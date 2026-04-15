@@ -1,11 +1,11 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T14:16:22Z",
+  "updatedAt": "2026-04-15T14:39:30Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-variant-inference-warning-audit",
-  "currentSliceTitle": "Audit and fix live Godot 4.6.2 warning-as-error parse breaks caused by Variant-inferred locals across active play shells",
+  "currentSliceId": "phase-2-overworld-command-risk-recursion-hotfix",
+  "currentSliceTitle": "Fix the confirmed overworld command-risk recursion overflow with the smallest safe rules-only patch",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1091,6 +1091,9 @@
     "This run fixed the live Godot 4.6.2 warning-as-error parse break in OverworldShell.gd by normalizing the in-session save-slot summary to an explicit Dictionary before passing it to SaveService, matching the prior BattleShell hotfix without changing save version behavior.",
     "Repository-local validation, validator bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after the OverworldShell typing hotfix while preserving save version 9.",
     "This run completed the remaining active-play shell Variant-inference audit by normalizing the in-session slot-summary reads in ScenarioOutcomeShell.gd and TownShell.gd through the same explicit Variant-to-Dictionary pattern already used in BattleShell.gd and OverworldShell.gd.",
-    "Godot 4.6.2 headless boot, an autoload-aware runtime resource sweep across project scenes and scripts, Python bytecode compilation for tests/validate_repo.py, and ops/progress.json parsing all passed after the typing fix; tests/validate_repo.py still reports unrelated pre-existing token-coverage failures outside this slice."
+    "Godot 4.6.2 headless boot, an autoload-aware runtime resource sweep across project scenes and scripts, Python bytecode compilation for tests/validate_repo.py, and ops/progress.json parsing all passed after the typing fix; tests/validate_repo.py still reports unrelated pre-existing token-coverage failures outside this slice.",
+    "This run started a narrow hotfix for a confirmed recursion overflow in OverworldRules.gd where command-risk forecast shaping re-entered normalize_overworld_state() through get_active_context() while the active hero was moving on the overworld.",
+    "The recursion hotfix stayed local to OverworldRules.gd by replacing the command-risk field item's town-context check with _find_active_town(session), avoiding the normalize_overworld_state() re-entry while preserving the same town suppression behavior.",
+    "Godot 4.6.2 headless scene repro via res://.tmp_repro_move.tscn now moves from 1,2 to 2,2 without a stack overflow, while python3 tests/validate_repo.py still fails on unrelated pre-existing token-coverage checks outside this hotfix."
   ]
 }

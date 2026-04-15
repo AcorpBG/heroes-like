@@ -6143,7 +6143,7 @@ static func _command_risk_field_item(session: SessionStateStoreScript.SessionDat
 	var nearest_town_result := _nearest_town_for_controller(session, "player", pos.x, pos.y)
 	var nearest_town = nearest_town_result.get("town", {})
 	var nearest_town_distance = 9999 if nearest_town.is_empty() else abs(pos.x - int(nearest_town.get("x", 0))) + abs(pos.y - int(nearest_town.get("y", 0)))
-	if String(get_active_context(session).get("type", "empty")) == "town":
+	if int(_find_active_town(session).get("index", -1)) >= 0:
 		return {}
 	if nearest_town_distance <= 2 and local_public_contacts <= 1:
 		return {}
