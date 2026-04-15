@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/town/TownShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/town/TownStageView.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 
 [node name="TownShell" type="Control"]
 layout_mode = 3
@@ -69,7 +70,17 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 8
 
-[node name="CrestLabel" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad"]
+[node name="CrestBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CrestGlyph" type="Control" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox"]
+custom_minimum_size = Vector2(50, 28)
+layout_mode = 2
+script = ExtResource("3")
+glyph_id = "town"
+
+[node name="CrestLabel" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox"]
 layout_mode = 2
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 18

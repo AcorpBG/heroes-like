@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T17:01:14Z",
+  "updatedAt": "2026-04-15T17:36:00Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-main-menu-outcome-visual-shells",
-  "currentSliceTitle": "Replace the text-heavy main menu and scenario outcome shell with visual front-end and result boards while preserving routes and save flow",
+  "currentSliceId": "phase-6-shared-visual-kit-cohesion",
+  "currentSliceTitle": "Apply a shared visual kit, tighter card summaries, and cohesive original banner marks across the converted front-end shells",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "MainMenu now uses a drawn landing board plus grouped campaign/skirmish/save cards, ScenarioOutcomeShell now uses a palette-driven result banner plus recap cards, and both keep existing routing and save behavior intact.",
+  "currentSliceNotes": "Added a reusable shell visual kit plus drawn heraldry marks, compacted the heaviest report-style labels in menu and outcome, and moved overworld, town, and battle shell styling onto the same shared presentation treatment without changing routing or gameplay flow.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

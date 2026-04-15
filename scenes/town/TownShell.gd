@@ -1,5 +1,7 @@
 extends Control
 
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 @onready var _banner_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner
 @onready var _crest_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame
 @onready var _town_stage_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel
@@ -13,7 +15,8 @@ extends Control
 @onready var _study_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel
 @onready var _market_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel
 @onready var _logistics_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel
-@onready var _crest_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestLabel
+@onready var _crest_glyph = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox/CrestGlyph
+@onready var _crest_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox/CrestLabel
 @onready var _header_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Header
 @onready var _status_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Status
 @onready var _resource_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Resources
@@ -187,6 +190,8 @@ func _refresh() -> void:
 	_status_label.text = TownRules.describe_status(_session)
 	_resource_label.text = OverworldRules.describe_resources(_session)
 	_crest_label.text = _crest_text()
+	if _crest_glyph.has_method("set_glyph"):
+		_crest_glyph.call("set_glyph", "town", _faction_accent())
 	_set_compact_label(_outlook_label, TownRules.describe_outlook_board(_session), 4)
 	_set_compact_label(_command_ledger_label, TownRules.describe_command_ledger(_session), 4)
 	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 4)
@@ -454,37 +459,10 @@ func _handle_session_resolution() -> bool:
 	return true
 
 func _make_placeholder_label(text: String) -> Label:
-	var placeholder := Label.new()
-	placeholder.text = text
-	placeholder.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	placeholder.add_theme_color_override("font_color", Color(0.72, 0.77, 0.82))
-	return placeholder
+	return FrontierVisualKit.placeholder_label(text)
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
-	label.tooltip_text = full_text
-	label.text = _compact_text(full_text, max_lines)
-
-func _compact_text(full_text: String, max_lines: int) -> String:
-	var raw_lines := full_text.split("\n", false)
-	var lines := []
-	for raw_line in raw_lines:
-		var line := raw_line.strip_edges()
-		if line == "":
-			continue
-		if raw_lines.size() > 1 and not line.begins_with("-") and "|" not in line and ":" not in line and line == line.capitalize():
-			continue
-		if line.begins_with("- "):
-			line = line.trim_prefix("- ").strip_edges()
-		if line.length() > 92:
-			line = "%s..." % line.left(89)
-		lines.append(line)
-	if lines.is_empty():
-		return full_text.strip_edges()
-	if lines.size() > max_lines:
-		var hidden := lines.size() - max_lines
-		lines = lines.slice(0, max_lines)
-		lines.append("+ %d more" % hidden)
-	return "\n".join(lines)
+	FrontierVisualKit.set_compact_label(label, full_text, max_lines)
 
 func _crest_text() -> String:
 	var town := TownRules.get_active_town(_session)
@@ -496,72 +474,35 @@ func _crest_text() -> String:
 	return name.left(4).to_upper()
 
 func _style_action_button(button: Button, primary: bool = false) -> void:
-	button.custom_minimum_size = Vector2(132, 34)
-	button.focus_mode = Control.FOCUS_NONE
-	button.add_theme_font_size_override("font_size", 14)
-	_apply_button_theme(button, primary)
-
-func _apply_button_theme(button: Button, primary: bool) -> void:
-	var normal = StyleBoxFlat.new()
-	normal.bg_color = Color(0.34, 0.27, 0.18, 0.96) if primary else Color(0.18, 0.22, 0.25, 0.96)
-	normal.border_color = Color(0.88, 0.71, 0.38, 0.96) if primary else Color(0.52, 0.62, 0.68, 0.95)
-	normal.set_corner_radius_all(10)
-	normal.set_border_width_all(2)
-	normal.shadow_color = Color(0.0, 0.0, 0.0, 0.26)
-	normal.shadow_size = 3
-	var hover = normal.duplicate()
-	hover.bg_color = Color(0.41, 0.31, 0.20, 1.0) if primary else Color(0.24, 0.28, 0.32, 1.0)
-	var pressed = normal.duplicate()
-	pressed.bg_color = Color(0.25, 0.19, 0.13, 1.0) if primary else Color(0.14, 0.17, 0.20, 1.0)
-	var disabled = normal.duplicate()
-	disabled.bg_color = Color(0.12, 0.14, 0.15, 0.92)
-	disabled.border_color = Color(0.28, 0.32, 0.35, 0.72)
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("disabled", disabled)
-	button.add_theme_color_override("font_color", Color(0.95, 0.93, 0.88))
-	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
-
-func _panel_style(background: Color, border: Color) -> StyleBoxFlat:
-	var style = StyleBoxFlat.new()
-	style.bg_color = background
-	style.border_color = border
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(16)
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.24)
-	style.shadow_size = 5
-	style.shadow_offset = Vector2(0.0, 2.0)
-	return style
+	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", 132.0, 34.0)
 
 func _apply_visual_theme() -> void:
-	_banner_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.13, 0.18, 0.15, 0.96), Color(0.86, 0.71, 0.40, 0.95)))
-	_crest_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.20, 0.15, 0.09, 0.96), Color(0.88, 0.72, 0.40, 0.95)))
-	_town_stage_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.10, 0.11, 0.10, 0.96), Color(0.76, 0.64, 0.35, 0.95)))
-	_town_stage_frame_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.08, 0.09, 1.0), Color(0.56, 0.66, 0.71, 0.95)))
-	_command_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.13, 0.15, 0.97), Color(0.50, 0.61, 0.68, 0.95)))
-	_town_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.14, 0.12, 0.10, 0.97), Color(0.84, 0.68, 0.38, 0.95)))
-	_outlook_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.15, 0.17, 0.97), Color(0.43, 0.69, 0.74, 0.95)))
-	_command_ledger_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.17, 0.16, 0.11, 0.97), Color(0.73, 0.66, 0.34, 0.95)))
-	_build_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.15, 0.13, 0.11, 0.97), Color(0.78, 0.58, 0.34, 0.95)))
-	_recruit_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.16, 0.13, 0.97), Color(0.56, 0.74, 0.43, 0.95)))
-	_study_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.14, 0.20, 0.97), Color(0.54, 0.62, 0.90, 0.95)))
-	_market_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.17, 0.15, 0.10, 0.97), Color(0.88, 0.72, 0.40, 0.95)))
-	_logistics_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.14, 0.16, 0.97), Color(0.47, 0.68, 0.72, 0.95)))
+	FrontierVisualKit.apply_panel(_banner_panel, "banner")
+	FrontierVisualKit.apply_badge(_crest_panel, "gold")
+	FrontierVisualKit.apply_panel(_town_stage_panel, "earth")
+	FrontierVisualKit.apply_panel(_town_stage_frame_panel, "frame")
+	FrontierVisualKit.apply_panel(_command_panel, "ink")
+	FrontierVisualKit.apply_panel(_town_panel, "gold")
+	FrontierVisualKit.apply_panel(_outlook_panel, "teal")
+	FrontierVisualKit.apply_panel(_command_ledger_panel, "earth")
+	FrontierVisualKit.apply_panel(_build_panel, "earth")
+	FrontierVisualKit.apply_panel(_recruit_panel, "green")
+	FrontierVisualKit.apply_panel(_study_panel, "blue")
+	FrontierVisualKit.apply_panel(_market_panel, "gold")
+	FrontierVisualKit.apply_panel(_logistics_panel, "teal")
 
 	for button in [_save_button, _leave_button, _menu_button]:
 		_style_action_button(button, true)
-	_save_slot_picker.custom_minimum_size = Vector2(150, 36)
-	_apply_button_theme(_save_slot_picker, false)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 150.0, 36.0)
 
-	_header_label.add_theme_color_override("font_color", Color(0.98, 0.96, 0.90))
-	_status_label.add_theme_color_override("font_color", Color(0.86, 0.92, 0.96))
-	_resource_label.add_theme_color_override("font_color", Color(0.97, 0.88, 0.61))
-	_crest_label.add_theme_color_override("font_color", Color(0.97, 0.92, 0.82))
-	_event_label.add_theme_color_override("font_color", Color(0.84, 0.89, 0.93))
-	_save_status_label.add_theme_color_override("font_color", Color(0.78, 0.82, 0.87))
+	FrontierVisualKit.apply_label(_header_label, "title")
+	FrontierVisualKit.apply_label(_status_label, "body")
+	FrontierVisualKit.apply_label(_resource_label, "gold")
+	FrontierVisualKit.apply_label(_crest_label, "title")
+	FrontierVisualKit.apply_label(_event_label, "body")
+	FrontierVisualKit.apply_label(_save_status_label, "muted")
 
-	for label in [
+	FrontierVisualKit.apply_labels([
 		_outlook_label,
 		_command_ledger_label,
 		_hero_label,
@@ -580,6 +521,19 @@ func _apply_visual_theme() -> void:
 		_transfer_label,
 		_response_label,
 		_artifact_label,
-	]:
-		label.add_theme_color_override("font_color", Color(0.86, 0.90, 0.93))
-		label.add_theme_font_size_override("font_size", 13)
+	], "body", 13)
+
+func _faction_accent() -> Color:
+	var town := TownRules.get_active_town(_session)
+	if town.is_empty():
+		return Color(0.88, 0.72, 0.40, 1.0)
+	var template := ContentService.get_town(String(town.get("town_id", "")))
+	match String(template.get("faction_id", "")):
+		"faction_embercourt":
+			return Color(0.88, 0.58, 0.34, 1.0)
+		"faction_mireclaw":
+			return Color(0.52, 0.74, 0.43, 1.0)
+		"faction_sunvault":
+			return Color(0.89, 0.77, 0.36, 1.0)
+		_:
+			return Color(0.88, 0.72, 0.40, 1.0)

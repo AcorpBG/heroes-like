@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=4 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -57,6 +58,12 @@ theme_override_constants/separation = 10
 [node name="TopBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
 layout_mode = 2
 theme_override_constants/separation = 14
+
+[node name="BannerGlyph" type="Control" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+custom_minimum_size = Vector2(54, 48)
+layout_mode = 2
+script = ExtResource("3")
+glyph_id = "battle"
 
 [node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2

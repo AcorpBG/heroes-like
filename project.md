@@ -218,6 +218,11 @@ Battle shell presentation decision:
 - the battle scene now also centers on a dedicated drawn battlefield board with deployment cards, distance bands, objective markers, focus links, and turn-order chips so the current fight reads like a tactical board before it reads like a log
 - `BattleShell.gd`, `BattleShell.tscn`, and `BattleBoardView.gd` only translate normalized battle payload state into that board plus compact tactical cards, keeping active-stack actions, spell casting, target cycling, save, retreat, and surrender flow inside `BattleRules.gd`
 
+Shared shell visual-kit decision:
+- `scripts/ui/FrontierVisualKit.gd` now owns the reusable panel, button, tab, list, slider, and compact-summary treatment used by the main menu, overworld, town, battle, and outcome shells instead of each scene carrying its own near-duplicate styling helpers
+- `scenes/ui/FrontierBannerGlyph.gd` now provides lightweight drawn-code heraldry marks that can be dropped into banner rows across the converted shells, keeping the placeholder UI art original, local, and easy to iterate without widening the asset pipeline
+- scene-specific art boards like `MainMenuHeroView.gd`, `OverworldMapView.gd`, `TownStageView.gd`, `BattleBoardView.gd`, and `OutcomeBannerView.gd` remain the owners of their larger compositions, while the shared kit only standardizes shell framing, copy density, and visual identity
+
 Battle-start tactical briefing decision:
 - fresh battle entry now surfaces a one-shot tactical briefing inside the existing battle shell, not through a tutorial engine, planner view, or codex subsystem
 - `BattleRules.gd` owns the briefing state and summary shaping from live battle payload data including encounter identity, battlefield tags, commander doctrine, army mix, decisive targets, retreat state, and scenario objective context, while the briefing marker persists in the battle payload for save-safe resume behavior

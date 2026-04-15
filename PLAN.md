@@ -134,6 +134,7 @@ Difficulty: High
 - add a release-facing battle-side order consequence board inside the real battle shell using current action availability, damage windows, retaliation exposure, spell windows, objective pull, and likely hostile reply state instead of a planner or advisor layer
 - turn battle withdrawal into a release-facing surrender and pursuit aftermath slice through the existing battle, outcome, town, economy, campaign, and shell flow so retreat and surrender produce different strategic fallout instead of sharing one generic exit path
 - deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities that change movement pressure, ranged threat, commander safety, target priority, and battle summaries through the existing battle pipeline
+- add a shared release-facing visual kit with original heraldry marks, compact summary surfacing, and cohesive panel or control treatment across the already-converted main menu, overworld, town, battle, and outcome shells without moving logic out of current scene or core boundaries
 
 ## Immediate execution order
 1. Confirm engine, language, content, and save strategy in docs.
@@ -258,6 +259,8 @@ Difficulty: High
 117. [completed] Re-run repository-local validation and Godot headless boot for reserve-delivery routing, convoy surfacing, hostile disruption, and save-version preservation.
 118. [completed] Turn live frontline reserve-delivery pressure into real convoy interception clashes through the existing overworld, encounter, battle, town, and enemy-turn systems.
 119. [completed] Re-run repository-local validation and Godot headless boot for convoy-hunt targeting, battle-aftermath routing, interception surfacing, and save-version preservation.
+120. [completed] Apply a shared visual kit, compact summary treatment, and original heraldry pass across the main menu, overworld, town, battle, and outcome shells while keeping gameplay flow intact.
+121. [completed] Re-run Godot headless boot, the existing shell smoke scenes, and a new heraldry-specific smoke for the shared presentation kit.
 120. [completed] Make the main-menu Play tab genuinely usable for playtesting at the default `1280x720` window through the existing campaign/skirmish scene and controller instead of replacing the release-facing menu flow.
 121. [completed] Re-run repository-local validation, validator bytecode compilation, ops JSON parsing, `SAVE_VERSION` verification, and headless Godot boot for the main-menu playtest-usability slice.
 122. [completed] Turn the overworld from a text-dominant shell into a real visual 2D board with rendered terrain, hero markers, key POIs, legible fog-of-war, and lighter HUD surfacing while keeping rules and movement in the existing core layer.

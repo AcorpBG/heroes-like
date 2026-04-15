@@ -1,5 +1,7 @@
 extends Control
 
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 @onready var _banner_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner
 @onready var _briefing_panel: PanelContainer = $Scroll/ContentMargin/Content/BriefingPanel
 @onready var _commitment_panel: PanelContainer = $Scroll/ContentMargin/Content/CommitmentPanel
@@ -309,22 +311,22 @@ func _refresh() -> void:
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	_status_label.text = OverworldRules.describe_status(_session)
 	_resource_label.text = OverworldRules.describe_resources(_session)
-	_commitment_label.text = OverworldRules.describe_commitment_board(_session)
-	_visibility_label.text = OverworldRules.describe_visibility_panel(_session)
-	_hero_label.text = _hero_card_text()
-	_army_label.text = OverworldRules.describe_army(_session)
-	_heroes_label.text = OverworldRules.describe_heroes(_session)
-	_specialty_label.text = OverworldRules.describe_specialties(_session)
-	_spell_label.text = OverworldRules.describe_spellbook(_session)
-	_artifact_label.text = OverworldRules.describe_artifacts(_session)
-	_objective_label.text = OverworldRules.describe_objectives(_session)
-	_threat_label.text = OverworldRules.describe_enemy_threats(_session)
-	_forecast_label.text = OverworldRules.describe_command_risk(_session)
-	_context_label.text = _describe_focus_tile()
-	_event_label.text = OverworldRules.describe_dispatch(_session, _last_message)
+	_set_compact_label(_commitment_label, OverworldRules.describe_commitment_board(_session), 4)
+	_set_compact_label(_visibility_label, OverworldRules.describe_visibility_panel(_session), 4)
+	_set_compact_label(_hero_label, _hero_card_text(), 4)
+	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 4)
+	_set_compact_label(_heroes_label, OverworldRules.describe_heroes(_session), 4)
+	_set_compact_label(_specialty_label, OverworldRules.describe_specialties(_session), 4)
+	_set_compact_label(_spell_label, OverworldRules.describe_spellbook(_session), 4)
+	_set_compact_label(_artifact_label, OverworldRules.describe_artifacts(_session), 4)
+	_set_compact_label(_objective_label, OverworldRules.describe_objectives(_session), 4)
+	_set_compact_label(_threat_label, OverworldRules.describe_enemy_threats(_session), 4)
+	_set_compact_label(_forecast_label, OverworldRules.describe_command_risk(_session), 4)
+	_set_compact_label(_context_label, _describe_focus_tile(), 5)
+	_set_compact_label(_event_label, OverworldRules.describe_dispatch(_session, _last_message), 3)
 	_end_turn_button.tooltip_text = OverworldRules.describe_command_risk_forecast(_session)
 	_briefing_title_label.text = _briefing_title_text
-	_briefing_label.text = _command_briefing_text
+	_set_compact_label(_briefing_label, _command_briefing_text, 4)
 	_briefing_panel.visible = _command_briefing_text != ""
 	_update_map_hint()
 
@@ -360,10 +362,7 @@ func _rebuild_hero_actions() -> void:
 
 	var actions = OverworldRules.get_hero_actions(_session)
 	if actions.size() <= 1:
-		var placeholder = Label.new()
-		placeholder.text = "Only one commander is ready"
-		placeholder.add_theme_color_override("font_color", Color(0.72, 0.75, 0.79, 0.9))
-		_hero_actions.add_child(placeholder)
+		_hero_actions.add_child(_make_placeholder_label("Only one commander is ready"))
 		return
 
 	for action in actions:
@@ -390,10 +389,7 @@ func _rebuild_context_actions() -> void:
 			actions.append(movement_action)
 
 	if actions.is_empty():
-		var placeholder = Label.new()
-		placeholder.text = "Select a tile to inspect or route toward it"
-		placeholder.add_theme_color_override("font_color", Color(0.72, 0.75, 0.79, 0.9))
-		_context_actions.add_child(placeholder)
+		_context_actions.add_child(_make_placeholder_label("Select a tile to inspect or route toward it"))
 		return
 
 	for action in actions:
@@ -444,10 +440,7 @@ func _rebuild_artifact_actions() -> void:
 
 	var actions = OverworldRules.get_artifact_actions(_session)
 	if actions.is_empty():
-		var placeholder = Label.new()
-		placeholder.text = "No loadout actions"
-		placeholder.add_theme_color_override("font_color", Color(0.72, 0.75, 0.79, 0.9))
-		_artifact_actions.add_child(placeholder)
+		_artifact_actions.add_child(_make_placeholder_label("No loadout actions"))
 		return
 
 	for action in actions:
@@ -467,10 +460,7 @@ func _rebuild_specialty_actions() -> void:
 
 	var actions = OverworldRules.get_specialty_actions(_session)
 	if actions.is_empty():
-		var placeholder = Label.new()
-		placeholder.text = "No specialty choice waiting"
-		placeholder.add_theme_color_override("font_color", Color(0.72, 0.75, 0.79, 0.9))
-		_specialty_actions.add_child(placeholder)
+		_specialty_actions.add_child(_make_placeholder_label("No specialty choice waiting"))
 		return
 
 	for action in actions:
@@ -490,10 +480,7 @@ func _rebuild_spell_actions() -> void:
 
 	var actions = OverworldRules.get_spell_actions(_session)
 	if actions.is_empty():
-		var placeholder = Label.new()
-		placeholder.text = "No field spells"
-		placeholder.add_theme_color_override("font_color", Color(0.72, 0.75, 0.79, 0.9))
-		_spell_actions.add_child(placeholder)
+		_spell_actions.add_child(_make_placeholder_label("No field spells"))
 		return
 
 	for action in actions:
@@ -784,71 +771,53 @@ func _tile_key(tile: Vector2i) -> String:
 func _duplicate_array(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
+func _make_placeholder_label(text: String) -> Label:
+	return FrontierVisualKit.placeholder_label(text)
+
+func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
+	FrontierVisualKit.set_compact_label(label, full_text, max_lines)
+
 func _style_action_button(button: Button) -> void:
-	button.custom_minimum_size = Vector2(126, 34)
-	button.focus_mode = Control.FOCUS_NONE
-	button.add_theme_font_size_override("font_size", 14)
-	_apply_button_theme(button, false)
-
-func _apply_button_theme(button: Button, primary: bool) -> void:
-	var normal = StyleBoxFlat.new()
-	normal.bg_color = Color(0.30, 0.24, 0.17, 0.95) if primary else Color(0.19, 0.22, 0.24, 0.95)
-	normal.border_color = Color(0.88, 0.71, 0.36, 0.95) if primary else Color(0.48, 0.57, 0.63, 0.95)
-	normal.set_corner_radius_all(10)
-	normal.set_border_width_all(2)
-	normal.shadow_color = Color(0.0, 0.0, 0.0, 0.30)
-	normal.shadow_size = 3
-	var hover = normal.duplicate()
-	hover.bg_color = Color(0.39, 0.29, 0.18, 1.0) if primary else Color(0.25, 0.29, 0.33, 1.0)
-	var pressed = normal.duplicate()
-	pressed.bg_color = Color(0.24, 0.18, 0.12, 1.0) if primary else Color(0.15, 0.18, 0.20, 1.0)
-	var disabled = normal.duplicate()
-	disabled.bg_color = Color(0.12, 0.14, 0.15, 0.92)
-	disabled.border_color = Color(0.28, 0.32, 0.35, 0.70)
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("disabled", disabled)
-	button.add_theme_color_override("font_color", Color(0.95, 0.93, 0.88))
-	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
-
-func _panel_style(background: Color, border: Color) -> StyleBoxFlat:
-	var style = StyleBoxFlat.new()
-	style.bg_color = background
-	style.border_color = border
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(16)
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.24)
-	style.shadow_size = 5
-	style.shadow_offset = Vector2(0.0, 2.0)
-	return style
+	FrontierVisualKit.apply_button(button, "secondary", 126.0, 34.0)
 
 func _apply_visual_theme() -> void:
-	_banner_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.18, 0.17, 0.96), Color(0.84, 0.70, 0.38, 0.95)))
-	_briefing_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.18, 0.15, 0.10, 0.96), Color(0.88, 0.73, 0.40, 0.95)))
-	_commitment_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.15, 0.17, 0.12, 0.96), Color(0.62, 0.72, 0.42, 0.95)))
-	_map_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.10, 0.11, 0.10, 0.96), Color(0.74, 0.62, 0.34, 0.95)))
-	_map_frame_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.08, 0.09, 1.0), Color(0.55, 0.65, 0.71, 0.95)))
-	_command_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.13, 0.14, 0.97), Color(0.51, 0.60, 0.66, 0.95)))
-	_frontier_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.14, 0.16, 0.97), Color(0.46, 0.68, 0.74, 0.95)))
-	_context_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.14, 0.12, 0.10, 0.97), Color(0.84, 0.67, 0.36, 0.95)))
+	FrontierVisualKit.apply_panel(_banner_panel, "banner")
+	FrontierVisualKit.apply_panel(_briefing_panel, "gold")
+	FrontierVisualKit.apply_panel(_commitment_panel, "green")
+	FrontierVisualKit.apply_panel(_map_panel, "earth")
+	FrontierVisualKit.apply_panel(_map_frame_panel, "frame")
+	FrontierVisualKit.apply_panel(_command_panel, "ink")
+	FrontierVisualKit.apply_panel(_frontier_panel, "teal")
+	FrontierVisualKit.apply_panel(_context_panel, "gold")
 
 	for button in [_move_north_button, _move_south_button, _move_west_button, _move_east_button]:
 		_style_action_button(button)
 	for button in [_end_turn_button, _save_button, _menu_button]:
-		button.custom_minimum_size = Vector2(132, 36)
-		button.focus_mode = Control.FOCUS_NONE
-		_apply_button_theme(button, true)
-	_save_slot_picker.custom_minimum_size = Vector2(150, 36)
-	_apply_button_theme(_save_slot_picker, false)
+		FrontierVisualKit.apply_button(button, "primary", 132.0, 36.0)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 150.0, 36.0)
 
-	_header_label.add_theme_color_override("font_color", Color(0.98, 0.96, 0.90))
-	_status_label.add_theme_color_override("font_color", Color(0.86, 0.92, 0.96))
-	_resource_label.add_theme_color_override("font_color", Color(0.97, 0.88, 0.61))
-	_event_label.add_theme_color_override("font_color", Color(0.84, 0.89, 0.93))
-	_briefing_title_label.add_theme_color_override("font_color", Color(0.98, 0.90, 0.72))
-	_save_status_label.add_theme_color_override("font_color", Color(0.78, 0.82, 0.87))
-	_map_hint_label.add_theme_color_override("font_color", Color(0.80, 0.86, 0.90))
+	FrontierVisualKit.apply_label(_header_label, "title")
+	FrontierVisualKit.apply_label(_status_label, "body")
+	FrontierVisualKit.apply_label(_resource_label, "gold")
+	FrontierVisualKit.apply_label(_event_label, "body")
+	FrontierVisualKit.apply_label(_briefing_title_label, "gold")
+	FrontierVisualKit.apply_label(_save_status_label, "muted")
+	FrontierVisualKit.apply_label(_map_hint_label, "blue")
+	FrontierVisualKit.apply_labels([
+		_commitment_label,
+		_briefing_label,
+		_hero_label,
+		_army_label,
+		_heroes_label,
+		_specialty_label,
+		_spell_label,
+		_artifact_label,
+		_visibility_label,
+		_objective_label,
+		_threat_label,
+		_forecast_label,
+		_context_label,
+	], "body", 13)
 
 func _set_command_briefing(title: String, text: String) -> void:
 	_briefing_title_text = title if title != "" else "Command Briefing"

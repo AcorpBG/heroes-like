@@ -1,5 +1,7 @@
 extends Control
 
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+
 @onready var _banner_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner
 @onready var _briefing_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel
 @onready var _risk_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel
@@ -273,107 +275,45 @@ func _refresh_save_slot_picker() -> void:
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func _make_placeholder_label(text: String) -> Label:
-	var placeholder := Label.new()
-	placeholder.text = text
-	placeholder.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	placeholder.add_theme_color_override("font_color", Color(0.72, 0.77, 0.82))
-	return placeholder
+	return FrontierVisualKit.placeholder_label(text)
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
-	label.tooltip_text = full_text
-	label.text = _compact_text(full_text, max_lines)
-
-func _compact_text(full_text: String, max_lines: int) -> String:
-	var raw_lines := full_text.split("\n", false)
-	var lines := []
-	for raw_line in raw_lines:
-		var line := raw_line.strip_edges()
-		if line == "":
-			continue
-		if line.begins_with("- "):
-			line = line.trim_prefix("- ").strip_edges()
-		if line.length() > 96:
-			line = "%s..." % line.left(93)
-		lines.append(line)
-	if lines.is_empty():
-		return full_text.strip_edges()
-	if lines.size() > max_lines:
-		var hidden := lines.size() - max_lines
-		lines = lines.slice(0, max_lines)
-		lines.append("+ %d more" % hidden)
-	return "\n".join(lines)
+	FrontierVisualKit.set_compact_label(label, full_text, max_lines, 96, false)
 
 func _style_action_button(button: Button, primary: bool = false, width: float = 160.0) -> void:
-	button.custom_minimum_size = Vector2(width, 34)
-	button.focus_mode = Control.FOCUS_NONE
-	button.add_theme_font_size_override("font_size", 14)
-	_apply_button_theme(button, primary)
-
-func _apply_button_theme(button: Button, primary: bool) -> void:
-	var normal = StyleBoxFlat.new()
-	normal.bg_color = Color(0.40, 0.20, 0.15, 0.98) if primary else Color(0.18, 0.22, 0.26, 0.96)
-	normal.border_color = Color(0.91, 0.69, 0.39, 0.96) if primary else Color(0.55, 0.63, 0.71, 0.95)
-	normal.set_corner_radius_all(10)
-	normal.set_border_width_all(2)
-	normal.shadow_color = Color(0.0, 0.0, 0.0, 0.28)
-	normal.shadow_size = 3
-	var hover = normal.duplicate()
-	hover.bg_color = Color(0.48, 0.24, 0.18, 1.0) if primary else Color(0.24, 0.28, 0.33, 1.0)
-	var pressed = normal.duplicate()
-	pressed.bg_color = Color(0.28, 0.14, 0.12, 1.0) if primary else Color(0.14, 0.17, 0.20, 1.0)
-	var disabled = normal.duplicate()
-	disabled.bg_color = Color(0.12, 0.14, 0.15, 0.92)
-	disabled.border_color = Color(0.28, 0.32, 0.35, 0.72)
-	button.add_theme_stylebox_override("normal", normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("disabled", disabled)
-	button.add_theme_color_override("font_color", Color(0.95, 0.93, 0.88))
-	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
-
-func _panel_style(background: Color, border: Color) -> StyleBoxFlat:
-	var style = StyleBoxFlat.new()
-	style.bg_color = background
-	style.border_color = border
-	style.set_border_width_all(2)
-	style.set_corner_radius_all(16)
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.24)
-	style.shadow_size = 5
-	style.shadow_offset = Vector2(0.0, 2.0)
-	return style
+	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", width, 34.0)
 
 func _apply_visual_theme() -> void:
-	_banner_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.14, 0.12, 0.10, 0.97), Color(0.88, 0.68, 0.38, 0.95)))
-	_briefing_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.18, 0.15, 0.11, 0.97), Color(0.90, 0.73, 0.42, 0.95)))
-	_risk_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.16, 0.18, 0.97), Color(0.45, 0.69, 0.76, 0.95)))
-	_consequence_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.18, 0.13, 0.12, 0.97), Color(0.86, 0.55, 0.38, 0.95)))
-	_battlefield_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.10, 0.11, 0.10, 0.97), Color(0.78, 0.64, 0.36, 0.95)))
-	_battlefield_frame_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.06, 0.08, 0.09, 1.0), Color(0.56, 0.66, 0.71, 0.95)))
-	_command_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.13, 0.15, 0.97), Color(0.49, 0.60, 0.67, 0.95)))
-	_initiative_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.15, 0.17, 0.97), Color(0.62, 0.72, 0.42, 0.95)))
-	_context_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.15, 0.12, 0.10, 0.97), Color(0.86, 0.67, 0.37, 0.95)))
-	_spell_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.12, 0.14, 0.20, 0.97), Color(0.54, 0.62, 0.89, 0.95)))
-	_timing_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.14, 0.15, 0.11, 0.97), Color(0.74, 0.68, 0.35, 0.95)))
-	_player_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.16, 0.20, 0.97), Color(0.42, 0.68, 0.90, 0.95)))
-	_enemy_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.19, 0.12, 0.11, 0.97), Color(0.86, 0.39, 0.34, 0.95)))
-	_footer_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.10, 0.12, 0.14, 0.97), Color(0.42, 0.48, 0.55, 0.95)))
-	_action_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.15, 0.12, 0.10, 0.97), Color(0.86, 0.66, 0.36, 0.95)))
-	_system_panel.add_theme_stylebox_override("panel", _panel_style(Color(0.11, 0.13, 0.16, 0.97), Color(0.50, 0.61, 0.69, 0.95)))
+	FrontierVisualKit.apply_panel(_banner_panel, "banner")
+	FrontierVisualKit.apply_panel(_briefing_panel, "gold")
+	FrontierVisualKit.apply_panel(_risk_panel, "teal")
+	FrontierVisualKit.apply_panel(_consequence_panel, "earth")
+	FrontierVisualKit.apply_panel(_battlefield_panel, "earth")
+	FrontierVisualKit.apply_panel(_battlefield_frame_panel, "frame")
+	FrontierVisualKit.apply_panel(_command_panel, "ink")
+	FrontierVisualKit.apply_panel(_initiative_panel, "green")
+	FrontierVisualKit.apply_panel(_context_panel, "gold")
+	FrontierVisualKit.apply_panel(_spell_panel, "blue")
+	FrontierVisualKit.apply_panel(_timing_panel, "earth")
+	FrontierVisualKit.apply_panel(_player_panel, "teal")
+	FrontierVisualKit.apply_panel(_enemy_panel, "red")
+	FrontierVisualKit.apply_panel(_footer_panel, "ink")
+	FrontierVisualKit.apply_panel(_action_panel, "gold")
+	FrontierVisualKit.apply_panel(_system_panel, "ink")
 
 	for button in [_prev_target_button, _next_target_button]:
 		_style_action_button(button, false, 126)
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button, _save_button, _menu_button]:
 		_style_action_button(button, true)
-	_save_slot_picker.custom_minimum_size = Vector2(150, 36)
-	_apply_button_theme(_save_slot_picker, false)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 150.0, 36.0)
 
-	_header_label.add_theme_color_override("font_color", Color(0.98, 0.96, 0.90))
-	_status_label.add_theme_color_override("font_color", Color(0.86, 0.92, 0.96))
-	_pressure_label.add_theme_color_override("font_color", Color(0.97, 0.88, 0.61))
-	_event_label.add_theme_color_override("font_color", Color(0.84, 0.89, 0.93))
-	_system_body_label.add_theme_color_override("font_color", Color(0.79, 0.83, 0.87))
+	FrontierVisualKit.apply_label(_header_label, "title")
+	FrontierVisualKit.apply_label(_status_label, "body")
+	FrontierVisualKit.apply_label(_pressure_label, "gold")
+	FrontierVisualKit.apply_label(_event_label, "body")
+	FrontierVisualKit.apply_label(_system_body_label, "muted")
 
-	for label in [
+	FrontierVisualKit.apply_labels([
 		_briefing_label,
 		_risk_label,
 		_consequence_label,
@@ -388,9 +328,7 @@ func _apply_visual_theme() -> void:
 		_player_roster,
 		_enemy_roster,
 		_action_guide,
-	]:
-		label.add_theme_color_override("font_color", Color(0.86, 0.90, 0.93))
-		label.add_theme_font_size_override("font_size", 13)
+	], "body", 13)
 
 func _dismiss_tactical_briefing() -> void:
 	_tactical_briefing_text = ""
