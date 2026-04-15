@@ -277,6 +277,8 @@ Difficulty: High
 133. [completed] Re-run the required menu/outcome, town/battle, overworld, movement repro, and full headless Godot validations after the coordinated shell pass while reporting unrelated warnings separately.
 134. [completed] Correct the live main menu into a stronger Heroes-style front end with one dominant play surface, no repeated navigation, and a tucked utility wing while preserving campaign, skirmish, save, help, and settings flow.
 135. [completed] Re-run the required menu visual smoke scene and full headless Godot boot after the main-menu front-end correction while reporting unrelated warnings separately.
+136. [completed] Write a descriptive cross-screen wireframe and screen-grammar spec for menu, overworld, town, battle, and outcome so future shell work targets actual game-screen design instead of denser dashboard layouts.
+137. [pending] Use the wireframe spec plus generated placeholder art to rebuild each shell against explicit dominant-surface and command-rail targets instead of another generic panel pass.
 
 ## Standards
 - no throwaway prototype code if avoidable

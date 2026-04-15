@@ -373,6 +373,11 @@ Capital-front battle identity decision:
 - `BattleRules.gd` and `BattleAiRules.gd` read those shared tags plus authored encounter tags to change approach distance, initiative, cohesion, momentum, target preference, spell value, and late-wave payoff, keeping tactical differentiation in core rules instead of scene scripts
 - finale scenarios now author signature reserve-column, breach-pack, and battery-array encounters in `content/encounters.json` plus scripted capital-project reinforcements in `content/scenarios.json`, so late-front battles become distinct authored puzzles rather than oversized field skirmishes
 
+Screen-design correction decision:
+- the next shell rework stage must start from descriptive wireframes and screen-fantasy targets instead of another density or panel-layout pass, because recent iterations proved that cleaner text columns still produce dashboard UX rather than game-screen UX
+- `docs/screen-wireframes.md` is now the explicit source of truth for screen grammar across main menu, overworld, town, battle, and outcome, defining each screen's dominant surface, command rails, secondary-detail boundaries, and required art support before implementation resumes
+- future shell work should only start after the target screen answers five gating questions clearly: dominant surface, first no-text read, primary command rail, secondary-info hiding strategy, and required generated-asset support
+
 This replaces the earlier mixed-content approach and gives towns, armies, recruitment, and battle setup stable ids that can scale into campaign, AI, and authoring tooling.
 
 ## Repository structure
