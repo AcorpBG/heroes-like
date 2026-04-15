@@ -153,6 +153,21 @@ static func _normalized_battle_context(session: SessionStateStore.SessionData, r
 					"trigger_faction_id": String(placement.get("spawned_by_faction_id", "")),
 				}
 				context_type = "town_defense"
+	var delivery_context: Dictionary = OverworldRules.delivery_interception_context_for_encounter(
+		session,
+		raw_context if raw_context is Dictionary else {}
+	)
+	var delivery_node_placement_id: String = String(context.get("delivery_node_placement_id", delivery_context.get("node_placement_id", "")))
+	var delivery_site_name: String = String(context.get("delivery_site_name", delivery_context.get("site_name", "")))
+	var delivery_origin_town_id: String = String(context.get("delivery_origin_town_id", delivery_context.get("origin_town_id", "")))
+	var delivery_origin_town_label: String = String(context.get("delivery_origin_town_label", delivery_context.get("origin_town_label", "")))
+	var delivery_target_kind: String = String(context.get("delivery_target_kind", delivery_context.get("target_kind", "")))
+	var delivery_target_id: String = String(context.get("delivery_target_id", delivery_context.get("target_id", "")))
+	var delivery_target_label: String = String(context.get("delivery_target_label", delivery_context.get("target_label", "")))
+	var delivery_route_label: String = String(context.get("delivery_route_label", delivery_context.get("route_label", "")))
+	var delivery_pressure_label: String = String(context.get("delivery_pressure_label", delivery_context.get("pressure_label", "")))
+	var delivery_recruit_summary: String = String(context.get("delivery_recruit_summary", delivery_context.get("recruit_summary", "")))
+	var delivery_arrival_day: int = maxi(0, int(context.get("delivery_arrival_day", delivery_context.get("arrival_day", 0))))
 	if context_type != "town_defense":
 		return {
 			"type": "encounter",
@@ -160,6 +175,17 @@ static func _normalized_battle_context(session: SessionStateStore.SessionData, r
 			"town_role": "frontier",
 			"battlefront_summary": "",
 			"battlefront_tags": [],
+			"delivery_node_placement_id": delivery_node_placement_id,
+			"delivery_site_name": delivery_site_name,
+			"delivery_origin_town_id": delivery_origin_town_id,
+			"delivery_origin_town_label": delivery_origin_town_label,
+			"delivery_target_kind": delivery_target_kind,
+			"delivery_target_id": delivery_target_id,
+			"delivery_target_label": delivery_target_label,
+			"delivery_route_label": delivery_route_label,
+			"delivery_pressure_label": delivery_pressure_label,
+			"delivery_recruit_summary": delivery_recruit_summary,
+			"delivery_arrival_day": delivery_arrival_day,
 		}
 	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
 	var battlefront = OverworldRules.town_battlefront_profile(town)
@@ -172,10 +198,24 @@ static func _normalized_battle_context(session: SessionStateStore.SessionData, r
 		"town_role": OverworldRules.town_strategic_role(town),
 		"battlefront_summary": String(battlefront.get("summary", "")),
 		"battlefront_tags": battlefront.get("tags", []),
+		"delivery_node_placement_id": delivery_node_placement_id,
+		"delivery_site_name": delivery_site_name,
+		"delivery_origin_town_id": delivery_origin_town_id,
+		"delivery_origin_town_label": delivery_origin_town_label,
+		"delivery_target_kind": delivery_target_kind,
+		"delivery_target_id": delivery_target_id,
+		"delivery_target_label": delivery_target_label,
+		"delivery_route_label": delivery_route_label,
+		"delivery_pressure_label": delivery_pressure_label,
+		"delivery_recruit_summary": delivery_recruit_summary,
+		"delivery_arrival_day": delivery_arrival_day,
 	}
 
 static func _is_town_defense_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "town_defense"
+
+static func _has_delivery_context(context: Variant) -> bool:
+	return context is Dictionary and String(context.get("delivery_node_placement_id", "")) != ""
 
 static func _battle_name(session: SessionStateStore.SessionData, encounter: Dictionary, battle_context: Dictionary) -> String:
 	if _is_town_defense_context(battle_context):
@@ -2963,6 +3003,7 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 	_sync_player_force_from_battle(session)
 	var front_result := _apply_victory_front_aftermath(session)
 	_append_nonempty_message(messages, String(front_result.get("summary", "")))
+	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "victory"))
 	_sync_enemy_force_from_battle(session, true)
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
@@ -3005,6 +3046,7 @@ static func _finalize_primary_defeat(
 ) -> Dictionary:
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
+	var delivery_summary: String = _apply_delivery_route_aftermath(session, outcome_id)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = outcome_id
 	session.flags["campaign"] = "defeat"
@@ -3015,14 +3057,16 @@ static func _finalize_primary_defeat(
 	_record_battle_aftermath(session, outcome_id, base_summary)
 	session.battle = {}
 	var scenario_result = ScenarioRules.evaluate_session(session)
-	var final_message = _join_messages([base_summary, String(scenario_result.get("message", ""))])
+	var final_message = _join_messages([base_summary, delivery_summary, String(scenario_result.get("message", ""))])
 	return {"state": "defeat", "message": final_message}
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionData) -> Dictionary:
 	_sync_enemy_force_from_battle(session, false)
+	var delivery_summary: String = _apply_delivery_route_aftermath(session, "hero_defeat")
 	var removal = HeroCommandRules.remove_active_hero_after_defeat(session)
 	session.flags["last_battle_outcome"] = "hero_defeat"
 	var messages = [String(removal.get("message", "A commander falls in battle."))]
+	_append_nonempty_message(messages, delivery_summary)
 	var next_active_name = String(removal.get("next_active_name", ""))
 	if next_active_name != "":
 		messages.append("%s takes command." % next_active_name)
@@ -3045,6 +3089,7 @@ static func _finalize_retreat(session: SessionStateStore.SessionData) -> Diction
 	_sync_enemy_force_from_battle(session, false)
 	var aftermath := _apply_withdrawal_aftermath(session, "retreat")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
+	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "retreat"))
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "retreat"
@@ -3066,6 +3111,7 @@ static func _finalize_surrender(session: SessionStateStore.SessionData) -> Dicti
 	_sync_enemy_force_from_battle(session, false)
 	var aftermath := _apply_withdrawal_aftermath(session, "surrender")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
+	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "surrender"))
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "surrender"
@@ -3086,6 +3132,7 @@ static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dicti
 	messages.append(base_summary)
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
+	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "stalemate"))
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "stalemate"
@@ -4354,6 +4401,18 @@ static func _apply_battle_context_stalemate(session: SessionStateStore.SessionDa
 		message = "%s %s" % [message, recovery_message]
 	return message
 
+static func _apply_delivery_route_aftermath(session: SessionStateStore.SessionData, outcome: String) -> String:
+	if session == null or session.battle.is_empty():
+		return ""
+	if bool(session.battle.get("delivery_outcome_applied", false)):
+		return ""
+	var context = session.battle.get("context", {})
+	var node_placement_id: String = String(context.get("delivery_node_placement_id", ""))
+	if node_placement_id == "":
+		return ""
+	session.battle["delivery_outcome_applied"] = true
+	return String(OverworldRules.apply_delivery_interception_outcome(session, node_placement_id, outcome).get("summary", ""))
+
 static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) -> Dictionary:
 	var context = session.battle.get("context", {})
 	var messages = []
@@ -4376,6 +4435,7 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
 	messages.append(base_summary)
 	_append_nonempty_message(messages, recovery_message)
+	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "town_lost"))
 
 	var defending_hero = HeroCommandRules.hero_by_id(session, defending_hero_id)
 	if not defending_hero.is_empty():
@@ -4618,7 +4678,14 @@ static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
 	return totals
 
 static func _battle_context_label(session: SessionStateStore.SessionData, context: Variant) -> String:
-	if not (context is Dictionary) or String(context.get("type", "")) != "town_defense":
+	if not (context is Dictionary):
+		return "Field engagement"
+	if _has_delivery_context(context):
+		var target_label := String(context.get("delivery_target_label", "the front"))
+		if String(context.get("type", "")) == "town_defense":
+			return "Relief defense at %s" % (target_label if target_label != "" else "the walls")
+		return "Convoy clash near %s" % (target_label if target_label != "" else "the front")
+	if String(context.get("type", "")) != "town_defense":
 		return "Field engagement"
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
 	match String(context.get("town_role", "frontier")):
@@ -4631,6 +4698,8 @@ static func _battle_context_label(session: SessionStateStore.SessionData, contex
 
 static func _battlefield_identity_summary(battle: Dictionary) -> String:
 	var parts = []
+	if _has_delivery_context(battle.get("context", {})):
+		parts.append("the fight is sitting on a live reinforcement route")
 	if _battle_has_tag(battle, "fortress_lane"):
 		parts.append("fortress lanes compress the approach")
 	if _battle_has_tag(battle, "battery_nest"):

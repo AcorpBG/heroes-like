@@ -166,6 +166,11 @@ Town reserve-delivery decision:
 - hostile denial stays on the same strategic path: `EnemyAdventureRules.gd` values active delivery manifests when choosing raids, scattered deliveries add pressure when routes are seized, and `EnemyTurnRules.gd` raises defense appetite around towns that are protecting live reinforcement lines
 - `TownRules.gd` and existing overworld or town summaries only surface convoy state, load plans, and route outcomes from the shared logistics data, so player-facing delivery status stays thin-shell and save-safe while `SAVE_VERSION` remains `9`
 
+Convoy interception decision:
+- live frontline reserve routes now stay on that same logistics-site state, but hostile response escalates through existing raid encounters and battle routing instead of a separate convoy minigame, planner, or map layer
+- `EnemyAdventureRules.gd` now scores active delivery lanes as real raid targets for towns and field heroes, `BattleRules.gd` carries delivery-route context into the existing battle start and outcome flow, and battle resolution now decides whether reinforcements arrive, turn back, or are intercepted before reaching the front
+- `OverworldRules.gd` and the current town or overworld summaries expose holding, blocking, and route-reopen pressure from the shared delivery state, so interception risk stays legible on current command surfaces while `SAVE_VERSION` remains `9`
+
 Enemy empire-management decision:
 - hostile overworld factions now keep save-backed treasury and posture state in `EnemyTurnRules.gd`, reusing authored town income, build trees, recruitment discounts, and weekly musters to decide what enemy towns construct and where fresh troops go
 - active raid encounters normalize into dynamic `enemy_army` payloads through `EnemyAdventureRules.gd`, letting enemy reinforcements materially change raid pillage pressure and downstream battle payloads without moving mutation into scene controllers or bumping save version `9`

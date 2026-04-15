@@ -52,77 +52,87 @@ theme_override_constants/separation = 16
 
 [node name="CampaignPanel" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit"]
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 8
 
 [node name="CampaignTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
 text = "Campaign Browser"
 horizontal_alignment = 1
 
-[node name="CampaignBrowser" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="CampaignScroll" type="ScrollContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CampaignContent" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="CampaignBrowser" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 theme_override_constants/separation = 12
 
-[node name="CampaignList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignBrowser"]
-custom_minimum_size = Vector2(260, 180)
+[node name="CampaignList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser"]
+custom_minimum_size = Vector2(260, 140)
 size_flags_horizontal = 3
 allow_reselect = true
 
-[node name="CampaignDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignBrowser"]
-custom_minimum_size = Vector2(0, 180)
+[node name="CampaignDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser"]
+custom_minimum_size = Vector2(0, 140)
 size_flags_horizontal = 3
 text = "Select a campaign to review progression, carryover, and downstream pressure."
 autowrap_mode = 3
 
-[node name="CampaignArcTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="CampaignArcTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 text = "Campaign Arc"
 horizontal_alignment = 1
 
-[node name="CampaignArcStatus" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-custom_minimum_size = Vector2(0, 110)
+[node name="CampaignArcStatus" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
+custom_minimum_size = Vector2(0, 92)
 text = "Campaign arc goals, finale state, and completion epilogues appear here."
 autowrap_mode = 3
 
-[node name="ChapterTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="ChapterTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 text = "Chapter Roster"
 horizontal_alignment = 1
 
-[node name="ChapterBrowser" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="ChapterBrowser" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 theme_override_constants/separation = 12
 
-[node name="ChapterList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/ChapterBrowser"]
-custom_minimum_size = Vector2(260, 180)
+[node name="ChapterList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser"]
+custom_minimum_size = Vector2(260, 140)
 size_flags_horizontal = 3
 allow_reselect = true
 
-[node name="ChapterDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/ChapterBrowser"]
-custom_minimum_size = Vector2(0, 180)
+[node name="ChapterDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser"]
+custom_minimum_size = Vector2(0, 140)
 size_flags_horizontal = 3
 text = "Select a chapter to inspect its status, blockers, and carryover context."
 autowrap_mode = 3
 
-[node name="CommanderPreviewTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="CommanderPreviewTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 text = "Chapter Loadout"
 horizontal_alignment = 1
 
-[node name="CampaignCommanderPreview" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-custom_minimum_size = Vector2(0, 180)
+[node name="CampaignCommanderPreview" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
+custom_minimum_size = Vector2(0, 120)
 text = "Select a chapter to preview commander, spellbook, relics, and opening army."
 autowrap_mode = 3
 
-[node name="OperationalBoardTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="OperationalBoardTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 text = "Operational Board"
 horizontal_alignment = 1
 
-[node name="CampaignOperationalBoard" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-custom_minimum_size = Vector2(0, 180)
+[node name="CampaignOperationalBoard" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
+custom_minimum_size = Vector2(0, 120)
 text = "Select a chapter to review terrain, enemy posture, objective pressure, and first-contact risk."
 autowrap_mode = 3
 
-[node name="JournalTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
+[node name="JournalTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 text = "Campaign Chronicle"
 horizontal_alignment = 1
 
-[node name="CampaignJournal" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-custom_minimum_size = Vector2(0, 110)
+[node name="CampaignJournal" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
+custom_minimum_size = Vector2(0, 92)
 text = "Campaign chronicle entries appear here once a chapter record exists."
 autowrap_mode = 3
 
@@ -139,62 +149,73 @@ text = "Start Selected Chapter"
 
 [node name="SkirmishPanel" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit"]
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 8
 
 [node name="SkirmishTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
 text = "Skirmish Browser"
 horizontal_alignment = 1
 
-[node name="BrowserSplit" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+[node name="SkirmishScroll" type="ScrollContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SkirmishContent" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="BrowserSplit" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
 theme_override_constants/separation = 12
 
-[node name="SkirmishList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/BrowserSplit"]
-custom_minimum_size = Vector2(260, 180)
+[node name="SkirmishList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit"]
+custom_minimum_size = Vector2(260, 140)
 size_flags_horizontal = 3
 allow_reselect = true
 
-[node name="SkirmishDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/BrowserSplit"]
-custom_minimum_size = Vector2(0, 180)
+[node name="SkirmishDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit"]
+custom_minimum_size = Vector2(0, 140)
 size_flags_horizontal = 3
 text = "Select an authored skirmish scenario to inspect it."
 autowrap_mode = 3
 
-[node name="DifficultyRow" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+[node name="DifficultyRow" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
 theme_override_constants/separation = 8
 
-[node name="DifficultyLabel" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/DifficultyRow"]
+[node name="DifficultyLabel" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow"]
 text = "Difficulty"
 
-[node name="DifficultyPicker" type="OptionButton" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/DifficultyRow"]
+[node name="DifficultyPicker" type="OptionButton" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow"]
 size_flags_horizontal = 3
 
-[node name="DifficultySummary" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+[node name="DifficultySummary" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
 text = "Difficulty summary"
 autowrap_mode = 3
 
-[node name="SetupSummary" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+[node name="SetupSummary" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
 text = "Skirmish setup summary"
 autowrap_mode = 3
 
-[node name="SkirmishCommanderPreviewTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+[node name="SkirmishCommanderPreviewTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
 text = "Commander Preview"
 horizontal_alignment = 1
 
-[node name="SkirmishCommanderPreview" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
-custom_minimum_size = Vector2(0, 180)
+[node name="SkirmishCommanderPreview" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
+custom_minimum_size = Vector2(0, 120)
 text = "Select a skirmish to preview commander, spellbook, relics, and opening army."
 autowrap_mode = 3
 
-[node name="SkirmishOperationalBoardTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+[node name="SkirmishOperationalBoardTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
 text = "Operational Board"
 horizontal_alignment = 1
 
-[node name="SkirmishOperationalBoard" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
-custom_minimum_size = Vector2(0, 180)
+[node name="SkirmishOperationalBoard" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
+custom_minimum_size = Vector2(0, 120)
 text = "Select a skirmish to review terrain, enemy posture, objective pressure, and first-contact risk."
 autowrap_mode = 3
 
 [node name="StartSkirmish" type="Button" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
+size_flags_horizontal = 3
 text = "Start Skirmish"
 
 [node name="Guide" type="VBoxContainer" parent="VBox/MenuTabs"]
@@ -295,12 +316,12 @@ text = "Load Selected Save"
 
 [connection signal="pressed" from="VBox/ActionRow/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="VBox/ActionRow/Quit" to="." method="_on_quit_pressed"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignBrowser/CampaignList" to="." method="_on_campaign_selected"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/ChapterBrowser/ChapterList" to="." method="_on_chapter_selected"]
+[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser/CampaignList" to="." method="_on_campaign_selected"]
+[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
 [connection signal="pressed" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/BrowserSplit/SkirmishList" to="." method="_on_skirmish_selected"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/DifficultyRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
+[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit/SkirmishList" to="." method="_on_skirmish_selected"]
+[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
 [connection signal="pressed" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/StartSkirmish" to="." method="_on_start_skirmish_pressed"]
 [connection signal="item_selected" from="VBox/MenuTabs/Guide/HelpSplit/HelpList" to="." method="_on_help_selected"]
 [connection signal="item_selected" from="VBox/MenuTabs/Settings/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]

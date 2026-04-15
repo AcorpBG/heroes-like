@@ -242,7 +242,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: town reserve-production delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems without adding a separate convoy planner.
+- current item 104 focus: keep the main-menu Play tab genuinely usable at the default `1280x720` window by adding scroll-safe containment to the existing campaign/skirmish shell without removing release-facing launch context or changing the overworld start flow.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -256,6 +256,10 @@ Difficulty: High
 115. [completed] Re-run repository-local validation and Godot headless boot for battlefield cover, obstruction, lane-pressure summaries, and save-version preservation.
 116. [completed] Turn town recruitment and reserve production into frontline reinforcement delivery through the existing town, overworld, hero-command, logistics-site, and enemy-turn systems.
 117. [completed] Re-run repository-local validation and Godot headless boot for reserve-delivery routing, convoy surfacing, hostile disruption, and save-version preservation.
+118. [completed] Turn live frontline reserve-delivery pressure into real convoy interception clashes through the existing overworld, encounter, battle, town, and enemy-turn systems.
+119. [completed] Re-run repository-local validation and Godot headless boot for convoy-hunt targeting, battle-aftermath routing, interception surfacing, and save-version preservation.
+120. [completed] Make the main-menu Play tab genuinely usable for playtesting at the default `1280x720` window through the existing campaign/skirmish scene and controller instead of replacing the release-facing menu flow.
+121. [completed] Re-run repository-local validation, validator bytecode compilation, ops JSON parsing, `SAVE_VERSION` verification, and headless Godot boot for the main-menu playtest-usability slice.
 
 ## Standards
 - no throwaway prototype code if avoidable

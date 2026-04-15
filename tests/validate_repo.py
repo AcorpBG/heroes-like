@@ -1592,6 +1592,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ("ModeSplit", "HBoxContainer"),
         ("CampaignPanel", "VBoxContainer"),
         ("SkirmishPanel", "VBoxContainer"),
+        ("SkirmishScroll", "ScrollContainer"),
         ("SkirmishList", "ItemList"),
         ("DifficultyPicker", "OptionButton"),
         ("SetupSummary", "Label"),
@@ -1687,6 +1688,7 @@ def validate_campaign_browser(errors: list[str]) -> None:
     main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
     for node_name, node_type in (
         ("CampaignPanel", "VBoxContainer"),
+        ("CampaignScroll", "ScrollContainer"),
         ("CampaignBrowser", "HBoxContainer"),
         ("CampaignList", "ItemList"),
         ("CampaignDetails", "Label"),
@@ -3619,6 +3621,55 @@ def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing reinforcement-line AI token: {required_token}")
 
 
+def validate_convoy_interception_clash_slice(errors: list[str]) -> None:
+    required_paths = (SESSION_STATE_PATH, OVERWORLD_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, BATTLE_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing convoy-interception file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Convoy interception clash slice must preserve save version 9")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _resource_site_delivery_interception",
+        "func delivery_interception_context_for_encounter",
+        "func apply_delivery_interception_outcome",
+        '"blocks_delivery"',
+        '"holding under interception"',
+        "route holds. %s keeps marching toward %s.",
+        "convoy turns back to %s after the lane stalls",
+        "convoy for %s is intercepted",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing convoy-interception token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _append_delivery_interception_candidates",
+        "func _delivery_town_candidate",
+        "func _delivery_hero_candidate",
+        '"delivery_intercept_node_placement_id"',
+        '"delivery_intercept_target_kind"',
+        "OverworldRules.delivery_interception_context_for_encounter",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing convoy-hunt token: {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "OverworldRules.delivery_interception_context_for_encounter",
+        '"delivery_node_placement_id"',
+        '"delivery_route_label"',
+        '"delivery_pressure_label"',
+        "func _has_delivery_context",
+        "func _apply_delivery_route_aftermath",
+        "OverworldRules.apply_delivery_interception_outcome",
+        '"Relief defense at %s"',
+        '"Convoy clash near %s"',
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing convoy-clash routing token: {required_token}")
+
+
 def validate_hostile_empire_personality(errors: list[str]) -> None:
     required_paths = (ENEMY_TURN_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, CONTENT_DIR / "factions.json", CONTENT_DIR / "scenarios.json", CONTENT_DIR / "resource_sites.json")
     for path in required_paths:
@@ -4145,6 +4196,7 @@ def main() -> int:
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
     validate_town_frontline_reinforcement_delivery(errors)
+    validate_convoy_interception_clash_slice(errors)
     validate_hostile_empire_personality(errors)
     validate_late_game_capital_escalation(errors)
     validate_capital_front_battle_identity(errors)
@@ -4196,6 +4248,7 @@ def main() -> int:
     print("- fresh scenario launches now surface a one-shot first-turn command briefing in the overworld shell using runtime objective, logistics, scouting, and threat data")
     print("- the overworld shell now surfaces a live next-day command-risk forecast and a one-shot end-turn warning using runtime pressure, logistics, scouting, town-readiness, objective, and frontier-watch data")
     print("- towns now project reserve production toward pressured towns and field heroes through existing logistics-site convoy state, while hostile raids can scatter those deliveries and current town or overworld summaries expose the live line status")
+    print("- live convoy routes now also attract real raid-hunt pressure and route-block battles, with existing battle routing deciding whether reinforcements arrive, turn back, or are intercepted")
     print("- enemy towns now build, recruit, reinforce raid armies, and surface public threat posture without a save-version bump")
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")

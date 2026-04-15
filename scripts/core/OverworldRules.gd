@@ -877,6 +877,13 @@ static func describe_context(session: SessionStateStore.SessionData) -> String:
 		"encounter":
 			var placement = context.get("encounter", {})
 			var encounter = ContentService.get_encounter(String(placement.get("encounter_id", placement.get("id", ""))))
+			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, placement)
+			if delivery_pressure != "":
+				return "Hostile Contact\nTerrain %s | %s\n%s" % [
+					terrain,
+					String(encounter.get("name", "Skirmish")),
+					delivery_pressure,
+				]
 			return "Hostile Contact\nTerrain %s | %s\nApproach strength unknown beyond authored scouting notes. Enter battle to break the host." % [
 				terrain,
 				String(encounter.get("name", "Skirmish")),
@@ -2109,6 +2116,192 @@ static func _resource_site_delivery_state(
 		"manifest_value": _weighted_recruit_value(manifest),
 	}
 
+static func _delivery_encounter_matches_node(
+	session: SessionStateStore.SessionData,
+	encounter: Dictionary,
+	node: Dictionary,
+	delivery_state: Dictionary
+) -> bool:
+	if session == null or encounter.is_empty() or node.is_empty() or delivery_state.is_empty():
+		return false
+	var explicit_node_id := String(encounter.get("delivery_intercept_node_placement_id", ""))
+	if explicit_node_id != "" and explicit_node_id == String(node.get("placement_id", "")):
+		return true
+	match String(encounter.get("target_kind", "")):
+		"resource":
+			return String(encounter.get("target_placement_id", "")) == String(node.get("placement_id", ""))
+		"town":
+			return (
+				String(delivery_state.get("target_kind", "")) == "town"
+				and String(encounter.get("target_placement_id", "")) == String(delivery_state.get("target_id", ""))
+			)
+		"hero":
+			if String(delivery_state.get("target_kind", "")) != "hero":
+				return false
+			var hero_target_id := String(encounter.get("target_placement_id", ""))
+			if hero_target_id == "":
+				hero_target_id = String(session.overworld.get("active_hero_id", ""))
+			return hero_target_id != "" and hero_target_id == String(delivery_state.get("target_id", ""))
+		_:
+			return false
+
+static func _resource_site_delivery_interception(
+	session: SessionStateStore.SessionData,
+	node: Dictionary,
+	site: Dictionary = {}
+) -> Dictionary:
+	var empty_state := {
+		"active": false,
+		"arrived": false,
+		"blocks_delivery": false,
+		"goal_distance": 9999,
+		"strength": 0,
+		"encounter_key": "",
+		"encounter_name": "",
+		"summary": "",
+	}
+	if session == null or node.is_empty():
+		return empty_state
+	var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
+	if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
+		return empty_state
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var best := empty_state.duplicate(true)
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) == "":
+			continue
+		if resolved_encounters is Array and encounter_key(encounter) in resolved_encounters:
+			continue
+		if not _delivery_encounter_matches_node(session, encounter, node, delivery_state):
+			continue
+		var goal_distance: int = max(0, int(encounter.get("goal_distance", 9999)))
+		var arrived: bool = bool(encounter.get("arrived", false)) or goal_distance <= 0
+		var strength: int = int(_enemy_adventure_rules().raid_strength(encounter))
+		if bool(best.get("active", false)):
+			var best_arrived := bool(best.get("arrived", false))
+			var best_distance := int(best.get("goal_distance", 9999))
+			var best_strength := int(best.get("strength", 0))
+			if arrived == best_arrived:
+				if goal_distance == best_distance and strength <= best_strength:
+					continue
+				if goal_distance > best_distance:
+					continue
+			elif not arrived:
+				continue
+		var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+		best = {
+			"active": true,
+			"arrived": arrived,
+			"blocks_delivery": arrived,
+			"goal_distance": goal_distance,
+			"strength": strength,
+			"encounter_key": encounter_key(encounter),
+			"encounter_name": String(encounter_def.get("name", encounter.get("placement_id", "Raid host"))),
+			"summary": "",
+		}
+	var encounter_name := String(best.get("encounter_name", "Raid host"))
+	var target_label := String(delivery_state.get("target_label", "the front"))
+	if bool(best.get("active", false)):
+		if bool(best.get("blocks_delivery", false)):
+			best["summary"] = "%s is contesting %s." % [encounter_name, target_label]
+		else:
+			best["summary"] = "%s closes on %s in %d tile%s." % [
+				encounter_name,
+				target_label,
+				int(best.get("goal_distance", 0)),
+				"" if int(best.get("goal_distance", 0)) == 1 else "s",
+			]
+	return best
+
+static func delivery_interception_context_for_encounter(
+	session: SessionStateStore.SessionData,
+	encounter: Dictionary
+) -> Dictionary:
+	var empty_context := {
+		"active": false,
+		"node_placement_id": "",
+		"site_name": "",
+		"origin_town_id": "",
+		"origin_town_label": "",
+		"target_kind": "",
+		"target_id": "",
+		"target_label": "",
+		"route_label": "",
+		"pressure_label": "",
+		"arrival_day": 0,
+		"recruit_summary": "",
+		"manifest": {},
+		"manifest_value": 0,
+		"interception": {
+			"active": false,
+			"arrived": false,
+			"blocks_delivery": false,
+			"goal_distance": 9999,
+			"strength": 0,
+			"encounter_key": "",
+			"encounter_name": "",
+			"summary": "",
+		},
+	}
+	if session == null or encounter.is_empty():
+		return empty_context
+	var explicit_node_id := String(encounter.get("delivery_intercept_node_placement_id", ""))
+	var nodes = session.overworld.get("resource_nodes", [])
+	var best := empty_context.duplicate(true)
+	for node_value in nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if explicit_node_id != "" and String(node.get("placement_id", "")) != explicit_node_id:
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
+		if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
+			continue
+		if not _delivery_encounter_matches_node(session, encounter, node, delivery_state):
+			continue
+		var target_label := String(delivery_state.get("target_label", "the front"))
+		var site_name := String(site.get("name", "Frontier route"))
+		var route_label := "%s convoy to %s" % [site_name, target_label]
+		var pressure_label := route_label
+		match String(delivery_state.get("target_kind", "")):
+			"town":
+				pressure_label = "%s relief lane" % target_label
+			"hero":
+				pressure_label = "%s convoy" % target_label
+		var candidate := {
+			"active": true,
+			"node_placement_id": String(node.get("placement_id", "")),
+			"site_name": site_name,
+			"origin_town_id": String(delivery_state.get("origin_town_id", "")),
+			"origin_town_label": String(delivery_state.get("origin_town_label", "")),
+			"target_kind": String(delivery_state.get("target_kind", "")),
+			"target_id": String(delivery_state.get("target_id", "")),
+			"target_label": target_label,
+			"route_label": route_label,
+			"pressure_label": pressure_label,
+			"arrival_day": int(delivery_state.get("arrival_day", 0)),
+			"recruit_summary": String(delivery_state.get("recruit_summary", "")),
+			"manifest": _normalize_recruit_payload(delivery_state.get("manifest", {})),
+			"manifest_value": int(delivery_state.get("manifest_value", 0)),
+			"interception": _resource_site_delivery_interception(session, node, site),
+		}
+		if not bool(best.get("active", false)):
+			best = candidate
+			if explicit_node_id != "":
+				break
+			continue
+		if int(candidate.get("manifest_value", 0)) > int(best.get("manifest_value", 0)):
+			best = candidate
+			continue
+		if int(candidate.get("manifest_value", 0)) == int(best.get("manifest_value", 0)) and int(candidate.get("arrival_day", 0)) < int(best.get("arrival_day", 0)):
+			best = candidate
+	if explicit_node_id != "" and not bool(best.get("active", false)):
+		return empty_context
+	return best
+
 static func _resource_site_delivery_line(
 	session: SessionStateStore.SessionData,
 	node: Dictionary,
@@ -2127,6 +2320,20 @@ static func _resource_site_delivery_line(
 	var days_remaining := int(delivery_state.get("days_remaining", 0))
 	if days_remaining > 0:
 		parts.append("%d day%s out" % [days_remaining, "" if days_remaining == 1 else "s"])
+	else:
+		var interception_state: Dictionary = _resource_site_delivery_interception(session, node, site)
+		if bool(interception_state.get("blocks_delivery", false)):
+			parts.append("holding under interception")
+	var interception: Dictionary = _resource_site_delivery_interception(session, node, site)
+	if bool(interception.get("active", false)):
+		if bool(interception.get("blocks_delivery", false)):
+			parts.append("%s blocks the route" % String(interception.get("encounter_name", "Raid host")))
+		else:
+			parts.append("%s %d tile%s out" % [
+				String(interception.get("encounter_name", "Raid host")),
+				int(interception.get("goal_distance", 0)),
+				"" if int(interception.get("goal_distance", 0)) == 1 else "s",
+			])
 	return " | ".join(parts)
 
 static func _estimate_reserve_delivery_eta(
@@ -2729,7 +2936,7 @@ static func _advance_player_reserve_deliveries(session: SessionStateStore.Sessio
 		var node = nodes[index]
 		if not (node is Dictionary):
 			continue
-		var delivery_state = _resource_site_delivery_state(session, node)
+		var delivery_state: Dictionary = _resource_site_delivery_state(session, node)
 		if String(delivery_state.get("controller_id", "")) != "player":
 			continue
 		if _normalize_recruit_payload(delivery_state.get("manifest", {})).is_empty():
@@ -2745,6 +2952,9 @@ static func _advance_player_reserve_deliveries(session: SessionStateStore.Sessio
 		if session.day < int(delivery_state.get("arrival_day", 0)):
 			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+		var interception_state: Dictionary = _resource_site_delivery_interception(session, node, site)
+		if bool(interception_state.get("blocks_delivery", false)):
+			continue
 		var message = _resolve_player_reserve_delivery(session, site, delivery_state)
 		node = _clear_resource_site_delivery(node)
 		nodes[index] = node
@@ -2785,6 +2995,71 @@ static func _resolve_player_reserve_delivery(
 			recruit_summary,
 		]
 	return "%s convoy for %s is lost on the frontier (%s)." % [site_name, target_label, recruit_summary]
+
+static func apply_delivery_interception_outcome(
+	session: SessionStateStore.SessionData,
+	node_placement_id: String,
+	outcome: String
+) -> Dictionary:
+	var result := {"summary": ""}
+	if session == null or node_placement_id == "":
+		return result
+	var node_result := _find_resource_node_by_placement(session, node_placement_id)
+	if int(node_result.get("index", -1)) < 0:
+		return result
+	var node: Dictionary = node_result.get("node", {})
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
+	if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
+		return result
+	var nodes = session.overworld.get("resource_nodes", [])
+	match outcome:
+		"victory":
+			if session.day < int(delivery_state.get("arrival_day", 0)):
+				result["summary"] = "%s route holds. %s keeps marching toward %s." % [
+					String(site.get("name", "The route")),
+					String(delivery_state.get("recruit_summary", "The convoy")),
+					String(delivery_state.get("target_label", "the front")),
+				]
+				return result
+			var delivery_message := _resolve_player_reserve_delivery(session, site, delivery_state)
+			node = _clear_resource_site_delivery(node)
+			nodes[int(node_result.get("index", -1))] = node
+			session.overworld["resource_nodes"] = nodes
+			result["summary"] = delivery_message
+			return result
+		"stalemate":
+			node = _clear_resource_site_delivery(node)
+			nodes[int(node_result.get("index", -1))] = node
+			session.overworld["resource_nodes"] = nodes
+			var returned_to := _return_reinforcements_to_source(
+				session,
+				String(delivery_state.get("origin_town_id", "")),
+				_normalize_recruit_payload(delivery_state.get("manifest", {}))
+			)
+			if returned_to != "":
+				result["summary"] = "%s convoy turns back to %s after the lane stalls (%s)." % [
+					String(site.get("name", "The route")),
+					returned_to,
+					String(delivery_state.get("recruit_summary", "")),
+				]
+			else:
+				result["summary"] = "%s convoy breaks off from %s after the line stalls (%s)." % [
+					String(site.get("name", "The route")),
+					String(delivery_state.get("target_label", "the front")),
+					String(delivery_state.get("recruit_summary", "")),
+				]
+			return result
+		_:
+			node = _clear_resource_site_delivery(node)
+			nodes[int(node_result.get("index", -1))] = node
+			session.overworld["resource_nodes"] = nodes
+			result["summary"] = "%s convoy for %s is intercepted (%s)." % [
+				String(site.get("name", "The route")),
+				String(delivery_state.get("target_label", "the front")),
+				String(delivery_state.get("recruit_summary", "")),
+			]
+			return result
 
 static func _deliver_reinforcements_to_hero(
 	session: SessionStateStore.SessionData,
@@ -3101,7 +3376,7 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 				response_recovery_relief_bonus += int(response_state.get("recovery_relief", 0))
 				response_growth_bonus_percent += int(response_state.get("growth_bonus_percent", 0))
 				response_pressure_guard_bonus += int(response_state.get("pressure_guard_bonus", 0))
-				var delivery_state := _resource_site_delivery_state(session, node, site)
+				var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
 				if bool(delivery_state.get("active", false)):
 					delivery_count += 1
 					delivery_site_labels.append(_resource_site_delivery_line(session, node, site))
@@ -5183,6 +5458,9 @@ static func _context_action_briefing(session: SessionStateStore.SessionData, act
 			return "Recover the relic on this tile now before hostile pressure reaches the lane."
 		"enter_battle":
 			var encounter = context.get("encounter", {})
+			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter, true)
+			if delivery_pressure != "":
+				return delivery_pressure
 			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return "Break %s now before the host can widen pressure across the frontier." % String(encounter_def.get("name", "the blocking host"))
 	return String(action.get("summary", "Review the current tile and commit the next order."))
@@ -5202,12 +5480,54 @@ static func _context_action_summary(session: SessionStateStore.SessionData, acti
 			)
 		"enter_battle":
 			var encounter = context.get("encounter", {})
+			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter)
+			if delivery_pressure != "":
+				return delivery_pressure
 			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return "Break %s on %s before the host can widen pressure across the frontier." % [
 				String(encounter_def.get("name", "the blocking host")),
 				_terrain_name_at(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))),
 			]
 	return _context_action_briefing(session, {"id": action_id}, context)
+
+static func _encounter_delivery_pressure_summary(
+	session: SessionStateStore.SessionData,
+	encounter: Dictionary,
+	for_battle_prompt: bool = false
+) -> String:
+	var delivery_context: Dictionary = delivery_interception_context_for_encounter(session, encounter)
+	if not bool(delivery_context.get("active", false)):
+		return ""
+	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var encounter_name := String(encounter_def.get("name", encounter.get("placement_id", "the host")))
+	var route_label := String(delivery_context.get("route_label", delivery_context.get("pressure_label", "the relief lane")))
+	var recruit_summary := String(delivery_context.get("recruit_summary", "the convoy"))
+	var interception_state: Dictionary = delivery_context.get("interception", {})
+	if for_battle_prompt:
+		if bool(interception_state.get("blocks_delivery", false)):
+			return "Break %s now to reopen %s before %s is intercepted." % [
+				encounter_name,
+				route_label,
+				recruit_summary,
+			]
+		return "Break %s now to keep %s moving toward %s." % [
+			encounter_name,
+			recruit_summary,
+			String(delivery_context.get("target_label", "the front")),
+		]
+	if bool(interception_state.get("blocks_delivery", false)):
+		return "%s is on %s. If left standing, %s is intercepted before it reaches %s." % [
+			encounter_name,
+			route_label,
+			recruit_summary,
+			String(delivery_context.get("target_label", "the front")),
+		]
+	return "%s is hunting %s. Breaking it protects %s on the road to %s." % [
+		encounter_name,
+		route_label,
+		recruit_summary,
+		String(delivery_context.get("target_label", "the front")),
+	]
 
 static func _command_commitment_action_line(session: SessionStateStore.SessionData) -> String:
 	var context_actions := get_context_actions(session)

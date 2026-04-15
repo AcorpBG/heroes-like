@@ -1,11 +1,11 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T12:37:24Z",
+  "updatedAt": "2026-04-15T13:15:52Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-town-frontline-reinforcement-delivery",
-  "currentSliceTitle": "Turn town recruitment and reserve production into frontline reinforcement delivery through the existing town, overworld, hero-command, logistics-site, and enemy-turn systems",
+  "currentSliceId": "phase-6-main-menu-playtest-usability",
+  "currentSliceTitle": "Make the main-menu Play tab genuinely usable for playtesting at the default window size through the existing campaign/skirmish shell",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -840,6 +840,42 @@
       "title": "Re-run repository-local validation and headless Godot boot for reserve-delivery routing, convoy surfacing, hostile disruption, and save-version preservation",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-shell-typing-warning-fix",
+      "title": "Fix the live Godot 4.6.2 warning-as-error parse break in BattleShell.gd without changing save version behavior",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-shell-typing-warning-fix-validation",
+      "title": "Re-run repository-local validation, SAVE_VERSION verification, JSON parsing, and headless Godot boot after the BattleShell typing fix",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-convoy-interception-clashes",
+      "title": "Turn live frontline reserve-delivery pressure into real convoy interception clashes through the existing overworld, encounter, battle, town, and enemy-turn systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-convoy-interception-clashes-validation",
+      "title": "Re-run repository-local validation, SAVE_VERSION verification, JSON parsing, and headless Godot boot for convoy-hunt targeting, battle-aftermath routing, and interception surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-main-menu-playtest-usability",
+      "title": "Make the main-menu Play tab genuinely usable for playtesting at the default 1280x720 window through the existing campaign/skirmish scene and controller",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-main-menu-playtest-usability-validation",
+      "title": "Re-run repository-local validation, validator bytecode compilation, JSON parsing, SAVE_VERSION verification, and headless Godot boot for the main-menu playtest-usability slice",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1032,6 +1068,13 @@
     "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding battlefield cover, obstruction, and lane-pressure coverage while preserving save version 9.",
     "This run turned town reserve production into real frontline reinforcement delivery by loading authored recruits onto existing logistics-site response orders, routing them toward pressured towns or active heroes, and resolving arrivals on the normal day-advance path instead of adding a separate convoy subsystem.",
     "TownRules.gd and OverworldRules.gd now surface live convoy plans, route status, and delivery outcomes through the existing town summary, recruitment, response, management-watch, and logistics-site context surfaces, while EnemyAdventureRules.gd and EnemyTurnRules.gd both value attacking or protecting those lines.",
-    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding frontline reserve-delivery coverage while preserving save version 9."
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding frontline reserve-delivery coverage while preserving save version 9.",
+    "This run fixed the live Godot 4.6.2 warning-as-error parse break in BattleShell.gd by normalizing the slot summary to an explicit Dictionary before passing it to SaveService, then removed the immediate follow-on battle-side warning in BattleRules.gd by replacing a generic max() call with maxi() in delivery-arrival normalization.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after the BattleShell typing hotfix while preserving save version 9.",
+    "This run turned live frontline reserve-delivery pressure into real convoy interception gameplay by letting hostile raids hunt active relief lanes, route those clashes through the existing encounter and battle start flow, and resolve victory, loss, retreat, surrender, and stalemate into delivery arrival, turn-back, or interception on the shared logistics-site state.",
+    "OverworldRules.gd now exposes route-block and holding pressure on current convoy summaries, EnemyAdventureRules.gd now targets live delivery lanes for towns and field heroes, and BattleRules.gd now carries delivery context and aftermath through the existing battle routing instead of adding a separate convoy subsystem.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding convoy-interception clash coverage while preserving save version 9.",
+    "This run made the main-menu Play tab usable at the default 1280x720 window by moving the oversized campaign and skirmish content into per-panel scroll containers, reducing the tallest fixed browser blocks, and keeping the existing campaign or skirmish launch actions reachable without replacing the release-facing shell.",
+    "Repository-local validation, validator bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after the main-menu playtest-usability fix while preserving save version 9."
   ]
 }
