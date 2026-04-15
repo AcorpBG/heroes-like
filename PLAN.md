@@ -275,6 +275,8 @@ Difficulty: High
 131. [completed] Re-run the required overworld smoke, movement repro, and headless Godot boot after the adventure-shell correction while reporting unrelated test-harness warnings separately.
 132. [completed] Apply a coordinated density pass across menu, overworld, town, battle, and outcome shells so each screen follows the same dominant-surface-plus-command-rail layout logic instead of panel-confetti variations.
 133. [completed] Re-run the required menu/outcome, town/battle, overworld, movement repro, and full headless Godot validations after the coordinated shell pass while reporting unrelated warnings separately.
+134. [completed] Correct the live main menu into a stronger Heroes-style front end with one dominant play surface, no repeated navigation, and a tucked utility wing while preserving campaign, skirmish, save, help, and settings flow.
+135. [completed] Re-run the required menu visual smoke scene and full headless Godot boot after the main-menu front-end correction while reporting unrelated warnings separately.
 
 ## Standards
 - no throwaway prototype code if avoidable

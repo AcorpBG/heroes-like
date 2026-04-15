@@ -114,11 +114,11 @@ In-session save controls decision:
 Presentation and onboarding decision:
 - release-facing device settings now persist through `SettingsService.gd` under a dedicated user config path, staying separate from campaign progression profiles and expedition save snapshots
 - presentation, audio, and accessibility formatting live in the service, while `MainMenu.gd` only binds the controls and refreshes state from service-owned summaries
-- the main menu now uses a tabbed shell with play, guide, settings, and saves views so campaign/skirmish launch, help surfacing, and save inspection feel like product UX instead of a raw debug menu
+- the main menu now keeps play on one dominant war-table board while guide, settings, and save inspection sit in a tucked utility wing, so secondary actions stay available without reading like a tabbed dashboard
 
 Front-end shell presentation decision:
-- `MainMenu.tscn` now centers on a visual landing shell with a drawn hero board, grouped command cards, quick tab jumps, and panelized campaign, skirmish, guide, settings, and save sections instead of stacked text blocks
-- `MainMenu.gd` still only binds campaign, skirmish, help, settings, and save data from existing rule or autoload helpers, so launch behavior and resume flow stay unchanged while the front-end reads like a product screen
+- `MainMenu.tscn` now centers on one dominant play board with a drawn hero stage, a short front brief, side-by-side campaign and skirmish launch surfaces, and a narrow command wing for continue, saves, guide, and settings instead of a repeated-navigation dashboard
+- `MainMenu.gd` still only binds campaign, skirmish, help, settings, and save data from the existing rule and autoload helpers, so launch behavior and resume flow stay unchanged while the front end pushes primary play choices forward and tucks secondary actions away
 
 Outcome flow decision:
 - resolved scenarios now route into a dedicated `ScenarioOutcomeShell` instead of dropping straight back to the menu, with summary shaping in `ScenarioRules.gd` and campaign-specific consequence modeling in `CampaignRules.gd`
@@ -227,6 +227,11 @@ Shell density-family correction decision:
 - the main menu, overworld, town, battle, and outcome shells now follow one denser strategy-game layout rule set inspired by Heroes III screen logic: one dominant play surface, one or two tight command rails, compressed chips or short summaries, and tabbed secondary detail instead of permanent report acreage
 - `MainMenu.tscn`, `OverworldShell.tscn`, `TownShell.tscn`, `BattleShell.tscn`, `ScenarioOutcomeShell.tscn`, and `scripts/ui/FrontierVisualKit.gd` now coordinate around smaller chrome, shorter copy, and fixed-height shell framing so the screens read as one product family instead of a menu shell plus separate dashboard variants
 - the shell smoke scenes now anchor to unique named nodes for each major board or action rail, so layout refactors can keep moving without brittle deep-path test coupling
+
+Main-menu front-end correction decision:
+- the main menu now corrects from a still-dashboard-like shell toward a Heroes-style front end: one broad war-table play surface, one obvious continue button, no duplicate nav, and secondary utility hidden in a compact wing instead of competing with launch choices
+- campaign and skirmish remain fully live inside that single play board, with the existing browser, preview, difficulty, and start actions preserved but regrouped into larger selection surfaces and shorter text blocks rather than many equally weighted cards
+- `MainMenuHeroView.gd` remains the menu art owner and `FrontierVisualKit.gd` still supplies the shared shell treatment, keeping the pass local to scene composition and UI copy density rather than widening into new art or gameplay systems
 
 Shared shell visual-kit decision:
 - `scripts/ui/FrontierVisualKit.gd` now owns the reusable panel, button, tab, list, slider, and compact-summary treatment used by the main menu, overworld, town, battle, and outcome shells instead of each scene carrying its own near-duplicate styling helpers

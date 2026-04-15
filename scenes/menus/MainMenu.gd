@@ -3,12 +3,23 @@ extends Control
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
+const UTILITY_TAB_SAVES := 0
+const UTILITY_TAB_GUIDE := 1
+const UTILITY_TAB_SETTINGS := 2
+
 @onready var _menu_tabs: TabContainer = %MenuTabs
+@onready var _eyebrow_label: Label = %Eyebrow
+@onready var _title_label: Label = %Title
+@onready var _subtitle_label: Label = %Subtitle
 @onready var _summary_label: Label = %Summary
 @onready var _active_expedition_label: Label = %ActiveExpedition
 @onready var _campaign_pulse_label: Label = %CampaignPulse
 @onready var _save_pulse_label: Label = %SavePulse
 @onready var _continue_button: Button = %Continue
+@onready var _quit_button: Button = %Quit
+@onready var _open_saves_button: Button = %OpenSaves
+@onready var _open_guide_button: Button = %OpenGuide
+@onready var _open_settings_button: Button = %OpenSettings
 @onready var _campaign_list: ItemList = %CampaignList
 @onready var _campaign_details_label: Label = %CampaignDetails
 @onready var _campaign_arc_status_label: Label = %CampaignArcStatus
@@ -57,9 +68,10 @@ var _syncing_settings_ui := false
 var _menu_notice := ""
 
 func _ready() -> void:
-	_apply_visual_theme()
 	CampaignProgression.ensure_profile()
 	SettingsService.ensure_settings()
+	_apply_visual_theme()
+	_select_utility_tab(UTILITY_TAB_SAVES)
 	_refresh_menu()
 
 func _refresh_menu() -> void:
@@ -81,16 +93,18 @@ func _update_continue_enabled() -> void:
 	_continue_button.tooltip_text = SaveService.load_action_tooltip(latest_summary)
 
 func _refresh_summary() -> void:
-	var lines := []
-	if _menu_notice != "":
-		lines.append(_menu_notice)
-	else:
-		lines.append("Command the frontier from a single war table: launch authored campaigns, open skirmish fronts, or resume the latest expedition without dropping into tool-like menu stacks.")
-	lines.append("Campaign progression, expedition saves, and device settings remain on separate tracks.")
-	_set_compact_label(_summary_label, "\n".join(lines), 3)
-	_set_compact_label(_active_expedition_label, ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session()), 4)
-	_set_compact_label(_campaign_pulse_label, _build_campaign_pulse(), 3)
-	_set_compact_label(_save_pulse_label, _build_save_pulse(), 3)
+	var lead := _menu_notice
+	if lead == "":
+		lead = "Choose the next march: carry a campaign forward, open a fresh skirmish front, or resume the latest field command."
+	_set_compact_label(_summary_label, lead, 3, 84)
+	_set_compact_label(
+		_active_expedition_label,
+		ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session()),
+		4,
+		84
+	)
+	_set_compact_label(_campaign_pulse_label, _build_campaign_pulse(), 2, 80)
+	_set_compact_label(_save_pulse_label, _build_save_pulse(), 2, 80)
 
 func _on_campaign_selected(index: int) -> void:
 	if index < 0 or index >= _campaign_entries.size():
@@ -134,17 +148,14 @@ func _on_continue_pressed() -> void:
 	if not AppRouter.resume_latest_session():
 		_refresh_menu()
 
-func _on_open_play_pressed() -> void:
-	_menu_tabs.current_tab = 0
+func _on_open_saves_pressed() -> void:
+	_select_utility_tab(UTILITY_TAB_SAVES)
 
 func _on_open_guide_pressed() -> void:
-	_menu_tabs.current_tab = 1
+	_select_utility_tab(UTILITY_TAB_GUIDE)
 
 func _on_open_settings_pressed() -> void:
-	_menu_tabs.current_tab = 2
-
-func _on_open_saves_pressed() -> void:
-	_menu_tabs.current_tab = 3
+	_select_utility_tab(UTILITY_TAB_SETTINGS)
 
 func _on_save_selected(index: int) -> void:
 	if index < 0 or index >= _save_summaries.size():
@@ -155,15 +166,6 @@ func _on_save_selected(index: int) -> void:
 func _on_load_selected_pressed() -> void:
 	if not AppRouter.resume_summary(_selected_summary()):
 		_refresh_menu()
-
-func _resume_summary(summary: Dictionary) -> void:
-	if summary.is_empty():
-		_refresh_menu()
-		return
-
-	if not AppRouter.resume_summary(summary):
-		_refresh_menu()
-		return
 
 func _on_skirmish_selected(index: int) -> void:
 	if index < 0 or index >= _skirmish_entries.size():
@@ -289,65 +291,75 @@ func _rebuild_campaign_chapter_browser() -> void:
 
 func _refresh_campaign_browser() -> void:
 	if _campaign_entries.is_empty():
-		_set_compact_label(_campaign_details_label, "No authored campaigns are available.", 3)
-		_set_compact_label(_campaign_arc_status_label, "Campaign arc goals and finale state appear here once a campaign is selected.", 3)
-		_set_compact_label(_chapter_details_label, "No campaign chapters are authored.", 3)
-		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to preview commander, spellbook, relics, and opening army.", 4)
-		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, enemy posture, objective pressure, and first-contact risk.", 4)
-		_set_compact_label(_campaign_journal_label, "Campaign chronicle entries appear here once a chapter record exists.", 4)
-		_campaign_primary_button.text = "No Campaign Available"
+		_set_compact_label(_campaign_details_label, "No campaign arcs are authored.", 2, 82)
+		_set_compact_label(_campaign_arc_status_label, "Arc status appears here.", 2, 82)
+		_set_compact_label(_chapter_details_label, "No chapters are ready.", 2, 82)
+		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to review the commander and opening force.", 3, 82)
+		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, pressure, and first contact.", 3, 82)
+		_set_compact_label(_campaign_journal_label, "Campaign journal entries appear here.", 3, 82)
+		_campaign_primary_button.text = "No Campaign"
 		_campaign_primary_button.disabled = true
-		_campaign_primary_button.tooltip_text = "Author a campaign to launch it from this menu."
+		_campaign_primary_button.tooltip_text = "Author a campaign arc to launch it from the main menu."
 		_start_chapter_button.text = "Select Chapter"
 		_start_chapter_button.disabled = true
-		_start_chapter_button.tooltip_text = "Select a chapter to start or retry."
+		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
 		return
 
-	_set_compact_label(_campaign_details_label, CampaignProgression.campaign_details(_selected_campaign_id), 5)
-	_set_compact_label(_campaign_arc_status_label, CampaignProgression.campaign_arc_status(_selected_campaign_id), 4)
-	_set_compact_label(_campaign_journal_label, CampaignProgression.campaign_journal(_selected_campaign_id), 4)
+	_set_compact_label(_campaign_details_label, CampaignProgression.campaign_details(_selected_campaign_id), 4, 86)
+	_set_compact_label(_campaign_arc_status_label, CampaignProgression.campaign_arc_status(_selected_campaign_id), 3, 86)
+	_set_compact_label(_campaign_journal_label, CampaignProgression.campaign_journal(_selected_campaign_id), 3, 86)
 
 	var primary_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
-	_campaign_primary_button.text = String(primary_action.get("label", "Start Next Chapter"))
+	_campaign_primary_button.text = String(primary_action.get("label", "Advance Campaign"))
 	_campaign_primary_button.disabled = bool(primary_action.get("disabled", false))
 	_campaign_primary_button.tooltip_text = String(primary_action.get("summary", ""))
 
 	if _selected_campaign_scenario_id == "":
-		_set_compact_label(_chapter_details_label, "Select a chapter to review its unlock state, carryover, and last result.", 4)
-		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to preview commander, spellbook, relics, and opening army.", 4)
-		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, enemy posture, objective pressure, and first-contact risk.", 4)
+		_set_compact_label(_chapter_details_label, "Select a chapter to inspect carryover and the latest result.", 3, 86)
+		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to review the commander and opening force.", 3, 86)
+		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, pressure, and first contact.", 3, 86)
 		_start_chapter_button.text = "Select Chapter"
 		_start_chapter_button.disabled = true
-		_start_chapter_button.tooltip_text = "Select a chapter to start or retry."
+		_start_chapter_button.tooltip_text = "Select a chapter to start or replay it."
 		return
 
-	_set_compact_label(_chapter_details_label, CampaignProgression.chapter_details(_selected_campaign_id, _selected_campaign_scenario_id), 5)
-	_set_compact_label(_campaign_commander_preview_label, CampaignProgression.chapter_commander_preview(
-		_selected_campaign_id,
-		_selected_campaign_scenario_id
-	), 4)
-	_set_compact_label(_campaign_operational_board_label, CampaignProgression.chapter_operational_board(
-		_selected_campaign_id,
-		_selected_campaign_scenario_id
-	), 4)
+	_set_compact_label(
+		_chapter_details_label,
+		CampaignProgression.chapter_details(_selected_campaign_id, _selected_campaign_scenario_id),
+		4,
+		86
+	)
+	_set_compact_label(
+		_campaign_commander_preview_label,
+		CampaignProgression.chapter_commander_preview(_selected_campaign_id, _selected_campaign_scenario_id),
+		4,
+		86
+	)
+	_set_compact_label(
+		_campaign_operational_board_label,
+		CampaignProgression.chapter_operational_board(_selected_campaign_id, _selected_campaign_scenario_id),
+		4,
+		86
+	)
+
 	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
 	_start_chapter_button.text = String(chapter_action.get("label", "Start Chapter"))
 	_start_chapter_button.disabled = bool(chapter_action.get("disabled", false))
 	_start_chapter_button.tooltip_text = String(chapter_action.get("summary", ""))
 
 func _rebuild_help_browser() -> void:
-	_set_compact_label(_help_intro_label, SettingsService.help_browser_summary(), 4)
+	_set_compact_label(_help_intro_label, SettingsService.help_browser_summary(), 3, 84)
 	_help_entries = SettingsService.build_help_topics()
 	_help_list.clear()
 
-	var selected_index := -1
 	var preferred_help_topic_id := _selected_help_topic_id
 	if preferred_help_topic_id == "":
 		preferred_help_topic_id = SettingsService.default_help_topic_id()
 
+	var selected_index := -1
 	for index in range(_help_entries.size()):
 		var entry = _help_entries[index]
-		_help_list.add_item(String(entry.get("label", entry.get("id", "Guide"))))
+		_help_list.add_item(String(entry.get("label", entry.get("id", "Topic"))))
 		if String(entry.get("id", "")) == preferred_help_topic_id:
 			selected_index = index
 
@@ -363,21 +375,27 @@ func _rebuild_help_browser() -> void:
 	_refresh_help_browser()
 
 func _refresh_help_browser() -> void:
-	if _selected_help_topic_id == "":
-		_set_compact_label(_help_details_label, "Select a guide topic to review a system summary.", 4)
+	if _help_entries.is_empty():
+		_set_compact_label(_help_details_label, "No guide entries are available.", 2, 84)
 		return
-	_set_compact_label(_help_details_label, SettingsService.describe_help_topic(_selected_help_topic_id), 6)
+
+	if _selected_help_topic_id == "":
+		_selected_help_topic_id = String(_help_entries[0].get("id", ""))
+		_help_list.select(0)
+
+	_set_compact_label(_help_details_label, SettingsService.describe_help_topic(_selected_help_topic_id), 7, 88)
 
 func _refresh_settings_panel() -> void:
-	_syncing_settings_ui = true
-	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 5)
+	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)
 
+	_syncing_settings_ui = true
 	_presentation_mode_picker.clear()
 	var options := SettingsService.build_presentation_options()
 	var selected_index := -1
 	for index in range(options.size()):
 		var option = options[index]
-		_presentation_mode_picker.add_item(String(option.get("label", option.get("id", "Mode"))), index)
+		var label := String(option.get("label", option.get("id", "Window Mode")))
+		_presentation_mode_picker.add_item(label, index)
 		_presentation_mode_picker.set_item_metadata(index, String(option.get("id", "")))
 		if bool(option.get("selected", false)):
 			selected_index = index
@@ -399,7 +417,7 @@ func _rebuild_save_browser() -> void:
 	var latest_key := _summary_key(SaveService.latest_loadable_summary())
 	var selected_index := -1
 	for index in range(_save_summaries.size()):
-		var summary = _save_summaries[index]
+		var summary: Dictionary = _save_summaries[index]
 		var label := SaveService.describe_slot(summary)
 		if _summary_key(summary) == latest_key and SaveService.can_load_summary(summary):
 			label = "%s | Latest" % label
@@ -421,13 +439,13 @@ func _rebuild_save_browser() -> void:
 func _refresh_selected_save() -> void:
 	var summary := _selected_summary()
 	if summary.is_empty():
-		_set_compact_label(_save_details_label, "No save slots are available.", 3)
-		_load_selected_button.text = "Load Selected"
+		_set_compact_label(_save_details_label, "No loadable expeditions are stored.", 3, 84)
+		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
-		_load_selected_button.tooltip_text = "Select a loadable save to resume."
+		_load_selected_button.tooltip_text = "Select a loadable save to resume it."
 		return
 
-	_set_compact_label(_save_details_label, SaveService.describe_slot_details(summary), 6)
+	_set_compact_label(_save_details_label, SaveService.describe_slot_details(summary), 6, 88)
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
 	_load_selected_button.tooltip_text = SaveService.load_action_tooltip(summary)
@@ -490,39 +508,44 @@ func _rebuild_skirmish_browser() -> void:
 
 func _refresh_skirmish_setup() -> void:
 	var selected_entry := _selected_skirmish_entry()
-	_set_compact_label(_difficulty_summary_label, ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty), 4)
+	_set_compact_label(_difficulty_summary_label, ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty), 3, 82)
 
 	if selected_entry.is_empty():
-		_set_compact_label(_skirmish_details_label, "No skirmish scenarios are authored.", 3)
-		_set_compact_label(_setup_summary_label, "Select an authored skirmish scenario to review its start setup.", 4)
-		_set_compact_label(_skirmish_commander_preview_label, "Select a skirmish to preview commander, spellbook, relics, and opening army.", 4)
-		_set_compact_label(_skirmish_operational_board_label, "Select a skirmish to review terrain, enemy posture, objective pressure, and first-contact risk.", 4)
+		_set_compact_label(_skirmish_details_label, "No skirmish fronts are authored.", 2, 82)
+		_set_compact_label(_setup_summary_label, "Select a front to review its opening setup.", 3, 82)
+		_set_compact_label(_skirmish_commander_preview_label, "Commander preview appears here.", 3, 82)
+		_set_compact_label(_skirmish_operational_board_label, "Operational pressure appears here.", 3, 82)
 		_start_skirmish_button.disabled = true
 		_start_skirmish_button.tooltip_text = "No skirmish scenarios are available."
 		return
 
-	_set_compact_label(_skirmish_details_label, String(selected_entry.get("summary", "")), 4)
+	_set_compact_label(_skirmish_details_label, String(selected_entry.get("summary", "")), 3, 84)
 	var setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	if setup.is_empty():
-		_set_compact_label(_setup_summary_label, "This scenario is not available for skirmish launch.", 4)
-		_set_compact_label(_skirmish_commander_preview_label, "Commander preview unavailable for this front.", 4)
-		_set_compact_label(_skirmish_operational_board_label, "Operational board unavailable for this front.", 4)
+		_set_compact_label(_setup_summary_label, "This front cannot be launched right now.", 3, 82)
+		_set_compact_label(_skirmish_commander_preview_label, "Commander preview unavailable for this front.", 3, 82)
+		_set_compact_label(_skirmish_operational_board_label, "Operational board unavailable for this front.", 3, 82)
 		_start_skirmish_button.disabled = true
 		_start_skirmish_button.tooltip_text = "This scenario cannot be launched as a skirmish."
 		return
 
 	var recommended_difficulty := String(setup.get("recommended_difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
 	if recommended_difficulty != _selected_difficulty:
-		_set_compact_label(_difficulty_summary_label, "%s\nRecommended for this map: %s." % [
-			ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
-			String(setup.get("recommended_difficulty_label", "")),
-		], 4)
+		_set_compact_label(
+			_difficulty_summary_label,
+			"%s\nRecommended: %s." % [
+				ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
+				String(setup.get("recommended_difficulty_label", "")),
+			],
+			3,
+			82
+		)
 
-	_set_compact_label(_setup_summary_label, String(setup.get("setup_summary", "")), 4)
-	_set_compact_label(_skirmish_commander_preview_label, String(setup.get("commander_preview", "Commander preview unavailable.")), 4)
-	_set_compact_label(_skirmish_operational_board_label, String(setup.get("operational_board", "Operational board unavailable.")), 4)
+	_set_compact_label(_setup_summary_label, String(setup.get("setup_summary", "")), 3, 84)
+	_set_compact_label(_skirmish_commander_preview_label, String(setup.get("commander_preview", "Commander preview unavailable.")), 4, 84)
+	_set_compact_label(_skirmish_operational_board_label, String(setup.get("operational_board", "Operational board unavailable.")), 4, 84)
 	_start_skirmish_button.disabled = false
-	_start_skirmish_button.text = "Start Skirmish"
+	_start_skirmish_button.text = "Launch Skirmish"
 	_start_skirmish_button.tooltip_text = "Launch %s at %s difficulty." % [
 		String(setup.get("scenario_name", _selected_skirmish_id)),
 		String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty))),
@@ -536,14 +559,14 @@ func _selected_skirmish_entry() -> Dictionary:
 
 func _build_campaign_pulse() -> String:
 	if _campaign_entries.is_empty():
-		return "No authored campaign arcs are loaded."
+		return "No campaign arcs loaded."
 
 	var completed_count := 0
 	for entry in _campaign_entries:
 		if String(entry.get("label", "")).contains("Completed"):
 			completed_count += 1
 
-	var selected_label := "No campaign selected."
+	var selected_label := "No focus arc."
 	for entry in _campaign_entries:
 		if String(entry.get("campaign_id", "")) == _selected_campaign_id:
 			selected_label = String(entry.get("label", "Campaign"))
@@ -551,121 +574,119 @@ func _build_campaign_pulse() -> String:
 
 	return "\n".join(
 		[
-			"Arcs %d | Completed %d" % [_campaign_entries.size(), completed_count],
-			"Focus: %s" % selected_label,
+			"Arcs %d | Cleared %d" % [_campaign_entries.size(), completed_count],
+			"Focus %s" % selected_label,
 		]
 	)
 
 func _build_save_pulse() -> String:
 	var latest_summary := SaveService.latest_loadable_summary()
-	var latest_line := "No loadable expedition is ready."
+	var latest_line := "No active resume point."
 	if not latest_summary.is_empty():
 		latest_line = SaveService.describe_slot(latest_summary)
 
 	return "\n".join(
 		[
-			"Manual slots %d + autosave" % SaveService.get_manual_slot_ids().size(),
+			"Manual %d + autosave" % SaveService.get_manual_slot_ids().size(),
 			latest_line,
 		]
 	)
 
-func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 96) -> void:
+func _select_utility_tab(index: int) -> void:
+	if _menu_tabs.get_tab_count() == 0:
+		return
+	_menu_tabs.current_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
+	_sync_utility_button_styles()
+
+func _sync_utility_button_styles() -> void:
+	var tab_roles := {
+		UTILITY_TAB_SAVES: [_open_saves_button],
+		UTILITY_TAB_GUIDE: [_open_guide_button],
+		UTILITY_TAB_SETTINGS: [_open_settings_button],
+	}
+	for tab_index in tab_roles.keys():
+		for button in tab_roles[tab_index]:
+			var role := "primary" if _menu_tabs.current_tab == tab_index else "secondary"
+			FrontierVisualKit.apply_button(button, role, 104.0, 34.0, 13)
+
+func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)
 
 func _apply_visual_theme() -> void:
 	var panel_tones := {
-		"HeroPanel": "banner",
-		"HeroArtPanel": "earth",
-		"ExpeditionPanel": "teal",
+		"HeaderPanel": "banner",
 		"CampaignPulsePanel": "gold",
 		"SavePulsePanel": "ink",
-		"SummaryPanel": "earth",
-		"PlayLeadPanel": "ink",
+		"PlayBoardPanel": "frame",
+		"HeroArtPanel": "earth",
+		"SummaryPanel": "teal",
 		"CampaignPanel": "banner",
-		"CampaignRosterPanel": "ink",
-		"ChapterRosterPanel": "ink",
-		"CampaignDetailPanel": "gold",
-		"ChapterDetailPanel": "earth",
-		"CampaignArcPanel": "earth",
-		"CampaignCommanderPanel": "teal",
-		"CampaignOperationalPanel": "blue",
-		"CampaignJournalPanel": "ink",
+		"CampaignListPanel": "ink",
+		"ChapterListPanel": "ink",
+		"CampaignBriefPanel": "gold",
+		"CampaignFieldPanel": "teal",
 		"SkirmishPanel": "ink",
-		"SkirmishListPanel": "ink",
-		"SkirmishDetailPanel": "gold",
 		"DifficultyPanel": "earth",
-		"SetupPanel": "teal",
-		"SkirmishCommanderPanel": "teal",
-		"SkirmishOperationalPanel": "blue",
-		"GuideIntroPanel": "ink",
-		"HelpListPanel": "ink",
-		"HelpDetailPanel": "gold",
-		"SettingsSummaryPanel": "ink",
-		"PresentationAudioPanel": "earth",
-		"MasterVolumePanel": "teal",
-		"MusicVolumePanel": "blue",
-		"AccessibilityPanel": "teal",
-		"SettingsNotesPanel": "ink",
-		"SaveIntroPanel": "ink",
+		"SkirmishListPanel": "ink",
+		"SkirmishBriefPanel": "gold",
+		"SkirmishIntelPanel": "blue",
+		"CommandWingPanel": "frame",
+		"WingBriefPanel": "banner",
 		"SaveListPanel": "ink",
 		"SaveDetailPanel": "gold",
+		"GuidePanel": "ink",
+		"SettingsPanel": "earth",
+		"MasterVolumePanel": "teal",
+		"MusicVolumePanel": "blue",
 	}
 	for panel in find_children("*", "PanelContainer", true, false):
-		if panel is PanelContainer:
-			var tone := String(panel_tones.get(panel.name, "ink"))
-			if panel.name.ends_with("Panel"):
-				FrontierVisualKit.apply_panel(panel, tone)
+		if panel is PanelContainer and panel.name.ends_with("Panel"):
+			FrontierVisualKit.apply_panel(panel, String(panel_tones.get(panel.name, "ink")))
 
 	FrontierVisualKit.apply_tab_container(_menu_tabs)
 
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
 		FrontierVisualKit.apply_item_list(list, "ink")
 
-	var primary_buttons := [
-		_continue_button,
-		_campaign_primary_button,
-		_start_chapter_button,
-		_start_skirmish_button,
-		_load_selected_button,
-	]
-	for button in primary_buttons:
-		FrontierVisualKit.apply_button(button, "primary", maxf(button.custom_minimum_size.x, 180.0), 36.0)
-
-	var secondary_buttons := [
-		get_node("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenPlay"),
-		get_node("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenGuide"),
-		get_node("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenSettings"),
-		get_node("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenSaves"),
-	]
-	for button in secondary_buttons:
-		FrontierVisualKit.apply_button(button, "secondary", 126.0, 34.0)
-	FrontierVisualKit.apply_button(get_node("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/PrimaryActions/Quit"), "danger", 120.0, 36.0)
+	FrontierVisualKit.apply_button(_continue_button, "primary", 208.0, 42.0, 15)
+	FrontierVisualKit.apply_button(_quit_button, "danger", 208.0, 36.0, 14)
+	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 38.0, 14)
+	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 38.0, 14)
+	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 184.0, 38.0, 14)
+	FrontierVisualKit.apply_button(_load_selected_button, "primary", 200.0, 36.0, 14)
+	_sync_utility_button_styles()
 
 	for picker in [_difficulty_picker, _presentation_mode_picker]:
-		FrontierVisualKit.apply_option_button(picker, "secondary", 180.0, 36.0)
+		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
 	for toggle in [_large_text_toggle, _reduce_motion_toggle]:
-		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0)
+		FrontierVisualKit.apply_button(toggle, "secondary", 180.0, 34.0, 13)
 
 	for slider in [_master_volume_slider, _music_volume_slider]:
 		FrontierVisualKit.apply_range(slider, "gold")
 
 	for label in find_children("*", "Label", true, false):
 		if label is Label:
-			FrontierVisualKit.apply_label(label, "body")
+			FrontierVisualKit.apply_label(label, "body", 13)
+
 	for title_label in find_children("*Title", "Label", true, false):
 		if title_label is Label:
-			FrontierVisualKit.apply_label(title_label, "title")
+			FrontierVisualKit.apply_label(title_label, "title", 14)
 
-	for title_path in [
-		"RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox/Eyebrow",
-		"RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox/Title",
-	]:
-		var label: Label = get_node(title_path)
-		FrontierVisualKit.apply_label(label, "gold" if label.name == "Eyebrow" else "title", 16 if label.name == "Eyebrow" else 34)
+	for node_name in ["CampaignTitle", "SkirmishTitle"]:
+		var feature_title = find_child(node_name, true, false)
+		if feature_title is Label:
+			FrontierVisualKit.apply_label(feature_title, "title", 20)
 
-	FrontierVisualKit.apply_label(get_node("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox/Subtitle"), "body", 14)
-	FrontierVisualKit.apply_label(_summary_label, "body", 14)
+	for node_name in ["GuideTitle", "SettingsTitle", "WingBriefTitle", "SummaryTitle"]:
+		var section_title = find_child(node_name, true, false)
+		if section_title is Label:
+			FrontierVisualKit.apply_label(section_title, "title", 16)
+
+	FrontierVisualKit.apply_label(_eyebrow_label, "gold", 14)
+	FrontierVisualKit.apply_label(_title_label, "title", 34)
+	FrontierVisualKit.apply_label(_subtitle_label, "body", 14)
+	FrontierVisualKit.apply_label(_summary_label, "body", 15)
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)
 	FrontierVisualKit.apply_label(_campaign_pulse_label, "body", 13)
 	FrontierVisualKit.apply_label(_save_pulse_label, "muted", 13)
