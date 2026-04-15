@@ -48,53 +48,86 @@ What must not be shared:
 
 # 1. Main Menu
 
+## Reference basis
+This wireframe is now grounded in actual Heroes III menu references, not memory-only paraphrase.
+
+Screens checked:
+- Restoration of Erathia main menu screenshot, MobyGames
+- Shadow of Death main menu screenshot, MobyGames
+- Armageddon's Blade main menu screenshot, MobyGames
+- Complete menu background without buttons, Heroes III Wiki
+
+Shared pattern across those references:
+- the menu is a painted scene with anchored controls, not a dashboard
+- the logo lives at the top-left, not centered
+- the main art mass lives left to center-left
+- the clickable menu lives in a narrow right-side vertical column
+- most of the screen is backdrop and atmosphere, not UI container
+- the right side is visually quieter or darker so the controls pop
+- bottom-left is reserved for branding / footer, not utility clutter
+
 ## Screen fantasy
-A war table in a command pavilion. The player is choosing where to begin the campaign, not operating a settings dashboard.
+A painted campaign stage with physical, ceremonial menu props anchored onto it. The player is stepping into a legend, not opening an app.
 
 ## Primary player job
-Choose a campaign chapter or skirmish front quickly.
+Pick a starting path immediately from a small set of obvious main commands.
 
 ## Dominant surface
-A central title tableau or war-table board with 2 to 3 large play choices.
+A large left-heavy painted hero or world scene, with the controls docked as a separate right-side command column.
 
 ## Layout wireframe
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ Crest / Title                    Profile / Settings / Audio         │
-├──────────────────────────────────────────────────────────────────────┤
+│ HEROES-LIKE LOGO                                                    │
+│ subtitle / campaign tag                                             │
 │                                                                      │
-│   ┌──────────────────────── HERO / WORLD TABLEAU ─────────────────┐  │
-│   │                                                               │  │
-│   │   painted focal art or animated diorama                       │  │
-│   │   campaign emphasis lives here                                │  │
-│   │                                                               │  │
-│   │   [ Start Campaign ]   [ Skirmish ]   [ Continue ]            │  │
-│   │                                                               │  │
-│   └───────────────────────────────────────────────────────────────┘  │
+│  ┌──────────────────────── PAINTED STAGE ───────────────────────┐    │
+│  │                                                              │┌──┐│
+│  │  large hero / creature / citadel / war-scene focal art      ││◎ ││
+│  │  smoke, sky, banners, cliff, fortress, magic glow           ││New││
+│  │  most of the screen belongs to this backdrop                ││  ││
+│  │                                                              │├──┤│
+│  │                                                              ││◎ ││
+│  │                                                              ││Load││
+│  │                                                              │├──┤│
+│  │                                                              ││◎ ││
+│  │                                                              ││Camp││
+│  │                                                              │├──┤│
+│  │                                                              ││◎ ││
+│  │                                                              ││Opts││
+│  │                                                              │├──┤│
+│  │                                                              ││◎ ││
+│  │                                                              ││Quit││
+│  └──────────────────────────────────────────────────────────────┘└──┘│
 │                                                                      │
-│   left small rail                         right small rail            │
-│   campaign chapter card                   save / options / help      │
-│   latest chronicle / hook                 compact utility only        │
-│                                                                      │
-├──────────────────────────────────────────────────────────────────────┤
-│ status strip: latest save, unlocked arc, build/version if needed     │
+│ New World / footer / version area                                    │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
+## Original-design translation rules
+To stay strongly HoMM3-inspired without copying assets:
+- keep the asymmetry, not the exact art
+- keep icon-first physical command anchors, not flat generic buttons
+- keep a left-heavy painted scene and a right-side command spine
+- keep the logo in the upper-left quadrant
+- keep the command count low on first view, around 4 to 6 items
+- keep a darker, calmer gutter behind the menu column
+
 ## Required visual ingredients
-- big title treatment
-- hero portrait or tableau
-- map, war table, banners, candles, instruments, or command props
-- large campaign and skirmish call-to-action plates
-- compact utility wing only
+- large top-left title treatment with subtitle beneath it
+- one dominant left-side hero or world illustration
+- atmospheric negative space around the focal art
+- right-side vertical command column with ornate icon + label pairs
+- footer branding or version text tucked away at the bottom-left
 
 ## What should be absent
-- repeated navigation rows
-- large explanatory text columns
-- multi-panel save browser as the visual center
-- debug-feeling lists on first view
-
+- centered card-stack menu layouts
+- equal-width columns across the screen
+- giant side panels for save metadata or lore text
+- top navigation bars full of utilities
+- central dashboard blocks, tab strips, or launcher-style tiles
+- lots of buttons spread horizontally across the middle
 ---
 
 # 2. Overworld
