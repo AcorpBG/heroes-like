@@ -54,7 +54,7 @@ var _movement_left := 0
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
-	custom_minimum_size = Vector2(680, 460)
+	custom_minimum_size = Vector2(640, 400)
 
 func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i) -> void:
 	_session = session

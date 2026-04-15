@@ -243,7 +243,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: keep tightening top-level playability passes on the shipped shells, starting with a compact overworld HUD pass that removes routine top-level scrolling at `1280x720` while keeping movement and active-session actions intact.
+- current item 104 focus: keep correcting shipped shell presentation toward stronger game-screen UX, starting with a Heroes-style overworld adventure screen that stays fixed at `1280x720`, keeps the map as the clear focal point, and preserves existing movement plus active-session actions.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -271,6 +271,8 @@ Difficulty: High
 127. [completed] Re-run headless Godot boot, a dedicated menu/outcome smoke scene, validator bytecode compilation, and repository-local validation while reporting unrelated pre-existing validator baseline failures separately.
 128. [completed] Compact the overworld shell into a fixed-height, map-first HUD with tabbed detail panes, shorter summaries, and fewer always-visible action rows while preserving current movement and core actions.
 129. [completed] Re-run normal Godot headless boot, the existing overworld visual smoke scene, and the existing movement repro after the overworld compaction pass while reporting unrelated validator baseline failures separately.
+130. [completed] Correct the overworld shell from a generic compact dashboard into a fixed adventure-map screen with stronger frame chrome, a dominant central map, terse HUD chips, and one bottom command band while preserving current movement, context actions, and save flow.
+131. [completed] Re-run the required overworld smoke, movement repro, and headless Godot boot after the adventure-shell correction while reporting unrelated test-harness warnings separately.
 
 ## Standards
 - no throwaway prototype code if avoidable

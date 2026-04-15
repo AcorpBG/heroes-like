@@ -206,6 +206,11 @@ Overworld shell presentation decision:
 - `OverworldRules.gd` owns the release-facing summary shaping for objective boards, scout-net coverage, frontier watch, active-tile context, and dispatch messaging, keeping `OverworldShell.gd` focused on map rendering, actions, and routing
 - local overworld threat surfacing stays fog-safe by summarizing only visible hostile contacts and visible enemy-held towns, while unexplored or unseen hostile movement remains abstract in the command shell
 
+Overworld adventure-shell correction decision:
+- the overworld scene now corrects course toward a fixed adventure-map shell inspired by the layout logic of Heroes II and III: one dominant central map board, compact top status chips, a framed HUD wing, and a single bottom command band instead of a general-purpose dashboard
+- `OverworldShell.gd` and `.tscn` keep all current movement, context-action, save, and routing behavior, but secondary detail is now hidden behind HUD tabs while primary movement and order buttons stay in one obvious band
+- placeholder visuals remain original and local, and `OverworldRules.gd` still owns every summary, risk, briefing, and context string so the presentation correction does not create a parallel gameplay layer or change save version `9`
+
 Overworld visual-map decision:
 - the overworld scene now renders through a dedicated drawn map-board control instead of a text-labeled grid, with terrain, towns, resource nodes, artifact caches, encounters, hero markers, route previews, and fog all presented as 2D board elements using local placeholder art
 - `OverworldRules.gd` remains the owner of fog, context, movement, and interaction rules, while `OverworldShell.gd` and `OverworldMapView.gd` only translate current session state into visual tile rendering, tile selection, and movement intents so the presentation upgrade does not create a parallel simulation layer

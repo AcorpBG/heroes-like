@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T17:40:00Z",
+  "updatedAt": "2026-04-15T18:18:00Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-overworld-hud-compaction",
-  "currentSliceTitle": "Compact the overworld into a fixed-height, map-first HUD with tabbed detail panes and tighter action surfacing",
+  "currentSliceId": "phase-6-overworld-adventure-shell-correction",
+  "currentSliceTitle": "Correct the overworld shell toward a fixed Heroes-style adventure-map screen with a dominant map board and one clear command band",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Rebuilt the overworld shell around a short banner, a larger visual map stage, tabbed sidebar detail panes, and a compact system strip so normal desktop play no longer depends on top-level vertical scrolling while movement and current actions stay intact.",
+  "currentSliceNotes": "Rebuilt the overworld around a fixed adventure-map shell with a dominant framed map board, compact status chips, a HUD-style right wing, terse dispatch and order chips, and one bottom command band while preserving current movement, context actions, save flow, and headless validation.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

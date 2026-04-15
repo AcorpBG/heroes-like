@@ -2,51 +2,69 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
-@onready var _banner_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner
-@onready var _event_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/EventPanel
-@onready var _briefing_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel
-@onready var _commitment_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/CommitmentPanel
-@onready var _map_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel
-@onready var _map_frame_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapFrame
-@onready var _sidebar_tabs: TabContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs
-@onready var _command_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel
-@onready var _frontier_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel
-@onready var _context_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel
-@onready var _header_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/TitleBox/Header
-@onready var _status_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/TitleBox/Status
-@onready var _resource_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Resources
-@onready var _map_cue_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/MapCue
-@onready var _event_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/EventPanel/EventPad/EventBox/Event
-@onready var _briefing_title_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel/BriefingPad/BriefingBox/BriefingTitle
-@onready var _briefing_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel/BriefingPad/BriefingBox/Briefing
-@onready var _commitment_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/CommitmentPanel/CommitmentPad/CommitmentBox/Commitment
-@onready var _map_hint_label: Label = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapHeader/MapHint
-@onready var _hero_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/Hero
-@onready var _army_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/Army
-@onready var _heroes_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/Heroes
-@onready var _specialty_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/Specialties
-@onready var _spell_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/Spellbook
-@onready var _artifact_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/Artifacts
-@onready var _visibility_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox/Visibility
-@onready var _objective_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox/Objectives
-@onready var _threat_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox/Threats
-@onready var _forecast_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox/Forecast
-@onready var _map_view = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapFrame/MapInset/Map
-@onready var _context_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel/ContextPad/ContextBox/Context
-@onready var _context_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel/ContextPad/ContextBox/Actions
-@onready var _hero_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/HeroBar/Actions
-@onready var _spell_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/SpellBar/Actions
-@onready var _specialty_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/SpecialtyBar/Actions
-@onready var _artifact_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/ArtifactBar/Actions
-@onready var _move_north_button: Button = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveNorth
-@onready var _move_south_button: Button = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveSouth
-@onready var _move_west_button: Button = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveWest
-@onready var _move_east_button: Button = $Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveEast
-@onready var _end_turn_button: Button = $Scroll/ContentMargin/Content/Columns/Sidebar/Footer/EndTurn
-@onready var _save_status_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/Footer/SaveStatus
-@onready var _save_slot_picker: OptionButton = $Scroll/ContentMargin/Content/Columns/Sidebar/Footer/SaveSlot
-@onready var _save_button: Button = $Scroll/ContentMargin/Content/Columns/Sidebar/Footer/Save
-@onready var _menu_button: Button = $Scroll/ContentMargin/Content/Columns/Sidebar/Footer/Menu
+@onready var _shell_panel: PanelContainer = %Shell
+@onready var _top_strip_panel: PanelContainer = %TopStrip
+@onready var _status_chip_panel: PanelContainer = %StatusChip
+@onready var _resource_chip_panel: PanelContainer = %ResourceChip
+@onready var _cue_chip_panel: PanelContainer = %CueChip
+@onready var _event_panel: PanelContainer = %EventPanel
+@onready var _briefing_panel: PanelContainer = %BriefingPanel
+@onready var _commitment_panel: PanelContainer = %CommitmentPanel
+@onready var _map_panel: PanelContainer = %MapPanel
+@onready var _map_frame_panel: PanelContainer = %MapFrame
+@onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
+@onready var _hero_panel: PanelContainer = %HeroPanel
+@onready var _sidebar_tabs: TabContainer = %SidebarTabs
+@onready var _command_panel: PanelContainer = %CommandPanel
+@onready var _frontier_panel: PanelContainer = %FrontierPanel
+@onready var _context_panel: PanelContainer = %ContextPanel
+@onready var _command_band_panel: PanelContainer = %CommandBand
+@onready var _march_panel: PanelContainer = %MarchPanel
+@onready var _orders_panel: PanelContainer = %OrdersPanel
+@onready var _system_panel: PanelContainer = %SystemPanel
+@onready var _header_label: Label = %Header
+@onready var _status_label: Label = %Status
+@onready var _resource_label: Label = %Resources
+@onready var _map_cue_label: Label = %MapCue
+@onready var _event_title_label: Label = %EventTitle
+@onready var _event_label: Label = %Event
+@onready var _briefing_title_label: Label = %BriefingTitle
+@onready var _briefing_label: Label = %Briefing
+@onready var _commitment_title_label: Label = %CommitmentTitle
+@onready var _commitment_label: Label = %Commitment
+@onready var _map_hint_label: Label = %MapHint
+@onready var _hero_title_label: Label = %HeroTitle
+@onready var _hero_label: Label = %Hero
+@onready var _army_label: Label = %Army
+@onready var _heroes_label: Label = %Heroes
+@onready var _command_title_label: Label = %CommandTitle
+@onready var _specialty_label: Label = %Specialties
+@onready var _spell_label: Label = %Spellbook
+@onready var _artifact_label: Label = %Artifacts
+@onready var _context_title_label: Label = %ContextTitle
+@onready var _frontier_title_label: Label = %FrontierTitle
+@onready var _visibility_label: Label = %Visibility
+@onready var _objective_label: Label = %Objectives
+@onready var _threat_label: Label = %Threats
+@onready var _forecast_label: Label = %Forecast
+@onready var _move_state_label: Label = %MoveState
+@onready var _orders_title_label: Label = %OrdersTitle
+@onready var _map_view = %Map
+@onready var _context_label: Label = %Context
+@onready var _context_actions: Container = %ContextActions
+@onready var _hero_actions: Container = %HeroActions
+@onready var _spell_actions: Container = %SpellActions
+@onready var _specialty_actions: Container = %SpecialtyActions
+@onready var _artifact_actions: Container = %ArtifactActions
+@onready var _move_north_button: Button = %MoveNorth
+@onready var _move_south_button: Button = %MoveSouth
+@onready var _move_west_button: Button = %MoveWest
+@onready var _move_east_button: Button = %MoveEast
+@onready var _end_turn_button: Button = %EndTurn
+@onready var _save_status_label: Label = %SaveStatus
+@onready var _save_slot_picker: OptionButton = %SaveSlot
+@onready var _save_button: Button = %Save
+@onready var _menu_button: Button = %Menu
 
 const DIRECTIONS := [
 	Vector2i.UP,
@@ -319,28 +337,30 @@ func _refresh() -> void:
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	var status_text := OverworldRules.describe_status(_session)
 	_status_label.tooltip_text = status_text
-	_status_label.text = _compact_text(status_text, 1, 94, false)
+	_status_label.text = _compact_text(status_text, 1, 64, false)
+	_move_state_label.tooltip_text = status_text
+	_move_state_label.text = _march_state_text()
 	var resource_text := OverworldRules.describe_resources(_session)
 	_resource_label.tooltip_text = resource_text
 	_resource_label.text = resource_text
-	_map_cue_label.text = "WASD or click route"
-	_map_cue_label.tooltip_text = "Keyboard movement stays active. Click adjacent tiles to march or distant tiles to route."
-	_set_compact_label(_commitment_label, OverworldRules.describe_commitment_board(_session), 2, 84)
-	_set_compact_label(_visibility_label, OverworldRules.describe_visibility_panel(_session), 3, 84)
-	_set_compact_label(_hero_label, _hero_card_text(), 2, 84)
-	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2, 84)
-	_set_compact_label(_heroes_label, OverworldRules.describe_heroes(_session), 3, 84)
-	_set_compact_label(_specialty_label, OverworldRules.describe_specialties(_session), 2, 84)
-	_set_compact_label(_spell_label, OverworldRules.describe_spellbook(_session), 2, 84)
-	_set_compact_label(_artifact_label, OverworldRules.describe_artifacts(_session), 2, 84)
-	_set_compact_label(_objective_label, OverworldRules.describe_objectives(_session), 3, 84)
-	_set_compact_label(_threat_label, OverworldRules.describe_enemy_threats(_session), 3, 84)
-	_set_compact_label(_forecast_label, OverworldRules.describe_command_risk(_session), 2, 84)
-	_set_compact_label(_context_label, _describe_focus_tile(), 4, 86)
-	_set_compact_label(_event_label, OverworldRules.describe_dispatch(_session, _last_message), 2, 92)
+	_map_cue_label.text = "Click route | WASD march"
+	_map_cue_label.tooltip_text = "Click adjacent tiles to march, click distant tiles to set a route, or use WASD and arrow keys."
+	_set_compact_label(_commitment_label, OverworldRules.describe_commitment_board(_session), 2, 72)
+	_set_compact_label(_visibility_label, OverworldRules.describe_visibility_panel(_session), 3, 72)
+	_set_compact_label(_hero_label, _hero_card_text(), 2, 72)
+	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2, 72)
+	_set_compact_label(_heroes_label, OverworldRules.describe_heroes(_session), 2, 72)
+	_set_compact_label(_specialty_label, OverworldRules.describe_specialties(_session), 2, 72)
+	_set_compact_label(_spell_label, OverworldRules.describe_spellbook(_session), 2, 72)
+	_set_compact_label(_artifact_label, OverworldRules.describe_artifacts(_session), 2, 72)
+	_set_compact_label(_objective_label, OverworldRules.describe_objectives(_session), 3, 72)
+	_set_compact_label(_threat_label, OverworldRules.describe_enemy_threats(_session), 3, 72)
+	_set_compact_label(_forecast_label, OverworldRules.describe_command_risk(_session), 2, 72)
+	_set_compact_label(_context_label, _describe_focus_tile(), 5, 74)
+	_set_compact_label(_event_label, OverworldRules.describe_dispatch(_session, _last_message), 2, 68)
 	_end_turn_button.tooltip_text = OverworldRules.describe_command_risk_forecast(_session)
 	_briefing_title_label.text = _briefing_title_text
-	_set_compact_label(_briefing_label, _command_briefing_text, 2, 84, false)
+	_set_compact_label(_briefing_label, _command_briefing_text, 2, 68, false)
 	_briefing_panel.visible = _command_briefing_text != ""
 	_update_map_hint()
 
@@ -415,7 +435,7 @@ func _rebuild_context_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		_style_action_button(button)
+		FrontierVisualKit.apply_button(button, "primary", 112.0, 34.0, 13)
 		button.pressed.connect(_on_context_action_pressed.bind(String(action.get("id", ""))))
 		_context_actions.add_child(button)
 
@@ -527,6 +547,16 @@ func _hero_card_text() -> String:
 		int(command.get("power", 0)),
 		int(command.get("knowledge", 0)),
 		HeroCommandRules.scouting_radius_for_hero(hero),
+	]
+
+func _march_state_text() -> String:
+	var movement = _session.overworld.get("movement", {})
+	var hero_pos = OverworldRules.hero_position(_session)
+	return "Mv %d/%d\nPos %d,%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+		hero_pos.x,
+		hero_pos.y,
 	]
 
 func _describe_focus_tile() -> String:
@@ -810,35 +840,53 @@ func _style_action_button(button: Button, width: float = 96.0, height: float = 3
 	FrontierVisualKit.apply_button(button, "secondary", width, height, 13)
 
 func _apply_visual_theme() -> void:
-	FrontierVisualKit.apply_panel(_banner_panel, "banner")
-	FrontierVisualKit.apply_panel(_event_panel, "ink")
-	FrontierVisualKit.apply_panel(_briefing_panel, "gold")
-	FrontierVisualKit.apply_panel(_commitment_panel, "green")
-	FrontierVisualKit.apply_panel(_map_panel, "earth")
-	FrontierVisualKit.apply_panel(_map_frame_panel, "frame")
-	FrontierVisualKit.apply_panel(_command_panel, "ink")
-	FrontierVisualKit.apply_panel(_frontier_panel, "teal")
-	FrontierVisualKit.apply_panel(_context_panel, "gold")
+	FrontierVisualKit.apply_panel(_shell_panel, "earth", 24)
+	FrontierVisualKit.apply_panel(_top_strip_panel, "banner", 20)
+	FrontierVisualKit.apply_badge(_status_chip_panel, "ink")
+	FrontierVisualKit.apply_badge(_resource_chip_panel, "gold")
+	FrontierVisualKit.apply_badge(_cue_chip_panel, "teal")
+	FrontierVisualKit.apply_badge(_event_panel, "ink")
+	FrontierVisualKit.apply_badge(_briefing_panel, "gold")
+	FrontierVisualKit.apply_badge(_commitment_panel, "green")
+	FrontierVisualKit.apply_panel(_map_panel, "earth", 22)
+	FrontierVisualKit.apply_panel(_map_frame_panel, "frame", 18)
+	FrontierVisualKit.apply_panel(_sidebar_shell_panel, "frame", 22)
+	FrontierVisualKit.apply_panel(_hero_panel, "banner", 18)
+	FrontierVisualKit.apply_panel(_command_panel, "ink", 18)
+	FrontierVisualKit.apply_panel(_frontier_panel, "teal", 18)
+	FrontierVisualKit.apply_panel(_context_panel, "gold", 18)
+	FrontierVisualKit.apply_panel(_command_band_panel, "earth", 22)
+	FrontierVisualKit.apply_panel(_march_panel, "frame", 18)
+	FrontierVisualKit.apply_panel(_orders_panel, "ink", 18)
+	FrontierVisualKit.apply_panel(_system_panel, "banner", 18)
 	FrontierVisualKit.apply_tab_container(_sidebar_tabs)
 	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_CONTEXT, "Tile")
-	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_COMMAND, "Command")
+	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_COMMAND, "Kit")
 	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_FRONTIER, "Intel")
 
 	for button in [_move_north_button, _move_south_button, _move_west_button, _move_east_button]:
-		_style_action_button(button, 42.0, 28.0)
-	FrontierVisualKit.apply_button(_end_turn_button, "primary", 88.0, 32.0, 13)
-	FrontierVisualKit.apply_button(_save_button, "secondary", 58.0, 32.0, 13)
-	FrontierVisualKit.apply_button(_menu_button, "secondary", 64.0, 32.0, 13)
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 76.0, 32.0, 13)
+		_style_action_button(button, 50.0, 34.0)
+	FrontierVisualKit.apply_button(_end_turn_button, "primary", 104.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_save_button, "secondary", 78.0, 32.0, 13)
+	FrontierVisualKit.apply_button(_menu_button, "secondary", 78.0, 32.0, 13)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 92.0, 32.0, 13)
 
-	FrontierVisualKit.apply_label(_header_label, "title")
-	FrontierVisualKit.apply_label(_status_label, "body")
-	FrontierVisualKit.apply_label(_resource_label, "gold")
-	FrontierVisualKit.apply_label(_map_cue_label, "muted", 12)
-	FrontierVisualKit.apply_label(_event_label, "body")
-	FrontierVisualKit.apply_label(_briefing_title_label, "gold")
-	FrontierVisualKit.apply_label(_save_status_label, "muted")
-	FrontierVisualKit.apply_label(_map_hint_label, "blue")
+	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_status_label, "body", 12)
+	FrontierVisualKit.apply_label(_resource_label, "gold", 12)
+	FrontierVisualKit.apply_label(_map_cue_label, "blue", 12)
+	FrontierVisualKit.apply_label(_event_title_label, "muted", 11)
+	FrontierVisualKit.apply_label(_event_label, "body", 12)
+	FrontierVisualKit.apply_label(_briefing_title_label, "gold", 11)
+	FrontierVisualKit.apply_label(_commitment_title_label, "green", 11)
+	FrontierVisualKit.apply_label(_hero_title_label, "gold", 13)
+	FrontierVisualKit.apply_label(_command_title_label, "muted", 13)
+	FrontierVisualKit.apply_label(_context_title_label, "gold", 13)
+	FrontierVisualKit.apply_label(_frontier_title_label, "teal", 13)
+	FrontierVisualKit.apply_label(_orders_title_label, "gold", 13)
+	FrontierVisualKit.apply_label(_move_state_label, "gold", 13)
+	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
+	FrontierVisualKit.apply_label(_map_hint_label, "blue", 12)
 	FrontierVisualKit.apply_labels([
 		_commitment_label,
 		_briefing_label,

@@ -16,7 +16,7 @@ func _run() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	var map_node = shell.get_node_or_null("Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapFrame/MapInset/Map")
+	var map_node = shell.get_node_or_null("%Map")
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
