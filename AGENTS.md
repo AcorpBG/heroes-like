@@ -20,6 +20,15 @@ This repository is for a full-production, release-bound fantasy strategy game in
 - No temporary git worktrees. Work directly in this repo.
 - Local commits are fine when they are coherent. Do not push anywhere.
 
+## Screen composition hard rules
+- Do not cover the dominant screen surface with large text panels, stacked report boxes, or generic geometry just to expose existing data.
+- If information does not fit in compact edge rails, a command spine, a footer pocket, tabs, or contextual popouts, hide it, collapse it, or move it off the main surface instead of laying more panels over the art.
+- Scenic screens, especially the main menu, must stay scenery-first. The art or play surface is primary. Text is secondary.
+- If a screen starts reading like a text dashboard, panel farm, or placeholder geometry mockup, stop and redesign the composition instead of polishing the same mistake.
+- Preserve negative space. Do not spend the whole screen budget on labels, boxes, and explanatory text.
+- Main-menu top-level buttons should open secondary menus or overlays for detailed options and selection flows. Do not dump all campaign, skirmish, save, guide, and settings detail directly onto the main menu surface.
+- Keep the first-view main menu clean: a few obvious top-level commands on the main screen, deeper selection and configuration only after entering the relevant submenu.
+
 ## Process rules
 - Update `PLAN.md` when scope, sequencing, or decisions change.
 - Update `ops/progress.json` whenever a step starts, completes, or is blocked.
