@@ -166,6 +166,12 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 			if hidden_count > 0:
 				commander_summary += " (+%d more)" % hidden_count
 			line_parts.append(commander_summary)
+		var commander_memory = EnemyAdventureRulesScript.raid_commander_memory_summaries(
+			_visible_raids_for_faction(session, faction_id),
+			2
+		)
+		if not commander_memory.is_empty():
+			line_parts.append("Command memory %s" % ", ".join(commander_memory))
 		var contestation = EnemyAdventureRulesScript.describe_contestation(session, faction_id, true)
 		if contestation != "":
 			line_parts.append(contestation)

@@ -1091,8 +1091,11 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 		"Doctrine: %s" % _side_doctrine_summary(battle, side),
 	]
 	var continuity_summary := EnemyAdventureRulesScript.commander_record_summary(commander_state) if side == "enemy" else ""
+	var memory_summary := EnemyAdventureRulesScript.commander_memory_summary(commander_state) if side == "enemy" else ""
 	if continuity_summary != "":
 		lines.insert(1, "Record: %s" % continuity_summary)
+	if memory_summary != "":
+		lines.insert(2 if continuity_summary != "" else 1, "Memory: %s" % memory_summary)
 	return "\n".join(lines)
 
 static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
@@ -3555,6 +3558,8 @@ static func _resolve_enemy_commander_aftermath(
 	var commander_state = session.battle.get("enemy_hero", {})
 	if not (commander_state is Dictionary) or commander_state.is_empty():
 		return ""
+	commander_state = _apply_enemy_commander_battle_memory(session, commander_state)
+	session.battle["enemy_hero"] = commander_state
 	return EnemyAdventureRulesScript.apply_resolved_commander_aftermath(
 		session,
 		_battle_enemy_faction_id(session),
@@ -3574,7 +3579,10 @@ static func _record_enemy_commander_battle_continuity(
 	var faction_id := _battle_enemy_faction_id(session)
 	if faction_id == "":
 		return
-	var updated_state := EnemyAdventureRulesScript.advance_commander_record(commander_state, outcome_id)
+	var updated_state := EnemyAdventureRulesScript.advance_commander_record(
+		_apply_enemy_commander_battle_memory(session, commander_state),
+		outcome_id
+	)
 	session.battle["enemy_hero"] = updated_state
 	session.battle["enemy_hero_payload"] = _hero_payload_from_state(updated_state, {}, session, "enemy")
 	EnemyAdventureRulesScript.sync_commander_state_to_roster(
@@ -3586,6 +3594,71 @@ static func _record_enemy_commander_battle_continuity(
 		-1,
 		outcome_id
 	)
+
+static func _apply_enemy_commander_battle_memory(
+	session: SessionStateStoreScript.SessionData,
+	commander_state: Dictionary
+) -> Dictionary:
+	if session == null or session.battle.is_empty() or commander_state.is_empty():
+		return commander_state
+	var updated := commander_state
+	var encounter := _current_battle_encounter_placement(session)
+	var target_kind := String(encounter.get("target_kind", ""))
+	var target_id := String(encounter.get("target_placement_id", ""))
+	if target_kind != "" and target_id != "":
+		updated = EnemyAdventureRulesScript.record_target_assignment(
+			updated,
+			target_kind,
+			target_id,
+			String(encounter.get("target_label", "")),
+			int(encounter.get("target_x", encounter.get("goal_x", encounter.get("x", 0)))),
+			int(encounter.get("target_y", encounter.get("goal_y", encounter.get("y", 0))))
+		)
+	var rivalry_context := _enemy_commander_rivalry_context(session, encounter)
+	if not rivalry_context.is_empty():
+		updated = EnemyAdventureRulesScript.record_rivalry(
+			updated,
+			String(rivalry_context.get("kind", "")),
+			String(rivalry_context.get("id", "")),
+			String(rivalry_context.get("label", ""))
+		)
+	return updated
+
+static func _enemy_commander_rivalry_context(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary = {}
+) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {}
+	var context = session.battle.get("context", {})
+	if _is_town_defense_context(context) or _is_town_assault_context(context):
+		var town_id := String(context.get("town_placement_id", ""))
+		if town_id != "":
+			return {
+				"kind": "town",
+				"id": town_id,
+				"label": _town_name_from_placement_id(session, town_id),
+			}
+	var player_source = session.battle.get("player_commander_source", {})
+	var hero_id := String(player_source.get("hero_id", ""))
+	if String(player_source.get("type", "")) in ["active_hero", "town_hero"] and hero_id != "":
+		var player_state = session.battle.get("player_commander_state", {})
+		var hero_label := String(player_state.get("name", ""))
+		if hero_label == "":
+			hero_label = String(HeroCommandRulesScript.hero_by_id(session, hero_id).get("name", hero_id))
+		return {"kind": "hero", "id": hero_id, "label": hero_label}
+	if encounter.is_empty():
+		encounter = _current_battle_encounter_placement(session)
+	if (
+		String(encounter.get("target_kind", "")) in ["town", "hero"]
+		and String(encounter.get("target_placement_id", "")) != ""
+	):
+		return {
+			"kind": String(encounter.get("target_kind", "")),
+			"id": String(encounter.get("target_placement_id", "")),
+			"label": String(encounter.get("target_label", "")),
+		}
+	return {}
 
 static func _apply_withdrawal_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
 	var preview := _build_withdrawal_aftermath_preview(session, outcome)

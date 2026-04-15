@@ -209,6 +209,11 @@ Hostile commander veterancy decision:
 - `EnemyAdventureRules.gd` reuses `HeroProgressionRules.gd` to auto-resolve focused enemy specialties and command growth from recurring battle record, while `EnemyTurnRules.gd` reads that same commander state back into raid strength demand and future host quality instead of resetting every spawn to authored baseline
 - `OverworldRules.gd`, `TownRules.gd`, and `BattleRules.gd` only surface compact veterancy labels and battle-record summaries from the shared commander payload, keeping UI legibility inside current shells and preserving `SAVE_VERSION` at `9`
 
+Hostile commander target-memory decision:
+- hostile commander roster entries now also keep save-backed `target_memory` on that same `enemy_states[].commander_roster` payload, recording remembered targets, front anchors, and repeated hero-or-town rivalries instead of inventing a separate diplomacy or meta-strategy subsystem
+- `EnemyAdventureRules.gd` reuses the current raid-target pipeline to seed and normalize that memory from raid assignments plus battle context, and later target scoring reads the same memory back as a bias toward repeated towns, hunted heroes, and familiar fronts while still respecting current strategy weights and availability
+- `EnemyTurnRules.gd`, `OverworldRules.gd`, `TownRules.gd`, and `BattleRules.gd` only surface compact commander-memory hints from that shared payload inside existing frontier, town, and battle summaries, keeping scenes thin and `SAVE_VERSION` at `9`
+
 Town shell presentation decision:
 - the town scene now uses a sectioned management-shell layout with dedicated command, town hall, construction, recruitment, spellcraft, and logistics panels instead of a single stacked debug column
 - `TownRules.gd` owns the release-facing summary shaping for town identity, construction ledgers, recruit reserves, stationed defenders, visibility-safe frontier pressure, and dispatch messaging, keeping `TownShell.gd` thin and save-safe

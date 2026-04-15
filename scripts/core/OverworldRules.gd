@@ -678,6 +678,15 @@ static func encounter_commander_name(encounter: Dictionary) -> String:
 		return ""
 	return String(_enemy_adventure_rules().raid_commander_display_name(encounter))
 
+static func encounter_commander_threat_label(encounter: Dictionary) -> String:
+	var commander_name := encounter_commander_name(encounter)
+	if commander_name == "":
+		return ""
+	var memory_brief := String(_enemy_adventure_rules().commander_memory_brief(encounter.get("enemy_commander_state", {})))
+	if memory_brief == "":
+		return commander_name
+	return "%s (%s)" % [commander_name, memory_brief]
+
 static func encounter_display_name(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
@@ -1075,7 +1084,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 		if distance < nearest_contact_distance:
 			nearest_contact_distance = distance
 			nearest_contact_name = encounter_display_name(encounter)
-		var commander_name := encounter_commander_name(encounter)
+		var commander_name := encounter_commander_threat_label(encounter)
 		if commander_name != "" and commander_name not in visible_commander_names:
 			visible_commander_names.append(commander_name)
 		if String(encounter.get("contested_by_faction_id", "")) != "":
@@ -6454,7 +6463,7 @@ static func _town_command_risk_state(session: SessionStateStoreScript.SessionDat
 		var is_public: bool = _raid_is_public(session, encounter)
 		var goal_distance := int(encounter.get("goal_distance", 9999))
 		var is_pressuring := bool(encounter.get("arrived", false)) or goal_distance <= 0
-		var commander_name := encounter_commander_name(encounter)
+		var commander_name := encounter_commander_threat_label(encounter)
 		if is_public:
 			if is_pressuring:
 				state["visible_pressuring"] = int(state.get("visible_pressuring", 0)) + 1

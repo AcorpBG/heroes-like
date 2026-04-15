@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T23:59:59Z",
+  "updatedAt": "2026-04-16T00:35:00Z",
   "status": "in_progress",
-  "currentPhase": "hostile-commander-veterancy",
-  "currentSliceId": "phase-5-hostile-overworld-commander-veterancy",
-  "currentSliceTitle": "Make recurring hostile commanders accumulate battle record and veterancy continuity",
+  "currentPhase": "hostile-commander-target-memory",
+  "currentSliceId": "phase-5-hostile-overworld-commander-target-memory",
+  "currentSliceTitle": "Give recurring hostile commanders target memory and rivalry continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a follow-on hostile-commander slice that keeps save-backed battle records on the existing enemy roster, turns repeated deployments and battle outcomes into commander progression plus future raid-strength demand, surfaces veteran hostile officers through the current frontier, town, and battle summaries, and adds focused regression coverage for field-victory plus repeat-deployment continuity.",
+  "currentSliceNotes": "Completed a follow-on hostile-commander slice that keeps save-backed target memory and rivalry state on the existing enemy roster, biases later raid targeting through the current enemy-turn and adventure-target rules, surfaces compact continuity hints through existing frontier, town, and battle summaries, and adds focused regression coverage for repeat-target and repeat-opponent continuity.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

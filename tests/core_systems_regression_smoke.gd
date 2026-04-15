@@ -316,6 +316,11 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		push_error("Core systems smoke: defeated hostile commander did not enter save-backed recovery.")
 		get_tree().quit(1)
 		return false
+	var recovering_memory := EnemyAdventureRules.commander_target_memory(recovering_entry)
+	if String(recovering_memory.get("focus_target_id", "")) != "riverwatch_hold":
+		push_error("Core systems smoke: defeated hostile commander did not keep save-backed target memory for the pressured town.")
+		get_tree().quit(1)
+		return false
 	var recovery_day := int(recovering_entry.get("recovery_day", 0))
 	if recovery_day <= session.day:
 		push_error("Core systems smoke: hostile commander recovery day was not scheduled into the future.")
@@ -333,6 +338,10 @@ func _run_hostile_commander_recovery_regression() -> bool:
 	var restored_entry := _enemy_commander_entry(_enemy_state_by_faction(restored, "faction_mireclaw"), roster_hero_id)
 	if String(restored_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_RECOVERING:
 		push_error("Core systems smoke: restored session lost hostile commander recovery state.")
+		get_tree().quit(1)
+		return false
+	if String(EnemyAdventureRules.commander_target_memory(restored_entry).get("focus_target_id", "")) != "riverwatch_hold":
+		push_error("Core systems smoke: restored session lost hostile commander target memory.")
 		get_tree().quit(1)
 		return false
 	if int(restored_entry.get("recovery_day", 0)) != recovery_day:
@@ -374,6 +383,16 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		return false
 	if EnemyAdventureRules.commander_veterancy_label(returned_raid.get("enemy_commander_state", {})) == "":
 		push_error("Core systems smoke: recovered hostile commander returned without a visible veterancy label.")
+		get_tree().quit(1)
+		return false
+	var returning_brief := EnemyAdventureRules.commander_memory_brief(returned_raid.get("enemy_commander_state", {}))
+	if "returns to Riverwatch Hold" not in returning_brief:
+		push_error("Core systems smoke: recovered hostile commander did not surface repeat target memory on the returning raid.")
+		get_tree().quit(1)
+		return false
+	var public_memory := EnemyAdventureRules.raid_commander_memory_summaries([returned_raid], 1)
+	if public_memory.is_empty() or "Riverwatch Hold" not in String(public_memory[0]):
+		push_error("Core systems smoke: public commander-memory summaries did not expose the repeated target pressure.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -471,6 +490,13 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		get_tree().quit(1)
 		return false
 	var updated_state: Dictionary = updated_raid.get("enemy_commander_state", {})
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var active_hero_name := String(session.overworld.get("hero", {}).get("name", "the hero"))
+	var rivalry_memory := EnemyAdventureRules.commander_target_memory(updated_state)
+	if String(rivalry_memory.get("rival_id", "")) != active_hero_id:
+		push_error("Core systems smoke: hostile commander field victory did not record the opposing hero as a rivalry target.")
+		get_tree().quit(1)
+		return false
 	if int(updated_state.get("battle_wins", 0)) <= 0:
 		push_error("Core systems smoke: hostile commander field victory did not increment the battle-win record.")
 		get_tree().quit(1)
@@ -488,6 +514,18 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		push_error("Core systems smoke: hostile commander field victory did not surface its battle record summary.")
 		get_tree().quit(1)
 		return false
+	var enemy_config := _enemy_config(session, "faction_mireclaw")
+	var baseline_plan := EnemyAdventureRules.choose_target(session, enemy_config, {"x": 7, "y": 1}, {})
+	var repeat_rival_state := EnemyAdventureRules.record_rivalry(updated_state, "hero", active_hero_id, active_hero_name)
+	var biased_plan := EnemyAdventureRules.choose_target(session, enemy_config, {"x": 7, "y": 1}, repeat_rival_state)
+	if String(baseline_plan.get("target_placement_id", "")) == String(biased_plan.get("target_placement_id", "")):
+		push_error("Core systems smoke: commander rivalry memory did not change later raid targeting.")
+		get_tree().quit(1)
+		return false
+	if String(biased_plan.get("target_kind", "")) != "hero" or String(biased_plan.get("target_placement_id", "")) != active_hero_id:
+		push_error("Core systems smoke: commander rivalry memory did not bias later raid targeting toward the repeated opposing hero.")
+		get_tree().quit(1)
+		return false
 
 	var restored = SessionState.new_session_data()
 	restored.from_dict(session.to_dict())
@@ -495,6 +533,10 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 	var restored_raid := _active_enemy_raid_by_roster_hero(restored, "faction_mireclaw", roster_hero_id)
 	if int(restored_raid.get("enemy_commander_state", {}).get("battle_wins", 0)) != int(updated_state.get("battle_wins", 0)):
 		push_error("Core systems smoke: restored session lost hostile commander field-victory record.")
+		get_tree().quit(1)
+		return false
+	if String(EnemyAdventureRules.commander_target_memory(restored_raid.get("enemy_commander_state", {})).get("rival_id", "")) != active_hero_id:
+		push_error("Core systems smoke: restored session lost hostile commander rivalry memory.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -932,6 +974,13 @@ func _active_enemy_raid_by_roster_hero(session, faction_id: String, roster_hero_
 			continue
 		if String(encounter.get("enemy_commander_state", {}).get("roster_hero_id", "")) == roster_hero_id:
 			return encounter
+	return {}
+
+func _enemy_config(session, faction_id: String) -> Dictionary:
+	var scenario := ContentService.get_scenario(String(session.scenario_id))
+	for config in scenario.get("enemy_factions", []):
+		if config is Dictionary and String(config.get("faction_id", "")) == faction_id:
+			return config
 	return {}
 
 func _first_encounter(session) -> Dictionary:

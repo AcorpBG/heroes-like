@@ -1614,7 +1614,7 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 				continue
 			var is_public: bool = EnemyAdventureRulesScript._raid_is_public(session, encounter)
 			var is_pressuring := bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 0
-			var commander_name := String(OverworldRulesScript.encounter_commander_name(encounter))
+			var commander_name := String(OverworldRulesScript.encounter_commander_threat_label(encounter))
 			if is_public:
 				if is_pressuring:
 					visible_pressuring += 1

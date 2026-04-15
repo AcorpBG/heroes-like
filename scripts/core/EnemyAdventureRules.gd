@@ -26,6 +26,8 @@ const COMMANDER_EXPERIENCE_STALEMATE := 30
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
+	var previous_target := _current_target_snapshot(raid)
+	var had_memory := not commander_target_memory(raid.get("enemy_commander_state", {})).is_empty()
 	if _raid_target_valid(session, raid):
 		raid = _refresh_target(session, raid)
 	else:
@@ -33,10 +35,26 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		var plan = choose_target(
 			session,
 			config,
-			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))}
+			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
+			raid.get("enemy_commander_state", {})
 		)
 		if not plan.is_empty():
 			raid.merge(plan, true)
+	var current_target := _current_target_snapshot(raid)
+	if _target_signature(current_target) != "" and (
+		_target_signature(previous_target) != _target_signature(current_target)
+		or not had_memory
+	):
+		var commander_state = raid.get("enemy_commander_state", {})
+		if commander_state is Dictionary and not commander_state.is_empty():
+			raid["enemy_commander_state"] = record_target_assignment(
+				commander_state,
+				String(current_target.get("target_kind", "")),
+				String(current_target.get("target_placement_id", "")),
+				String(current_target.get("target_label", "")),
+				int(current_target.get("target_x", 0)),
+				int(current_target.get("target_y", 0))
+			)
 	return raid
 
 static func advance_raids(
@@ -215,11 +233,15 @@ static func normalize_commander_roster(
 			else existing.get("commander_state", {})
 		)
 		var record := _normalized_commander_record(existing, commander_seed)
+		var target_memory := _normalized_commander_memory(existing, commander_seed)
 		var commander_state = build_roster_commander_state(
 			roster_hero_id,
 			faction_id,
 			commander_seed,
-			record
+			{
+				"record": record,
+				"target_memory": target_memory,
+			}
 		)
 		var entry := {
 			"roster_hero_id": roster_hero_id,
@@ -231,6 +253,7 @@ static func normalize_commander_roster(
 			"battle_wins": max(0, int(record.get("battle_wins", 0))),
 			"times_defeated": max(0, int(record.get("times_defeated", 0))),
 			"renown": max(0, int(record.get("renown", 0))),
+			"target_memory": target_memory,
 			"commander_state": commander_state,
 		}
 		if active_map.has(roster_hero_id):
@@ -300,6 +323,61 @@ static func commander_record_summary(source: Variant) -> String:
 	elif wins > 0:
 		parts.append("undefeated")
 	return " | ".join(parts)
+
+static func commander_target_memory(source: Variant) -> Dictionary:
+	return _normalized_commander_memory(source)
+
+static func commander_memory_brief(source: Variant) -> String:
+	var memory := _normalized_commander_memory(source)
+	if memory.is_empty():
+		return ""
+	var rival_label := String(memory.get("rival_label", ""))
+	var rivalry_count: int = max(0, int(memory.get("rivalry_count", 0)))
+	if rival_label != "" and rivalry_count >= 2:
+		return "holds a grudge against %s" % rival_label
+	var focus_label := String(memory.get("focus_target_label", ""))
+	var focus_count: int = max(0, int(memory.get("focus_pressure_count", 0)))
+	if focus_label != "" and focus_count >= 2:
+		return "returns to %s" % focus_label
+	return ""
+
+static func commander_memory_summary(source: Variant) -> String:
+	var memory := _normalized_commander_memory(source)
+	if memory.is_empty():
+		return ""
+	var parts := []
+	var focus_label := String(memory.get("focus_target_label", ""))
+	var focus_count: int = max(0, int(memory.get("focus_pressure_count", 0)))
+	if focus_label != "":
+		var focus_summary := "Target %s" % focus_label
+		if focus_count > 1:
+			focus_summary += " (%d raids)" % focus_count
+		parts.append(focus_summary)
+	var rival_label := String(memory.get("rival_label", ""))
+	var rivalry_count: int = max(0, int(memory.get("rivalry_count", 0)))
+	if rival_label != "":
+		var rival_summary := "Rival %s" % rival_label
+		if rivalry_count > 1:
+			rival_summary += " x%d" % rivalry_count
+		parts.append(rival_summary)
+	return " | ".join(parts)
+
+static func raid_commander_memory_summaries(encounters: Array, limit: int = 2) -> Array:
+	var summaries: Array = []
+	for encounter in encounters:
+		if not (encounter is Dictionary):
+			continue
+		var commander_name := raid_commander_display_name(encounter)
+		var memory_brief := commander_memory_brief(encounter.get("enemy_commander_state", {}))
+		if commander_name == "" or memory_brief == "":
+			continue
+		var summary := "%s %s" % [commander_name, memory_brief]
+		if summary in summaries:
+			continue
+		summaries.append(summary)
+		if limit > 0 and summaries.size() >= limit:
+			break
+	return summaries
 
 static func has_available_raid_commander(
 	session: SessionStateStoreScript.SessionData,
@@ -407,6 +485,7 @@ static func apply_resolved_commander_aftermath(
 				updated_state,
 				entry
 			)
+			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
 			var recovery_days := 0
 			var summary := ""
 			match outcome_id:
@@ -441,7 +520,9 @@ static func build_roster_commander_state(
 	record_source: Variant = {}
 ) -> Dictionary:
 	var hero_template = ContentService.get_hero(roster_hero_id)
-	var record := _normalized_commander_record(record_source, existing_state)
+	var record_value: Variant = record_source.get("record", record_source) if record_source is Dictionary else record_source
+	var record := _normalized_commander_record(record_value, existing_state)
+	var target_memory := _normalized_commander_memory(record_source, existing_state)
 	var existing_spellbook = existing_state.get("spellbook", {})
 	if not (existing_spellbook is Dictionary):
 		existing_spellbook = {}
@@ -485,14 +566,17 @@ static func build_roster_commander_state(
 	}
 	commander_state = _normalize_enemy_progression(commander_state)
 	return _apply_commander_record_metadata(
-		SpellRulesScript.refresh_daily_mana(
-			SpellRulesScript.ensure_hero_spellbook(
-				commander_state,
-				{
-					"command": commander_state.get("command", {}),
-					"starting_spell_ids": spell_ids_source,
-				}
-			)
+		_apply_commander_memory_metadata(
+			SpellRulesScript.refresh_daily_mana(
+				SpellRulesScript.ensure_hero_spellbook(
+					commander_state,
+					{
+						"command": commander_state.get("command", {}),
+						"starting_spell_ids": spell_ids_source,
+					}
+				)
+			),
+			target_memory
 		),
 		record
 	)
@@ -525,12 +609,15 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 	if not (spellbook is Dictionary):
 		spellbook = {}
 	return _apply_commander_record_metadata(
-		SpellRulesScript.ensure_hero_spellbook(
-			updated,
-			{
-				"command": updated.get("command", {}),
-				"starting_spell_ids": spellbook.get("known_spell_ids", []),
-			}
+		_apply_commander_memory_metadata(
+			SpellRulesScript.ensure_hero_spellbook(
+				updated,
+				{
+					"command": updated.get("command", {}),
+					"starting_spell_ids": spellbook.get("known_spell_ids", []),
+				}
+			),
+			updated
 		),
 		record
 	)
@@ -569,6 +656,7 @@ static func record_commander_deployment(
 			updated_state,
 			entry
 		)
+		entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
 		roster[roster_index] = entry
 		break
 	return roster
@@ -622,6 +710,7 @@ static func sync_commander_state_to_roster(
 				commander_state,
 				entry
 			)
+			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
 			roster[roster_index] = entry
 			state["commander_roster"] = roster
 			states[state_index] = state
@@ -825,18 +914,21 @@ static func build_raid_commander_state(
 	if not (commander_spellbook is Dictionary):
 		commander_spellbook = {}
 	return _apply_commander_record_metadata(
-		SpellRulesScript.ensure_hero_spellbook(
-			commander_state,
-			{
-				"command": commander_state.get("command", {}),
-				"starting_spell_ids": _merge_unique_strings(
-					commander_spellbook.get("known_spell_ids", []),
-					_merge_unique_strings(
-						_hero_battle_spell_ids(hero_template),
-						encounter_commander.get("starting_spell_ids", [])
-					)
-				),
-			}
+		_apply_commander_memory_metadata(
+			SpellRulesScript.ensure_hero_spellbook(
+				commander_state,
+				{
+					"command": commander_state.get("command", {}),
+					"starting_spell_ids": _merge_unique_strings(
+						commander_spellbook.get("known_spell_ids", []),
+						_merge_unique_strings(
+							_hero_battle_spell_ids(hero_template),
+							encounter_commander.get("starting_spell_ids", [])
+						)
+					),
+				}
+			),
+			_normalized_commander_memory(roster_entry, commander_state)
 		),
 		_normalized_commander_record(roster_entry, commander_state)
 	)
@@ -954,6 +1046,64 @@ static func _commander_name_from_source(source: Variant) -> String:
 			return String(ContentService.get_hero(String(source.get("roster_hero_id", ""))).get("name", ""))
 	return ""
 
+static func record_target_assignment(
+	commander_state: Dictionary,
+	target_kind: String,
+	target_id: String,
+	target_label: String,
+	target_x: int = 0,
+	target_y: int = 0
+) -> Dictionary:
+	if commander_state.is_empty() or target_kind == "" or target_id == "":
+		return _apply_commander_memory_metadata(commander_state, commander_state)
+	var updated := commander_state.duplicate(true)
+	var memory := _normalized_commander_memory(updated)
+	var is_focus_match := (
+		target_kind == String(memory.get("focus_target_kind", ""))
+		and target_id == String(memory.get("focus_target_id", ""))
+	)
+	var is_last_match := (
+		target_kind == String(memory.get("last_target_kind", ""))
+		and target_id == String(memory.get("last_target_id", ""))
+	)
+	var next_focus_count := 1
+	if is_focus_match:
+		next_focus_count = max(1, int(memory.get("focus_pressure_count", 0))) + 1
+	elif is_last_match:
+		next_focus_count = max(2, int(memory.get("focus_pressure_count", 0)))
+	memory["focus_target_kind"] = target_kind
+	memory["focus_target_id"] = target_id
+	memory["focus_target_label"] = target_label
+	memory["focus_pressure_count"] = next_focus_count
+	memory["last_target_kind"] = target_kind
+	memory["last_target_id"] = target_id
+	memory["last_target_label"] = target_label
+	memory["front_label"] = target_label
+	memory["front_x"] = target_x
+	memory["front_y"] = target_y
+	updated["target_memory"] = memory
+	return _apply_commander_memory_metadata(updated, memory)
+
+static func record_rivalry(
+	commander_state: Dictionary,
+	rival_kind: String,
+	rival_id: String,
+	rival_label: String
+) -> Dictionary:
+	if commander_state.is_empty() or rival_kind == "" or rival_id == "":
+		return _apply_commander_memory_metadata(commander_state, commander_state)
+	var updated := commander_state.duplicate(true)
+	var memory := _normalized_commander_memory(updated)
+	var rivalry_count := 1
+	if rival_kind == String(memory.get("rival_kind", "")) and rival_id == String(memory.get("rival_id", "")):
+		rivalry_count = max(1, int(memory.get("rivalry_count", 0))) + 1
+	memory["rival_kind"] = rival_kind
+	memory["rival_id"] = rival_id
+	memory["rival_label"] = rival_label
+	memory["rivalry_count"] = rivalry_count
+	updated["target_memory"] = memory
+	return _apply_commander_memory_metadata(updated, memory)
+
 static func _normalized_commander_record(entry_value: Variant, commander_state_value: Variant = {}) -> Dictionary:
 	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
 	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
@@ -971,6 +1121,68 @@ static func _normalized_commander_record(entry_value: Variant, commander_state_v
 	}
 	record["renown"] = _commander_renown_from_record(record)
 	return record
+
+static func _normalized_commander_memory(entry_value: Variant, commander_state_value: Variant = {}) -> Dictionary:
+	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
+	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
+	var entry_commander_state = entry.get("commander_state", {})
+	if not (entry_commander_state is Dictionary):
+		entry_commander_state = {}
+	var raw_memory: Dictionary = {}
+	for key in [
+		"focus_target_kind",
+		"focus_target_id",
+		"focus_target_label",
+		"focus_pressure_count",
+		"last_target_kind",
+		"last_target_id",
+		"last_target_label",
+		"front_label",
+		"front_x",
+		"front_y",
+		"rival_kind",
+		"rival_id",
+		"rival_label",
+		"rivalry_count",
+	]:
+		if entry.has(key):
+			raw_memory[String(key)] = entry[key]
+	for source_value in [
+		entry.get("target_memory", {}),
+		entry_commander_state.get("target_memory", {}),
+		commander_state.get("target_memory", {}),
+	]:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		for key in source.keys():
+			raw_memory[String(key)] = source[key]
+	var memory := {
+		"focus_target_kind": String(raw_memory.get("focus_target_kind", "")),
+		"focus_target_id": String(raw_memory.get("focus_target_id", "")),
+		"focus_target_label": String(raw_memory.get("focus_target_label", "")),
+		"focus_pressure_count": max(0, int(raw_memory.get("focus_pressure_count", 0))),
+		"last_target_kind": String(raw_memory.get("last_target_kind", "")),
+		"last_target_id": String(raw_memory.get("last_target_id", "")),
+		"last_target_label": String(raw_memory.get("last_target_label", "")),
+		"front_label": String(raw_memory.get("front_label", "")),
+		"front_x": int(raw_memory.get("front_x", 0)),
+		"front_y": int(raw_memory.get("front_y", 0)),
+		"rival_kind": String(raw_memory.get("rival_kind", "")),
+		"rival_id": String(raw_memory.get("rival_id", "")),
+		"rival_label": String(raw_memory.get("rival_label", "")),
+		"rivalry_count": max(0, int(raw_memory.get("rivalry_count", 0))),
+	}
+	if (
+		String(memory.get("focus_target_id", "")) == ""
+		and String(memory.get("last_target_id", "")) == ""
+		and String(memory.get("rival_id", "")) == ""
+		and String(memory.get("front_label", "")) == ""
+		and int(memory.get("focus_pressure_count", 0)) <= 0
+		and int(memory.get("rivalry_count", 0)) <= 0
+	):
+		return {}
+	return memory
 
 static func _commander_renown_from_record(record: Dictionary) -> int:
 	var deployments: int = max(0, int(record.get("deployments", 0)))
@@ -1001,6 +1213,16 @@ static func _apply_commander_record_metadata(commander_state: Dictionary, record
 	commander["veterancy_label"] = commander_veterancy_label(record)
 	commander["record_summary"] = commander_record_summary(record)
 	commander["last_outcome"] = String(record.get("last_outcome", commander.get("last_outcome", "")))
+	return commander
+
+static func _apply_commander_memory_metadata(commander_state: Dictionary, memory_source: Variant) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var commander := commander_state.duplicate(true)
+	var memory := _normalized_commander_memory(memory_source, commander)
+	commander["target_memory"] = memory
+	commander["memory_brief"] = commander_memory_brief(memory)
+	commander["memory_summary"] = commander_memory_summary(memory)
 	return commander
 
 static func _normalize_enemy_progression(commander_state: Dictionary) -> Dictionary:
@@ -1111,7 +1333,28 @@ static func _clear_delivery_intercept_target(raid: Dictionary) -> Dictionary:
 	raid["delivery_intercept_label"] = ""
 	return raid
 
-static func choose_target(session: SessionStateStoreScript.SessionData, config: Dictionary, origin: Dictionary) -> Dictionary:
+static func _current_target_snapshot(raid: Dictionary) -> Dictionary:
+	if raid.is_empty():
+		return {}
+	return {
+		"target_kind": String(raid.get("target_kind", "")),
+		"target_placement_id": String(raid.get("target_placement_id", "")),
+		"target_label": String(raid.get("target_label", "")),
+		"target_x": int(raid.get("target_x", raid.get("goal_x", 0))),
+		"target_y": int(raid.get("target_y", raid.get("goal_y", 0))),
+	}
+
+static func _target_signature(target: Dictionary) -> String:
+	if target.is_empty():
+		return ""
+	return "%s:%s" % [String(target.get("target_kind", "")), String(target.get("target_placement_id", ""))]
+
+static func choose_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin: Dictionary,
+	commander_source: Variant = {}
+) -> Dictionary:
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos)
 	if candidates.is_empty():
@@ -1127,6 +1370,16 @@ static func choose_target(session: SessionStateStoreScript.SessionData, config: 
 			"goal_y": int(hero_position.get("y", 0)),
 			"goal_distance": abs(origin_pos.x - int(hero_position.get("x", 0))) + abs(origin_pos.y - int(hero_position.get("y", 0))),
 		}
+
+	for index in range(candidates.size()):
+		if not (candidates[index] is Dictionary):
+			continue
+		var candidate: Dictionary = candidates[index]
+		candidate["priority"] = max(
+			0,
+			int(candidate.get("priority", 0)) + _commander_memory_priority_bonus(session, candidate, commander_source)
+		)
+		candidates[index] = candidate
 
 	var best: Dictionary = candidates[0]
 	for index in range(1, candidates.size()):
@@ -1894,6 +2147,42 @@ static func _weighted_priority(
 		)
 	)
 	return max(0, weighted_priority + priority_target_bonus(config, placement_id))
+
+static func _commander_memory_priority_bonus(
+	session: SessionStateStoreScript.SessionData,
+	candidate: Dictionary,
+	commander_source: Variant
+) -> int:
+	var memory := _normalized_commander_memory(commander_source)
+	if memory.is_empty():
+		return 0
+	var target_kind := String(candidate.get("target_kind", ""))
+	var target_id := String(candidate.get("target_placement_id", ""))
+	var bonus := 0
+	if target_kind != "" and target_id != "":
+		if (
+			target_kind == String(memory.get("focus_target_kind", ""))
+			and target_id == String(memory.get("focus_target_id", ""))
+		):
+			bonus += 70 + (min(3, max(1, int(memory.get("focus_pressure_count", 0)))) * 22)
+		if (
+			target_kind == String(memory.get("rival_kind", ""))
+			and target_id == String(memory.get("rival_id", ""))
+		):
+			bonus += 55 + (min(3, max(1, int(memory.get("rivalry_count", 0)))) * 24)
+	if String(memory.get("front_label", "")) != "" or String(memory.get("focus_target_id", "")) != "":
+		var target_x := int(candidate.get("target_x", candidate.get("goal_x", 0)))
+		var target_y := int(candidate.get("target_y", candidate.get("goal_y", 0)))
+		var front_distance: int = abs(target_x - int(memory.get("front_x", target_x))) + abs(
+			target_y - int(memory.get("front_y", target_y))
+		)
+		if front_distance <= 1:
+			bonus += 28
+		elif front_distance <= 3:
+			bonus += 16
+		elif front_distance <= 5:
+			bonus += 8
+	return bonus
 
 static func _town_strategic_priority_bonus(
 	session: SessionStateStoreScript.SessionData,
