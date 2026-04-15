@@ -202,9 +202,9 @@ Battle risk and readiness board decision:
 - `BattleShell.gd` and `.tscn` only bind the dedicated risk-board panel, so battle presentation deepens without adding duplicate simulation state or changing save version `9`
 
 Battle objective pressure decision:
-- authored encounters and scenario encounter placements now extend the existing battle payload with `field_objectives` for lane batteries, ritual pylons, supply posts, signal beacons, breach points, and hazard zones instead of creating a separate siege, planner, or advisor subsystem
-- `BattleRules.gd` owns objective normalization, control pressure, reserve-timing shifts, commander exposure, cohesion or momentum fallout, and shell-summary shaping from current battle state only, while `BattleAiRules.gd` mirrors that pressure in action scoring so enemies contest or defend those points instead of ignoring them
-- the real battle shell continues to surface this through the existing header, status, pressure, context, briefing, and risk flows, keeping scenes thin and save version `9` unchanged
+- authored encounters and scenario encounter placements now extend the existing battle payload with `field_objectives` for lane batteries, cover lines, obstruction lines, ritual pylons, supply posts, signal beacons, breach points, and hazard zones instead of creating a separate siege, planner, or advisor subsystem
+- `BattleRules.gd` owns objective normalization, control pressure, reserve-timing shifts, movement tax, ranged safety, commander exposure, target-priority shaping, cohesion or momentum fallout, and shell-summary shaping from current battle state only, while `BattleAiRules.gd` mirrors that pressure in action scoring so enemies contest or defend those points instead of ignoring them
+- the real battle shell continues to surface this through the existing header, status, pressure, context, briefing, risk, order-consequence, and spell-timing flows, keeping scenes thin and save version `9` unchanged
 
 Battle order consequence decision:
 - the existing battle shell now surfaces a live order-consequence board that compresses focused order, trade window, command tools, objective pull, and likely hostile reply from the current battle state instead of adding a planner, advisor, tutorial, or codex subsystem

@@ -63,6 +63,8 @@ SUPPORTED_BATTLEFIELD_TAGS = {
 }
 SUPPORTED_FIELD_OBJECTIVE_TYPES = {
     "lane_battery",
+    "cover_line",
+    "obstruction_line",
     "ritual_pylon",
     "supply_post",
     "signal_beacon",
@@ -212,6 +214,15 @@ RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS = {
     "nightglass_drum_circle",
     "prismhearth_relay_pickets",
     "glassfen_relay_pickets",
+}
+RELEASE_BATTLEFIELD_IDENTITY_OBJECTIVES = {
+    "encounter_ghoul_grove": {"cover_line"},
+    "encounter_reedbarrow_chain": {"obstruction_line", "lane_battery"},
+    "encounter_charter_guard": {"obstruction_line", "signal_beacon"},
+    "encounter_bone_ferry_watch": {"cover_line", "obstruction_line"},
+    "encounter_bridgeward_levies": {"obstruction_line"},
+    "encounter_relay_pickets": {"cover_line", "lane_battery"},
+    "encounter_daybreak_matrix": {"cover_line", "lane_battery"},
 }
 ENEMY_STRATEGY_KEYS = {
     "build_category_weights": {"civic", "dwelling", "economy", "support", "magic"},
@@ -1073,6 +1084,13 @@ def validate_content(errors: list[str]) -> None:
     ensure(any(str(objective.get("type", "")) == "supply_post" for objective in encounters.get("encounter_charter_guard", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Charter Guard must keep a supply_post battlefield objective authored")
     ensure(any(str(objective.get("type", "")) == "ritual_pylon" for objective in encounters.get("encounter_drum_circle", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Nightglass Drum Circle must keep a ritual_pylon battlefield objective authored")
     ensure(any(str(objective.get("type", "")) == "signal_beacon" for objective in encounters.get("encounter_relay_pickets", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Relay Pickets must keep a signal_beacon battlefield objective authored")
+    for encounter_id, required_objectives in RELEASE_BATTLEFIELD_IDENTITY_OBJECTIVES.items():
+        authored_types = {
+            str(objective.get("type", ""))
+            for objective in encounters.get(encounter_id, {}).get("field_objectives", [])
+            if isinstance(objective, dict)
+        }
+        ensure(required_objectives.issubset(authored_types), errors, f"Encounter {encounter_id} must keep battlefield identity objectives {sorted(required_objectives)}")
 
     objective_override_placements: set[str] = set()
     for scenario_id, scenario in scenarios.items():
@@ -2481,6 +2499,9 @@ def validate_battle_objective_pressure_slice(errors: list[str]) -> None:
         "func _reserve_wave_ready_round",
         "func _reserve_wave_is_active_for_side",
         "func _field_objective_commander_modifier",
+        "cover_line",
+        "obstruction_line",
+        "func _weakest_stack_by_role",
     ):
         ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle-objective token: {required_token}")
 
@@ -2497,6 +2518,8 @@ def validate_battle_objective_pressure_slice(errors: list[str]) -> None:
         "func _field_objective_cohesion_bonus",
         "func _field_objective_momentum_bonus",
         "func _field_objective_commander_modifier",
+        "cover_line",
+        "obstruction_line",
     ):
         ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required battle-objective token: {required_token}")
 
@@ -4111,7 +4134,7 @@ def main() -> int:
     print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")
     print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")
     print("- the battle shell now also surfaces a live tactical risk and readiness board using current initiative, commander cover, cohesion, ranged pressure, decisive targets, objective urgency, and dispatch state")
-    print("- battle encounters and scenario placements now author objective or hazard control points that drive real pressure, reserve timing, AI scoring, and shell summaries")
+    print("- battle encounters now also author cover lines, obstruction lines, and firing-lane control points that drive movement pressure, ranged threat, commander safety, AI scoring, and shell summaries")
     print("- battle withdrawal now exposes a real surrender action, distinct retreat versus surrender consequences, and persisted aftermath recap across battle, outcome, and campaign flow")
     print("- battle content now keeps distinct battlefield tags, commander traits, specialized army groups, terrain-payoff rules, and doctrine-aware AI scoring")
     print("- faction identity, town build trees, weekly musters, and thin town-shell progression wiring are present")

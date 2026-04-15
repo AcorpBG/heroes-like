@@ -1393,6 +1393,10 @@ static func _attack_action_summary(attacker: Dictionary, target: Dictionary, bat
 	]
 	if is_ranged:
 		clauses.append("shots after volley %d" % max(0, int(attacker.get("shots_remaining", 0)) - 1))
+		if _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line") and attack_distance > 0:
+			clauses.append("enemy cover will blunt part of the volley")
+		elif _side_controls_field_objective_type(battle, String(attacker.get("side", "")), "cover_line") and attack_distance > 0:
+			clauses.append("friendly cover keeps the firing angle cleaner")
 	else:
 		if int(target.get("retaliations_left", 0)) > 0 and _can_make_retaliation(target, attack_distance):
 			var retaliation_preview = _retaliation_range_preview(attacker, target, battle, attack_distance, attack_preview)
@@ -1424,6 +1428,10 @@ static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> St
 	var momentum_gain = _preview_advance_momentum_gain(stack, battle)
 	if momentum_gain > 0:
 		clauses.append("momentum +%d" % momentum_gain)
+	if _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "obstruction_line"):
+		clauses.append("enemy obstruction will tax the push")
+	elif _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "cover_line"):
+		clauses.append("closing also strips hostile cover")
 	if not bool(stack.get("ranged", false)) and next_distance <= 0:
 		clauses.append("melee contact opens immediately")
 	var objective_preview = _field_objective_action_preview(
@@ -1449,6 +1457,10 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 		clauses.append("protect the firing lane")
 	elif int(stack.get("retaliations_left", 0)) > 0:
 		clauses.append("retaliation stays live")
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "cover_line"):
+		clauses.append("hold the screened cover line")
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line"):
+		clauses.append("keep the obstruction sealed")
 	if _has_ability(stack, "brace"):
 		clauses.append("Brace can stagger the next attacker")
 	elif _has_ability(stack, "formation_guard"):
@@ -1678,6 +1690,10 @@ static func _preview_advance_momentum_gain(stack: Dictionary, battle: Dictionary
 		momentum_gain += 1
 	if _battle_has_tag(battle, "open_lane") and (not bool(stack.get("ranged", false)) or _hero_has_trait(battle, String(stack.get("side", "")), "artillerist")):
 		momentum_gain += 1
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and not bool(stack.get("ranged", false)):
+		momentum_gain += 1
+	if _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "obstruction_line"):
+		momentum_gain -= 1
 	return max(0, momentum_gain)
 
 static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary) -> int:
@@ -1693,6 +1709,10 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 	if _hero_has_trait(battle, String(stack.get("side", "")), "linekeeper"):
 		cohesion_gain += 1
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)):
+		cohesion_gain += 1
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "cover_line"):
+		cohesion_gain += 1
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and not bool(stack.get("ranged", false)):
 		cohesion_gain += 1
 	return max(0, cohesion_gain)
 
@@ -1889,6 +1909,10 @@ static func _tactical_decisive_target_line(battle: Dictionary) -> String:
 static func _tactical_caution_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
 	if _battle_has_tag(battle, "battery_nest") and int(battle.get("distance", 1)) > 0:
 		return "Tactical caution: The approach stays exposed while battery lanes are open; trade shots only if you can win the ranged exchange."
+	if _side_controls_field_objective_type(battle, "enemy", "cover_line") and int(battle.get("distance", 1)) > 0:
+		return "Tactical caution: Enemy cover still screens the firing line and commander; dislodge it before settling into a long volley."
+	if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and int(battle.get("distance", 1)) > 0:
+		return "Tactical caution: The obstruction line is still taxing the push. Lead with the toughest breach stack."
 	if _battle_has_tag(battle, "fortress_lane"):
 		return "Tactical caution: Fortress lanes compress melee into a kill zone. Brace anchors before committing the full assault."
 	if _battle_has_tag(battle, "wall_pressure") and int(battle.get("round", 1)) <= 2:
@@ -2016,10 +2040,23 @@ static func _risk_board_commander_line(battle: Dictionary) -> String:
 	elif initiative_edge < 0:
 		aura_summary = "aura trails enemy command by %d initiative" % abs(initiative_edge)
 	var cover_summary = "line covered"
-	if steady_count <= 1 and wavering_count >= 2:
-		cover_summary = "line exposed"
+	var command_screen = 0
+	if _side_controls_field_objective_type(battle, "player", "cover_line"):
+		command_screen += 2
+	if _side_controls_field_objective_type(battle, "player", "signal_beacon"):
+		command_screen += 1
+	if _side_controls_field_objective_type(battle, "enemy", "cover_line"):
+		command_screen -= 1
+	if _side_controls_field_objective_type(battle, "enemy", "signal_beacon"):
+		command_screen -= 1
+	if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and int(battle.get("distance", 1)) > 0:
+		command_screen -= 1
+	if command_screen >= 2:
+		cover_summary = "command screened"
+	elif steady_count <= 1 and wavering_count >= 2:
+		cover_summary = "command exposed"
 	elif wavering_count > 0:
-		cover_summary = "line contested"
+		cover_summary = "cover contested"
 	return "%s | Mana %d/%d | %d steady, %d wavering | %s | %s." % [
 		commander_name,
 		int(commander_payload.get("mana_current", 0)),
@@ -2082,19 +2119,25 @@ static func _risk_board_ranged_pressure_line(battle: Dictionary) -> String:
 			]
 		return "the lines are engaged, so surviving shooters now depend on protected rear lanes."
 	if enemy_shots > player_shots:
+		var enemy_lane = "covered %s" % lane_label if _side_controls_field_objective_type(battle, "enemy", "cover_line") else lane_label
 		return "enemy batteries own the %s with %d stack%s and %d shots remaining." % [
-			lane_label,
+			enemy_lane,
 			enemy_ranged,
 			"" if enemy_ranged == 1 else "s",
 			enemy_shots,
 		]
 	if player_shots > enemy_shots:
+		var player_lane = "covered %s" % lane_label if _side_controls_field_objective_type(battle, "player", "cover_line") else lane_label
 		return "friendly batteries own the %s with %d stack%s and %d shots remaining." % [
-			lane_label,
+			player_lane,
 			player_ranged,
 			"" if player_ranged == 1 else "s",
 			player_shots,
 		]
+	if _side_controls_field_objective_type(battle, "enemy", "obstruction_line"):
+		return "enemy obstructions are keeping the %s narrow even on even shots." % lane_label
+	if _side_controls_field_objective_type(battle, "player", "obstruction_line"):
+		return "friendly hands own the %s choke and can blunt the next enemy volley." % lane_label
 	if enemy_ranged > player_ranged:
 		return "enemy line holds the deeper firing stack count even on equal shots."
 	if player_ranged > enemy_ranged:
@@ -2178,6 +2221,24 @@ static func _weakest_stack_by_cohesion(battle: Dictionary, side: String) -> Dict
 			weakest_score = score
 	return weakest
 
+static func _weakest_stack_by_role(battle: Dictionary, side: String, prefer_ranged: bool) -> Dictionary:
+	var weakest = {}
+	var weakest_score = 99999
+	for stack in _alive_stacks_for_side(battle, side):
+		if bool(stack.get("ranged", false)) != prefer_ranged:
+			continue
+		var score = _stack_cohesion_total(stack, battle)
+		if _stack_is_isolated(battle, stack):
+			score -= 1
+		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
+			score -= 1
+		if weakest.is_empty() or score < weakest_score:
+			weakest = stack
+			weakest_score = score
+	if weakest.is_empty():
+		return _weakest_stack_by_cohesion(battle, side)
+	return weakest
+
 static func _side_shots_remaining(battle: Dictionary, side: String) -> int:
 	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
@@ -2240,8 +2301,17 @@ static func _priority_enemy_stack_for_briefing(battle: Dictionary) -> Dictionary
 		var score = 0
 		if bool(stack.get("ranged", false)):
 			score += 5 if _battle_has_any_tags(battle, ["battery_nest", "elevated_fire", "open_lane"]) else 3
+			if _side_controls_field_objective_type(battle, "enemy", "cover_line"):
+				score += 2
 		else:
 			score += 4 if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "chokepoint"]) else 2
+			if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and (
+				_has_ability(stack, "formation_guard")
+				or _has_ability(stack, "brace")
+				or _has_ability(stack, "reach")
+				or bool(stack.get("defending", false))
+			):
+				score += 2
 		if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach"):
 			score += 2
 		if _has_ability(stack, "bloodrush") or _has_ability(stack, "backstab") or _has_ability(stack, "harry"):
@@ -2256,8 +2326,12 @@ static func _priority_enemy_stack_for_briefing(battle: Dictionary) -> Dictionary
 static func _priority_target_reason(stack: Dictionary, battle: Dictionary) -> String:
 	if bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["battery_nest", "elevated_fire", "open_lane"]):
 		return "its ranged line controls the opening approach"
+	if bool(stack.get("ranged", false)) and _side_controls_field_objective_type(battle, String(stack.get("side", "")), "cover_line"):
+		return "it is firing from a screened cover line"
 	if bool(stack.get("ranged", false)):
 		return "it is the sharpest ranged threat on the field"
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and (_has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach")):
+		return "it is locking the obstruction line and taxing the approach"
 	if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "chokepoint"]) and (_has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach")):
 		return "it anchors the tightest lane in the melee"
 	if _has_ability(stack, "bloodrush") or _has_ability(stack, "backstab") or _has_ability(stack, "harry"):
@@ -3603,18 +3677,34 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		return ""
+	var side = String(stack.get("side", ""))
 	var momentum_gain = 1 if not bool(stack.get("ranged", false)) else 0
+	var hit_obstruction = false
 	if _hero_has_trait(battle, String(stack.get("side", "")), "vanguard") and not bool(stack.get("ranged", false)):
 		momentum_gain += 1
 	if _hero_has_trait(battle, String(stack.get("side", "")), "ambusher") and _battle_has_any_tags(battle, ["ambush_cover"]) and not bool(stack.get("ranged", false)):
 		momentum_gain += 1
 	if _battle_has_tag(battle, "open_lane") and (not bool(stack.get("ranged", false)) or _hero_has_trait(battle, String(stack.get("side", "")), "artillerist")):
 		momentum_gain += 1
+	if _side_controls_field_objective_type(battle, side, "obstruction_line") and not bool(stack.get("ranged", false)):
+		momentum_gain += 1
+	if _side_controls_field_objective_type(battle, _opposing_side(side), "obstruction_line"):
+		hit_obstruction = true
+		momentum_gain = max(0, momentum_gain - 1)
+		if not bool(stack.get("ranged", false)) and not (
+			_has_ability(stack, "reach")
+			or _has_ability(stack, "brace")
+			or _has_ability(stack, "formation_guard")
+		):
+			_adjust_stack_cohesion(battle, battle_id, -1)
 	_adjust_stack_momentum(battle, battle_id, momentum_gain)
 	var updated = _get_stack_by_id(battle, battle_id)
+	var notes = []
+	if hit_obstruction:
+		notes.append("%s hits the obstruction line." % _stack_label(updated))
 	if _stack_momentum_total(updated, battle) >= 3:
-		return "%s surges into the fight." % _stack_label(updated)
-	return ""
+		notes.append("%s surges into the fight." % _stack_label(updated))
+	return " ".join(notes)
 
 static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> String:
 	var stack = _get_stack_by_id(battle, battle_id)
@@ -3630,6 +3720,10 @@ static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> Str
 	if _hero_has_trait(battle, String(stack.get("side", "")), "linekeeper"):
 		cohesion_gain += 1
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)):
+		cohesion_gain += 1
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "cover_line"):
+		cohesion_gain += 1
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and not bool(stack.get("ranged", false)):
 		cohesion_gain += 1
 	_adjust_stack_cohesion(battle, battle_id, cohesion_gain)
 	_adjust_stack_momentum(battle, battle_id, -1)
@@ -4595,6 +4689,16 @@ static func _pressure_brief(session: SessionStateStore.SessionData) -> String:
 	var player_health = max(1, int(player_totals.get("health", 0)))
 	var enemy_health = max(1, int(enemy_totals.get("health", 0)))
 	var rounds_remaining = max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
+	if _side_controls_field_objective_type(battle, "enemy", "cover_line") and _side_controls_field_objective_type(battle, "enemy", "lane_battery") and int(battle.get("distance", 1)) > 0:
+		return "Enemy guns are firing from cover and screening their commander."
+	if _side_controls_field_objective_type(battle, "enemy", "cover_line") and int(battle.get("distance", 1)) > 0:
+		return "Enemy cover lines are still screening the approach."
+	if _side_controls_field_objective_type(battle, "player", "cover_line") and int(battle.get("distance", 1)) > 0:
+		return "Friendly cover is blunting the opening volleys."
+	if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and int(battle.get("distance", 1)) > 0:
+		return "Enemy obstructions are still compressing the approach."
+	if _side_controls_field_objective_type(battle, "player", "obstruction_line") and int(battle.get("distance", 1)) > 0:
+		return "Friendly hands now own the choke and can tax the enemy push."
 	if _battle_has_tag(battle, "battery_nest") and int(battle.get("round", 1)) <= 2 and int(battle.get("distance", 1)) > 0:
 		return "Battery lanes are still punishing the approach."
 	if _battle_has_tag(battle, "fortress_lane") and int(battle.get("round", 1)) <= 2:
@@ -5565,6 +5669,10 @@ static func _default_field_objective_summary(objective_type: String) -> String:
 	match objective_type:
 		"lane_battery":
 			return "Lane batteries sharpen ranged pressure until the approach is broken."
+		"cover_line":
+			return "A cover line screens the firing lane and keeps exposed command safer."
+		"obstruction_line":
+			return "An obstruction line clogs the approach until the barrier is forced aside."
 		"ritual_pylon":
 			return "A ritual pylon steals tempo and batters cohesion from the loose line."
 		"supply_post":
@@ -5582,6 +5690,10 @@ static func _default_field_objective_pressure_tags(objective_type: String) -> Ar
 	match objective_type:
 		"lane_battery":
 			return ["ranged", "initiative"]
+		"cover_line":
+			return ["ranged", "commander", "cohesion"]
+		"obstruction_line":
+			return ["cohesion", "momentum", "urgency"]
 		"ritual_pylon":
 			return ["initiative", "cohesion"]
 		"supply_post":
@@ -5655,6 +5767,16 @@ static func _field_objective_pressure_brief(battle: Dictionary) -> String:
 					return "%s still controls the firing lane." % _field_objective_label(objective)
 				if controller == "player" and int(battle.get("distance", 1)) > 0:
 					return "%s now favors the friendly guns." % _field_objective_label(objective)
+			"cover_line":
+				if controller == "enemy" and int(battle.get("distance", 1)) > 0:
+					return "%s is still screening the enemy guns and commander." % _field_objective_label(objective)
+				if controller == "player" and int(battle.get("distance", 1)) > 0:
+					return "%s now shelters the friendly firing line." % _field_objective_label(objective)
+			"obstruction_line":
+				if controller == "enemy" and int(battle.get("distance", 1)) > 0:
+					return "%s is still compressing the approach." % _field_objective_label(objective)
+				if controller == "player" and int(battle.get("distance", 1)) > 0:
+					return "%s has turned the choke back on the enemy push." % _field_objective_label(objective)
 			"ritual_pylon":
 				if controller == "enemy" and int(battle.get("round", 1)) >= urgency_round:
 					return "%s is grinding the line's cohesion." % _field_objective_label(objective)
@@ -5716,6 +5838,10 @@ static func _field_objective_focus_line(battle: Dictionary, side: String, stack:
 				"lane_battery":
 					if preferred_ranged:
 						return "Objective: %s supports this firing line." % _field_objective_label(objective)
+				"cover_line":
+					return "Objective: %s is screening this side from hostile fire." % _field_objective_label(objective)
+				"obstruction_line":
+					return "Objective: %s is choking the lane in this side's favor." % _field_objective_label(objective)
 				"supply_post":
 					return "Objective: %s is keeping this side steadier." % _field_objective_label(objective)
 				"signal_beacon":
@@ -5729,6 +5855,10 @@ static func _field_objective_focus_line(battle: Dictionary, side: String, stack:
 				"lane_battery":
 					if preferred_ranged or int(battle.get("distance", 1)) > 0:
 						return "Objective: %s is still working against this side." % _field_objective_label(objective)
+				"cover_line":
+					return "Objective: %s is still screening the hostile line." % _field_objective_label(objective)
+				"obstruction_line":
+					return "Objective: %s is still clogging this push." % _field_objective_label(objective)
 				"ritual_pylon", "hazard_zone":
 					return "Objective: %s is dragging this side under pressure." % _field_objective_label(objective)
 				"supply_post", "signal_beacon", "breach_point":
@@ -5766,6 +5896,16 @@ static func _field_objective_initiative_bonus(stack: Dictionary, battle: Diction
 			"lane_battery":
 				if bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
 					bonus += 1
+			"cover_line":
+				if bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0 and (
+					_has_ability(stack, "reach")
+					or _has_ability(stack, "brace")
+					or _has_ability(stack, "formation_guard")
+				):
+					bonus += 1
 			"ritual_pylon":
 				if int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
 					bonus += 1
@@ -5784,6 +5924,15 @@ static func _field_objective_attack_bonus(stack: Dictionary, battle: Dictionary)
 			"lane_battery":
 				if bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
 					bonus += 1
+			"cover_line":
+				if bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0 and not _stack_is_isolated(battle, stack):
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)) and (
+					int(battle.get("distance", 1)) <= 1
+					or int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2))
+				):
+					bonus += 1
 			"breach_point":
 				if not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 3)):
 					bonus += 1
@@ -5796,6 +5945,12 @@ static func _field_objective_defense_bonus(stack: Dictionary, battle: Dictionary
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
 		match String(objective.get("type", "")):
+			"cover_line":
+				if bool(stack.get("ranged", false)) or bool(stack.get("defending", false)):
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)):
+					bonus += 1
 			"supply_post":
 				if not _stack_is_isolated(battle, stack):
 					bonus += 1
@@ -5814,6 +5969,16 @@ static func _field_objective_cohesion_bonus(stack: Dictionary, battle: Dictionar
 			continue
 		var controller = String(objective.get("control_side", "neutral"))
 		match String(objective.get("type", "")):
+			"cover_line":
+				if controller == side and (bool(stack.get("ranged", false)) or not _stack_is_isolated(battle, stack)):
+					bonus += 1
+				elif controller == _opposing_side(side) and bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+					bonus -= 1
+			"obstruction_line":
+				if controller == side and not bool(stack.get("ranged", false)):
+					bonus += 1
+				elif controller == _opposing_side(side) and not bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+					bonus -= 1
 			"supply_post":
 				if controller == side and not _stack_is_isolated(battle, stack):
 					bonus += 1
@@ -5832,6 +5997,12 @@ static func _field_objective_momentum_bonus(stack: Dictionary, battle: Dictionar
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
 		match String(objective.get("type", "")):
+			"cover_line":
+				if bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and int(battle.get("distance", 1)) > 0:
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0 and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
+					bonus += 1
 			"breach_point":
 				if not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 3)):
 					bonus += 1
@@ -5844,10 +6015,26 @@ static func _field_objective_commander_modifier(attacker: Dictionary, defender: 
 	var modifier = 1.0
 	var attacker_side = String(attacker.get("side", ""))
 	var defender_side = String(defender.get("side", ""))
+	if _side_controls_field_objective_type(battle, attacker_side, "cover_line") and int(battle.get("distance", 1)) > 0:
+		modifier *= 1.03
+	if _side_controls_field_objective_type(battle, defender_side, "cover_line") and int(battle.get("distance", 1)) > 0:
+		modifier *= 0.97
 	if _side_controls_field_objective_type(battle, attacker_side, "signal_beacon"):
 		modifier *= 1.04
 	if _side_controls_field_objective_type(battle, defender_side, "signal_beacon"):
 		modifier *= 0.96
+	if (
+		not bool(attacker.get("ranged", false))
+		and _side_controls_field_objective_type(battle, defender_side, "obstruction_line")
+		and int(battle.get("distance", 1)) > 0
+	):
+		modifier *= 0.97
+	if (
+		not bool(attacker.get("ranged", false))
+		and _side_controls_field_objective_type(battle, attacker_side, "obstruction_line")
+		and int(battle.get("round", 1)) >= 2
+	):
+		modifier *= 1.02
 	if _side_controls_field_objective_type(battle, attacker_side, "ritual_pylon"):
 		modifier *= 1.03
 	return modifier
@@ -5900,6 +6087,35 @@ static func _field_objective_action_influence(
 						return 2 if bool(target_stack.get("ranged", false)) else 1
 				"defend":
 					return 1 if acting_side == controller and (is_ranged or _has_ability(acting_stack, "brace") or _has_ability(acting_stack, "formation_guard")) else 0
+		"cover_line":
+			match action:
+				"advance":
+					return 2 if contested and not is_ranged else (1 if contested else 0)
+				"strike":
+					return 2 if contested and not is_ranged else 1
+				"shoot":
+					return 1 if is_ranged and acting_side == controller else 0
+				"defend":
+					return 2 if acting_side == controller and (
+						is_ranged
+						or _has_ability(acting_stack, "brace")
+						or _has_ability(acting_stack, "formation_guard")
+					) else (1 if contested and not is_ranged else 0)
+				"cast_spell":
+					return 1
+		"obstruction_line":
+			match action:
+				"advance":
+					return 2 if contested and not is_ranged else (1 if contested else 0)
+				"strike":
+					return 2 if not is_ranged else 0
+				"defend":
+					return 2 if acting_side == controller and (
+						not is_ranged
+						or _has_ability(acting_stack, "brace")
+						or _has_ability(acting_stack, "formation_guard")
+						or _has_ability(acting_stack, "reach")
+					) else (1 if contested and not is_ranged else 0)
 		"ritual_pylon":
 			match action:
 				"advance", "strike":
@@ -5997,6 +6213,20 @@ static func _apply_field_objective_round_effects(battle: Dictionary) -> void:
 		if controller not in ["player", "enemy"]:
 			continue
 		match String(objective.get("type", "")):
+			"cover_line":
+				var screened = _weakest_stack_by_role(battle, controller, true)
+				if screened.is_empty():
+					screened = _weakest_stack_by_cohesion(battle, controller)
+				if not screened.is_empty() and _stack_cohesion_total(screened, battle) < int(screened.get("cohesion_base", 5)) + 1:
+					_adjust_stack_cohesion(battle, String(screened.get("battle_id", "")), 1)
+			"obstruction_line":
+				var blocking_line = _weakest_stack_by_role(battle, controller, false)
+				if not blocking_line.is_empty() and _stack_cohesion_total(blocking_line, battle) < int(blocking_line.get("cohesion_base", 5)) + 1:
+					_adjust_stack_cohesion(battle, String(blocking_line.get("battle_id", "")), 1)
+				if int(battle.get("distance", 1)) > 0:
+					var stalled = _highest_momentum_stack_for_side(battle, _opposing_side(controller))
+					if not stalled.is_empty() and not bool(stalled.get("ranged", false)):
+						_adjust_stack_momentum(battle, String(stalled.get("battle_id", "")), -1)
 			"ritual_pylon":
 				if int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
 					var pressured = _weakest_stack_by_cohesion(battle, _opposing_side(controller))

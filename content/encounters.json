@@ -13,6 +13,18 @@
         "starting_spell_ids": ["spell_stone_veil"],
         "battle_traits": ["ambusher", "bogwise"]
       },
+      "field_objectives": [
+        {
+          "id": "bramble_cover_line",
+          "type": "cover_line",
+          "label": "Bramble Screen",
+          "summary": "The thorn-choked berm lets the grove raiders fire from cover and keeps the hexer screened until the bank is stormed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "commander", "cohesion"]
+        }
+      ],
       "rewards": {"gold": 250, "experience": 180},
       "victory_flags": ["pass_cleared"]
     },
@@ -190,6 +202,16 @@
         "battle_traits": ["linekeeper", "packhunter"]
       },
       "field_objectives": [
+        {
+          "id": "levee_stake_choke",
+          "type": "obstruction_line",
+          "label": "Levee Stake Choke",
+          "summary": "The levee stakes keep the bank tight and bleed momentum until the barrier is ripped apart.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "momentum", "urgency"]
+        },
         {
           "id": "chain_slinger_lane",
           "type": "lane_battery",
@@ -385,6 +407,16 @@
       },
       "field_objectives": [
         {
+          "id": "charter_pike_gate",
+          "type": "obstruction_line",
+          "label": "Charter Pike Gate",
+          "summary": "The charter pike gate keeps the assault compressed until the barrier line is forced open.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "momentum", "urgency"]
+        },
+        {
           "id": "charter_supply_post",
           "type": "supply_post",
           "label": "Charter Supply Post",
@@ -459,6 +491,28 @@
         "starting_spell_ids": ["spell_relay_drum", "spell_cinder_burst", "spell_bloodwake_drum"],
         "battle_traits": ["ambusher", "packhunter"]
       },
+      "field_objectives": [
+        {
+          "id": "bone_rack_cover_line",
+          "type": "cover_line",
+          "label": "Bone Rack Blind",
+          "summary": "The ferry's rackwork blinds keep the watchers screened while they rake the lane from cover.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "commander", "cohesion"]
+        },
+        {
+          "id": "ferry_chain_obstruction",
+          "type": "obstruction_line",
+          "label": "Ferry Chain Choke",
+          "summary": "The dropped ferry chains keep the causeway clogged until the choke is hacked clear.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "momentum", "urgency"]
+        }
+      ],
       "rewards": {"gold": 240, "ore": 1, "experience": 250},
       "victory_flags": ["bone_ferry_watch_broken"]
     },
@@ -491,6 +545,18 @@
         "starting_spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx", "spell_bulwark_litany"],
         "battle_traits": ["linekeeper", "artillerist"]
       },
+      "field_objectives": [
+        {
+          "id": "bridge_barricade_line",
+          "type": "obstruction_line",
+          "label": "Bridge Barricade",
+          "summary": "The bridge barricade keeps the crossing narrow until the levy wall is broken apart.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "momentum", "urgency"]
+        }
+      ],
       "rewards": {"gold": 230, "wood": 1, "experience": 240},
       "victory_flags": ["bridgeward_levies_broken"]
     },
@@ -508,6 +574,16 @@
         "battle_traits": ["linekeeper", "artillerist"]
       },
       "field_objectives": [
+        {
+          "id": "relay_cover_line",
+          "type": "cover_line",
+          "label": "Lens Bulwark",
+          "summary": "The mirrored lens bulwark keeps the pickets screened while the relay crews hold the firing line.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "commander", "cohesion"]
+        },
         {
           "id": "relay_kill_lane",
           "type": "lane_battery",
@@ -658,6 +734,16 @@
         "battle_traits": ["artillerist", "linekeeper"]
       },
       "field_objectives": [
+        {
+          "id": "matrix_cover_line",
+          "type": "cover_line",
+          "label": "Prism Shelter Line",
+          "summary": "The prism shelters keep the matrix crews screened while the arrays hold the long lane.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "commander", "cohesion"]
+        },
         {
           "id": "matrix_kill_lane",
           "type": "lane_battery",

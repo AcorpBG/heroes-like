@@ -50,6 +50,15 @@ static func _field_objective_attack_bonus(stack: Dictionary, battle: Dictionary)
 			"lane_battery":
 				if bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
 					bonus += 1
+			"cover_line":
+				if bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0 and not _stack_is_isolated(battle, stack):
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)) and (
+					int(battle.get("distance", 1)) <= 1
+					or int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2))
+				):
+					bonus += 1
 			"breach_point":
 				if not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 3)):
 					bonus += 1
@@ -62,6 +71,12 @@ static func _field_objective_defense_bonus(stack: Dictionary, battle: Dictionary
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
 		match String(objective.get("type", "")):
+			"cover_line":
+				if bool(stack.get("ranged", false)) or bool(stack.get("defending", false)):
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)):
+					bonus += 1
 			"supply_post":
 				if not _stack_is_isolated(battle, stack):
 					bonus += 1
@@ -80,6 +95,16 @@ static func _field_objective_cohesion_bonus(stack: Dictionary, battle: Dictionar
 			continue
 		var controller := String(objective.get("control_side", "neutral"))
 		match String(objective.get("type", "")):
+			"cover_line":
+				if controller == side and (bool(stack.get("ranged", false)) or not _stack_is_isolated(battle, stack)):
+					bonus += 1
+				elif controller == _opposing_side(side) and bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+					bonus -= 1
+			"obstruction_line":
+				if controller == side and not bool(stack.get("ranged", false)):
+					bonus += 1
+				elif controller == _opposing_side(side) and not bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+					bonus -= 1
 			"supply_post":
 				if controller == side and not _stack_is_isolated(battle, stack):
 					bonus += 1
@@ -98,6 +123,12 @@ static func _field_objective_momentum_bonus(stack: Dictionary, battle: Dictionar
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
 		match String(objective.get("type", "")):
+			"cover_line":
+				if bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2 and int(battle.get("distance", 1)) > 0:
+					bonus += 1
+			"obstruction_line":
+				if not bool(stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0 and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
+					bonus += 1
 			"breach_point":
 				if not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 3)):
 					bonus += 1
@@ -110,10 +141,26 @@ static func _field_objective_commander_modifier(attacker: Dictionary, defender: 
 	var modifier := 1.0
 	var attacker_side := String(attacker.get("side", ""))
 	var defender_side := String(defender.get("side", ""))
+	if _side_controls_field_objective_type(battle, attacker_side, "cover_line") and int(battle.get("distance", 1)) > 0:
+		modifier *= 1.03
+	if _side_controls_field_objective_type(battle, defender_side, "cover_line") and int(battle.get("distance", 1)) > 0:
+		modifier *= 0.97
 	if _side_controls_field_objective_type(battle, attacker_side, "signal_beacon"):
 		modifier *= 1.04
 	if _side_controls_field_objective_type(battle, defender_side, "signal_beacon"):
 		modifier *= 0.96
+	if (
+		not bool(attacker.get("ranged", false))
+		and _side_controls_field_objective_type(battle, defender_side, "obstruction_line")
+		and int(battle.get("distance", 1)) > 0
+	):
+		modifier *= 0.97
+	if (
+		not bool(attacker.get("ranged", false))
+		and _side_controls_field_objective_type(battle, attacker_side, "obstruction_line")
+		and int(battle.get("round", 1)) >= 2
+	):
+		modifier *= 1.02
 	if _side_controls_field_objective_type(battle, attacker_side, "ritual_pylon"):
 		modifier *= 1.03
 	return modifier
@@ -152,6 +199,20 @@ static func _field_objective_value(
 			value = 1.8 if int(battle.get("distance", 1)) > 0 else 1.1
 			if bool(target_stack.get("ranged", false)):
 				value += 0.35
+		"cover_line":
+			value = 1.55 if int(battle.get("distance", 1)) > 0 else 1.15
+			if bool(target_stack.get("ranged", false)):
+				value += 0.35
+			if _has_ability(target_stack, "formation_guard") or _has_ability(target_stack, "brace"):
+				value += 0.2
+			if int(_hero_payload_for_side(battle, acting_side).get("mana_current", 0)) > 0:
+				value += 0.2
+		"obstruction_line":
+			value = 1.6 if int(battle.get("distance", 1)) > 0 else 1.2
+			if _has_ability(target_stack, "formation_guard") or _has_ability(target_stack, "brace") or _has_ability(target_stack, "reach"):
+				value += 0.35
+			if bool(target_stack.get("ranged", false)):
+				value -= 0.15
 		"ritual_pylon":
 			value = 1.45
 			if int(battle.get("round", 1)) >= urgency_round:
@@ -178,7 +239,7 @@ static func _field_objective_value(
 		value -= 0.1
 	if action == "cast_spell" and objective_type not in ["ritual_pylon", "hazard_zone", "signal_beacon"]:
 		value *= 0.9
-	if action == "defend" and objective_type in ["lane_battery", "signal_beacon", "supply_post"] and bool(acting_stack.get("ranged", false)):
+	if action == "defend" and objective_type in ["lane_battery", "cover_line", "signal_beacon", "supply_post"] and bool(acting_stack.get("ranged", false)):
 		value += 0.2
 	return value
 
@@ -207,6 +268,35 @@ static func _field_objective_action_influence(
 						return 2 if bool(target_stack.get("ranged", false)) else 1
 				"defend":
 					return 1 if acting_side == controller and (is_ranged or _has_ability(acting_stack, "brace") or _has_ability(acting_stack, "formation_guard")) else 0
+		"cover_line":
+			match action:
+				"advance":
+					return 2 if contested and not is_ranged else (1 if contested else 0)
+				"strike":
+					return 2 if contested and not is_ranged else 1
+				"shoot":
+					return 1 if is_ranged and acting_side == controller else 0
+				"defend":
+					return 2 if acting_side == controller and (
+						is_ranged
+						or _has_ability(acting_stack, "brace")
+						or _has_ability(acting_stack, "formation_guard")
+					) else (1 if contested and not is_ranged else 0)
+				"cast_spell":
+					return 1
+		"obstruction_line":
+			match action:
+				"advance":
+					return 2 if contested and not is_ranged else (1 if contested else 0)
+				"strike":
+					return 2 if not is_ranged else 0
+				"defend":
+					return 2 if acting_side == controller and (
+						not is_ranged
+						or _has_ability(acting_stack, "brace")
+						or _has_ability(acting_stack, "formation_guard")
+						or _has_ability(acting_stack, "reach")
+					) else (1 if contested and not is_ranged else 0)
 		"ritual_pylon":
 			match action:
 				"advance", "strike":

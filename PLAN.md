@@ -132,6 +132,7 @@ Difficulty: High
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
 - add a release-facing battle-side order consequence board inside the real battle shell using current action availability, damage windows, retaliation exposure, spell windows, objective pull, and likely hostile reply state instead of a planner or advisor layer
 - turn battle withdrawal into a release-facing surrender and pursuit aftermath slice through the existing battle, outcome, town, economy, campaign, and shell flow so retreat and surrender produce different strategic fallout instead of sharing one generic exit path
+- deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities that change movement pressure, ranged threat, commander safety, target priority, and battle summaries through the existing battle pipeline
 
 ## Immediate execution order
 1. Confirm engine, language, content, and save strategy in docs.
@@ -240,7 +241,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: overworld logistics escort and route-security consequences through the existing logistics-site response path, hero-command state, town growth and recovery rules, and hostile raid contestation.
+- current item 104 focus: battle-side cover lines, obstruction lanes, and firing-lane identity through authored encounter `field_objectives`, current battle summaries, and existing AI scoring.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -250,6 +251,8 @@ Difficulty: High
 111. [completed] Re-run repository-local validation for surrender action wiring, pursuit aftermath, recap surfacing, and save-version preservation.
 112. [completed] Remove the remaining content-pipeline warning gaps for authored `attack_buff` spells, `encounter_resolved` objectives, `objective_not_met` and raid-count conditions, and `add_enemy_pressure` effects through the existing validator and core runtime paths.
 113. [completed] Re-run repository-local validation and Godot headless boot so those authored constructs pass without the prior warning spam and save version `9` remains unchanged.
+114. [completed] Deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities through the existing encounter, battle, and AI rules pipeline.
+115. [completed] Re-run repository-local validation and Godot headless boot for battlefield cover, obstruction, lane-pressure summaries, and save-version preservation.
 
 ## Standards
 - no throwaway prototype code if avoidable
@@ -315,3 +318,4 @@ Difficulty: High
 - town exchange play now stays in that same economy pipeline: `building_market_square`, `building_river_granary_exchange`, and `building_resonant_exchange` drive trade rates through faction and town economy profiles, `OverworldRules.gd` owns player and hostile quote or liquidation logic, and `TownRules.gd` plus the town shell only surface the core-owned exchange hall summaries and actions
 - town order readiness now stays in that same shell boundary: `OverworldRules.gd` exposes exchange-aware cost readiness from current reserves plus authored market rates, `TownRules.gd` ranks build, levy, response, and wall-coverage pressure into a single ledger, and `TownShell.gd` only binds the resulting panel instead of adding planner-side state
 - battle spell timing now stays in that same shell boundary: `BattleRules.gd` ranks live spell windows, status follow-through, protection pressure, and hostile burst risk from current battle payload only, `SpellRules.gd` adds timing-aware spell summaries, and `BattleShell.gd` only binds the resulting timing panel instead of adding advisor-side state
+- battlefield cover and obstruction identity now stays in that same battle boundary: authored encounter `field_objectives` can declare `cover_line` and `obstruction_line`, while `BattleRules.gd` and `BattleAiRules.gd` turn them into movement tax, ranged safety, commander screening, target-priority, and pressure-summary state without adding a separate planner or subsystem
