@@ -13,6 +13,8 @@ func _run() -> void:
 		return
 	if not _run_hostile_commander_identity_regression():
 		return
+	if not _run_hostile_commander_recovery_regression():
+		return
 	if not _run_enemy_hero_intercept_regression():
 		return
 	if not _run_enemy_town_assault_regression():
@@ -212,6 +214,145 @@ func _run_hostile_commander_identity_regression() -> bool:
 		return false
 	if String(session.battle.get("enemy_hero", {}).get("name", "")) != commander_name:
 		push_error("Core systems smoke: hostile commander identity did not carry from overworld raid into battle.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_hostile_commander_recovery_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	var states = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != "faction_mireclaw":
+			continue
+		var roster = state.get("commander_roster", [])
+		for roster_index in range(roster.size()):
+			var entry = roster[roster_index]
+			if not (entry is Dictionary):
+				continue
+			entry["status"] = (
+				EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+				if roster_index == 0
+				else EnemyAdventureRules.COMMANDER_STATUS_RECOVERING
+			)
+			entry["active_placement_id"] = ""
+			entry["recovery_day"] = 0 if roster_index == 0 else session.day + 99
+			roster[roster_index] = entry
+		state["commander_roster"] = roster
+		state["pressure"] = 0
+		state["raid_counter"] = 0
+		state["commander_counter"] = 0
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
+
+	_set_active_hero_position(session, Vector2i(2, 2))
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "commander_recovery_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 3,
+			"y": 2,
+			"difficulty": "pressure",
+			"combat_seed": 991299,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 1,
+			"target_kind": "town",
+			"target_placement_id": "riverwatch_hold",
+			"target_label": "Riverwatch Hold",
+			"target_x": 0,
+			"target_y": 2,
+			"goal_x": 2,
+			"goal_y": 2,
+		},
+		session
+	)
+	var commander_state: Dictionary = raid.get("enemy_commander_state", {})
+	var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
+	var commander_name := String(commander_state.get("name", ""))
+	if roster_hero_id == "" or commander_name == "":
+		push_error("Core systems smoke: recovery setup failed to attach a named hostile commander.")
+		get_tree().quit(1)
+		return false
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var engage_result := OverworldRules.try_move(session, 1, 0)
+	if String(engage_result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: recovery setup failed to enter battle against the hostile commander.")
+		get_tree().quit(1)
+		return false
+	for index in range(session.battle.get("stacks", []).size()):
+		var stack = session.battle.get("stacks", [])[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+			continue
+		stack["total_health"] = 0
+		session.battle["stacks"][index] = stack
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "victory":
+		push_error("Core systems smoke: hostile commander recovery coverage did not resolve through battle victory.")
+		get_tree().quit(1)
+		return false
+
+	var recovering_entry := _enemy_commander_entry(_enemy_state_by_faction(session, "faction_mireclaw"), roster_hero_id)
+	if String(recovering_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_RECOVERING:
+		push_error("Core systems smoke: defeated hostile commander did not enter save-backed recovery.")
+		get_tree().quit(1)
+		return false
+	var recovery_day := int(recovering_entry.get("recovery_day", 0))
+	if recovery_day <= session.day:
+		push_error("Core systems smoke: hostile commander recovery day was not scheduled into the future.")
+		get_tree().quit(1)
+		return false
+	var threat_watch := OverworldRules.describe_frontier_threats(session)
+	if "Command recovering" not in threat_watch or commander_name not in threat_watch:
+		push_error("Core systems smoke: frontier watch did not expose hostile commander recovery after victory.")
+		get_tree().quit(1)
+		return false
+
+	var restored = SessionState.new_session_data()
+	restored.from_dict(session.to_dict())
+	OverworldRules.normalize_overworld_state(restored)
+	var restored_entry := _enemy_commander_entry(_enemy_state_by_faction(restored, "faction_mireclaw"), roster_hero_id)
+	if String(restored_entry.get("status", "")) != EnemyAdventureRules.COMMANDER_STATUS_RECOVERING:
+		push_error("Core systems smoke: restored session lost hostile commander recovery state.")
+		get_tree().quit(1)
+		return false
+	if int(restored_entry.get("recovery_day", 0)) != recovery_day:
+		push_error("Core systems smoke: restored hostile commander recovery timing changed unexpectedly.")
+		get_tree().quit(1)
+		return false
+
+	_set_enemy_pressure(restored, "faction_mireclaw", 10)
+	var raid_count_before := EnemyTurnRules.active_raid_count(restored, "faction_mireclaw")
+	EnemyTurnRules.run_enemy_turn(restored)
+	if EnemyTurnRules.active_raid_count(restored, "faction_mireclaw") != raid_count_before:
+		push_error("Core systems smoke: hostile commander returned from defeat before the recovery rule elapsed.")
+		get_tree().quit(1)
+		return false
+
+	restored.day = recovery_day
+	_set_enemy_pressure(restored, "faction_mireclaw", 10)
+	var return_result := EnemyTurnRules.run_enemy_turn(restored)
+	if String(return_result.get("message", "")) == "":
+		push_error("Core systems smoke: hostile commander recovery turn produced no feedback.")
+		get_tree().quit(1)
+		return false
+	var returned_raid := _active_enemy_raid_by_roster_hero(restored, "faction_mireclaw", roster_hero_id)
+	if returned_raid.is_empty():
+		push_error("Core systems smoke: recovered hostile commander did not become eligible for a later raid.")
+		get_tree().quit(1)
+		return false
+	if String(returned_raid.get("enemy_commander_state", {}).get("name", "")) != commander_name:
+		push_error("Core systems smoke: recovered hostile commander returned without preserving identity.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -572,6 +713,41 @@ func _set_town_owner(session, placement_id: String, owner: String) -> void:
 			towns[index] = town
 			break
 	session.overworld["towns"] = towns
+
+func _enemy_state_by_faction(session, faction_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return state
+	return {}
+
+func _enemy_commander_entry(state: Dictionary, roster_hero_id: String) -> Dictionary:
+	for entry in state.get("commander_roster", []):
+		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
+			return entry
+	return {}
+
+func _set_enemy_pressure(session, faction_id: String, amount: int) -> void:
+	var states = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		state["pressure"] = amount
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
+
+func _active_enemy_raid_by_roster_hero(session, faction_id: String, roster_hero_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if OverworldRules.is_encounter_resolved(session, encounter):
+			continue
+		if String(encounter.get("enemy_commander_state", {}).get("roster_hero_id", "")) == roster_hero_id:
+			return encounter
+	return {}
 
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

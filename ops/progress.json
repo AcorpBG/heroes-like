@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T23:28:00Z",
+  "updatedAt": "2026-04-15T23:59:00Z",
   "status": "in_progress",
-  "currentPhase": "hostile-commander-continuity",
-  "currentSliceId": "phase-5-hostile-overworld-commander-identity",
-  "currentSliceTitle": "Give hostile raid pressure durable commander identity and carry it through overworld and battle state",
+  "currentPhase": "hostile-commander-recovery",
+  "currentSliceId": "phase-5-hostile-overworld-commander-recovery",
+  "currentSliceTitle": "Make hostile commanders durable strategic assets through defeat and recovery continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a hostile-overworld opposition slice that seeds raid hosts from faction hero rosters, surfaces named hostile commanders in frontier and town readouts, carries commander identity into battle and back into surviving encounter state, and adds focused regression coverage for commander continuity plus save-resume preservation.",
+  "currentSliceNotes": "Completed a hostile-overworld continuity slice that keeps per-faction commander rosters in save-backed enemy state, blocks immediate hostile commander reuse through explicit recovery timing, feeds battle defeat or assault outcomes back into future raid eligibility, surfaces recovery in existing threat summaries, and adds focused regression coverage for defeat, restore, and return flow.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -944,6 +944,18 @@
       "title": "Re-run the required menu smoke, full headless Godot boot, and a live DISPLAY=:99 capture after the submenu-first main-menu pass",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-hostile-overworld-commander-recovery",
+      "title": "Make hostile commanders durable strategic assets through save-backed availability, defeat, and recovery continuity",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-hostile-overworld-commander-recovery-validation",
+      "title": "Re-run the required Godot smoke scenes and headless boot for hostile commander recovery timing, duplicate-prevention, restore continuity, and summary surfacing",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1166,6 +1178,9 @@
     "This run kept the approved 002-style scenic front intact while removing the always-open stage dock from first view, so campaign, skirmish, saves, guide, and settings now open only as a summoned overlay from the right command spine instead of covering the painted surface by default.",
     "Godot 4.6.2 headless validation passed again for tests/menu_outcome_visual_smoke.tscn and full boot, and refreshed DISPLAY=:99 captures confirmed both the clean first view and the overlay-on-demand menu behavior.",
     "This run turned hostile overworld pressure into clearer product-facing play by routing hero-hunt raids into real field interception battles, surfacing raid intent and consequences through OverworldRules summaries, and requiring defended enemy towns to be taken through battle-backed assaults instead of instant state flips.",
-    "The required Godot 4.6.2 headless validations all passed again after the hostile-pressure slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot; the smoke scenes still emit the unrelated baseline ObjectDB leak warning on exit."
+    "The required Godot 4.6.2 headless validations all passed again after the hostile-pressure slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot; the smoke scenes still emit the unrelated baseline ObjectDB leak warning on exit.",
+    "This run made hostile commanders strategically durable by adding save-backed per-faction commander rosters, explicit `available`/`active`/`recovering` lifecycle, battle-fed recovery timing, and commander-gated raid spawning on the existing enemy-turn and encounter systems instead of creating a parallel meta layer.",
+    "Frontier and town threat summaries now surface commander recovery windows from that shared enemy-state roster, and the core systems smoke suite now proves that defeating a named hostile commander blocks immediate reuse, survives restore, and later returns with the same identity.",
+    "Godot 4.6.2 headless validation passed again after the hostile commander recovery slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot."
   ]
 }

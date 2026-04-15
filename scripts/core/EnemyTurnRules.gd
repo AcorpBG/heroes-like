@@ -31,6 +31,7 @@ static func build_enemy_states(configs: Variant) -> Array:
 				"treasury": _blank_resource_pool(),
 				"posture": "probing",
 				"captured_artifact_ids": [],
+				"commander_roster": [],
 			}
 		)
 	return states
@@ -61,11 +62,17 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 					"treasury": _normalize_resource_pool(existing_state.get("treasury", {})),
 					"posture": _normalize_posture(existing_state.get("posture", "probing")),
 					"captured_artifact_ids": _normalize_string_array(existing_state.get("captured_artifact_ids", [])),
+					"commander_roster": EnemyAdventureRulesScript.normalize_commander_roster(
+						session,
+						faction_id,
+						existing_state.get("commander_roster", [])
+					),
 				}
 			)
 
 	session.overworld["enemy_states"] = normalized_states
 	EnemyAdventureRulesScript.normalize_raid_armies(session)
+	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 
 static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	DifficultyRulesScript.normalize_session(session)
@@ -97,6 +104,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		states[state_index] = state
 
 	session.overworld["enemy_states"] = states
+	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
 	return {"ok": true, "message": " ".join(messages)}
 
 static func describe_threats(session: SessionStateStoreScript.SessionData) -> String:
@@ -141,6 +149,13 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		var focus = EnemyAdventureRulesScript.describe_focus(session, faction_id, true)
 		if focus != "":
 			line_parts.append(focus)
+		var commander_recovery = EnemyAdventureRulesScript.public_commander_recovery_summary(
+			session,
+			faction_id,
+			state.get("commander_roster", [])
+		)
+		if commander_recovery != "":
+			line_parts.append(commander_recovery)
 		var visible_commanders = EnemyAdventureRulesScript.raid_commander_summaries(
 			_visible_raids_for_faction(session, faction_id),
 			2
@@ -572,6 +587,12 @@ static func _can_launch_raid(
 		return false
 	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(session, config, faction_id):
 		return false
+	if not EnemyAdventureRulesScript.has_available_raid_commander(
+		session,
+		faction_id,
+		state.get("commander_roster", [])
+	):
+		return false
 	var encounter_pool = config.get("raid_encounter_ids", [])
 	if not (encounter_pool is Array) or encounter_pool.is_empty():
 		return false
@@ -587,8 +608,20 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		return {}
 
 	var raid_counter = int(state.get("raid_counter", 0))
+	var faction_id := String(config.get("faction_id", ""))
+	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
+	if roster_hero_id == "":
+		return {}
 	var encounter_id = String(encounter_pool[raid_counter % encounter_pool.size()])
 	state["raid_counter"] = raid_counter + 1
+	state["commander_counter"] = int(state.get("commander_counter", 0)) + 1
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, String(config.get("faction_id", "")))
 	var raid_threshold = _raid_threshold_for_strategy(session, config, String(config.get("faction_id", "")))
 	var commitment_scale = clamp(
@@ -600,16 +633,6 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 
 	var encounters = session.overworld.get("encounters", [])
 	var placement_id = "%s_raid_%d" % [String(config.get("faction_id", "enemy")), int(state.get("raid_counter", 0))]
-	var faction_id := String(config.get("faction_id", ""))
-	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
-	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id(
-		session,
-		faction_id,
-		int(state.get("commander_counter", 0)),
-		occupied_commander_ids
-	)
-	if roster_hero_id != "":
-		state["commander_counter"] = int(state.get("commander_counter", 0)) + 1
 	var raid_seed: Dictionary = {
 		"placement_id": placement_id,
 		"encounter_id": encounter_id,
@@ -622,14 +645,14 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		"arrived": false,
 		"goal_distance": 9999,
 	}
-	if roster_hero_id != "":
-		raid_seed["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
-			raid_seed,
-			roster_hero_id,
-			faction_id,
-			session,
-			occupied_commander_ids
-		)
+	raid_seed["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+		raid_seed,
+		roster_hero_id,
+		faction_id,
+		session,
+		occupied_commander_ids,
+		state.get("commander_roster", [])
+	)
 	var raid = EnemyAdventureRulesScript.assign_target(
 		session,
 		config,
@@ -947,6 +970,20 @@ static func _determine_posture(
 	if active_raid_count(session, faction_id) > 0:
 		return "raiding"
 	var threshold = _raid_threshold_for_strategy(session, config, faction_id)
+	if (
+		int(state.get("pressure", 0)) >= threshold
+		and not EnemyAdventureRulesScript.has_available_raid_commander(
+			session,
+			faction_id,
+			state.get("commander_roster", [])
+		)
+		and EnemyAdventureRulesScript.recovering_commander_count(
+			session,
+			faction_id,
+			state.get("commander_roster", [])
+		) > 0
+	):
+		return "reorganizing"
 	if int(state.get("pressure", 0)) >= threshold:
 		return "massing"
 	if threatened_towns > 0:
@@ -955,6 +992,15 @@ static func _determine_posture(
 
 static func _public_posture_label(state: Dictionary, raid_threshold: int, faction_id: String) -> String:
 	match _normalize_posture(state.get("posture", "probing")):
+		"reorganizing":
+			match faction_id:
+				"faction_embercourt":
+					return "Road captains are reorganizing after the last clash"
+				"faction_mireclaw":
+					return "Wounded warbands are slipping back into the reeds to regroup"
+				"faction_sunvault":
+					return "Relay commanders are recalibrating after the last exchange"
+			return "Hostile commanders are regrouping before the next push"
 		"fortifying":
 			match faction_id:
 				"faction_embercourt":
@@ -1442,7 +1488,7 @@ static func _apply_discount(cost: Variant, discount_percent: int) -> Dictionary:
 
 static func _normalize_posture(value: Variant) -> String:
 	var posture = String(value)
-	if posture in ["probing", "massing", "raiding", "fortifying", "collapsed"]:
+	if posture in ["probing", "massing", "raiding", "fortifying", "reorganizing", "collapsed"]:
 		return posture
 	return "probing"
 

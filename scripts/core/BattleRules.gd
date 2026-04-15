@@ -8,6 +8,7 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 
@@ -3368,6 +3369,11 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	_sync_player_force_from_battle(session)
 	var front_result := _apply_victory_front_aftermath(session)
 	_append_nonempty_message(messages, String(front_result.get("summary", "")))
+	var commander_aftermath := _resolve_enemy_commander_aftermath(
+		session,
+		EnemyAdventureRulesScript.COMMANDER_OUTCOME_DEFEATED
+	)
+	_append_nonempty_message(messages, commander_aftermath)
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "victory"))
 	_sync_enemy_force_from_battle(session, true)
 	HeroCommandRulesScript.commit_active_hero(session)
@@ -3386,7 +3392,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		{
 			"resource_summary": "Battle rewards %s." % reward_summary if reward_summary != "" else "",
 			"pressure_summary": String(front_result.get("summary", "")),
-			"recovery_summary": "",
+			"recovery_summary": commander_aftermath,
 		}
 	)
 	session.battle = {}
@@ -3532,6 +3538,22 @@ static func _apply_victory_front_aftermath(session: SessionStateStoreScript.Sess
 		pressure_delta = -2
 	var pressure_summary := _apply_front_pressure_shift(session, faction_id, pressure_delta, "victory")
 	return {"summary": pressure_summary}
+
+static func _resolve_enemy_commander_aftermath(
+	session: SessionStateStoreScript.SessionData,
+	outcome_id: String
+) -> String:
+	if session == null or session.battle.is_empty():
+		return ""
+	var commander_state = session.battle.get("enemy_hero", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return ""
+	return EnemyAdventureRulesScript.apply_resolved_commander_aftermath(
+		session,
+		_battle_enemy_faction_id(session),
+		commander_state,
+		outcome_id
+	)
 
 static func _apply_withdrawal_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
 	var preview := _build_withdrawal_aftermath_preview(session, outcome)
@@ -4847,8 +4869,13 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 	var recovery_message = _apply_town_defense_recovery(session, "loss")
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
+	var commander_aftermath := _resolve_enemy_commander_aftermath(
+		session,
+		EnemyAdventureRulesScript.COMMANDER_OUTCOME_ASSAULT_VICTORY
+	)
 	messages.append(base_summary)
 	_append_nonempty_message(messages, recovery_message)
+	_append_nonempty_message(messages, commander_aftermath)
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "town_lost"))
 
 	var defending_hero = HeroCommandRulesScript.hero_by_id(session, defending_hero_id)
@@ -4858,7 +4885,7 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 			var report = session.flags.get("last_battle_aftermath", {})
 			if report is Dictionary:
 				report["summary"] = base_summary
-				report["recovery_summary"] = recovery_message
+				report["recovery_summary"] = _join_messages([recovery_message, commander_aftermath])
 				session.flags["last_battle_aftermath"] = report
 			_append_nonempty_message(messages, String(defeat_result.get("message", "")))
 			return {"state": "defeat", "message": " ".join(messages)}
@@ -4870,7 +4897,7 @@ static func _finalize_town_defense_loss(session: SessionStateStoreScript.Session
 		session,
 		"town_lost",
 		base_summary,
-		{"recovery_summary": recovery_message}
+		{"recovery_summary": _join_messages([recovery_message, commander_aftermath])}
 	)
 	session.battle = {}
 	OverworldRulesScript.refresh_fog_of_war(session)

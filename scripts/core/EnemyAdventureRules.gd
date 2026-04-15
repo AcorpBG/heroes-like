@@ -8,6 +8,14 @@ const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 
+const COMMANDER_STATUS_AVAILABLE := "available"
+const COMMANDER_STATUS_ACTIVE := "active"
+const COMMANDER_STATUS_RECOVERING := "recovering"
+const COMMANDER_OUTCOME_DEFEATED := "defeated"
+const COMMANDER_OUTCOME_ASSAULT_VICTORY := "assault_victory"
+const COMMANDER_RECOVERY_DAYS_DEFEATED := 3
+const COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY := 1
+
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	if _raid_target_valid(session, raid):
 		raid = _refresh_target(session, raid)
@@ -141,6 +149,267 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 	if changed:
 		session.overworld["encounters"] = normalized
 
+static func normalize_all_commander_rosters(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return
+	var changed := false
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary):
+			continue
+		var faction_id := String(state.get("faction_id", ""))
+		if faction_id == "":
+			continue
+		var normalized_roster = normalize_commander_roster(
+			session,
+			faction_id,
+			state.get("commander_roster", [])
+		)
+		if state.get("commander_roster", []) != normalized_roster:
+			state["commander_roster"] = normalized_roster
+			states[index] = state
+			changed = true
+	if changed:
+		session.overworld["enemy_states"] = states
+
+static func normalize_commander_roster(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant
+) -> Array:
+	var existing_map: Dictionary = {}
+	if roster_value is Array:
+		for entry_value in roster_value:
+			if not (entry_value is Dictionary):
+				continue
+			var roster_hero_id := String(entry_value.get("roster_hero_id", ""))
+			if roster_hero_id == "":
+				continue
+			existing_map[roster_hero_id] = entry_value
+	var active_map = _active_commander_map(session, faction_id)
+	var normalized := []
+	var session_day := int(session.day) if session != null else 0
+	for roster_hero_id in _faction_commander_ids(faction_id):
+		var existing = existing_map.get(roster_hero_id, {})
+		if not (existing is Dictionary):
+			existing = {}
+		var commander_state = build_roster_commander_state(
+			roster_hero_id,
+			faction_id,
+			existing.get("commander_state", {})
+		)
+		var entry := {
+			"roster_hero_id": roster_hero_id,
+			"status": COMMANDER_STATUS_AVAILABLE,
+			"active_placement_id": "",
+			"recovery_day": 0,
+			"last_outcome": String(existing.get("last_outcome", "")),
+			"times_defeated": max(0, int(existing.get("times_defeated", 0))),
+			"commander_state": commander_state,
+		}
+		if active_map.has(roster_hero_id):
+			var active_entry: Dictionary = active_map.get(roster_hero_id, {})
+			entry["status"] = COMMANDER_STATUS_ACTIVE
+			entry["active_placement_id"] = String(active_entry.get("placement_id", ""))
+		else:
+			var existing_status: String = _normalize_commander_status(
+				existing.get("status", COMMANDER_STATUS_AVAILABLE)
+			)
+			var recovery_day: int = max(0, int(existing.get("recovery_day", 0)))
+			if existing_status == COMMANDER_STATUS_RECOVERING and recovery_day > session_day:
+				entry["status"] = COMMANDER_STATUS_RECOVERING
+				entry["recovery_day"] = recovery_day
+		normalized.append(entry)
+	return normalized
+
+static func commander_roster_for_faction(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> Array:
+	if session == null or faction_id == "":
+		return []
+	for state in session.overworld.get("enemy_states", []):
+		if not (state is Dictionary):
+			continue
+		if String(state.get("faction_id", "")) != faction_id:
+			continue
+		var roster = state.get("commander_roster", [])
+		return roster if roster is Array else []
+	return []
+
+static func has_available_raid_commander(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant = []
+) -> bool:
+	for entry_value in normalize_commander_roster(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) == COMMANDER_STATUS_AVAILABLE:
+			return true
+	return false
+
+static func recovering_commander_count(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant = []
+) -> int:
+	var count := 0
+	for entry_value in normalize_commander_roster(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) == COMMANDER_STATUS_RECOVERING:
+			count += 1
+	return count
+
+static func public_commander_recovery_summary(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant = []
+) -> String:
+	var session_day := int(session.day) if session != null else 0
+	var recovering := []
+	for entry_value in normalize_commander_roster(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_RECOVERING:
+			continue
+		var recovery_day: int = max(0, int(entry_value.get("recovery_day", 0)))
+		var remaining_days: int = max(1, recovery_day - session_day)
+		var commander_name := _commander_entry_name(entry_value)
+		if commander_name == "":
+			continue
+		recovering.append("%s (%dd)" % [commander_name, remaining_days])
+		if recovering.size() >= 2:
+			break
+	if recovering.is_empty():
+		return ""
+	var summary := "Command recovering %s" % ", ".join(recovering)
+	var total_recovering := recovering_commander_count(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	)
+	if total_recovering > recovering.size():
+		summary += " (+%d more)" % (total_recovering - recovering.size())
+	return summary
+
+static func apply_resolved_commander_aftermath(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_state: Variant,
+	outcome_id: String
+) -> String:
+	if session == null or faction_id == "" or not (commander_state is Dictionary):
+		return ""
+	var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		return ""
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return ""
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
+		for roster_index in range(roster.size()):
+			var entry = roster[roster_index]
+			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
+				continue
+			entry["status"] = COMMANDER_STATUS_RECOVERING
+			entry["active_placement_id"] = ""
+			entry["last_outcome"] = outcome_id
+			entry["commander_state"] = build_roster_commander_state(
+				roster_hero_id,
+				faction_id,
+				commander_state
+			)
+			var recovery_days := 0
+			var summary := ""
+			match outcome_id:
+				COMMANDER_OUTCOME_DEFEATED:
+					recovery_days = COMMANDER_RECOVERY_DAYS_DEFEATED
+					entry["times_defeated"] = max(0, int(entry.get("times_defeated", 0))) + 1
+					summary = "%s is routed and cannot lead another raid for %d day%s." % [
+						_commander_entry_name(entry),
+						recovery_days,
+						"" if recovery_days == 1 else "s",
+					]
+				COMMANDER_OUTCOME_ASSAULT_VICTORY:
+					recovery_days = COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY
+					summary = "%s is consolidating the breach and will not return for %d day%s." % [
+						_commander_entry_name(entry),
+						recovery_days,
+						"" if recovery_days == 1 else "s",
+					]
+				_:
+					entry["status"] = COMMANDER_STATUS_AVAILABLE
+			entry["recovery_day"] = int(session.day) + recovery_days if recovery_days > 0 else 0
+			roster[roster_index] = entry
+			state["commander_roster"] = roster
+			states[index] = state
+			session.overworld["enemy_states"] = states
+			return summary
+	return ""
+
+static func build_roster_commander_state(
+	roster_hero_id: String,
+	faction_id: String,
+	existing_state: Dictionary = {}
+) -> Dictionary:
+	var hero_template = ContentService.get_hero(roster_hero_id)
+	var command_source = hero_template.get("command", existing_state.get("command", {}))
+	var battle_traits_source = hero_template.get("battle_traits", [])
+	var specialties_source = hero_template.get("starting_specialties", [])
+	var specialty_focus_source = hero_template.get("specialty_focus_ids", [])
+	var spell_ids_source = _hero_battle_spell_ids(hero_template)
+	if hero_template.is_empty():
+		battle_traits_source = existing_state.get("battle_traits", [])
+		specialties_source = existing_state.get("specialties", [])
+		specialty_focus_source = existing_state.get("specialty_focus_ids", [])
+		var existing_spellbook = existing_state.get("spellbook", {})
+		if existing_spellbook is Dictionary:
+			spell_ids_source = existing_spellbook.get("known_spell_ids", [])
+	var commander_state = {
+		"id": String(existing_state.get("id", "enemy_commander:%s:%s" % [faction_id, roster_hero_id])),
+		"roster_hero_id": roster_hero_id,
+		"faction_id": faction_id,
+		"name": String(hero_template.get("name", existing_state.get("name", "Enemy Commander"))),
+		"archetype": String(hero_template.get("archetype", existing_state.get("archetype", ""))),
+		"identity_summary": String(
+			hero_template.get("identity_summary", existing_state.get("identity_summary", ""))
+		),
+		"command": _normalize_command_payload(command_source),
+		"battle_traits": _merge_unique_strings(battle_traits_source, []),
+		"specialties": _merge_unique_strings(specialties_source, []),
+		"specialty_focus_ids": _merge_unique_strings(specialty_focus_source, []),
+	}
+	return SpellRulesScript.refresh_daily_mana(
+		SpellRulesScript.ensure_hero_spellbook(
+			commander_state,
+			{
+				"command": commander_state.get("command", {}),
+				"starting_spell_ids": _merge_unique_strings(spell_ids_source, []),
+			}
+		)
+	)
+
 static func ensure_raid_army(
 	encounter: Dictionary,
 	session: SessionStateStoreScript.SessionData = null,
@@ -155,7 +424,14 @@ static func ensure_raid_army(
 	if not normalized_army.is_empty():
 		encounter["enemy_army"] = normalized_army
 	if String(encounter.get("spawned_by_faction_id", "")) != "":
-		var commander_state = build_raid_commander_state(encounter, "", "", session, occupied_commander_ids)
+		var commander_state = build_raid_commander_state(
+			encounter,
+			"",
+			"",
+			session,
+			occupied_commander_ids,
+			commander_roster_for_faction(session, String(encounter.get("spawned_by_faction_id", "")))
+		)
 		if not commander_state.is_empty():
 			encounter["enemy_commander_state"] = commander_state
 	return encounter
@@ -187,35 +463,46 @@ static func select_raid_commander_roster_hero_id(
 	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	preferred_index: int = 0,
-	occupied_commander_ids: Dictionary = {}
+	occupied_commander_ids: Dictionary = {},
+	commander_roster: Variant = []
 ) -> String:
 	if faction_id == "":
 		return ""
-	var faction = ContentService.get_faction(faction_id)
-	var hero_ids: Array = []
-	for hero_id_value in faction.get("hero_ids", []):
-		var hero_id := String(hero_id_value)
-		if hero_id != "" and hero_id not in hero_ids:
-			hero_ids.append(hero_id)
+	var hero_ids: Array = _faction_commander_ids(faction_id)
 	if hero_ids.is_empty():
 		return ""
 	var occupied: Dictionary = occupied_commander_ids
 	if occupied.is_empty():
 		occupied = occupied_raid_commander_ids(session, faction_id)
+	var normalized_roster = normalize_commander_roster(
+		session,
+		faction_id,
+		commander_roster if commander_roster is Array else commander_roster_for_faction(session, faction_id)
+	)
+	var unavailable: Dictionary = {}
+	for entry_value in normalized_roster:
+		if not (entry_value is Dictionary):
+			continue
+		var roster_hero_id := String(entry_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE:
+			unavailable[roster_hero_id] = true
 	var start_index: int = posmod(preferred_index, hero_ids.size())
 	for offset in range(hero_ids.size()):
 		var candidate_id = String(hero_ids[(start_index + offset) % hero_ids.size()])
-		if candidate_id == "" or occupied.has(candidate_id):
+		if candidate_id == "" or occupied.has(candidate_id) or unavailable.has(candidate_id):
 			continue
 		return candidate_id
-	return String(hero_ids[start_index])
+	return ""
 
 static func build_raid_commander_state(
 	encounter: Dictionary,
 	roster_hero_id: String = "",
 	faction_id: String = "",
 	session: SessionStateStoreScript.SessionData = null,
-	occupied_commander_ids: Dictionary = {}
+	occupied_commander_ids: Dictionary = {},
+	commander_roster: Variant = []
 ) -> Dictionary:
 	if encounter.is_empty():
 		return {}
@@ -231,19 +518,33 @@ static func build_raid_commander_state(
 			session,
 			resolved_faction_id,
 			_preferred_commander_index_for_encounter(encounter),
-			occupied_commander_ids
+			occupied_commander_ids,
+			commander_roster
 		)
+	if resolved_roster_hero_id == "" and resolved_faction_id != "" and existing_state.is_empty():
+		return {}
 	var hero_template = ContentService.get_hero(resolved_roster_hero_id)
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var encounter_commander = encounter_template.get("enemy_commander", {})
 	if not (encounter_commander is Dictionary):
 		encounter_commander = {}
-	var command_source = encounter_commander.get("command", hero_template.get("command", {}))
-	var commander_state = existing_state.duplicate(true)
+	var commander_seed := build_roster_commander_state(
+		resolved_roster_hero_id,
+		resolved_faction_id,
+		existing_state
+	)
+	var command_source = encounter_commander.get(
+		"command",
+		commander_seed.get("command", hero_template.get("command", {}))
+	)
+	var commander_state = existing_state.duplicate(true) if not existing_state.is_empty() else commander_seed.duplicate(true)
 	commander_state["id"] = String(
 		commander_state.get(
 			"id",
-			"raid_commander:%s" % String(encounter.get("placement_id", encounter.get("encounter_id", "raid")))
+			commander_seed.get(
+				"id",
+				"raid_commander:%s" % String(encounter.get("placement_id", encounter.get("encounter_id", "raid")))
+			)
 		)
 	)
 	commander_state["roster_hero_id"] = resolved_roster_hero_id
@@ -251,24 +552,29 @@ static func build_raid_commander_state(
 	commander_state["name"] = String(
 		commander_state.get(
 			"name",
-			hero_template.get("name", encounter_commander.get("name", "Enemy Commander"))
+			commander_seed.get("name", hero_template.get("name", encounter_commander.get("name", "Enemy Commander")))
 		)
 	)
-	commander_state["archetype"] = String(commander_state.get("archetype", hero_template.get("archetype", "")))
+	commander_state["archetype"] = String(
+		commander_state.get("archetype", commander_seed.get("archetype", hero_template.get("archetype", "")))
+	)
 	commander_state["identity_summary"] = String(
-		commander_state.get("identity_summary", hero_template.get("identity_summary", ""))
+		commander_state.get(
+			"identity_summary",
+			commander_seed.get("identity_summary", hero_template.get("identity_summary", ""))
+		)
 	)
 	commander_state["command"] = _normalize_command_payload(commander_state.get("command", command_source))
 	commander_state["battle_traits"] = _merge_unique_strings(
-		hero_template.get("battle_traits", []),
+		commander_seed.get("battle_traits", hero_template.get("battle_traits", [])),
 		commander_state.get("battle_traits", encounter_commander.get("battle_traits", []))
 	)
 	commander_state["specialties"] = _merge_unique_strings(
-		hero_template.get("starting_specialties", []),
+		commander_seed.get("specialties", hero_template.get("starting_specialties", [])),
 		commander_state.get("specialties", [])
 	)
 	commander_state["specialty_focus_ids"] = _merge_unique_strings(
-		hero_template.get("specialty_focus_ids", []),
+		commander_seed.get("specialty_focus_ids", hero_template.get("specialty_focus_ids", [])),
 		commander_state.get("specialty_focus_ids", [])
 	)
 	return SpellRulesScript.ensure_hero_spellbook(
@@ -277,7 +583,7 @@ static func build_raid_commander_state(
 			"command": commander_state.get("command", {}),
 			"starting_spell_ids": _merge_unique_strings(
 				_hero_battle_spell_ids(hero_template),
-				commander_state.get("spellbook", {}).get("known_spell_ids", encounter_commander.get("starting_spell_ids", []))
+				encounter_commander.get("starting_spell_ids", [])
 			),
 		}
 	)
@@ -315,6 +621,58 @@ static func raid_commander_summaries(encounters: Array, limit: int = 2) -> Array
 		if limit > 0 and names.size() >= limit:
 			break
 	return names
+
+static func _faction_commander_ids(faction_id: String) -> Array:
+	var hero_ids: Array = []
+	if faction_id == "":
+		return hero_ids
+	var faction = ContentService.get_faction(faction_id)
+	for hero_id_value in faction.get("hero_ids", []):
+		var hero_id := String(hero_id_value)
+		if hero_id != "" and hero_id not in hero_ids:
+			hero_ids.append(hero_id)
+	return hero_ids
+
+static func _active_commander_map(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String = ""
+) -> Dictionary:
+	var active: Dictionary = {}
+	if session == null:
+		return active
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
+			continue
+		if faction_id != "" and String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		var commander_state = encounter.get("enemy_commander_state", {})
+		if not (commander_state is Dictionary) or commander_state.is_empty():
+			continue
+		var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		active[roster_hero_id] = {
+			"placement_id": String(encounter.get("placement_id", "")),
+			"commander_state": commander_state.duplicate(true),
+		}
+	return active
+
+static func _normalize_commander_status(value: Variant) -> String:
+	var status := String(value)
+	if status in [COMMANDER_STATUS_AVAILABLE, COMMANDER_STATUS_ACTIVE, COMMANDER_STATUS_RECOVERING]:
+		return status
+	return COMMANDER_STATUS_AVAILABLE
+
+static func _commander_entry_name(entry: Dictionary) -> String:
+	var commander_state = entry.get("commander_state", {})
+	if commander_state is Dictionary:
+		var commander_name := String(commander_state.get("name", ""))
+		if commander_name != "":
+			return commander_name
+	return String(ContentService.get_hero(String(entry.get("roster_hero_id", ""))).get("name", ""))
 
 static func _hero_battle_spell_ids(hero_template: Dictionary) -> Array:
 	var spell_ids := []

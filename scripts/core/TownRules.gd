@@ -1631,7 +1631,26 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 		var siege_progress := 0
 		if String(config.get("siege_target_placement_id", "")) == town_placement_id:
 			siege_progress = max(0, int(state.get("siege_progress", 0)))
-		if visible_marching <= 0 and visible_pressuring <= 0 and not hidden_targeting and siege_progress <= 0:
+		var commander_recovery := ""
+		if (
+			String(config.get("siege_target_placement_id", "")) == town_placement_id
+			or visible_marching > 0
+			or visible_pressuring > 0
+			or hidden_targeting
+			or siege_progress > 0
+		):
+			commander_recovery = EnemyAdventureRulesScript.public_commander_recovery_summary(
+				session,
+				faction_id,
+				state.get("commander_roster", [])
+			)
+		if (
+			visible_marching <= 0
+			and visible_pressuring <= 0
+			and not hidden_targeting
+			and siege_progress <= 0
+			and commander_recovery == ""
+		):
 			continue
 
 		var clauses := []
@@ -1664,6 +1683,8 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 				siege_progress,
 				max(1, int(config.get("siege_capture_progress", 1))),
 			])
+		if commander_recovery != "":
+			clauses.append(commander_recovery)
 		threat_lines.append("%s: %s" % [
 			String(config.get("label", ContentService.get_faction(faction_id).get("name", faction_id))),
 			"; ".join(clauses),
