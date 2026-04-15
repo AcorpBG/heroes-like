@@ -223,6 +223,11 @@ Battle shell presentation decision:
 - the battle scene now also centers on a dedicated drawn battlefield board with deployment cards, distance bands, objective markers, focus links, and turn-order chips so the current fight reads like a tactical board before it reads like a log
 - `BattleShell.gd`, `BattleShell.tscn`, and `BattleBoardView.gd` only translate normalized battle payload state into that board plus compact tactical cards, keeping active-stack actions, spell casting, target cycling, save, retreat, and surrender flow inside `BattleRules.gd`
 
+Shell density-family correction decision:
+- the main menu, overworld, town, battle, and outcome shells now follow one denser strategy-game layout rule set inspired by Heroes III screen logic: one dominant play surface, one or two tight command rails, compressed chips or short summaries, and tabbed secondary detail instead of permanent report acreage
+- `MainMenu.tscn`, `OverworldShell.tscn`, `TownShell.tscn`, `BattleShell.tscn`, `ScenarioOutcomeShell.tscn`, and `scripts/ui/FrontierVisualKit.gd` now coordinate around smaller chrome, shorter copy, and fixed-height shell framing so the screens read as one product family instead of a menu shell plus separate dashboard variants
+- the shell smoke scenes now anchor to unique named nodes for each major board or action rail, so layout refactors can keep moving without brittle deep-path test coupling
+
 Shared shell visual-kit decision:
 - `scripts/ui/FrontierVisualKit.gd` now owns the reusable panel, button, tab, list, slider, and compact-summary treatment used by the main menu, overworld, town, battle, and outcome shells instead of each scene carrying its own near-duplicate styling helpers
 - `scenes/ui/FrontierBannerGlyph.gd` now provides lightweight drawn-code heraldry marks that can be dropped into banner rows across the converted shells, keeping the placeholder UI art original, local, and easy to iterate without widening the asset pipeline

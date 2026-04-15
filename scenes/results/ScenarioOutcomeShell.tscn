@@ -19,54 +19,48 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.0666667, 0.0745098, 0.0901961, 1)
 
-[node name="Scroll" type="ScrollContainer" parent="."]
+[node name="ContentMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-horizontal_scroll_mode = 0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
-[node name="ContentMargin" type="MarginContainer" parent="Scroll"]
+[node name="Content" type="VBoxContainer" parent="ContentMargin"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 18
+theme_override_constants/separation = 8
 
-[node name="Content" type="VBoxContainer" parent="Scroll/ContentMargin"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 14
-
-[node name="Banner" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+[node name="Banner" type="PanelContainer" parent="ContentMargin/Content"]
 layout_mode = 2
 
-[node name="BannerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner"]
-layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
-
-[node name="BannerColumns" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="BannerArtPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns"]
-custom_minimum_size = Vector2(340, 0)
-layout_mode = 2
-
-[node name="BannerArtPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel"]
+[node name="BannerPad" type="MarginContainer" parent="ContentMargin/Content/Banner"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="OutcomeBanner" type="Control" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel/BannerArtPad"]
+[node name="BannerColumns" type="HBoxContainer" parent="ContentMargin/Content/Banner/BannerPad"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BannerArtPanel" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns"]
+layout_mode = 2
+custom_minimum_size = Vector2(356, 0)
+
+[node name="BannerArtPad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="OutcomeBanner" type="Control" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel/BannerArtPad"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
@@ -74,391 +68,383 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2")
 
-[node name="BannerInfo" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns"]
+[node name="BannerInfo" type="VBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 10
+theme_override_constants/separation = 6
 
-[node name="TopLine" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
+[node name="TopLine" type="HBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
-[node name="ResultGlyph" type="Control" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine"]
+[node name="ResultGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(52, 48)
+custom_minimum_size = Vector2(48, 34)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "outcome"
 
-[node name="ResultBadgePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine"]
+[node name="ResultBadgePanel" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ResultBadgePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine/ResultBadgePanel"]
+[node name="ResultBadgePad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine/ResultBadgePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 6
 
-[node name="ResultBadge" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine/ResultBadgePanel/ResultBadgePad"]
+[node name="ResultBadge" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine/ResultBadgePanel/ResultBadgePad"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "OUTCOME"
 
-[node name="Mode" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine"]
+[node name="Mode" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 2
-autowrap_mode = 3
 text = "Campaign | Captain | Day 1"
 
-[node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
+[node name="Header" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 26
 text = "Scenario Outcome"
 
-[node name="Summary" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
+[node name="Summary" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Outcome summary"
 
-[node name="ActionStatusPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
+[node name="ActionStatusPanel" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo"]
 layout_mode = 2
 
-[node name="ActionStatusPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/ActionStatusPanel"]
+[node name="ActionStatusPad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/ActionStatusPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
-[node name="ActionStatus" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/ActionStatusPanel/ActionStatusPad"]
+[node name="ActionStatus" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/ActionStatusPanel/ActionStatusPad"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Review the outcome, then choose the next step."
 
-[node name="RecapColumns" type="HSplitContainer" parent="Scroll/ContentMargin/Content"]
+[node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offset = 820
+theme_override_constants/separation = 8
 
-[node name="LeftColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="ForceCards" type="HBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="HeroPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards"]
+[node name="CommandColumn" type="VBoxContainer" parent="ContentMargin/Content/MainRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 8
 
-[node name="HeroPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/HeroPanel"]
+[node name="ForceCards" type="HBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
-[node name="HeroBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/HeroPanel/HeroPad"]
+[node name="HeroPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards"]
 layout_mode = 2
-theme_override_constants/separation = 6
+size_flags_horizontal = 3
 
-[node name="HeroTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/HeroPanel/HeroPad/HeroBox"]
+[node name="HeroPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HeroBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HeroTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad/HeroBox"]
+layout_mode = 2
 text = "Commander"
 
-[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/HeroPanel/HeroPad/HeroBox"]
+[node name="Hero" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 170)
 autowrap_mode = 3
 text = "Hero summary"
 
-[node name="ArmyPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards"]
+[node name="ArmyPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
 
-[node name="ArmyPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ArmyPanel"]
+[node name="ArmyPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="ArmyBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ArmyPanel/ArmyPad"]
+[node name="ArmyBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
-[node name="ArmyTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ArmyPanel/ArmyPad/ArmyBox"]
+[node name="ArmyTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad/ArmyBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Army Ledger"
+text = "Army"
 
-[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ArmyPanel/ArmyPad/ArmyBox"]
+[node name="Army" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ArmyPanel/ArmyPad/ArmyBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 170)
 autowrap_mode = 3
 text = "Army summary"
 
-[node name="ResourcePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards"]
+[node name="ResourcePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResourcePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ResourceBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="ResourceTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad/ResourceBox"]
+layout_mode = 2
+text = "Rewards"
+
+[node name="Resources" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ForceCards/ResourcePanel/ResourcePad/ResourceBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Resource summary"
+
+[node name="ActionsPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/CommandColumn"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ResourcePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ResourcePanel"]
+[node name="ActionsPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="ResourceBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ResourcePanel/ResourcePad"]
+[node name="ActionsBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="ResourceTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ResourcePanel/ResourcePad/ResourceBox"]
+[node name="ActionsTitle" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "War Chest"
+text = "Next Step"
 
-[node name="Resources" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ForceCards/ResourcePanel/ResourcePad/ResourceBox"]
+[node name="ActionsHint" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Advance the campaign, replay, or return to the frontier from one clear action rail."
+
+[node name="Actions" type="HFlowContainer" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 170)
-autowrap_mode = 3
-text = "Resource summary"
+size_flags_vertical = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
 
-[node name="ProgressionPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn"]
+[node name="SidebarShell" type="PanelContainer" parent="ContentMargin/Content/MainRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(332, 0)
+size_flags_vertical = 3
+
+[node name="SidebarPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SidebarBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="RecapTabs" type="TabContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ProgressionPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs"]
 layout_mode = 2
 
-[node name="ProgressionPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ProgressionPanel"]
+[node name="ProgressionPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/ProgressionPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="ProgressionBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ProgressionPanel/ProgressionPad"]
+[node name="ProgressionBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/ProgressionPanel/ProgressionPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
-[node name="ProgressionTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ProgressionPanel/ProgressionPad/ProgressionBox"]
+[node name="ProgressionTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/ProgressionPanel/ProgressionPad/ProgressionBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Readiness And Progress"
+text = "Progress"
 
-[node name="Progression" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/ProgressionPanel/ProgressionPad/ProgressionBox"]
+[node name="Progression" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/ProgressionPanel/ProgressionPad/ProgressionBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Progression summary"
 
-[node name="AftermathPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn"]
+[node name="CampaignArcPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs"]
 layout_mode = 2
 
-[node name="AftermathPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/AftermathPanel"]
+[node name="CampaignArcPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CampaignArcPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="AftermathBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/AftermathPanel/AftermathPad"]
+[node name="CampaignArcBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CampaignArcPanel/CampaignArcPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
-[node name="AftermathTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/AftermathPanel/AftermathPad/AftermathBox"]
+[node name="CampaignArcTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CampaignArcPanel/CampaignArcPad/CampaignArcBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Aftermath"
+text = "Arc"
 
-[node name="Aftermath" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/LeftColumn/AftermathPanel/AftermathPad/AftermathBox"]
+[node name="CampaignArc" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CampaignArcPanel/CampaignArcPad/CampaignArcBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
-text = "Aftermath summary"
+text = "Campaign arc"
 
-[node name="RightColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns"]
-custom_minimum_size = Vector2(360, 0)
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="CampaignArcPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn"]
+[node name="CarryoverPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs"]
 layout_mode = 2
 
-[node name="CampaignArcPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CampaignArcPanel"]
+[node name="CarryoverPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CarryoverPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="CampaignArcBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CampaignArcPanel/CampaignArcPad"]
+[node name="CarryoverBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CarryoverPanel/CarryoverPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
-[node name="CampaignArcTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CampaignArcPanel/CampaignArcPad/CampaignArcBox"]
+[node name="CarryoverTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CarryoverPanel/CarryoverPad/CarryoverBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Campaign Arc"
-
-[node name="CampaignArc" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CampaignArcPanel/CampaignArcPad/CampaignArcBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Campaign arc summary"
-
-[node name="CarryoverPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn"]
-layout_mode = 2
-
-[node name="CarryoverPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CarryoverPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="CarryoverBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CarryoverPanel/CarryoverPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="CarryoverTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CarryoverPanel/CarryoverPad/CarryoverBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
 text = "Carryover"
 
-[node name="Carryover" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/CarryoverPanel/CarryoverPad/CarryoverBox"]
+[node name="Carryover" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/CarryoverPanel/CarryoverPad/CarryoverBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
-text = "Carryover summary"
+text = "Carryover"
 
-[node name="JournalPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn"]
+[node name="AftermathPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs"]
 layout_mode = 2
 
-[node name="JournalPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/JournalPanel"]
+[node name="AftermathPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/AftermathPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="JournalBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/JournalPanel/JournalPad"]
+[node name="AftermathBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/AftermathPanel/AftermathPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
-[node name="JournalTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/JournalPanel/JournalPad/JournalBox"]
+[node name="AftermathTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/AftermathPanel/AftermathPad/AftermathBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+text = "Aftermath"
+
+[node name="Aftermath" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/AftermathPanel/AftermathPad/AftermathBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Aftermath"
+
+[node name="JournalPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs"]
+layout_mode = 2
+
+[node name="JournalPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/JournalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="JournalBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/JournalPanel/JournalPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="JournalTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/JournalPanel/JournalPad/JournalBox"]
+layout_mode = 2
 text = "Chronicle"
 
-[node name="Journal" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/JournalPanel/JournalPad/JournalBox"]
+[node name="Journal" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/RecapTabs/JournalPanel/JournalPad/JournalBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
-text = "Campaign chronicle summary"
+text = "Journal"
 
-[node name="SavePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn"]
+[node name="SavePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
 layout_mode = 2
 
-[node name="SavePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel"]
+[node name="SavePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
-[node name="SaveBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad"]
+[node name="SaveBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
-[node name="SaveTitle" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox"]
+[node name="SaveTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Record Outcome"
+text = "Save"
 
-[node name="SaveStatus" type="Label" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox"]
+[node name="SaveStatus" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Latest ready save: none."
 
-[node name="SaveBar" type="HFlowContainer" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox"]
+[node name="SaveBar" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox"]
 layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
 
-[node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(180, 0)
-layout_mode = 2
-
-[node name="Save" type="Button" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar"]
+[node name="SaveSlot" type="OptionButton" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Save Outcome"
 
-[node name="Menu" type="Button" parent="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar"]
+[node name="Save" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Return to Menu"
+text = "Save"
 
-[node name="ActionsPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-
-[node name="ActionsPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/ActionsPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
-
-[node name="ActionsBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/ActionsPanel/ActionsPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ActionsTitle" type="Label" parent="Scroll/ContentMargin/Content/ActionsPanel/ActionsPad/ActionsBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Next Orders"
-
-[node name="ActionsHint" type="Label" parent="Scroll/ContentMargin/Content/ActionsPanel/ActionsPad/ActionsBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Launch the next chapter, retry a skirmish, or return to the front-end without losing the resolved state."
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/ActionsPanel/ActionsPad/ActionsBox"]
+[node name="Menu" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
+text = "Menu"
 
-[node name="Compatibility" type="Node" parent="."]
-
-[node name="ForceSplit" type="HBoxContainer" parent="Compatibility"]
-visible = false
-layout_mode = 2
-
-[node name="SaveBar" type="HBoxContainer" parent="Compatibility"]
-visible = false
-layout_mode = 2
-
-[node name="Actions" type="HBoxContainer" parent="Compatibility"]
-visible = false
-layout_mode = 2
-
-[connection signal="item_selected" from="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar/SaveSlot" to="." method="_on_save_slot_selected"]
-[connection signal="pressed" from="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar/Menu" to="." method="_on_menu_pressed"]
+[connection signal="item_selected" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Menu" to="." method="_on_menu_pressed"]

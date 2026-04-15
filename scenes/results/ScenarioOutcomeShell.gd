@@ -10,6 +10,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _result_badge_label: Label = %ResultBadge
 @onready var _result_badge_panel: PanelContainer = %ResultBadgePanel
 @onready var _outcome_banner: Control = %OutcomeBanner
+@onready var _recap_tabs: TabContainer = %RecapTabs
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
 @onready var _resource_label: Label = %Resources
@@ -191,9 +192,16 @@ func _apply_visual_theme() -> void:
 		if panel is PanelContainer:
 			FrontierVisualKit.apply_panel(panel, String(panel_tones.get(panel.name, "ink")))
 
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 180.0, 36.0)
-	FrontierVisualKit.apply_button(_save_button, "primary", 150.0, 36.0)
-	FrontierVisualKit.apply_button(_menu_button, "secondary", 170.0, 36.0)
+	FrontierVisualKit.apply_tab_container(_recap_tabs)
+	_recap_tabs.set_tab_title(0, "Progress")
+	_recap_tabs.set_tab_title(1, "Arc")
+	_recap_tabs.set_tab_title(2, "Carry")
+	_recap_tabs.set_tab_title(3, "After")
+	_recap_tabs.set_tab_title(4, "Journal")
+
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 132.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_save_button, "primary", 126.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_menu_button, "secondary", 138.0, 34.0, 13)
 
 	for label in find_children("*", "Label", true, false):
 		if label is Label:
@@ -202,6 +210,6 @@ func _apply_visual_theme() -> void:
 	for label_name in ["HeroTitle", "ArmyTitle", "ResourceTitle", "ProgressionTitle", "AftermathTitle", "CampaignArcTitle", "CarryoverTitle", "JournalTitle", "SaveTitle", "ActionsTitle"]:
 		for title_label in find_children(label_name, "Label", true, false):
 			if title_label is Label:
-				FrontierVisualKit.apply_label(title_label, "title")
-	FrontierVisualKit.apply_label(_header_label, "title", 26)
-	FrontierVisualKit.apply_label(_save_status_label, "muted")
+				FrontierVisualKit.apply_label(title_label, "title", 14)
+	FrontierVisualKit.apply_label(_header_label, "title", 24)
+	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)

@@ -2,65 +2,69 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
-@onready var _banner_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner
-@onready var _crest_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame
-@onready var _town_stage_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel
-@onready var _town_stage_frame_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame
-@onready var _town_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel
-@onready var _outlook_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/OutlookPanel
-@onready var _command_ledger_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/CommandLedgerPanel
-@onready var _command_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel
-@onready var _build_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel
-@onready var _recruit_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel
-@onready var _study_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel
-@onready var _market_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel
-@onready var _logistics_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel
-@onready var _crest_glyph = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox/CrestGlyph
-@onready var _crest_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox/CrestLabel
-@onready var _header_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Header
-@onready var _status_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Status
-@onready var _resource_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Resources
-@onready var _event_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/Event
-@onready var _town_stage_view = $Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame/TownStageInset/TownStage
-@onready var _outlook_label: Label = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/OutlookPanel/OutlookPad/OutlookBox/Outlook
-@onready var _command_ledger_label: Label = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox/CommandLedger
-@onready var _hero_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/Hero
-@onready var _heroes_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/Heroes
-@onready var _specialty_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/Specialties
-@onready var _hero_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/HeroBar/Actions
-@onready var _specialty_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/SpecialtyBar/Actions
-@onready var _army_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/Army
-@onready var _town_label: Label = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox/TownSummary
-@onready var _defense_label: Label = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox/Defense
-@onready var _pressure_label: Label = $Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox/Pressure
-@onready var _building_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox/Buildings
-@onready var _build_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox/BuildBar/Actions
-@onready var _market_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad/MarketBox/Market
-@onready var _market_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad/MarketBox/MarketBar/Actions
-@onready var _recruit_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad/RecruitBox/Recruitment
-@onready var _recruit_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad/RecruitBox/RecruitBar/Actions
-@onready var _study_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox/Study
-@onready var _study_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox/StudyBar/Actions
-@onready var _spellbook_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox/Spellbook
-@onready var _tavern_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/Tavern
-@onready var _tavern_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/TavernBar/Actions
-@onready var _transfer_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/Transfer
-@onready var _transfer_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/TransferBar/Actions
-@onready var _response_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/Responses
-@onready var _response_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/ResponseBar/Actions
-@onready var _artifact_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/Artifacts
-@onready var _artifact_actions: Container = $Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/ArtifactBar/Actions
-@onready var _save_status_label: Label = $Scroll/ContentMargin/Content/Footer/SaveStatus
-@onready var _save_slot_picker: OptionButton = $Scroll/ContentMargin/Content/Footer/SaveSlot
-@onready var _save_button: Button = $Scroll/ContentMargin/Content/Footer/Save
-@onready var _leave_button: Button = $Scroll/ContentMargin/Content/Footer/Leave
-@onready var _menu_button: Button = $Scroll/ContentMargin/Content/Footer/Menu
+@onready var _banner_panel: PanelContainer = %Banner
+@onready var _crest_panel: PanelContainer = %CrestFrame
+@onready var _town_stage_panel: PanelContainer = %TownStagePanel
+@onready var _town_stage_frame_panel: PanelContainer = %TownStageFrame
+@onready var _town_panel: PanelContainer = %TownPanel
+@onready var _outlook_panel: PanelContainer = %OutlookPanel
+@onready var _command_ledger_panel: PanelContainer = %CommandLedgerPanel
+@onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
+@onready var _command_panel: PanelContainer = %CommandPanel
+@onready var _management_tabs: TabContainer = %ManagementTabs
+@onready var _build_panel: PanelContainer = %BuildPanel
+@onready var _recruit_panel: PanelContainer = %RecruitPanel
+@onready var _study_panel: PanelContainer = %StudyPanel
+@onready var _market_panel: PanelContainer = %MarketPanel
+@onready var _logistics_panel: PanelContainer = %LogisticsPanel
+@onready var _footer_panel: PanelContainer = %FooterPanel
+@onready var _crest_glyph = %CrestGlyph
+@onready var _crest_label: Label = %CrestLabel
+@onready var _header_label: Label = %Header
+@onready var _status_label: Label = %Status
+@onready var _resource_label: Label = %Resources
+@onready var _event_label: Label = %Event
+@onready var _town_stage_view = %TownStage
+@onready var _outlook_label: Label = %Outlook
+@onready var _command_ledger_label: Label = %CommandLedger
+@onready var _hero_label: Label = %Hero
+@onready var _heroes_label: Label = %Heroes
+@onready var _specialty_label: Label = %Specialties
+@onready var _hero_actions: Container = %HeroActions
+@onready var _specialty_actions: Container = %SpecialtyActions
+@onready var _army_label: Label = %Army
+@onready var _town_label: Label = %TownSummary
+@onready var _defense_label: Label = %Defense
+@onready var _pressure_label: Label = %Pressure
+@onready var _building_label: Label = %Buildings
+@onready var _build_actions: Container = %BuildActions
+@onready var _market_label: Label = %Market
+@onready var _market_actions: Container = %MarketActions
+@onready var _recruit_label: Label = %Recruitment
+@onready var _recruit_actions: Container = %RecruitActions
+@onready var _study_label: Label = %Study
+@onready var _study_actions: Container = %StudyActions
+@onready var _spellbook_label: Label = %Spellbook
+@onready var _tavern_label: Label = %Tavern
+@onready var _tavern_actions: Container = %TavernActions
+@onready var _transfer_label: Label = %Transfer
+@onready var _transfer_actions: Container = %TransferActions
+@onready var _response_label: Label = %Responses
+@onready var _response_actions: Container = %ResponseActions
+@onready var _artifact_label: Label = %Artifacts
+@onready var _artifact_actions: Container = %ArtifactActions
+@onready var _save_status_label: Label = %SaveStatus
+@onready var _save_slot_picker: OptionButton = %SaveSlot
+@onready var _save_button: Button = %Save
+@onready var _leave_button: Button = %Leave
+@onready var _menu_button: Button = %Menu
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
 
 func _ready() -> void:
 	_apply_visual_theme()
+	_management_tabs.current_tab = 0
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter a town without an active scenario session.")
@@ -474,13 +478,14 @@ func _crest_text() -> String:
 	return name.left(4).to_upper()
 
 func _style_action_button(button: Button, primary: bool = false) -> void:
-	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", 132.0, 34.0)
+	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", 120.0, 32.0, 13)
 
 func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_banner_panel, "banner")
 	FrontierVisualKit.apply_badge(_crest_panel, "gold")
 	FrontierVisualKit.apply_panel(_town_stage_panel, "earth")
 	FrontierVisualKit.apply_panel(_town_stage_frame_panel, "frame")
+	FrontierVisualKit.apply_panel(_sidebar_shell_panel, "ink")
 	FrontierVisualKit.apply_panel(_command_panel, "ink")
 	FrontierVisualKit.apply_panel(_town_panel, "gold")
 	FrontierVisualKit.apply_panel(_outlook_panel, "teal")
@@ -490,17 +495,28 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_study_panel, "blue")
 	FrontierVisualKit.apply_panel(_market_panel, "gold")
 	FrontierVisualKit.apply_panel(_logistics_panel, "teal")
+	FrontierVisualKit.apply_panel(_footer_panel, "banner")
+	FrontierVisualKit.apply_tab_container(_management_tabs)
+	_management_tabs.set_tab_title(0, "Build")
+	_management_tabs.set_tab_title(1, "Muster")
+	_management_tabs.set_tab_title(2, "Spells")
+	_management_tabs.set_tab_title(3, "Trade")
+	_management_tabs.set_tab_title(4, "Log")
 
 	for button in [_save_button, _leave_button, _menu_button]:
 		_style_action_button(button, true)
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 150.0, 36.0)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 126.0, 34.0, 13)
 
-	FrontierVisualKit.apply_label(_header_label, "title")
-	FrontierVisualKit.apply_label(_status_label, "body")
-	FrontierVisualKit.apply_label(_resource_label, "gold")
-	FrontierVisualKit.apply_label(_crest_label, "title")
-	FrontierVisualKit.apply_label(_event_label, "body")
-	FrontierVisualKit.apply_label(_save_status_label, "muted")
+	for label in find_children("*Title", "Label", true, false):
+		if label is Label:
+			FrontierVisualKit.apply_label(label, "title", 14)
+
+	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_status_label, "body", 12)
+	FrontierVisualKit.apply_label(_resource_label, "gold", 12)
+	FrontierVisualKit.apply_label(_crest_label, "title", 18)
+	FrontierVisualKit.apply_label(_event_label, "body", 12)
+	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
 
 	FrontierVisualKit.apply_labels([
 		_outlook_label,

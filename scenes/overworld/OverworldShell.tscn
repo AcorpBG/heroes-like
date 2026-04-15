@@ -23,10 +23,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Shell" type="PanelContainer" parent="ShellMargin"]
 unique_name_in_owner = true
@@ -36,16 +36,16 @@ size_flags_vertical = 3
 
 [node name="ShellPad" type="MarginContainer" parent="ShellMargin/Shell"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Content" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="TopStrip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 unique_name_in_owner = true
@@ -54,17 +54,17 @@ size_flags_horizontal = 3
 
 [node name="TopPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="TopBar" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="BannerGlyph" type="Control" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar"]
-custom_minimum_size = Vector2(56, 48)
+custom_minimum_size = Vector2(48, 42)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "overworld"
@@ -161,7 +161,7 @@ theme_override_constants/separation = 8
 [node name="SummaryStrip" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip"]
 unique_name_in_owner = true
@@ -170,10 +170,10 @@ size_flags_horizontal = 3
 
 [node name="EventPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/EventPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 9
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 9
-theme_override_constants/margin_bottom = 7
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 6
 
 [node name="EventBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/EventPanel/EventPad"]
 layout_mode = 2
@@ -197,10 +197,10 @@ size_flags_horizontal = 3
 
 [node name="CommitmentPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/CommitmentPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 9
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 9
-theme_override_constants/margin_bottom = 7
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 6
 
 [node name="CommitmentBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/CommitmentPanel/CommitmentPad"]
 layout_mode = 2
@@ -224,10 +224,10 @@ size_flags_horizontal = 3
 
 [node name="BriefingPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/BriefingPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 9
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 9
-theme_override_constants/margin_bottom = 7
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 6
 
 [node name="BriefingBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/BriefingPanel/BriefingPad"]
 layout_mode = 2
@@ -277,7 +277,7 @@ text = "Click adjacent tiles to march. Click distant tiles to route."
 
 [node name="CommandBand" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 126)
+custom_minimum_size = Vector2(0, 112)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -437,7 +437,7 @@ text = "Menu"
 
 [node name="SidebarShell" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(322, 0)
+custom_minimum_size = Vector2(316, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -456,7 +456,7 @@ theme_override_constants/separation = 8
 
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 182)
+custom_minimum_size = Vector2(0, 156)
 layout_mode = 2
 size_flags_horizontal = 3
 

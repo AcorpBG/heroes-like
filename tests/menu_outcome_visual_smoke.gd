@@ -23,19 +23,19 @@ func _run_main_menu_smoke() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	var hero_stage = shell.get_node_or_null("RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroArtPanel/HeroArtPad/HeroStage")
+	var hero_stage = shell.get_node_or_null("%HeroStage")
 	if hero_stage == null:
 		push_error("Main menu smoke: hero landing art did not load.")
 		get_tree().quit(1)
 		return false
 
-	var campaign_list = shell.get_node_or_null("RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/CampaignRosterPanel/CampaignRosterPad/CampaignRosterBox/CampaignList")
+	var campaign_list = shell.get_node_or_null("%CampaignList")
 	if campaign_list == null or int(campaign_list.get_item_count()) <= 0:
 		push_error("Main menu smoke: campaign browser did not populate.")
 		get_tree().quit(1)
 		return false
 
-	var skirmish_list = shell.get_node_or_null("RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList")
+	var skirmish_list = shell.get_node_or_null("%SkirmishList")
 	if skirmish_list == null or int(skirmish_list.get_item_count()) <= 0:
 		push_error("Main menu smoke: skirmish browser did not populate.")
 		get_tree().quit(1)
@@ -60,19 +60,19 @@ func _run_outcome_smoke() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	var banner = shell.get_node_or_null("Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerArtPanel/BannerArtPad/OutcomeBanner")
+	var banner = shell.get_node_or_null("%OutcomeBanner")
 	if banner == null:
 		push_error("Outcome smoke: result banner did not load.")
 		get_tree().quit(1)
 		return false
 
-	var actions = shell.get_node_or_null("Scroll/ContentMargin/Content/ActionsPanel/ActionsPad/ActionsBox/Actions")
+	var actions = shell.get_node_or_null("%Actions")
 	if actions == null or actions.get_child_count() <= 0:
 		push_error("Outcome smoke: follow-up action row did not populate.")
 		get_tree().quit(1)
 		return false
 
-	var save_slot = shell.get_node_or_null("Scroll/ContentMargin/Content/RecapColumns/RightColumn/SavePanel/SavePad/SaveBox/SaveBar/SaveSlot")
+	var save_slot = shell.get_node_or_null("%SaveSlot")
 	if save_slot == null or int(save_slot.get_item_count()) <= 0:
 		push_error("Outcome smoke: save slot picker did not populate.")
 		get_tree().quit(1)

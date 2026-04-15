@@ -29,13 +29,13 @@ func _run_town_smoke() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	var board = shell.get_node_or_null("Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame/TownStageInset/TownStage")
+	var board = shell.get_node_or_null("%TownStage")
 	if board == null:
 		push_error("Town smoke: town stage board did not load.")
 		get_tree().quit(1)
 		return false
 
-	var build_actions = shell.get_node_or_null("Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox/BuildBar/Actions")
+	var build_actions = shell.get_node_or_null("%BuildActions")
 	if build_actions == null or build_actions.get_child_count() <= 0:
 		push_error("Town smoke: construction action surface did not populate.")
 		get_tree().quit(1)
@@ -64,7 +64,7 @@ func _run_battle_smoke() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	var board = shell.get_node_or_null("Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame/BattlefieldInset/BattleBoard")
+	var board = shell.get_node_or_null("%BattleBoard")
 	if board == null:
 		push_error("Battle smoke: battle board did not load.")
 		get_tree().quit(1)
@@ -80,7 +80,7 @@ func _run_battle_smoke() -> bool:
 		shell._refresh()
 		await get_tree().process_frame
 
-	var defend_button = shell.get_node_or_null("Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Defend")
+	var defend_button = shell.get_node_or_null("%Defend")
 	if defend_button == null:
 		push_error("Battle smoke: defend action button did not load.")
 		get_tree().quit(1)

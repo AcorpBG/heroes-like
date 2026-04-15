@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T18:18:00Z",
+  "updatedAt": "2026-04-15T18:30:00Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-overworld-adventure-shell-correction",
-  "currentSliceTitle": "Correct the overworld shell toward a fixed Heroes-style adventure-map screen with a dominant map board and one clear command band",
+  "currentSliceId": "phase-6-shell-density-family-pass",
+  "currentSliceTitle": "Apply a coordinated Heroes-style density pass across the menu, overworld, town, battle, and outcome shells",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Rebuilt the overworld around a fixed adventure-map shell with a dominant framed map board, compact status chips, a HUD-style right wing, terse dispatch and order chips, and one bottom command band while preserving current movement, context actions, save flow, and headless validation.",
+  "currentSliceNotes": "Rebuilt the active product shells around dominant boards, tighter top or bottom rails, compressed summaries, and tabbed secondary detail so menu, overworld, town, battle, and outcome now read as one dense strategy-game UI family while preserving current actions, save flow, and headless validation.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -902,6 +902,18 @@
       "title": "Re-run headless Godot boot, a dedicated menu/outcome smoke scene, validator bytecode compilation, and repository-local validation while reporting unrelated baseline failures separately",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-shell-density-family-pass",
+      "title": "Apply a coordinated density pass across menu, overworld, town, battle, and outcome shells so each screen keeps one dominant surface plus compact command rails",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-shell-density-family-pass-validation",
+      "title": "Re-run the required shell smoke scenes, movement repro, and full headless Godot boot after the coordinated shell pass while reporting unrelated warnings separately",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1114,6 +1126,8 @@
     "This run turned the remaining top-level product surfaces into visual-first shells by giving MainMenu a drawn landing board plus grouped campaign, skirmish, guide, settings, and save panels, and by giving ScenarioOutcomeShell a palette-driven result banner with recap cards and clearer outcome actions.",
     "Godot 4.6.2 headless boot, python3 -m py_compile tests/validate_repo.py, and the dedicated res://tests/menu_outcome_visual_smoke.tscn all passed after the menu/outcome visual pass, while python3 tests/validate_repo.py still reports the same unrelated pre-existing token-audit failures in untouched gameplay files.",
     "This run compacted the overworld shell into a fixed-height, map-first HUD by folding the long stacked report into a short dispatch banner, summary cards, a larger map board, tabbed sidebar detail panes, and a compact system strip without moving simulation out of scripts/core.",
-    "Godot 4.6.2 headless boot, the dedicated res://tests/overworld_visual_smoke.tscn smoke scene, and the existing res://.tmp_repro_move.tscn movement repro all passed after the overworld compaction pass; python3 tests/validate_repo.py still reports the same unrelated broad token-audit failures in untouched gameplay and menu files."
+    "Godot 4.6.2 headless boot, the dedicated res://tests/overworld_visual_smoke.tscn smoke scene, and the existing res://.tmp_repro_move.tscn movement repro all passed after the overworld compaction pass; python3 tests/validate_repo.py still reports the same unrelated broad token-audit failures in untouched gameplay and menu files.",
+    "This run applied a coordinated shell-density pass across MainMenu, OverworldShell, TownShell, BattleShell, and ScenarioOutcomeShell so each screen now keeps one dominant board or action surface, tighter command rails, shorter copy, and tabbed secondary detail instead of stacked permanent report panels.",
+    "The required Godot 4.6.2 headless validations all passed again after the coordinated shell pass: res://tests/menu_outcome_visual_smoke.tscn, res://tests/town_battle_visual_smoke.tscn, res://tests/overworld_visual_smoke.tscn, res://.tmp_repro_move.tscn, and full headless boot; the smoke scenes still emit unrelated ObjectDB leak warnings on exit."
   ]
 }

@@ -2,54 +2,56 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
-@onready var _banner_panel: PanelContainer = $Scroll/ContentMargin/Content/Banner
-@onready var _briefing_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel
-@onready var _risk_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel
-@onready var _consequence_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/ConsequencePanel
-@onready var _battlefield_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel
-@onready var _battlefield_frame_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame
-@onready var _command_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel
-@onready var _initiative_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/InitiativePanel
-@onready var _context_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel
-@onready var _spell_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel
-@onready var _timing_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/Sidebar/TimingPanel
-@onready var _player_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/PlayerPanel
-@onready var _enemy_panel: PanelContainer = $Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/EnemyPanel
-@onready var _footer_panel: PanelContainer = $Scroll/ContentMargin/Content/Footer
-@onready var _action_panel: PanelContainer = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel
-@onready var _system_panel: PanelContainer = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel
-@onready var _header_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Header
-@onready var _status_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Status
-@onready var _pressure_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Pressure
-@onready var _event_label: Label = $Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/Event
-@onready var _briefing_label: Label = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel/BriefingPad/BriefingBox/Briefing
-@onready var _risk_label: Label = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel/RiskPad/RiskBox/Risk
-@onready var _consequence_label: Label = $Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/ConsequencePanel/ConsequencePad/ConsequenceBox/Consequence
-@onready var _battle_board_view = $Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame/BattlefieldInset/BattleBoard
-@onready var _player_command_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/PlayerCommand
-@onready var _enemy_command_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/EnemyCommand
-@onready var _initiative_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/InitiativePanel/InitiativePad/InitiativeBox/Initiative
-@onready var _active_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox/Active
-@onready var _target_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox/Target
-@onready var _spell_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel/SpellPad/SpellBox/Spellbook
-@onready var _effect_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel/SpellPad/SpellBox/Effects
-@onready var _timing_label: Label = $Scroll/ContentMargin/Content/Columns/Sidebar/TimingPanel/TimingPad/TimingBox/Timing
-@onready var _player_roster: Label = $Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/PlayerPanel/PlayerPad/PlayerBox/PlayerRoster
-@onready var _enemy_roster: Label = $Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/EnemyPanel/EnemyPad/EnemyBox/EnemyRoster
-@onready var _action_guide: Label = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionGuide
-@onready var _spell_actions: HFlowContainer = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/SpellBar/Actions
-@onready var _prev_target_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/TargetBar/PrevTarget
-@onready var _next_target_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/TargetBar/NextTarget
-@onready var _advance_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Advance
-@onready var _strike_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Strike
-@onready var _shoot_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Shoot
-@onready var _defend_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Defend
-@onready var _retreat_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Retreat
-@onready var _surrender_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Surrender
-@onready var _save_slot_picker: OptionButton = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/SaveSlot
-@onready var _save_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/Save
-@onready var _system_body_label: Label = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/SystemBody
-@onready var _menu_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/Menu
+@onready var _banner_panel: PanelContainer = %Banner
+@onready var _briefing_panel: PanelContainer = %BriefingPanel
+@onready var _risk_panel: PanelContainer = %RiskPanel
+@onready var _consequence_panel: PanelContainer = %ConsequencePanel
+@onready var _battlefield_panel: PanelContainer = %BattlefieldPanel
+@onready var _battlefield_frame_panel: PanelContainer = %BattlefieldFrame
+@onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
+@onready var _command_panel: PanelContainer = %CommandPanel
+@onready var _battle_tabs: TabContainer = %BattleTabs
+@onready var _initiative_panel: PanelContainer = %InitiativePanel
+@onready var _context_panel: PanelContainer = %ContextPanel
+@onready var _spell_panel: PanelContainer = %SpellPanel
+@onready var _timing_panel: PanelContainer = %TimingPanel
+@onready var _player_panel: PanelContainer = %PlayerPanel
+@onready var _enemy_panel: PanelContainer = %EnemyPanel
+@onready var _footer_panel: PanelContainer = %Footer
+@onready var _action_panel: PanelContainer = %ActionPanel
+@onready var _system_panel: PanelContainer = %SystemPanel
+@onready var _header_label: Label = %Header
+@onready var _status_label: Label = %Status
+@onready var _pressure_label: Label = %Pressure
+@onready var _event_label: Label = %Event
+@onready var _briefing_label: Label = %Briefing
+@onready var _risk_label: Label = %Risk
+@onready var _consequence_label: Label = %Consequence
+@onready var _battle_board_view = %BattleBoard
+@onready var _player_command_label: Label = %PlayerCommand
+@onready var _enemy_command_label: Label = %EnemyCommand
+@onready var _initiative_label: Label = %Initiative
+@onready var _active_label: Label = %Active
+@onready var _target_label: Label = %Target
+@onready var _spell_label: Label = %Spellbook
+@onready var _effect_label: Label = %Effects
+@onready var _timing_label: Label = %Timing
+@onready var _player_roster: Label = %PlayerRoster
+@onready var _enemy_roster: Label = %EnemyRoster
+@onready var _action_guide: Label = %ActionGuide
+@onready var _spell_actions: HFlowContainer = %SpellActions
+@onready var _prev_target_button: Button = %PrevTarget
+@onready var _next_target_button: Button = %NextTarget
+@onready var _advance_button: Button = %Advance
+@onready var _strike_button: Button = %Strike
+@onready var _shoot_button: Button = %Shoot
+@onready var _defend_button: Button = %Defend
+@onready var _retreat_button: Button = %Retreat
+@onready var _surrender_button: Button = %Surrender
+@onready var _save_slot_picker: OptionButton = %SaveSlot
+@onready var _save_button: Button = %Save
+@onready var _system_body_label: Label = %SystemBody
+@onready var _menu_button: Button = %Menu
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
@@ -57,6 +59,7 @@ var _tactical_briefing_text := ""
 
 func _ready() -> void:
 	_apply_visual_theme()
+	_battle_tabs.current_tab = 0
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter battle without an active scenario session.")
@@ -290,6 +293,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_consequence_panel, "earth")
 	FrontierVisualKit.apply_panel(_battlefield_panel, "earth")
 	FrontierVisualKit.apply_panel(_battlefield_frame_panel, "frame")
+	FrontierVisualKit.apply_panel(_sidebar_shell_panel, "ink")
 	FrontierVisualKit.apply_panel(_command_panel, "ink")
 	FrontierVisualKit.apply_panel(_initiative_panel, "green")
 	FrontierVisualKit.apply_panel(_context_panel, "gold")
@@ -300,18 +304,27 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_footer_panel, "ink")
 	FrontierVisualKit.apply_panel(_action_panel, "gold")
 	FrontierVisualKit.apply_panel(_system_panel, "ink")
+	FrontierVisualKit.apply_tab_container(_battle_tabs)
+	_battle_tabs.set_tab_title(0, "Order")
+	_battle_tabs.set_tab_title(1, "Focus")
+	_battle_tabs.set_tab_title(2, "Spells")
+	_battle_tabs.set_tab_title(3, "Timing")
 
 	for button in [_prev_target_button, _next_target_button]:
-		_style_action_button(button, false, 126)
+		_style_action_button(button, false, 108)
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button, _save_button, _menu_button]:
 		_style_action_button(button, true)
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 150.0, 36.0)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 120.0, 34.0, 13)
 
-	FrontierVisualKit.apply_label(_header_label, "title")
-	FrontierVisualKit.apply_label(_status_label, "body")
-	FrontierVisualKit.apply_label(_pressure_label, "gold")
-	FrontierVisualKit.apply_label(_event_label, "body")
-	FrontierVisualKit.apply_label(_system_body_label, "muted")
+	for title_label in find_children("*Title", "Label", true, false):
+		if title_label is Label:
+			FrontierVisualKit.apply_label(title_label, "title", 14)
+
+	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_status_label, "body", 12)
+	FrontierVisualKit.apply_label(_pressure_label, "gold", 12)
+	FrontierVisualKit.apply_label(_event_label, "body", 12)
+	FrontierVisualKit.apply_label(_system_body_label, "muted", 12)
 
 	FrontierVisualKit.apply_labels([
 		_briefing_label,

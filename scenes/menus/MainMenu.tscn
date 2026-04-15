@@ -32,10 +32,10 @@ theme_override_constants/margin_bottom = 18
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 14
+theme_override_constants/separation = 8
 
 [node name="HeroPanel" type="PanelContainer" parent="RootMargin/Shell"]
-custom_minimum_size = Vector2(0, 250)
+custom_minimum_size = Vector2(0, 214)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -48,10 +48,10 @@ theme_override_constants/margin_bottom = 14
 
 [node name="HeroLayout" type="HBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
 [node name="HeroArtPanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout"]
-custom_minimum_size = Vector2(380, 0)
+custom_minimum_size = Vector2(332, 0)
 layout_mode = 2
 
 [node name="HeroArtPad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroArtPanel"]
@@ -62,7 +62,8 @@ theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
 [node name="HeroStage" type="Control" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroArtPanel/HeroArtPad"]
-custom_minimum_size = Vector2(0, 208)
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 176)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -71,7 +72,7 @@ script = ExtResource("2")
 [node name="HeroInfo" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="TopRow" type="HBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo"]
 layout_mode = 2
@@ -147,8 +148,8 @@ text = "Saves"
 [node name="PulseRow" type="GridContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo"]
 layout_mode = 2
 columns = 3
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
 
 [node name="ExpeditionPanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow"]
 layout_mode = 2
@@ -172,7 +173,7 @@ text = "Active Expedition"
 [node name="ActiveExpedition" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/ExpeditionPanel/ExpeditionPad/ExpeditionBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 86)
+custom_minimum_size = Vector2(0, 58)
 autowrap_mode = 3
 text = "Current expedition summary"
 
@@ -198,7 +199,7 @@ text = "Campaign Fronts"
 [node name="CampaignPulse" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/CampaignPulsePanel/CampaignPulsePad/CampaignPulseBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 86)
+custom_minimum_size = Vector2(0, 58)
 autowrap_mode = 3
 text = "Campaign pulse"
 
@@ -224,7 +225,7 @@ text = "Save Relay"
 [node name="SavePulse" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/SavePulsePanel/SavePulsePad/SavePulseBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 86)
+custom_minimum_size = Vector2(0, 58)
 autowrap_mode = 3
 text = "Save pulse"
 
@@ -256,6 +257,7 @@ size_flags_vertical = 3
 theme_override_constants/separation = 12
 
 [node name="PlayLeadPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play"]
+visible = false
 layout_mode = 2
 
 [node name="PlayLeadPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayLeadPanel"]
