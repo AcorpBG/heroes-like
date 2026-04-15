@@ -455,6 +455,10 @@ text = "Defend"
 layout_mode = 2
 text = "Retreat"
 
+[node name="Surrender" type="Button" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar"]
+layout_mode = 2
+text = "Surrender"
+
 [node name="SystemPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns"]
 layout_mode = 2
 size_flags_horizontal = 1
@@ -498,6 +502,7 @@ text = "Main Menu"
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Shoot" to="." method="_on_shoot_pressed"]
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Defend" to="." method="_on_defend_pressed"]
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Retreat" to="." method="_on_retreat_pressed"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Surrender" to="." method="_on_surrender_pressed"]
 [connection signal="item_selected" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/Menu" to="." method="_on_menu_pressed"]

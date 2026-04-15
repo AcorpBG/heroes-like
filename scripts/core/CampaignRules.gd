@@ -511,6 +511,9 @@ static func build_outcome_recap(profile: Dictionary, session: SessionStateStore.
 	var aftermath_text := _chapter_aftermath_text(current_entry, session.scenario_id, session.scenario_status)
 	if aftermath_text != "":
 		aftermath_lines.append(aftermath_text)
+	var battle_aftermath := _last_battle_aftermath_text(session)
+	if battle_aftermath != "":
+		aftermath_lines.append(battle_aftermath)
 	var recent_events: String = _describe_recent_events(session, 3)
 	if recent_events != "":
 		aftermath_lines.append("Operational aftermath: %s." % recent_events)
@@ -1243,6 +1246,19 @@ static func _chapter_aftermath_text(scenario_entry: Dictionary, scenario_id: Str
 		if objective_text != "":
 			return objective_text
 	return String(scenario_entry.get("description", "Campaign record updated."))
+
+static func _last_battle_aftermath_text(session: SessionStateStore.SessionData) -> String:
+	if session == null:
+		return ""
+	var report = session.flags.get("last_battle_aftermath", {})
+	if not (report is Dictionary) or report.is_empty():
+		return ""
+	var lines := []
+	for key in ["headline", "summary", "resource_summary", "army_summary", "pressure_summary", "recovery_summary"]:
+		var line := String(report.get(key, "")).strip_edges()
+		if line != "" and line not in lines:
+			lines.append(line)
+	return "\n".join(lines)
 
 static func _scenario_stakes_text(scenario: Dictionary) -> String:
 	var objectives = scenario.get("objectives", {})

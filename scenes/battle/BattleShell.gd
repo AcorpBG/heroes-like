@@ -27,6 +27,7 @@ extends Control
 @onready var _shoot_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Shoot
 @onready var _defend_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Defend
 @onready var _retreat_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Retreat
+@onready var _surrender_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/ActionPanel/ActionPad/ActionBox/ActionBar/Surrender
 @onready var _save_slot_picker: OptionButton = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/SaveSlot
 @onready var _save_button: Button = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/Save
 @onready var _system_body_label: Label = $Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox/SystemBody
@@ -57,7 +58,7 @@ func _ready() -> void:
 		return
 	var initial_result := BattleRules.resolve_if_battle_ready(_session)
 	match String(initial_result.get("state", "continue")):
-		"victory", "retreat", "stalemate", "hero_defeat", "town_lost":
+		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
 			AppRouter.go_to_overworld()
 			return
 		"defeat":
@@ -92,6 +93,9 @@ func _on_defend_pressed() -> void:
 
 func _on_retreat_pressed() -> void:
 	_perform_action("retreat")
+
+func _on_surrender_pressed() -> void:
+	_perform_action("surrender")
 
 func _on_spell_action_pressed(action_id: String) -> void:
 	if not action_id.begins_with("cast_spell:"):
@@ -132,7 +136,7 @@ func _handle_battle_resolution(result: Dictionary) -> bool:
 		AppRouter.go_to_scenario_outcome()
 		return true
 	match String(result.get("state", "continue")):
-		"victory", "retreat", "stalemate", "hero_defeat", "town_lost":
+		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
 			AppRouter.go_to_overworld()
 			return true
 		"defeat":
@@ -213,6 +217,7 @@ func _refresh_action_buttons() -> void:
 	_apply_action_surface(_shoot_button, surface.get("shoot", {}))
 	_apply_action_surface(_defend_button, surface.get("defend", {}))
 	_apply_action_surface(_retreat_button, surface.get("retreat", {}))
+	_apply_action_surface(_surrender_button, surface.get("surrender", {}))
 
 	var target_name := String(target_stack.get("name", "No target"))
 	_strike_button.text = "Strike %s" % target_name if player_turn and not target_stack.is_empty() else "Strike"

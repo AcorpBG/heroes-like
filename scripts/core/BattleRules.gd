@@ -1270,7 +1270,7 @@ static func _trade_window_line(
 	if not bool(surface.get("defend", {}).get("disabled", true)):
 		return _defend_action_summary(battle, active_stack)
 	if not bool(surface.get("retreat", {}).get("disabled", true)):
-		return _retreat_action_summary(battle)
+		return _retreat_action_summary(session)
 	if not bool(surface.get("surrender", {}).get("disabled", true)):
 		return _surrender_action_summary(session)
 	return "No clean trade is available until the initiative changes."
@@ -1465,14 +1465,24 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 		clauses.append(objective_preview)
 	return "%s." % " | ".join(clauses)
 
-static func _retreat_action_summary(battle: Dictionary) -> String:
+static func _retreat_action_summary(session: SessionStateStore.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return "No battle is active."
+	var battle = session.battle
 	if not bool(battle.get("retreat_allowed", true)):
 		return "Retreat is locked while defending a town."
 	var player_totals = _army_totals(battle, "player")
-	return "Break contact and preserve %d surviving stack%s from the field." % [
-		int(player_totals.get("stacks", 0)),
-		"" if int(player_totals.get("stacks", 0)) == 1 else "s",
+	var clauses = [
+		"Break contact and preserve %d surviving stack%s from the field" % [
+			int(player_totals.get("stacks", 0)),
+			"" if int(player_totals.get("stacks", 0)) == 1 else "s",
+		],
 	]
+	var preview := _build_withdrawal_aftermath_preview(session, "retreat")
+	var aftermath_summary := _withdrawal_preview_summary(preview, "retreat")
+	if aftermath_summary != "":
+		clauses.append(aftermath_summary)
+	return "%s." % " | ".join(clauses)
 
 static func _surrender_action_summary(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
@@ -1480,10 +1490,183 @@ static func _surrender_action_summary(session: SessionStateStore.SessionData) ->
 	if not bool(session.battle.get("surrender_allowed", true)):
 		return "Surrender is locked while defending a town."
 	var player_totals = _army_totals(session.battle, "player")
-	return "Yield the field immediately and preserve %d surviving stack%s for the campaign." % [
-		int(player_totals.get("stacks", 0)),
-		"" if int(player_totals.get("stacks", 0)) == 1 else "s",
+	var clauses = [
+		"Yield the field and preserve %d surviving stack%s under surrender terms" % [
+			int(player_totals.get("stacks", 0)),
+			"" if int(player_totals.get("stacks", 0)) == 1 else "s",
+		],
 	]
+	var preview := _build_withdrawal_aftermath_preview(session, "surrender")
+	var aftermath_summary := _withdrawal_preview_summary(preview, "surrender")
+	if aftermath_summary != "":
+		clauses.append(aftermath_summary)
+	return "%s." % " | ".join(clauses)
+
+static func _build_withdrawal_aftermath_preview(
+	session: SessionStateStore.SessionData,
+	outcome: String
+) -> Dictionary:
+	var preview := {
+		"enemy_faction_id": "",
+		"enemy_label": "The opposing host",
+		"resource_loss": {},
+		"casualty_units": 0,
+		"pressure_delta": 0,
+		"nearest_town_placement_id": "",
+		"nearest_town_name": "",
+		"recovery_pressure": 0,
+	}
+	if session == null or session.battle.is_empty():
+		return preview
+
+	var enemy_faction_id := _battle_enemy_faction_id(session)
+	preview["enemy_faction_id"] = enemy_faction_id
+	preview["enemy_label"] = _battle_enemy_label(session, enemy_faction_id)
+
+	var commander_source = session.battle.get("player_commander_source", {})
+	var hero_id := String(commander_source.get("hero_id", session.overworld.get("active_hero_id", "")))
+	var player_survivors := _battle_survivor_stacks(
+		session,
+		"player",
+		{
+			"source_type": "hero_army",
+			"hero_id": hero_id,
+		}
+	)
+	if player_survivors.is_empty():
+		player_survivors = _battle_survivor_stacks(session, "player")
+	var enemy_survivors := _battle_survivor_stacks(
+		session,
+		"enemy",
+		{
+			"source_type": "encounter_army",
+			"encounter_key": String(session.battle.get("resolved_key", "")),
+		}
+	)
+	if enemy_survivors.is_empty():
+		enemy_survivors = _battle_survivor_stacks(session, "enemy")
+
+	var player_units: int = _stack_count_total(player_survivors)
+	var player_strength: int = _army_strength_from_stacks(player_survivors)
+	var enemy_strength: int = _army_strength_from_stacks(enemy_survivors)
+	var severity: int = clampi(1 + int(floor(float(enemy_strength) / float(max(1, player_strength)))), 1, 4)
+	var desired_loss: Dictionary = {"gold": 0, "wood": 0, "ore": 0}
+
+	match outcome:
+		"surrender":
+			desired_loss["gold"] = 180 + (severity * 90) + int(round(float(enemy_strength) / 12.0))
+			desired_loss["wood"] = max(0, severity - 1)
+			desired_loss["ore"] = 1 if severity >= 3 else 0
+			preview["casualty_units"] = _casualty_units_from_ratio(player_units, 0.04 + (float(severity) * 0.03))
+			preview["pressure_delta"] = 1 + (1 if enemy_faction_id != "" and severity >= 4 else 0) if enemy_faction_id != "" else 0
+			preview["recovery_pressure"] = 1
+		_:
+			desired_loss["gold"] = 90 + (severity * 70) + int(round(float(enemy_strength) / 18.0))
+			desired_loss["wood"] = max(0, severity - 1)
+			desired_loss["ore"] = 1 if severity >= 4 else 0
+			preview["casualty_units"] = _casualty_units_from_ratio(player_units, 0.12 + (float(severity) * 0.06))
+			preview["pressure_delta"] = 1 + int(severity / 2) if enemy_faction_id != "" else 0
+			preview["recovery_pressure"] = 1 + (1 if severity >= 3 else 0)
+
+	preview["resource_loss"] = _clamped_resource_loss(session, desired_loss)
+	var battle_position = session.battle.get("position", {})
+	var nearest_town_result = OverworldRules._nearest_town_for_controller(
+		session,
+		"player",
+		int(battle_position.get("x", 0)),
+		int(battle_position.get("y", 0))
+	)
+	if int(nearest_town_result.get("index", -1)) >= 0:
+		var town = nearest_town_result.get("town", {})
+		preview["nearest_town_placement_id"] = String(town.get("placement_id", ""))
+		preview["nearest_town_name"] = _town_name(town)
+	return preview
+
+static func _withdrawal_preview_summary(preview: Dictionary, outcome: String) -> String:
+	var clauses := []
+	var casualty_units = int(preview.get("casualty_units", 0))
+	if casualty_units > 0:
+		clauses.append(
+			"about %d troop%s %s" % [
+				casualty_units,
+				"" if casualty_units == 1 else "s",
+				"lost while the enemy collects the terms" if outcome == "surrender" else "lost to the pursuit",
+			]
+		)
+	var resource_loss = preview.get("resource_loss", {})
+	var resource_summary := OverworldRules._describe_resource_delta(resource_loss)
+	if resource_summary != "":
+		if outcome == "surrender":
+			clauses.append("pay %s to the enemy" % resource_summary)
+		else:
+			clauses.append("abandon %s to the enemy" % resource_summary)
+	var pressure_delta = int(preview.get("pressure_delta", 0))
+	var enemy_label := String(preview.get("enemy_label", "Enemy pressure"))
+	if pressure_delta > 0:
+		clauses.append("%s pressure +%d" % [enemy_label, pressure_delta])
+	elif int(preview.get("recovery_pressure", 0)) > 0 and String(preview.get("nearest_town_name", "")) != "":
+		clauses.append("%s recovery +%d" % [
+			String(preview.get("nearest_town_name", "")),
+			int(preview.get("recovery_pressure", 0)),
+		])
+	return " | ".join(clauses)
+
+static func _casualty_units_from_ratio(total_units: int, ratio: float) -> int:
+	if total_units <= 1:
+		return 0
+	var casualties = int(round(float(total_units) * clampf(ratio, 0.0, 0.9)))
+	if casualties <= 0 and total_units >= 5 and ratio >= 0.12:
+		casualties = 1
+	return clamp(casualties, 0, total_units - 1)
+
+static func _clamped_resource_loss(session: SessionStateStore.SessionData, desired_loss: Dictionary) -> Dictionary:
+	var available = session.overworld.get("resources", {})
+	var loss := {}
+	for resource_key in ["gold", "wood", "ore"]:
+		var amount = min(max(0, int(desired_loss.get(resource_key, 0))), max(0, int(available.get(resource_key, 0))))
+		if amount > 0:
+			loss[resource_key] = amount
+	return loss
+
+static func _battle_enemy_faction_id(session: SessionStateStore.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return ""
+	var context = session.battle.get("context", {})
+	var faction_id := ""
+	if _is_town_defense_context(context):
+		faction_id = String(context.get("trigger_faction_id", ""))
+		if _enemy_state_exists(session, faction_id):
+			return faction_id
+	var encounter = _current_battle_encounter_placement(session)
+	faction_id = String(encounter.get("spawned_by_faction_id", ""))
+	if _enemy_state_exists(session, faction_id):
+		return faction_id
+	faction_id = _side_faction_id(session.battle, "enemy")
+	return faction_id if _enemy_state_exists(session, faction_id) else ""
+
+static func _enemy_state_exists(session: SessionStateStore.SessionData, faction_id: String) -> bool:
+	if session == null or faction_id == "":
+		return false
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return true
+	return false
+
+static func _battle_enemy_label(session: SessionStateStore.SessionData, faction_id: String) -> String:
+	if faction_id != "":
+		return String(ContentService.get_faction(faction_id).get("name", faction_id))
+	if session == null or session.battle.is_empty():
+		return "The opposing host"
+	return String(session.battle.get("encounter_name", session.battle.get("encounter_id", "The opposing host")))
+
+static func _stack_count_total(stacks: Variant) -> int:
+	var total := 0
+	if not (stacks is Array):
+		return total
+	for stack in stacks:
+		if stack is Dictionary:
+			total += max(0, int(stack.get("count", 0)))
+	return total
 
 static func _preview_advance_momentum_gain(stack: Dictionary, battle: Dictionary) -> int:
 	if stack.is_empty():
@@ -2123,11 +2306,19 @@ static func get_action_surface(session: SessionStateStore.SessionData) -> Dictio
 	}
 	var retreat_summary = "Await the enemy move."
 	if player_turn:
-		retreat_summary = _retreat_action_summary(battle)
+		retreat_summary = _retreat_action_summary(session)
 	surface["retreat"] = {
 		"label": "Retreat",
 		"disabled": not player_turn or not bool(availability.get("retreat", false)),
 		"summary": retreat_summary,
+	}
+	var surrender_summary = "Await the enemy move."
+	if player_turn:
+		surrender_summary = _surrender_action_summary(session)
+	surface["surrender"] = {
+		"label": "Surrender",
+		"disabled": not player_turn or not bool(availability.get("surrender", false)),
+		"summary": surrender_summary,
 	}
 	return surface
 
@@ -2264,6 +2455,8 @@ static func perform_player_action(session: SessionStateStore.SessionData, action
 			return _complete_action(session, defend_message)
 		"retreat":
 			return _finalize_retreat(session)
+		"surrender":
+			return _finalize_surrender(session)
 		_:
 			return {"ok": false, "message": "Unknown action.", "state": "invalid"}
 
@@ -2285,6 +2478,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 			"shoot": false,
 			"defend": false,
 			"retreat": false,
+			"surrender": false,
 		}
 
 	return {
@@ -2297,6 +2491,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 		),
 		"defend": true,
 		"retreat": bool(battle.get("retreat_allowed", true)),
+		"surrender": bool(battle.get("surrender_allowed", true)),
 	}
 
 static func _resolve_attack_action(
@@ -2674,8 +2869,11 @@ static func _evaluate_outcome(session: SessionStateStore.SessionData) -> Diction
 
 static func _finalize_victory(session: SessionStateStore.SessionData) -> Dictionary:
 	var messages = []
+	var base_summary := _apply_battle_context_victory(session)
+	if base_summary == "":
+		base_summary = "The enemy host breaks and the battlefield is secured."
+	messages.append(base_summary)
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
-	_append_nonempty_message(messages, _apply_battle_context_victory(session))
 
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
 	var rewards = DifficultyRules.scale_reward_resources(session, encounter.get("rewards", {}))
@@ -2689,6 +2887,8 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 		messages.append("%s gains %d experience." % [hero_name, experience_amount])
 	messages.append_array(_award_commander_experience(session, experience_amount))
 	_sync_player_force_from_battle(session)
+	var front_result := _apply_victory_front_aftermath(session)
+	_append_nonempty_message(messages, String(front_result.get("summary", "")))
 	_sync_enemy_force_from_battle(session, true)
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
@@ -2699,6 +2899,16 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 			session.flags[String(flag_value)] = true
 
 	session.flags["last_battle_outcome"] = "victory"
+	_record_battle_aftermath(
+		session,
+		"victory",
+		base_summary,
+		{
+			"resource_summary": "Battle rewards %s." % reward_summary if reward_summary != "" else "",
+			"pressure_summary": String(front_result.get("summary", "")),
+			"recovery_summary": "",
+		}
+	)
 	session.battle = {}
 	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
@@ -2714,30 +2924,37 @@ static func _finalize_player_battle_loss(session: SessionStateStore.SessionData)
 		return _finalize_primary_defeat(session)
 	return _finalize_secondary_hero_defeat(session)
 
-static func _finalize_primary_defeat(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_primary_defeat(
+	session: SessionStateStore.SessionData,
+	base_summary: String = "The field army collapses and the primary commander is defeated.",
+	outcome_id: String = "defeat"
+) -> Dictionary:
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
 	OverworldRules.refresh_fog_of_war(session)
-	session.flags["last_battle_outcome"] = "defeat"
+	session.flags["last_battle_outcome"] = outcome_id
 	session.flags["campaign"] = "defeat"
 	if session.scenario_status == "in_progress":
 		session.scenario_status = "defeat"
 		if session.scenario_summary == "":
 			session.scenario_summary = "The primary commander is defeated."
+	_record_battle_aftermath(session, outcome_id, base_summary)
 	session.battle = {}
 	var scenario_result = ScenarioRules.evaluate_session(session)
-	return {"state": "defeat", "message": String(scenario_result.get("message", ""))}
+	var final_message = _join_messages([base_summary, String(scenario_result.get("message", ""))])
+	return {"state": "defeat", "message": final_message}
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionData) -> Dictionary:
 	_sync_enemy_force_from_battle(session, false)
 	var removal = HeroCommandRules.remove_active_hero_after_defeat(session)
 	session.flags["last_battle_outcome"] = "hero_defeat"
-	session.battle = {}
-	OverworldRules.refresh_fog_of_war(session)
 	var messages = [String(removal.get("message", "A commander falls in battle."))]
 	var next_active_name = String(removal.get("next_active_name", ""))
 	if next_active_name != "":
 		messages.append("%s takes command." % next_active_name)
+	_record_battle_aftermath(session, "hero_defeat", String(messages[0]))
+	session.battle = {}
+	OverworldRules.refresh_fog_of_war(session)
 	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
@@ -2748,12 +2965,16 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionDa
 static func _finalize_retreat(session: SessionStateStore.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
-	var messages = ["The army withdraws from battle."]
+	var base_summary := "The army withdraws from battle."
+	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
+	var aftermath := _apply_withdrawal_aftermath(session, "retreat")
+	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "retreat"
+	_record_battle_aftermath(session, "retreat", base_summary, aftermath)
 	session.battle = {}
 	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
@@ -2762,14 +2983,39 @@ static func _finalize_retreat(session: SessionStateStore.SessionData) -> Diction
 		session.flags["return_notice"] = final_message
 	return {"ok": true, "message": final_message, "state": "retreat"}
 
+static func _finalize_surrender(session: SessionStateStore.SessionData) -> Dictionary:
+	if _is_town_defense_context(session.battle.get("context", {})):
+		return {"ok": false, "message": "Town defenders cannot surrender the walls mid-assault.", "state": "invalid"}
+	var base_summary := "The commander lowers the banners and yields the field."
+	var messages = [base_summary]
+	_sync_player_force_from_battle(session)
+	_sync_enemy_force_from_battle(session, false)
+	var aftermath := _apply_withdrawal_aftermath(session, "surrender")
+	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
+	HeroCommandRules.commit_active_hero(session)
+	OverworldRules.refresh_fog_of_war(session)
+	session.flags["last_battle_outcome"] = "surrender"
+	_record_battle_aftermath(session, "surrender", base_summary, aftermath)
+	session.battle = {}
+	var scenario_result = ScenarioRules.evaluate_session(session)
+	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
+	var final_message = " ".join(messages)
+	if session.scenario_status == "in_progress" and final_message != "":
+		session.flags["return_notice"] = final_message
+	return {"ok": true, "message": final_message, "state": "surrender"}
+
 static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dictionary:
 	var messages = []
-	_append_nonempty_message(messages, _apply_battle_context_stalemate(session))
+	var base_summary := _apply_battle_context_stalemate(session)
+	if base_summary == "":
+		base_summary = "Both armies disengage before a decisive break."
+	messages.append(base_summary)
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "stalemate"
+	_record_battle_aftermath(session, "stalemate", base_summary)
 	session.battle = {}
 	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
@@ -2777,6 +3023,232 @@ static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dicti
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "stalemate", "message": final_message}
+
+static func _apply_victory_front_aftermath(session: SessionStateStore.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"summary": ""}
+	var faction_id := _battle_enemy_faction_id(session)
+	if faction_id == "":
+		return {"summary": ""}
+	var encounter = _current_battle_encounter_placement(session)
+	var pressure_delta := -1
+	if _is_town_defense_context(session.battle.get("context", {})) or String(encounter.get("spawned_by_faction_id", "")) != "":
+		pressure_delta = -2
+	var pressure_summary := _apply_front_pressure_shift(session, faction_id, pressure_delta, "victory")
+	return {"summary": pressure_summary}
+
+static func _apply_withdrawal_aftermath(session: SessionStateStore.SessionData, outcome: String) -> Dictionary:
+	var preview := _build_withdrawal_aftermath_preview(session, outcome)
+	var resource_summary := ""
+	var army_summary := ""
+	var pressure_summary := ""
+	var recovery_summary := ""
+	var resource_loss = preview.get("resource_loss", {})
+	if resource_loss is Dictionary and not resource_loss.is_empty():
+		OverworldRules._spend_resources(session, resource_loss)
+		_add_enemy_treasury_resources(session, String(preview.get("enemy_faction_id", "")), resource_loss)
+		resource_summary = _withdrawal_resource_summary(outcome, resource_loss, String(preview.get("enemy_label", "The enemy")))
+	army_summary = _apply_active_hero_aftermath_losses(session, int(preview.get("casualty_units", 0)), outcome)
+	pressure_summary = _apply_front_pressure_shift(
+		session,
+		String(preview.get("enemy_faction_id", "")),
+		int(preview.get("pressure_delta", 0)),
+		outcome
+	)
+	recovery_summary = _apply_withdrawal_recovery_pressure(
+		session,
+		String(preview.get("nearest_town_placement_id", "")),
+		int(preview.get("recovery_pressure", 0)),
+		outcome
+	)
+	var summary := _join_messages([resource_summary, army_summary, pressure_summary, recovery_summary])
+	if summary == "":
+		summary = (
+			"The surrender terms keep the survivors together."
+			if outcome == "surrender"
+			else "The rearguard keeps the withdrawal orderly."
+		)
+	return {
+		"summary": summary,
+		"resource_summary": resource_summary,
+		"army_summary": army_summary,
+		"pressure_summary": pressure_summary,
+		"recovery_summary": recovery_summary,
+	}
+
+static func _withdrawal_resource_summary(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
+	var resource_summary := OverworldRules._describe_resource_delta(resource_loss)
+	if resource_summary == "":
+		return ""
+	if outcome == "surrender":
+		return "%s confiscates %s as surrender terms." % [enemy_label, resource_summary]
+	if enemy_label != "":
+		return "%s seizes %s from the baggage train." % [enemy_label, resource_summary]
+	return "The withdrawal abandons %s on the road." % resource_summary
+
+static func _apply_active_hero_aftermath_losses(
+	session: SessionStateStore.SessionData,
+	unit_losses: int,
+	outcome: String
+) -> String:
+	var commander_source = session.battle.get("player_commander_source", {})
+	var hero_id := String(commander_source.get("hero_id", session.overworld.get("active_hero_id", "")))
+	if hero_id == "":
+		return ""
+	var hero = HeroCommandRules.hero_by_id(session, hero_id)
+	if hero.is_empty():
+		return ""
+	var army: Dictionary = hero.get("army", {}).duplicate(true) if hero.get("army", {}) is Dictionary else {}
+	var stacks: Array = army.get("stacks", []).duplicate(true) if army.get("stacks", []) is Array else []
+	var before_units: int = _stack_count_total(stacks)
+	if before_units <= 0:
+		return ""
+	var before_companies: int = stacks.size()
+	var applied_losses: int = _remove_units_from_stacks(stacks, unit_losses)
+	army["stacks"] = stacks
+	hero["army"] = army
+	_set_player_hero_state(session, hero, hero_id)
+	var after_companies: int = stacks.size()
+	if applied_losses <= 0:
+		return (
+			"The surrender terms spare the surviving companies from further bloodshed."
+			if outcome == "surrender"
+			else "The surviving companies keep formation through the retreat."
+		)
+	var broken_companies: int = maxi(0, before_companies - after_companies)
+	if outcome == "surrender":
+		return "Disarmament and stragglers cost %d troop%s, but %d compan%s remain under command." % [
+			applied_losses,
+			"" if applied_losses == 1 else "s",
+			after_companies,
+			"y" if after_companies == 1 else "ies",
+		]
+	var company_clause := ""
+	if broken_companies > 0:
+		company_clause = " and breaks %d compan%s" % [
+			broken_companies,
+			"y" if broken_companies == 1 else "ies",
+		]
+	return "Pursuit scatters %d troop%s%s." % [
+		applied_losses,
+		"" if applied_losses == 1 else "s",
+		company_clause,
+	]
+
+static func _remove_units_from_stacks(stacks: Array, unit_losses: int) -> int:
+	var total_units: int = _stack_count_total(stacks)
+	var remaining_losses: int = clampi(unit_losses, 0, maxi(0, total_units - 1))
+	var applied: int = 0
+	while remaining_losses > 0 and not stacks.is_empty():
+		var largest_index := -1
+		var largest_count := -1
+		for index in range(stacks.size()):
+			var stack = stacks[index]
+			if not (stack is Dictionary):
+				continue
+			var count = max(0, int(stack.get("count", 0)))
+			if count > largest_count:
+				largest_count = count
+				largest_index = index
+		if largest_index < 0 or largest_count <= 0:
+			break
+		var target = stacks[largest_index]
+		target["count"] = max(0, int(target.get("count", 0)) - 1)
+		if int(target.get("count", 0)) <= 0:
+			stacks.remove_at(largest_index)
+		else:
+			stacks[largest_index] = target
+		remaining_losses -= 1
+		applied += 1
+	return applied
+
+static func _apply_front_pressure_shift(
+	session: SessionStateStore.SessionData,
+	faction_id: String,
+	delta: int,
+	outcome: String
+) -> String:
+	var applied := _adjust_enemy_pressure(session, faction_id, delta)
+	if applied == 0:
+		return ""
+	var faction_name := _battle_enemy_label(session, faction_id)
+	if applied > 0:
+		var reason := "the broken contact" if outcome == "retreat" else "the capitulation"
+		return "%s front pressure rises by %d after %s." % [faction_name, applied, reason]
+	return "%s front pressure drops by %d after the field is secured." % [faction_name, abs(applied)]
+
+static func _adjust_enemy_pressure(session: SessionStateStore.SessionData, faction_id: String, delta: int) -> int:
+	if session == null or faction_id == "" or delta == 0:
+		return 0
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return 0
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var current = max(0, int(state.get("pressure", 0)))
+		var updated = max(0, current + delta)
+		state["pressure"] = updated
+		states[index] = state
+		session.overworld["enemy_states"] = states
+		return updated - current
+	return 0
+
+static func _add_enemy_treasury_resources(
+	session: SessionStateStore.SessionData,
+	faction_id: String,
+	delta: Dictionary
+) -> void:
+	if session == null or faction_id == "" or delta.is_empty():
+		return
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var treasury = state.get("treasury", {}).duplicate(true) if state.get("treasury", {}) is Dictionary else {}
+		for resource_key in ["gold", "wood", "ore"]:
+			treasury[resource_key] = max(0, int(treasury.get(resource_key, 0)) + int(delta.get(resource_key, 0)))
+		state["treasury"] = treasury
+		states[index] = state
+		session.overworld["enemy_states"] = states
+		return
+
+static func _apply_withdrawal_recovery_pressure(
+	session: SessionStateStore.SessionData,
+	town_placement_id: String,
+	pressure: int,
+	outcome: String
+) -> String:
+	if town_placement_id == "" or pressure <= 0:
+		return ""
+	var source := "surrender column" if outcome == "surrender" else "scattered survivors"
+	return OverworldRules.apply_town_recovery_pressure(session, town_placement_id, pressure, source)
+
+static func _record_battle_aftermath(
+	session: SessionStateStore.SessionData,
+	outcome: String,
+	summary: String,
+	details: Dictionary = {}
+) -> void:
+	if session == null:
+		return
+	var headline := "Battle Aftermath | %s" % _titleize_token(outcome)
+	if not session.battle.is_empty():
+		headline = "%s | %s" % [headline, String(session.battle.get("encounter_name", session.battle.get("encounter_id", "Battle")))]
+	session.flags["last_battle_aftermath"] = {
+		"outcome": outcome,
+		"headline": headline,
+		"summary": summary,
+		"resource_summary": String(details.get("resource_summary", "")),
+		"army_summary": String(details.get("army_summary", "")),
+		"pressure_summary": String(details.get("pressure_summary", "")),
+		"recovery_summary": String(details.get("recovery_summary", "")),
+		"day": session.day,
+	}
 
 static func _append_nonempty_message(messages: Array, message: String) -> void:
 	if message != "":
@@ -3792,6 +4264,7 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 	var context = session.battle.get("context", {})
 	var messages = []
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+	var base_summary := "%s falls after the walls are breached." % town_name if town_name != "" else "The town falls after the walls are breached."
 	var commander_source = session.battle.get("player_commander_source", {})
 	var defending_hero_id = String(commander_source.get("hero_id", ""))
 	_sync_player_force_from_battle(session)
@@ -3807,20 +4280,30 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 	var recovery_message = _apply_town_defense_recovery(session, "loss")
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
-	if town_name != "":
-		messages.append("%s falls after the walls are breached." % town_name)
+	messages.append(base_summary)
 	_append_nonempty_message(messages, recovery_message)
 
 	var defending_hero = HeroCommandRules.hero_by_id(session, defending_hero_id)
 	if not defending_hero.is_empty():
 		if bool(defending_hero.get("is_primary", false)):
-			var defeat_result = _finalize_primary_defeat(session)
+			var defeat_result = _finalize_primary_defeat(session, "The primary commander is defeated.", "town_lost")
+			var report = session.flags.get("last_battle_aftermath", {})
+			if report is Dictionary:
+				report["summary"] = base_summary
+				report["recovery_summary"] = recovery_message
+				session.flags["last_battle_aftermath"] = report
 			_append_nonempty_message(messages, String(defeat_result.get("message", "")))
 			return {"state": "defeat", "message": " ".join(messages)}
 		var removal = _remove_hero_by_id_after_defeat(session, defending_hero_id)
 		_append_nonempty_message(messages, String(removal.get("message", "")))
 
 	session.flags["last_battle_outcome"] = "town_lost"
+	_record_battle_aftermath(
+		session,
+		"town_lost",
+		base_summary,
+		{"recovery_summary": recovery_message}
+	)
 	session.battle = {}
 	OverworldRules.refresh_fog_of_war(session)
 	var scenario_result = ScenarioRules.evaluate_session(session)

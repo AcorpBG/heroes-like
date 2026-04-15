@@ -3923,6 +3923,63 @@ def validate_authored_scenario_identity(errors: list[str]) -> None:
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required authored-scenario surfacing token: {required_token}")
 
 
+def validate_battle_surrender_pursuit_aftermath(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        BATTLE_RULES_PATH,
+        BATTLE_SCRIPT_PATH,
+        BATTLE_SCENE_PATH,
+        SCENARIO_RULES_PATH,
+        CAMPAIGN_RULES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle surrender or aftermath file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Battle surrender and pursuit aftermath must preserve save version 9")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'surface["surrender"]',
+        '"surrender_allowed"',
+        "func _surrender_action_summary",
+        "func _build_withdrawal_aftermath_preview",
+        "func _apply_victory_front_aftermath",
+        "func _apply_withdrawal_aftermath",
+        "func _add_enemy_treasury_resources",
+        "func _apply_withdrawal_recovery_pressure",
+        "func _record_battle_aftermath",
+        'session.flags["last_battle_outcome"] = "surrender"',
+        '"last_battle_aftermath"',
+        "Town defenders cannot surrender the walls mid-assault.",
+        "apply_town_recovery_pressure",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required surrender-aftermath token: {required_token}")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(scene_has_node(battle_scene_text, "Surrender", "Button"), errors, "BattleShell.tscn must define a Surrender button on the battle action surface")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "@onready var _surrender_button: Button",
+        "func _on_surrender_pressed",
+        '_perform_action("surrender")',
+        "_apply_action_surface(_surrender_button",
+        '"surrender"',
+    ):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required surrender UI token: {required_token}")
+
+    scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("func _last_battle_aftermath_text", '"last_battle_aftermath"'):
+        ensure(required_token in scenario_rules_text, errors, f"ScenarioRules.gd is missing required surrender-aftermath recap token: {required_token}")
+
+    campaign_rules_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("func _last_battle_aftermath_text", '"last_battle_aftermath"'):
+        ensure(required_token in campaign_rules_text, errors, f"CampaignRules.gd is missing required surrender-aftermath recap token: {required_token}")
+
+
 def validate_town_defense_battle_flow(errors: list[str]) -> None:
     required_paths = (
         SESSION_STATE_PATH,
@@ -4006,6 +4063,7 @@ def main() -> int:
     validate_late_game_capital_escalation(errors)
     validate_capital_front_battle_identity(errors)
     validate_authored_scenario_identity(errors)
+    validate_battle_surrender_pursuit_aftermath(errors)
     validate_town_defense_battle_flow(errors)
     validate_in_session_save_controls(errors)
 
@@ -4041,6 +4099,7 @@ def main() -> int:
     print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")
     print("- the battle shell now also surfaces a live tactical risk and readiness board using current initiative, commander cover, cohesion, ranged pressure, decisive targets, objective urgency, and dispatch state")
     print("- battle encounters and scenario placements now author objective or hazard control points that drive real pressure, reserve timing, AI scoring, and shell summaries")
+    print("- battle withdrawal now exposes a real surrender action, distinct retreat versus surrender consequences, and persisted aftermath recap across battle, outcome, and campaign flow")
     print("- battle content now keeps distinct battlefield tags, commander traits, specialized army groups, terrain-payoff rules, and doctrine-aware AI scoring")
     print("- faction identity, town build trees, weekly musters, and thin town-shell progression wiring are present")
     print("- advanced town works now drive asymmetric pressure, reinforcement quality, and battle-readiness payoffs across Embercourt and Mireclaw")

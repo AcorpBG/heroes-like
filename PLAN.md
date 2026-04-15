@@ -130,6 +130,7 @@ Difficulty: High
 - add a release-facing overworld command commitment board inside the real overworld shell using existing context, logistics, hero-coverage, and frontier-risk data instead of a planner or advisor layer
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
 - add a release-facing battle-side order consequence board inside the real battle shell using current action availability, damage windows, retaliation exposure, spell windows, objective pull, and likely hostile reply state instead of a planner or advisor layer
+- turn battle withdrawal into a release-facing surrender and pursuit aftermath slice through the existing battle, outcome, town, economy, campaign, and shell flow so retreat and surrender produce different strategic fallout instead of sharing one generic exit path
 
 ## Immediate execution order
 1. Confirm engine, language, content, and save strategy in docs.
@@ -244,6 +245,8 @@ Difficulty: High
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
 108. [completed] Add a release-facing overworld logistics escort and route-security pass through the existing overworld, town, hero-command, and enemy systems.
 109. [completed] Re-run repository-local validation for overworld escort-route APIs, hostile contestation, and save-version preservation.
+110. [completed] Turn battle withdrawal into a release-facing surrender action with distinct retreat versus surrender consequences through the existing battle and campaign-state rules.
+111. [completed] Re-run repository-local validation for surrender action wiring, pursuit aftermath, recap surfacing, and save-version preservation.
 
 ## Standards
 - no throwaway prototype code if avoidable

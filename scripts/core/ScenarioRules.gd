@@ -290,12 +290,28 @@ static func _build_skirmish_outcome_actions(session: SessionStateStore.SessionDa
 
 static func _build_skirmish_aftermath_summary(session: SessionStateStore.SessionData, scenario: Dictionary) -> String:
 	var lines := []
+	var battle_aftermath := _last_battle_aftermath_text(session)
+	if battle_aftermath != "":
+		lines.append(battle_aftermath)
 	var outcome_text := _resolution_text(scenario, session.scenario_status)
 	if outcome_text != "":
 		lines.append(outcome_text)
 	var recent_events: String = _scenario_script_rules().describe_recent_events(session, 3)
 	if recent_events != "":
 		lines.append("Field report: %s." % recent_events)
+	return "\n".join(lines)
+
+static func _last_battle_aftermath_text(session: SessionStateStore.SessionData) -> String:
+	if session == null:
+		return ""
+	var report = session.flags.get("last_battle_aftermath", {})
+	if not (report is Dictionary) or report.is_empty():
+		return ""
+	var lines := []
+	for key in ["headline", "summary", "resource_summary", "army_summary", "pressure_summary", "recovery_summary"]:
+		var line := String(report.get(key, "")).strip_edges()
+		if line != "" and line not in lines:
+			lines.append(line)
 	return "\n".join(lines)
 
 static func _resolution_text(scenario: Dictionary, status: String) -> String:

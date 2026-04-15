@@ -1,11 +1,11 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T07:45:57Z",
+  "updatedAt": "2026-04-15T11:43:39Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-1-godot-boot-hardening",
-  "currentSliceTitle": "Fix Godot 4.6 autoload collisions and strict-typing compile blockers so the repo boots cleanly before returning to gameplay work",
+  "currentSliceId": "phase-6-battle-surrender-pursuit-aftermath",
+  "currentSliceTitle": "Turn retreat into a real surrender-versus-pursuit battle outcome slice with shared-world consequences and recap flow",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -792,6 +792,18 @@
       "title": "Re-run repository-local validation for overworld escort-route APIs, hostile contestation, and save-version preservation",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-surrender-pursuit-aftermath",
+      "title": "Turn battle withdrawal into a release-facing surrender action with distinct retreat versus surrender fallout through the existing battle and campaign-state rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-surrender-pursuit-aftermath-validation",
+      "title": "Re-run repository-local validation for surrender action wiring, pursuit aftermath, recap surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -974,6 +986,9 @@
     "This run deepened overworld logistics agency by turning the existing site-response order into a hero-bound escort commitment that now changes route pressure guard, weekly musters, recovery fallout, and hostile raid incentives through the same save-backed resource-node state.",
     "OverworldRules.gd now persists escort commander identity and route-security rating on logistics sites, while EnemyAdventureRules.gd values and breaks those escorted routes directly so the player-facing order has real consequences without adding a parallel planner or advisor layer.",
     "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding overworld escort-route coverage while preserving save version 9.",
-    "This run restored Godot 4.6 bootability by removing autoload/class_name collisions across all six autoload singletons, tightening strict-typing in ContentService.gd, and extending validator coverage so those compile blockers fail locally before gameplay work resumes."
+    "This run restored Godot 4.6 bootability by removing autoload/class_name collisions across all six autoload singletons, tightening strict-typing in ContentService.gd, and extending validator coverage so those compile blockers fail locally before gameplay work resumes.",
+    "This run turned battle withdrawal into a real product-facing choice by adding surrender to the existing battle action surface, then routing surrender and retreat through different core aftermath rules instead of one generic exit path.",
+    "BattleRules.gd now records shared-world aftermath for victory, retreat, surrender, stalemate, hero defeat, and town loss, shifting treasury or stockpile loss, surviving army attrition, hostile pressure, and nearby-town recovery state while BattleShell, ScenarioRules, and CampaignRules only surface those core-owned consequences.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding surrender-action coverage, pursuit-aftermath recap hooks, and strict-typing cleanup while preserving save version 9."
   ]
 }

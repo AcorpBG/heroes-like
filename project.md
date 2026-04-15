@@ -216,6 +216,11 @@ Battle spell timing decision:
 - `BattleRules.gd` owns the read-only timing shaping from current spell actions, active-stack ability windows, live status marks, vulnerable friendly lanes, and likely hostile reply text sourced through `BattleAiRules.gd`, while `SpellRules.gd` adds timing-aware spell summaries from the same battle payload so the real spell bar stays actionable
 - `BattleShell.gd` and `.tscn` only bind the added timing panel, so commander decision clarity deepens without moving simulation or save mutation out of `scripts/core` and while keeping `SAVE_VERSION` at `9`
 
+Battle surrender and pursuit decision:
+- the existing battle shell now exposes surrender on the same action surface as retreat, and `BattleRules.gd` owns both preview text and resolution so withdrawal choices stay on the current battle path instead of creating a parallel subsystem
+- retreat and surrender now produce different shared-world consequences in core rules: treasury or stockpile loss, post-battle army attrition, hostile pressure shifts, nearby-town recovery pressure, and durable `last_battle_aftermath` recap state that campaign and skirmish outcome flow can read directly
+- town-defense lock behavior remains enforced through the existing `retreat_allowed` and `surrender_allowed` battle payload flags, while scenes stay thin and save version `9` remains unchanged
+
 Difficulty simulation decision:
 - difficulty now resolves through `DifficultyRules.gd` from persisted `session.difficulty`, so campaign starts, skirmish starts, and restored saves all reuse the same rule profile without a save-version bump
 - overworld difficulty now changes daily movement, economy/reward scaling, and hostile raid pressure, while tactical difficulty shifts initiative tempo and damage output through derived battle payloads instead of scene-owned conditionals
