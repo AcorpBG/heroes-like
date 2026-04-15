@@ -15,6 +15,10 @@ func _run() -> void:
 		return
 	if not _run_enemy_town_assault_regression():
 		return
+	if not _run_save_restore_hero_intercept_resume_regression():
+		return
+	if not _run_save_restore_town_assault_resume_regression():
+		return
 	if not _run_enemy_opening_turn_regression():
 		return
 	get_tree().quit(0)
@@ -248,6 +252,153 @@ func _run_enemy_town_assault_regression() -> bool:
 		return false
 	return true
 
+func _run_save_restore_hero_intercept_resume_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	_set_active_hero_position(session, Vector2i(2, 2))
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	var hero_name := String(session.overworld.get("hero", {}).get("name", "the hero"))
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "intercept_resume_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 3,
+			"y": 2,
+			"difficulty": "pressure",
+			"combat_seed": 991202,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 1,
+			"target_kind": "hero",
+			"target_placement_id": hero_id,
+			"target_label": hero_name,
+			"target_x": 2,
+			"target_y": 2,
+			"goal_x": 2,
+			"goal_y": 2,
+		}
+	)
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	if session.battle.is_empty() or String(result.get("message", "")) == "":
+		push_error("Core systems smoke: interception save/restore setup did not create a live battle.")
+		get_tree().quit(1)
+		return false
+
+	session.game_state = "overworld"
+	var path := SaveService.save_manual_session(session.to_dict(), 2)
+	if path == "":
+		push_error("Core systems smoke: interception save/restore setup could not write the manual slot.")
+		get_tree().quit(1)
+		return false
+	var summary := SaveService.inspect_manual_slot(2)
+	if not SaveService.can_load_summary(summary):
+		push_error("Core systems smoke: interception save summary was not loadable after restore normalization.")
+		get_tree().quit(1)
+		return false
+	if String(summary.get("resume_target", "")) != "battle":
+		push_error("Core systems smoke: interception save summary did not prefer battle resume when battle state existed.")
+		get_tree().quit(1)
+		return false
+	if String(summary.get("battle_name", "")) == "":
+		push_error("Core systems smoke: interception save summary did not expose the battle name for resume context.")
+		get_tree().quit(1)
+		return false
+
+	var restored = SaveService.restore_session_from_summary(summary)
+	if restored == null:
+		push_error("Core systems smoke: interception save could not be restored through the public save service.")
+		get_tree().quit(1)
+		return false
+	if String(restored.battle.get("context", {}).get("type", "")) != "hero_intercept":
+		push_error("Core systems smoke: interception restore lost the hero-intercept battle context.")
+		get_tree().quit(1)
+		return false
+	if String(restored.game_state) != "battle" or SaveService.resume_target_for_session(restored) != "battle":
+		push_error("Core systems smoke: interception restore did not normalize back to battle resume.")
+		get_tree().quit(1)
+		return false
+	if String(restored.overworld.get("active_hero_id", "")) != String(restored.battle.get("context", {}).get("target_hero_id", "")):
+		push_error("Core systems smoke: interception restore did not keep the intercepted hero active for resume.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_save_restore_town_assault_resume_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var town := _town_by_placement(session, "duskfen_bastion")
+	if town.is_empty():
+		push_error("Core systems smoke: sample scenario is missing the hostile town assault restore target.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(session, Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+
+	var result := OverworldRules.capture_active_town(session)
+	if String(result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: town-assault save/restore setup did not create a live assault battle.")
+		get_tree().quit(1)
+		return false
+
+	var degraded_battle: Dictionary = session.battle.duplicate(true)
+	degraded_battle.erase("context")
+	degraded_battle.erase("stacks")
+	session.battle = degraded_battle
+	_set_town_owner(session, "duskfen_bastion", "player")
+	session.game_state = "overworld"
+
+	var path := SaveService.save_manual_session(session.to_dict(), 3)
+	if path == "":
+		push_error("Core systems smoke: town-assault save/restore setup could not write the manual slot.")
+		get_tree().quit(1)
+		return false
+	var summary := SaveService.inspect_manual_slot(3)
+	if not SaveService.can_load_summary(summary):
+		push_error("Core systems smoke: town-assault save summary was not loadable after restore normalization.")
+		get_tree().quit(1)
+		return false
+	if String(summary.get("resume_target", "")) != "battle":
+		push_error("Core systems smoke: town-assault save summary did not prefer battle resume when battle state existed.")
+		get_tree().quit(1)
+		return false
+	if String(summary.get("battle_name", "")) == "":
+		push_error("Core systems smoke: town-assault save summary did not expose the assault battle name.")
+		get_tree().quit(1)
+		return false
+
+	var restored = SaveService.restore_session_from_summary(summary)
+	if restored == null:
+		push_error("Core systems smoke: town-assault save could not be restored through the public save service.")
+		get_tree().quit(1)
+		return false
+	if String(restored.battle.get("context", {}).get("type", "")) != "town_assault":
+		push_error("Core systems smoke: town-assault restore lost the assault battle context.")
+		get_tree().quit(1)
+		return false
+	if restored.battle.get("stacks", []).is_empty():
+		push_error("Core systems smoke: town-assault restore did not rebuild missing battle stacks.")
+		get_tree().quit(1)
+		return false
+	if String(_town_by_placement(restored, "duskfen_bastion").get("owner", "")) != "enemy":
+		push_error("Core systems smoke: town-assault restore did not re-anchor hostile town ownership before battle resume.")
+		get_tree().quit(1)
+		return false
+	if String(restored.game_state) != "battle" or SaveService.resume_target_for_session(restored) != "battle":
+		push_error("Core systems smoke: town-assault restore did not normalize back to battle resume.")
+		get_tree().quit(1)
+		return false
+	return true
+
 func _run_enemy_opening_turn_regression() -> bool:
 	var session = ScenarioFactory.create_session(
 		SCENARIO_ID,
@@ -342,6 +493,16 @@ func _town_by_placement(session, placement_id: String) -> Dictionary:
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return town
 	return {}
+
+func _set_town_owner(session, placement_id: String, owner: String) -> void:
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			town["owner"] = owner
+			towns[index] = town
+			break
+	session.overworld["towns"] = towns
 
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

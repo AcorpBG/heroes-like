@@ -287,6 +287,8 @@ Difficulty: High
 141. [completed] Re-run the required menu smoke, full headless Godot boot, and a live `DISPLAY=:99` menu capture after the submenu-first main-menu pass.
 142. [completed] Restore the live core-systems paths behind the current shells so one-press end turn advances the day, movement refreshes, site stepping auto-resolves, enemy-opening battle turns autoplay, hostile raid-host presence returns, and hostile towns stay hostile until explicitly captured.
 143. [completed] Re-run the required overworld, town-battle, menu-outcome, full headless Godot validations plus a focused core-systems regression smoke scene for turn advance, site interaction, hostile-town context, raid-host presence, and battle-opening enemy turns.
+144. [completed] Harden save/load and resume reliability around `hero_intercept` and `town_assault` battles so degraded or stale battle metadata restores through explicit context normalization instead of generic encounter fallback.
+145. [completed] Re-run the required core-systems, overworld, town-battle, menu-outcome, and full headless Godot validations for the hostile-pressure save-hardening slice while preserving save version `9`.
 
 ## Standards
 - no throwaway prototype code if avoidable
@@ -304,6 +306,7 @@ Difficulty: High
 - normalize battle payloads on entry so old saves and scene resumes degrade safely instead of crashing
 - keep scene controllers thin by routing scenario bootstrap, overworld interactions, and tactical resolution through `scripts/core/`
 - save snapshots are now version `9`, with `SaveService.gd` managing three manual slots plus autosave, launch-mode plus difficulty summaries for UI, and restore normalization that safely downgrades broken battle/town state to overworld resume when possible
+- hostile-pressure save restore now rebuilds `hero_intercept` and `town_assault` contexts from saved battle payload plus live hero or town anchors, reasserts hostile ownership for in-progress assaults before resume, and prefers battle routing plus named battle summaries when battle payload survives stale scene-state metadata
 - logistics-site response orders now also carry escort commander identity and route-security rating on the existing resource-node state, so musters, pressure guard, disruption fallout, and hostile raid incentives stay on current overworld save boundaries without a version bump
 - save/load hardening now records service-owned save timestamps and route metadata, re-reads live slot state before restore, blocks saves missing core expedition payload, and surfaces recovered versus blocked state clearly in the main-menu save browser without a save-version bump
 - active-play save controls now route through `SaveService.gd` plus `AppRouter.gd`, so manual saves, autosaves, latest-save context, and return-to-menu resume hints stay consistent across overworld, town, battle, and outcome shells without moving persistence rules into scene controllers
@@ -321,6 +324,7 @@ Difficulty: High
 - hostile raids now use the same save-backed encounter and map-node state to seize resource sites, secure relic caches, contest objective-linked neutral fronts, and raise town retake pressure instead of only marching on player towns
 - hostile raids can now interrupt the overworld turn with a queued town-defense battle, and the battle flow reuses the existing encounter `enemy_army` path plus new battle-context metadata instead of splitting siege combat into a second system
 - post-battle resolution now syncs surviving raid hosts, defending town garrisons, defending-hero state, and captured-town ownership back into core overworld state so siege outcomes create durable strategic consequences without a save-version bump
+- harden save/load and resume reliability around hostile-pressure battles so `hero_intercept` and `town_assault` restore from saved battle state plus live overworld anchors, reassert in-progress town ownership safely, and surface named battle resume summaries without a save-version bump
 - the town shell now uses a sectioned, scroll-safe management layout, while `TownRules.gd` owns dispatch, defense, frontier-watch, construction-ledger, and recruit-reserve formatting so the scene stays declarative
 - the town shell now also surfaces a full-width defense-outlook and dispatch-readiness board, while `TownRules.gd` owns the posture grading, visibility-safe threat summary, hero-coverage check, and support-chain messaging from live runtime state instead of a planner layer
 - the overworld shell now uses a sectioned command layout, while `OverworldRules.gd` owns objective-board, scout-net, frontier-watch, active-context, and dispatch formatting so the scene stays declarative and visibility-safe

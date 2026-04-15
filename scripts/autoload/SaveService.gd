@@ -166,6 +166,9 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"menu_button_tooltip": _return_to_menu_tooltip(current_target, latest_summary),
 	}
 
+func resume_target_for_session(session: SessionStateStoreScript.SessionData) -> String:
+	return _resume_target_for_session(session)
+
 func can_load_summary(summary: Dictionary) -> bool:
 	return bool(summary.get("valid", false)) and bool(summary.get("loadable", false)) and not _summary_payload(summary).is_empty()
 
@@ -220,6 +223,9 @@ func describe_slot(summary: Dictionary) -> String:
 	parts.append(ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))))
 	parts.append(ScenarioSelectRulesScript.difficulty_label(String(summary.get("difficulty", ScenarioSelectRulesScript.default_difficulty_id()))))
 	parts.append(_resume_target_label(summary))
+	var battle_name := String(summary.get("battle_name", ""))
+	if battle_name != "" and String(summary.get("resume_target", "")) == "battle":
+		parts.append(battle_name)
 	var day := int(summary.get("day", 0))
 	if day > 0:
 		parts.append("Day %d" % day)
@@ -268,6 +274,9 @@ func describe_slot_details(summary: Dictionary) -> String:
 	var hero_specialties_summary := String(summary.get("hero_specialties_summary", ""))
 	if hero_specialties_summary != "":
 		lines.append("Specialties: %s" % hero_specialties_summary)
+	var battle_name := String(summary.get("battle_name", ""))
+	if battle_name != "" and String(summary.get("resume_target", "")) == "battle":
+		lines.append("Battle: %s" % battle_name)
 
 	var day := int(summary.get("day", 0))
 	if day > 0:
@@ -514,7 +523,8 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 			validity = _degraded_validity(validity)
 		warnings.append("Normalized legacy save version %d." % source_save_version)
 
-	match String(session.game_state):
+	var requested_resume_target := _resume_target_for_session(session)
+	match requested_resume_target:
 		"battle":
 			if session.battle.is_empty():
 				session.game_state = "overworld"
@@ -533,12 +543,22 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 		_:
 			session.game_state = "overworld"
 
+	var resume_target := _resume_target_for_session(session)
+	match resume_target:
+		"battle":
+			session.game_state = "battle"
+		"town":
+			session.game_state = "town"
+		_:
+			if session.scenario_status == "in_progress":
+				session.game_state = "overworld"
+
 	return {
 		"ok": true,
 		"validity": validity,
 		"warnings": warnings,
 		"session": session,
-		"resume_target": _resume_target_for_session(session),
+		"resume_target": resume_target,
 	}
 
 func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) -> Dictionary:
@@ -583,6 +603,7 @@ func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) ->
 	summary["launch_mode"] = launch_mode
 	summary["scenario_status"] = String(normalized.get("scenario_status", "in_progress"))
 	summary["game_state"] = String(normalized.get("game_state", "overworld"))
+	summary["battle_name"] = _battle_name_from_payload(normalized)
 	summary["saved_from_game_state"] = String(payload.get(SAVE_METADATA_GAME_STATE_KEY, summary.get("game_state", "overworld")))
 	summary["saved_from_scenario_status"] = String(payload.get(SAVE_METADATA_SCENARIO_STATUS_KEY, summary.get("scenario_status", "in_progress")))
 	summary["saved_from_launch_mode"] = String(payload.get(SAVE_METADATA_LAUNCH_MODE_KEY, summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
@@ -620,6 +641,12 @@ func _hero_name(hero_state: Variant, hero_template: Dictionary, hero_id: String)
 			return hero_name
 	return String(hero_template.get("name", hero_id))
 
+func _battle_name_from_payload(normalized_payload: Dictionary) -> String:
+	var battle_state = normalized_payload.get("battle", {})
+	if not (battle_state is Dictionary) or battle_state.is_empty():
+		return ""
+	return String(battle_state.get("encounter_name", battle_state.get("encounter_id", "")))
+
 func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	return {
 		"slot_type": slot_type,
@@ -637,6 +664,7 @@ func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Di
 		"day": 0,
 		"hero_id": "",
 		"hero_name": "",
+		"battle_name": "",
 			"difficulty": ScenarioSelectRulesScript.default_difficulty_id(),
 			"launch_mode": SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
 		"scenario_status": "in_progress",
@@ -702,6 +730,9 @@ func _main_menu_continue_hint(summary: Dictionary) -> String:
 		return "Main menu continue is unavailable for this snapshot."
 	match String(summary.get("resume_target", "blocked")):
 		"battle":
+			var battle_name := String(summary.get("battle_name", ""))
+			if battle_name != "":
+				return "Continue Latest will resume %s." % battle_name
 			return "Continue Latest will resume the active battle."
 		"town":
 			return "Continue Latest will resume town management."
@@ -786,6 +817,9 @@ func _status_text_for_summary(summary: Dictionary) -> String:
 		return String(summary.get("status_text", "Unavailable"))
 	match String(summary.get("resume_target", "blocked")):
 		"battle":
+			var battle_name := String(summary.get("battle_name", ""))
+			if battle_name != "":
+				return "Ready to resume %s." % battle_name
 			return "Ready to resume the active battle."
 		"town":
 			return "Ready to resume town management."
@@ -813,13 +847,11 @@ func _resume_target_for_session(session: SessionStateStoreScript.SessionData) ->
 		return "blocked"
 	if session.scenario_status != "in_progress":
 		return "outcome"
-	match String(session.game_state):
-		"battle":
-			return "battle"
-		"town":
-			return "town"
-		_:
-			return "overworld"
+	if not session.battle.is_empty():
+		return "battle"
+	if String(session.game_state) == "town" and TownRulesScript.can_visit_active_town_bridge(session):
+		return "town"
+	return "overworld"
 
 func _recorded_timestamp_from_payload(payload: Dictionary, fallback: int = 0) -> int:
 	var recorded: int = max(0, int(payload.get(SAVE_METADATA_TIMESTAMP_KEY, 0)))

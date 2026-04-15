@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T21:31:42Z",
+  "updatedAt": "2026-04-15T22:31:00Z",
   "status": "in_progress",
-  "currentPhase": "hostile-pressure-and-town-assault",
-  "currentSliceId": "phase-2-3-5-hostile-pursuit-town-assault",
-  "currentSliceTitle": "Turn hostile pursuit and enemy-town seizure into battle-backed overworld pressure",
+  "currentPhase": "save-resume-hardening",
+  "currentSliceId": "phase-6-save-hardening-hostile-pressure-contexts",
+  "currentSliceTitle": "Harden save/load and resume reliability for interception and town-assault battle contexts",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a hostile-pressure slice that turns hero-hunt raids into real interception battles, replaces instant hostile-town capture with a battle-backed assault path, and tightens overworld context strings so raid intent, defended towns, and map pressure read through the existing core rules instead of abstract text or instant state flips.",
+  "currentSliceNotes": "Completed a save-hardening slice that rebuilds hero-intercept and town-assault battle contexts from saved battle state plus live overworld anchors, keeps active battle resume routing and save summaries aligned even when scene-state metadata is stale, and adds focused regression coverage for hostile-pressure battle restore paths.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

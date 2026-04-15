@@ -97,11 +97,13 @@ func resume_active_session() -> void:
 		go_to_scenario_outcome()
 		return
 
-	match String(session.game_state):
+	match SaveService.resume_target_for_session(session):
 		"battle":
 			go_to_battle()
 		"town":
 			go_to_town()
+		"outcome":
+			go_to_scenario_outcome()
 		_:
 			go_to_overworld()
 

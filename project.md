@@ -389,6 +389,11 @@ Main-menu scenic composition decision:
 - the first-view menu surface now intentionally shows only the scenic stage, logo pocket, footer pocket, and readable command spine, with deeper launch, save, help, and settings detail opening as secondary overlays instead of permanent screen furniture
 - the temporary backdrop art now lives locally under `art/ui/` and `MainMenuHeroView.gd` loads it at runtime, keeping the placeholder art local to the repo and the slice confined to menu presentation code rather than gameplay boundaries
 
+Hostile-pressure save-hardening decision:
+- `BattleRules.gd` now treats `hero_intercept` and `town_assault` as first-class restore contexts, rebuilding them from saved battle payload plus live hero or town anchors when older or degraded snapshots no longer carry the original encounter placement verbatim
+- in-progress assault resumes now reassert the correct overworld anchor before the shell returns, keeping hostile towns hostile during active town-assault battles and keeping intercepted heroes selected when the player resumes a field interception
+- `SaveService.gd` and `AppRouter.gd` now derive resume routing from the normalized live session rather than trusting stale scene-state metadata alone, and save-slot summaries surface the active battle name so autosave and manual-slot resume context stays legible without changing save version `9`
+
 Core-systems regression correction decision:
 - overworld turn advance is one-press again: the command-risk forecast remains informational, but `OverworldShell.gd` no longer gates `OverworldRules.end_turn()` behind a preview acknowledgement, so daily movement refresh, mana refresh, economy ticks, and hostile empire turns fire on the intended button press
 - post-move interaction now resolves from core rules instead of waiting on extra scene commands for basic site flow: stepping onto claimable resource sites and artifact caches auto-resolves immediately, stepping onto hostile encounters auto-prepares battle and routes there, stepping onto owned towns routes into the town shell, and stepping onto hostile towns leaves them hostile instead of silently converting them into player-town visits
