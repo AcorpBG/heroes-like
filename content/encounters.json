@@ -29,6 +29,33 @@
       "victory_flags": ["pass_cleared"]
     },
     {
+      "id": "encounter_town_assault",
+      "name": "Town Assault",
+      "enemy_group_id": "army_mireclaw_raiding_party",
+      "terrain": "grass",
+      "battlefield_tags": ["fortress_lane", "wall_pressure"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Wall Captain",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "gate_breach",
+          "type": "breach_point",
+          "label": "Gate Breach",
+          "summary": "The side that controls the broken gate controls whether the assault stalls at the wall or spills into the yard.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["momentum", "cohesion", "urgency"]
+        }
+      ],
+      "rewards": {}
+    },
+    {
       "id": "encounter_hollow_mire",
       "name": "Hollow Mire",
       "enemy_group_id": "army_mireclaw_pack",

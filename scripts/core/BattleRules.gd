@@ -20,6 +20,38 @@ const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
 
+static func create_town_assault_payload(
+	session: SessionStateStoreScript.SessionData,
+	town_placement_id: String
+) -> Dictionary:
+	OverworldRulesScript.normalize_overworld_state(session)
+	var town_result = _find_town_by_placement(session, town_placement_id)
+	if int(town_result.get("index", -1)) < 0:
+		return {}
+	var town: Dictionary = town_result.get("town", {})
+	if town.is_empty() or String(town.get("owner", "neutral")) != "enemy":
+		return {}
+	var town_template: Dictionary = ContentService.get_town(String(town.get("town_id", "")))
+	var placement := {
+		"placement_id": "town_assault:%s" % town_placement_id,
+		"encounter_id": "encounter_town_assault",
+		"x": int(town.get("x", 0)),
+		"y": int(town.get("y", 0)),
+		"combat_seed": hash("%s:%d:town_assault:%s" % [session.session_id, session.day, town_placement_id]),
+		"enemy_army": {
+			"id": "town_garrison_%s" % town_placement_id,
+			"name": "%s Garrison" % _town_name(town),
+			"stacks": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],
+		},
+		"enemy_hero_override": _town_captain_state(town),
+		"battle_context": {
+			"type": "town_assault",
+			"town_placement_id": town_placement_id,
+			"trigger_faction_id": String(town_template.get("faction_id", "")),
+		},
+	}
+	return create_battle_payload(session, placement)
+
 static func create_battle_payload(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	OverworldRulesScript.normalize_overworld_state(session)
 	encounter_placement = _resolved_encounter_placement(session, encounter_placement)
@@ -31,8 +63,8 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var battle_context = _normalized_battle_context(session, encounter_placement)
 	var player_setup = _player_setup_for_battle(session, encounter_placement, battle_context)
-	var enemy_army = _enemy_army_for_encounter(encounter_placement, encounter)
-	var enemy_hero_state = _enemy_commander_state(encounter)
+	var enemy_army = _enemy_army_for_battle(session, encounter_placement, encounter, battle_context)
+	var enemy_hero_state = _enemy_commander_state_for_battle(session, encounter_placement, encounter, battle_context)
 	var player_commander_state = player_setup.get("commander_state", session.overworld.get("hero", {}))
 	var battlefield_tags = _normalized_battlefield_tags(encounter, battle_context)
 	var battle = {
@@ -107,10 +139,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 					int(stack.get("count", 0)),
 					"enemy",
 					index,
-					{
-						"source_type": "encounter_army",
-						"encounter_key": OverworldRulesScript.encounter_key(encounter_placement),
-					}
+					_enemy_stack_source(encounter_placement, battle_context)
 				)
 			)
 
@@ -168,7 +197,28 @@ static func _normalized_battle_context(session: SessionStateStoreScript.SessionD
 	var delivery_pressure_label: String = String(context.get("delivery_pressure_label", delivery_context.get("pressure_label", "")))
 	var delivery_recruit_summary: String = String(context.get("delivery_recruit_summary", delivery_context.get("recruit_summary", "")))
 	var delivery_arrival_day: int = maxi(0, int(context.get("delivery_arrival_day", delivery_context.get("arrival_day", 0))))
-	if context_type != "town_defense":
+	if context_type == "hero_intercept":
+		return {
+			"type": "hero_intercept",
+			"town_placement_id": "",
+			"town_role": "frontier",
+			"battlefront_summary": "",
+			"battlefront_tags": [],
+			"target_hero_id": String(context.get("target_hero_id", "")),
+			"trigger_faction_id": String(context.get("trigger_faction_id", "")),
+			"delivery_node_placement_id": delivery_node_placement_id,
+			"delivery_site_name": delivery_site_name,
+			"delivery_origin_town_id": delivery_origin_town_id,
+			"delivery_origin_town_label": delivery_origin_town_label,
+			"delivery_target_kind": delivery_target_kind,
+			"delivery_target_id": delivery_target_id,
+			"delivery_target_label": delivery_target_label,
+			"delivery_route_label": delivery_route_label,
+			"delivery_pressure_label": delivery_pressure_label,
+			"delivery_recruit_summary": delivery_recruit_summary,
+			"delivery_arrival_day": delivery_arrival_day,
+		}
+	if context_type not in ["town_defense", "town_assault"]:
 		return {
 			"type": "encounter",
 			"town_placement_id": "",
@@ -186,11 +236,11 @@ static func _normalized_battle_context(session: SessionStateStoreScript.SessionD
 			"delivery_pressure_label": delivery_pressure_label,
 			"delivery_recruit_summary": delivery_recruit_summary,
 			"delivery_arrival_day": delivery_arrival_day,
-		}
+	}
 	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
 	var battlefront = OverworldRulesScript.town_battlefront_profile(town)
 	return {
-		"type": "town_defense",
+		"type": context_type,
 		"town_placement_id": String(context.get("town_placement_id", "")),
 		"defending_hero_id": String(context.get("defending_hero_id", "")),
 		"raid_encounter_key": String(context.get("raid_encounter_key", "")),
@@ -214,15 +264,39 @@ static func _normalized_battle_context(session: SessionStateStoreScript.SessionD
 static func _is_town_defense_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "town_defense"
 
+static func _is_town_assault_context(context: Variant) -> bool:
+	return context is Dictionary and String(context.get("type", "")) == "town_assault"
+
 static func _has_delivery_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("delivery_node_placement_id", "")) != ""
 
 static func _battle_name(session: SessionStateStoreScript.SessionData, encounter: Dictionary, battle_context: Dictionary) -> String:
+	if _is_town_assault_context(battle_context):
+		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
+		if town_name != "":
+			return "Assault on %s" % town_name
 	if _is_town_defense_context(battle_context):
 		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
 		if town_name != "":
 			return "%s at %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), town_name]
+	if String(battle_context.get("type", "")) == "hero_intercept":
+		var hero_name := String(
+			HeroCommandRulesScript.hero_by_id(session, String(battle_context.get("target_hero_id", ""))).get("name", "")
+		)
+		if hero_name != "":
+			return "%s intercepts %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), hero_name]
 	return String(encounter.get("name", encounter.get("id", "Battle")))
+
+static func _enemy_stack_source(encounter_placement: Dictionary, battle_context: Dictionary) -> Dictionary:
+	if _is_town_assault_context(battle_context):
+		return {
+			"source_type": "town_garrison",
+			"town_placement_id": String(battle_context.get("town_placement_id", "")),
+		}
+	return {
+		"source_type": "encounter_army",
+		"encounter_key": OverworldRulesScript.encounter_key(encounter_placement),
+	}
 
 static func _enemy_army_for_encounter(encounter_placement: Dictionary, encounter: Dictionary) -> Dictionary:
 	var enemy_army = ContentService.get_army_group(String(encounter.get("enemy_group_id", "")))
@@ -230,6 +304,35 @@ static func _enemy_army_for_encounter(encounter_placement: Dictionary, encounter
 	if placement_army is Dictionary and placement_army.get("stacks", []) is Array and not placement_army.get("stacks", []).is_empty():
 		enemy_army = placement_army
 	return enemy_army
+
+static func _enemy_army_for_battle(
+	session: SessionStateStoreScript.SessionData,
+	encounter_placement: Dictionary,
+	encounter: Dictionary,
+	battle_context: Dictionary
+) -> Dictionary:
+	if _is_town_assault_context(battle_context):
+		var town = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
+		return {
+			"id": "town_garrison_%s" % String(battle_context.get("town_placement_id", "")),
+			"name": "%s Garrison" % _town_name(town),
+			"stacks": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],
+		}
+	return _enemy_army_for_encounter(encounter_placement, encounter)
+
+static func _enemy_commander_state_for_battle(
+	session: SessionStateStoreScript.SessionData,
+	encounter_placement: Dictionary,
+	encounter: Dictionary,
+	battle_context: Dictionary
+) -> Dictionary:
+	var override = encounter_placement.get("enemy_hero_override", {})
+	if override is Dictionary and not override.is_empty():
+		return override.duplicate(true)
+	if _is_town_assault_context(battle_context):
+		var town = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
+		return _town_captain_state(town)
+	return _enemy_commander_state(encounter)
 
 static func _player_setup_for_battle(
 	session: SessionStateStoreScript.SessionData,
@@ -1685,7 +1788,7 @@ static func _battle_enemy_faction_id(session: SessionStateStoreScript.SessionDat
 		return ""
 	var context = session.battle.get("context", {})
 	var faction_id := ""
-	if _is_town_defense_context(context):
+	if _is_town_defense_context(context) or _is_town_assault_context(context):
 		faction_id = String(context.get("trigger_faction_id", ""))
 		if _enemy_state_exists(session, faction_id):
 			return faction_id
@@ -1893,7 +1996,7 @@ static func _tactical_battlefield_line(session: SessionStateStoreScript.SessionD
 	var tag_labels = _battlefield_tag_labels(battle)
 	if not tag_labels.is_empty():
 		parts.append("Tags %s" % ", ".join(tag_labels))
-	if _is_town_defense_context(battle.get("context", {})):
+	if _is_town_defense_context(battle.get("context", {})) or _is_town_assault_context(battle.get("context", {})):
 		parts.append(_battle_context_label(session, battle.get("context", {})))
 	return "Battlefield: %s" % " | ".join(parts)
 
@@ -1902,6 +2005,11 @@ static func _tactical_objective_line(session: SessionStateStoreScript.SessionDat
 		var town_name = _town_name_from_placement_id(session, String(battle.get("context", {}).get("town_placement_id", "")))
 		return "Battle aim: Hold %s. A collapse here loses the town and cedes the lane." % (
 			town_name if town_name != "" else "the walls"
+		)
+	if _is_town_assault_context(battle.get("context", {})):
+		var assault_town_name = _town_name_from_placement_id(session, String(battle.get("context", {}).get("town_placement_id", "")))
+		return "Battle aim: Take %s. Breaking the garrison opens the town and collapses this hostile anchor." % (
+			assault_town_name if assault_town_name != "" else "the walls"
 		)
 	var encounter_objective = _encounter_objective_for_battle(session, battle, scenario)
 	if not encounter_objective.is_empty():
@@ -1965,6 +2073,8 @@ static func _tactical_caution_line(session: SessionStateStoreScript.SessionData,
 		return "Tactical edge: You own the cleaner firing line. Spend the opening volleys before the lines fully engage."
 	if _is_town_defense_context(battle.get("context", {})):
 		return "Tactical caution: Retreat is locked on the walls. Preserve disciplined defenders and trade for position, not speed."
+	if _is_town_assault_context(battle.get("context", {})):
+		return "Tactical caution: If the breach stalls, the town stays hostile. Keep pressure on the wall lane and decisive stacks."
 	return ""
 
 static func _risk_readiness_grade(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
@@ -3005,7 +3115,8 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	if base_summary == "":
 		base_summary = "The enemy host breaks and the battlefield is secured."
 	messages.append(base_summary)
-	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
+	if not _is_town_assault_context(session.battle.get("context", {})):
+		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
 	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
@@ -3054,6 +3165,8 @@ static func _finalize_player_battle_loss(session: SessionStateStoreScript.Sessio
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return _finalize_town_defense_loss(session)
 	if HeroCommandRulesScript.active_hero_is_primary(session):
+		if _is_town_assault_context(session.battle.get("context", {})):
+			return _finalize_primary_defeat(session, "The assault collapses beneath the walls and the primary commander is defeated.")
 		return _finalize_primary_defeat(session)
 	return _finalize_secondary_hero_defeat(session)
 
@@ -3102,6 +3215,8 @@ static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> D
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
 	var base_summary := "The army withdraws from battle."
+	if _is_town_assault_context(session.battle.get("context", {})):
+		base_summary = "The assault breaks off from the walls."
 	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
@@ -3124,6 +3239,8 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot surrender the walls mid-assault.", "state": "invalid"}
 	var base_summary := "The commander lowers the banners and yields the field."
+	if _is_town_assault_context(session.battle.get("context", {})):
+		base_summary = "The commander yields the assault beneath the walls."
 	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
@@ -3171,7 +3288,11 @@ static func _apply_victory_front_aftermath(session: SessionStateStoreScript.Sess
 		return {"summary": ""}
 	var encounter = _current_battle_encounter_placement(session)
 	var pressure_delta := -1
-	if _is_town_defense_context(session.battle.get("context", {})) or String(encounter.get("spawned_by_faction_id", "")) != "":
+	if (
+		_is_town_defense_context(session.battle.get("context", {}))
+		or _is_town_assault_context(session.battle.get("context", {}))
+		or String(encounter.get("spawned_by_faction_id", "")) != ""
+	):
 		pressure_delta = -2
 	var pressure_summary := _apply_front_pressure_shift(session, faction_id, pressure_delta, "victory")
 	return {"summary": pressure_summary}
@@ -4337,6 +4458,24 @@ static func _sync_player_force_from_battle(session: SessionStateStoreScript.Sess
 static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.SessionData, encounter_resolved: bool) -> void:
 	if session == null or session.battle.is_empty():
 		return
+	var context = session.battle.get("context", {})
+	if _is_town_assault_context(context):
+		var town_result = _find_town_by_placement(session, String(context.get("town_placement_id", "")))
+		if int(town_result.get("index", -1)) < 0:
+			return
+		var towns = session.overworld.get("towns", [])
+		var town = town_result.get("town", {})
+		town["garrison"] = _battle_survivor_stacks(
+			session,
+			"enemy",
+			{
+				"source_type": "town_garrison",
+				"town_placement_id": String(context.get("town_placement_id", "")),
+			}
+		)
+		towns[int(town_result.get("index", -1))] = town
+		session.overworld["towns"] = towns
+		return
 	var encounter_result = _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
 	if int(encounter_result.get("index", -1)) < 0:
 		return
@@ -4398,6 +4537,15 @@ static func _award_commander_experience(session: SessionStateStoreScript.Session
 
 static func _apply_battle_context_victory(session: SessionStateStoreScript.SessionData) -> String:
 	var context = session.battle.get("context", {})
+	if _is_town_assault_context(context):
+		var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+		var message = OverworldRulesScript.capture_town_by_placement(session, String(context.get("town_placement_id", "")))
+		if message == "":
+			message = "%s falls to the assault." % (town_name if town_name != "" else "The town")
+		var recovery_message = _apply_town_assault_recovery(session, "victory")
+		if recovery_message != "":
+			message = "%s %s" % [message, recovery_message]
+		return message
 	if not _is_town_defense_context(context):
 		return ""
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
@@ -4410,6 +4558,15 @@ static func _apply_battle_context_victory(session: SessionStateStoreScript.Sessi
 
 static func _apply_battle_context_stalemate(session: SessionStateStoreScript.SessionData) -> String:
 	var context = session.battle.get("context", {})
+	if _is_town_assault_context(context):
+		var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+		var message = "%s holds through the assault and remains hostile." % (
+			town_name if town_name != "" else "The town"
+		)
+		var recovery_message = _apply_town_assault_recovery(session, "stalemate")
+		if recovery_message != "":
+			message = "%s %s" % [message, recovery_message]
+		return message
 	if not _is_town_defense_context(context):
 		return ""
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
@@ -4529,6 +4686,36 @@ static func _town_defense_recovery_pressure(session: SessionStateStoreScript.Ses
 		"stronghold":
 			pressure += 1
 	return clamp(pressure, 1, 6)
+
+static func _apply_town_assault_recovery(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
+	var context = session.battle.get("context", {})
+	if not _is_town_assault_context(context):
+		return ""
+	var pressure = _town_assault_recovery_pressure(session, outcome)
+	if pressure <= 0:
+		return ""
+	var source = "stormed walls" if outcome == "victory" else "contested walls"
+	return OverworldRulesScript.apply_town_recovery_pressure(
+		session,
+		String(context.get("town_placement_id", "")),
+		pressure,
+		source
+	)
+
+static func _town_assault_recovery_pressure(session: SessionStateStoreScript.SessionData, outcome: String) -> int:
+	if session == null or session.battle.is_empty():
+		return 0
+	var context = session.battle.get("context", {})
+	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
+	var pressure = max(1, int(round(float(max(1, _army_strength_from_stacks(town.get("garrison", [])))) / 220.0)))
+	if outcome == "victory":
+		pressure += 1
+	match OverworldRulesScript.town_strategic_role(town):
+		"capital":
+			pressure += 1
+		"stronghold":
+			pressure += 1
+	return clamp(pressure, 1, 5)
 
 static func _capture_town_after_assault(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
 	var town_result = _find_town_by_placement(session, town_placement_id)
@@ -4703,6 +4890,20 @@ static func _battle_context_label(session: SessionStateStoreScript.SessionData, 
 		if String(context.get("type", "")) == "town_defense":
 			return "Relief defense at %s" % (target_label if target_label != "" else "the walls")
 		return "Convoy clash near %s" % (target_label if target_label != "" else "the front")
+	if String(context.get("type", "")) == "hero_intercept":
+		var hero_name := String(
+			HeroCommandRulesScript.hero_by_id(session, String(context.get("target_hero_id", ""))).get("name", "the road")
+		)
+		return "Interception near %s" % hero_name
+	if _is_town_assault_context(context):
+		var assault_town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+		match String(context.get("town_role", "frontier")):
+			"capital":
+				return "Capital assault at %s" % (assault_town_name if assault_town_name != "" else "the walls")
+			"stronghold":
+				return "Stronghold assault at %s" % (assault_town_name if assault_town_name != "" else "the walls")
+			_:
+				return "Town assault at %s" % (assault_town_name if assault_town_name != "" else "the walls")
 	if String(context.get("type", "")) != "town_defense":
 		return "Field engagement"
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
@@ -4796,6 +4997,8 @@ static func _pressure_brief(session: SessionStateStoreScript.SessionData) -> Str
 		return "The breach is widening; late melee exchanges will snowball fast."
 	if _is_town_defense_context(battle.get("context", {})) and enemy_health > player_health:
 		return "The walls are under strain; a collapse here costs the town."
+	if _is_town_assault_context(battle.get("context", {})) and enemy_health >= player_health:
+		return "The breach is stalling; the town stays hostile unless the wall line breaks."
 	if rounds_remaining <= 2:
 		return "The clock is tightening; one more slow round risks stalemate."
 	if enemy_health <= int(round(float(player_health) * 0.65)):
@@ -5615,7 +5818,7 @@ static func _normalized_battlefield_tags(encounter: Dictionary, context: Variant
 		var tag_id = String(tag_value)
 		if tag_id != "" and tag_id not in normalized:
 			normalized.append(tag_id)
-	if _is_town_defense_context(context):
+	if _is_town_defense_context(context) or _is_town_assault_context(context):
 		for tag_id in ["fortified_line", "chokepoint"]:
 			if tag_id not in normalized:
 				normalized.append(tag_id)

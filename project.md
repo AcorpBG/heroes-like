@@ -310,6 +310,11 @@ Hostile empire personality decision:
 - authored scenario fronts can sharpen or redirect that baseline through `priority_target_placement_ids`, `priority_target_bonus`, and nested `strategy_overrides` on `enemy_factions`, letting the same faction behave differently on river crossings, relay fronts, siege roads, and logistics-heavy maps without inventing a second strategy system
 - `EnemyTurnRules.gd` now reads those strategy profiles for build scoring, recruit ordering, garrison-versus-raid reinforcement, desired town strength, raid threshold spend, and public frontier-watch posture summaries, while `EnemyAdventureRules.gd` applies the same profiles to town, site, relic, encounter, and hero target scoring so hostile pressure stays legible and materially different across Embercourt, Mireclaw, and Sunvault
 
+Hostile pursuit and town-assault decision:
+- hostile raid hosts now cash in hero-hunt pressure through the existing enemy-turn and battle path: when a raid closes on a field hero outside a friendly town, `EnemyTurnRules.gd` switches command to the threatened hero and launches a real interception battle instead of leaving the threat as abstract pressure or optional player cleanup
+- hostile-town capture now also cashes in through that same battle path: `OverworldRules.gd` routes defended enemy towns into a real assault battle via `BattleRules.gd`, and victory or stalemate resolve back into town ownership, defender sync, frontier-pressure shifts, and recovery fallout rather than an instant ownership flip
+- encounter and town readability remain core-owned: `OverworldRules.gd` now shapes hostile-contact pressure text and defended-town context from live target, garrison, and approach state, while `OverworldShell.gd` only binds those summaries so scene controllers stay thin and save version `9` remains unchanged
+
 ## Data domains
 The authored content boundary is now split into dedicated JSON domains under `content/`:
 - `factions.json`

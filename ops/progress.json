@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T21:05:46Z",
+  "updatedAt": "2026-04-15T21:31:42Z",
   "status": "in_progress",
-  "currentPhase": "core-systems-regression-hardening",
-  "currentSliceId": "phase-2-3-5-core-systems-regression-pass",
-  "currentSliceTitle": "Restore turn advance, auto interactions, hostile battle turns, raid-host presence, and hostile-town context",
+  "currentPhase": "hostile-pressure-and-town-assault",
+  "currentSliceId": "phase-2-3-5-hostile-pursuit-town-assault",
+  "currentSliceTitle": "Turn hostile pursuit and enemy-town seizure into battle-backed overworld pressure",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Removed the forecast gate from one-press end turn so day advance, movement refresh, and hostile empire turns fire immediately again. Overworld movement now auto-resolves claimable sites, artifact caches, owned-town entry, and hostile encounter battle routing, while hostile towns stay hostile on entry instead of silently becoming player-town visits. Battle startup and resume now drain enemy-first initiative windows through core AI so enemy turns execute before the shell waits for player input.",
+  "currentSliceNotes": "Completed a hostile-pressure slice that turns hero-hunt raids into real interception battles, replaces instant hostile-town capture with a battle-backed assault path, and tightens overworld context strings so raid intent, defended towns, and map pressure read through the existing core rules instead of abstract text or instant state flips.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1164,6 +1164,8 @@
     "This run rebuilt the live main menu around the approved scenic composition by anchoring a temporary local painted backdrop behind a clean top-left logo pocket, one shared lower-left stage dock, a quiet footer pocket, and a far-right command spine while preserving continue, campaign, skirmish, saves, guide, settings, and quit routing.",
     "Godot 4.6.2 headless validation passed again for res://tests/menu_outcome_visual_smoke.tscn and full boot, and a live DISPLAY=:99 capture confirmed the real menu composition; python3 tests/validate_repo.py still reports the same unrelated baseline token-audit failures outside this slice.",
     "This run kept the approved 002-style scenic front intact while removing the always-open stage dock from first view, so campaign, skirmish, saves, guide, and settings now open only as a summoned overlay from the right command spine instead of covering the painted surface by default.",
-    "Godot 4.6.2 headless validation passed again for tests/menu_outcome_visual_smoke.tscn and full boot, and refreshed DISPLAY=:99 captures confirmed both the clean first view and the overlay-on-demand menu behavior."
+    "Godot 4.6.2 headless validation passed again for tests/menu_outcome_visual_smoke.tscn and full boot, and refreshed DISPLAY=:99 captures confirmed both the clean first view and the overlay-on-demand menu behavior.",
+    "This run turned hostile overworld pressure into clearer product-facing play by routing hero-hunt raids into real field interception battles, surfacing raid intent and consequences through OverworldRules summaries, and requiring defended enemy towns to be taken through battle-backed assaults instead of instant state flips.",
+    "The required Godot 4.6.2 headless validations all passed again after the hostile-pressure slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot; the smoke scenes still emit the unrelated baseline ObjectDB leak warning on exit."
   ]
 }

@@ -11,6 +11,10 @@ func _run() -> void:
 		return
 	if not _run_auto_interaction_regressions():
 		return
+	if not _run_enemy_hero_intercept_regression():
+		return
+	if not _run_enemy_town_assault_regression():
+		return
 	if not _run_enemy_opening_turn_regression():
 		return
 	get_tree().quit(0)
@@ -147,6 +151,99 @@ func _run_enemy_town_context_regression() -> bool:
 		return false
 	if String(result.get("route", "")) == "town" or TownRules.can_visit_active_town(session):
 		push_error("Core systems smoke: hostile town entry still routes as a player town visit.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_enemy_hero_intercept_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	_set_active_hero_position(session, Vector2i(2, 2))
+	var hero_id := String(session.overworld.get("active_hero_id", ""))
+	var hero_name := String(session.overworld.get("hero", {}).get("name", "the hero"))
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "intercept_smoke_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 3,
+			"y": 2,
+			"difficulty": "pressure",
+			"combat_seed": 991201,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 1,
+			"target_kind": "hero",
+			"target_placement_id": hero_id,
+			"target_label": hero_name,
+			"target_x": 2,
+			"target_y": 2,
+			"goal_x": 2,
+			"goal_y": 2,
+		}
+	)
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var result := EnemyTurnRules.run_enemy_turn(session)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: hero-targeting raid did not launch an interception battle.")
+		get_tree().quit(1)
+		return false
+	if String(session.battle.get("context", {}).get("type", "")) != "hero_intercept":
+		push_error("Core systems smoke: interception battle did not preserve hero-intercept context.")
+		get_tree().quit(1)
+		return false
+	if String(result.get("message", "")) == "":
+		push_error("Core systems smoke: interception launch returned no enemy-turn feedback.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_enemy_town_assault_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var town := _town_by_placement(session, "duskfen_bastion")
+	if town.is_empty():
+		push_error("Core systems smoke: sample scenario is missing the hostile town assault target.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(session, Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+
+	var result := OverworldRules.capture_active_town(session)
+	if String(result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: hostile-town capture did not route into a town-assault battle.")
+		get_tree().quit(1)
+		return false
+	if String(session.battle.get("context", {}).get("type", "")) != "town_assault":
+		push_error("Core systems smoke: town assault battle did not preserve assault context.")
+		get_tree().quit(1)
+		return false
+	if String(_town_by_placement(session, "duskfen_bastion").get("owner", "")) != "enemy":
+		push_error("Core systems smoke: hostile-town assault flipped ownership before battle resolution.")
+		get_tree().quit(1)
+		return false
+
+	for index in range(session.battle.get("stacks", []).size()):
+		var stack = session.battle.get("stacks", [])[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+			continue
+		stack["total_health"] = 0
+		session.battle["stacks"][index] = stack
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "victory":
+		push_error("Core systems smoke: town assault victory did not resolve through the standard battle flow.")
+		get_tree().quit(1)
+		return false
+	if String(_town_by_placement(session, "duskfen_bastion").get("owner", "")) != "player":
+		push_error("Core systems smoke: town assault victory did not transfer town ownership.")
 		get_tree().quit(1)
 		return false
 	return true

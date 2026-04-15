@@ -625,11 +625,12 @@ func _describe_selected_tile() -> String:
 	var encounter = _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
 		var encounter_data = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-		return "Hostile Contact\nCoords %d,%d | Terrain %s\n%s\nAdvance toward the contact to trigger battle." % [
+		return "Hostile Contact\nCoords %d,%d | Terrain %s\n%s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
 			String(encounter_data.get("name", "Skirmish host")),
+			OverworldRules.describe_encounter_pressure(_session, encounter),
 		]
 
 	var heroes_here = _hero_entries_at(_selected_tile.x, _selected_tile.y)

@@ -484,12 +484,28 @@ static func capture_active_town(session: SessionStateStoreScript.SessionData) ->
 	if int(town_result.get("index", -1)) < 0:
 		return {"ok": false, "message": "No town stands here."}
 
-	var towns = session.overworld.get("towns", [])
 	var town = town_result.get("town", {})
 	if String(town.get("owner", "neutral")) == "player":
 		return {"ok": false, "message": "This town already flies your banner."}
+	if String(town.get("owner", "neutral")) == "enemy" and _town_requires_assault(town):
+		return _begin_town_assault(session, town)
 
-	return _finalize_action_result(session, true, _claim_town(session, town_result))
+	return _finalize_action_result(session, true, capture_town_by_placement(session, String(town.get("placement_id", ""))))
+
+static func capture_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> String:
+	if session == null or placement_id == "":
+		return ""
+	var town_result := _find_town_by_placement(session, placement_id)
+	if int(town_result.get("index", -1)) < 0:
+		return ""
+	return _claim_town(session, town_result)
+
+static func describe_encounter_pressure(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	for_battle_prompt: bool = false
+) -> String:
+	return _encounter_pressure_summary(session, encounter, for_battle_prompt)
 
 static func build_in_active_town(session: SessionStateStoreScript.SessionData, building_id: String) -> Dictionary:
 	normalize_overworld_state(session)
@@ -869,6 +885,12 @@ static func describe_town_context(town: Dictionary, session: SessionStateStoreSc
 		parts.append("Weekly %s" % weekly_growth)
 	if defense != "":
 		parts.append("Defense %s" % defense)
+	if String(town.get("owner", "neutral")) == "enemy" and _town_garrison_headcount(town) > 0:
+		parts.append(
+			"Garrison %d troops/%d companies" % [_town_garrison_headcount(town), _town_garrison_company_count(town)]
+		)
+		if _town_requires_assault(town):
+			parts.append("Assault required")
 	if readiness > 0:
 		parts.append("Readiness %d" % readiness)
 	if pressure_output > 0:
@@ -946,16 +968,10 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 		"encounter":
 			var placement = context.get("encounter", {})
 			var encounter = ContentService.get_encounter(String(placement.get("encounter_id", placement.get("id", ""))))
-			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, placement)
-			if delivery_pressure != "":
-				return "Hostile Contact\nTerrain %s | %s\n%s" % [
-					terrain,
-					String(encounter.get("name", "Skirmish")),
-					delivery_pressure,
-				]
-			return "Hostile Contact\nTerrain %s | %s\nApproach strength unknown beyond authored scouting notes. Enter battle to break the host." % [
+			return "Hostile Contact\nTerrain %s | %s\n%s" % [
 				terrain,
 				String(encounter.get("name", "Skirmish")),
+				_encounter_pressure_summary(session, placement),
 			]
 		_:
 			return "Open Ground\nTerrain %s | No immediate site action.\nUse the movement controls to scout, consolidate towns, or intercept raids." % terrain
@@ -1677,7 +1693,11 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 				actions.append(
 					{
 						"id": "capture_town",
-						"label": "Capture Town" if owner == "enemy" else "Claim Town",
+						"label": (
+							"Assault Town"
+							if owner == "enemy" and _town_requires_assault(town)
+							else ("Capture Town" if owner == "enemy" else "Claim Town")
+						),
 						"summary": _context_action_summary(session, "capture_town", context),
 					}
 				)
@@ -5148,6 +5168,19 @@ static func _apply_artifact_claim(
 	_sync_movement_to_hero(session, previous_max)
 	return result
 
+static func _begin_town_assault(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var town_name := _town_name(town)
+	var payload = _battle_rules().create_town_assault_payload(session, String(town.get("placement_id", "")))
+	if payload.is_empty():
+		return {"ok": false, "message": "The assault on %s cannot be staged." % town_name}
+	session.battle = payload
+	return {
+		"ok": true,
+		"message": "The assault on %s begins." % town_name,
+		"route": "battle",
+		"scenario_status": session.scenario_status,
+	}
+
 static func _claim_town(session: SessionStateStoreScript.SessionData, town_result: Dictionary) -> String:
 	var towns = session.overworld.get("towns", [])
 	var town = town_result.get("town", {})
@@ -5162,6 +5195,23 @@ static func _claim_town(session: SessionStateStoreScript.SessionData, town_resul
 	towns[town_index] = town
 	session.overworld["towns"] = towns
 	return "Captured %s." % _town_name(town)
+
+static func _town_garrison_company_count(town: Dictionary) -> int:
+	var companies := 0
+	for stack in town.get("garrison", []):
+		if stack is Dictionary and int(stack.get("count", 0)) > 0:
+			companies += 1
+	return companies
+
+static func _town_garrison_headcount(town: Dictionary) -> int:
+	var headcount := 0
+	for stack in town.get("garrison", []):
+		if stack is Dictionary:
+			headcount += max(0, int(stack.get("count", 0)))
+	return headcount
+
+static func _town_requires_assault(town: Dictionary) -> bool:
+	return String(town.get("owner", "neutral")) == "enemy" and _town_garrison_headcount(town) > 0
 
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	var map_size := derive_map_size(session)
@@ -5498,6 +5548,8 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 			var town = context.get("town", {})
 			var owner := String(town.get("owner", "neutral"))
 			if owner == "enemy":
+				if _town_requires_assault(town):
+					return "Storm %s now. The hostile garrison must be broken in battle before the banner changes." % _town_name(town)
 				return "Capture %s from the hostile garrison before it can anchor the local front." % _town_name(town)
 			return "Claim %s now to secure a foothold and unlock local command options." % _town_name(town)
 		"collect_resource":
@@ -5553,14 +5605,7 @@ static func _context_action_summary(session: SessionStateStoreScript.SessionData
 			)
 		"enter_battle":
 			var encounter = context.get("encounter", {})
-			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter)
-			if delivery_pressure != "":
-				return delivery_pressure
-			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-			return "Break %s on %s before the host can widen pressure across the frontier." % [
-				String(encounter_def.get("name", "the blocking host")),
-				_terrain_name_at(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))),
-			]
+			return _encounter_pressure_summary(session, encounter, true)
 	return _context_action_briefing(session, {"id": action_id}, context)
 
 static func _encounter_delivery_pressure_summary(
@@ -5601,6 +5646,59 @@ static func _encounter_delivery_pressure_summary(
 		recruit_summary,
 		String(delivery_context.get("target_label", "the front")),
 	]
+
+static func _encounter_pressure_summary(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	for_battle_prompt: bool = false
+) -> String:
+	var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter, for_battle_prompt)
+	if delivery_pressure != "":
+		return delivery_pressure
+
+	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var encounter_name := String(encounter_def.get("name", "the blocking host"))
+	if String(encounter.get("spawned_by_faction_id", "")) == "":
+		if for_battle_prompt:
+			return "Break %s on %s before the host can widen pressure across the frontier." % [
+				encounter_name,
+				_terrain_name_at(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))),
+			]
+		return "Approach strength unknown beyond authored scouting notes. Enter battle to break the host."
+
+	var target_kind := String(encounter.get("target_kind", ""))
+	var target_label := String(encounter.get("target_label", "the frontier"))
+	var goal_distance := int(encounter.get("goal_distance", 9999))
+	var pressuring := bool(encounter.get("arrived", false)) or goal_distance <= 0
+	match target_kind:
+		"hero":
+			if for_battle_prompt:
+				return "Break %s now before it pins %s in a forced field battle." % [encounter_name, target_label]
+			if pressuring or goal_distance <= 1:
+				return "%s is on %s's march line and can force a field battle at day's end." % [encounter_name, target_label]
+			return "%s is hunting %s across the frontier." % [encounter_name, target_label]
+		"town":
+			if for_battle_prompt:
+				return "Break %s now before it reaches %s and forces a town assault." % [encounter_name, target_label]
+			if pressuring or goal_distance <= 1:
+				return "%s already presses %s and can trigger a town fight at day's end." % [encounter_name, target_label]
+			return "%s is marching on %s." % [encounter_name, target_label]
+		"resource":
+			if for_battle_prompt:
+				return "Break %s now before it denies %s." % [encounter_name, target_label]
+			return "%s is moving to deny %s." % [encounter_name, target_label]
+		"artifact":
+			if for_battle_prompt:
+				return "Break %s now before it secures %s." % [encounter_name, target_label]
+			return "%s is closing on %s." % [encounter_name, target_label]
+		"encounter":
+			if for_battle_prompt:
+				return "Break %s now before it locks down %s and widens the hostile front." % [encounter_name, target_label]
+			return "%s is trying to lock down %s and widen the hostile front." % [encounter_name, target_label]
+		_:
+			if for_battle_prompt:
+				return "Break %s now before the host can widen pressure across the frontier." % encounter_name
+			return "This host is moving through the frontier under hostile orders."
 
 static func _command_commitment_action_line(session: SessionStateStoreScript.SessionData) -> String:
 	var context_actions := get_context_actions(session)

@@ -4,6 +4,7 @@ extends RefCounted
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 static var BattleRulesScript: Variant = load("res://scripts/core/BattleRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 
@@ -231,6 +232,15 @@ static func _run_empire_cycle(
 		var defense_message = String(defense_result.get("message", ""))
 		if defense_message != "":
 			messages.append(defense_message)
+		state["treasury"] = treasury
+		state["posture"] = "raiding"
+		return {"state": state, "messages": messages}
+
+	var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
+	if bool(intercept_result.get("battle_started", false)):
+		var intercept_message = String(intercept_result.get("message", ""))
+		if intercept_message != "":
+			messages.append(intercept_message)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
 		return {"state": state, "messages": messages}
@@ -640,6 +650,49 @@ static func _queue_town_defense_battle(
 		],
 	}
 
+static func _queue_hero_intercept_battle(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	if session == null or not session.battle.is_empty():
+		return {}
+	var candidate = _hero_intercept_candidate(session, faction_id)
+	if candidate.is_empty():
+		return {}
+	var encounter_index = int(candidate.get("encounter_index", -1))
+	var encounter = candidate.get("encounter", {})
+	var hero = candidate.get("hero", {})
+	if encounter_index < 0 or encounter.is_empty() or hero.is_empty():
+		return {}
+	var hero_id := String(hero.get("id", ""))
+	if hero_id == "":
+		return {}
+	var switch_result: Dictionary = HeroCommandRulesScript.set_active_hero(session, hero_id)
+	if not bool(switch_result.get("ok", false)):
+		return {}
+	var encounters = session.overworld.get("encounters", [])
+	encounter["battle_context"] = {
+		"type": "hero_intercept",
+		"target_hero_id": hero_id,
+		"trigger_faction_id": faction_id,
+	}
+	encounters[encounter_index] = encounter
+	session.overworld["encounters"] = encounters
+
+	var payload = BattleRulesScript.create_battle_payload(session, encounter)
+	if payload.is_empty():
+		return {}
+	session.battle = payload
+	session.game_state = "battle"
+	return {
+		"battle_started": true,
+		"message": "%s cuts off %s in the field." % [
+			String(config.get("label", faction_id)),
+			String(hero.get("name", "the hero")),
+		],
+	}
+
 static func _town_defense_candidate(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	var best = {}
 	var best_distance = 9999
@@ -668,6 +721,35 @@ static func _town_defense_candidate(session: SessionStateStoreScript.SessionData
 			best_distance = goal_distance
 			best_strength = strength
 			best = {"encounter_index": index, "encounter": encounter, "town": town}
+	return best
+
+static func _hero_intercept_candidate(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	var best = {}
+	var best_distance = 9999
+	var best_strength = -1
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var encounters = session.overworld.get("encounters", [])
+	for index in range(encounters.size()):
+		var encounter = encounters[index]
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
+			continue
+		if String(encounter.get("target_kind", "")) != "hero":
+			continue
+		var hero = _find_player_hero(session, String(encounter.get("target_placement_id", "")))
+		if hero.is_empty() or _hero_is_sheltered_in_player_town(session, hero):
+			continue
+		var goal_distance = int(encounter.get("goal_distance", 9999))
+		if goal_distance > 1 and not bool(encounter.get("arrived", false)):
+			continue
+		var strength = EnemyAdventureRulesScript.raid_strength(encounter)
+		if goal_distance < best_distance or (goal_distance == best_distance and strength > best_strength):
+			best_distance = goal_distance
+			best_strength = strength
+			best = {"encounter_index": index, "encounter": encounter, "hero": hero}
 	return best
 
 static func _best_build_candidate(
@@ -1420,6 +1502,28 @@ static func _find_town_by_placement(session: SessionStateStoreScript.SessionData
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
+
+static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	if session == null or hero_id == "":
+		return {}
+	for hero_value in session.overworld.get("player_heroes", []):
+		if hero_value is Dictionary and String(hero_value.get("id", "")) == hero_id:
+			return hero_value
+	return {}
+
+static func _hero_is_sheltered_in_player_town(session: SessionStateStoreScript.SessionData, hero: Dictionary) -> bool:
+	if session == null or hero.is_empty():
+		return false
+	var hero_x := int(hero.get("position", {}).get("x", -1))
+	var hero_y := int(hero.get("position", {}).get("y", -1))
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		if String(town_value.get("owner", "neutral")) != "player":
+			continue
+		if int(town_value.get("x", -2)) == hero_x and int(town_value.get("y", -2)) == hero_y:
+			return true
+	return false
 
 static func _set_town_owner(session: SessionStateStoreScript.SessionData, placement_id: String, owner: String) -> void:
 	var towns = session.overworld.get("towns", [])
