@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T23:59:00Z",
+  "updatedAt": "2026-04-15T23:59:59Z",
   "status": "in_progress",
-  "currentPhase": "hostile-commander-recovery",
-  "currentSliceId": "phase-5-hostile-overworld-commander-recovery",
-  "currentSliceTitle": "Make hostile commanders durable strategic assets through defeat and recovery continuity",
+  "currentPhase": "hostile-commander-veterancy",
+  "currentSliceId": "phase-5-hostile-overworld-commander-veterancy",
+  "currentSliceTitle": "Make recurring hostile commanders accumulate battle record and veterancy continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a hostile-overworld continuity slice that keeps per-faction commander rosters in save-backed enemy state, blocks immediate hostile commander reuse through explicit recovery timing, feeds battle defeat or assault outcomes back into future raid eligibility, surfaces recovery in existing threat summaries, and adds focused regression coverage for defeat, restore, and return flow.",
+  "currentSliceNotes": "Completed a follow-on hostile-commander slice that keeps save-backed battle records on the existing enemy roster, turns repeated deployments and battle outcomes into commander progression plus future raid-strength demand, surfaces veteran hostile officers through the current frontier, town, and battle summaries, and adds focused regression coverage for field-victory plus repeat-deployment continuity.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -956,6 +956,18 @@
       "title": "Re-run the required Godot smoke scenes and headless boot for hostile commander recovery timing, duplicate-prevention, restore continuity, and summary surfacing",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-hostile-overworld-commander-veterancy",
+      "title": "Make recurring hostile commanders accumulate save-backed battle record, veterancy, and stronger return-threat continuity",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-hostile-overworld-commander-veterancy-validation",
+      "title": "Re-run the required Godot smoke scenes and headless boot for commander battle-record continuity, veterancy threat scaling, restore persistence, and summary surfacing",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1181,6 +1193,8 @@
     "The required Godot 4.6.2 headless validations all passed again after the hostile-pressure slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot; the smoke scenes still emit the unrelated baseline ObjectDB leak warning on exit.",
     "This run made hostile commanders strategically durable by adding save-backed per-faction commander rosters, explicit `available`/`active`/`recovering` lifecycle, battle-fed recovery timing, and commander-gated raid spawning on the existing enemy-turn and encounter systems instead of creating a parallel meta layer.",
     "Frontier and town threat summaries now surface commander recovery windows from that shared enemy-state roster, and the core systems smoke suite now proves that defeating a named hostile commander blocks immediate reuse, survives restore, and later returns with the same identity.",
-    "Godot 4.6.2 headless validation passed again after the hostile commander recovery slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot."
+    "Godot 4.6.2 headless validation passed again after the hostile commander recovery slice: tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and full headless boot.",
+    "This run turned recurring hostile commanders into battle-marked officers by keeping deployments, wins, defeats, renown, and auto-resolved specialty progression on the existing enemy commander roster instead of adding a separate meta layer.",
+    "EnemyAdventureRules.gd, EnemyTurnRules.gd, BattleRules.gd, and OverworldRules.gd now feed that same commander record into future raid-strength demand, battle commander summaries, and frontier labels, while focused smoke coverage proves field-victory continuity, restore persistence, and stronger repeat-deployment return threat."
   ]
 }

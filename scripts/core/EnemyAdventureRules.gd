@@ -13,8 +13,17 @@ const COMMANDER_STATUS_ACTIVE := "active"
 const COMMANDER_STATUS_RECOVERING := "recovering"
 const COMMANDER_OUTCOME_DEFEATED := "defeated"
 const COMMANDER_OUTCOME_ASSAULT_VICTORY := "assault_victory"
+const COMMANDER_OUTCOME_DEPLOYED := "deployed"
+const COMMANDER_OUTCOME_FIELD_VICTORY := "field_victory"
+const COMMANDER_OUTCOME_STALEMATE := "stalemate"
 const COMMANDER_RECOVERY_DAYS_DEFEATED := 3
 const COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY := 1
+const COMMANDER_EXPERIENCE_DEPLOYED := 90
+const COMMANDER_EXPERIENCE_FIELD_VICTORY := 180
+const COMMANDER_EXPERIENCE_ASSAULT_VICTORY := 210
+const COMMANDER_EXPERIENCE_DEFEATED := 45
+const COMMANDER_EXPERIENCE_STALEMATE := 30
+const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	if _raid_target_valid(session, raid):
@@ -196,22 +205,35 @@ static func normalize_commander_roster(
 		var existing = existing_map.get(roster_hero_id, {})
 		if not (existing is Dictionary):
 			existing = {}
+		var active_entry: Dictionary = active_map.get(roster_hero_id, {})
+		var active_commander_state = active_entry.get("commander_state", {})
+		if not (active_commander_state is Dictionary):
+			active_commander_state = {}
+		var commander_seed = (
+			active_commander_state
+			if not active_commander_state.is_empty()
+			else existing.get("commander_state", {})
+		)
+		var record := _normalized_commander_record(existing, commander_seed)
 		var commander_state = build_roster_commander_state(
 			roster_hero_id,
 			faction_id,
-			existing.get("commander_state", {})
+			commander_seed,
+			record
 		)
 		var entry := {
 			"roster_hero_id": roster_hero_id,
 			"status": COMMANDER_STATUS_AVAILABLE,
 			"active_placement_id": "",
 			"recovery_day": 0,
-			"last_outcome": String(existing.get("last_outcome", "")),
-			"times_defeated": max(0, int(existing.get("times_defeated", 0))),
+			"last_outcome": String(existing.get("last_outcome", commander_state.get("last_outcome", ""))),
+			"deployments": max(0, int(record.get("deployments", 0))),
+			"battle_wins": max(0, int(record.get("battle_wins", 0))),
+			"times_defeated": max(0, int(record.get("times_defeated", 0))),
+			"renown": max(0, int(record.get("renown", 0))),
 			"commander_state": commander_state,
 		}
 		if active_map.has(roster_hero_id):
-			var active_entry: Dictionary = active_map.get(roster_hero_id, {})
 			entry["status"] = COMMANDER_STATUS_ACTIVE
 			entry["active_placement_id"] = String(active_entry.get("placement_id", ""))
 		else:
@@ -239,6 +261,45 @@ static func commander_roster_for_faction(
 		var roster = state.get("commander_roster", [])
 		return roster if roster is Array else []
 	return []
+
+static func commander_renown(source: Variant) -> int:
+	return max(0, int(_normalized_commander_record(source).get("renown", 0)))
+
+static func commander_veterancy_label(source: Variant) -> String:
+	return String(
+		COMMANDER_VETERANCY_LABELS[
+			clamp(_commander_veterancy_rank_from_record(_normalized_commander_record(source)), 0, COMMANDER_VETERANCY_LABELS.size() - 1)
+		]
+	)
+
+static func commander_display_name(source: Variant, include_veterancy: bool = true) -> String:
+	var commander_name := _commander_name_from_source(source)
+	if commander_name == "":
+		return ""
+	var veterancy := commander_veterancy_label(source)
+	if include_veterancy and veterancy != "":
+		return "%s %s" % [veterancy, commander_name]
+	return commander_name
+
+static func commander_record_summary(source: Variant) -> String:
+	var record := _normalized_commander_record(source)
+	var deployments: int = max(0, int(record.get("deployments", 0)))
+	var wins: int = max(0, int(record.get("battle_wins", 0)))
+	var defeats: int = max(0, int(record.get("times_defeated", 0)))
+	if deployments <= 0 and wins <= 0 and defeats <= 0:
+		return ""
+	var parts := []
+	var veterancy := commander_veterancy_label(record)
+	if veterancy != "":
+		parts.append(veterancy)
+	parts.append("%d raid%s" % [deployments, "" if deployments == 1 else "s"])
+	if wins > 0:
+		parts.append("%d win%s" % [wins, "" if wins == 1 else "s"])
+	if defeats > 0:
+		parts.append("%d defeat%s" % [defeats, "" if defeats == 1 else "s"])
+	elif wins > 0:
+		parts.append("undefeated")
+	return " | ".join(parts)
 
 static func has_available_raid_commander(
 	session: SessionStateStoreScript.SessionData,
@@ -291,7 +352,7 @@ static func public_commander_recovery_summary(
 			continue
 		var recovery_day: int = max(0, int(entry_value.get("recovery_day", 0)))
 		var remaining_days: int = max(1, recovery_day - session_day)
-		var commander_name := _commander_entry_name(entry_value)
+		var commander_name := commander_display_name(entry_value)
 		if commander_name == "":
 			continue
 		recovering.append("%s (%dd)" % [commander_name, remaining_days])
@@ -332,29 +393,34 @@ static func apply_resolved_commander_aftermath(
 			var entry = roster[roster_index]
 			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
 				continue
+			var updated_state := advance_commander_record(commander_state, outcome_id)
 			entry["status"] = COMMANDER_STATUS_RECOVERING
 			entry["active_placement_id"] = ""
 			entry["last_outcome"] = outcome_id
+			entry["deployments"] = max(0, int(updated_state.get("deployments", entry.get("deployments", 0))))
+			entry["battle_wins"] = max(0, int(updated_state.get("battle_wins", entry.get("battle_wins", 0))))
+			entry["times_defeated"] = max(0, int(updated_state.get("times_defeated", entry.get("times_defeated", 0))))
+			entry["renown"] = commander_renown(updated_state)
 			entry["commander_state"] = build_roster_commander_state(
 				roster_hero_id,
 				faction_id,
-				commander_state
+				updated_state,
+				entry
 			)
 			var recovery_days := 0
 			var summary := ""
 			match outcome_id:
 				COMMANDER_OUTCOME_DEFEATED:
 					recovery_days = COMMANDER_RECOVERY_DAYS_DEFEATED
-					entry["times_defeated"] = max(0, int(entry.get("times_defeated", 0))) + 1
 					summary = "%s is routed and cannot lead another raid for %d day%s." % [
-						_commander_entry_name(entry),
+						commander_display_name(entry),
 						recovery_days,
 						"" if recovery_days == 1 else "s",
 					]
 				COMMANDER_OUTCOME_ASSAULT_VICTORY:
 					recovery_days = COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY
 					summary = "%s is consolidating the breach and will not return for %d day%s." % [
-						_commander_entry_name(entry),
+						commander_display_name(entry),
 						recovery_days,
 						"" if recovery_days == 1 else "s",
 					]
@@ -371,44 +437,196 @@ static func apply_resolved_commander_aftermath(
 static func build_roster_commander_state(
 	roster_hero_id: String,
 	faction_id: String,
-	existing_state: Dictionary = {}
+	existing_state: Dictionary = {},
+	record_source: Variant = {}
 ) -> Dictionary:
 	var hero_template = ContentService.get_hero(roster_hero_id)
-	var command_source = hero_template.get("command", existing_state.get("command", {}))
-	var battle_traits_source = hero_template.get("battle_traits", [])
-	var specialties_source = hero_template.get("starting_specialties", [])
-	var specialty_focus_source = hero_template.get("specialty_focus_ids", [])
-	var spell_ids_source = _hero_battle_spell_ids(hero_template)
-	if hero_template.is_empty():
-		battle_traits_source = existing_state.get("battle_traits", [])
-		specialties_source = existing_state.get("specialties", [])
-		specialty_focus_source = existing_state.get("specialty_focus_ids", [])
-		var existing_spellbook = existing_state.get("spellbook", {})
-		if existing_spellbook is Dictionary:
-			spell_ids_source = existing_spellbook.get("known_spell_ids", [])
+	var record := _normalized_commander_record(record_source, existing_state)
+	var existing_spellbook = existing_state.get("spellbook", {})
+	if not (existing_spellbook is Dictionary):
+		existing_spellbook = {}
+	var command_source = existing_state.get("command", hero_template.get("command", {}))
+	var battle_traits_source = _merge_unique_strings(
+		existing_state.get("battle_traits", []),
+		hero_template.get("battle_traits", [])
+	)
+	var existing_specialties = existing_state.get("specialties", [])
+	var specialties_source = _normalized_specialty_ranks(
+		existing_specialties if existing_specialties is Array and not existing_specialties.is_empty() else hero_template.get("starting_specialties", [])
+	)
+	var specialty_focus_source = _normalized_specialty_focus_ids(
+		_merge_unique_strings(
+			existing_state.get("specialty_focus_ids", []),
+			hero_template.get("specialty_focus_ids", [])
+		)
+	)
+	var spell_ids_source = _merge_unique_strings(
+		existing_spellbook.get("known_spell_ids", []),
+		_hero_battle_spell_ids(hero_template)
+	)
 	var commander_state = {
 		"id": String(existing_state.get("id", "enemy_commander:%s:%s" % [faction_id, roster_hero_id])),
 		"roster_hero_id": roster_hero_id,
 		"faction_id": faction_id,
-		"name": String(hero_template.get("name", existing_state.get("name", "Enemy Commander"))),
-		"archetype": String(hero_template.get("archetype", existing_state.get("archetype", ""))),
+		"name": String(existing_state.get("name", hero_template.get("name", "Enemy Commander"))),
+		"archetype": String(existing_state.get("archetype", hero_template.get("archetype", ""))),
 		"identity_summary": String(
-			hero_template.get("identity_summary", existing_state.get("identity_summary", ""))
+			existing_state.get("identity_summary", hero_template.get("identity_summary", ""))
 		),
 		"command": _normalize_command_payload(command_source),
-		"battle_traits": _merge_unique_strings(battle_traits_source, []),
-		"specialties": _merge_unique_strings(specialties_source, []),
-		"specialty_focus_ids": _merge_unique_strings(specialty_focus_source, []),
+		"battle_traits": battle_traits_source,
+		"specialties": specialties_source,
+		"specialty_focus_ids": specialty_focus_source,
+		"level": max(1, int(existing_state.get("level", 1))),
+		"experience": max(0, int(existing_state.get("experience", 0))),
+		"next_level_experience": max(250, int(existing_state.get("next_level_experience", 250))),
+		"pending_specialty_choices": existing_state.get("pending_specialty_choices", []),
+		"last_outcome": String(existing_state.get("last_outcome", record.get("last_outcome", ""))),
 	}
-	return SpellRulesScript.refresh_daily_mana(
-		SpellRulesScript.ensure_hero_spellbook(
-			commander_state,
-			{
-				"command": commander_state.get("command", {}),
-				"starting_spell_ids": _merge_unique_strings(spell_ids_source, []),
-			}
-		)
+	commander_state = _normalize_enemy_progression(commander_state)
+	return _apply_commander_record_metadata(
+		SpellRulesScript.refresh_daily_mana(
+			SpellRulesScript.ensure_hero_spellbook(
+				commander_state,
+				{
+					"command": commander_state.get("command", {}),
+					"starting_spell_ids": spell_ids_source,
+				}
+			)
+		),
+		record
 	)
+
+static func advance_commander_record(commander_state: Dictionary, outcome_id: String) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var updated := commander_state.duplicate(true)
+	var record := _normalized_commander_record({}, updated)
+	record["last_outcome"] = outcome_id
+	match outcome_id:
+		COMMANDER_OUTCOME_DEPLOYED:
+			record["deployments"] = int(record.get("deployments", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_DEPLOYED)
+		COMMANDER_OUTCOME_FIELD_VICTORY:
+			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_FIELD_VICTORY)
+		COMMANDER_OUTCOME_ASSAULT_VICTORY:
+			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_ASSAULT_VICTORY)
+		COMMANDER_OUTCOME_DEFEATED:
+			record["times_defeated"] = int(record.get("times_defeated", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_DEFEATED)
+		COMMANDER_OUTCOME_STALEMATE:
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_STALEMATE)
+		_:
+			updated = _normalize_enemy_progression(updated)
+	updated["last_outcome"] = outcome_id
+	var spellbook = updated.get("spellbook", {})
+	if not (spellbook is Dictionary):
+		spellbook = {}
+	return _apply_commander_record_metadata(
+		SpellRulesScript.ensure_hero_spellbook(
+			updated,
+			{
+				"command": updated.get("command", {}),
+				"starting_spell_ids": spellbook.get("known_spell_ids", []),
+			}
+		),
+		record
+	)
+
+static func record_commander_deployment(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	roster_value: Variant = [],
+	placement_id: String = ""
+) -> Array:
+	var roster = normalize_commander_roster(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	)
+	for roster_index in range(roster.size()):
+		var entry = roster[roster_index]
+		if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
+			continue
+		var updated_state := advance_commander_record(
+			entry.get("commander_state", {}),
+			COMMANDER_OUTCOME_DEPLOYED
+		)
+		entry["status"] = COMMANDER_STATUS_ACTIVE if placement_id != "" else COMMANDER_STATUS_AVAILABLE
+		entry["active_placement_id"] = placement_id
+		entry["recovery_day"] = 0
+		entry["last_outcome"] = COMMANDER_OUTCOME_DEPLOYED
+		entry["deployments"] = max(0, int(updated_state.get("deployments", entry.get("deployments", 0))))
+		entry["battle_wins"] = max(0, int(updated_state.get("battle_wins", entry.get("battle_wins", 0))))
+		entry["times_defeated"] = max(0, int(updated_state.get("times_defeated", entry.get("times_defeated", 0))))
+		entry["renown"] = commander_renown(updated_state)
+		entry["commander_state"] = build_roster_commander_state(
+			roster_hero_id,
+			faction_id,
+			updated_state,
+			entry
+		)
+		roster[roster_index] = entry
+		break
+	return roster
+
+static func sync_commander_state_to_roster(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_state: Variant,
+	status_override: String = "",
+	active_placement_id: String = "",
+	recovery_day: int = -1,
+	last_outcome: String = ""
+) -> void:
+	if session == null or faction_id == "" or not (commander_state is Dictionary):
+		return
+	var roster_hero_id := String(commander_state.get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		return
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return
+	for state_index in range(states.size()):
+		var state = states[state_index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
+		for roster_index in range(roster.size()):
+			var entry = roster[roster_index]
+			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
+				continue
+			var record := _normalized_commander_record(entry, commander_state)
+			entry["deployments"] = max(0, int(record.get("deployments", 0)))
+			entry["battle_wins"] = max(0, int(record.get("battle_wins", 0)))
+			entry["times_defeated"] = max(0, int(record.get("times_defeated", 0)))
+			entry["renown"] = max(0, int(record.get("renown", 0)))
+			if status_override != "":
+				entry["status"] = _normalize_commander_status(status_override)
+			if active_placement_id != "":
+				entry["active_placement_id"] = active_placement_id
+			elif status_override == COMMANDER_STATUS_RECOVERING:
+				entry["active_placement_id"] = ""
+			if status_override == COMMANDER_STATUS_ACTIVE and recovery_day < 0:
+				entry["recovery_day"] = 0
+			if recovery_day >= 0:
+				entry["recovery_day"] = recovery_day
+			if last_outcome != "":
+				entry["last_outcome"] = last_outcome
+			entry["commander_state"] = build_roster_commander_state(
+				roster_hero_id,
+				faction_id,
+				commander_state,
+				entry
+			)
+			roster[roster_index] = entry
+			state["commander_roster"] = roster
+			states[state_index] = state
+			session.overworld["enemy_states"] = states
+			return
 
 static func ensure_raid_army(
 	encounter: Dictionary,
@@ -528,10 +746,20 @@ static func build_raid_commander_state(
 	var encounter_commander = encounter_template.get("enemy_commander", {})
 	if not (encounter_commander is Dictionary):
 		encounter_commander = {}
+	var normalized_roster = normalize_commander_roster(
+		session,
+		resolved_faction_id,
+		commander_roster if commander_roster is Array else commander_roster_for_faction(session, resolved_faction_id)
+	)
+	var roster_entry := _commander_roster_entry(normalized_roster, resolved_roster_hero_id)
+	var roster_commander_state = roster_entry.get("commander_state", {})
+	if not (roster_commander_state is Dictionary):
+		roster_commander_state = {}
 	var commander_seed := build_roster_commander_state(
 		resolved_roster_hero_id,
 		resolved_faction_id,
-		existing_state
+		roster_commander_state if not roster_commander_state.is_empty() else existing_state,
+		roster_entry
 	)
 	var command_source = encounter_commander.get(
 		"command",
@@ -569,23 +797,48 @@ static func build_raid_commander_state(
 		commander_seed.get("battle_traits", hero_template.get("battle_traits", [])),
 		commander_state.get("battle_traits", encounter_commander.get("battle_traits", []))
 	)
-	commander_state["specialties"] = _merge_unique_strings(
-		commander_seed.get("specialties", hero_template.get("starting_specialties", [])),
-		commander_state.get("specialties", [])
+	var resolved_specialties = commander_state.get("specialties", [])
+	if not (resolved_specialties is Array) or resolved_specialties.is_empty():
+		resolved_specialties = commander_seed.get("specialties", hero_template.get("starting_specialties", []))
+	commander_state["specialties"] = _normalized_specialty_ranks(resolved_specialties)
+	commander_state["specialty_focus_ids"] = _normalized_specialty_focus_ids(
+		_merge_unique_strings(
+			commander_state.get("specialty_focus_ids", []),
+			commander_seed.get("specialty_focus_ids", hero_template.get("specialty_focus_ids", []))
+		)
 	)
-	commander_state["specialty_focus_ids"] = _merge_unique_strings(
-		commander_seed.get("specialty_focus_ids", hero_template.get("specialty_focus_ids", [])),
-		commander_state.get("specialty_focus_ids", [])
+	commander_state["level"] = max(1, int(commander_state.get("level", commander_seed.get("level", 1))))
+	commander_state["experience"] = max(0, int(commander_state.get("experience", commander_seed.get("experience", 0))))
+	commander_state["next_level_experience"] = max(
+		250,
+		int(commander_state.get("next_level_experience", commander_seed.get("next_level_experience", 250)))
 	)
-	return SpellRulesScript.ensure_hero_spellbook(
-		commander_state,
-		{
-			"command": commander_state.get("command", {}),
-			"starting_spell_ids": _merge_unique_strings(
-				_hero_battle_spell_ids(hero_template),
-				encounter_commander.get("starting_spell_ids", [])
-			),
-		}
+	commander_state["pending_specialty_choices"] = commander_state.get(
+		"pending_specialty_choices",
+		commander_seed.get("pending_specialty_choices", [])
+	)
+	commander_state["last_outcome"] = String(
+		commander_state.get("last_outcome", commander_seed.get("last_outcome", ""))
+	)
+	commander_state = _normalize_enemy_progression(commander_state)
+	var commander_spellbook = commander_state.get("spellbook", {})
+	if not (commander_spellbook is Dictionary):
+		commander_spellbook = {}
+	return _apply_commander_record_metadata(
+		SpellRulesScript.ensure_hero_spellbook(
+			commander_state,
+			{
+				"command": commander_state.get("command", {}),
+				"starting_spell_ids": _merge_unique_strings(
+					commander_spellbook.get("known_spell_ids", []),
+					_merge_unique_strings(
+						_hero_battle_spell_ids(hero_template),
+						encounter_commander.get("starting_spell_ids", [])
+					)
+				),
+			}
+		),
+		_normalized_commander_record(roster_entry, commander_state)
 	)
 
 static func raid_commander_name(encounter: Dictionary) -> String:
@@ -599,12 +852,20 @@ static func raid_commander_name(encounter: Dictionary) -> String:
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	return String(encounter_template.get("enemy_commander", {}).get("name", ""))
 
+static func raid_commander_display_name(encounter: Dictionary) -> String:
+	if encounter.is_empty():
+		return ""
+	var commander_state = encounter.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		return commander_display_name(commander_state)
+	return raid_commander_name(encounter)
+
 static func raid_display_name(encounter: Dictionary) -> String:
 	if encounter.is_empty():
 		return "Hostile contact"
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Raid host")))
-	var commander_name := raid_commander_name(encounter)
+	var commander_name := raid_commander_display_name(encounter)
 	if commander_name == "" or String(encounter.get("spawned_by_faction_id", "")) == "":
 		return encounter_name
 	return "%s's %s" % [commander_name, encounter_name]
@@ -614,7 +875,7 @@ static func raid_commander_summaries(encounters: Array, limit: int = 2) -> Array
 	for encounter in encounters:
 		if not (encounter is Dictionary):
 			continue
-		var commander_name := raid_commander_name(encounter)
+		var commander_name := raid_commander_display_name(encounter)
 		if commander_name == "" or commander_name in names:
 			continue
 		names.append(commander_name)
@@ -673,6 +934,134 @@ static func _commander_entry_name(entry: Dictionary) -> String:
 		if commander_name != "":
 			return commander_name
 	return String(ContentService.get_hero(String(entry.get("roster_hero_id", ""))).get("name", ""))
+
+static func _commander_roster_entry(roster: Variant, roster_hero_id: String) -> Dictionary:
+	if roster_hero_id == "" or not (roster is Array):
+		return {}
+	for entry_value in roster:
+		if entry_value is Dictionary and String(entry_value.get("roster_hero_id", "")) == roster_hero_id:
+			return entry_value
+	return {}
+
+static func _commander_name_from_source(source: Variant) -> String:
+	if source is Dictionary:
+		var commander_state = source.get("commander_state", {})
+		if commander_state is Dictionary and String(commander_state.get("name", "")) != "":
+			return String(commander_state.get("name", ""))
+		if String(source.get("name", "")) != "":
+			return String(source.get("name", ""))
+		if String(source.get("roster_hero_id", "")) != "":
+			return String(ContentService.get_hero(String(source.get("roster_hero_id", ""))).get("name", ""))
+	return ""
+
+static func _normalized_commander_record(entry_value: Variant, commander_state_value: Variant = {}) -> Dictionary:
+	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
+	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
+	var deployments: int = max(0, max(int(entry.get("deployments", 0)), int(commander_state.get("deployments", 0))))
+	var battle_wins: int = max(0, max(int(entry.get("battle_wins", 0)), int(commander_state.get("battle_wins", 0))))
+	var times_defeated: int = max(0, max(int(entry.get("times_defeated", 0)), int(commander_state.get("times_defeated", 0))))
+	var last_outcome := String(commander_state.get("last_outcome", ""))
+	if last_outcome == "":
+		last_outcome = String(entry.get("last_outcome", ""))
+	var record := {
+		"deployments": deployments,
+		"battle_wins": battle_wins,
+		"times_defeated": times_defeated,
+		"last_outcome": last_outcome,
+	}
+	record["renown"] = _commander_renown_from_record(record)
+	return record
+
+static func _commander_renown_from_record(record: Dictionary) -> int:
+	var deployments: int = max(0, int(record.get("deployments", 0)))
+	var battle_wins: int = max(0, int(record.get("battle_wins", 0)))
+	var times_defeated: int = max(0, int(record.get("times_defeated", 0)))
+	return clamp((deployments + (battle_wins * 2)) - times_defeated, 0, 9)
+
+static func _commander_veterancy_rank_from_record(record: Dictionary) -> int:
+	var deployments: int = max(0, int(record.get("deployments", 0)))
+	var battle_wins: int = max(0, int(record.get("battle_wins", 0)))
+	var renown: int = max(0, int(record.get("renown", _commander_renown_from_record(record))))
+	if battle_wins >= 3 or renown >= 8:
+		return 3
+	if battle_wins >= 2 or renown >= 5:
+		return 2
+	if battle_wins >= 1 or deployments >= 2 or renown >= 2:
+		return 1
+	return 0
+
+static func _apply_commander_record_metadata(commander_state: Dictionary, record_source: Variant) -> Dictionary:
+	var commander := commander_state.duplicate(true)
+	var record := _normalized_commander_record(record_source, commander)
+	commander["deployments"] = max(0, int(record.get("deployments", 0)))
+	commander["battle_wins"] = max(0, int(record.get("battle_wins", 0)))
+	commander["times_defeated"] = max(0, int(record.get("times_defeated", 0)))
+	commander["renown"] = max(0, int(record.get("renown", 0)))
+	commander["veterancy_rank"] = _commander_veterancy_rank_from_record(record)
+	commander["veterancy_label"] = commander_veterancy_label(record)
+	commander["record_summary"] = commander_record_summary(record)
+	commander["last_outcome"] = String(record.get("last_outcome", commander.get("last_outcome", "")))
+	return commander
+
+static func _normalize_enemy_progression(commander_state: Dictionary) -> Dictionary:
+	var commander := HeroProgressionRulesScript.ensure_hero_progression(commander_state.duplicate(true))
+	var guard := 0
+	while HeroProgressionRulesScript.pending_choices_remaining(commander) > 0 and guard < 8:
+		var pending_choice := HeroProgressionRulesScript.current_pending_choice(commander)
+		if pending_choice.is_empty():
+			break
+		var chosen_specialty := _preferred_enemy_specialty_id(commander, pending_choice)
+		if chosen_specialty == "":
+			break
+		var choice_result := HeroProgressionRulesScript.choose_specialty(commander, chosen_specialty)
+		commander = choice_result.get("hero", commander)
+		guard += 1
+	return HeroProgressionRulesScript.ensure_hero_progression(commander)
+
+static func _award_enemy_commander_experience(commander_state: Dictionary, amount: int) -> Dictionary:
+	if amount <= 0:
+		return _normalize_enemy_progression(commander_state)
+	var result := HeroProgressionRulesScript.add_experience(commander_state, amount)
+	return _normalize_enemy_progression(result.get("hero", commander_state))
+
+static func _preferred_enemy_specialty_id(commander_state: Dictionary, pending_choice: Dictionary) -> String:
+	var options = pending_choice.get("options", [])
+	if not (options is Array) or options.is_empty():
+		return ""
+	for specialty_id_value in commander_state.get("specialty_focus_ids", []):
+		var specialty_id := String(specialty_id_value)
+		if specialty_id in options:
+			return specialty_id
+	return String(options[0])
+
+static func _normalized_specialty_ranks(primary: Variant, secondary: Variant = []) -> Array:
+	var hero_stub := {"specialties": []}
+	var normalized := []
+	for source in [secondary, primary]:
+		if not (source is Array):
+			continue
+		for specialty_value in source:
+			var specialty_id := String(specialty_value)
+			if HeroProgressionRulesScript.specialty_definition(specialty_id).is_empty():
+				continue
+			var trial := normalized.duplicate()
+			trial.append(specialty_id)
+			hero_stub["specialties"] = trial
+			normalized = HeroProgressionRulesScript.ensure_hero_progression(hero_stub).get("specialties", normalized)
+	return normalized
+
+static func _normalized_specialty_focus_ids(value: Variant) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for specialty_value in value:
+		var specialty_id := String(specialty_value)
+		if specialty_id == "" or specialty_id in normalized:
+			continue
+		if HeroProgressionRulesScript.specialty_definition(specialty_id).is_empty():
+			continue
+		normalized.append(specialty_id)
+	return normalized
 
 static func _hero_battle_spell_ids(hero_template: Dictionary) -> Array:
 	var spell_ids := []
@@ -949,7 +1338,12 @@ static func desired_raid_strength(encounter: Dictionary) -> int:
 		multiplier = max(multiplier, 1.4)
 	if bool(encounter.get("arrived", false)):
 		multiplier += 0.15
-	return int(round(float(base_strength) * multiplier))
+	var commander_state = encounter.get("enemy_commander_state", {})
+	var commander_record := _normalized_commander_record(commander_state)
+	var veterancy_bonus: int = (max(0, int(commander_record.get("renown", 0))) * 16) + (
+		_commander_veterancy_rank_from_record(commander_record) * 12
+	)
+	return int(round(float(base_strength) * multiplier)) + veterancy_bonus
 
 static func raid_pillage_weight(encounter: Dictionary) -> int:
 	var base_strength: int = max(

@@ -13,6 +13,8 @@ func _run() -> void:
 		return
 	if not _run_hostile_commander_identity_regression():
 		return
+	if not _run_hostile_commander_field_victory_regression():
+		return
 	if not _run_hostile_commander_recovery_regression():
 		return
 	if not _run_enemy_hero_intercept_regression():
@@ -284,6 +286,13 @@ func _run_hostile_commander_recovery_regression() -> bool:
 	var encounters = session.overworld.get("encounters", [])
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
+	raid = _register_raid_commander_deployment(session, "faction_mireclaw", "commander_recovery_raid", roster_hero_id)
+	if raid.is_empty():
+		push_error("Core systems smoke: recovery setup could not register the hostile commander deployment.")
+		get_tree().quit(1)
+		return false
+	var first_deployments := int(raid.get("enemy_commander_state", {}).get("deployments", 0))
+	var first_desired_strength := EnemyAdventureRules.desired_raid_strength(raid)
 
 	var engage_result := OverworldRules.try_move(session, 1, 0)
 	if String(engage_result.get("route", "")) != "battle" or session.battle.is_empty():
@@ -353,6 +362,139 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		return false
 	if String(returned_raid.get("enemy_commander_state", {}).get("name", "")) != commander_name:
 		push_error("Core systems smoke: recovered hostile commander returned without preserving identity.")
+		get_tree().quit(1)
+		return false
+	if int(returned_raid.get("enemy_commander_state", {}).get("deployments", 0)) <= first_deployments:
+		push_error("Core systems smoke: recovered hostile commander did not carry repeat-deployment record into the next raid.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.desired_raid_strength(returned_raid) <= first_desired_strength:
+		push_error("Core systems smoke: repeat hostile commander deployment did not raise future raid threat demand.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.commander_veterancy_label(returned_raid.get("enemy_commander_state", {})) == "":
+		push_error("Core systems smoke: recovered hostile commander returned without a visible veterancy label.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_hostile_commander_field_victory_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	var states = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != "faction_mireclaw":
+			continue
+		var roster = state.get("commander_roster", [])
+		for roster_index in range(roster.size()):
+			var entry = roster[roster_index]
+			if not (entry is Dictionary):
+				continue
+			entry["status"] = (
+				EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+				if roster_index == 0
+				else EnemyAdventureRules.COMMANDER_STATUS_RECOVERING
+			)
+			entry["active_placement_id"] = ""
+			entry["recovery_day"] = 0 if roster_index == 0 else session.day + 99
+			roster[roster_index] = entry
+		state["commander_roster"] = roster
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
+
+	_set_active_hero_position(session, Vector2i(2, 2))
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "commander_field_win_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 3,
+			"y": 2,
+			"difficulty": "pressure",
+			"combat_seed": 991177,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 1,
+			"target_kind": "hero",
+			"target_placement_id": String(session.overworld.get("active_hero_id", "")),
+			"target_label": String(session.overworld.get("hero", {}).get("name", "the hero")),
+			"target_x": 2,
+			"target_y": 2,
+			"goal_x": 2,
+			"goal_y": 2,
+		},
+		session
+	)
+	var roster_hero_id := String(raid.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		push_error("Core systems smoke: field-victory setup failed to assign a hostile commander.")
+		get_tree().quit(1)
+		return false
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	raid = _register_raid_commander_deployment(session, "faction_mireclaw", "commander_field_win_raid", roster_hero_id)
+	if raid.is_empty():
+		push_error("Core systems smoke: field-victory setup could not register the hostile commander deployment.")
+		get_tree().quit(1)
+		return false
+	var desired_before := EnemyAdventureRules.desired_raid_strength(raid)
+
+	var engage_result := OverworldRules.try_move(session, 1, 0)
+	if String(engage_result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: field-victory setup failed to enter battle against the hostile commander.")
+		get_tree().quit(1)
+		return false
+	var guard := 0
+	while String(BattleRules.get_active_stack(session.battle).get("side", "")) == "enemy" and guard < 8:
+		var autoplay := BattleRules.resolve_if_battle_ready(session)
+		if String(autoplay.get("state", "")) == "invalid":
+			push_error("Core systems smoke: field-victory setup produced an invalid enemy opening turn.")
+			get_tree().quit(1)
+			return false
+		guard += 1
+	var retreat_result := BattleRules.perform_player_action(session, "retreat")
+	if String(retreat_result.get("state", "")) != "retreat":
+		push_error("Core systems smoke: retreat did not resolve the enemy field-victory continuity path.")
+		get_tree().quit(1)
+		return false
+
+	var updated_raid := _active_enemy_raid_by_roster_hero(session, "faction_mireclaw", roster_hero_id)
+	if updated_raid.is_empty():
+		push_error("Core systems smoke: enemy field-victory continuity lost the active raid.")
+		get_tree().quit(1)
+		return false
+	var updated_state: Dictionary = updated_raid.get("enemy_commander_state", {})
+	if int(updated_state.get("battle_wins", 0)) <= 0:
+		push_error("Core systems smoke: hostile commander field victory did not increment the battle-win record.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.commander_veterancy_label(updated_state) == "":
+		push_error("Core systems smoke: hostile commander field victory did not surface a veterancy label.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.desired_raid_strength(updated_raid) <= desired_before:
+		push_error("Core systems smoke: hostile commander field victory did not raise active raid threat demand.")
+		get_tree().quit(1)
+		return false
+	var record_summary := EnemyAdventureRules.commander_record_summary(updated_state)
+	if "win" not in record_summary:
+		push_error("Core systems smoke: hostile commander field victory did not surface its battle record summary.")
+		get_tree().quit(1)
+		return false
+
+	var restored = SessionState.new_session_data()
+	restored.from_dict(session.to_dict())
+	OverworldRules.normalize_overworld_state(restored)
+	var restored_raid := _active_enemy_raid_by_roster_hero(restored, "faction_mireclaw", roster_hero_id)
+	if int(restored_raid.get("enemy_commander_state", {}).get("battle_wins", 0)) != int(updated_state.get("battle_wins", 0)):
+		push_error("Core systems smoke: restored session lost hostile commander field-victory record.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -724,6 +866,49 @@ func _enemy_commander_entry(state: Dictionary, roster_hero_id: String) -> Dictio
 	for entry in state.get("commander_roster", []):
 		if entry is Dictionary and String(entry.get("roster_hero_id", "")) == roster_hero_id:
 			return entry
+	return {}
+
+func _register_raid_commander_deployment(
+	session,
+	faction_id: String,
+	placement_id: String,
+	roster_hero_id: String
+) -> Dictionary:
+	var states = session.overworld.get("enemy_states", [])
+	var updated_roster := []
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		updated_roster = EnemyAdventureRules.record_commander_deployment(
+			session,
+			faction_id,
+			roster_hero_id,
+			state.get("commander_roster", []),
+			placement_id
+		)
+		state["commander_roster"] = updated_roster
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
+
+	var encounters = session.overworld.get("encounters", [])
+	for index in range(encounters.size()):
+		var encounter = encounters[index]
+		if not (encounter is Dictionary) or String(encounter.get("placement_id", "")) != placement_id:
+			continue
+		encounter["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(
+			encounter,
+			roster_hero_id,
+			faction_id,
+			session,
+			{},
+			updated_roster
+		)
+		encounters[index] = encounter
+		session.overworld["encounters"] = encounters
+		return encounter
+	session.overworld["encounters"] = encounters
 	return {}
 
 func _set_enemy_pressure(session, faction_id: String, amount: int) -> void:

@@ -1065,33 +1065,35 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 	var initiative_label = "%d" % battle_initiative
 	if battle_initiative > 0:
 		initiative_label = "+%d" % battle_initiative
-	return "\n".join(
-		[
-			"%s | %s" % [
-				String(commander_state.get("name", _side_label(side))),
-				_commander_role_label(battle, side),
-			],
-			"Command: Atk %d | Def %d | Power %d | Knowledge %d" % [
-				int(command.get("attack", 0)),
-				int(command.get("defense", 0)),
-				int(command.get("power", 0)),
-				int(command.get("knowledge", 0)),
-			],
-			"Battle aura: Atk %d | Def %d | Init %s" % [
-				battle_attack,
-				battle_defense,
-				initiative_label,
-			],
-			"Mana %d/%d | Army %d stacks | %d units | %d HP" % [
-				int(commander_payload.get("mana_current", 0)),
-				int(commander_payload.get("mana_max", 0)),
-				int(army_totals.get("stacks", 0)),
-				int(army_totals.get("units", 0)),
-				int(army_totals.get("health", 0)),
-			],
-			"Doctrine: %s" % _side_doctrine_summary(battle, side),
-		]
-	)
+	var lines := [
+		"%s | %s" % [
+			EnemyAdventureRulesScript.commander_display_name(commander_state),
+			_commander_role_label(battle, side),
+		],
+		"Command: Atk %d | Def %d | Power %d | Knowledge %d" % [
+			int(command.get("attack", 0)),
+			int(command.get("defense", 0)),
+			int(command.get("power", 0)),
+			int(command.get("knowledge", 0)),
+		],
+		"Battle aura: Atk %d | Def %d | Init %s" % [
+			battle_attack,
+			battle_defense,
+			initiative_label,
+		],
+		"Mana %d/%d | Army %d stacks | %d units | %d HP" % [
+			int(commander_payload.get("mana_current", 0)),
+			int(commander_payload.get("mana_max", 0)),
+			int(army_totals.get("stacks", 0)),
+			int(army_totals.get("units", 0)),
+			int(army_totals.get("health", 0)),
+		],
+		"Doctrine: %s" % _side_doctrine_summary(battle, side),
+	]
+	var continuity_summary := EnemyAdventureRulesScript.commander_record_summary(commander_state) if side == "enemy" else ""
+	if continuity_summary != "":
+		lines.insert(1, "Record: %s" % continuity_summary)
+	return "\n".join(lines)
 
 static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
@@ -3418,6 +3420,7 @@ static func _finalize_primary_defeat(
 	outcome_id: String = "defeat"
 ) -> Dictionary:
 	_sync_player_force_from_battle(session)
+	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var delivery_summary: String = _apply_delivery_route_aftermath(session, outcome_id)
 	OverworldRulesScript.refresh_fog_of_war(session)
@@ -3434,6 +3437,7 @@ static func _finalize_primary_defeat(
 	return {"state": "defeat", "message": final_message}
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var delivery_summary: String = _apply_delivery_route_aftermath(session, "hero_defeat")
 	var removal = HeroCommandRulesScript.remove_active_hero_after_defeat(session)
@@ -3461,6 +3465,7 @@ static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> D
 		base_summary = "The assault breaks off from the walls."
 	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
+	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var aftermath := _apply_withdrawal_aftermath(session, "retreat")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
@@ -3485,6 +3490,7 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 		base_summary = "The commander yields the assault beneath the walls."
 	var messages = [base_summary]
 	_sync_player_force_from_battle(session)
+	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
 	var aftermath := _apply_withdrawal_aftermath(session, "surrender")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
@@ -3508,6 +3514,7 @@ static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) ->
 		base_summary = "Both armies disengage before a decisive break."
 	messages.append(base_summary)
 	_sync_player_force_from_battle(session)
+	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_STALEMATE)
 	_sync_enemy_force_from_battle(session, false)
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "stalemate"))
 	HeroCommandRulesScript.commit_active_hero(session)
@@ -3552,6 +3559,31 @@ static func _resolve_enemy_commander_aftermath(
 		session,
 		_battle_enemy_faction_id(session),
 		commander_state,
+		outcome_id
+	)
+
+static func _record_enemy_commander_battle_continuity(
+	session: SessionStateStoreScript.SessionData,
+	outcome_id: String
+) -> void:
+	if session == null or session.battle.is_empty():
+		return
+	var commander_state = session.battle.get("enemy_hero", {})
+	if not (commander_state is Dictionary) or commander_state.is_empty():
+		return
+	var faction_id := _battle_enemy_faction_id(session)
+	if faction_id == "":
+		return
+	var updated_state := EnemyAdventureRulesScript.advance_commander_record(commander_state, outcome_id)
+	session.battle["enemy_hero"] = updated_state
+	session.battle["enemy_hero_payload"] = _hero_payload_from_state(updated_state, {}, session, "enemy")
+	EnemyAdventureRulesScript.sync_commander_state_to_roster(
+		session,
+		faction_id,
+		updated_state,
+		EnemyAdventureRulesScript.COMMANDER_STATUS_ACTIVE,
+		String(session.battle.get("resolved_key", "")),
+		-1,
 		outcome_id
 	)
 
@@ -6035,8 +6067,8 @@ static func _encounter_enemy_commander_seed(encounter_placement: Dictionary) -> 
 static func _encounter_enemy_commander_name(encounter_placement: Dictionary, encounter: Dictionary) -> String:
 	var seeded = _encounter_enemy_commander_seed(encounter_placement)
 	if not seeded.is_empty():
-		return String(seeded.get("name", ""))
-	return String(_enemy_commander_state(encounter).get("name", ""))
+		return EnemyAdventureRulesScript.commander_display_name(seeded)
+	return EnemyAdventureRulesScript.commander_display_name(_enemy_commander_state(encounter))
 
 static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 	var commander = encounter.get("enemy_commander", {})
@@ -6080,11 +6112,12 @@ static func _normalize_enemy_hero_state(
 			normalized.get("identity_summary", seeded.get("identity_summary", ""))
 		)
 		if normalized.get("specialties", []) is Array or seeded.get("specialties", []) is Array:
-			normalized["specialties"] = _normalized_specialties(
-				normalized.get("specialties", seeded.get("specialties", []))
-			)
+			var resolved_specialties = normalized.get("specialties", [])
+			if not (resolved_specialties is Array) or resolved_specialties.is_empty():
+				resolved_specialties = seeded.get("specialties", [])
+			normalized["specialties"] = _normalized_specialty_ranks(resolved_specialties)
 		if normalized.get("specialty_focus_ids", []) is Array or seeded.get("specialty_focus_ids", []) is Array:
-			normalized["specialty_focus_ids"] = _normalized_specialties(
+			normalized["specialty_focus_ids"] = _normalized_specialty_focus_ids(
 				normalized.get("specialty_focus_ids", seeded.get("specialty_focus_ids", []))
 			)
 	normalized["name"] = String(normalized.get("name", template.get("name", "Enemy Commander")))
@@ -6092,15 +6125,18 @@ static func _normalize_enemy_hero_state(
 		normalized.get("command", seeded.get("command", template.get("command", {})))
 	)
 	normalized["battle_traits"] = _normalized_battle_traits(normalized if normalized.has("battle_traits") else template)
-	return SpellRulesScript.ensure_hero_spellbook(
-		normalized,
-		{
-			"command": normalized.get("command", template.get("command", {})),
-			"starting_spell_ids": seeded_spellbook.get(
-				"known_spell_ids",
-				template.get("spellbook", {}).get("known_spell_ids", [])
-			),
-		}
+	return EnemyAdventureRulesScript._apply_commander_record_metadata(
+		SpellRulesScript.ensure_hero_spellbook(
+			normalized,
+			{
+				"command": normalized.get("command", template.get("command", {})),
+				"starting_spell_ids": seeded_spellbook.get(
+					"known_spell_ids",
+					template.get("spellbook", {}).get("known_spell_ids", [])
+				),
+			}
+		),
+		normalized
 	)
 
 static func _normalized_battle_traits(value: Variant) -> Array:
@@ -6125,15 +6161,11 @@ static func _normalized_battle_traits(value: Variant) -> Array:
 					normalized.append(trait_id)
 	return normalized
 
-static func _normalized_specialties(value: Variant) -> Array:
-	var normalized := []
-	if not (value is Array):
-		return normalized
-	for specialty_value in value:
-		var specialty_id := String(specialty_value)
-		if specialty_id != "" and specialty_id not in normalized:
-			normalized.append(specialty_id)
-	return normalized
+static func _normalized_specialty_ranks(primary: Variant, secondary: Variant = []) -> Array:
+	return EnemyAdventureRulesScript._normalized_specialty_ranks(primary, secondary)
+
+static func _normalized_specialty_focus_ids(value: Variant) -> Array:
+	return EnemyAdventureRulesScript._normalized_specialty_focus_ids(value)
 
 static func _normalized_battlefield_tags(encounter: Dictionary, context: Variant = {}) -> Array:
 	var normalized = []

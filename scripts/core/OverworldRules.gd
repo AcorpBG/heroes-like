@@ -676,7 +676,7 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 static func encounter_commander_name(encounter: Dictionary) -> String:
 	if encounter.is_empty() or String(encounter.get("spawned_by_faction_id", "")) == "":
 		return ""
-	return String(_enemy_adventure_rules().raid_commander_name(encounter))
+	return String(_enemy_adventure_rules().raid_commander_display_name(encounter))
 
 static func encounter_display_name(encounter: Dictionary) -> String:
 	if encounter.is_empty():

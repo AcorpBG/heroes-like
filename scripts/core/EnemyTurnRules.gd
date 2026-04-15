@@ -633,6 +633,13 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 
 	var encounters = session.overworld.get("encounters", [])
 	var placement_id = "%s_raid_%d" % [String(config.get("faction_id", "enemy")), int(state.get("raid_counter", 0))]
+	state["commander_roster"] = EnemyAdventureRulesScript.record_commander_deployment(
+		session,
+		faction_id,
+		roster_hero_id,
+		state.get("commander_roster", []),
+		placement_id
+	)
 	var raid_seed: Dictionary = {
 		"placement_id": placement_id,
 		"encounter_id": encounter_id,
