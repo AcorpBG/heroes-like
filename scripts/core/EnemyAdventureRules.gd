@@ -234,6 +234,7 @@ static func normalize_commander_roster(
 		)
 		var record := _normalized_commander_record(existing, commander_seed)
 		var target_memory := _normalized_commander_memory(existing, commander_seed)
+		var army_continuity := _normalized_commander_army_continuity(existing, commander_seed)
 		var commander_state = build_roster_commander_state(
 			roster_hero_id,
 			faction_id,
@@ -241,6 +242,7 @@ static func normalize_commander_roster(
 			{
 				"record": record,
 				"target_memory": target_memory,
+				"army_continuity": army_continuity,
 			}
 		)
 		var entry := {
@@ -254,6 +256,7 @@ static func normalize_commander_roster(
 			"times_defeated": max(0, int(record.get("times_defeated", 0))),
 			"renown": max(0, int(record.get("renown", 0))),
 			"target_memory": target_memory,
+			"army_continuity": commander_army_continuity(commander_state),
 			"commander_state": commander_state,
 		}
 		if active_map.has(roster_hero_id):
@@ -362,6 +365,31 @@ static func commander_memory_summary(source: Variant) -> String:
 		parts.append(rival_summary)
 	return " | ".join(parts)
 
+static func commander_army_continuity(source: Variant) -> Dictionary:
+	return _normalized_commander_army_continuity(source)
+
+static func commander_army_status(source: Variant) -> String:
+	return String(_normalized_commander_army_continuity(source).get("status", ""))
+
+static func commander_army_brief(source: Variant) -> String:
+	match commander_army_status(source):
+		"shattered":
+			return "shattered host"
+		"rebuilding":
+			return "rebuilding host"
+		"scarred":
+			return "scarred host"
+	return ""
+
+static func commander_army_summary(source: Variant) -> String:
+	return String(_normalized_commander_army_continuity(source).get("summary", ""))
+
+static func commander_can_deploy(source: Variant) -> bool:
+	var continuity := _normalized_commander_army_continuity(source)
+	if continuity.is_empty() or int(continuity.get("base_strength", 0)) <= 0:
+		return true
+	return int(continuity.get("current_strength", 0)) > 0
+
 static func raid_commander_memory_summaries(encounters: Array, limit: int = 2) -> Array:
 	var summaries: Array = []
 	for encounter in encounters:
@@ -391,7 +419,10 @@ static func has_available_raid_commander(
 	):
 		if not (entry_value is Dictionary):
 			continue
-		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) == COMMANDER_STATUS_AVAILABLE:
+		if (
+			_normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) == COMMANDER_STATUS_AVAILABLE
+			and commander_can_deploy(entry_value)
+		):
 			return true
 	return false
 
@@ -410,6 +441,28 @@ static func recovering_commander_count(
 			continue
 		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) == COMMANDER_STATUS_RECOVERING:
 			count += 1
+	return count
+
+static func rebuilding_commander_count(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant = []
+) -> int:
+	var count := 0
+	for entry_value in normalize_commander_roster(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		var status := _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE))
+		if status in [COMMANDER_STATUS_ACTIVE, COMMANDER_STATUS_RECOVERING]:
+			continue
+		var continuity := commander_army_continuity(entry_value)
+		if continuity.is_empty() or int(continuity.get("base_strength", 0)) <= 0 or commander_can_deploy(entry_value):
+			continue
+		count += 1
 	return count
 
 static func public_commander_recovery_summary(
@@ -433,7 +486,11 @@ static func public_commander_recovery_summary(
 		var commander_name := commander_display_name(entry_value)
 		if commander_name == "":
 			continue
-		recovering.append("%s (%dd)" % [commander_name, remaining_days])
+		var descriptor := "%dd" % remaining_days
+		var army_brief := commander_army_brief(entry_value)
+		if army_brief != "":
+			descriptor += ", %s" % army_brief
+		recovering.append("%s (%s)" % [commander_name, descriptor])
 		if recovering.size() >= 2:
 			break
 	if recovering.is_empty():
@@ -446,6 +503,43 @@ static func public_commander_recovery_summary(
 	)
 	if total_recovering > recovering.size():
 		summary += " (+%d more)" % (total_recovering - recovering.size())
+	return summary
+
+static func public_commander_rebuild_summary(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_value: Variant = []
+) -> String:
+	var rebuilding := []
+	for entry_value in normalize_commander_roster(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		var status := _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE))
+		if status in [COMMANDER_STATUS_ACTIVE, COMMANDER_STATUS_RECOVERING]:
+			continue
+		if commander_can_deploy(entry_value):
+			continue
+		var commander_name := commander_display_name(entry_value)
+		var army_summary := commander_army_summary(entry_value)
+		if commander_name == "" or army_summary == "":
+			continue
+		rebuilding.append("%s (%s)" % [commander_name, army_summary])
+		if rebuilding.size() >= 2:
+			break
+	if rebuilding.is_empty():
+		return ""
+	var summary := "Command rebuilding %s" % ", ".join(rebuilding)
+	var total_rebuilding := rebuilding_commander_count(
+		session,
+		faction_id,
+		roster_value if roster_value is Array else commander_roster_for_faction(session, faction_id)
+	)
+	if total_rebuilding > rebuilding.size():
+		summary += " (+%d more)" % (total_rebuilding - rebuilding.size())
 	return summary
 
 static func apply_resolved_commander_aftermath(
@@ -486,6 +580,7 @@ static func apply_resolved_commander_aftermath(
 				entry
 			)
 			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 			var recovery_days := 0
 			var summary := ""
 			match outcome_id:
@@ -523,6 +618,7 @@ static func build_roster_commander_state(
 	var record_value: Variant = record_source.get("record", record_source) if record_source is Dictionary else record_source
 	var record := _normalized_commander_record(record_value, existing_state)
 	var target_memory := _normalized_commander_memory(record_source, existing_state)
+	var army_continuity := _normalized_commander_army_continuity(record_source, existing_state)
 	var existing_spellbook = existing_state.get("spellbook", {})
 	if not (existing_spellbook is Dictionary):
 		existing_spellbook = {}
@@ -565,20 +661,23 @@ static func build_roster_commander_state(
 		"last_outcome": String(existing_state.get("last_outcome", record.get("last_outcome", ""))),
 	}
 	commander_state = _normalize_enemy_progression(commander_state)
-	return _apply_commander_record_metadata(
-		_apply_commander_memory_metadata(
-			SpellRulesScript.refresh_daily_mana(
-				SpellRulesScript.ensure_hero_spellbook(
-					commander_state,
-					{
-						"command": commander_state.get("command", {}),
-						"starting_spell_ids": spell_ids_source,
-					}
-				)
+	return _apply_commander_army_metadata(
+		_apply_commander_record_metadata(
+			_apply_commander_memory_metadata(
+				SpellRulesScript.refresh_daily_mana(
+					SpellRulesScript.ensure_hero_spellbook(
+						commander_state,
+						{
+							"command": commander_state.get("command", {}),
+							"starting_spell_ids": spell_ids_source,
+						}
+					)
+				),
+				target_memory
 			),
-			target_memory
+			record
 		),
-		record
+		army_continuity
 	)
 
 static func advance_commander_record(commander_state: Dictionary, outcome_id: String) -> Dictionary:
@@ -608,18 +707,21 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 	var spellbook = updated.get("spellbook", {})
 	if not (spellbook is Dictionary):
 		spellbook = {}
-	return _apply_commander_record_metadata(
-		_apply_commander_memory_metadata(
-			SpellRulesScript.ensure_hero_spellbook(
-				updated,
-				{
-					"command": updated.get("command", {}),
-					"starting_spell_ids": spellbook.get("known_spell_ids", []),
-				}
+	return _apply_commander_army_metadata(
+		_apply_commander_record_metadata(
+			_apply_commander_memory_metadata(
+				SpellRulesScript.ensure_hero_spellbook(
+					updated,
+					{
+						"command": updated.get("command", {}),
+						"starting_spell_ids": spellbook.get("known_spell_ids", []),
+					}
+				),
+				updated
 			),
-			updated
+			record
 		),
-		record
+		updated
 	)
 
 static func record_commander_deployment(
@@ -657,6 +759,7 @@ static func record_commander_deployment(
 			entry
 		)
 		entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+		entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 		roster[roster_index] = entry
 		break
 	return roster
@@ -711,11 +814,65 @@ static func sync_commander_state_to_roster(
 				entry
 			)
 			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
 			roster[roster_index] = entry
 			state["commander_roster"] = roster
 			states[state_index] = state
 			session.overworld["enemy_states"] = states
 			return
+
+static func reinforce_commander_roster_army(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	unit_id: String,
+	count: int
+) -> int:
+	if session == null or faction_id == "" or roster_hero_id == "" or unit_id == "" or count <= 0:
+		return 0
+	var states = session.overworld.get("enemy_states", [])
+	if not (states is Array):
+		return 0
+	for state_index in range(states.size()):
+		var state = states[state_index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		var roster = normalize_commander_roster(session, faction_id, state.get("commander_roster", []))
+		for roster_index in range(roster.size()):
+			var entry = roster[roster_index]
+			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
+				continue
+			if _normalize_commander_status(entry.get("status", COMMANDER_STATUS_AVAILABLE)) == COMMANDER_STATUS_ACTIVE:
+				return 0
+			var commander_state = entry.get("commander_state", {})
+			if not (commander_state is Dictionary) or commander_state.is_empty():
+				return 0
+			var continuity: Dictionary = _normalized_commander_army_continuity(entry, commander_state)
+			var rebuild_need: int = max(0, int(continuity.get("rebuild_need", 0)))
+			if rebuild_need <= 0:
+				return 0
+			var per_unit_strength: int = max(1, _unit_strength_value(unit_id))
+			var accepted: int = min(count, max(1, int(ceili(float(rebuild_need) / float(per_unit_strength)))))
+			var reinforced_stacks: Array = _add_army_stack(continuity.get("stacks", []), unit_id, accepted)
+			var updated_state := sync_commander_army_continuity(
+				commander_state,
+				{"stacks": reinforced_stacks},
+				String(continuity.get("encounter_id", ""))
+			)
+			entry["commander_state"] = build_roster_commander_state(
+				roster_hero_id,
+				faction_id,
+				updated_state,
+				entry
+			)
+			entry["target_memory"] = commander_target_memory(entry.get("commander_state", {}))
+			entry["army_continuity"] = commander_army_continuity(entry.get("commander_state", {}))
+			roster[roster_index] = entry
+			state["commander_roster"] = roster
+			states[state_index] = state
+			session.overworld["enemy_states"] = states
+			return accepted
+	return 0
 
 static func ensure_raid_army(
 	encounter: Dictionary,
@@ -725,13 +882,9 @@ static func ensure_raid_army(
 	if encounter.is_empty():
 		return encounter
 	var encounter_id = String(encounter.get("encounter_id", encounter.get("id", "")))
-	var normalized_army = _normalize_army_payload(encounter.get("enemy_army", {}))
-	if normalized_army.is_empty():
-		normalized_army = _base_enemy_army(encounter_id)
-	if not normalized_army.is_empty():
-		encounter["enemy_army"] = normalized_army
+	var commander_state := {}
 	if String(encounter.get("spawned_by_faction_id", "")) != "":
-		var commander_state = build_raid_commander_state(
+		commander_state = build_raid_commander_state(
 			encounter,
 			"",
 			"",
@@ -739,8 +892,29 @@ static func ensure_raid_army(
 			occupied_commander_ids,
 			commander_roster_for_faction(session, String(encounter.get("spawned_by_faction_id", "")))
 		)
-		if not commander_state.is_empty():
-			encounter["enemy_commander_state"] = commander_state
+	var normalized_army = _normalize_army_payload(encounter.get("enemy_army", {}))
+	if normalized_army.is_empty():
+		var continuity_army = _normalize_army_payload(
+			{"stacks": commander_army_continuity(commander_state).get("stacks", [])}
+		)
+		if not continuity_army.is_empty():
+			normalized_army = {
+				"id": String(encounter.get("enemy_army", {}).get("id", encounter_id)),
+				"name": String(encounter.get("enemy_army", {}).get("name", "Raid Host")),
+				"stacks": continuity_army.get("stacks", []).duplicate(true),
+			}
+		else:
+			normalized_army = _base_enemy_army(encounter_id)
+	if not normalized_army.is_empty():
+		normalized_army["id"] = String(normalized_army.get("id", encounter_id))
+		normalized_army["name"] = String(normalized_army.get("name", "Raid Host"))
+		encounter["enemy_army"] = normalized_army
+	if not commander_state.is_empty():
+		encounter["enemy_commander_state"] = sync_commander_army_continuity(
+			commander_state,
+			normalized_army,
+			encounter_id
+		)
 	return encounter
 
 static func occupied_raid_commander_ids(
@@ -793,7 +967,10 @@ static func select_raid_commander_roster_hero_id(
 		var roster_hero_id := String(entry_value.get("roster_hero_id", ""))
 		if roster_hero_id == "":
 			continue
-		if _normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE:
+		if (
+			_normalize_commander_status(entry_value.get("status", COMMANDER_STATUS_AVAILABLE)) != COMMANDER_STATUS_AVAILABLE
+			or not commander_can_deploy(entry_value)
+		):
 			unavailable[roster_hero_id] = true
 	var start_index: int = posmod(preferred_index, hero_ids.size())
 	for offset in range(hero_ids.size()):
@@ -913,24 +1090,31 @@ static func build_raid_commander_state(
 	var commander_spellbook = commander_state.get("spellbook", {})
 	if not (commander_spellbook is Dictionary):
 		commander_spellbook = {}
-	return _apply_commander_record_metadata(
-		_apply_commander_memory_metadata(
-			SpellRulesScript.ensure_hero_spellbook(
-				commander_state,
-				{
-					"command": commander_state.get("command", {}),
-					"starting_spell_ids": _merge_unique_strings(
-						commander_spellbook.get("known_spell_ids", []),
-						_merge_unique_strings(
-							_hero_battle_spell_ids(hero_template),
-							encounter_commander.get("starting_spell_ids", [])
-						)
-					),
-				}
+	return _apply_commander_army_metadata(
+		_apply_commander_record_metadata(
+			_apply_commander_memory_metadata(
+				SpellRulesScript.ensure_hero_spellbook(
+					commander_state,
+					{
+						"command": commander_state.get("command", {}),
+						"starting_spell_ids": _merge_unique_strings(
+							commander_spellbook.get("known_spell_ids", []),
+							_merge_unique_strings(
+								_hero_battle_spell_ids(hero_template),
+								encounter_commander.get("starting_spell_ids", [])
+							)
+						),
+					}
+				),
+				_normalized_commander_memory(roster_entry, commander_state)
 			),
-			_normalized_commander_memory(roster_entry, commander_state)
+			_normalized_commander_record(roster_entry, commander_state)
 		),
-		_normalized_commander_record(roster_entry, commander_state)
+		_normalized_commander_army_continuity(
+			roster_entry,
+			commander_state,
+			String(encounter.get("encounter_id", encounter.get("id", "")))
+		)
 	)
 
 static func raid_commander_name(encounter: Dictionary) -> String:
@@ -1224,6 +1408,143 @@ static func _apply_commander_memory_metadata(commander_state: Dictionary, memory
 	commander["memory_brief"] = commander_memory_brief(memory)
 	commander["memory_summary"] = commander_memory_summary(memory)
 	return commander
+
+static func _normalized_commander_army_continuity(
+	entry_value: Variant,
+	commander_state_value: Variant = {},
+	encounter_id: String = ""
+) -> Dictionary:
+	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
+	var commander_state: Dictionary = commander_state_value if commander_state_value is Dictionary else {}
+	var entry_commander_state = entry.get("commander_state", {})
+	if not (entry_commander_state is Dictionary):
+		entry_commander_state = {}
+	var raw_continuity: Dictionary = {}
+	for source_value in [
+		entry.get("army_continuity", {}),
+		entry_commander_state.get("army_continuity", {}),
+		commander_state.get("army_continuity", {}),
+	]:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		for key in source.keys():
+			raw_continuity[String(key)] = source[key]
+	var resolved_encounter_id := String(raw_continuity.get("encounter_id", encounter_id))
+	var normalized_payload := _normalize_army_payload({"stacks": raw_continuity.get("stacks", [])})
+	var stacks: Array = normalized_payload.get("stacks", [])
+	var base_strength: int = max(0, int(raw_continuity.get("base_strength", 0)))
+	if base_strength <= 0 and resolved_encounter_id != "":
+		base_strength = _army_strength(_base_enemy_army(resolved_encounter_id).get("stacks", []))
+	if base_strength <= 0 and stacks.is_empty():
+		return {}
+	if base_strength <= 0:
+		base_strength = _army_strength(stacks)
+	var current_strength: int = _army_strength(stacks)
+	var status := String(raw_continuity.get("status", ""))
+	if status == "":
+		status = _army_continuity_status(current_strength, base_strength)
+	var strength_percent := 100 if base_strength <= 0 else int(round((float(current_strength) * 100.0) / float(base_strength)))
+	return {
+		"encounter_id": resolved_encounter_id,
+		"stacks": stacks.duplicate(true),
+		"base_strength": base_strength,
+		"current_strength": current_strength,
+		"rebuild_need": max(0, base_strength - current_strength),
+		"strength_percent": clamp(strength_percent, 0, 100),
+		"status": status,
+		"headcount": _army_headcount(stacks),
+		"company_count": stacks.size(),
+		"summary": _army_continuity_summary(status, current_strength, base_strength),
+	}
+
+static func sync_commander_army_continuity(
+	commander_state: Dictionary,
+	army_source: Variant,
+	encounter_id: String = ""
+) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var updated := commander_state.duplicate(true)
+	var continuity := _normalized_commander_army_continuity(updated, updated, encounter_id)
+	var normalized_army := _normalize_army_payload(
+		army_source if army_source is Dictionary else {"stacks": army_source}
+	)
+	var stacks: Array = normalized_army.get("stacks", continuity.get("stacks", []))
+	var resolved_encounter_id := encounter_id if encounter_id != "" else String(continuity.get("encounter_id", ""))
+	var base_strength: int = max(
+		int(continuity.get("base_strength", 0)),
+		_army_strength(_base_enemy_army(resolved_encounter_id).get("stacks", [])),
+		_army_strength(stacks)
+	)
+	if base_strength <= 0 and stacks.is_empty():
+		return _apply_commander_army_metadata(updated, {})
+	var current_strength: int = _army_strength(stacks)
+	var status := _army_continuity_status(current_strength, base_strength)
+	updated["army_continuity"] = {
+		"encounter_id": resolved_encounter_id,
+		"stacks": stacks.duplicate(true),
+		"base_strength": base_strength,
+		"current_strength": current_strength,
+		"rebuild_need": max(0, base_strength - current_strength),
+		"strength_percent": 100 if base_strength <= 0 else clamp(
+			int(round((float(current_strength) * 100.0) / float(base_strength))),
+			0,
+			100
+		),
+		"status": status,
+		"headcount": _army_headcount(stacks),
+		"company_count": stacks.size(),
+	}
+	return _apply_commander_army_metadata(updated, updated)
+
+static func _apply_commander_army_metadata(commander_state: Dictionary, army_source: Variant) -> Dictionary:
+	if commander_state.is_empty():
+		return {}
+	var commander := commander_state.duplicate(true)
+	var continuity := _normalized_commander_army_continuity(army_source, commander)
+	commander["army_continuity"] = continuity
+	commander["army_status"] = String(continuity.get("status", ""))
+	commander["army_brief"] = commander_army_brief(continuity)
+	commander["army_summary"] = commander_army_summary(continuity)
+	commander["army_base_strength"] = max(0, int(continuity.get("base_strength", 0)))
+	commander["army_current_strength"] = max(0, int(continuity.get("current_strength", 0)))
+	commander["army_rebuild_need"] = max(0, int(continuity.get("rebuild_need", 0)))
+	return commander
+
+static func _army_continuity_status(current_strength: int, base_strength: int) -> String:
+	if base_strength <= 0:
+		return ""
+	if current_strength <= 0:
+		return "shattered"
+	if current_strength >= base_strength:
+		return "ready"
+	if (float(current_strength) / float(base_strength)) >= 0.7:
+		return "scarred"
+	return "rebuilding"
+
+static func _army_continuity_summary(status: String, current_strength: int, base_strength: int) -> String:
+	if base_strength <= 0:
+		return ""
+	var prefix := "Battle-ready host"
+	match status:
+		"shattered":
+			prefix = "Shattered host"
+		"rebuilding":
+			prefix = "Rebuilding host"
+		"scarred":
+			prefix = "Scarred host"
+	return "%s %d/%d" % [prefix, max(0, current_strength), max(0, base_strength)]
+
+static func _army_headcount(stacks: Variant) -> int:
+	var count := 0
+	if not (stacks is Array):
+		return count
+	for stack_value in stacks:
+		if not (stack_value is Dictionary):
+			continue
+		count += max(0, int(stack_value.get("count", 0)))
+	return count
 
 static func _normalize_enemy_progression(commander_state: Dictionary) -> Dictionary:
 	var commander := HeroProgressionRulesScript.ensure_hero_progression(commander_state.duplicate(true))
@@ -3090,16 +3411,38 @@ static func _army_strength(stacks: Variant) -> int:
 		var count: int = max(0, int(stack_value.get("count", 0)))
 		if unit_id == "" or count <= 0:
 			continue
-		var unit = ContentService.get_unit(unit_id)
-		var per_unit_strength: int = max(
-			6,
-			int(unit.get("hp", 1))
-			+ int(unit.get("min_damage", 1))
-			+ int(unit.get("max_damage", 1))
-			+ (3 if bool(unit.get("ranged", false)) else 0)
-		)
-		total += per_unit_strength * count
+		total += _unit_strength_value(unit_id) * count
 	return total
+
+static func _unit_strength_value(unit_id: String) -> int:
+	var unit = ContentService.get_unit(unit_id)
+	return max(
+		6,
+		int(unit.get("hp", 1))
+		+ int(unit.get("min_damage", 1))
+		+ int(unit.get("max_damage", 1))
+		+ (3 if bool(unit.get("ranged", false)) else 0)
+	)
+
+static func _add_army_stack(stacks: Variant, unit_id: String, amount: int) -> Array:
+	var normalized := []
+	var added := false
+	if stacks is Array:
+		for stack_value in stacks:
+			if not (stack_value is Dictionary):
+				continue
+			var stack := {
+				"unit_id": String(stack_value.get("unit_id", "")),
+				"count": max(0, int(stack_value.get("count", 0))),
+			}
+			if stack["unit_id"] == unit_id:
+				stack["count"] = int(stack.get("count", 0)) + max(0, amount)
+				added = true
+			if stack["unit_id"] != "" and int(stack.get("count", 0)) > 0:
+				normalized.append(stack)
+	if not added and unit_id != "" and amount > 0:
+		normalized.append({"unit_id": unit_id, "count": amount})
+	return normalized
 
 static func _scale_resources(payload: Variant, multiplier: int) -> Dictionary:
 	var scaled = {}

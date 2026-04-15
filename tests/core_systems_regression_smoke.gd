@@ -321,6 +321,15 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		push_error("Core systems smoke: defeated hostile commander did not keep save-backed target memory for the pressured town.")
 		get_tree().quit(1)
 		return false
+	var shattered_army := EnemyAdventureRules.commander_army_continuity(recovering_entry)
+	if int(shattered_army.get("base_strength", 0)) <= 0 or int(shattered_army.get("current_strength", 0)) != 0:
+		push_error("Core systems smoke: defeated hostile commander did not persist a shattered raid-host record.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.commander_army_status(recovering_entry) != "shattered":
+		push_error("Core systems smoke: defeated hostile commander did not surface a shattered army state.")
+		get_tree().quit(1)
+		return false
 	var recovery_day := int(recovering_entry.get("recovery_day", 0))
 	if recovery_day <= session.day:
 		push_error("Core systems smoke: hostile commander recovery day was not scheduled into the future.")
@@ -359,6 +368,7 @@ func _run_hostile_commander_recovery_regression() -> bool:
 
 	restored.day = recovery_day
 	_set_enemy_pressure(restored, "faction_mireclaw", 10)
+	_limit_enemy_rebuild_capacity(restored, "faction_mireclaw")
 	var return_result := EnemyTurnRules.run_enemy_turn(restored)
 	if String(return_result.get("message", "")) == "":
 		push_error("Core systems smoke: hostile commander recovery turn produced no feedback.")
@@ -383,6 +393,23 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		return false
 	if EnemyAdventureRules.commander_veterancy_label(returned_raid.get("enemy_commander_state", {})) == "":
 		push_error("Core systems smoke: recovered hostile commander returned without a visible veterancy label.")
+		get_tree().quit(1)
+		return false
+	var returned_army := EnemyAdventureRules.commander_army_continuity(returned_raid.get("enemy_commander_state", {}))
+	if int(returned_army.get("current_strength", 0)) <= 0:
+		push_error("Core systems smoke: recovered hostile commander returned without any rebuilt army strength.")
+		get_tree().quit(1)
+		return false
+	if int(returned_army.get("base_strength", 0)) > 0 and int(returned_army.get("current_strength", 0)) >= int(returned_army.get("base_strength", 0)):
+		push_error("Core systems smoke: recovered hostile commander returned at full army strength instead of carrying rebuild scars.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.raid_strength(returned_raid) != int(returned_army.get("current_strength", 0)):
+		push_error("Core systems smoke: returning raid strength did not match the commander's rebuilt army continuity.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.commander_army_brief(returned_raid.get("enemy_commander_state", {})) == "":
+		push_error("Core systems smoke: recovered hostile commander returned without a visible rebuild or scar hint.")
 		get_tree().quit(1)
 		return false
 	var returning_brief := EnemyAdventureRules.commander_memory_brief(returned_raid.get("enemy_commander_state", {}))
@@ -478,6 +505,13 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 			get_tree().quit(1)
 			return false
 		guard += 1
+	for index in range(session.battle.get("stacks", []).size()):
+		var stack = session.battle.get("stacks", [])[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+			continue
+		stack["total_health"] = max(1, int(round(float(int(stack.get("total_health", 0))) * 0.55)))
+		session.battle["stacks"][index] = stack
+		break
 	var retreat_result := BattleRules.perform_player_action(session, "retreat")
 	if String(retreat_result.get("state", "")) != "retreat":
 		push_error("Core systems smoke: retreat did not resolve the enemy field-victory continuity path.")
@@ -503,6 +537,23 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		return false
 	if EnemyAdventureRules.commander_veterancy_label(updated_state) == "":
 		push_error("Core systems smoke: hostile commander field victory did not surface a veterancy label.")
+		get_tree().quit(1)
+		return false
+	var scarred_army := EnemyAdventureRules.commander_army_continuity(updated_state)
+	if int(scarred_army.get("current_strength", 0)) <= 0:
+		push_error("Core systems smoke: hostile commander field victory lost the surviving raid host.")
+		get_tree().quit(1)
+		return false
+	if int(scarred_army.get("base_strength", 0)) > 0 and int(scarred_army.get("current_strength", 0)) >= int(scarred_army.get("base_strength", 0)):
+		push_error("Core systems smoke: hostile commander field victory did not keep partial army losses on the active raid.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.raid_strength(updated_raid) != int(scarred_army.get("current_strength", 0)):
+		push_error("Core systems smoke: active raid strength did not stay in sync with commander army continuity after retreat.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.commander_army_brief(updated_state) == "":
+		push_error("Core systems smoke: hostile commander field victory did not surface a scarred-host hint.")
 		get_tree().quit(1)
 		return false
 	if EnemyAdventureRules.desired_raid_strength(updated_raid) <= desired_before:
@@ -963,6 +1014,39 @@ func _set_enemy_pressure(session, faction_id: String, amount: int) -> void:
 		states[index] = state
 		break
 	session.overworld["enemy_states"] = states
+
+func _limit_enemy_rebuild_capacity(session, faction_id: String) -> void:
+	var towns = session.overworld.get("towns", [])
+	var constrained := false
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		var town_template := ContentService.get_town(String(town.get("town_id", "")))
+		if String(town_template.get("faction_id", "")) != faction_id:
+			town["available_recruits"] = {}
+			towns[index] = town
+			continue
+		if constrained:
+			town["available_recruits"] = {}
+			towns[index] = town
+			continue
+		var limited_recruits := {}
+		var recruit_source = town.get("available_recruits", {})
+		if not (recruit_source is Dictionary) or recruit_source.is_empty():
+			recruit_source = OverworldRules.town_weekly_growth(town, session)
+		for unit_id_value in recruit_source.keys():
+			var unit_id := String(unit_id_value)
+			if unit_id == "":
+				continue
+			limited_recruits[unit_id] = 1
+			constrained = true
+			break
+		town["available_recruits"] = limited_recruits
+		towns[index] = town
+	session.overworld["towns"] = towns
 
 func _active_enemy_raid_by_roster_hero(session, faction_id: String, roster_hero_id: String) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

@@ -1091,11 +1091,19 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 		"Doctrine: %s" % _side_doctrine_summary(battle, side),
 	]
 	var continuity_summary := EnemyAdventureRulesScript.commander_record_summary(commander_state) if side == "enemy" else ""
+	var army_summary := EnemyAdventureRulesScript.commander_army_summary(commander_state) if side == "enemy" else ""
 	var memory_summary := EnemyAdventureRulesScript.commander_memory_summary(commander_state) if side == "enemy" else ""
 	if continuity_summary != "":
 		lines.insert(1, "Record: %s" % continuity_summary)
+	if army_summary != "":
+		lines.insert(2 if continuity_summary != "" else 1, "Army: %s" % army_summary)
 	if memory_summary != "":
-		lines.insert(2 if continuity_summary != "" else 1, "Memory: %s" % memory_summary)
+		var memory_index := 1
+		if continuity_summary != "":
+			memory_index += 1
+		if army_summary != "":
+			memory_index += 1
+		lines.insert(memory_index, "Memory: %s" % memory_summary)
 	return "\n".join(lines)
 
 static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
@@ -3622,6 +3630,19 @@ static func _apply_enemy_commander_battle_memory(
 			String(rivalry_context.get("id", "")),
 			String(rivalry_context.get("label", ""))
 		)
+	var survivor_stacks := _battle_survivor_stacks(
+		session,
+		"enemy",
+		{
+			"source_type": "encounter_army",
+			"encounter_key": String(session.battle.get("resolved_key", "")),
+		}
+	)
+	updated = EnemyAdventureRulesScript.sync_commander_army_continuity(
+		updated,
+		{"stacks": survivor_stacks},
+		String(encounter.get("encounter_id", encounter.get("id", "")))
+	)
 	return updated
 
 static func _enemy_commander_rivalry_context(

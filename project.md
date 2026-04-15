@@ -214,6 +214,11 @@ Hostile commander target-memory decision:
 - `EnemyAdventureRules.gd` reuses the current raid-target pipeline to seed and normalize that memory from raid assignments plus battle context, and later target scoring reads the same memory back as a bias toward repeated towns, hunted heroes, and familiar fronts while still respecting current strategy weights and availability
 - `EnemyTurnRules.gd`, `OverworldRules.gd`, `TownRules.gd`, and `BattleRules.gd` only surface compact commander-memory hints from that shared payload inside existing frontier, town, and battle summaries, keeping scenes thin and `SAVE_VERSION` at `9`
 
+Hostile commander army-continuity decision:
+- hostile commander roster entries now also keep save-backed `army_continuity` on that same `enemy_states[].commander_roster` payload, recording the commander-bound host’s current stacks, baseline strength, rebuild debt, and scar state instead of inventing a separate army-meta subsystem
+- `BattleRules.gd` now feeds battle survivors and wipeouts back into that shared commander payload, `EnemyTurnRules.gd` spends current enemy-town recruitment on inactive commanders with rebuild debt through the same reinforcement loop, and `EnemyAdventureRules.gd` seeds later raid armies from the rebuilt host instead of resetting them to a fresh template army
+- `OverworldRules.gd`, `TownRules.gd`, and `BattleRules.gd` only surface compact scarred, shattered, and rebuilding host hints from that shared payload inside existing frontier, town, and commander summaries, keeping UI legibility inside current shells and preserving `SAVE_VERSION` at `9`
+
 Town shell presentation decision:
 - the town scene now uses a sectioned management-shell layout with dedicated command, town hall, construction, recruitment, spellcraft, and logistics panels instead of a single stacked debug column
 - `TownRules.gd` owns the release-facing summary shaping for town identity, construction ledgers, recruit reserves, stationed defenders, visibility-safe frontier pressure, and dispatch messaging, keeping `TownShell.gd` thin and save-safe

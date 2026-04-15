@@ -683,9 +683,15 @@ static func encounter_commander_threat_label(encounter: Dictionary) -> String:
 	if commander_name == "":
 		return ""
 	var memory_brief := String(_enemy_adventure_rules().commander_memory_brief(encounter.get("enemy_commander_state", {})))
-	if memory_brief == "":
+	var army_brief := String(_enemy_adventure_rules().commander_army_brief(encounter.get("enemy_commander_state", {})))
+	var parts := []
+	if memory_brief != "":
+		parts.append(memory_brief)
+	if army_brief != "":
+		parts.append(army_brief)
+	if parts.is_empty():
 		return commander_name
-	return "%s (%s)" % [commander_name, memory_brief]
+	return "%s (%s)" % [commander_name, "; ".join(parts)]
 
 static func encounter_display_name(encounter: Dictionary) -> String:
 	if encounter.is_empty():

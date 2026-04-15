@@ -156,6 +156,13 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		)
 		if commander_recovery != "":
 			line_parts.append(commander_recovery)
+		var commander_rebuild = EnemyAdventureRulesScript.public_commander_rebuild_summary(
+			session,
+			faction_id,
+			state.get("commander_roster", [])
+		)
+		if commander_rebuild != "":
+			line_parts.append(commander_rebuild)
 		var visible_commanders = EnemyAdventureRulesScript.raid_commander_summaries(
 			_visible_raids_for_faction(session, faction_id),
 			2
@@ -395,6 +402,7 @@ static func _reinforce_enemy_forces(
 ) -> String:
 	var garrisoned_towns = []
 	var raid_reinforcements = 0
+	var rebuild_batches = 0
 	for index in range(towns.size()):
 		var town = towns[index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
@@ -407,14 +415,18 @@ static func _reinforce_enemy_forces(
 		if bool(recruit_result.get("garrisoned", false)):
 			garrisoned_towns.append(_town_name(town))
 		raid_reinforcements += int(recruit_result.get("raid_batches", 0))
+		rebuild_batches += int(recruit_result.get("rebuild_batches", 0))
 	if garrisoned_towns.is_empty() and raid_reinforcements <= 0:
-		return ""
+		if rebuild_batches <= 0:
+			return ""
 
 	var parts = []
 	if not garrisoned_towns.is_empty():
 		parts.append("bolsters %s" % ", ".join(garrisoned_towns))
 	if raid_reinforcements > 0:
 		parts.append("feeds %d raid host%s" % [raid_reinforcements, "" if raid_reinforcements == 1 else "s"])
+	if rebuild_batches > 0:
+		parts.append("rebuilds %d command host%s" % [rebuild_batches, "" if rebuild_batches == 1 else "s"])
 	return "%s %s." % [String(config.get("label", faction_id)), " and ".join(parts)]
 
 static func _recruit_town_forces(
@@ -426,6 +438,7 @@ static func _recruit_town_forces(
 ) -> Dictionary:
 	var garrisoned = false
 	var raid_batches = 0
+	var rebuild_batches = 0
 	var recruit_ids = []
 	for unit_id_value in town.get("available_recruits", {}).keys():
 		recruit_ids.append(String(unit_id_value))
@@ -446,16 +459,39 @@ static func _recruit_town_forces(
 		if recruit_count <= 0:
 			continue
 		var destination = _choose_recruit_destination(session, config, town, faction_id)
+		var applied_count = recruit_count
 		if String(destination.get("type", "")) == "raid":
-			var raid_count = _apply_reinforcement_to_raid(session, int(destination.get("index", -1)), unit_id, recruit_count)
-			if raid_count > 0:
+			applied_count = _apply_reinforcement_to_raid(
+				session,
+				int(destination.get("index", -1)),
+				unit_id,
+				recruit_count
+			)
+			if applied_count > 0:
 				raid_batches += 1
+		elif String(destination.get("type", "")) == "rebuild":
+			applied_count = EnemyAdventureRulesScript.reinforce_commander_roster_army(
+				session,
+				faction_id,
+				String(destination.get("roster_hero_id", "")),
+				unit_id,
+				recruit_count
+			)
+			if applied_count > 0:
+				rebuild_batches += 1
 		else:
 			town["garrison"] = _add_stack(town.get("garrison", []), unit_id, recruit_count)
 			garrisoned = true
-		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, recruit_count)
-		_spend_from_pool(treasury, _scale_resource_pool(cost, recruit_count))
-	return {"town": town, "garrisoned": garrisoned, "raid_batches": raid_batches}
+		if applied_count <= 0:
+			continue
+		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, applied_count)
+		_spend_from_pool(treasury, _scale_resource_pool(cost, applied_count))
+	return {
+		"town": town,
+		"garrisoned": garrisoned,
+		"raid_batches": raid_batches,
+		"rebuild_batches": rebuild_batches,
+	}
 
 static func _choose_recruit_destination(
 	session: SessionStateStoreScript.SessionData,
@@ -470,9 +506,13 @@ static func _choose_recruit_destination(
 		return {"type": "garrison"}
 
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id)
+	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
 	var raid_score = float(int(best_raid.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+	var rebuild_score = float(int(best_rebuild.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.85
+	if not best_rebuild.is_empty() and rebuild_score > max(garrison_score, raid_score):
+		return {"type": "rebuild", "roster_hero_id": String(best_rebuild.get("roster_hero_id", ""))}
 	if not best_raid.is_empty() and raid_score > garrison_score:
 		return {"type": "raid", "index": int(best_raid.get("index", -1))}
 	return {"type": "garrison"}
@@ -522,6 +562,45 @@ static func _best_raid_reinforcement_target(
 			best = {"index": index, "encounter": encounter, "need": need}
 	return best
 
+static func _best_commander_rebuild_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var best := {}
+	var best_score := -1.0
+	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	for entry_value in EnemyAdventureRulesScript.normalize_commander_roster(
+		session,
+		faction_id,
+		EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
+	):
+		if not (entry_value is Dictionary):
+			continue
+		if String(entry_value.get("roster_hero_id", "")) == "":
+			continue
+		if String(entry_value.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)) == EnemyAdventureRulesScript.COMMANDER_STATUS_ACTIVE:
+			continue
+		var continuity := EnemyAdventureRulesScript.commander_army_continuity(entry_value)
+		var need: int = max(0, int(continuity.get("rebuild_need", 0)))
+		if need <= 0:
+			continue
+		var score := float(need)
+		score *= EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+		score += float(max(0, int(entry_value.get("renown", 0))) * 24)
+		score += float(max(0, int(EnemyAdventureRulesScript.commander_target_memory(entry_value).get("focus_pressure_count", 0))) * 12)
+		score += float(max(0, int(EnemyAdventureRulesScript.commander_target_memory(entry_value).get("rivalry_count", 0))) * 10)
+		if String(entry_value.get("status", "")) == EnemyAdventureRulesScript.COMMANDER_STATUS_RECOVERING:
+			score += 30.0
+		if score > best_score:
+			best_score = score
+			best = {
+				"roster_hero_id": String(entry_value.get("roster_hero_id", "")),
+				"need": need,
+				"score": score,
+			}
+	return best
+
 static func _apply_reinforcement_to_raid(session: SessionStateStoreScript.SessionData, encounter_index: int, unit_id: String, count: int) -> int:
 	if encounter_index < 0 or count <= 0:
 		return 0
@@ -535,6 +614,13 @@ static func _apply_reinforcement_to_raid(session: SessionStateStoreScript.Sessio
 	var army = encounter.get("enemy_army", {})
 	army["stacks"] = _add_stack(army.get("stacks", []), unit_id, count)
 	encounter["enemy_army"] = army
+	var commander_state = encounter.get("enemy_commander_state", {})
+	if commander_state is Dictionary and not commander_state.is_empty():
+		encounter["enemy_commander_state"] = EnemyAdventureRulesScript.sync_commander_army_continuity(
+			commander_state,
+			army,
+			String(encounter.get("encounter_id", encounter.get("id", "")))
+		)
 	encounters[encounter_index] = encounter
 	session.overworld["encounters"] = encounters
 	return count
@@ -990,11 +1076,18 @@ static func _determine_posture(
 			faction_id,
 			state.get("commander_roster", [])
 		)
-		and EnemyAdventureRulesScript.recovering_commander_count(
-			session,
-			faction_id,
-			state.get("commander_roster", [])
-		) > 0
+		and (
+			EnemyAdventureRulesScript.recovering_commander_count(
+				session,
+				faction_id,
+				state.get("commander_roster", [])
+			) > 0
+			or EnemyAdventureRulesScript.rebuilding_commander_count(
+				session,
+				faction_id,
+				state.get("commander_roster", [])
+			) > 0
+		)
 	):
 		return "reorganizing"
 	if int(state.get("pressure", 0)) >= threshold:

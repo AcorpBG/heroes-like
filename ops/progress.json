@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T00:35:00Z",
+  "updatedAt": "2026-04-15T13:30:00Z",
   "status": "in_progress",
-  "currentPhase": "hostile-commander-target-memory",
-  "currentSliceId": "phase-5-hostile-overworld-commander-target-memory",
-  "currentSliceTitle": "Give recurring hostile commanders target memory and rivalry continuity",
+  "currentPhase": "hostile-commander-army-continuity",
+  "currentSliceId": "phase-5-hostile-overworld-commander-army-continuity",
+  "currentSliceTitle": "Give recurring hostile commanders army-loss and rebuild continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a follow-on hostile-commander slice that keeps save-backed target memory and rivalry state on the existing enemy roster, biases later raid targeting through the current enemy-turn and adventure-target rules, surfaces compact continuity hints through existing frontier, town, and battle summaries, and adds focused regression coverage for repeat-target and repeat-opponent continuity.",
+  "currentSliceNotes": "Completed a follow-on hostile-commander slice that keeps save-backed army continuity and rebuild debt on the existing enemy roster, feeds battle survivors and wipeouts back into later raid composition, routes rebuild through current enemy-town recruitment and raid reinforcement logic, surfaces compact scarred-versus-rebuilding hints through existing frontier, town, and battle summaries, and adds focused regression coverage for scarred-host and rebuild-scar persistence.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
