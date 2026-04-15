@@ -1,7 +1,7 @@
 class_name DifficultyRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 const DIFFICULTY_PROFILES := {
 	"story": {
@@ -55,43 +55,43 @@ static func profile_for_difficulty(difficulty_id: Variant) -> Dictionary:
 	var normalized_id := normalize_difficulty(difficulty_id)
 	return DIFFICULTY_PROFILES.get(normalized_id, DIFFICULTY_PROFILES[_default_difficulty_id()]).duplicate(true)
 
-static func profile_for_session(session: SessionStateStore.SessionData) -> Dictionary:
+static func profile_for_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return profile_for_difficulty(_default_difficulty_id())
 	return profile_for_difficulty(session.difficulty)
 
-static func normalize_session(session: SessionStateStore.SessionData) -> Dictionary:
+static func normalize_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return profile_for_difficulty(_default_difficulty_id())
 	session.difficulty = normalize_difficulty(session.difficulty)
 	return profile_for_session(session)
 
-static func movement_bonus(session: SessionStateStore.SessionData) -> int:
+static func movement_bonus(session: SessionStateStoreScript.SessionData) -> int:
 	return int(profile_for_session(session).get("movement_bonus", 0))
 
-static func scale_income_resources(session: SessionStateStore.SessionData, payload: Variant) -> Dictionary:
+static func scale_income_resources(session: SessionStateStoreScript.SessionData, payload: Variant) -> Dictionary:
 	return scale_resource_payload(payload, float(profile_for_session(session).get("income_multiplier", 1.0)))
 
-static func scale_reward_resources(session: SessionStateStore.SessionData, payload: Variant) -> Dictionary:
+static func scale_reward_resources(session: SessionStateStoreScript.SessionData, payload: Variant) -> Dictionary:
 	return scale_resource_payload(payload, float(profile_for_session(session).get("reward_multiplier", 1.0)))
 
-static func adjust_enemy_pressure_gain(session: SessionStateStore.SessionData, base_gain: int) -> int:
+static func adjust_enemy_pressure_gain(session: SessionStateStoreScript.SessionData, base_gain: int) -> int:
 	var profile := profile_for_session(session)
 	return max(0, base_gain + int(profile.get("enemy_pressure_bonus", 0)))
 
-static func adjust_raid_threshold(session: SessionStateStore.SessionData, base_threshold: int) -> int:
+static func adjust_raid_threshold(session: SessionStateStoreScript.SessionData, base_threshold: int) -> int:
 	var profile := profile_for_session(session)
 	return max(1, base_threshold + int(profile.get("raid_threshold_offset", 0)))
 
-static func scale_raid_pillage(session: SessionStateStore.SessionData, payload: Variant) -> Dictionary:
+static func scale_raid_pillage(session: SessionStateStoreScript.SessionData, payload: Variant) -> Dictionary:
 	return scale_resource_payload(payload, float(profile_for_session(session).get("raid_pillage_multiplier", 1.0)))
 
-static func initiative_bonus_for_side(session: SessionStateStore.SessionData, side: String) -> int:
+static func initiative_bonus_for_side(session: SessionStateStoreScript.SessionData, side: String) -> int:
 	var profile := profile_for_session(session)
 	var key := "player_initiative_bonus" if side == "player" else "enemy_initiative_bonus"
 	return int(profile.get(key, 0))
 
-static func damage_multiplier_for_side(session: SessionStateStore.SessionData, side: String) -> float:
+static func damage_multiplier_for_side(session: SessionStateStoreScript.SessionData, side: String) -> float:
 	var profile := profile_for_session(session)
 	var key := "player_damage_multiplier" if side == "player" else "enemy_damage_multiplier"
 	return float(profile.get(key, 1.0))

@@ -1,11 +1,11 @@
 class_name HeroCommandRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
-const SpellRules = preload("res://scripts/core/SpellRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
-static var DifficultyRules: Variant = load("res://scripts/core/DifficultyRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+static var DifficultyRulesScript: Variant = load("res://scripts/core/DifficultyRules.gd")
 
 const HALL_BUILDING_ID := "building_wayfarers_hall"
 const HOLDER_GARRISON := "garrison"
@@ -14,7 +14,7 @@ const DEFAULT_RECRUIT_COST := {"gold": 1200}
 const BASE_SCOUT_RADIUS := 2
 
 static func normalize_session(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	primary_hero_id: String = "",
 	default_position: Dictionary = {},
 	default_army: Dictionary = {}
@@ -108,7 +108,7 @@ static func build_hero_from_template(
 	if hero_template.is_empty():
 		return {}
 	var command = hero_template.get("command", {})
-	var hero := HeroProgressionRules.ensure_hero_progression(
+	var hero := HeroProgressionRulesScript.ensure_hero_progression(
 		{
 			"id": String(hero_template.get("id", "")),
 			"name": String(hero_template.get("name", "Wandering Captain")),
@@ -122,8 +122,8 @@ static func build_hero_from_template(
 				"power": int(command.get("power", 0)),
 				"knowledge": int(command.get("knowledge", 0)),
 			},
-			"spellbook": SpellRules.build_spellbook(hero_template),
-			"artifacts": ArtifactRules.normalize_hero_artifacts({}),
+			"spellbook": SpellRulesScript.build_spellbook(hero_template),
+			"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
 			"specialties": _normalize_authored_specialties(hero_template.get("starting_specialties", [])),
 			"pending_specialty_choices": [],
 			"specialty_focus_ids": _normalize_authored_specialties(hero_template.get("specialty_focus_ids", [])),
@@ -137,14 +137,14 @@ static func build_hero_from_template(
 	return hero
 
 static func movement_max_for_hero(hero_state: Dictionary, movement_source: Variant = null) -> int:
-	var artifact_bonuses = ArtifactRules.aggregate_bonuses(hero_state)
-	var specialty_bonuses = HeroProgressionRules.aggregate_bonuses(hero_state)
+	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
+	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	var difficulty_bonus := 0
-	if movement_source is SessionStateStore.SessionData:
-		difficulty_bonus = DifficultyRules.movement_bonus(movement_source)
+	if movement_source is SessionStateStoreScript.SessionData:
+		difficulty_bonus = DifficultyRulesScript.movement_bonus(movement_source)
 	else:
-		var difficulty_id: String = DifficultyRules.normalize_difficulty(String(movement_source))
-		difficulty_bonus = int(DifficultyRules.profile_for_difficulty(difficulty_id).get("movement_bonus", 0))
+		var difficulty_id: String = DifficultyRulesScript.normalize_difficulty(String(movement_source))
+		difficulty_bonus = int(DifficultyRulesScript.profile_for_difficulty(difficulty_id).get("movement_bonus", 0))
 	return max(
 		1,
 		int(hero_state.get("base_movement", 10))
@@ -155,8 +155,8 @@ static func movement_max_for_hero(hero_state: Dictionary, movement_source: Varia
 	)
 
 static func scouting_radius_for_hero(hero_state: Dictionary) -> int:
-	var artifact_bonuses = ArtifactRules.aggregate_bonuses(hero_state)
-	var specialty_bonuses = HeroProgressionRules.aggregate_bonuses(hero_state)
+	var artifact_bonuses = ArtifactRulesScript.aggregate_bonuses(hero_state)
+	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	return max(
 		1,
 		BASE_SCOUT_RADIUS
@@ -164,7 +164,7 @@ static func scouting_radius_for_hero(hero_state: Dictionary) -> int:
 		+ int(specialty_bonuses.get("scouting_radius", 0))
 	)
 
-static func active_hero(session: SessionStateStore.SessionData) -> Dictionary:
+static func active_hero(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -173,10 +173,10 @@ static func active_hero(session: SessionStateStore.SessionData) -> Dictionary:
 			return hero
 	return {}
 
-static func primary_hero(session: SessionStateStore.SessionData) -> Dictionary:
+static func primary_hero(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return primary_hero_from_overworld(session.overworld if session != null else {}, session.hero_id if session != null else "")
 
-static func hero_by_id(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+static func hero_by_id(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
 	for hero in session.overworld.get("player_heroes", []):
@@ -184,15 +184,15 @@ static func hero_by_id(session: SessionStateStore.SessionData, hero_id: String) 
 			return hero
 	return {}
 
-static func player_hero_count(session: SessionStateStore.SessionData) -> int:
+static func player_hero_count(session: SessionStateStoreScript.SessionData) -> int:
 	return hero_count_from_overworld(session.overworld if session != null else {})
 
-static func active_hero_is_primary(session: SessionStateStore.SessionData) -> bool:
+static func active_hero_is_primary(session: SessionStateStoreScript.SessionData) -> bool:
 	var hero := active_hero(session)
 	return not hero.is_empty() and bool(hero.get("is_primary", false))
 
 static func spend_active_hero_movement(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	amount: int,
 	reason: String = ""
 ) -> Dictionary:
@@ -234,7 +234,7 @@ static func spend_active_hero_movement(
 		"remaining_movement": int(movement.get("current", 0)),
 	}
 
-static func commit_active_hero(session: SessionStateStore.SessionData) -> void:
+static func commit_active_hero(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	var heroes = session.overworld.get("player_heroes", [])
@@ -260,7 +260,7 @@ static func commit_active_hero(session: SessionStateStore.SessionData) -> void:
 	session.overworld["player_heroes"] = heroes
 	_sync_active_hero_mirror(session)
 
-static func set_active_hero(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+static func set_active_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	normalize_session(session)
 	if hero_id == "":
 		return {"ok": false, "message": "No hero was selected."}
@@ -300,16 +300,16 @@ static func hero_profile_summary(payload: Dictionary, include_focus: bool = fals
 		parts.append(roster_summary)
 	else:
 		parts.append(hero_archetype_label(template))
-	var starting_specialties: String = HeroProgressionRules.summarize_specialty_ids(template.get("starting_specialties", []))
+	var starting_specialties: String = HeroProgressionRulesScript.summarize_specialty_ids(template.get("starting_specialties", []))
 	if starting_specialties != "":
 		parts.append("Starts %s" % starting_specialties)
 	if include_focus:
-		var focus_specialties: String = HeroProgressionRules.summarize_specialty_ids(template.get("specialty_focus_ids", []))
+		var focus_specialties: String = HeroProgressionRulesScript.summarize_specialty_ids(template.get("specialty_focus_ids", []))
 		if focus_specialties != "":
 			parts.append("Focus %s" % focus_specialties)
 	return " | ".join(parts)
 
-static func describe_roster(session: SessionStateStore.SessionData, stationed_only: bool = false, town: Dictionary = {}) -> String:
+static func describe_roster(session: SessionStateStoreScript.SessionData, stationed_only: bool = false, town: Dictionary = {}) -> String:
 	normalize_session(session)
 	var lines := ["Command"]
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -324,7 +324,7 @@ static func describe_roster(session: SessionStateStore.SessionData, stationed_on
 		lines.append("- No stationed heroes")
 	return "\n".join(lines)
 
-static func get_overworld_switch_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_overworld_switch_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_session(session)
 	var actions := []
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -342,7 +342,7 @@ static func get_overworld_switch_actions(session: SessionStateStore.SessionData)
 		)
 	return actions
 
-static func get_town_switch_actions(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func get_town_switch_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	normalize_session(session)
 	var actions := []
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -358,7 +358,7 @@ static func get_town_switch_actions(session: SessionStateStore.SessionData, town
 		)
 	return actions
 
-static func stationed_heroes(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func stationed_heroes(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var stationed := []
 	if session == null or town.is_empty():
 		return stationed
@@ -367,7 +367,7 @@ static func stationed_heroes(session: SessionStateStore.SessionData, town: Dicti
 			stationed.append(hero)
 	return stationed
 
-static func describe_tavern(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+static func describe_tavern(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var hall_name := String(ContentService.get_building(HALL_BUILDING_ID).get("name", "Wayfarers Hall"))
 	var lines := [hall_name]
 	if not town_has_hall(town):
@@ -391,7 +391,7 @@ static func describe_tavern(session: SessionStateStore.SessionData, town: Dictio
 		lines.append("- %s | %s" % [String(action.get("label", "")), String(action.get("summary", ""))])
 	return "\n".join(lines)
 
-static func get_tavern_actions(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func get_tavern_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	normalize_session(session)
 	var actions := []
 	if session == null or town.is_empty() or not town_has_hall(town):
@@ -417,7 +417,7 @@ static func get_tavern_actions(session: SessionStateStore.SessionData, town: Dic
 		)
 	return actions
 
-static func recruit_hero_at_town(session: SessionStateStore.SessionData, town: Dictionary, hero_id: String) -> Dictionary:
+static func recruit_hero_at_town(session: SessionStateStoreScript.SessionData, town: Dictionary, hero_id: String) -> Dictionary:
 	normalize_session(session)
 	if session == null or town.is_empty():
 		return {"ok": false, "message": "No town is available for hero recruitment."}
@@ -447,7 +447,7 @@ static func recruit_hero_at_town(session: SessionStateStore.SessionData, town: D
 	var town_name := String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "the town")))
 	return {"ok": true, "message": "%s joins the command roster at %s." % [String(hero.get("name", hero_id)), town_name]}
 
-static func describe_town_transfer(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+static func describe_town_transfer(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	normalize_session(session)
 	var lines := ["Transfer"]
 	lines.append("- Garrison | %s" % _stack_summary_from_array(town.get("garrison", [])))
@@ -455,7 +455,7 @@ static func describe_town_transfer(session: SessionStateStore.SessionData, town:
 		lines.append("- %s | %s" % [String(hero.get("name", "Hero")), _army_summary(hero.get("army", {}))])
 	return "\n".join(lines)
 
-static func get_town_transfer_actions(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func get_town_transfer_actions(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	normalize_session(session)
 	var actions := []
 	if session == null or town.is_empty():
@@ -489,7 +489,7 @@ static func get_town_transfer_actions(session: SessionStateStore.SessionData, to
 	return actions
 
 static func transfer_town_stack(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	source_holder: String,
 	target_holder: String,
@@ -547,7 +547,7 @@ static func transfer_town_stack(
 		],
 	}
 
-static func remove_active_hero_after_defeat(session: SessionStateStore.SessionData) -> Dictionary:
+static func remove_active_hero_after_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_session(session)
 	commit_active_hero(session)
 	if session == null:
@@ -583,7 +583,7 @@ static func hero_recruit_cost(hero_template: Dictionary) -> Dictionary:
 	var cost = hero_template.get("recruit_cost", DEFAULT_RECRUIT_COST)
 	return _normalize_resources(cost)
 
-static func recruitable_hero_ids(session: SessionStateStore.SessionData) -> Array:
+static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -> Array:
 	var recruitable := []
 	if session == null:
 		return recruitable
@@ -639,7 +639,7 @@ static func hero_count_from_overworld(overworld_state: Variant) -> int:
 		return 1
 	return 0
 
-static func closest_hero_target(session: SessionStateStore.SessionData, origin: Vector2i = Vector2i.ZERO) -> Dictionary:
+static func closest_hero_target(session: SessionStateStoreScript.SessionData, origin: Vector2i = Vector2i.ZERO) -> Dictionary:
 	normalize_session(session)
 	var best := {}
 	for hero in session.overworld.get("player_heroes", []):
@@ -657,11 +657,11 @@ static func closest_hero_target(session: SessionStateStore.SessionData, origin: 
 			}
 	return best
 
-static func hero_position_by_id(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+static func hero_position_by_id(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	var hero := hero_by_id(session, hero_id)
 	return _normalize_position(hero.get("position", {}))
 
-static func hero_positions(session: SessionStateStore.SessionData) -> Array:
+static func hero_positions(session: SessionStateStoreScript.SessionData) -> Array:
 	var positions := []
 	if session == null:
 		return positions
@@ -680,7 +680,7 @@ static func hero_positions(session: SessionStateStore.SessionData) -> Array:
 
 static func _normalize_player_hero(
 	hero_state: Dictionary,
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	fallback_position: Dictionary,
 	fallback_army: Dictionary,
 	fallback_movement: Variant
@@ -700,15 +700,15 @@ static func _normalize_player_hero(
 		var starting_specialties := _normalize_authored_specialties(hero_template.get("starting_specialties", []))
 		if not starting_specialties.is_empty() and _normalize_authored_specialties(hero.get("specialties", [])).is_empty():
 			hero["specialties"] = starting_specialties
-	hero = HeroProgressionRules.ensure_hero_progression(hero)
-	hero = SpellRules.ensure_hero_spellbook(hero, hero_template)
-	hero = ArtifactRules.ensure_hero_artifacts(hero)
+	hero = HeroProgressionRulesScript.ensure_hero_progression(hero)
+	hero = SpellRulesScript.ensure_hero_spellbook(hero, hero_template)
+	hero = ArtifactRulesScript.ensure_hero_artifacts(hero)
 	hero["position"] = _normalize_position(hero.get("position", fallback_position))
 	hero["army"] = _normalize_army(hero.get("army", fallback_army), hero_id)
 	hero["movement"] = _normalize_movement(hero.get("movement", fallback_movement), movement_max_for_hero(hero, session))
 	return hero
 
-static func _sync_active_hero_mirror(session: SessionStateStore.SessionData) -> void:
+static func _sync_active_hero_mirror(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	var hero := active_hero(session)
@@ -787,7 +787,7 @@ static func _hero_roster_line(hero: Dictionary, active_hero_id: String) -> Strin
 		"Scout %d | %s | %s" % [
 			scouting_radius_for_hero(hero),
 			_army_summary(hero.get("army", {})),
-			HeroProgressionRules.brief_summary(hero),
+			HeroProgressionRulesScript.brief_summary(hero),
 		],
 	]
 
@@ -796,7 +796,7 @@ static func _normalize_authored_specialties(value: Variant) -> Array:
 	if value is Array:
 		for specialty_id_value in value:
 			var specialty_id := String(specialty_id_value)
-			if HeroProgressionRules.specialty_definition(specialty_id).is_empty() or specialty_id in normalized:
+			if HeroProgressionRulesScript.specialty_definition(specialty_id).is_empty() or specialty_id in normalized:
 				continue
 			normalized.append(specialty_id)
 	return normalized
@@ -823,19 +823,19 @@ static func _stack_summary_from_array(stacks: Variant) -> String:
 static func _hero_is_stationed_at_town(hero: Dictionary, town: Dictionary) -> bool:
 	return int(hero.get("position", {}).get("x", -1)) == int(town.get("x", -2)) and int(hero.get("position", {}).get("y", -1)) == int(town.get("y", -2))
 
-static func _stationed_holder_ids(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func _stationed_holder_ids(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var holders := [HOLDER_GARRISON]
 	for hero in stationed_heroes(session, town):
 		holders.append(String(hero.get("id", "")))
 	return holders
 
-static func _holder_stacks(session: SessionStateStore.SessionData, town: Dictionary, holder_id: String) -> Array:
+static func _holder_stacks(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> Array:
 	if holder_id == HOLDER_GARRISON:
 		return town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else []
 	var hero := hero_by_id(session, holder_id)
 	return hero.get("army", {}).get("stacks", []).duplicate(true) if not hero.is_empty() and hero.get("army", {}).get("stacks", []) is Array else []
 
-static func _set_holder_stacks(session: SessionStateStore.SessionData, town: Dictionary, holder_id: String, stacks: Array) -> void:
+static func _set_holder_stacks(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String, stacks: Array) -> void:
 	if session == null or town.is_empty():
 		return
 	if holder_id == HOLDER_GARRISON:
@@ -902,13 +902,13 @@ static func _resolve_transfer_amount(amount_token: String, available: int) -> in
 		_:
 			return clamp(int(amount_token), 0, available)
 
-static func _holder_label(session: SessionStateStore.SessionData, town: Dictionary, holder_id: String) -> String:
+static func _holder_label(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> String:
 	if holder_id == HOLDER_GARRISON:
 		return "%s garrison" % String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("town_id", "Town")))
 	var hero := hero_by_id(session, holder_id)
 	return String(hero.get("name", holder_id))
 
-static func _can_afford(session: SessionStateStore.SessionData, cost: Variant) -> bool:
+static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Variant) -> bool:
 	var resources = session.overworld.get("resources", {})
 	if not (cost is Dictionary):
 		return true
@@ -917,7 +917,7 @@ static func _can_afford(session: SessionStateStore.SessionData, cost: Variant) -
 			return false
 	return true
 
-static func _spend_resources(session: SessionStateStore.SessionData, cost: Variant) -> void:
+static func _spend_resources(session: SessionStateStoreScript.SessionData, cost: Variant) -> void:
 	var resources = session.overworld.get("resources", {}).duplicate(true)
 	if cost is Dictionary:
 		for key in cost.keys():

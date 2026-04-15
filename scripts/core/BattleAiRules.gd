@@ -1,7 +1,7 @@
 class_name BattleAiRules
 extends RefCounted
 
-const SpellRules = preload("res://scripts/core/SpellRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -376,7 +376,7 @@ static func _best_spell_action(
 	targets: Array
 ) -> Dictionary:
 	var best := {}
-	for spell in SpellRules.known_spells(enemy_hero, SpellRules.CONTEXT_BATTLE):
+	for spell in SpellRulesScript.known_spells(enemy_hero, SpellRulesScript.CONTEXT_BATTLE):
 		if not (spell is Dictionary):
 			continue
 		var effect = spell.get("effect", {})
@@ -385,7 +385,7 @@ static func _best_spell_action(
 				for target in targets:
 					if not (target is Dictionary):
 						continue
-					var validation := SpellRules.validate_battle_spell(
+					var validation := SpellRulesScript.validate_battle_spell(
 						enemy_hero,
 						battle,
 						active_stack,
@@ -407,7 +407,7 @@ static func _best_spell_action(
 			"defense_buff":
 				if _spell_buff_already_active(active_stack, battle, spell):
 					continue
-				var validation := SpellRules.validate_battle_spell(
+				var validation := SpellRulesScript.validate_battle_spell(
 					enemy_hero,
 					battle,
 					active_stack,
@@ -428,7 +428,7 @@ static func _best_spell_action(
 			"initiative_buff", "attack_buff":
 				if _spell_buff_already_active(active_stack, battle, spell):
 					continue
-				var validation := SpellRules.validate_battle_spell(
+				var validation := SpellRulesScript.validate_battle_spell(
 					enemy_hero,
 					battle,
 					active_stack,
@@ -523,24 +523,24 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 1.75
 	if _battle_has_tag(battle, "bog_channels") and (_has_ability(attacker, "harry") or _has_ability(attacker, "backstab") or _has_ability(attacker, "bloodrush")):
 		score += 1.5
-	if _has_ability(attacker, "harry") and is_ranged and not SpellRules.has_effect_id(target, battle, STATUS_HARRIED):
+	if _has_ability(attacker, "harry") and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		score += 2.0
-	if _has_ability(attacker, "backstab") and SpellRules.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if _has_ability(attacker, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		score += 2.5
 	if is_ranged and _side_defending_count(battle, side) > 0 and _side_has_ability(battle, side, "formation_guard"):
 		score += 1.5
-	if _has_ability(attacker, "formation_guard") and SpellRules.has_effect_id(target, battle, STATUS_STAGGERED):
+	if _has_ability(attacker, "formation_guard") and SpellRulesScript.has_effect_id(target, battle, STATUS_STAGGERED):
 		score += 1.5
 	var bloodrush := _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and _health_ratio(target) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
 		score += 2.0
-	if not bloodrush.is_empty() and SpellRules.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
+	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(target, battle, bloodrush.get("status_ids", [])):
 		score += 1.5
 	if not bloodrush.is_empty() and int(battle.get("round", 1)) >= 3:
 		score += 0.75
 	if _hero_has_trait(battle, side, "artillerist") and is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		score += 1.5
-	if _hero_has_trait(battle, side, "packhunter") and (_health_ratio(target) <= 0.75 or SpellRules.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
+	if _hero_has_trait(battle, side, "packhunter") and (_health_ratio(target) <= 0.75 or SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
 		score += 1.25
 	if _hero_has_trait(battle, side, "vanguard") and not is_ranged and int(battle.get("round", 1)) <= 2:
 		score += 1.0
@@ -569,7 +569,7 @@ static func _damage_spell_score(
 	score += min(1.0, float(damage) / float(max(1, int(target.get("total_health", 0))))) * 6.0
 	var status_effect := _status_effect_from_spell(spell)
 	var status_id := String(status_effect.get("effect_id", ""))
-	if status_id != "" and not SpellRules.has_effect_id(target, battle, status_id):
+	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
 		score += 2.0
 		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id)
 		if status_id == STATUS_HARRIED and _health_ratio(target) <= 0.75:
@@ -601,7 +601,7 @@ static func _buff_spell_score(
 	targets: Array,
 	spell: Dictionary
 ) -> float:
-	var modifiers: Dictionary = SpellRules.battle_spell_modifiers(spell)
+	var modifiers: Dictionary = SpellRulesScript.battle_spell_modifiers(spell)
 	var score := 1.5
 	var round_number := int(battle.get("round", 1))
 	var defense_bonus := int(modifiers.get("defense", 0))
@@ -774,8 +774,8 @@ static func _estimate_damage(
 	var max_damage: int = max(min_damage, int(attacker.get("max_damage", 1)))
 	var base_damage: int = attacker_count * int(round(float(min_damage + max_damage) / 2.0))
 
-	var attack_stat: int = int(attacker.get("attack", 0)) + SpellRules.effect_bonus_for_kind(attacker, battle, "attack") + _contextual_attack_bonus(attacker, battle)
-	var defense_stat: int = int(defender.get("defense", 0)) + SpellRules.effect_bonus_for_kind(defender, battle, "defense") + _contextual_defense_bonus(defender, battle)
+	var attack_stat: int = int(attacker.get("attack", 0)) + SpellRulesScript.effect_bonus_for_kind(attacker, battle, "attack") + _contextual_attack_bonus(attacker, battle)
+	var defense_stat: int = int(defender.get("defense", 0)) + SpellRulesScript.effect_bonus_for_kind(defender, battle, "defense") + _contextual_defense_bonus(defender, battle)
 	attack_stat += _hero_bonus_for_side(battle, String(attacker.get("side", "")), "attack")
 	defense_stat += _hero_bonus_for_side(battle, String(defender.get("side", "")), "defense")
 	if bool(defender.get("defending", false)):
@@ -870,7 +870,7 @@ static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> 
 static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 	var total: int = (
 		int(stack.get("cohesion", stack.get("cohesion_base", 5)))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "cohesion")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "cohesion")
 		+ _contextual_cohesion_bonus(stack, battle)
 	)
 	return clamp(total, COHESION_MIN, COHESION_MAX)
@@ -878,7 +878,7 @@ static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
 	var total: int = (
 		int(stack.get("momentum", 0))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "momentum")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "momentum")
 		+ _contextual_momentum_bonus(stack, battle)
 	)
 	return clamp(total, 0, MOMENTUM_MAX)
@@ -903,7 +903,7 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 			bonus += 1
 	if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(stack, battle) and not bool(stack.get("ranged", false)) and round_number >= 3:
 		bonus += 1
-	if SpellRules.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		bonus -= 1
 	var shielding := _ability_by_id(stack, "shielding")
 	if not shielding.is_empty():
@@ -969,7 +969,7 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 
 static func _stack_has_positive_effect(stack: Dictionary, battle: Dictionary) -> bool:
 	var current_round := int(battle.get("round", 1))
-	for effect in SpellRules.active_effects_for_round(stack, current_round):
+	for effect in SpellRulesScript.active_effects_for_round(stack, current_round):
 		var modifiers: Dictionary = effect.get("modifiers", {})
 		if not (modifiers is Dictionary):
 			continue
@@ -1054,7 +1054,7 @@ static func _ability_damage_modifier(
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 
 	var backstab := _ability_by_id(attacker, "backstab")
-	if not backstab.is_empty() and SpellRules.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
+	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
 		modifier *= float(backstab.get("damage_multiplier", 1.0))
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
@@ -1062,13 +1062,13 @@ static func _ability_damage_modifier(
 	var volley := _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
 		modifier *= float(volley.get("damage_multiplier", 1.0))
-	if is_ranged and not volley.is_empty() and SpellRules.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
+	if is_ranged and not volley.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
 		modifier *= float(volley.get("status_damage_multiplier", 1.0))
 	if is_ranged and not volley.is_empty() and _side_defending_count(battle, String(attacker.get("side", ""))) > 0:
 		modifier *= float(volley.get("ally_defending_multiplier", 1.0))
 
 	var formation_guard := _ability_by_id(attacker, "formation_guard")
-	if not formation_guard.is_empty() and SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
+	if not formation_guard.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 		modifier *= float(formation_guard.get("staggered_damage_multiplier", 1.0))
 
 	var harry := _ability_by_id(attacker, "harry")
@@ -1078,7 +1078,7 @@ static func _ability_damage_modifier(
 	var bloodrush := _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
-	if not bloodrush.is_empty() and SpellRules.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
 		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
 
 	var shielding := _ability_by_id(defender, "shielding")
@@ -1087,7 +1087,7 @@ static func _ability_damage_modifier(
 	var attacking_shielding := _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
-	if not is_ranged and not attacking_shielding.is_empty() and SpellRules.has_effect_id(defender, battle, STATUS_HARRIED):
+	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
 		modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
 
 	return modifier
@@ -1111,7 +1111,7 @@ static func _faction_damage_modifier(
 				modifier *= 1.08
 				if _side_has_ability(battle, side, "formation_guard"):
 					modifier *= _side_max_ability_float(battle, side, "formation_guard", "ally_ranged_damage_multiplier", 1.0)
-			if SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 				modifier *= 1.08
 			if int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side):
 				modifier *= 1.06 if _side_has_ability(battle, side, "formation_guard") else 1.04
@@ -1119,7 +1119,7 @@ static func _faction_damage_modifier(
 			var wounded_count := _enemy_wounded_count(battle, side)
 			if wounded_count > 0:
 				modifier *= 1.0 + (float(min(wounded_count, 3)) * 0.04)
-			if SpellRules.has_effect_id(defender, battle, STATUS_HARRIED):
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
 				modifier *= 1.08
 			if not is_ranged and int(battle.get("round", 1)) >= 3 and attack_distance <= 0:
 				modifier *= 1.0 + (float(min(wounded_count, 2)) * 0.03)
@@ -1131,7 +1131,7 @@ static func _faction_damage_modifier(
 					modifier *= 1.04
 			if positive_effect_count >= 2:
 				modifier *= 1.0 + (float(min(positive_effect_count, 3)) * 0.03)
-			if SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 				modifier *= 1.05
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
 				modifier *= 1.04
@@ -1163,7 +1163,7 @@ static func _terrain_tag_damage_modifier(
 		_has_ability(attacker, "harry")
 		or _has_ability(attacker, "backstab")
 		or _has_ability(attacker, "bloodrush")
-		or SpellRules.has_effect_id(defender, battle, STATUS_HARRIED)
+		or SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED)
 	):
 		modifier *= 1.08
 	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0:
@@ -1185,8 +1185,8 @@ static func _commander_damage_modifier(
 		modifier *= 1.05
 	if _hero_has_trait(battle, side, "packhunter") and (
 		_health_ratio(defender) <= 0.75
-		or SpellRules.has_effect_id(defender, battle, STATUS_HARRIED)
-		or SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED)
+		or SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED)
+		or SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED)
 	):
 		modifier *= 1.06
 	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (
@@ -1214,12 +1214,12 @@ static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
 	return not _ability_by_id(stack, ability_id).is_empty()
 
 static func _spell_buff_already_active(active_stack: Dictionary, battle: Dictionary, spell: Dictionary) -> bool:
-	var modifiers: Dictionary = SpellRules.battle_spell_modifiers(spell)
+	var modifiers: Dictionary = SpellRulesScript.battle_spell_modifiers(spell)
 	if modifiers.is_empty():
 		return false
 	for modifier_key in modifiers.keys():
 		var key := String(modifier_key)
-		if SpellRules.effect_bonus_for_kind(active_stack, battle, key) < int(modifiers[key]):
+		if SpellRulesScript.effect_bonus_for_kind(active_stack, battle, key) < int(modifiers[key]):
 			return false
 	return true
 

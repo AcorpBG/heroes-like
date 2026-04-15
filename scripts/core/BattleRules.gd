@@ -1,15 +1,15 @@
 class_name BattleRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const OverworldRules = preload("res://scripts/core/OverworldRules.gd")
-const DifficultyRules = preload("res://scripts/core/DifficultyRules.gd")
-const HeroCommandRules = preload("res://scripts/core/HeroCommandRules.gd")
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
-const SpellRules = preload("res://scripts/core/SpellRules.gd")
-const BattleAiRules = preload("res://scripts/core/BattleAiRules.gd")
-const ScenarioRules = preload("res://scripts/core/ScenarioRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
+const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -20,8 +20,8 @@ const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
 
-static func create_battle_payload(session: SessionStateStore.SessionData, encounter_placement: Dictionary) -> Dictionary:
-	OverworldRules.normalize_overworld_state(session)
+static func create_battle_payload(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
+	OverworldRulesScript.normalize_overworld_state(session)
 	encounter_placement = _resolved_encounter_placement(session, encounter_placement)
 	var encounter_id = String(encounter_placement.get("encounter_id", encounter_placement.get("id", "")))
 	var encounter = ContentService.get_encounter(encounter_id)
@@ -37,12 +37,12 @@ static func create_battle_payload(session: SessionStateStore.SessionData, encoun
 	var battlefield_tags = _normalized_battlefield_tags(encounter, battle_context)
 	var battle = {
 		"position": {
-			"x": int(encounter_placement.get("x", OverworldRules.hero_position(session).x)),
-			"y": int(encounter_placement.get("y", OverworldRules.hero_position(session).y)),
+			"x": int(encounter_placement.get("x", OverworldRulesScript.hero_position(session).x)),
+			"y": int(encounter_placement.get("y", OverworldRulesScript.hero_position(session).y)),
 		},
 		"encounter_id": encounter_id,
 		"encounter_name": _battle_name(session, encounter, battle_context),
-		"resolved_key": OverworldRules.encounter_key(encounter_placement),
+		"resolved_key": OverworldRulesScript.encounter_key(encounter_placement),
 		"terrain": String(encounter.get("terrain", "plains")),
 		"battlefield_tags": battlefield_tags,
 		"combat_seed": int(encounter_placement.get("combat_seed", 0)),
@@ -56,7 +56,7 @@ static func create_battle_payload(session: SessionStateStore.SessionData, encoun
 		"player_commander_source": player_setup.get("commander_source", {}),
 		"player_hero": _hero_payload_from_state(
 			player_commander_state,
-			ArtifactRules.aggregate_bonuses(player_commander_state),
+			ArtifactRulesScript.aggregate_bonuses(player_commander_state),
 			session,
 			"player"
 		),
@@ -76,7 +76,7 @@ static func create_battle_payload(session: SessionStateStore.SessionData, encoun
 			battle_context
 		),
 		TACTICAL_BRIEFING_KEY: {
-			"signature": "%s|%s" % [encounter_id, OverworldRules.encounter_key(encounter_placement)],
+			"signature": "%s|%s" % [encounter_id, OverworldRulesScript.encounter_key(encounter_placement)],
 			"shown": false,
 			"shown_round": 0,
 		},
@@ -109,7 +109,7 @@ static func create_battle_payload(session: SessionStateStore.SessionData, encoun
 					index,
 					{
 						"source_type": "encounter_army",
-						"encounter_key": OverworldRules.encounter_key(encounter_placement),
+						"encounter_key": OverworldRulesScript.encounter_key(encounter_placement),
 					}
 				)
 			)
@@ -121,18 +121,18 @@ static func create_battle_payload(session: SessionStateStore.SessionData, encoun
 static func normalize_battle_state_bridge(session) -> bool:
 	return normalize_battle_state(session)
 
-static func _resolved_encounter_placement(session: SessionStateStore.SessionData, encounter_placement: Dictionary) -> Dictionary:
+static func _resolved_encounter_placement(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	if session == null:
 		return encounter_placement
-	var resolved_key = OverworldRules.encounter_key(encounter_placement)
+	var resolved_key = OverworldRulesScript.encounter_key(encounter_placement)
 	for placement_value in session.overworld.get("encounters", []):
 		if not (placement_value is Dictionary):
 			continue
-		if OverworldRules.encounter_key(placement_value) == resolved_key:
+		if OverworldRulesScript.encounter_key(placement_value) == resolved_key:
 			return placement_value
 	return encounter_placement
 
-static func _normalized_battle_context(session: SessionStateStore.SessionData, raw_context: Variant) -> Dictionary:
+static func _normalized_battle_context(session: SessionStateStoreScript.SessionData, raw_context: Variant) -> Dictionary:
 	var context = {}
 	if raw_context is Dictionary:
 		if raw_context.has("battle_context") and raw_context.get("battle_context", {}) is Dictionary:
@@ -149,11 +149,11 @@ static func _normalized_battle_context(session: SessionStateStore.SessionData, r
 					"type": "town_defense",
 					"town_placement_id": String(target_town.get("placement_id", placement.get("target_placement_id", ""))),
 					"defending_hero_id": "",
-					"raid_encounter_key": OverworldRules.encounter_key(placement),
+					"raid_encounter_key": OverworldRulesScript.encounter_key(placement),
 					"trigger_faction_id": String(placement.get("spawned_by_faction_id", "")),
 				}
 				context_type = "town_defense"
-	var delivery_context: Dictionary = OverworldRules.delivery_interception_context_for_encounter(
+	var delivery_context: Dictionary = OverworldRulesScript.delivery_interception_context_for_encounter(
 		session,
 		raw_context if raw_context is Dictionary else {}
 	)
@@ -188,14 +188,14 @@ static func _normalized_battle_context(session: SessionStateStore.SessionData, r
 			"delivery_arrival_day": delivery_arrival_day,
 		}
 	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
-	var battlefront = OverworldRules.town_battlefront_profile(town)
+	var battlefront = OverworldRulesScript.town_battlefront_profile(town)
 	return {
 		"type": "town_defense",
 		"town_placement_id": String(context.get("town_placement_id", "")),
 		"defending_hero_id": String(context.get("defending_hero_id", "")),
 		"raid_encounter_key": String(context.get("raid_encounter_key", "")),
 		"trigger_faction_id": String(context.get("trigger_faction_id", "")),
-		"town_role": OverworldRules.town_strategic_role(town),
+		"town_role": OverworldRulesScript.town_strategic_role(town),
 		"battlefront_summary": String(battlefront.get("summary", "")),
 		"battlefront_tags": battlefront.get("tags", []),
 		"delivery_node_placement_id": delivery_node_placement_id,
@@ -217,7 +217,7 @@ static func _is_town_defense_context(context: Variant) -> bool:
 static func _has_delivery_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("delivery_node_placement_id", "")) != ""
 
-static func _battle_name(session: SessionStateStore.SessionData, encounter: Dictionary, battle_context: Dictionary) -> String:
+static func _battle_name(session: SessionStateStoreScript.SessionData, encounter: Dictionary, battle_context: Dictionary) -> String:
 	if _is_town_defense_context(battle_context):
 		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
 		if town_name != "":
@@ -232,7 +232,7 @@ static func _enemy_army_for_encounter(encounter_placement: Dictionary, encounter
 	return enemy_army
 
 static func _player_setup_for_battle(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	encounter_placement: Dictionary,
 	battle_context: Dictionary
 ) -> Dictionary:
@@ -289,7 +289,7 @@ static func _player_setup_for_battle(
 	}
 
 static func _normalize_player_commander_state(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	existing_state: Variant,
 	source: Variant,
 	context: Variant
@@ -297,10 +297,10 @@ static func _normalize_player_commander_state(
 	if existing_state is Dictionary and not existing_state.is_empty():
 		if String((source if source is Dictionary else {}).get("type", "")) == "town_captain":
 			return _normalize_town_captain(existing_state)
-		return HeroProgressionRules.ensure_hero_progression(SpellRules.ensure_hero_spellbook(existing_state))
+		return HeroProgressionRulesScript.ensure_hero_progression(SpellRulesScript.ensure_hero_spellbook(existing_state))
 	var source_type = String((source if source is Dictionary else {}).get("type", ""))
 	if source_type in ["active_hero", "town_hero"]:
-		var hero = HeroCommandRules.hero_by_id(session, String((source if source is Dictionary else {}).get("hero_id", "")))
+		var hero = HeroCommandRulesScript.hero_by_id(session, String((source if source is Dictionary else {}).get("hero_id", "")))
 		if not hero.is_empty():
 			return hero
 	if _is_town_defense_context(context):
@@ -308,7 +308,7 @@ static func _normalize_player_commander_state(
 		return _town_captain_state(town)
 	return session.overworld.get("hero", {})
 
-static func _player_commander_state(session: SessionStateStore.SessionData) -> Dictionary:
+static func _player_commander_state(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null:
 		return {}
 	if session.battle.is_empty():
@@ -337,7 +337,7 @@ static func _army_stack_descriptors(army: Variant, source: Dictionary) -> Array:
 	return descriptors
 
 static func _town_defending_hero(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	preferred_hero_id: String = ""
 ) -> Dictionary:
@@ -386,14 +386,14 @@ static func _town_captain_state(town: Dictionary) -> Dictionary:
 			"command": command,
 			"specialties": [],
 			"pending_specialty_choices": [],
-			"artifacts": ArtifactRules.normalize_hero_artifacts({}),
+			"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
 		}
 	)
 
 static func _normalize_town_captain(hero_state: Dictionary) -> Dictionary:
 	var command = _normalize_command(hero_state.get("command", {}))
-	return SpellRules.ensure_hero_spellbook(
-		HeroProgressionRules.ensure_hero_progression(
+	return SpellRulesScript.ensure_hero_spellbook(
+		HeroProgressionRulesScript.ensure_hero_progression(
 			{
 				"id": String(hero_state.get("id", "")),
 				"name": String(hero_state.get("name", "Town Captain")),
@@ -404,7 +404,7 @@ static func _normalize_town_captain(hero_state: Dictionary) -> Dictionary:
 				"command": command,
 				"specialties": [],
 				"pending_specialty_choices": [],
-				"artifacts": ArtifactRules.normalize_hero_artifacts({}),
+				"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
 			}
 		),
 		{
@@ -444,7 +444,7 @@ static func _append_building_with_requirements(target: Array, building_id: Strin
 		_append_building_with_requirements(target, String(requirement_value), next_trail)
 	target.append(building_id)
 
-static func _find_town_by_placement(session: SessionStateStore.SessionData, placement_id: String) -> Dictionary:
+static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	if session == null or placement_id == "":
 		return {"index": -1, "town": {}}
 	var towns = session.overworld.get("towns", [])
@@ -454,17 +454,17 @@ static func _find_town_by_placement(session: SessionStateStore.SessionData, plac
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
 
-static func _find_encounter_by_key(session: SessionStateStore.SessionData, encounter_key: String) -> Dictionary:
+static func _find_encounter_by_key(session: SessionStateStoreScript.SessionData, encounter_key: String) -> Dictionary:
 	if session == null or encounter_key == "":
 		return {"index": -1, "encounter": {}}
 	var encounters = session.overworld.get("encounters", [])
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
-		if encounter is Dictionary and OverworldRules.encounter_key(encounter) == encounter_key:
+		if encounter is Dictionary and OverworldRulesScript.encounter_key(encounter) == encounter_key:
 			return {"index": index, "encounter": encounter}
 	return {"index": -1, "encounter": {}}
 
-static func _town_name_from_placement_id(session: SessionStateStore.SessionData, placement_id: String) -> String:
+static func _town_name_from_placement_id(session: SessionStateStoreScript.SessionData, placement_id: String) -> String:
 	var town = _find_town_by_placement(session, placement_id).get("town", {})
 	return _town_name(town)
 
@@ -474,11 +474,11 @@ static func _town_name(town: Dictionary) -> String:
 	var template = ContentService.get_town(String(town.get("town_id", "")))
 	return String(template.get("name", town.get("town_id", "Town")))
 
-static func normalize_battle_state(session: SessionStateStore.SessionData) -> bool:
+static func normalize_battle_state(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null or session.battle.is_empty():
 		return false
-	session.save_version = SessionStateStore.SAVE_VERSION
-	DifficultyRules.normalize_session(session)
+	session.save_version = SessionStateStoreScript.SAVE_VERSION
+	DifficultyRulesScript.normalize_session(session)
 
 	if not session.battle.has("stacks"):
 		var encounter_stub = {
@@ -495,7 +495,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 	for stack in session.battle.get("stacks", []):
 		var normalized = _normalize_stack(stack)
 		if not normalized.is_empty():
-			normalized = SpellRules.normalize_stack_effects(normalized)
+			normalized = SpellRulesScript.normalize_stack_effects(normalized)
 			stacks.append(normalized)
 	session.battle["stacks"] = stacks
 	session.battle["context"] = _normalized_battle_context(session, session.battle.get("context", {}))
@@ -534,7 +534,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 	)
 	session.battle["player_hero"] = _hero_payload_from_state(
 		session.battle.get("player_commander_state", {}),
-		ArtifactRules.aggregate_bonuses(session.battle.get("player_commander_state", {})),
+		ArtifactRulesScript.aggregate_bonuses(session.battle.get("player_commander_state", {})),
 		session,
 		"player"
 	)
@@ -559,7 +559,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 
 	return not session.battle.is_empty()
 
-static func resolve_if_battle_ready(session: SessionStateStore.SessionData) -> Dictionary:
+static func resolve_if_battle_ready(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"state": "invalid", "message": ""}
 	var outcome = _evaluate_outcome(session)
@@ -573,7 +573,7 @@ static func get_active_stack(battle: Dictionary) -> Dictionary:
 static func get_selected_target(battle: Dictionary) -> Dictionary:
 	return _get_stack_by_id(battle, String(battle.get("selected_target_id", "")))
 
-static func cycle_target(session: SessionStateStore.SessionData, direction: int) -> void:
+static func cycle_target(session: SessionStateStoreScript.SessionData, direction: int) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	var active_stack = get_active_stack(session.battle)
@@ -594,28 +594,28 @@ static func cycle_target(session: SessionStateStore.SessionData, direction: int)
 	index = posmod(index + direction, enemies.size())
 	session.battle["selected_target_id"] = String(enemies[index].get("battle_id", ""))
 
-static func describe_spellbook(session: SessionStateStore.SessionData) -> String:
+static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return "Battle Spells | Mana 0/0 | No known spells"
-	return SpellRules.describe_spellbook(_player_commander_state(session), SpellRules.CONTEXT_BATTLE)
+	return SpellRulesScript.describe_spellbook(_player_commander_state(session), SpellRulesScript.CONTEXT_BATTLE)
 
-static func get_spell_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null or session.battle.is_empty():
 		return []
-	return SpellRules.get_battle_actions(
+	return SpellRulesScript.get_battle_actions(
 		_player_commander_state(session),
 		session.battle,
 		get_active_stack(session.battle),
 		get_selected_target(session.battle)
 	)
 
-static func describe_header(session: SessionStateStore.SessionData) -> String:
+static func describe_header(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Battle"
 	var battle = session.battle
 	return String(battle.get("encounter_name", battle.get("encounter_id", "Battle")))
 
-static func describe_status(session: SessionStateStore.SessionData) -> String:
+static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Round 0 | Battlefield unavailable"
 	var battle = session.battle
@@ -633,7 +633,7 @@ static func describe_status(session: SessionStateStore.SessionData) -> String:
 		status += " | %s" % objective_brief
 	return status
 
-static func describe_pressure(session: SessionStateStore.SessionData) -> String:
+static func describe_pressure(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Outcome pressure unavailable."
 	var battle = session.battle
@@ -664,7 +664,7 @@ static func describe_pressure(session: SessionStateStore.SessionData) -> String:
 	lines.append("Surrender: %s" % ("Open" if bool(battle.get("surrender_allowed", true)) else "Locked"))
 	return "\n".join(lines)
 
-static func describe_risk_readiness_board(session: SessionStateStore.SessionData) -> String:
+static func describe_risk_readiness_board(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Outlook: Tactical risk board unavailable."
 	var battle = session.battle
@@ -682,7 +682,7 @@ static func describe_risk_readiness_board(session: SessionStateStore.SessionData
 		lines.append("Latest shift: %s" % dispatch_line)
 	return "\n".join(lines)
 
-static func describe_tactical_briefing(session: SessionStateStore.SessionData) -> String:
+static func describe_tactical_briefing(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	normalize_battle_state(session)
@@ -690,7 +690,7 @@ static func describe_tactical_briefing(session: SessionStateStore.SessionData) -
 		return ""
 	return "\n".join(_tactical_briefing_lines(session))
 
-static func consume_tactical_briefing(session: SessionStateStore.SessionData) -> String:
+static func consume_tactical_briefing(session: SessionStateStoreScript.SessionData) -> String:
 	var briefing_text = describe_tactical_briefing(session)
 	if briefing_text == "":
 		return ""
@@ -702,7 +702,7 @@ static func consume_tactical_briefing(session: SessionStateStore.SessionData) ->
 	session.battle[TACTICAL_BRIEFING_KEY] = briefing_state
 	return briefing_text
 
-static func describe_commander_summary(session: SessionStateStore.SessionData, side: String) -> String:
+static func describe_commander_summary(session: SessionStateStoreScript.SessionData, side: String) -> String:
 	if session == null or session.battle.is_empty():
 		return "Commander summary unavailable."
 	var battle = session.battle
@@ -756,7 +756,7 @@ static func describe_commander_summary(session: SessionStateStore.SessionData, s
 		]
 	)
 
-static func describe_initiative_track(session: SessionStateStore.SessionData) -> String:
+static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Initiative track unavailable."
 	var battle = session.battle
@@ -784,12 +784,12 @@ static func describe_initiative_track(session: SessionStateStore.SessionData) ->
 		])
 	return "\n".join(lines) if not lines.is_empty() else "No active stacks remain."
 
-static func describe_active_context(session: SessionStateStore.SessionData) -> String:
+static func describe_active_context(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No active stack."
 	return _stack_focus_summary(get_active_stack(session.battle), session.battle, true)
 
-static func describe_target_context(session: SessionStateStore.SessionData) -> String:
+static func describe_target_context(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No target selected."
 	var battle = session.battle
@@ -802,14 +802,14 @@ static func describe_target_context(session: SessionStateStore.SessionData) -> S
 		return summary
 	return "%s\nEngagement: %s" % [summary, _engagement_preview(active_stack, target, battle)]
 
-static func describe_effect_board(session: SessionStateStore.SessionData) -> String:
+static func describe_effect_board(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No active effects."
 	var lines = []
 	for stack in session.battle.get("stacks", []):
 		if not (stack is Dictionary) or _alive_count(stack) <= 0:
 			continue
-		var effect_summary = SpellRules.effect_summary(stack, session.battle)
+		var effect_summary = SpellRulesScript.effect_summary(stack, session.battle)
 		if effect_summary != "":
 			lines.append("%s [%s]: %s" % [
 				_stack_label(stack),
@@ -818,7 +818,7 @@ static func describe_effect_board(session: SessionStateStore.SessionData) -> Str
 			])
 	return "\n".join(lines) if not lines.is_empty() else "No active spell or status effects are shaping this round."
 
-static func describe_dispatch(session: SessionStateStore.SessionData, last_message: String = "") -> String:
+static func describe_dispatch(session: SessionStateStoreScript.SessionData, last_message: String = "") -> String:
 	if session == null or session.battle.is_empty():
 		return last_message if last_message != "" else "Battle dispatch unavailable."
 	var lines = []
@@ -837,7 +837,7 @@ static func describe_dispatch(session: SessionStateStore.SessionData, last_messa
 	lines.append("Pressure: %s" % _pressure_brief(session))
 	return "\n".join(lines)
 
-static func describe_action_surface(session: SessionStateStore.SessionData) -> String:
+static func describe_action_surface(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No battle orders are available."
 	var battle = session.battle
@@ -859,7 +859,7 @@ static func describe_action_surface(session: SessionStateStore.SessionData) -> S
 		])
 	return "\n".join(lines)
 
-static func describe_order_consequence_board(session: SessionStateStore.SessionData) -> String:
+static func describe_order_consequence_board(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Order Consequences\n- Battle consequence board unavailable."
 	var battle = session.battle
@@ -867,7 +867,7 @@ static func describe_order_consequence_board(session: SessionStateStore.SessionD
 	if active_stack.is_empty():
 		return "Order Consequences\n- No stack is ready to act."
 	if String(active_stack.get("side", "")) != "player":
-		var enemy_action = BattleAiRules.choose_enemy_action(
+		var enemy_action = BattleAiRulesScript.choose_enemy_action(
 			battle,
 			active_stack,
 			battle.get("enemy_hero", {})
@@ -893,7 +893,7 @@ static func describe_order_consequence_board(session: SessionStateStore.SessionD
 		]
 	)
 
-static func describe_spell_timing_board(session: SessionStateStore.SessionData) -> String:
+static func describe_spell_timing_board(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Spell and Ability Timing\n- Timing board unavailable."
 	var battle = session.battle
@@ -910,7 +910,7 @@ static func describe_spell_timing_board(session: SessionStateStore.SessionData) 
 	)
 
 static func _spell_window_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary
@@ -926,8 +926,8 @@ static func _spell_window_line(
 			String(preferred_action.get("summary", "A battle spell is ready.")),
 		]
 	var commander = _player_commander_state(session)
-	var mana = SpellRules.mana_state(commander)
-	var known_spells = SpellRules.known_spells(commander, SpellRules.CONTEXT_BATTLE)
+	var mana = SpellRulesScript.mana_state(commander)
+	var known_spells = SpellRulesScript.known_spells(commander, SpellRulesScript.CONTEXT_BATTLE)
 	if known_spells.is_empty():
 		return "No battle spell is authored for this commander; this turn has to come from unit timing."
 	if int(mana.get("current", 0)) <= 0:
@@ -940,7 +940,7 @@ static func _spell_window_line(
 	return "No legal spell window is open from this posture; stabilize or change the exchange first."
 
 static func _preferred_spell_timing_action(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary
@@ -982,7 +982,7 @@ static func _spell_timing_action_score(
 					score += 1.0
 			var status_effect = effect.get("status_effect", {})
 			var effect_id = String(status_effect.get("effect_id", status_effect.get("status_id", "")))
-			if effect_id != "" and not target.is_empty() and not SpellRules.has_effect_id(target, battle, effect_id):
+			if effect_id != "" and not target.is_empty() and not SpellRulesScript.has_effect_id(target, battle, effect_id):
 				score += 1.5
 		"defense_buff":
 			score = 2.0
@@ -1011,7 +1011,7 @@ static func _spell_timing_action_score(
 	return score
 
 static func _support_payoff_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary
@@ -1041,14 +1041,14 @@ static func _support_followup_line(battle: Dictionary, target: Dictionary) -> St
 	for enemy in targets:
 		if not (enemy is Dictionary):
 			continue
-		if SpellRules.has_effect_id(enemy, battle, STATUS_HARRIED):
+		if SpellRulesScript.has_effect_id(enemy, battle, STATUS_HARRIED):
 			var finisher = _first_stack_with_any_ability(battle, "player", ["backstab", "bloodrush", "shielding"])
 			if not finisher.is_empty():
 				return "%s is harried; %s can cash that mark once contact holds." % [
 					_stack_label(enemy),
 					_stack_label(finisher),
 				]
-		if SpellRules.has_effect_id(enemy, battle, STATUS_STAGGERED):
+		if SpellRulesScript.has_effect_id(enemy, battle, STATUS_STAGGERED):
 			var punisher = _first_stack_with_any_ability(battle, "player", ["formation_guard", "reach", "brace"])
 			if not punisher.is_empty():
 				return "%s is staggered; %s can punish the slowed window on the next grounded trade." % [
@@ -1058,7 +1058,7 @@ static func _support_followup_line(battle: Dictionary, target: Dictionary) -> St
 	return ""
 
 static func _protection_need_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary
@@ -1083,7 +1083,7 @@ static func _protection_need_line(
 				_stack_label(protected_stack),
 				String(defend_surface.get("summary", "Defend and hold the line.")),
 			]
-	if SpellRules.has_any_effect_ids(protected_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if SpellRulesScript.has_any_effect_ids(protected_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		return "%s is already pressured and there is no authored cleanse in the current spellbook; blunt %s before the burst lands." % [
 			_stack_label(protected_stack),
 			threat_label,
@@ -1104,7 +1104,7 @@ static func _priority_friendly_protection_stack(battle: Dictionary) -> Dictionar
 		threat_stack = _next_enemy_reply_stack(battle)
 	var threatened_target_id = ""
 	if not threat_stack.is_empty():
-		var threat_action = BattleAiRules.choose_enemy_action(
+		var threat_action = BattleAiRulesScript.choose_enemy_action(
 			battle,
 			threat_stack,
 			battle.get("enemy_hero", {})
@@ -1122,7 +1122,7 @@ static func _priority_friendly_protection_stack(battle: Dictionary) -> Dictionar
 			score += 1
 		if _stack_is_isolated(battle, stack):
 			score += 2
-		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+		if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 			score += 2
 		if _health_ratio(stack) <= 0.6:
 			score += 2
@@ -1138,7 +1138,7 @@ static func _priority_friendly_protection_stack(battle: Dictionary) -> Dictionar
 	return {}
 
 static func _best_ready_support_spell_action(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary
@@ -1182,13 +1182,13 @@ static func _best_ready_support_spell_action(
 			best_score = score
 	return best
 
-static func _burst_risk_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _burst_risk_line(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var reply_stack = get_active_stack(battle)
 	if reply_stack.is_empty() or String(reply_stack.get("side", "")) != "enemy":
 		reply_stack = _next_enemy_reply_stack(battle)
 	if reply_stack.is_empty():
 		return "No hostile reply remains after this exchange."
-	var action = BattleAiRules.choose_enemy_action(
+	var action = BattleAiRulesScript.choose_enemy_action(
 		battle,
 		reply_stack,
 		battle.get("enemy_hero", {})
@@ -1200,7 +1200,7 @@ static func _burst_risk_line(session: SessionStateStore.SessionData, battle: Dic
 	match String(action.get("action", "")):
 		"cast_spell":
 			var spell = ContentService.get_spell(String(action.get("spell_id", "")))
-			var timing_hint = SpellRules.battle_spell_timing_summary(
+			var timing_hint = SpellRulesScript.battle_spell_timing_summary(
 				battle.get("enemy_hero", {}),
 				battle,
 				reply_stack,
@@ -1217,7 +1217,7 @@ static func _burst_risk_line(session: SessionStateStore.SessionData, battle: Dic
 		"strike":
 			if not target.is_empty() and _has_ability(reply_stack, "bloodrush") and _health_ratio(target) <= 0.75:
 				return "%s Bloodrush is live on %s." % [summary, _stack_label(target)]
-			if not target.is_empty() and _has_ability(reply_stack, "backstab") and SpellRules.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+			if not target.is_empty() and _has_ability(reply_stack, "backstab") and SpellRulesScript.has_any_effect_ids(target, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 				return "%s Backstab payoff is live on %s." % [summary, _stack_label(target)]
 			if _has_ability(reply_stack, "brace") and bool(reply_stack.get("defending", false)):
 				return "%s Brace will punish the first stack that overcommits into it." % summary
@@ -1227,7 +1227,7 @@ static func _burst_risk_line(session: SessionStateStore.SessionData, battle: Dic
 	return summary
 
 static func _enemy_spell_threat_line(battle: Dictionary, enemy_stack: Dictionary) -> String:
-	var action = BattleAiRules.choose_enemy_action(
+	var action = BattleAiRulesScript.choose_enemy_action(
 		battle,
 		enemy_stack,
 		battle.get("enemy_hero", {})
@@ -1236,7 +1236,7 @@ static func _enemy_spell_threat_line(battle: Dictionary, enemy_stack: Dictionary
 		return "%s is acting now; no enemy spell timing window is leading the exchange." % _stack_label(enemy_stack)
 	var spell = ContentService.get_spell(String(action.get("spell_id", "")))
 	var target = _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
-	var timing_hint = SpellRules.battle_spell_timing_summary(
+	var timing_hint = SpellRulesScript.battle_spell_timing_summary(
 		battle.get("enemy_hero", {}),
 		battle,
 		enemy_stack,
@@ -1279,7 +1279,7 @@ static func _preferred_player_action_id(surface: Dictionary, active_stack: Dicti
 	return ""
 
 static func _focused_order_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	surface: Dictionary,
 	active_stack: Dictionary,
@@ -1295,7 +1295,7 @@ static func _focused_order_line(
 	return _trade_window_line(session, battle, surface, active_stack, target)
 
 static func _trade_window_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	surface: Dictionary,
 	active_stack: Dictionary,
@@ -1316,7 +1316,7 @@ static func _trade_window_line(
 	return "No clean trade is available until the initiative changes."
 
 static func _command_tools_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target: Dictionary
@@ -1333,7 +1333,7 @@ static func _command_tools_line(
 	return "No live spell or ability edge is opening beyond the base exchange."
 
 static func _objective_pull_line(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	battle: Dictionary,
 	surface: Dictionary,
 	active_stack: Dictionary,
@@ -1359,17 +1359,17 @@ static func _objective_pull_line(
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var encounter_objective = _encounter_objective_for_battle(session, battle, scenario)
 	if not encounter_objective.is_empty():
-		return "Clearing this host advances %s." % ScenarioRules._objective_label(session, encounter_objective)
+		return "Clearing this host advances %s." % ScenarioRulesScript._objective_label(session, encounter_objective)
 	var objective_brief = _field_objective_pressure_brief(battle)
 	if objective_brief != "":
 		return objective_brief
 	return "No battlefield objective is pulling harder than the line break."
 
-static func _enemy_reply_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _enemy_reply_line(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var reply_stack = _next_enemy_reply_stack(battle)
 	if reply_stack.is_empty():
 		return "No hostile stack remains to answer the next order."
-	var action = BattleAiRules.choose_enemy_action(
+	var action = BattleAiRulesScript.choose_enemy_action(
 		battle,
 		reply_stack,
 		battle.get("enemy_hero", {})
@@ -1517,7 +1517,7 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 		clauses.append(objective_preview)
 	return "%s." % " | ".join(clauses)
 
-static func _retreat_action_summary(session: SessionStateStore.SessionData) -> String:
+static func _retreat_action_summary(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No battle is active."
 	var battle = session.battle
@@ -1536,7 +1536,7 @@ static func _retreat_action_summary(session: SessionStateStore.SessionData) -> S
 		clauses.append(aftermath_summary)
 	return "%s." % " | ".join(clauses)
 
-static func _surrender_action_summary(session: SessionStateStore.SessionData) -> String:
+static func _surrender_action_summary(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No battle is active."
 	if not bool(session.battle.get("surrender_allowed", true)):
@@ -1555,7 +1555,7 @@ static func _surrender_action_summary(session: SessionStateStore.SessionData) ->
 	return "%s." % " | ".join(clauses)
 
 static func _build_withdrawal_aftermath_preview(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	outcome: String
 ) -> Dictionary:
 	var preview := {
@@ -1622,7 +1622,7 @@ static func _build_withdrawal_aftermath_preview(
 
 	preview["resource_loss"] = _clamped_resource_loss(session, desired_loss)
 	var battle_position = session.battle.get("position", {})
-	var nearest_town_result = OverworldRules._nearest_town_for_controller(
+	var nearest_town_result = OverworldRulesScript._nearest_town_for_controller(
 		session,
 		"player",
 		int(battle_position.get("x", 0)),
@@ -1646,7 +1646,7 @@ static func _withdrawal_preview_summary(preview: Dictionary, outcome: String) ->
 			]
 		)
 	var resource_loss = preview.get("resource_loss", {})
-	var resource_summary = OverworldRules._describe_resource_delta(resource_loss)
+	var resource_summary = OverworldRulesScript._describe_resource_delta(resource_loss)
 	if resource_summary != "":
 		if outcome == "surrender":
 			clauses.append("pay %s to the enemy" % resource_summary)
@@ -1671,7 +1671,7 @@ static func _casualty_units_from_ratio(total_units: int, ratio: float) -> int:
 		casualties = 1
 	return clamp(casualties, 0, total_units - 1)
 
-static func _clamped_resource_loss(session: SessionStateStore.SessionData, desired_loss: Dictionary) -> Dictionary:
+static func _clamped_resource_loss(session: SessionStateStoreScript.SessionData, desired_loss: Dictionary) -> Dictionary:
 	var available = session.overworld.get("resources", {})
 	var loss := {}
 	for resource_key in ["gold", "wood", "ore"]:
@@ -1680,7 +1680,7 @@ static func _clamped_resource_loss(session: SessionStateStore.SessionData, desir
 			loss[resource_key] = amount
 	return loss
 
-static func _battle_enemy_faction_id(session: SessionStateStore.SessionData) -> String:
+static func _battle_enemy_faction_id(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	var context = session.battle.get("context", {})
@@ -1696,7 +1696,7 @@ static func _battle_enemy_faction_id(session: SessionStateStore.SessionData) -> 
 	faction_id = _side_faction_id(session.battle, "enemy")
 	return faction_id if _enemy_state_exists(session, faction_id) else ""
 
-static func _enemy_state_exists(session: SessionStateStore.SessionData, faction_id: String) -> bool:
+static func _enemy_state_exists(session: SessionStateStoreScript.SessionData, faction_id: String) -> bool:
 	if session == null or faction_id == "":
 		return false
 	for state in session.overworld.get("enemy_states", []):
@@ -1704,7 +1704,7 @@ static func _enemy_state_exists(session: SessionStateStore.SessionData, faction_
 			return true
 	return false
 
-static func _battle_enemy_label(session: SessionStateStore.SessionData, faction_id: String) -> String:
+static func _battle_enemy_label(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
 	if faction_id != "":
 		return String(ContentService.get_faction(faction_id).get("name", faction_id))
 	if session == null or session.battle.is_empty():
@@ -1771,13 +1771,13 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 	if _has_ability(stack, "formation_guard"):
 		return "Formation Guard is live if this stack steadies the line and keeps allies covered."
 	if not target.is_empty() and _has_ability(stack, "backstab") and (
-		SpellRules.has_any_effect_ids(target, battle, _ability_by_id(stack, "backstab").get("status_ids", []))
+		SpellRulesScript.has_any_effect_ids(target, battle, _ability_by_id(stack, "backstab").get("status_ids", []))
 		or _health_ratio(target) <= float(_ability_by_id(stack, "backstab").get("health_threshold_ratio", 0.0))
 	):
 		return "Backstab is live on the marked target right now."
 	if not target.is_empty() and _has_ability(stack, "bloodrush") and _health_ratio(target) <= float(_ability_by_id(stack, "bloodrush").get("wounded_threshold_ratio", 0.0)):
 		return "Bloodrush is live on the wounded target and can snowball momentum."
-	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRules.has_effect_id(target, battle, STATUS_HARRIED):
+	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
 		return "Shielding bites harder into a harried target once the line closes."
 	var ability_summary = _stack_ability_summary(stack)
 	return "Abilities in hand: %s." % ability_summary if ability_summary != "" else ""
@@ -1845,7 +1845,7 @@ static func _project_field_objective_state(objective: Dictionary, acting_side: S
 	projection["flipped"] = flipped
 	return projection
 
-static func _should_surface_tactical_briefing(session: SessionStateStore.SessionData) -> bool:
+static func _should_surface_tactical_briefing(session: SessionStateStoreScript.SessionData) -> bool:
 	if session == null or session.battle.is_empty():
 		return false
 	if session.scenario_status != "in_progress":
@@ -1855,7 +1855,7 @@ static func _should_surface_tactical_briefing(session: SessionStateStore.Session
 	var briefing_state = session.battle.get(TACTICAL_BRIEFING_KEY, {})
 	return briefing_state is Dictionary and not bool(briefing_state.get("shown", false))
 
-static func _tactical_briefing_lines(session: SessionStateStore.SessionData) -> Array:
+static func _tactical_briefing_lines(session: SessionStateStoreScript.SessionData) -> Array:
 	var battle = session.battle
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var lines = []
@@ -1882,7 +1882,7 @@ static func _tactical_briefing_lines(session: SessionStateStore.SessionData) -> 
 		lines.append(caution_line)
 	return lines
 
-static func _tactical_battlefield_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _tactical_battlefield_line(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var parts = [
 		String(battle.get("terrain", "plains")).capitalize(),
 		_distance_label(int(battle.get("distance", 1))),
@@ -1897,7 +1897,7 @@ static func _tactical_battlefield_line(session: SessionStateStore.SessionData, b
 		parts.append(_battle_context_label(session, battle.get("context", {})))
 	return "Battlefield: %s" % " | ".join(parts)
 
-static func _tactical_objective_line(session: SessionStateStore.SessionData, battle: Dictionary, scenario: Dictionary) -> String:
+static func _tactical_objective_line(session: SessionStateStoreScript.SessionData, battle: Dictionary, scenario: Dictionary) -> String:
 	if _is_town_defense_context(battle.get("context", {})):
 		var town_name = _town_name_from_placement_id(session, String(battle.get("context", {}).get("town_placement_id", "")))
 		return "Battle aim: Hold %s. A collapse here loses the town and cedes the lane." % (
@@ -1905,10 +1905,10 @@ static func _tactical_objective_line(session: SessionStateStore.SessionData, bat
 		)
 	var encounter_objective = _encounter_objective_for_battle(session, battle, scenario)
 	if not encounter_objective.is_empty():
-		return "Battle aim: %s" % ScenarioRules._objective_label(session, encounter_objective)
+		return "Battle aim: %s" % ScenarioRulesScript._objective_label(session, encounter_objective)
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
-		var victory_labels = ScenarioRules._objective_labels_from_bucket(session, objectives.get("victory", []), 1)
+		var victory_labels = ScenarioRulesScript._objective_labels_from_bucket(session, objectives.get("victory", []), 1)
 		if not victory_labels.is_empty():
 			return "Battle aim: %s" % String(victory_labels[0])
 	return ""
@@ -1927,7 +1927,7 @@ static func _tactical_enemy_doctrine_line(battle: Dictionary) -> String:
 		parts.append("Traits %s" % ", ".join(trait_labels))
 	return "Enemy doctrine: %s" % " | ".join(parts)
 
-static func _tactical_opening_pressure_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _tactical_opening_pressure_line(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var player_totals = _army_totals(battle, "player")
 	var enemy_totals = _army_totals(battle, "enemy")
 	return "Opening pressure: %s | Friendly ranged %d | Enemy ranged %d | Retreat %s" % [
@@ -1946,7 +1946,7 @@ static func _tactical_decisive_target_line(battle: Dictionary) -> String:
 		_priority_target_reason(target, battle),
 	]
 
-static func _tactical_caution_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _tactical_caution_line(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	if _battle_has_tag(battle, "battery_nest") and int(battle.get("distance", 1)) > 0:
 		return "Tactical caution: The approach stays exposed while battery lanes are open; trade shots only if you can win the ranged exchange."
 	if _side_controls_field_objective_type(battle, "enemy", "cover_line") and int(battle.get("distance", 1)) > 0:
@@ -1967,7 +1967,7 @@ static func _tactical_caution_line(session: SessionStateStore.SessionData, battl
 		return "Tactical caution: Retreat is locked on the walls. Preserve disciplined defenders and trade for position, not speed."
 	return ""
 
-static func _risk_readiness_grade(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _risk_readiness_grade(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var severity = 0
 	var stability = 0
 	var player_totals = _army_totals(battle, "player")
@@ -2199,7 +2199,7 @@ static func _risk_board_priority_line(battle: Dictionary) -> String:
 		_priority_target_reason(decisive_target, battle),
 	]
 
-static func _risk_board_objective_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _risk_board_objective_line(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var summary = _field_objective_urgency_summary(session, battle)
 	return summary if summary != "" else "break the opposing line before the clock turns."
 
@@ -2234,7 +2234,7 @@ static func _steady_stack_count(battle: Dictionary, side: String) -> int:
 static func _wavering_stack_count(battle: Dictionary, side: String) -> int:
 	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
-		if _stack_cohesion_total(stack, battle) <= 4 or _stack_is_isolated(battle, stack) or SpellRules.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
+		if _stack_cohesion_total(stack, battle) <= 4 or _stack_is_isolated(battle, stack) or SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
 			total += 1
 	return total
 
@@ -2254,7 +2254,7 @@ static func _weakest_stack_by_cohesion(battle: Dictionary, side: String) -> Dict
 		var score = _stack_cohesion_total(stack, battle)
 		if _stack_is_isolated(battle, stack):
 			score -= 1
-		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
+		if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
 			score -= 1
 		if weakest.is_empty() or score < weakest_score:
 			weakest = stack
@@ -2270,7 +2270,7 @@ static func _weakest_stack_by_role(battle: Dictionary, side: String, prefer_rang
 		var score = _stack_cohesion_total(stack, battle)
 		if _stack_is_isolated(battle, stack):
 			score -= 1
-		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
+		if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
 			score -= 1
 		if weakest.is_empty() or score < weakest_score:
 			weakest = stack
@@ -2313,7 +2313,7 @@ static func _battle_trait_labels(traits: Array) -> Array:
 			break
 	return labels
 
-static func _encounter_objective_for_battle(session: SessionStateStore.SessionData, battle: Dictionary, scenario: Dictionary) -> Dictionary:
+static func _encounter_objective_for_battle(session: SessionStateStoreScript.SessionData, battle: Dictionary, scenario: Dictionary) -> Dictionary:
 	if scenario.is_empty():
 		return {}
 	var encounter_placement = _current_battle_encounter_placement(session)
@@ -2329,7 +2329,7 @@ static func _encounter_objective_for_battle(session: SessionStateStore.SessionDa
 				return objective
 	return {}
 
-static func _current_battle_encounter_placement(session: SessionStateStore.SessionData) -> Dictionary:
+static func _current_battle_encounter_placement(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {}
 	return _find_encounter_by_key(session, String(session.battle.get("resolved_key", ""))).get("encounter", {})
@@ -2380,7 +2380,7 @@ static func _priority_target_reason(stack: Dictionary, battle: Dictionary) -> St
 		return "it will act early and pressure the first exchange"
 	return "breaking it will soften the enemy line before reserves matter"
 
-static func get_action_surface(session: SessionStateStore.SessionData) -> Dictionary:
+static func get_action_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var surface = {}
 	if session == null or session.battle.is_empty():
 		return surface
@@ -2436,13 +2436,13 @@ static func get_action_surface(session: SessionStateStore.SessionData) -> Dictio
 	}
 	return surface
 
-static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: String) -> Dictionary:
+static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
 	var active_stack = get_active_stack(session.battle)
 	var target_stack = get_selected_target(session.battle)
-	var resolution = SpellRules.resolve_battle_spell(
+	var resolution = SpellRulesScript.resolve_battle_spell(
 		_player_commander_state(session),
 		session.battle,
 		active_stack,
@@ -2455,7 +2455,7 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 	session.battle["player_commander_state"] = resolution.get("hero", _player_commander_state(session))
 	session.battle["player_hero"] = _hero_payload_from_state(
 		_player_commander_state(session),
-		ArtifactRules.aggregate_bonuses(_player_commander_state(session)),
+		ArtifactRulesScript.aggregate_bonuses(_player_commander_state(session)),
 		session,
 		"player"
 	)
@@ -2512,7 +2512,7 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 
 	return _complete_action(session, message)
 
-static func perform_player_action(session: SessionStateStore.SessionData, action: String) -> Dictionary:
+static func perform_player_action(session: SessionStateStoreScript.SessionData, action: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
@@ -2609,7 +2609,7 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 	}
 
 static func _resolve_attack_action(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	attacker: Dictionary,
 	target: Dictionary,
 	is_ranged: bool
@@ -2686,7 +2686,7 @@ static func _resolve_attack_action(
 
 	return _complete_action(session, " ".join(messages))
 
-static func _complete_action(session: SessionStateStore.SessionData, initial_message: String) -> Dictionary:
+static func _complete_action(session: SessionStateStoreScript.SessionData, initial_message: String) -> Dictionary:
 	var messages = [initial_message]
 	_record_event(session.battle, initial_message)
 	var outcome = _evaluate_outcome(session)
@@ -2731,7 +2731,7 @@ static func advance_turn(battle: Dictionary) -> void:
 		battle["active_stack_id"] = next_id
 	_assign_default_target(battle)
 
-static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack: Dictionary) -> Dictionary:
+static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active_stack: Dictionary) -> Dictionary:
 	if active_stack.is_empty():
 		return {"ok": false, "message": "", "state": "invalid"}
 
@@ -2744,7 +2744,7 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 			"state": String(defeat_result.get("state", "defeat")),
 		}
 
-	var action = BattleAiRules.choose_enemy_action(
+	var action = BattleAiRulesScript.choose_enemy_action(
 		session.battle,
 		active_stack,
 		session.battle.get("enemy_hero", {})
@@ -2823,9 +2823,9 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 				return _complete_enemy_action(session, fallback_advance_message)
 			return _resolve_ai_attack(session, active_stack, fallback, false)
 
-static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
+static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
 	var target = _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
-	var resolution = SpellRules.resolve_battle_spell(
+	var resolution = SpellRulesScript.resolve_battle_spell(
 		session.battle.get("enemy_hero", {}),
 		session.battle,
 		active_stack,
@@ -2891,7 +2891,7 @@ static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_sta
 
 	return _complete_enemy_action(session, message)
 
-static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker: Dictionary, target: Dictionary, is_ranged: bool) -> Dictionary:
+static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, attacker: Dictionary, target: Dictionary, is_ranged: bool) -> Dictionary:
 	if target.is_empty():
 		return {"ok": false, "message": "", "state": "invalid"}
 	var rng = RandomNumberGenerator.new()
@@ -2952,7 +2952,7 @@ static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker:
 
 	return _complete_enemy_action(session, " ".join(messages))
 
-static func _complete_enemy_action(session: SessionStateStore.SessionData, message: String) -> Dictionary:
+static func _complete_enemy_action(session: SessionStateStoreScript.SessionData, message: String) -> Dictionary:
 	var outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) != "":
 		return {
@@ -2970,7 +2970,7 @@ static func _complete_enemy_action(session: SessionStateStore.SessionData, messa
 		}
 	return {"ok": true, "message": message, "state": "continue"}
 
-static func _evaluate_outcome(session: SessionStateStore.SessionData) -> Dictionary:
+static func _evaluate_outcome(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var player_alive = not _alive_stacks_for_side(session.battle, "player").is_empty()
 	var enemy_alive = not _alive_stacks_for_side(session.battle, "enemy").is_empty()
 	if not enemy_alive and player_alive:
@@ -2981,7 +2981,7 @@ static func _evaluate_outcome(session: SessionStateStore.SessionData) -> Diction
 		return _finalize_stalemate(session)
 	return {"state": "", "message": ""}
 
-static func _finalize_victory(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var messages = []
 	var base_summary := _apply_battle_context_victory(session)
 	if base_summary == "":
@@ -2990,9 +2990,9 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
 	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var rewards = DifficultyRules.scale_reward_resources(session, encounter.get("rewards", {}))
-	OverworldRules._add_resources(session, rewards)
-	var reward_summary = OverworldRules._describe_resource_delta(rewards)
+	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	OverworldRulesScript._add_resources(session, rewards)
+	var reward_summary = OverworldRulesScript._describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Battle rewards %s." % reward_summary)
 	var experience_amount = max(0, int(rewards.get("experience", 0)))
@@ -3005,8 +3005,8 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 	_append_nonempty_message(messages, String(front_result.get("summary", "")))
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "victory"))
 	_sync_enemy_force_from_battle(session, true)
-	HeroCommandRules.commit_active_hero(session)
-	OverworldRules.refresh_fog_of_war(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 
 	var victory_flags = encounter.get("victory_flags", [])
 	if victory_flags is Array:
@@ -3025,29 +3025,29 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 		}
 	)
 	session.battle = {}
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "victory", "message": final_message}
 
-static func _finalize_player_battle_loss(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_player_battle_loss(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return _finalize_town_defense_loss(session)
-	if HeroCommandRules.active_hero_is_primary(session):
+	if HeroCommandRulesScript.active_hero_is_primary(session):
 		return _finalize_primary_defeat(session)
 	return _finalize_secondary_hero_defeat(session)
 
 static func _finalize_primary_defeat(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	base_summary: String = "The field army collapses and the primary commander is defeated.",
 	outcome_id: String = "defeat"
 ) -> Dictionary:
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
 	var delivery_summary: String = _apply_delivery_route_aftermath(session, outcome_id)
-	OverworldRules.refresh_fog_of_war(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = outcome_id
 	session.flags["campaign"] = "defeat"
 	if session.scenario_status == "in_progress":
@@ -3056,14 +3056,14 @@ static func _finalize_primary_defeat(
 			session.scenario_summary = "The primary commander is defeated."
 	_record_battle_aftermath(session, outcome_id, base_summary)
 	session.battle = {}
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	var final_message = _join_messages([base_summary, delivery_summary, String(scenario_result.get("message", ""))])
 	return {"state": "defeat", "message": final_message}
 
-static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	_sync_enemy_force_from_battle(session, false)
 	var delivery_summary: String = _apply_delivery_route_aftermath(session, "hero_defeat")
-	var removal = HeroCommandRules.remove_active_hero_after_defeat(session)
+	var removal = HeroCommandRulesScript.remove_active_hero_after_defeat(session)
 	session.flags["last_battle_outcome"] = "hero_defeat"
 	var messages = [String(removal.get("message", "A commander falls in battle."))]
 	_append_nonempty_message(messages, delivery_summary)
@@ -3072,15 +3072,15 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionDa
 		messages.append("%s takes command." % next_active_name)
 	_record_battle_aftermath(session, "hero_defeat", String(messages[0]))
 	session.battle = {}
-	OverworldRules.refresh_fog_of_war(session)
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "hero_defeat", "message": final_message}
 
-static func _finalize_retreat(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
 	var base_summary := "The army withdraws from battle."
@@ -3090,19 +3090,19 @@ static func _finalize_retreat(session: SessionStateStore.SessionData) -> Diction
 	var aftermath := _apply_withdrawal_aftermath(session, "retreat")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "retreat"))
-	HeroCommandRules.commit_active_hero(session)
-	OverworldRules.refresh_fog_of_war(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "retreat"
 	_record_battle_aftermath(session, "retreat", base_summary, aftermath)
 	session.battle = {}
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"ok": true, "message": final_message, "state": "retreat"}
 
-static func _finalize_surrender(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_surrender(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot surrender the walls mid-assault.", "state": "invalid"}
 	var base_summary := "The commander lowers the banners and yields the field."
@@ -3112,19 +3112,19 @@ static func _finalize_surrender(session: SessionStateStore.SessionData) -> Dicti
 	var aftermath := _apply_withdrawal_aftermath(session, "surrender")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "surrender"))
-	HeroCommandRules.commit_active_hero(session)
-	OverworldRules.refresh_fog_of_war(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "surrender"
 	_record_battle_aftermath(session, "surrender", base_summary, aftermath)
 	session.battle = {}
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"ok": true, "message": final_message, "state": "surrender"}
 
-static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var messages = []
 	var base_summary := _apply_battle_context_stalemate(session)
 	if base_summary == "":
@@ -3133,19 +3133,19 @@ static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dicti
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "stalemate"))
-	HeroCommandRules.commit_active_hero(session)
-	OverworldRules.refresh_fog_of_war(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "stalemate"
 	_record_battle_aftermath(session, "stalemate", base_summary)
 	session.battle = {}
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "stalemate", "message": final_message}
 
-static func _apply_victory_front_aftermath(session: SessionStateStore.SessionData) -> Dictionary:
+static func _apply_victory_front_aftermath(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"summary": ""}
 	var faction_id := _battle_enemy_faction_id(session)
@@ -3158,7 +3158,7 @@ static func _apply_victory_front_aftermath(session: SessionStateStore.SessionDat
 	var pressure_summary := _apply_front_pressure_shift(session, faction_id, pressure_delta, "victory")
 	return {"summary": pressure_summary}
 
-static func _apply_withdrawal_aftermath(session: SessionStateStore.SessionData, outcome: String) -> Dictionary:
+static func _apply_withdrawal_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> Dictionary:
 	var preview := _build_withdrawal_aftermath_preview(session, outcome)
 	var resource_summary := ""
 	var army_summary := ""
@@ -3166,7 +3166,7 @@ static func _apply_withdrawal_aftermath(session: SessionStateStore.SessionData, 
 	var recovery_summary := ""
 	var resource_loss = preview.get("resource_loss", {})
 	if resource_loss is Dictionary and not resource_loss.is_empty():
-		OverworldRules._spend_resources(session, resource_loss)
+		OverworldRulesScript._spend_resources(session, resource_loss)
 		_add_enemy_treasury_resources(session, String(preview.get("enemy_faction_id", "")), resource_loss)
 		resource_summary = _withdrawal_resource_summary(outcome, resource_loss, String(preview.get("enemy_label", "The enemy")))
 	army_summary = _apply_active_hero_aftermath_losses(session, int(preview.get("casualty_units", 0)), outcome)
@@ -3198,7 +3198,7 @@ static func _apply_withdrawal_aftermath(session: SessionStateStore.SessionData, 
 	}
 
 static func _withdrawal_resource_summary(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
-	var resource_summary = OverworldRules._describe_resource_delta(resource_loss)
+	var resource_summary = OverworldRulesScript._describe_resource_delta(resource_loss)
 	if resource_summary == "":
 		return ""
 	if outcome == "surrender":
@@ -3208,7 +3208,7 @@ static func _withdrawal_resource_summary(outcome: String, resource_loss: Diction
 	return "The withdrawal abandons %s on the road." % resource_summary
 
 static func _apply_active_hero_aftermath_losses(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	unit_losses: int,
 	outcome: String
 ) -> String:
@@ -3216,7 +3216,7 @@ static func _apply_active_hero_aftermath_losses(
 	var hero_id := String(commander_source.get("hero_id", session.overworld.get("active_hero_id", "")))
 	if hero_id == "":
 		return ""
-	var hero = HeroCommandRules.hero_by_id(session, hero_id)
+	var hero = HeroCommandRulesScript.hero_by_id(session, hero_id)
 	if hero.is_empty():
 		return ""
 	var army: Dictionary = hero.get("army", {}).duplicate(true) if hero.get("army", {}) is Dictionary else {}
@@ -3284,7 +3284,7 @@ static func _remove_units_from_stacks(stacks: Array, unit_losses: int) -> int:
 	return applied
 
 static func _apply_front_pressure_shift(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	delta: int,
 	outcome: String
@@ -3298,7 +3298,7 @@ static func _apply_front_pressure_shift(
 		return "%s front pressure rises by %d after %s." % [faction_name, applied, reason]
 	return "%s front pressure drops by %d after the field is secured." % [faction_name, abs(applied)]
 
-static func _adjust_enemy_pressure(session: SessionStateStore.SessionData, faction_id: String, delta: int) -> int:
+static func _adjust_enemy_pressure(session: SessionStateStoreScript.SessionData, faction_id: String, delta: int) -> int:
 	if session == null or faction_id == "" or delta == 0:
 		return 0
 	var states = session.overworld.get("enemy_states", [])
@@ -3317,7 +3317,7 @@ static func _adjust_enemy_pressure(session: SessionStateStore.SessionData, facti
 	return 0
 
 static func _add_enemy_treasury_resources(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	faction_id: String,
 	delta: Dictionary
 ) -> void:
@@ -3339,7 +3339,7 @@ static func _add_enemy_treasury_resources(
 		return
 
 static func _apply_withdrawal_recovery_pressure(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	town_placement_id: String,
 	pressure: int,
 	outcome: String
@@ -3347,10 +3347,10 @@ static func _apply_withdrawal_recovery_pressure(
 	if town_placement_id == "" or pressure <= 0:
 		return ""
 	var source := "surrender column" if outcome == "surrender" else "scattered survivors"
-	return OverworldRules.apply_town_recovery_pressure(session, town_placement_id, pressure, source)
+	return OverworldRulesScript.apply_town_recovery_pressure(session, town_placement_id, pressure, source)
 
 static func _record_battle_aftermath(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	outcome: String,
 	summary: String,
 	details: Dictionary = {}
@@ -3475,7 +3475,7 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		var stack = stacks[index]
 		if not (stack is Dictionary):
 			continue
-		stack = SpellRules.purge_expired_stack_effects(stack, round_number)
+		stack = SpellRulesScript.purge_expired_stack_effects(stack, round_number)
 		stack["defending"] = false
 		stack["retaliations_left"] = int(stack.get("retaliations", 1))
 		stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
@@ -3787,7 +3787,7 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 		var stack = stacks[index]
 		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
 			continue
-		stack = SpellRules.normalize_stack_effects(stack)
+		stack = SpellRulesScript.normalize_stack_effects(stack)
 		var effects = stack.get("effects", [])
 		var effect_id = String(effect_payload.get("effect_id", ""))
 		var kind = String(effect_payload.get("kind", ""))
@@ -3865,7 +3865,7 @@ static func _apply_retaliation_ability_effects(
 	return messages
 
 static func _status_effect_from_ability(ability: Dictionary, battle: Dictionary) -> Dictionary:
-	return SpellRules.build_battle_effect(
+	return SpellRulesScript.build_battle_effect(
 		String(ability.get("status_id", "")),
 		String(ability.get("status_label", "Status")),
 		ability.get("modifiers", {}),
@@ -3893,7 +3893,7 @@ static func _ability_damage_modifier(
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 
 	var backstab = _ability_by_id(attacker, "backstab")
-	if not backstab.is_empty() and SpellRules.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
+	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
 		modifier *= float(backstab.get("damage_multiplier", 1.0))
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
@@ -3901,13 +3901,13 @@ static func _ability_damage_modifier(
 	var volley = _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
 		modifier *= float(volley.get("damage_multiplier", 1.0))
-	if is_ranged and not volley.is_empty() and SpellRules.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
+	if is_ranged and not volley.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
 		modifier *= float(volley.get("status_damage_multiplier", 1.0))
 	if is_ranged and not volley.is_empty() and _side_defending_count(battle, String(attacker.get("side", ""))) > 0:
 		modifier *= float(volley.get("ally_defending_multiplier", 1.0))
 
 	var formation_guard = _ability_by_id(attacker, "formation_guard")
-	if not formation_guard.is_empty() and SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
+	if not formation_guard.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 		modifier *= float(formation_guard.get("staggered_damage_multiplier", 1.0))
 
 	var harry = _ability_by_id(attacker, "harry")
@@ -3917,7 +3917,7 @@ static func _ability_damage_modifier(
 	var bloodrush = _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
-	if not bloodrush.is_empty() and SpellRules.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
+	if not bloodrush.is_empty() and SpellRulesScript.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
 		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
 
 	var shielding = _ability_by_id(defender, "shielding")
@@ -3926,7 +3926,7 @@ static func _ability_damage_modifier(
 	var attacking_shielding = _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
-	if not is_ranged and not attacking_shielding.is_empty() and SpellRules.has_effect_id(defender, battle, STATUS_HARRIED):
+	if not is_ranged and not attacking_shielding.is_empty() and SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
 		modifier *= float(attacking_shielding.get("harried_damage_multiplier", 1.0))
 
 	return modifier
@@ -3954,7 +3954,7 @@ static func _faction_damage_modifier(
 						"ally_ranged_damage_multiplier",
 						1.0
 					)
-			if SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 				modifier *= 1.08
 			if int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side):
 				modifier *= 1.06 if _side_has_ability(battle, side, "formation_guard") else 1.04
@@ -3962,7 +3962,7 @@ static func _faction_damage_modifier(
 			var wounded_count = _enemy_wounded_count(battle, side)
 			if wounded_count > 0:
 				modifier *= 1.0 + (float(min(wounded_count, 3)) * 0.04)
-			if SpellRules.has_effect_id(defender, battle, STATUS_HARRIED):
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED):
 				modifier *= 1.08
 			if not is_ranged and int(battle.get("round", 1)) >= 3 and attack_distance <= 0:
 				modifier *= 1.0 + (float(min(wounded_count, 2)) * 0.03)
@@ -3974,7 +3974,7 @@ static func _faction_damage_modifier(
 					modifier *= 1.04
 			if positive_effect_count >= 2:
 				modifier *= 1.0 + (float(min(positive_effect_count, 3)) * 0.03)
-			if SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
+			if SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED):
 				modifier *= 1.05
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
 				modifier *= 1.04
@@ -4006,7 +4006,7 @@ static func _terrain_tag_damage_modifier(
 		_has_ability(attacker, "harry")
 		or _has_ability(attacker, "backstab")
 		or _has_ability(attacker, "bloodrush")
-		or SpellRules.has_effect_id(defender, battle, STATUS_HARRIED)
+		or SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED)
 	):
 		modifier *= 1.08
 	if _battle_has_tag(battle, "fog_bank") and is_ranged and attack_distance > 0:
@@ -4028,8 +4028,8 @@ static func _commander_damage_modifier(
 		modifier *= 1.05
 	if _hero_has_trait(battle, side, "packhunter") and (
 		_health_ratio(defender) <= 0.75
-		or SpellRules.has_effect_id(defender, battle, STATUS_HARRIED)
-		or SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED)
+		or SpellRulesScript.has_effect_id(defender, battle, STATUS_HARRIED)
+		or SpellRulesScript.has_effect_id(defender, battle, STATUS_STAGGERED)
 	):
 		modifier *= 1.06
 	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (
@@ -4266,7 +4266,7 @@ static func _stack_ability_summary(stack: Dictionary) -> String:
 				names.append(name)
 	return ", ".join(names)
 
-static func _sync_player_force_from_battle(session: SessionStateStore.SessionData) -> void:
+static func _sync_player_force_from_battle(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	var context = session.battle.get("context", {})
@@ -4316,7 +4316,7 @@ static func _sync_player_force_from_battle(session: SessionStateStore.SessionDat
 	)
 	session.overworld["army"] = army
 
-static func _sync_enemy_force_from_battle(session: SessionStateStore.SessionData, encounter_resolved: bool) -> void:
+static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.SessionData, encounter_resolved: bool) -> void:
 	if session == null or session.battle.is_empty():
 		return
 	var encounter_result = _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
@@ -4341,7 +4341,7 @@ static func _sync_enemy_force_from_battle(session: SessionStateStore.SessionData
 	if encounter_resolved:
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
-static func _battle_survivor_stacks(session: SessionStateStore.SessionData, side: String, filters: Dictionary = {}) -> Array:
+static func _battle_survivor_stacks(session: SessionStateStoreScript.SessionData, side: String, filters: Dictionary = {}) -> Array:
 	var survivors = []
 	for stack in session.battle.get("stacks", []):
 		if not (stack is Dictionary):
@@ -4362,23 +4362,23 @@ static func _battle_survivor_stacks(session: SessionStateStore.SessionData, side
 		survivors.append({"unit_id": String(stack.get("unit_id", "")), "count": count})
 	return survivors
 
-static func _award_commander_experience(session: SessionStateStore.SessionData, amount: int) -> Array:
+static func _award_commander_experience(session: SessionStateStoreScript.SessionData, amount: int) -> Array:
 	if amount <= 0 or session == null or session.battle.is_empty():
 		return []
 	var commander_source = session.battle.get("player_commander_source", {})
 	if String(commander_source.get("type", "")) not in ["active_hero", "town_hero"]:
 		return []
-	var result = HeroProgressionRules.add_experience(_player_commander_state(session), amount)
+	var result = HeroProgressionRulesScript.add_experience(_player_commander_state(session), amount)
 	session.battle["player_commander_state"] = result.get("hero", _player_commander_state(session))
 	session.battle["player_hero"] = _hero_payload_from_state(
 		session.battle.get("player_commander_state", {}),
-		ArtifactRules.aggregate_bonuses(session.battle.get("player_commander_state", {})),
+		ArtifactRulesScript.aggregate_bonuses(session.battle.get("player_commander_state", {})),
 		session,
 		"player"
 	)
 	return result.get("messages", [])
 
-static func _apply_battle_context_victory(session: SessionStateStore.SessionData) -> String:
+static func _apply_battle_context_victory(session: SessionStateStoreScript.SessionData) -> String:
 	var context = session.battle.get("context", {})
 	if not _is_town_defense_context(context):
 		return ""
@@ -4390,7 +4390,7 @@ static func _apply_battle_context_victory(session: SessionStateStore.SessionData
 		message = "%s %s" % [message, recovery_message]
 	return message
 
-static func _apply_battle_context_stalemate(session: SessionStateStore.SessionData) -> String:
+static func _apply_battle_context_stalemate(session: SessionStateStoreScript.SessionData) -> String:
 	var context = session.battle.get("context", {})
 	if not _is_town_defense_context(context):
 		return ""
@@ -4401,7 +4401,7 @@ static func _apply_battle_context_stalemate(session: SessionStateStore.SessionDa
 		message = "%s %s" % [message, recovery_message]
 	return message
 
-static func _apply_delivery_route_aftermath(session: SessionStateStore.SessionData, outcome: String) -> String:
+static func _apply_delivery_route_aftermath(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
 	if session == null or session.battle.is_empty():
 		return ""
 	if bool(session.battle.get("delivery_outcome_applied", false)):
@@ -4411,9 +4411,9 @@ static func _apply_delivery_route_aftermath(session: SessionStateStore.SessionDa
 	if node_placement_id == "":
 		return ""
 	session.battle["delivery_outcome_applied"] = true
-	return String(OverworldRules.apply_delivery_interception_outcome(session, node_placement_id, outcome).get("summary", ""))
+	return String(OverworldRulesScript.apply_delivery_interception_outcome(session, node_placement_id, outcome).get("summary", ""))
 
-static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) -> Dictionary:
+static func _finalize_town_defense_loss(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var context = session.battle.get("context", {})
 	var messages = []
 	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
@@ -4437,7 +4437,7 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 	_append_nonempty_message(messages, recovery_message)
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "town_lost"))
 
-	var defending_hero = HeroCommandRules.hero_by_id(session, defending_hero_id)
+	var defending_hero = HeroCommandRulesScript.hero_by_id(session, defending_hero_id)
 	if not defending_hero.is_empty():
 		if bool(defending_hero.get("is_primary", false)):
 			var defeat_result = _finalize_primary_defeat(session, "The primary commander is defeated.", "town_lost")
@@ -4459,8 +4459,8 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 		{"recovery_summary": recovery_message}
 	)
 	session.battle = {}
-	OverworldRules.refresh_fog_of_war(session)
-	var scenario_result = ScenarioRules.evaluate_session(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
+	var scenario_result = ScenarioRulesScript.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
@@ -4470,7 +4470,7 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 		"message": final_message,
 	}
 
-static func _apply_town_defense_recovery(session: SessionStateStore.SessionData, outcome: String) -> String:
+static func _apply_town_defense_recovery(session: SessionStateStoreScript.SessionData, outcome: String) -> String:
 	var context = session.battle.get("context", {})
 	if not _is_town_defense_context(context):
 		return ""
@@ -4485,14 +4485,14 @@ static func _apply_town_defense_recovery(session: SessionStateStore.SessionData,
 			source = "battered walls"
 		"loss":
 			source = "breached walls"
-	return OverworldRules.apply_town_recovery_pressure(
+	return OverworldRulesScript.apply_town_recovery_pressure(
 		session,
 		String(context.get("town_placement_id", "")),
 		pressure,
 		source
 	)
 
-static func _town_defense_recovery_pressure(session: SessionStateStore.SessionData, outcome: String) -> int:
+static func _town_defense_recovery_pressure(session: SessionStateStoreScript.SessionData, outcome: String) -> int:
 	if session == null or session.battle.is_empty():
 		return 0
 	var context = session.battle.get("context", {})
@@ -4505,14 +4505,14 @@ static func _town_defense_recovery_pressure(session: SessionStateStore.SessionDa
 		"loss":
 			pressure += 2
 	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
-	match OverworldRules.town_strategic_role(town):
+	match OverworldRulesScript.town_strategic_role(town):
 		"capital":
 			pressure += 1
 		"stronghold":
 			pressure += 1
 	return clamp(pressure, 1, 6)
 
-static func _capture_town_after_assault(session: SessionStateStore.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
+static func _capture_town_after_assault(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
 	var town_result = _find_town_by_placement(session, town_placement_id)
 	if int(town_result.get("index", -1)) < 0:
 		return
@@ -4523,7 +4523,7 @@ static func _capture_town_after_assault(session: SessionStateStore.SessionData, 
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 
-static func _set_player_hero_state(session: SessionStateStore.SessionData, hero_state: Dictionary, hero_id: String) -> void:
+static func _set_player_hero_state(session: SessionStateStoreScript.SessionData, hero_state: Dictionary, hero_id: String) -> void:
 	if session == null or hero_id == "":
 		return
 	var heroes = session.overworld.get("player_heroes", [])
@@ -4541,10 +4541,10 @@ static func _set_player_hero_state(session: SessionStateStore.SessionData, hero_
 		session.overworld["hero_position"] = hero_state.get("position", {}).duplicate(true) if hero_state.get("position", {}) is Dictionary else session.overworld.get("hero_position", {})
 		session.overworld["movement"] = hero_state.get("movement", {}).duplicate(true) if hero_state.get("movement", {}) is Dictionary else session.overworld.get("movement", {})
 
-static func _remove_hero_by_id_after_defeat(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
-	HeroCommandRules.normalize_session(session)
-	HeroCommandRules.commit_active_hero(session)
-	var removed_hero = HeroCommandRules.hero_by_id(session, hero_id)
+static func _remove_hero_by_id_after_defeat(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	HeroCommandRulesScript.normalize_session(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	var removed_hero = HeroCommandRulesScript.hero_by_id(session, hero_id)
 	if removed_hero.is_empty():
 		return {"ok": false, "message": ""}
 	var remaining = []
@@ -4562,13 +4562,13 @@ static func _remove_hero_by_id_after_defeat(session: SessionStateStore.SessionDa
 		if not found and not remaining.is_empty():
 			next_active_id = String(remaining[0].get("id", ""))
 		session.overworld["active_hero_id"] = next_active_id
-		HeroCommandRules._sync_active_hero_mirror(session)
+		HeroCommandRulesScript._sync_active_hero_mirror(session)
 	return {
 		"ok": true,
 		"message": "%s falls defending the town." % String(removed_hero.get("name", "The hero")),
 	}
 
-static func _mark_resolved_encounter(session: SessionStateStore.SessionData, resolved_key: String) -> void:
+static func _mark_resolved_encounter(session: SessionStateStoreScript.SessionData, resolved_key: String) -> void:
 	if session == null or resolved_key == "":
 		return
 	var resolved = session.overworld.get("resolved_encounters", [])
@@ -4578,7 +4578,7 @@ static func _mark_resolved_encounter(session: SessionStateStore.SessionData, res
 		resolved.append(resolved_key)
 	session.overworld["resolved_encounters"] = resolved
 
-static func _set_enemy_siege_progress(session: SessionStateStore.SessionData, faction_id: String, progress: int) -> void:
+static func _set_enemy_siege_progress(session: SessionStateStoreScript.SessionData, faction_id: String, progress: int) -> void:
 	if session == null or faction_id == "":
 		return
 	var states = session.overworld.get("enemy_states", [])
@@ -4632,7 +4632,7 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 
 static func _stack_has_positive_effect(stack: Dictionary, battle: Dictionary) -> bool:
 	var current_round = int(battle.get("round", 1))
-	for effect in SpellRules.active_effects_for_round(stack, current_round):
+	for effect in SpellRulesScript.active_effects_for_round(stack, current_round):
 		var modifiers = effect.get("modifiers", {})
 		if not (modifiers is Dictionary):
 			continue
@@ -4677,7 +4677,7 @@ static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
 			totals["ranged_stacks"] = int(totals.get("ranged_stacks", 0)) + 1
 	return totals
 
-static func _battle_context_label(session: SessionStateStore.SessionData, context: Variant) -> String:
+static func _battle_context_label(session: SessionStateStoreScript.SessionData, context: Variant) -> String:
 	if not (context is Dictionary):
 		return "Field engagement"
 	if _has_delivery_context(context):
@@ -4746,7 +4746,7 @@ static func _commander_role_label(battle: Dictionary, side: String) -> String:
 		_:
 			return "Commander"
 
-static func _pressure_brief(session: SessionStateStore.SessionData) -> String:
+static func _pressure_brief(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No pressure data."
 	var battle = session.battle
@@ -4842,7 +4842,7 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 		])
 	if bool(stack.get("defending", false)):
 		lines.append("Stance: Defending")
-	var effect_summary = SpellRules.effect_summary(stack, battle)
+	var effect_summary = SpellRulesScript.effect_summary(stack, battle)
 	lines.append("Effects: %s" % (effect_summary if effect_summary != "" else "none"))
 	var ability_summary = _stack_ability_summary(stack)
 	if ability_summary != "":
@@ -4855,7 +4855,7 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 static func _stack_attack_total(stack: Dictionary, battle: Dictionary) -> int:
 	return (
 		int(stack.get("attack", 0))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "attack")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "attack")
 		+ _contextual_attack_bonus(stack, battle)
 		+ _cohesion_attack_bonus(_stack_cohesion_total(stack, battle))
 		+ _momentum_attack_bonus(_stack_momentum_total(stack, battle))
@@ -4864,7 +4864,7 @@ static func _stack_attack_total(stack: Dictionary, battle: Dictionary) -> int:
 static func _stack_defense_total(stack: Dictionary, battle: Dictionary) -> int:
 	return (
 		int(stack.get("defense", 0))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "defense")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "defense")
 		+ _contextual_defense_bonus(stack, battle)
 		+ _cohesion_defense_bonus(_stack_cohesion_total(stack, battle))
 	)
@@ -4873,7 +4873,7 @@ static func _stack_initiative_total(stack: Dictionary, battle: Dictionary) -> in
 	var hero_bonus = _hero_payload_for_side(battle, String(stack.get("side", "")))
 	var total = (
 		int(stack.get("initiative", 0))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "initiative")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "initiative")
 		+ _contextual_initiative_bonus(stack, battle)
 		+ _cohesion_initiative_bonus(_stack_cohesion_total(stack, battle))
 		+ _momentum_initiative_bonus(_stack_momentum_total(stack, battle))
@@ -4884,7 +4884,7 @@ static func _stack_initiative_total(stack: Dictionary, battle: Dictionary) -> in
 static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 	var total = (
 		int(stack.get("cohesion", stack.get("cohesion_base", 5)))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "cohesion")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "cohesion")
 		+ _contextual_cohesion_bonus(stack, battle)
 	)
 	return clamp(total, COHESION_MIN, COHESION_MAX)
@@ -4892,7 +4892,7 @@ static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
 	var total = (
 		int(stack.get("momentum", 0))
-		+ SpellRules.effect_bonus_for_kind(stack, battle, "momentum")
+		+ SpellRulesScript.effect_bonus_for_kind(stack, battle, "momentum")
 		+ _contextual_momentum_bonus(stack, battle)
 	)
 	return clamp(total, 0, MOMENTUM_MAX)
@@ -5032,7 +5032,7 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 			bonus += 1
 	if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(stack, battle) and not bool(stack.get("ranged", false)) and round_number >= 3:
 		bonus += 1
-	if SpellRules.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		bonus -= 1
 	var shielding = _ability_by_id(stack, "shielding")
 	if not shielding.is_empty():
@@ -5181,7 +5181,7 @@ static func _apply_round_pressure_shifts(battle: Dictionary) -> void:
 		var round_number = int(battle.get("round", 1))
 		if _stack_is_isolated(battle, stack):
 			_adjust_stack_cohesion(battle, battle_id, -1)
-		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+		if SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 			_adjust_stack_cohesion(battle, battle_id, -1)
 		if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and (bool(stack.get("defending", false)) or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")) and _stack_cohesion_total(stack, battle) < int(stack.get("cohesion_base", 5)) + 1:
 			_adjust_stack_cohesion(battle, battle_id, 1)
@@ -5255,7 +5255,7 @@ static func _apply_damage_pressure(
 	var cohesion_shift = _casualty_cohesion_shift(target_before, target_after)
 	if not target_after.is_empty() and _alive_count(target_after) > 0 and _stack_is_isolated(battle, target_after):
 		cohesion_shift -= 1
-	if not target_after.is_empty() and SpellRules.has_any_effect_ids(target_after, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if not target_after.is_empty() and SpellRulesScript.has_any_effect_ids(target_after, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		cohesion_shift -= 1
 	_adjust_stack_cohesion(battle, target_battle_id, cohesion_shift)
 	var momentum_gain = _attack_momentum_gain(attacker, target_before, target_after, battle, is_ranged, source_type)
@@ -5306,11 +5306,11 @@ static func _attack_momentum_gain(
 		var lost_ratio = clampf(float(max(0, before_health - after_health)) / float(before_health), 0.0, 1.0)
 		if lost_ratio >= 0.25 or _health_ratio(target_after) <= 0.75:
 			gain += 1
-	if SpellRules.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+	if SpellRulesScript.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		gain += 1
 	if _stack_cohesion_total(target_before, battle) <= 4:
 		gain += 1
-	if _hero_has_trait(battle, side, "packhunter") and (_enemy_wounded_count(battle, side) > 0 or SpellRules.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
+	if _hero_has_trait(battle, side, "packhunter") and (_enemy_wounded_count(battle, side) > 0 or SpellRulesScript.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, [STATUS_HARRIED, STATUS_STAGGERED])):
 		gain += 1
 	if _hero_has_trait(battle, side, "vanguard") and not is_ranged and (int(battle.get("round", 1)) <= 2 or _battle_has_tag(battle, "open_lane")):
 		gain += 1
@@ -5321,7 +5321,7 @@ static func _attack_momentum_gain(
 	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(attacker, "harry") or _has_ability(attacker, "backstab") or _has_ability(attacker, "bloodrush")):
 		gain += 1
 	var backstab = _ability_by_id(attacker, "backstab")
-	if not backstab.is_empty() and SpellRules.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, backstab.get("status_ids", [])):
+	if not backstab.is_empty() and SpellRulesScript.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, backstab.get("status_ids", [])):
 		gain += max(0, int(backstab.get("momentum_gain", 0)))
 	var harry = _ability_by_id(attacker, "harry")
 	if not harry.is_empty() and is_ranged:
@@ -5503,19 +5503,19 @@ static func _side_faction_id(battle: Dictionary, side: String) -> String:
 			best_id = String(faction_id)
 	return best_id
 
-static func _hero_command_payload(session: SessionStateStore.SessionData) -> Dictionary:
+static func _hero_command_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var hero = session.overworld.get("hero", {})
-	return _hero_payload_from_state(hero, ArtifactRules.aggregate_bonuses(hero), session, "player")
+	return _hero_payload_from_state(hero, ArtifactRulesScript.aggregate_bonuses(hero), session, "player")
 
 static func _hero_payload_from_state(
 	hero_state: Dictionary,
 	bonuses: Dictionary = {},
-	session: SessionStateStore.SessionData = null,
+	session: SessionStateStoreScript.SessionData = null,
 	side: String = "player"
 ) -> Dictionary:
 	var command = hero_state.get("command", {})
 	var resolved_bonuses = bonuses.duplicate(true) if bonuses is Dictionary else {}
-	var specialty_bonuses = HeroProgressionRules.aggregate_bonuses(hero_state)
+	var specialty_bonuses = HeroProgressionRulesScript.aggregate_bonuses(hero_state)
 	var battle_traits = _normalized_battle_traits(hero_state)
 	resolved_bonuses["battle_attack"] = int(resolved_bonuses.get("battle_attack", 0)) + int(specialty_bonuses.get("battle_attack", 0))
 	resolved_bonuses["battle_defense"] = int(resolved_bonuses.get("battle_defense", 0)) + int(specialty_bonuses.get("battle_defense", 0))
@@ -5524,8 +5524,8 @@ static func _hero_payload_from_state(
 	return {
 		"attack": int(command.get("attack", 0)) + int(resolved_bonuses.get("battle_attack", 0)),
 		"defense": int(command.get("defense", 0)) + int(resolved_bonuses.get("battle_defense", 0)),
-		"initiative": int(resolved_bonuses.get("battle_initiative", 0)) + DifficultyRules.initiative_bonus_for_side(session, side),
-		"damage_multiplier": DifficultyRules.damage_multiplier_for_side(session, side),
+		"initiative": int(resolved_bonuses.get("battle_initiative", 0)) + DifficultyRulesScript.initiative_bonus_for_side(session, side),
+		"damage_multiplier": DifficultyRulesScript.damage_multiplier_for_side(session, side),
 		"mana_current": int(mana.get("current", 0)),
 		"mana_max": int(mana.get("max", 0)),
 		"battle_traits": battle_traits,
@@ -5541,7 +5541,7 @@ static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 	if not (commander is Dictionary) or commander.is_empty():
 		return {}
 	var command = _normalize_command(commander.get("command", {}))
-	return SpellRules.ensure_hero_spellbook(
+	return SpellRulesScript.ensure_hero_spellbook(
 		{
 			"name": String(commander.get("name", "Enemy Commander")),
 			"command": command,
@@ -5561,7 +5561,7 @@ static func _normalize_enemy_hero_state(existing_state: Variant, encounter: Dict
 	normalized["name"] = String(normalized.get("name", template.get("name", "Enemy Commander")))
 	normalized["command"] = _normalize_command(normalized.get("command", template.get("command", {})))
 	normalized["battle_traits"] = _normalized_battle_traits(normalized if normalized.has("battle_traits") else template)
-	return SpellRules.ensure_hero_spellbook(
+	return SpellRulesScript.ensure_hero_spellbook(
 		normalized,
 		{
 			"command": template.get("command", {}),
@@ -5871,7 +5871,7 @@ static func _field_objective_pressure_brief(battle: Dictionary) -> String:
 					return "%s has been turned back on the enemy line." % _field_objective_label(objective)
 	return ""
 
-static func _field_objective_urgency_summary(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
+static func _field_objective_urgency_summary(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
 	var parts = []
 	var urgent = []
 	for objective in _field_objectives(battle):
@@ -6332,13 +6332,13 @@ static func _highest_momentum_stack_for_side(battle: Dictionary, side: String) -
 			best_score = score
 	return best
 
-static func _battle_seed(session: SessionStateStore.SessionData) -> int:
+static func _battle_seed(session: SessionStateStoreScript.SessionData) -> int:
 	var seed = int(session.battle.get("combat_seed", 0))
 	if seed != 0:
 		return seed
 	return hash("%s:%s:%d" % [session.session_id, String(session.battle.get("encounter_id", "")), int(session.battle.get("round", 1))])
 
-static func _battle_state_counter(session: SessionStateStore.SessionData) -> int:
+static func _battle_state_counter(session: SessionStateStoreScript.SessionData) -> int:
 	return hash(JSON.stringify(session.battle))
 
 static func _normalize_recent_events(value: Variant) -> Array:
@@ -6353,7 +6353,7 @@ static func _normalize_recent_events(value: Variant) -> Array:
 				break
 	return events
 
-static func _normalize_tactical_briefing_state(value: Variant, session: SessionStateStore.SessionData) -> Dictionary:
+static func _normalize_tactical_briefing_state(value: Variant, session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var signature = "%s|%s" % [
 		String(session.battle.get("encounter_id", "")),
 		String(session.battle.get("resolved_key", "")),
@@ -6427,7 +6427,7 @@ static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id
 		else "Retal %d/%d" % [int(stack.get("retaliations_left", 0)), int(stack.get("retaliations", 0))]
 	)
 	var ability_summary = _stack_ability_summary(stack)
-	var effect_summary = SpellRules.effect_summary(stack, battle)
+	var effect_summary = SpellRulesScript.effect_summary(stack, battle)
 	var stance = " | Defending" if bool(stack.get("defending", false)) else ""
 	return "%s%s x%d | HP %d | Atk %d Def %d Init %d | %s%s%s%s" % [
 		("[%s] " % ",".join(markers)) if not markers.is_empty() else "",

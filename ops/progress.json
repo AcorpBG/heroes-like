@@ -1,11 +1,11 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T13:15:52Z",
+  "updatedAt": "2026-04-15T13:36:39Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-main-menu-playtest-usability",
-  "currentSliceTitle": "Make the main-menu Play tab genuinely usable for playtesting at the default window size through the existing campaign/skirmish shell",
+  "currentSliceId": "phase-6-overworld-shell-typing-warning-fix",
+  "currentSliceTitle": "Fix the live Godot 4.6.2 warning-as-error parse break in OverworldShell.gd without changing save version behavior",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -876,6 +876,18 @@
       "title": "Re-run repository-local validation, validator bytecode compilation, JSON parsing, SAVE_VERSION verification, and headless Godot boot for the main-menu playtest-usability slice",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-overworld-shell-typing-warning-fix",
+      "title": "Fix the live Godot 4.6.2 warning-as-error parse break in OverworldShell.gd without changing save version behavior",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-overworld-shell-typing-warning-fix-validation",
+      "title": "Re-run repository-local validation, SAVE_VERSION verification, JSON parsing, and headless Godot boot after the OverworldShell typing fix",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1075,6 +1087,8 @@
     "OverworldRules.gd now exposes route-block and holding pressure on current convoy summaries, EnemyAdventureRules.gd now targets live delivery lanes for towns and field heroes, and BattleRules.gd now carries delivery context and aftermath through the existing battle routing instead of adding a separate convoy subsystem.",
     "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding convoy-interception clash coverage while preserving save version 9.",
     "This run made the main-menu Play tab usable at the default 1280x720 window by moving the oversized campaign and skirmish content into per-panel scroll containers, reducing the tallest fixed browser blocks, and keeping the existing campaign or skirmish launch actions reachable without replacing the release-facing shell.",
-    "Repository-local validation, validator bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after the main-menu playtest-usability fix while preserving save version 9."
+    "Repository-local validation, validator bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after the main-menu playtest-usability fix while preserving save version 9.",
+    "This run fixed the live Godot 4.6.2 warning-as-error parse break in OverworldShell.gd by normalizing the in-session save-slot summary to an explicit Dictionary before passing it to SaveService, matching the prior BattleShell hotfix without changing save version behavior.",
+    "Repository-local validation, validator bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after the OverworldShell typing hotfix while preserving save version 9."
   ]
 }

@@ -1,24 +1,24 @@
 class_name ScenarioFactory
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const DifficultyRules = preload("res://scripts/core/DifficultyRules.gd")
-const HeroCommandRules = preload("res://scripts/core/HeroCommandRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
-const EnemyTurnRules = preload("res://scripts/core/EnemyTurnRules.gd")
-const ScenarioScriptRules = preload("res://scripts/core/ScenarioScriptRules.gd")
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
-const SpellRules = preload("res://scripts/core/SpellRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
+const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 static func create_session(
 	scenario_id: String,
 	difficulty: String = "normal",
-	launch_mode: String = SessionStateStore.LAUNCH_MODE_CAMPAIGN
-) -> SessionStateStore.SessionData:
+	launch_mode: String = SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN
+) -> SessionStateStoreScript.SessionData:
 	var scenario := ContentService.get_scenario(scenario_id)
 	if scenario.is_empty():
 		push_error("Unable to build session for missing scenario %s." % scenario_id)
-		return SessionStateStore.new_session_data()
+		return SessionStateStoreScript.new_session_data()
 
 	var hero_id := String(scenario.get("hero_id", ""))
 	if hero_id == "":
@@ -29,9 +29,9 @@ static func create_session(
 	var hero_template := ContentService.get_hero(hero_id)
 	var army_template := ContentService.get_army_group(String(scenario.get("player_army_id", "")))
 	var start := _normalize_position(scenario.get("start", {"x": 0, "y": 0}))
-	var normalized_difficulty: String = DifficultyRules.normalize_difficulty(difficulty)
+	var normalized_difficulty: String = DifficultyRulesScript.normalize_difficulty(difficulty)
 	var player_army_state := _build_army_state(army_template)
-	var hero_state: Dictionary = HeroCommandRules.build_hero_from_template(hero_template, start, player_army_state, normalized_difficulty)
+	var hero_state: Dictionary = HeroCommandRulesScript.build_hero_from_template(hero_template, start, player_army_state, normalized_difficulty)
 	hero_state["is_primary"] = true
 
 	var overworld_state := {
@@ -49,12 +49,12 @@ static func create_session(
 		"resolved_encounters": [],
 		"towns": _build_town_states(scenario.get("towns", [])),
 		"resource_nodes": _build_resource_states(scenario.get("resource_nodes", [])),
-		"artifact_nodes": ArtifactRules.build_artifact_nodes(scenario.get("artifact_nodes", [])),
-		"enemy_states": EnemyTurnRules.build_enemy_states(scenario.get("enemy_factions", [])),
-		"scenario_script_state": ScenarioScriptRules.build_script_state(),
+		"artifact_nodes": ArtifactRulesScript.build_artifact_nodes(scenario.get("artifact_nodes", [])),
+		"enemy_states": EnemyTurnRulesScript.build_enemy_states(scenario.get("enemy_factions", [])),
+		"scenario_script_state": ScenarioScriptRulesScript.build_script_state(),
 	}
 
-	var session := SessionStateStore.new_session_data(
+	var session := SessionStateStoreScript.new_session_data(
 		str(Time.get_ticks_msec()),
 		scenario_id,
 		hero_id,
@@ -71,7 +71,7 @@ static func create_session(
 
 static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
 	var command = hero_template.get("command", {})
-	return HeroProgressionRules.ensure_hero_progression(
+	return HeroProgressionRulesScript.ensure_hero_progression(
 		{
 			"id": String(hero_template.get("id", "")),
 			"name": String(hero_template.get("name", "Wandering Captain")),
@@ -85,8 +85,8 @@ static func _build_hero_state(hero_template: Dictionary) -> Dictionary:
 				"power": int(command.get("power", 0)),
 				"knowledge": int(command.get("knowledge", 0)),
 			},
-			"spellbook": SpellRules.build_spellbook(hero_template),
-			"artifacts": ArtifactRules.normalize_hero_artifacts({}),
+			"spellbook": SpellRulesScript.build_spellbook(hero_template),
+			"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
 			"specialties": [],
 			"battle_traits": hero_template.get("battle_traits", []).duplicate(true) if hero_template.get("battle_traits", []) is Array else [],
 			"pending_specialty_choices": [],

@@ -1,6 +1,6 @@
 extends Node
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 const SAVE_VERSION := 9
 const SUPPORTED_GAME_STATES := ["overworld", "town", "battle"]
@@ -9,10 +9,10 @@ const LAUNCH_MODE_CAMPAIGN := "campaign"
 const LAUNCH_MODE_SKIRMISH := "skirmish"
 const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH]
 
-var active_session: SessionStateStore.SessionData = null
+var active_session: SessionStateStoreScript.SessionData = null
 
 static func normalize_payload(value: Variant) -> Dictionary:
-	var normalized: Dictionary = SessionStateStore.normalize_payload(value)
+	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(value)
 	return {
 		"save_version": max(0, int(normalized.get("save_version", SAVE_VERSION))),
 		"session_id": String(normalized.get("session_id", str(Time.get_ticks_msec()))),
@@ -48,11 +48,11 @@ func _ready() -> void:
 	ensure_active_session()
 
 func reset_session() -> void:
-	active_session = SessionStateStore.new_session_data()
+	active_session = SessionStateStoreScript.new_session_data()
 
-func ensure_active_session() -> SessionStateStore.SessionData:
+func ensure_active_session() -> SessionStateStoreScript.SessionData:
 	if active_session == null:
-		active_session = SessionStateStore.new_session_data()
+		active_session = SessionStateStoreScript.new_session_data()
 	return active_session
 
 func has_playable_session() -> bool:
@@ -61,18 +61,18 @@ func has_playable_session() -> bool:
 func has_battle_state() -> bool:
 	return has_playable_session() and not ensure_active_session().battle.is_empty()
 
-func set_active_session(session: SessionStateStore.SessionData) -> SessionStateStore.SessionData:
+func set_active_session(session: SessionStateStoreScript.SessionData) -> SessionStateStoreScript.SessionData:
 	if session == null:
 		reset_session()
 		return active_session
 	active_session = _normalized_session_copy(session.to_dict())
 	return active_session
 
-func restore_session(payload: Variant) -> SessionStateStore.SessionData:
+func restore_session(payload: Variant) -> SessionStateStoreScript.SessionData:
 	active_session = _normalized_session_copy(payload)
 	return active_session
 
-func duplicate_active_session() -> SessionStateStore.SessionData:
+func duplicate_active_session() -> SessionStateStoreScript.SessionData:
 	return _normalized_session_copy(ensure_active_session().to_dict())
 
 func current_payload() -> Dictionary:
@@ -90,8 +90,8 @@ func is_campaign_session() -> bool:
 func is_skirmish_session() -> bool:
 	return normalize_launch_mode(ensure_active_session().launch_mode) == LAUNCH_MODE_SKIRMISH
 
-func _normalized_session_copy(value: Variant) -> SessionStateStore.SessionData:
-	var session := SessionStateStore.new_session_data()
+func _normalized_session_copy(value: Variant) -> SessionStateStoreScript.SessionData:
+	var session := SessionStateStoreScript.new_session_data()
 	session.from_dict(normalize_payload(value))
 	session.save_version = SAVE_VERSION
 	return session

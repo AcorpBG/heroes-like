@@ -1,15 +1,15 @@
 class_name CampaignRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const ScenarioFactory = preload("res://scripts/core/ScenarioFactory.gd")
-const ScenarioRules = preload("res://scripts/core/ScenarioRules.gd")
-const ScenarioScriptRules = preload("res://scripts/core/ScenarioScriptRules.gd")
-const OverworldRules = preload("res://scripts/core/OverworldRules.gd")
-const HeroCommandRules = preload("res://scripts/core/HeroCommandRules.gd")
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
-const SpellRules = preload("res://scripts/core/SpellRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
+const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
+const ScenarioScriptRulesScript = preload("res://scripts/core/ScenarioScriptRules.gd")
+const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 
 const PROFILE_VERSION := 1
 const RESOURCE_KEYS := ["gold", "wood", "ore"]
@@ -17,20 +17,20 @@ const RESOURCE_KEYS := ["gold", "wood", "ore"]
 static func _scenario_select_rules():
 	return load("res://scripts/core/ScenarioSelectRules.gd")
 
-static func _describe_session_operational_board(session: SessionStateStore.SessionData) -> String:
+static func _describe_session_operational_board(session: SessionStateStoreScript.SessionData) -> String:
 	return load("res://scripts/core/ScenarioRules.gd").describe_session_operational_board(session)
 
-static func _normalize_overworld_state(session: SessionStateStore.SessionData) -> void:
+static func _normalize_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
 	# Validator anchor: OverworldRules.normalize_overworld_state
 	load("res://scripts/core/OverworldRules.gd").normalize_overworld_state(session)
 
-static func _evaluate_scenario_session(session: SessionStateStore.SessionData) -> Dictionary:
+static func _evaluate_scenario_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return load("res://scripts/core/ScenarioRules.gd").evaluate_session(session)
 
-static func _refresh_fog_of_war(session: SessionStateStore.SessionData) -> void:
+static func _refresh_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	load("res://scripts/core/OverworldRules.gd").refresh_fog_of_war(session)
 
-static func _describe_recent_events(session: SessionStateStore.SessionData, limit: int) -> String:
+static func _describe_recent_events(session: SessionStateStoreScript.SessionData, limit: int) -> String:
 	return load("res://scripts/core/ScenarioScriptRules.gd").describe_recent_events(session, limit)
 
 static func build_profile() -> Dictionary:
@@ -424,13 +424,13 @@ static func build_start_action(profile: Dictionary, campaign_id: String) -> Dict
 
 	return build_chapter_action(normalized, campaign_id, scenario_id)
 
-static func campaign_id_for_session(session: SessionStateStore.SessionData) -> String:
+static func campaign_id_for_session(session: SessionStateStoreScript.SessionData) -> String:
 	return _campaign_id_for_session(session)
 
 static func campaign_id_for_session_bridge(session) -> String:
 	return campaign_id_for_session(session)
 
-static func build_outcome_recap(profile: Dictionary, session: SessionStateStore.SessionData) -> Dictionary:
+static func build_outcome_recap(profile: Dictionary, session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var normalized := normalize_profile(profile)
 	var campaign_id := campaign_id_for_session(session)
 	if session == null or session.scenario_id == "" or campaign_id == "":
@@ -533,7 +533,7 @@ static func build_outcome_recap(profile: Dictionary, session: SessionStateStore.
 static func build_outcome_recap_bridge(profile: Dictionary, session) -> Dictionary:
 	return build_outcome_recap(profile, session)
 
-static func build_outcome_actions(profile: Dictionary, session: SessionStateStore.SessionData) -> Array:
+static func build_outcome_actions(profile: Dictionary, session: SessionStateStoreScript.SessionData) -> Array:
 	var normalized := normalize_profile(profile)
 	var campaign_id := campaign_id_for_session(session)
 	if session == null or session.scenario_id == "" or campaign_id == "":
@@ -649,12 +649,12 @@ static func is_scenario_unlocked(profile: Dictionary, campaign_id: String, scena
 
 	return _requirements_met(normalized, campaign_id, scenario_entry.get("unlock_requirements", []))
 
-static func build_session(profile: Dictionary, scenario_id: String, difficulty: String = "normal", campaign_id: String = "") -> SessionStateStore.SessionData:
+static func build_session(profile: Dictionary, scenario_id: String, difficulty: String = "normal", campaign_id: String = "") -> SessionStateStoreScript.SessionData:
 	var normalized := normalize_profile(profile)
-	var session := ScenarioFactory.create_session(
+	var session := ScenarioFactoryScript.create_session(
 		scenario_id,
 		difficulty,
-		SessionStateStore.LAUNCH_MODE_CAMPAIGN
+		SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN
 	)
 	if session.scenario_id == "":
 		return session
@@ -677,7 +677,7 @@ static func build_session(profile: Dictionary, scenario_id: String, difficulty: 
 static func build_session_bridge(profile: Dictionary, scenario_id: String, difficulty: String = "normal", campaign_id: String = ""):
 	return build_session(profile, scenario_id, difficulty, campaign_id)
 
-static func record_session_completion(profile: Dictionary, session: SessionStateStore.SessionData) -> Dictionary:
+static func record_session_completion(profile: Dictionary, session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var normalized := normalize_profile(profile)
 	if session == null or session.scenario_id == "":
 		return normalized
@@ -692,7 +692,7 @@ static func record_session_completion(profile: Dictionary, session: SessionState
 	var scenario_records = state.get("scenario_records", {})
 	var existing_record: Dictionary = scenario_records.get(session.scenario_id, {})
 	var captured_flags := _capture_exported_flags(session, scenario_entry.get("carryover_export", {}))
-	var hero: Dictionary = HeroCommandRules.primary_hero(session)
+	var hero: Dictionary = HeroCommandRulesScript.primary_hero(session)
 
 	var record := {
 		"status": session.scenario_status,
@@ -747,7 +747,7 @@ static func describe_carryover_bundle(bundle: Dictionary) -> String:
 	if spell_ids is Array and not spell_ids.is_empty():
 		parts.append("%d spells" % spell_ids.size())
 
-	var specialties := HeroProgressionRules.brief_summary(bundle.get("hero_progression", {}))
+	var specialties := HeroProgressionRulesScript.brief_summary(bundle.get("hero_progression", {}))
 	if specialties != "" and specialties != "No specialties chosen yet":
 		parts.append(specialties)
 
@@ -817,7 +817,7 @@ static func _normalize_carryover_bundle(value: Variant) -> Dictionary:
 		"resources": {},
 		"hero_progression": {},
 		"spell_ids": [],
-		"artifacts": ArtifactRules.normalize_hero_artifacts({}),
+		"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
 		"flags": {},
 	}
 	if not (value is Dictionary):
@@ -828,15 +828,15 @@ static func _normalize_carryover_bundle(value: Variant) -> Dictionary:
 	bundle["resources"] = _normalize_resource_dict(value.get("resources", {}))
 	bundle["hero_progression"] = _normalize_hero_progression(value.get("hero_progression", {}))
 	bundle["spell_ids"] = _normalize_string_array(value.get("spell_ids", []))
-	bundle["artifacts"] = ArtifactRules.normalize_hero_artifacts(value.get("artifacts", {}))
+	bundle["artifacts"] = ArtifactRulesScript.normalize_hero_artifacts(value.get("artifacts", {}))
 	bundle["flags"] = _normalize_flag_dict(value.get("flags", {}))
 	return bundle
 
 static func _normalize_hero_progression(value: Variant) -> Dictionary:
 	if not (value is Dictionary):
-		return HeroProgressionRules.ensure_hero_progression({})
+		return HeroProgressionRulesScript.ensure_hero_progression({})
 	var command = value.get("command", {})
-	return HeroProgressionRules.ensure_hero_progression(
+	return HeroProgressionRulesScript.ensure_hero_progression(
 		{
 			"level": max(1, int(value.get("level", 1))),
 			"experience": max(0, int(value.get("experience", 0))),
@@ -1014,7 +1014,7 @@ static func _campaign_arc_status_lines(profile: Dictionary, campaign_id: String)
 		lines.append("Latest frontline report: %s." % String(latest_record.get("summary", "")))
 	return lines
 
-static func _campaign_arc_outcome_lines(profile: Dictionary, campaign_id: String, session: SessionStateStore.SessionData) -> Array:
+static func _campaign_arc_outcome_lines(profile: Dictionary, campaign_id: String, session: SessionStateStoreScript.SessionData) -> Array:
 	var campaign := ContentService.get_campaign(campaign_id)
 	if campaign.is_empty():
 		return []
@@ -1076,7 +1076,7 @@ static func _record_snapshot_summary(record: Dictionary) -> String:
 	var artifact_ids = record.get("artifact_ids", [])
 	if artifact_ids is Array and not artifact_ids.is_empty():
 		parts.append("%d relics" % artifact_ids.size())
-	var specialties := HeroProgressionRules.summarize_specialty_ids(record.get("specialties", []))
+	var specialties := HeroProgressionRulesScript.summarize_specialty_ids(record.get("specialties", []))
 	if specialties != "":
 		parts.append(specialties)
 	return " | ".join(parts)
@@ -1085,7 +1085,7 @@ static func _outcome_export_bundle(profile: Dictionary, campaign_id: String, sce
 	var state := get_campaign_state(profile, campaign_id)
 	return _normalize_carryover_bundle(state.get("carryover_bundles", {}).get(scenario_id, {}))
 
-static func _campaign_id_for_session(session: SessionStateStore.SessionData) -> String:
+static func _campaign_id_for_session(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return ""
 	var campaign_id := String(session.flags.get("campaign_id", ""))
@@ -1247,7 +1247,7 @@ static func _chapter_aftermath_text(scenario_entry: Dictionary, scenario_id: Str
 			return objective_text
 	return String(scenario_entry.get("description", "Campaign record updated."))
 
-static func _last_battle_aftermath_text(session: SessionStateStore.SessionData) -> String:
+static func _last_battle_aftermath_text(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return ""
 	var report = session.flags.get("last_battle_aftermath", {})
@@ -1322,8 +1322,8 @@ static func _carryover_bundle_for_node(profile: Dictionary, campaign_id: String,
 	var campaign_state := get_campaign_state(profile, campaign_id)
 	return _normalize_carryover_bundle(campaign_state.get("carryover_bundles", {}).get(source_scenario_id, {}))
 
-static func _build_carryover_bundle(session: SessionStateStore.SessionData, export_config: Variant, captured_flags: Dictionary) -> Dictionary:
-	var hero: Dictionary = HeroCommandRules.primary_hero(session)
+static func _build_carryover_bundle(session: SessionStateStoreScript.SessionData, export_config: Variant, captured_flags: Dictionary) -> Dictionary:
+	var hero: Dictionary = HeroCommandRulesScript.primary_hero(session)
 	var config: Dictionary = export_config if export_config is Dictionary else {}
 	var bundle := {
 		"source_scenario_id": session.scenario_id,
@@ -1332,7 +1332,7 @@ static func _build_carryover_bundle(session: SessionStateStore.SessionData, expo
 		"resources": _capture_carryover_resources(session.overworld.get("resources", {}), config),
 		"hero_progression": {},
 		"spell_ids": [],
-		"artifacts": ArtifactRules.normalize_hero_artifacts({}),
+		"artifacts": ArtifactRulesScript.normalize_hero_artifacts({}),
 		"flags": captured_flags.duplicate(true),
 	}
 	if bool(config.get("retain_hero_progression", true)):
@@ -1349,7 +1349,7 @@ static func _build_carryover_bundle(session: SessionStateStore.SessionData, expo
 	if bool(config.get("retain_spells", true)):
 		bundle["spell_ids"] = _normalize_string_array(hero.get("spellbook", {}).get("known_spell_ids", []))
 	if bool(config.get("retain_artifacts", true)):
-		bundle["artifacts"] = ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {}))
+		bundle["artifacts"] = ArtifactRulesScript.normalize_hero_artifacts(hero.get("artifacts", {}))
 	return _normalize_carryover_bundle(bundle)
 
 static func _capture_carryover_resources(resources: Variant, config: Dictionary) -> Dictionary:
@@ -1367,7 +1367,7 @@ static func _capture_carryover_resources(resources: Variant, config: Dictionary)
 			captured[key] = carried
 	return captured
 
-static func _capture_exported_flags(session: SessionStateStore.SessionData, export_config: Variant) -> Dictionary:
+static func _capture_exported_flags(session: SessionStateStoreScript.SessionData, export_config: Variant) -> Dictionary:
 	var captured := {}
 	if not (export_config is Dictionary):
 		return captured
@@ -1379,15 +1379,15 @@ static func _capture_exported_flags(session: SessionStateStore.SessionData, expo
 			captured[flag_id] = true
 	return captured
 
-static func _apply_carryover(session: SessionStateStore.SessionData, bundle: Dictionary, scenario_entry: Dictionary) -> void:
+static func _apply_carryover(session: SessionStateStoreScript.SessionData, bundle: Dictionary, scenario_entry: Dictionary) -> void:
 	if session == null or bundle.is_empty() or scenario_entry.is_empty():
 		return
 	var import_config = scenario_entry.get("carryover_import", {})
 	if not (import_config is Dictionary):
 		return
 
-	HeroCommandRules.normalize_session(session)
-	var hero: Dictionary = HeroCommandRules.primary_hero(session).duplicate(true)
+	HeroCommandRulesScript.normalize_session(session)
+	var hero: Dictionary = HeroCommandRulesScript.primary_hero(session).duplicate(true)
 	var same_hero := String(bundle.get("hero_id", "")) == "" or String(bundle.get("hero_id", "")) == String(hero.get("id", ""))
 
 	if bool(import_config.get("resources", false)):
@@ -1407,27 +1407,27 @@ static func _apply_carryover(session: SessionStateStore.SessionData, bundle: Dic
 			hero["pending_specialty_choices"] = hero_progression.get("pending_specialty_choices", hero.get("pending_specialty_choices", []))
 
 	if same_hero and bool(import_config.get("spells", false)):
-		var spellbook = SpellRules.ensure_hero_spellbook(hero).get("spellbook", {})
+		var spellbook = SpellRulesScript.ensure_hero_spellbook(hero).get("spellbook", {})
 		spellbook["known_spell_ids"] = _merge_string_arrays(spellbook.get("known_spell_ids", []), bundle.get("spell_ids", []))
 		hero["spellbook"] = spellbook
 
 	if same_hero and bool(import_config.get("artifacts", false)):
-		hero["artifacts"] = ArtifactRules.merge_hero_artifacts(
+		hero["artifacts"] = ArtifactRulesScript.merge_hero_artifacts(
 			hero.get("artifacts", {}),
 			bundle.get("artifacts", {})
 		)
 
-	hero = HeroProgressionRules.ensure_hero_progression(hero)
-	hero = SpellRules.refresh_daily_mana(hero)
-	hero = ArtifactRules.ensure_hero_artifacts(hero)
+	hero = HeroProgressionRulesScript.ensure_hero_progression(hero)
+	hero = SpellRulesScript.refresh_daily_mana(hero)
+	hero = ArtifactRulesScript.ensure_hero_artifacts(hero)
 	session.overworld["active_hero_id"] = String(hero.get("id", session.hero_id))
 	session.overworld["hero"] = hero
 	session.overworld["army"] = hero.get("army", {})
 	session.overworld["hero_position"] = hero.get("position", session.overworld.get("hero_position", {}))
-	var movement_max: int = HeroCommandRules.movement_max_for_hero(hero, session)
+	var movement_max: int = HeroCommandRulesScript.movement_max_for_hero(hero, session)
 	session.overworld["movement"] = {"current": movement_max, "max": movement_max}
-	HeroCommandRules.commit_active_hero(session)
-	HeroCommandRules.normalize_session(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	HeroCommandRulesScript.normalize_session(session)
 	_refresh_fog_of_war(session)
 
 	var prefix := String(import_config.get("flags_prefix", "carryover_"))
@@ -1451,7 +1451,7 @@ static func _merge_command(base_command: Variant, imported_command: Variant) -> 
 	return merged
 
 static func _merge_artifacts(base_artifacts: Variant, imported_artifacts: Variant) -> Dictionary:
-	return ArtifactRules.merge_hero_artifacts(base_artifacts, imported_artifacts)
+	return ArtifactRulesScript.merge_hero_artifacts(base_artifacts, imported_artifacts)
 
 static func _normalize_string_array(value: Variant) -> Array:
 	var normalized := []
@@ -1499,8 +1499,8 @@ static func _describe_resources(value: Variant) -> String:
 
 static func _artifact_ids_from_hero(hero: Dictionary) -> Array:
 	var artifact_ids := []
-	var artifacts = ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {}))
-	for slot in ArtifactRules.EQUIPMENT_SLOTS:
+	var artifacts = ArtifactRulesScript.normalize_hero_artifacts(hero.get("artifacts", {}))
+	for slot in ArtifactRulesScript.EQUIPMENT_SLOTS:
 		var equipped_id := String(artifacts.get("equipped", {}).get(slot, ""))
 		if equipped_id != "" and equipped_id not in artifact_ids:
 			artifact_ids.append(equipped_id)

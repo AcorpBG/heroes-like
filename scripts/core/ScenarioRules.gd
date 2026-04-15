@@ -1,9 +1,9 @@
 class_name ScenarioRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const DifficultyRules = preload("res://scripts/core/DifficultyRules.gd")
-const EnemyAdventureRules = preload("res://scripts/core/EnemyAdventureRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
+const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 
 static func _scenario_script_rules() -> Variant:
 	return load("res://scripts/core/ScenarioScriptRules.gd")
@@ -22,7 +22,7 @@ static func _overworld_rules() -> Variant:
 	# Validator anchors: OverworldRules.describe_hero, OverworldRules.describe_army, OverworldRules.describe_resources
 	return load("res://scripts/core/OverworldRules.gd")
 
-static func normalize_scenario_state(session: SessionStateStore.SessionData) -> void:
+static func normalize_scenario_state(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	if session.scenario_status == "":
@@ -32,7 +32,7 @@ static func normalize_scenario_state(session: SessionStateStore.SessionData) -> 
 	_scenario_script_rules().normalize_script_state(session)
 	_enemy_turn_rules().normalize_enemy_states(session)
 
-static func evaluate_session(session: SessionStateStore.SessionData) -> Dictionary:
+static func evaluate_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_scenario_state(session)
 	if session == null or session.scenario_id == "":
 		return {"status": "invalid", "message": ""}
@@ -71,7 +71,7 @@ static func evaluate_session(session: SessionStateStore.SessionData) -> Dictiona
 	return {"status": "in_progress", "message": script_message}
 
 static func is_objective_met(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	objective_id: String,
 	bucket: String = ""
 ) -> bool:
@@ -79,7 +79,7 @@ static func is_objective_met(
 	return not objective.is_empty() and _objective_met(session, objective)
 
 static func get_objective(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	objective_id: String,
 	bucket: String = ""
 ) -> Dictionary:
@@ -101,7 +101,7 @@ static func get_objective(
 				return objective
 	return {}
 
-static func describe_objectives(session: SessionStateStore.SessionData) -> String:
+static func describe_objectives(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_scenario_state(session)
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
@@ -135,17 +135,17 @@ static func describe_scenario_briefing(scenario_id: String) -> String:
 static func describe_scenario_operational_board(
 	scenario_id: String,
 	difficulty_id: String = "normal",
-	launch_mode: String = SessionStateStore.LAUNCH_MODE_SKIRMISH
+	launch_mode: String = SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
 ) -> String:
 	var normalized_difficulty: String = _scenario_select_rules().normalize_difficulty(difficulty_id)
-	var session: SessionStateStore.SessionData = _scenario_factory().create_session(scenario_id, normalized_difficulty, launch_mode)
+	var session: SessionStateStoreScript.SessionData = _scenario_factory().create_session(scenario_id, normalized_difficulty, launch_mode)
 	if session.scenario_id == "":
 		return "Operational board unavailable."
 	_overworld_rules().normalize_overworld_state(session)
 	normalize_scenario_state(session)
 	return describe_session_operational_board(session)
 
-static func describe_session_operational_board(session: SessionStateStore.SessionData) -> String:
+static func describe_session_operational_board(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.scenario_id == "":
 		return "Operational board unavailable."
 	_overworld_rules().normalize_overworld_state(session)
@@ -170,7 +170,7 @@ static func describe_session_operational_board(session: SessionStateStore.Sessio
 		lines.append(escalation_summary)
 	return "\n".join(lines)
 
-static func build_outcome_model(session: SessionStateStore.SessionData) -> Dictionary:
+static func build_outcome_model(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_scenario_state(session)
 	if session == null or session.scenario_id == "":
 		return {
@@ -190,7 +190,7 @@ static func build_outcome_model(session: SessionStateStore.SessionData) -> Dicti
 
 	_overworld_rules().normalize_overworld_state(session)
 	var scenario := ContentService.get_scenario(session.scenario_id)
-	var launch_mode := SessionStateStore.normalize_launch_mode(session.launch_mode)
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
 	var status_label := String(session.scenario_status).capitalize()
 	var model := {
 		"header": "%s | %s" % [status_label, String(scenario.get("name", session.scenario_id))],
@@ -211,7 +211,7 @@ static func build_outcome_model(session: SessionStateStore.SessionData) -> Dicti
 		"actions": [],
 	}
 
-	if launch_mode == SessionStateStore.LAUNCH_MODE_CAMPAIGN:
+	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		var recap := CampaignProgression.outcome_recap(session)
 		model["progression_summary"] = String(recap.get("progression_summary", ""))
 		model["campaign_arc_summary"] = String(recap.get("campaign_arc_summary", ""))
@@ -233,7 +233,7 @@ static func build_outcome_model(session: SessionStateStore.SessionData) -> Dicti
 		model["actions"] = _build_skirmish_outcome_actions(session)
 	return model
 
-static func perform_outcome_action(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+static func perform_outcome_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if action_id == "" or action_id == "return_to_menu":
 		return {"ok": true, "route": "main_menu", "message": ""}
 
@@ -246,18 +246,18 @@ static func perform_outcome_action(session: SessionStateStore.SessionData, actio
 		return {"ok": true, "route": "overworld", "message": ""}
 
 	if action_id.begins_with("skirmish_start:"):
-		var skirmish_session: SessionStateStore.SessionData = _scenario_select_rules().start_skirmish_session(action_id.trim_prefix("skirmish_start:"), session.difficulty)
+		var skirmish_session: SessionStateStoreScript.SessionData = _scenario_select_rules().start_skirmish_session(action_id.trim_prefix("skirmish_start:"), session.difficulty)
 		if skirmish_session.scenario_id == "":
 			return {"ok": false, "route": "stay", "message": "The requested skirmish could not be started."}
 		return {"ok": true, "route": "overworld", "message": ""}
 
 	return {"ok": false, "route": "stay", "message": "That outcome action is not supported."}
 
-static func _complete_session(session: SessionStateStore.SessionData, status: String, summary: String) -> Dictionary:
+static func _complete_session(session: SessionStateStoreScript.SessionData, status: String, summary: String) -> Dictionary:
 	session.scenario_status = status
 	session.scenario_summary = summary
 	session.flags["campaign"] = status
-	if SessionStateStore.normalize_launch_mode(session.launch_mode) == SessionStateStore.LAUNCH_MODE_CAMPAIGN:
+	if SessionStateStoreScript.normalize_launch_mode(session.launch_mode) == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		CampaignProgression.record_session_completion(session)
 	return {"status": status, "message": summary}
 
@@ -272,7 +272,7 @@ static func _merge_result_messages(result: Dictionary, prefix_message: String) -
 	merged["message"] = " ".join(messages)
 	return merged
 
-static func _build_skirmish_outcome_actions(session: SessionStateStore.SessionData) -> Array:
+static func _build_skirmish_outcome_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	return [
 		{
 			"id": "skirmish_start:%s" % session.scenario_id,
@@ -288,7 +288,7 @@ static func _build_skirmish_outcome_actions(session: SessionStateStore.SessionDa
 		},
 	]
 
-static func _build_skirmish_aftermath_summary(session: SessionStateStore.SessionData, scenario: Dictionary) -> String:
+static func _build_skirmish_aftermath_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	var lines := []
 	var battle_aftermath := _last_battle_aftermath_text(session)
 	if battle_aftermath != "":
@@ -301,7 +301,7 @@ static func _build_skirmish_aftermath_summary(session: SessionStateStore.Session
 		lines.append("Field report: %s." % recent_events)
 	return "\n".join(lines)
 
-static func _last_battle_aftermath_text(session: SessionStateStore.SessionData) -> String:
+static func _last_battle_aftermath_text(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return ""
 	var report = session.flags.get("last_battle_aftermath", {})
@@ -354,7 +354,7 @@ static func _scenario_stakes_text(scenario: Dictionary) -> String:
 			return defeat_text
 	return ""
 
-static func _operational_terrain_summary(session: SessionStateStore.SessionData, scenario: Dictionary) -> String:
+static func _operational_terrain_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	var start: Dictionary = session.overworld.get("hero_position", scenario.get("start", {}))
 	var start_x := int(start.get("x", 0))
 	var start_y := int(start.get("y", 0))
@@ -382,7 +382,7 @@ static func _operational_terrain_summary(session: SessionStateStore.SessionData,
 		", ".join(mix) if not mix.is_empty() else "Unknown ground",
 	]
 
-static func _enemy_operational_lines(session: SessionStateStore.SessionData, scenario: Dictionary) -> Array:
+static func _enemy_operational_lines(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> Array:
 	var lines := []
 	for config in scenario.get("enemy_factions", []):
 		if not (config is Dictionary):
@@ -395,10 +395,10 @@ static func _enemy_operational_lines(session: SessionStateStore.SessionData, sce
 			0,
 			int(config.get("pressure_per_day", 0)) + int(config.get("pressure_per_enemy_town", 0))
 		)
-		var scaled_pressure := DifficultyRules.adjust_enemy_pressure_gain(session, base_pressure)
-		var raid_threshold := DifficultyRules.adjust_raid_threshold(session, max(1, int(config.get("raid_threshold", 1))))
+		var scaled_pressure := DifficultyRulesScript.adjust_enemy_pressure_gain(session, base_pressure)
+		var raid_threshold := DifficultyRulesScript.adjust_raid_threshold(session, max(1, int(config.get("raid_threshold", 1))))
 		var max_raids: int = max(1, int(config.get("max_active_raids", 1)))
-		var strategy_summary: String = EnemyAdventureRules.public_strategy_summary(config, faction_id)
+		var strategy_summary: String = EnemyAdventureRulesScript.public_strategy_summary(config, faction_id)
 		var line := "Enemy posture: %s | +%d pressure/day | raids at %d | up to %d active raids" % [
 			label,
 			scaled_pressure,
@@ -413,7 +413,7 @@ static func _enemy_operational_lines(session: SessionStateStore.SessionData, sce
 		lines.append(line)
 	return lines
 
-static func _opening_objective_summary(session: SessionStateStore.SessionData, scenario: Dictionary) -> String:
+static func _opening_objective_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return ""
@@ -510,7 +510,7 @@ static func _reinforcement_risk_summary(scenario: Dictionary) -> String:
 		parts.append("captured towns can trigger immediate pushback")
 	return " | ".join(parts)
 
-static func _objective_labels_from_bucket(session: SessionStateStore.SessionData, bucket: Variant, limit: int) -> Array:
+static func _objective_labels_from_bucket(session: SessionStateStoreScript.SessionData, bucket: Variant, limit: int) -> Array:
 	var labels := []
 	if not (bucket is Array):
 		return labels
@@ -599,7 +599,7 @@ static func _titleize_token(value: String) -> String:
 		words[index] = String(words[index]).capitalize()
 	return " ".join(words)
 
-static func _objective_met(session: SessionStateStore.SessionData, objective: Dictionary) -> bool:
+static func _objective_met(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> bool:
 	match String(objective.get("type", "")):
 		"town_owned_by_player":
 			var town := _find_town(session, objective)
@@ -622,7 +622,7 @@ static func _objective_met(session: SessionStateStore.SessionData, objective: Di
 		_:
 			return false
 
-static func _objective_label(session: SessionStateStore.SessionData, objective: Dictionary) -> String:
+static func _objective_label(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> String:
 	var base_label := String(objective.get("label", objective.get("id", "Objective")))
 	match String(objective.get("type", "")):
 		"enemy_pressure_at_least":
@@ -654,7 +654,7 @@ static func _objective_marker(is_victory: bool, met: bool) -> String:
 		return "[x]" if met else "[ ]"
 	return "[!]" if met else "[ ]"
 
-static func _find_town(session: SessionStateStore.SessionData, objective: Dictionary) -> Dictionary:
+static func _find_town(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
 	var placement_id := String(objective.get("placement_id", ""))
 	var town_id := String(objective.get("town_id", ""))
 	for town in session.overworld.get("towns", []):

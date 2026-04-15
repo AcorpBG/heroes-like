@@ -1,6 +1,6 @@
 extends Control
 
-const ScenarioSelectRules = preload("res://scripts/core/ScenarioSelectRules.gd")
+const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 @onready var _summary_label: Label = $VBox/Summary
 @onready var _continue_button: Button = $VBox/ActionRow/Continue
@@ -45,7 +45,7 @@ var _campaign_chapter_entries: Array = []
 var _selected_campaign_scenario_id := ""
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
-var _selected_difficulty: String = ScenarioSelectRules.default_difficulty_id()
+var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
 var _help_entries: Array = []
 var _selected_help_topic_id := ""
 var _syncing_settings_ui := false
@@ -78,7 +78,7 @@ func _refresh_summary() -> void:
 	var lines := []
 	if _menu_notice != "":
 		lines.append(_menu_notice)
-	lines.append(ScenarioSelectRules.build_current_session_summary(SessionState.ensure_active_session()))
+	lines.append(ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session()))
 	lines.append("Campaign progression, expedition saves, and device settings are managed on separate tracks.")
 	_summary_label.text = "\n".join(lines)
 
@@ -111,7 +111,7 @@ func _launch_campaign_action(action: Dictionary) -> void:
 	var campaign_id := String(action.get("campaign_id", _selected_campaign_id))
 	var session := CampaignProgression.start_scenario(
 		scenario_id,
-		ScenarioSelectRules.default_difficulty_id(),
+		ScenarioSelectRulesScript.default_difficulty_id(),
 		campaign_id
 	)
 	if session.scenario_id == "":
@@ -153,13 +153,13 @@ func _on_difficulty_selected(index: int) -> void:
 	if index < 0 or index >= _difficulty_picker.get_item_count():
 		return
 	var metadata = _difficulty_picker.get_item_metadata(index)
-	_selected_difficulty = ScenarioSelectRules.normalize_difficulty(metadata)
+	_selected_difficulty = ScenarioSelectRulesScript.normalize_difficulty(metadata)
 	_refresh_skirmish_setup()
 
 func _on_start_skirmish_pressed() -> void:
 	if _start_skirmish_button.disabled:
 		return
-	var session := ScenarioSelectRules.start_skirmish_session(_selected_skirmish_id, _selected_difficulty)
+	var session := ScenarioSelectRulesScript.start_skirmish_session(_selected_skirmish_id, _selected_difficulty)
 	if session.scenario_id == "":
 		_refresh_menu()
 		return
@@ -433,20 +433,20 @@ func _summary_key(summary: Dictionary) -> String:
 
 func _configure_difficulty_picker() -> void:
 	_difficulty_picker.clear()
-	var options := ScenarioSelectRules.build_difficulty_options(_selected_difficulty)
+	var options := ScenarioSelectRulesScript.build_difficulty_options(_selected_difficulty)
 	var selected_index := -1
 	for index in range(options.size()):
 		var option = options[index]
 		var label := String(option.get("label", option.get("id", "Difficulty")))
 		_difficulty_picker.add_item(label, index)
-		_difficulty_picker.set_item_metadata(index, String(option.get("id", ScenarioSelectRules.default_difficulty_id())))
+		_difficulty_picker.set_item_metadata(index, String(option.get("id", ScenarioSelectRulesScript.default_difficulty_id())))
 		if bool(option.get("selected", false)):
 			selected_index = index
 	if selected_index >= 0:
 		_difficulty_picker.select(selected_index)
 
 func _rebuild_skirmish_browser() -> void:
-	_skirmish_entries = ScenarioSelectRules.build_skirmish_browser_entries()
+	_skirmish_entries = ScenarioSelectRulesScript.build_skirmish_browser_entries()
 	_skirmish_list.clear()
 
 	var selected_index := -1
@@ -468,7 +468,7 @@ func _rebuild_skirmish_browser() -> void:
 
 func _refresh_skirmish_setup() -> void:
 	var selected_entry := _selected_skirmish_entry()
-	_difficulty_summary_label.text = ScenarioSelectRules.difficulty_summary(_selected_difficulty)
+	_difficulty_summary_label.text = ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty)
 
 	if selected_entry.is_empty():
 		_skirmish_details_label.text = "No skirmish scenarios are authored."
@@ -480,7 +480,7 @@ func _refresh_skirmish_setup() -> void:
 		return
 
 	_skirmish_details_label.text = String(selected_entry.get("summary", ""))
-	var setup := ScenarioSelectRules.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
+	var setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	if setup.is_empty():
 		_setup_summary_label.text = "This scenario is not available for skirmish launch."
 		_skirmish_commander_preview_label.text = "Commander preview unavailable for this front."
@@ -489,10 +489,10 @@ func _refresh_skirmish_setup() -> void:
 		_start_skirmish_button.tooltip_text = "This scenario cannot be launched as a skirmish."
 		return
 
-	var recommended_difficulty := String(setup.get("recommended_difficulty", ScenarioSelectRules.default_difficulty_id()))
+	var recommended_difficulty := String(setup.get("recommended_difficulty", ScenarioSelectRulesScript.default_difficulty_id()))
 	if recommended_difficulty != _selected_difficulty:
 		_difficulty_summary_label.text = "%s\nRecommended for this map: %s." % [
-			ScenarioSelectRules.difficulty_summary(_selected_difficulty),
+			ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty),
 			String(setup.get("recommended_difficulty_label", "")),
 		]
 
@@ -503,7 +503,7 @@ func _refresh_skirmish_setup() -> void:
 	_start_skirmish_button.text = "Start Skirmish"
 	_start_skirmish_button.tooltip_text = "Launch %s at %s difficulty." % [
 		String(setup.get("scenario_name", _selected_skirmish_id)),
-		String(setup.get("difficulty_label", ScenarioSelectRules.difficulty_label(_selected_difficulty))),
+		String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty))),
 	]
 
 func _selected_skirmish_entry() -> Dictionary:

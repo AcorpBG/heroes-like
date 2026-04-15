@@ -1,13 +1,13 @@
 class_name EnemyAdventureRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const DifficultyRules = preload("res://scripts/core/DifficultyRules.gd")
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
-static var OverworldRules: Variant = load("res://scripts/core/OverworldRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 
-static func assign_target(session: SessionStateStore.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
+static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	if _raid_target_valid(session, raid):
 		raid = _refresh_target(session, raid)
 	else:
@@ -22,12 +22,12 @@ static func assign_target(session: SessionStateStore.SessionData, config: Dictio
 	return raid
 
 static func advance_raids(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
 	state: Dictionary = {}
 ) -> Dictionary:
-	DifficultyRules.normalize_session(session)
+	DifficultyRulesScript.normalize_session(session)
 	var encounters = session.overworld.get("encounters", [])
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	var total_pillage = {}
@@ -93,9 +93,9 @@ static func advance_raids(
 
 	var actual_losses = _remove_resources(
 		session,
-		HeroProgressionRules.scale_raid_pillage(
+		HeroProgressionRulesScript.scale_raid_pillage(
 			session.overworld.get("hero", {}),
-			DifficultyRules.scale_raid_pillage(session, total_pillage)
+			DifficultyRulesScript.scale_raid_pillage(session, total_pillage)
 		)
 	)
 	if not actual_losses.is_empty():
@@ -106,7 +106,7 @@ static func advance_raids(
 		"state": state,
 	}
 
-static func normalize_raid_armies(session: SessionStateStore.SessionData) -> void:
+static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 	var encounters = session.overworld.get("encounters", [])
@@ -146,7 +146,7 @@ static func _clear_delivery_intercept_target(raid: Dictionary) -> Dictionary:
 	raid["delivery_intercept_label"] = ""
 	return raid
 
-static func choose_target(session: SessionStateStore.SessionData, config: Dictionary, origin: Dictionary) -> Dictionary:
+static func choose_target(session: SessionStateStoreScript.SessionData, config: Dictionary, origin: Dictionary) -> Dictionary:
 	var origin_pos = Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
 	var candidates = _target_candidates(session, config, origin_pos)
 	if candidates.is_empty():
@@ -237,7 +237,7 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 		_:
 			return "Priorities: pressure objectives while contesting frontier assets"
 
-static func target_site_family(session: SessionStateStore.SessionData, target_kind: String, placement_id: String) -> String:
+static func target_site_family(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> String:
 	if target_kind != "resource" or placement_id == "":
 		return ""
 	var resource_result = _find_resource_by_placement(session, placement_id)
@@ -245,7 +245,7 @@ static func target_site_family(session: SessionStateStore.SessionData, target_ki
 		return ""
 	return String(ContentService.get_resource_site(String(resource_result.get("node", {}).get("site_id", ""))).get("family", ""))
 
-static func target_is_objective_anchor(session: SessionStateStore.SessionData, target_kind: String, placement_id: String) -> bool:
+static func target_is_objective_anchor(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> bool:
 	match target_kind:
 		"town":
 			return _town_is_objective_anchor(session, placement_id)
@@ -255,7 +255,7 @@ static func target_is_objective_anchor(session: SessionStateStore.SessionData, t
 		_:
 			return false
 
-static func pressuring_raid_count(session: SessionStateStore.SessionData, faction_id: String, target_placement_id: String) -> int:
+static func pressuring_raid_count(session: SessionStateStoreScript.SessionData, faction_id: String, target_placement_id: String) -> int:
 	var count = 0
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
@@ -267,7 +267,7 @@ static func pressuring_raid_count(session: SessionStateStore.SessionData, factio
 			count += 1
 	return count
 
-static func describe_focus(session: SessionStateStore.SessionData, faction_id: String, public_only: bool = false) -> String:
+static func describe_focus(session: SessionStateStoreScript.SessionData, faction_id: String, public_only: bool = false) -> String:
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	var marching_counts = {}
 	var pressure_counts = {}
@@ -291,7 +291,7 @@ static func describe_focus(session: SessionStateStore.SessionData, faction_id: S
 		parts.append(pressuring)
 	return " | ".join(parts)
 
-static func describe_contestation(session: SessionStateStore.SessionData, faction_id: String, public_only: bool = false) -> String:
+static func describe_contestation(session: SessionStateStoreScript.SessionData, faction_id: String, public_only: bool = false) -> String:
 	var secured_sites = 0
 	var seized_relics = 0
 	var contested_fronts = []
@@ -300,7 +300,7 @@ static func describe_contestation(session: SessionStateStore.SessionData, factio
 			continue
 		if String(node.get("collected_by_faction_id", "")) != faction_id:
 			continue
-		if public_only and not OverworldRules.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
+		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
 			continue
 		secured_sites += 1
 	for node in session.overworld.get("artifact_nodes", []):
@@ -308,17 +308,17 @@ static func describe_contestation(session: SessionStateStore.SessionData, factio
 			continue
 		if String(node.get("collected_by_faction_id", "")) != faction_id:
 			continue
-		if public_only and not OverworldRules.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
+		if public_only and not OverworldRulesScript.is_tile_visible(session, int(node.get("x", -1)), int(node.get("y", -1))):
 			continue
 		seized_relics += 1
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary):
 			continue
-		if OverworldRules.is_encounter_resolved(session, encounter):
+		if OverworldRulesScript.is_encounter_resolved(session, encounter):
 			continue
 		if String(encounter.get("contested_by_faction_id", "")) != faction_id:
 			continue
-		if public_only and not OverworldRules.is_tile_visible(session, int(encounter.get("x", -1)), int(encounter.get("y", -1))):
+		if public_only and not OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", -1)), int(encounter.get("y", -1))):
 			continue
 		var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 		var label = String(encounter_template.get("name", encounter.get("placement_id", "frontier camp")))
@@ -334,7 +334,7 @@ static func describe_contestation(session: SessionStateStore.SessionData, factio
 		parts.append("contests %s" % ", ".join(contested_fronts.slice(0, min(2, contested_fronts.size()))))
 	return " | ".join(parts)
 
-static func visible_raid_count(session: SessionStateStore.SessionData, faction_id: String) -> int:
+static func visible_raid_count(session: SessionStateStoreScript.SessionData, faction_id: String) -> int:
 	var count = 0
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
@@ -385,7 +385,7 @@ static func raid_pillage_weight(encounter: Dictionary) -> int:
 	var current_strength: int = max(1, raid_strength(encounter))
 	return clamp(int(ceili(float(current_strength) / float(base_strength))), 1, 3)
 
-static func _target_candidates(session: SessionStateStore.SessionData, config: Dictionary, origin_pos: Vector2i) -> Array:
+static func _target_candidates(session: SessionStateStoreScript.SessionData, config: Dictionary, origin_pos: Vector2i) -> Array:
 	var seen = {}
 	var candidates = []
 	var faction_id = String(config.get("faction_id", ""))
@@ -460,7 +460,7 @@ static func _target_candidates(session: SessionStateStore.SessionData, config: D
 	return candidates
 
 static func _append_town_candidate(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	candidates: Array,
 	seen: Dictionary,
 	placement_id: String,
@@ -513,7 +513,7 @@ static func _append_town_candidate(
 	)
 
 static func _append_resource_candidate(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	candidates: Array,
 	seen: Dictionary,
 	node: Variant,
@@ -561,7 +561,7 @@ static func _append_resource_candidate(
 	)
 
 static func _append_artifact_candidate(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	candidates: Array,
 	seen: Dictionary,
 	node: Variant,
@@ -585,7 +585,7 @@ static func _append_artifact_candidate(
 		{
 			"target_kind": "artifact",
 			"target_placement_id": placement_id,
-			"target_label": ArtifactRules.describe_artifact(String(node.get("artifact_id", ""))),
+			"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
 			"target_x": goal_tile.x,
 			"target_y": goal_tile.y,
 			"goal_x": goal_tile.x,
@@ -607,7 +607,7 @@ static func _append_artifact_candidate(
 	)
 
 static func _append_encounter_candidate(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	candidates: Array,
 	seen: Dictionary,
 	encounter: Variant,
@@ -620,7 +620,7 @@ static func _append_encounter_candidate(
 		return
 	if String(encounter.get("spawned_by_faction_id", "")) != "":
 		return
-	if OverworldRules.is_encounter_resolved(session, encounter):
+	if OverworldRulesScript.is_encounter_resolved(session, encounter):
 		return
 	var placement_id = String(encounter.get("placement_id", ""))
 	var seen_key = "encounter:%s" % placement_id
@@ -660,7 +660,7 @@ static func _append_encounter_candidate(
 	)
 
 static func _append_delivery_interception_candidates(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	candidates: Array,
 	seen: Dictionary,
 	origin_pos: Vector2i,
@@ -676,7 +676,7 @@ static func _append_delivery_interception_candidates(
 		if placement_id == "" or seen.has(seen_key):
 			continue
 		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
-		var delivery_state: Dictionary = OverworldRules._resource_site_delivery_state(session, node, site)
+		var delivery_state: Dictionary = OverworldRulesScript._resource_site_delivery_state(session, node, site)
 		if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
 			continue
 		seen[seen_key] = true
@@ -691,7 +691,7 @@ static func _append_delivery_interception_candidates(
 					candidates.append(hero_candidate)
 
 static func _delivery_town_candidate(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
@@ -710,9 +710,9 @@ static func _delivery_town_candidate(
 	if goal_distance >= 9999:
 		return {}
 	var goal_tile = _best_goal_tile(session, origin_pos, staging_tiles)
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
-	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
 	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
 	var priority = 210 + int(min(180.0, float(int(delivery_state.get("manifest_value", 0))) / 9.0))
 	priority += int(max(0, 3 - int(delivery_state.get("days_remaining", 0)))) * 24
@@ -753,7 +753,7 @@ static func _delivery_town_candidate(
 	}
 
 static func _delivery_hero_candidate(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
@@ -810,7 +810,7 @@ static func _delivery_hero_candidate(
 	}
 
 static func _hero_target_candidates(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String
@@ -845,12 +845,12 @@ static func _hero_target_candidates(
 			if distance > 6:
 				continue
 			var defense_priority: int = 120 + max(0, (6 - distance) * 10)
-			match OverworldRules.town_strategic_role(town):
+			match OverworldRulesScript.town_strategic_role(town):
 				"capital":
 					defense_priority += 44
 				"stronghold":
 					defense_priority += 24
-			if int(OverworldRules.town_capital_project_state(town, session).get("active", 0)) > 0:
+			if int(OverworldRulesScript.town_capital_project_state(town, session).get("active", 0)) > 0:
 				defense_priority += 24
 			if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 				defense_priority += 28
@@ -874,7 +874,7 @@ static func _hero_target_candidates(
 		)
 	return candidates
 
-static func _find_player_hero(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
 		return {}
 	for hero in session.overworld.get("player_heroes", []):
@@ -886,7 +886,7 @@ static func _player_hero_goal_tile(hero: Dictionary) -> Vector2i:
 	var hero_position: Dictionary = hero.get("position", {})
 	return Vector2i(int(hero_position.get("x", 0)), int(hero_position.get("y", 0)))
 
-static func _hero_position_for_target(session: SessionStateStore.SessionData, hero_id: String) -> Vector2i:
+static func _hero_position_for_target(session: SessionStateStoreScript.SessionData, hero_id: String) -> Vector2i:
 	if hero_id != "":
 		var hero := _find_player_hero(session, hero_id)
 		if not hero.is_empty():
@@ -894,7 +894,7 @@ static func _hero_position_for_target(session: SessionStateStore.SessionData, he
 	var hero_position: Dictionary = session.overworld.get("hero_position", {"x": 0, "y": 0})
 	return Vector2i(int(hero_position.get("x", 0)), int(hero_position.get("y", 0)))
 
-static func _hero_label_for_target(session: SessionStateStore.SessionData, hero_id: String) -> String:
+static func _hero_label_for_target(session: SessionStateStoreScript.SessionData, hero_id: String) -> String:
 	if hero_id != "":
 		var hero := _find_player_hero(session, hero_id)
 		if not hero.is_empty():
@@ -926,19 +926,19 @@ static func _weighted_priority(
 	return max(0, weighted_priority + priority_target_bonus(config, placement_id))
 
 static func _town_strategic_priority_bonus(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	objective_anchor: bool = false
 ) -> int:
 	var bonus = _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
-	match OverworldRules.town_strategic_role(town):
+	match OverworldRulesScript.town_strategic_role(town):
 		"capital":
 			bonus += 80
 		"stronghold":
 			bonus += 45
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
-	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
 	if int(capital_project.get("active", 0)) > 0:
 		bonus += 25 + (int(capital_project.get("pressure_bonus", 0)) * 12)
 	elif int(capital_project.get("total", 0)) > 0:
@@ -952,9 +952,9 @@ static func _town_strategic_priority_bonus(
 		bonus += 20
 	return max(0, bonus)
 
-static func _town_staging_tiles(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func _town_staging_tiles(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var options = []
-	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var town_x = int(town.get("x", 0))
 	var town_y = int(town.get("y", 0))
 	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
@@ -962,16 +962,16 @@ static func _town_staging_tiles(session: SessionStateStore.SessionData, town: Di
 		var ny: int = town_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
 			continue
-		if OverworldRules.tile_is_blocked(session, nx, ny):
+		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
 			continue
 		options.append(Vector2i(nx, ny))
 	if options.is_empty():
 		options.append(Vector2i(town_x, town_y))
 	return options
 
-static func _encounter_staging_tiles(session: SessionStateStore.SessionData, encounter: Dictionary) -> Array:
+static func _encounter_staging_tiles(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
 	var options = []
-	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	var encounter_x = int(encounter.get("x", 0))
 	var encounter_y = int(encounter.get("y", 0))
 	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
@@ -979,14 +979,14 @@ static func _encounter_staging_tiles(session: SessionStateStore.SessionData, enc
 		var ny: int = encounter_y + delta.y
 		if nx < 0 or ny < 0 or nx >= map_size.x or ny >= map_size.y:
 			continue
-		if OverworldRules.tile_is_blocked(session, nx, ny):
+		if OverworldRulesScript.tile_is_blocked(session, nx, ny):
 			continue
 		options.append(Vector2i(nx, ny))
 	if options.is_empty():
 		options.append(Vector2i(encounter_x, encounter_y))
 	return options
 
-static func _resource_target_priority(session: SessionStateStore.SessionData, node: Variant, faction_id: String) -> int:
+static func _resource_target_priority(session: SessionStateStoreScript.SessionData, node: Variant, faction_id: String) -> int:
 	if not (node is Dictionary):
 		return 0
 	var site = ContentService.get_resource_site(String(node.get("site_id", "")))
@@ -1004,13 +1004,13 @@ static func _resource_target_priority(session: SessionStateStore.SessionData, no
 	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
 	return priority
 
-static func _linked_player_town_bonus(session: SessionStateStore.SessionData, node: Dictionary) -> int:
+static func _linked_player_town_bonus(session: SessionStateStoreScript.SessionData, node: Dictionary) -> int:
 	var linked_town = {}
 	var best_distance = 9999
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
-		var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+		var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 		var distance: int = abs(int(node.get("x", 0)) - int(town.get("x", 0))) + abs(int(node.get("y", 0)) - int(town.get("y", 0)))
 		if distance > int(logistics.get("support_radius", 0)):
 			continue
@@ -1020,21 +1020,21 @@ static func _linked_player_town_bonus(session: SessionStateStore.SessionData, no
 	if linked_town.is_empty():
 		return 0
 	var bonus = 0
-	match OverworldRules.town_strategic_role(linked_town):
+	match OverworldRulesScript.town_strategic_role(linked_town):
 		"capital":
 			bonus += 35
 		"stronghold":
 			bonus += 18
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, linked_town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, linked_town)
 	bonus += int(recovery.get("pressure", 0)) * 8
-	var capital_project: Dictionary = OverworldRules.town_capital_project_state(linked_town, session)
+	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(linked_town, session)
 	if bool(capital_project.get("active", false)):
 		bonus += 18
 	if bool(capital_project.get("vulnerable", false)):
 		bonus += 22
 	return bonus
 
-static func _artifact_target_priority(session: SessionStateStore.SessionData, node: Variant) -> int:
+static func _artifact_target_priority(session: SessionStateStoreScript.SessionData, node: Variant) -> int:
 	if not (node is Dictionary) or bool(node.get("collected", false)):
 		return 0
 	var artifact = ContentService.get_artifact(String(node.get("artifact_id", "")))
@@ -1049,10 +1049,10 @@ static func _artifact_target_priority(session: SessionStateStore.SessionData, no
 	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
 	return priority
 
-static func _encounter_target_priority(session: SessionStateStore.SessionData, encounter: Variant) -> int:
+static func _encounter_target_priority(session: SessionStateStoreScript.SessionData, encounter: Variant) -> int:
 	if not (encounter is Dictionary):
 		return 0
-	if String(encounter.get("spawned_by_faction_id", "")) != "" or OverworldRules.is_encounter_resolved(session, encounter):
+	if String(encounter.get("spawned_by_faction_id", "")) != "" or OverworldRulesScript.is_encounter_resolved(session, encounter):
 		return 0
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var priority = 95 + int(min(80, _target_resource_value(encounter_template.get("rewards", {})) / 130))
@@ -1066,7 +1066,7 @@ static func _target_resource_value(rewards: Variant) -> int:
 		return 0
 	return max(0, int(rewards.get("gold", 0))) + (max(0, int(rewards.get("wood", 0))) * 350) + (max(0, int(rewards.get("ore", 0))) * 350) + max(0, int(rewards.get("experience", 0)))
 
-static func _objective_proximity_bonus(session: SessionStateStore.SessionData, x: int, y: int) -> int:
+static func _objective_proximity_bonus(session: SessionStateStoreScript.SessionData, x: int, y: int) -> int:
 	var best_distance = 9999
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
@@ -1095,7 +1095,7 @@ static func _objective_proximity_bonus(session: SessionStateStore.SessionData, x
 		return 10
 	return 0
 
-static func _assignment_penalty(session: SessionStateStore.SessionData, target_kind: String, placement_id: String) -> int:
+static func _assignment_penalty(session: SessionStateStoreScript.SessionData, target_kind: String, placement_id: String) -> int:
 	if placement_id == "":
 		return 0
 	var penalty = 0
@@ -1110,14 +1110,14 @@ static func _assignment_penalty(session: SessionStateStore.SessionData, target_k
 		penalty += 90 if bool(encounter.get("arrived", false)) else 45
 	return penalty
 
-static func _town_started_enemy(session: SessionStateStore.SessionData, placement_id: String) -> bool:
+static func _town_started_enemy(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	for town in scenario.get("towns", []):
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return String(town.get("owner", "neutral")) == "enemy"
 	return false
 
-static func _town_is_objective_anchor(session: SessionStateStore.SessionData, placement_id: String) -> bool:
+static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
@@ -1128,7 +1128,7 @@ static func _town_is_objective_anchor(session: SessionStateStore.SessionData, pl
 				return true
 	return false
 
-static func _encounter_is_objective_anchor(session: SessionStateStore.SessionData, encounter: Dictionary) -> bool:
+static func _encounter_is_objective_anchor(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var victory_flags: Array = encounter_template.get("victory_flags", [])
 	if not (victory_flags is Array) or victory_flags.is_empty():
@@ -1147,7 +1147,7 @@ static func _encounter_is_objective_anchor(session: SessionStateStore.SessionDat
 				return true
 	return false
 
-static func _best_goal_tile(session: SessionStateStore.SessionData, origin_pos: Vector2i, goal_tiles: Array) -> Vector2i:
+static func _best_goal_tile(session: SessionStateStoreScript.SessionData, origin_pos: Vector2i, goal_tiles: Array) -> Vector2i:
 	if goal_tiles.is_empty():
 		return origin_pos
 	var best_tile: Vector2i = goal_tiles[0]
@@ -1162,7 +1162,7 @@ static func _best_goal_tile(session: SessionStateStore.SessionData, origin_pos: 
 	return best_tile
 
 static func _resolve_arrived_target(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
 	faction_id: String
@@ -1178,7 +1178,7 @@ static func _resolve_arrived_target(
 			return {"encounter": raid, "state": state, "event_message": ""}
 
 static func _secure_resource_target(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
 	faction_id: String
@@ -1244,7 +1244,7 @@ static func _secure_resource_target(
 			_raid_name(raid),
 			String(site.get("name", "the site")),
 		]
-	var disruption_message: String = OverworldRules.apply_resource_site_disruption(
+	var disruption_message: String = OverworldRulesScript.apply_resource_site_disruption(
 		session,
 		previous_node,
 		site,
@@ -1256,7 +1256,7 @@ static func _secure_resource_target(
 	return {"encounter": raid, "state": state, "event_message": message}
 
 static func _secure_artifact_target(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
 	faction_id: String
@@ -1288,19 +1288,19 @@ static func _secure_artifact_target(
 		"state": state,
 		"event_message": "%s secures %s for the warhost." % [
 			_raid_name(raid),
-			ArtifactRules.describe_artifact(claimed_artifact_id),
+			ArtifactRulesScript.describe_artifact(claimed_artifact_id),
 		],
 	}
 
 static func _contest_encounter_target(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
 	state: Dictionary,
 	faction_id: String
 ) -> Dictionary:
 	var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
 	var encounter_state = encounter_result.get("encounter", {})
-	if int(encounter_result.get("index", -1)) < 0 or OverworldRules.is_encounter_resolved(session, encounter_state):
+	if int(encounter_result.get("index", -1)) < 0 or OverworldRulesScript.is_encounter_resolved(session, encounter_state):
 		return {"encounter": raid, "state": state, "event_message": ""}
 	if _encounter_is_objective_anchor(session, encounter_state):
 		var encounters = session.overworld.get("encounters", [])
@@ -1378,7 +1378,7 @@ static func _raid_name(raid: Dictionary) -> String:
 	var encounter = ContentService.get_encounter(String(raid.get("encounter_id", raid.get("id", ""))))
 	return String(encounter.get("name", "The raid"))
 
-static func _goal_tiles_from_raid(session: SessionStateStore.SessionData, raid: Dictionary) -> Array:
+static func _goal_tiles_from_raid(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> Array:
 	match String(raid.get("target_kind", "")):
 		"town":
 			var town_result = _find_town_by_placement(session, String(raid.get("target_placement_id", "")))
@@ -1395,7 +1395,7 @@ static func _goal_tiles_from_raid(session: SessionStateStore.SessionData, raid: 
 			return [hero_position]
 	return [Vector2i(int(raid.get("goal_x", int(raid.get("x", 0)))), int(raid.get("goal_y", int(raid.get("y", 0)))))]
 
-static func _next_step_toward(session: SessionStateStore.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> Vector2i:
+static func _next_step_toward(session: SessionStateStoreScript.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> Vector2i:
 	if goal_tiles.is_empty():
 		return start
 	var blocked = _occupied_tiles(session, ignore_placement_id)
@@ -1430,7 +1430,7 @@ static func _next_step_toward(session: SessionStateStore.SessionData, start: Vec
 		cursor = parents[_pos_key(cursor)]
 	return cursor if cursor != start else start
 
-static func _path_distance(session: SessionStateStore.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> int:
+static func _path_distance(session: SessionStateStoreScript.SessionData, start: Vector2i, goal_tiles: Array, ignore_placement_id: String) -> int:
 	if goal_tiles.is_empty():
 		return 9999
 	if start in goal_tiles:
@@ -1457,7 +1457,7 @@ static func _path_distance(session: SessionStateStore.SessionData, start: Vector
 			queue.append({"pos": next, "distance": distance + 1})
 	return 9999
 
-static func _occupied_tiles(session: SessionStateStore.SessionData, ignore_placement_id: String) -> Dictionary:
+static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String) -> Dictionary:
 	var occupied = {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter in session.overworld.get("encounters", []):
@@ -1471,17 +1471,17 @@ static func _occupied_tiles(session: SessionStateStore.SessionData, ignore_place
 		occupied[_pos_key(Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))))] = true
 	return occupied
 
-static func _position_blocked(session: SessionStateStore.SessionData, pos: Vector2i, goal_tiles: Array, blocked: Dictionary) -> bool:
-	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+static func _position_blocked(session: SessionStateStoreScript.SessionData, pos: Vector2i, goal_tiles: Array, blocked: Dictionary) -> bool:
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
 	if pos.x < 0 or pos.y < 0 or pos.x >= map_size.x or pos.y >= map_size.y:
 		return true
 	if pos in goal_tiles:
 		return blocked.has(_pos_key(pos))
-	if OverworldRules.tile_is_blocked(session, pos.x, pos.y):
+	if OverworldRulesScript.tile_is_blocked(session, pos.x, pos.y):
 		return true
 	return blocked.has(_pos_key(pos))
 
-static func _refresh_target(session: SessionStateStore.SessionData, raid: Dictionary) -> Dictionary:
+static func _refresh_target(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> Dictionary:
 	var origin = Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	match String(raid.get("target_kind", "")):
 		"town":
@@ -1510,7 +1510,7 @@ static func _refresh_target(session: SessionStateStore.SessionData, raid: Dictio
 			var artifact_result = _find_artifact_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(artifact_result.get("index", -1)) >= 0:
 				var node = artifact_result.get("node", {})
-				raid["target_label"] = ArtifactRules.describe_artifact(String(node.get("artifact_id", "")))
+				raid["target_label"] = ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", "")))
 				raid["target_x"] = int(node.get("x", 0))
 				raid["target_y"] = int(node.get("y", 0))
 				raid["goal_x"] = int(node.get("x", 0))
@@ -1543,7 +1543,7 @@ static func _refresh_target(session: SessionStateStore.SessionData, raid: Dictio
 				String(raid.get("placement_id", ""))
 			)
 	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
-		var delivery_context: Dictionary = OverworldRules.delivery_interception_context_for_encounter(session, raid)
+		var delivery_context: Dictionary = OverworldRulesScript.delivery_interception_context_for_encounter(session, raid)
 		if bool(delivery_context.get("active", false)):
 			raid["delivery_intercept_target_kind"] = String(delivery_context.get("target_kind", ""))
 			raid["delivery_intercept_target_id"] = String(delivery_context.get("target_id", ""))
@@ -1551,7 +1551,7 @@ static func _refresh_target(session: SessionStateStore.SessionData, raid: Dictio
 			raid["target_label"] = String(delivery_context.get("pressure_label", raid.get("target_label", "")))
 	return raid
 
-static func _raid_target_valid(session: SessionStateStore.SessionData, raid: Dictionary) -> bool:
+static func _raid_target_valid(session: SessionStateStoreScript.SessionData, raid: Dictionary) -> bool:
 	var target_kind = String(raid.get("target_kind", ""))
 	var valid := false
 	match target_kind:
@@ -1570,7 +1570,7 @@ static func _raid_target_valid(session: SessionStateStore.SessionData, raid: Dic
 			valid = int(artifact_result.get("index", -1)) >= 0 and not bool(artifact_result.get("node", {}).get("collected", false))
 		"encounter":
 			var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
-			valid = int(encounter_result.get("index", -1)) >= 0 and not OverworldRules.is_encounter_resolved(session, encounter_result.get("encounter", {}))
+			valid = int(encounter_result.get("index", -1)) >= 0 and not OverworldRulesScript.is_encounter_resolved(session, encounter_result.get("encounter", {}))
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
 			valid = hero_target_id == "" or not _find_player_hero(session, hero_target_id).is_empty()
@@ -1579,7 +1579,7 @@ static func _raid_target_valid(session: SessionStateStore.SessionData, raid: Dic
 	if not valid:
 		return false
 	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
-		return bool(OverworldRules.delivery_interception_context_for_encounter(session, raid).get("active", false))
+		return bool(OverworldRulesScript.delivery_interception_context_for_encounter(session, raid).get("active", false))
 	return true
 
 static func _is_active_raid(encounter: Variant, faction_id: String, resolved_encounters: Variant) -> bool:
@@ -1594,14 +1594,14 @@ static func _is_active_raid(encounter: Variant, faction_id: String, resolved_enc
 	var placement_id = String(encounter.get("placement_id", ""))
 	return not (resolved_encounters is Array and placement_id in resolved_encounters)
 
-static func _find_town_by_placement(session: SessionStateStore.SessionData, placement_id: String) -> Dictionary:
+static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("towns", []).size()):
 		var town = session.overworld.get("towns", [])[index]
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
 
-static func _find_resource_by_placement(session: SessionStateStore.SessionData, placement_id: String) -> Dictionary:
+static func _find_resource_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("resource_nodes", []).size()):
 		var node = session.overworld.get("resource_nodes", [])[index]
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
@@ -1731,14 +1731,14 @@ static func _merge_strategy_dict(base: Dictionary, override: Dictionary) -> Dict
 			merged[String(key)] = value
 	return merged
 
-static func _find_artifact_by_placement(session: SessionStateStore.SessionData, placement_id: String) -> Dictionary:
+static func _find_artifact_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("artifact_nodes", []).size()):
 		var node = session.overworld.get("artifact_nodes", [])[index]
 		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
 			return {"index": index, "node": node}
 	return {"index": -1, "node": {}}
 
-static func _find_encounter_by_placement(session: SessionStateStore.SessionData, placement_id: String) -> Dictionary:
+static func _find_encounter_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("encounters", []).size()):
 		var encounter = session.overworld.get("encounters", [])[index]
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
@@ -1771,7 +1771,7 @@ static func _merge_resources(base: Variant, delta: Variant) -> Dictionary:
 			merged[resource_key] = int(merged.get(resource_key, 0)) + max(0, int(delta[key]))
 	return merged
 
-static func _remove_resources(session: SessionStateStore.SessionData, losses: Variant) -> Dictionary:
+static func _remove_resources(session: SessionStateStoreScript.SessionData, losses: Variant) -> Dictionary:
 	var actual = {}
 	if not (losses is Dictionary) or losses.is_empty():
 		return actual
@@ -1850,7 +1850,7 @@ static func _scale_resources(payload: Variant, multiplier: int) -> Dictionary:
 		scaled[String(key)] = max(0, int(payload[key])) * multiplier
 	return scaled
 
-static func _raid_is_public(session: SessionStateStore.SessionData, encounter: Dictionary) -> bool:
+static func _raid_is_public(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	if session == null:
 		return false
 	if bool(encounter.get("arrived", false)):
@@ -1858,7 +1858,7 @@ static func _raid_is_public(session: SessionStateStore.SessionData, encounter: D
 			var town_result = _find_town_by_placement(session, String(encounter.get("target_placement_id", "")))
 			if int(town_result.get("index", -1)) >= 0 and String(town_result.get("town", {}).get("owner", "neutral")) == "player":
 				return true
-	if OverworldRules.is_tile_visible(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))):
+	if OverworldRulesScript.is_tile_visible(session, int(encounter.get("x", 0)), int(encounter.get("y", 0))):
 		return true
 	return false
 

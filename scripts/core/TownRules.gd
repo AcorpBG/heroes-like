@@ -1,33 +1,33 @@
 class_name TownRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-static var OverworldRules: Variant = load("res://scripts/core/OverworldRules.gd")
-static var HeroCommandRules: Variant = load("res://scripts/core/HeroCommandRules.gd")
-const SpellRules = preload("res://scripts/core/SpellRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
-static var EnemyAdventureRules: Variant = load("res://scripts/core/EnemyAdventureRules.gd")
-static var ScenarioRules: Variant = load("res://scripts/core/ScenarioRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
+static var HeroCommandRulesScript: Variant = load("res://scripts/core/HeroCommandRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+static var EnemyAdventureRulesScript: Variant = load("res://scripts/core/EnemyAdventureRules.gd")
+static var ScenarioRulesScript: Variant = load("res://scripts/core/ScenarioRules.gd")
 
-static func can_visit_active_town(session: SessionStateStore.SessionData) -> bool:
+static func can_visit_active_town(session: SessionStateStoreScript.SessionData) -> bool:
 	var town := get_active_town(session)
 	return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
 
 static func can_visit_active_town_bridge(session) -> bool:
 	return can_visit_active_town(session)
 
-static func get_active_town(session: SessionStateStore.SessionData) -> Dictionary:
+static func get_active_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var result := _find_active_town_result(session)
 	return result.get("town", {})
 
-static func describe_status(session: SessionStateStore.SessionData) -> String:
-	var pos: Vector2i = OverworldRules.hero_position(session)
-	var days_until_growth: int = OverworldRules.days_until_next_weekly_growth(session.day)
+static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
+	var pos: Vector2i = OverworldRulesScript.hero_position(session)
+	var days_until_growth: int = OverworldRulesScript.days_until_next_weekly_growth(session.day)
 	var week := _week_of_day(session.day)
 	var weekday := _weekday_of_day(session.day)
-	var growth_clause := "Weekly muster refreshes today." if OverworldRules.is_weekly_growth_day(session.day) else "Next muster Day %d in %d day%s" % [
-		OverworldRules.next_weekly_growth_day(session.day),
+	var growth_clause := "Weekly muster refreshes today." if OverworldRulesScript.is_weekly_growth_day(session.day) else "Next muster Day %d in %d day%s" % [
+		OverworldRulesScript.next_weekly_growth_day(session.day),
 		days_until_growth,
 		"" if days_until_growth == 1 else "s",
 	]
@@ -39,14 +39,14 @@ static func describe_status(session: SessionStateStore.SessionData) -> String:
 		growth_clause,
 	]
 
-static func describe_header(session: SessionStateStore.SessionData) -> String:
+static func describe_header(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "No town is under command."
 	var template := ContentService.get_town(String(town.get("town_id", "")))
 	var faction := ContentService.get_faction(String(template.get("faction_id", "")))
 	var role_label := ""
-	match OverworldRules.town_strategic_role(town):
+	match OverworldRulesScript.town_strategic_role(town):
 		"capital":
 			role_label = " | Capital Anchor"
 		"stronghold":
@@ -59,28 +59,28 @@ static func describe_header(session: SessionStateStore.SessionData) -> String:
 		current_spell_tier(town),
 	]
 
-static func describe_summary(session: SessionStateStore.SessionData) -> String:
+static func describe_summary(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "No active town."
-	var income := _describe_resources(OverworldRules.town_income(town))
-	var weekly_growth := _describe_recruit_delta(OverworldRules.town_weekly_growth(town, session))
-	var reinforcement_quality: int = OverworldRules.town_reinforcement_quality(town, session)
-	var battle_readiness: int = OverworldRules.town_battle_readiness(town, session)
-	var pressure_output: int = OverworldRules.town_pressure_output(town, session)
+	var income := _describe_resources(OverworldRulesScript.town_income(town))
+	var weekly_growth := _describe_recruit_delta(OverworldRulesScript.town_weekly_growth(town, session))
+	var reinforcement_quality: int = OverworldRulesScript.town_reinforcement_quality(town, session)
+	var battle_readiness: int = OverworldRulesScript.town_battle_readiness(town, session)
+	var pressure_output: int = OverworldRulesScript.town_pressure_output(town, session)
 	var built_buildings = town.get("built_buildings", [])
 	var available_orders := get_build_actions(session).size()
 	var locked_plans := _locked_building_count(town)
 	var spell_tier := current_spell_tier(town)
-	var days_until_growth: int = OverworldRules.days_until_next_weekly_growth(session.day)
-	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
-	var battlefront: Dictionary = OverworldRules.town_battlefront_profile(town)
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
-	var market: Dictionary = OverworldRules.town_market_state(town)
+	var days_until_growth: int = OverworldRulesScript.days_until_next_weekly_growth(session.day)
+	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
+	var battlefront: Dictionary = OverworldRulesScript.town_battlefront_profile(town)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var market: Dictionary = OverworldRulesScript.town_market_state(town)
 	var parts := [
 		"%s" % _town_identity_summary(town),
-		"%s" % OverworldRules.town_strategic_summary(town),
+		"%s" % OverworldRulesScript.town_strategic_summary(town),
 		"Battlefront %s" % String(battlefront.get("summary", "The defenders will meet the assault in ordinary lines.")),
 		"Daily income %s | Spell tier %d | Built works %d" % [
 			income,
@@ -88,7 +88,7 @@ static func describe_summary(session: SessionStateStore.SessionData) -> String:
 			built_buildings.size() if built_buildings is Array else 0,
 		],
 		"Next weekly muster Day %d in %d day%s | Growth %s" % [
-			OverworldRules.next_weekly_growth_day(session.day),
+			OverworldRulesScript.next_weekly_growth_day(session.day),
 			days_until_growth,
 			"" if days_until_growth == 1 else "s",
 			weekly_growth,
@@ -144,20 +144,20 @@ static func describe_summary(session: SessionStateStore.SessionData) -> String:
 		)
 	return "\n".join(parts)
 
-static func describe_outlook_board(session: SessionStateStore.SessionData) -> String:
+static func describe_outlook_board(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Defense Outlook\n- No active town."
 
-	var readiness: int = OverworldRules.town_battle_readiness(town, session)
-	var reinforcement_quality: int = OverworldRules.town_reinforcement_quality(town, session)
-	var pressure_output: int = OverworldRules.town_pressure_output(town, session)
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
-	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
-	var battlefront: Dictionary = OverworldRules.town_battlefront_profile(town)
-	var threat_state: Dictionary = OverworldRules.town_public_threat_state(session, town)
-	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var readiness: int = OverworldRulesScript.town_battle_readiness(town, session)
+	var reinforcement_quality: int = OverworldRulesScript.town_reinforcement_quality(town, session)
+	var pressure_output: int = OverworldRulesScript.town_pressure_output(town, session)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
+	var battlefront: Dictionary = OverworldRulesScript.town_battlefront_profile(town)
+	var threat_state: Dictionary = OverworldRulesScript.town_public_threat_state(session, town)
+	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var reserve_count := _stationed_reserve_count(session, stationed)
 	var response_actions := get_response_actions(session)
 	var ready_response_count := _count_ready_actions(response_actions)
@@ -191,7 +191,7 @@ static func describe_outlook_board(session: SessionStateStore.SessionData) -> St
 	]
 	return "\n".join(lines)
 
-static func describe_command_ledger(session: SessionStateStore.SessionData) -> String:
+static func describe_command_ledger(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Order Ledger\n- No active town."
@@ -204,12 +204,12 @@ static func describe_command_ledger(session: SessionStateStore.SessionData) -> S
 	]
 	return "\n".join(lines)
 
-static func describe_defense(session: SessionStateStore.SessionData) -> String:
+static func describe_defense(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Defense unavailable."
 
-	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var active_hero_value: Variant = session.overworld.get("hero", {})
 	var active_hero: Dictionary = active_hero_value if active_hero_value is Dictionary else {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
@@ -229,13 +229,13 @@ static func describe_defense(session: SessionStateStore.SessionData) -> String:
 			_garrison_headcount(town),
 		],
 		"- Battle readiness %d | Reinforcement %s" % [
-			OverworldRules.town_battle_readiness(town, session),
-			_reinforcement_grade(OverworldRules.town_reinforcement_quality(town, session)),
+			OverworldRulesScript.town_battle_readiness(town, session),
+			_reinforcement_grade(OverworldRulesScript.town_reinforcement_quality(town, session)),
 		],
 		"- Garrison %s" % _describe_garrison(town),
-		"- Logistics %s" % _logistics_watch_summary(OverworldRules.town_logistics_state(session, town)),
+		"- Logistics %s" % _logistics_watch_summary(OverworldRulesScript.town_logistics_state(session, town)),
 	]
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	if bool(recovery.get("active", false)):
 		lines.append("- Recovery %s" % String(recovery.get("summary", "")))
 	if not active_hero.is_empty():
@@ -246,17 +246,17 @@ static func describe_defense(session: SessionStateStore.SessionData) -> String:
 		lines.append("- Reserve commanders %s" % "; ".join(reserve_lines))
 	return "\n".join(lines)
 
-static func describe_threats(session: SessionStateStore.SessionData) -> String:
+static func describe_threats(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Threat watch unavailable."
 
 	var lines := ["Frontier Watch"]
 	var threat_lines := _town_threat_lines(session, town)
-	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
-	var battlefront: Dictionary = OverworldRules.town_battlefront_profile(town)
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
+	var battlefront: Dictionary = OverworldRulesScript.town_battlefront_profile(town)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	if threat_lines.is_empty():
 		lines.append("- No hostile raid hosts are currently aligned on %s." % _town_name(town))
 		lines.append("- The walls hold a %s over the frontier roads." % _defense_grade(town).to_lower())
@@ -286,7 +286,7 @@ static func describe_threats(session: SessionStateStore.SessionData) -> String:
 		lines.append("- Capital watch: %s" % _project_watch_summary(capital_project))
 	return "\n".join(lines)
 
-static func describe_event_feed(session: SessionStateStore.SessionData, last_message: String = "") -> String:
+static func describe_event_feed(session: SessionStateStoreScript.SessionData, last_message: String = "") -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Town Dispatch\n- No active town."
@@ -296,8 +296,8 @@ static func describe_event_feed(session: SessionStateStore.SessionData, last_mes
 	var open_study := get_spell_learning_actions(session).size()
 	var lead_line := "Latest order: %s" % last_message if last_message != "" else "The council chamber awaits fresh orders."
 	var pressure_line := _pressure_brief(session, town)
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var market_actions := get_market_actions(session).size()
 	var response_actions := get_response_actions(session).size()
 	var lines := [
@@ -317,7 +317,7 @@ static func describe_event_feed(session: SessionStateStore.SessionData, last_mes
 		lines.append("- Strategic response orders %d" % response_actions)
 	return "\n".join(lines)
 
-static func describe_buildings(session: SessionStateStore.SessionData) -> String:
+static func describe_buildings(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Buildings unavailable."
@@ -342,7 +342,7 @@ static func describe_buildings(session: SessionStateStore.SessionData) -> String
 		var building_id := String(building_id_value)
 		if building_id == "" or building_id in built_buildings:
 			continue
-		var build_status: Dictionary = OverworldRules.get_town_build_status(town, building_id)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
 		if bool(build_status.get("buildable", false)):
 			continue
 		locked_lines.append("- %s" % _building_line(building_id, "locked", build_status))
@@ -366,18 +366,18 @@ static func describe_buildings(session: SessionStateStore.SessionData) -> String
 		parts.append("\n".join(locked_lines))
 	return "\n".join(parts)
 
-static func describe_recruitment(session: SessionStateStore.SessionData) -> String:
+static func describe_recruitment(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Recruitment unavailable."
 
 	var lines := []
 	var recruits = town.get("available_recruits", {})
-	var weekly_growth: Dictionary = OverworldRules.town_weekly_growth(town, session)
-	var days_until_growth: int = OverworldRules.days_until_next_weekly_growth(session.day)
-	var reinforcement_grade := _reinforcement_grade(OverworldRules.town_reinforcement_quality(town, session))
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var weekly_growth: Dictionary = OverworldRulesScript.town_weekly_growth(town, session)
+	var days_until_growth: int = OverworldRulesScript.days_until_next_weekly_growth(session.day)
+	var reinforcement_grade := _reinforcement_grade(OverworldRulesScript.town_reinforcement_quality(town, session))
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	for unit_id in _town_unit_ids(town):
 		var unit := ContentService.get_unit(unit_id)
 		var available := int(recruits.get(unit_id, 0))
@@ -391,13 +391,13 @@ static func describe_recruitment(session: SessionStateStore.SessionData) -> Stri
 					reserve_label,
 					max(0, growth),
 					" via %s" % growth_sources if growth_sources != "" else "",
-					_describe_resources(OverworldRules.town_recruit_cost(session, town, unit_id)),
+					_describe_resources(OverworldRulesScript.town_recruit_cost(session, town, unit_id)),
 				]
 			)
 			continue
 		var unlock_building_id := _unlock_building_for_unit(town, unit_id)
 		var unlock_building := ContentService.get_building(unlock_building_id)
-		var build_status: Dictionary = OverworldRules.get_town_build_status(town, unlock_building_id)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, unlock_building_id)
 		lines.append(
 			"- %s locked | %s" % [
 				String(unit.get("name", unit_id)),
@@ -410,7 +410,7 @@ static func describe_recruitment(session: SessionStateStore.SessionData) -> Stri
 				]
 			)
 	return "Recruit Reserves\nNext levy Day %d in %d day%s\n%s" % [
-		OverworldRules.next_weekly_growth_day(session.day),
+		OverworldRulesScript.next_weekly_growth_day(session.day),
 		days_until_growth,
 		"" if days_until_growth == 1 else "s",
 		(
@@ -429,13 +429,13 @@ static func describe_recruitment(session: SessionStateStore.SessionData) -> Stri
 		),
 	]
 
-static func describe_market(session: SessionStateStore.SessionData) -> String:
+static func describe_market(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Exchange Hall\n- No active town."
-	return OverworldRules.describe_town_market(session, town)
+	return OverworldRulesScript.describe_town_market(session, town)
 
-static func describe_spell_access(session: SessionStateStore.SessionData) -> String:
+static func describe_spell_access(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Spell study unavailable."
@@ -453,7 +453,7 @@ static func describe_spell_access(session: SessionStateStore.SessionData) -> Str
 		lines.append(
 			"- %s | %s" % [
 				String(spell.get("name", spell_id)),
-				"Known" if SpellRules.knows_spell(hero, spell_id) else "Ready to learn",
+				"Known" if SpellRulesScript.knows_spell(hero, spell_id) else "Ready to learn",
 			]
 		)
 	return "Spell Study\nTier %d archive access\n%s" % [
@@ -461,14 +461,14 @@ static func describe_spell_access(session: SessionStateStore.SessionData) -> Str
 		"\n".join(lines) if not lines.is_empty() else "- No spell leaves are catalogued here",
 	]
 
-static func describe_artifacts(session: SessionStateStore.SessionData) -> String:
-	return ArtifactRules.describe_management(session.overworld.get("hero", {}))
+static func describe_artifacts(session: SessionStateStoreScript.SessionData) -> String:
+	return ArtifactRulesScript.describe_management(session.overworld.get("hero", {}))
 
-static func describe_heroes(session: SessionStateStore.SessionData) -> String:
+static func describe_heroes(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Command\n- No active town."
-	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	var lines := ["Command Wing"]
 	var active_found := false
@@ -493,28 +493,28 @@ static func describe_heroes(session: SessionStateStore.SessionData) -> String:
 		lines.append("- No stationed heroes.")
 	return "\n".join(lines)
 
-static func describe_specialties(session: SessionStateStore.SessionData) -> String:
-	return HeroProgressionRules.describe_specialties(session.overworld.get("hero", {}))
+static func describe_specialties(session: SessionStateStoreScript.SessionData) -> String:
+	return HeroProgressionRulesScript.describe_specialties(session.overworld.get("hero", {}))
 
-static func describe_tavern(session: SessionStateStore.SessionData) -> String:
+static func describe_tavern(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Wayfarers Hall\n- No active town."
-	return HeroCommandRules.describe_tavern(session, town)
+	return HeroCommandRulesScript.describe_tavern(session, town)
 
-static func describe_transfer(session: SessionStateStore.SessionData) -> String:
+static func describe_transfer(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Transfer\n- No active town."
-	return HeroCommandRules.describe_town_transfer(session, town)
+	return HeroCommandRulesScript.describe_town_transfer(session, town)
 
-static func describe_responses(session: SessionStateStore.SessionData) -> String:
+static func describe_responses(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Strategic Response\n- No active town."
-	return OverworldRules.describe_town_response_panel(session, town)
+	return OverworldRulesScript.describe_town_response_panel(session, town)
 
-static func get_build_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_build_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
@@ -523,10 +523,10 @@ static func get_build_actions(session: SessionStateStore.SessionData) -> Array:
 	var resources = session.overworld.get("resources", {})
 	for building_id in _available_building_ids(town):
 		var building := ContentService.get_building(building_id)
-		var build_status: Dictionary = OverworldRules.get_town_build_status(town, building_id)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
 		var cost = building.get("cost", {})
-		var projection: String = OverworldRules.describe_town_build_projection(session, town, building_id)
-		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, cost)
+		var projection: String = OverworldRulesScript.describe_town_build_projection(session, town, building_id)
+		var readiness: Dictionary = OverworldRulesScript.town_cost_readiness(town, resources, cost)
 		var direct_affordable := bool(readiness.get("direct_affordable", false))
 		var market_coverable := bool(readiness.get("market_affordable", false)) and not direct_affordable
 		var market_summary := _market_coverage_line(readiness)
@@ -563,23 +563,23 @@ static func get_build_actions(session: SessionStateStore.SessionData) -> Array:
 		)
 	return actions
 
-static func get_recruit_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_recruit_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
 
 	var actions := []
 	var resources = session.overworld.get("resources", {})
-	for unit_id in OverworldRules.get_town_recruit_options(town):
+	for unit_id in OverworldRulesScript.get_town_recruit_options(town):
 		var unit := ContentService.get_unit(unit_id)
 		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
-		var weekly_growth := int(OverworldRules.town_weekly_growth(town, session).get(unit_id, 0))
-		var unit_cost: Dictionary = OverworldRules.town_recruit_cost(session, town, unit_id)
+		var weekly_growth := int(OverworldRulesScript.town_weekly_growth(town, session).get(unit_id, 0))
+		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
 		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
 		var market_affordable_count := _max_market_affordable_count(town, resources, unit_cost, available)
 		var market_summary := ""
 		if market_affordable_count > direct_affordable_count:
-			var market_readiness: Dictionary = OverworldRules.town_cost_readiness(
+			var market_readiness: Dictionary = OverworldRulesScript.town_cost_readiness(
 				town,
 				resources,
 				_multiply_resource_cost(unit_cost, market_affordable_count)
@@ -587,7 +587,7 @@ static func get_recruit_actions(session: SessionStateStore.SessionData) -> Array
 			market_summary = _market_coverage_line(market_readiness)
 		var shortfall_summary := ""
 		if market_affordable_count <= 0:
-			shortfall_summary = _cost_shortfall_line(OverworldRules.town_cost_readiness(town, resources, unit_cost))
+			shortfall_summary = _cost_shortfall_line(OverworldRulesScript.town_cost_readiness(town, resources, unit_cost))
 		var summary_lines := [
 			"%s x%d | Weekly +%d | Cost %s" % [
 				String(unit.get("name", unit_id)),
@@ -620,37 +620,37 @@ static func get_recruit_actions(session: SessionStateStore.SessionData) -> Array
 		)
 	return actions
 
-static func get_market_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_market_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
-	return OverworldRules.get_town_market_actions(session, town)
+	return OverworldRulesScript.get_town_market_actions(session, town)
 
-static func get_hero_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_hero_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
-	return HeroCommandRules.get_town_switch_actions(session, town)
+	return HeroCommandRulesScript.get_town_switch_actions(session, town)
 
-static func get_tavern_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_tavern_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
-	return HeroCommandRules.get_tavern_actions(session, town)
+	return HeroCommandRulesScript.get_tavern_actions(session, town)
 
-static func get_transfer_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
-	return HeroCommandRules.get_town_transfer_actions(session, town)
+	return HeroCommandRulesScript.get_town_transfer_actions(session, town)
 
-static func get_response_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_response_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
-	return OverworldRules.get_town_response_actions(session, town)
+	return OverworldRulesScript.get_town_response_actions(session, town)
 
-static func get_spell_learning_actions(session: SessionStateStore.SessionData) -> Array:
+static func get_spell_learning_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return []
@@ -658,7 +658,7 @@ static func get_spell_learning_actions(session: SessionStateStore.SessionData) -
 	var actions := []
 	var hero = session.overworld.get("hero", {})
 	for spell_id in accessible_spell_ids(town):
-		if SpellRules.knows_spell(hero, spell_id):
+		if SpellRulesScript.knows_spell(hero, spell_id):
 			continue
 		var spell := ContentService.get_spell(spell_id)
 		if spell.is_empty():
@@ -676,20 +676,20 @@ static func get_spell_learning_actions(session: SessionStateStore.SessionData) -
 		)
 	return actions
 
-static func get_artifact_actions(session: SessionStateStore.SessionData) -> Array:
-	return ArtifactRules.get_management_actions(session.overworld.get("hero", {}))
+static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	return ArtifactRulesScript.get_management_actions(session.overworld.get("hero", {}))
 
-static func get_specialty_actions(session: SessionStateStore.SessionData) -> Array:
-	return HeroProgressionRules.get_choice_actions(session.overworld.get("hero", {}))
+static func get_specialty_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	return HeroProgressionRulesScript.get_choice_actions(session.overworld.get("hero", {}))
 
-static func build_active_town(session: SessionStateStore.SessionData, building_id: String) -> Dictionary:
-	return OverworldRules.build_in_active_town(session, building_id)
+static func build_active_town(session: SessionStateStoreScript.SessionData, building_id: String) -> Dictionary:
+	return OverworldRulesScript.build_in_active_town(session, building_id)
 
-static func switch_active_hero_at_town(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+static func switch_active_hero_at_town(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town is available for command changes."}
-	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var stationed_here := false
 	for hero in stationed:
 		if hero is Dictionary and String(hero.get("id", "")) == hero_id:
@@ -697,48 +697,48 @@ static func switch_active_hero_at_town(session: SessionStateStore.SessionData, h
 			break
 	if not stationed_here:
 		return {"ok": false, "message": "Only heroes stationed in the active town can take command here."}
-	var result: Dictionary = HeroCommandRules.set_active_hero(session, hero_id)
+	var result: Dictionary = HeroCommandRulesScript.set_active_hero(session, hero_id)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Unable to change command."))}
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
-static func recruit_active_town(session: SessionStateStore.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
-	return OverworldRules.recruit_in_active_town(session, unit_id, requested_count)
+static func recruit_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
+	return OverworldRulesScript.recruit_in_active_town(session, unit_id, requested_count)
 
-static func perform_market_action(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+static func perform_market_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town is available for exchange orders."}
-	return OverworldRules.perform_town_market_action(session, town, action_id)
+	return OverworldRulesScript.perform_town_market_action(session, town, action_id)
 
-static func hire_hero_at_active_town(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+static func hire_hero_at_active_town(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town is available for hero recruitment."}
-	var result: Dictionary = HeroCommandRules.recruit_hero_at_town(session, town, hero_id)
+	var result: Dictionary = HeroCommandRulesScript.recruit_hero_at_town(session, town, hero_id)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Hero recruitment failed."))}
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
-static func transfer_in_active_town(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+static func transfer_in_active_town(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town is available for transfer orders."}
 	var parts := action_id.split(":")
 	if parts.size() != 5 or parts[0] != "transfer":
 		return {"ok": false, "message": "That transfer order is invalid."}
-	var result: Dictionary = HeroCommandRules.transfer_town_stack(session, town, parts[1], parts[2], parts[3], parts[4])
+	var result: Dictionary = HeroCommandRulesScript.transfer_town_stack(session, town, parts[1], parts[2], parts[3], parts[4])
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Transfer failed."))}
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
-static func perform_response_action(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+static func perform_response_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town is available for strategic response orders."}
-	return OverworldRules.perform_town_response_action(session, town, action_id)
+	return OverworldRulesScript.perform_town_response_action(session, town, action_id)
 
-static func learn_spell_at_active_town(session: SessionStateStore.SessionData, spell_id: String) -> Dictionary:
+static func learn_spell_at_active_town(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town archives are available here."}
@@ -747,7 +747,7 @@ static func learn_spell_at_active_town(session: SessionStateStore.SessionData, s
 
 	var hero_value: Variant = session.overworld.get("hero", {})
 	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
-	var result: Dictionary = SpellRules.learn_spell(hero, spell_id)
+	var result: Dictionary = SpellRulesScript.learn_spell(hero, spell_id)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Study failed."))}
 
@@ -755,11 +755,11 @@ static func learn_spell_at_active_town(session: SessionStateStore.SessionData, s
 	var message := "%s in %s" % [String(result.get("message", "Spell learned.")), _town_name(town)]
 	return _finalize_town_result(session, true, message)
 
-static func manage_artifact_at_active_town(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
-	return OverworldRules.perform_artifact_action(session, action_id)
+static func manage_artifact_at_active_town(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
+	return OverworldRulesScript.perform_artifact_action(session, action_id)
 
-static func choose_specialty_at_active_town(session: SessionStateStore.SessionData, specialty_id: String) -> Dictionary:
-	return OverworldRules.choose_specialty(session, specialty_id)
+static func choose_specialty_at_active_town(session: SessionStateStoreScript.SessionData, specialty_id: String) -> Dictionary:
+	return OverworldRulesScript.choose_specialty(session, specialty_id)
 
 static func current_spell_tier(town: Dictionary) -> int:
 	var highest_tier := 0
@@ -786,7 +786,7 @@ static func accessible_spell_ids(town: Dictionary) -> Array:
 				spell_ids.append(spell_id)
 	return spell_ids
 
-static func _build_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+static func _build_order_ledger_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var build_actions := get_build_actions(session)
 	for action in build_actions:
 		if action is Dictionary and not bool(action.get("disabled", false)):
@@ -811,7 +811,7 @@ static func _build_order_ledger_line(session: SessionStateStore.SessionData, tow
 		var building_id := String(building_id_value)
 		if building_id == "" or building_id in built_buildings:
 			continue
-		var build_status: Dictionary = OverworldRules.get_town_build_status(town, building_id)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id)
 		if bool(build_status.get("buildable", false)):
 			continue
 		return "%s stays deferred: %s." % [
@@ -820,7 +820,7 @@ static func _build_order_ledger_line(session: SessionStateStore.SessionData, tow
 		]
 	return "No new works are open in this town."
 
-static func _recruit_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+static func _recruit_order_ledger_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var recruit_actions := get_recruit_actions(session)
 	var best_ready := {}
 	var best_market := {}
@@ -853,14 +853,14 @@ static func _recruit_order_ledger_line(session: SessionStateStore.SessionData, t
 			int(best_blocked.get("available_count", 0)),
 			blocker,
 		]
-	var next_levy_day: int = OverworldRules.next_weekly_growth_day(session.day)
+	var next_levy_day: int = OverworldRulesScript.next_weekly_growth_day(session.day)
 	var best_empty_unit_id := ""
 	var best_empty_growth := 0
 	for unit_id in _town_unit_ids(town):
 		if not _unit_is_unlocked_in_town(town, unit_id):
 			continue
 		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
-		var growth := int(OverworldRules.town_weekly_growth(town, session).get(unit_id, 0))
+		var growth := int(OverworldRulesScript.town_weekly_growth(town, session).get(unit_id, 0))
 		if available <= 0 and growth > best_empty_growth:
 			best_empty_growth = growth
 			best_empty_unit_id = unit_id
@@ -878,17 +878,17 @@ static func _recruit_order_ledger_line(session: SessionStateStore.SessionData, t
 		var unlock_building_id := _unlock_building_for_unit(town, unit_id)
 		if unlock_building_id == "":
 			continue
-		var build_status: Dictionary = OverworldRules.get_town_build_status(town, unlock_building_id)
+		var build_status: Dictionary = OverworldRulesScript.get_town_build_status(town, unlock_building_id)
 		return "%s stays locked until %s." % [
 			String(ContentService.get_unit(unit_id).get("name", unit_id)),
 			String(build_status.get("blocked_message", "the proper works are raised")),
 		]
 	return "No levy option is currently open."
 
-static func _response_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+static func _response_order_ledger_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var response_actions := get_response_actions(session)
-	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
-	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var movement_state := _active_hero_movement_state(session)
 	for action in response_actions:
 		if action is Dictionary and not bool(action.get("disabled", false)):
@@ -921,7 +921,7 @@ static func _response_order_ledger_line(session: SessionStateStore.SessionData, 
 		if action is Dictionary and bool(action.get("resource_blocked", false)):
 			return "%s is blocked by reserves: %s." % [
 				String(action.get("label", "Response order")),
-				_cost_shortfall_line(OverworldRules.town_cost_readiness(
+				_cost_shortfall_line(OverworldRulesScript.town_cost_readiness(
 					town,
 					session.overworld.get("resources", {}),
 					action.get("resource_cost", {})
@@ -938,8 +938,8 @@ static func _response_order_ledger_line(session: SessionStateStore.SessionData, 
 		return "%s. No linked response order is currently open from this town." % _logistics_watch_summary(logistics)
 	return "No immediate route or recovery order is open."
 
-static func _coverage_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
-	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+static func _coverage_order_ledger_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var reserve_names := []
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	for hero in stationed:
@@ -1002,7 +1002,7 @@ static func _max_market_affordable_count(
 	available_count: int
 ) -> int:
 	for recruit_count in range(max(available_count, 0), 0, -1):
-		if OverworldRules.can_afford_cost_with_town_market(
+		if OverworldRulesScript.can_afford_cost_with_town_market(
 			town,
 			resources,
 			_multiply_resource_cost(unit_cost, recruit_count)
@@ -1017,9 +1017,9 @@ static func _multiply_resource_cost(cost: Variant, multiplier: int) -> Dictionar
 			scaled[String(key)] = int(cost[key]) * multiplier
 	return scaled
 
-static func _find_active_town_result(session: SessionStateStore.SessionData) -> Dictionary:
-	OverworldRules.normalize_overworld_state(session)
-	var pos: Vector2i = OverworldRules.hero_position(session)
+static func _find_active_town_result(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	OverworldRulesScript.normalize_overworld_state(session)
+	var pos: Vector2i = OverworldRulesScript.hero_position(session)
 	var towns = session.overworld.get("towns", [])
 	for index in range(towns.size()):
 		var town = towns[index]
@@ -1030,7 +1030,7 @@ static func _find_active_town_result(session: SessionStateStore.SessionData) -> 
 	return {"index": -1, "town": {}}
 
 static func _available_building_ids(town: Dictionary) -> Array:
-	return OverworldRules.get_town_build_options(town)
+	return OverworldRulesScript.get_town_build_options(town)
 
 static func _building_line(building_id: String, state: String, build_status: Dictionary = {}) -> String:
 	var building := ContentService.get_building(building_id)
@@ -1126,7 +1126,7 @@ static func _locked_building_count(town: Dictionary) -> int:
 		var building_id := String(building_id_value)
 		if building_id == "" or building_id in built_buildings:
 			continue
-		if not bool(OverworldRules.get_town_build_status(town, building_id).get("buildable", false)):
+		if not bool(OverworldRulesScript.get_town_build_status(town, building_id).get("buildable", false)):
 			locked_count += 1
 	return locked_count
 
@@ -1536,7 +1536,7 @@ static func _town_support_watch_line(
 		return "%s | Recovery lines clear" % String(logistics.get("summary", "Stable chain"))
 	return " | ".join(parts)
 
-static func _active_hero_movement_state(session: SessionStateStore.SessionData) -> Dictionary:
+static func _active_hero_movement_state(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var hero = session.overworld.get("hero", {})
 	var hero_movement = hero.get("movement", {}) if hero is Dictionary else {}
 	var overworld_movement = session.overworld.get("movement", {})
@@ -1552,7 +1552,7 @@ static func _count_ready_actions(actions: Array) -> int:
 			ready_count += 1
 	return ready_count
 
-static func _stationed_reserve_count(session: SessionStateStore.SessionData, stationed: Array) -> int:
+static func _stationed_reserve_count(session: SessionStateStoreScript.SessionData, stationed: Array) -> int:
 	var reserve_count := 0
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	for hero in stationed:
@@ -1560,7 +1560,7 @@ static func _stationed_reserve_count(session: SessionStateStore.SessionData, sta
 			reserve_count += 1
 	return reserve_count
 
-static func _town_threat_lines(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+static func _town_threat_lines(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Array:
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var threat_lines := []
 	var town_placement_id := String(town.get("placement_id", ""))
@@ -1586,7 +1586,7 @@ static func _town_threat_lines(session: SessionStateStore.SessionData, town: Dic
 				continue
 			if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
 				continue
-			var is_public: bool = EnemyAdventureRules._raid_is_public(session, encounter)
+			var is_public: bool = EnemyAdventureRulesScript._raid_is_public(session, encounter)
 			var is_pressuring := bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 0
 			if is_public:
 				if is_pressuring:
@@ -1627,19 +1627,19 @@ static func _town_threat_lines(session: SessionStateStore.SessionData, town: Dic
 		])
 	return threat_lines
 
-static func _pressure_brief(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+static func _pressure_brief(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var threat_lines := _town_threat_lines(session, town)
 	if threat_lines.is_empty():
 		return "%s reports quiet roads beyond the walls." % _town_name(town)
 	return threat_lines[0]
 
-static func _enemy_state_for_faction(session: SessionStateStore.SessionData, faction_id: String) -> Dictionary:
+static func _enemy_state_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):
 		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
 			return state
 	return {}
 
-static func _can_afford(session: SessionStateStore.SessionData, cost: Variant) -> bool:
+static func _can_afford(session: SessionStateStoreScript.SessionData, cost: Variant) -> bool:
 	var resources = session.overworld.get("resources", {})
 	if not (cost is Dictionary):
 		return true
@@ -1648,7 +1648,7 @@ static func _can_afford(session: SessionStateStore.SessionData, cost: Variant) -
 			return false
 	return true
 
-static func _max_affordable_count(session: SessionStateStore.SessionData, unit_cost: Variant) -> int:
+static func _max_affordable_count(session: SessionStateStoreScript.SessionData, unit_cost: Variant) -> int:
 	if not (unit_cost is Dictionary) or unit_cost.is_empty():
 		return 999
 	var resources = session.overworld.get("resources", {})
@@ -1713,14 +1713,14 @@ static func _town_unit_ids(town: Dictionary) -> Array:
 		var unit_id := String(unit_id_value)
 		if unit_id != "" and unit_id not in unit_ids:
 			unit_ids.append(unit_id)
-	for unit_id_value in OverworldRules.town_weekly_growth(town).keys():
+	for unit_id_value in OverworldRulesScript.town_weekly_growth(town).keys():
 		var unit_id := String(unit_id_value)
 		if unit_id != "" and unit_id not in unit_ids:
 			unit_ids.append(unit_id)
 	return unit_ids
 
 static func _unit_is_unlocked_in_town(town: Dictionary, unit_id: String) -> bool:
-	return int(OverworldRules.town_weekly_growth(town).get(unit_id, 0)) > 0
+	return int(OverworldRulesScript.town_weekly_growth(town).get(unit_id, 0)) > 0
 
 static func _unlock_building_for_unit(town: Dictionary, unit_id: String) -> String:
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
@@ -1734,17 +1734,17 @@ static func _unlock_building_for_unit(town: Dictionary, unit_id: String) -> Stri
 			return building_id
 	return ""
 
-static func _finalize_town_result(session: SessionStateStore.SessionData, ok: bool, base_message: String) -> Dictionary:
-	HeroCommandRules.commit_active_hero(session)
-	OverworldRules.refresh_fog_of_war(session)
+static func _finalize_town_result(session: SessionStateStoreScript.SessionData, ok: bool, base_message: String) -> Dictionary:
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 	var messages := []
 	if base_message != "":
 		messages.append(base_message)
 
-	var scenario_result: Dictionary = ScenarioRules.evaluate_session(session)
+	var scenario_result: Dictionary = ScenarioRulesScript.evaluate_session(session)
 	var scenario_message := String(scenario_result.get("message", ""))
-	HeroCommandRules.commit_active_hero(session)
-	OverworldRules.refresh_fog_of_war(session)
+	HeroCommandRulesScript.commit_active_hero(session)
+	OverworldRulesScript.refresh_fog_of_war(session)
 	if scenario_message != "":
 		messages.append(scenario_message)
 

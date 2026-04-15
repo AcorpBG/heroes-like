@@ -1,7 +1,7 @@
 class_name SpellRules
 extends RefCounted
 
-const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
+const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
@@ -42,7 +42,7 @@ static func ensure_hero_spellbook(hero_state: Dictionary, hero_template: Diction
 	return hero_state
 
 static func mana_max_from_hero(hero_state: Dictionary) -> int:
-	return mana_max_from_command(hero_state.get("command", {})) + HeroProgressionRules.mana_max_bonus(hero_state)
+	return mana_max_from_command(hero_state.get("command", {})) + HeroProgressionRulesScript.mana_max_bonus(hero_state)
 
 static func mana_max_from_command(command: Variant) -> int:
 	if not (command is Dictionary):
@@ -124,7 +124,7 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 	var actions := []
 	for spell in known_spells(hero_state, CONTEXT_OVERWORLD):
 		var validation := validate_overworld_spell(hero_state, movement_state, spell)
-		var mana_cost: int = HeroProgressionRules.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
 		actions.append(
 			{
 				"id": "cast_spell:%s" % String(spell.get("id", "")),
@@ -142,7 +142,7 @@ static func cast_overworld_spell(hero_state: Dictionary, movement_state: Diction
 	var spell := ContentService.get_spell(spell_id)
 	if spell.is_empty():
 		return {"ok": false, "hero": hero, "movement": movement, "message": "That spell is not known."}
-	var mana_cost: int = HeroProgressionRules.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
 
 	var validation := validate_overworld_spell(hero, movement, spell)
 	if not bool(validation.get("ok", false)):
@@ -169,7 +169,7 @@ static func get_battle_actions(hero_state: Dictionary, battle: Dictionary, activ
 	var actions := []
 	for spell in known_spells(hero_state, CONTEXT_BATTLE):
 		var validation := validate_battle_spell(hero_state, battle, active_stack, target_stack, spell)
-		var mana_cost: int = HeroProgressionRules.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
 		var summary := _battle_spell_action_summary(hero_state, battle, active_stack, target_stack, spell)
 		var validation_message := String(validation.get("message", ""))
 		if validation_message != "":
@@ -198,7 +198,7 @@ static func resolve_battle_spell(
 	var spell := ContentService.get_spell(spell_id)
 	if spell.is_empty():
 		return {"ok": false, "hero": hero, "message": "That spell is not known."}
-	var mana_cost: int = HeroProgressionRules.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
 
 	var validation := validate_battle_spell(hero, battle, active_stack, target_stack, spell, acting_side)
 	if not bool(validation.get("ok", false)):
@@ -254,7 +254,7 @@ static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dic
 		return {"ok": false, "message": "That spell is not known."}
 	if String(spell_dict.get("context", "")) != CONTEXT_OVERWORLD:
 		return {"ok": false, "message": "That spell cannot be used on the overworld."}
-	if not _has_mana(hero, HeroProgressionRules.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))):
+	if not _has_mana(hero, HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))):
 		return {"ok": false, "message": "Insufficient mana."}
 
 	var effect = spell_dict.get("effect", {})
@@ -282,7 +282,7 @@ static func validate_battle_spell(
 		return {"ok": false, "message": "That spell cannot be used in battle."}
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != acting_side:
 		return {"ok": false, "message": "It is not this side's turn."}
-	if not _has_mana(hero, HeroProgressionRules.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))):
+	if not _has_mana(hero, HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))):
 		return {"ok": false, "message": "Insufficient mana."}
 
 	var effect = spell_dict.get("effect", {})

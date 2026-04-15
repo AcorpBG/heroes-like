@@ -1,11 +1,11 @@
 class_name ScenarioScriptRules
 extends RefCounted
 
-const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
-const ScenarioRules = preload("res://scripts/core/ScenarioRules.gd")
-const EnemyTurnRules = preload("res://scripts/core/EnemyTurnRules.gd")
-const HeroCommandRules = preload("res://scripts/core/HeroCommandRules.gd")
-const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
+const EnemyTurnRulesScript = preload("res://scripts/core/EnemyTurnRules.gd")
+const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 
 const SCRIPT_STATE_KEY := "scenario_script_state"
 const MAX_CHAIN_REACTIONS := 16
@@ -24,7 +24,7 @@ static func build_script_state() -> Dictionary:
 		"event_log": [],
 	}
 
-static func normalize_script_state(session: SessionStateStore.SessionData) -> void:
+static func normalize_script_state(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
 
@@ -57,7 +57,7 @@ static func normalize_script_state(session: SessionStateStore.SessionData) -> vo
 	state["event_log"] = event_log
 	session.overworld[SCRIPT_STATE_KEY] = state
 
-static func process_hooks(session: SessionStateStore.SessionData) -> Dictionary:
+static func process_hooks(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_script_state(session)
 	if session == null or session.scenario_id == "":
 		return {"fired_ids": [], "messages": [], "message": ""}
@@ -139,7 +139,7 @@ static func _hook_sorts_before(candidate: Dictionary, existing: Dictionary) -> b
 		return String(candidate.get("id", "")) < String(existing.get("id", ""))
 	return candidate_priority > existing_priority
 
-static func _conditions_met(session: SessionStateStore.SessionData, conditions: Variant) -> bool:
+static func _conditions_met(session: SessionStateStoreScript.SessionData, conditions: Variant) -> bool:
 	if not (conditions is Array) or conditions.is_empty():
 		return false
 	for condition in conditions:
@@ -149,7 +149,7 @@ static func _conditions_met(session: SessionStateStore.SessionData, conditions: 
 			return false
 	return true
 
-static func _condition_met(session: SessionStateStore.SessionData, condition: Dictionary) -> bool:
+static func _condition_met(session: SessionStateStoreScript.SessionData, condition: Dictionary) -> bool:
 	match String(condition.get("type", "")):
 		"day_at_least":
 			return session.day >= int(condition.get("day", 0))
@@ -164,25 +164,25 @@ static func _condition_met(session: SessionStateStore.SessionData, condition: Di
 		"session_flag_equals":
 			return String(session.flags.get(String(condition.get("flag", "")), "")) == String(condition.get("value", ""))
 		"enemy_pressure_at_least":
-			return EnemyTurnRules.get_pressure(session, String(condition.get("faction_id", ""))) >= int(condition.get("threshold", 0))
+			return EnemyTurnRulesScript.get_pressure(session, String(condition.get("faction_id", ""))) >= int(condition.get("threshold", 0))
 		"encounter_resolved":
 			return _encounter_resolved(session, String(condition.get("placement_id", "")))
 		"objective_met":
-			return ScenarioRules.is_objective_met(
+			return ScenarioRulesScript.is_objective_met(
 				session,
 				String(condition.get("objective_id", "")),
 				String(condition.get("bucket", ""))
 			)
 		"objective_not_met":
-			return not ScenarioRules.is_objective_met(
+			return not ScenarioRulesScript.is_objective_met(
 				session,
 				String(condition.get("objective_id", "")),
 				String(condition.get("bucket", ""))
 			)
 		"active_raid_count_at_least":
-			return EnemyTurnRules.active_raid_count(session, String(condition.get("faction_id", ""))) >= int(condition.get("threshold", 0))
+			return EnemyTurnRulesScript.active_raid_count(session, String(condition.get("faction_id", ""))) >= int(condition.get("threshold", 0))
 		"active_raid_count_at_most":
-			return EnemyTurnRules.active_raid_count(session, String(condition.get("faction_id", ""))) <= int(condition.get("threshold", 0))
+			return EnemyTurnRulesScript.active_raid_count(session, String(condition.get("faction_id", ""))) <= int(condition.get("threshold", 0))
 		"hook_fired":
 			return _hook_fired(session, String(condition.get("hook_id", "")))
 		"hook_not_fired":
@@ -190,7 +190,7 @@ static func _condition_met(session: SessionStateStore.SessionData, condition: Di
 		_:
 			return false
 
-static func _apply_effects(session: SessionStateStore.SessionData, effects: Variant) -> Dictionary:
+static func _apply_effects(session: SessionStateStoreScript.SessionData, effects: Variant) -> Dictionary:
 	var messages = []
 	if not (effects is Array):
 		return {"messages": messages}
@@ -207,7 +207,7 @@ static func _apply_effects(session: SessionStateStore.SessionData, effects: Vari
 
 	return {"messages": messages}
 
-static func _apply_effect(session: SessionStateStore.SessionData, effect: Dictionary) -> Dictionary:
+static func _apply_effect(session: SessionStateStoreScript.SessionData, effect: Dictionary) -> Dictionary:
 	match String(effect.get("type", "")):
 		"message":
 			var text = String(effect.get("text", ""))
@@ -233,7 +233,7 @@ static func _apply_effect(session: SessionStateStore.SessionData, effect: Dictio
 			var hero_name = String(session.overworld.get("hero", {}).get("name", "The hero"))
 			var messages = ["%s gains %d experience." % [hero_name, amount]]
 			messages.append_array(_overworld_rules()._award_experience(session, amount))
-			HeroCommandRules.commit_active_hero(session)
+			HeroCommandRulesScript.commit_active_hero(session)
 			_overworld_rules().refresh_fog_of_war(session)
 			return {"messages": messages}
 		"award_artifact":
@@ -266,7 +266,7 @@ static func _apply_effect(session: SessionStateStore.SessionData, effect: Dictio
 		_:
 			return {"messages": []}
 
-static func describe_recent_events(session: SessionStateStore.SessionData, limit: int = 2) -> String:
+static func describe_recent_events(session: SessionStateStoreScript.SessionData, limit: int = 2) -> String:
 	normalize_script_state(session)
 	if session == null:
 		return ""
@@ -287,7 +287,7 @@ static func describe_recent_events(session: SessionStateStore.SessionData, limit
 		parts.append("Day %d: %s" % [int(entry.get("day", session.day)), message])
 	return " | ".join(parts)
 
-static func _spawn_resource_node(session: SessionStateStore.SessionData, placement: Variant) -> Dictionary:
+static func _spawn_resource_node(session: SessionStateStoreScript.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):
 		return {"messages": []}
 	var placement_id = String(placement.get("placement_id", ""))
@@ -314,7 +314,7 @@ static func _spawn_resource_node(session: SessionStateStore.SessionData, placeme
 		]
 	}
 
-static func _spawn_artifact_node(session: SessionStateStore.SessionData, placement: Variant) -> Dictionary:
+static func _spawn_artifact_node(session: SessionStateStoreScript.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):
 		return {"messages": []}
 	var placement_id = String(placement.get("placement_id", ""))
@@ -322,7 +322,7 @@ static func _spawn_artifact_node(session: SessionStateStore.SessionData, placeme
 		return {"messages": []}
 
 	var nodes = session.overworld.get("artifact_nodes", [])
-	var built_nodes: Array = ArtifactRules.build_artifact_nodes([placement])
+	var built_nodes: Array = ArtifactRulesScript.build_artifact_nodes([placement])
 	if built_nodes.is_empty():
 		return {"messages": []}
 	nodes.append(built_nodes[0])
@@ -341,18 +341,18 @@ static func _spawn_artifact_node(session: SessionStateStore.SessionData, placeme
 		]
 	}
 
-static func _award_artifact(session: SessionStateStore.SessionData, artifact_id: String) -> Dictionary:
+static func _award_artifact(session: SessionStateStoreScript.SessionData, artifact_id: String) -> Dictionary:
 	if artifact_id == "":
 		return {"messages": []}
 	var result: Dictionary = _overworld_rules().award_hero_artifact(session, artifact_id, "Awarded", true, false)
 	if not bool(result.get("ok", false)):
 		return {"messages": []}
-	HeroCommandRules.commit_active_hero(session)
+	HeroCommandRulesScript.commit_active_hero(session)
 	_overworld_rules().refresh_fog_of_war(session)
 	var message = String(result.get("message", ""))
 	return {"messages": [message] if message != "" else []}
 
-static func _spawn_encounter(session: SessionStateStore.SessionData, placement: Variant) -> Dictionary:
+static func _spawn_encounter(session: SessionStateStoreScript.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):
 		return {"messages": []}
 	var placement_id = String(placement.get("placement_id", ""))
@@ -389,7 +389,7 @@ static func _spawn_encounter(session: SessionStateStore.SessionData, placement: 
 		]
 	}
 
-static func _town_add_building(session: SessionStateStore.SessionData, placement_id: String, building_id: String) -> Dictionary:
+static func _town_add_building(session: SessionStateStoreScript.SessionData, placement_id: String, building_id: String) -> Dictionary:
 	var town_result = _find_town_result(session, placement_id)
 	if int(town_result.get("index", -1)) < 0 or building_id == "":
 		return {"messages": []}
@@ -421,7 +421,7 @@ static func _town_add_building(session: SessionStateStore.SessionData, placement
 		]
 	}
 
-static func _town_add_recruits(session: SessionStateStore.SessionData, placement_id: String, recruits: Variant) -> Dictionary:
+static func _town_add_recruits(session: SessionStateStoreScript.SessionData, placement_id: String, recruits: Variant) -> Dictionary:
 	var town_result = _find_town_result(session, placement_id)
 	if int(town_result.get("index", -1)) < 0 or not (recruits is Dictionary):
 		return {"messages": []}
@@ -445,7 +445,7 @@ static func _town_add_recruits(session: SessionStateStore.SessionData, placement
 		}
 	return {"messages": []}
 
-static func _append_event_log(session: SessionStateStore.SessionData, hook_id: String, messages: Array) -> void:
+static func _append_event_log(session: SessionStateStoreScript.SessionData, hook_id: String, messages: Array) -> void:
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
 	var event_log = state.get("event_log", [])
 	if not (event_log is Array):
@@ -462,7 +462,7 @@ static func _append_event_log(session: SessionStateStore.SessionData, hook_id: S
 	state["event_log"] = event_log
 	session.overworld[SCRIPT_STATE_KEY] = state
 
-static func _hook_fired(session: SessionStateStore.SessionData, hook_id: String) -> bool:
+static func _hook_fired(session: SessionStateStoreScript.SessionData, hook_id: String) -> bool:
 	if session == null or hook_id == "":
 		return false
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
@@ -477,17 +477,17 @@ static func _node_exists(nodes: Variant, placement_id: String) -> bool:
 			return true
 	return false
 
-static func _encounter_resolved(session: SessionStateStore.SessionData, placement_id: String) -> bool:
+static func _encounter_resolved(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
 	if placement_id == "":
 		return false
 	var resolved = session.overworld.get("resolved_encounters", [])
 	return resolved is Array and placement_id in resolved
 
-static func _find_town(session: SessionStateStore.SessionData, reference: Dictionary) -> Dictionary:
+static func _find_town(session: SessionStateStoreScript.SessionData, reference: Dictionary) -> Dictionary:
 	return _find_town_result(session, String(reference.get("placement_id", "")), String(reference.get("town_id", ""))).get("town", {})
 
 static func _find_town_result(
-	session: SessionStateStore.SessionData,
+	session: SessionStateStoreScript.SessionData,
 	placement_id: String,
 	town_id: String = ""
 ) -> Dictionary:
@@ -502,10 +502,10 @@ static func _find_town_result(
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
 
-static func _add_enemy_pressure(session: SessionStateStore.SessionData, faction_id: String, amount: int, minimum: int = 0) -> Dictionary:
+static func _add_enemy_pressure(session: SessionStateStoreScript.SessionData, faction_id: String, amount: int, minimum: int = 0) -> Dictionary:
 	if session == null or faction_id == "":
 		return {"messages": []}
-	EnemyTurnRules.normalize_enemy_states(session)
+	EnemyTurnRulesScript.normalize_enemy_states(session)
 	var states = session.overworld.get("enemy_states", [])
 	if not (states is Array):
 		return {"messages": []}
@@ -523,7 +523,7 @@ static func _add_enemy_pressure(session: SessionStateStore.SessionData, faction_
 		return {"messages": ["%s pressure rises to %d." % [label, pressure]]}
 	return {"messages": []}
 
-static func _enemy_label(session: SessionStateStore.SessionData, faction_id: String) -> String:
+static func _enemy_label(session: SessionStateStoreScript.SessionData, faction_id: String) -> String:
 	var scenario = ContentService.get_scenario(session.scenario_id if session != null else "")
 	for config in scenario.get("enemy_factions", []):
 		if config is Dictionary and String(config.get("faction_id", "")) == faction_id:
@@ -535,7 +535,7 @@ static func _town_name(town: Dictionary) -> String:
 	var town_template = ContentService.get_town(String(town.get("town_id", "")))
 	return String(town_template.get("name", town.get("town_id", "Town")))
 
-static func _placement_is_visible(session: SessionStateStore.SessionData, placement: Variant) -> bool:
+static func _placement_is_visible(session: SessionStateStoreScript.SessionData, placement: Variant) -> bool:
 	if not (placement is Dictionary):
 		return false
 	return _overworld_rules().is_tile_visible(
