@@ -434,11 +434,7 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 				"route": "",
 			}
 		session.battle = battle_payload
-		var encounter_name := String(
-			ContentService.get_encounter(
-				String(encounter.get("encounter_id", encounter.get("id", "")))
-			).get("name", "the hostile force")
-		)
+		var encounter_name := encounter_display_name(encounter)
 		return {
 			"ok": true,
 			"message": "Battle is joined against %s." % encounter_name,
@@ -676,6 +672,21 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 		if _position_matches(encounter, pos) and not is_encounter_resolved(session, encounter):
 			return encounter
 	return {}
+
+static func encounter_commander_name(encounter: Dictionary) -> String:
+	if encounter.is_empty() or String(encounter.get("spawned_by_faction_id", "")) == "":
+		return ""
+	return String(_enemy_adventure_rules().raid_commander_name(encounter))
+
+static func encounter_display_name(encounter: Dictionary) -> String:
+	if encounter.is_empty():
+		return "Hostile contact"
+	if String(encounter.get("spawned_by_faction_id", "")) != "":
+		var raid_name: String = String(_enemy_adventure_rules().raid_display_name(encounter))
+		if raid_name != "":
+			return raid_name
+	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	return String(encounter_def.get("name", encounter.get("placement_id", "Hostile contact")))
 
 static func is_encounter_resolved(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> bool:
 	var resolved = session.overworld.get("resolved_encounters", [])
@@ -967,10 +978,9 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			]
 		"encounter":
 			var placement = context.get("encounter", {})
-			var encounter = ContentService.get_encounter(String(placement.get("encounter_id", placement.get("id", ""))))
 			return "Hostile Contact\nTerrain %s | %s\n%s" % [
 				terrain,
-				String(encounter.get("name", "Skirmish")),
+				encounter_display_name(placement),
 				_encounter_pressure_summary(session, placement),
 			]
 		_:
@@ -1048,6 +1058,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 	var visible_enemy_towns := 0
 	var visible_denied_sites := 0
 	var visible_contested_fronts := 0
+	var visible_commander_names: Array = []
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary):
 			continue
@@ -1063,8 +1074,10 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 			local_contacts += 1
 		if distance < nearest_contact_distance:
 			nearest_contact_distance = distance
-			var encounter_id := String(encounter.get("encounter_id", encounter.get("id", "")))
-			nearest_contact_name = String(ContentService.get_encounter(encounter_id).get("name", "hostile contact"))
+			nearest_contact_name = encounter_display_name(encounter)
+		var commander_name := encounter_commander_name(encounter)
+		if commander_name != "" and commander_name not in visible_commander_names:
+			visible_commander_names.append(commander_name)
 		if String(encounter.get("contested_by_faction_id", "")) != "":
 			visible_contested_fronts += 1
 	for town in session.overworld.get("towns", []):
@@ -1105,6 +1118,12 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 		parts.append("%d frontier site%s already denied by hostile forces" % [visible_denied_sites, "" if visible_denied_sites == 1 else "s"])
 	if visible_contested_fronts > 0:
 		parts.append("%d neutral front%s under hostile contest" % [visible_contested_fronts, "" if visible_contested_fronts == 1 else "s"])
+	if not visible_commander_names.is_empty():
+		var shown_names = visible_commander_names.slice(0, min(2, visible_commander_names.size()))
+		var commander_summary: String = "Commanders sighted %s" % ", ".join(shown_names)
+		if visible_commander_names.size() > shown_names.size():
+			commander_summary += " (+%d more)" % (visible_commander_names.size() - shown_names.size())
+		parts.append(commander_summary)
 	if parts.is_empty():
 		return fallback
 	return " | ".join(parts)
@@ -1214,8 +1233,7 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "%s on %s" % [ArtifactRulesScript.describe_artifact(String(artifact_node.get("artifact_id", ""))), terrain]
 		"encounter":
 			var encounter_placement = context.get("encounter", {})
-			var encounter := ContentService.get_encounter(String(encounter_placement.get("encounter_id", "")))
-			return "%s on %s" % [String(encounter.get("name", "Hostile contact")), terrain]
+			return "%s on %s" % [encounter_display_name(encounter_placement), terrain]
 		_:
 			return "Open ground at %d,%d on %s" % [pos.x, pos.y, terrain]
 
@@ -2280,7 +2298,6 @@ static func _resource_site_delivery_interception(
 					continue
 			elif not arrived:
 				continue
-		var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 		best = {
 			"active": true,
 			"arrived": arrived,
@@ -2288,7 +2305,7 @@ static func _resource_site_delivery_interception(
 			"goal_distance": goal_distance,
 			"strength": strength,
 			"encounter_key": encounter_key(encounter),
-			"encounter_name": String(encounter_def.get("name", encounter.get("placement_id", "Raid host"))),
+			"encounter_name": encounter_display_name(encounter),
 			"summary": "",
 		}
 	var encounter_name := String(best.get("encounter_name", "Raid host"))
@@ -5586,8 +5603,7 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter, true)
 			if delivery_pressure != "":
 				return delivery_pressure
-			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-			return "Break %s now before the host can widen pressure across the frontier." % String(encounter_def.get("name", "the blocking host"))
+			return "Break %s now before the host can widen pressure across the frontier." % encounter_display_name(encounter)
 	return String(action.get("summary", "Review the current tile and commit the next order."))
 
 static func _context_action_summary(session: SessionStateStoreScript.SessionData, action_id: String, context: Dictionary) -> String:
@@ -5616,8 +5632,7 @@ static func _encounter_delivery_pressure_summary(
 	var delivery_context: Dictionary = delivery_interception_context_for_encounter(session, encounter)
 	if not bool(delivery_context.get("active", false)):
 		return ""
-	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-	var encounter_name := String(encounter_def.get("name", encounter.get("placement_id", "the host")))
+	var encounter_name := encounter_display_name(encounter)
 	var route_label := String(delivery_context.get("route_label", delivery_context.get("pressure_label", "the relief lane")))
 	var recruit_summary := String(delivery_context.get("recruit_summary", "the convoy"))
 	var interception_state: Dictionary = delivery_context.get("interception", {})
@@ -5656,8 +5671,7 @@ static func _encounter_pressure_summary(
 	if delivery_pressure != "":
 		return delivery_pressure
 
-	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-	var encounter_name := String(encounter_def.get("name", "the blocking host"))
+	var encounter_name := encounter_display_name(encounter)
 	if String(encounter.get("spawned_by_faction_id", "")) == "":
 		if for_battle_prompt:
 			return "Break %s on %s before the host can widen pressure across the frontier." % [
@@ -5767,9 +5781,8 @@ static func _command_commitment_route_line(session: SessionStateStoreScript.Sess
 			return "%s remains claimable on the active lane." % site_name
 		"encounter":
 			var encounter = context.get("encounter", {})
-			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-			return "%s blocks the active march line. Leaving it intact keeps hostile pressure on this route." % String(
-				encounter_def.get("name", "Hostile contact")
+			return "%s blocks the active march line. Leaving it intact keeps hostile pressure on this route." % (
+				encounter_display_name(encounter)
 			)
 		"artifact":
 			var artifact_node = context.get("node", {})
@@ -5952,14 +5965,13 @@ static func _nearest_visible_encounter_plan(session: SessionStateStoreScript.Ses
 		if not is_tile_visible(session, x, y):
 			continue
 		var distance = abs(pos.x - x) + abs(pos.y - y)
-		var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 		var candidate := {
 			"distance": distance,
 			"order": "Advance %d tile%s %s and prepare to engage %s on %s." % [
 				distance,
 				"" if distance == 1 else "s",
 				_direction_from_to(pos, Vector2i(x, y)),
-				String(encounter_def.get("name", "the nearest host")),
+				encounter_display_name(encounter),
 				_terrain_name_at(session, x, y),
 			],
 		}
@@ -6420,6 +6432,8 @@ static func _town_command_risk_state(session: SessionStateStoreScript.SessionDat
 		"visible_pressuring": 0,
 		"hidden_targeting": false,
 		"nearest_goal_distance": 9999,
+		"marching_commanders": [],
+		"pressuring_commanders": [],
 		"siege_progress": 0,
 		"siege_capture_progress": 1,
 	}
@@ -6440,12 +6454,21 @@ static func _town_command_risk_state(session: SessionStateStoreScript.SessionDat
 		var is_public: bool = _raid_is_public(session, encounter)
 		var goal_distance := int(encounter.get("goal_distance", 9999))
 		var is_pressuring := bool(encounter.get("arrived", false)) or goal_distance <= 0
+		var commander_name := encounter_commander_name(encounter)
 		if is_public:
 			if is_pressuring:
 				state["visible_pressuring"] = int(state.get("visible_pressuring", 0)) + 1
+				if commander_name != "" and commander_name not in state.get("pressuring_commanders", []):
+					var pressuring_commanders: Array = state.get("pressuring_commanders", [])
+					pressuring_commanders.append(commander_name)
+					state["pressuring_commanders"] = pressuring_commanders
 			else:
 				state["visible_marching"] = int(state.get("visible_marching", 0)) + 1
 				state["nearest_goal_distance"] = min(int(state.get("nearest_goal_distance", 9999)), goal_distance)
+				if commander_name != "" and commander_name not in state.get("marching_commanders", []):
+					var marching_commanders: Array = state.get("marching_commanders", [])
+					marching_commanders.append(commander_name)
+					state["marching_commanders"] = marching_commanders
 		else:
 			state["hidden_targeting"] = true
 	for config in scenario.get("enemy_factions", []):

@@ -11,6 +11,8 @@ func _run() -> void:
 		return
 	if not _run_auto_interaction_regressions():
 		return
+	if not _run_hostile_commander_identity_regression():
+		return
 	if not _run_enemy_hero_intercept_regression():
 		return
 	if not _run_enemy_town_assault_regression():
@@ -159,6 +161,61 @@ func _run_enemy_town_context_regression() -> bool:
 		return false
 	return true
 
+func _run_hostile_commander_identity_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	_set_active_hero_position(session, Vector2i(2, 2))
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "commander_identity_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 3,
+			"y": 2,
+			"difficulty": "pressure",
+			"combat_seed": 991200,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 1,
+			"target_kind": "town",
+			"target_placement_id": "riverwatch_keep",
+			"target_label": "Riverwatch Keep",
+			"target_x": 5,
+			"target_y": 2,
+			"goal_x": 4,
+			"goal_y": 2,
+		},
+		session
+	)
+	var commander_name := String(raid.get("enemy_commander_state", {}).get("name", ""))
+	if commander_name == "":
+		push_error("Core systems smoke: hostile raid did not gain a durable commander identity.")
+		get_tree().quit(1)
+		return false
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+	var threat_watch := OverworldRules.describe_frontier_threats(session)
+	if commander_name not in threat_watch:
+		push_error("Core systems smoke: frontier watch did not surface the visible hostile commander identity.")
+		get_tree().quit(1)
+		return false
+
+	var result := OverworldRules.try_move(session, 1, 0)
+	if String(result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: stepping onto a named hostile raid did not open battle.")
+		get_tree().quit(1)
+		return false
+	if String(session.battle.get("enemy_hero", {}).get("name", "")) != commander_name:
+		push_error("Core systems smoke: hostile commander identity did not carry from overworld raid into battle.")
+		get_tree().quit(1)
+		return false
+	return true
+
 func _run_enemy_hero_intercept_regression() -> bool:
 	var session = ScenarioFactory.create_session(
 		SCENARIO_ID,
@@ -187,8 +244,10 @@ func _run_enemy_hero_intercept_regression() -> bool:
 			"target_y": 2,
 			"goal_x": 2,
 			"goal_y": 2,
-		}
+		},
+		session
 	)
+	var commander_name := String(raid.get("enemy_commander_state", {}).get("name", ""))
 	var encounters = session.overworld.get("encounters", [])
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
@@ -204,6 +263,10 @@ func _run_enemy_hero_intercept_regression() -> bool:
 		return false
 	if String(result.get("message", "")) == "":
 		push_error("Core systems smoke: interception launch returned no enemy-turn feedback.")
+		get_tree().quit(1)
+		return false
+	if commander_name != "" and String(session.battle.get("enemy_hero", {}).get("name", "")) != commander_name:
+		push_error("Core systems smoke: interception battle did not preserve the hostile commander identity.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -280,8 +343,10 @@ func _run_save_restore_hero_intercept_resume_regression() -> bool:
 			"target_y": 2,
 			"goal_x": 2,
 			"goal_y": 2,
-		}
+		},
+		session
 	)
+	var commander_name := String(raid.get("enemy_commander_state", {}).get("name", ""))
 	var encounters = session.overworld.get("encounters", [])
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
@@ -327,6 +392,10 @@ func _run_save_restore_hero_intercept_resume_regression() -> bool:
 		return false
 	if String(restored.overworld.get("active_hero_id", "")) != String(restored.battle.get("context", {}).get("target_hero_id", "")):
 		push_error("Core systems smoke: interception restore did not keep the intercepted hero active for resume.")
+		get_tree().quit(1)
+		return false
+	if commander_name != "" and String(restored.battle.get("enemy_hero", {}).get("name", "")) != commander_name:
+		push_error("Core systems smoke: interception restore did not preserve hostile commander identity.")
 		get_tree().quit(1)
 		return false
 	return true

@@ -194,6 +194,11 @@ Town defense decision:
 - `BattleRules.gd` now supports defender commander sources for active heroes, stationed town heroes, and fallback town captains, allowing town defenses to resolve coherently even when the primary hero is elsewhere
 - post-battle syncing now writes surviving raid hosts back into encounter or captured-town state, writes surviving defenders back into town garrisons and defending-hero armies, and turns town loss into durable overworld ownership changes rather than abstract pressure ticks
 
+Hostile commander continuity decision:
+- hostile raid encounters now carry durable `enemy_commander_state` payloads seeded from authored faction hero rosters plus existing encounter commander doctrine, so opposing overworld pressure reads as named enemy commanders instead of anonymous raid blobs
+- `EnemyAdventureRules.gd` owns raid-commander assignment and normalization, `BattleRules.gd` reads and restores that same commander state for battle creation plus save-resume rebuilds, and post-battle sync writes surviving hostile commanders back into the encounter payload instead of resetting them to encounter-template defaults
+- `OverworldRules.gd`, `EnemyTurnRules.gd`, and `TownRules.gd` only surface visibility-safe commander names and host labels from that shared encounter state, keeping scene controllers thin and `SAVE_VERSION` at `9`
+
 Town shell presentation decision:
 - the town scene now uses a sectioned management-shell layout with dedicated command, town hall, construction, recruitment, spellcraft, and logistics panels instead of a single stacked debug column
 - `TownRules.gd` owns the release-facing summary shaping for town identity, construction ledgers, recruit reserves, stationed defenders, visibility-safe frontier pressure, and dispatch messaging, keeping `TownShell.gd` thin and save-safe

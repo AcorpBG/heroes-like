@@ -26,6 +26,7 @@ static func build_enemy_states(configs: Variant) -> Array:
 				"faction_id": String(config.get("faction_id", "")),
 				"pressure": 0,
 				"raid_counter": 0,
+				"commander_counter": 0,
 				"siege_progress": 0,
 				"treasury": _blank_resource_pool(),
 				"posture": "probing",
@@ -55,6 +56,7 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 					"faction_id": faction_id,
 					"pressure": max(0, int(existing_state.get("pressure", 0))),
 					"raid_counter": max(0, int(existing_state.get("raid_counter", 0))),
+					"commander_counter": max(0, int(existing_state.get("commander_counter", 0))),
 					"siege_progress": max(0, int(existing_state.get("siege_progress", 0))),
 					"treasury": _normalize_resource_pool(existing_state.get("treasury", {})),
 					"posture": _normalize_posture(existing_state.get("posture", "probing")),
@@ -139,6 +141,16 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		var focus = EnemyAdventureRulesScript.describe_focus(session, faction_id, true)
 		if focus != "":
 			line_parts.append(focus)
+		var visible_commanders = EnemyAdventureRulesScript.raid_commander_summaries(
+			_visible_raids_for_faction(session, faction_id),
+			2
+		)
+		if not visible_commanders.is_empty():
+			var commander_summary: String = "Commanders sighted %s" % ", ".join(visible_commanders)
+			var hidden_count: int = max(0, EnemyAdventureRulesScript.visible_raid_count(session, faction_id) - visible_commanders.size())
+			if hidden_count > 0:
+				commander_summary += " (+%d more)" % hidden_count
+			line_parts.append(commander_summary)
 		var contestation = EnemyAdventureRulesScript.describe_contestation(session, faction_id, true)
 		if contestation != "":
 			line_parts.append(contestation)
@@ -165,6 +177,21 @@ static func active_raid_count(session: SessionStateStoreScript.SessionData, fact
 			continue
 		count += 1
 	return count
+
+static func _visible_raids_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
+	var visible := []
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
+			continue
+		if not EnemyAdventureRulesScript._raid_is_public(session, encounter):
+			continue
+		visible.append(encounter)
+	return visible
 
 static func _run_empire_cycle(
 	session: SessionStateStoreScript.SessionData,
@@ -573,28 +600,45 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 
 	var encounters = session.overworld.get("encounters", [])
 	var placement_id = "%s_raid_%d" % [String(config.get("faction_id", "enemy")), int(state.get("raid_counter", 0))]
+	var faction_id := String(config.get("faction_id", ""))
+	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, faction_id)
+	var roster_hero_id := EnemyAdventureRulesScript.select_raid_commander_roster_hero_id(
+		session,
+		faction_id,
+		int(state.get("commander_counter", 0)),
+		occupied_commander_ids
+	)
+	if roster_hero_id != "":
+		state["commander_counter"] = int(state.get("commander_counter", 0)) + 1
+	var raid_seed: Dictionary = {
+		"placement_id": placement_id,
+		"encounter_id": encounter_id,
+		"x": int(spawn_point.get("x", 0)),
+		"y": int(spawn_point.get("y", 0)),
+		"difficulty": "pressure",
+		"combat_seed": hash("%s:%d:%s" % [session.session_id, session.day, placement_id]),
+		"spawned_by_faction_id": faction_id,
+		"days_active": 0,
+		"arrived": false,
+		"goal_distance": 9999,
+	}
+	if roster_hero_id != "":
+		raid_seed["enemy_commander_state"] = EnemyAdventureRulesScript.build_raid_commander_state(
+			raid_seed,
+			roster_hero_id,
+			faction_id,
+			session,
+			occupied_commander_ids
+		)
 	var raid = EnemyAdventureRulesScript.assign_target(
 		session,
 		config,
-		EnemyAdventureRulesScript.ensure_raid_army(
-			{
-				"placement_id": placement_id,
-				"encounter_id": encounter_id,
-				"x": int(spawn_point.get("x", 0)),
-				"y": int(spawn_point.get("y", 0)),
-				"difficulty": "pressure",
-				"combat_seed": hash("%s:%d:%s" % [session.session_id, session.day, placement_id]),
-				"spawned_by_faction_id": String(config.get("faction_id", "")),
-				"days_active": 0,
-				"arrived": false,
-				"goal_distance": 9999,
-			}
-		)
+		EnemyAdventureRulesScript.ensure_raid_army(raid_seed, session, occupied_commander_ids)
 	)
 	encounters.append(raid)
 	session.overworld["encounters"] = encounters
 
-	var encounter = ContentService.get_encounter(encounter_id)
+	var encounter_name: String = EnemyAdventureRulesScript.raid_display_name(raid)
 	var target_suffix = ""
 	if String(raid.get("target_label", "")) != "":
 		target_suffix = " toward %s" % String(raid.get("target_label", ""))
@@ -602,7 +646,7 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 		"ok": true,
 		"message": "%s dispatches %s at %d,%d%s." % [
 			String(config.get("label", config.get("faction_id", "Enemy"))),
-			String(encounter.get("name", encounter_id)),
+			encounter_name,
 			int(spawn_point.get("x", 0)),
 			int(spawn_point.get("y", 0)),
 			target_suffix,
@@ -642,12 +686,14 @@ static func _queue_town_defense_battle(
 		return {}
 	session.battle = payload
 	session.game_state = "battle"
+	var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
 	return {
 		"battle_started": true,
-		"message": "%s launches an assault on %s." % [
-			String(config.get("label", faction_id)),
-			_town_name(town),
-		],
+		"message": (
+			"%s launches an assault on %s." % [commander_name, _town_name(town)]
+			if commander_name != ""
+			else "%s launches an assault on %s." % [String(config.get("label", faction_id)), _town_name(town)]
+		),
 	}
 
 static func _queue_hero_intercept_battle(
@@ -685,12 +731,14 @@ static func _queue_hero_intercept_battle(
 		return {}
 	session.battle = payload
 	session.game_state = "battle"
+	var commander_name := EnemyAdventureRulesScript.raid_commander_name(encounter)
 	return {
 		"battle_started": true,
-		"message": "%s cuts off %s in the field." % [
-			String(config.get("label", faction_id)),
-			String(hero.get("name", "the hero")),
-		],
+		"message": (
+			"%s cuts off %s in the field." % [commander_name, String(hero.get("name", "the hero"))]
+			if commander_name != ""
+			else "%s cuts off %s in the field." % [String(config.get("label", faction_id)), String(hero.get("name", "the hero"))]
+		),
 	}
 
 static func _town_defense_candidate(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:

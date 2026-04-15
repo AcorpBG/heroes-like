@@ -73,7 +73,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 			"y": int(encounter_placement.get("y", OverworldRulesScript.hero_position(session).y)),
 		},
 		"encounter_id": encounter_id,
-		"encounter_name": _battle_name(session, encounter, battle_context),
+		"encounter_name": _battle_name(session, encounter, battle_context, encounter_placement),
 		"resolved_key": OverworldRulesScript.encounter_key(encounter_placement),
 		"terrain": String(encounter.get("terrain", "plains")),
 		"battlefield_tags": battlefield_tags,
@@ -472,7 +472,13 @@ static func _is_town_assault_context(context: Variant) -> bool:
 static func _has_delivery_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("delivery_node_placement_id", "")) != ""
 
-static func _battle_name(session: SessionStateStoreScript.SessionData, encounter: Dictionary, battle_context: Dictionary) -> String:
+static func _battle_name(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	battle_context: Dictionary,
+	encounter_placement: Dictionary = {}
+) -> String:
+	var opposing_commander_name := _encounter_enemy_commander_name(encounter_placement, encounter)
 	if _is_town_assault_context(battle_context):
 		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
 		if town_name != "":
@@ -480,13 +486,19 @@ static func _battle_name(session: SessionStateStoreScript.SessionData, encounter
 	if _is_town_defense_context(battle_context):
 		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
 		if town_name != "":
+			if opposing_commander_name != "":
+				return "%s assaults %s" % [opposing_commander_name, town_name]
 			return "%s at %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), town_name]
 	if String(battle_context.get("type", "")) == "hero_intercept":
 		var hero_name := String(
 			HeroCommandRulesScript.hero_by_id(session, String(battle_context.get("target_hero_id", ""))).get("name", "")
 		)
 		if hero_name != "":
+			if opposing_commander_name != "":
+				return "%s intercepts %s" % [opposing_commander_name, hero_name]
 			return "%s intercepts %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), hero_name]
+	if opposing_commander_name != "" and String(encounter.get("spawned_by_faction_id", encounter_placement.get("spawned_by_faction_id", ""))) != "":
+		return "%s's %s" % [opposing_commander_name, String(encounter.get("name", encounter.get("id", "Battle")))]
 	return String(encounter.get("name", encounter.get("id", "Battle")))
 
 static func _enemy_stack_source(encounter_placement: Dictionary, battle_context: Dictionary) -> Dictionary:
@@ -531,10 +543,13 @@ static func _enemy_commander_state_for_battle(
 	var override = encounter_placement.get("enemy_hero_override", {})
 	if override is Dictionary and not override.is_empty():
 		return override.duplicate(true)
+	var seeded_commander = encounter_placement.get("enemy_commander_state", {})
+	if seeded_commander is Dictionary and not seeded_commander.is_empty():
+		return _normalize_enemy_hero_state(seeded_commander, encounter, encounter_placement)
 	if _is_town_assault_context(battle_context):
 		var town = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
 		return _town_captain_state(town)
-	return _enemy_commander_state(encounter)
+	return _normalize_enemy_hero_state({}, encounter, encounter_placement)
 
 static func _player_setup_for_battle(
 	session: SessionStateStoreScript.SessionData,
@@ -829,7 +844,7 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var encounter_placement = _current_battle_encounter_placement(session)
 	session.battle["resolved_key"] = _normalized_battle_resolved_key(session, encounter_placement, normalized_context)
-	session.battle["encounter_name"] = _battle_name(session, encounter, normalized_context)
+	session.battle["encounter_name"] = _battle_name(session, encounter, normalized_context, encounter_placement)
 	session.battle["battlefield_tags"] = _normalized_battlefield_tags(encounter, session.battle.get("context", {}))
 	session.battle[FIELD_OBJECTIVES_KEY] = _normalize_field_objectives(
 		session.battle.get(FIELD_OBJECTIVES_KEY, []),
@@ -855,7 +870,11 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		session,
 		"player"
 	)
-	session.battle["enemy_hero"] = _normalize_enemy_hero_state(session.battle.get("enemy_hero", {}), encounter)
+	session.battle["enemy_hero"] = _normalize_enemy_hero_state(
+		session.battle.get("enemy_hero", {}),
+		encounter,
+		encounter_placement
+	)
 	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
 
 	var current_turn_order = session.battle.get("turn_order", [])
@@ -4710,6 +4729,9 @@ static func _sync_enemy_force_from_battle(session: SessionStateStoreScript.Sessi
 			}
 		),
 	}
+	var enemy_commander_state = session.battle.get("enemy_hero", {})
+	if enemy_commander_state is Dictionary and not enemy_commander_state.is_empty():
+		encounter["enemy_commander_state"] = enemy_commander_state.duplicate(true)
 	encounters[int(encounter_result.get("index", -1))] = encounter
 	session.overworld["encounters"] = encounters
 	if encounter_resolved:
@@ -5974,6 +5996,21 @@ static func _hero_payload_for_side(battle: Dictionary, side: String) -> Dictiona
 		return battle.get("player_hero", {})
 	return battle.get("enemy_hero_payload", {})
 
+static func _encounter_enemy_commander_seed(encounter_placement: Dictionary) -> Dictionary:
+	var seeded = encounter_placement.get("enemy_commander_state", {})
+	if seeded is Dictionary and not seeded.is_empty():
+		return seeded
+	var override = encounter_placement.get("enemy_hero_override", {})
+	if override is Dictionary and not override.is_empty():
+		return override
+	return {}
+
+static func _encounter_enemy_commander_name(encounter_placement: Dictionary, encounter: Dictionary) -> String:
+	var seeded = _encounter_enemy_commander_seed(encounter_placement)
+	if not seeded.is_empty():
+		return String(seeded.get("name", ""))
+	return String(_enemy_commander_state(encounter).get("name", ""))
+
 static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 	var commander = encounter.get("enemy_commander", {})
 	if not (commander is Dictionary) or commander.is_empty():
@@ -5991,19 +6028,51 @@ static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 		}
 	)
 
-static func _normalize_enemy_hero_state(existing_state: Variant, encounter: Dictionary) -> Dictionary:
+static func _normalize_enemy_hero_state(
+	existing_state: Variant,
+	encounter: Dictionary,
+	encounter_placement: Dictionary = {}
+) -> Dictionary:
 	var template = _enemy_commander_state(encounter)
+	var seeded = _encounter_enemy_commander_seed(encounter_placement)
 	if not (existing_state is Dictionary) or existing_state.is_empty():
-		return template
+		if not seeded.is_empty():
+			existing_state = seeded
+		else:
+			return template
 	var normalized = existing_state.duplicate(true)
+	var seeded_spellbook = seeded.get("spellbook", {})
+	if not (seeded_spellbook is Dictionary):
+		seeded_spellbook = {}
+	if not seeded.is_empty():
+		normalized["id"] = String(normalized.get("id", seeded.get("id", "")))
+		normalized["roster_hero_id"] = String(normalized.get("roster_hero_id", seeded.get("roster_hero_id", "")))
+		normalized["faction_id"] = String(normalized.get("faction_id", seeded.get("faction_id", "")))
+		normalized["archetype"] = String(normalized.get("archetype", seeded.get("archetype", "")))
+		normalized["identity_summary"] = String(
+			normalized.get("identity_summary", seeded.get("identity_summary", ""))
+		)
+		if normalized.get("specialties", []) is Array or seeded.get("specialties", []) is Array:
+			normalized["specialties"] = _normalized_specialties(
+				normalized.get("specialties", seeded.get("specialties", []))
+			)
+		if normalized.get("specialty_focus_ids", []) is Array or seeded.get("specialty_focus_ids", []) is Array:
+			normalized["specialty_focus_ids"] = _normalized_specialties(
+				normalized.get("specialty_focus_ids", seeded.get("specialty_focus_ids", []))
+			)
 	normalized["name"] = String(normalized.get("name", template.get("name", "Enemy Commander")))
-	normalized["command"] = _normalize_command(normalized.get("command", template.get("command", {})))
+	normalized["command"] = _normalize_command(
+		normalized.get("command", seeded.get("command", template.get("command", {})))
+	)
 	normalized["battle_traits"] = _normalized_battle_traits(normalized if normalized.has("battle_traits") else template)
 	return SpellRulesScript.ensure_hero_spellbook(
 		normalized,
 		{
-			"command": template.get("command", {}),
-			"starting_spell_ids": template.get("spellbook", {}).get("known_spell_ids", []),
+			"command": normalized.get("command", template.get("command", {})),
+			"starting_spell_ids": seeded_spellbook.get(
+				"known_spell_ids",
+				template.get("spellbook", {}).get("known_spell_ids", [])
+			),
 		}
 	)
 
@@ -6027,6 +6096,16 @@ static func _normalized_battle_traits(value: Variant) -> Array:
 				var trait_id = String(trait_value)
 				if trait_id != "" and trait_id not in normalized:
 					normalized.append(trait_id)
+	return normalized
+
+static func _normalized_specialties(value: Variant) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for specialty_value in value:
+		var specialty_id := String(specialty_value)
+		if specialty_id != "" and specialty_id not in normalized:
+			normalized.append(specialty_id)
 	return normalized
 
 static func _normalized_battlefield_tags(encounter: Dictionary, context: Variant = {}) -> Array:

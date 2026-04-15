@@ -5,6 +5,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
@@ -40,7 +41,7 @@ static func advance_raids(
 		if not _is_active_raid(encounter, faction_id, resolved_encounters):
 			continue
 
-		encounter = ensure_raid_army(encounter)
+		encounter = ensure_raid_army(encounter, session)
 		encounter = assign_target(session, config, encounter)
 		encounter["days_active"] = max(0, int(encounter.get("days_active", 0))) + 1
 
@@ -112,6 +113,16 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 	var encounters = session.overworld.get("encounters", [])
 	var normalized = []
 	var changed = false
+	var occupied_commander_ids: Dictionary = {}
+	for encounter_value in encounters:
+		if not (encounter_value is Dictionary):
+			continue
+		var existing_commander = encounter_value.get("enemy_commander_state", {})
+		if not (existing_commander is Dictionary):
+			continue
+		var roster_hero_id := String(existing_commander.get("roster_hero_id", ""))
+		if roster_hero_id != "":
+			occupied_commander_ids[roster_hero_id] = true
 	for encounter_value in encounters:
 		if not (encounter_value is Dictionary):
 			normalized.append(encounter_value)
@@ -119,14 +130,22 @@ static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) 
 		var encounter = encounter_value
 		if String(encounter.get("spawned_by_faction_id", "")) != "":
 			var previous_army = encounter.get("enemy_army", {})
-			encounter = ensure_raid_army(encounter)
-			if encounter.get("enemy_army", {}) != previous_army:
+			var previous_commander = encounter.get("enemy_commander_state", {})
+			encounter = ensure_raid_army(encounter, session, occupied_commander_ids)
+			var roster_hero_id := String(encounter.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+			if roster_hero_id != "":
+				occupied_commander_ids[roster_hero_id] = true
+			if encounter.get("enemy_army", {}) != previous_army or encounter.get("enemy_commander_state", {}) != previous_commander:
 				changed = true
 		normalized.append(encounter)
 	if changed:
 		session.overworld["encounters"] = normalized
 
-static func ensure_raid_army(encounter: Dictionary) -> Dictionary:
+static func ensure_raid_army(
+	encounter: Dictionary,
+	session: SessionStateStoreScript.SessionData = null,
+	occupied_commander_ids: Dictionary = {}
+) -> Dictionary:
 	if encounter.is_empty():
 		return encounter
 	var encounter_id = String(encounter.get("encounter_id", encounter.get("id", "")))
@@ -135,7 +154,206 @@ static func ensure_raid_army(encounter: Dictionary) -> Dictionary:
 		normalized_army = _base_enemy_army(encounter_id)
 	if not normalized_army.is_empty():
 		encounter["enemy_army"] = normalized_army
+	if String(encounter.get("spawned_by_faction_id", "")) != "":
+		var commander_state = build_raid_commander_state(encounter, "", "", session, occupied_commander_ids)
+		if not commander_state.is_empty():
+			encounter["enemy_commander_state"] = commander_state
 	return encounter
+
+static func occupied_raid_commander_ids(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String = "",
+	exclude_placement_id: String = ""
+) -> Dictionary:
+	var occupied: Dictionary = {}
+	if session == null:
+		return occupied
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
+			continue
+		if faction_id != "" and String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+			continue
+		if exclude_placement_id != "" and String(encounter.get("placement_id", "")) == exclude_placement_id:
+			continue
+		var roster_hero_id := String(encounter.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+		if roster_hero_id != "":
+			occupied[roster_hero_id] = true
+	return occupied
+
+static func select_raid_commander_roster_hero_id(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	preferred_index: int = 0,
+	occupied_commander_ids: Dictionary = {}
+) -> String:
+	if faction_id == "":
+		return ""
+	var faction = ContentService.get_faction(faction_id)
+	var hero_ids: Array = []
+	for hero_id_value in faction.get("hero_ids", []):
+		var hero_id := String(hero_id_value)
+		if hero_id != "" and hero_id not in hero_ids:
+			hero_ids.append(hero_id)
+	if hero_ids.is_empty():
+		return ""
+	var occupied: Dictionary = occupied_commander_ids
+	if occupied.is_empty():
+		occupied = occupied_raid_commander_ids(session, faction_id)
+	var start_index: int = posmod(preferred_index, hero_ids.size())
+	for offset in range(hero_ids.size()):
+		var candidate_id = String(hero_ids[(start_index + offset) % hero_ids.size()])
+		if candidate_id == "" or occupied.has(candidate_id):
+			continue
+		return candidate_id
+	return String(hero_ids[start_index])
+
+static func build_raid_commander_state(
+	encounter: Dictionary,
+	roster_hero_id: String = "",
+	faction_id: String = "",
+	session: SessionStateStoreScript.SessionData = null,
+	occupied_commander_ids: Dictionary = {}
+) -> Dictionary:
+	if encounter.is_empty():
+		return {}
+	var existing_state = encounter.get("enemy_commander_state", {})
+	if not (existing_state is Dictionary):
+		existing_state = {}
+	var resolved_faction_id: String = String(existing_state.get("faction_id", faction_id))
+	if resolved_faction_id == "":
+		resolved_faction_id = String(encounter.get("spawned_by_faction_id", faction_id))
+	var resolved_roster_hero_id: String = String(existing_state.get("roster_hero_id", roster_hero_id))
+	if resolved_roster_hero_id == "" and resolved_faction_id != "":
+		resolved_roster_hero_id = select_raid_commander_roster_hero_id(
+			session,
+			resolved_faction_id,
+			_preferred_commander_index_for_encounter(encounter),
+			occupied_commander_ids
+		)
+	var hero_template = ContentService.get_hero(resolved_roster_hero_id)
+	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var encounter_commander = encounter_template.get("enemy_commander", {})
+	if not (encounter_commander is Dictionary):
+		encounter_commander = {}
+	var command_source = encounter_commander.get("command", hero_template.get("command", {}))
+	var commander_state = existing_state.duplicate(true)
+	commander_state["id"] = String(
+		commander_state.get(
+			"id",
+			"raid_commander:%s" % String(encounter.get("placement_id", encounter.get("encounter_id", "raid")))
+		)
+	)
+	commander_state["roster_hero_id"] = resolved_roster_hero_id
+	commander_state["faction_id"] = resolved_faction_id
+	commander_state["name"] = String(
+		commander_state.get(
+			"name",
+			hero_template.get("name", encounter_commander.get("name", "Enemy Commander"))
+		)
+	)
+	commander_state["archetype"] = String(commander_state.get("archetype", hero_template.get("archetype", "")))
+	commander_state["identity_summary"] = String(
+		commander_state.get("identity_summary", hero_template.get("identity_summary", ""))
+	)
+	commander_state["command"] = _normalize_command_payload(commander_state.get("command", command_source))
+	commander_state["battle_traits"] = _merge_unique_strings(
+		hero_template.get("battle_traits", []),
+		commander_state.get("battle_traits", encounter_commander.get("battle_traits", []))
+	)
+	commander_state["specialties"] = _merge_unique_strings(
+		hero_template.get("starting_specialties", []),
+		commander_state.get("specialties", [])
+	)
+	commander_state["specialty_focus_ids"] = _merge_unique_strings(
+		hero_template.get("specialty_focus_ids", []),
+		commander_state.get("specialty_focus_ids", [])
+	)
+	return SpellRulesScript.ensure_hero_spellbook(
+		commander_state,
+		{
+			"command": commander_state.get("command", {}),
+			"starting_spell_ids": _merge_unique_strings(
+				_hero_battle_spell_ids(hero_template),
+				commander_state.get("spellbook", {}).get("known_spell_ids", encounter_commander.get("starting_spell_ids", []))
+			),
+		}
+	)
+
+static func raid_commander_name(encounter: Dictionary) -> String:
+	if encounter.is_empty():
+		return ""
+	var commander_state = encounter.get("enemy_commander_state", {})
+	if commander_state is Dictionary:
+		var commander_name := String(commander_state.get("name", ""))
+		if commander_name != "":
+			return commander_name
+	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	return String(encounter_template.get("enemy_commander", {}).get("name", ""))
+
+static func raid_display_name(encounter: Dictionary) -> String:
+	if encounter.is_empty():
+		return "Hostile contact"
+	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var encounter_name := String(encounter_template.get("name", encounter.get("placement_id", "Raid host")))
+	var commander_name := raid_commander_name(encounter)
+	if commander_name == "" or String(encounter.get("spawned_by_faction_id", "")) == "":
+		return encounter_name
+	return "%s's %s" % [commander_name, encounter_name]
+
+static func raid_commander_summaries(encounters: Array, limit: int = 2) -> Array:
+	var names: Array = []
+	for encounter in encounters:
+		if not (encounter is Dictionary):
+			continue
+		var commander_name := raid_commander_name(encounter)
+		if commander_name == "" or commander_name in names:
+			continue
+		names.append(commander_name)
+		if limit > 0 and names.size() >= limit:
+			break
+	return names
+
+static func _hero_battle_spell_ids(hero_template: Dictionary) -> Array:
+	var spell_ids := []
+	for spell_id_value in hero_template.get("starting_spell_ids", []):
+		var spell_id := String(spell_id_value)
+		if spell_id == "":
+			continue
+		if String(ContentService.get_spell(spell_id).get("context", "")) != SpellRulesScript.CONTEXT_BATTLE:
+			continue
+		if spell_id not in spell_ids:
+			spell_ids.append(spell_id)
+	return spell_ids
+
+static func _normalize_command_payload(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {"attack": 0, "defense": 0, "power": 0, "knowledge": 0}
+	return {
+		"attack": max(0, int(value.get("attack", 0))),
+		"defense": max(0, int(value.get("defense", 0))),
+		"power": max(0, int(value.get("power", 0))),
+		"knowledge": max(0, int(value.get("knowledge", 0))),
+	}
+
+static func _merge_unique_strings(primary: Variant, secondary: Variant) -> Array:
+	var merged := []
+	for source in [primary, secondary]:
+		if not (source is Array):
+			continue
+		for entry in source:
+			var text := String(entry)
+			if text != "" and text not in merged:
+				merged.append(text)
+	return merged
+
+static func _preferred_commander_index_for_encounter(encounter: Dictionary) -> int:
+	var placement_id := String(encounter.get("placement_id", encounter.get("encounter_id", "")))
+	if placement_id == "":
+		return 0
+	return abs(int(hash(placement_id)))
 
 static func _clear_delivery_intercept_target(raid: Dictionary) -> Dictionary:
 	if raid.is_empty():

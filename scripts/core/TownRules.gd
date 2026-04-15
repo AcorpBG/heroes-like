@@ -1433,26 +1433,50 @@ static func _town_frontier_outlook_line(town: Dictionary, threat_state: Dictiona
 	var visible_pressuring := int(threat_state.get("visible_pressuring", 0))
 	var visible_marching := int(threat_state.get("visible_marching", 0))
 	var nearest_goal_distance := int(threat_state.get("nearest_goal_distance", 9999))
+	var pressuring_commanders = threat_state.get("pressuring_commanders", [])
+	var marching_commanders = threat_state.get("marching_commanders", [])
 	var siege_progress := int(threat_state.get("siege_progress", 0))
 	var siege_capture_progress := int(max(1, int(threat_state.get("siege_capture_progress", 1))))
 	if visible_pressuring > 0:
-		clauses.append("%d known raid host%s already press the approaches" % [
-			visible_pressuring,
-			"" if visible_pressuring == 1 else "s",
-		])
+		if visible_pressuring == 1 and pressuring_commanders is Array and not pressuring_commanders.is_empty():
+			clauses.append("%s already presses the approaches" % String(pressuring_commanders[0]))
+		else:
+			var pressure_clause: String = "%d known raid host%s already press the approaches" % [
+				visible_pressuring,
+				"" if visible_pressuring == 1 else "s",
+			]
+			if pressuring_commanders is Array and not pressuring_commanders.is_empty():
+				var shown_pressuring = pressuring_commanders.slice(0, min(2, pressuring_commanders.size()))
+				pressure_clause += " (%s)" % ", ".join(shown_pressuring)
+			clauses.append(pressure_clause)
 	if visible_marching > 0:
 		if nearest_goal_distance <= 2:
-			clauses.append("%d known host%s can reach in %d day%s" % [
-				visible_marching,
-				"" if visible_marching == 1 else "s",
-				max(1, nearest_goal_distance),
-				"" if max(1, nearest_goal_distance) == 1 else "s",
-			])
+			if visible_marching == 1 and marching_commanders is Array and not marching_commanders.is_empty():
+				clauses.append("%s can reach in %d day%s" % [
+					String(marching_commanders[0]),
+					max(1, nearest_goal_distance),
+					"" if max(1, nearest_goal_distance) == 1 else "s",
+				])
+			else:
+				var marching_clause: String = "%d known host%s can reach in %d day%s" % [
+					visible_marching,
+					"" if visible_marching == 1 else "s",
+					max(1, nearest_goal_distance),
+					"" if max(1, nearest_goal_distance) == 1 else "s",
+				]
+				if marching_commanders is Array and not marching_commanders.is_empty():
+					var shown_marching = marching_commanders.slice(0, min(2, marching_commanders.size()))
+					marching_clause += " (%s)" % ", ".join(shown_marching)
+				clauses.append(marching_clause)
 		else:
-			clauses.append("%d known host%s are marching on the lane" % [
+			var distant_clause: String = "%d known host%s are marching on the lane" % [
 				visible_marching,
 				"" if visible_marching == 1 else "s",
-			])
+			]
+			if marching_commanders is Array and not marching_commanders.is_empty():
+				var shown_distant = marching_commanders.slice(0, min(2, marching_commanders.size()))
+				distant_clause += " (%s)" % ", ".join(shown_distant)
+			clauses.append(distant_clause)
 	if bool(threat_state.get("hidden_targeting", false)):
 		clauses.append("scouts report hostile movement beyond the fog")
 	if siege_progress > 0:
@@ -1577,6 +1601,8 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 		var visible_marching := 0
 		var visible_pressuring := 0
 		var hidden_targeting := false
+		var pressuring_commanders: Array = []
+		var marching_commanders: Array = []
 		for encounter in session.overworld.get("encounters", []):
 			if not (encounter is Dictionary):
 				continue
@@ -1588,11 +1614,16 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 				continue
 			var is_public: bool = EnemyAdventureRulesScript._raid_is_public(session, encounter)
 			var is_pressuring := bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 0
+			var commander_name := String(OverworldRulesScript.encounter_commander_name(encounter))
 			if is_public:
 				if is_pressuring:
 					visible_pressuring += 1
+					if commander_name != "" and commander_name not in pressuring_commanders:
+						pressuring_commanders.append(commander_name)
 				else:
 					visible_marching += 1
+					if commander_name != "" and commander_name not in marching_commanders:
+						marching_commanders.append(commander_name)
 			else:
 				hidden_targeting = true
 
@@ -1605,15 +1636,27 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 
 		var clauses := []
 		if visible_pressuring > 0:
-			clauses.append("%d known raid host%s press the approaches" % [
-				visible_pressuring,
-				"" if visible_pressuring == 1 else "s",
-			])
+			if visible_pressuring == 1 and not pressuring_commanders.is_empty():
+				clauses.append("%s presses the approaches" % String(pressuring_commanders[0]))
+			else:
+				var pressure_clause: String = "%d known raid host%s press the approaches" % [
+					visible_pressuring,
+					"" if visible_pressuring == 1 else "s",
+				]
+				if not pressuring_commanders.is_empty():
+					pressure_clause += " (%s)" % ", ".join(pressuring_commanders.slice(0, min(2, pressuring_commanders.size())))
+				clauses.append(pressure_clause)
 		if visible_marching > 0:
-			clauses.append("%d known host%s are marching on the town" % [
-				visible_marching,
-				"" if visible_marching == 1 else "s",
-			])
+			if visible_marching == 1 and not marching_commanders.is_empty():
+				clauses.append("%s is marching on the town" % String(marching_commanders[0]))
+			else:
+				var marching_clause: String = "%d known host%s are marching on the town" % [
+					visible_marching,
+					"" if visible_marching == 1 else "s",
+				]
+				if not marching_commanders.is_empty():
+					marching_clause += " (%s)" % ", ".join(marching_commanders.slice(0, min(2, marching_commanders.size())))
+				clauses.append(marching_clause)
 		if hidden_targeting:
 			clauses.append("scouts report hostile movement beyond the fog")
 		if siege_progress > 0:

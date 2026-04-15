@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T22:31:00Z",
+  "updatedAt": "2026-04-15T23:28:00Z",
   "status": "in_progress",
-  "currentPhase": "save-resume-hardening",
-  "currentSliceId": "phase-6-save-hardening-hostile-pressure-contexts",
-  "currentSliceTitle": "Harden save/load and resume reliability for interception and town-assault battle contexts",
+  "currentPhase": "hostile-commander-continuity",
+  "currentSliceId": "phase-5-hostile-overworld-commander-identity",
+  "currentSliceTitle": "Give hostile raid pressure durable commander identity and carry it through overworld and battle state",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a save-hardening slice that rebuilds hero-intercept and town-assault battle contexts from saved battle state plus live overworld anchors, keeps active battle resume routing and save summaries aligned even when scene-state metadata is stale, and adds focused regression coverage for hostile-pressure battle restore paths.",
+  "currentSliceNotes": "Completed a hostile-overworld opposition slice that seeds raid hosts from faction hero rosters, surfaces named hostile commanders in frontier and town readouts, carries commander identity into battle and back into surviving encounter state, and adds focused regression coverage for commander continuity plus save-resume preservation.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
