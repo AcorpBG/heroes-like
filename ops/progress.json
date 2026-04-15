@@ -1,11 +1,11 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T12:17:32Z",
+  "updatedAt": "2026-04-15T12:37:24Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-battlefield-cover-obstruction-identity",
-  "currentSliceTitle": "Deepen tactical combat with authored battlefield cover, obstruction, and lane-control identity through the existing battle pipeline",
+  "currentSliceId": "phase-6-town-frontline-reinforcement-delivery",
+  "currentSliceTitle": "Turn town recruitment and reserve production into frontline reinforcement delivery through the existing town, overworld, hero-command, logistics-site, and enemy-turn systems",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -828,6 +828,18 @@
       "title": "Re-run repository-local validation and headless Godot boot for battlefield cover, obstruction, lane-pressure summaries, and save-version preservation",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-town-frontline-reinforcement-delivery",
+      "title": "Turn town recruitment and reserve production into frontline reinforcement delivery through the existing town, overworld, hero-command, logistics-site, and enemy-turn systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-town-frontline-reinforcement-delivery-validation",
+      "title": "Re-run repository-local validation and headless Godot boot for reserve-delivery routing, convoy surfacing, hostile disruption, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1017,6 +1029,9 @@
     "This run closed the remaining ContentService warning gaps for authored attack_buff spells, encounter-clearing objectives, reactive raid and objective conditions, and add_enemy_pressure hook effects so the same core-owned spell and scenario paths now validate cleanly in Godot 4.6.2 headless boot without changing save version 9.",
     "This run deepened tactical combat through the existing field-objective pipeline by adding authored cover lines, obstruction lines, and stronger firing-lane identity to representative encounters instead of creating a separate battle-planner subsystem.",
     "BattleRules.gd and BattleAiRules.gd now treat those authored cover, obstruction, and lane states as live movement-pressure, ranged-threat, commander-screening, target-priority, cohesion, momentum, and battle-summary inputs, while tests/validate_repo.py enforces the new objective types and signature encounter coverage.",
-    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding battlefield cover, obstruction, and lane-pressure coverage while preserving save version 9."
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding battlefield cover, obstruction, and lane-pressure coverage while preserving save version 9.",
+    "This run turned town reserve production into real frontline reinforcement delivery by loading authored recruits onto existing logistics-site response orders, routing them toward pressured towns or active heroes, and resolving arrivals on the normal day-advance path instead of adding a separate convoy subsystem.",
+    "TownRules.gd and OverworldRules.gd now surface live convoy plans, route status, and delivery outcomes through the existing town summary, recruitment, response, management-watch, and logistics-site context surfaces, while EnemyAdventureRules.gd and EnemyTurnRules.gd both value attacking or protecting those lines.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding frontline reserve-delivery coverage while preserving save version 9."
   ]
 }

@@ -293,6 +293,9 @@ static func end_turn(session: SessionStateStore.SessionData) -> Dictionary:
 		messages.append("Field sites yield %s." % site_income_summary)
 	if not site_muster_messages.is_empty():
 		messages.append("Outlying musters %s." % "; ".join(site_muster_messages))
+	var delivery_messages := _advance_player_reserve_deliveries(session)
+	if not delivery_messages.is_empty():
+		messages.append("Reserve deliveries %s." % "; ".join(delivery_messages))
 	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
 	var enemy_message := String(enemy_turn_result.get("message", ""))
 	if enemy_message != "":
@@ -1293,9 +1296,11 @@ static func describe_management_watch(session: SessionStateStore.SessionData) ->
 	var project_summary := ""
 	var disruption_summary := ""
 	var recovery_summary := ""
+	var delivery_summary := ""
 	var project_score := -1
 	var disruption_score := -1
 	var recovery_score := -1
+	var delivery_score := -1
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
@@ -1328,6 +1333,12 @@ static func describe_management_watch(session: SessionStateStore.SessionData) ->
 			recovery_score = local_recovery_score
 			if bool(recovery.get("active", false)):
 				recovery_summary = "%s %s" % [town_name, String(recovery.get("summary", ""))]
+		var local_delivery_score := int(logistics.get("delivery_count", 0)) * 2 + int(logistics.get("threatened_count", 0))
+		if local_delivery_score > delivery_score and int(logistics.get("delivery_count", 0)) > 0:
+			delivery_score = local_delivery_score
+			var delivery_labels = logistics.get("delivery_site_labels", [])
+			if delivery_labels is Array and not delivery_labels.is_empty():
+				delivery_summary = "%s %s" % [town_name, String(delivery_labels[0])]
 	var parts := []
 	if project_summary != "":
 		parts.append(project_summary)
@@ -1335,6 +1346,8 @@ static func describe_management_watch(session: SessionStateStore.SessionData) ->
 		parts.append(disruption_summary)
 	if recovery_summary != "":
 		parts.append(recovery_summary)
+	if delivery_summary != "":
+		parts.append(delivery_summary)
 	if parts.is_empty():
 		return "Town lines are stable."
 	return " | ".join(parts)
@@ -1753,6 +1766,13 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 				"response_until_day": max(0, int(node.get("response_until_day", 0))),
 				"response_commander_id": String(node.get("response_commander_id", "")),
 				"response_security_rating": max(0, int(node.get("response_security_rating", 0))),
+				"delivery_controller_id": String(node.get("delivery_controller_id", "")),
+				"delivery_origin_town_id": String(node.get("delivery_origin_town_id", "")),
+				"delivery_target_kind": String(node.get("delivery_target_kind", "")),
+				"delivery_target_id": String(node.get("delivery_target_id", "")),
+				"delivery_target_label": String(node.get("delivery_target_label", "")),
+				"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
+				"delivery_manifest": _normalize_recruit_payload(node.get("delivery_manifest", {})),
 			}
 		)
 	return normalized
@@ -2011,6 +2031,383 @@ static func _resource_site_response_effect_summary(response_state: Dictionary) -
 		parts.append("pressure guard +%d" % int(response_state.get("pressure_guard_bonus", 0)))
 	return ", ".join(parts)
 
+static func _resource_site_delivery_target_label(
+	session: SessionStateStore.SessionData,
+	target_kind: String,
+	target_id: String,
+	fallback_label: String = ""
+) -> String:
+	if session != null:
+		match target_kind:
+			"hero":
+				var hero := HeroCommandRules.hero_by_id(session, target_id)
+				if not hero.is_empty():
+					return String(hero.get("name", target_id))
+			"town":
+				var town_result := _find_town_by_placement(session, target_id)
+				if int(town_result.get("index", -1)) >= 0:
+					return _town_name(town_result.get("town", {}))
+			"raid":
+				var encounter_result = _find_encounter_by_placement(session, target_id)
+				if int(encounter_result.get("index", -1)) >= 0:
+					var encounter: Dictionary = encounter_result.get("encounter", {})
+					return String(encounter.get("target_label", encounter.get("placement_id", target_id)))
+	if fallback_label != "":
+		return fallback_label
+	match target_kind:
+		"hero":
+			return "frontline hero"
+		"town":
+			return "frontline town"
+		"raid":
+			return "raid host"
+		_:
+			return "frontline"
+
+static func _resource_site_delivery_state(
+	session: SessionStateStore.SessionData,
+	node: Dictionary,
+	_site: Dictionary = {}
+) -> Dictionary:
+	var manifest = _normalize_recruit_payload(node.get("delivery_manifest", {}))
+	var controller_id = String(node.get("delivery_controller_id", ""))
+	var arrival_day = max(0, int(node.get("delivery_arrival_day", 0)))
+	var target_kind = String(node.get("delivery_target_kind", ""))
+	var target_id = String(node.get("delivery_target_id", ""))
+	var target_label = _resource_site_delivery_target_label(
+		session,
+		target_kind,
+		target_id,
+		String(node.get("delivery_target_label", ""))
+	)
+	var source_town_id = String(node.get("delivery_origin_town_id", ""))
+	var source_town_label := ""
+	if session != null and source_town_id != "":
+		var source_town_result = _find_town_by_placement(session, source_town_id)
+		if int(source_town_result.get("index", -1)) >= 0:
+			source_town_label = _town_name(source_town_result.get("town", {}))
+	var active := false
+	var days_remaining := 0
+	if session != null and controller_id != "" and not manifest.is_empty() and arrival_day > 0:
+		active = String(node.get("collected_by_faction_id", "")) == controller_id
+		if active:
+			days_remaining = max(0, arrival_day - session.day)
+			if days_remaining > 0:
+				days_remaining = max(1, days_remaining)
+	return {
+		"active": active,
+		"controller_id": controller_id,
+		"origin_town_id": source_town_id,
+		"origin_town_label": source_town_label,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label,
+		"arrival_day": arrival_day,
+		"days_remaining": days_remaining,
+		"manifest": manifest,
+		"recruit_summary": _describe_recruit_delta(manifest),
+		"manifest_value": _weighted_recruit_value(manifest),
+	}
+
+static func _resource_site_delivery_line(
+	session: SessionStateStore.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var delivery_state = _resource_site_delivery_state(session, node, site)
+	if not bool(delivery_state.get("active", false)):
+		return ""
+	var parts := [
+		"%s convoy" % String(site.get("name", "Frontier route")),
+		"to %s" % String(delivery_state.get("target_label", "the front")),
+	]
+	var recruit_summary = String(delivery_state.get("recruit_summary", ""))
+	if recruit_summary != "":
+		parts.append(recruit_summary)
+	var days_remaining := int(delivery_state.get("days_remaining", 0))
+	if days_remaining > 0:
+		parts.append("%d day%s out" % [days_remaining, "" if days_remaining == 1 else "s"])
+	return " | ".join(parts)
+
+static func _estimate_reserve_delivery_eta(
+	origin: Vector2i,
+	target: Vector2i,
+	security_rating: int,
+	max_days: int
+) -> int:
+	var distance = abs(origin.x - target.x) + abs(origin.y - target.y)
+	var travel_speed = max(2, security_rating + 1)
+	return clamp(int(ceili(float(max(distance, 1)) / float(travel_speed))), 1, max(1, max_days))
+
+static func _player_reserve_delivery_plan(
+	session: SessionStateStore.SessionData,
+	source_town: Dictionary,
+	response_state: Dictionary
+) -> Dictionary:
+	if session == null or source_town.is_empty():
+		return {}
+	var available_recruits = _normalize_recruit_payload(source_town.get("available_recruits", {}))
+	if available_recruits.is_empty():
+		return {}
+	var candidates = _player_reserve_delivery_candidates(session, source_town, response_state)
+	if candidates.is_empty():
+		return {}
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_priority := int(a.get("priority", 0))
+		var b_priority := int(b.get("priority", 0))
+		if a_priority == b_priority:
+			var a_eta := int(a.get("eta_days", 999))
+			var b_eta := int(b.get("eta_days", 999))
+			if a_eta == b_eta:
+				return String(a.get("label", "")) < String(b.get("label", ""))
+			return a_eta < b_eta
+		return a_priority > b_priority
+	)
+	var best_candidate: Dictionary = candidates[0]
+	var manifest = _reserve_delivery_manifest_for_candidate(session, source_town, best_candidate, response_state)
+	if manifest.is_empty():
+		return {}
+	return {
+		"target_kind": String(best_candidate.get("target_kind", "")),
+		"target_id": String(best_candidate.get("target_id", "")),
+		"target_label": String(best_candidate.get("label", "")),
+		"eta_days": int(best_candidate.get("eta_days", 1)),
+		"manifest": manifest,
+		"priority": int(best_candidate.get("priority", 0)),
+	}
+
+static func _player_reserve_delivery_candidates(
+	session: SessionStateStore.SessionData,
+	source_town: Dictionary,
+	response_state: Dictionary
+) -> Array:
+	var candidates = []
+	if session == null or source_town.is_empty():
+		return candidates
+	var source_position = Vector2i(int(source_town.get("x", 0)), int(source_town.get("y", 0)))
+	var support_radius = max(1, int(_town_logistics_plan(source_town).get("support_radius", 0)))
+	var range_bonus = max(0, int(response_state.get("security_rating", 1)) - 1)
+	var max_range = support_radius + range_bonus
+	var source_placement_id = String(source_town.get("placement_id", ""))
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+			continue
+		var placement_id = String(town.get("placement_id", ""))
+		if placement_id == "" or placement_id == source_placement_id:
+			continue
+		var target_position = Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+		var distance = abs(source_position.x - target_position.x) + abs(source_position.y - target_position.y)
+		if distance > max_range:
+			continue
+		var threat_state = _town_command_risk_state(session, town)
+		var recovery = _town_recovery_state(session, town)
+		var logistics = _town_logistics_state(session, town)
+		var capital_project = _town_capital_project_state(town, session)
+		var priority = int(threat_state.get("visible_pressuring", 0)) * 52
+		priority += int(threat_state.get("visible_marching", 0)) * 22
+		if bool(threat_state.get("hidden_targeting", false)):
+			priority += 10
+		priority += int(recovery.get("pressure", 0)) * 18
+		priority += int(logistics.get("disrupted_count", 0)) * 18
+		priority += int(logistics.get("threatened_count", 0)) * 10
+		priority += int(logistics.get("support_gap", 0)) * 14
+		match _town_strategic_role(town):
+			"capital":
+				priority += 24
+			"stronghold":
+				priority += 12
+		if bool(capital_project.get("vulnerable", false)):
+			priority += 18
+		elif bool(capital_project.get("active", false)):
+			priority += 8
+		if priority <= 0:
+			continue
+		candidates.append(
+			{
+				"target_kind": "town",
+				"target_id": placement_id,
+				"label": _town_name(town),
+				"priority": priority,
+				"eta_days": _estimate_reserve_delivery_eta(
+					source_position,
+					target_position,
+					int(response_state.get("security_rating", 1)),
+					int(response_state.get("watch_days", 1))
+				),
+			}
+		)
+	for hero in session.overworld.get("player_heroes", []):
+		if not (hero is Dictionary):
+			continue
+		var hero_id = String(hero.get("id", ""))
+		if hero_id == "":
+			continue
+		var hero_position = Vector2i(int(hero.get("position", {}).get("x", 0)), int(hero.get("position", {}).get("y", 0)))
+		if hero_position == source_position:
+			continue
+		var hero_distance = abs(source_position.x - hero_position.x) + abs(source_position.y - hero_position.y)
+		if hero_distance > max_range:
+			continue
+		var hero_priority = _player_hero_delivery_priority(session, hero)
+		if hero_priority <= 0:
+			continue
+		candidates.append(
+			{
+				"target_kind": "hero",
+				"target_id": hero_id,
+				"label": String(hero.get("name", "the hero")),
+				"priority": hero_priority,
+				"eta_days": _estimate_reserve_delivery_eta(
+					source_position,
+					hero_position,
+					int(response_state.get("security_rating", 1)),
+					int(response_state.get("watch_days", 1))
+				),
+			}
+		)
+	return candidates
+
+static func _player_hero_delivery_priority(session: SessionStateStore.SessionData, hero: Dictionary) -> int:
+	if session == null or hero.is_empty():
+		return 0
+	var hero_position = Vector2i(int(hero.get("position", {}).get("x", 0)), int(hero.get("position", {}).get("y", 0)))
+	var priority = 0
+	var active_hero_id = String(session.overworld.get("active_hero_id", ""))
+	if String(hero.get("id", "")) == active_hero_id:
+		priority += 16
+	if bool(hero.get("is_primary", false)):
+		priority += 10
+	var army_strength = _army_strength_value(hero.get("army", {}).get("stacks", []))
+	if army_strength <= 90:
+		priority += 28
+	elif army_strength <= 140:
+		priority += 18
+	elif army_strength <= 200:
+		priority += 8
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
+			continue
+		var encounter_x := int(encounter.get("x", -1))
+		var encounter_y := int(encounter.get("y", -1))
+		if not is_tile_visible(session, encounter_x, encounter_y):
+			continue
+		var distance = abs(hero_position.x - encounter_x) + abs(hero_position.y - encounter_y)
+		if distance <= 1:
+			priority += 38
+		elif distance <= 3:
+			priority += 20
+		if String(encounter.get("target_kind", "")) == "hero" and bool(encounter.get("arrived", false)):
+			priority += 10
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
+			continue
+		if not is_tile_visible(session, int(town.get("x", -1)), int(town.get("y", -1))):
+			continue
+		var town_distance = abs(hero_position.x - int(town.get("x", 0))) + abs(hero_position.y - int(town.get("y", 0)))
+		if town_distance <= 2:
+			priority += 16
+		elif town_distance <= 4:
+			priority += 8
+	return priority
+
+static func _reserve_delivery_manifest_for_candidate(
+	session: SessionStateStore.SessionData,
+	source_town: Dictionary,
+	candidate: Dictionary,
+	response_state: Dictionary
+) -> Dictionary:
+	var recruits = _normalize_recruit_payload(source_town.get("available_recruits", {}))
+	if recruits.is_empty():
+		return {}
+	var capacity = 10 + (max(1, int(response_state.get("security_rating", 1))) * 6)
+	capacity += int(response_state.get("quality_bonus", 0)) * 2
+	capacity += int(response_state.get("readiness_bonus", 0)) * 2
+	if String(candidate.get("target_kind", "")) == "town":
+		capacity += 6
+	if int(candidate.get("priority", 0)) >= 70:
+		capacity += 8
+	elif int(candidate.get("priority", 0)) >= 40:
+		capacity += 4
+	var hold_back := _town_should_hold_back_reserves(session, source_town)
+	var unit_ids = []
+	for unit_id_value in recruits.keys():
+		var unit_id := String(unit_id_value)
+		var available := int(recruits.get(unit_id_value, 0))
+		var keep_count := 1 if hold_back and available > 2 else 0
+		if max(0, available - keep_count) <= 0:
+			continue
+		unit_ids.append(unit_id)
+	unit_ids.sort_custom(func(a: String, b: String) -> bool:
+		var a_priority := _reserve_delivery_unit_priority(a, String(candidate.get("target_kind", "")))
+		var b_priority := _reserve_delivery_unit_priority(b, String(candidate.get("target_kind", "")))
+		if a_priority == b_priority:
+			return a < b
+		return a_priority > b_priority
+	)
+	var manifest = {}
+	var remaining_capacity = max(1, capacity)
+	for unit_id in unit_ids:
+		var available_count = int(recruits.get(unit_id, 0))
+		var keep_count = 1 if hold_back and available_count > 2 else 0
+		var sendable = max(0, available_count - keep_count)
+		if sendable <= 0:
+			continue
+		var unit_value = _reserve_delivery_unit_value(unit_id)
+		var max_by_capacity = max(1, int(floor(float(max(remaining_capacity, unit_value)) / float(unit_value))))
+		var send_count = min(sendable, max_by_capacity)
+		if send_count <= 0:
+			continue
+		manifest[unit_id] = send_count
+		remaining_capacity -= send_count * unit_value
+		if remaining_capacity <= 0:
+			break
+	if manifest.is_empty() and not unit_ids.is_empty():
+		manifest[unit_ids[0]] = 1
+	return manifest
+
+static func _reserve_delivery_unit_priority(unit_id: String, target_kind: String) -> int:
+	var unit = ContentService.get_unit(unit_id)
+	var priority = (max(1, int(unit.get("tier", 1))) * 10)
+	priority += int(unit.get("attack", 0)) + int(unit.get("defense", 0))
+	if bool(unit.get("ranged", false)):
+		priority += 6 if target_kind == "town" else 3
+	return priority
+
+static func _reserve_delivery_unit_value(unit_id: String) -> int:
+	return max(1, _weighted_recruit_value({unit_id: 1}))
+
+static func _town_should_hold_back_reserves(session: SessionStateStore.SessionData, town: Dictionary) -> bool:
+	if session == null or town.is_empty():
+		return false
+	var recovery := _town_recovery_state(session, town)
+	var threat_state := _town_command_risk_state(session, town)
+	if bool(recovery.get("active", false)):
+		return true
+	if int(threat_state.get("visible_pressuring", 0)) > 0 or int(threat_state.get("visible_marching", 0)) > 0 or bool(threat_state.get("hidden_targeting", false)):
+		return true
+	return _town_strategic_role(town) in ["capital", "stronghold"]
+
+static func _consume_recruit_payload(recruits: Variant, manifest: Variant) -> Dictionary:
+	var remaining := _normalize_recruit_payload(recruits)
+	var shipment := _normalize_recruit_payload(manifest)
+	for unit_id_value in shipment.keys():
+		var unit_id := String(unit_id_value)
+		remaining[unit_id] = max(0, int(remaining.get(unit_id, 0)) - int(shipment.get(unit_id_value, 0)))
+		if int(remaining.get(unit_id, 0)) <= 0:
+			remaining.erase(unit_id)
+	return remaining
+
+static func _clear_resource_site_delivery(node: Dictionary) -> Dictionary:
+	var cleared := node.duplicate(true)
+	cleared["delivery_controller_id"] = ""
+	cleared["delivery_origin_town_id"] = ""
+	cleared["delivery_target_kind"] = ""
+	cleared["delivery_target_id"] = ""
+	cleared["delivery_target_label"] = ""
+	cleared["delivery_arrival_day"] = 0
+	cleared["delivery_manifest"] = {}
+	return cleared
+
 static func _resource_site_response_action(
 	session: SessionStateStore.SessionData,
 	node: Dictionary,
@@ -2035,6 +2432,22 @@ static func _resource_site_response_action(
 		summary_parts.append("Commander %s" % commander_name)
 	if int(linked_town_result.get("index", -1)) >= 0:
 		summary_parts.append("Linked %s" % _town_name(linked_town_result.get("town", {})))
+	var delivery_plan := {}
+	if int(linked_town_result.get("index", -1)) >= 0:
+		delivery_plan = _player_reserve_delivery_plan(session, linked_town_result.get("town", {}), response_state)
+	if not delivery_plan.is_empty():
+		summary_parts.append(
+			"Load %s for %s" % [
+				_describe_recruit_delta(delivery_plan.get("manifest", {})),
+				String(delivery_plan.get("target_label", "the front")),
+			]
+		)
+		summary_parts.append(
+			"ETA %d day%s" % [
+				int(delivery_plan.get("eta_days", 1)),
+				"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
+			]
+		)
 	var impact_summary := _resource_site_response_effect_summary(response_state)
 	if impact_summary != "":
 		summary_parts.append(impact_summary)
@@ -2099,6 +2512,7 @@ static func _resource_site_context_summary(session: SessionStateStore.SessionDat
 	if spell_id != "":
 		parts.append("Teaches %s" % String(ContentService.get_spell(spell_id).get("name", spell_id)))
 	var response_state := _resource_site_response_state(session, node, site)
+	var delivery_state := _resource_site_delivery_state(session, node, site)
 	if bool(response_state.get("active", false)):
 		var response_line := "%s escort %d day%s" % [
 			String(response_state.get("action_label", "Route secure")),
@@ -2112,6 +2526,8 @@ static func _resource_site_context_summary(session: SessionStateStore.SessionDat
 		if impact_summary != "":
 			response_line += " | %s" % impact_summary
 		parts.append(response_line)
+		if bool(delivery_state.get("active", false)):
+			parts.append(_resource_site_delivery_line(session, node, site))
 	elif String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
 		var ready_commander := String(response_state.get("commander_name", ""))
 		if ready_commander != "":
@@ -2121,6 +2537,18 @@ static func _resource_site_context_summary(session: SessionStateStore.SessionDat
 			])
 		else:
 			parts.append("Order %s to steady nearby threat lanes." % String(response_state.get("action_label", "route security")))
+		var linked_town_result := _resource_node_linked_town(session, node, "player")
+		if int(linked_town_result.get("index", -1)) >= 0:
+			var delivery_plan := _player_reserve_delivery_plan(session, linked_town_result.get("town", {}), response_state)
+			if not delivery_plan.is_empty():
+				parts.append(
+					"Next convoy %s for %s in %d day%s." % [
+						_describe_recruit_delta(delivery_plan.get("manifest", {})),
+						String(delivery_plan.get("target_label", "the front")),
+						int(delivery_plan.get("eta_days", 1)),
+						"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
+					]
+				)
 	if parts.is_empty():
 		return "Claim the site to add its stores immediately."
 	return " | ".join(parts)
@@ -2194,12 +2622,32 @@ static func _issue_resource_site_response(
 	var commander_name := String(active_hero.get("name", "The commander"))
 	var security_rating := _route_security_rating_for_hero(active_hero)
 	var linked_town_result := _resource_node_linked_town(session, node, "player")
+	var delivery_plan := {}
+	if int(linked_town_result.get("index", -1)) >= 0:
+		delivery_plan = _player_reserve_delivery_plan(session, linked_town_result.get("town", {}), response_state)
 	node["response_origin"] = origin
 	node["response_source_town_id"] = String(linked_town_result.get("town", {}).get("placement_id", ""))
 	node["response_last_day"] = session.day
 	node["response_until_day"] = session.day + max(1, int(response_state.get("watch_days", 0))) - 1
 	node["response_commander_id"] = commander_id
 	node["response_security_rating"] = security_rating
+	node = _clear_resource_site_delivery(node)
+	if not delivery_plan.is_empty():
+		var source_town = linked_town_result.get("town", {})
+		var towns = session.overworld.get("towns", [])
+		source_town["available_recruits"] = _consume_recruit_payload(
+			source_town.get("available_recruits", {}),
+			delivery_plan.get("manifest", {})
+		)
+		towns[int(linked_town_result.get("index", -1))] = source_town
+		session.overworld["towns"] = towns
+		node["delivery_controller_id"] = "player"
+		node["delivery_origin_town_id"] = String(source_town.get("placement_id", ""))
+		node["delivery_target_kind"] = String(delivery_plan.get("target_kind", ""))
+		node["delivery_target_id"] = String(delivery_plan.get("target_id", ""))
+		node["delivery_target_label"] = String(delivery_plan.get("target_label", ""))
+		node["delivery_arrival_day"] = session.day + max(1, int(delivery_plan.get("eta_days", 1)))
+		node["delivery_manifest"] = _normalize_recruit_payload(delivery_plan.get("manifest", {}))
 	var nodes = session.overworld.get("resource_nodes", [])
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["resource_nodes"] = nodes
@@ -2220,6 +2668,16 @@ static func _issue_resource_site_response(
 	if impact_summary != "":
 		messages.append("Escort line %s while active." % impact_summary)
 	messages.append("Route escort strength %d." % security_rating)
+	if not delivery_plan.is_empty():
+		messages.append(
+			"%s loads %s for %s (%d day%s)." % [
+				String(site.get("name", "The route")),
+				_describe_recruit_delta(delivery_plan.get("manifest", {})),
+				String(delivery_plan.get("target_label", "the front")),
+				int(delivery_plan.get("eta_days", 1)),
+				"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
+			]
+		)
 	var relief_message := ""
 	if int(linked_town_result.get("index", -1)) >= 0 and int(response_state.get("recovery_relief", 0)) > 0:
 		relief_message = relieve_town_recovery_pressure(
@@ -2252,7 +2710,7 @@ static func _resource_node_linked_town(
 	return town_result
 
 static func _clear_resource_site_response(node: Dictionary) -> Dictionary:
-	var cleared := node.duplicate(true)
+	var cleared := _clear_resource_site_delivery(node)
 	cleared["response_origin"] = ""
 	cleared["response_source_town_id"] = ""
 	cleared["response_last_day"] = 0
@@ -2260,6 +2718,163 @@ static func _clear_resource_site_response(node: Dictionary) -> Dictionary:
 	cleared["response_commander_id"] = ""
 	cleared["response_security_rating"] = 0
 	return cleared
+
+static func _advance_player_reserve_deliveries(session: SessionStateStore.SessionData) -> Array:
+	var messages := []
+	if session == null:
+		return messages
+	var nodes = session.overworld.get("resource_nodes", [])
+	var changed := false
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		var delivery_state = _resource_site_delivery_state(session, node)
+		if String(delivery_state.get("controller_id", "")) != "player":
+			continue
+		if _normalize_recruit_payload(delivery_state.get("manifest", {})).is_empty():
+			node = _clear_resource_site_delivery(node)
+			nodes[index] = node
+			changed = true
+			continue
+		if String(node.get("collected_by_faction_id", "")) != "player":
+			node = _clear_resource_site_delivery(node)
+			nodes[index] = node
+			changed = true
+			continue
+		if session.day < int(delivery_state.get("arrival_day", 0)):
+			continue
+		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
+		var message = _resolve_player_reserve_delivery(session, site, delivery_state)
+		node = _clear_resource_site_delivery(node)
+		nodes[index] = node
+		changed = true
+		if message != "":
+			messages.append(message)
+	if changed:
+		session.overworld["resource_nodes"] = nodes
+	return messages
+
+static func _resolve_player_reserve_delivery(
+	session: SessionStateStore.SessionData,
+	site: Dictionary,
+	delivery_state: Dictionary
+) -> String:
+	var manifest = _normalize_recruit_payload(delivery_state.get("manifest", {}))
+	if manifest.is_empty():
+		return ""
+	var site_name = String(site.get("name", "The route"))
+	var target_kind = String(delivery_state.get("target_kind", ""))
+	var target_id = String(delivery_state.get("target_id", ""))
+	var target_label = String(delivery_state.get("target_label", "the front"))
+	var recruit_summary = String(delivery_state.get("recruit_summary", ""))
+	var delivered := false
+	match target_kind:
+		"hero":
+			delivered = _deliver_reinforcements_to_hero(session, target_id, manifest)
+		"town":
+			delivered = _deliver_reinforcements_to_town(session, target_id, manifest)
+	if delivered:
+		return "%s convoy reaches %s (%s)." % [site_name, target_label, recruit_summary]
+	var returned_to = _return_reinforcements_to_source(session, String(delivery_state.get("origin_town_id", "")), manifest)
+	if returned_to != "":
+		return "%s convoy turns back to %s after %s closes (%s)." % [
+			site_name,
+			returned_to,
+			target_label,
+			recruit_summary,
+		]
+	return "%s convoy for %s is lost on the frontier (%s)." % [site_name, target_label, recruit_summary]
+
+static func _deliver_reinforcements_to_hero(
+	session: SessionStateStore.SessionData,
+	hero_id: String,
+	manifest: Dictionary
+) -> bool:
+	if session == null or hero_id == "":
+		return false
+	var heroes = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if not (hero is Dictionary) or String(hero.get("id", "")) != hero_id:
+			continue
+		var army = _normalize_army_state(hero.get("army", {}))
+		var unit_ids = manifest.keys()
+		unit_ids.sort()
+		for unit_id_value in unit_ids:
+			var unit_id := String(unit_id_value)
+			army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, int(manifest.get(unit_id_value, 0)))
+		hero["army"] = army
+		heroes[index] = hero
+		session.overworld["player_heroes"] = heroes
+		if String(session.overworld.get("active_hero_id", "")) == hero_id:
+			HeroCommandRules._sync_active_hero_mirror(session)
+		return true
+	return false
+
+static func _deliver_reinforcements_to_town(
+	session: SessionStateStore.SessionData,
+	town_placement_id: String,
+	manifest: Dictionary
+) -> bool:
+	if session == null or town_placement_id == "":
+		return false
+	var town_result = _find_town_by_placement(session, town_placement_id)
+	if int(town_result.get("index", -1)) < 0:
+		return false
+	var town = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "player":
+		return false
+	var garrison = town.get("garrison", [])
+	var unit_ids := manifest.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		garrison = _add_army_stack(garrison, unit_id, int(manifest.get(unit_id_value, 0)))
+	town["garrison"] = garrison
+	var towns = session.overworld.get("towns", [])
+	towns[int(town_result.get("index", -1))] = town
+	session.overworld["towns"] = towns
+	return true
+
+static func _return_reinforcements_to_source(
+	session: SessionStateStore.SessionData,
+	source_town_id: String,
+	manifest: Dictionary
+) -> String:
+	if session == null or source_town_id == "":
+		return ""
+	var town_result = _find_town_by_placement(session, source_town_id)
+	if int(town_result.get("index", -1)) < 0:
+		return ""
+	var town = town_result.get("town", {})
+	if String(town.get("owner", "neutral")) != "player":
+		return ""
+	town["available_recruits"] = _add_recruit_growth(town.get("available_recruits", {}), manifest)
+	var towns = session.overworld.get("towns", [])
+	towns[int(town_result.get("index", -1))] = town
+	session.overworld["towns"] = towns
+	return _town_name(town)
+
+static func _army_strength_value(stacks: Variant) -> int:
+	var total_strength := 0
+	if not (stacks is Array):
+		return total_strength
+	for stack in stacks:
+		if not (stack is Dictionary):
+			continue
+		var count = max(0, int(stack.get("count", 0)))
+		if count <= 0:
+			continue
+		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+		total_strength += count * max(
+			6,
+			int(unit.get("hp", 1))
+			+ int(unit.get("min_damage", 1))
+			+ int(unit.get("max_damage", 1))
+			+ (3 if bool(unit.get("ranged", false)) else 0)
+		)
+	return total_strength
 
 static func _nearest_town_for_controller(
 	session: SessionStateStore.SessionData,
@@ -2431,10 +3046,12 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 	var disrupted_site_labels := []
 	var threatened_site_labels := []
 	var response_site_labels := []
+	var delivery_site_labels := []
 	var held_site_count := 0
 	var disrupted_count := 0
 	var threatened_count := 0
 	var response_count := 0
+	var delivery_count := 0
 	var quality_bonus := 0
 	var readiness_bonus := 0
 	var pressure_bonus := 0
@@ -2484,6 +3101,10 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 				response_recovery_relief_bonus += int(response_state.get("recovery_relief", 0))
 				response_growth_bonus_percent += int(response_state.get("growth_bonus_percent", 0))
 				response_pressure_guard_bonus += int(response_state.get("pressure_guard_bonus", 0))
+				var delivery_state := _resource_site_delivery_state(session, node, site)
+				if bool(delivery_state.get("active", false)):
+					delivery_count += 1
+					delivery_site_labels.append(_resource_site_delivery_line(session, node, site))
 			if threatened:
 				threatened_count += 1
 				threatened_site_labels.append(site_name)
@@ -2516,6 +3137,8 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 		summary_parts.append("%d threatened" % threatened_count)
 	if response_count > 0:
 		summary_parts.append("%d escorted" % response_count)
+	if delivery_count > 0:
+		summary_parts.append("%d convoy%s" % [delivery_count, "" if delivery_count == 1 else "s"])
 	if missing_family_labels is Array and not missing_family_labels.is_empty():
 		summary_parts.append("Missing %s" % ", ".join(missing_family_labels))
 	var impact_parts := []
@@ -2559,10 +3182,12 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 		"disrupted_count": disrupted_count,
 		"threatened_count": threatened_count,
 		"response_count": response_count,
+		"delivery_count": delivery_count,
 		"held_site_labels": held_site_labels,
 		"disrupted_site_labels": disrupted_site_labels,
 		"threatened_site_labels": threatened_site_labels,
 		"response_site_labels": response_site_labels,
+		"delivery_site_labels": delivery_site_labels,
 		"family_counts": family_counts,
 		"met_requirements": int(requirement_progress.get("met_requirements", 0)),
 		"required_total": int(requirement_progress.get("required_total", 0)),
@@ -2823,10 +3448,12 @@ static func _empty_town_logistics_state() -> Dictionary:
 		"disrupted_count": 0,
 		"threatened_count": 0,
 		"response_count": 0,
+		"delivery_count": 0,
 		"held_site_labels": [],
 		"disrupted_site_labels": [],
 		"threatened_site_labels": [],
 		"response_site_labels": [],
+		"delivery_site_labels": [],
 		"family_counts": {},
 		"met_requirements": 0,
 		"required_total": 0,
@@ -3010,6 +3637,8 @@ static func _town_response_panel_lines(session: SessionStateStore.SessionData, t
 	lines.append("- Logistics %s" % String(logistics.get("summary", "No linked routes.")))
 	if logistics.get("response_site_labels", []) is Array and not logistics.get("response_site_labels", []).is_empty():
 		lines.append("- Active route orders: %s" % ", ".join(logistics.get("response_site_labels", [])))
+	if logistics.get("delivery_site_labels", []) is Array and not logistics.get("delivery_site_labels", []).is_empty():
+		lines.append("- Reserve deliveries: %s" % ", ".join(logistics.get("delivery_site_labels", [])))
 	if logistics.get("threatened_site_labels", []) is Array and not logistics.get("threatened_site_labels", []).is_empty():
 		lines.append("- Threat lanes: %s" % ", ".join(logistics.get("threatened_site_labels", [])))
 	if logistics.get("disrupted_site_labels", []) is Array and not logistics.get("disrupted_site_labels", []).is_empty():
@@ -3079,10 +3708,21 @@ static func _town_response_actions(session: SessionStateStore.SessionData, town:
 		var market_summary := ""
 		if bool(readiness.get("market_affordable", false)) and not bool(readiness.get("direct_affordable", false)):
 			market_summary = _summarize_market_actions(readiness.get("market_actions", []))
+		var delivery_plan := _player_reserve_delivery_plan(session, town, response_state)
+		var delivery_summary := ""
+		if not delivery_plan.is_empty():
+			delivery_summary = "Load %s for %s (%d day%s)" % [
+				_describe_recruit_delta(delivery_plan.get("manifest", {})),
+				String(delivery_plan.get("target_label", "the front")),
+				int(delivery_plan.get("eta_days", 1)),
+				"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
+			]
 		var site_summary_parts := [
 			String(response_state.get("summary", "")),
 			"Site %s" % String(site.get("name", "Frontier site")),
 		]
+		if delivery_summary != "":
+			site_summary_parts.append(delivery_summary)
 		var impact_summary := _resource_site_response_effect_summary(response_state)
 		if impact_summary != "":
 			site_summary_parts.append(impact_summary)
@@ -3105,6 +3745,7 @@ static func _town_response_actions(session: SessionStateStore.SessionData, town:
 				"remaining_movement_after_order": max(0, movement_left - int(response_state.get("movement_cost", 0))),
 				"market_coverable": bool(readiness.get("market_affordable", false)) and not bool(readiness.get("direct_affordable", false)),
 				"market_summary": market_summary,
+				"delivery_summary": delivery_summary,
 				"resource_blocked": not bool(readiness.get("direct_affordable", false)),
 				"movement_blocked": movement_left < int(response_state.get("movement_cost", 0)),
 			}
@@ -3954,6 +4595,17 @@ static func _normalize_resource_dict(value: Variant) -> Dictionary:
 			normalized[String(key)] = max(0, int(value[key]))
 	return normalized
 
+static func _normalize_recruit_payload(value: Variant) -> Dictionary:
+	var normalized := {}
+	if value is Dictionary:
+		for unit_id_value in value.keys():
+			var unit_id := String(unit_id_value)
+			var count = max(0, int(value.get(unit_id_value, 0)))
+			if unit_id == "" or count <= 0:
+				continue
+			normalized[unit_id] = count
+	return normalized
+
 static func _describe_resource_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return ""
@@ -4031,6 +4683,16 @@ static func _find_town_by_placement(session: SessionStateStore.SessionData, plac
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return {"index": index, "town": town}
 	return {"index": -1, "town": {}}
+
+static func _find_encounter_by_placement(session: SessionStateStore.SessionData, placement_id: String) -> Dictionary:
+	if session == null or placement_id == "":
+		return {"index": -1, "encounter": {}}
+	var encounters = session.overworld.get("encounters", [])
+	for index in range(encounters.size()):
+		var encounter = encounters[index]
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return {"index": index, "encounter": encounter}
+	return {"index": -1, "encounter": {}}
 
 static func _advance_all_town_recovery(session: SessionStateStore.SessionData) -> Array:
 	var messages := []

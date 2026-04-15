@@ -106,6 +106,9 @@ static func describe_summary(session: SessionStateStore.SessionData) -> String:
 		],
 		"Logistics %s" % _logistics_watch_summary(logistics),
 	]
+	var delivery_summary := _convoy_watch_summary(logistics)
+	if delivery_summary != "":
+		parts.append("Convoys %s" % delivery_summary)
 	if bool(market.get("active", false)):
 		parts.append(
 			"Exchange %s | Buy wood %d, ore %d | Sell wood %d, ore %d" % [
@@ -411,13 +414,19 @@ static func describe_recruitment(session: SessionStateStore.SessionData) -> Stri
 		days_until_growth,
 		"" if days_until_growth == 1 else "s",
 		(
-			"Reserve quality %s | Logistics %s%s\n%s" % [
+			"Reserve quality %s | Logistics %s%s%s\n%s" % [
 				reinforcement_grade,
 				_logistics_watch_summary(logistics),
+				" | Convoys %s" % _convoy_watch_summary(logistics) if _convoy_watch_summary(logistics) != "" else "",
 				" | Recovery %s" % String(recovery.get("summary", "")) if bool(recovery.get("active", false)) else "",
 				"\n".join(lines),
 			]
-		) if not lines.is_empty() else ("Reserve quality %s\n- No recruits are waiting" % reinforcement_grade),
+		) if not lines.is_empty() else (
+			"Reserve quality %s%s\n- No recruits are waiting" % [
+				reinforcement_grade,
+				" | Convoys %s" % _convoy_watch_summary(logistics) if _convoy_watch_summary(logistics) != "" else "",
+			]
+		),
 	]
 
 static func describe_market(session: SessionStateStore.SessionData) -> String:
@@ -886,9 +895,13 @@ static func _response_order_ledger_line(session: SessionStateStore.SessionData, 
 			var movement_clause := ""
 			if int(action.get("movement_cost", 0)) > 0:
 				movement_clause = " | %d move left after dispatch" % int(action.get("remaining_movement_after_order", 0))
-			return "%s is ready now%s." % [
+			var delivery_clause := ""
+			if String(action.get("delivery_summary", "")) != "":
+				delivery_clause = " | %s" % String(action.get("delivery_summary", ""))
+			return "%s is ready now%s%s." % [
 				String(action.get("label", "Response order")),
 				movement_clause,
+				delivery_clause,
 			]
 	for action in response_actions:
 		if action is Dictionary and bool(action.get("market_coverable", false)):
@@ -1356,6 +1369,21 @@ static func _logistics_watch_summary(logistics: Dictionary) -> String:
 	var impact_summary := String(logistics.get("impact_summary", ""))
 	if impact_summary != "":
 		return "%s | %s" % [summary, impact_summary]
+	return summary
+
+static func _convoy_watch_summary(logistics: Dictionary) -> String:
+	var delivery_lines = logistics.get("delivery_site_labels", [])
+	if not (delivery_lines is Array) or delivery_lines.is_empty():
+		return ""
+	var shown := []
+	for index in range(min(2, delivery_lines.size())):
+		shown.append(String(delivery_lines[index]))
+	var summary := "; ".join(shown)
+	if delivery_lines.size() > 2:
+		summary += "; %d more line%s" % [
+			delivery_lines.size() - 2,
+			"" if delivery_lines.size() - 2 == 1 else "s",
+		]
 	return summary
 
 static func _town_outlook_grade(

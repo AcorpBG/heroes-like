@@ -3570,6 +3570,55 @@ def validate_overworld_route_security_escort(errors: list[str]) -> None:
     )
 
 
+def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
+    required_paths = (SESSION_STATE_PATH, OVERWORLD_RULES_PATH, TOWN_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, ENEMY_TURN_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town-frontline-reinforcement file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Town-frontline reinforcement delivery must preserve save version 9")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"delivery_controller_id"',
+        '"delivery_origin_town_id"',
+        '"delivery_target_kind"',
+        '"delivery_target_id"',
+        '"delivery_target_label"',
+        '"delivery_arrival_day"',
+        '"delivery_manifest"',
+        "func _player_reserve_delivery_plan",
+        "func _advance_player_reserve_deliveries",
+        "func _deliver_reinforcements_to_hero",
+        "func _deliver_reinforcements_to_town",
+        "func _return_reinforcements_to_source",
+        "Reserve deliveries",
+        "Load %s for %s",
+        "Next convoy %s for %s in %d day%s.",
+        "convoy reaches %s",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing reserve-delivery token: {required_token}")
+
+    town_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _convoy_watch_summary",
+        '"Convoys %s"',
+        '"delivery_summary"',
+        "_convoy_watch_summary(logistics)",
+    ):
+        ensure(required_token in town_text, errors, f"TownRules.gd is missing reserve-delivery surfacing token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ('"delivery_manifest"', "The convoy bound for %s is scattered."):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing convoy-disruption token: {required_token}")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("OverworldRules.town_logistics_state(session, town)", '"delivery_count"'):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing reinforcement-line AI token: {required_token}")
+
+
 def validate_hostile_empire_personality(errors: list[str]) -> None:
     required_paths = (ENEMY_TURN_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, CONTENT_DIR / "factions.json", CONTENT_DIR / "scenarios.json", CONTENT_DIR / "resource_sites.json")
     for path in required_paths:
@@ -4095,6 +4144,7 @@ def main() -> int:
     validate_enemy_strategic_contestation(errors)
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
+    validate_town_frontline_reinforcement_delivery(errors)
     validate_hostile_empire_personality(errors)
     validate_late_game_capital_escalation(errors)
     validate_capital_front_battle_identity(errors)
@@ -4145,6 +4195,7 @@ def main() -> int:
     print("- the overworld shell now surfaces objective boards, scouting coverage, frontier watch, dispatch context, and command actions from core rules")
     print("- fresh scenario launches now surface a one-shot first-turn command briefing in the overworld shell using runtime objective, logistics, scouting, and threat data")
     print("- the overworld shell now surfaces a live next-day command-risk forecast and a one-shot end-turn warning using runtime pressure, logistics, scouting, town-readiness, objective, and frontier-watch data")
+    print("- towns now project reserve production toward pressured towns and field heroes through existing logistics-site convoy state, while hostile raids can scatter those deliveries and current town or overworld summaries expose the live line status")
     print("- enemy towns now build, recruit, reinforce raid armies, and surface public threat posture without a save-version bump")
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")

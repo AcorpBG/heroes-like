@@ -130,6 +130,7 @@ Difficulty: High
 - add a release-facing town-side order-readiness and affordability ledger inside the real town shell using existing build, recruit, market, response, and hero-command data instead of a planner or advisor layer
 - add a release-facing overworld command commitment board inside the real overworld shell using existing context, logistics, hero-coverage, and frontier-risk data instead of a planner or advisor layer
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
+- turn town recruitment and reserve production into frontline reinforcement delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems instead of a parallel convoy subsystem
 - add a release-facing battle-side order consequence board inside the real battle shell using current action availability, damage windows, retaliation exposure, spell windows, objective pull, and likely hostile reply state instead of a planner or advisor layer
 - turn battle withdrawal into a release-facing surrender and pursuit aftermath slice through the existing battle, outcome, town, economy, campaign, and shell flow so retreat and surrender produce different strategic fallout instead of sharing one generic exit path
 - deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities that change movement pressure, ranged threat, commander safety, target priority, and battle summaries through the existing battle pipeline
@@ -241,7 +242,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: battle-side cover lines, obstruction lanes, and firing-lane identity through authored encounter `field_objectives`, current battle summaries, and existing AI scoring.
+- current item 104 focus: town reserve-production delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems without adding a separate convoy planner.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -253,6 +254,8 @@ Difficulty: High
 113. [completed] Re-run repository-local validation and Godot headless boot so those authored constructs pass without the prior warning spam and save version `9` remains unchanged.
 114. [completed] Deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities through the existing encounter, battle, and AI rules pipeline.
 115. [completed] Re-run repository-local validation and Godot headless boot for battlefield cover, obstruction, lane-pressure summaries, and save-version preservation.
+116. [completed] Turn town recruitment and reserve production into frontline reinforcement delivery through the existing town, overworld, hero-command, logistics-site, and enemy-turn systems.
+117. [completed] Re-run repository-local validation and Godot headless boot for reserve-delivery routing, convoy surfacing, hostile disruption, and save-version preservation.
 
 ## Standards
 - no throwaway prototype code if avoidable

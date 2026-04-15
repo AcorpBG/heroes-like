@@ -1606,7 +1606,7 @@ static func _withdrawal_preview_summary(preview: Dictionary, outcome: String) ->
 			]
 		)
 	var resource_loss = preview.get("resource_loss", {})
-	var resource_summary := OverworldRules._describe_resource_delta(resource_loss)
+	var resource_summary = OverworldRules._describe_resource_delta(resource_loss)
 	if resource_summary != "":
 		if outcome == "surrender":
 			clauses.append("pay %s to the enemy" % resource_summary)
@@ -3151,7 +3151,7 @@ static func _apply_withdrawal_aftermath(session: SessionStateStore.SessionData, 
 	}
 
 static func _withdrawal_resource_summary(outcome: String, resource_loss: Dictionary, enemy_label: String) -> String:
-	var resource_summary := OverworldRules._describe_resource_delta(resource_loss)
+	var resource_summary = OverworldRules._describe_resource_delta(resource_loss)
 	if resource_summary == "":
 		return ""
 	if outcome == "surrender":

@@ -785,6 +785,9 @@ static func _resource_target_priority(session: SessionStateStore.SessionData, no
 		priority += 35
 	if String(node.get("collected_by_faction_id", "")) == "player" and int(node.get("response_until_day", 0)) >= session.day:
 		priority += 20 + (max(1, int(node.get("response_security_rating", 0))) * 6)
+	var delivery_value := _recruit_payload_value(node.get("delivery_manifest", {}))
+	if String(node.get("collected_by_faction_id", "")) == "player" and delivery_value > 0:
+		priority += 28 + int(min(95, float(delivery_value) / 10.0))
 	priority += _linked_player_town_bonus(session, node)
 	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
 	return priority
@@ -980,6 +983,10 @@ static func _secure_resource_target(
 	var previous_controller = String(node.get("collected_by_faction_id", ""))
 	var escorted_route = int(previous_node.get("response_until_day", 0)) >= session.day
 	var escort_strength: int = max(0, int(previous_node.get("response_security_rating", 0)))
+	var delivery_value := _recruit_payload_value(previous_node.get("delivery_manifest", {}))
+	var delivery_target_label := String(previous_node.get("delivery_target_label", "the front"))
+	if delivery_target_label == "":
+		delivery_target_label = "the front"
 	node["collected"] = true
 	node["collected_by_faction_id"] = faction_id
 	node["collected_day"] = session.day
@@ -989,6 +996,13 @@ static func _secure_resource_target(
 	node["response_until_day"] = 0
 	node["response_commander_id"] = ""
 	node["response_security_rating"] = 0
+	node["delivery_controller_id"] = ""
+	node["delivery_origin_town_id"] = ""
+	node["delivery_target_kind"] = ""
+	node["delivery_target_id"] = ""
+	node["delivery_target_label"] = ""
+	node["delivery_arrival_day"] = 0
+	node["delivery_manifest"] = {}
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["resource_nodes"] = nodes
 
@@ -997,6 +1011,8 @@ static func _secure_resource_target(
 	state["pressure"] = max(0, int(state.get("pressure", 0))) + _resource_site_pressure_value(site)
 	if escorted_route:
 		state["pressure"] += max(1, escort_strength)
+	if delivery_value > 0:
+		state["pressure"] = max(0, int(state.get("pressure", 0))) + clamp(int(ceili(float(delivery_value) / 220.0)), 1, 3)
 	var message = "%s seizes %s." % [_raid_name(raid), String(site.get("name", "the site"))]
 	if not spoils.is_empty():
 		message = "%s seizes %s and strips %s." % [
@@ -1004,6 +1020,8 @@ static func _secure_resource_target(
 			String(site.get("name", "the site")),
 			_describe_resource_set(spoils),
 		]
+	if delivery_value > 0:
+		message = "%s The convoy bound for %s is scattered." % [message.trim_suffix("."), delivery_target_label]
 	elif escorted_route:
 		message = "%s seizes %s and breaks its escorted logistics route." % [
 			_raid_name(raid),

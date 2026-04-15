@@ -1000,6 +1000,7 @@ static func _desired_town_strength(session: SessionStateStore.SessionData, town:
 	var hero_position = session.overworld.get("hero_position", {"x": 0, "y": 0})
 	var distance = abs(int(hero_position.get("x", 0)) - int(town.get("x", 0))) + abs(int(hero_position.get("y", 0)) - int(town.get("y", 0)))
 	var town_role: String = OverworldRules.town_strategic_role(town)
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
 	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
 	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
 	var target = 140 + (built_count * 18)
@@ -1014,6 +1015,9 @@ static func _desired_town_strength(session: SessionStateStore.SessionData, town:
 		target += int(capital_project.get("active", 0)) * 20
 	elif int(capital_project.get("total", 0)) > 0:
 		target += 30
+	target += int(logistics.get("support_gap", 0)) * 24
+	target += int(logistics.get("threatened_count", 0)) * 18
+	target += int(logistics.get("delivery_count", 0)) * 16
 	target += int(recovery.get("pressure", 0)) * 10
 	if distance <= 6:
 		target += 120

@@ -161,6 +161,11 @@ Overworld logistics escort decision:
 - `OverworldRules.gd` owns the escort payoff shaping from the active commander plus current site profile, while `EnemyAdventureRules.gd` and `EnemyTurnRules.gd` contest that same state through higher raid priority and pressure swings when escorted routes are broken instead of through a separate advisor or logistics subsystem
 - `OverworldShell.gd` and town response surfaces keep using the existing command actions and summaries, so the slice lands as real gameplay agency on current boundaries without moving mutation out of `scripts/core` or changing `SAVE_VERSION` from `9`
 
+Town reserve-delivery decision:
+- town reserve delivery now rides on the existing logistics-site response payload in `OverworldRules.gd`, reserving authored recruits from linked towns, projecting them toward pressured player towns or active field heroes, and resolving arrivals during the normal day-advance flow instead of adding a separate convoy or planner subsystem
+- hostile denial stays on the same strategic path: `EnemyAdventureRules.gd` values active delivery manifests when choosing raids, scattered deliveries add pressure when routes are seized, and `EnemyTurnRules.gd` raises defense appetite around towns that are protecting live reinforcement lines
+- `TownRules.gd` and existing overworld or town summaries only surface convoy state, load plans, and route outcomes from the shared logistics data, so player-facing delivery status stays thin-shell and save-safe while `SAVE_VERSION` remains `9`
+
 Enemy empire-management decision:
 - hostile overworld factions now keep save-backed treasury and posture state in `EnemyTurnRules.gd`, reusing authored town income, build trees, recruitment discounts, and weekly musters to decide what enemy towns construct and where fresh troops go
 - active raid encounters normalize into dynamic `enemy_army` payloads through `EnemyAdventureRules.gd`, letting enemy reinforcements materially change raid pillage pressure and downstream battle payloads without moving mutation into scene controllers or bumping save version `9`
