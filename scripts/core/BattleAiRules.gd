@@ -1,6 +1,8 @@
 class_name BattleAiRules
 extends RefCounted
 
+const SpellRules = preload("res://scripts/core/SpellRules.gd")
+
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
 const COHESION_MIN := 0
@@ -386,7 +388,7 @@ static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, ta
 
 static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
 	var damage := _estimate_damage(attacker, target, battle, is_ranged)
-	var target_health := max(1, int(target.get("total_health", 0)))
+	var target_health: int = max(1, int(target.get("total_health", 0)))
 	var side := String(attacker.get("side", ""))
 	var round_number := int(battle.get("round", 1))
 	var score := float(damage) / float(max(1, int(target.get("unit_hp", 1))))
@@ -469,7 +471,7 @@ static func _damage_spell_score(
 ) -> float:
 	var effect = spell.get("effect", {})
 	var power := int(enemy_hero.get("command", {}).get("power", 0))
-	var damage := max(
+	var damage: int = max(
 		1,
 		int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))
 	)
@@ -482,7 +484,7 @@ static func _damage_spell_score(
 		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id)
 		if status_id == STATUS_HARRIED and _health_ratio(target) <= 0.75:
 			score += 1.0
-	var status_modifiers := status_effect.get("modifiers", {})
+	var status_modifiers = status_effect.get("modifiers", {})
 	if status_modifiers is Dictionary and int(status_modifiers.get("cohesion", 0)) < 0:
 		score += float(abs(int(status_modifiers.get("cohesion", 0)))) * 1.3
 	if _stack_cohesion_total(target, battle) <= 4:
@@ -509,7 +511,7 @@ static func _buff_spell_score(
 	targets: Array,
 	spell: Dictionary
 ) -> float:
-	var modifiers := SpellRules.battle_spell_modifiers(spell)
+	var modifiers: Dictionary = SpellRules.battle_spell_modifiers(spell)
 	var score := 1.5
 	var round_number := int(battle.get("round", 1))
 	var defense_bonus := int(modifiers.get("defense", 0))
@@ -677,13 +679,13 @@ static func _estimate_damage(
 	is_ranged: bool,
 	is_retaliation: bool = false
 ) -> int:
-	var attacker_count := max(1, _alive_count(attacker))
-	var min_damage := int(attacker.get("min_damage", 1))
-	var max_damage := max(min_damage, int(attacker.get("max_damage", 1)))
-	var base_damage := attacker_count * int(round(float(min_damage + max_damage) / 2.0))
+	var attacker_count: int = max(1, _alive_count(attacker))
+	var min_damage: int = int(attacker.get("min_damage", 1))
+	var max_damage: int = max(min_damage, int(attacker.get("max_damage", 1)))
+	var base_damage: int = attacker_count * int(round(float(min_damage + max_damage) / 2.0))
 
-	var attack_stat := int(attacker.get("attack", 0)) + SpellRules.effect_bonus_for_kind(attacker, battle, "attack") + _contextual_attack_bonus(attacker, battle)
-	var defense_stat := int(defender.get("defense", 0)) + SpellRules.effect_bonus_for_kind(defender, battle, "defense") + _contextual_defense_bonus(defender, battle)
+	var attack_stat: int = int(attacker.get("attack", 0)) + SpellRules.effect_bonus_for_kind(attacker, battle, "attack") + _contextual_attack_bonus(attacker, battle)
+	var defense_stat: int = int(defender.get("defense", 0)) + SpellRules.effect_bonus_for_kind(defender, battle, "defense") + _contextual_defense_bonus(defender, battle)
 	attack_stat += _hero_bonus_for_side(battle, String(attacker.get("side", "")), "attack")
 	defense_stat += _hero_bonus_for_side(battle, String(defender.get("side", "")), "defense")
 	if bool(defender.get("defending", false)):
@@ -776,7 +778,7 @@ static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> 
 	return bonus
 
 static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
-	var total := (
+	var total: int = (
 		int(stack.get("cohesion", stack.get("cohesion_base", 5)))
 		+ SpellRules.effect_bonus_for_kind(stack, battle, "cohesion")
 		+ _contextual_cohesion_bonus(stack, battle)
@@ -784,7 +786,7 @@ static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 	return clamp(total, COHESION_MIN, COHESION_MAX)
 
 static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
-	var total := (
+	var total: int = (
 		int(stack.get("momentum", 0))
 		+ SpellRules.effect_bonus_for_kind(stack, battle, "momentum")
 		+ _contextual_momentum_bonus(stack, battle)
@@ -878,7 +880,7 @@ static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
 static func _stack_has_positive_effect(stack: Dictionary, battle: Dictionary) -> bool:
 	var current_round := int(battle.get("round", 1))
 	for effect in SpellRules.active_effects_for_round(stack, current_round):
-		var modifiers = effect.get("modifiers", {})
+		var modifiers: Dictionary = effect.get("modifiers", {})
 		if not (modifiers is Dictionary):
 			continue
 		for modifier_key in ["attack", "defense", "initiative", "cohesion", "momentum"]:
@@ -894,11 +896,11 @@ static func _side_positive_effect_count(battle: Dictionary, side: String) -> int
 	return total
 
 static func _alive_count(stack: Dictionary) -> int:
-	var unit_hp := max(1, int(stack.get("unit_hp", 1)))
+	var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
 	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
 
 static func _health_ratio(stack: Dictionary) -> float:
-	var max_health := max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
+	var max_health: int = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
 	return clampf(float(max(0, int(stack.get("total_health", 0)))) / float(max_health), 0.0, 1.0)
 
 static func _has_hostile_ranged_pressure(targets: Array) -> bool:
@@ -1122,7 +1124,7 @@ static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
 	return not _ability_by_id(stack, ability_id).is_empty()
 
 static func _spell_buff_already_active(active_stack: Dictionary, battle: Dictionary, spell: Dictionary) -> bool:
-	var modifiers := SpellRules.battle_spell_modifiers(spell)
+	var modifiers: Dictionary = SpellRules.battle_spell_modifiers(spell)
 	if modifiers.is_empty():
 		return false
 	for modifier_key in modifiers.keys():

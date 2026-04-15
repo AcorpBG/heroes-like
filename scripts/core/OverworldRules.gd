@@ -211,8 +211,8 @@ static func try_move(session: SessionStateStore.SessionData, dx: int, dy: int) -
 
 	var pos := hero_position(session)
 	var map_size := derive_map_size(session)
-	var nx := clamp(pos.x + dx, 0, max(map_size.x - 1, 0))
-	var ny := clamp(pos.y + dy, 0, max(map_size.y - 1, 0))
+	var nx = clamp(pos.x + dx, 0, max(map_size.x - 1, 0))
+	var ny = clamp(pos.y + dy, 0, max(map_size.y - 1, 0))
 	if nx == pos.x and ny == pos.y:
 		return {"ok": false, "message": "The map edge blocks further travel."}
 	if tile_is_blocked(session, nx, ny):
@@ -477,7 +477,7 @@ static func recruit_in_active_town(session: SessionStateStore.SessionData, unit_
 	var unit := ContentService.get_unit(unit_id)
 	var adjusted_unit_cost := town_recruit_cost(session, town, unit_id)
 	var max_affordable := _max_affordable_count(session, adjusted_unit_cost)
-	var recruit_count := available_count if requested_count <= 0 else min(requested_count, available_count)
+	var recruit_count = available_count if requested_count <= 0 else min(requested_count, available_count)
 	recruit_count = min(recruit_count, max_affordable)
 	if recruit_count <= 0:
 		return {"ok": false, "message": "Resources are too thin to recruit %s." % String(unit.get("name", unit_id))}
@@ -616,7 +616,7 @@ static func derive_map_size(session: SessionStateStore.SessionData) -> Vector2i:
 			return Vector2i(width, height)
 
 	var map_data = session.overworld.get("map", [])
-	var height_from_map := map_data.size() if map_data is Array else 0
+	var height_from_map = map_data.size() if map_data is Array else 0
 	var width_from_map := 0
 	if height_from_map > 0 and map_data[0] is Array:
 		width_from_map = map_data[0].size()
@@ -667,7 +667,7 @@ static func describe_hero(session: SessionStateStore.SessionData) -> String:
 	var hero = session.overworld.get("hero", {})
 	var command = hero.get("command", {})
 	var mana = hero.get("spellbook", {}).get("mana", {})
-	var position := hero.get("position", {})
+	var position = hero.get("position", {})
 	var army = hero.get("army", {})
 	var stack_count := 0
 	for stack in army.get("stacks", []):
@@ -702,8 +702,8 @@ static func describe_hero(session: SessionStateStore.SessionData) -> String:
 	]
 
 static func _overworld_hero_line(hero: Dictionary) -> String:
-	var position := hero.get("position", {})
-	var army := hero.get("army", {})
+	var position = hero.get("position", {})
+	var army = hero.get("army", {})
 	var headcount := 0
 	var groups := 0
 	for stack in army.get("stacks", []):
@@ -832,7 +832,7 @@ static func describe_visibility_panel(session: SessionStateStore.SessionData) ->
 	for hero in session.overworld.get("player_heroes", []):
 		if not (hero is Dictionary):
 			continue
-		var position := hero.get("position", {})
+		var position = hero.get("position", {})
 		lines.append(
 			"- %s | Pos %d,%d | Scout %d%s" % [
 				String(hero.get("name", "Hero")),
@@ -963,7 +963,7 @@ static func _local_visible_threat_summary(session: SessionStateStore.SessionData
 		if not is_tile_visible(session, x, y):
 			continue
 		visible_contacts += 1
-		var distance := abs(x - pos.x) + abs(y - pos.y)
+		var distance = abs(x - pos.x) + abs(y - pos.y)
 		if distance <= 3:
 			local_contacts += 1
 		if distance < nearest_contact_distance:
@@ -1108,17 +1108,17 @@ static func _dispatch_context_brief(session: SessionStateStore.SessionData) -> S
 	var terrain := _terrain_name_at(session, pos.x, pos.y)
 	match String(context.get("type", "empty")):
 		"town":
-			var town := context.get("town", {})
+			var town = context.get("town", {})
 			return "%s on %s" % [_town_name(town), terrain]
 		"resource":
-			var node := context.get("node", {})
+			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			return "%s on %s" % [String(site.get("name", "Resource site")), terrain]
 		"artifact":
-			var artifact_node := context.get("node", {})
+			var artifact_node = context.get("node", {})
 			return "%s on %s" % [ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))), terrain]
 		"encounter":
-			var encounter_placement := context.get("encounter", {})
+			var encounter_placement = context.get("encounter", {})
 			var encounter := ContentService.get_encounter(String(encounter_placement.get("encounter_id", "")))
 			return "%s on %s" % [String(encounter.get("name", "Hostile contact")), terrain]
 		_:
@@ -1401,7 +1401,7 @@ static func describe_town_build_projection(
 		if int(projected_project.get("recovery_guard", 0)) > 0:
 			anchor_summary += " | Recovery +%d/day" % int(projected_project.get("recovery_guard", 0))
 		parts.append(anchor_summary)
-	var logistics_required_total := max(
+	var logistics_required_total = max(
 		int(current_logistics.get("required_total", 0)),
 		int(projected_logistics.get("required_total", 0))
 	)
@@ -1469,10 +1469,10 @@ static func relieve_town_recovery_pressure(
 	var towns = session.overworld.get("towns", [])
 	var town = town_result.get("town", {})
 	var recovery := _normalize_town_recovery_state(town.get("recovery", {}))
-	var current_pressure := max(0, int(recovery.get("pressure", 0)))
+	var current_pressure = max(0, int(recovery.get("pressure", 0)))
 	if current_pressure <= 0:
 		return ""
-	var relieved := min(current_pressure, amount)
+	var relieved = min(current_pressure, amount)
 	recovery["pressure"] = max(0, current_pressure - relieved)
 	recovery["last_event_day"] = session.day
 	if int(recovery.get("pressure", 0)) <= 0:
@@ -1511,8 +1511,8 @@ static func apply_resource_site_disruption(
 	)
 	if int(town_result.get("index", -1)) < 0:
 		return ""
-	var town := town_result.get("town", {})
-	var distance := abs(int(node.get("x", 0)) - int(town.get("x", 0))) + abs(int(node.get("y", 0)) - int(town.get("y", 0)))
+	var town = town_result.get("town", {})
+	var distance = abs(int(node.get("x", 0)) - int(town.get("x", 0))) + abs(int(node.get("y", 0)) - int(town.get("y", 0)))
 	if distance > int(_town_logistics_plan(town).get("support_radius", 0)):
 		return ""
 	var disruption_pressure := int(_resource_site_town_support(site).get("disruption_pressure", 0))
@@ -1660,7 +1660,7 @@ static func get_specialty_actions(session: SessionStateStore.SessionData) -> Arr
 
 static func choose_specialty(session: SessionStateStore.SessionData, specialty_id: String) -> Dictionary:
 	normalize_overworld_state(session)
-	var hero := session.overworld.get("hero", {})
+	var hero = session.overworld.get("hero", {})
 	var previous_movement_max := _movement_max_from_hero(hero, session)
 	var previous_mana_max := int(hero.get("spellbook", {}).get("mana", {}).get("max", SpellRules.mana_max_from_hero(hero)))
 	var result := HeroProgressionRules.choose_specialty(hero, specialty_id)
@@ -1933,14 +1933,14 @@ static func _resource_site_response_profile(site: Dictionary) -> Dictionary:
 static func _route_security_rating_for_hero(hero: Dictionary) -> int:
 	if hero.is_empty():
 		return 1
-	var command := hero.get("command", {})
+	var command = hero.get("command", {})
 	var command_total := (
 		int(command.get("attack", 0))
 		+ int(command.get("defense", 0))
 		+ int(command.get("power", 0))
 		+ int(command.get("knowledge", 0))
 	)
-	var level_bonus := max(0, int(hero.get("level", 1)) - 1)
+	var level_bonus = max(0, int(hero.get("level", 1)) - 1)
 	return clamp(1 + int(floor(float(command_total + level_bonus) / 4.0)), 1, 5)
 
 static func _resource_site_response_state(
@@ -1953,9 +1953,9 @@ static func _resource_site_response_state(
 	var remaining_days := 0
 	var commander_id := String(node.get("response_commander_id", ""))
 	var commander_name := ""
-	var security_rating := max(0, int(node.get("response_security_rating", 0)))
+	var security_rating = max(0, int(node.get("response_security_rating", 0)))
 	if session != null and String(node.get("collected_by_faction_id", "")) == "player":
-		var response_until_day := max(0, int(node.get("response_until_day", 0)))
+		var response_until_day = max(0, int(node.get("response_until_day", 0)))
 		active = response_until_day >= session.day and int(profile.get("watch_days", 0)) > 0
 		if active:
 			remaining_days = max(1, response_until_day - session.day + 1)
@@ -1968,11 +1968,11 @@ static func _resource_site_response_state(
 				commander_name = String(preview_hero.get("name", ""))
 	if active and security_rating <= 0:
 		security_rating = 1
-	var pressure_guard_bonus := max(0, int(profile.get("pressure_guard_bonus", 0))) + max(0, security_rating - 1)
-	var growth_bonus_percent := max(0, int(profile.get("growth_bonus_percent", 0)))
+	var pressure_guard_bonus = max(0, int(profile.get("pressure_guard_bonus", 0))) + max(0, security_rating - 1)
+	var growth_bonus_percent = max(0, int(profile.get("growth_bonus_percent", 0)))
 	if growth_bonus_percent > 0:
 		growth_bonus_percent += max(0, security_rating - 1) * 3
-	var break_pressure := max(0, int(profile.get("break_pressure", 0))) + max(0, security_rating - 1)
+	var break_pressure = max(0, int(profile.get("break_pressure", 0))) + max(0, security_rating - 1)
 	return {
 		"active": active,
 		"remaining_days": remaining_days,
@@ -2075,10 +2075,10 @@ static func _resource_site_context_summary(session: SessionStateStore.SessionDat
 	var claim_summary := _describe_recruit_delta(site.get("claim_recruits", {}))
 	if claim_summary != "":
 		parts.append("Field recruits %s" % claim_summary)
-	var vision_radius := max(0, int(site.get("vision_radius", 0)))
+	var vision_radius = max(0, int(site.get("vision_radius", 0)))
 	if vision_radius > 0:
 		parts.append("Scout ring %d" % vision_radius)
-	var pressure_guard := max(0, int(site.get("pressure_guard", 0)))
+	var pressure_guard = max(0, int(site.get("pressure_guard", 0)))
 	if pressure_guard > 0:
 		parts.append("Pressure guard %d" % pressure_guard)
 	var town_support := _resource_site_town_support(site)
@@ -2128,14 +2128,14 @@ static func _resource_site_context_summary(session: SessionStateStore.SessionDat
 static func _grant_site_claim_recruits(session: SessionStateStore.SessionData, recruits: Variant) -> String:
 	if not (recruits is Dictionary) or recruits.is_empty():
 		return ""
-	var hero := session.overworld.get("hero", {})
+	var hero = session.overworld.get("hero", {})
 	var army := _normalize_army_state(hero.get("army", {}))
 	var unit_ids := []
 	for unit_id_value in recruits.keys():
 		unit_ids.append(String(unit_id_value))
 	unit_ids.sort()
 	for unit_id in unit_ids:
-		var count := max(0, int(recruits.get(unit_id, 0)))
+		var count = max(0, int(recruits.get(unit_id, 0)))
 		if unit_id == "" or count <= 0:
 			continue
 		army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, count)
@@ -2245,8 +2245,8 @@ static func _resource_node_linked_town(
 	)
 	if int(town_result.get("index", -1)) < 0:
 		return {"index": -1, "town": {}}
-	var town := town_result.get("town", {})
-	var distance := abs(int(node.get("x", 0)) - int(town.get("x", 0))) + abs(int(node.get("y", 0)) - int(town.get("y", 0)))
+	var town = town_result.get("town", {})
+	var distance = abs(int(node.get("x", 0)) - int(town.get("x", 0))) + abs(int(node.get("y", 0)) - int(town.get("y", 0)))
 	if distance > int(_town_logistics_plan(town).get("support_radius", 0)):
 		return {"index": -1, "town": {}}
 	return town_result
@@ -2274,7 +2274,7 @@ static func _nearest_town_for_controller(
 		var town = towns[index]
 		if not (town is Dictionary) or not _town_matches_controller(town, controller_id):
 			continue
-		var distance := abs(x - int(town.get("x", 0))) + abs(y - int(town.get("y", 0)))
+		var distance = abs(x - int(town.get("x", 0))) + abs(y - int(town.get("y", 0)))
 		if distance < best_distance:
 			best_distance = distance
 			best_index = index
@@ -2458,7 +2458,7 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 		var town_result := _resource_node_linked_town(session, node, controller_id)
 		if int(town_result.get("index", -1)) < 0:
 			continue
-		var assigned_town := town_result.get("town", {})
+		var assigned_town = town_result.get("town", {})
 		if String(assigned_town.get("placement_id", "")) != String(town.get("placement_id", "")):
 			continue
 		var threatened := _resource_site_under_threat(session, node, controller_id)
@@ -2587,13 +2587,13 @@ static func _town_logistics_state(session: SessionStateStore.SessionData, town: 
 
 static func _town_recovery_state(session: SessionStateStore.SessionData, town: Dictionary) -> Dictionary:
 	var recovery := _normalize_town_recovery_state(town.get("recovery", {}))
-	var pressure := max(0, int(recovery.get("pressure", 0)))
+	var pressure = max(0, int(recovery.get("pressure", 0)))
 	var relief_rating := _town_recovery_relief_rating(session, town)
-	var relief_per_day := max(1, 1 + int(floor(float(relief_rating) / 3.0)))
-	var readiness_penalty := pressure * 6
-	var quality_penalty := pressure * 4
+	var relief_per_day = max(1, 1 + int(floor(float(relief_rating) / 3.0)))
+	var readiness_penalty = pressure * 6
+	var quality_penalty = pressure * 4
 	var pressure_penalty := int(ceil(float(pressure) / 2.0))
-	var growth_penalty_percent := clamp(pressure * 12, 0, 60)
+	var growth_penalty_percent = clamp(pressure * 12, 0, 60)
 	var days_to_clear := 0 if pressure <= 0 else int(ceil(float(pressure) / float(relief_per_day)))
 	var summary := "steady"
 	if pressure > 0:
@@ -2703,7 +2703,7 @@ static func _town_capital_project_state(town: Dictionary, session: SessionStateS
 		missing_support_labels = requirement_progress.get("missing_family_labels", [])
 		vulnerable = not active_ids.is_empty() and (support_gap > 0 or bool(recovery.get("active", false)))
 		if vulnerable:
-			var vulnerability_steps := max(1, support_gap + (1 if bool(recovery.get("active", false)) else 0))
+			var vulnerability_steps = max(1, support_gap + (1 if bool(recovery.get("active", false)) else 0))
 			quality_penalty = int(vulnerability_penalties.get("quality_penalty", 0)) * vulnerability_steps
 			readiness_penalty = int(vulnerability_penalties.get("readiness_penalty", 0)) * vulnerability_steps
 			pressure_penalty = int(vulnerability_penalties.get("pressure_penalty", 0)) * vulnerability_steps
@@ -2797,7 +2797,7 @@ static func _support_requirement_progress(family_counts: Variant, requirements: 
 		}
 	for family_id_value in requirements.keys():
 		var family_id := String(family_id_value)
-		var required_count := max(0, int(requirements.get(family_id, 0)))
+		var required_count = max(0, int(requirements.get(family_id, 0)))
 		if required_count <= 0:
 			continue
 		required_total += required_count
@@ -2967,7 +2967,7 @@ static func _resource_site_under_threat(session: SessionStateStore.SessionData, 
 			return true
 		if response_active:
 			continue
-		var distance := abs(int(encounter.get("x", 0)) - int(node.get("x", 0))) + abs(int(encounter.get("y", 0)) - int(node.get("y", 0)))
+		var distance = abs(int(encounter.get("x", 0)) - int(node.get("x", 0))) + abs(int(encounter.get("y", 0)) - int(node.get("y", 0)))
 		if distance <= 2 and (bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 2):
 			return true
 	return false
@@ -2978,7 +2978,7 @@ static func _apply_recruit_percent(recruits: Variant, percent_modifier: int) -> 
 		return adjusted
 	for unit_id_value in recruits.keys():
 		var unit_id := String(unit_id_value)
-		var base_count := max(0, int(recruits.get(unit_id, 0)))
+		var base_count = max(0, int(recruits.get(unit_id, 0)))
 		if unit_id == "":
 			continue
 		if base_count <= 0:
@@ -3289,7 +3289,7 @@ static func _execute_town_market_action(
 		return {"ok": false, "message": "That exchange order is invalid."}
 	var action_type := String(parts[1])
 	var resource_key := String(parts[2])
-	var amount := max(0, int(parts[3]))
+	var amount = max(0, int(parts[3]))
 	var quote := _town_market_quote(town, action_type, resource_key, amount)
 	if quote.is_empty():
 		return {"ok": false, "message": "That exchange order is not available in %s." % _town_name(town)}
@@ -3418,12 +3418,12 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 
 static func _market_resource_abundance_score(faction_economy: Variant, town_economy: Variant, resource_key: String) -> int:
 	var score := 0
-	var faction_base := faction_economy.get("base_income", {}) if faction_economy is Dictionary else {}
-	var town_base := town_economy.get("base_income", {}) if town_economy is Dictionary else {}
-	var faction_categories := faction_economy.get("per_category_income", {}) if faction_economy is Dictionary else {}
-	var town_categories := town_economy.get("per_category_income", {}) if town_economy is Dictionary else {}
-	var faction_economy_bucket := faction_categories.get("economy", {}) if faction_categories is Dictionary else {}
-	var town_economy_bucket := town_categories.get("economy", {}) if town_categories is Dictionary else {}
+	var faction_base = faction_economy.get("base_income", {}) if faction_economy is Dictionary else {}
+	var town_base = town_economy.get("base_income", {}) if town_economy is Dictionary else {}
+	var faction_categories = faction_economy.get("per_category_income", {}) if faction_economy is Dictionary else {}
+	var town_categories = town_economy.get("per_category_income", {}) if town_economy is Dictionary else {}
+	var faction_economy_bucket = faction_categories.get("economy", {}) if faction_categories is Dictionary else {}
+	var town_economy_bucket = town_categories.get("economy", {}) if town_categories is Dictionary else {}
 	score += 1 if faction_base is Dictionary and int(faction_base.get(resource_key, 0)) > 0 else 0
 	score += 1 if town_base is Dictionary and int(town_base.get(resource_key, 0)) > 0 else 0
 	score += 1 if faction_economy_bucket is Dictionary and int(faction_economy_bucket.get(resource_key, 0)) > 0 else 0
@@ -3438,14 +3438,14 @@ static func _market_quote_from_state(state: Dictionary, action_type: String, res
 		return {}
 	if resource_key not in ["wood", "ore"]:
 		return {}
-	var normalized_amount := max(0, amount)
+	var normalized_amount = max(0, amount)
 	if normalized_amount <= 0:
 		return {}
 	var rates: Dictionary = state.get("buy_rates", {}) if action_type == "buy" else state.get("sell_rates", {})
 	var unit_rate := int(rates.get(resource_key, 0))
 	if unit_rate <= 0:
 		return {}
-	var total_value := unit_rate * normalized_amount
+	var total_value = unit_rate * normalized_amount
 	if normalized_amount > 1 and normalized_amount == int(state.get("bulk_amount", 0)) and String(state.get("bulk_resource", "")) == resource_key:
 		if action_type == "buy":
 			total_value = max(1, int(round(float(total_value) * 0.9)))
@@ -3509,8 +3509,8 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 	for resource_key in ["wood", "ore"]:
 		var required_amount := int(normalized_cost.get(resource_key, 0))
 		var current_amount := int(normalized_pool.get(resource_key, 0))
-		var deficit := max(0, required_amount - current_amount)
-		var surplus := max(0, current_amount - required_amount)
+		var deficit = max(0, required_amount - current_amount)
+		var surplus = max(0, current_amount - required_amount)
 		if deficit > 0:
 			required_gold_total += deficit * int(state.get("buy_rates", {}).get(resource_key, 0))
 		if surplus > 0:
@@ -3545,7 +3545,7 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 		return int(state.get("sell_rates", {}).get(a, 0)) > int(state.get("sell_rates", {}).get(b, 0))
 	)
 	for resource_key in sell_order:
-		var surplus := max(0, int(pool.get(resource_key, 0)) - int(normalized_cost.get(resource_key, 0)))
+		var surplus = max(0, int(pool.get(resource_key, 0)) - int(normalized_cost.get(resource_key, 0)))
 		while int(pool.get("gold", 0)) < required_gold_total and surplus > 0:
 			var sell_quote := _market_quote_from_state(state, "sell", resource_key, 1)
 			if sell_quote.is_empty():
@@ -3556,7 +3556,7 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 		if int(pool.get("gold", 0)) >= required_gold_total:
 			break
 	for resource_key in ["wood", "ore"]:
-		var deficit := max(0, int(normalized_cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
+		var deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
 		while deficit > 0:
 			var buy_quote := _market_quote_from_state(state, "buy", resource_key, 1)
 			if buy_quote.is_empty() or int(pool.get("gold", 0)) < int(buy_quote.get("gold_value", 0)):
@@ -3681,11 +3681,11 @@ static func _weighted_recruit_value(recruits: Variant) -> int:
 		return total
 	for unit_id_value in recruits.keys():
 		var unit_id := String(unit_id_value)
-		var count := max(0, int(recruits[unit_id_value]))
+		var count = max(0, int(recruits[unit_id_value]))
 		if unit_id == "" or count <= 0:
 			continue
 		var unit := ContentService.get_unit(unit_id)
-		var tier := max(1, int(unit.get("tier", 1)))
+		var tier = max(1, int(unit.get("tier", 1)))
 		total += count * (4 + (tier * 3))
 		total += count * max(0, int(unit.get("attack", 0)) + int(unit.get("defense", 0)) - 6)
 		if bool(unit.get("ranged", false)):
@@ -3794,7 +3794,7 @@ static func _town_garrison_strength(town: Dictionary) -> int:
 		if not (stack is Dictionary):
 			continue
 		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
-		var count := max(0, int(stack.get("count", 0)))
+		var count = max(0, int(stack.get("count", 0)))
 		total_strength += count * max(
 			6,
 			int(unit.get("hp", 1))
@@ -3847,7 +3847,7 @@ static func _max_affordable_count(session: SessionStateStore.SessionData, unit_c
 	var resources = session.overworld.get("resources", {})
 	var max_affordable := 999
 	for key in unit_cost.keys():
-			var price := max(1, int(unit_cost[key]))
+			var price = max(1, int(unit_cost[key]))
 			max_affordable = min(max_affordable, int(int(resources.get(String(key), 0)) / price))
 	return max_affordable
 
@@ -3860,7 +3860,7 @@ static func _resource_pool_meets_cost(pool: Dictionary, cost: Dictionary) -> boo
 static func _resource_pool_shortfall(pool: Dictionary, cost: Dictionary) -> Dictionary:
 	var shortfall := {}
 	for resource_key in ["gold", "wood", "ore"]:
-		var missing := max(0, int(cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
+		var missing = max(0, int(cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
 		if missing > 0:
 			shortfall[resource_key] = missing
 	return shortfall
@@ -3874,11 +3874,11 @@ static func _multiply_cost(cost: Variant, multiplier: int) -> Dictionary:
 
 static func _apply_percent_discount(cost: Variant, discount_percent: int) -> Dictionary:
 	var discounted := {}
-	var clamped_discount := clamp(discount_percent, 0, 75)
+	var clamped_discount = clamp(discount_percent, 0, 75)
 	if cost is Dictionary:
 		for key in cost.keys():
 			var resource_key := String(key)
-			var base_amount := max(0, int(cost[key]))
+			var base_amount = max(0, int(cost[key]))
 			discounted[resource_key] = int(ceili(float(base_amount * (100 - clamped_discount)) / 100.0))
 	return discounted
 
@@ -4055,8 +4055,8 @@ static func _advance_town_recovery(session: SessionStateStore.SessionData, town:
 		town["recovery"] = recovery
 		return {"town": town, "message": ""}
 	var recovery_state := _town_recovery_state(session, town)
-	var relief_per_day := max(1, int(recovery_state.get("relief_per_day", 1)))
-	var relieved := min(pressure, relief_per_day)
+	var relief_per_day = max(1, int(recovery_state.get("relief_per_day", 1)))
+	var relieved = min(pressure, relief_per_day)
 	recovery["pressure"] = max(0, pressure - relieved)
 	if int(recovery.get("pressure", 0)) <= 0:
 		recovery["source"] = ""
@@ -4076,7 +4076,7 @@ static func _town_defense_summary(town: Dictionary) -> String:
 		if not (stack is Dictionary):
 			continue
 		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
-		var count := max(0, int(stack.get("count", 0)))
+		var count = max(0, int(stack.get("count", 0)))
 		garrison_strength += count * max(
 			6,
 			int(unit.get("hp", 1))
@@ -4232,7 +4232,7 @@ static func _blank_visibility_grid(map_size: Vector2i, fill_value: bool = false)
 
 static func _apply_hero_reveal(visible_tiles: Array, explored_tiles: Array, hero: Dictionary, map_size: Vector2i) -> void:
 	var position = hero.get("position", {})
-	var position_dict := position if position is Dictionary else {}
+	var position_dict = position if position is Dictionary else {}
 	var origin := Vector2i(int(position_dict.get("x", 0)), int(position_dict.get("y", 0)))
 	var radius := HeroCommandRules.scouting_radius_for_hero(hero)
 	_apply_site_reveal(visible_tiles, explored_tiles, {"x": origin.x, "y": origin.y}, radius, map_size)
@@ -4425,8 +4425,8 @@ static func _command_briefing_logistics_line(session: SessionStateStore.SessionD
 		if site_plan.is_empty():
 			return "Logistics watch: No owned town anchors the front yet. Early site claims will define your first supply line."
 		return "Logistics watch: No owned town anchors the front yet. %s" % String(site_plan.get("summary", ""))
-	var town := town_result.get("town", {})
-	var distance := abs(pos.x - int(town.get("x", 0))) + abs(pos.y - int(town.get("y", 0)))
+	var town = town_result.get("town", {})
+	var distance = abs(pos.x - int(town.get("x", 0))) + abs(pos.y - int(town.get("y", 0)))
 	var logistics := town_logistics_state(session, town)
 	var parts := [
 		"%s %d tile%s away" % [_town_name(town), distance, "" if distance == 1 else "s"],
@@ -4485,20 +4485,20 @@ static func _context_action_briefing(session: SessionStateStore.SessionData, act
 	var action_id := String(action.get("id", ""))
 	match action_id:
 		"visit_town":
-			var town := context.get("town", {})
+			var town = context.get("town", {})
 			return "Enter %s now to review construction, recruitment, market, and recovery orders." % _town_name(town)
 		"capture_town":
-			var town := context.get("town", {})
+			var town = context.get("town", {})
 			return "Claim %s now to secure a foothold and unlock local command options." % _town_name(town)
 		"collect_resource":
-			var node := context.get("node", {})
+			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			return "Secure %s now to %s." % [
 				String(site.get("name", "this site")),
 				_resource_site_opening_value(site),
 			]
 		"site_response":
-			var node := context.get("node", {})
+			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			var response_state := _resource_site_response_state(session, node, site)
 			var command_clause := "Commit %s at %s" % [
@@ -4520,7 +4520,7 @@ static func _context_action_briefing(session: SessionStateStore.SessionData, act
 		"collect_artifact":
 			return "Recover the relic on this tile now before hostile pressure reaches the lane."
 		"enter_battle":
-			var encounter := context.get("encounter", {})
+			var encounter = context.get("encounter", {})
 			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return "Break %s now before the host can widen pressure across the frontier." % String(encounter_def.get("name", "the blocking host"))
 	return String(action.get("summary", "Review the current tile and commit the next order."))
@@ -4530,16 +4530,16 @@ static func _context_action_summary(session: SessionStateStore.SessionData, acti
 		"visit_town", "capture_town":
 			return _context_action_briefing(session, {"id": action_id}, context)
 		"collect_resource":
-			var node := context.get("node", {})
+			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			return _resource_site_context_summary(session, node, site)
 		"collect_artifact":
-			var artifact_node := context.get("node", {})
+			var artifact_node = context.get("node", {})
 			return "Recover %s for the active hero before hostile pressure reaches this lane." % ArtifactRules.describe_artifact(
 				String(artifact_node.get("artifact_id", ""))
 			)
 		"enter_battle":
-			var encounter := context.get("encounter", {})
+			var encounter = context.get("encounter", {})
 			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return "Break %s on %s before the host can widen pressure across the frontier." % [
 				String(encounter_def.get("name", "the blocking host")),
@@ -4550,7 +4550,7 @@ static func _context_action_summary(session: SessionStateStore.SessionData, acti
 static func _command_commitment_action_line(session: SessionStateStore.SessionData) -> String:
 	var context_actions := get_context_actions(session)
 	if not context_actions.is_empty():
-		var action := context_actions[0]
+		var action = context_actions[0]
 		if action is Dictionary:
 			return String(action.get("summary", _context_action_briefing(session, action, get_active_context(session))))
 	var site_plan := _nearest_logistics_plan(session)
@@ -4571,7 +4571,7 @@ static func _command_commitment_route_line(session: SessionStateStore.SessionDat
 	var context := get_active_context(session)
 	match String(context.get("type", "empty")):
 		"town":
-			var town := context.get("town", {})
+			var town = context.get("town", {})
 			if String(town.get("owner", "neutral")) == "player":
 				var logistics := town_logistics_state(session, town)
 				var recovery := town_recovery_state(session, town)
@@ -4586,12 +4586,12 @@ static func _command_commitment_route_line(session: SessionStateStore.SessionDat
 				return " | ".join(parts)
 			return "%s is still off the banner line. Claiming it secures a local foothold and unlocks town command options." % _town_name(town)
 		"resource":
-			var node := context.get("node", {})
+			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			var site_name := String(site.get("name", "Frontier site"))
 			var response_state := _resource_site_response_state(session, node, site)
 			var linked_town_result := _resource_node_linked_town(session, node, "player")
-			var linked_town := linked_town_result.get("town", {})
+			var linked_town = linked_town_result.get("town", {})
 			var linked_clause := ""
 			if not linked_town.is_empty():
 				linked_clause = " | Linked %s" % _town_name(linked_town)
@@ -4613,13 +4613,13 @@ static func _command_commitment_route_line(session: SessionStateStore.SessionDat
 				return "%s can %s%s." % [site_name, _resource_site_opening_value(site), linked_clause]
 			return "%s remains claimable on the active lane." % site_name
 		"encounter":
-			var encounter := context.get("encounter", {})
+			var encounter = context.get("encounter", {})
 			var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 			return "%s blocks the active march line. Leaving it intact keeps hostile pressure on this route." % String(
 				encounter_def.get("name", "Hostile contact")
 			)
 		"artifact":
-			var artifact_node := context.get("node", {})
+			var artifact_node = context.get("node", {})
 			return "%s lies exposed on the active lane. Recovering it strengthens the current commander before the front tightens." % ArtifactRules.describe_artifact(
 				String(artifact_node.get("artifact_id", ""))
 			)
@@ -4636,7 +4636,7 @@ static func _command_commitment_route_line(session: SessionStateStore.SessionDat
 
 static func _command_commitment_coverage_line(session: SessionStateStore.SessionData) -> String:
 	var parts := []
-	var movement := session.overworld.get("movement", {})
+	var movement = session.overworld.get("movement", {})
 	parts.append("Move %d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))])
 	var reserve_support := _nearest_reserve_hero_support(session)
 	if reserve_support.is_empty():
@@ -4656,8 +4656,8 @@ static func _command_commitment_coverage_line(session: SessionStateStore.Session
 	var pos := hero_position(session)
 	var nearest_town_result := _nearest_town_for_controller(session, "player", pos.x, pos.y)
 	if int(nearest_town_result.get("index", -1)) >= 0:
-		var town := nearest_town_result.get("town", {})
-		var distance := abs(pos.x - int(town.get("x", 0))) + abs(pos.y - int(town.get("y", 0)))
+		var town = nearest_town_result.get("town", {})
+		var distance = abs(pos.x - int(town.get("x", 0))) + abs(pos.y - int(town.get("y", 0)))
 		if distance <= 0:
 			parts.append("%s anchors this tile" % _town_name(town))
 		else:
@@ -4691,9 +4691,9 @@ static func _nearest_reserve_hero_support(session: SessionStateStore.SessionData
 			continue
 		if String(hero.get("id", "")) == active_hero_id:
 			continue
-		var hero_pos := hero.get("position", {})
+		var hero_pos = hero.get("position", {})
 		var target := Vector2i(int(hero_pos.get("x", 0)), int(hero_pos.get("y", 0)))
-		var distance := abs(pos.x - target.x) + abs(pos.y - target.y)
+		var distance = abs(pos.x - target.x) + abs(pos.y - target.y)
 		var candidate := {
 			"id": String(hero.get("id", "")),
 			"name": String(hero.get("name", "Reserve commander")),
@@ -4798,7 +4798,7 @@ static func _nearest_visible_encounter_plan(session: SessionStateStore.SessionDa
 		var y := int(encounter.get("y", -1))
 		if not is_tile_visible(session, x, y):
 			continue
-		var distance := abs(pos.x - x) + abs(pos.y - y)
+		var distance = abs(pos.x - x) + abs(pos.y - y)
 		var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 		var candidate := {
 			"distance": distance,
@@ -4952,7 +4952,7 @@ static func _command_risk_town_items(session: SessionStateStore.SessionData) -> 
 				"" if int(threat_state.get("visible_pressuring", 0)) == 1 else "s",
 			])
 		if int(threat_state.get("visible_marching", 0)) > 0:
-			var days_to_contact := max(1, int(threat_state.get("nearest_goal_distance", 9999)))
+			var days_to_contact = max(1, int(threat_state.get("nearest_goal_distance", 9999)))
 			if days_to_contact <= 2:
 				threat_clauses.append("%d known host%s can reach the town in %d day%s" % [
 					int(threat_state.get("visible_marching", 0)),
@@ -5086,7 +5086,7 @@ static func _command_risk_objective_items(session: SessionStateStore.SessionData
 				var town_result := _find_town_by_placement(session, placement_id)
 				if int(town_result.get("index", -1)) < 0:
 					continue
-				var town := town_result.get("town", {})
+				var town = town_result.get("town", {})
 				if String(town.get("owner", "neutral")) != "player":
 					items.append(
 						{
@@ -5152,15 +5152,15 @@ static func _command_risk_field_item(session: SessionStateStore.SessionData) -> 
 			continue
 		if not _raid_is_public(session, encounter):
 			continue
-		var distance := abs(int(encounter.get("x", 0)) - pos.x) + abs(int(encounter.get("y", 0)) - pos.y)
+		var distance = abs(int(encounter.get("x", 0)) - pos.x) + abs(int(encounter.get("y", 0)) - pos.y)
 		if distance <= 2:
 			local_public_contacts += 1
 		nearest_distance = min(nearest_distance, distance)
 	if local_public_contacts <= 0:
 		return {}
 	var nearest_town_result := _nearest_town_for_controller(session, "player", pos.x, pos.y)
-	var nearest_town := nearest_town_result.get("town", {})
-	var nearest_town_distance := 9999 if nearest_town.is_empty() else abs(pos.x - int(nearest_town.get("x", 0))) + abs(pos.y - int(nearest_town.get("y", 0)))
+	var nearest_town = nearest_town_result.get("town", {})
+	var nearest_town_distance = 9999 if nearest_town.is_empty() else abs(pos.x - int(nearest_town.get("x", 0))) + abs(pos.y - int(nearest_town.get("y", 0)))
 	if String(get_active_context(session).get("type", "empty")) == "town":
 		return {}
 	if nearest_town_distance <= 2 and local_public_contacts <= 1:
@@ -5387,7 +5387,7 @@ static func _army_totals(army: Dictionary) -> Dictionary:
 	for stack in army.get("stacks", []):
 		if not (stack is Dictionary):
 			continue
-		var count := max(0, int(stack.get("count", 0)))
+		var count = max(0, int(stack.get("count", 0)))
 		if count <= 0:
 			continue
 		headcount += count

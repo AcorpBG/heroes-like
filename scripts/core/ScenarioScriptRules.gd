@@ -34,11 +34,11 @@ static func normalize_script_state(session: SessionStateStore.SessionData) -> vo
 
 	var fired_hook_ids: Array[String] = []
 	for hook_id_value in state.get("fired_hook_ids", []):
-		var hook_id := String(hook_id_value)
+		var hook_id = String(hook_id_value)
 		if hook_id != "" and hook_id not in fired_hook_ids:
 			fired_hook_ids.append(hook_id)
 
-	var event_log := []
+	var event_log = []
 	for entry in state.get("event_log", []):
 		if not (entry is Dictionary):
 			continue
@@ -62,24 +62,24 @@ static func process_hooks(session: SessionStateStore.SessionData) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"fired_ids": [], "messages": [], "message": ""}
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
-	var hooks := _sorted_hooks(scenario.get("script_hooks", []))
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var hooks = _sorted_hooks(scenario.get("script_hooks", []))
 	if hooks.is_empty():
 		return {"fired_ids": [], "messages": [], "message": ""}
 
 	var state: Dictionary = session.overworld.get(SCRIPT_STATE_KEY, {})
 	var fired_hook_ids: Array = state.get("fired_hook_ids", [])
-	var fired_ids := []
-	var messages := []
-	var processed_this_pass := {}
-	var iteration_count := 0
+	var fired_ids = []
+	var messages = []
+	var processed_this_pass = {}
+	var iteration_count = 0
 
 	while iteration_count < MAX_CHAIN_REACTIONS:
-		var fired_this_iteration := false
+		var fired_this_iteration = false
 		for hook in hooks:
 			if not (hook is Dictionary):
 				continue
-			var hook_id := String(hook.get("id", ""))
+			var hook_id = String(hook.get("id", ""))
 			if hook_id == "" or processed_this_pass.has(hook_id):
 				continue
 			if bool(hook.get("once", true)) and hook_id in fired_hook_ids:
@@ -91,7 +91,7 @@ static func process_hooks(session: SessionStateStore.SessionData) -> Dictionary:
 			if bool(hook.get("once", true)) and hook_id not in fired_hook_ids:
 				fired_hook_ids.append(hook_id)
 
-			var effect_result := _apply_effects(session, hook.get("effects", []))
+			var effect_result = _apply_effects(session, hook.get("effects", []))
 			var hook_messages: Array = effect_result.get("messages", [])
 			if not hook_messages.is_empty():
 				messages.append_array(hook_messages)
@@ -116,13 +116,13 @@ static func process_hooks(session: SessionStateStore.SessionData) -> Dictionary:
 	}
 
 static func _sorted_hooks(raw_hooks: Variant) -> Array:
-	var hooks := []
+	var hooks = []
 	if raw_hooks is Array:
 		for hook in raw_hooks:
 			if hook is Dictionary:
 				hooks.append(hook)
 	for index in range(hooks.size()):
-		var best_index := index
+		var best_index = index
 		for candidate_index in range(index + 1, hooks.size()):
 			if _hook_sorts_before(hooks[candidate_index], hooks[best_index]):
 				best_index = candidate_index
@@ -133,8 +133,8 @@ static func _sorted_hooks(raw_hooks: Variant) -> Array:
 	return hooks
 
 static func _hook_sorts_before(candidate: Dictionary, existing: Dictionary) -> bool:
-	var candidate_priority := int(candidate.get("priority", 0))
-	var existing_priority := int(existing.get("priority", 0))
+	var candidate_priority = int(candidate.get("priority", 0))
+	var existing_priority = int(existing.get("priority", 0))
 	if candidate_priority == existing_priority:
 		return String(candidate.get("id", "")) < String(existing.get("id", ""))
 	return candidate_priority > existing_priority
@@ -154,10 +154,10 @@ static func _condition_met(session: SessionStateStore.SessionData, condition: Di
 		"day_at_least":
 			return session.day >= int(condition.get("day", 0))
 		"town_owned_by_player":
-			var town := _find_town(session, condition)
+			var town = _find_town(session, condition)
 			return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
 		"town_not_owned_by_player":
-			var town := _find_town(session, condition)
+			var town = _find_town(session, condition)
 			return town.is_empty() or String(town.get("owner", "neutral")) != "player"
 		"flag_true":
 			return bool(session.flags.get(String(condition.get("flag", "")), false))
@@ -191,7 +191,7 @@ static func _condition_met(session: SessionStateStore.SessionData, condition: Di
 			return false
 
 static func _apply_effects(session: SessionStateStore.SessionData, effects: Variant) -> Dictionary:
-	var messages := []
+	var messages = []
 	if not (effects is Array):
 		return {"messages": messages}
 
@@ -201,7 +201,7 @@ static func _apply_effects(session: SessionStateStore.SessionData, effects: Vari
 		var result = _apply_effect(session, effect)
 		if result is Dictionary:
 			for message_value in result.get("messages", []):
-				var message := String(message_value)
+				var message = String(message_value)
 				if message != "":
 					messages.append(message)
 
@@ -210,32 +210,32 @@ static func _apply_effects(session: SessionStateStore.SessionData, effects: Vari
 static func _apply_effect(session: SessionStateStore.SessionData, effect: Dictionary) -> Dictionary:
 	match String(effect.get("type", "")):
 		"message":
-			var text := String(effect.get("text", ""))
+			var text = String(effect.get("text", ""))
 			if text != "":
 				return {"messages": [text]}
 			return {"messages": []}
 		"set_flag":
-			var flag := String(effect.get("flag", ""))
+			var flag = String(effect.get("flag", ""))
 			if flag != "":
 				session.flags[flag] = effect.get("value", true)
 			return {"messages": []}
-			"add_resources":
-				var resources := _normalize_resources(effect.get("resources", {}))
-				_overworld_rules()._add_resources(session, resources)
-				var summary := _describe_resources(resources)
-				if summary != "":
-					return {"messages": ["Received %s." % summary]}
+		"add_resources":
+			var resources = _normalize_resources(effect.get("resources", {}))
+			_overworld_rules()._add_resources(session, resources)
+			var summary = _describe_resources(resources)
+			if summary != "":
+				return {"messages": ["Received %s." % summary]}
 			return {"messages": []}
 		"award_experience":
-			var amount := max(0, int(effect.get("amount", 0)))
-				if amount <= 0:
-					return {"messages": []}
-				var hero_name := String(session.overworld.get("hero", {}).get("name", "The hero"))
-				var messages := ["%s gains %d experience." % [hero_name, amount]]
-				messages.append_array(_overworld_rules()._award_experience(session, amount))
-				HeroCommandRules.commit_active_hero(session)
-				_overworld_rules().refresh_fog_of_war(session)
-				return {"messages": messages}
+			var amount = max(0, int(effect.get("amount", 0)))
+			if amount <= 0:
+				return {"messages": []}
+			var hero_name = String(session.overworld.get("hero", {}).get("name", "The hero"))
+			var messages = ["%s gains %d experience." % [hero_name, amount]]
+			messages.append_array(_overworld_rules()._award_experience(session, amount))
+			HeroCommandRules.commit_active_hero(session)
+			_overworld_rules().refresh_fog_of_war(session)
+			return {"messages": messages}
 		"award_artifact":
 			return _award_artifact(session, String(effect.get("artifact_id", "")))
 		"spawn_resource_node":
@@ -274,14 +274,14 @@ static func describe_recent_events(session: SessionStateStore.SessionData, limit
 	var event_log = state.get("event_log", [])
 	if not (event_log is Array) or event_log.is_empty():
 		return ""
-	var count := clamp(limit, 1, EVENT_LOG_LIMIT)
-	var start_index := max(0, event_log.size() - count)
-	var parts := []
+	var count = clamp(limit, 1, EVENT_LOG_LIMIT)
+	var start_index = max(0, event_log.size() - count)
+	var parts = []
 	for index in range(start_index, event_log.size()):
 		var entry = event_log[index]
 		if not (entry is Dictionary):
 			continue
-		var message := String(entry.get("message", ""))
+		var message = String(entry.get("message", ""))
 		if message == "":
 			continue
 		parts.append("Day %d: %s" % [int(entry.get("day", session.day)), message])
@@ -290,7 +290,7 @@ static func describe_recent_events(session: SessionStateStore.SessionData, limit
 static func _spawn_resource_node(session: SessionStateStore.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):
 		return {"messages": []}
-	var placement_id := String(placement.get("placement_id", ""))
+	var placement_id = String(placement.get("placement_id", ""))
 	if placement_id == "" or _node_exists(session.overworld.get("resource_nodes", []), placement_id):
 		return {"messages": []}
 
@@ -301,7 +301,7 @@ static func _spawn_resource_node(session: SessionStateStore.SessionData, placeme
 	nodes.append(built_nodes[0])
 	session.overworld["resource_nodes"] = nodes
 
-	var site := ContentService.get_resource_site(String(placement.get("site_id", "")))
+	var site = ContentService.get_resource_site(String(placement.get("site_id", "")))
 	if not _placement_is_visible(session, placement):
 		return {"messages": ["New supplies have been reported beyond current scouting."]}
 	return {
@@ -317,7 +317,7 @@ static func _spawn_resource_node(session: SessionStateStore.SessionData, placeme
 static func _spawn_artifact_node(session: SessionStateStore.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):
 		return {"messages": []}
-	var placement_id := String(placement.get("placement_id", ""))
+	var placement_id = String(placement.get("placement_id", ""))
 	if placement_id == "" or _node_exists(session.overworld.get("artifact_nodes", []), placement_id):
 		return {"messages": []}
 
@@ -328,7 +328,7 @@ static func _spawn_artifact_node(session: SessionStateStore.SessionData, placeme
 	nodes.append(built_nodes[0])
 	session.overworld["artifact_nodes"] = nodes
 
-	var artifact := ContentService.get_artifact(String(placement.get("artifact_id", "")))
+	var artifact = ContentService.get_artifact(String(placement.get("artifact_id", "")))
 	if not _placement_is_visible(session, placement):
 		return {"messages": ["A relic cache has been reported beyond current scouting."]}
 	return {
@@ -349,17 +349,17 @@ static func _award_artifact(session: SessionStateStore.SessionData, artifact_id:
 		return {"messages": []}
 	HeroCommandRules.commit_active_hero(session)
 	_overworld_rules().refresh_fog_of_war(session)
-	var message := String(result.get("message", ""))
+	var message = String(result.get("message", ""))
 	return {"messages": [message] if message != "" else []}
 
 static func _spawn_encounter(session: SessionStateStore.SessionData, placement: Variant) -> Dictionary:
 	if not (placement is Dictionary):
 		return {"messages": []}
-	var placement_id := String(placement.get("placement_id", ""))
+	var placement_id = String(placement.get("placement_id", ""))
 	if placement_id == "" or _node_exists(session.overworld.get("encounters", []), placement_id):
 		return {"messages": []}
 
-	var encounter := {
+	var encounter = {
 		"placement_id": placement_id,
 		"encounter_id": String(placement.get("encounter_id", placement.get("id", ""))),
 		"x": int(placement.get("x", 0)),
@@ -368,7 +368,7 @@ static func _spawn_encounter(session: SessionStateStore.SessionData, placement: 
 		"combat_seed": int(placement.get("combat_seed", hash("%s:%d:%s" % [session.session_id, session.day, placement_id]))),
 	}
 	for key in placement.keys():
-		var field := String(key)
+		var field = String(key)
 		if not encounter.has(field):
 			encounter[field] = placement[key]
 
@@ -376,7 +376,7 @@ static func _spawn_encounter(session: SessionStateStore.SessionData, placement: 
 	encounters.append(encounter)
 	session.overworld["encounters"] = encounters
 
-	var encounter_template := ContentService.get_encounter(String(encounter.get("encounter_id", "")))
+	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", "")))
 	if not _placement_is_visible(session, encounter):
 		return {"messages": ["A hostile force is moving beyond current scouting."]}
 	return {
@@ -390,7 +390,7 @@ static func _spawn_encounter(session: SessionStateStore.SessionData, placement: 
 	}
 
 static func _town_add_building(session: SessionStateStore.SessionData, placement_id: String, building_id: String) -> Dictionary:
-	var town_result := _find_town_result(session, placement_id)
+	var town_result = _find_town_result(session, placement_id)
 	if int(town_result.get("index", -1)) < 0 or building_id == "":
 		return {"messages": []}
 
@@ -410,8 +410,8 @@ static func _town_add_building(session: SessionStateStore.SessionData, placement
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 
-	var building := ContentService.get_building(building_id)
-	var town_label := _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
+	var building = ContentService.get_building(building_id)
+	var town_label = _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
 	return {
 		"messages": [
 			"%s raises %s." % [
@@ -422,7 +422,7 @@ static func _town_add_building(session: SessionStateStore.SessionData, placement
 	}
 
 static func _town_add_recruits(session: SessionStateStore.SessionData, placement_id: String, recruits: Variant) -> Dictionary:
-	var town_result := _find_town_result(session, placement_id)
+	var town_result = _find_town_result(session, placement_id)
 	if int(town_result.get("index", -1)) < 0 or not (recruits is Dictionary):
 		return {"messages": []}
 
@@ -435,9 +435,9 @@ static func _town_add_recruits(session: SessionStateStore.SessionData, placement
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 
-	var summary := _describe_recruits(recruits)
+	var summary = _describe_recruits(recruits)
 	if summary != "":
-		var town_label := _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
+		var town_label = _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
 		return {
 			"messages": [
 				"%s receives %s." % [town_label, summary]
@@ -513,26 +513,26 @@ static func _add_enemy_pressure(session: SessionStateStore.SessionData, faction_
 		var state = states[index]
 		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
 			continue
-		var pressure := max(0, int(state.get("pressure", 0)) + max(0, amount))
+		var pressure = max(0, int(state.get("pressure", 0)) + max(0, amount))
 		if minimum > 0:
 			pressure = max(pressure, minimum)
 		state["pressure"] = pressure
 		states[index] = state
 		session.overworld["enemy_states"] = states
-		var label := _enemy_label(session, faction_id)
+		var label = _enemy_label(session, faction_id)
 		return {"messages": ["%s pressure rises to %d." % [label, pressure]]}
 	return {"messages": []}
 
 static func _enemy_label(session: SessionStateStore.SessionData, faction_id: String) -> String:
-	var scenario := ContentService.get_scenario(session.scenario_id if session != null else "")
+	var scenario = ContentService.get_scenario(session.scenario_id if session != null else "")
 	for config in scenario.get("enemy_factions", []):
 		if config is Dictionary and String(config.get("faction_id", "")) == faction_id:
 			return String(config.get("label", faction_id))
-	var faction := ContentService.get_faction(faction_id)
+	var faction = ContentService.get_faction(faction_id)
 	return String(faction.get("name", faction_id))
 
 static func _town_name(town: Dictionary) -> String:
-	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var town_template = ContentService.get_town(String(town.get("town_id", "")))
 	return String(town_template.get("name", town.get("town_id", "Town")))
 
 static func _placement_is_visible(session: SessionStateStore.SessionData, placement: Variant) -> bool:
@@ -545,11 +545,11 @@ static func _placement_is_visible(session: SessionStateStore.SessionData, placem
 	)
 
 static func _normalize_resources(value: Variant) -> Dictionary:
-	var resources := {}
+	var resources = {}
 	if value is Dictionary:
 		for key in value.keys():
-			var resource_key := String(key)
-			var amount := max(0, int(value[key]))
+			var resource_key = String(key)
+			var amount = max(0, int(value[key]))
 			if amount > 0 and resource_key in ["gold", "wood", "ore"]:
 				resources[resource_key] = amount
 	return resources
@@ -557,9 +557,9 @@ static func _normalize_resources(value: Variant) -> Dictionary:
 static func _describe_resources(resources: Variant) -> String:
 	if not (resources is Dictionary):
 		return ""
-	var parts := []
+	var parts = []
 	for key in ["gold", "wood", "ore"]:
-		var amount := int(resources.get(key, 0))
+		var amount = int(resources.get(key, 0))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])
 	return ", ".join(parts)
@@ -567,23 +567,23 @@ static func _describe_resources(resources: Variant) -> String:
 static func _describe_recruits(recruits: Variant) -> String:
 	if not (recruits is Dictionary):
 		return ""
-	var parts := []
-	var unit_ids := recruits.keys()
+	var parts = []
+	var unit_ids = recruits.keys()
 	unit_ids.sort()
 	for unit_id_value in unit_ids:
-		var unit_id := String(unit_id_value)
-		var count := max(0, int(recruits[unit_id_value]))
+		var unit_id = String(unit_id_value)
+		var count = max(0, int(recruits[unit_id_value]))
 		if count <= 0:
 			continue
-		var unit := ContentService.get_unit(unit_id)
+		var unit = ContentService.get_unit(unit_id)
 		parts.append("%s x%d" % [String(unit.get("name", unit_id)), count])
 	return ", ".join(parts)
 
 static func _join_messages(messages: Variant) -> String:
-	var parts := []
+	var parts = []
 	if messages is Array:
 		for value in messages:
-			var message := String(value)
+			var message = String(value)
 			if message != "":
 				parts.append(message)
 	return " ".join(parts)

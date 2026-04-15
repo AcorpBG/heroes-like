@@ -1,6 +1,16 @@
 class_name BattleRules
 extends RefCounted
 
+const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
+const OverworldRules = preload("res://scripts/core/OverworldRules.gd")
+const DifficultyRules = preload("res://scripts/core/DifficultyRules.gd")
+const HeroCommandRules = preload("res://scripts/core/HeroCommandRules.gd")
+const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
+const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
+const SpellRules = preload("res://scripts/core/SpellRules.gd")
+const BattleAiRules = preload("res://scripts/core/BattleAiRules.gd")
+const ScenarioRules = preload("res://scripts/core/ScenarioRules.gd")
+
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
 const RECENT_EVENT_LIMIT := 6
@@ -13,19 +23,19 @@ const MOMENTUM_MAX := 4
 static func create_battle_payload(session: SessionStateStore.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	OverworldRules.normalize_overworld_state(session)
 	encounter_placement = _resolved_encounter_placement(session, encounter_placement)
-	var encounter_id := String(encounter_placement.get("encounter_id", encounter_placement.get("id", "")))
-	var encounter := ContentService.get_encounter(encounter_id)
+	var encounter_id = String(encounter_placement.get("encounter_id", encounter_placement.get("id", "")))
+	var encounter = ContentService.get_encounter(encounter_id)
 	if encounter.is_empty():
 		return {}
 
-	var scenario := ContentService.get_scenario(session.scenario_id)
-	var battle_context := _normalized_battle_context(session, encounter_placement)
-	var player_setup := _player_setup_for_battle(session, encounter_placement, battle_context)
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var battle_context = _normalized_battle_context(session, encounter_placement)
+	var player_setup = _player_setup_for_battle(session, encounter_placement, battle_context)
 	var enemy_army = _enemy_army_for_encounter(encounter_placement, encounter)
-	var enemy_hero_state := _enemy_commander_state(encounter)
-	var player_commander_state := player_setup.get("commander_state", session.overworld.get("hero", {}))
-	var battlefield_tags := _normalized_battlefield_tags(encounter, battle_context)
-	var battle := {
+	var enemy_hero_state = _enemy_commander_state(encounter)
+	var player_commander_state = player_setup.get("commander_state", session.overworld.get("hero", {}))
+	var battlefield_tags = _normalized_battlefield_tags(encounter, battle_context)
+	var battle = {
 		"position": {
 			"x": int(encounter_placement.get("x", OverworldRules.hero_position(session).x)),
 			"y": int(encounter_placement.get("y", OverworldRules.hero_position(session).y)),
@@ -72,7 +82,7 @@ static func create_battle_payload(session: SessionStateStore.SessionData, encoun
 		},
 	}
 
-	var stacks := []
+	var stacks = []
 	var player_stacks = player_setup.get("stacks", [])
 	for index in range(player_stacks.size()):
 		var stack = player_stacks[index]
@@ -114,7 +124,7 @@ static func normalize_battle_state_bridge(session) -> bool:
 static func _resolved_encounter_placement(session: SessionStateStore.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	if session == null:
 		return encounter_placement
-	var resolved_key := OverworldRules.encounter_key(encounter_placement)
+	var resolved_key = OverworldRules.encounter_key(encounter_placement)
 	for placement_value in session.overworld.get("encounters", []):
 		if not (placement_value is Dictionary):
 			continue
@@ -123,17 +133,17 @@ static func _resolved_encounter_placement(session: SessionStateStore.SessionData
 	return encounter_placement
 
 static func _normalized_battle_context(session: SessionStateStore.SessionData, raw_context: Variant) -> Dictionary:
-	var context := {}
+	var context = {}
 	if raw_context is Dictionary:
 		if raw_context.has("battle_context") and raw_context.get("battle_context", {}) is Dictionary:
 			context = raw_context.get("battle_context", {})
 		else:
 			context = raw_context
-	var context_type := String(context.get("type", ""))
+	var context_type = String(context.get("type", ""))
 	if context_type == "" and raw_context is Dictionary:
 		var placement = raw_context
 		if String(placement.get("spawned_by_faction_id", "")) != "" and String(placement.get("target_kind", "")) == "town":
-			var target_town := _find_town_by_placement(session, String(placement.get("target_placement_id", ""))).get("town", {})
+			var target_town = _find_town_by_placement(session, String(placement.get("target_placement_id", ""))).get("town", {})
 			if not target_town.is_empty() and String(target_town.get("owner", "neutral")) == "player":
 				context = {
 					"type": "town_defense",
@@ -151,8 +161,8 @@ static func _normalized_battle_context(session: SessionStateStore.SessionData, r
 			"battlefront_summary": "",
 			"battlefront_tags": [],
 		}
-	var town := _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
-	var battlefront := OverworldRules.town_battlefront_profile(town)
+	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
+	var battlefront = OverworldRules.town_battlefront_profile(town)
 	return {
 		"type": "town_defense",
 		"town_placement_id": String(context.get("town_placement_id", "")),
@@ -169,7 +179,7 @@ static func _is_town_defense_context(context: Variant) -> bool:
 
 static func _battle_name(session: SessionStateStore.SessionData, encounter: Dictionary, battle_context: Dictionary) -> String:
 	if _is_town_defense_context(battle_context):
-		var town_name := _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
+		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
 		if town_name != "":
 			return "%s at %s" % [String(encounter.get("name", encounter.get("id", "Raid"))), town_name]
 	return String(encounter.get("name", encounter.get("id", "Battle")))
@@ -187,7 +197,7 @@ static func _player_setup_for_battle(
 	battle_context: Dictionary
 ) -> Dictionary:
 	if not _is_town_defense_context(battle_context):
-		var active_hero := session.overworld.get("hero", {})
+		var active_hero = session.overworld.get("hero", {})
 		return {
 			"commander_state": active_hero,
 			"commander_source": {
@@ -203,15 +213,15 @@ static func _player_setup_for_battle(
 			),
 		}
 
-	var town := _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
-	var defending_hero := _town_defending_hero(session, town, String(battle_context.get("defending_hero_id", "")))
-	var commander_state := defending_hero if not defending_hero.is_empty() else _town_captain_state(town)
-	var commander_source := {
+	var town = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
+	var defending_hero = _town_defending_hero(session, town, String(battle_context.get("defending_hero_id", "")))
+	var commander_state = defending_hero if not defending_hero.is_empty() else _town_captain_state(town)
+	var commander_source = {
 		"type": "town_hero" if not defending_hero.is_empty() else "town_captain",
 		"hero_id": String(defending_hero.get("id", "")),
 		"town_placement_id": String(town.get("placement_id", "")),
 	}
-	var player_stacks := []
+	var player_stacks = []
 	if not defending_hero.is_empty():
 		player_stacks.append_array(
 			_army_stack_descriptors(
@@ -248,13 +258,13 @@ static func _normalize_player_commander_state(
 		if String((source if source is Dictionary else {}).get("type", "")) == "town_captain":
 			return _normalize_town_captain(existing_state)
 		return HeroProgressionRules.ensure_hero_progression(SpellRules.ensure_hero_spellbook(existing_state))
-	var source_type := String((source if source is Dictionary else {}).get("type", ""))
+	var source_type = String((source if source is Dictionary else {}).get("type", ""))
 	if source_type in ["active_hero", "town_hero"]:
-		var hero := HeroCommandRules.hero_by_id(session, String((source if source is Dictionary else {}).get("hero_id", "")))
+		var hero = HeroCommandRules.hero_by_id(session, String((source if source is Dictionary else {}).get("hero_id", "")))
 		if not hero.is_empty():
 			return hero
 	if _is_town_defense_context(context):
-		var town := _find_town_by_placement(session, String((context if context is Dictionary else {}).get("town_placement_id", ""))).get("town", {})
+		var town = _find_town_by_placement(session, String((context if context is Dictionary else {}).get("town_placement_id", ""))).get("town", {})
 		return _town_captain_state(town)
 	return session.overworld.get("hero", {})
 
@@ -263,18 +273,18 @@ static func _player_commander_state(session: SessionStateStore.SessionData) -> D
 		return {}
 	if session.battle.is_empty():
 		return session.overworld.get("hero", {})
-	var commander := session.battle.get("player_commander_state", {})
+	var commander = session.battle.get("player_commander_state", {})
 	return commander if commander is Dictionary else session.overworld.get("hero", {})
 
 static func _army_stack_descriptors(army: Variant, source: Dictionary) -> Array:
-	var descriptors := []
+	var descriptors = []
 	if not (army is Dictionary):
 		return descriptors
 	for stack_value in army.get("stacks", []):
 		if not (stack_value is Dictionary):
 			continue
-		var unit_id := String(stack_value.get("unit_id", ""))
-		var count := max(0, int(stack_value.get("count", 0)))
+		var unit_id = String(stack_value.get("unit_id", ""))
+		var count = max(0, int(stack_value.get("count", 0)))
 		if unit_id == "" or count <= 0:
 			continue
 		descriptors.append(
@@ -293,7 +303,7 @@ static func _town_defending_hero(
 ) -> Dictionary:
 	if session == null or town.is_empty():
 		return {}
-	var candidates := []
+	var candidates = []
 	for hero_value in session.overworld.get("player_heroes", []):
 		if not (hero_value is Dictionary):
 			continue
@@ -317,9 +327,9 @@ static func _town_defending_hero(
 	return candidates[0]
 
 static func _town_captain_state(town: Dictionary) -> Dictionary:
-	var name := "%s Watch Captain" % _town_name(town)
-	var category_counts := _town_building_category_counts(town)
-	var command := {
+	var name = "%s Watch Captain" % _town_name(town)
+	var category_counts = _town_building_category_counts(town)
+	var command = {
 		"attack": clamp(int(category_counts.get("dwelling", 0) / 2), 0, 3),
 		"defense": clamp(1 + int(category_counts.get("support", 0)) + int(category_counts.get("civic", 0) / 2), 1, 5),
 		"power": clamp(int(category_counts.get("magic", 0) / 2), 0, 2),
@@ -341,7 +351,7 @@ static func _town_captain_state(town: Dictionary) -> Dictionary:
 	)
 
 static func _normalize_town_captain(hero_state: Dictionary) -> Dictionary:
-	var command := _normalize_command(hero_state.get("command", {}))
+	var command = _normalize_command(hero_state.get("command", {}))
 	return SpellRules.ensure_hero_spellbook(
 		HeroProgressionRules.ensure_hero_progression(
 			{
@@ -364,17 +374,17 @@ static func _normalize_town_captain(hero_state: Dictionary) -> Dictionary:
 	)
 
 static func _town_building_category_counts(town: Dictionary) -> Dictionary:
-	var counts := {"civic": 0, "dwelling": 0, "economy": 0, "support": 0, "magic": 0}
+	var counts = {"civic": 0, "dwelling": 0, "economy": 0, "support": 0, "magic": 0}
 	for building_id_value in _normalized_town_buildings(town):
-		var category := String(ContentService.get_building(String(building_id_value)).get("category", "support"))
+		var category = String(ContentService.get_building(String(building_id_value)).get("category", "support"))
 		if not counts.has(category):
 			category = "support"
 		counts[category] = int(counts.get(category, 0)) + 1
 	return counts
 
 static func _normalized_town_buildings(town: Dictionary) -> Array:
-	var normalized := []
-	var template := ContentService.get_town(String(town.get("town_id", "")))
+	var normalized = []
+	var template = ContentService.get_town(String(town.get("town_id", "")))
 	for building_id_value in template.get("starting_building_ids", []):
 		_append_building_with_requirements(normalized, String(building_id_value))
 	for building_id_value in town.get("built_buildings", []):
@@ -384,10 +394,10 @@ static func _normalized_town_buildings(town: Dictionary) -> Array:
 static func _append_building_with_requirements(target: Array, building_id: String, trail: Array = []) -> void:
 	if building_id == "" or building_id in target or building_id in trail:
 		return
-	var next_trail := trail.duplicate(true)
+	var next_trail = trail.duplicate(true)
 	next_trail.append(building_id)
-	var building := ContentService.get_building(building_id)
-	var upgrade_from := String(building.get("upgrade_from", ""))
+	var building = ContentService.get_building(building_id)
+	var upgrade_from = String(building.get("upgrade_from", ""))
 	if upgrade_from != "":
 		_append_building_with_requirements(target, upgrade_from, next_trail)
 	for requirement_value in building.get("requires", []):
@@ -415,13 +425,13 @@ static func _find_encounter_by_key(session: SessionStateStore.SessionData, encou
 	return {"index": -1, "encounter": {}}
 
 static func _town_name_from_placement_id(session: SessionStateStore.SessionData, placement_id: String) -> String:
-	var town := _find_town_by_placement(session, placement_id).get("town", {})
+	var town = _find_town_by_placement(session, placement_id).get("town", {})
 	return _town_name(town)
 
 static func _town_name(town: Dictionary) -> String:
 	if town.is_empty():
 		return ""
-	var template := ContentService.get_town(String(town.get("town_id", "")))
+	var template = ContentService.get_town(String(town.get("town_id", "")))
 	return String(template.get("name", town.get("town_id", "Town")))
 
 static func normalize_battle_state(session: SessionStateStore.SessionData) -> bool:
@@ -431,7 +441,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 	DifficultyRules.normalize_session(session)
 
 	if not session.battle.has("stacks"):
-		var encounter_stub := {
+		var encounter_stub = {
 			"encounter_id": String(session.battle.get("encounter_id", "")),
 			"x": int(session.battle.get("position", {}).get("x", 0)),
 			"y": int(session.battle.get("position", {}).get("y", 0)),
@@ -441,7 +451,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 		session.battle = create_battle_payload(session, encounter_stub)
 		return not session.battle.is_empty()
 
-	var stacks := []
+	var stacks = []
 	for stack in session.battle.get("stacks", []):
 		var normalized = _normalize_stack(stack)
 		if not normalized.is_empty():
@@ -460,9 +470,9 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 	session.battle["round"] = max(1, int(session.battle.get("round", 1)))
 	session.battle["max_rounds"] = max(1, int(session.battle.get("max_rounds", 12)))
 	session.battle["terrain"] = String(session.battle.get("terrain", "plains"))
-	var encounter := ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var scenario := ContentService.get_scenario(session.scenario_id)
-	var encounter_placement := _current_battle_encounter_placement(session)
+	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var encounter_placement = _current_battle_encounter_placement(session)
 	session.battle["battlefield_tags"] = _normalized_battlefield_tags(encounter, session.battle.get("context", {}))
 	session.battle[FIELD_OBJECTIVES_KEY] = _normalize_field_objectives(
 		session.battle.get(FIELD_OBJECTIVES_KEY, []),
@@ -501,7 +511,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 		else:
 			session.battle["turn_order"] = turn_order
 			session.battle["turn_index"] = clamp(int(session.battle.get("turn_index", 0)), 0, max(turn_order.size() - 1, 0))
-			var active_id := String(session.battle.get("active_stack_id", ""))
+			var active_id = String(session.battle.get("active_stack_id", ""))
 			if active_id == "" or _get_stack_by_id(session.battle, active_id).is_empty():
 				active_id = _advance_to_next_alive(session.battle, int(session.battle.get("turn_index", 0)))
 				session.battle["active_stack_id"] = active_id
@@ -512,7 +522,7 @@ static func normalize_battle_state(session: SessionStateStore.SessionData) -> bo
 static func resolve_if_battle_ready(session: SessionStateStore.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"state": "invalid", "message": ""}
-	var outcome := _evaluate_outcome(session)
+	var outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) == "":
 		return {"state": "continue", "message": ""}
 	return outcome
@@ -526,17 +536,17 @@ static func get_selected_target(battle: Dictionary) -> Dictionary:
 static func cycle_target(session: SessionStateStore.SessionData, direction: int) -> void:
 	if session == null or session.battle.is_empty():
 		return
-	var active_stack := get_active_stack(session.battle)
+	var active_stack = get_active_stack(session.battle)
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return
 
-	var enemies := _alive_stacks_for_side(session.battle, "enemy")
+	var enemies = _alive_stacks_for_side(session.battle, "enemy")
 	if enemies.is_empty():
 		session.battle["selected_target_id"] = ""
 		return
 
-	var current_id := String(session.battle.get("selected_target_id", ""))
-	var index := 0
+	var current_id = String(session.battle.get("selected_target_id", ""))
+	var index = 0
 	for enemy_index in range(enemies.size()):
 		if String(enemies[enemy_index].get("battle_id", "")) == current_id:
 			index = enemy_index
@@ -562,15 +572,15 @@ static func get_spell_actions(session: SessionStateStore.SessionData) -> Array:
 static func describe_header(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Battle"
-	var battle := session.battle
+	var battle = session.battle
 	return String(battle.get("encounter_name", battle.get("encounter_id", "Battle")))
 
 static func describe_status(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Round 0 | Battlefield unavailable"
-	var battle := session.battle
-	var active_stack := get_active_stack(battle)
-	var status := "Round %d/%d | %s | Terrain %s | %s | Active %s" % [
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var status = "Round %d/%d | %s | Terrain %s | %s | Active %s" % [
 		int(battle.get("round", 1)),
 		int(battle.get("max_rounds", 12)),
 		_battle_context_label(session, battle.get("context", {})),
@@ -578,7 +588,7 @@ static func describe_status(session: SessionStateStore.SessionData) -> String:
 		_distance_label(int(battle.get("distance", 1))),
 		String(active_stack.get("name", "No active stack")),
 	]
-	var objective_brief := _field_objective_status_brief(battle)
+	var objective_brief = _field_objective_status_brief(battle)
 	if objective_brief != "":
 		status += " | %s" % objective_brief
 	return status
@@ -586,11 +596,11 @@ static func describe_status(session: SessionStateStore.SessionData) -> String:
 static func describe_pressure(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Outcome pressure unavailable."
-	var battle := session.battle
-	var player_totals := _army_totals(battle, "player")
-	var enemy_totals := _army_totals(battle, "enemy")
-	var rounds_remaining := max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
-	var lines := [
+	var battle = session.battle
+	var player_totals = _army_totals(battle, "player")
+	var enemy_totals = _army_totals(battle, "enemy")
+	var rounds_remaining = max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
+	var lines = [
 		"Friendly line: %d stacks | %d units | %d HP" % [
 			int(player_totals.get("stacks", 0)),
 			int(player_totals.get("units", 0)),
@@ -603,10 +613,10 @@ static func describe_pressure(session: SessionStateStore.SessionData) -> String:
 		],
 		"Clock: %d rounds before stalemate" % rounds_remaining,
 	]
-	var battlefront_summary := _battlefield_identity_summary(battle)
+	var battlefront_summary = _battlefield_identity_summary(battle)
 	if battlefront_summary != "":
 		lines.append("Battlefront: %s" % battlefront_summary)
-	var objective_pressure := _field_objective_pressure_summary(battle)
+	var objective_pressure = _field_objective_pressure_summary(battle)
 	if objective_pressure != "":
 		lines.append("Objective pressure: %s" % objective_pressure)
 	lines.append("Pressure: %s" % _pressure_brief(session))
@@ -617,8 +627,8 @@ static func describe_pressure(session: SessionStateStore.SessionData) -> String:
 static func describe_risk_readiness_board(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Outlook: Tactical risk board unavailable."
-	var battle := session.battle
-	var lines := [
+	var battle = session.battle
+	var lines = [
 		"Outlook: %s" % _risk_readiness_grade(session, battle),
 		"Initiative swing: %s" % _risk_board_initiative_line(battle),
 		"Command posture: %s" % _risk_board_commander_line(battle),
@@ -627,7 +637,7 @@ static func describe_risk_readiness_board(session: SessionStateStore.SessionData
 		"Priority break: %s" % _risk_board_priority_line(battle),
 		"Objective urgency: %s" % _risk_board_objective_line(session, battle),
 	]
-	var dispatch_line := _risk_board_dispatch_line(battle)
+	var dispatch_line = _risk_board_dispatch_line(battle)
 	if dispatch_line != "":
 		lines.append("Latest shift: %s" % dispatch_line)
 	return "\n".join(lines)
@@ -641,10 +651,10 @@ static func describe_tactical_briefing(session: SessionStateStore.SessionData) -
 	return "\n".join(_tactical_briefing_lines(session))
 
 static func consume_tactical_briefing(session: SessionStateStore.SessionData) -> String:
-	var briefing_text := describe_tactical_briefing(session)
+	var briefing_text = describe_tactical_briefing(session)
 	if briefing_text == "":
 		return ""
-	var briefing_state := session.battle.get(TACTICAL_BRIEFING_KEY, {})
+	var briefing_state = session.battle.get(TACTICAL_BRIEFING_KEY, {})
 	if not (briefing_state is Dictionary):
 		briefing_state = {}
 	briefing_state["shown"] = true
@@ -655,11 +665,11 @@ static func consume_tactical_briefing(session: SessionStateStore.SessionData) ->
 static func describe_commander_summary(session: SessionStateStore.SessionData, side: String) -> String:
 	if session == null or session.battle.is_empty():
 		return "Commander summary unavailable."
-	var battle := session.battle
-	var commander_state := _commander_state_for_side(battle, side)
-	var commander_payload := _hero_payload_for_side(battle, side)
+	var battle = session.battle
+	var commander_state = _commander_state_for_side(battle, side)
+	var commander_payload = _hero_payload_for_side(battle, side)
 	var command = commander_state.get("command", {}) if commander_state is Dictionary else {}
-	var army_totals := _army_totals(battle, side)
+	var army_totals = _army_totals(battle, side)
 	if commander_state.is_empty():
 		return "\n".join(
 			[
@@ -672,10 +682,10 @@ static func describe_commander_summary(session: SessionStateStore.SessionData, s
 				],
 			]
 		)
-	var battle_attack := int(commander_payload.get("attack", int(command.get("attack", 0))))
-	var battle_defense := int(commander_payload.get("defense", int(command.get("defense", 0))))
-	var battle_initiative := int(commander_payload.get("initiative", 0))
-	var initiative_label := "%d" % battle_initiative
+	var battle_attack = int(commander_payload.get("attack", int(command.get("attack", 0))))
+	var battle_defense = int(commander_payload.get("defense", int(command.get("defense", 0))))
+	var battle_initiative = int(commander_payload.get("initiative", 0))
+	var initiative_label = "%d" % battle_initiative
 	if battle_initiative > 0:
 		initiative_label = "+%d" % battle_initiative
 	return "\n".join(
@@ -709,17 +719,17 @@ static func describe_commander_summary(session: SessionStateStore.SessionData, s
 static func describe_initiative_track(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Initiative track unavailable."
-	var battle := session.battle
+	var battle = session.battle
 	var turn_order = battle.get("turn_order", [])
 	if not (turn_order is Array) or turn_order.is_empty():
 		return "Initiative is still being established."
-	var lines := []
+	var lines = []
 	for index in range(turn_order.size()):
-		var battle_id := String(turn_order[index])
-		var stack := _get_stack_by_id(battle, battle_id)
+		var battle_id = String(turn_order[index])
+		var stack = _get_stack_by_id(battle, battle_id)
 		if stack.is_empty() or _alive_count(stack) <= 0:
 			continue
-		var marker := "UP"
+		var marker = "UP"
 		if battle_id == String(battle.get("active_stack_id", "")):
 			marker = "NOW"
 		elif index < int(battle.get("turn_index", 0)):
@@ -742,12 +752,12 @@ static func describe_active_context(session: SessionStateStore.SessionData) -> S
 static func describe_target_context(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No target selected."
-	var battle := session.battle
-	var target := get_selected_target(battle)
+	var battle = session.battle
+	var target = get_selected_target(battle)
 	if target.is_empty():
 		return "No target selected."
-	var summary := _stack_focus_summary(target, battle, false)
-	var active_stack := get_active_stack(battle)
+	var summary = _stack_focus_summary(target, battle, false)
+	var active_stack = get_active_stack(battle)
 	if active_stack.is_empty():
 		return summary
 	return "%s\nEngagement: %s" % [summary, _engagement_preview(active_stack, target, battle)]
@@ -755,11 +765,11 @@ static func describe_target_context(session: SessionStateStore.SessionData) -> S
 static func describe_effect_board(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No active effects."
-	var lines := []
+	var lines = []
 	for stack in session.battle.get("stacks", []):
 		if not (stack is Dictionary) or _alive_count(stack) <= 0:
 			continue
-		var effect_summary := SpellRules.effect_summary(stack, session.battle)
+		var effect_summary = SpellRules.effect_summary(stack, session.battle)
 		if effect_summary != "":
 			lines.append("%s [%s]: %s" % [
 				_stack_label(stack),
@@ -771,13 +781,13 @@ static func describe_effect_board(session: SessionStateStore.SessionData) -> Str
 static func describe_dispatch(session: SessionStateStore.SessionData, last_message: String = "") -> String:
 	if session == null or session.battle.is_empty():
 		return last_message if last_message != "" else "Battle dispatch unavailable."
-	var lines := []
-	var latest := last_message.strip_edges()
+	var lines = []
+	var latest = last_message.strip_edges()
 	if latest != "":
 		lines.append("Latest: %s" % latest)
-	var appended := 0
+	var appended = 0
 	for event_text in session.battle.get("recent_events", []):
-		var event_line := String(event_text).strip_edges()
+		var event_line = String(event_text).strip_edges()
 		if event_line == "" or event_line == latest:
 			continue
 		lines.append("Feed: %s" % event_line)
@@ -790,15 +800,15 @@ static func describe_dispatch(session: SessionStateStore.SessionData, last_messa
 static func describe_action_surface(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No battle orders are available."
-	var battle := session.battle
-	var active_stack := get_active_stack(battle)
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
 	if active_stack.is_empty():
 		return "No stack is ready to act."
 	if String(active_stack.get("side", "")) != "player":
 		return "%s is acting now. Hold the line until command returns." % _stack_label(active_stack)
-	var target := get_selected_target(battle)
-	var actions := get_action_surface(session)
-	var lines := [
+	var target = get_selected_target(battle)
+	var actions = get_action_surface(session)
+	var lines = [
 		"Target focus: %s" % String(target.get("name", "No target selected")),
 	]
 	for action_id in ["advance", "strike", "shoot", "defend", "retreat", "surrender"]:
@@ -812,12 +822,12 @@ static func describe_action_surface(session: SessionStateStore.SessionData) -> S
 static func describe_order_consequence_board(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Order Consequences\n- Battle consequence board unavailable."
-	var battle := session.battle
-	var active_stack := get_active_stack(battle)
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
 	if active_stack.is_empty():
 		return "Order Consequences\n- No stack is ready to act."
 	if String(active_stack.get("side", "")) != "player":
-		var enemy_action := BattleAiRules.choose_enemy_action(
+		var enemy_action = BattleAiRules.choose_enemy_action(
 			battle,
 			active_stack,
 			battle.get("enemy_hero", {})
@@ -830,8 +840,8 @@ static func describe_order_consequence_board(session: SessionStateStore.SessionD
 				"- Objective pull: %s" % _objective_pull_line(session, battle, {}, active_stack, get_selected_target(battle)),
 			]
 		)
-	var target := get_selected_target(battle)
-	var actions := get_action_surface(session)
+	var target = get_selected_target(battle)
+	var actions = get_action_surface(session)
 	return "\n".join(
 		[
 			"Order Consequences",
@@ -846,9 +856,9 @@ static func describe_order_consequence_board(session: SessionStateStore.SessionD
 static func describe_spell_timing_board(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Spell and Ability Timing\n- Timing board unavailable."
-	var battle := session.battle
-	var active_stack := get_active_stack(battle)
-	var target := get_selected_target(battle)
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
 	return "\n".join(
 		[
 			"Spell and Ability Timing",
@@ -869,15 +879,15 @@ static func _spell_window_line(
 		return "No active stack is shaping a timing window."
 	if String(active_stack.get("side", "")) != "player":
 		return _enemy_spell_threat_line(battle, active_stack)
-	var preferred_action := _preferred_spell_timing_action(session, battle, active_stack, target)
+	var preferred_action = _preferred_spell_timing_action(session, battle, active_stack, target)
 	if not preferred_action.is_empty():
 		return "%s: %s" % [
 			String(preferred_action.get("label", "Battle spell")),
 			String(preferred_action.get("summary", "A battle spell is ready.")),
 		]
-	var commander := _player_commander_state(session)
-	var mana := SpellRules.mana_state(commander)
-	var known_spells := SpellRules.known_spells(commander, SpellRules.CONTEXT_BATTLE)
+	var commander = _player_commander_state(session)
+	var mana = SpellRules.mana_state(commander)
+	var known_spells = SpellRules.known_spells(commander, SpellRules.CONTEXT_BATTLE)
 	if known_spells.is_empty():
 		return "No battle spell is authored for this commander; this turn has to come from unit timing."
 	if int(mana.get("current", 0)) <= 0:
@@ -895,17 +905,17 @@ static func _preferred_spell_timing_action(
 	active_stack: Dictionary,
 	target: Dictionary
 ) -> Dictionary:
-	var best := {}
-	var best_score := -99999.0
-	var availability := action_availability(battle)
+	var best = {}
+	var best_score = -99999.0
+	var availability = action_availability(battle)
 	for action in get_spell_actions(session):
 		if not (action is Dictionary) or bool(action.get("disabled", false)):
 			continue
-		var spell_id := String(action.get("id", "")).trim_prefix("cast_spell:")
-		var spell := ContentService.get_spell(spell_id)
+		var spell_id = String(action.get("id", "")).trim_prefix("cast_spell:")
+		var spell = ContentService.get_spell(spell_id)
 		if spell.is_empty():
 			continue
-		var score := _spell_timing_action_score(battle, active_stack, target, spell, availability)
+		var score = _spell_timing_action_score(battle, active_stack, target, spell, availability)
 		if best.is_empty() or score > best_score:
 			best = action
 			best_score = score
@@ -919,8 +929,8 @@ static func _spell_timing_action_score(
 	availability: Dictionary
 ) -> float:
 	var effect = spell.get("effect", {})
-	var effect_type := String(effect.get("type", ""))
-	var score := 0.0
+	var effect_type = String(effect.get("type", ""))
+	var score = 0.0
 	match effect_type:
 		"damage_enemy":
 			score = 4.0
@@ -931,7 +941,7 @@ static func _spell_timing_action_score(
 				if _health_ratio(target) <= 0.75:
 					score += 1.0
 			var status_effect = effect.get("status_effect", {})
-			var effect_id := String(status_effect.get("effect_id", status_effect.get("status_id", "")))
+			var effect_id = String(status_effect.get("effect_id", status_effect.get("status_id", "")))
 			if effect_id != "" and not target.is_empty() and not SpellRules.has_effect_id(target, battle, effect_id):
 				score += 1.5
 		"defense_buff":
@@ -966,11 +976,11 @@ static func _support_payoff_line(
 	active_stack: Dictionary,
 	target: Dictionary
 ) -> String:
-	var followup_line := _support_followup_line(battle, target)
+	var followup_line = _support_followup_line(battle, target)
 	if followup_line != "":
 		return followup_line
 	if not active_stack.is_empty() and String(active_stack.get("side", "")) == "player":
-		var active_ability := _active_ability_window_summary(active_stack, battle, target)
+		var active_ability = _active_ability_window_summary(active_stack, battle, target)
 		if active_ability != "":
 			return active_ability
 	if _side_has_ability(battle, "player", "formation_guard") and _side_defending_count(battle, "player") > 0 and _allied_ranged_count(battle, "player") > 0:
@@ -982,7 +992,7 @@ static func _support_payoff_line(
 	return "No major support chain is live beyond the base exchange."
 
 static func _support_followup_line(battle: Dictionary, target: Dictionary) -> String:
-	var targets := []
+	var targets = []
 	if not target.is_empty() and String(target.get("side", "")) == "enemy":
 		targets.append(target)
 	for enemy in _alive_stacks_for_side(battle, "enemy"):
@@ -992,14 +1002,14 @@ static func _support_followup_line(battle: Dictionary, target: Dictionary) -> St
 		if not (enemy is Dictionary):
 			continue
 		if SpellRules.has_effect_id(enemy, battle, STATUS_HARRIED):
-			var finisher := _first_stack_with_any_ability(battle, "player", ["backstab", "bloodrush", "shielding"])
+			var finisher = _first_stack_with_any_ability(battle, "player", ["backstab", "bloodrush", "shielding"])
 			if not finisher.is_empty():
 				return "%s is harried; %s can cash that mark once contact holds." % [
 					_stack_label(enemy),
 					_stack_label(finisher),
 				]
 		if SpellRules.has_effect_id(enemy, battle, STATUS_STAGGERED):
-			var punisher := _first_stack_with_any_ability(battle, "player", ["formation_guard", "reach", "brace"])
+			var punisher = _first_stack_with_any_ability(battle, "player", ["formation_guard", "reach", "brace"])
 			if not punisher.is_empty():
 				return "%s is staggered; %s can punish the slowed window on the next grounded trade." % [
 					_stack_label(enemy),
@@ -1013,21 +1023,21 @@ static func _protection_need_line(
 	active_stack: Dictionary,
 	target: Dictionary
 ) -> String:
-	var protected_stack := _priority_friendly_protection_stack(battle)
+	var protected_stack = _priority_friendly_protection_stack(battle)
 	if protected_stack.is_empty():
 		return "No friendly stack is demanding emergency cover yet."
-	var threat_stack := get_active_stack(battle)
+	var threat_stack = get_active_stack(battle)
 	if threat_stack.is_empty() or String(threat_stack.get("side", "")) != "enemy":
 		threat_stack = _next_enemy_reply_stack(battle)
-	var threat_label := _stack_label(threat_stack) if not threat_stack.is_empty() else "the next hostile stack"
+	var threat_label = _stack_label(threat_stack) if not threat_stack.is_empty() else "the next hostile stack"
 	if not active_stack.is_empty() and String(active_stack.get("side", "")) == "player" and String(active_stack.get("battle_id", "")) == String(protected_stack.get("battle_id", "")):
-		var support_spell := _best_ready_support_spell_action(session, battle, active_stack, target)
+		var support_spell = _best_ready_support_spell_action(session, battle, active_stack, target)
 		if not support_spell.is_empty():
 			return "%s is the exposed lane; %s" % [
 				_stack_label(protected_stack),
 				String(support_spell.get("summary", "A support spell is ready.")),
 			]
-		var defend_surface := get_action_surface(session).get("defend", {})
+		var defend_surface = get_action_surface(session).get("defend", {})
 		if defend_surface is Dictionary and not bool(defend_surface.get("disabled", true)):
 			return "%s is the exposed lane; %s" % [
 				_stack_label(protected_stack),
@@ -1049,21 +1059,21 @@ static func _protection_need_line(
 	]
 
 static func _priority_friendly_protection_stack(battle: Dictionary) -> Dictionary:
-	var threat_stack := get_active_stack(battle)
+	var threat_stack = get_active_stack(battle)
 	if threat_stack.is_empty() or String(threat_stack.get("side", "")) != "enemy":
 		threat_stack = _next_enemy_reply_stack(battle)
-	var threatened_target_id := ""
+	var threatened_target_id = ""
 	if not threat_stack.is_empty():
-		var threat_action := BattleAiRules.choose_enemy_action(
+		var threat_action = BattleAiRules.choose_enemy_action(
 			battle,
 			threat_stack,
 			battle.get("enemy_hero", {})
 		)
 		threatened_target_id = String(threat_action.get("target_battle_id", ""))
-	var best := {}
-	var best_score := 0
+	var best = {}
+	var best_score = 0
 	for stack in _alive_stacks_for_side(battle, "player"):
-		var score := 0
+		var score = 0
 		if String(stack.get("battle_id", "")) == threatened_target_id:
 			score += 3
 		if _stack_cohesion_total(stack, battle) <= 4:
@@ -1095,19 +1105,19 @@ static func _best_ready_support_spell_action(
 ) -> Dictionary:
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return {}
-	var best := {}
-	var best_score := -99999.0
+	var best = {}
+	var best_score = -99999.0
 	for action in get_spell_actions(session):
 		if not (action is Dictionary) or bool(action.get("disabled", false)):
 			continue
-		var spell_id := String(action.get("id", "")).trim_prefix("cast_spell:")
-		var spell := ContentService.get_spell(spell_id)
+		var spell_id = String(action.get("id", "")).trim_prefix("cast_spell:")
+		var spell = ContentService.get_spell(spell_id)
 		if spell.is_empty():
 			continue
-		var effect_type := String(spell.get("effect", {}).get("type", ""))
+		var effect_type = String(spell.get("effect", {}).get("type", ""))
 		if effect_type == "damage_enemy":
 			continue
-		var score := 0.0
+		var score = 0.0
 		match effect_type:
 			"defense_buff":
 				score = 4.0
@@ -1133,31 +1143,31 @@ static func _best_ready_support_spell_action(
 	return best
 
 static func _burst_risk_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var reply_stack := get_active_stack(battle)
+	var reply_stack = get_active_stack(battle)
 	if reply_stack.is_empty() or String(reply_stack.get("side", "")) != "enemy":
 		reply_stack = _next_enemy_reply_stack(battle)
 	if reply_stack.is_empty():
 		return "No hostile reply remains after this exchange."
-	var action := BattleAiRules.choose_enemy_action(
+	var action = BattleAiRules.choose_enemy_action(
 		battle,
 		reply_stack,
 		battle.get("enemy_hero", {})
 	)
 	if action.is_empty():
 		return "No hostile burst line is visible yet."
-	var summary := _enemy_action_preview_summary(battle, reply_stack, action)
-	var target := _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
+	var summary = _enemy_action_preview_summary(battle, reply_stack, action)
+	var target = _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
 	match String(action.get("action", "")):
 		"cast_spell":
-			var spell := ContentService.get_spell(String(action.get("spell_id", "")))
-			var timing_hint := SpellRules.battle_spell_timing_summary(
+			var spell = ContentService.get_spell(String(action.get("spell_id", "")))
+			var timing_hint = SpellRules.battle_spell_timing_summary(
 				battle.get("enemy_hero", {}),
 				battle,
 				reply_stack,
 				target,
 				spell
 			)
-			var suffix := ""
+			var suffix = ""
 			if timing_hint != "":
 				suffix = " %s" % timing_hint
 			return "%s%s" % [summary, suffix]
@@ -1177,26 +1187,26 @@ static func _burst_risk_line(session: SessionStateStore.SessionData, battle: Dic
 	return summary
 
 static func _enemy_spell_threat_line(battle: Dictionary, enemy_stack: Dictionary) -> String:
-	var action := BattleAiRules.choose_enemy_action(
+	var action = BattleAiRules.choose_enemy_action(
 		battle,
 		enemy_stack,
 		battle.get("enemy_hero", {})
 	)
 	if String(action.get("action", "")) != "cast_spell":
 		return "%s is acting now; no enemy spell timing window is leading the exchange." % _stack_label(enemy_stack)
-	var spell := ContentService.get_spell(String(action.get("spell_id", "")))
-	var target := _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
-	var timing_hint := SpellRules.battle_spell_timing_summary(
+	var spell = ContentService.get_spell(String(action.get("spell_id", "")))
+	var target = _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
+	var timing_hint = SpellRules.battle_spell_timing_summary(
 		battle.get("enemy_hero", {}),
 		battle,
 		enemy_stack,
 		target,
 		spell
 	)
-	var target_suffix := ""
+	var target_suffix = ""
 	if not target.is_empty():
 		target_suffix = " on %s" % _stack_label(target)
-	var timing_suffix := ""
+	var timing_suffix = ""
 	if timing_hint != "":
 		timing_suffix = " %s" % timing_hint
 	return "%s can cast %s%s.%s" % [
@@ -1235,11 +1245,11 @@ static func _focused_order_line(
 	active_stack: Dictionary,
 	target: Dictionary
 ) -> String:
-	var action_id := _preferred_player_action_id(surface, active_stack)
+	var action_id = _preferred_player_action_id(surface, active_stack)
 	if action_id == "":
 		return "No legal player order is open from this posture."
-	var action := surface.get(action_id, {})
-	var summary := String(action.get("summary", ""))
+	var action = surface.get(action_id, {})
+	var summary = String(action.get("summary", ""))
 	if summary != "":
 		return summary
 	return _trade_window_line(session, battle, surface, active_stack, target)
@@ -1277,7 +1287,7 @@ static func _command_tools_line(
 		if bool(action.get("disabled", false)):
 			continue
 		return "Spell: %s" % String(action.get("summary", "A battle spell is ready."))
-	var ability_summary := _active_ability_window_summary(active_stack, battle, target)
+	var ability_summary = _active_ability_window_summary(active_stack, battle, target)
 	if ability_summary != "":
 		return ability_summary
 	return "No live spell or ability edge is opening beyond the base exchange."
@@ -1290,9 +1300,9 @@ static func _objective_pull_line(
 	target: Dictionary
 ) -> String:
 	if not active_stack.is_empty() and String(active_stack.get("side", "")) == "player":
-		var action_id := _preferred_player_action_id(surface, active_stack)
+		var action_id = _preferred_player_action_id(surface, active_stack)
 		if action_id != "":
-			var preview := _field_objective_action_preview(
+			var preview = _field_objective_action_preview(
 				battle,
 				{
 					"action": action_id,
@@ -1303,23 +1313,23 @@ static func _objective_pull_line(
 			)
 			if preview != "":
 				return preview
-	var urgency := _field_objective_urgency_summary(session, battle)
+	var urgency = _field_objective_urgency_summary(session, battle)
 	if urgency != "":
 		return urgency
-	var scenario := ContentService.get_scenario(session.scenario_id)
-	var encounter_objective := _encounter_objective_for_battle(session, battle, scenario)
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var encounter_objective = _encounter_objective_for_battle(session, battle, scenario)
 	if not encounter_objective.is_empty():
 		return "Clearing this host advances %s." % ScenarioRules._objective_label(session, encounter_objective)
-	var objective_brief := _field_objective_pressure_brief(battle)
+	var objective_brief = _field_objective_pressure_brief(battle)
 	if objective_brief != "":
 		return objective_brief
 	return "No battlefield objective is pulling harder than the line break."
 
 static func _enemy_reply_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var reply_stack := _next_enemy_reply_stack(battle)
+	var reply_stack = _next_enemy_reply_stack(battle)
 	if reply_stack.is_empty():
 		return "No hostile stack remains to answer the next order."
-	var action := BattleAiRules.choose_enemy_action(
+	var action = BattleAiRules.choose_enemy_action(
 		battle,
 		reply_stack,
 		battle.get("enemy_hero", {})
@@ -1330,7 +1340,7 @@ static func _next_enemy_reply_stack(battle: Dictionary) -> Dictionary:
 	var turn_order = battle.get("turn_order", [])
 	if turn_order is Array:
 		for index in range(int(battle.get("turn_index", 0)) + 1, turn_order.size()):
-			var stack := _get_stack_by_id(battle, String(turn_order[index]))
+			var stack = _get_stack_by_id(battle, String(turn_order[index]))
 			if not stack.is_empty() and _alive_count(stack) > 0 and String(stack.get("side", "")) == "enemy":
 				return stack
 	for stack in _alive_stacks_for_side(battle, "enemy"):
@@ -1341,11 +1351,11 @@ static func _next_enemy_reply_stack(battle: Dictionary) -> Dictionary:
 static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dictionary, action: Dictionary) -> String:
 	if enemy_stack.is_empty():
 		return "Hostile reply is unclear."
-	var action_id := String(action.get("action", ""))
-	var target := _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
+	var action_id = String(action.get("action", ""))
+	var target = _get_stack_by_id(battle, String(action.get("target_battle_id", "")))
 	match action_id:
 		"cast_spell":
-			var spell := ContentService.get_spell(String(action.get("spell_id", "")))
+			var spell = ContentService.get_spell(String(action.get("spell_id", "")))
 			return "%s is best placed to cast %s%s." % [
 				_stack_label(enemy_stack),
 				String(spell.get("name", "a spell")),
@@ -1370,11 +1380,11 @@ static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dicti
 static func _attack_action_summary(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> String:
 	if attacker.is_empty() or target.is_empty():
 		return "No clean target is lined up yet."
-	var attack_distance := int(battle.get("distance", 1))
-	var attack_preview := _damage_range_preview(attacker, target, battle, is_ranged, false, attack_distance)
+	var attack_distance = int(battle.get("distance", 1))
+	var attack_preview = _damage_range_preview(attacker, target, battle, is_ranged, false, attack_distance)
 	if attack_preview.is_empty():
 		return "No clean target is lined up yet."
-	var clauses := [
+	var clauses = [
 		"%s %s for %s" % [
 			"Fire on" if is_ranged else "Hit",
 			_stack_label(target),
@@ -1385,12 +1395,12 @@ static func _attack_action_summary(attacker: Dictionary, target: Dictionary, bat
 		clauses.append("shots after volley %d" % max(0, int(attacker.get("shots_remaining", 0)) - 1))
 	else:
 		if int(target.get("retaliations_left", 0)) > 0 and _can_make_retaliation(target, attack_distance):
-			var retaliation_preview := _retaliation_range_preview(attacker, target, battle, attack_distance, attack_preview)
+			var retaliation_preview = _retaliation_range_preview(attacker, target, battle, attack_distance, attack_preview)
 			if not retaliation_preview.is_empty():
 				clauses.append("expect %s retaliation" % _damage_preview_text(retaliation_preview))
 		else:
 			clauses.append("retaliation is spent or blocked")
-	var objective_preview := _field_objective_action_preview(
+	var objective_preview = _field_objective_action_preview(
 		battle,
 		{
 			"action": "shoot" if is_ranged else "strike",
@@ -1404,19 +1414,19 @@ static func _attack_action_summary(attacker: Dictionary, target: Dictionary, bat
 	return "%s." % " | ".join(clauses)
 
 static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> String:
-	var distance := int(battle.get("distance", 1))
+	var distance = int(battle.get("distance", 1))
 	if distance <= 0:
 		return "The lines are already engaged."
-	var next_distance := max(0, distance - 1)
-	var clauses := [
+	var next_distance = max(0, distance - 1)
+	var clauses = [
 		"Close from %s to %s" % [_distance_label(distance), _distance_label(next_distance)],
 	]
-	var momentum_gain := _preview_advance_momentum_gain(stack, battle)
+	var momentum_gain = _preview_advance_momentum_gain(stack, battle)
 	if momentum_gain > 0:
 		clauses.append("momentum +%d" % momentum_gain)
 	if not bool(stack.get("ranged", false)) and next_distance <= 0:
 		clauses.append("melee contact opens immediately")
-	var objective_preview := _field_objective_action_preview(
+	var objective_preview = _field_objective_action_preview(
 		battle,
 		{
 			"action": "advance",
@@ -1429,8 +1439,8 @@ static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> St
 	return "%s." % " | ".join(clauses)
 
 static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> String:
-	var clauses := ["Brace this stack for the next exchange"]
-	var cohesion_gain := _preview_defend_cohesion_gain(stack, battle)
+	var clauses = ["Brace this stack for the next exchange"]
+	var cohesion_gain = _preview_defend_cohesion_gain(stack, battle)
 	if cohesion_gain > 0:
 		clauses.append("cohesion +%d" % cohesion_gain)
 	if int(stack.get("momentum", 0)) > 0:
@@ -1443,7 +1453,7 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 		clauses.append("Brace can stagger the next attacker")
 	elif _has_ability(stack, "formation_guard"):
 		clauses.append("Formation Guard steadies nearby lanes")
-	var objective_preview := _field_objective_action_preview(
+	var objective_preview = _field_objective_action_preview(
 		battle,
 		{
 			"action": "defend",
@@ -1458,8 +1468,19 @@ static func _defend_action_summary(battle: Dictionary, stack: Dictionary) -> Str
 static func _retreat_action_summary(battle: Dictionary) -> String:
 	if not bool(battle.get("retreat_allowed", true)):
 		return "Retreat is locked while defending a town."
-	var player_totals := _army_totals(battle, "player")
+	var player_totals = _army_totals(battle, "player")
 	return "Break contact and preserve %d surviving stack%s from the field." % [
+		int(player_totals.get("stacks", 0)),
+		"" if int(player_totals.get("stacks", 0)) == 1 else "s",
+	]
+
+static func _surrender_action_summary(session: SessionStateStore.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return "No battle is active."
+	if not bool(session.battle.get("surrender_allowed", true)):
+		return "Surrender is locked while defending a town."
+	var player_totals = _army_totals(session.battle, "player")
+	return "Yield the field immediately and preserve %d surviving stack%s for the campaign." % [
 		int(player_totals.get("stacks", 0)),
 		"" if int(player_totals.get("stacks", 0)) == 1 else "s",
 	]
@@ -1467,7 +1488,7 @@ static func _retreat_action_summary(battle: Dictionary) -> String:
 static func _preview_advance_momentum_gain(stack: Dictionary, battle: Dictionary) -> int:
 	if stack.is_empty():
 		return 0
-	var momentum_gain := 1 if not bool(stack.get("ranged", false)) else 0
+	var momentum_gain = 1 if not bool(stack.get("ranged", false)) else 0
 	if _hero_has_trait(battle, String(stack.get("side", "")), "vanguard") and not bool(stack.get("ranged", false)):
 		momentum_gain += 1
 	if _hero_has_trait(battle, String(stack.get("side", "")), "ambusher") and _battle_has_any_tags(battle, ["ambush_cover"]) and not bool(stack.get("ranged", false)):
@@ -1479,11 +1500,11 @@ static func _preview_advance_momentum_gain(stack: Dictionary, battle: Dictionary
 static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary) -> int:
 	if stack.is_empty():
 		return 0
-	var cohesion_gain := 1
-	var brace := _ability_by_id(stack, "brace")
+	var cohesion_gain = 1
+	var brace = _ability_by_id(stack, "brace")
 	if not brace.is_empty():
 		cohesion_gain += max(0, int(brace.get("defending_cohesion_bonus", 0)))
-	var formation_guard := _ability_by_id(stack, "formation_guard")
+	var formation_guard = _ability_by_id(stack, "formation_guard")
 	if not formation_guard.is_empty():
 		cohesion_gain += max(0, int(formation_guard.get("defending_cohesion_bonus", 0)))
 	if _hero_has_trait(battle, String(stack.get("side", "")), "linekeeper"):
@@ -1495,7 +1516,7 @@ static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary)
 static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary, target: Dictionary) -> String:
 	if stack.is_empty():
 		return ""
-	var distance := int(battle.get("distance", 1))
+	var distance = int(battle.get("distance", 1))
 	if _has_ability(stack, "reach") and not bool(stack.get("ranged", false)) and distance == 1:
 		return "Reach makes melee contact live from the current closing distance."
 	if _has_ability(stack, "volley") and bool(stack.get("ranged", false)) and distance >= int(_ability_by_id(stack, "volley").get("min_distance", 1)):
@@ -1515,33 +1536,33 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 		return "Bloodrush is live on the wounded target and can snowball momentum."
 	if not target.is_empty() and _has_ability(stack, "shielding") and SpellRules.has_effect_id(target, battle, STATUS_HARRIED):
 		return "Shielding bites harder into a harried target once the line closes."
-	var ability_summary := _stack_ability_summary(stack)
+	var ability_summary = _stack_ability_summary(stack)
 	return "Abilities in hand: %s." % ability_summary if ability_summary != "" else ""
 
 static func _field_objective_action_preview(battle: Dictionary, action_context: Dictionary) -> String:
-	var acting_side := String(action_context.get("side", ""))
+	var acting_side = String(action_context.get("side", ""))
 	if acting_side not in ["player", "enemy"]:
 		return ""
-	var acting_stack := _get_stack_by_id(battle, String(action_context.get("battle_id", "")))
-	var target_stack := _get_stack_by_id(battle, String(action_context.get("target_battle_id", "")))
-	var notes := []
+	var acting_stack = _get_stack_by_id(battle, String(action_context.get("battle_id", "")))
+	var target_stack = _get_stack_by_id(battle, String(action_context.get("target_battle_id", "")))
+	var notes = []
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
-		var influence := _field_objective_action_influence(objective, battle, acting_side, action_context, acting_stack, target_stack)
+		var influence = _field_objective_action_influence(objective, battle, acting_side, action_context, acting_stack, target_stack)
 		if influence <= 0:
 			continue
-		var projection := _project_field_objective_state(objective, acting_side, influence)
-		var label := _field_objective_label(objective)
+		var projection = _project_field_objective_state(objective, acting_side, influence)
+		var label = _field_objective_label(objective)
 		if bool(projection.get("flipped", false)):
 			notes.append("%s would swing to %s control" % [label, _side_label(acting_side)])
 			continue
 		if String(objective.get("control_side", "neutral")) == acting_side:
 			notes.append("%s hold strengthens" % label)
 			continue
-		var progress_side := String(projection.get("progress_side", ""))
-		var progress_value := int(projection.get("progress_value", 0))
-		var threshold := int(projection.get("capture_threshold", objective.get("capture_threshold", 2)))
+		var progress_side = String(projection.get("progress_side", ""))
+		var progress_value = int(projection.get("progress_value", 0))
+		var threshold = int(projection.get("capture_threshold", objective.get("capture_threshold", 2)))
 		if progress_side == acting_side and progress_value > 0:
 			notes.append("%s moves to %d/%d toward %s control" % [label, progress_value, threshold, _side_label(acting_side)])
 		if notes.size() >= 2:
@@ -1549,12 +1570,12 @@ static func _field_objective_action_preview(battle: Dictionary, action_context: 
 	return "; ".join(notes)
 
 static func _project_field_objective_state(objective: Dictionary, acting_side: String, amount: int) -> Dictionary:
-	var projection := objective.duplicate(true)
-	var controller := String(projection.get("control_side", "neutral"))
-	var progress_side := String(projection.get("progress_side", ""))
-	var progress_value := max(0, int(projection.get("progress_value", 0)))
-	var threshold := max(1, int(projection.get("capture_threshold", 2)))
-	var flipped := false
+	var projection = objective.duplicate(true)
+	var controller = String(projection.get("control_side", "neutral"))
+	var progress_side = String(projection.get("progress_side", ""))
+	var progress_value = max(0, int(projection.get("progress_value", 0)))
+	var threshold = max(1, int(projection.get("capture_threshold", 2)))
+	var flipped = false
 	if controller == acting_side:
 		if progress_side != "" and progress_side != acting_side:
 			progress_value = max(0, progress_value - amount)
@@ -1588,45 +1609,45 @@ static func _should_surface_tactical_briefing(session: SessionStateStore.Session
 		return false
 	if int(session.battle.get("round", 1)) != 1:
 		return false
-	var briefing_state := session.battle.get(TACTICAL_BRIEFING_KEY, {})
+	var briefing_state = session.battle.get(TACTICAL_BRIEFING_KEY, {})
 	return briefing_state is Dictionary and not bool(briefing_state.get("shown", false))
 
 static func _tactical_briefing_lines(session: SessionStateStore.SessionData) -> Array:
-	var battle := session.battle
-	var scenario := ContentService.get_scenario(session.scenario_id)
-	var lines := []
-	var battlefield_line := _tactical_battlefield_line(session, battle)
+	var battle = session.battle
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var lines = []
+	var battlefield_line = _tactical_battlefield_line(session, battle)
 	if battlefield_line != "":
 		lines.append(battlefield_line)
-	var objective_line := _tactical_objective_line(session, battle, scenario)
+	var objective_line = _tactical_objective_line(session, battle, scenario)
 	if objective_line != "":
 		lines.append(objective_line)
-	var field_objective_line := _tactical_field_objective_line(battle)
+	var field_objective_line = _tactical_field_objective_line(battle)
 	if field_objective_line != "":
 		lines.append(field_objective_line)
-	var doctrine_line := _tactical_enemy_doctrine_line(battle)
+	var doctrine_line = _tactical_enemy_doctrine_line(battle)
 	if doctrine_line != "":
 		lines.append(doctrine_line)
-	var pressure_line := _tactical_opening_pressure_line(session, battle)
+	var pressure_line = _tactical_opening_pressure_line(session, battle)
 	if pressure_line != "":
 		lines.append(pressure_line)
-	var decisive_line := _tactical_decisive_target_line(battle)
+	var decisive_line = _tactical_decisive_target_line(battle)
 	if decisive_line != "":
 		lines.append(decisive_line)
-	var caution_line := _tactical_caution_line(session, battle)
+	var caution_line = _tactical_caution_line(session, battle)
 	if caution_line != "":
 		lines.append(caution_line)
 	return lines
 
 static func _tactical_battlefield_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var parts := [
+	var parts = [
 		String(battle.get("terrain", "plains")).capitalize(),
 		_distance_label(int(battle.get("distance", 1))),
 	]
-	var identity_summary := _battlefield_identity_summary(battle)
+	var identity_summary = _battlefield_identity_summary(battle)
 	if identity_summary != "":
 		parts.append(identity_summary)
-	var tag_labels := _battlefield_tag_labels(battle)
+	var tag_labels = _battlefield_tag_labels(battle)
 	if not tag_labels.is_empty():
 		parts.append("Tags %s" % ", ".join(tag_labels))
 	if _is_town_defense_context(battle.get("context", {})):
@@ -1635,37 +1656,37 @@ static func _tactical_battlefield_line(session: SessionStateStore.SessionData, b
 
 static func _tactical_objective_line(session: SessionStateStore.SessionData, battle: Dictionary, scenario: Dictionary) -> String:
 	if _is_town_defense_context(battle.get("context", {})):
-		var town_name := _town_name_from_placement_id(session, String(battle.get("context", {}).get("town_placement_id", "")))
+		var town_name = _town_name_from_placement_id(session, String(battle.get("context", {}).get("town_placement_id", "")))
 		return "Battle aim: Hold %s. A collapse here loses the town and cedes the lane." % (
 			town_name if town_name != "" else "the walls"
 		)
-	var encounter_objective := _encounter_objective_for_battle(session, battle, scenario)
+	var encounter_objective = _encounter_objective_for_battle(session, battle, scenario)
 	if not encounter_objective.is_empty():
 		return "Battle aim: %s" % ScenarioRules._objective_label(session, encounter_objective)
-	var objectives := scenario.get("objectives", {})
+	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
-		var victory_labels := ScenarioRules._objective_labels_from_bucket(session, objectives.get("victory", []), 1)
+		var victory_labels = ScenarioRules._objective_labels_from_bucket(session, objectives.get("victory", []), 1)
 		if not victory_labels.is_empty():
 			return "Battle aim: %s" % String(victory_labels[0])
 	return ""
 
 static func _tactical_field_objective_line(battle: Dictionary) -> String:
-	var objective_summary := _field_objective_pressure_summary(battle)
+	var objective_summary = _field_objective_pressure_summary(battle)
 	return "Battlefield objective: %s" % objective_summary if objective_summary != "" else ""
 
 static func _tactical_enemy_doctrine_line(battle: Dictionary) -> String:
-	var commander_state := _commander_state_for_side(battle, "enemy")
-	var doctrine := _side_doctrine_summary(battle, "enemy")
-	var commander_name := String(commander_state.get("name", "Enemy command"))
-	var trait_labels := _battle_trait_labels(_normalized_battle_traits(commander_state))
-	var parts := ["%s | %s" % [commander_name, doctrine]]
+	var commander_state = _commander_state_for_side(battle, "enemy")
+	var doctrine = _side_doctrine_summary(battle, "enemy")
+	var commander_name = String(commander_state.get("name", "Enemy command"))
+	var trait_labels = _battle_trait_labels(_normalized_battle_traits(commander_state))
+	var parts = ["%s | %s" % [commander_name, doctrine]]
 	if not trait_labels.is_empty():
 		parts.append("Traits %s" % ", ".join(trait_labels))
 	return "Enemy doctrine: %s" % " | ".join(parts)
 
 static func _tactical_opening_pressure_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var player_totals := _army_totals(battle, "player")
-	var enemy_totals := _army_totals(battle, "enemy")
+	var player_totals = _army_totals(battle, "player")
+	var enemy_totals = _army_totals(battle, "enemy")
 	return "Opening pressure: %s | Friendly ranged %d | Enemy ranged %d | Retreat %s" % [
 		_pressure_brief(session),
 		int(player_totals.get("ranged_stacks", 0)),
@@ -1674,7 +1695,7 @@ static func _tactical_opening_pressure_line(session: SessionStateStore.SessionDa
 	]
 
 static func _tactical_decisive_target_line(battle: Dictionary) -> String:
-	var target := _priority_enemy_stack_for_briefing(battle)
+	var target = _priority_enemy_stack_for_briefing(battle)
 	if target.is_empty():
 		return ""
 	return "Decisive target: %s | %s" % [
@@ -1689,8 +1710,8 @@ static func _tactical_caution_line(session: SessionStateStore.SessionData, battl
 		return "Tactical caution: Fortress lanes compress melee into a kill zone. Brace anchors before committing the full assault."
 	if _battle_has_tag(battle, "wall_pressure") and int(battle.get("round", 1)) <= 2:
 		return "Tactical caution: Delay the breach now and the enemy's late melee pressure will spike after round three."
-	var player_totals := _army_totals(battle, "player")
-	var enemy_totals := _army_totals(battle, "enemy")
+	var player_totals = _army_totals(battle, "player")
+	var enemy_totals = _army_totals(battle, "enemy")
 	if int(enemy_totals.get("ranged_stacks", 0)) > int(player_totals.get("ranged_stacks", 0)) and int(battle.get("distance", 1)) > 0:
 		return "Tactical caution: Enemy shooting outranges your opening line; close distance with the toughest stacks first."
 	if int(player_totals.get("ranged_stacks", 0)) > int(enemy_totals.get("ranged_stacks", 0)) and int(battle.get("distance", 1)) > 0:
@@ -1700,18 +1721,18 @@ static func _tactical_caution_line(session: SessionStateStore.SessionData, battl
 	return ""
 
 static func _risk_readiness_grade(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var severity := 0
-	var stability := 0
-	var player_totals := _army_totals(battle, "player")
-	var enemy_totals := _army_totals(battle, "enemy")
-	var player_health := int(player_totals.get("health", 0))
-	var enemy_health := int(enemy_totals.get("health", 0))
-	var player_wavering := _wavering_stack_count(battle, "player")
-	var enemy_wavering := _wavering_stack_count(battle, "enemy")
-	var player_steady := _steady_stack_count(battle, "player")
-	var next_window := _next_activation_window(battle, 3)
-	var player_next := 0
-	var enemy_next := 0
+	var severity = 0
+	var stability = 0
+	var player_totals = _army_totals(battle, "player")
+	var enemy_totals = _army_totals(battle, "enemy")
+	var player_health = int(player_totals.get("health", 0))
+	var enemy_health = int(enemy_totals.get("health", 0))
+	var player_wavering = _wavering_stack_count(battle, "player")
+	var enemy_wavering = _wavering_stack_count(battle, "enemy")
+	var player_steady = _steady_stack_count(battle, "player")
+	var next_window = _next_activation_window(battle, 3)
+	var player_next = 0
+	var enemy_next = 0
 	for stack in next_window:
 		if String(stack.get("side", "")) == "player":
 			player_next += 1
@@ -1742,8 +1763,8 @@ static func _risk_readiness_grade(session: SessionStateStore.SessionData, battle
 	if _average_side_cohesion(battle, "player") <= 5.0:
 		severity += 1
 	if int(battle.get("distance", 1)) > 0:
-		var player_shots := _side_shots_remaining(battle, "player")
-		var enemy_shots := _side_shots_remaining(battle, "enemy")
+		var player_shots = _side_shots_remaining(battle, "player")
+		var enemy_shots = _side_shots_remaining(battle, "enemy")
 		if enemy_shots > player_shots:
 			severity += 1
 		elif player_shots > enemy_shots:
@@ -1752,7 +1773,7 @@ static func _risk_readiness_grade(session: SessionStateStore.SessionData, battle
 		severity += 1
 	if max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1) <= 2:
 		severity += 1
-	var category := "Balanced posture."
+	var category = "Balanced posture."
 	if stability >= 5 and severity <= 1:
 		category = "Strong stabilization posture."
 	elif stability >= 3 and severity <= 2:
@@ -1766,18 +1787,18 @@ static func _risk_readiness_grade(session: SessionStateStore.SessionData, battle
 	return "%s %s" % [category, _pressure_brief(session)]
 
 static func _risk_board_initiative_line(battle: Dictionary) -> String:
-	var next_window := _next_activation_window(battle, 3)
+	var next_window = _next_activation_window(battle, 3)
 	if next_window.is_empty():
 		return "the turn order is rebuilding after a collapse."
-	var player_count := 0
-	var enemy_count := 0
+	var player_count = 0
+	var enemy_count = 0
 	for stack in next_window:
 		if String(stack.get("side", "")) == "player":
 			player_count += 1
 		else:
 			enemy_count += 1
 	var first_stack = next_window[0]
-	var window_size := next_window.size()
+	var window_size = next_window.size()
 	if player_count > enemy_count:
 		return "friendly line controls %d of the next %d activations, starting with %s at Init %d." % [
 			player_count,
@@ -1799,19 +1820,19 @@ static func _risk_board_initiative_line(battle: Dictionary) -> String:
 	]
 
 static func _risk_board_commander_line(battle: Dictionary) -> String:
-	var commander_state := _commander_state_for_side(battle, "player")
-	var commander_payload := _hero_payload_for_side(battle, "player")
-	var enemy_payload := _hero_payload_for_side(battle, "enemy")
-	var commander_name := String(commander_state.get("name", "Field command"))
-	var steady_count := _steady_stack_count(battle, "player")
-	var wavering_count := _wavering_stack_count(battle, "player")
-	var initiative_edge := int(commander_payload.get("initiative", 0)) - int(enemy_payload.get("initiative", 0))
-	var aura_summary := "aura even with enemy command"
+	var commander_state = _commander_state_for_side(battle, "player")
+	var commander_payload = _hero_payload_for_side(battle, "player")
+	var enemy_payload = _hero_payload_for_side(battle, "enemy")
+	var commander_name = String(commander_state.get("name", "Field command"))
+	var steady_count = _steady_stack_count(battle, "player")
+	var wavering_count = _wavering_stack_count(battle, "player")
+	var initiative_edge = int(commander_payload.get("initiative", 0)) - int(enemy_payload.get("initiative", 0))
+	var aura_summary = "aura even with enemy command"
 	if initiative_edge > 0:
 		aura_summary = "aura leads enemy command by %d initiative" % initiative_edge
 	elif initiative_edge < 0:
 		aura_summary = "aura trails enemy command by %d initiative" % abs(initiative_edge)
-	var cover_summary := "line covered"
+	var cover_summary = "line covered"
 	if steady_count <= 1 and wavering_count >= 2:
 		cover_summary = "line exposed"
 	elif wavering_count > 0:
@@ -1827,19 +1848,19 @@ static func _risk_board_commander_line(battle: Dictionary) -> String:
 	]
 
 static func _risk_board_line_integrity_line(battle: Dictionary) -> String:
-	var player_wavering := _wavering_stack_count(battle, "player")
-	var enemy_wavering := _wavering_stack_count(battle, "enemy")
-	var player_average := _average_side_cohesion(battle, "player")
-	var enemy_average := _average_side_cohesion(battle, "enemy")
+	var player_wavering = _wavering_stack_count(battle, "player")
+	var enemy_wavering = _wavering_stack_count(battle, "enemy")
+	var player_average = _average_side_cohesion(battle, "player")
+	var enemy_average = _average_side_cohesion(battle, "enemy")
 	if player_wavering > 0 and (player_wavering >= enemy_wavering or player_average < enemy_average):
-		var weakest_player := _weakest_stack_by_cohesion(battle, "player")
+		var weakest_player = _weakest_stack_by_cohesion(battle, "player")
 		return "%d friendly stack%s are wavering at low cohesion; %s is the softest point." % [
 			player_wavering,
 			"" if player_wavering == 1 else "s",
 			_stack_label(weakest_player),
 		]
 	if enemy_wavering > 0:
-		var weakest_enemy := _weakest_stack_by_cohesion(battle, "enemy")
+		var weakest_enemy = _weakest_stack_by_cohesion(battle, "enemy")
 		return "%d enemy stack%s are wavering at low cohesion; %s is ready to break." % [
 			enemy_wavering,
 			"" if enemy_wavering == 1 else "s",
@@ -1856,13 +1877,13 @@ static func _risk_board_line_integrity_line(battle: Dictionary) -> String:
 	]
 
 static func _risk_board_ranged_pressure_line(battle: Dictionary) -> String:
-	var player_totals := _army_totals(battle, "player")
-	var enemy_totals := _army_totals(battle, "enemy")
-	var player_ranged := int(player_totals.get("ranged_stacks", 0))
-	var enemy_ranged := int(enemy_totals.get("ranged_stacks", 0))
-	var player_shots := _side_shots_remaining(battle, "player")
-	var enemy_shots := _side_shots_remaining(battle, "enemy")
-	var lane_label := _risk_board_lane_label(battle)
+	var player_totals = _army_totals(battle, "player")
+	var enemy_totals = _army_totals(battle, "enemy")
+	var player_ranged = int(player_totals.get("ranged_stacks", 0))
+	var enemy_ranged = int(enemy_totals.get("ranged_stacks", 0))
+	var player_shots = _side_shots_remaining(battle, "player")
+	var enemy_shots = _side_shots_remaining(battle, "enemy")
+	var lane_label = _risk_board_lane_label(battle)
 	if max(player_ranged, enemy_ranged) <= 0:
 		return "no ranged pressure remains; melee tempo will decide the exchange."
 	if int(battle.get("distance", 1)) <= 0:
@@ -1898,10 +1919,10 @@ static func _risk_board_ranged_pressure_line(battle: Dictionary) -> String:
 	return "ranged pressure is even across the %s." % lane_label
 
 static func _risk_board_priority_line(battle: Dictionary) -> String:
-	var decisive_target := _priority_enemy_stack_for_briefing(battle)
+	var decisive_target = _priority_enemy_stack_for_briefing(battle)
 	if decisive_target.is_empty():
 		return "no decisive target is exposed yet."
-	var selected_target := get_selected_target(battle)
+	var selected_target = get_selected_target(battle)
 	if not selected_target.is_empty() and String(selected_target.get("battle_id", "")) == String(decisive_target.get("battle_id", "")):
 		return "%s is already marked; %s." % [
 			_stack_label(decisive_target),
@@ -1913,23 +1934,23 @@ static func _risk_board_priority_line(battle: Dictionary) -> String:
 	]
 
 static func _risk_board_objective_line(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var summary := _field_objective_urgency_summary(session, battle)
+	var summary = _field_objective_urgency_summary(session, battle)
 	return summary if summary != "" else "break the opposing line before the clock turns."
 
 static func _risk_board_dispatch_line(battle: Dictionary) -> String:
 	for event_text in battle.get("recent_events", []):
-		var line := String(event_text).strip_edges()
+		var line = String(event_text).strip_edges()
 		if line != "":
 			return line
 	return ""
 
 static func _next_activation_window(battle: Dictionary, count: int) -> Array:
-	var window := []
+	var window = []
 	var turn_order = battle.get("turn_order", [])
 	if not (turn_order is Array):
 		return window
 	for index in range(max(0, int(battle.get("turn_index", 0))), turn_order.size()):
-		var stack := _get_stack_by_id(battle, String(turn_order[index]))
+		var stack = _get_stack_by_id(battle, String(turn_order[index]))
 		if stack.is_empty() or _alive_count(stack) <= 0:
 			continue
 		window.append(stack)
@@ -1938,33 +1959,33 @@ static func _next_activation_window(battle: Dictionary, count: int) -> Array:
 	return window
 
 static func _steady_stack_count(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if _stack_cohesion_total(stack, battle) >= 6 and not _stack_is_isolated(battle, stack):
 			total += 1
 	return total
 
 static func _wavering_stack_count(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if _stack_cohesion_total(stack, battle) <= 4 or _stack_is_isolated(battle, stack) or SpellRules.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
 			total += 1
 	return total
 
 static func _average_side_cohesion(battle: Dictionary, side: String) -> float:
-	var stacks := _alive_stacks_for_side(battle, side)
+	var stacks = _alive_stacks_for_side(battle, side)
 	if stacks.is_empty():
 		return 0.0
-	var total := 0.0
+	var total = 0.0
 	for stack in stacks:
 		total += float(_stack_cohesion_total(stack, battle))
 	return total / float(stacks.size())
 
 static func _weakest_stack_by_cohesion(battle: Dictionary, side: String) -> Dictionary:
-	var weakest := {}
-	var weakest_score := 99999
+	var weakest = {}
+	var weakest_score = 99999
 	for stack in _alive_stacks_for_side(battle, side):
-		var score := _stack_cohesion_total(stack, battle)
+		var score = _stack_cohesion_total(stack, battle)
 		if _stack_is_isolated(battle, stack):
 			score -= 1
 		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_STAGGERED, STATUS_HARRIED]):
@@ -1975,7 +1996,7 @@ static func _weakest_stack_by_cohesion(battle: Dictionary, side: String) -> Dict
 	return weakest
 
 static func _side_shots_remaining(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if bool(stack.get("ranged", false)):
 			total += max(0, int(stack.get("shots_remaining", 0)))
@@ -1989,9 +2010,9 @@ static func _risk_board_lane_label(battle: Dictionary) -> String:
 	return _distance_label(int(battle.get("distance", 1))).to_lower()
 
 static func _battlefield_tag_labels(battle: Dictionary) -> Array:
-	var labels := []
+	var labels = []
 	for tag_value in battle.get("battlefield_tags", []):
-		var label := _titleize_token(String(tag_value))
+		var label = _titleize_token(String(tag_value))
 		if label != "" and label not in labels:
 			labels.append(label)
 		if labels.size() >= 4:
@@ -1999,9 +2020,9 @@ static func _battlefield_tag_labels(battle: Dictionary) -> Array:
 	return labels
 
 static func _battle_trait_labels(traits: Array) -> Array:
-	var labels := []
+	var labels = []
 	for trait_value in traits:
-		var label := _titleize_token(String(trait_value))
+		var label = _titleize_token(String(trait_value))
 		if label != "" and label not in labels:
 			labels.append(label)
 		if labels.size() >= 3:
@@ -2011,11 +2032,11 @@ static func _battle_trait_labels(traits: Array) -> Array:
 static func _encounter_objective_for_battle(session: SessionStateStore.SessionData, battle: Dictionary, scenario: Dictionary) -> Dictionary:
 	if scenario.is_empty():
 		return {}
-	var encounter_placement := _current_battle_encounter_placement(session)
-	var placement_id := String(encounter_placement.get("placement_id", battle.get("resolved_key", "")))
+	var encounter_placement = _current_battle_encounter_placement(session)
+	var placement_id = String(encounter_placement.get("placement_id", battle.get("resolved_key", "")))
 	if placement_id == "":
 		return {}
-	var objectives := scenario.get("objectives", {})
+	var objectives = scenario.get("objectives", {})
 	if not (objectives is Dictionary):
 		return {}
 	for bucket_name in ["victory", "defeat"]:
@@ -2030,10 +2051,10 @@ static func _current_battle_encounter_placement(session: SessionStateStore.Sessi
 	return _find_encounter_by_key(session, String(session.battle.get("resolved_key", ""))).get("encounter", {})
 
 static func _priority_enemy_stack_for_briefing(battle: Dictionary) -> Dictionary:
-	var best := {}
-	var best_score := -99999
+	var best = {}
+	var best_score = -99999
 	for stack in _alive_stacks_for_side(battle, "enemy"):
-		var score := 0
+		var score = 0
 		if bool(stack.get("ranged", false)):
 			score += 5 if _battle_has_any_tags(battle, ["battery_nest", "elevated_fire", "open_lane"]) else 3
 		else:
@@ -2063,15 +2084,15 @@ static func _priority_target_reason(stack: Dictionary, battle: Dictionary) -> St
 	return "breaking it will soften the enemy line before reserves matter"
 
 static func get_action_surface(session: SessionStateStore.SessionData) -> Dictionary:
-	var surface := {}
+	var surface = {}
 	if session == null or session.battle.is_empty():
 		return surface
-	var battle := session.battle
-	var active_stack := get_active_stack(battle)
-	var target := get_selected_target(battle)
-	var availability := action_availability(battle)
-	var player_turn := not active_stack.is_empty() and String(active_stack.get("side", "")) == "player"
-	var advance_summary := "Await the enemy move."
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
+	var availability = action_availability(battle)
+	var player_turn = not active_stack.is_empty() and String(active_stack.get("side", "")) == "player"
+	var advance_summary = "Await the enemy move."
 	if player_turn:
 		advance_summary = _advance_action_summary(battle, active_stack) if bool(availability.get("advance", false)) else "The lines are already engaged."
 	surface["advance"] = {
@@ -2079,7 +2100,7 @@ static func get_action_surface(session: SessionStateStore.SessionData) -> Dictio
 		"disabled": not player_turn or not bool(availability.get("advance", false)),
 		"summary": advance_summary,
 	}
-	var strike_summary := "Await the enemy move."
+	var strike_summary = "Await the enemy move."
 	if player_turn:
 		strike_summary = _attack_action_summary(active_stack, target, battle, false) if bool(availability.get("strike", false)) else "Close the distance or secure a target before striking."
 	surface["strike"] = {
@@ -2087,7 +2108,7 @@ static func get_action_surface(session: SessionStateStore.SessionData) -> Dictio
 		"disabled": not player_turn or not bool(availability.get("strike", false)),
 		"summary": strike_summary,
 	}
-	var shoot_summary := "Await the enemy move."
+	var shoot_summary = "Await the enemy move."
 	if player_turn:
 		shoot_summary = _attack_action_summary(active_stack, target, battle, true) if bool(availability.get("shoot", false)) else "Only ranged stacks with shots remaining can fire."
 	surface["shoot"] = {
@@ -2100,7 +2121,7 @@ static func get_action_surface(session: SessionStateStore.SessionData) -> Dictio
 		"disabled": not player_turn or not bool(availability.get("defend", false)),
 		"summary": "Await the enemy move." if not player_turn else _defend_action_summary(battle, active_stack),
 	}
-	var retreat_summary := "Await the enemy move."
+	var retreat_summary = "Await the enemy move."
 	if player_turn:
 		retreat_summary = _retreat_action_summary(battle)
 	surface["retreat"] = {
@@ -2114,9 +2135,9 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
-	var active_stack := get_active_stack(session.battle)
-	var target_stack := get_selected_target(session.battle)
-	var resolution := SpellRules.resolve_battle_spell(
+	var active_stack = get_active_stack(session.battle)
+	var target_stack = get_selected_target(session.battle)
+	var resolution = SpellRules.resolve_battle_spell(
 		_player_commander_state(session),
 		session.battle,
 		active_stack,
@@ -2133,14 +2154,14 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 		session,
 		"player"
 	)
-	var message := String(resolution.get("message", ""))
-	var target_before := {}
+	var message = String(resolution.get("message", ""))
+	var target_before = {}
 	match String(resolution.get("resolution_type", "")):
 		"damage":
-			var target_battle_id := String(resolution.get("target_battle_id", ""))
+			var target_battle_id = String(resolution.get("target_battle_id", ""))
 			target_before = _get_stack_by_id(session.battle, target_battle_id)
 			_apply_damage_to_stack(session.battle, target_battle_id, int(resolution.get("damage", 0)))
-			var target_after := _get_stack_by_id(session.battle, target_battle_id)
+			var target_after = _get_stack_by_id(session.battle, target_battle_id)
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
 				message += " %s is destroyed." % _stack_label(target_after)
 		"effect":
@@ -2153,7 +2174,7 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 			return {"ok": false, "message": "Unsupported spell resolution.", "state": "invalid"}
 	var post_damage_effect = resolution.get("post_damage_effect", {})
 	if post_damage_effect is Dictionary and not post_damage_effect.is_empty():
-		var effect_target := _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
+		var effect_target = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
 		if not effect_target.is_empty() and _alive_count(effect_target) > 0:
 			_apply_stack_effect(session.battle, String(resolution.get("target_battle_id", "")), post_damage_effect)
 			message += " %s is %s." % [
@@ -2161,8 +2182,8 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 				String(post_damage_effect.get("label", "affected")).to_lower(),
 			]
 	if String(resolution.get("resolution_type", "")) == "damage":
-		var spell_target_after := _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
-		var pressure_messages := _apply_damage_pressure(
+		var spell_target_after = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
+		var pressure_messages = _apply_damage_pressure(
 			session.battle,
 			active_stack,
 			target_before,
@@ -2172,7 +2193,7 @@ static func cast_player_spell(session: SessionStateStore.SessionData, spell_id: 
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
-	var objective_messages := _apply_field_objective_action_pressure(
+	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
 			"action": "cast_spell",
@@ -2190,7 +2211,7 @@ static func perform_player_action(session: SessionStateStore.SessionData, action
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
-	var active_stack := get_active_stack(session.battle)
+	var active_stack = get_active_stack(session.battle)
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return {"ok": false, "message": "It is not the player's turn.", "state": "invalid"}
 
@@ -2199,11 +2220,11 @@ static func perform_player_action(session: SessionStateStore.SessionData, action
 			if int(session.battle.get("distance", 1)) <= 0:
 				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
 			session.battle["distance"] = int(session.battle.get("distance", 1)) - 1
-			var advance_message := "%s advances." % _stack_label(active_stack)
-			var advance_pressure := _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
+			var advance_message = "%s advances." % _stack_label(active_stack)
+			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
-			var advance_objective_messages := _apply_field_objective_action_pressure(
+			var advance_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
 					"action": "advance",
@@ -2226,11 +2247,11 @@ static func perform_player_action(session: SessionStateStore.SessionData, action
 			return _resolve_attack_action(session, active_stack, get_selected_target(session.battle), true)
 		"defend":
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
-			var defend_message := "%s braces for impact." % _stack_label(active_stack)
-			var defend_pressure := _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
+			var defend_message = "%s braces for impact." % _stack_label(active_stack)
+			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if defend_pressure != "":
 				defend_message += " %s" % defend_pressure
-			var defend_objective_messages := _apply_field_objective_action_pressure(
+			var defend_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
 					"action": "defend",
@@ -2247,7 +2268,7 @@ static func perform_player_action(session: SessionStateStore.SessionData, action
 			return {"ok": false, "message": "Unknown action.", "state": "invalid"}
 
 static func roster_lines(battle: Dictionary, side: String) -> Array:
-	var lines := []
+	var lines = []
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
 			continue
@@ -2255,8 +2276,8 @@ static func roster_lines(battle: Dictionary, side: String) -> Array:
 	return lines
 
 static func action_availability(battle: Dictionary) -> Dictionary:
-	var active_stack := get_active_stack(battle)
-	var selected_target := get_selected_target(battle)
+	var active_stack = get_active_stack(battle)
+	var selected_target = get_selected_target(battle)
 	if active_stack.is_empty():
 		return {
 			"advance": false,
@@ -2287,14 +2308,14 @@ static func _resolve_attack_action(
 	if target.is_empty():
 		return {"ok": false, "message": "No target is selected.", "state": "invalid"}
 
-	var rng := RandomNumberGenerator.new()
+	var rng = RandomNumberGenerator.new()
 	rng.seed = _battle_seed(session)
 	rng.state = _battle_state_counter(session)
 
-	var messages := []
-	var attack_distance := int(session.battle.get("distance", 1))
-	var target_before := target.duplicate(true)
-	var damage := _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
+	var messages = []
+	var attack_distance = int(session.battle.get("distance", 1))
+	var target_before = target.duplicate(true)
+	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -2302,8 +2323,8 @@ static func _resolve_attack_action(
 	else:
 		messages.append("%s strikes %s for %d damage." % [_stack_label(attacker), _stack_label(target), damage])
 
-	var retaliated := false
-	var defender_after := _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
+	var retaliated = false
+	var defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance))
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
@@ -2314,13 +2335,13 @@ static func _resolve_attack_action(
 		and int(defender_after.get("retaliations_left", 0)) > 0
 		and _can_make_retaliation(defender_after, attack_distance)
 	):
-		var attacker_after := _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
-		var attacker_before_retaliation := attacker_after.duplicate(true)
-		var retaliation_damage := _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
+		var attacker_after = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
+		var attacker_before_retaliation = attacker_after.duplicate(true)
+		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
 		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
-		var attacker_after_retaliation := _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
+		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		messages.append_array(_apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation))
 		attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		messages.append_array(
@@ -2335,14 +2356,14 @@ static func _resolve_attack_action(
 		)
 		retaliated = true
 
-	var outcome := _evaluate_outcome(session)
+	var outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) != "":
 		_append_nonempty_message(messages, String(outcome.get("message", "")))
 		return {"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))}
 
 	if not retaliated and _alive_count(_get_stack_by_id(session.battle, String(target.get("battle_id", "")))) <= 0:
 		messages.append("%s is destroyed." % _stack_label(target))
-	var objective_messages := _apply_field_objective_action_pressure(
+	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
 			"action": "shoot" if is_ranged else "strike",
@@ -2357,9 +2378,9 @@ static func _resolve_attack_action(
 	return _complete_action(session, " ".join(messages))
 
 static func _complete_action(session: SessionStateStore.SessionData, initial_message: String) -> Dictionary:
-	var messages := [initial_message]
+	var messages = [initial_message]
 	_record_event(session.battle, initial_message)
-	var outcome := _evaluate_outcome(session)
+	var outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) != "":
 		_append_nonempty_message(messages, String(outcome.get("message", "")))
 		return {"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))}
@@ -2371,14 +2392,14 @@ static func _complete_action(session: SessionStateStore.SessionData, initial_mes
 		return {"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))}
 
 	while true:
-		var active_stack := get_active_stack(session.battle)
+		var active_stack = get_active_stack(session.battle)
 		if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
 			break
-		var enemy_result := _run_enemy_turn(session, active_stack)
+		var enemy_result = _run_enemy_turn(session, active_stack)
 		if String(enemy_result.get("message", "")) != "":
 			_record_event(session.battle, String(enemy_result.get("message", "")))
 			messages.append(String(enemy_result.get("message", "")))
-		var enemy_state := String(enemy_result.get("state", ""))
+		var enemy_state = String(enemy_result.get("state", ""))
 		if enemy_state != "" and enemy_state not in ["continue", "invalid"]:
 			return {"ok": true, "message": " ".join(messages), "state": enemy_state}
 		if String(enemy_result.get("state", "")) == "invalid":
@@ -2392,8 +2413,8 @@ static func advance_turn(battle: Dictionary) -> void:
 		_prepare_round(battle, max(1, int(battle.get("round", 1))))
 		return
 
-	var next_index := int(battle.get("turn_index", 0)) + 1
-	var next_id := _advance_to_next_alive(battle, next_index)
+	var next_index = int(battle.get("turn_index", 0)) + 1
+	var next_id = _advance_to_next_alive(battle, next_index)
 	if next_id == "":
 		_prepare_round(battle, int(battle.get("round", 1)) + 1)
 	else:
@@ -2405,16 +2426,16 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 	if active_stack.is_empty():
 		return {"ok": false, "message": "", "state": "invalid"}
 
-	var targets := _alive_stacks_for_side(session.battle, "player")
+	var targets = _alive_stacks_for_side(session.battle, "player")
 	if targets.is_empty():
-		var defeat_result := _finalize_player_battle_loss(session)
+		var defeat_result = _finalize_player_battle_loss(session)
 		return {
 			"ok": true,
 			"message": _join_messages(["The army is broken.", String(defeat_result.get("message", ""))]),
 			"state": String(defeat_result.get("state", "defeat")),
 		}
 
-	var action := BattleAiRules.choose_enemy_action(
+	var action = BattleAiRules.choose_enemy_action(
 		session.battle,
 		active_stack,
 		session.battle.get("enemy_hero", {})
@@ -2438,11 +2459,11 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 			)
 		"advance":
 			session.battle["distance"] = max(0, int(session.battle.get("distance", 1)) - 1)
-			var advance_message := "%s advances." % _stack_label(active_stack)
-			var advance_pressure := _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
+			var advance_message = "%s advances." % _stack_label(active_stack)
+			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
-			var advance_objective_messages := _apply_field_objective_action_pressure(
+			var advance_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
 					"action": "advance",
@@ -2455,11 +2476,11 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 			return _complete_enemy_action(session, advance_message)
 		"defend":
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
-			var defend_message := "%s braces for impact." % _stack_label(active_stack)
-			var defend_pressure := _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
+			var defend_message = "%s braces for impact." % _stack_label(active_stack)
+			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if defend_pressure != "":
 				defend_message += " %s" % defend_pressure
-			var defend_objective_messages := _apply_field_objective_action_pressure(
+			var defend_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
 					"action": "defend",
@@ -2471,16 +2492,16 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 				defend_message = _join_messages([defend_message, " ".join(defend_objective_messages)])
 			return _complete_enemy_action(session, defend_message)
 		_:
-			var fallback := _lowest_health_stack(targets)
+			var fallback = _lowest_health_stack(targets)
 			if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
 				return _resolve_ai_attack(session, active_stack, fallback, true)
 			if int(session.battle.get("distance", 1)) > 0:
 				session.battle["distance"] = max(0, int(session.battle.get("distance", 1)) - 1)
-				var fallback_advance_message := "%s advances." % _stack_label(active_stack)
-				var fallback_advance_pressure := _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
+				var fallback_advance_message = "%s advances." % _stack_label(active_stack)
+				var fallback_advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 				if fallback_advance_pressure != "":
 					fallback_advance_message += " %s" % fallback_advance_pressure
-				var fallback_objective_messages := _apply_field_objective_action_pressure(
+				var fallback_objective_messages = _apply_field_objective_action_pressure(
 					session.battle,
 					{
 						"action": "advance",
@@ -2494,8 +2515,8 @@ static func _run_enemy_turn(session: SessionStateStore.SessionData, active_stack
 			return _resolve_ai_attack(session, active_stack, fallback, false)
 
 static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
-	var target := _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
-	var resolution := SpellRules.resolve_battle_spell(
+	var target = _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
+	var resolution = SpellRules.resolve_battle_spell(
 		session.battle.get("enemy_hero", {}),
 		session.battle,
 		active_stack,
@@ -2508,14 +2529,14 @@ static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_sta
 
 	session.battle["enemy_hero"] = resolution.get("hero", session.battle.get("enemy_hero", {}))
 	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
-	var message := String(resolution.get("message", ""))
-	var target_before := {}
+	var message = String(resolution.get("message", ""))
+	var target_before = {}
 	match String(resolution.get("resolution_type", "")):
 		"damage":
-			var target_battle_id := String(resolution.get("target_battle_id", ""))
+			var target_battle_id = String(resolution.get("target_battle_id", ""))
 			target_before = _get_stack_by_id(session.battle, target_battle_id)
 			_apply_damage_to_stack(session.battle, target_battle_id, int(resolution.get("damage", 0)))
-			var target_after := _get_stack_by_id(session.battle, target_battle_id)
+			var target_after = _get_stack_by_id(session.battle, target_battle_id)
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
 				message += " %s is destroyed." % _stack_label(target_after)
 		"effect":
@@ -2528,7 +2549,7 @@ static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_sta
 			return {"ok": false, "message": "Unsupported spell resolution.", "state": "invalid"}
 	var post_damage_effect = resolution.get("post_damage_effect", {})
 	if post_damage_effect is Dictionary and not post_damage_effect.is_empty():
-		var effect_target := _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
+		var effect_target = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
 		if not effect_target.is_empty() and _alive_count(effect_target) > 0:
 			_apply_stack_effect(session.battle, String(resolution.get("target_battle_id", "")), post_damage_effect)
 			message += " %s is %s." % [
@@ -2536,8 +2557,8 @@ static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_sta
 				String(post_damage_effect.get("label", "affected")).to_lower(),
 			]
 	if String(resolution.get("resolution_type", "")) == "damage":
-		var spell_target_after := _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
-		var pressure_messages := _apply_damage_pressure(
+		var spell_target_after = _get_stack_by_id(session.battle, String(resolution.get("target_battle_id", "")))
+		var pressure_messages = _apply_damage_pressure(
 			session.battle,
 			active_stack,
 			target_before,
@@ -2547,7 +2568,7 @@ static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_sta
 		)
 		if not pressure_messages.is_empty():
 			message = _join_messages([message, " ".join(pressure_messages)])
-	var objective_messages := _apply_field_objective_action_pressure(
+	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
 			"action": "cast_spell",
@@ -2564,13 +2585,13 @@ static func _cast_enemy_spell(session: SessionStateStore.SessionData, active_sta
 static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker: Dictionary, target: Dictionary, is_ranged: bool) -> Dictionary:
 	if target.is_empty():
 		return {"ok": false, "message": "", "state": "invalid"}
-	var rng := RandomNumberGenerator.new()
+	var rng = RandomNumberGenerator.new()
 	rng.seed = _battle_seed(session)
 	rng.state = _battle_state_counter(session)
-	var messages := []
-	var attack_distance := int(session.battle.get("distance", 1))
-	var target_before := target.duplicate(true)
-	var damage := _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
+	var messages = []
+	var attack_distance = int(session.battle.get("distance", 1))
+	var target_before = target.duplicate(true)
+	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
 	if is_ranged:
 		_consume_shot(session.battle, String(attacker.get("battle_id", "")))
@@ -2578,7 +2599,7 @@ static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker:
 	else:
 		messages.append("%s batters %s for %d damage." % [_stack_label(attacker), _stack_label(target), damage])
 
-	var defender_after := _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
+	var defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_attack_ability_effects(session.battle, attacker, defender_after, is_ranged, attack_distance))
 	defender_after = _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	messages.append_array(_apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack"))
@@ -2589,13 +2610,13 @@ static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker:
 		and int(defender_after.get("retaliations_left", 0)) > 0
 		and _can_make_retaliation(defender_after, attack_distance)
 	):
-		var attacker_after := _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
-		var attacker_before_retaliation := attacker_after.duplicate(true)
-		var retaliation_damage := _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
+		var attacker_after = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
+		var attacker_before_retaliation = attacker_after.duplicate(true)
+		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
 		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
 		messages.append("%s retaliates for %d damage." % [_stack_label(defender_after), retaliation_damage])
-		var attacker_after_retaliation := _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
+		var attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		messages.append_array(_apply_retaliation_ability_effects(session.battle, defender_after, attacker_after_retaliation))
 		attacker_after_retaliation = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		messages.append_array(
@@ -2608,7 +2629,7 @@ static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker:
 				"retaliation"
 			)
 		)
-	var objective_messages := _apply_field_objective_action_pressure(
+	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
 			"action": "shoot" if is_ranged else "strike",
@@ -2623,7 +2644,7 @@ static func _resolve_ai_attack(session: SessionStateStore.SessionData, attacker:
 	return _complete_enemy_action(session, " ".join(messages))
 
 static func _complete_enemy_action(session: SessionStateStore.SessionData, message: String) -> Dictionary:
-	var outcome := _evaluate_outcome(session)
+	var outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) != "":
 		return {
 			"ok": true,
@@ -2641,8 +2662,8 @@ static func _complete_enemy_action(session: SessionStateStore.SessionData, messa
 	return {"ok": true, "message": message, "state": "continue"}
 
 static func _evaluate_outcome(session: SessionStateStore.SessionData) -> Dictionary:
-	var player_alive := not _alive_stacks_for_side(session.battle, "player").is_empty()
-	var enemy_alive := not _alive_stacks_for_side(session.battle, "enemy").is_empty()
+	var player_alive = not _alive_stacks_for_side(session.battle, "player").is_empty()
+	var enemy_alive = not _alive_stacks_for_side(session.battle, "enemy").is_empty()
 	if not enemy_alive and player_alive:
 		return _finalize_victory(session)
 	if not player_alive:
@@ -2652,19 +2673,19 @@ static func _evaluate_outcome(session: SessionStateStore.SessionData) -> Diction
 	return {"state": "", "message": ""}
 
 static func _finalize_victory(session: SessionStateStore.SessionData) -> Dictionary:
-	var messages := []
+	var messages = []
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 	_append_nonempty_message(messages, _apply_battle_context_victory(session))
 
-	var encounter := ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
+	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
 	var rewards = DifficultyRules.scale_reward_resources(session, encounter.get("rewards", {}))
 	OverworldRules._add_resources(session, rewards)
-	var reward_summary := OverworldRules._describe_resource_delta(rewards)
+	var reward_summary = OverworldRules._describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Battle rewards %s." % reward_summary)
-	var experience_amount := max(0, int(rewards.get("experience", 0)))
+	var experience_amount = max(0, int(rewards.get("experience", 0)))
 	if experience_amount > 0:
-		var hero_name := String(_player_commander_state(session).get("name", "The commander"))
+		var hero_name = String(_player_commander_state(session).get("name", "The commander"))
 		messages.append("%s gains %d experience." % [hero_name, experience_amount])
 	messages.append_array(_award_commander_experience(session, experience_amount))
 	_sync_player_force_from_battle(session)
@@ -2679,9 +2700,9 @@ static func _finalize_victory(session: SessionStateStore.SessionData) -> Diction
 
 	session.flags["last_battle_outcome"] = "victory"
 	session.battle = {}
-	var scenario_result := ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
-	var final_message := " ".join(messages)
+	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "victory", "message": final_message}
@@ -2704,22 +2725,22 @@ static func _finalize_primary_defeat(session: SessionStateStore.SessionData) -> 
 		if session.scenario_summary == "":
 			session.scenario_summary = "The primary commander is defeated."
 	session.battle = {}
-	var scenario_result := ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRules.evaluate_session(session)
 	return {"state": "defeat", "message": String(scenario_result.get("message", ""))}
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionData) -> Dictionary:
 	_sync_enemy_force_from_battle(session, false)
-	var removal := HeroCommandRules.remove_active_hero_after_defeat(session)
+	var removal = HeroCommandRules.remove_active_hero_after_defeat(session)
 	session.flags["last_battle_outcome"] = "hero_defeat"
 	session.battle = {}
 	OverworldRules.refresh_fog_of_war(session)
-	var messages := [String(removal.get("message", "A commander falls in battle."))]
-	var next_active_name := String(removal.get("next_active_name", ""))
+	var messages = [String(removal.get("message", "A commander falls in battle."))]
+	var next_active_name = String(removal.get("next_active_name", ""))
 	if next_active_name != "":
 		messages.append("%s takes command." % next_active_name)
-	var scenario_result := ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
-	var final_message := " ".join(messages)
+	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "hero_defeat", "message": final_message}
@@ -2727,22 +2748,22 @@ static func _finalize_secondary_hero_defeat(session: SessionStateStore.SessionDa
 static func _finalize_retreat(session: SessionStateStore.SessionData) -> Dictionary:
 	if _is_town_defense_context(session.battle.get("context", {})):
 		return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
-	var messages := ["The army withdraws from battle."]
+	var messages = ["The army withdraws from battle."]
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
 	HeroCommandRules.commit_active_hero(session)
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "retreat"
 	session.battle = {}
-	var scenario_result := ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
-	var final_message := " ".join(messages)
+	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"ok": true, "message": final_message, "state": "retreat"}
 
 static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dictionary:
-	var messages := []
+	var messages = []
 	_append_nonempty_message(messages, _apply_battle_context_stalemate(session))
 	_sync_player_force_from_battle(session)
 	_sync_enemy_force_from_battle(session, false)
@@ -2750,9 +2771,9 @@ static func _finalize_stalemate(session: SessionStateStore.SessionData) -> Dicti
 	OverworldRules.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = "stalemate"
 	session.battle = {}
-	var scenario_result := ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
-	var final_message := " ".join(messages)
+	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {"state": "stalemate", "message": final_message}
@@ -2762,9 +2783,9 @@ static func _append_nonempty_message(messages: Array, message: String) -> void:
 		messages.append(message)
 
 static func _join_messages(parts: Array) -> String:
-	var messages := []
+	var messages = []
 	for value in parts:
-		var message := String(value)
+		var message = String(value)
 		if message != "":
 			messages.append(message)
 	return " ".join(messages)
@@ -2776,11 +2797,11 @@ static func _build_battle_stack(
 	index: int,
 	source: Dictionary = {}
 ) -> Dictionary:
-	var unit := ContentService.get_unit(unit_id)
+	var unit = ContentService.get_unit(unit_id)
 	if unit.is_empty():
 		return {}
-	var unit_hp := max(1, int(unit.get("hp", 1)))
-	var cohesion_base := _cohesion_base_for_unit(unit)
+	var unit_hp = max(1, int(unit.get("hp", 1)))
+	var cohesion_base = _cohesion_base_for_unit(unit)
 	return {
 		"battle_id": "%s_%d_%s" % [side, index, unit_id],
 		"side": side,
@@ -2815,14 +2836,14 @@ static func _build_battle_stack(
 static func _normalize_stack(stack: Variant) -> Dictionary:
 	if not (stack is Dictionary):
 		return {}
-	var unit_id := String(stack.get("unit_id", ""))
+	var unit_id = String(stack.get("unit_id", ""))
 	if unit_id == "":
 		return {}
-	var unit := ContentService.get_unit(unit_id)
+	var unit = ContentService.get_unit(unit_id)
 	if unit.is_empty():
 		return {}
-	var unit_hp := max(1, int(unit.get("hp", 1)))
-	var cohesion_base := _cohesion_base_for_unit(unit)
+	var unit_hp = max(1, int(unit.get("hp", 1)))
+	var cohesion_base = _cohesion_base_for_unit(unit)
 	return {
 		"battle_id": String(stack.get("battle_id", "%s_%s" % [String(stack.get("side", "stack")), unit_id])),
 		"side": String(stack.get("side", "player")),
@@ -2872,7 +2893,7 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 	battle["turn_index"] = 0
 	battle["active_stack_id"] = _advance_to_next_alive(battle, 0)
 	_assign_default_target(battle)
-	var active_stack := get_active_stack(battle)
+	var active_stack = get_active_stack(battle)
 	if not active_stack.is_empty():
 		_record_event(
 			battle,
@@ -2884,15 +2905,15 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		)
 
 static func _sorted_turn_order(battle: Dictionary) -> Array:
-	var candidates := []
+	var candidates = []
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary) or _alive_count(stack) <= 0:
 			continue
 		candidates.append(String(stack.get("battle_id", "")))
 
-	var sorted := []
+	var sorted = []
 	while not candidates.is_empty():
-		var best_index := 0
+		var best_index = 0
 		for index in range(1, candidates.size()):
 			if _compare_stack_order(battle, candidates[index], candidates[best_index]):
 				best_index = index
@@ -2901,16 +2922,16 @@ static func _sorted_turn_order(battle: Dictionary) -> Array:
 	return sorted
 
 static func _compare_stack_order(battle: Dictionary, lhs_id: String, rhs_id: String) -> bool:
-	var lhs := _get_stack_by_id(battle, lhs_id)
-	var rhs := _get_stack_by_id(battle, rhs_id)
-	var lhs_score := _stack_initiative_total(lhs, battle)
-	var rhs_score := _stack_initiative_total(rhs, battle)
+	var lhs = _get_stack_by_id(battle, lhs_id)
+	var rhs = _get_stack_by_id(battle, rhs_id)
+	var lhs_score = _stack_initiative_total(lhs, battle)
+	var rhs_score = _stack_initiative_total(rhs, battle)
 	if String(battle.get("terrain", "")) == "mire":
 		lhs_score -= 1
 		rhs_score -= 1
 	if lhs_score == rhs_score:
-		var lhs_speed := int(lhs.get("speed", 0))
-		var rhs_speed := int(rhs.get("speed", 0))
+		var lhs_speed = int(lhs.get("speed", 0))
+		var rhs_speed = int(rhs.get("speed", 0))
 		if lhs_speed == rhs_speed:
 			return String(lhs.get("side", "")) == "player" and String(rhs.get("side", "")) != "player"
 		return lhs_speed > rhs_speed
@@ -2920,10 +2941,10 @@ static func _advance_to_next_alive(battle: Dictionary, start_index: int) -> Stri
 	var turn_order = battle.get("turn_order", [])
 	if not (turn_order is Array):
 		return ""
-	var index := max(0, start_index)
+	var index = max(0, start_index)
 	while index < turn_order.size():
-		var battle_id := String(turn_order[index])
-		var stack := _get_stack_by_id(battle, battle_id)
+		var battle_id = String(turn_order[index])
+		var stack = _get_stack_by_id(battle, battle_id)
 		if not stack.is_empty() and _alive_count(stack) > 0:
 			battle["turn_index"] = index
 			return battle_id
@@ -2931,12 +2952,12 @@ static func _advance_to_next_alive(battle: Dictionary, start_index: int) -> Stri
 	return ""
 
 static func _assign_default_target(battle: Dictionary) -> void:
-	var active_stack := get_active_stack(battle)
+	var active_stack = get_active_stack(battle)
 	if active_stack.is_empty():
 		battle["selected_target_id"] = ""
 		return
-	var target_side := "enemy" if String(active_stack.get("side", "")) == "player" else "player"
-	var targets := _alive_stacks_for_side(battle, target_side)
+	var target_side = "enemy" if String(active_stack.get("side", "")) == "player" else "player"
+	var targets = _alive_stacks_for_side(battle, target_side)
 	battle["selected_target_id"] = String(targets[0].get("battle_id", "")) if not targets.is_empty() else ""
 
 static func _calculate_damage(
@@ -2948,10 +2969,10 @@ static func _calculate_damage(
 	is_retaliation: bool = false,
 	attack_distance: int = -1
 ) -> int:
-	var attacker_count := max(1, _alive_count(attacker))
-	var base_roll := rng.randi_range(int(attacker.get("min_damage", 1)), max(int(attacker.get("min_damage", 1)), int(attacker.get("max_damage", 1))))
-	var base_damage := attacker_count * base_roll
-	var modifier := _damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
+	var attacker_count = max(1, _alive_count(attacker))
+	var base_roll = rng.randi_range(int(attacker.get("min_damage", 1)), max(int(attacker.get("min_damage", 1)), int(attacker.get("max_damage", 1))))
+	var base_damage = attacker_count * base_roll
+	var modifier = _damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
 	return max(1, int(round(base_damage * modifier)))
 
 static func _damage_modifier(
@@ -2962,15 +2983,15 @@ static func _damage_modifier(
 	is_retaliation: bool = false,
 	attack_distance: int = -1
 ) -> float:
-	var attack_bonus := int(_hero_payload_for_side(battle, String(attacker.get("side", ""))).get("attack", 0))
-	var defense_bonus := int(_hero_payload_for_side(battle, String(defender.get("side", ""))).get("defense", 0))
-	var attack_stat := _stack_attack_total(attacker, battle) + attack_bonus
-	var defense_stat := _stack_defense_total(defender, battle) + defense_bonus
+	var attack_bonus = int(_hero_payload_for_side(battle, String(attacker.get("side", ""))).get("attack", 0))
+	var defense_bonus = int(_hero_payload_for_side(battle, String(defender.get("side", ""))).get("defense", 0))
+	var attack_stat = _stack_attack_total(attacker, battle) + attack_bonus
+	var defense_stat = _stack_defense_total(defender, battle) + defense_bonus
 	if bool(defender.get("defending", false)):
 		defense_stat += 2
 
-	var modifier := 1.0 + (clampf(float(attack_stat - defense_stat), -8.0, 8.0) * 0.05)
-	var resolved_distance := int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
+	var modifier = 1.0 + (clampf(float(attack_stat - defense_stat), -8.0, 8.0) * 0.05)
+	var resolved_distance = int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
 		modifier *= 0.8
 	if is_ranged and resolved_distance == 0:
@@ -2997,15 +3018,15 @@ static func _damage_range_preview(
 ) -> Dictionary:
 	if attacker.is_empty() or defender.is_empty():
 		return {}
-	var attacker_count := _alive_count(attacker)
+	var attacker_count = _alive_count(attacker)
 	if attacker_count <= 0:
 		return {}
-	var min_roll := int(attacker.get("min_damage", 1))
-	var max_roll := max(min_roll, int(attacker.get("max_damage", 1)))
-	var modifier := _damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
-	var min_damage := max(1, int(round(float(attacker_count * min_roll) * modifier)))
-	var max_damage := max(min_damage, int(round(float(attacker_count * max_roll) * modifier)))
-	var losses := _unit_loss_range(defender, min_damage, max_damage)
+	var min_roll = int(attacker.get("min_damage", 1))
+	var max_roll = max(min_roll, int(attacker.get("max_damage", 1)))
+	var modifier = _damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
+	var min_damage = max(1, int(round(float(attacker_count * min_roll) * modifier)))
+	var max_damage = max(min_damage, int(round(float(attacker_count * max_roll) * modifier)))
+	var losses = _unit_loss_range(defender, min_damage, max_damage)
 	return {
 		"min_damage": min_damage,
 		"max_damage": max_damage,
@@ -3016,11 +3037,11 @@ static func _damage_range_preview(
 static func _unit_loss_range(defender: Dictionary, min_damage: int, max_damage: int) -> Dictionary:
 	if defender.is_empty():
 		return {"min_units": 0, "max_units": 0}
-	var total_health := max(0, int(defender.get("total_health", 0)))
-	var unit_hp := max(1, int(defender.get("unit_hp", 1)))
-	var before := _alive_count(defender)
-	var after_min := int(ceil(float(max(0, total_health - min_damage)) / float(unit_hp)))
-	var after_max := int(ceil(float(max(0, total_health - max_damage)) / float(unit_hp)))
+	var total_health = max(0, int(defender.get("total_health", 0)))
+	var unit_hp = max(1, int(defender.get("unit_hp", 1)))
+	var before = _alive_count(defender)
+	var after_min = int(ceil(float(max(0, total_health - min_damage)) / float(unit_hp)))
+	var after_max = int(ceil(float(max(0, total_health - max_damage)) / float(unit_hp)))
 	return {
 		"min_units": max(0, before - after_min),
 		"max_units": max(0, before - after_max),
@@ -3029,14 +3050,14 @@ static func _unit_loss_range(defender: Dictionary, min_damage: int, max_damage: 
 static func _damage_preview_text(preview: Dictionary) -> String:
 	if preview.is_empty():
 		return "no clean damage"
-	var min_damage := int(preview.get("min_damage", 0))
-	var max_damage := int(preview.get("max_damage", min_damage))
-	var min_units := int(preview.get("min_units", 0))
-	var max_units := int(preview.get("max_units", min_units))
-	var damage_text := "%d damage" % min_damage if min_damage == max_damage else "%d-%d damage" % [min_damage, max_damage]
+	var min_damage = int(preview.get("min_damage", 0))
+	var max_damage = int(preview.get("max_damage", min_damage))
+	var min_units = int(preview.get("min_units", 0))
+	var max_units = int(preview.get("max_units", min_units))
+	var damage_text = "%d damage" % min_damage if min_damage == max_damage else "%d-%d damage" % [min_damage, max_damage]
 	if max_units <= 0:
 		return damage_text
-	var unit_text := "%d unit" % min_units if min_units == max_units else "%d-%d units" % [min_units, max_units]
+	var unit_text = "%d unit" % min_units if min_units == max_units else "%d-%d units" % [min_units, max_units]
 	return "%s (%s)" % [damage_text, unit_text]
 
 static func _retaliation_range_preview(
@@ -3048,17 +3069,17 @@ static func _retaliation_range_preview(
 ) -> Dictionary:
 	if attack_preview.is_empty():
 		return {}
-	var low_state := defender.duplicate(true)
+	var low_state = defender.duplicate(true)
 	low_state["total_health"] = max(0, int(defender.get("total_health", 0)) - int(attack_preview.get("max_damage", 0)))
-	var high_state := defender.duplicate(true)
+	var high_state = defender.duplicate(true)
 	high_state["total_health"] = max(0, int(defender.get("total_health", 0)) - int(attack_preview.get("min_damage", 0)))
-	var low_preview := _damage_range_preview(low_state, attacker, battle, false, true, attack_distance)
-	var high_preview := _damage_range_preview(high_state, attacker, battle, false, true, attack_distance)
+	var low_preview = _damage_range_preview(low_state, attacker, battle, false, true, attack_distance)
+	var high_preview = _damage_range_preview(high_state, attacker, battle, false, true, attack_distance)
 	if low_preview.is_empty() and high_preview.is_empty():
 		return {}
-	var min_damage := int(low_preview.get("min_damage", high_preview.get("min_damage", 0)))
-	var max_damage := int(high_preview.get("max_damage", low_preview.get("max_damage", min_damage)))
-	var losses := _unit_loss_range(attacker, min_damage, max_damage)
+	var min_damage = int(low_preview.get("min_damage", high_preview.get("min_damage", 0)))
+	var max_damage = int(high_preview.get("max_damage", low_preview.get("max_damage", min_damage)))
+	var losses = _unit_loss_range(attacker, min_damage, max_damage)
 	return {
 		"min_damage": min_damage,
 		"max_damage": max_damage,
@@ -3107,10 +3128,10 @@ static func _set_stack_defending(battle: Dictionary, battle_id: String) -> void:
 	battle["stacks"] = stacks
 
 static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> String:
-	var stack := _get_stack_by_id(battle, battle_id)
+	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		return ""
-	var momentum_gain := 1 if not bool(stack.get("ranged", false)) else 0
+	var momentum_gain = 1 if not bool(stack.get("ranged", false)) else 0
 	if _hero_has_trait(battle, String(stack.get("side", "")), "vanguard") and not bool(stack.get("ranged", false)):
 		momentum_gain += 1
 	if _hero_has_trait(battle, String(stack.get("side", "")), "ambusher") and _battle_has_any_tags(battle, ["ambush_cover"]) and not bool(stack.get("ranged", false)):
@@ -3118,20 +3139,20 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 	if _battle_has_tag(battle, "open_lane") and (not bool(stack.get("ranged", false)) or _hero_has_trait(battle, String(stack.get("side", "")), "artillerist")):
 		momentum_gain += 1
 	_adjust_stack_momentum(battle, battle_id, momentum_gain)
-	var updated := _get_stack_by_id(battle, battle_id)
+	var updated = _get_stack_by_id(battle, battle_id)
 	if _stack_momentum_total(updated, battle) >= 3:
 		return "%s surges into the fight." % _stack_label(updated)
 	return ""
 
 static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> String:
-	var stack := _get_stack_by_id(battle, battle_id)
+	var stack = _get_stack_by_id(battle, battle_id)
 	if stack.is_empty() or _alive_count(stack) <= 0:
 		return ""
-	var cohesion_gain := 1
-	var brace := _ability_by_id(stack, "brace")
+	var cohesion_gain = 1
+	var brace = _ability_by_id(stack, "brace")
 	if not brace.is_empty():
 		cohesion_gain += max(0, int(brace.get("defending_cohesion_bonus", 0)))
-	var formation_guard := _ability_by_id(stack, "formation_guard")
+	var formation_guard = _ability_by_id(stack, "formation_guard")
 	if not formation_guard.is_empty():
 		cohesion_gain += max(0, int(formation_guard.get("defending_cohesion_bonus", 0)))
 	if _hero_has_trait(battle, String(stack.get("side", "")), "linekeeper"):
@@ -3140,7 +3161,7 @@ static func _apply_defend_pressure(battle: Dictionary, battle_id: String) -> Str
 		cohesion_gain += 1
 	_adjust_stack_cohesion(battle, battle_id, cohesion_gain)
 	_adjust_stack_momentum(battle, battle_id, -1)
-	var updated := _get_stack_by_id(battle, battle_id)
+	var updated = _get_stack_by_id(battle, battle_id)
 	if _stack_cohesion_total(updated, battle) >= 8:
 		return "%s steadies the line." % _stack_label(updated)
 	return ""
@@ -3155,14 +3176,14 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 			continue
 		stack = SpellRules.normalize_stack_effects(stack)
 		var effects = stack.get("effects", [])
-		var effect_id := String(effect_payload.get("effect_id", ""))
-		var kind := String(effect_payload.get("kind", ""))
+		var effect_id = String(effect_payload.get("effect_id", ""))
+		var kind = String(effect_payload.get("kind", ""))
 		for effect_index in range(effects.size() - 1, -1, -1):
 			var existing = effects[effect_index]
 			if not (existing is Dictionary):
 				continue
-			var same_effect_id := effect_id != "" and String(existing.get("effect_id", "")) == effect_id
-			var same_legacy_kind := effect_id == "" and kind != "" and String(existing.get("kind", "")) == kind
+			var same_effect_id = effect_id != "" and String(existing.get("effect_id", "")) == effect_id
+			var same_legacy_kind = effect_id == "" and kind != "" and String(existing.get("kind", "")) == kind
 			if same_effect_id or same_legacy_kind:
 				effects.remove_at(effect_index)
 		effects.append(effect_payload.duplicate(true))
@@ -3172,7 +3193,7 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 	battle["stacks"] = stacks
 
 static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary) -> bool:
-	var distance := int(battle.get("distance", 1))
+	var distance = int(battle.get("distance", 1))
 	if distance <= 0:
 		return true
 	return distance == 1 and _has_ability(stack, "reach")
@@ -3189,13 +3210,13 @@ static func _apply_attack_ability_effects(
 	is_ranged: bool,
 	attack_distance: int
 ) -> Array:
-	var messages := []
+	var messages = []
 	if defender.is_empty() or _alive_count(defender) <= 0:
 		return messages
 	if not is_ranged and attack_distance > 1:
 		return messages
 
-	var harry := _ability_by_id(attacker, "harry")
+	var harry = _ability_by_id(attacker, "harry")
 	if not harry.is_empty() and is_ranged:
 		_apply_stack_effect(
 			battle,
@@ -3213,10 +3234,10 @@ static func _apply_retaliation_ability_effects(
 	retaliator: Dictionary,
 	attacker: Dictionary
 ) -> Array:
-	var messages := []
+	var messages = []
 	if attacker.is_empty() or _alive_count(attacker) <= 0:
 		return messages
-	var brace := _ability_by_id(retaliator, "brace")
+	var brace = _ability_by_id(retaliator, "brace")
 	if brace.is_empty() or not bool(retaliator.get("defending", false)):
 		return messages
 	_apply_stack_effect(
@@ -3249,22 +3270,22 @@ static func _ability_damage_modifier(
 	is_retaliation: bool,
 	attack_distance: int
 ) -> float:
-	var modifier := 1.0
-	var reach := _ability_by_id(attacker, "reach")
+	var modifier = 1.0
+	var reach = _ability_by_id(attacker, "reach")
 	if not is_ranged and attack_distance == 1 and not reach.is_empty():
 		modifier *= float(reach.get("distance_one_multiplier", 1.0))
 
-	var brace := _ability_by_id(attacker, "brace")
+	var brace = _ability_by_id(attacker, "brace")
 	if is_retaliation and bool(attacker.get("defending", false)) and not brace.is_empty():
 		modifier *= float(brace.get("retaliation_multiplier", 1.0))
 
-	var backstab := _ability_by_id(attacker, "backstab")
+	var backstab = _ability_by_id(attacker, "backstab")
 	if not backstab.is_empty() and SpellRules.has_any_effect_ids(defender, battle, backstab.get("status_ids", [])):
 		modifier *= float(backstab.get("damage_multiplier", 1.0))
 	if not backstab.is_empty() and _health_ratio(defender) <= float(backstab.get("health_threshold_ratio", 0.0)):
 		modifier *= float(backstab.get("threshold_damage_multiplier", 1.0))
 
-	var volley := _ability_by_id(attacker, "volley")
+	var volley = _ability_by_id(attacker, "volley")
 	if is_ranged and not volley.is_empty() and attack_distance >= int(volley.get("min_distance", 1)):
 		modifier *= float(volley.get("damage_multiplier", 1.0))
 	if is_ranged and not volley.is_empty() and SpellRules.has_any_effect_ids(defender, battle, volley.get("status_ids", [])):
@@ -3272,24 +3293,24 @@ static func _ability_damage_modifier(
 	if is_ranged and not volley.is_empty() and _side_defending_count(battle, String(attacker.get("side", ""))) > 0:
 		modifier *= float(volley.get("ally_defending_multiplier", 1.0))
 
-	var formation_guard := _ability_by_id(attacker, "formation_guard")
+	var formation_guard = _ability_by_id(attacker, "formation_guard")
 	if not formation_guard.is_empty() and SpellRules.has_effect_id(defender, battle, STATUS_STAGGERED):
 		modifier *= float(formation_guard.get("staggered_damage_multiplier", 1.0))
 
-	var harry := _ability_by_id(attacker, "harry")
+	var harry = _ability_by_id(attacker, "harry")
 	if is_ranged and not harry.is_empty() and _health_ratio(defender) <= float(harry.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(harry.get("wounded_damage_multiplier", 1.0))
 
-	var bloodrush := _ability_by_id(attacker, "bloodrush")
+	var bloodrush = _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and _health_ratio(defender) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)):
 		modifier *= float(bloodrush.get("wounded_damage_multiplier", 1.0))
 	if not bloodrush.is_empty() and SpellRules.has_any_effect_ids(defender, battle, bloodrush.get("status_ids", [])):
 		modifier *= float(bloodrush.get("status_damage_multiplier", 1.0))
 
-	var shielding := _ability_by_id(defender, "shielding")
+	var shielding = _ability_by_id(defender, "shielding")
 	if is_ranged and not shielding.is_empty():
 		modifier *= float(shielding.get("ranged_damage_multiplier", 1.0))
-	var attacking_shielding := _ability_by_id(attacker, "shielding")
+	var attacking_shielding = _ability_by_id(attacker, "shielding")
 	if not is_ranged and not attacking_shielding.is_empty() and attack_distance <= 0:
 		modifier *= float(attacking_shielding.get("engaged_damage_multiplier", 1.0))
 	if not is_ranged and not attacking_shielding.is_empty() and SpellRules.has_effect_id(defender, battle, STATUS_HARRIED):
@@ -3304,10 +3325,10 @@ static func _faction_damage_modifier(
 	is_ranged: bool,
 	attack_distance: int
 ) -> float:
-	var modifier := 1.0
-	var faction_id := String(attacker.get("faction_id", ""))
-	var side := String(attacker.get("side", ""))
-	var side_defending_count := _side_defending_count(battle, side)
+	var modifier = 1.0
+	var faction_id = String(attacker.get("faction_id", ""))
+	var side = String(attacker.get("side", ""))
+	var side_defending_count = _side_defending_count(battle, side)
 	match faction_id:
 		"faction_embercourt":
 			if is_ranged and side_defending_count > 0:
@@ -3325,7 +3346,7 @@ static func _faction_damage_modifier(
 			if int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side):
 				modifier *= 1.06 if _side_has_ability(battle, side, "formation_guard") else 1.04
 		"faction_mireclaw":
-			var wounded_count := _enemy_wounded_count(battle, side)
+			var wounded_count = _enemy_wounded_count(battle, side)
 			if wounded_count > 0:
 				modifier *= 1.0 + (float(min(wounded_count, 3)) * 0.04)
 			if SpellRules.has_effect_id(defender, battle, STATUS_HARRIED):
@@ -3333,7 +3354,7 @@ static func _faction_damage_modifier(
 			if not is_ranged and int(battle.get("round", 1)) >= 3 and attack_distance <= 0:
 				modifier *= 1.0 + (float(min(wounded_count, 2)) * 0.03)
 		"faction_sunvault":
-			var positive_effect_count := _side_positive_effect_count(battle, side)
+			var positive_effect_count = _side_positive_effect_count(battle, side)
 			if _stack_has_positive_effect(attacker, battle):
 				modifier *= 1.08
 				if _battle_has_any_tags(battle, ["elevated_fire", "fortified_line"]):
@@ -3353,7 +3374,7 @@ static func _terrain_tag_damage_modifier(
 	is_ranged: bool,
 	attack_distance: int
 ) -> float:
-	var modifier := 1.0
+	var modifier = 1.0
 	if _battle_has_tag(battle, "elevated_fire") and is_ranged and attack_distance > 0:
 		modifier *= 1.1
 	if _battle_has_tag(battle, "open_lane") and is_ranged and attack_distance > 0:
@@ -3386,8 +3407,8 @@ static func _commander_damage_modifier(
 	is_ranged: bool,
 	attack_distance: int
 ) -> float:
-	var modifier := 1.0
-	var side := String(attacker.get("side", ""))
+	var modifier = 1.0
+	var side = String(attacker.get("side", ""))
 	if _hero_has_trait(battle, side, "artillerist") and is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
 		modifier *= 1.06
 	if _hero_has_trait(battle, side, "linekeeper") and is_ranged and _side_defending_count(battle, side) > 0:
@@ -3423,9 +3444,9 @@ static func _has_ability(stack: Dictionary, ability_id: String) -> bool:
 	return not _ability_by_id(stack, ability_id).is_empty()
 
 static func _side_ability_payloads(battle: Dictionary, side: String, ability_id: String) -> Array:
-	var payloads := []
+	var payloads = []
 	for stack in _alive_stacks_for_side(battle, side):
-		var ability := _ability_by_id(stack, ability_id)
+		var ability = _ability_by_id(stack, ability_id)
 		if not ability.is_empty():
 			payloads.append(ability)
 	return payloads
@@ -3455,7 +3476,7 @@ static func _capital_front_anchor_side(battle: Dictionary) -> String:
 	return ""
 
 static func _capital_front_assault_side(battle: Dictionary) -> String:
-	var anchor_side := _capital_front_anchor_side(battle)
+	var anchor_side = _capital_front_anchor_side(battle)
 	if anchor_side == "player":
 		return "enemy"
 	if anchor_side == "enemy":
@@ -3483,29 +3504,29 @@ static func _side_max_ability_float(
 	key: String,
 	default_value: float = 1.0
 ) -> float:
-	var best := default_value
+	var best = default_value
 	for ability in _side_ability_payloads(battle, side, ability_id):
 		best = max(best, float(ability.get(key, default_value)))
 	return best
 
 static func _side_max_ability_int(battle: Dictionary, side: String, ability_id: String, key: String) -> int:
-	var best := 0
+	var best = 0
 	for ability in _side_ability_payloads(battle, side, ability_id):
 		best = max(best, int(ability.get(key, 0)))
 	return best
 
 static func _normalize_unit_abilities(value: Variant) -> Array:
-	var abilities := []
-	var seen := {}
+	var abilities = []
+	var seen = {}
 	if not (value is Array):
 		return abilities
 	for entry in value:
 		if not (entry is Dictionary):
 			continue
-		var ability_id := String(entry.get("id", ""))
+		var ability_id = String(entry.get("id", ""))
 		if ability_id == "" or seen.has(ability_id):
 			continue
-		var normalized := {}
+		var normalized = {}
 		match ability_id:
 			"reach":
 				normalized = {
@@ -3605,29 +3626,29 @@ static func _normalize_unit_abilities(value: Variant) -> Array:
 	return abilities
 
 static func _normalize_ability_modifiers(value: Variant) -> Dictionary:
-	var modifiers := {}
+	var modifiers = {}
 	if value is Dictionary:
 		for key in value.keys():
-			var modifier_key := String(key)
+			var modifier_key = String(key)
 			if modifier_key == "":
 				continue
 			modifiers[modifier_key] = int(value[key])
 	return modifiers
 
 static func _normalize_string_array(value: Variant) -> Array:
-	var normalized := []
+	var normalized = []
 	if value is Array:
 		for entry in value:
-			var text := String(entry)
+			var text = String(entry)
 			if text != "" and text not in normalized:
 				normalized.append(text)
 	return normalized
 
 static func _stack_ability_summary(stack: Dictionary) -> String:
-	var names := []
+	var names = []
 	for ability in stack.get("abilities", []):
 		if ability is Dictionary:
-			var name := String(ability.get("name", ability.get("id", "")))
+			var name = String(ability.get("name", ability.get("id", "")))
 			if name != "":
 				names.append(name)
 	return ", ".join(names)
@@ -3637,8 +3658,8 @@ static func _sync_player_force_from_battle(session: SessionStateStore.SessionDat
 		return
 	var context = session.battle.get("context", {})
 	var commander_source = session.battle.get("player_commander_source", {})
-	var commander_type := String(commander_source.get("type", ""))
-	var commander_state := _player_commander_state(session).duplicate(true)
+	var commander_type = String(commander_source.get("type", ""))
+	var commander_state = _player_commander_state(session).duplicate(true)
 	if commander_type in ["active_hero", "town_hero"]:
 		commander_state["army"] = {
 			"id": String(commander_state.get("army", {}).get("id", "%s_army" % String(commander_state.get("id", "")))),
@@ -3655,7 +3676,7 @@ static func _sync_player_force_from_battle(session: SessionStateStore.SessionDat
 		_set_player_hero_state(session, commander_state, String(commander_source.get("hero_id", "")))
 
 	if _is_town_defense_context(context):
-		var town_result := _find_town_by_placement(session, String(context.get("town_placement_id", "")))
+		var town_result = _find_town_by_placement(session, String(context.get("town_placement_id", "")))
 		if int(town_result.get("index", -1)) >= 0:
 			var towns = session.overworld.get("towns", [])
 			var town = town_result.get("town", {})
@@ -3685,7 +3706,7 @@ static func _sync_player_force_from_battle(session: SessionStateStore.SessionDat
 static func _sync_enemy_force_from_battle(session: SessionStateStore.SessionData, encounter_resolved: bool) -> void:
 	if session == null or session.battle.is_empty():
 		return
-	var encounter_result := _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
+	var encounter_result = _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
 	if int(encounter_result.get("index", -1)) < 0:
 		return
 	var encounters = session.overworld.get("encounters", [])
@@ -3708,13 +3729,13 @@ static func _sync_enemy_force_from_battle(session: SessionStateStore.SessionData
 		_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 
 static func _battle_survivor_stacks(session: SessionStateStore.SessionData, side: String, filters: Dictionary = {}) -> Array:
-	var survivors := []
+	var survivors = []
 	for stack in session.battle.get("stacks", []):
 		if not (stack is Dictionary):
 			continue
 		if String(stack.get("side", "")) != side:
 			continue
-		var count := _alive_count(stack)
+		var count = _alive_count(stack)
 		if count <= 0:
 			continue
 		if filters.has("source_type") and String(stack.get("source_type", "")) != String(filters.get("source_type", "")):
@@ -3734,7 +3755,7 @@ static func _award_commander_experience(session: SessionStateStore.SessionData, 
 	var commander_source = session.battle.get("player_commander_source", {})
 	if String(commander_source.get("type", "")) not in ["active_hero", "town_hero"]:
 		return []
-	var result := HeroProgressionRules.add_experience(_player_commander_state(session), amount)
+	var result = HeroProgressionRules.add_experience(_player_commander_state(session), amount)
 	session.battle["player_commander_state"] = result.get("hero", _player_commander_state(session))
 	session.battle["player_hero"] = _hero_payload_from_state(
 		session.battle.get("player_commander_state", {}),
@@ -3749,9 +3770,9 @@ static func _apply_battle_context_victory(session: SessionStateStore.SessionData
 	if not _is_town_defense_context(context):
 		return ""
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
-	var town_name := _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
-	var message := "%s repels the assault." % (town_name if town_name != "" else "The town")
-	var recovery_message := _apply_town_defense_recovery(session, "victory")
+	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+	var message = "%s repels the assault." % (town_name if town_name != "" else "The town")
+	var recovery_message = _apply_town_defense_recovery(session, "victory")
 	if recovery_message != "":
 		message = "%s %s" % [message, recovery_message]
 	return message
@@ -3760,21 +3781,21 @@ static func _apply_battle_context_stalemate(session: SessionStateStore.SessionDa
 	var context = session.battle.get("context", {})
 	if not _is_town_defense_context(context):
 		return ""
-	var town_name := _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
-	var message := "%s holds through the assault, but the siege is not broken." % (town_name if town_name != "" else "The town")
-	var recovery_message := _apply_town_defense_recovery(session, "stalemate")
+	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+	var message = "%s holds through the assault, but the siege is not broken." % (town_name if town_name != "" else "The town")
+	var recovery_message = _apply_town_defense_recovery(session, "stalemate")
 	if recovery_message != "":
 		message = "%s %s" % [message, recovery_message]
 	return message
 
 static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) -> Dictionary:
 	var context = session.battle.get("context", {})
-	var messages := []
-	var town_name := _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+	var messages = []
+	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
 	var commander_source = session.battle.get("player_commander_source", {})
-	var defending_hero_id := String(commander_source.get("hero_id", ""))
+	var defending_hero_id = String(commander_source.get("hero_id", ""))
 	_sync_player_force_from_battle(session)
-	var enemy_survivors := _battle_survivor_stacks(
+	var enemy_survivors = _battle_survivor_stacks(
 		session,
 		"enemy",
 		{
@@ -3783,28 +3804,28 @@ static func _finalize_town_defense_loss(session: SessionStateStore.SessionData) 
 		}
 	)
 	_capture_town_after_assault(session, String(context.get("town_placement_id", "")), enemy_survivors)
-	var recovery_message := _apply_town_defense_recovery(session, "loss")
+	var recovery_message = _apply_town_defense_recovery(session, "loss")
 	_mark_resolved_encounter(session, String(session.battle.get("resolved_key", "")))
 	_set_enemy_siege_progress(session, String(context.get("trigger_faction_id", "")), 0)
 	if town_name != "":
 		messages.append("%s falls after the walls are breached." % town_name)
 	_append_nonempty_message(messages, recovery_message)
 
-	var defending_hero := HeroCommandRules.hero_by_id(session, defending_hero_id)
+	var defending_hero = HeroCommandRules.hero_by_id(session, defending_hero_id)
 	if not defending_hero.is_empty():
 		if bool(defending_hero.get("is_primary", false)):
-			var defeat_result := _finalize_primary_defeat(session)
+			var defeat_result = _finalize_primary_defeat(session)
 			_append_nonempty_message(messages, String(defeat_result.get("message", "")))
 			return {"state": "defeat", "message": " ".join(messages)}
-		var removal := _remove_hero_by_id_after_defeat(session, defending_hero_id)
+		var removal = _remove_hero_by_id_after_defeat(session, defending_hero_id)
 		_append_nonempty_message(messages, String(removal.get("message", "")))
 
 	session.flags["last_battle_outcome"] = "town_lost"
 	session.battle = {}
 	OverworldRules.refresh_fog_of_war(session)
-	var scenario_result := ScenarioRules.evaluate_session(session)
+	var scenario_result = ScenarioRules.evaluate_session(session)
 	_append_nonempty_message(messages, String(scenario_result.get("message", "")))
-	var final_message := " ".join(messages)
+	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
 	return {
@@ -3816,10 +3837,10 @@ static func _apply_town_defense_recovery(session: SessionStateStore.SessionData,
 	var context = session.battle.get("context", {})
 	if not _is_town_defense_context(context):
 		return ""
-	var pressure := _town_defense_recovery_pressure(session, outcome)
+	var pressure = _town_defense_recovery_pressure(session, outcome)
 	if pressure <= 0:
 		return ""
-	var source := ""
+	var source = ""
 	match outcome:
 		"victory":
 			source = "repelled assault"
@@ -3838,15 +3859,15 @@ static func _town_defense_recovery_pressure(session: SessionStateStore.SessionDa
 	if session == null or session.battle.is_empty():
 		return 0
 	var context = session.battle.get("context", {})
-	var encounter_result := _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
-	var assault_strength := _army_strength_from_stacks(encounter_result.get("encounter", {}).get("enemy_army", {}).get("stacks", []))
-	var pressure := max(1, int(round(float(max(1, assault_strength)) / 180.0)))
+	var encounter_result = _find_encounter_by_key(session, String(session.battle.get("resolved_key", "")))
+	var assault_strength = _army_strength_from_stacks(encounter_result.get("encounter", {}).get("enemy_army", {}).get("stacks", []))
+	var pressure = max(1, int(round(float(max(1, assault_strength)) / 180.0)))
 	match outcome:
 		"stalemate":
 			pressure += 1
 		"loss":
 			pressure += 2
-	var town := _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
+	var town = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
 	match OverworldRules.town_strategic_role(town):
 		"capital":
 			pressure += 1
@@ -3855,7 +3876,7 @@ static func _town_defense_recovery_pressure(session: SessionStateStore.SessionDa
 	return clamp(pressure, 1, 6)
 
 static func _capture_town_after_assault(session: SessionStateStore.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
-	var town_result := _find_town_by_placement(session, town_placement_id)
+	var town_result = _find_town_by_placement(session, town_placement_id)
 	if int(town_result.get("index", -1)) < 0:
 		return
 	var towns = session.overworld.get("towns", [])
@@ -3886,17 +3907,17 @@ static func _set_player_hero_state(session: SessionStateStore.SessionData, hero_
 static func _remove_hero_by_id_after_defeat(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
 	HeroCommandRules.normalize_session(session)
 	HeroCommandRules.commit_active_hero(session)
-	var removed_hero := HeroCommandRules.hero_by_id(session, hero_id)
+	var removed_hero = HeroCommandRules.hero_by_id(session, hero_id)
 	if removed_hero.is_empty():
 		return {"ok": false, "message": ""}
-	var remaining := []
+	var remaining = []
 	for hero in session.overworld.get("player_heroes", []):
 		if hero is Dictionary and String(hero.get("id", "")) != hero_id:
 			remaining.append(hero)
 	session.overworld["player_heroes"] = remaining
 	if String(session.overworld.get("active_hero_id", "")) == hero_id:
-		var next_active_id := String(session.hero_id)
-		var found := false
+		var next_active_id = String(session.hero_id)
+		var found = false
 		for hero in remaining:
 			if hero is Dictionary and String(hero.get("id", "")) == next_active_id:
 				found = true
@@ -3938,14 +3959,14 @@ static func _set_enemy_siege_progress(session: SessionStateStore.SessionData, fa
 	session.overworld["enemy_states"] = states
 
 static func _army_strength_from_stacks(stacks: Variant) -> int:
-	var total := 0
+	var total = 0
 	if not (stacks is Array):
 		return total
 	for stack in stacks:
 		if not (stack is Dictionary):
 			continue
-		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
-		var count := max(0, int(stack.get("count", 0)))
+		var unit = ContentService.get_unit(String(stack.get("unit_id", "")))
+		var count = max(0, int(stack.get("count", 0)))
 		total += count * max(
 			6,
 			int(unit.get("hp", 1))
@@ -3956,18 +3977,24 @@ static func _army_strength_from_stacks(stacks: Variant) -> int:
 	return total
 
 static func _alive_count(stack: Dictionary) -> int:
-	var unit_hp := max(1, int(stack.get("unit_hp", 1)))
+	var unit_hp = max(1, int(stack.get("unit_hp", 1)))
 	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
 
+static func _health_ratio(stack: Dictionary) -> float:
+	if stack.is_empty():
+		return 0.0
+	var max_health = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
+	return clampf(float(max(0, int(stack.get("total_health", 0)))) / float(max_health), 0.0, 1.0)
+
 static func _alive_stacks_for_side(battle: Dictionary, side: String) -> Array:
-	var alive := []
+	var alive = []
 	for stack in battle.get("stacks", []):
 		if stack is Dictionary and String(stack.get("side", "")) == side and _alive_count(stack) > 0:
 			alive.append(stack)
 	return alive
 
 static func _stack_has_positive_effect(stack: Dictionary, battle: Dictionary) -> bool:
-	var current_round := int(battle.get("round", 1))
+	var current_round = int(battle.get("round", 1))
 	for effect in SpellRules.active_effects_for_round(stack, current_round):
 		var modifiers = effect.get("modifiers", {})
 		if not (modifiers is Dictionary):
@@ -3978,14 +4005,14 @@ static func _stack_has_positive_effect(stack: Dictionary, battle: Dictionary) ->
 	return false
 
 static func _side_positive_effect_count(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if stack is Dictionary and _stack_has_positive_effect(stack, battle):
 			total += 1
 	return total
 
 static func _lowest_health_stack(stacks: Array) -> Dictionary:
-	var best := {}
+	var best = {}
 	for stack in stacks:
 		if not (stack is Dictionary):
 			continue
@@ -3994,7 +4021,7 @@ static func _lowest_health_stack(stacks: Array) -> Dictionary:
 	return best
 
 static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
-	var totals := {
+	var totals = {
 		"stacks": 0,
 		"units": 0,
 		"health": 0,
@@ -4003,7 +4030,7 @@ static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary) or String(stack.get("side", "")) != side:
 			continue
-		var count := _alive_count(stack)
+		var count = _alive_count(stack)
 		if count <= 0:
 			continue
 		totals["stacks"] = int(totals.get("stacks", 0)) + 1
@@ -4016,7 +4043,7 @@ static func _army_totals(battle: Dictionary, side: String) -> Dictionary:
 static func _battle_context_label(session: SessionStateStore.SessionData, context: Variant) -> String:
 	if not (context is Dictionary) or String(context.get("type", "")) != "town_defense":
 		return "Field engagement"
-	var town_name := _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
+	var town_name = _town_name_from_placement_id(session, String(context.get("town_placement_id", "")))
 	match String(context.get("town_role", "frontier")):
 		"capital":
 			return "Capital defense at %s" % (town_name if town_name != "" else "the walls")
@@ -4026,7 +4053,7 @@ static func _battle_context_label(session: SessionStateStore.SessionData, contex
 			return "Town defense at %s" % (town_name if town_name != "" else "the walls")
 
 static func _battlefield_identity_summary(battle: Dictionary) -> String:
-	var parts := []
+	var parts = []
 	if _battle_has_tag(battle, "fortress_lane"):
 		parts.append("fortress lanes compress the approach")
 	if _battle_has_tag(battle, "battery_nest"):
@@ -4035,7 +4062,7 @@ static func _battlefield_identity_summary(battle: Dictionary) -> String:
 		parts.append("wall pressure favors late breach fighting")
 	if _battle_has_tag(battle, "reserve_wave"):
 		parts.append("reserve waves matter after the opening exchanges")
-	var objective_brief := _field_objective_status_brief(battle)
+	var objective_brief = _field_objective_status_brief(battle)
 	if objective_brief != "":
 		parts.append(objective_brief.to_lower())
 	if parts.is_empty() and String(battle.get("context", {}).get("battlefront_summary", "")) != "":
@@ -4076,15 +4103,15 @@ static func _commander_role_label(battle: Dictionary, side: String) -> String:
 static func _pressure_brief(session: SessionStateStore.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No pressure data."
-	var battle := session.battle
-	var objective_pressure := _field_objective_pressure_brief(battle)
+	var battle = session.battle
+	var objective_pressure = _field_objective_pressure_brief(battle)
 	if objective_pressure != "":
 		return objective_pressure
-	var player_totals := _army_totals(battle, "player")
-	var enemy_totals := _army_totals(battle, "enemy")
-	var player_health := max(1, int(player_totals.get("health", 0)))
-	var enemy_health := max(1, int(enemy_totals.get("health", 0)))
-	var rounds_remaining := max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
+	var player_totals = _army_totals(battle, "player")
+	var enemy_totals = _army_totals(battle, "enemy")
+	var player_health = max(1, int(player_totals.get("health", 0)))
+	var enemy_health = max(1, int(enemy_totals.get("health", 0)))
+	var rounds_remaining = max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
 	if _battle_has_tag(battle, "battery_nest") and int(battle.get("round", 1)) <= 2 and int(battle.get("distance", 1)) > 0:
 		return "Battery lanes are still punishing the approach."
 	if _battle_has_tag(battle, "fortress_lane") and int(battle.get("round", 1)) <= 2:
@@ -4102,8 +4129,8 @@ static func _pressure_brief(session: SessionStateStore.SessionData) -> String:
 	if player_health <= int(round(float(enemy_health) * 0.65)):
 		return "The friendly line is under heavy pressure."
 	if int(battle.get("round", 1)) >= 3:
-		var player_doctrine := _side_doctrine_summary(battle, "player")
-		var enemy_doctrine := _side_doctrine_summary(battle, "enemy")
+		var player_doctrine = _side_doctrine_summary(battle, "player")
+		var enemy_doctrine = _side_doctrine_summary(battle, "enemy")
 		if player_doctrine != enemy_doctrine:
 			return "%s versus %s is defining the late exchanges." % [player_doctrine, enemy_doctrine]
 	return "The exchange is still balanced."
@@ -4114,7 +4141,7 @@ static func _engagement_preview(active_stack: Dictionary, target: Dictionary, ba
 	if String(active_stack.get("side", "")) == String(target.get("side", "")):
 		return "Friendly stack selected."
 	if String(active_stack.get("side", "")) == "player":
-		var availability := action_availability(battle)
+		var availability = action_availability(battle)
 		if bool(availability.get("shoot", false)) and bool(active_stack.get("ranged", false)):
 			return "%s can shoot now." % _stack_label(active_stack)
 		if bool(availability.get("strike", false)):
@@ -4125,8 +4152,8 @@ static func _engagement_preview(active_stack: Dictionary, target: Dictionary, ba
 static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_active: bool) -> String:
 	if stack.is_empty():
 		return "No stack is selected."
-	var side := String(stack.get("side", ""))
-	var lines := [
+	var side = String(stack.get("side", ""))
+	var lines = [
 		"%s [%s]%s" % [
 			_stack_label(stack),
 			_side_label(side),
@@ -4159,12 +4186,12 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 		])
 	if bool(stack.get("defending", false)):
 		lines.append("Stance: Defending")
-	var effect_summary := SpellRules.effect_summary(stack, battle)
+	var effect_summary = SpellRules.effect_summary(stack, battle)
 	lines.append("Effects: %s" % (effect_summary if effect_summary != "" else "none"))
-	var ability_summary := _stack_ability_summary(stack)
+	var ability_summary = _stack_ability_summary(stack)
 	if ability_summary != "":
 		lines.append("Abilities: %s" % ability_summary)
-	var objective_summary := _field_objective_focus_line(battle, side, stack)
+	var objective_summary = _field_objective_focus_line(battle, side, stack)
 	if objective_summary != "":
 		lines.append(objective_summary)
 	return "\n".join(lines)
@@ -4188,7 +4215,7 @@ static func _stack_defense_total(stack: Dictionary, battle: Dictionary) -> int:
 
 static func _stack_initiative_total(stack: Dictionary, battle: Dictionary) -> int:
 	var hero_bonus = _hero_payload_for_side(battle, String(stack.get("side", "")))
-	var total := (
+	var total = (
 		int(stack.get("initiative", 0))
 		+ SpellRules.effect_bonus_for_kind(stack, battle, "initiative")
 		+ _contextual_initiative_bonus(stack, battle)
@@ -4199,7 +4226,7 @@ static func _stack_initiative_total(stack: Dictionary, battle: Dictionary) -> in
 	return total + int(hero_bonus.get("initiative", 0)) + _faction_initiative_bonus(stack, battle)
 
 static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
-	var total := (
+	var total = (
 		int(stack.get("cohesion", stack.get("cohesion_base", 5)))
 		+ SpellRules.effect_bonus_for_kind(stack, battle, "cohesion")
 		+ _contextual_cohesion_bonus(stack, battle)
@@ -4207,7 +4234,7 @@ static func _stack_cohesion_total(stack: Dictionary, battle: Dictionary) -> int:
 	return clamp(total, COHESION_MIN, COHESION_MAX)
 
 static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
-	var total := (
+	var total = (
 		int(stack.get("momentum", 0))
 		+ SpellRules.effect_bonus_for_kind(stack, battle, "momentum")
 		+ _contextual_momentum_bonus(stack, battle)
@@ -4215,13 +4242,13 @@ static func _stack_momentum_total(stack: Dictionary, battle: Dictionary) -> int:
 	return clamp(total, 0, MOMENTUM_MAX)
 
 static func _cohesion_base_for_unit(unit: Dictionary) -> int:
-	var base := 5 + max(0, int(unit.get("tier", 1)) - 1)
+	var base = 5 + max(0, int(unit.get("tier", 1)) - 1)
 	if not bool(unit.get("ranged", false)):
 		base += 1
 	for ability in unit.get("abilities", []):
 		if not (ability is Dictionary):
 			continue
-		var ability_id := String(ability.get("id", ""))
+		var ability_id = String(ability.get("id", ""))
 		if ability_id in ["brace", "formation_guard", "shielding"]:
 			base += 1
 			break
@@ -4273,9 +4300,9 @@ static func _momentum_initiative_bonus(momentum: int) -> int:
 	return 0
 
 static func _contextual_attack_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var bonus := 0
-	var side := String(stack.get("side", ""))
-	var round_number := int(battle.get("round", 1))
+	var bonus = 0
+	var side = String(stack.get("side", ""))
+	var round_number = int(battle.get("round", 1))
 	if _battle_has_tag(battle, "elevated_fire") and bool(stack.get("ranged", false)):
 		bonus += 1
 	if _battle_has_tag(battle, "bog_channels") and (_has_ability(stack, "harry") or _has_ability(stack, "backstab") or _has_ability(stack, "bloodrush")):
@@ -4311,9 +4338,9 @@ static func _contextual_attack_bonus(stack: Dictionary, battle: Dictionary) -> i
 	return bonus
 
 static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var bonus := 0
-	var side := String(stack.get("side", ""))
-	var round_number := int(battle.get("round", 1))
+	var bonus = 0
+	var side = String(stack.get("side", ""))
+	var round_number = int(battle.get("round", 1))
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
 		bonus += 1
 	if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side(stack, battle) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
@@ -4330,9 +4357,9 @@ static func _contextual_defense_bonus(stack: Dictionary, battle: Dictionary) -> 
 	return bonus
 
 static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var bonus := 0
-	var side := String(stack.get("side", ""))
-	var round_number := int(battle.get("round", 1))
+	var bonus = 0
+	var side = String(stack.get("side", ""))
+	var round_number = int(battle.get("round", 1))
 	if _stack_is_isolated(battle, stack):
 		bonus -= 1
 	if _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]) and not bool(stack.get("ranged", false)) and (_has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
@@ -4351,7 +4378,7 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 		bonus += 1
 	if SpellRules.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		bonus -= 1
-	var shielding := _ability_by_id(stack, "shielding")
+	var shielding = _ability_by_id(stack, "shielding")
 	if not shielding.is_empty():
 		bonus += max(0, int(shielding.get("cohesion_hold_bonus", 0)))
 	if _hero_has_trait(battle, side, "linekeeper") and (bool(stack.get("defending", false)) or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard")):
@@ -4374,9 +4401,9 @@ static func _contextual_cohesion_bonus(stack: Dictionary, battle: Dictionary) ->
 	return bonus
 
 static func _contextual_initiative_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var bonus := 0
-	var side := String(stack.get("side", ""))
-	var round_number := int(battle.get("round", 1))
+	var bonus = 0
+	var side = String(stack.get("side", ""))
+	var round_number = int(battle.get("round", 1))
 	if _battle_has_tag(battle, "elevated_fire") and bool(stack.get("ranged", false)):
 		bonus += 1
 	if _battle_has_tag(battle, "open_lane") and bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2:
@@ -4410,9 +4437,9 @@ static func _contextual_initiative_bonus(stack: Dictionary, battle: Dictionary) 
 	return bonus
 
 static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var bonus := 0
-	var side := String(stack.get("side", ""))
-	var round_number := int(battle.get("round", 1))
+	var bonus = 0
+	var side = String(stack.get("side", ""))
+	var round_number = int(battle.get("round", 1))
 	if _battle_has_any_tags(battle, ["ambush_cover"]) and not bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2:
 		bonus += 1
 	if _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and bool(stack.get("ranged", false)) and int(battle.get("round", 1)) <= 2:
@@ -4443,27 +4470,27 @@ static func _contextual_momentum_bonus(stack: Dictionary, battle: Dictionary) ->
 	return bonus
 
 static func _faction_initiative_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var faction_id := String(stack.get("faction_id", ""))
-	var side := String(stack.get("side", ""))
+	var faction_id = String(stack.get("faction_id", ""))
+	var side = String(stack.get("side", ""))
 	match faction_id:
 		"faction_embercourt":
-			var bonus := 0
+			var bonus = 0
 			if bool(stack.get("ranged", false)) and _side_defending_count(battle, side) > 0:
 				bonus += 1
 				if _side_has_ability(battle, side, "formation_guard"):
 					bonus += _side_max_ability_int(battle, side, "formation_guard", "ally_ranged_initiative_bonus")
 			if int(battle.get("round", 1)) >= 3 and _side_has_role_mix(battle, side):
 				bonus += 1
-			var formation_guard := _ability_by_id(stack, "formation_guard")
+			var formation_guard = _ability_by_id(stack, "formation_guard")
 			if not formation_guard.is_empty() and bool(stack.get("defending", false)):
 				bonus += int(formation_guard.get("defending_initiative_bonus", 0))
 			return bonus
 		"faction_mireclaw":
-			var bonus := 0
-			var wounded_count := _enemy_wounded_count(battle, side)
+			var bonus = 0
+			var wounded_count = _enemy_wounded_count(battle, side)
 			if wounded_count > 0:
 				bonus += 1
-			var bloodrush := _ability_by_id(stack, "bloodrush")
+			var bloodrush = _ability_by_id(stack, "bloodrush")
 			if not bloodrush.is_empty() and wounded_count > 0:
 				bonus += min(
 					int(bloodrush.get("max_initiative_bonus", 0)),
@@ -4475,8 +4502,8 @@ static func _faction_initiative_bonus(stack: Dictionary, battle: Dictionary) -> 
 				bonus += int(bloodrush.get("late_round_initiative_bonus", 0))
 			return bonus
 		"faction_sunvault":
-			var bonus := 0
-			var positive_effect_count := _side_positive_effect_count(battle, side)
+			var bonus = 0
+			var positive_effect_count = _side_positive_effect_count(battle, side)
 			if _stack_has_positive_effect(stack, battle):
 				bonus += 1
 				if bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]):
@@ -4493,9 +4520,9 @@ static func _apply_round_pressure_shifts(battle: Dictionary) -> void:
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary) or _alive_count(stack) <= 0:
 			continue
-		var battle_id := String(stack.get("battle_id", ""))
-		var side := String(stack.get("side", ""))
-		var round_number := int(battle.get("round", 1))
+		var battle_id = String(stack.get("battle_id", ""))
+		var side = String(stack.get("side", ""))
+		var round_number = int(battle.get("round", 1))
 		if _stack_is_isolated(battle, stack):
 			_adjust_stack_cohesion(battle, battle_id, -1)
 		if SpellRules.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
@@ -4564,25 +4591,25 @@ static func _apply_damage_pressure(
 	is_ranged: bool,
 	source_type: String
 ) -> Array:
-	var messages := []
+	var messages = []
 	if attacker.is_empty() or target_before.is_empty():
 		return messages
-	var target_battle_id := String(target_before.get("battle_id", ""))
-	var attacker_battle_id := String(attacker.get("battle_id", ""))
-	var cohesion_shift := _casualty_cohesion_shift(target_before, target_after)
+	var target_battle_id = String(target_before.get("battle_id", ""))
+	var attacker_battle_id = String(attacker.get("battle_id", ""))
+	var cohesion_shift = _casualty_cohesion_shift(target_before, target_after)
 	if not target_after.is_empty() and _alive_count(target_after) > 0 and _stack_is_isolated(battle, target_after):
 		cohesion_shift -= 1
 	if not target_after.is_empty() and SpellRules.has_any_effect_ids(target_after, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
 		cohesion_shift -= 1
 	_adjust_stack_cohesion(battle, target_battle_id, cohesion_shift)
-	var momentum_gain := _attack_momentum_gain(attacker, target_before, target_after, battle, is_ranged, source_type)
+	var momentum_gain = _attack_momentum_gain(attacker, target_before, target_after, battle, is_ranged, source_type)
 	_adjust_stack_momentum(battle, attacker_battle_id, momentum_gain)
-	var support_gain := _supportive_cohesion_gain(attacker, battle, is_ranged)
+	var support_gain = _supportive_cohesion_gain(attacker, battle, is_ranged)
 	_adjust_stack_cohesion(battle, attacker_battle_id, support_gain)
 	if target_after.is_empty() or _alive_count(target_after) <= 0:
 		_apply_destroyed_stack_shock(battle, target_before, String(attacker.get("side", "")))
-	var updated_target := _get_stack_by_id(battle, target_battle_id)
-	var updated_attacker := _get_stack_by_id(battle, attacker_battle_id)
+	var updated_target = _get_stack_by_id(battle, target_battle_id)
+	var updated_attacker = _get_stack_by_id(battle, attacker_battle_id)
 	if not updated_target.is_empty() and _alive_count(updated_target) > 0 and _stack_cohesion_total(updated_target, battle) <= 3:
 		messages.append("%s is wavering." % _stack_label(updated_target))
 	if not updated_attacker.is_empty() and _stack_momentum_total(updated_attacker, battle) >= 3:
@@ -4590,12 +4617,12 @@ static func _apply_damage_pressure(
 	return messages
 
 static func _casualty_cohesion_shift(target_before: Dictionary, target_after: Dictionary) -> int:
-	var before_health := max(1, int(target_before.get("total_health", 0)))
-	var after_health := max(0, int(target_after.get("total_health", 0))) if not target_after.is_empty() else 0
-	var before_count := _alive_count(target_before)
-	var after_count := _alive_count(target_after) if not target_after.is_empty() else 0
-	var lost_count := max(0, before_count - after_count)
-	var lost_health_ratio := clampf(float(max(0, before_health - after_health)) / float(before_health), 0.0, 1.0)
+	var before_health = max(1, int(target_before.get("total_health", 0)))
+	var after_health = max(0, int(target_after.get("total_health", 0))) if not target_after.is_empty() else 0
+	var before_count = _alive_count(target_before)
+	var after_count = _alive_count(target_after) if not target_after.is_empty() else 0
+	var lost_count = max(0, before_count - after_count)
+	var lost_health_ratio = clampf(float(max(0, before_health - after_health)) / float(before_health), 0.0, 1.0)
 	if after_count <= 0:
 		return -3
 	if lost_health_ratio >= 0.45 or lost_count >= 2:
@@ -4612,15 +4639,15 @@ static func _attack_momentum_gain(
 	is_ranged: bool,
 	source_type: String
 ) -> int:
-	var gain := 0
-	var side := String(attacker.get("side", ""))
-	var destroyed := target_after.is_empty() or _alive_count(target_after) <= 0
+	var gain = 0
+	var side = String(attacker.get("side", ""))
+	var destroyed = target_after.is_empty() or _alive_count(target_after) <= 0
 	if destroyed:
 		gain += 2
 	else:
-		var before_health := max(1, int(target_before.get("total_health", 0)))
-		var after_health := max(0, int(target_after.get("total_health", 0)))
-		var lost_ratio := clampf(float(max(0, before_health - after_health)) / float(before_health), 0.0, 1.0)
+		var before_health = max(1, int(target_before.get("total_health", 0)))
+		var after_health = max(0, int(target_after.get("total_health", 0)))
+		var lost_ratio = clampf(float(max(0, before_health - after_health)) / float(before_health), 0.0, 1.0)
 		if lost_ratio >= 0.25 or _health_ratio(target_after) <= 0.75:
 			gain += 1
 	if SpellRules.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
@@ -4637,13 +4664,13 @@ static func _attack_momentum_gain(
 		gain += 1
 	if _hero_has_trait(battle, side, "bogwise") and (_battle_has_tag(battle, "bog_channels") or String(battle.get("terrain", "")) == "mire") and (_has_ability(attacker, "harry") or _has_ability(attacker, "backstab") or _has_ability(attacker, "bloodrush")):
 		gain += 1
-	var backstab := _ability_by_id(attacker, "backstab")
+	var backstab = _ability_by_id(attacker, "backstab")
 	if not backstab.is_empty() and SpellRules.has_any_effect_ids(target_after if not target_after.is_empty() else target_before, battle, backstab.get("status_ids", [])):
 		gain += max(0, int(backstab.get("momentum_gain", 0)))
-	var harry := _ability_by_id(attacker, "harry")
+	var harry = _ability_by_id(attacker, "harry")
 	if not harry.is_empty() and is_ranged:
 		gain += max(0, int(harry.get("momentum_gain", 0)))
-	var bloodrush := _ability_by_id(attacker, "bloodrush")
+	var bloodrush = _ability_by_id(attacker, "bloodrush")
 	if not bloodrush.is_empty() and (_health_ratio(target_after if not target_after.is_empty() else target_before) <= float(bloodrush.get("wounded_threshold_ratio", 0.0)) or destroyed):
 		gain += max(0, int(bloodrush.get("momentum_gain", 0)))
 		if destroyed:
@@ -4653,8 +4680,8 @@ static func _attack_momentum_gain(
 	return gain
 
 static func _supportive_cohesion_gain(attacker: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
-	var gain := 0
-	var side := String(attacker.get("side", ""))
+	var gain = 0
+	var side = String(attacker.get("side", ""))
 	if String(attacker.get("faction_id", "")) == "faction_embercourt" and is_ranged and _side_defending_count(battle, side) > 0:
 		gain += 1
 	if String(attacker.get("faction_id", "")) == "faction_sunvault" and _stack_has_positive_effect(attacker, battle):
@@ -4663,17 +4690,17 @@ static func _supportive_cohesion_gain(attacker: Dictionary, battle: Dictionary, 
 			gain += 1
 	if is_ranged and _side_has_ability(battle, side, "formation_guard"):
 		gain += _side_max_ability_int(battle, side, "formation_guard", "ally_cohesion_bonus")
-	var formation_guard := _ability_by_id(attacker, "formation_guard")
+	var formation_guard = _ability_by_id(attacker, "formation_guard")
 	if not formation_guard.is_empty() and bool(attacker.get("defending", false)):
 		gain += max(0, int(formation_guard.get("defending_cohesion_bonus", 0)))
 	return gain
 
 static func _apply_destroyed_stack_shock(battle: Dictionary, destroyed_stack: Dictionary, attacking_side: String) -> void:
-	var defending_side := String(destroyed_stack.get("side", ""))
+	var defending_side = String(destroyed_stack.get("side", ""))
 	for ally in _alive_stacks_for_side(battle, defending_side):
 		if String(ally.get("battle_id", "")) == String(destroyed_stack.get("battle_id", "")):
 			continue
-		var shock := -1
+		var shock = -1
 		if _hero_has_trait(battle, defending_side, "linekeeper") and _battle_has_any_tags(battle, ["chokepoint", "fortified_line"]):
 			shock = 0
 		_adjust_stack_cohesion(battle, String(ally.get("battle_id", "")), shock)
@@ -4688,10 +4715,10 @@ static func _cohesion_damage_modifier(
 	is_ranged: bool,
 	is_retaliation: bool
 ) -> float:
-	var modifier := 1.0
-	var attacker_cohesion := _stack_cohesion_total(attacker, battle)
-	var defender_cohesion := _stack_cohesion_total(defender, battle)
-	var attacker_momentum := _stack_momentum_total(attacker, battle)
+	var modifier = 1.0
+	var attacker_cohesion = _stack_cohesion_total(attacker, battle)
+	var defender_cohesion = _stack_cohesion_total(defender, battle)
+	var attacker_momentum = _stack_momentum_total(attacker, battle)
 	if attacker_cohesion >= 8:
 		modifier *= 1.05
 	elif attacker_cohesion <= 3:
@@ -4710,8 +4737,8 @@ static func _cohesion_damage_modifier(
 static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 	if stack.is_empty():
 		return false
-	var side := String(stack.get("side", ""))
-	var living_allies := _alive_stacks_for_side(battle, side)
+	var side = String(stack.get("side", ""))
+	var living_allies = _alive_stacks_for_side(battle, side)
 	if living_allies.size() <= 1:
 		return true
 	if bool(stack.get("ranged", false)):
@@ -4719,29 +4746,29 @@ static func _stack_is_isolated(battle: Dictionary, stack: Dictionary) -> bool:
 	return false
 
 static func _side_defending_count(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if bool(stack.get("defending", false)):
 			total += 1
 	return total
 
 static func _allied_ranged_count(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if bool(stack.get("ranged", false)):
 			total += 1
 	return total
 
 static func _allied_melee_count(battle: Dictionary, side: String) -> int:
-	var total := 0
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, side):
 		if not bool(stack.get("ranged", false)):
 			total += 1
 	return total
 
 static func _side_has_role_mix(battle: Dictionary, side: String) -> bool:
-	var has_ranged := false
-	var has_melee := false
+	var has_ranged = false
+	var has_melee = false
 	for stack in _alive_stacks_for_side(battle, side):
 		if bool(stack.get("ranged", false)):
 			has_ranged = true
@@ -4752,15 +4779,15 @@ static func _side_has_role_mix(battle: Dictionary, side: String) -> bool:
 	return false
 
 static func _enemy_wounded_count(battle: Dictionary, side: String) -> int:
-	var target_side := "enemy" if side == "player" else "player"
-	var total := 0
+	var target_side = "enemy" if side == "player" else "player"
+	var total = 0
 	for stack in _alive_stacks_for_side(battle, target_side):
 		if _health_ratio(stack) <= 0.75:
 			total += 1
 	return total
 
 static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
-	var faction_id := _side_faction_id(battle, side)
+	var faction_id = _side_faction_id(battle, side)
 	match faction_id:
 		"faction_embercourt":
 			if _battle_has_tag(battle, "fortress_lane") and _stack_is_anchor_side({"side": side}, battle):
@@ -4789,7 +4816,7 @@ static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
 				return "The pack is scenting weakness"
 			return "The pack is probing for the first break"
 		"faction_sunvault":
-			var positive_effect_count := _side_positive_effect_count(battle, side)
+			var positive_effect_count = _side_positive_effect_count(battle, side)
 			if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side({"side": side}, battle):
 				if _reserve_wave_is_active_for_side(battle, side):
 					return "Battery nests are rotating fresh arrays into the firing line"
@@ -4805,16 +4832,16 @@ static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
 			return "No doctrine is asserting itself"
 
 static func _side_faction_id(battle: Dictionary, side: String) -> String:
-	var counts := {}
+	var counts = {}
 	for stack in _alive_stacks_for_side(battle, side):
-		var faction_id := String(stack.get("faction_id", ""))
+		var faction_id = String(stack.get("faction_id", ""))
 		if faction_id == "":
 			continue
 		counts[faction_id] = int(counts.get(faction_id, 0)) + 1
-	var best_id := ""
-	var best_count := -1
+	var best_id = ""
+	var best_count = -1
 	for faction_id in counts.keys():
-		var count := int(counts[faction_id])
+		var count = int(counts[faction_id])
 		if count > best_count:
 			best_count = count
 			best_id = String(faction_id)
@@ -4831,13 +4858,13 @@ static func _hero_payload_from_state(
 	side: String = "player"
 ) -> Dictionary:
 	var command = hero_state.get("command", {})
-	var resolved_bonuses := bonuses.duplicate(true) if bonuses is Dictionary else {}
-	var specialty_bonuses := HeroProgressionRules.aggregate_bonuses(hero_state)
-	var battle_traits := _normalized_battle_traits(hero_state)
+	var resolved_bonuses = bonuses.duplicate(true) if bonuses is Dictionary else {}
+	var specialty_bonuses = HeroProgressionRules.aggregate_bonuses(hero_state)
+	var battle_traits = _normalized_battle_traits(hero_state)
 	resolved_bonuses["battle_attack"] = int(resolved_bonuses.get("battle_attack", 0)) + int(specialty_bonuses.get("battle_attack", 0))
 	resolved_bonuses["battle_defense"] = int(resolved_bonuses.get("battle_defense", 0)) + int(specialty_bonuses.get("battle_defense", 0))
 	resolved_bonuses["battle_initiative"] = int(resolved_bonuses.get("battle_initiative", 0)) + int(specialty_bonuses.get("battle_initiative", 0))
-	var mana := hero_state.get("spellbook", {}).get("mana", {})
+	var mana = hero_state.get("spellbook", {}).get("mana", {})
 	return {
 		"attack": int(command.get("attack", 0)) + int(resolved_bonuses.get("battle_attack", 0)),
 		"defense": int(command.get("defense", 0)) + int(resolved_bonuses.get("battle_defense", 0)),
@@ -4857,7 +4884,7 @@ static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 	var commander = encounter.get("enemy_commander", {})
 	if not (commander is Dictionary) or commander.is_empty():
 		return {}
-	var command := _normalize_command(commander.get("command", {}))
+	var command = _normalize_command(commander.get("command", {}))
 	return SpellRules.ensure_hero_spellbook(
 		{
 			"name": String(commander.get("name", "Enemy Commander")),
@@ -4871,10 +4898,10 @@ static func _enemy_commander_state(encounter: Dictionary) -> Dictionary:
 	)
 
 static func _normalize_enemy_hero_state(existing_state: Variant, encounter: Dictionary) -> Dictionary:
-	var template := _enemy_commander_state(encounter)
+	var template = _enemy_commander_state(encounter)
 	if not (existing_state is Dictionary) or existing_state.is_empty():
 		return template
-	var normalized := existing_state.duplicate(true)
+	var normalized = existing_state.duplicate(true)
 	normalized["name"] = String(normalized.get("name", template.get("name", "Enemy Commander")))
 	normalized["command"] = _normalize_command(normalized.get("command", template.get("command", {})))
 	normalized["battle_traits"] = _normalized_battle_traits(normalized if normalized.has("battle_traits") else template)
@@ -4887,31 +4914,31 @@ static func _normalize_enemy_hero_state(existing_state: Variant, encounter: Dict
 	)
 
 static func _normalized_battle_traits(value: Variant) -> Array:
-	var source := []
+	var source = []
 	if value is Dictionary:
 		source = value.get("battle_traits", [])
 	elif value is Array:
 		source = value
-	var normalized := []
+	var normalized = []
 	if not (source is Array):
 		source = []
 	for trait_value in source:
-		var trait_id := String(trait_value)
+		var trait_id = String(trait_value)
 		if trait_id != "" and trait_id not in normalized:
 			normalized.append(trait_id)
 	if normalized.is_empty() and value is Dictionary:
-		var hero_id := String(value.get("id", ""))
+		var hero_id = String(value.get("id", ""))
 		if hero_id != "":
 			for trait_value in ContentService.get_hero(hero_id).get("battle_traits", []):
-				var trait_id := String(trait_value)
+				var trait_id = String(trait_value)
 				if trait_id != "" and trait_id not in normalized:
 					normalized.append(trait_id)
 	return normalized
 
 static func _normalized_battlefield_tags(encounter: Dictionary, context: Variant = {}) -> Array:
-	var normalized := []
+	var normalized = []
 	for tag_value in encounter.get("battlefield_tags", []):
-		var tag_id := String(tag_value)
+		var tag_id = String(tag_value)
 		if tag_id != "" and tag_id not in normalized:
 			normalized.append(tag_id)
 	if _is_town_defense_context(context):
@@ -4919,7 +4946,7 @@ static func _normalized_battlefield_tags(encounter: Dictionary, context: Variant
 			if tag_id not in normalized:
 				normalized.append(tag_id)
 		for tag_value in context.get("battlefront_tags", []):
-			var context_tag := String(tag_value)
+			var context_tag = String(tag_value)
 			if context_tag != "" and context_tag not in normalized:
 				normalized.append(context_tag)
 	return normalized
@@ -4935,8 +4962,8 @@ static func _normalize_command(value: Variant) -> Dictionary:
 	}
 
 static func _starting_distance_for_encounter(encounter: Dictionary, context: Variant = {}) -> int:
-	var distance := _starting_distance_for_terrain(String(encounter.get("terrain", "plains")))
-	var battlefield_tags := _normalized_battlefield_tags(encounter, context)
+	var distance = _starting_distance_for_terrain(String(encounter.get("terrain", "plains")))
+	var battlefield_tags = _normalized_battlefield_tags(encounter, context)
 	if "chokepoint" in battlefield_tags or "fortified_line" in battlefield_tags or "fortress_lane" in battlefield_tags or "wall_pressure" in battlefield_tags:
 		distance = min(distance, 1)
 	if "elevated_fire" in battlefield_tags or "open_lane" in battlefield_tags or "battery_nest" in battlefield_tags:
@@ -4975,18 +5002,18 @@ static func _normalize_field_objectives(
 	scenario: Dictionary,
 	context: Variant = {}
 ) -> Array:
-	var existing_by_id := {}
+	var existing_by_id = {}
 	if existing_value is Array:
 		for entry in existing_value:
 			if entry is Dictionary:
-				var existing_id := String(entry.get("id", ""))
+				var existing_id = String(entry.get("id", ""))
 				if existing_id != "":
 					existing_by_id[existing_id] = entry
-	var normalized := []
+	var normalized = []
 	for entry in _authored_field_objectives(encounter, encounter_placement, scenario, context):
 		if not (entry is Dictionary):
 			continue
-		var objective_id := String(entry.get("id", ""))
+		var objective_id = String(entry.get("id", ""))
 		if objective_id == "":
 			continue
 		normalized.append(_normalize_field_objective(entry, existing_by_id.get(objective_id, {}), context))
@@ -4998,15 +5025,15 @@ static func _authored_field_objectives(
 	scenario: Dictionary,
 	context: Variant = {}
 ) -> Array:
-	var ordered_ids := []
-	var merged := {}
+	var ordered_ids = []
+	var merged = {}
 	for source in [encounter.get(FIELD_OBJECTIVES_KEY, []), encounter_placement.get(FIELD_OBJECTIVES_KEY, [])]:
 		if not (source is Array):
 			continue
 		for entry in source:
 			if not (entry is Dictionary):
 				continue
-			var objective_id := String(entry.get("id", ""))
+			var objective_id = String(entry.get("id", ""))
 			if objective_id == "":
 				continue
 			if not merged.has(objective_id):
@@ -5018,24 +5045,24 @@ static func _authored_field_objectives(
 					for key in entry.keys():
 						current[String(key)] = entry[key]
 					merged[objective_id] = current
-	var authored := []
+	var authored = []
 	for objective_id in ordered_ids:
 		authored.append(merged.get(objective_id, {}))
 	return authored
 
 static func _normalize_field_objective(entry: Dictionary, existing_state: Variant, context: Variant = {}) -> Dictionary:
-	var objective_type := String(entry.get("type", ""))
-	var starting_side := _normalize_side_token(String(entry.get("starting_side", "neutral")))
-	var capture_threshold := max(1, int(entry.get("capture_threshold", 2)))
-	var urgency_round := max(1, int(entry.get("urgency_round", 2)))
-	var state := existing_state if existing_state is Dictionary else {}
-	var control_side := _normalize_side_token(String(state.get("control_side", starting_side)))
+	var objective_type = String(entry.get("type", ""))
+	var starting_side = _normalize_side_token(String(entry.get("starting_side", "neutral")))
+	var capture_threshold = max(1, int(entry.get("capture_threshold", 2)))
+	var urgency_round = max(1, int(entry.get("urgency_round", 2)))
+	var state = existing_state if existing_state is Dictionary else {}
+	var control_side = _normalize_side_token(String(state.get("control_side", starting_side)))
 	if control_side == "":
 		control_side = starting_side
-	var progress_side := _normalize_side_token(String(state.get("progress_side", "")))
+	var progress_side = _normalize_side_token(String(state.get("progress_side", "")))
 	if progress_side == control_side:
 		progress_side = ""
-	var progress_value := clamp(int(state.get("progress_value", 0)), 0, capture_threshold)
+	var progress_value = clamp(int(state.get("progress_value", 0)), 0, capture_threshold)
 	return {
 		"id": String(entry.get("id", "")),
 		"type": objective_type,
@@ -5093,10 +5120,10 @@ static func _field_objective_label(objective: Dictionary) -> String:
 	return String(objective.get("label", objective.get("id", "Objective")))
 
 static func _field_objective_progress_text(objective: Dictionary) -> String:
-	var controller := String(objective.get("control_side", "neutral"))
-	var progress_side := String(objective.get("progress_side", ""))
-	var progress_value := int(objective.get("progress_value", 0))
-	var threshold := max(1, int(objective.get("capture_threshold", 2)))
+	var controller = String(objective.get("control_side", "neutral"))
+	var progress_side = String(objective.get("progress_side", ""))
+	var progress_value = int(objective.get("progress_value", 0))
+	var threshold = max(1, int(objective.get("capture_threshold", 2)))
 	if controller in ["player", "enemy"]:
 		if progress_side != "" and progress_side != controller and progress_value > 0:
 			return "%s-held, %s pressure %d/%d" % [
@@ -5114,16 +5141,16 @@ static func _field_objective_short_status(objective: Dictionary) -> String:
 	return "%s %s" % [_field_objective_label(objective), _field_objective_progress_text(objective)]
 
 static func _field_objective_status_brief(battle: Dictionary) -> String:
-	var objectives := _field_objectives(battle)
+	var objectives = _field_objectives(battle)
 	if objectives.is_empty():
 		return ""
-	var primary := objectives[0]
+	var primary = objectives[0]
 	if primary is Dictionary:
 		return _field_objective_short_status(primary)
 	return ""
 
 static func _field_objective_pressure_summary(battle: Dictionary) -> String:
-	var parts := []
+	var parts = []
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
@@ -5136,9 +5163,9 @@ static func _field_objective_pressure_brief(battle: Dictionary) -> String:
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
-		var objective_type := String(objective.get("type", ""))
-		var controller := String(objective.get("control_side", "neutral"))
-		var urgency_round := int(objective.get("urgency_round", 2))
+		var objective_type = String(objective.get("type", ""))
+		var controller = String(objective.get("control_side", "neutral"))
+		var urgency_round = int(objective.get("urgency_round", 2))
 		match objective_type:
 			"lane_battery":
 				if controller == "enemy" and int(battle.get("distance", 1)) > 0:
@@ -5171,21 +5198,21 @@ static func _field_objective_pressure_brief(battle: Dictionary) -> String:
 	return ""
 
 static func _field_objective_urgency_summary(session: SessionStateStore.SessionData, battle: Dictionary) -> String:
-	var parts := []
-	var urgent := []
+	var parts = []
+	var urgent = []
 	for objective in _field_objectives(battle):
 		if objective is Dictionary and int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
 			urgent.append(_field_objective_short_status(objective))
 	if urgent.is_empty():
-		var objective_brief := _field_objective_status_brief(battle)
+		var objective_brief = _field_objective_status_brief(battle)
 		if objective_brief != "":
 			parts.append(objective_brief)
 	else:
 		parts.append("Active pressure %s" % "; ".join(urgent.slice(0, min(2, urgent.size()))))
-	var scenario_line := _tactical_objective_line(session, battle, ContentService.get_scenario(session.scenario_id)).trim_prefix("Battle aim: ").strip_edges()
+	var scenario_line = _tactical_objective_line(session, battle, ContentService.get_scenario(session.scenario_id)).trim_prefix("Battle aim: ").strip_edges()
 	if scenario_line != "":
 		parts.append(scenario_line)
-	var rounds_remaining := max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
+	var rounds_remaining = max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
 	if rounds_remaining <= 2:
 		parts.append("%d round%s remain before stalemate" % [rounds_remaining, "" if rounds_remaining == 1 else "s"])
 	if not bool(battle.get("retreat_allowed", true)):
@@ -5195,12 +5222,12 @@ static func _field_objective_urgency_summary(session: SessionStateStore.SessionD
 static func _field_objective_focus_line(battle: Dictionary, side: String, stack: Dictionary = {}) -> String:
 	if side == "":
 		return ""
-	var preferred_ranged := stack is Dictionary and bool(stack.get("ranged", false))
+	var preferred_ranged = stack is Dictionary and bool(stack.get("ranged", false))
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
-		var controller := String(objective.get("control_side", "neutral"))
-		var objective_type := String(objective.get("type", ""))
+		var controller = String(objective.get("control_side", "neutral"))
+		var objective_type = String(objective.get("type", ""))
 		if controller == side:
 			match objective_type:
 				"lane_battery":
@@ -5232,7 +5259,7 @@ static func _side_controls_field_objective_type(battle: Dictionary, side: String
 	return false
 
 static func _reserve_wave_ready_round(battle: Dictionary, side: String) -> int:
-	var ready_round := 3
+	var ready_round = 3
 	if side == "":
 		return ready_round
 	if _side_controls_field_objective_type(battle, side, "supply_post"):
@@ -5245,8 +5272,8 @@ static func _reserve_wave_is_active_for_side(battle: Dictionary, side: String) -
 	return side != "" and _battle_has_tag(battle, "reserve_wave") and int(battle.get("round", 1)) >= _reserve_wave_ready_round(battle, side)
 
 static func _field_objective_initiative_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var side := String(stack.get("side", ""))
-	var bonus := 0
+	var side = String(stack.get("side", ""))
+	var bonus = 0
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
@@ -5265,8 +5292,8 @@ static func _field_objective_initiative_bonus(stack: Dictionary, battle: Diction
 	return min(bonus, 2)
 
 static func _field_objective_attack_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var side := String(stack.get("side", ""))
-	var bonus := 0
+	var side = String(stack.get("side", ""))
+	var bonus = 0
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
@@ -5280,8 +5307,8 @@ static func _field_objective_attack_bonus(stack: Dictionary, battle: Dictionary)
 	return min(bonus, 2)
 
 static func _field_objective_defense_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var side := String(stack.get("side", ""))
-	var bonus := 0
+	var side = String(stack.get("side", ""))
+	var bonus = 0
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
@@ -5297,12 +5324,12 @@ static func _field_objective_defense_bonus(stack: Dictionary, battle: Dictionary
 	return min(bonus, 2)
 
 static func _field_objective_cohesion_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var side := String(stack.get("side", ""))
-	var bonus := 0
+	var side = String(stack.get("side", ""))
+	var bonus = 0
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
-		var controller := String(objective.get("control_side", "neutral"))
+		var controller = String(objective.get("control_side", "neutral"))
 		match String(objective.get("type", "")):
 			"supply_post":
 				if controller == side and not _stack_is_isolated(battle, stack):
@@ -5316,8 +5343,8 @@ static func _field_objective_cohesion_bonus(stack: Dictionary, battle: Dictionar
 	return clamp(bonus, -2, 2)
 
 static func _field_objective_momentum_bonus(stack: Dictionary, battle: Dictionary) -> int:
-	var side := String(stack.get("side", ""))
-	var bonus := 0
+	var side = String(stack.get("side", ""))
+	var bonus = 0
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary) or String(objective.get("control_side", "")) != side:
 			continue
@@ -5331,9 +5358,9 @@ static func _field_objective_momentum_bonus(stack: Dictionary, battle: Dictionar
 	return min(bonus, 2)
 
 static func _field_objective_commander_modifier(attacker: Dictionary, defender: Dictionary, battle: Dictionary) -> float:
-	var modifier := 1.0
-	var attacker_side := String(attacker.get("side", ""))
-	var defender_side := String(defender.get("side", ""))
+	var modifier = 1.0
+	var attacker_side = String(attacker.get("side", ""))
+	var defender_side = String(defender.get("side", ""))
 	if _side_controls_field_objective_type(battle, attacker_side, "signal_beacon"):
 		modifier *= 1.04
 	if _side_controls_field_objective_type(battle, defender_side, "signal_beacon"):
@@ -5343,21 +5370,21 @@ static func _field_objective_commander_modifier(attacker: Dictionary, defender: 
 	return modifier
 
 static func _apply_field_objective_action_pressure(battle: Dictionary, action_context: Dictionary) -> Array:
-	var acting_side := String(action_context.get("side", ""))
+	var acting_side = String(action_context.get("side", ""))
 	if acting_side not in ["player", "enemy"]:
 		return []
-	var acting_stack := _get_stack_by_id(battle, String(action_context.get("battle_id", "")))
-	var target_stack := _get_stack_by_id(battle, String(action_context.get("target_battle_id", "")))
-	var messages := []
-	var objectives := _field_objectives(battle)
+	var acting_stack = _get_stack_by_id(battle, String(action_context.get("battle_id", "")))
+	var target_stack = _get_stack_by_id(battle, String(action_context.get("target_battle_id", "")))
+	var messages = []
+	var objectives = _field_objectives(battle)
 	for index in range(objectives.size()):
 		var objective = objectives[index]
 		if not (objective is Dictionary):
 			continue
-		var influence := _field_objective_action_influence(objective, battle, acting_side, action_context, acting_stack, target_stack)
+		var influence = _field_objective_action_influence(objective, battle, acting_side, action_context, acting_stack, target_stack)
 		if influence <= 0:
 			continue
-		var event_text := _apply_field_objective_control_push(objective, battle, acting_side, influence)
+		var event_text = _apply_field_objective_control_push(objective, battle, acting_side, influence)
 		objectives[index] = objective
 		if event_text != "":
 			messages.append(event_text)
@@ -5372,10 +5399,10 @@ static func _field_objective_action_influence(
 	acting_stack: Dictionary,
 	target_stack: Dictionary
 ) -> int:
-	var action := String(action_context.get("action", ""))
-	var controller := String(objective.get("control_side", "neutral"))
-	var contested := controller != acting_side
-	var is_ranged := bool(acting_stack.get("ranged", false))
+	var action = String(action_context.get("action", ""))
+	var controller = String(objective.get("control_side", "neutral"))
+	var contested = controller != acting_side
+	var is_ranged = bool(acting_stack.get("ranged", false))
 	match String(objective.get("type", "")):
 		"lane_battery":
 			match action:
@@ -5437,10 +5464,10 @@ static func _field_objective_action_influence(
 static func _apply_field_objective_control_push(objective: Dictionary, battle: Dictionary, acting_side: String, amount: int) -> String:
 	if amount <= 0:
 		return ""
-	var controller := String(objective.get("control_side", "neutral"))
-	var progress_side := String(objective.get("progress_side", ""))
-	var progress_value := max(0, int(objective.get("progress_value", 0)))
-	var threshold := max(1, int(objective.get("capture_threshold", 2)))
+	var controller = String(objective.get("control_side", "neutral"))
+	var progress_side = String(objective.get("progress_side", ""))
+	var progress_value = max(0, int(objective.get("progress_value", 0)))
+	var threshold = max(1, int(objective.get("capture_threshold", 2)))
 	if controller == acting_side:
 		if progress_side != "" and progress_side != acting_side:
 			progress_value = max(0, progress_value - amount)
@@ -5459,7 +5486,7 @@ static func _apply_field_objective_control_push(objective: Dictionary, battle: D
 			progress_side = acting_side
 			progress_value += amount
 		if progress_value >= threshold:
-			var previous_controller := controller
+			var previous_controller = controller
 			controller = acting_side
 			progress_side = ""
 			progress_value = 0
@@ -5474,7 +5501,7 @@ static func _apply_field_objective_control_push(objective: Dictionary, battle: D
 	return ""
 
 static func _field_objective_flip_message(objective: Dictionary, previous_controller: String, new_controller: String) -> String:
-	var label := _field_objective_label(objective)
+	var label = _field_objective_label(objective)
 	if previous_controller in ["player", "enemy"]:
 		return "%s swings to %s control." % [label, _side_label(new_controller)]
 	return "%s is seized by %s." % [label, _side_label(new_controller)]
@@ -5483,38 +5510,38 @@ static func _apply_field_objective_round_effects(battle: Dictionary) -> void:
 	for objective in _field_objectives(battle):
 		if not (objective is Dictionary):
 			continue
-		var controller := String(objective.get("control_side", "neutral"))
+		var controller = String(objective.get("control_side", "neutral"))
 		if controller not in ["player", "enemy"]:
 			continue
 		match String(objective.get("type", "")):
 			"ritual_pylon":
 				if int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
-					var pressured := _weakest_stack_by_cohesion(battle, _opposing_side(controller))
+					var pressured = _weakest_stack_by_cohesion(battle, _opposing_side(controller))
 					if not pressured.is_empty():
 						_adjust_stack_cohesion(battle, String(pressured.get("battle_id", "")), -1)
 			"supply_post":
-				var steadied := _weakest_stack_by_cohesion(battle, controller)
+				var steadied = _weakest_stack_by_cohesion(battle, controller)
 				if not steadied.is_empty() and _stack_cohesion_total(steadied, battle) < int(steadied.get("cohesion_base", 5)) + 1:
 					_adjust_stack_cohesion(battle, String(steadied.get("battle_id", "")), 1)
 			"breach_point":
 				if int(battle.get("round", 1)) >= int(objective.get("urgency_round", 3)):
-					var surge_stack := _highest_momentum_stack_for_side(battle, controller)
+					var surge_stack = _highest_momentum_stack_for_side(battle, controller)
 					if not surge_stack.is_empty() and not bool(surge_stack.get("ranged", false)):
 						_adjust_stack_momentum(battle, String(surge_stack.get("battle_id", "")), 1)
-					var pressured_line := _weakest_stack_by_cohesion(battle, _opposing_side(controller))
+					var pressured_line = _weakest_stack_by_cohesion(battle, _opposing_side(controller))
 					if not pressured_line.is_empty():
 						_adjust_stack_cohesion(battle, String(pressured_line.get("battle_id", "")), -1)
 			"hazard_zone":
 				if int(battle.get("round", 1)) >= int(objective.get("urgency_round", 2)):
-					var exposed := _weakest_stack_by_cohesion(battle, _opposing_side(controller))
+					var exposed = _weakest_stack_by_cohesion(battle, _opposing_side(controller))
 					if not exposed.is_empty():
 						_adjust_stack_cohesion(battle, String(exposed.get("battle_id", "")), -1)
 
 static func _highest_momentum_stack_for_side(battle: Dictionary, side: String) -> Dictionary:
-	var best := {}
-	var best_score := -99999
+	var best = {}
+	var best_score = -99999
 	for stack in _alive_stacks_for_side(battle, side):
-		var score := _stack_momentum_total(stack, battle) * 3
+		var score = _stack_momentum_total(stack, battle) * 3
 		score += _stack_attack_total(stack, battle)
 		if bool(stack.get("ranged", false)):
 			score -= 2
@@ -5524,7 +5551,7 @@ static func _highest_momentum_stack_for_side(battle: Dictionary, side: String) -
 	return best
 
 static func _battle_seed(session: SessionStateStore.SessionData) -> int:
-	var seed := int(session.battle.get("combat_seed", 0))
+	var seed = int(session.battle.get("combat_seed", 0))
 	if seed != 0:
 		return seed
 	return hash("%s:%s:%d" % [session.session_id, String(session.battle.get("encounter_id", "")), int(session.battle.get("round", 1))])
@@ -5533,10 +5560,10 @@ static func _battle_state_counter(session: SessionStateStore.SessionData) -> int
 	return hash(JSON.stringify(session.battle))
 
 static func _normalize_recent_events(value: Variant) -> Array:
-	var events := []
+	var events = []
 	if value is Array:
 		for entry in value:
-			var text := String(entry).strip_edges()
+			var text = String(entry).strip_edges()
 			if text == "" or text in events:
 				continue
 			events.append(text)
@@ -5545,11 +5572,11 @@ static func _normalize_recent_events(value: Variant) -> Array:
 	return events
 
 static func _normalize_tactical_briefing_state(value: Variant, session: SessionStateStore.SessionData) -> Dictionary:
-	var signature := "%s|%s" % [
+	var signature = "%s|%s" % [
 		String(session.battle.get("encounter_id", "")),
 		String(session.battle.get("resolved_key", "")),
 	]
-	var briefing := value if value is Dictionary else {}
+	var briefing = value if value is Dictionary else {}
 	if String(briefing.get("signature", "")) != signature:
 		briefing = {
 			"signature": signature,
@@ -5562,7 +5589,7 @@ static func _normalize_tactical_briefing_state(value: Variant, session: SessionS
 			"shown": bool(briefing.get("shown", false)),
 			"shown_round": max(0, int(briefing.get("shown_round", 0))),
 		}
-	var recent_events := session.battle.get("recent_events", [])
+	var recent_events = session.battle.get("recent_events", [])
 	if not bool(briefing.get("shown", false)) and (
 		int(session.battle.get("round", 1)) > 1
 		or (recent_events is Array and not recent_events.is_empty())
@@ -5574,7 +5601,7 @@ static func _normalize_tactical_briefing_state(value: Variant, session: SessionS
 static func _titleize_token(value: String) -> String:
 	if value == "":
 		return ""
-	var words := value.split("_")
+	var words = value.split("_")
 	for index in range(words.size()):
 		words[index] = String(words[index]).capitalize()
 	return " ".join(words)
@@ -5582,10 +5609,10 @@ static func _titleize_token(value: String) -> String:
 static func _record_event(battle: Dictionary, message: String) -> void:
 	if battle.is_empty():
 		return
-	var text := message.strip_edges()
+	var text = message.strip_edges()
 	if text == "":
 		return
-	var events := _normalize_recent_events(battle.get("recent_events", []))
+	var events = _normalize_recent_events(battle.get("recent_events", []))
 	for index in range(events.size() - 1, -1, -1):
 		if String(events[index]) == text:
 			events.remove_at(index)
@@ -5606,20 +5633,20 @@ static func _stack_label(stack: Dictionary) -> String:
 	return String(stack.get("name", stack.get("unit_id", "Stack")))
 
 static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id: String, selected_id: String) -> String:
-	var markers := []
+	var markers = []
 	if String(stack.get("battle_id", "")) == active_id:
 		markers.append("ACT")
 	if String(stack.get("battle_id", "")) == selected_id:
 		markers.append("TGT")
-	var count := _alive_count(stack)
-	var role_summary := (
+	var count = _alive_count(stack)
+	var role_summary = (
 		"Shots %d" % int(stack.get("shots_remaining", 0))
 		if bool(stack.get("ranged", false))
 		else "Retal %d/%d" % [int(stack.get("retaliations_left", 0)), int(stack.get("retaliations", 0))]
 	)
-	var ability_summary := _stack_ability_summary(stack)
-	var effect_summary := SpellRules.effect_summary(stack, battle)
-	var stance := " | Defending" if bool(stack.get("defending", false)) else ""
+	var ability_summary = _stack_ability_summary(stack)
+	var effect_summary = SpellRules.effect_summary(stack, battle)
+	var stance = " | Defending" if bool(stack.get("defending", false)) else ""
 	return "%s%s x%d | HP %d | Atk %d Def %d Init %d | %s%s%s%s" % [
 		("[%s] " % ",".join(markers)) if not markers.is_empty() else "",
 		String(stack.get("name", stack.get("unit_id", ""))),
