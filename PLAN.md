@@ -242,7 +242,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: continue the remaining release-facing shell polish after the overworld, town, and battle visual-board passes, keeping presentation work inside scene shells with narrow smoke coverage around each touched surface.
+- current item 104 focus: finish the remaining top-level front-end pass by turning `MainMenu` and `ScenarioOutcomeShell` into visual-first shells while keeping presentation work inside scene controllers and validating each touched surface with narrow smoke coverage.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -264,6 +264,8 @@ Difficulty: High
 123. [completed] Re-run repository-local validation, headless Godot boot, and an overworld-specific movement smoke scene for the visual-overworld slice while reporting unrelated pre-existing validator failures separately.
 124. [completed] Rebuild TownShell and BattleShell around visual-first town and battlefield boards so they read like game screens instead of dense report columns while preserving existing gameplay rules, save/resume, and action flows.
 125. [completed] Re-run repository-local validation, headless Godot boot, and a dedicated town/battle shell smoke scene for the visual shell slice while reporting unrelated pre-existing validator baseline failures separately.
+126. [completed] Rework `MainMenu` and `ScenarioOutcomeShell` into visual-first front-end and results shells with drawn landing or result boards, grouped recap cards, and preserved campaign/skirmish/save routing.
+127. [completed] Re-run headless Godot boot, a dedicated menu/outcome smoke scene, validator bytecode compilation, and repository-local validation while reporting unrelated pre-existing validator baseline failures separately.
 
 ## Standards
 - no throwaway prototype code if avoidable

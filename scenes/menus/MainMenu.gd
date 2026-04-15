@@ -2,40 +2,44 @@ extends Control
 
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
-@onready var _summary_label: Label = $VBox/Summary
-@onready var _continue_button: Button = $VBox/ActionRow/Continue
-@onready var _campaign_list: ItemList = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser/CampaignList
-@onready var _campaign_details_label: Label = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser/CampaignDetails
-@onready var _campaign_arc_status_label: Label = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignArcStatus
-@onready var _chapter_list: ItemList = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser/ChapterList
-@onready var _chapter_details_label: Label = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser/ChapterDetails
-@onready var _campaign_commander_preview_label: Label = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignCommanderPreview
-@onready var _campaign_operational_board_label: Label = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignOperationalBoard
-@onready var _campaign_journal_label: Label = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignJournal
-@onready var _campaign_primary_button: Button = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions/CampaignPrimaryAction
-@onready var _start_chapter_button: Button = $VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions/StartChapter
-@onready var _skirmish_list: ItemList = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit/SkirmishList
-@onready var _skirmish_details_label: Label = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit/SkirmishDetails
-@onready var _difficulty_picker: OptionButton = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow/DifficultyPicker
-@onready var _difficulty_summary_label: Label = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultySummary
-@onready var _setup_summary_label: Label = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/SetupSummary
-@onready var _skirmish_commander_preview_label: Label = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/SkirmishCommanderPreview
-@onready var _skirmish_operational_board_label: Label = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/SkirmishOperationalBoard
-@onready var _start_skirmish_button: Button = $VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/StartSkirmish
-@onready var _help_intro_label: Label = $VBox/MenuTabs/Guide/HelpIntro
-@onready var _help_list: ItemList = $VBox/MenuTabs/Guide/HelpSplit/HelpList
-@onready var _help_details_label: Label = $VBox/MenuTabs/Guide/HelpSplit/HelpDetails
-@onready var _settings_summary_label: Label = $VBox/MenuTabs/Settings/SettingsSummary
-@onready var _presentation_mode_picker: OptionButton = $VBox/MenuTabs/Settings/PresentationRow/PresentationModePicker
-@onready var _master_volume_slider: HSlider = $VBox/MenuTabs/Settings/MasterVolumeRow/MasterVolumeSlider
-@onready var _master_volume_value: Label = $VBox/MenuTabs/Settings/MasterVolumeRow/MasterVolumeValue
-@onready var _music_volume_slider: HSlider = $VBox/MenuTabs/Settings/MusicVolumeRow/MusicVolumeSlider
-@onready var _music_volume_value: Label = $VBox/MenuTabs/Settings/MusicVolumeRow/MusicVolumeValue
-@onready var _large_text_toggle: CheckButton = $VBox/MenuTabs/Settings/LargeTextToggle
-@onready var _reduce_motion_toggle: CheckButton = $VBox/MenuTabs/Settings/ReduceMotionToggle
-@onready var _save_list: ItemList = $VBox/MenuTabs/Saves/SaveList
-@onready var _save_details_label: Label = $VBox/MenuTabs/Saves/SaveDetails
-@onready var _load_selected_button: Button = $VBox/MenuTabs/Saves/LoadSelected
+@onready var _menu_tabs: TabContainer = %MenuTabs
+@onready var _summary_label: Label = %Summary
+@onready var _active_expedition_label: Label = %ActiveExpedition
+@onready var _campaign_pulse_label: Label = %CampaignPulse
+@onready var _save_pulse_label: Label = %SavePulse
+@onready var _continue_button: Button = %Continue
+@onready var _campaign_list: ItemList = %CampaignList
+@onready var _campaign_details_label: Label = %CampaignDetails
+@onready var _campaign_arc_status_label: Label = %CampaignArcStatus
+@onready var _chapter_list: ItemList = %ChapterList
+@onready var _chapter_details_label: Label = %ChapterDetails
+@onready var _campaign_commander_preview_label: Label = %CampaignCommanderPreview
+@onready var _campaign_operational_board_label: Label = %CampaignOperationalBoard
+@onready var _campaign_journal_label: Label = %CampaignJournal
+@onready var _campaign_primary_button: Button = %CampaignPrimaryAction
+@onready var _start_chapter_button: Button = %StartChapter
+@onready var _skirmish_list: ItemList = %SkirmishList
+@onready var _skirmish_details_label: Label = %SkirmishDetails
+@onready var _difficulty_picker: OptionButton = %DifficultyPicker
+@onready var _difficulty_summary_label: Label = %DifficultySummary
+@onready var _setup_summary_label: Label = %SetupSummary
+@onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
+@onready var _skirmish_operational_board_label: Label = %SkirmishOperationalBoard
+@onready var _start_skirmish_button: Button = %StartSkirmish
+@onready var _help_intro_label: Label = %HelpIntro
+@onready var _help_list: ItemList = %HelpList
+@onready var _help_details_label: Label = %HelpDetails
+@onready var _settings_summary_label: Label = %SettingsSummary
+@onready var _presentation_mode_picker: OptionButton = %PresentationModePicker
+@onready var _master_volume_slider: HSlider = %MasterVolumeSlider
+@onready var _master_volume_value: Label = %MasterVolumeValue
+@onready var _music_volume_slider: HSlider = %MusicVolumeSlider
+@onready var _music_volume_value: Label = %MusicVolumeValue
+@onready var _large_text_toggle: CheckButton = %LargeTextToggle
+@onready var _reduce_motion_toggle: CheckButton = %ReduceMotionToggle
+@onready var _save_list: ItemList = %SaveList
+@onready var _save_details_label: Label = %SaveDetails
+@onready var _load_selected_button: Button = %LoadSelected
 
 var _save_summaries: Array = []
 var _selected_save_key := ""
@@ -60,13 +64,13 @@ func _refresh_menu() -> void:
 	_menu_notice = AppRouter.consume_menu_notice()
 	_rebuild_save_browser()
 	_update_continue_enabled()
-	_refresh_summary()
 	_rebuild_campaign_browser()
 	_configure_difficulty_picker()
 	_rebuild_skirmish_browser()
 	_refresh_skirmish_setup()
 	_rebuild_help_browser()
 	_refresh_settings_panel()
+	_refresh_summary()
 
 func _update_continue_enabled() -> void:
 	var latest_summary := SaveService.latest_loadable_summary()
@@ -78,9 +82,13 @@ func _refresh_summary() -> void:
 	var lines := []
 	if _menu_notice != "":
 		lines.append(_menu_notice)
-	lines.append(ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session()))
-	lines.append("Campaign progression, expedition saves, and device settings are managed on separate tracks.")
+	else:
+		lines.append("Command the frontier from a single war table: launch authored campaigns, open skirmish fronts, or resume the latest expedition without dropping into tool-like menu stacks.")
+	lines.append("Campaign progression, expedition saves, and device settings remain on separate tracks.")
 	_summary_label.text = "\n".join(lines)
+	_active_expedition_label.text = ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())
+	_campaign_pulse_label.text = _build_campaign_pulse()
+	_save_pulse_label.text = _build_save_pulse()
 
 func _on_campaign_selected(index: int) -> void:
 	if index < 0 or index >= _campaign_entries.size():
@@ -123,6 +131,18 @@ func _launch_campaign_action(action: Dictionary) -> void:
 func _on_continue_pressed() -> void:
 	if not AppRouter.resume_latest_session():
 		_refresh_menu()
+
+func _on_open_play_pressed() -> void:
+	_menu_tabs.current_tab = 0
+
+func _on_open_guide_pressed() -> void:
+	_menu_tabs.current_tab = 1
+
+func _on_open_settings_pressed() -> void:
+	_menu_tabs.current_tab = 2
+
+func _on_open_saves_pressed() -> void:
+	_menu_tabs.current_tab = 3
 
 func _on_save_selected(index: int) -> void:
 	if index < 0 or index >= _save_summaries.size():
@@ -511,3 +531,38 @@ func _selected_skirmish_entry() -> Dictionary:
 		if String(entry.get("scenario_id", "")) == _selected_skirmish_id:
 			return entry
 	return {}
+
+func _build_campaign_pulse() -> String:
+	if _campaign_entries.is_empty():
+		return "No authored campaign arcs are loaded."
+
+	var completed_count := 0
+	for entry in _campaign_entries:
+		if String(entry.get("label", "")).contains("Completed"):
+			completed_count += 1
+
+	var selected_label := "No campaign selected."
+	for entry in _campaign_entries:
+		if String(entry.get("campaign_id", "")) == _selected_campaign_id:
+			selected_label = String(entry.get("label", "Campaign"))
+			break
+
+	return "\n".join(
+		[
+			"Arcs %d | Completed %d" % [_campaign_entries.size(), completed_count],
+			"Focus: %s" % selected_label,
+		]
+	)
+
+func _build_save_pulse() -> String:
+	var latest_summary := SaveService.latest_loadable_summary()
+	var latest_line := "No loadable expedition is ready."
+	if not latest_summary.is_empty():
+		latest_line = SaveService.describe_slot(latest_summary)
+
+	return "\n".join(
+		[
+			"Manual slots %d + autosave" % SaveService.get_manual_slot_ids().size(),
+			latest_line,
+		]
+	)

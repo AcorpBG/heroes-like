@@ -1,22 +1,26 @@
 extends Control
 
-@onready var _header_label: Label = $VBox/Header
-@onready var _summary_label: Label = $VBox/Summary
-@onready var _mode_label: Label = $VBox/Mode
-@onready var _hero_label: Label = $VBox/ForceSplit/Hero
-@onready var _army_label: Label = $VBox/ForceSplit/Army
-@onready var _resource_label: Label = $VBox/ForceSplit/Resources
-@onready var _progression_label: Label = $VBox/Progression
-@onready var _campaign_arc_label: Label = $VBox/CampaignArc
-@onready var _carryover_label: Label = $VBox/Carryover
-@onready var _aftermath_label: Label = $VBox/Aftermath
-@onready var _journal_label: Label = $VBox/Journal
-@onready var _save_status_label: Label = $VBox/SaveStatus
-@onready var _save_slot_picker: OptionButton = $VBox/SaveBar/SaveSlot
-@onready var _save_button: Button = $VBox/SaveBar/Save
-@onready var _menu_button: Button = $VBox/SaveBar/Menu
-@onready var _action_status_label: Label = $VBox/ActionStatus
-@onready var _actions_bar: HBoxContainer = $VBox/Actions
+@onready var _backdrop: ColorRect = %Backdrop
+@onready var _header_label: Label = %Header
+@onready var _summary_label: Label = %Summary
+@onready var _mode_label: Label = %Mode
+@onready var _result_badge_label: Label = %ResultBadge
+@onready var _result_badge_panel: PanelContainer = %ResultBadgePanel
+@onready var _outcome_banner: Control = %OutcomeBanner
+@onready var _hero_label: Label = %Hero
+@onready var _army_label: Label = %Army
+@onready var _resource_label: Label = %Resources
+@onready var _progression_label: Label = %Progression
+@onready var _campaign_arc_label: Label = %CampaignArc
+@onready var _carryover_label: Label = %Carryover
+@onready var _aftermath_label: Label = %Aftermath
+@onready var _journal_label: Label = %Journal
+@onready var _save_status_label: Label = %SaveStatus
+@onready var _save_slot_picker: OptionButton = %SaveSlot
+@onready var _save_button: Button = %Save
+@onready var _menu_button: Button = %Menu
+@onready var _action_status_label: Label = %ActionStatus
+@onready var _actions_bar: HFlowContainer = %Actions
 
 var _session: SessionStateStore.SessionData
 var _model: Dictionary = {}
@@ -35,9 +39,14 @@ func _ready() -> void:
 
 func _refresh() -> void:
 	_model = ScenarioRules.build_outcome_model(_session)
+	var status := String(_session.scenario_status)
+	_apply_result_palette(status)
 	_header_label.text = String(_model.get("header", "Scenario Outcome"))
 	_summary_label.text = String(_model.get("summary", "Scenario resolution recorded."))
 	_mode_label.text = String(_model.get("mode_summary", ""))
+	_result_badge_label.text = _result_status_label(status)
+	if _outcome_banner.has_method("set_outcome"):
+		_outcome_banner.call("set_outcome", status)
 	_hero_label.text = String(_model.get("hero_summary", "Hero data unavailable."))
 	_army_label.text = String(_model.get("army_summary", "Army data unavailable."))
 	_resource_label.text = String(_model.get("resource_summary", "Resource data unavailable."))
@@ -119,3 +128,43 @@ func _on_save_slot_selected(index: int) -> void:
 
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
+
+func _result_status_label(status: String) -> String:
+	var normalized := status.replace("_", " ").strip_edges()
+	if normalized == "":
+		return "OUTCOME"
+	return normalized.to_upper()
+
+func _apply_result_palette(status: String) -> void:
+	var backdrop_color := Color(0.07, 0.08, 0.10, 1.0)
+	var accent := Color(0.84, 0.74, 0.47, 1.0)
+	match status:
+		"victory":
+			backdrop_color = Color(0.05, 0.09, 0.10, 1.0)
+			accent = Color(0.87, 0.74, 0.38, 1.0)
+		"defeat":
+			backdrop_color = Color(0.11, 0.05, 0.07, 1.0)
+			accent = Color(0.88, 0.48, 0.35, 1.0)
+		_:
+			backdrop_color = Color(0.08, 0.08, 0.11, 1.0)
+			accent = Color(0.80, 0.74, 0.52, 1.0)
+
+	_backdrop.color = backdrop_color
+	_header_label.add_theme_color_override("font_color", Color(0.96, 0.95, 0.90, 1.0))
+	_summary_label.add_theme_color_override("font_color", Color(0.90, 0.90, 0.90, 1.0))
+	_mode_label.add_theme_color_override("font_color", accent.lightened(0.08))
+	_action_status_label.add_theme_color_override("font_color", accent)
+	_result_badge_label.add_theme_color_override("font_color", accent)
+
+	var badge_style := StyleBoxFlat.new()
+	badge_style.bg_color = Color(accent.r * 0.18, accent.g * 0.18, accent.b * 0.18, 0.95)
+	badge_style.border_color = accent
+	badge_style.border_width_left = 2
+	badge_style.border_width_top = 2
+	badge_style.border_width_right = 2
+	badge_style.border_width_bottom = 2
+	badge_style.corner_radius_top_left = 10
+	badge_style.corner_radius_top_right = 10
+	badge_style.corner_radius_bottom_right = 10
+	badge_style.corner_radius_bottom_left = 10
+	_result_badge_panel.add_theme_stylebox_override("panel", badge_style)

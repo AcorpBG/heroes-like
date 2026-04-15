@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T16:36:50Z",
+  "updatedAt": "2026-04-15T17:01:14Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-4-3-town-battle-visual-shells",
-  "currentSliceTitle": "Replace the text-heavy town and battle shells with visual management and battlefield boards while preserving rules and action flows",
+  "currentSliceId": "phase-6-main-menu-outcome-visual-shells",
+  "currentSliceTitle": "Replace the text-heavy main menu and scenario outcome shell with visual front-end and result boards while preserving routes and save flow",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "TownShell now centers on a drawn citadel board plus compact management cards, BattleShell now centers on a drawn battlefield board plus compact tactical cards, and both keep existing core-rule mutation and save flows intact.",
+  "currentSliceNotes": "MainMenu now uses a drawn landing board plus grouped campaign/skirmish/save cards, ScenarioOutcomeShell now uses a palette-driven result banner plus recap cards, and both keep existing routing and save behavior intact.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -890,6 +890,18 @@
       "title": "Re-run repository-local validation, SAVE_VERSION verification, JSON parsing, and headless Godot boot after the OverworldShell typing fix",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-main-menu-outcome-visual-shells",
+      "title": "Rework MainMenu and ScenarioOutcomeShell into visual-first front-end and results shells while preserving campaign, skirmish, save, and outcome routing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-main-menu-outcome-visual-shells-validation",
+      "title": "Re-run headless Godot boot, a dedicated menu/outcome smoke scene, validator bytecode compilation, and repository-local validation while reporting unrelated baseline failures separately",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1098,6 +1110,8 @@
     "The recursion hotfix stayed local to OverworldRules.gd by replacing the command-risk field item's town-context check with _find_active_town(session), avoiding the normalize_overworld_state() re-entry while preserving the same town suppression behavior.",
     "Godot 4.6.2 headless scene repro via res://.tmp_repro_move.tscn now moves from 1,2 to 2,2 without a stack overflow, while python3 tests/validate_repo.py still fails on unrelated pre-existing token-coverage checks outside this hotfix.",
     "This run turned TownShell and BattleShell into visual-first surfaces by adding a drawn citadel board and a drawn battlefield board, compacting label-heavy readouts into tooltip-backed cards, and keeping build, recruit, study, spell, transfer, response, save, and combat-action flows in the existing core rules.",
-    "Godot 4.6.2 headless boot and the dedicated res://tests/town_battle_visual_smoke.tscn both passed after the town/battle visual shell pass, while python3 tests/validate_repo.py still reports unrelated pre-existing token-coverage failures outside this slice."
+    "Godot 4.6.2 headless boot and the dedicated res://tests/town_battle_visual_smoke.tscn both passed after the town/battle visual shell pass, while python3 tests/validate_repo.py still reports unrelated pre-existing token-coverage failures outside this slice.",
+    "This run turned the remaining top-level product surfaces into visual-first shells by giving MainMenu a drawn landing board plus grouped campaign, skirmish, guide, settings, and save panels, and by giving ScenarioOutcomeShell a palette-driven result banner with recap cards and clearer outcome actions.",
+    "Godot 4.6.2 headless boot, python3 -m py_compile tests/validate_repo.py, and the dedicated res://tests/menu_outcome_visual_smoke.tscn all passed after the menu/outcome visual pass, while python3 tests/validate_repo.py still reports the same unrelated pre-existing token-audit failures in untouched gameplay files."
   ]
 }

@@ -116,10 +116,18 @@ Presentation and onboarding decision:
 - presentation, audio, and accessibility formatting live in the service, while `MainMenu.gd` only binds the controls and refreshes state from service-owned summaries
 - the main menu now uses a tabbed shell with play, guide, settings, and saves views so campaign/skirmish launch, help surfacing, and save inspection feel like product UX instead of a raw debug menu
 
+Front-end shell presentation decision:
+- `MainMenu.tscn` now centers on a visual landing shell with a drawn hero board, grouped command cards, quick tab jumps, and panelized campaign, skirmish, guide, settings, and save sections instead of stacked text blocks
+- `MainMenu.gd` still only binds campaign, skirmish, help, settings, and save data from existing rule or autoload helpers, so launch behavior and resume flow stay unchanged while the front-end reads like a product screen
+
 Outcome flow decision:
 - resolved scenarios now route into a dedicated `ScenarioOutcomeShell` instead of dropping straight back to the menu, with summary shaping in `ScenarioRules.gd` and campaign-specific consequence modeling in `CampaignRules.gd`
 - campaign outcomes now surface recorded chapter state, downstream unlock or blocker status, and carryover import/export recap from the real progression profile, while skirmish outcomes remain self-contained and do not mutate campaign data
 - the router overwrites autosave with the resolved session snapshot before showing the outcome shell, keeping restart and recap state durable without bumping save version `9`
+
+Outcome shell presentation decision:
+- `ScenarioOutcomeShell.tscn` now uses a visual result banner with outcome-specific palette, recap cards, carryover and chronicle panels, and clear follow-up CTA rows instead of a single long text dump
+- `ScenarioOutcomeShell.gd` only applies the result palette and binds rule-owned recap plus save-surface summaries, keeping campaign and skirmish consequence logic in `ScenarioRules.gd`, `CampaignRules.gd`, `SaveService.gd`, and `AppRouter.gd`
 
 Campaign narrative surfacing decision:
 - release-facing chapter briefing, intel, stakes, aftermath, and chronicle text now lives in authored `content/campaigns.json` chapter entries and scenario metadata fallbacks, keeping campaign voice on the same content boundary as unlocks and carryover instead of adding a separate lore or codex subsystem

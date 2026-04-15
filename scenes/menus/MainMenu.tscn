@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://main_menu"]
+[gd_scene load_steps=3 format=3 uid="uid://main_menu"]
 
 [ext_resource type="Script" path="res://scenes/menus/MainMenu.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/menus/MainMenuHeroView.gd" id="2"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -9,325 +10,1179 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="Backdrop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 48.0
-offset_top = 32.0
-offset_right = -48.0
-offset_bottom = -32.0
-theme_override_constants/separation = 12
+color = Color(0.0470588, 0.0588235, 0.0745098, 1)
 
-[node name="Title" type="Label" parent="VBox"]
-text = "HEROES-LIKE"
-horizontal_alignment = 1
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
 
-[node name="Summary" type="Label" parent="VBox"]
-text = "Campaign progress, expedition saves, and player-facing settings are tracked separately."
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="ActionRow" type="HBoxContainer" parent="VBox"]
-theme_override_constants/separation = 8
-
-[node name="Continue" type="Button" parent="VBox/ActionRow"]
+[node name="Shell" type="VBoxContainer" parent="RootMargin"]
+layout_mode = 2
 size_flags_horizontal = 3
-text = "Continue Latest"
-
-[node name="Quit" type="Button" parent="VBox/ActionRow"]
-size_flags_horizontal = 1
-text = "Quit"
-
-[node name="MenuTabs" type="TabContainer" parent="VBox"]
 size_flags_vertical = 3
+theme_override_constants/separation = 14
 
-[node name="Play" type="VBoxContainer" parent="VBox/MenuTabs"]
-theme_override_constants/separation = 12
+[node name="HeroPanel" type="PanelContainer" parent="RootMargin/Shell"]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="ModeSplit" type="HBoxContainer" parent="VBox/MenuTabs/Play"]
-size_flags_vertical = 3
+[node name="HeroPad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="HeroLayout" type="HBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad"]
+layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="CampaignPanel" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit"]
+[node name="HeroArtPanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout"]
+custom_minimum_size = Vector2(380, 0)
+layout_mode = 2
+
+[node name="HeroArtPad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroArtPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HeroStage" type="Control" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroArtPanel/HeroArtPad"]
+custom_minimum_size = Vector2(0, 208)
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+script = ExtResource("2")
 
-[node name="CampaignTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-text = "Campaign Browser"
-horizontal_alignment = 1
-
-[node name="CampaignScroll" type="ScrollContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="CampaignContent" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll"]
+[node name="HeroInfo" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout"]
+layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="CampaignBrowser" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
 theme_override_constants/separation = 12
 
-[node name="CampaignList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser"]
-custom_minimum_size = Vector2(260, 140)
+[node name="TopRow" type="HBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleBox" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow"]
+layout_mode = 2
 size_flags_horizontal = 3
-allow_reselect = true
-
-[node name="CampaignDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser"]
-custom_minimum_size = Vector2(0, 140)
-size_flags_horizontal = 3
-text = "Select a campaign to review progression, carryover, and downstream pressure."
-autowrap_mode = 3
-
-[node name="CampaignArcTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-text = "Campaign Arc"
-horizontal_alignment = 1
-
-[node name="CampaignArcStatus" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-custom_minimum_size = Vector2(0, 92)
-text = "Campaign arc goals, finale state, and completion epilogues appear here."
-autowrap_mode = 3
-
-[node name="ChapterTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-text = "Chapter Roster"
-horizontal_alignment = 1
-
-[node name="ChapterBrowser" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-theme_override_constants/separation = 12
-
-[node name="ChapterList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser"]
-custom_minimum_size = Vector2(260, 140)
-size_flags_horizontal = 3
-allow_reselect = true
-
-[node name="ChapterDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser"]
-custom_minimum_size = Vector2(0, 140)
-size_flags_horizontal = 3
-text = "Select a chapter to inspect its status, blockers, and carryover context."
-autowrap_mode = 3
-
-[node name="CommanderPreviewTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-text = "Chapter Loadout"
-horizontal_alignment = 1
-
-[node name="CampaignCommanderPreview" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-custom_minimum_size = Vector2(0, 120)
-text = "Select a chapter to preview commander, spellbook, relics, and opening army."
-autowrap_mode = 3
-
-[node name="OperationalBoardTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-text = "Operational Board"
-horizontal_alignment = 1
-
-[node name="CampaignOperationalBoard" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-custom_minimum_size = Vector2(0, 120)
-text = "Select a chapter to review terrain, enemy posture, objective pressure, and first-contact risk."
-autowrap_mode = 3
-
-[node name="JournalTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-text = "Campaign Chronicle"
-horizontal_alignment = 1
-
-[node name="CampaignJournal" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent"]
-custom_minimum_size = Vector2(0, 92)
-text = "Campaign chronicle entries appear here once a chapter record exists."
-autowrap_mode = 3
-
-[node name="CampaignActions" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel"]
-theme_override_constants/separation = 8
-
-[node name="CampaignPrimaryAction" type="Button" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions"]
-size_flags_horizontal = 3
-text = "Start Next Chapter"
-
-[node name="StartChapter" type="Button" parent="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions"]
-size_flags_horizontal = 3
-text = "Start Selected Chapter"
-
-[node name="SkirmishPanel" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit"]
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="SkirmishTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
-text = "Skirmish Browser"
-horizontal_alignment = 1
-
-[node name="SkirmishScroll" type="ScrollContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="SkirmishContent" type="VBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll"]
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="BrowserSplit" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-theme_override_constants/separation = 12
-
-[node name="SkirmishList" type="ItemList" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit"]
-custom_minimum_size = Vector2(260, 140)
-size_flags_horizontal = 3
-allow_reselect = true
-
-[node name="SkirmishDetails" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit"]
-custom_minimum_size = Vector2(0, 140)
-size_flags_horizontal = 3
-text = "Select an authored skirmish scenario to inspect it."
-autowrap_mode = 3
-
-[node name="DifficultyRow" type="HBoxContainer" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-theme_override_constants/separation = 8
-
-[node name="DifficultyLabel" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow"]
-text = "Difficulty"
-
-[node name="DifficultyPicker" type="OptionButton" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow"]
-size_flags_horizontal = 3
-
-[node name="DifficultySummary" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-text = "Difficulty summary"
-autowrap_mode = 3
-
-[node name="SetupSummary" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-text = "Skirmish setup summary"
-autowrap_mode = 3
-
-[node name="SkirmishCommanderPreviewTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-text = "Commander Preview"
-horizontal_alignment = 1
-
-[node name="SkirmishCommanderPreview" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-custom_minimum_size = Vector2(0, 120)
-text = "Select a skirmish to preview commander, spellbook, relics, and opening army."
-autowrap_mode = 3
-
-[node name="SkirmishOperationalBoardTitle" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-text = "Operational Board"
-horizontal_alignment = 1
-
-[node name="SkirmishOperationalBoard" type="Label" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent"]
-custom_minimum_size = Vector2(0, 120)
-text = "Select a skirmish to review terrain, enemy posture, objective pressure, and first-contact risk."
-autowrap_mode = 3
-
-[node name="StartSkirmish" type="Button" parent="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel"]
-size_flags_horizontal = 3
-text = "Start Skirmish"
-
-[node name="Guide" type="VBoxContainer" parent="VBox/MenuTabs"]
-theme_override_constants/separation = 8
-
-[node name="HelpIntro" type="Label" parent="VBox/MenuTabs/Guide"]
-text = "Review the major modes and systems before launching a run."
-autowrap_mode = 3
-
-[node name="HelpSplit" type="HBoxContainer" parent="VBox/MenuTabs/Guide"]
-theme_override_constants/separation = 12
-
-[node name="HelpList" type="ItemList" parent="VBox/MenuTabs/Guide/HelpSplit"]
-custom_minimum_size = Vector2(260, 260)
-size_flags_horizontal = 3
-allow_reselect = true
-
-[node name="HelpDetails" type="Label" parent="VBox/MenuTabs/Guide/HelpSplit"]
-custom_minimum_size = Vector2(0, 260)
-size_flags_horizontal = 3
-text = "Select a guide topic to inspect the current onboarding notes."
-autowrap_mode = 3
-
-[node name="Settings" type="VBoxContainer" parent="VBox/MenuTabs"]
-theme_override_constants/separation = 10
-
-[node name="SettingsSummary" type="Label" parent="VBox/MenuTabs/Settings"]
-text = "Settings are saved separately from campaign progression and expedition slots."
-autowrap_mode = 3
-
-[node name="PresentationRow" type="HBoxContainer" parent="VBox/MenuTabs/Settings"]
-theme_override_constants/separation = 8
-
-[node name="PresentationLabel" type="Label" parent="VBox/MenuTabs/Settings/PresentationRow"]
-text = "Presentation"
-
-[node name="PresentationModePicker" type="OptionButton" parent="VBox/MenuTabs/Settings/PresentationRow"]
-size_flags_horizontal = 3
-
-[node name="MasterVolumeRow" type="HBoxContainer" parent="VBox/MenuTabs/Settings"]
-theme_override_constants/separation = 8
-
-[node name="MasterVolumeLabel" type="Label" parent="VBox/MenuTabs/Settings/MasterVolumeRow"]
-text = "Master Volume"
-
-[node name="MasterVolumeSlider" type="HSlider" parent="VBox/MenuTabs/Settings/MasterVolumeRow"]
-size_flags_horizontal = 3
-max_value = 100.0
-step = 1.0
-
-[node name="MasterVolumeValue" type="Label" parent="VBox/MenuTabs/Settings/MasterVolumeRow"]
-custom_minimum_size = Vector2(56, 0)
-text = "80%"
-horizontal_alignment = 2
-
-[node name="MusicVolumeRow" type="HBoxContainer" parent="VBox/MenuTabs/Settings"]
-theme_override_constants/separation = 8
-
-[node name="MusicVolumeLabel" type="Label" parent="VBox/MenuTabs/Settings/MusicVolumeRow"]
-text = "Music Volume"
-
-[node name="MusicVolumeSlider" type="HSlider" parent="VBox/MenuTabs/Settings/MusicVolumeRow"]
-size_flags_horizontal = 3
-max_value = 100.0
-step = 1.0
-
-[node name="MusicVolumeValue" type="Label" parent="VBox/MenuTabs/Settings/MusicVolumeRow"]
-custom_minimum_size = Vector2(56, 0)
-text = "65%"
-horizontal_alignment = 2
-
-[node name="AccessibilityTitle" type="Label" parent="VBox/MenuTabs/Settings"]
-text = "Accessibility"
-
-[node name="LargeTextToggle" type="CheckButton" parent="VBox/MenuTabs/Settings"]
-text = "Large UI Text"
-
-[node name="ReduceMotionToggle" type="CheckButton" parent="VBox/MenuTabs/Settings"]
-text = "Reduced Motion Intent"
-
-[node name="Saves" type="VBoxContainer" parent="VBox/MenuTabs"]
 theme_override_constants/separation = 6
 
-[node name="SaveBrowserTitle" type="Label" parent="VBox/MenuTabs/Saves"]
-text = "Saved Expeditions"
-horizontal_alignment = 1
+[node name="Eyebrow" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox"]
+layout_mode = 2
+text = "FRONTIER COMMAND"
 
-[node name="SaveList" type="ItemList" parent="VBox/MenuTabs/Saves"]
-custom_minimum_size = Vector2(0, 220)
+[node name="Title" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "HEROES-LIKE"
+
+[node name="Subtitle" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "A strategy front end for campaign arcs, skirmish fronts, durable saves, and immediate expedition resume."
+
+[node name="ActionColumn" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(340, 0)
+theme_override_constants/separation = 8
+
+[node name="PrimaryActions" type="HFlowContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Continue" type="Button" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/PrimaryActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Continue Latest"
+
+[node name="Quit" type="Button" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/PrimaryActions"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Quit"
+
+[node name="NavActions" type="HFlowContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="OpenPlay" type="Button" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions"]
+layout_mode = 2
+text = "Play"
+
+[node name="OpenGuide" type="Button" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions"]
+layout_mode = 2
+text = "Guide"
+
+[node name="OpenSettings" type="Button" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions"]
+layout_mode = 2
+text = "Settings"
+
+[node name="OpenSaves" type="Button" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions"]
+layout_mode = 2
+text = "Saves"
+
+[node name="PulseRow" type="GridContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo"]
+layout_mode = 2
+columns = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="ExpeditionPanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ExpeditionPad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/ExpeditionPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ExpeditionBox" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/ExpeditionPanel/ExpeditionPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ExpeditionTitle" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/ExpeditionPanel/ExpeditionPad/ExpeditionBox"]
+layout_mode = 2
+text = "Active Expedition"
+
+[node name="ActiveExpedition" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/ExpeditionPanel/ExpeditionPad/ExpeditionBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 86)
+autowrap_mode = 3
+text = "Current expedition summary"
+
+[node name="CampaignPulsePanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CampaignPulsePad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/CampaignPulsePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignPulseBox" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/CampaignPulsePanel/CampaignPulsePad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignPulseTitle" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/CampaignPulsePanel/CampaignPulsePad/CampaignPulseBox"]
+layout_mode = 2
+text = "Campaign Fronts"
+
+[node name="CampaignPulse" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/CampaignPulsePanel/CampaignPulsePad/CampaignPulseBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 86)
+autowrap_mode = 3
+text = "Campaign pulse"
+
+[node name="SavePulsePanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SavePulsePad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/SavePulsePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SavePulseBox" type="VBoxContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/SavePulsePanel/SavePulsePad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SavePulseTitle" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/SavePulsePanel/SavePulsePad/SavePulseBox"]
+layout_mode = 2
+text = "Save Relay"
+
+[node name="SavePulse" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/PulseRow/SavePulsePanel/SavePulsePad/SavePulseBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 86)
+autowrap_mode = 3
+text = "Save pulse"
+
+[node name="SummaryPanel" type="PanelContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo"]
+layout_mode = 2
+
+[node name="SummaryPad" type="MarginContainer" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/SummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="Summary" type="Label" parent="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/SummaryPanel/SummaryPad"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Front-end summary"
+
+[node name="MenuTabs" type="TabContainer" parent="RootMargin/Shell"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Play" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="PlayLeadPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play"]
+layout_mode = 2
+
+[node name="PlayLeadPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayLeadPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="PlayLead" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayLeadPanel/PlayLeadPad"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Campaign arcs keep downstream unlocks and carryover in view. Skirmish fronts stay self-contained, but share the same start flow and difficulty setup."
+
+[node name="PlayColumns" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Play"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 740
+
+[node name="CampaignPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CampaignPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CampaignShell" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="CampaignHeader" type="HBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CampaignTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Campaign Theater"
+
+[node name="CampaignHint" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+horizontal_alignment = 2
+text = "Browse arcs, inspect chapter state, read carryover posture, and launch the next field command."
+
+[node name="CampaignActions" type="HFlowContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="CampaignPrimaryAction" type="Button" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+text = "Start Next Chapter"
+
+[node name="StartChapter" type="Button" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+text = "Start Selected Chapter"
+
+[node name="CampaignScroll" type="ScrollContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CampaignScrollBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="CampaignSelectionRow" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox"]
+layout_mode = 2
+split_offset = 280
+
+[node name="CampaignListColumn" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignRosterPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CampaignRosterPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/CampaignRosterPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignRosterBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/CampaignRosterPanel/CampaignRosterPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignRosterTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/CampaignRosterPanel/CampaignRosterPad/CampaignRosterBox"]
+layout_mode = 2
+text = "Arcs"
+
+[node name="CampaignList" type="ItemList" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/CampaignRosterPanel/CampaignRosterPad/CampaignRosterBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_vertical = 3
 allow_reselect = true
 
-[node name="SaveDetails" type="Label" parent="VBox/MenuTabs/Saves"]
-text = "Select a save to inspect it."
-autowrap_mode = 3
+[node name="ChapterRosterPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn"]
+layout_mode = 2
+size_flags_vertical = 3
 
-[node name="LoadSelected" type="Button" parent="VBox/MenuTabs/Saves"]
+[node name="ChapterRosterPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/ChapterRosterPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ChapterRosterBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/ChapterRosterPanel/ChapterRosterPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ChapterRosterTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/ChapterRosterPanel/ChapterRosterPad/ChapterRosterBox"]
+layout_mode = 2
+text = "Chapters"
+
+[node name="ChapterList" type="ItemList" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/ChapterRosterPanel/ChapterRosterPad/ChapterRosterBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="CampaignDetailsColumn" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignDetailPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CampaignDetailPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/CampaignDetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignDetailBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/CampaignDetailPanel/CampaignDetailPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignDetailTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/CampaignDetailPanel/CampaignDetailPad/CampaignDetailBox"]
+layout_mode = 2
+text = "Campaign Brief"
+
+[node name="CampaignDetails" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/CampaignDetailPanel/CampaignDetailPad/CampaignDetailBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 178)
+autowrap_mode = 3
+text = "Campaign details"
+
+[node name="ChapterDetailPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ChapterDetailPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/ChapterDetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ChapterDetailBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/ChapterDetailPanel/ChapterDetailPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ChapterDetailTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/ChapterDetailPanel/ChapterDetailPad/ChapterDetailBox"]
+layout_mode = 2
+text = "Selected Chapter"
+
+[node name="ChapterDetails" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignDetailsColumn/ChapterDetailPanel/ChapterDetailPad/ChapterDetailBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 190)
+autowrap_mode = 3
+text = "Chapter details"
+
+[node name="CampaignCards" type="GridContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="CampaignArcPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards"]
+layout_mode = 2
+
+[node name="CampaignArcPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignArcPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignArcBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignArcPanel/CampaignArcPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignArcTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignArcPanel/CampaignArcPad/CampaignArcBox"]
+layout_mode = 2
+text = "Arc Status"
+
+[node name="CampaignArcStatus" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignArcPanel/CampaignArcPad/CampaignArcBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 132)
+autowrap_mode = 3
+text = "Campaign arc status"
+
+[node name="CampaignCommanderPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards"]
+layout_mode = 2
+
+[node name="CampaignCommanderPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignCommanderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignCommanderBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignCommanderPanel/CampaignCommanderPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignCommanderTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignCommanderPanel/CampaignCommanderPad/CampaignCommanderBox"]
+layout_mode = 2
+text = "Commander Preview"
+
+[node name="CampaignCommanderPreview" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignCommanderPanel/CampaignCommanderPad/CampaignCommanderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 132)
+autowrap_mode = 3
+text = "Commander preview"
+
+[node name="CampaignOperationalPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards"]
+layout_mode = 2
+
+[node name="CampaignOperationalPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignOperationalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignOperationalBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignOperationalPanel/CampaignOperationalPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignOperationalTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignOperationalPanel/CampaignOperationalPad/CampaignOperationalBox"]
+layout_mode = 2
+text = "Operational Board"
+
+[node name="CampaignOperationalBoard" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignOperationalPanel/CampaignOperationalPad/CampaignOperationalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 132)
+autowrap_mode = 3
+text = "Operational board"
+
+[node name="CampaignJournalPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards"]
+layout_mode = 2
+
+[node name="CampaignJournalPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignJournalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CampaignJournalBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignJournalPanel/CampaignJournalPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignJournalTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignJournalPanel/CampaignJournalPad/CampaignJournalBox"]
+layout_mode = 2
+text = "Chronicle"
+
+[node name="CampaignJournal" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignCards/CampaignJournalPanel/CampaignJournalPad/CampaignJournalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 132)
+autowrap_mode = 3
+text = "Campaign journal"
+
+[node name="SkirmishPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SkirmishPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="SkirmishShell" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="SkirmishHeader" type="HBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SkirmishTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Skirmish Fronts"
+
+[node name="SkirmishHint" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+horizontal_alignment = 2
+text = "Pick a front, set the command tempo, then launch a clean one-off expedition without touching campaign progression."
+
+[node name="SkirmishActionRow" type="HFlowContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="StartSkirmish" type="Button" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishActionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Start Skirmish"
+
+[node name="SkirmishScroll" type="ScrollContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="SkirmishScrollBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="SkirmishBrowserRow" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox"]
+layout_mode = 2
+split_offset = 300
+
+[node name="SkirmishListPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow"]
+layout_mode = 2
+
+[node name="SkirmishListPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishListPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishListBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishListPanel/SkirmishListPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishListTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
+layout_mode = 2
+text = "Available Fronts"
+
+[node name="SkirmishList" type="ItemList" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 204)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="SkirmishDetailPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow"]
+layout_mode = 2
+
+[node name="SkirmishDetailPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishDetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishDetailBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishDetailPanel/SkirmishDetailPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishDetailTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishDetailPanel/SkirmishDetailPad/SkirmishDetailBox"]
+layout_mode = 2
+text = "Front Brief"
+
+[node name="SkirmishDetails" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishDetailPanel/SkirmishDetailPad/SkirmishDetailBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 204)
+autowrap_mode = 3
+text = "Skirmish details"
+
+[node name="DifficultySetupRow" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox"]
+layout_mode = 2
+split_offset = 270
+
+[node name="DifficultyPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow"]
+layout_mode = 2
+
+[node name="DifficultyPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/DifficultyPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="DifficultyBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/DifficultyPanel/DifficultyPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DifficultyTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/DifficultyPanel/DifficultyPad/DifficultyBox"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="DifficultyPicker" type="OptionButton" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/DifficultyPanel/DifficultyPad/DifficultyBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="DifficultySummary" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/DifficultyPanel/DifficultyPad/DifficultyBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 106)
+autowrap_mode = 3
+text = "Difficulty summary"
+
+[node name="SetupPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow"]
+layout_mode = 2
+
+[node name="SetupPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/SetupPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SetupBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/SetupPanel/SetupPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SetupTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/SetupPanel/SetupPad/SetupBox"]
+layout_mode = 2
+text = "Launch Setup"
+
+[node name="SetupSummary" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/SetupPanel/SetupPad/SetupBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 142)
+autowrap_mode = 3
+text = "Setup summary"
+
+[node name="SkirmishCards" type="GridContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+
+[node name="SkirmishCommanderPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards"]
+layout_mode = 2
+
+[node name="SkirmishCommanderPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishCommanderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishCommanderBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishCommanderPanel/SkirmishCommanderPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishCommanderTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox"]
+layout_mode = 2
+text = "Commander Preview"
+
+[node name="SkirmishCommanderPreview" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 132)
+autowrap_mode = 3
+text = "Commander preview"
+
+[node name="SkirmishOperationalPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards"]
+layout_mode = 2
+
+[node name="SkirmishOperationalPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishOperationalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishOperationalBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishOperationalPanel/SkirmishOperationalPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishOperationalTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishOperationalPanel/SkirmishOperationalPad/SkirmishOperationalBox"]
+layout_mode = 2
+text = "Operational Board"
+
+[node name="SkirmishOperationalBoard" type="Label" parent="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishCards/SkirmishOperationalPanel/SkirmishOperationalPad/SkirmishOperationalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 132)
+autowrap_mode = 3
+text = "Operational board"
+
+[node name="Guide" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="GuideIntroPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Guide"]
+layout_mode = 2
+
+[node name="GuideIntroPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideIntroPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="HelpIntro" type="Label" parent="RootMargin/Shell/MenuTabs/Guide/GuideIntroPanel/GuideIntroPad"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Guide intro"
+
+[node name="GuideColumns" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Guide"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 320
+
+[node name="HelpListPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HelpListPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpListPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HelpListBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpListPanel/HelpListPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HelpListTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpListPanel/HelpListPad/HelpListBox"]
+layout_mode = 2
+text = "Topics"
+
+[node name="HelpList" type="ItemList" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpListPanel/HelpListPad/HelpListBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="HelpDetailPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HelpDetailPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpDetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="HelpDetailBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpDetailPanel/HelpDetailPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HelpDetailTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpDetailPanel/HelpDetailPad/HelpDetailBox"]
+layout_mode = 2
+text = "Field Notes"
+
+[node name="HelpDetails" type="Label" parent="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpDetailPanel/HelpDetailPad/HelpDetailBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+text = "Help details"
+
+[node name="Settings" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="SettingsSummaryPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Settings"]
+layout_mode = 2
+
+[node name="SettingsSummaryPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsSummaryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="SettingsSummary" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsSummaryPanel/SettingsSummaryPad"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Settings summary"
+
+[node name="SettingsColumns" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Settings"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 540
+
+[node name="PresentationAudioPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PresentationAudioPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="PresentationAudioBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PresentationAudioTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Presentation And Audio"
+
+[node name="PresentationRow" type="HBoxContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PresentationLabel" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/PresentationRow"]
+layout_mode = 2
+text = "Window Mode"
+
+[node name="PresentationModePicker" type="OptionButton" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/PresentationRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MasterVolumePanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox"]
+layout_mode = 2
+
+[node name="MasterVolumePad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MasterVolumePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MasterVolumeRow" type="HBoxContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MasterVolumePanel/MasterVolumePad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MasterVolumeLabel" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+layout_mode = 2
+text = "Master Volume"
+
+[node name="MasterVolumeSlider" type="HSlider" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+step = 1.0
+
+[node name="MasterVolumeValue" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "80%"
+
+[node name="MusicVolumePanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox"]
+layout_mode = 2
+
+[node name="MusicVolumePad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MusicVolumePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="MusicVolumeRow" type="HBoxContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MusicVolumePanel/MusicVolumePad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MusicVolumeLabel" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+layout_mode = 2
+text = "Music Volume"
+
+[node name="MusicVolumeSlider" type="HSlider" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 100.0
+step = 1.0
+
+[node name="MusicVolumeValue" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 0)
+layout_mode = 2
+horizontal_alignment = 2
+text = "65%"
+
+[node name="AccessibilityColumn" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AccessibilityPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn"]
+layout_mode = 2
+
+[node name="AccessibilityPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="AccessibilityBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel/AccessibilityPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="AccessibilityTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel/AccessibilityPad/AccessibilityBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Accessibility"
+
+[node name="LargeTextToggle" type="CheckButton" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel/AccessibilityPad/AccessibilityBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Large UI Text"
+
+[node name="ReduceMotionToggle" type="CheckButton" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel/AccessibilityPad/AccessibilityBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reduced Motion Intent"
+
+[node name="SettingsNotesPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn"]
+layout_mode = 2
+
+[node name="SettingsNotesPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/SettingsNotesPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="SettingsNotes" type="Label" parent="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/SettingsNotesPanel/SettingsNotesPad"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Settings stay on a device-specific track. Campaign unlocks, skirmish runs, and expedition save slots remain independent of presentation changes."
+
+[node name="Saves" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="SaveIntroPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Saves"]
+layout_mode = 2
+
+[node name="SaveIntroPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveIntroPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="SaveIntro" type="Label" parent="RootMargin/Shell/MenuTabs/Saves/SaveIntroPanel/SaveIntroPad"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Inspect manual slots and autosave before loading. Continue Latest always targets the freshest valid expedition."
+
+[node name="SaveColumns" type="HSplitContainer" parent="RootMargin/Shell/MenuTabs/Saves"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 360
+
+[node name="SaveListPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SaveListPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveListPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="SaveListBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveListPanel/SaveListPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SaveListTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveListPanel/SaveListPad/SaveListBox"]
+layout_mode = 2
+text = "Saved Expeditions"
+
+[node name="SaveList" type="ItemList" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveListPanel/SaveListPad/SaveListBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="SaveDetailPanel" type="PanelContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SaveDetailPad" type="MarginContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveDetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="SaveDetailBox" type="VBoxContainer" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveDetailPanel/SaveDetailPad"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="SaveDetailTitle" type="Label" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Selected Save"
+
+[node name="SaveDetails" type="Label" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+text = "Save details"
+
+[node name="LoadSelected" type="Button" parent="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
 text = "Load Selected Save"
 
-[connection signal="pressed" from="VBox/ActionRow/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="VBox/ActionRow/Quit" to="." method="_on_quit_pressed"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/CampaignBrowser/CampaignList" to="." method="_on_campaign_selected"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignScroll/CampaignContent/ChapterBrowser/ChapterList" to="." method="_on_chapter_selected"]
-[connection signal="pressed" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
-[connection signal="pressed" from="VBox/MenuTabs/Play/ModeSplit/CampaignPanel/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/BrowserSplit/SkirmishList" to="." method="_on_skirmish_selected"]
-[connection signal="item_selected" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/SkirmishScroll/SkirmishContent/DifficultyRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
-[connection signal="pressed" from="VBox/MenuTabs/Play/ModeSplit/SkirmishPanel/StartSkirmish" to="." method="_on_start_skirmish_pressed"]
-[connection signal="item_selected" from="VBox/MenuTabs/Guide/HelpSplit/HelpList" to="." method="_on_help_selected"]
-[connection signal="item_selected" from="VBox/MenuTabs/Settings/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
-[connection signal="value_changed" from="VBox/MenuTabs/Settings/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
-[connection signal="value_changed" from="VBox/MenuTabs/Settings/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
-[connection signal="toggled" from="VBox/MenuTabs/Settings/LargeTextToggle" to="." method="_on_large_text_toggled"]
-[connection signal="toggled" from="VBox/MenuTabs/Settings/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
-[connection signal="item_selected" from="VBox/MenuTabs/Saves/SaveList" to="." method="_on_save_selected"]
-[connection signal="pressed" from="VBox/MenuTabs/Saves/LoadSelected" to="." method="_on_load_selected_pressed"]
+[node name="Compatibility" type="Node" parent="."]
+
+[node name="ActionRow" type="HBoxContainer" parent="Compatibility"]
+visible = false
+layout_mode = 2
+
+[node name="ModeSplit" type="HBoxContainer" parent="Compatibility"]
+visible = false
+layout_mode = 2
+
+[node name="CampaignPanel" type="VBoxContainer" parent="Compatibility/ModeSplit"]
+visible = false
+layout_mode = 2
+
+[node name="CampaignBrowser" type="HBoxContainer" parent="Compatibility/ModeSplit/CampaignPanel"]
+visible = false
+layout_mode = 2
+
+[node name="ChapterBrowser" type="HBoxContainer" parent="Compatibility/ModeSplit/CampaignPanel"]
+visible = false
+layout_mode = 2
+
+[node name="CommanderPreviewTitle" type="Label" parent="Compatibility/ModeSplit/CampaignPanel"]
+visible = false
+layout_mode = 2
+text = "Commander Preview"
+
+[node name="OperationalBoardTitle" type="Label" parent="Compatibility/ModeSplit/CampaignPanel"]
+visible = false
+layout_mode = 2
+text = "Operational Board"
+
+[node name="JournalTitle" type="Label" parent="Compatibility/ModeSplit/CampaignPanel"]
+visible = false
+layout_mode = 2
+text = "Journal"
+
+[node name="CampaignActions" type="HBoxContainer" parent="Compatibility/ModeSplit/CampaignPanel"]
+visible = false
+layout_mode = 2
+
+[node name="SkirmishPanel" type="VBoxContainer" parent="Compatibility/ModeSplit"]
+visible = false
+layout_mode = 2
+
+[node name="SkirmishCommanderPreviewTitle" type="Label" parent="Compatibility/ModeSplit/SkirmishPanel"]
+visible = false
+layout_mode = 2
+text = "Commander Preview"
+
+[node name="SkirmishOperationalBoardTitle" type="Label" parent="Compatibility/ModeSplit/SkirmishPanel"]
+visible = false
+layout_mode = 2
+text = "Operational Board"
+
+[connection signal="pressed" from="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/PrimaryActions/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/PrimaryActions/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenPlay" to="." method="_on_open_play_pressed"]
+[connection signal="pressed" from="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenGuide" to="." method="_on_open_guide_pressed"]
+[connection signal="pressed" from="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenSettings" to="." method="_on_open_settings_pressed"]
+[connection signal="pressed" from="RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/ActionColumn/NavActions/OpenSaves" to="." method="_on_open_saves_pressed"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/CampaignRosterPanel/CampaignRosterPad/CampaignRosterBox/CampaignList" to="." method="_on_campaign_selected"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignScroll/CampaignScrollBox/CampaignSelectionRow/CampaignListColumn/ChapterRosterPanel/ChapterRosterPad/ChapterRosterBox/ChapterList" to="." method="_on_chapter_selected"]
+[connection signal="pressed" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
+[connection signal="pressed" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/SkirmishBrowserRow/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishScroll/SkirmishScrollBox/DifficultySetupRow/DifficultyPanel/DifficultyPad/DifficultyBox/DifficultyPicker" to="." method="_on_difficulty_selected"]
+[connection signal="pressed" from="RootMargin/Shell/MenuTabs/Play/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishActionRow/StartSkirmish" to="." method="_on_start_skirmish_pressed"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Guide/GuideColumns/HelpListPanel/HelpListPad/HelpListBox/HelpList" to="." method="_on_help_selected"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
+[connection signal="value_changed" from="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/PresentationAudioPanel/PresentationAudioPad/PresentationAudioBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
+[connection signal="toggled" from="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel/AccessibilityPad/AccessibilityBox/LargeTextToggle" to="." method="_on_large_text_toggled"]
+[connection signal="toggled" from="RootMargin/Shell/MenuTabs/Settings/SettingsColumns/AccessibilityColumn/AccessibilityPanel/AccessibilityPad/AccessibilityBox/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
+[connection signal="item_selected" from="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveListPanel/SaveListPad/SaveListBox/SaveList" to="." method="_on_save_selected"]
+[connection signal="pressed" from="RootMargin/Shell/MenuTabs/Saves/SaveColumns/SaveDetailPanel/SaveDetailPad/SaveDetailBox/LoadSelected" to="." method="_on_load_selected_pressed"]
