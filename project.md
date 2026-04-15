@@ -292,6 +292,10 @@ Authored scenario identity decision:
 - neutral-front and side-objective variety stays data-driven through `content/army_groups.json` plus `content/encounters.json`, while `ScenarioScriptRules.gd` owns the new trigger/effect behavior so scenes do not gain scenario-owned state mutation
 - `OverworldRules.gd` now surfaces recent scripted beats as a scenario-pulse dispatch summary, keeping chapter-specific pressure legible to the player without moving authored event logic into controllers or bumping save version `9`
 
+Content validation support decision:
+- `ContentService.gd` now treats battle `attack_buff` spells, `encounter_resolved` objectives, and reactive scenario hook types such as `objective_not_met`, `active_raid_count_at_least`, `active_raid_count_at_most`, `hook_fired`, `hook_not_fired`, and `add_enemy_pressure` as first-class authored constructs instead of tolerated warnings
+- `SpellRules.gd`, `ScenarioRules.gd`, `ScenarioScriptRules.gd`, and `EnemyTurnRules.gd` remain the owning runtime paths for those authored constructs, while `tests/validate_repo.py` now guards the validator/runtime parity so Godot headless validation stays materially cleaner without a save-version bump beyond `9`
+
 Town asymmetry decision:
 - town, faction, and building content now author late-game `pressure_bonus` and `readiness_bonus` signals alongside stronger economy and recruitment profiles, letting advanced works push either frontier leverage and defense readiness or wider raid pressure and faster raider musters without inventing a second town subsystem
 - `OverworldRules.gd` now derives shared town metrics for reinforcement quality, battle readiness, and pressure output from current build trees, spell access, garrisons, and authored bonuses, so player-facing summaries and hostile empire logic read from the same state

@@ -1,11 +1,11 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T11:43:39Z",
+  "updatedAt": "2026-04-15T11:54:24Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-battle-surrender-pursuit-aftermath",
-  "currentSliceTitle": "Turn retreat into a real surrender-versus-pursuit battle outcome slice with shared-world consequences and recap flow",
+  "currentSliceId": "phase-6-content-pipeline-warning-support",
+  "currentSliceTitle": "Remove residual content-pipeline warning gaps by promoting authored spell, objective, and script constructs to first-class validated support",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -804,6 +804,18 @@
       "title": "Re-run repository-local validation for surrender action wiring, pursuit aftermath, recap surfacing, and save-version preservation",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-content-pipeline-warning-support",
+      "title": "Remove the remaining content-pipeline warning gaps for authored spell, objective, and scenario-hook constructs through existing validator and core runtime paths",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-content-pipeline-warning-support-validation",
+      "title": "Re-run repository-local validation and headless Godot boot so authored spell, objective, and script constructs validate without prior warning spam",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -989,6 +1001,7 @@
     "This run restored Godot 4.6 bootability by removing autoload/class_name collisions across all six autoload singletons, tightening strict-typing in ContentService.gd, and extending validator coverage so those compile blockers fail locally before gameplay work resumes.",
     "This run turned battle withdrawal into a real product-facing choice by adding surrender to the existing battle action surface, then routing surrender and retreat through different core aftermath rules instead of one generic exit path.",
     "BattleRules.gd now records shared-world aftermath for victory, retreat, surrender, stalemate, hero defeat, and town loss, shifting treasury or stockpile loss, surviving army attrition, hostile pressure, and nearby-town recovery state while BattleShell, ScenarioRules, and CampaignRules only surface those core-owned consequences.",
-    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding surrender-action coverage, pursuit-aftermath recap hooks, and strict-typing cleanup while preserving save version 9."
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, SAVE_VERSION verification, and Godot 4.6.2 headless boot all passed again after adding surrender-action coverage, pursuit-aftermath recap hooks, and strict-typing cleanup while preserving save version 9.",
+    "This run closed the remaining ContentService warning gaps for authored attack_buff spells, encounter-clearing objectives, reactive raid and objective conditions, and add_enemy_pressure hook effects so the same core-owned spell and scenario paths now validate cleanly in Godot 4.6.2 headless boot without changing save version 9."
   ]
 }

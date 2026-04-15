@@ -102,6 +102,7 @@ Difficulty: High
 - add a release-facing post-scenario outcome shell with real campaign/skirmish recap, carryover export surfacing, and follow-up actions
 - deepen hostile overworld empire management so enemy towns build, recruit, reinforce garrisons, and feed stronger raid hosts through the same authored economy and growth systems as the player
 - convert hostile town pressure into real defense battles so raids, sieges, and town loss resolve through concrete combat and overworld consequences instead of abstract takeover ticks
+- harden the content pipeline so authored `attack_buff` spells, encounter-clearing objectives, raid-count conditions, objective-not-met checks, and enemy-pressure script effects validate cleanly through the same spell and scenario runtime rules that execute them
 - polish the town shell into a release-facing management surface with authored identity, construction, recruitment, defense, and pressure summaries driven from core rules instead of a stacked debug readout
 - polish the overworld shell into a release-facing command surface with objective boards, scout-net status, frontier watch, active-tile context, and dispatch summaries driven from core rules instead of scene-owned status strings
 - polish the battle shell into a release-facing tactical surface with commander boards, initiative visibility, stack context, effect surfacing, event dispatch, and clearer action guidance driven from core rules instead of a stacked combat dump
@@ -247,6 +248,8 @@ Difficulty: High
 109. [completed] Re-run repository-local validation for overworld escort-route APIs, hostile contestation, and save-version preservation.
 110. [completed] Turn battle withdrawal into a release-facing surrender action with distinct retreat versus surrender consequences through the existing battle and campaign-state rules.
 111. [completed] Re-run repository-local validation for surrender action wiring, pursuit aftermath, recap surfacing, and save-version preservation.
+112. [completed] Remove the remaining content-pipeline warning gaps for authored `attack_buff` spells, `encounter_resolved` objectives, `objective_not_met` and raid-count conditions, and `add_enemy_pressure` effects through the existing validator and core runtime paths.
+113. [completed] Re-run repository-local validation and Godot headless boot so those authored constructs pass without the prior warning spam and save version `9` remains unchanged.
 
 ## Standards
 - no throwaway prototype code if avoidable

@@ -3895,11 +3895,24 @@ def validate_capital_front_battle_identity(errors: list[str]) -> None:
 
 
 def validate_authored_scenario_identity(errors: list[str]) -> None:
-    required_paths = (SCENARIO_SCRIPT_RULES_PATH, SCENARIO_RULES_PATH, OVERWORLD_RULES_PATH)
+    required_paths = (CONTENT_SERVICE_PATH, SCENARIO_SCRIPT_RULES_PATH, SCENARIO_RULES_PATH, OVERWORLD_RULES_PATH)
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing authored-scenario identity file: {path.relative_to(ROOT)}")
     if not all(path.exists() for path in required_paths):
         return
+
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"attack_buff"',
+        '"encounter_resolved"',
+        '"objective_not_met"',
+        '"active_raid_count_at_least"',
+        '"active_raid_count_at_most"',
+        '"add_enemy_pressure"',
+        '"hook_fired"',
+        '"hook_not_fired"',
+    ):
+        ensure(required_token in content_service_text, errors, f"ContentService.gd is missing required content-pipeline token: {required_token}")
 
     scenario_script_text = SCENARIO_SCRIPT_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (

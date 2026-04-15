@@ -353,7 +353,7 @@ func _validate_spell(spell: Dictionary) -> void:
 				push_warning("Spell %s must define damage base_damage > 0." % spell_id)
 			if int(effect.get("power_scale", -1)) < 0:
 				push_warning("Spell %s must define damage power_scale >= 0." % spell_id)
-		"defense_buff", "initiative_buff":
+		"defense_buff", "initiative_buff", "attack_buff":
 			if int(effect.get("amount", 0)) <= 0:
 				push_warning("Spell %s must define buff amount > 0." % spell_id)
 			if int(effect.get("duration_rounds", 0)) <= 0:
@@ -519,11 +519,11 @@ func _validate_scenario(
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, town_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, town_placement_ids, encounter_placement_ids)
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary:
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
-				_validate_objective(scenario_id, objective, faction_index, town_placement_ids)
+				_validate_objective(scenario_id, objective, faction_index, town_placement_ids, encounter_placement_ids)
 
 	var script_hooks = scenario.get("script_hooks", [])
 	if scenario.has("script_hooks") and not (script_hooks is Array):
@@ -566,7 +566,8 @@ func _validate_objective(
 	scenario_id: String,
 	objective: Dictionary,
 	faction_index: Dictionary,
-	town_placement_ids: Array[String]
+	town_placement_ids: Array[String],
+	encounter_placement_ids: Array[String]
 ) -> void:
 	var objective_type := String(objective.get("type", ""))
 	match objective_type:
@@ -586,6 +587,13 @@ func _validate_objective(
 				push_warning("Scenario %s objective %s references missing faction_id %s." % [scenario_id, String(objective.get("id", "")), faction_id])
 			if int(objective.get("threshold", 0)) <= 0:
 				push_warning("Scenario %s objective %s must define threshold > 0." % [scenario_id, String(objective.get("id", ""))])
+		"encounter_resolved":
+			var encounter_placement_id := String(objective.get("placement_id", ""))
+			if encounter_placement_id == "" or encounter_placement_id not in encounter_placement_ids:
+				push_warning("Scenario %s objective %s references missing encounter placement %s." % [scenario_id, String(objective.get("id", "")), encounter_placement_id])
+		"hook_fired":
+			if String(objective.get("hook_id", "")) == "":
+				push_warning("Scenario %s objective %s must define hook_id." % [scenario_id, String(objective.get("id", ""))])
 		"day_at_least":
 			if int(objective.get("day", 0)) <= 0:
 				push_warning("Scenario %s objective %s must define day > 0." % [scenario_id, String(objective.get("id", ""))])
@@ -638,6 +646,7 @@ func _validate_script_hook(
 					scenario_id,
 					hook_id,
 					effect,
+					faction_index,
 					unit_index,
 					building_index,
 					resource_site_index,
@@ -681,10 +690,19 @@ func _validate_script_condition(
 			var encounter_placement_id := String(condition.get("placement_id", ""))
 			if encounter_placement_id == "" or encounter_placement_id not in encounter_placement_ids:
 				push_warning("Scenario %s hook %s references missing encounter placement %s." % [scenario_id, hook_id, encounter_placement_id])
-		"objective_met":
+		"objective_met", "objective_not_met":
 			var objective_id := String(condition.get("objective_id", ""))
 			if objective_id == "" or objective_id not in objective_ids:
 				push_warning("Scenario %s hook %s references missing objective id %s." % [scenario_id, hook_id, objective_id])
+		"active_raid_count_at_least", "active_raid_count_at_most":
+			var raid_faction_id := String(condition.get("faction_id", ""))
+			if raid_faction_id == "" or not faction_index.has(raid_faction_id):
+				push_warning("Scenario %s hook %s references missing faction %s." % [scenario_id, hook_id, raid_faction_id])
+			if int(condition.get("threshold", -1)) < 0:
+				push_warning("Scenario %s hook %s %s conditions must define threshold >= 0." % [scenario_id, hook_id, condition_type])
+		"hook_fired", "hook_not_fired":
+			if String(condition.get("hook_id", "")) == "":
+				push_warning("Scenario %s hook %s %s conditions must define hook_id." % [scenario_id, hook_id, condition_type])
 		_:
 			push_warning("Scenario %s hook %s has unsupported condition type %s." % [scenario_id, hook_id, condition_type])
 
@@ -692,6 +710,7 @@ func _validate_script_effect(
 	scenario_id: String,
 	hook_id: String,
 	effect: Dictionary,
+	faction_index: Dictionary,
 	unit_index: Dictionary,
 	building_index: Dictionary,
 	resource_site_index: Dictionary,
@@ -771,6 +790,12 @@ func _validate_script_effect(
 						push_warning("Scenario %s hook %s references missing recruit unit id %s." % [scenario_id, hook_id, unit_id])
 					if int(recruits[unit_id_value]) <= 0:
 						push_warning("Scenario %s hook %s recruit counts must be > 0 for unit %s." % [scenario_id, hook_id, unit_id])
+		"add_enemy_pressure":
+			var faction_id := String(effect.get("faction_id", ""))
+			if faction_id == "" or not faction_index.has(faction_id):
+				push_warning("Scenario %s hook %s references missing faction %s." % [scenario_id, hook_id, faction_id])
+			if int(effect.get("amount", 0)) <= 0 and int(effect.get("minimum", 0)) <= 0:
+				push_warning("Scenario %s hook %s add_enemy_pressure effects must define amount > 0 or minimum > 0." % [scenario_id, hook_id])
 		_:
 			push_warning("Scenario %s hook %s has unsupported effect type %s." % [scenario_id, hook_id, effect_type])
 
