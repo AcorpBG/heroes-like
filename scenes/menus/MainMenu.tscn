@@ -111,11 +111,12 @@ autowrap_mode = 3
 text = "Summary"
 
 [node name="StageDockPanel" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.032
-anchor_top = 0.47
+anchor_top = 0.258
 anchor_right = 0.765
-anchor_bottom = 0.89
+anchor_bottom = 0.878
 
 [node name="StageDockPad" type="MarginContainer" parent="StageDockPanel"]
 layout_mode = 2
@@ -135,14 +136,26 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="ActionLead" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+unique_name_in_owner = true
 layout_mode = 2
-text = "Painted stage"
+text = "Campaign board"
 
 [node name="ActionHint" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 2
-text = "Campaigns, skirmishes, and cabinet tools open here without breaking the scenic frame."
+text = "Open deeper launch, save, guide, and settings detail here without disturbing the first-view composition."
+
+[node name="ActionSpacer" type="Control" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseStageDock" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Close"
 
 [node name="MenuTabs" type="TabContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
 unique_name_in_owner = true
@@ -1014,6 +1027,7 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CloseStageDock" to="." method="_on_close_stage_dock_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/StartSkirmish" to="." method="_on_start_skirmish_pressed"]

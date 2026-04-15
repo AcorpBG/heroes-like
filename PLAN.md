@@ -281,6 +281,8 @@ Difficulty: High
 137. [pending] Use the wireframe spec plus generated placeholder art to rebuild each shell against explicit dominant-surface and command-rail targets instead of another generic panel pass.
 138. [completed] Rebuild the live main menu against the reference-grounded scenic composition using a temporary local painted backdrop, a clean top-left logo pocket, a left-heavy scenic stage, a far-right command spine, and a quiet footer pocket while preserving all existing launch and utility routing.
 139. [completed] Re-run the required menu smoke, full headless Godot boot, and a live `DISPLAY=:99` menu capture after the scenic main-menu composition pass while reporting unrelated validator baseline failures separately.
+140. [completed] Keep the scenic main-menu first view clean by hiding campaign, skirmish, saves, guide, and settings detail behind a summoned overlay board instead of showing the shared dock by default.
+141. [completed] Re-run the required menu smoke, full headless Godot boot, and a live `DISPLAY=:99` menu capture after the submenu-first main-menu pass.
 
 ## Standards
 - no throwaway prototype code if avoidable

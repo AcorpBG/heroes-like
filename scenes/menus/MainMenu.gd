@@ -8,8 +8,34 @@ const TAB_SKIRMISH := 1
 const TAB_SAVES := 2
 const TAB_GUIDE := 3
 const TAB_SETTINGS := 4
+const TAB_STAGE_COPY := {
+	TAB_CAMPAIGN: {
+		"title": "Campaign board",
+		"hint": "Inspect arcs, chapters, and the next campaign push from this summoned board.",
+	},
+	TAB_SKIRMISH: {
+		"title": "Skirmish charter",
+		"hint": "Review a single-front plan, set difficulty, and launch a fresh expedition.",
+	},
+	TAB_SAVES: {
+		"title": "War ledger",
+		"hint": "Manual slots and autosave stay in this compact load board.",
+	},
+	TAB_GUIDE: {
+		"title": "Field manual",
+		"hint": "Open help pages in a reference tray only when the player asks for them.",
+	},
+	TAB_SETTINGS: {
+		"title": "Cabinet",
+		"hint": "Presentation, sound, and readability controls live in a secondary board.",
+	},
+}
 
 @onready var _menu_tabs: TabContainer = %MenuTabs
+@onready var _stage_dock_panel: PanelContainer = $StageDockPanel
+@onready var _stage_dock_title_label: Label = %ActionLead
+@onready var _stage_dock_hint_label: Label = %ActionHint
+@onready var _close_stage_dock_button: Button = %CloseStageDock
 @onready var _eyebrow_label: Label = %Eyebrow
 @onready var _title_label: Label = %Title
 @onready var _subtitle_label: Label = %Subtitle
@@ -76,6 +102,7 @@ func _ready() -> void:
 	SettingsService.ensure_settings()
 	_apply_visual_theme()
 	_select_menu_tab(TAB_CAMPAIGN)
+	_hide_stage_dock()
 	_refresh_menu()
 
 func _refresh_menu() -> void:
@@ -88,7 +115,9 @@ func _refresh_menu() -> void:
 	_refresh_skirmish_setup()
 	_rebuild_help_browser()
 	_refresh_settings_panel()
+	_refresh_stage_dock_header()
 	_refresh_summary()
+	_sync_command_button_styles()
 
 func _update_continue_enabled() -> void:
 	var latest_summary := SaveService.latest_loadable_summary()
@@ -99,7 +128,10 @@ func _update_continue_enabled() -> void:
 func _refresh_summary() -> void:
 	var lead := _menu_notice
 	if lead == "":
-		lead = "Choose the next march: carry a campaign forward, open a fresh skirmish front, or resume the latest field command."
+		if _stage_dock_panel.visible:
+			lead = "The command board is open. Review detail here, then close it to return to the scenic front."
+		else:
+			lead = "First view stays scenic. Open deeper boards from the right spine when needed."
 	_set_compact_label(_summary_label, lead, 3, 84)
 	_set_compact_label(
 		_active_expedition_label,
@@ -153,19 +185,22 @@ func _on_continue_pressed() -> void:
 		_refresh_menu()
 
 func _on_open_campaign_pressed() -> void:
-	_select_menu_tab(TAB_CAMPAIGN)
+	_toggle_stage_dock(TAB_CAMPAIGN)
 
 func _on_open_skirmish_pressed() -> void:
-	_select_menu_tab(TAB_SKIRMISH)
+	_toggle_stage_dock(TAB_SKIRMISH)
 
 func _on_open_saves_pressed() -> void:
-	_select_menu_tab(TAB_SAVES)
+	_toggle_stage_dock(TAB_SAVES)
 
 func _on_open_guide_pressed() -> void:
-	_select_menu_tab(TAB_GUIDE)
+	_toggle_stage_dock(TAB_GUIDE)
 
 func _on_open_settings_pressed() -> void:
-	_select_menu_tab(TAB_SETTINGS)
+	_toggle_stage_dock(TAB_SETTINGS)
+
+func _on_close_stage_dock_pressed() -> void:
+	_hide_stage_dock()
 
 func _on_save_selected(index: int) -> void:
 	if index < 0 or index >= _save_summaries.size():
@@ -606,7 +641,33 @@ func _select_menu_tab(index: int) -> void:
 	if _menu_tabs.get_tab_count() == 0:
 		return
 	_menu_tabs.current_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
+	_refresh_stage_dock_header()
 	_sync_command_button_styles()
+
+func _toggle_stage_dock(index: int) -> void:
+	var clamped_index := clampi(index, 0, maxi(_menu_tabs.get_tab_count() - 1, 0))
+	if _stage_dock_panel.visible and _menu_tabs.current_tab == clamped_index:
+		_hide_stage_dock()
+		return
+	_select_menu_tab(clamped_index)
+	_show_stage_dock()
+
+func _show_stage_dock() -> void:
+	_stage_dock_panel.visible = true
+	_refresh_stage_dock_header()
+	_refresh_summary()
+	_sync_command_button_styles()
+
+func _hide_stage_dock() -> void:
+	_stage_dock_panel.visible = false
+	_refresh_summary()
+	_sync_command_button_styles()
+
+func _refresh_stage_dock_header() -> void:
+	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
+	_set_compact_label(_stage_dock_title_label, String(stage_copy.get("title", "Command board")), 1, 48)
+	_set_compact_label(_stage_dock_hint_label, String(stage_copy.get("hint", "")), 2, 92)
+	_close_stage_dock_button.tooltip_text = "Dismiss this secondary board and return to the clean scenic first view."
 
 func _sync_command_button_styles() -> void:
 	var tab_buttons := {
@@ -618,8 +679,14 @@ func _sync_command_button_styles() -> void:
 	}
 	for tab_index in tab_buttons.keys():
 		for button in tab_buttons[tab_index]:
-			var role := "spine_active" if _menu_tabs.current_tab == tab_index else "spine"
+			var is_active: bool = _stage_dock_panel.visible and _menu_tabs.current_tab == tab_index
+			var role := "spine_active" if is_active else "spine"
 			FrontierVisualKit.apply_button(button, role, 182.0, 42.0, 15)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and _stage_dock_panel.visible:
+		_hide_stage_dock()
+		get_viewport().set_input_as_handled()
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)
@@ -661,6 +728,7 @@ func _apply_visual_theme() -> void:
 
 	FrontierVisualKit.apply_button(_continue_button, "spine_active", 182.0, 46.0, 16)
 	FrontierVisualKit.apply_button(_quit_button, "danger", 182.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
@@ -708,6 +776,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_title_label, "title", 38)
 	FrontierVisualKit.apply_label(_subtitle_label, "body", 14)
 	FrontierVisualKit.apply_label(_summary_label, "body", 15)
+	FrontierVisualKit.apply_label(_stage_dock_title_label, "title", 18)
+	FrontierVisualKit.apply_label(_stage_dock_hint_label, "muted", 13)
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)
 	FrontierVisualKit.apply_label(_campaign_pulse_label, "body", 13)
 	FrontierVisualKit.apply_label(_save_pulse_label, "muted", 13)

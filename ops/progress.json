@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T20:19:05Z",
+  "updatedAt": "2026-04-15T20:35:27Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-main-menu-scenic-composition",
-  "currentSliceTitle": "Implement the selected scenic main-menu composition in the live Godot shell",
+  "currentSliceId": "phase-6-main-menu-submenu-overlay-pass",
+  "currentSliceTitle": "Keep the scenic main-menu first view clean by moving deeper detail behind summoned overlays",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Rebuilt the live main menu around the approved scenic composition using a temporary local painted backdrop plus overlay pockets: a clean top-left logo pocket, one shared lower-left stage dock, a quiet footer pocket, and a far-right command spine. Campaign, skirmish, saves, guide, settings, continue, and quit all remain live inside the existing Godot routing flow.",
+  "currentSliceNotes": "Kept the approved scenic main-menu composition, but removed the always-open detail dock from first view. Campaign, skirmish, saves, guide, and settings now open through a summoned secondary board from the right command spine while continue and quit remain direct commands.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -932,6 +932,18 @@
       "title": "Write a descriptive cross-screen wireframe and screen-grammar spec before more shell implementation",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-main-menu-submenu-overlay-pass",
+      "title": "Keep the scenic main-menu first view clean by hiding deeper campaign, skirmish, save, guide, and settings detail behind a summoned overlay board",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-main-menu-submenu-overlay-pass-validation",
+      "title": "Re-run the required menu smoke, full headless Godot boot, and a live DISPLAY=:99 capture after the submenu-first main-menu pass",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1150,6 +1162,8 @@
     "This run corrected the live main menu from a repeated-navigation dashboard into a Heroes-style front end with one dominant play board, larger focal art, shorter copy, and a narrow utility wing for saves, guide, and settings while preserving campaign, skirmish, and resume behavior.",
     "Godot 4.6.2 headless validation passed again for the corrected menu via res://tests/menu_outcome_visual_smoke.tscn and full headless boot; the menu smoke scene still emits the unrelated baseline ObjectDB leak warning on exit.",
     "This run rebuilt the live main menu around the approved scenic composition by anchoring a temporary local painted backdrop behind a clean top-left logo pocket, one shared lower-left stage dock, a quiet footer pocket, and a far-right command spine while preserving continue, campaign, skirmish, saves, guide, settings, and quit routing.",
-    "Godot 4.6.2 headless validation passed again for res://tests/menu_outcome_visual_smoke.tscn and full boot, and a live DISPLAY=:99 capture confirmed the real menu composition; python3 tests/validate_repo.py still reports the same unrelated baseline token-audit failures outside this slice."
+    "Godot 4.6.2 headless validation passed again for res://tests/menu_outcome_visual_smoke.tscn and full boot, and a live DISPLAY=:99 capture confirmed the real menu composition; python3 tests/validate_repo.py still reports the same unrelated baseline token-audit failures outside this slice.",
+    "This run kept the approved 002-style scenic front intact while removing the always-open stage dock from first view, so campaign, skirmish, saves, guide, and settings now open only as a summoned overlay from the right command spine instead of covering the painted surface by default.",
+    "Godot 4.6.2 headless validation passed again for tests/menu_outcome_visual_smoke.tscn and full boot, and refreshed DISPLAY=:99 captures confirmed both the clean first view and the overlay-on-demand menu behavior."
   ]
 }

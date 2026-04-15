@@ -380,7 +380,8 @@ Screen-design correction decision:
 
 Main-menu scenic composition decision:
 - the live main menu now follows one explicit scenic-front composition: a clean logo pocket in the upper-left, one shared lower-left stage dock over a large painted backdrop, a quiet footer pocket, and a far-right command spine for top-level actions instead of a dashboard board plus utility wing
-- campaign, skirmish, saves, guide, and settings now all share that single `MenuTabs` stage dock while continue and quit remain direct spine commands, so the composition changes without splitting launch or routing logic into separate scenes or services
+- campaign, skirmish, saves, guide, and settings now all share one summoned `MenuTabs` stage dock that stays off the first view until a spine command requests it, while continue and quit remain direct spine commands
+- the first-view menu surface now intentionally shows only the scenic stage, logo pocket, footer pocket, and readable command spine, with deeper launch, save, help, and settings detail opening as secondary overlays instead of permanent screen furniture
 - the temporary backdrop art now lives locally under `art/ui/` and `MainMenuHeroView.gd` loads it at runtime, keeping the placeholder art local to the repo and the slice confined to menu presentation code rather than gameplay boundaries
 
 This replaces the earlier mixed-content approach and gives towns, armies, recruitment, and battle setup stable ids that can scale into campaign, AI, and authoring tooling.
