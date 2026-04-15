@@ -196,6 +196,11 @@ Overworld shell presentation decision:
 - `OverworldRules.gd` owns the release-facing summary shaping for objective boards, scout-net coverage, frontier watch, active-tile context, and dispatch messaging, keeping `OverworldShell.gd` focused on map rendering, actions, and routing
 - local overworld threat surfacing stays fog-safe by summarizing only visible hostile contacts and visible enemy-held towns, while unexplored or unseen hostile movement remains abstract in the command shell
 
+Overworld visual-map decision:
+- the overworld scene now renders through a dedicated drawn map-board control instead of a text-labeled grid, with terrain, towns, resource nodes, artifact caches, encounters, hero markers, route previews, and fog all presented as 2D board elements using local placeholder art
+- `OverworldRules.gd` remains the owner of fog, context, movement, and interaction rules, while `OverworldShell.gd` and `OverworldMapView.gd` only translate current session state into visual tile rendering, tile selection, and movement intents so the presentation upgrade does not create a parallel simulation layer
+- town and battle shells stay on their current presentation path in this slice, keeping the visual pass focused on the actively tested overworld without widening scope or changing save version `9`
+
 Battle shell presentation decision:
 - the battle scene now uses a sectioned command-shell layout with a banner, commander wing, initiative track, active-exchange panel, roster boards, and a dedicated orders footer instead of a stacked combat dump
 - `BattleRules.gd` now owns the release-facing summary shaping for commander state, initiative flow, active and target stack context, outcome pressure, recent combat feed, and action guidance so `BattleShell.gd` only binds labels, buttons, and save controls

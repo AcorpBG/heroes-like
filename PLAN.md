@@ -260,6 +260,8 @@ Difficulty: High
 119. [completed] Re-run repository-local validation and Godot headless boot for convoy-hunt targeting, battle-aftermath routing, interception surfacing, and save-version preservation.
 120. [completed] Make the main-menu Play tab genuinely usable for playtesting at the default `1280x720` window through the existing campaign/skirmish scene and controller instead of replacing the release-facing menu flow.
 121. [completed] Re-run repository-local validation, validator bytecode compilation, ops JSON parsing, `SAVE_VERSION` verification, and headless Godot boot for the main-menu playtest-usability slice.
+122. [completed] Turn the overworld from a text-dominant shell into a real visual 2D board with rendered terrain, hero markers, key POIs, legible fog-of-war, and lighter HUD surfacing while keeping rules and movement in the existing core layer.
+123. [completed] Re-run repository-local validation, headless Godot boot, and an overworld-specific movement smoke scene for the visual-overworld slice while reporting unrelated pre-existing validator failures separately.
 
 ## Standards
 - no throwaway prototype code if avoidable
@@ -284,6 +286,7 @@ Difficulty: High
 - scenario scripting now resolves through declarative hook conditions/effects in core rules, so authored rewards, spawned encounters, and town mutations stay out of scene controllers and survive save/load
 - campaign progression now expects authored `content/campaigns.json`, and repository-local validation derives required content files from `ContentService.gd` so missing content domains fail validation instead of slipping through
 - overworld command surfacing now keeps immediate-order, route-pressure, coverage, and hold-risk language in `OverworldRules.gd`, with `OverworldShell.gd` only binding the commitment panel and context-action tooltips so save version `9` remains unchanged
+- overworld map presentation now runs through a dedicated drawn board control, while `OverworldShell.gd` keeps only tile selection, route-preview, and movement-intent wiring on the scene side and leaves fog, tile context, and actual interaction results in `OverworldRules.gd`
 - the main menu campaign flow now routes through a real browser/detail shell driven by `CampaignProgression.gd`, with authored chapter status, unlock blockers, retry state, and carryover context surfaced without moving progression logic into scene controllers
 - release-facing settings now persist through a dedicated `SettingsService.gd` config path separate from campaign progression and expedition saves, while the main menu uses tabbed help/settings/saves shells instead of a raw dev-operations stack
 - resolved scenarios now route through a dedicated outcome shell, with campaign recap state and skirmish retry flow shaped in core rules while autosave is updated to the resolved snapshot so stale in-progress resume paths do not stay front-and-center

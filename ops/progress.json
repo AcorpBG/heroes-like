@@ -1,11 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T14:39:30Z",
+  "updatedAt": "2026-04-15T15:27:48Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-2-overworld-command-risk-recursion-hotfix",
-  "currentSliceTitle": "Fix the confirmed overworld command-risk recursion overflow with the smallest safe rules-only patch",
+  "currentSliceId": "phase-2-overworld-visual-map-board",
+  "currentSliceTitle": "Replace the text-dominant overworld shell with a visual 2D map board while preserving existing movement and core rules",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Overworld now renders terrain, hero markers, towns, resources, artifacts, encounters, route previews, and fog through a dedicated map view; town and battle were intentionally left out of this slice.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
