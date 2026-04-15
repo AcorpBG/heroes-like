@@ -1,0 +1,4065 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import re
+import sys
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+CONTENT_DIR = ROOT / "content"
+CONTENT_SERVICE_PATH = ROOT / "scripts" / "autoload" / "ContentService.gd"
+SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
+CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
+SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
+APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
+SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
+SESSION_STATE_STORE_PATH = ROOT / "scripts" / "core" / "SessionStateStore.gd"
+GLOBAL_SCRIPT_CLASS_CACHE_PATH = ROOT / ".godot" / "global_script_class_cache.cfg"
+DIFFICULTY_RULES_PATH = ROOT / "scripts" / "core" / "DifficultyRules.gd"
+HERO_PROGRESSION_RULES_PATH = ROOT / "scripts" / "core" / "HeroProgressionRules.gd"
+HERO_COMMAND_RULES_PATH = ROOT / "scripts" / "core" / "HeroCommandRules.gd"
+SCENARIO_FACTORY_PATH = ROOT / "scripts" / "core" / "ScenarioFactory.gd"
+SCENARIO_SELECT_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioSelectRules.gd"
+SCENARIO_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioRules.gd"
+SCENARIO_SCRIPT_RULES_PATH = ROOT / "scripts" / "core" / "ScenarioScriptRules.gd"
+OVERWORLD_RULES_PATH = ROOT / "scripts" / "core" / "OverworldRules.gd"
+BATTLE_RULES_PATH = ROOT / "scripts" / "core" / "BattleRules.gd"
+BATTLE_AI_RULES_PATH = ROOT / "scripts" / "core" / "BattleAiRules.gd"
+TOWN_RULES_PATH = ROOT / "scripts" / "core" / "TownRules.gd"
+CAMPAIGN_RULES_PATH = ROOT / "scripts" / "core" / "CampaignRules.gd"
+ARTIFACT_RULES_PATH = ROOT / "scripts" / "core" / "ArtifactRules.gd"
+SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
+ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
+ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
+MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
+MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
+OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
+OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
+TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
+TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
+BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
+BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
+OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
+OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
+
+VALID_DIFFICULTIES = {"story", "normal", "hard"}
+WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
+SUPPORTED_UNIT_ABILITY_IDS = {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush"}
+VALID_BATTLE_TRAIT_IDS = {"linekeeper", "artillerist", "ambusher", "bogwise", "packhunter", "vanguard"}
+SUPPORTED_BATTLEFIELD_TAGS = {
+    "chokepoint",
+    "elevated_fire",
+    "bog_channels",
+    "ambush_cover",
+    "open_lane",
+    "fog_bank",
+    "fortified_line",
+    "fortress_lane",
+    "reserve_wave",
+    "battery_nest",
+    "wall_pressure",
+}
+SUPPORTED_FIELD_OBJECTIVE_TYPES = {
+    "lane_battery",
+    "ritual_pylon",
+    "supply_post",
+    "signal_beacon",
+    "breach_point",
+    "hazard_zone",
+}
+SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
+    "ranged",
+    "initiative",
+    "cohesion",
+    "reinforcement",
+    "commander",
+    "momentum",
+    "urgency",
+}
+SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
+VALID_SPECIALTY_IDS = {"wayfinder", "ledgerkeeper", "spellwright", "drillmaster", "armsmaster", "mustercaptain", "borderwarden"}
+RELEASE_PLAYER_FACTIONS = {"faction_embercourt", "faction_mireclaw", "faction_sunvault"}
+ADVANCED_EMBERCOURT_BUILDING_IDS = {
+    "building_river_granary_exchange",
+    "building_quartermasters_depot",
+    "building_signal_citadel",
+}
+ADVANCED_MIRECLAW_BUILDING_IDS = {
+    "building_war_drum_circle",
+    "building_smugglers_flotilla",
+    "building_floodtide_forge",
+}
+ADVANCED_SUNVAULT_BUILDING_IDS = {
+    "building_resonant_exchange",
+    "building_harmonic_cloister",
+    "building_aurora_spire",
+}
+MARKET_BUILDING_IDS = {
+    "building_market_square",
+    "building_river_granary_exchange",
+    "building_resonant_exchange",
+}
+LOGISTICS_SITE_FAMILIES = {"neutral_dwelling", "faction_outpost", "frontier_shrine"}
+LOGISTICS_SITE_IDS = {
+    "site_free_company_yard",
+    "site_fenhound_kennels",
+    "site_lens_house",
+    "site_ember_signal_post",
+    "site_bog_drum_outpost",
+    "site_prism_watch_relay",
+    "site_roadside_sanctum",
+    "site_reedscript_shrine",
+    "site_starlens_sanctum",
+}
+RELEASE_LOGISTICS_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers"}
+STRATEGIC_RESPONSE_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers", "lockmarsh-surge"}
+CAPITAL_PROJECT_BUILDING_IDS = {
+    "building_charter_bastion",
+    "building_nightglass_dominion",
+    "building_daybreak_matrix",
+}
+CAPITAL_PROJECT_TOWN_BUILDINGS = {
+    "town_highwater_keep": "building_charter_bastion",
+    "town_nightglass_redoubt": "building_nightglass_dominion",
+    "town_prismhearth": "building_daybreak_matrix",
+}
+STRATEGIC_STRONGHOLD_IDS = {
+    "town_riverwatch",
+    "town_duskfen",
+    "town_reedbarrow_ferry",
+    "town_halo_spire",
+}
+STRATEGIC_LOGISTICS_TOWN_IDS = set(CAPITAL_PROJECT_TOWN_BUILDINGS.keys()) | STRATEGIC_STRONGHOLD_IDS
+LATE_GAME_CAPITAL_SCENARIO_EXPECTATIONS = {
+    "nightglass-redoubt": {
+        "placement_id": "nightglass_redoubt",
+        "building_id": "building_nightglass_dominion",
+        "objective_id": "claim_nightglass",
+    },
+    "lockmarsh-surge": {
+        "placement_id": "highwater_keep",
+        "building_id": "building_charter_bastion",
+        "objective_id": "claim_highwater_final",
+    },
+    "daybreak-spire": {
+        "placement_id": "nightglass_redoubt",
+        "building_id": "building_nightglass_dominion",
+        "objective_id": "claim_nightglass",
+    },
+    "glassfen-breakers": {
+        "placement_id": "prismhearth_array",
+        "building_id": "building_daybreak_matrix",
+        "objective_id": "claim_prismhearth",
+    },
+}
+CAPITAL_FRONT_SIGNATURE_ARMIES = {
+    "army_charter_bastion_reserve",
+    "army_nightglass_dominion",
+    "army_daybreak_matrix",
+}
+CAPITAL_FRONT_ENCOUNTER_EXPECTATIONS = {
+    "encounter_charter_guard": {"enemy_group_id": "army_charter_bastion_reserve", "required_tags": {"fortress_lane", "reserve_wave"}},
+    "encounter_archive_wardens": {"enemy_group_id": "army_archive_wardens", "required_tags": {"fortress_lane"}},
+    "encounter_drum_circle": {"enemy_group_id": "army_nightglass_dominion", "required_tags": {"wall_pressure", "reserve_wave"}},
+    "encounter_bone_ferry_watch": {"enemy_group_id": "army_ripper_vanguard", "required_tags": {"wall_pressure"}},
+    "encounter_relay_pickets": {"enemy_group_id": "army_relay_pickets", "required_tags": {"battery_nest"}},
+    "encounter_aurora_battery": {"enemy_group_id": "army_aurora_battery", "required_tags": {"battery_nest", "reserve_wave"}},
+    "encounter_halo_reserve": {"enemy_group_id": "army_halo_reserve", "required_tags": {"battery_nest", "reserve_wave"}},
+    "encounter_daybreak_array": {"enemy_group_id": "army_daybreak_matrix", "required_tags": {"battery_nest", "reserve_wave"}},
+    "encounter_charter_bastion_reserve": {"enemy_group_id": "army_charter_bastion_reserve", "required_tags": {"fortress_lane", "reserve_wave"}},
+    "encounter_nightglass_dominion": {"enemy_group_id": "army_nightglass_dominion", "required_tags": {"wall_pressure", "reserve_wave"}},
+    "encounter_daybreak_matrix": {"enemy_group_id": "army_daybreak_matrix", "required_tags": {"battery_nest", "reserve_wave"}},
+}
+CAPITAL_FRONT_SCENARIO_EXPECTATIONS = {
+    "nightglass-redoubt": {
+        "front_encounter_ids": {"encounter_drum_circle", "encounter_bone_ferry_watch"},
+        "raid_encounter_ids": {"encounter_bone_ferry_watch", "encounter_nightglass_dominion"},
+        "hook_id": "nightglass_dominion_rises",
+        "spawn_encounter_id": "encounter_nightglass_dominion",
+    },
+    "lockmarsh-surge": {
+        "front_encounter_ids": {"encounter_charter_guard", "encounter_archive_wardens"},
+        "raid_encounter_ids": {"encounter_charter_bastion_reserve", "encounter_road_chaplains"},
+        "hook_id": "charter_bastion_ignites",
+        "spawn_encounter_id": "encounter_charter_bastion_reserve",
+    },
+    "daybreak-spire": {
+        "front_encounter_ids": {"encounter_daybreak_array", "encounter_bone_ferry_watch"},
+        "raid_encounter_ids": {"encounter_bone_ferry_watch", "encounter_nightglass_dominion"},
+        "hook_id": "nightglass_dominion_holds",
+        "spawn_encounter_id": "encounter_nightglass_dominion",
+    },
+    "glassfen-breakers": {
+        "front_encounter_ids": {"encounter_relay_pickets", "encounter_aurora_battery"},
+        "raid_encounter_ids": {"encounter_aurora_battery", "encounter_daybreak_matrix"},
+        "hook_id": "daybreak_matrix_locks",
+        "spawn_encounter_id": "encounter_daybreak_matrix",
+    },
+}
+RELEASE_FIELD_OBJECTIVE_ENCOUNTER_IDS = {
+    "encounter_reedbarrow_chain",
+    "encounter_drum_circle",
+    "encounter_lantern_patrol",
+    "encounter_charter_guard",
+    "encounter_reed_totemists",
+    "encounter_relay_pickets",
+    "encounter_daybreak_matrix",
+}
+RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS = {
+    "reedbarrow_chain",
+    "nightglass_drum_circle",
+    "prismhearth_relay_pickets",
+    "glassfen_relay_pickets",
+}
+ENEMY_STRATEGY_KEYS = {
+    "build_category_weights": {"civic", "dwelling", "economy", "support", "magic"},
+    "build_value_weights": {"income", "growth", "quality", "readiness", "pressure"},
+    "raid_target_weights": {"town", "resource", "artifact", "encounter", "hero"},
+    "site_family_weights": LOGISTICS_SITE_FAMILIES,
+    "reinforcement": {"garrison_bias", "raid_bias", "ranged_weight", "melee_weight", "low_tier_weight", "high_tier_weight"},
+    "raid": {"threshold_scale", "max_active_bonus", "pressure_commitment_scale", "objective_weight", "town_siege_weight", "site_denial_weight", "hero_hunt_weight"},
+}
+
+
+def load_json(path: Path) -> dict:
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def items_index(payload: dict) -> dict[str, dict]:
+    return {str(item["id"]): item for item in payload.get("items", []) if isinstance(item, dict) and "id" in item}
+
+
+def fail(errors: list[str], message: str) -> None:
+    errors.append(message)
+
+
+def ensure(condition: bool, errors: list[str], message: str) -> None:
+    if not condition:
+        fail(errors, message)
+
+
+def append_unique(values: list[str], value: str) -> None:
+    if value and value not in values:
+        values.append(value)
+
+
+def scene_has_node(scene_text: str, node_name: str, node_type: str) -> bool:
+    pattern = rf'\[node name="{re.escape(node_name)}" type="{re.escape(node_type)}"'
+    return re.search(pattern, scene_text) is not None
+
+
+def validate_field_objectives(errors: list[str], owner_label: str, objectives: object, allow_partial: bool = False) -> list[str]:
+    objective_ids: list[str] = []
+    ensure(isinstance(objectives, list) and bool(objectives), errors, f"{owner_label} must define a non-empty field_objectives list")
+    if not isinstance(objectives, list):
+        return objective_ids
+    for objective in objectives:
+        ensure(isinstance(objective, dict), errors, f"{owner_label} contains a non-dict field objective")
+        if not isinstance(objective, dict):
+            continue
+        objective_id = str(objective.get("id", ""))
+        objective_type = str(objective.get("type", ""))
+        ensure(bool(objective_id), errors, f"{owner_label} field objectives must define id")
+        ensure(objective_id not in objective_ids, errors, f"{owner_label} repeats field objective id {objective_id}")
+        append_unique(objective_ids, objective_id)
+        if allow_partial:
+            if "type" in objective:
+                ensure(objective_type in SUPPORTED_FIELD_OBJECTIVE_TYPES, errors, f"{owner_label} uses unsupported field objective type {objective_type}")
+            if "label" in objective:
+                ensure(bool(str(objective.get("label", ""))), errors, f"{owner_label} field objective {objective_id} must define label when label is present")
+            if "summary" in objective:
+                ensure(bool(str(objective.get("summary", ""))), errors, f"{owner_label} field objective {objective_id} must define summary when summary is present")
+            if "starting_side" in objective:
+                ensure(str(objective.get("starting_side", "neutral")) in {"player", "enemy", "neutral"}, errors, f"{owner_label} field objective {objective_id} must use a supported starting_side")
+            if "capture_threshold" in objective:
+                ensure(int(objective.get("capture_threshold", 0)) > 0, errors, f"{owner_label} field objective {objective_id} must define capture_threshold > 0 when present")
+            if "urgency_round" in objective:
+                ensure(int(objective.get("urgency_round", 0)) > 0, errors, f"{owner_label} field objective {objective_id} must define urgency_round > 0 when present")
+            if "pressure_tags" in objective:
+                pressure_tags = objective.get("pressure_tags", [])
+                ensure(isinstance(pressure_tags, list) and bool(pressure_tags), errors, f"{owner_label} field objective {objective_id} must define non-empty pressure_tags when present")
+                if isinstance(pressure_tags, list):
+                    for pressure_tag in pressure_tags:
+                        ensure(str(pressure_tag) in SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS, errors, f"{owner_label} field objective {objective_id} uses unsupported pressure tag {pressure_tag}")
+        else:
+            ensure(objective_type in SUPPORTED_FIELD_OBJECTIVE_TYPES, errors, f"{owner_label} uses unsupported field objective type {objective_type}")
+            ensure(bool(str(objective.get("label", ""))), errors, f"{owner_label} field objective {objective_id} must define label")
+            ensure(bool(str(objective.get("summary", ""))), errors, f"{owner_label} field objective {objective_id} must define summary")
+            ensure(str(objective.get("starting_side", "neutral")) in {"player", "enemy", "neutral"}, errors, f"{owner_label} field objective {objective_id} must use a supported starting_side")
+            ensure(int(objective.get("capture_threshold", 0)) > 0, errors, f"{owner_label} field objective {objective_id} must define capture_threshold > 0")
+            ensure(int(objective.get("urgency_round", 0)) > 0, errors, f"{owner_label} field objective {objective_id} must define urgency_round > 0")
+            pressure_tags = objective.get("pressure_tags", [])
+            ensure(isinstance(pressure_tags, list) and bool(pressure_tags), errors, f"{owner_label} field objective {objective_id} must define non-empty pressure_tags")
+            if isinstance(pressure_tags, list):
+                for pressure_tag in pressure_tags:
+                    ensure(str(pressure_tag) in SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS, errors, f"{owner_label} field objective {objective_id} uses unsupported pressure tag {pressure_tag}")
+    return objective_ids
+
+
+def discover_content_files(errors: list[str]) -> dict[str, Path]:
+    ensure(CONTENT_SERVICE_PATH.exists(), errors, f"Missing content service script: {CONTENT_SERVICE_PATH.relative_to(ROOT)}")
+    if not CONTENT_SERVICE_PATH.exists():
+        return {}
+
+    script_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    matches = re.findall(r'const\s+[A-Z_]+_PATH\s*:=\s*"%s/([^"]+\.json)"\s*%\s*CONTENT_DIR', script_text)
+    ensure(bool(matches), errors, "ContentService.gd does not declare any JSON content paths")
+    return {Path(filename).stem: CONTENT_DIR / filename for filename in matches}
+
+
+def validate_script_condition(
+    errors: list[str],
+    scenario_id: str,
+    hook_id: str,
+    condition: dict,
+    factions: dict[str, dict],
+    town_placement_ids: list[str],
+    encounter_placement_ids: list[str],
+    objective_ids: list[str],
+) -> None:
+    condition_type = str(condition.get("type", ""))
+    if condition_type == "day_at_least":
+        ensure(int(condition.get("day", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} must define day > 0")
+    elif condition_type in {"town_owned_by_player", "town_not_owned_by_player"}:
+        ensure(str(condition.get("placement_id", "")) in town_placement_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing town placement {condition.get('placement_id')}")
+    elif condition_type in {"flag_true", "session_flag_equals"}:
+        ensure(bool(str(condition.get("flag", ""))), errors, f"Scenario {scenario_id} hook {hook_id} must define a flag for {condition_type}")
+    elif condition_type == "enemy_pressure_at_least":
+        ensure(str(condition.get("faction_id", "")) in factions, errors, f"Scenario {scenario_id} hook {hook_id} references missing faction {condition.get('faction_id')}")
+        ensure(int(condition.get("threshold", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} must define threshold > 0")
+    elif condition_type == "encounter_resolved":
+        ensure(str(condition.get("placement_id", "")) in encounter_placement_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing encounter placement {condition.get('placement_id')}")
+    elif condition_type == "objective_met":
+        ensure(str(condition.get("objective_id", "")) in objective_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing objective {condition.get('objective_id')}")
+    elif condition_type == "objective_not_met":
+        ensure(str(condition.get("objective_id", "")) in objective_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing objective {condition.get('objective_id')}")
+    elif condition_type in {"active_raid_count_at_least", "active_raid_count_at_most"}:
+        ensure(str(condition.get("faction_id", "")) in factions, errors, f"Scenario {scenario_id} hook {hook_id} references missing faction {condition.get('faction_id')}")
+        ensure(int(condition.get("threshold", 0)) >= 0, errors, f"Scenario {scenario_id} hook {hook_id} must define threshold >= 0")
+    elif condition_type in {"hook_fired", "hook_not_fired"}:
+        ensure(bool(str(condition.get("hook_id", ""))), errors, f"Scenario {scenario_id} hook {hook_id} must define hook_id for {condition_type}")
+    else:
+        fail(errors, f"Scenario {scenario_id} hook {hook_id} has unsupported condition type {condition_type}")
+
+
+def validate_script_placement(
+    errors: list[str],
+    scenario_id: str,
+    hook_id: str,
+    placement: object,
+    reference_key: str,
+    reference_index: dict[str, dict],
+    width: int,
+    height: int,
+) -> None:
+    ensure(isinstance(placement, dict), errors, f"Scenario {scenario_id} hook {hook_id} must define a placement dictionary")
+    if not isinstance(placement, dict):
+        return
+    ensure(bool(str(placement.get("placement_id", ""))), errors, f"Scenario {scenario_id} hook {hook_id} scripted placements must define placement_id")
+    ensure(str(placement.get(reference_key, "")) in reference_index, errors, f"Scenario {scenario_id} hook {hook_id} references missing {reference_key} {placement.get(reference_key)}")
+    x = int(placement.get("x", -1))
+    y = int(placement.get("y", -1))
+    ensure(0 <= x < width and 0 <= y < height, errors, f"Scenario {scenario_id} hook {hook_id} placement {placement.get('placement_id')} is out of bounds")
+
+
+def validate_script_effect(
+    errors: list[str],
+    scenario_id: str,
+    hook_id: str,
+    effect: dict,
+    factions: dict[str, dict],
+    units: dict[str, dict],
+    buildings: dict[str, dict],
+    resource_sites: dict[str, dict],
+    artifacts: dict[str, dict],
+    encounters: dict[str, dict],
+    town_placement_ids: list[str],
+    width: int,
+    height: int,
+) -> None:
+    effect_type = str(effect.get("type", ""))
+    if effect_type == "message":
+        ensure(bool(str(effect.get("text", ""))), errors, f"Scenario {scenario_id} hook {hook_id} message effects must define text")
+    elif effect_type == "set_flag":
+        ensure(bool(str(effect.get("flag", ""))), errors, f"Scenario {scenario_id} hook {hook_id} set_flag effects must define flag")
+    elif effect_type == "add_resources":
+        resources = effect.get("resources", {})
+        ensure(isinstance(resources, dict) and bool(resources), errors, f"Scenario {scenario_id} hook {hook_id} add_resources effects must define resources")
+    elif effect_type == "award_experience":
+        ensure(int(effect.get("amount", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} award_experience effects must define amount > 0")
+    elif effect_type == "award_artifact":
+        ensure(str(effect.get("artifact_id", "")) in artifacts, errors, f"Scenario {scenario_id} hook {hook_id} references missing artifact {effect.get('artifact_id')}")
+    elif effect_type == "spawn_resource_node":
+        validate_script_placement(errors, scenario_id, hook_id, effect.get("placement", {}), "site_id", resource_sites, width, height)
+    elif effect_type == "spawn_artifact_node":
+        validate_script_placement(errors, scenario_id, hook_id, effect.get("placement", {}), "artifact_id", artifacts, width, height)
+    elif effect_type == "spawn_encounter":
+        validate_script_placement(errors, scenario_id, hook_id, effect.get("placement", {}), "encounter_id", encounters, width, height)
+    elif effect_type == "town_add_building":
+        ensure(str(effect.get("placement_id", "")) in town_placement_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing town placement {effect.get('placement_id')}")
+        ensure(str(effect.get("building_id", "")) in buildings, errors, f"Scenario {scenario_id} hook {hook_id} references missing building {effect.get('building_id')}")
+    elif effect_type == "town_add_recruits":
+        ensure(str(effect.get("placement_id", "")) in town_placement_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing town placement {effect.get('placement_id')}")
+        recruits = effect.get("recruits", {})
+        ensure(isinstance(recruits, dict) and bool(recruits), errors, f"Scenario {scenario_id} hook {hook_id} town_add_recruits effects must define recruits")
+        if isinstance(recruits, dict):
+            for unit_id, amount in recruits.items():
+                ensure(str(unit_id) in units, errors, f"Scenario {scenario_id} hook {hook_id} references missing recruit unit {unit_id}")
+                ensure(int(amount) > 0, errors, f"Scenario {scenario_id} hook {hook_id} recruit count must be > 0 for {unit_id}")
+    elif effect_type == "add_enemy_pressure":
+        ensure(str(effect.get("faction_id", "")) in factions, errors, f"Scenario {scenario_id} hook {hook_id} references missing faction {effect.get('faction_id')}")
+        ensure(int(effect.get("amount", 0)) > 0 or int(effect.get("minimum", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} add_enemy_pressure must define amount > 0 or minimum > 0")
+    else:
+        fail(errors, f"Scenario {scenario_id} hook {hook_id} has unsupported effect type {effect_type}")
+
+
+def validate_campaigns(errors: list[str], campaigns: dict[str, dict], scenarios: dict[str, dict]) -> None:
+    ensure(bool(campaigns), errors, "No campaigns are authored in content/campaigns.json")
+    ensure(len(campaigns) >= 3, errors, "Release-facing campaign content must author at least three campaign arcs")
+    total_campaign_chapters = 0
+    campaign_starting_factions: set[str] = set()
+    for campaign_id, campaign in campaigns.items():
+        ensure(bool(str(campaign.get("summary", ""))), errors, f"Campaign {campaign_id} must define summary")
+        ensure(bool(str(campaign.get("region", ""))), errors, f"Campaign {campaign_id} must define region")
+        ensure(bool(str(campaign.get("arc_goal", ""))), errors, f"Campaign {campaign_id} must define arc_goal")
+        ensure(bool(str(campaign.get("completion_title", ""))), errors, f"Campaign {campaign_id} must define completion_title")
+        ensure(bool(str(campaign.get("completion_summary", ""))), errors, f"Campaign {campaign_id} must define completion_summary")
+        scenario_entries = campaign.get("scenarios", [])
+        ensure(isinstance(scenario_entries, list) and bool(scenario_entries), errors, f"Campaign {campaign_id} must define at least one scenario entry")
+        if not isinstance(scenario_entries, list):
+            continue
+        ensure(len(scenario_entries) >= 3, errors, f"Campaign {campaign_id} must define at least three authored chapters for release-facing breadth")
+        total_campaign_chapters += len(scenario_entries)
+
+        listed_scenario_ids: list[str] = []
+        entry_by_scenario_id: dict[str, dict] = {}
+        chapter_indices: list[int] = []
+        for scenario_entry in scenario_entries:
+            ensure(isinstance(scenario_entry, dict), errors, f"Campaign {campaign_id} contains a non-dict scenario entry")
+            if not isinstance(scenario_entry, dict):
+                continue
+            scenario_id = str(scenario_entry.get("scenario_id", ""))
+            ensure(scenario_id in scenarios, errors, f"Campaign {campaign_id} references missing scenario {scenario_id}")
+            ensure(scenario_id not in listed_scenario_ids, errors, f"Campaign {campaign_id} repeats scenario {scenario_id}")
+            chapter_index = int(scenario_entry.get("chapter_index", 0))
+            ensure(chapter_index > 0, errors, f"Campaign {campaign_id} scenario {scenario_id} must define chapter_index > 0")
+            ensure(chapter_index not in chapter_indices, errors, f"Campaign {campaign_id} repeats chapter_index {chapter_index}")
+            ensure(bool(str(scenario_entry.get("chapter_title", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define chapter_title")
+            ensure(bool(str(scenario_entry.get("status_hint", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define status_hint")
+            ensure(bool(str(scenario_entry.get("carryover_summary", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define carryover_summary")
+            ensure(bool(str(scenario_entry.get("briefing", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define briefing")
+            ensure(bool(str(scenario_entry.get("intel", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define intel")
+            ensure(bool(str(scenario_entry.get("stakes", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define stakes")
+            ensure(bool(str(scenario_entry.get("aftermath_victory", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define aftermath_victory")
+            ensure(bool(str(scenario_entry.get("aftermath_defeat", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define aftermath_defeat")
+            ensure(bool(str(scenario_entry.get("journal_victory", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define journal_victory")
+            ensure(bool(str(scenario_entry.get("journal_defeat", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} must define journal_defeat")
+            if scenario_id and scenario_id in scenarios and scenario_id not in listed_scenario_ids:
+                listed_scenario_ids.append(scenario_id)
+                entry_by_scenario_id[scenario_id] = scenario_entry
+            if chapter_index > 0 and chapter_index not in chapter_indices:
+                chapter_indices.append(chapter_index)
+
+        starting_scenario_id = str(campaign.get("starting_scenario_id", ""))
+        ensure(starting_scenario_id in listed_scenario_ids, errors, f"Campaign {campaign_id} starting_scenario_id {starting_scenario_id} is not listed in campaign scenarios")
+        if starting_scenario_id in scenarios:
+            campaign_starting_factions.add(str(scenarios[starting_scenario_id].get("player_faction_id", "")))
+        starting_entry = entry_by_scenario_id.get(starting_scenario_id, {})
+        if starting_entry:
+            ensure(bool(starting_entry.get("starts_unlocked", False)), errors, f"Campaign {campaign_id} starting scenario {starting_scenario_id} must start unlocked")
+        ensure(
+            sorted(chapter_indices) == list(range(1, len(chapter_indices) + 1)),
+            errors,
+            f"Campaign {campaign_id} chapter_index values must form a contiguous sequence starting at 1",
+        )
+
+        for scenario_entry in scenario_entries:
+            if not isinstance(scenario_entry, dict):
+                continue
+            scenario_id = str(scenario_entry.get("scenario_id", "<unknown>"))
+
+            unlock_requirements = scenario_entry.get("unlock_requirements", [])
+            if "unlock_requirements" in scenario_entry:
+                ensure(isinstance(unlock_requirements, list), errors, f"Campaign {campaign_id} scenario {scenario_id} unlock_requirements must be a list")
+            if isinstance(unlock_requirements, list):
+                for requirement in unlock_requirements:
+                    ensure(isinstance(requirement, dict), errors, f"Campaign {campaign_id} scenario {scenario_id} contains a non-dict unlock requirement")
+                    if not isinstance(requirement, dict):
+                        continue
+                    requirement_type = str(requirement.get("type", ""))
+                    dependency_id = str(requirement.get("scenario_id", ""))
+                    if requirement_type == "scenario_status":
+                        ensure(dependency_id in listed_scenario_ids, errors, f"Campaign {campaign_id} scenario {scenario_id} references missing unlock dependency {dependency_id}")
+                        ensure(str(requirement.get("status", "")) in {"victory", "defeat"}, errors, f"Campaign {campaign_id} scenario {scenario_id} uses unsupported unlock status {requirement.get('status')}")
+                    elif requirement_type == "scenario_flag_true":
+                        ensure(dependency_id in listed_scenario_ids, errors, f"Campaign {campaign_id} scenario {scenario_id} references missing flag dependency scenario {dependency_id}")
+                        ensure(bool(str(requirement.get("flag", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} scenario_flag_true requirements must define a flag")
+                    else:
+                        fail(errors, f"Campaign {campaign_id} scenario {scenario_id} uses unsupported unlock requirement type {requirement_type}")
+
+            carryover_export = scenario_entry.get("carryover_export", {})
+            if "carryover_export" in scenario_entry:
+                ensure(isinstance(carryover_export, dict), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_export must be a dictionary")
+            if isinstance(carryover_export, dict):
+                resource_fraction = float(carryover_export.get("resource_fraction", 0.0))
+                ensure(0.0 <= resource_fraction <= 1.0, errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_export resource_fraction must be between 0 and 1")
+                resource_caps = carryover_export.get("resource_caps", {})
+                if "resource_caps" in carryover_export:
+                    ensure(isinstance(resource_caps, dict), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_export resource_caps must be a dictionary")
+                if isinstance(resource_caps, dict):
+                    for resource_key, amount in resource_caps.items():
+                        ensure(int(amount) >= 0, errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_export resource cap must be >= 0 for {resource_key}")
+                flag_ids = carryover_export.get("flag_ids", [])
+                if "flag_ids" in carryover_export:
+                    ensure(isinstance(flag_ids, list), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_export flag_ids must be a list")
+                if isinstance(flag_ids, list):
+                    for flag_id in flag_ids:
+                        ensure(bool(str(flag_id)), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_export cannot contain empty flag ids")
+
+            carryover_import = scenario_entry.get("carryover_import", {})
+            if "carryover_import" in scenario_entry:
+                ensure(isinstance(carryover_import, dict), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_import must be a dictionary")
+            if isinstance(carryover_import, dict) and carryover_import:
+                from_scenario_id = str(carryover_import.get("from_scenario_id", ""))
+                ensure(from_scenario_id in listed_scenario_ids, errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_import references missing from_scenario_id {from_scenario_id}")
+                ensure(from_scenario_id != scenario_id, errors, f"Campaign {campaign_id} scenario {scenario_id} cannot import carryover from itself")
+                if "flags_prefix" in carryover_import:
+                    ensure(bool(str(carryover_import.get("flags_prefix", ""))), errors, f"Campaign {campaign_id} scenario {scenario_id} carryover_import flags_prefix cannot be empty")
+    ensure(total_campaign_chapters >= 9, errors, "Campaign content should author at least nine chapters across the available campaign arcs")
+    ensure(RELEASE_PLAYER_FACTIONS.issubset(campaign_starting_factions), errors, "Campaign starts must cover all release player factions")
+
+
+def validate_content(errors: list[str]) -> None:
+    required = discover_content_files(errors)
+    expected_domains = {
+        "factions",
+        "heroes",
+        "units",
+        "army_groups",
+        "towns",
+        "buildings",
+        "resource_sites",
+        "artifacts",
+        "spells",
+        "encounters",
+        "scenarios",
+        "campaigns",
+    }
+    for domain in sorted(expected_domains):
+        ensure(domain in required, errors, f"ContentService.gd is missing expected content path for {domain}")
+
+    payloads = {}
+    for key, path in required.items():
+        ensure(path.exists(), errors, f"Missing content file: {path.relative_to(ROOT)}")
+        if path.exists():
+            payloads[key] = load_json(path)
+
+    if errors:
+        return
+
+    factions = items_index(payloads["factions"])
+    heroes = items_index(payloads["heroes"])
+    units = items_index(payloads["units"])
+    army_groups = items_index(payloads["army_groups"])
+    towns = items_index(payloads["towns"])
+    buildings = items_index(payloads["buildings"])
+    resource_sites = items_index(payloads["resource_sites"])
+    artifacts = items_index(payloads["artifacts"])
+    spells = items_index(payloads["spells"])
+    encounters = items_index(payloads["encounters"])
+    scenarios = items_index(payloads["scenarios"])
+    campaigns = items_index(payloads["campaigns"])
+    ensure(len(heroes) >= 9, errors, "Release hero content must author at least nine commanders")
+    ensure(len(scenarios) >= 10, errors, "Release scenario content must author at least ten distinct fronts")
+    campaign_scenario_ids = {
+        str(scenario_entry.get("scenario_id", ""))
+        for campaign in campaigns.values()
+        for scenario_entry in campaign.get("scenarios", [])
+        if isinstance(scenario_entry, dict) and str(scenario_entry.get("scenario_id", ""))
+    }
+    skirmish_scenario_ids: list[str] = []
+    skirmish_only_scenario_ids: list[str] = []
+    scenario_player_factions: set[str] = set()
+    scenario_hero_ids: set[str] = set()
+    authored_unit_ability_ids: set[str] = set()
+
+    for faction_id, faction in factions.items():
+        ensure(bool(str(faction.get("identity_summary", ""))), errors, f"Faction {faction_id} must define identity_summary")
+        for town_id in faction.get("town_ids", []):
+            ensure(str(town_id) in towns, errors, f"Faction {faction_id} references missing town {town_id}")
+        for hero_id in faction.get("hero_ids", []):
+            ensure(str(hero_id) in heroes, errors, f"Faction {faction_id} references missing hero {hero_id}")
+        economy = faction.get("economy", {})
+        ensure(isinstance(economy, dict) and bool(economy), errors, f"Faction {faction_id} must define an economy profile")
+        if isinstance(economy, dict):
+            base_income = economy.get("base_income", {})
+            ensure(isinstance(base_income, dict), errors, f"Faction {faction_id} economy base_income must be a dictionary")
+            if "pressure_bonus" in economy:
+                ensure(int(economy.get("pressure_bonus", 0)) >= 0, errors, f"Faction {faction_id} economy pressure_bonus must be >= 0")
+            per_category_income = economy.get("per_category_income", {})
+            ensure(isinstance(per_category_income, dict) and bool(per_category_income), errors, f"Faction {faction_id} economy must define per_category_income")
+            if isinstance(per_category_income, dict):
+                for category, resources in per_category_income.items():
+                    ensure(str(category) in SUPPORTED_BUILDING_CATEGORIES, errors, f"Faction {faction_id} economy uses unsupported building category {category}")
+                    ensure(isinstance(resources, dict) and bool(resources), errors, f"Faction {faction_id} economy category {category} must define resource income")
+        recruitment = faction.get("recruitment", {})
+        ensure(isinstance(recruitment, dict) and bool(recruitment), errors, f"Faction {faction_id} must define a recruitment profile")
+        if isinstance(recruitment, dict):
+            if "readiness_bonus" in recruitment:
+                ensure(int(recruitment.get("readiness_bonus", 0)) >= 0, errors, f"Faction {faction_id} recruitment readiness_bonus must be >= 0")
+            growth_bonus = recruitment.get("growth_bonus", {})
+            ensure(isinstance(growth_bonus, dict) and bool(growth_bonus), errors, f"Faction {faction_id} recruitment must define growth_bonus")
+            if isinstance(growth_bonus, dict):
+                for unit_id, amount in growth_bonus.items():
+                    ensure(str(unit_id) in units, errors, f"Faction {faction_id} recruitment references missing growth unit {unit_id}")
+                    ensure(int(amount) > 0, errors, f"Faction {faction_id} recruitment growth bonus must be > 0 for {unit_id}")
+            discounts = recruitment.get("cost_discount_percent", {})
+            ensure(isinstance(discounts, dict) and bool(discounts), errors, f"Faction {faction_id} recruitment must define cost_discount_percent")
+            if isinstance(discounts, dict):
+                for unit_id, amount in discounts.items():
+                    ensure(str(unit_id) in units, errors, f"Faction {faction_id} recruitment references missing discount unit {unit_id}")
+                    ensure(0 < int(amount) < 100, errors, f"Faction {faction_id} recruitment discount must be between 1 and 99 for {unit_id}")
+        if faction_id in RELEASE_PLAYER_FACTIONS:
+            ensure(len([str(value) for value in faction.get("hero_ids", [])]) >= 4, errors, f"Faction {faction_id} must author at least four playable heroes for release-facing roster depth")
+            enemy_strategy = faction.get("enemy_strategy", {})
+            ensure(isinstance(enemy_strategy, dict) and bool(enemy_strategy), errors, f"Faction {faction_id} must define enemy_strategy for hostile-empire personality")
+            if isinstance(enemy_strategy, dict):
+                for section, required_keys in ENEMY_STRATEGY_KEYS.items():
+                    bucket = enemy_strategy.get(section, {})
+                    ensure(isinstance(bucket, dict) and bool(bucket), errors, f"Faction {faction_id} enemy_strategy must define non-empty {section}")
+                    if isinstance(bucket, dict):
+                        for key in required_keys:
+                            ensure(key in bucket, errors, f"Faction {faction_id} enemy_strategy {section} is missing {key}")
+
+    for hero_id, hero in heroes.items():
+        faction_id = str(hero.get("faction_id", ""))
+        ensure(faction_id in factions, errors, f"Hero {hero_id} references missing faction")
+        if faction_id in factions:
+            ensure(hero_id in [str(value) for value in factions[faction_id].get("hero_ids", [])], errors, f"Hero {hero_id} must be listed in faction {faction_id} hero_ids")
+        ensure(bool(str(hero.get("roster_summary", ""))), errors, f"Hero {hero_id} must define roster_summary")
+        ensure(bool(str(hero.get("identity_summary", ""))), errors, f"Hero {hero_id} must define identity_summary")
+        ensure(int(hero.get("base_movement", 0)) > 0, errors, f"Hero {hero_id} must define base_movement > 0")
+        recruit_cost = hero.get("recruit_cost", {})
+        if "recruit_cost" in hero:
+            ensure(isinstance(recruit_cost, dict), errors, f"Hero {hero_id} recruit_cost must be a dictionary")
+        if isinstance(recruit_cost, dict):
+            for resource_key, amount in recruit_cost.items():
+                ensure(bool(str(resource_key)), errors, f"Hero {hero_id} recruit_cost cannot contain an empty resource key")
+                ensure(int(amount) >= 0, errors, f"Hero {hero_id} recruit_cost must be >= 0 for {resource_key}")
+        starting_specialties = hero.get("starting_specialties", [])
+        ensure(isinstance(starting_specialties, list) and bool(starting_specialties), errors, f"Hero {hero_id} must define non-empty starting_specialties")
+        if isinstance(starting_specialties, list):
+            for specialty_id in starting_specialties:
+                ensure(str(specialty_id) in VALID_SPECIALTY_IDS, errors, f"Hero {hero_id} uses unsupported starting specialty {specialty_id}")
+        specialty_focus_ids = hero.get("specialty_focus_ids", [])
+        ensure(isinstance(specialty_focus_ids, list) and len(specialty_focus_ids) >= 2, errors, f"Hero {hero_id} must define at least two specialty_focus_ids")
+        if isinstance(specialty_focus_ids, list):
+            for specialty_id in specialty_focus_ids:
+                ensure(str(specialty_id) in VALID_SPECIALTY_IDS, errors, f"Hero {hero_id} uses unsupported specialty focus {specialty_id}")
+        battle_traits = hero.get("battle_traits", [])
+        ensure(isinstance(battle_traits, list) and bool(battle_traits), errors, f"Hero {hero_id} must define non-empty battle_traits")
+        if isinstance(battle_traits, list):
+            for trait_id in battle_traits:
+                ensure(str(trait_id) in VALID_BATTLE_TRAIT_IDS, errors, f"Hero {hero_id} uses unsupported battle trait {trait_id}")
+        for spell_id in hero.get("starting_spell_ids", []):
+            ensure(str(spell_id) in spells, errors, f"Hero {hero_id} references missing starting spell {spell_id}")
+
+    for unit_id, unit in units.items():
+        ensure(str(unit.get("faction_id", "")) in factions, errors, f"Unit {unit_id} references missing faction")
+        ensure(int(unit.get("hp", 0)) > 0, errors, f"Unit {unit_id} must define hp > 0")
+        ensure(int(unit.get("max_damage", 0)) >= int(unit.get("min_damage", 0)) > 0, errors, f"Unit {unit_id} has invalid damage range")
+        role = str(unit.get("role", ""))
+        ensure(role in {"melee", "ranged"}, errors, f"Unit {unit_id} uses unsupported role {role}")
+        if bool(unit.get("ranged", False)):
+            ensure(int(unit.get("shots", 0)) > 0, errors, f"Ranged unit {unit_id} must define shots > 0")
+
+        abilities = unit.get("abilities", [])
+        if "abilities" in unit:
+            ensure(isinstance(abilities, list) and bool(abilities), errors, f"Unit {unit_id} abilities must be a non-empty list when present")
+        if isinstance(abilities, list):
+            seen_ability_ids: set[str] = set()
+            for ability in abilities:
+                ensure(isinstance(ability, dict), errors, f"Unit {unit_id} contains a non-dict ability entry")
+                if not isinstance(ability, dict):
+                    continue
+                ability_id = str(ability.get("id", ""))
+                ensure(ability_id in SUPPORTED_UNIT_ABILITY_IDS, errors, f"Unit {unit_id} uses unsupported ability {ability_id}")
+                ensure(ability_id not in seen_ability_ids, errors, f"Unit {unit_id} repeats ability {ability_id}")
+                ensure(bool(str(ability.get("name", ""))), errors, f"Unit {unit_id} ability {ability_id} must define name")
+                ensure(bool(str(ability.get("description", ""))), errors, f"Unit {unit_id} ability {ability_id} must define description")
+                if ability_id:
+                    seen_ability_ids.add(ability_id)
+                    authored_unit_ability_ids.add(ability_id)
+                if ability_id == "reach":
+                    ensure(float(ability.get("distance_one_multiplier", 0.0)) > 0.0, errors, f"Unit {unit_id} reach must define distance_one_multiplier > 0")
+                elif ability_id == "brace":
+                    ensure(float(ability.get("retaliation_multiplier", 0.0)) >= 1.0, errors, f"Unit {unit_id} brace must define retaliation_multiplier >= 1")
+                    ensure(int(ability.get("defending_cohesion_bonus", 0)) > 0, errors, f"Unit {unit_id} brace must define defending_cohesion_bonus > 0")
+                    ensure(bool(str(ability.get("status_id", ""))), errors, f"Unit {unit_id} brace must define status_id")
+                    ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} brace must define duration_rounds > 0")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Unit {unit_id} brace must define modifiers")
+                elif ability_id == "harry":
+                    ensure(bool(str(ability.get("status_id", ""))), errors, f"Unit {unit_id} harry must define status_id")
+                    ensure(int(ability.get("duration_rounds", 0)) > 0, errors, f"Unit {unit_id} harry must define duration_rounds > 0")
+                    modifiers = ability.get("modifiers", {})
+                    ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Unit {unit_id} harry must define modifiers")
+                    ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} harry must define momentum_gain > 0")
+                    if "wounded_threshold_ratio" in ability:
+                        ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} harry wounded_threshold_ratio must be between 0 and 1")
+                    if "wounded_damage_multiplier" in ability:
+                        ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} harry wounded_damage_multiplier must be > 1")
+                elif ability_id == "backstab":
+                    ensure(float(ability.get("damage_multiplier", 0.0)) >= 1.0, errors, f"Unit {unit_id} backstab must define damage_multiplier >= 1")
+                    ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} backstab must define momentum_gain > 0")
+                    status_ids = ability.get("status_ids", [])
+                    ensure(isinstance(status_ids, list) and bool(status_ids), errors, f"Unit {unit_id} backstab must define status_ids")
+                    if "health_threshold_ratio" in ability:
+                        ensure(0.0 < float(ability.get("health_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} backstab health_threshold_ratio must be between 0 and 1")
+                    if "threshold_damage_multiplier" in ability:
+                        ensure(float(ability.get("threshold_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} backstab threshold_damage_multiplier must be > 1")
+                elif ability_id == "shielding":
+                    multiplier = float(ability.get("ranged_damage_multiplier", 0.0))
+                    ensure(0.0 < multiplier <= 1.0, errors, f"Unit {unit_id} shielding must define ranged_damage_multiplier between 0 and 1")
+                    ensure(int(ability.get("cohesion_hold_bonus", 0)) > 0, errors, f"Unit {unit_id} shielding must define cohesion_hold_bonus > 0")
+                    if "engaged_damage_multiplier" in ability:
+                        ensure(float(ability.get("engaged_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding engaged_damage_multiplier must be > 1")
+                    if "harried_damage_multiplier" in ability:
+                        ensure(float(ability.get("harried_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} shielding harried_damage_multiplier must be > 1")
+                elif ability_id == "volley":
+                    ensure(float(ability.get("damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley must define damage_multiplier > 1")
+                    ensure(int(ability.get("min_distance", 0)) > 0, errors, f"Unit {unit_id} volley must define min_distance > 0")
+                    if "status_ids" in ability:
+                        ensure(isinstance(ability.get("status_ids", []), list) and bool(ability.get("status_ids", [])), errors, f"Unit {unit_id} volley status_ids must be a non-empty list when present")
+                    if "status_damage_multiplier" in ability:
+                        ensure(float(ability.get("status_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley status_damage_multiplier must be > 1")
+                    if "ally_defending_multiplier" in ability:
+                        ensure(float(ability.get("ally_defending_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} volley ally_defending_multiplier must be > 1")
+                elif ability_id == "formation_guard":
+                    ensure(float(ability.get("ally_ranged_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} formation_guard must define ally_ranged_damage_multiplier > 1")
+                    ensure(int(ability.get("ally_ranged_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define ally_ranged_initiative_bonus > 0")
+                    ensure(int(ability.get("ally_cohesion_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define ally_cohesion_bonus > 0")
+                    ensure(int(ability.get("defending_cohesion_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define defending_cohesion_bonus > 0")
+                    ensure(int(ability.get("defending_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} formation_guard must define defending_initiative_bonus > 0")
+                    ensure(float(ability.get("staggered_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} formation_guard must define staggered_damage_multiplier > 1")
+                elif ability_id == "bloodrush":
+                    ensure(0.0 < float(ability.get("wounded_threshold_ratio", 0.0)) <= 1.0, errors, f"Unit {unit_id} bloodrush wounded_threshold_ratio must be between 0 and 1")
+                    ensure(float(ability.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} bloodrush wounded_damage_multiplier must be > 1")
+                    ensure(isinstance(ability.get("status_ids", []), list) and bool(ability.get("status_ids", [])), errors, f"Unit {unit_id} bloodrush must define status_ids")
+                    ensure(float(ability.get("status_damage_multiplier", 0.0)) > 1.0, errors, f"Unit {unit_id} bloodrush status_damage_multiplier must be > 1")
+                    ensure(int(ability.get("wounded_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush wounded_initiative_bonus must be > 0")
+                    ensure(int(ability.get("max_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush max_initiative_bonus must be > 0")
+                    ensure(int(ability.get("momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush momentum_gain must be > 0")
+                    ensure(int(ability.get("kill_momentum_gain", 0)) > 0, errors, f"Unit {unit_id} bloodrush kill_momentum_gain must be > 0")
+                    ensure(int(ability.get("late_round_initiative_bonus", 0)) > 0, errors, f"Unit {unit_id} bloodrush late_round_initiative_bonus must be > 0")
+
+    ensure(
+        {"reach", "brace", "harry", "backstab", "shielding", "volley", "formation_guard", "bloodrush"}.issubset(authored_unit_ability_ids),
+        errors,
+        "Authored units must cover the combat-depth ability set: reach, brace, harry, backstab, shielding, volley, formation_guard, and bloodrush",
+    )
+
+    ember_archer = units.get("unit_ember_archer", {})
+    ember_archer_volley = next((ability for ability in ember_archer.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "volley"), {})
+    ensure("status_staggered" in [str(value) for value in ember_archer_volley.get("status_ids", [])], errors, "Ember Archer volley must keep its stagger payoff authored")
+    ensure(float(ember_archer_volley.get("ally_defending_multiplier", 0.0)) > 1.0, errors, "Ember Archer volley must keep its allied-defender payoff authored")
+    ember_archer_harry = next((ability for ability in ember_archer.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
+    ensure(int(ember_archer_harry.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Ember Archer harry must keep a cohesion-pressure rider authored")
+    ensure(int(ember_archer_harry.get("momentum_gain", 0)) > 0, errors, "Ember Archer harry must keep its tempo-gain rider authored")
+
+    cutthroat = units.get("unit_blackbranch_cutthroat", {})
+    cutthroat_backstab = next((ability for ability in cutthroat.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "backstab"), {})
+    ensure(float(cutthroat_backstab.get("health_threshold_ratio", 0.0)) > 0.0, errors, "Blackbranch Cutthroat backstab must keep a wounded-threshold payoff authored")
+    ensure(float(cutthroat_backstab.get("threshold_damage_multiplier", 0.0)) > 1.0, errors, "Blackbranch Cutthroat backstab must keep a wounded-threshold damage multiplier authored")
+    ensure(int(cutthroat_backstab.get("momentum_gain", 0)) > 0, errors, "Blackbranch Cutthroat backstab must keep its momentum-gain payoff authored")
+
+    mire_slinger = units.get("unit_mire_slinger", {})
+    mire_slinger_harry = next((ability for ability in mire_slinger.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "harry"), {})
+    ensure(float(mire_slinger_harry.get("wounded_threshold_ratio", 0.0)) > 0.0, errors, "Mire Slinger harry must keep a wounded-threshold payoff authored")
+    ensure(float(mire_slinger_harry.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, "Mire Slinger harry must keep a wounded-target damage multiplier authored")
+    ensure(int(mire_slinger_harry.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Mire Slinger harry must keep a cohesion-pressure rider authored")
+
+    bog_brute = units.get("unit_bog_brute", {})
+    bog_brute_shielding = next((ability for ability in bog_brute.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "shielding"), {})
+    ensure(float(bog_brute_shielding.get("engaged_damage_multiplier", 0.0)) > 1.0, errors, "Bog Brute shielding must keep its engaged damage payoff authored")
+    ensure(float(bog_brute_shielding.get("harried_damage_multiplier", 0.0)) > 1.0, errors, "Bog Brute shielding must keep its harried-target payoff authored")
+    ensure(int(bog_brute_shielding.get("cohesion_hold_bonus", 0)) > 0, errors, "Bog Brute shielding must keep its cohesion-hold payoff authored")
+
+    citadel_pikeward = units.get("unit_citadel_pikeward", {})
+    pikeward_screen = next((ability for ability in citadel_pikeward.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "formation_guard"), {})
+    ensure(float(pikeward_screen.get("ally_ranged_damage_multiplier", 0.0)) > 1.0, errors, "Citadel Pikeward must keep its formation_guard ranged-support payoff authored")
+    ensure(int(pikeward_screen.get("ally_ranged_initiative_bonus", 0)) > 0, errors, "Citadel Pikeward must keep its formation_guard initiative payoff authored")
+    ensure(int(pikeward_screen.get("ally_cohesion_bonus", 0)) > 0, errors, "Citadel Pikeward must keep its formation_guard cohesion payoff authored")
+
+    gorefen_ripper = units.get("unit_gorefen_ripper", {})
+    ripper_bloodrush = next((ability for ability in gorefen_ripper.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "bloodrush"), {})
+    ensure(float(ripper_bloodrush.get("wounded_damage_multiplier", 0.0)) > 1.0, errors, "Gorefen Ripper must keep its bloodrush wounded-target payoff authored")
+    ensure(int(ripper_bloodrush.get("max_initiative_bonus", 0)) > 0, errors, "Gorefen Ripper must keep its bloodrush initiative payoff authored")
+    ensure(int(ripper_bloodrush.get("momentum_gain", 0)) > 0, errors, "Gorefen Ripper must keep its bloodrush momentum payoff authored")
+
+    for group_id, group in army_groups.items():
+        ensure(str(group.get("faction_id", "")) in factions, errors, f"Army group {group_id} references missing faction")
+        stacks = group.get("stacks", [])
+        ensure(bool(stacks), errors, f"Army group {group_id} must define at least one stack")
+        for stack in stacks:
+            if not isinstance(stack, dict):
+                fail(errors, f"Army group {group_id} contains a non-dict stack entry")
+                continue
+            unit_id = str(stack.get("unit_id", ""))
+            ensure(unit_id in units, errors, f"Army group {group_id} references missing unit {unit_id}")
+            ensure(int(stack.get("count", 0)) > 0, errors, f"Army group {group_id} has non-positive stack count for {unit_id}")
+
+    embercourt_elite_groups = sum(
+        1
+        for group in army_groups.values()
+        if any(isinstance(stack, dict) and str(stack.get("unit_id", "")) == "unit_citadel_pikeward" for stack in group.get("stacks", []))
+    )
+    ensure(embercourt_elite_groups >= 5, errors, "Release battle identity must keep Citadel Pikewards present across at least five authored army groups")
+    mireclaw_elite_groups = sum(
+        1
+        for group in army_groups.values()
+        if any(isinstance(stack, dict) and str(stack.get("unit_id", "")) == "unit_gorefen_ripper" for stack in group.get("stacks", []))
+    )
+    ensure(mireclaw_elite_groups >= 5, errors, "Release battle identity must keep Gorefen Rippers present across at least five authored army groups")
+    ensure("army_lantern_battery" in army_groups, errors, "Release battle variety must keep Lantern Battery authored")
+    ensure("army_causeway_phalanx" in army_groups, errors, "Release battle variety must keep Causeway Phalanx authored")
+    ensure("army_muckveil_harriers" in army_groups, errors, "Release battle variety must keep Muckveil Harriers authored")
+    ensure("army_ripper_vanguard" in army_groups, errors, "Release battle variety must keep Ripper Vanguard authored")
+
+    for building_id, building in buildings.items():
+        ensure(str(building.get("category", "")) in SUPPORTED_BUILDING_CATEGORIES, errors, f"Building {building_id} must define a supported category")
+        ensure(bool(str(building.get("description", ""))), errors, f"Building {building_id} must define description")
+        if "readiness_bonus" in building:
+            ensure(int(building.get("readiness_bonus", 0)) > 0, errors, f"Building {building_id} readiness_bonus must be > 0 when present")
+        if "pressure_bonus" in building:
+            ensure(int(building.get("pressure_bonus", 0)) > 0, errors, f"Building {building_id} pressure_bonus must be > 0 when present")
+        unlock_unit_id = str(building.get("unlock_unit_id", ""))
+        if unlock_unit_id:
+            ensure(unlock_unit_id in units, errors, f"Building {building_id} references missing unlock_unit_id {unlock_unit_id}")
+        if "spell_tier" in building:
+            ensure(int(building.get("spell_tier", 0)) > 0, errors, f"Building {building_id} must define spell_tier > 0 when present")
+        for required_building in building.get("requires", []):
+            ensure(str(required_building) in buildings, errors, f"Building {building_id} references missing prerequisite {required_building}")
+        upgrade_from = str(building.get("upgrade_from", ""))
+        if upgrade_from:
+            ensure(upgrade_from in buildings, errors, f"Building {building_id} references missing upgrade_from building {upgrade_from}")
+            ensure(upgrade_from != building_id, errors, f"Building {building_id} cannot upgrade from itself")
+        growth_bonus = building.get("growth_bonus", {})
+        if "growth_bonus" in building:
+            ensure(isinstance(growth_bonus, dict), errors, f"Building {building_id} growth_bonus must be a dictionary")
+        if isinstance(growth_bonus, dict):
+            for unit_id, amount in growth_bonus.items():
+                ensure(str(unit_id) in units, errors, f"Building {building_id} growth_bonus references missing unit {unit_id}")
+                ensure(int(amount) > 0, errors, f"Building {building_id} growth_bonus must be > 0 for {unit_id}")
+        recruit_discount = building.get("recruitment_discount_percent", {})
+        if "recruitment_discount_percent" in building:
+            ensure(isinstance(recruit_discount, dict) and bool(recruit_discount), errors, f"Building {building_id} recruitment_discount_percent must be a non-empty dictionary")
+        if isinstance(recruit_discount, dict):
+            for unit_id, amount in recruit_discount.items():
+                ensure(str(unit_id) in units, errors, f"Building {building_id} recruitment_discount_percent references missing unit {unit_id}")
+                ensure(0 < int(amount) < 100, errors, f"Building {building_id} recruitment discount must be between 1 and 99 for {unit_id}")
+    ensure(WAYFARERS_HALL_BUILDING_ID in buildings, errors, f"Missing required hero-command building {WAYFARERS_HALL_BUILDING_ID}")
+
+    for town_id, town in towns.items():
+        ensure(str(town.get("faction_id", "")) in factions, errors, f"Town {town_id} references missing faction")
+        if str(town.get("faction_id", "")) in factions:
+            ensure(town_id in [str(value) for value in factions[str(town.get("faction_id", ""))].get("town_ids", [])], errors, f"Town {town_id} must be listed in faction {town.get('faction_id')} town_ids")
+        ensure(bool(str(town.get("identity_summary", ""))), errors, f"Town {town_id} must define identity_summary")
+        economy = town.get("economy", {})
+        ensure(isinstance(economy, dict) and bool(economy), errors, f"Town {town_id} must define an economy profile")
+        if isinstance(economy, dict):
+            base_income = economy.get("base_income", {})
+            ensure(isinstance(base_income, dict) and bool(base_income), errors, f"Town {town_id} economy must define base_income")
+            if "pressure_bonus" in economy:
+                ensure(int(economy.get("pressure_bonus", 0)) >= 0, errors, f"Town {town_id} economy pressure_bonus must be >= 0")
+            per_category_income = economy.get("per_category_income", {})
+            ensure(isinstance(per_category_income, dict), errors, f"Town {town_id} economy per_category_income must be a dictionary")
+            if isinstance(per_category_income, dict):
+                for category, resources in per_category_income.items():
+                    ensure(str(category) in SUPPORTED_BUILDING_CATEGORIES, errors, f"Town {town_id} economy uses unsupported building category {category}")
+                    ensure(isinstance(resources, dict) and bool(resources), errors, f"Town {town_id} economy category {category} must define resource income")
+        recruitment = town.get("recruitment", {})
+        ensure(isinstance(recruitment, dict) and bool(recruitment), errors, f"Town {town_id} must define a recruitment profile")
+        if isinstance(recruitment, dict):
+            if "readiness_bonus" in recruitment:
+                ensure(int(recruitment.get("readiness_bonus", 0)) >= 0, errors, f"Town {town_id} recruitment readiness_bonus must be >= 0")
+            growth_bonus = recruitment.get("growth_bonus", {})
+            ensure(isinstance(growth_bonus, dict) and bool(growth_bonus), errors, f"Town {town_id} recruitment must define growth_bonus")
+            if isinstance(growth_bonus, dict):
+                for unit_id, amount in growth_bonus.items():
+                    ensure(str(unit_id) in units, errors, f"Town {town_id} recruitment references missing growth unit {unit_id}")
+                    ensure(int(amount) > 0, errors, f"Town {town_id} recruitment growth bonus must be > 0 for {unit_id}")
+            discounts = recruitment.get("cost_discount_percent", {})
+            ensure(isinstance(discounts, dict) and bool(discounts), errors, f"Town {town_id} recruitment must define cost_discount_percent")
+            if isinstance(discounts, dict):
+                for unit_id, amount in discounts.items():
+                    ensure(str(unit_id) in units, errors, f"Town {town_id} recruitment references missing discount unit {unit_id}")
+                    ensure(0 < int(amount) < 100, errors, f"Town {town_id} recruitment discount must be between 1 and 99 for {unit_id}")
+        town_building_ids = [str(value) for value in town.get("starting_building_ids", [])] + [str(value) for value in town.get("buildable_building_ids", [])]
+        for building_id in town.get("starting_building_ids", []):
+            ensure(str(building_id) in buildings, errors, f"Town {town_id} references missing starting building {building_id}")
+        for building_id in town.get("buildable_building_ids", []):
+            ensure(str(building_id) in buildings, errors, f"Town {town_id} references missing buildable building {building_id}")
+        unlockable_unit_ids: list[str] = []
+        for building_id in town_building_ids:
+            building = buildings.get(building_id, {})
+            unlock_unit_id = str(building.get("unlock_unit_id", ""))
+            if unlock_unit_id:
+                append_unique(unlockable_unit_ids, unlock_unit_id)
+                ensure(str(units.get(unlock_unit_id, {}).get("faction_id", "")) == str(town.get("faction_id", "")), errors, f"Town {town_id} unlocks unit {unlock_unit_id} from a different faction")
+            upgrade_from = str(building.get("upgrade_from", ""))
+            if upgrade_from:
+                ensure(upgrade_from in town_building_ids, errors, f"Town {town_id} cannot progress into {building_id} because upgrade_from {upgrade_from} is missing from its build tree")
+            for requirement in building.get("requires", []):
+                ensure(str(requirement) in town_building_ids, errors, f"Town {town_id} cannot satisfy {building_id} prerequisite {requirement} within its authored build tree")
+        ensure(bool(unlockable_unit_ids), errors, f"Town {town_id} must offer at least one authored dwelling unit")
+        for stack in town.get("garrison", []):
+            if not isinstance(stack, dict):
+                fail(errors, f"Town {town_id} contains a non-dict garrison entry")
+                continue
+            ensure(str(stack.get("unit_id", "")) in units, errors, f"Town {town_id} references missing garrison unit {stack.get('unit_id')}")
+            ensure(int(stack.get("count", 0)) > 0, errors, f"Town {town_id} garrison stack must have count > 0 for {stack.get('unit_id')}")
+        for entry in town.get("spell_library", []):
+            ensure(isinstance(entry, dict), errors, f"Town {town_id} contains a non-dict spell library entry")
+            if not isinstance(entry, dict):
+                continue
+            ensure(int(entry.get("tier", 0)) > 0, errors, f"Town {town_id} spell library entries must define tier > 0")
+            for spell_id in entry.get("spell_ids", []):
+                ensure(str(spell_id) in spells, errors, f"Town {town_id} references missing spell library spell {spell_id}")
+        advanced_embercourt_ids = [building_id for building_id in town.get("buildable_building_ids", []) if str(building_id) in ADVANCED_EMBERCOURT_BUILDING_IDS]
+        advanced_mireclaw_ids = [building_id for building_id in town.get("buildable_building_ids", []) if str(building_id) in ADVANCED_MIRECLAW_BUILDING_IDS]
+        advanced_sunvault_ids = [building_id for building_id in town.get("buildable_building_ids", []) if str(building_id) in ADVANCED_SUNVAULT_BUILDING_IDS]
+        ensure("building_market_square" in town_building_ids, errors, f"Town {town_id} must keep Market Square in its build tree for the exchange-economy slice")
+        if str(town.get("faction_id", "")) == "faction_embercourt":
+            ensure(bool(advanced_embercourt_ids), errors, f"Town {town_id} must expose at least one advanced Embercourt building for release-facing town asymmetry")
+            ensure("building_citadel_pikehall" in town_building_ids, errors, f"Town {town_id} must keep Citadel Pikehall in its build tree for Embercourt battle identity")
+        if str(town.get("faction_id", "")) == "faction_mireclaw":
+            ensure(bool(advanced_mireclaw_ids), errors, f"Town {town_id} must expose at least one advanced Mireclaw building for release-facing town asymmetry")
+            ensure("building_gorefen_ring" in town_building_ids, errors, f"Town {town_id} must keep Gorefen Ring in its build tree for Mireclaw battle identity")
+        if str(town.get("faction_id", "")) == "faction_sunvault":
+            ensure(bool(advanced_sunvault_ids), errors, f"Town {town_id} must expose at least one advanced Sunvault building for release-facing town asymmetry")
+            ensure("building_aurora_spire" in town_building_ids, errors, f"Town {town_id} must keep Aurora Spire in its build tree for Sunvault battle identity")
+
+    for artifact_id, artifact in artifacts.items():
+        slot = str(artifact.get("slot", ""))
+        ensure(slot in {"boots", "banner", "armor", "trinket"}, errors, f"Artifact {artifact_id} uses unsupported slot {slot}")
+        bonuses = artifact.get("bonuses", {})
+        ensure(isinstance(bonuses, dict) and bool(bonuses), errors, f"Artifact {artifact_id} must define at least one bonus")
+    ensure(
+        any(int((artifact.get("bonuses", {}) if isinstance(artifact.get("bonuses", {}), dict) else {}).get("scouting_radius", 0)) > 0 for artifact in artifacts.values()),
+        errors,
+        "At least one authored artifact must provide a scouting_radius bonus for the fog-of-war slice",
+    )
+    ensure(ADVANCED_EMBERCOURT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Embercourt building set authored")
+    ensure(ADVANCED_MIRECLAW_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Mireclaw building set authored")
+    ensure(ADVANCED_SUNVAULT_BUILDING_IDS.issubset(buildings.keys()), errors, "Release town depth must keep the advanced Sunvault building set authored")
+    ensure(MARKET_BUILDING_IDS.issubset(buildings.keys()), errors, "Release economy gameplay must keep the core market and exchange building set authored")
+    ensure(sum(1 for building in buildings.values() if int(building.get("readiness_bonus", 0)) > 0) >= 6, errors, "Release town depth must author at least six readiness-boosting buildings")
+    ensure(sum(1 for building in buildings.values() if int(building.get("pressure_bonus", 0)) > 0) >= 4, errors, "Release town depth must author at least four pressure-boosting buildings")
+    ensure(int(factions.get("faction_embercourt", {}).get("recruitment", {}).get("readiness_bonus", 0)) > int(factions.get("faction_mireclaw", {}).get("recruitment", {}).get("readiness_bonus", 0)), errors, "Embercourt must keep the stronger faction-wide readiness bonus")
+    ensure(int(factions.get("faction_mireclaw", {}).get("economy", {}).get("pressure_bonus", 0)) > int(factions.get("faction_embercourt", {}).get("economy", {}).get("pressure_bonus", 0)), errors, "Mireclaw must keep the stronger faction-wide pressure bonus")
+    ensure(int(factions.get("faction_sunvault", {}).get("economy", {}).get("per_category_income", {}).get("magic", {}).get("gold", 0)) >= 30, errors, "Sunvault must keep a strong faction-wide magic income identity")
+    ensure(int(factions.get("faction_sunvault", {}).get("economy", {}).get("per_category_income", {}).get("support", {}).get("gold", 0)) >= 30, errors, "Sunvault must keep a strong faction-wide support income identity")
+
+    for spell_id, spell in spells.items():
+        context = str(spell.get("context", ""))
+        ensure(context in {"overworld", "battle"}, errors, f"Spell {spell_id} uses unsupported context {context}")
+        ensure(int(spell.get("mana_cost", 0)) > 0, errors, f"Spell {spell_id} must define mana_cost > 0")
+        effect = spell.get("effect", {})
+        ensure(isinstance(effect, dict), errors, f"Spell {spell_id} must define an effect payload")
+        if not isinstance(effect, dict):
+            continue
+        effect_type = str(effect.get("type", ""))
+        if effect_type == "restore_movement":
+            ensure(int(effect.get("amount", 0)) > 0, errors, f"Spell {spell_id} must define restore movement amount > 0")
+        elif effect_type == "damage_enemy":
+            ensure(int(effect.get("base_damage", 0)) > 0, errors, f"Spell {spell_id} must define base_damage > 0")
+            ensure(int(effect.get("power_scale", -1)) >= 0, errors, f"Spell {spell_id} must define power_scale >= 0")
+            status_effect = effect.get("status_effect", {})
+            if "status_effect" in effect:
+                ensure(isinstance(status_effect, dict) and bool(status_effect), errors, f"Spell {spell_id} status_effect must be a non-empty dictionary when present")
+            if isinstance(status_effect, dict) and status_effect:
+                ensure(bool(str(status_effect.get("effect_id", status_effect.get("status_id", "")))), errors, f"Spell {spell_id} status_effect must define effect_id")
+                ensure(int(status_effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} status_effect must define duration_rounds > 0")
+                modifiers = status_effect.get("modifiers", {})
+                ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} status_effect must define modifiers")
+        elif effect_type in {"defense_buff", "initiative_buff", "attack_buff"}:
+            ensure(int(effect.get("amount", 0)) > 0, errors, f"Spell {spell_id} must define buff amount > 0")
+            ensure(int(effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} must define duration_rounds > 0")
+            modifiers = effect.get("modifiers", {})
+            if "modifiers" in effect:
+                ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} modifiers must be a non-empty dictionary when present")
+        else:
+            fail(errors, f"Spell {spell_id} uses unsupported effect type {effect_type}")
+
+    cinder_burst = spells.get("spell_cinder_burst", {}).get("effect", {})
+    ensure(str(cinder_burst.get("status_effect", {}).get("effect_id", "")) == "status_staggered", errors, "Cinder Burst must keep its staggered spell payoff authored")
+    ensure(int(cinder_burst.get("status_effect", {}).get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Cinder Burst must keep a cohesion-pressure rider on stagger")
+    coal_rain = spells.get("spell_coal_rain", {}).get("effect", {})
+    ensure(str(coal_rain.get("status_effect", {}).get("effect_id", "")) == "status_harried", errors, "Coal Rain must keep its harried spell payoff authored")
+    ensure(int(coal_rain.get("status_effect", {}).get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Coal Rain must keep a cohesion-break rider on harried targets")
+    ensure(int(spells.get("spell_quickmarch_hymn", {}).get("effect", {}).get("modifiers", {}).get("attack", 0)) > 0, errors, "Quickmarch Hymn must keep an attack modifier for Embercourt battle tempo")
+    ensure(int(spells.get("spell_quickmarch_hymn", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Quickmarch Hymn must keep a momentum rider for battle tempo")
+    ensure(int(spells.get("spell_relay_drum", {}).get("effect", {}).get("modifiers", {}).get("attack", 0)) > 0, errors, "Relay Drum must keep an attack modifier for Mireclaw battle tempo")
+    ensure(int(spells.get("spell_relay_drum", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Relay Drum must keep a momentum rider for Mireclaw battle tempo")
+    ensure(int(spells.get("spell_stone_veil", {}).get("effect", {}).get("modifiers", {}).get("initiative", 0)) > 0, errors, "Stone Veil must keep an initiative rider for formation recovery")
+    ensure(int(spells.get("spell_stone_veil", {}).get("effect", {}).get("modifiers", {}).get("cohesion", 0)) > 0, errors, "Stone Veil must keep a cohesion rider for line recovery")
+    ensure(int(spells.get("spell_bulwark_litany", {}).get("effect", {}).get("modifiers", {}).get("attack", 0)) > 0, errors, "Bulwark Litany must keep an attack rider for brute-line payoff")
+    ensure(int(spells.get("spell_bulwark_litany", {}).get("effect", {}).get("modifiers", {}).get("cohesion", 0)) > 0, errors, "Bulwark Litany must keep a cohesion rider for holdfast payoff")
+    ensure(str(spells.get("spell_lantern_phalanx", {}).get("effect", {}).get("type", "")) == "attack_buff", errors, "Lantern Phalanx must keep its attack_buff identity authored")
+    ensure(int(spells.get("spell_lantern_phalanx", {}).get("effect", {}).get("modifiers", {}).get("defense", 0)) > 0, errors, "Lantern Phalanx must keep a defense rider for Embercourt line play")
+    ensure(int(spells.get("spell_lantern_phalanx", {}).get("effect", {}).get("modifiers", {}).get("cohesion", 0)) > 0, errors, "Lantern Phalanx must keep a cohesion rider for Embercourt line play")
+    ensure(str(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("type", "")) == "attack_buff", errors, "Bloodwake Drum must keep its attack_buff identity authored")
+    ensure(int(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("modifiers", {}).get("initiative", 0)) > 0, errors, "Bloodwake Drum must keep an initiative rider for Mireclaw collapse tempo")
+    ensure(int(spells.get("spell_bloodwake_drum", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Bloodwake Drum must keep a momentum rider for Mireclaw collapse tempo")
+    ensure(str(spells.get("spell_prism_bastion", {}).get("effect", {}).get("type", "")) == "defense_buff", errors, "Prism Bastion must keep its defense_buff identity authored")
+    ensure(int(spells.get("spell_prism_bastion", {}).get("effect", {}).get("modifiers", {}).get("cohesion", 0)) > 0, errors, "Prism Bastion must keep a cohesion rider for Sunvault array support")
+    ensure(str(spells.get("spell_resonant_chorus", {}).get("effect", {}).get("type", "")) == "initiative_buff", errors, "Resonant Chorus must keep its initiative_buff identity authored")
+    ensure(int(spells.get("spell_resonant_chorus", {}).get("effect", {}).get("modifiers", {}).get("momentum", 0)) > 0, errors, "Resonant Chorus must keep a momentum rider for Sunvault tempo")
+    ensure(str(spells.get("spell_sunlance_arc", {}).get("effect", {}).get("type", "")) == "damage_enemy", errors, "Sunlance Arc must keep its damage spell identity authored")
+    ensure(int(spells.get("spell_sunlance_arc", {}).get("effect", {}).get("status_effect", {}).get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Sunlance Arc must keep a cohesion-break rider for Sunvault battle identity")
+
+    ensure("spell_lantern_phalanx" in [str(spell_id) for spell_id in heroes.get("hero_caelen", {}).get("starting_spell_ids", [])], errors, "Caelen must keep Lantern Phalanx for line-cohesion commander identity")
+    ensure("spell_quickmarch_hymn" in [str(spell_id) for spell_id in heroes.get("hero_seren", {}).get("starting_spell_ids", [])], errors, "Seren must keep Quickmarch Hymn for artillery-tempo commander identity")
+    ensure("spell_coal_rain" in [str(spell_id) for spell_id in heroes.get("hero_tarn", {}).get("starting_spell_ids", [])], errors, "Tarn must keep Coal Rain for ambush-pressure commander identity")
+    ensure("spell_stone_veil" in [str(spell_id) for spell_id in heroes.get("hero_orrik", {}).get("starting_spell_ids", [])], errors, "Orrik must keep Stone Veil for dense-pack commander identity")
+    ensure("spell_prism_bastion" in [str(spell_id) for spell_id in heroes.get("hero_solera", {}).get("starting_spell_ids", [])], errors, "Solera must keep Prism Bastion for Sunvault line-support commander identity")
+    ensure("spell_sunlance_arc" in [str(spell_id) for spell_id in heroes.get("hero_neral", {}).get("starting_spell_ids", [])], errors, "Neral must keep Sunlance Arc for Sunvault artillery identity")
+    ensure("spell_resonant_chorus" in [str(spell_id) for spell_id in heroes.get("hero_varis", {}).get("starting_spell_ids", [])], errors, "Varis must keep Resonant Chorus for Sunvault tempo identity")
+    ensure("spell_resonant_chorus" in [str(spell_id) for spell_id in heroes.get("hero_thalen", {}).get("starting_spell_ids", [])], errors, "Thalen must keep Resonant Chorus for Sunvault cloister identity")
+
+    objective_authored_encounter_ids: set[str] = set()
+    for encounter_id, encounter in encounters.items():
+        ensure(str(encounter.get("enemy_group_id", "")) in army_groups, errors, f"Encounter {encounter_id} references missing enemy group")
+        ensure(int(encounter.get("max_rounds", 0)) > 0, errors, f"Encounter {encounter_id} must define max_rounds > 0")
+        battlefield_tags = encounter.get("battlefield_tags", [])
+        ensure(isinstance(battlefield_tags, list) and bool(battlefield_tags), errors, f"Encounter {encounter_id} must define non-empty battlefield_tags")
+        if isinstance(battlefield_tags, list):
+            for tag_id in battlefield_tags:
+                ensure(str(tag_id) in SUPPORTED_BATTLEFIELD_TAGS, errors, f"Encounter {encounter_id} uses unsupported battlefield tag {tag_id}")
+        commander = encounter.get("enemy_commander", {})
+        if commander:
+            ensure(isinstance(commander, dict), errors, f"Encounter {encounter_id} enemy_commander must be a dictionary")
+        if isinstance(commander, dict) and commander:
+            ensure(isinstance(commander.get("command", {}), dict), errors, f"Encounter {encounter_id} enemy_commander must define a command dictionary")
+            commander_traits = commander.get("battle_traits", [])
+            ensure(isinstance(commander_traits, list) and bool(commander_traits), errors, f"Encounter {encounter_id} enemy_commander must define non-empty battle_traits")
+            if isinstance(commander_traits, list):
+                for trait_id in commander_traits:
+                    ensure(str(trait_id) in VALID_BATTLE_TRAIT_IDS, errors, f"Encounter {encounter_id} enemy_commander uses unsupported battle trait {trait_id}")
+            for spell_id in commander.get("starting_spell_ids", []):
+                spell_key = str(spell_id)
+                ensure(spell_key in spells, errors, f"Encounter {encounter_id} references missing enemy commander spell {spell_key}")
+                if spell_key in spells:
+                    ensure(str(spells[spell_key].get("context", "")) == "battle", errors, f"Encounter {encounter_id} enemy commander spell {spell_key} must be a battle spell")
+        if "field_objectives" in encounter:
+            validate_field_objectives(errors, f"Encounter {encounter_id}", encounter.get("field_objectives", []))
+            if isinstance(encounter.get("field_objectives", []), list) and encounter.get("field_objectives", []):
+                objective_authored_encounter_ids.add(encounter_id)
+
+    encounter_tag_count = sum(1 for encounter in encounters.values() if isinstance(encounter.get("battlefield_tags", []), list) and bool(encounter.get("battlefield_tags", [])))
+    ensure(encounter_tag_count >= 20, errors, "Release battle variety must keep battlefield tags on at least twenty authored encounters")
+    ensure(RELEASE_FIELD_OBJECTIVE_ENCOUNTER_IDS.issubset(objective_authored_encounter_ids), errors, "Release battle-objective slice must keep authored field_objectives on the signature encounter set")
+    ensure(str(encounters.get("encounter_lantern_patrol", {}).get("enemy_group_id", "")) == "army_lantern_battery", errors, "Lantern Patrol must keep its ranged-battery encounter puzzle authored")
+    ensure(str(encounters.get("encounter_bridgeward_levies", {}).get("enemy_group_id", "")) == "army_causeway_phalanx", errors, "Bridgeward Levies must keep its chokepoint phalanx encounter puzzle authored")
+    ensure(str(encounters.get("encounter_sluice_raiders", {}).get("enemy_group_id", "")) == "army_muckveil_harriers", errors, "Sluice Raiders must keep its harrier-heavy encounter puzzle authored")
+    ensure(str(encounters.get("encounter_bone_ferry_watch", {}).get("enemy_group_id", "")) == "army_ripper_vanguard", errors, "Bone Ferry Watch must keep its ripper-vanguard encounter puzzle authored")
+    ensure(str(encounters.get("encounter_relay_pickets", {}).get("enemy_group_id", "")) == "army_relay_pickets", errors, "Relay Pickets must keep their fortified Sunvault screen encounter puzzle authored")
+    ensure(str(encounters.get("encounter_aurora_battery", {}).get("enemy_group_id", "")) == "army_aurora_battery", errors, "Aurora Battery must keep its elevated-fire Sunvault battery encounter puzzle authored")
+    ensure(any(str(objective.get("type", "")) == "lane_battery" for objective in encounters.get("encounter_lantern_patrol", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Lantern Patrol must keep a lane_battery battlefield objective authored")
+    ensure(any(str(objective.get("type", "")) == "supply_post" for objective in encounters.get("encounter_charter_guard", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Charter Guard must keep a supply_post battlefield objective authored")
+    ensure(any(str(objective.get("type", "")) == "ritual_pylon" for objective in encounters.get("encounter_drum_circle", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Nightglass Drum Circle must keep a ritual_pylon battlefield objective authored")
+    ensure(any(str(objective.get("type", "")) == "signal_beacon" for objective in encounters.get("encounter_relay_pickets", {}).get("field_objectives", []) if isinstance(objective, dict)), errors, "Relay Pickets must keep a signal_beacon battlefield objective authored")
+
+    objective_override_placements: set[str] = set()
+    for scenario_id, scenario in scenarios.items():
+        game_map = scenario.get("map", [])
+        ensure(isinstance(game_map, list) and bool(game_map), errors, f"Scenario {scenario_id} must define a non-empty map")
+        if not isinstance(game_map, list) or not game_map:
+            continue
+
+        width = len(game_map[0])
+        height = len(game_map)
+        ensure(all(isinstance(row, list) and len(row) == width for row in game_map), errors, f"Scenario {scenario_id} has inconsistent row widths")
+        declared_size = scenario.get("map_size", {})
+        ensure(int(declared_size.get("width", 0)) == width, errors, f"Scenario {scenario_id} width does not match map_size")
+        ensure(int(declared_size.get("height", 0)) == height, errors, f"Scenario {scenario_id} height does not match map_size")
+        ensure(str(scenario.get("player_faction_id", "")) in factions, errors, f"Scenario {scenario_id} references missing player faction")
+        ensure(str(scenario.get("hero_id", "")) in heroes, errors, f"Scenario {scenario_id} references missing hero")
+        ensure(str(scenario.get("player_army_id", "")) in army_groups, errors, f"Scenario {scenario_id} references missing player army")
+        player_faction_id = str(scenario.get("player_faction_id", ""))
+        primary_hero_id = str(scenario.get("hero_id", ""))
+        scenario_player_factions.add(player_faction_id)
+        scenario_hero_ids.add(primary_hero_id)
+        if player_faction_id in factions and primary_hero_id in heroes:
+            ensure(primary_hero_id in [str(value) for value in factions[player_faction_id].get("hero_ids", [])], errors, f"Scenario {scenario_id} hero_id {primary_hero_id} must belong to player faction {player_faction_id}")
+        hero_starts = scenario.get("hero_starts", [])
+        if "hero_starts" in scenario:
+            ensure(isinstance(hero_starts, list) and bool(hero_starts), errors, f"Scenario {scenario_id} hero_starts must be a non-empty list when present")
+        if isinstance(hero_starts, list) and hero_starts:
+            normalized_hero_starts: list[str] = []
+            for hero_id in hero_starts:
+                hero_key = str(hero_id)
+                ensure(hero_key in heroes, errors, f"Scenario {scenario_id} hero_starts references missing hero {hero_key}")
+                if player_faction_id in factions:
+                    ensure(hero_key in [str(value) for value in factions[player_faction_id].get("hero_ids", [])], errors, f"Scenario {scenario_id} hero_starts hero {hero_key} must belong to player faction {player_faction_id}")
+                ensure(hero_key not in normalized_hero_starts, errors, f"Scenario {scenario_id} hero_starts repeats hero {hero_key}")
+                if hero_key not in normalized_hero_starts:
+                    normalized_hero_starts.append(hero_key)
+            ensure(primary_hero_id in normalized_hero_starts, errors, f"Scenario {scenario_id} hero_starts must include primary hero_id {primary_hero_id}")
+        if player_faction_id in factions and len([str(value) for value in factions[player_faction_id].get("hero_ids", [])]) > 1:
+            hall_capable_town_exists = False
+            for placement in scenario.get("towns", []):
+                if not isinstance(placement, dict):
+                    continue
+                town_id = str(placement.get("town_id", ""))
+                town = towns.get(town_id, {})
+                available_buildings = [str(value) for value in town.get("starting_building_ids", [])] + [str(value) for value in town.get("buildable_building_ids", [])]
+                if WAYFARERS_HALL_BUILDING_ID in available_buildings:
+                    hall_capable_town_exists = True
+                    break
+            ensure(hall_capable_town_exists, errors, f"Scenario {scenario_id} must include at least one town that can host a Wayfarers Hall for multi-hero recruitment")
+        selection = scenario.get("selection", {})
+        ensure(isinstance(selection, dict) and bool(selection), errors, f"Scenario {scenario_id} must define selection metadata for skirmish/setup UX")
+        if isinstance(selection, dict):
+            ensure(bool(str(selection.get("summary", ""))), errors, f"Scenario {scenario_id} selection metadata must define summary")
+            ensure(str(selection.get("recommended_difficulty", "")) in VALID_DIFFICULTIES, errors, f"Scenario {scenario_id} selection metadata must define a supported recommended_difficulty")
+            ensure(bool(str(selection.get("map_size_label", ""))), errors, f"Scenario {scenario_id} selection metadata must define map_size_label")
+            ensure(bool(str(selection.get("player_summary", ""))), errors, f"Scenario {scenario_id} selection metadata must define player_summary")
+            ensure(bool(str(selection.get("enemy_summary", ""))), errors, f"Scenario {scenario_id} selection metadata must define enemy_summary")
+            availability = selection.get("availability", {})
+            ensure(isinstance(availability, dict), errors, f"Scenario {scenario_id} selection metadata must define an availability dictionary")
+            if isinstance(availability, dict):
+                ensure("campaign" in availability, errors, f"Scenario {scenario_id} selection availability must declare campaign")
+                ensure("skirmish" in availability, errors, f"Scenario {scenario_id} selection availability must declare skirmish")
+                campaign_enabled = bool(availability.get("campaign", False))
+                skirmish_enabled = bool(availability.get("skirmish", False))
+                ensure(campaign_enabled or skirmish_enabled, errors, f"Scenario {scenario_id} must be available to at least one launch mode")
+                ensure(campaign_enabled == (scenario_id in campaign_scenario_ids), errors, f"Scenario {scenario_id} campaign availability must match campaign content wiring")
+                if skirmish_enabled:
+                    skirmish_scenario_ids.append(scenario_id)
+                if skirmish_enabled and not campaign_enabled:
+                    skirmish_only_scenario_ids.append(scenario_id)
+
+        start = scenario.get("start", {})
+        start_x = int(start.get("x", -1))
+        start_y = int(start.get("y", -1))
+        ensure(0 <= start_x < width and 0 <= start_y < height, errors, f"Scenario {scenario_id} start is out of bounds")
+
+        for placement in scenario.get("towns", []):
+            if not isinstance(placement, dict):
+                fail(errors, f"Scenario {scenario_id} contains a non-dict town placement")
+                continue
+            ensure(str(placement.get("town_id", "")) in towns, errors, f"Scenario {scenario_id} references missing town {placement.get('town_id')}")
+            x = int(placement.get("x", -1))
+            y = int(placement.get("y", -1))
+            ensure(0 <= x < width and 0 <= y < height, errors, f"Scenario {scenario_id} town placement {placement.get('placement_id')} is out of bounds")
+
+        for placement in scenario.get("resource_nodes", []):
+            if not isinstance(placement, dict):
+                fail(errors, f"Scenario {scenario_id} contains a non-dict resource placement")
+                continue
+            ensure(str(placement.get("site_id", "")) in resource_sites, errors, f"Scenario {scenario_id} references missing resource site {placement.get('site_id')}")
+            x = int(placement.get("x", -1))
+            y = int(placement.get("y", -1))
+            ensure(0 <= x < width and 0 <= y < height, errors, f"Scenario {scenario_id} resource placement {placement.get('placement_id')} is out of bounds")
+        resource_placement_ids = {
+            str(placement.get("placement_id", ""))
+            for placement in scenario.get("resource_nodes", [])
+            if isinstance(placement, dict) and str(placement.get("placement_id", ""))
+        }
+
+        artifact_placement_ids: list[str] = []
+        artifact_ids_in_scenario: list[str] = []
+        for placement in scenario.get("artifact_nodes", []):
+            if not isinstance(placement, dict):
+                fail(errors, f"Scenario {scenario_id} contains a non-dict artifact placement")
+                continue
+            artifact_id = str(placement.get("artifact_id", ""))
+            placement_id = str(placement.get("placement_id", ""))
+            ensure(artifact_id in artifacts, errors, f"Scenario {scenario_id} references missing artifact {placement.get('artifact_id')}")
+            ensure(bool(placement_id), errors, f"Scenario {scenario_id} artifact placements must define placement_id")
+            ensure(placement_id not in artifact_placement_ids, errors, f"Scenario {scenario_id} repeats artifact placement_id {placement_id}")
+            ensure(artifact_id not in artifact_ids_in_scenario, errors, f"Scenario {scenario_id} repeats artifact {artifact_id} in authored artifact nodes")
+            append_unique(artifact_placement_ids, placement_id)
+            append_unique(artifact_ids_in_scenario, artifact_id)
+            x = int(placement.get("x", -1))
+            y = int(placement.get("y", -1))
+            ensure(0 <= x < width and 0 <= y < height, errors, f"Scenario {scenario_id} artifact placement {placement.get('placement_id')} is out of bounds")
+
+        for placement in scenario.get("encounters", []):
+            if not isinstance(placement, dict):
+                fail(errors, f"Scenario {scenario_id} contains a non-dict encounter placement")
+                continue
+            ensure(str(placement.get("encounter_id", placement.get("id", ""))) in encounters, errors, f"Scenario {scenario_id} references missing encounter {placement.get('encounter_id')}")
+            if "field_objectives" in placement:
+                placement_id = str(placement.get("placement_id", ""))
+                validate_field_objectives(errors, f"Scenario {scenario_id} encounter placement {placement_id}", placement.get("field_objectives", []), allow_partial=True)
+                if isinstance(placement.get("field_objectives", []), list) and placement.get("field_objectives", []):
+                    objective_override_placements.add(placement_id)
+            x = int(placement.get("x", -1))
+            y = int(placement.get("y", -1))
+            ensure(0 <= x < width and 0 <= y < height, errors, f"Scenario {scenario_id} encounter placement {placement.get('placement_id')} is out of bounds")
+
+        town_placement_ids = {
+            str(placement.get("placement_id", ""))
+            for placement in scenario.get("towns", [])
+            if isinstance(placement, dict)
+        }
+        encounter_placement_ids = [
+            str(placement.get("placement_id", ""))
+            for placement in scenario.get("encounters", [])
+            if isinstance(placement, dict) and str(placement.get("placement_id", ""))
+        ]
+
+        objectives = scenario.get("objectives", {})
+        objective_ids: list[str] = []
+        if objectives:
+            ensure(isinstance(objectives, dict), errors, f"Scenario {scenario_id} objectives must be a dictionary")
+        if isinstance(objectives, dict):
+            for objective_bucket in ("victory", "defeat"):
+                bucket = objectives.get(objective_bucket, [])
+                ensure(isinstance(bucket, list), errors, f"Scenario {scenario_id} objective bucket {objective_bucket} must be a list")
+                if not isinstance(bucket, list):
+                    continue
+                for objective in bucket:
+                    if not isinstance(objective, dict):
+                        fail(errors, f"Scenario {scenario_id} contains a non-dict objective in {objective_bucket}")
+                        continue
+                    objective_type = str(objective.get("type", ""))
+                    objective_id = str(objective.get("id", "<unknown>"))
+                    append_unique(objective_ids, objective_id)
+                    if objective_type in {"town_owned_by_player", "town_not_owned_by_player"}:
+                        ensure(str(objective.get("placement_id", "")) in town_placement_ids, errors, f"Scenario {scenario_id} objective {objective_id} references missing placement_id")
+                    elif objective_type == "flag_true":
+                        ensure(bool(str(objective.get("flag", ""))), errors, f"Scenario {scenario_id} objective {objective_id} must define a flag")
+                    elif objective_type == "session_flag_equals":
+                        ensure(bool(str(objective.get("flag", ""))), errors, f"Scenario {scenario_id} objective {objective_id} must define a flag")
+                    elif objective_type == "encounter_resolved":
+                        ensure(str(objective.get("placement_id", "")) in encounter_placement_ids, errors, f"Scenario {scenario_id} objective {objective_id} references missing encounter placement_id")
+                    elif objective_type == "hook_fired":
+                        ensure(bool(str(objective.get("hook_id", ""))), errors, f"Scenario {scenario_id} objective {objective_id} must define hook_id")
+                    elif objective_type == "enemy_pressure_at_least":
+                        ensure(str(objective.get("faction_id", "")) in factions, errors, f"Scenario {scenario_id} objective {objective_id} references missing faction")
+                        ensure(int(objective.get("threshold", 0)) > 0, errors, f"Scenario {scenario_id} objective {objective_id} must define threshold > 0")
+                    elif objective_type == "day_at_least":
+                        ensure(int(objective.get("day", 0)) > 0, errors, f"Scenario {scenario_id} objective {objective_id} must define day > 0")
+                    else:
+                        fail(errors, f"Scenario {scenario_id} objective {objective_id} has unsupported type {objective_type}")
+
+        script_hooks = scenario.get("script_hooks", [])
+        if script_hooks:
+            ensure(isinstance(script_hooks, list), errors, f"Scenario {scenario_id} script_hooks must be a list")
+        if isinstance(script_hooks, list):
+            for hook in script_hooks:
+                if not isinstance(hook, dict):
+                    fail(errors, f"Scenario {scenario_id} contains a non-dict script hook")
+                    continue
+                for effect in hook.get("effects", []):
+                    if not isinstance(effect, dict):
+                        continue
+                    if str(effect.get("type", "")) != "spawn_encounter":
+                        continue
+                    placement = effect.get("placement", {})
+                    if isinstance(placement, dict):
+                        append_unique(encounter_placement_ids, str(placement.get("placement_id", "")))
+
+            for hook in script_hooks:
+                if not isinstance(hook, dict):
+                    continue
+                hook_id = str(hook.get("id", "<unknown>"))
+                conditions = hook.get("conditions", [])
+                effects = hook.get("effects", [])
+                ensure(bool(str(hook.get("id", ""))), errors, f"Scenario {scenario_id} contains a script hook without an id")
+                ensure(isinstance(conditions, list) and bool(conditions), errors, f"Scenario {scenario_id} hook {hook_id} must define conditions")
+                ensure(isinstance(effects, list) and bool(effects), errors, f"Scenario {scenario_id} hook {hook_id} must define effects")
+                if isinstance(conditions, list):
+                    for condition in conditions:
+                        ensure(isinstance(condition, dict), errors, f"Scenario {scenario_id} hook {hook_id} contains a non-dict condition")
+                        if isinstance(condition, dict):
+                            validate_script_condition(
+                                errors,
+                                scenario_id,
+                                hook_id,
+                                condition,
+                                factions,
+                                list(town_placement_ids),
+                                encounter_placement_ids,
+                                objective_ids,
+                            )
+                if isinstance(effects, list):
+                    for effect in effects:
+                        ensure(isinstance(effect, dict), errors, f"Scenario {scenario_id} hook {hook_id} contains a non-dict effect")
+                        if isinstance(effect, dict):
+                            validate_script_effect(
+                                errors,
+                                scenario_id,
+                                hook_id,
+                                effect,
+                                factions,
+                                units,
+                                buildings,
+                                resource_sites,
+                                artifacts,
+                                encounters,
+                                list(town_placement_ids),
+                                width,
+                                height,
+                            )
+
+        encounter_count = len(
+            [placement for placement in scenario.get("encounters", []) if isinstance(placement, dict)]
+        )
+        ensure(encounter_count >= 3, errors, f"Scenario {scenario_id} must author at least three encounter placements for release-facing neutral-front variety")
+
+        encounter_objective_count = 0
+        reactive_hook_present = False
+        pressure_hook_present = False
+        scripted_spawn_present = False
+        town_relief_present = False
+        effectful_hook_count = 0
+        if isinstance(objectives, dict):
+            for objective in objectives.get("victory", []):
+                if isinstance(objective, dict) and str(objective.get("type", "")) == "encounter_resolved":
+                    encounter_objective_count += 1
+        if isinstance(script_hooks, list):
+            for hook in script_hooks:
+                if not isinstance(hook, dict):
+                    continue
+                conditions = hook.get("conditions", [])
+                effects = hook.get("effects", [])
+                if isinstance(effects, list) and effects:
+                    effectful_hook_count += 1
+                if isinstance(conditions, list):
+                    for condition in conditions:
+                        if not isinstance(condition, dict):
+                            continue
+                        if str(condition.get("type", "")) in {"objective_not_met", "active_raid_count_at_least", "hook_fired", "hook_not_fired"}:
+                            reactive_hook_present = True
+                if isinstance(effects, list):
+                    for effect in effects:
+                        if not isinstance(effect, dict):
+                            continue
+                        effect_type = str(effect.get("type", ""))
+                        if effect_type == "add_enemy_pressure":
+                            pressure_hook_present = True
+                        elif effect_type == "spawn_encounter":
+                            scripted_spawn_present = True
+                        elif effect_type == "town_add_recruits":
+                            town_relief_present = True
+
+        ensure(encounter_objective_count >= 1, errors, f"Scenario {scenario_id} must author at least one encounter-clearing objective for distinct side-pressure identity")
+        ensure(effectful_hook_count >= 5, errors, f"Scenario {scenario_id} must author at least five script hooks for release-facing chapter/event density")
+        ensure(reactive_hook_present, errors, f"Scenario {scenario_id} must include reactive script conditions such as objective_not_met, raid-count checks, or hook dependencies")
+        ensure(pressure_hook_present, errors, f"Scenario {scenario_id} must include at least one add_enemy_pressure hook effect")
+        ensure(scripted_spawn_present, errors, f"Scenario {scenario_id} must include at least one scripted spawn_encounter effect")
+        ensure(town_relief_present, errors, f"Scenario {scenario_id} must include at least one town relief or reinforcement hook")
+
+        for enemy_faction in scenario.get("enemy_factions", []):
+            if not isinstance(enemy_faction, dict):
+                fail(errors, f"Scenario {scenario_id} contains a non-dict enemy faction entry")
+                continue
+            faction_id = str(enemy_faction.get("faction_id", ""))
+            ensure(faction_id in factions, errors, f"Scenario {scenario_id} references missing enemy faction {faction_id}")
+            ensure(int(enemy_faction.get("raid_threshold", 0)) > 0, errors, f"Scenario {scenario_id} enemy faction {faction_id} must define raid_threshold > 0")
+            for encounter_id in enemy_faction.get("raid_encounter_ids", []):
+                ensure(str(encounter_id) in encounters, errors, f"Scenario {scenario_id} enemy faction {faction_id} references missing raid encounter {encounter_id}")
+            for spawn_point in enemy_faction.get("spawn_points", []):
+                if not isinstance(spawn_point, dict):
+                    fail(errors, f"Scenario {scenario_id} enemy faction {faction_id} contains a non-dict spawn point")
+                    continue
+                x = int(spawn_point.get("x", -1))
+                y = int(spawn_point.get("y", -1))
+                ensure(0 <= x < width and 0 <= y < height, errors, f"Scenario {scenario_id} enemy faction {faction_id} has out-of-bounds spawn point")
+            siege_target = str(enemy_faction.get("siege_target_placement_id", ""))
+            if siege_target:
+                ensure(siege_target in town_placement_ids, errors, f"Scenario {scenario_id} enemy faction {faction_id} references missing siege target {siege_target}")
+            priority_targets = enemy_faction.get("priority_target_placement_ids", [])
+            if "priority_target_placement_ids" in enemy_faction:
+                ensure(isinstance(priority_targets, list) and bool(priority_targets), errors, f"Scenario {scenario_id} enemy faction {faction_id} must define non-empty priority_target_placement_ids when present")
+            if isinstance(priority_targets, list):
+                all_priority_targets = town_placement_ids | resource_placement_ids | set(artifact_placement_ids) | set(encounter_placement_ids)
+                for placement_id in priority_targets:
+                    ensure(str(placement_id) in all_priority_targets, errors, f"Scenario {scenario_id} enemy faction {faction_id} priority target {placement_id} is not an authored placement")
+            if "priority_target_bonus" in enemy_faction:
+                ensure(int(enemy_faction.get("priority_target_bonus", 0)) > 0, errors, f"Scenario {scenario_id} enemy faction {faction_id} priority_target_bonus must be > 0")
+            strategy_overrides = enemy_faction.get("strategy_overrides", {})
+            if "strategy_overrides" in enemy_faction:
+                ensure(isinstance(strategy_overrides, dict) and bool(strategy_overrides), errors, f"Scenario {scenario_id} enemy faction {faction_id} strategy_overrides must be a non-empty dictionary")
+            if isinstance(strategy_overrides, dict):
+                for section, bucket in strategy_overrides.items():
+                    ensure(section in ENEMY_STRATEGY_KEYS, errors, f"Scenario {scenario_id} enemy faction {faction_id} uses unsupported strategy_overrides section {section}")
+                    ensure(isinstance(bucket, dict) and bool(bucket), errors, f"Scenario {scenario_id} enemy faction {faction_id} strategy_overrides {section} must be a non-empty dictionary")
+                    if section in ENEMY_STRATEGY_KEYS and isinstance(bucket, dict):
+                        for key in bucket.keys():
+                            ensure(str(key) in ENEMY_STRATEGY_KEYS[section], errors, f"Scenario {scenario_id} enemy faction {faction_id} strategy_overrides {section} uses unsupported key {key}")
+
+    validate_campaigns(errors, campaigns, scenarios)
+    ensure(RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS.issubset(objective_override_placements), errors, "Release battle-objective slice must keep authored scenario encounter overrides for the signature field-objective fronts")
+    ensure(bool(skirmish_scenario_ids), errors, "At least one scenario must be marked skirmish-available")
+    ensure(bool(skirmish_only_scenario_ids), errors, "Scenario roster should include at least one authored skirmish-only front")
+    ensure(RELEASE_PLAYER_FACTIONS.issubset(scenario_player_factions), errors, "Scenario starts must cover all release player factions")
+    ensure(len(scenario_hero_ids) >= 4, errors, "Scenario roster must expose at least four distinct lead heroes")
+
+
+def validate_project_and_scenes(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    ensure(project_path.exists(), errors, "Missing project.godot")
+    if not project_path.exists():
+        return
+
+    project_text = project_path.read_text(encoding="utf-8")
+    main_scene_match = re.search(r'run/main_scene="([^"]+)"', project_text)
+    ensure(main_scene_match is not None, errors, "project.godot is missing run/main_scene")
+    if main_scene_match:
+        main_scene = ROOT / main_scene_match.group(1).replace("res://", "")
+        ensure(main_scene.exists(), errors, f"Main scene is missing: {main_scene.relative_to(ROOT)}")
+
+    autoload_entries = re.findall(r'^([A-Za-z0-9_]+)="[*]?(res://[^"]+)"', project_text, flags=re.MULTILINE)
+    for autoload_name, autoload_path in autoload_entries:
+        file_path = ROOT / autoload_path.replace("res://", "")
+        ensure(file_path.exists(), errors, f"Autoload target is missing: {file_path.relative_to(ROOT)}")
+        if file_path.exists():
+            script_text = file_path.read_text(encoding="utf-8")
+            class_name_match = re.search(r"^\s*class_name\s+([A-Za-z_][A-Za-z0-9_]*)", script_text, flags=re.MULTILINE)
+            ensure(
+                class_name_match is None or class_name_match.group(1) != autoload_name,
+                errors,
+                f"Autoload {autoload_name} must not share its name with class_name in {file_path.relative_to(ROOT)}",
+            )
+
+    for scene_path in sorted((ROOT / "scenes").rglob("*.tscn")):
+        text = scene_path.read_text(encoding="utf-8")
+        for ext_path in re.findall(r'path="(res://[^"]+)"', text):
+            file_path = ROOT / ext_path.replace("res://", "")
+            ensure(file_path.exists(), errors, f"Scene {scene_path.relative_to(ROOT)} references missing resource {file_path.relative_to(ROOT)}")
+
+        script_match = re.search(r'\[ext_resource type="Script" path="(res://[^"]+)"', text)
+        if not script_match:
+            continue
+        script_path = ROOT / script_match.group(1).replace("res://", "")
+        if not script_path.exists():
+            continue
+        script_text = script_path.read_text(encoding="utf-8")
+        for method in re.findall(r'method="([^"]+)"', text):
+            ensure(
+                re.search(rf"func\s+{re.escape(method)}\s*\(", script_text) is not None,
+                errors,
+                f"Scene {scene_path.relative_to(ROOT)} connects missing method {method} in {script_path.relative_to(ROOT)}",
+            )
+
+
+def validate_save_management(errors: list[str]) -> None:
+    ensure(SAVE_SERVICE_PATH.exists(), errors, f"Missing save service script: {SAVE_SERVICE_PATH.relative_to(ROOT)}")
+    if not SAVE_SERVICE_PATH.exists():
+        return
+
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    manual_slots_match = re.search(r"const\s+MANUAL_SLOT_IDS\s*:=\s*\[([^\]]+)\]", save_text)
+    ensure(manual_slots_match is not None, errors, "SaveService.gd must declare MANUAL_SLOT_IDS")
+    if manual_slots_match is not None:
+        slot_ids = [part.strip() for part in manual_slots_match.group(1).split(",") if part.strip()]
+        ensure(len(slot_ids) >= 2, errors, "SaveService.gd must expose at least two manual save slots")
+
+    for required_token in (
+        "const AUTOSAVE_FILE",
+        "const SAVE_METADATA_TIMESTAMP_KEY",
+        "func save_autosave_session",
+        "func save_runtime_manual_session",
+        "func save_runtime_autosave_session",
+        "func save_runtime_selected_manual_session",
+        "func build_in_session_save_surface",
+        "func inspect_autosave",
+        "func list_session_summaries",
+        "func restore_session_from_summary",
+        "func refresh_summary",
+        "func load_action_label",
+        "func continue_action_label",
+        "func _save_runtime_session",
+        "func _runtime_save_message",
+        "func _latest_context_line",
+        "func _return_to_menu_tooltip",
+        "func _payload_structure_report",
+        "func _has_core_overworld_state",
+        '"resume_target"',
+    ):
+        ensure(required_token in save_text, errors, f"SaveService.gd is missing required save-management API token: {required_token}")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "SaveService.continue_action_label",
+        "SaveService.load_action_label",
+        "SaveService.load_action_tooltip",
+        "AppRouter.resume_latest_session",
+        "AppRouter.resume_summary",
+        "AppRouter.consume_menu_notice",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required save-browser state token: {required_token}")
+
+    ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for save browser validation")
+    if MAIN_MENU_SCENE_PATH.exists():
+        main_menu_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(scene_has_node(main_menu_text, "MenuTabs", "TabContainer"), errors, "MainMenu.tscn must define a MenuTabs container")
+        ensure(scene_has_node(main_menu_text, "Saves", "VBoxContainer"), errors, "MainMenu.tscn must define a Saves tab")
+        ensure(scene_has_node(main_menu_text, "SaveList", "ItemList"), errors, "MainMenu.tscn must define a SaveList item browser")
+        ensure(scene_has_node(main_menu_text, "SaveDetails", "Label"), errors, "MainMenu.tscn must define a SaveDetails label")
+        ensure(scene_has_node(main_menu_text, "LoadSelected", "Button"), errors, "MainMenu.tscn must define a LoadSelected button")
+
+
+def validate_skirmish_setup(errors: list[str]) -> None:
+    ensure(SESSION_STATE_PATH.exists(), errors, f"Missing session state script: {SESSION_STATE_PATH.relative_to(ROOT)}")
+    ensure(SCENARIO_SELECT_RULES_PATH.exists(), errors, f"Missing scenario select rules script: {SCENARIO_SELECT_RULES_PATH.relative_to(ROOT)}")
+    ensure(SCENARIO_RULES_PATH.exists(), errors, f"Missing scenario rules script: {SCENARIO_RULES_PATH.relative_to(ROOT)}")
+    ensure(MAIN_MENU_SCRIPT_PATH.exists(), errors, f"Missing main menu script: {MAIN_MENU_SCRIPT_PATH.relative_to(ROOT)}")
+    ensure(MAIN_MENU_SCENE_PATH.exists(), errors, f"Missing main menu scene: {MAIN_MENU_SCENE_PATH.relative_to(ROOT)}")
+    if not all(
+        path.exists()
+        for path in (
+            SESSION_STATE_PATH,
+            SCENARIO_SELECT_RULES_PATH,
+            SCENARIO_RULES_PATH,
+            MAIN_MENU_SCRIPT_PATH,
+            MAIN_MENU_SCENE_PATH,
+        )
+    ):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const SAVE_VERSION := 9",
+        "const LAUNCH_MODE_CAMPAIGN",
+        "const LAUNCH_MODE_SKIRMISH",
+        '"launch_mode"',
+    ):
+        ensure(required_token in session_text, errors, f"SessionState.gd is missing required skirmish/session token: {required_token}")
+
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in ('"launch_mode"', '"difficulty"', "ScenarioSelectRules.launch_mode_label", "ScenarioSelectRules.difficulty_label"):
+        ensure(required_token in save_text, errors, f"SaveService.gd is missing required skirmish summary token: {required_token}")
+
+    scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func build_skirmish_browser_entries",
+        "func build_skirmish_setup",
+        "func start_skirmish_session",
+        "func describe_scenario_commander_preview",
+        "func describe_session_commander_preview",
+        '"operational_board"',
+        '"commander_preview"',
+        "SpellRules.describe_spellbook",
+        "ArtifactRules.describe_loadout",
+        "ScenarioRules.describe_scenario_operational_board",
+        "ScenarioFactory.create_session",
+        "SessionStateStore.LAUNCH_MODE_SKIRMISH",
+    ):
+        ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing required skirmish token: {required_token}")
+
+    scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "SessionStateStore.normalize_launch_mode(session.launch_mode) == SessionStateStore.LAUNCH_MODE_CAMPAIGN",
+        "func describe_scenario_operational_board",
+        "func describe_session_operational_board",
+        "EnemyAdventureRules.public_strategy_summary",
+        "Reinforcement risk:",
+        "Likely first contact:",
+        "Operational Board",
+    ):
+        ensure(required_token in scenario_rules_text, errors, f"ScenarioRules.gd is missing required skirmish/session token: {required_token}")
+
+    main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("ModeSplit", "HBoxContainer"),
+        ("CampaignPanel", "VBoxContainer"),
+        ("SkirmishPanel", "VBoxContainer"),
+        ("SkirmishList", "ItemList"),
+        ("DifficultyPicker", "OptionButton"),
+        ("SetupSummary", "Label"),
+        ("SkirmishCommanderPreviewTitle", "Label"),
+        ("SkirmishCommanderPreview", "Label"),
+        ("SkirmishOperationalBoardTitle", "Label"),
+        ("SkirmishOperationalBoard", "Label"),
+        ("StartSkirmish", "Button"),
+    ):
+        ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for skirmish setup")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "ScenarioSelectRules.build_skirmish_browser_entries",
+        "ScenarioSelectRules.build_skirmish_setup",
+        "ScenarioSelectRules.start_skirmish_session",
+        "_skirmish_commander_preview_label",
+        "_skirmish_operational_board_label",
+        "func _on_start_skirmish_pressed",
+        "func _on_difficulty_selected",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required skirmish setup token: {required_token}")
+
+    for scene_name in ("overworld/OverworldShell.tscn", "town/TownShell.tscn"):
+        scene_path = ROOT / "scenes" / scene_name
+        ensure(scene_path.exists(), errors, f"Missing scene required for save-slot selection: {scene_name}")
+        if not scene_path.exists():
+            continue
+        scene_text = scene_path.read_text(encoding="utf-8")
+        ensure(scene_has_node(scene_text, "SaveSlot", "OptionButton"), errors, f"{scene_name} must define a SaveSlot option button")
+
+
+def validate_campaign_browser(errors: list[str]) -> None:
+    required_paths = (
+        CAMPAIGN_RULES_PATH,
+        CAMPAIGN_PROGRESSION_PATH,
+        SAVE_SERVICE_PATH,
+        MAIN_MENU_SCENE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing campaign-browser integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    campaign_rules_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func campaign_ids",
+        "func selected_campaign_id",
+        "func build_campaign_browser_entries",
+        "func build_campaign_chapter_entries",
+        "func describe_campaign_details",
+        "func describe_campaign_arc_status",
+        "func describe_campaign_chapter",
+        "func describe_campaign_commander_preview",
+        "func describe_campaign_operational_board",
+        "func describe_campaign_journal",
+        "func build_chapter_action",
+        "func mark_selected_campaign",
+        "_campaign_arc_status_lines",
+        "_campaign_completion_title",
+        "_final_scenario_entry",
+        "_chapter_briefing_lines",
+        "_campaign_journal_lines",
+        '"campaign_chapter_label"',
+    ):
+        ensure(required_token in campaign_rules_text, errors, f"CampaignRules.gd is missing required campaign-browser token: {required_token}")
+
+    campaign_progression_text = CAMPAIGN_PROGRESSION_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func selected_campaign_id",
+        "func selected_scenario_id",
+        "func select_campaign",
+        "func select_scenario",
+        "func campaign_browser_entries",
+        "func campaign_details",
+        "func campaign_arc_status",
+        "func chapter_commander_preview",
+        "func chapter_operational_board",
+        "func campaign_journal",
+        "func campaign_chapter_entries",
+        "func chapter_details",
+        "func primary_campaign_action",
+        "func chapter_action",
+        "func start_primary_campaign_scenario",
+    ):
+        ensure(required_token in campaign_progression_text, errors, f"CampaignProgression.gd is missing required campaign-browser token: {required_token}")
+
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in ('"campaign_id"', '"campaign_name"', '"chapter_label"', '"campaign_chapter_label"'):
+        ensure(required_token in save_text, errors, f"SaveService.gd is missing required campaign-summary token: {required_token}")
+
+    main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("CampaignPanel", "VBoxContainer"),
+        ("CampaignBrowser", "HBoxContainer"),
+        ("CampaignList", "ItemList"),
+        ("CampaignDetails", "Label"),
+        ("CampaignArcTitle", "Label"),
+        ("CampaignArcStatus", "Label"),
+        ("ChapterBrowser", "HBoxContainer"),
+        ("ChapterList", "ItemList"),
+        ("ChapterDetails", "Label"),
+        ("CommanderPreviewTitle", "Label"),
+        ("CampaignCommanderPreview", "Label"),
+        ("OperationalBoardTitle", "Label"),
+        ("CampaignOperationalBoard", "Label"),
+        ("JournalTitle", "Label"),
+        ("CampaignJournal", "Label"),
+        ("CampaignActions", "HBoxContainer"),
+        ("CampaignPrimaryAction", "Button"),
+        ("StartChapter", "Button"),
+    ):
+        ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for the campaign browser")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "CampaignProgression.campaign_browser_entries",
+        "CampaignProgression.campaign_details",
+        "CampaignProgression.campaign_arc_status",
+        "CampaignProgression.chapter_commander_preview",
+        "CampaignProgression.chapter_operational_board",
+        "CampaignProgression.campaign_journal",
+        "CampaignProgression.campaign_chapter_entries",
+        "CampaignProgression.chapter_details",
+        "CampaignProgression.primary_campaign_action",
+        "CampaignProgression.chapter_action",
+        "CampaignProgression.select_campaign",
+        "CampaignProgression.select_scenario",
+        "_campaign_arc_status_label",
+        "_campaign_commander_preview_label",
+        "_campaign_operational_board_label",
+        "_campaign_journal_label",
+        "func _on_campaign_selected",
+        "func _on_chapter_selected",
+        "func _on_campaign_primary_pressed",
+        "func _on_start_chapter_pressed",
+        "func _launch_campaign_action",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required campaign-browser token: {required_token}")
+
+
+def validate_settings_and_onboarding(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    required_paths = (
+        project_path,
+        SETTINGS_SERVICE_PATH,
+        MAIN_MENU_SCENE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing settings/onboarding integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    project_text = project_path.read_text(encoding="utf-8")
+    ensure(
+        'SettingsService="*res://scripts/autoload/SettingsService.gd"' in project_text,
+        errors,
+        "project.godot must register SettingsService as an autoload",
+    )
+
+    settings_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const SETTINGS_FILE",
+        "ConfigFile",
+        "func load_settings",
+        "func save_settings",
+        "func build_presentation_options",
+        "func describe_settings",
+        "func build_help_topics",
+        "func help_browser_summary",
+        "func describe_help_topic",
+        "func set_master_volume_percent",
+        "func set_music_volume_percent",
+        "func set_presentation_mode",
+        "func set_large_ui_text_enabled",
+        "func set_reduced_motion_enabled",
+        "DisplayServer.window_set_mode",
+        "AudioServer.set_bus_volume_db",
+        "content_scale_factor",
+    ):
+        ensure(required_token in settings_text, errors, f"SettingsService.gd is missing required settings/onboarding token: {required_token}")
+
+    main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("ActionRow", "HBoxContainer"),
+        ("MenuTabs", "TabContainer"),
+        ("Guide", "VBoxContainer"),
+        ("HelpList", "ItemList"),
+        ("HelpDetails", "Label"),
+        ("Settings", "VBoxContainer"),
+        ("SettingsSummary", "Label"),
+        ("PresentationModePicker", "OptionButton"),
+        ("MasterVolumeSlider", "HSlider"),
+        ("MusicVolumeSlider", "HSlider"),
+        ("LargeTextToggle", "CheckButton"),
+        ("ReduceMotionToggle", "CheckButton"),
+    ):
+        ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for settings/onboarding")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "SettingsService.ensure_settings",
+        "SettingsService.help_browser_summary",
+        "SettingsService.build_help_topics",
+        "SettingsService.describe_help_topic",
+        "SettingsService.describe_settings",
+        "SettingsService.build_presentation_options",
+        "SettingsService.set_master_volume_percent",
+        "SettingsService.set_music_volume_percent",
+        "SettingsService.set_presentation_mode",
+        "SettingsService.set_large_ui_text_enabled",
+        "SettingsService.set_reduced_motion_enabled",
+        "func _on_help_selected",
+        "func _on_presentation_mode_selected",
+        "func _on_master_volume_changed",
+        "func _on_music_volume_changed",
+        "func _on_large_text_toggled",
+        "func _on_reduce_motion_toggled",
+        "func _refresh_settings_panel",
+        "func _rebuild_help_browser",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required settings/onboarding token: {required_token}")
+
+
+def validate_scenario_outcome_shell(errors: list[str]) -> None:
+    required_paths = (
+        APP_ROUTER_PATH,
+        SCENARIO_RULES_PATH,
+        CAMPAIGN_RULES_PATH,
+        CAMPAIGN_PROGRESSION_PATH,
+        SCENARIO_SELECT_RULES_PATH,
+        OUTCOME_SCENE_PATH,
+        OUTCOME_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing scenario-outcome integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Scenario outcome shell must preserve save version 9")
+
+    app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const SCENARIO_OUTCOME_SCENE",
+        "func go_to_scenario_outcome",
+        "SaveService.save_runtime_autosave_session(session)",
+        "func save_active_session_to_selected_manual_slot",
+        "func resume_summary",
+        "func resume_latest_session",
+        "func consume_menu_notice",
+        "go_to_scenario_outcome()",
+    ):
+        ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required scenario-outcome token: {required_token}")
+
+    scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func build_outcome_model",
+        "func perform_outcome_action",
+        "func describe_scenario_briefing",
+        "CampaignProgression.outcome_recap",
+        "CampaignProgression.outcome_actions",
+        "ScenarioSelectRules.start_skirmish_session",
+        '"campaign_arc_summary"',
+        '"aftermath_summary"',
+        '"journal_summary"',
+        "OverworldRules.describe_hero",
+        "OverworldRules.describe_army",
+        "OverworldRules.describe_resources",
+    ):
+        ensure(required_token in scenario_rules_text, errors, f"ScenarioRules.gd is missing required scenario-outcome token: {required_token}")
+
+    campaign_rules_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func campaign_id_for_session",
+        "func build_outcome_recap",
+        "func build_outcome_actions",
+        "func describe_campaign_arc_status",
+        "func describe_campaign_journal",
+        "_campaign_arc_outcome_lines",
+        "_chapter_aftermath_text",
+        "Latest chronicle:",
+        "Operational aftermath:",
+        "Next chapter unlocked",
+        "Carryover export is only banked on victory.",
+    ):
+        ensure(required_token in campaign_rules_text, errors, f"CampaignRules.gd is missing required outcome-recap token: {required_token}")
+
+    campaign_progression_text = CAMPAIGN_PROGRESSION_PATH.read_text(encoding="utf-8")
+    for required_token in ("func campaign_id_for_session", "func outcome_recap", "func outcome_actions"):
+        ensure(required_token in campaign_progression_text, errors, f"CampaignProgression.gd is missing required outcome-recap token: {required_token}")
+
+    outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("Header", "Label"),
+        ("Summary", "Label"),
+        ("Mode", "Label"),
+        ("ForceSplit", "HBoxContainer"),
+        ("Hero", "Label"),
+        ("Army", "Label"),
+        ("Resources", "Label"),
+        ("Progression", "Label"),
+        ("CampaignArc", "Label"),
+        ("Carryover", "Label"),
+        ("Aftermath", "Label"),
+        ("Journal", "Label"),
+        ("ActionStatus", "Label"),
+        ("Actions", "HBoxContainer"),
+    ):
+        ensure(scene_has_node(outcome_scene_text, node_name, node_type), errors, f"ScenarioOutcomeShell.tscn must define {node_name} ({node_type}) for the outcome shell")
+
+    outcome_script_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "ScenarioRules.build_outcome_model",
+        "ScenarioRules.perform_outcome_action",
+        "func _rebuild_actions",
+        "func _on_action_pressed",
+        "_campaign_arc_label",
+        "_aftermath_label",
+        "_journal_label",
+        '"campaign_arc_summary"',
+        '"aftermath_summary"',
+        '"journal_summary"',
+        "AppRouter.go_to_overworld()",
+        "AppRouter.go_to_main_menu()",
+    ):
+        ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required outcome-shell token: {required_token}")
+
+    scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("ScenarioRules.describe_scenario_briefing", "setup_summary"):
+        ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing required briefing token: {required_token}")
+
+    for script_path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH, BATTLE_SCRIPT_PATH):
+        script_text = script_path.read_text(encoding="utf-8")
+        ensure("AppRouter.go_to_scenario_outcome()" in script_text, errors, f"{script_path.relative_to(ROOT)} must route resolved sessions into the outcome shell")
+
+
+def validate_difficulty_integration(errors: list[str]) -> None:
+    required_paths = (
+        DIFFICULTY_RULES_PATH,
+        HERO_COMMAND_RULES_PATH,
+        SCENARIO_FACTORY_PATH,
+        OVERWORLD_RULES_PATH,
+        BATTLE_RULES_PATH,
+        BATTLE_AI_RULES_PATH,
+        ENEMY_TURN_RULES_PATH,
+        ENEMY_ADVENTURE_RULES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing difficulty integration script: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    difficulty_text = DIFFICULTY_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const DIFFICULTY_PROFILES",
+        '"story"',
+        '"normal"',
+        '"hard"',
+        "func movement_bonus",
+        "func scale_income_resources",
+        "func scale_reward_resources",
+        "func adjust_enemy_pressure_gain",
+        "func adjust_raid_threshold",
+        "func scale_raid_pillage",
+        "func damage_multiplier_for_side",
+    ):
+        ensure(required_token in difficulty_text, errors, f"DifficultyRules.gd is missing required token: {required_token}")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    for required_token in ("DifficultyRules.normalize_difficulty", "HeroCommandRules.build_hero_from_template"):
+        ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing required difficulty bootstrap token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "DifficultyRules.normalize_session",
+        "DifficultyRules.scale_income_resources",
+        "DifficultyRules.scale_reward_resources",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required difficulty token: {required_token}")
+
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("DifficultyRules.movement_bonus", "DifficultyRules.profile_for_difficulty"):
+        ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required difficulty token: {required_token}")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("DifficultyRules.adjust_enemy_pressure_gain", "DifficultyRules.adjust_raid_threshold"):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required difficulty token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    ensure("DifficultyRules.scale_raid_pillage" in enemy_adventure_text, errors, "EnemyAdventureRules.gd must scale raid pillage by difficulty")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"enemy_hero_payload"',
+        "DifficultyRules.scale_reward_resources",
+        "DifficultyRules.initiative_bonus_for_side",
+        "DifficultyRules.damage_multiplier_for_side",
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required difficulty token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ('"enemy_hero_payload"', "_damage_multiplier_for_side"):
+        ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required difficulty token: {required_token}")
+
+
+def validate_hero_progression(errors: list[str]) -> None:
+    required_paths = (
+        HERO_PROGRESSION_RULES_PATH,
+        HERO_COMMAND_RULES_PATH,
+        SCENARIO_FACTORY_PATH,
+        OVERWORLD_RULES_PATH,
+        TOWN_RULES_PATH,
+        CAMPAIGN_RULES_PATH,
+        SPELL_RULES_PATH,
+        BATTLE_RULES_PATH,
+        ENEMY_ADVENTURE_RULES_PATH,
+        SAVE_SERVICE_PATH,
+        SCENARIO_SELECT_RULES_PATH,
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCENE_PATH,
+        TOWN_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing hero progression integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    progression_text = HERO_PROGRESSION_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const SPECIALTIES",
+        '"wayfinder"',
+        '"ledgerkeeper"',
+        '"spellwright"',
+        '"drillmaster"',
+        '"armsmaster"',
+        '"mustercaptain"',
+        '"borderwarden"',
+        "func ensure_hero_progression",
+        "func add_experience",
+        "func choose_specialty",
+        "func get_choice_actions",
+        "func aggregate_bonuses",
+        "func summarize_specialty_ids",
+        '"specialty_focus_ids"',
+        '"pending_specialty_choices"',
+    ):
+        ensure(required_token in progression_text, errors, f"HeroProgressionRules.gd is missing required token: {required_token}")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    ensure("HeroProgressionRules.ensure_hero_progression" in scenario_factory_text, errors, "ScenarioFactory.gd must initialize hero progression state")
+
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HeroProgressionRules.ensure_hero_progression",
+        "HeroProgressionRules.aggregate_bonuses",
+        "HeroProgressionRules.summarize_specialty_ids",
+        "func hero_profile_summary",
+        "func hero_identity_summary",
+    ):
+        ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required hero progression token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HeroProgressionRules.add_experience",
+        "HeroProgressionRules.daily_income_bonus",
+        "HeroProgressionRules.scale_recruit_growth",
+        "HeroProgressionRules.scale_recruit_cost",
+        "HeroProgressionRules.describe_specialties",
+        "HeroProgressionRules.get_choice_actions",
+        "HeroProgressionRules.choose_specialty",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required hero progression token: {required_token}")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HeroProgressionRules.describe_specialties",
+        "HeroProgressionRules.get_choice_actions",
+        "OverworldRules.town_recruit_cost",
+        "func choose_specialty_at_active_town",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required hero progression token: {required_token}")
+
+    spell_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("HeroProgressionRules.mana_max_bonus", "HeroProgressionRules.adjusted_mana_cost"):
+        ensure(required_token in spell_text, errors, f"SpellRules.gd is missing required hero progression token: {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    ensure("HeroProgressionRules.aggregate_bonuses" in battle_text, errors, "BattleRules.gd must merge specialty bonuses into battle hero payloads")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    ensure("HeroProgressionRules.scale_raid_pillage" in enemy_adventure_text, errors, "EnemyAdventureRules.gd must apply raid-resistance specialties")
+
+    campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"specialties"',
+        '"pending_specialty_choices"',
+        "HeroProgressionRules.ensure_hero_progression",
+        "HeroProgressionRules.brief_summary",
+    ):
+        ensure(required_token in campaign_text, errors, f"CampaignRules.gd is missing required hero progression token: {required_token}")
+
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    ensure("hero_specialties_summary" in save_text, errors, "SaveService.gd must surface hero specialties in save summaries")
+
+    scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("HeroProgressionRules.brief_summary", "HeroCommandRules.hero_profile_summary", "HeroCommandRules.hero_identity_summary"):
+        ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing authored-hero summary token: {required_token}")
+
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (("Specialties", "Label"), ("SpecialtyBar", "VBoxContainer")):
+        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for hero progression UI")
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (("Specialties", "Label"), ("SpecialtyBar", "VBoxContainer")):
+        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for hero progression UI")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("func _on_specialty_action_pressed", "func _rebuild_specialty_actions", "OverworldRules.describe_specialties", "OverworldRules.get_specialty_actions"):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required hero progression token: {required_token}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("func _on_specialty_action_pressed", "func _rebuild_specialty_actions", "TownRules.describe_specialties", "TownRules.get_specialty_actions"):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required hero progression token: {required_token}")
+
+
+def validate_hero_command(errors: list[str]) -> None:
+    required_paths = (
+        HERO_COMMAND_RULES_PATH,
+        SCENARIO_FACTORY_PATH,
+        OVERWORLD_RULES_PATH,
+        TOWN_RULES_PATH,
+        BATTLE_RULES_PATH,
+        CAMPAIGN_RULES_PATH,
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCENE_PATH,
+        TOWN_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing hero-command integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const HALL_BUILDING_ID",
+        "const HERO_LIMIT",
+        "func normalize_session",
+        "func hero_template",
+        "func hero_profile_summary",
+        "func hero_identity_summary",
+        "func set_active_hero",
+        "func get_overworld_switch_actions",
+        "func get_town_switch_actions",
+        "func get_tavern_actions",
+        "func recruit_hero_at_town",
+        "func get_town_transfer_actions",
+        "func transfer_town_stack",
+        "func remove_active_hero_after_defeat",
+        '"player_heroes"',
+        '"active_hero_id"',
+        '"is_primary"',
+    ):
+        ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required hero-command token: {required_token}")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    for required_token in ('"active_hero_id"', '"player_heroes"', "HeroCommandRules.build_hero_from_template"):
+        ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing required hero-command bootstrap token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "HeroCommandRules.normalize_session",
+        "func describe_heroes",
+        "func get_hero_actions",
+        "func switch_active_hero",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required hero-command token: {required_token}")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_heroes",
+        "func describe_tavern",
+        "func describe_transfer",
+        "func get_hero_actions",
+        "func get_tavern_actions",
+        "func get_transfer_actions",
+        "func switch_active_hero_at_town",
+        "func hire_hero_at_active_town",
+        "func transfer_in_active_town",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required hero-command token: {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("HeroCommandRules.active_hero_is_primary", "HeroCommandRules.remove_active_hero_after_defeat"):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required hero-command token: {required_token}")
+
+    campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("HeroCommandRules.primary_hero", "HeroCommandRules.normalize_session", '"spell_ids"', '"artifacts"', '"specialties"'):
+        ensure(required_token in campaign_text, errors, f"CampaignRules.gd is missing required hero-command token: {required_token}")
+
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (("Heroes", "Label"), ("HeroBar", "VBoxContainer")):
+        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for hero-command UI")
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("Heroes", "Label"),
+        ("HeroBar", "VBoxContainer"),
+        ("Tavern", "Label"),
+        ("TavernBar", "VBoxContainer"),
+        ("Transfer", "Label"),
+        ("TransferBar", "VBoxContainer"),
+    ):
+        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for hero-command UI")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _on_hero_action_pressed",
+        "func _rebuild_hero_actions",
+        "OverworldRules.describe_heroes",
+        "OverworldRules.get_hero_actions",
+        "OverworldRules.switch_active_hero",
+        "HeroCommandRules.hero_positions",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required hero-command token: {required_token}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _on_hero_action_pressed",
+        "func _on_tavern_action_pressed",
+        "func _on_transfer_action_pressed",
+        "func _rebuild_hero_actions",
+        "func _rebuild_tavern_actions",
+        "func _rebuild_transfer_actions",
+        "TownRules.describe_heroes",
+        "TownRules.describe_tavern",
+        "TownRules.describe_transfer",
+        "TownRules.get_hero_actions",
+        "TownRules.get_tavern_actions",
+        "TownRules.get_transfer_actions",
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required hero-command token: {required_token}")
+
+
+def validate_overworld_fog(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        HERO_PROGRESSION_RULES_PATH,
+        HERO_COMMAND_RULES_PATH,
+        SCENARIO_FACTORY_PATH,
+        SCENARIO_SELECT_RULES_PATH,
+        SCENARIO_SCRIPT_RULES_PATH,
+        OVERWORLD_RULES_PATH,
+        BATTLE_RULES_PATH,
+        CAMPAIGN_RULES_PATH,
+        OVERWORLD_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing fog/scouting integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Fog/scouting normalization should preserve save version 9 without a destructive bump")
+
+    progression_text = HERO_PROGRESSION_RULES_PATH.read_text(encoding="utf-8")
+    ensure('"scouting_radius"' in progression_text, errors, "HeroProgressionRules.gd must expose scouting_radius bonuses")
+
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("const BASE_SCOUT_RADIUS", "func scouting_radius_for_hero", 'Scout %d | %s'):
+        ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required fog/scouting token: {required_token}")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    ensure('"fog"' in scenario_factory_text, errors, "ScenarioFactory.gd must seed fog state in new overworld sessions")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const FOG_KEY",
+        '"visible_tiles"',
+        '"explored_tiles"',
+        "func refresh_fog_of_war",
+        "func is_tile_visible",
+        "func is_tile_explored",
+        "func describe_visibility",
+        "HeroCommandRules.scouting_radius_for_hero",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required fog/scouting token: {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    ensure("OverworldRules.refresh_fog_of_war" in battle_text, errors, "BattleRules.gd must refresh fog after overworld-facing battle outcomes")
+
+    campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
+    ensure("OverworldRules.normalize_overworld_state" in campaign_text, errors, "CampaignRules.gd must normalize fog/scouting state when building campaign sessions")
+
+    scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
+    ensure("OverworldRules.normalize_overworld_state" in scenario_select_text, errors, "ScenarioSelectRules.gd must normalize fog/scouting state for new skirmish sessions")
+
+    scenario_script_text = SCENARIO_SCRIPT_RULES_PATH.read_text(encoding="utf-8")
+    ensure("OverworldRules.is_tile_visible" in scenario_script_text, errors, "ScenarioScriptRules.gd must hide scripted map-reveal details behind visibility checks")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "OverworldRules.is_tile_visible",
+        "OverworldRules.is_tile_explored",
+        "OverworldRules.describe_visibility",
+        "func _terrain_memory_label",
+        "func _memory_cell_color",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required fog/scouting token: {required_token}")
+
+
+def validate_battle_ability_layer(errors: list[str]) -> None:
+    required_paths = (
+        BATTLE_RULES_PATH,
+        BATTLE_AI_RULES_PATH,
+        SPELL_RULES_PATH,
+        BATTLE_SCRIPT_PATH,
+        BATTLE_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle-ability integration file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "STATUS_HARRIED",
+        "STATUS_STAGGERED",
+        '"abilities"',
+        "func _normalize_unit_abilities",
+        "func _can_make_melee_attack",
+        "func _apply_attack_ability_effects",
+        "func _apply_retaliation_ability_effects",
+        "func _ability_damage_modifier",
+        "SpellRules.build_battle_effect",
+        "SpellRules.has_any_effect_ids",
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required battle-ability token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "STATUS_HARRIED",
+        "STATUS_STAGGERED",
+        "func _can_make_melee_attack",
+        "func _ability_damage_modifier",
+        "SpellRules.has_effect_id",
+        "SpellRules.has_any_effect_ids",
+    ):
+        ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required battle-ability token: {required_token}")
+
+    spell_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '\"modifiers\"',
+        "func build_battle_effect",
+        "func has_effect_id",
+        "func has_any_effect_ids",
+    ):
+        ensure(required_token in spell_text, errors, f"SpellRules.gd is missing required battle-status token: {required_token}")
+
+    battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BattleRules.roster_lines",
+        "BattleRules.get_action_surface",
+        "_player_roster.text",
+        "_enemy_roster.text",
+    ):
+        ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing required battle-ability UI token: {required_token}")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name in ("PlayerRoster", "EnemyRoster", "Strike", "Shoot", "Defend"):
+        ensure(
+            f'[node name="{node_name}"' in battle_scene_text,
+            errors,
+            f"BattleShell.tscn is missing required battle UI node {node_name}",
+        )
+
+
+def validate_battle_shell_release_polish(errors: list[str]) -> None:
+    required_paths = (BATTLE_SCENE_PATH, BATTLE_SCRIPT_PATH, BATTLE_RULES_PATH, SPELL_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle-shell polish file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("Scroll", "ScrollContainer"),
+        ("Banner", "PanelContainer"),
+        ("BriefingPanel", "PanelContainer"),
+        ("RiskPanel", "PanelContainer"),
+        ("CommandPanel", "PanelContainer"),
+        ("InitiativePanel", "PanelContainer"),
+        ("ContextPanel", "PanelContainer"),
+        ("SpellPanel", "PanelContainer"),
+        ("ArmyColumns", "HSplitContainer"),
+        ("BriefingTitle", "Label"),
+        ("Briefing", "Label"),
+        ("RiskTitle", "Label"),
+        ("Risk", "Label"),
+        ("ActionGuide", "Label"),
+        ("Footer", "PanelContainer"),
+        ("SaveSlot", "OptionButton"),
+    ):
+        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for the release-facing battle shell")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"recent_events"',
+        "const RECENT_EVENT_LIMIT := 6",
+        "const TACTICAL_BRIEFING_KEY := \"tactical_briefing\"",
+        "func describe_status",
+        "func describe_pressure",
+        "func describe_risk_readiness_board",
+        "func describe_tactical_briefing",
+        "func consume_tactical_briefing",
+        "func describe_commander_summary",
+        "func describe_initiative_track",
+        "func describe_active_context",
+        "func describe_target_context",
+        "func describe_effect_board",
+        "func describe_dispatch",
+        "func describe_action_surface",
+        "func get_action_surface",
+        "func _risk_readiness_grade",
+        "func _risk_board_initiative_line",
+        "func _risk_board_commander_line",
+        "func _risk_board_line_integrity_line",
+        "func _risk_board_ranged_pressure_line",
+        "func _risk_board_priority_line",
+        "func _risk_board_objective_line",
+        "func _risk_board_dispatch_line",
+        "func _normalize_tactical_briefing_state",
+        "func _tactical_briefing_lines",
+        "func _tactical_enemy_doctrine_line",
+        "func _tactical_decisive_target_line",
+        "func _priority_enemy_stack_for_briefing",
+        "Battlefield:",
+        "Opening pressure:",
+        "Decisive target:",
+        "Strong stabilization posture.",
+        "Initiative swing:",
+        "Objective urgency:",
+        "Latest shift:",
+        "func _record_event",
+        "func _army_totals",
+        "func _stack_focus_summary",
+        "func _pressure_brief",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle-shell polish token: {required_token}")
+
+    spell_rules_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("func _battle_spell_action_summary", '"summary": summary.strip_edges()'):
+        ensure(required_token in spell_rules_text, errors, f"SpellRules.gd is missing required battle-shell polish token: {required_token}")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_briefing_panel",
+        "_briefing_label",
+        "_tactical_briefing_text",
+        "BattleRules.consume_tactical_briefing",
+        "_pressure_label",
+        "_player_command_label",
+        "_initiative_label",
+        "_active_label",
+        "_effect_label",
+        "_action_guide",
+        "_save_slot_picker",
+        "_risk_label",
+        "BattleRules.describe_pressure",
+        "BattleRules.describe_risk_readiness_board",
+        "BattleRules.describe_commander_summary",
+        "BattleRules.describe_initiative_track",
+        "BattleRules.describe_effect_board",
+        "BattleRules.describe_action_surface",
+        "AppRouter.save_active_session_to_selected_manual_slot",
+        "_style_action_button",
+    ):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle-shell polish token: {required_token}")
+
+
+def validate_battle_objective_pressure_slice(errors: list[str]) -> None:
+    required_paths = (BATTLE_RULES_PATH, BATTLE_AI_RULES_PATH, BATTLE_SCENE_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle-objective pressure file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const FIELD_OBJECTIVES_KEY := "field_objectives"',
+        "func _normalize_field_objectives",
+        "func _authored_field_objectives",
+        "func _field_objective_pressure_summary",
+        "func _field_objective_focus_line",
+        "func _field_objective_action_influence",
+        "func _apply_field_objective_action_pressure",
+        "func _apply_field_objective_round_effects",
+        "func _reserve_wave_ready_round",
+        "func _reserve_wave_is_active_for_side",
+        "func _field_objective_commander_modifier",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle-objective token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const FIELD_OBJECTIVES_KEY := "field_objectives"',
+        "func _advance_score",
+        "func _objective_action_score",
+        "func _field_objective_action_influence",
+        "func _reserve_wave_ready_round",
+        "func _reserve_wave_is_active_for_side",
+        "func _field_objective_attack_bonus",
+        "func _field_objective_defense_bonus",
+        "func _field_objective_cohesion_bonus",
+        "func _field_objective_momentum_bonus",
+        "func _field_objective_commander_modifier",
+    ):
+        ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required battle-objective token: {required_token}")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure("objective" in battle_scene_text.lower() or "hazard" in battle_scene_text.lower(), errors, "BattleShell.tscn should reference objective or hazard pressure in its release-facing battle copy")
+
+
+def validate_battle_order_consequence_board(errors: list[str]) -> None:
+    required_paths = (SESSION_STATE_PATH, BATTLE_SCENE_PATH, BATTLE_SCRIPT_PATH, BATTLE_RULES_PATH, BATTLE_AI_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle order-consequence file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Battle order consequence board must preserve save version 9")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("ConsequencePanel", "PanelContainer"),
+        ("ConsequenceTitle", "Label"),
+        ("Consequence", "Label"),
+    ):
+        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for the battle order consequence board")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_order_consequence_board",
+        "func _preferred_player_action_id",
+        "func _focused_order_line",
+        "func _trade_window_line",
+        "func _command_tools_line",
+        "func _objective_pull_line",
+        "func _enemy_reply_line",
+        "func _enemy_action_preview_summary",
+        "func _attack_action_summary",
+        "func _advance_action_summary",
+        "func _defend_action_summary",
+        "func _damage_modifier",
+        "func _damage_range_preview",
+        "func _retaliation_range_preview",
+        "func _field_objective_action_preview",
+        "func _project_field_objective_state",
+        "Order Consequences",
+        "Focused order:",
+        "Trade window:",
+        "Command tools:",
+        "Enemy reply:",
+        "BattleAiRules.choose_enemy_action",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle order-consequence token: {required_token}")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_consequence_label",
+        "BattleRules.describe_order_consequence_board",
+    ):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle order-consequence token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    ensure("func choose_enemy_action" in battle_ai_text, errors, "BattleAiRules.gd must keep choose_enemy_action for battle order consequence surfacing")
+
+
+def validate_battle_spell_timing_board(errors: list[str]) -> None:
+    required_paths = (SESSION_STATE_PATH, BATTLE_SCENE_PATH, BATTLE_SCRIPT_PATH, BATTLE_RULES_PATH, SPELL_RULES_PATH, BATTLE_AI_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle spell-timing file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Battle spell timing board must preserve save version 9")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("TimingPanel", "PanelContainer"),
+        ("TimingTitle", "Label"),
+        ("Timing", "Label"),
+    ):
+        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for the battle spell timing board")
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_spell_timing_board",
+        "func _spell_window_line",
+        "func _preferred_spell_timing_action",
+        "func _spell_timing_action_score",
+        "func _support_payoff_line",
+        "func _support_followup_line",
+        "func _protection_need_line",
+        "func _priority_friendly_protection_stack",
+        "func _best_ready_support_spell_action",
+        "func _burst_risk_line",
+        "func _enemy_spell_threat_line",
+        "Spell and Ability Timing",
+        "Spell window:",
+        "Support payoff:",
+        "Protection need:",
+        "Burst risk:",
+        "there is no authored cleanse in the current spellbook",
+        "SpellRules.battle_spell_timing_summary",
+        "BattleAiRules.choose_enemy_action",
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle spell-timing token: {required_token}")
+
+    spell_rules_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func battle_spell_timing_summary",
+        "Timing: ",
+        "Best before the next volley or before the lane closes.",
+    ):
+        ensure(required_token in spell_rules_text, errors, f"SpellRules.gd is missing required battle spell-timing token: {required_token}")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_timing_label",
+        "BattleRules.describe_spell_timing_board",
+    ):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required battle spell-timing token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    ensure("func choose_enemy_action" in battle_ai_text, errors, "BattleAiRules.gd must keep choose_enemy_action for battle spell timing surfacing")
+
+
+def validate_battle_faction_identity(errors: list[str]) -> None:
+    required_paths = (BATTLE_RULES_PATH, BATTLE_AI_RULES_PATH, SPELL_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing battle-faction identity file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _faction_damage_modifier",
+        "func _faction_initiative_bonus",
+        "func _contextual_attack_bonus",
+        "func _contextual_cohesion_bonus",
+        "func _contextual_momentum_bonus",
+        "func _terrain_tag_damage_modifier",
+        "func _commander_damage_modifier",
+        "func _cohesion_damage_modifier",
+        "func _stack_cohesion_total",
+        "func _stack_momentum_total",
+        "func _apply_round_pressure_shifts",
+        "func _apply_damage_pressure",
+        "func _stack_is_isolated",
+        "func _normalized_battlefield_tags",
+        "func _normalized_battle_traits",
+        "func _hero_has_trait",
+        "func _starting_distance_for_encounter",
+        "func _side_has_ability",
+        "func _stack_has_positive_effect",
+        "func _side_positive_effect_count",
+        "func _side_doctrine_summary",
+        '"battlefield_tags"',
+        '"fortified_line"',
+        '"formation_guard"',
+        '"bloodrush"',
+        '"faction_sunvault"',
+        '"cohesion"',
+        '"momentum"',
+        '"post_damage_effect"',
+        '"Doctrine: %s"',
+    ):
+        ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required faction-battle token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _faction_damage_modifier",
+        "func _contextual_attack_bonus",
+        "func _contextual_cohesion_bonus",
+        "func _contextual_momentum_bonus",
+        "func _terrain_tag_damage_modifier",
+        "func _commander_damage_modifier",
+        "func _cohesion_damage_modifier",
+        "func _stack_cohesion_total",
+        "func _stack_momentum_total",
+        "func _stack_is_isolated",
+        "func _battle_has_tag",
+        "func _hero_has_trait",
+        "func _spell_buff_already_active",
+        "func _allied_status_synergy_score",
+        "func _side_has_ability",
+        "func _stack_has_positive_effect",
+        "func _side_positive_effect_count",
+        '"battlefield_tags"',
+        '"attack_buff"',
+        '"faction_sunvault"',
+        '"cohesion"',
+        '"momentum"',
+        "SpellRules.battle_spell_modifiers",
+    ):
+        ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required faction-battle token: {required_token}")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    for required_token in ('"battle_traits"',):
+        ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing required battle-variety token: {required_token}")
+
+    spell_rules_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func battle_spell_modifiers",
+        "func _status_effect_from_spell_effect",
+        "func _modifier_summary",
+        '"attack_buff"',
+        '"cohesion"',
+        '"momentum"',
+        '"post_damage_effect"',
+        '"status_effect"',
+    ):
+        ensure(required_token in spell_rules_text, errors, f"SpellRules.gd is missing required faction-battle token: {required_token}")
+
+
+def validate_in_session_save_controls(errors: list[str]) -> None:
+    required_paths = (
+        SAVE_SERVICE_PATH,
+        APP_ROUTER_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+        OUTCOME_SCRIPT_PATH,
+        OVERWORLD_SCENE_PATH,
+        TOWN_SCENE_PATH,
+        BATTLE_SCENE_PATH,
+        OUTCOME_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing in-session save-control file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "In-session save controls must preserve save version 9")
+
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func save_runtime_selected_manual_session",
+        "func save_runtime_manual_session",
+        "func save_runtime_autosave_session",
+        "func build_in_session_save_surface",
+        "func _in_session_save_label",
+        "func _in_session_save_tooltip",
+        "func _latest_context_line",
+        "func _return_to_menu_tooltip",
+    ):
+        ensure(required_token in save_text, errors, f"SaveService.gd is missing required in-session save token: {required_token}")
+
+    app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func return_to_main_menu_from_active_play",
+        "func save_active_session_to_selected_manual_slot",
+        "func active_save_surface",
+        "func resume_summary",
+        "func resume_latest_session",
+        "func consume_menu_notice",
+        "SaveService.save_runtime_selected_manual_session",
+        "SaveService.save_runtime_autosave_session",
+    ):
+        ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required in-session save-routing token: {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_save_status_label",
+        "_menu_button",
+        "AppRouter.save_active_session_to_selected_manual_slot",
+        "AppRouter.active_save_surface",
+        "AppRouter.return_to_main_menu_from_active_play",
+        "SaveService.save_runtime_autosave_session(_session)",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required in-session save token: {required_token}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_save_status_label",
+        "_menu_button",
+        "AppRouter.save_active_session_to_selected_manual_slot",
+        "AppRouter.active_save_surface",
+        "AppRouter.return_to_main_menu_from_active_play",
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required in-session save token: {required_token}")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_system_body_label",
+        "_menu_button",
+        "AppRouter.save_active_session_to_selected_manual_slot",
+        "AppRouter.active_save_surface",
+        "AppRouter.return_to_main_menu_from_active_play",
+    ):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required in-session save token: {required_token}")
+
+    outcome_script_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_save_status_label",
+        "_save_slot_picker",
+        "_save_button",
+        "_menu_button",
+        "func _configure_save_slot_picker",
+        "func _refresh_save_surface",
+        "AppRouter.save_active_session_to_selected_manual_slot",
+        "AppRouter.return_to_main_menu_from_active_play",
+    ):
+        ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required in-session save token: {required_token}")
+
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("SaveStatus", "Label"),
+        ("SaveSlot", "OptionButton"),
+        ("Save", "Button"),
+        ("Menu", "Button"),
+    ):
+        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for in-session save controls")
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("SaveStatus", "Label"),
+        ("SaveSlot", "OptionButton"),
+        ("Save", "Button"),
+        ("Menu", "Button"),
+    ):
+        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for in-session save controls")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("SystemPanel", "PanelContainer"),
+        ("SystemBody", "Label"),
+        ("SaveSlot", "OptionButton"),
+        ("Save", "Button"),
+        ("Menu", "Button"),
+    ):
+        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for in-session save controls")
+
+    outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("SaveStatus", "Label"),
+        ("SaveBar", "HBoxContainer"),
+        ("SaveSlot", "OptionButton"),
+        ("Save", "Button"),
+        ("Menu", "Button"),
+    ):
+        ensure(scene_has_node(outcome_scene_text, node_name, node_type), errors, f"ScenarioOutcomeShell.tscn must define {node_name} ({node_type}) for in-session save controls")
+
+
+def validate_town_faction_progression(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        SCENARIO_FACTORY_PATH,
+        OVERWORLD_RULES_PATH,
+        TOWN_RULES_PATH,
+        SCENARIO_SCRIPT_RULES_PATH,
+        TOWN_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town/faction progression file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Town/faction progression must preserve save version 9")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    for required_token in ("func _seed_recruits_for_town_state", "func _apply_growth_profile"):
+        ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing required town progression token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const WEEKLY_GROWTH_INTERVAL := 7",
+        "func is_weekly_growth_day",
+        "func days_until_next_weekly_growth",
+        "func next_weekly_growth_day",
+        "func describe_town_context",
+        "func town_weekly_growth",
+        "func town_income",
+        "func town_reinforcement_quality",
+        "func town_battle_readiness",
+        "func town_pressure_output",
+        "func town_recruit_cost",
+        "func get_town_build_status",
+        "func _normalize_built_buildings_for_town_state",
+        "func _economy_profile_income",
+        "func _weighted_recruit_value",
+        "func _pressure_bonus_from_profile",
+        "func _readiness_bonus_from_profile",
+        "func _recruitment_discount_percent",
+        "Weekly musters",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required town progression token: {required_token}")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_status",
+        "OverworldRules.town_income",
+        "OverworldRules.town_weekly_growth",
+        "OverworldRules.town_reinforcement_quality",
+        "OverworldRules.town_battle_readiness",
+        "OverworldRules.town_pressure_output",
+        "OverworldRules.town_market_state",
+        "OverworldRules.town_recruit_cost",
+        "OverworldRules.get_town_build_status",
+        "func _town_identity_summary",
+        "func _town_unit_ids",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required town progression token: {required_token}")
+
+    scenario_script_text = SCENARIO_SCRIPT_RULES_PATH.read_text(encoding="utf-8")
+    ensure("OverworldRules._normalize_built_buildings_for_town_state" in scenario_script_text, errors, "ScenarioScriptRules.gd must normalize scripted town buildings through the shared prerequisite graph")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("TownRules.describe_status", "TownRules.describe_summary", "TownRules.describe_buildings", "TownRules.describe_market", "TownRules.describe_recruitment", "TownRules.describe_responses"):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town progression token: {required_token}")
+
+
+def validate_town_shell_release_polish(errors: list[str]) -> None:
+    required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_RULES_PATH, OVERWORLD_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town-shell polish file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("Scroll", "ScrollContainer"),
+        ("Banner", "PanelContainer"),
+        ("CommandPanel", "PanelContainer"),
+        ("TownPanel", "PanelContainer"),
+        ("BuildPanel", "PanelContainer"),
+        ("MarketPanel", "PanelContainer"),
+        ("RecruitPanel", "PanelContainer"),
+        ("StudyPanel", "PanelContainer"),
+        ("LogisticsPanel", "PanelContainer"),
+        ("Defense", "Label"),
+        ("Pressure", "Label"),
+        ("Market", "Label"),
+        ("MarketBar", "VBoxContainer"),
+        ("Responses", "Label"),
+        ("ResponseBar", "VBoxContainer"),
+        ("Event", "Label"),
+        ("Footer", "HBoxContainer"),
+    ):
+        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for the release-facing town shell")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_defense",
+        "func describe_threats",
+        "func describe_event_feed",
+        "func _town_threat_lines",
+        "func _pressure_brief",
+        "func _describe_building_category_counts",
+        "func _growth_source_summary",
+        "func _reinforcement_grade",
+        "func _town_pressure_label",
+        "func _pressure_noun_for_building",
+        "func describe_market",
+        "func get_market_actions",
+        "func perform_market_action",
+        "func describe_responses",
+        "func get_response_actions",
+        "func perform_response_action",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required town-shell polish token: {required_token}")
+    ensure("faction_sunvault" in town_rules_text, errors, "TownRules.gd must surface Sunvault pressure terminology for the third playable faction")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func is_tile_visible",
+        "func describe_enemy_threats",
+        "func town_public_threat_state",
+        "func town_market_state",
+        "func describe_town_market",
+        "func get_town_market_actions",
+        "func perform_town_market_action",
+        "func can_afford_cost_with_town_market",
+        "func apply_market_cost_coverage",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required town-shell support token: {required_token}")
+    ensure("faction_sunvault" in overworld_text, errors, "OverworldRules.gd must surface Sunvault pressure terminology for the third playable faction")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "TownRules.describe_defense",
+        "TownRules.describe_threats",
+        "TownRules.describe_event_feed",
+        "TownRules.describe_market",
+        "TownRules.get_market_actions",
+        "TownRules.perform_market_action",
+        "TownRules.describe_responses",
+        "TownRules.get_response_actions",
+        "TownRules.perform_response_action",
+        "_defense_label",
+        "_pressure_label",
+        "_market_label",
+        "_market_actions",
+        "_response_label",
+        "_response_actions",
+        "_style_action_button",
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town-shell polish token: {required_token}")
+
+
+def validate_town_defense_outlook_board(errors: list[str]) -> None:
+    required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_RULES_PATH, OVERWORLD_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town defense-outlook file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("OutlookPanel", "PanelContainer"),
+        ("OutlookTitle", "Label"),
+        ("Outlook", "Label"),
+    ):
+        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for the town defense outlook board")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_outlook_board",
+        "func _town_outlook_grade",
+        "func _town_frontier_outlook_line",
+        "func _town_dispatch_readiness_line",
+        "func _town_support_watch_line",
+        "func _active_hero_movement_state",
+        "func _count_ready_actions",
+        "func _stationed_reserve_count",
+        "Strong defensive posture",
+        "Capital chain exposed",
+        "No reserve commander covers the walls if the field hero rides out",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required town defense-outlook token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    ensure("func town_public_threat_state" in overworld_text, errors, "OverworldRules.gd must expose a visibility-safe public town-threat helper for the town outlook board")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_outlook_label",
+        "TownRules.describe_outlook_board",
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town defense-outlook token: {required_token}")
+
+
+def validate_town_order_readiness_ledger(errors: list[str]) -> None:
+    required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_RULES_PATH, OVERWORLD_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town order-readiness file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("CommandLedgerPanel", "PanelContainer"),
+        ("CommandLedgerTitle", "Label"),
+        ("CommandLedger", "Label"),
+    ):
+        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for the town order-readiness ledger")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func describe_command_ledger",
+        "func _build_order_ledger_line",
+        "func _recruit_order_ledger_line",
+        "func _response_order_ledger_line",
+        "func _coverage_order_ledger_line",
+        "func _market_coverage_line",
+        "func _cost_shortfall_line",
+        "func _max_market_affordable_count",
+        "Exchange can unlock",
+        "Order Ledger",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required town order-readiness token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func town_cost_readiness",
+        "market_affordable",
+        "direct_shortfall",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required town order-readiness token: {required_token}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_command_ledger_label",
+        "TownRules.describe_command_ledger",
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town order-readiness token: {required_token}")
+
+
+def validate_overworld_shell_release_polish(errors: list[str]) -> None:
+    required_paths = (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing overworld-shell polish file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("Scroll", "ScrollContainer"),
+        ("Banner", "PanelContainer"),
+        ("BriefingPanel", "PanelContainer"),
+        ("CommandPanel", "PanelContainer"),
+        ("FrontierPanel", "PanelContainer"),
+        ("ContextPanel", "PanelContainer"),
+        ("MapPanel", "PanelContainer"),
+        ("BriefingTitle", "Label"),
+        ("Briefing", "Label"),
+        ("Visibility", "Label"),
+        ("Objectives", "Label"),
+        ("Threats", "Label"),
+        ("Forecast", "Label"),
+        ("Event", "Label"),
+        ("Footer", "HBoxContainer"),
+    ):
+        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for the release-facing overworld shell")
+
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const COMMAND_BRIEFING_KEY := \"command_briefing\"",
+        "const COMMAND_RISK_FORECAST_KEY := \"command_risk_forecast\"",
+        "func describe_status",
+        "func describe_visibility_panel",
+        "func describe_objective_board",
+        "func describe_frontier_threats",
+        "func describe_command_briefing",
+        "func consume_command_briefing",
+        "func describe_command_risk",
+        "func describe_command_risk_forecast",
+        "func consume_command_risk_forecast",
+        "func describe_dispatch",
+        "func _normalize_command_briefing",
+        "func _normalize_command_risk_forecast",
+        "func _command_briefing_lines",
+        "func _command_briefing_orders_line",
+        "func _command_risk_forecast",
+        "func _command_risk_town_items",
+        "func _command_risk_logistics_items",
+        "func _command_risk_objective_items",
+        "func _command_risk_posture_items",
+        "func _command_risk_field_item",
+        "Immediate orders:",
+        "Logistics watch:",
+        "Next-day posture:",
+        "func _local_visible_threat_summary",
+        "func _dispatch_context_brief",
+        "func _terrain_name_at",
+    ):
+        ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing required overworld-shell polish token: {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_briefing_panel",
+        "_briefing_title_label",
+        "_briefing_label",
+        "_briefing_title_text",
+        "_command_briefing_text",
+        "OverworldRules.consume_command_briefing",
+        "OverworldRules.consume_command_risk_forecast",
+        "_visibility_label",
+        "_forecast_label",
+        "OverworldRules.describe_status",
+        "OverworldRules.describe_visibility_panel",
+        "OverworldRules.describe_command_risk",
+        "OverworldRules.describe_dispatch",
+        "OverworldRules.describe_enemy_threats",
+        "OverworldRules.describe_context",
+        "_set_command_briefing",
+        "_style_action_button",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required overworld-shell polish token: {required_token}")
+
+
+def validate_overworld_command_commitment_board(errors: list[str]) -> None:
+    required_paths = (SESSION_STATE_PATH, OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing overworld command-commitment file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Overworld command commitment board must preserve save version 9")
+
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    for node_name, node_type in (
+        ("CommitmentPanel", "PanelContainer"),
+        ("CommitmentTitle", "Label"),
+        ("Commitment", "Label"),
+    ):
+        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for the command commitment board")
+
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'func describe_commitment_board',
+        'func _context_action_summary',
+        'func _command_commitment_action_line',
+        'func _command_commitment_route_line',
+        'func _command_commitment_coverage_line',
+        'func _command_commitment_hold_line',
+        'func _nearest_reserve_hero_support',
+        '"summary": _context_action_summary',
+        'Command Commitment',
+        'Immediate order:',
+        'Route pressure:',
+        'Coverage:',
+        'If you hold:',
+    ):
+        ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing required command-commitment token: {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_commitment_label",
+        "OverworldRules.describe_commitment_board",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required command-commitment token: {required_token}")
+
+
+def validate_enemy_empire_management(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        OVERWORLD_RULES_PATH,
+        ENEMY_TURN_RULES_PATH,
+        ENEMY_ADVENTURE_RULES_PATH,
+        BATTLE_RULES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing enemy empire-management file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Enemy empire management must preserve save version 9")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("func describe_enemy_threats", "func _town_defense_summary", "Defense %s"):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required enemy-surfacing token: {required_token}")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"treasury": _blank_resource_pool()',
+        '"posture": "probing"',
+        '"captured_artifact_ids": []',
+        "EnemyAdventureRules.normalize_raid_armies",
+        "OverworldRules.town_income",
+        "OverworldRules.town_weekly_growth",
+        "OverworldRules.town_reinforcement_quality",
+        "OverworldRules.town_battle_readiness",
+        "OverworldRules.town_pressure_output",
+        "OverworldRules.can_afford_cost_with_town_market",
+        "OverworldRules.apply_market_cost_coverage",
+        "OverworldRules.get_town_build_options",
+        "func _run_empire_cycle",
+        "func _build_in_enemy_towns",
+        "func _reinforce_enemy_forces",
+        "func _apply_reinforcement_to_raid",
+        "func _desired_town_strength",
+        "func _empire_town_pressure_bonus",
+        "func _public_posture_label",
+        "func _captured_artifact_income",
+        "func _captured_artifact_pressure_bonus",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required empire-management token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func normalize_raid_armies",
+        "func ensure_raid_army",
+        "func visible_raid_count",
+        "func raid_strength",
+        "func desired_raid_strength",
+        "func raid_pillage_weight",
+        "func describe_contestation",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing required empire-management token: {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'encounter_placement.get("enemy_army"',
+        "func _resolved_encounter_placement",
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required enemy-army token: {required_token}")
+
+
+def validate_enemy_strategic_contestation(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        SCENARIO_FACTORY_PATH,
+        OVERWORLD_RULES_PATH,
+        ARTIFACT_RULES_PATH,
+        ENEMY_TURN_RULES_PATH,
+        ENEMY_ADVENTURE_RULES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing enemy strategic-contestation file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Strategic enemy contestation must preserve save version 9")
+
+    scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
+    for required_token in ("collected_by_faction_id", "collected_day"):
+        ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing strategic-node token: {required_token}")
+
+    artifact_rules_text = ARTIFACT_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("collected_by_faction_id", "collected_day"):
+        ensure(required_token in artifact_rules_text, errors, f"ArtifactRules.gd is missing strategic-node token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "collected_by_faction_id",
+        "contested_by_faction_id",
+        "frontier site%s already denied by hostile forces",
+        "neutral front%s under hostile contest",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing strategic-surfacing token: {required_token}")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "EnemyAdventureRules.advance_raids(session, config, faction_id, state)",
+        "EnemyAdventureRules.describe_contestation",
+        '"captured_artifact_ids": _normalize_string_array',
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing strategic-turn token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"target_kind": "resource"',
+        '"target_kind": "artifact"',
+        '"target_kind": "encounter"',
+        "func _resolve_arrived_target",
+        "func _secure_resource_target",
+        "func _secure_artifact_target",
+        "func _contest_encounter_target",
+        "func _append_resource_candidate",
+        "func _append_artifact_candidate",
+        "func _append_encounter_candidate",
+        "func _hero_target_candidate",
+        "func _encounter_staging_tiles",
+        "func _resource_target_priority",
+        "func _artifact_target_priority",
+        "func _encounter_target_priority",
+        "contested_by_faction_id",
+        "collected_by_faction_id",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing strategic-targeting token: {required_token}")
+
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    for scenario_id, scenario in scenarios.items():
+        enemy_factions = scenario.get("enemy_factions", [])
+        if not isinstance(enemy_factions, list) or not enemy_factions:
+            continue
+        contestable_count = len(scenario.get("resource_nodes", [])) + len(scenario.get("artifact_nodes", [])) + len(scenario.get("encounters", []))
+        ensure(contestable_count > 0, errors, f"Scenario {scenario_id} must author at least one non-town strategic contest target for enemy factions")
+
+        objectives = scenario.get("objectives", {})
+        objective_pressure_present = False
+        if isinstance(objectives, dict):
+            for bucket in ("victory", "defeat"):
+                for objective in objectives.get(bucket, []):
+                    if not isinstance(objective, dict):
+                        continue
+                    objective_type = str(objective.get("type", ""))
+                    if objective_type in {"town_owned_by_player", "town_not_owned_by_player", "enemy_pressure_at_least", "flag_true"}:
+                        objective_pressure_present = True
+                        break
+                if objective_pressure_present:
+                    break
+        ensure(objective_pressure_present, errors, f"Scenario {scenario_id} must author at least one objective that strategic enemy contestation can pressure")
+
+
+def validate_overworld_logistics_sites(errors: list[str]) -> None:
+    payloads = {
+        "resource_sites": load_json(CONTENT_DIR / "resource_sites.json"),
+        "spells": load_json(CONTENT_DIR / "spells.json"),
+        "units": load_json(CONTENT_DIR / "units.json"),
+        "scenarios": load_json(CONTENT_DIR / "scenarios.json"),
+    }
+    resource_sites = items_index(payloads["resource_sites"])
+    spells = items_index(payloads["spells"])
+    units = items_index(payloads["units"])
+    scenarios = items_index(payloads["scenarios"])
+
+    ensure(LOGISTICS_SITE_IDS.issubset(resource_sites.keys()), errors, "Release overworld logistics slice must keep all authored logistics-site ids present")
+    families_present = {
+        str(site.get("family", ""))
+        for site in resource_sites.values()
+        if str(site.get("family", "")) in LOGISTICS_SITE_FAMILIES
+    }
+    ensure(LOGISTICS_SITE_FAMILIES.issubset(families_present), errors, "Release overworld logistics slice must keep neutral dwellings, faction outposts, and frontier shrines authored")
+
+    for site_id in LOGISTICS_SITE_IDS:
+        site = resource_sites.get(site_id, {})
+        family = str(site.get("family", ""))
+        ensure(bool(site.get("persistent_control", False)), errors, f"Logistics site {site_id} must remain persistent-control content")
+        response_profile = site.get("response_profile", {})
+        ensure(isinstance(response_profile, dict) and bool(response_profile), errors, f"Logistics site {site_id} must define response_profile")
+        if isinstance(response_profile, dict):
+            ensure(bool(str(response_profile.get("action_label", ""))), errors, f"Logistics site {site_id} response_profile must define action_label")
+            ensure(bool(str(response_profile.get("summary", ""))), errors, f"Logistics site {site_id} response_profile must define summary")
+            ensure(int(response_profile.get("movement_cost", 0)) > 0, errors, f"Logistics site {site_id} response_profile must define movement_cost > 0")
+            ensure(int(response_profile.get("watch_days", 0)) > 0, errors, f"Logistics site {site_id} response_profile must define watch_days > 0")
+            resource_cost = response_profile.get("resource_cost", {})
+            ensure(isinstance(resource_cost, dict) and bool(resource_cost), errors, f"Logistics site {site_id} response_profile must define non-empty resource_cost")
+            ensure(
+                sum(
+                    int(response_profile.get(key, 0))
+                    for key in ("quality_bonus", "readiness_bonus", "pressure_bonus", "recovery_relief")
+                ) > 0,
+                errors,
+                f"Logistics site {site_id} response_profile must define at least one strategic payoff bonus",
+            )
+        if family == "neutral_dwelling":
+            claim_recruits = site.get("claim_recruits", {})
+            weekly_recruits = site.get("weekly_recruits", {})
+            ensure(isinstance(claim_recruits, dict) and bool(claim_recruits), errors, f"Neutral dwelling {site_id} must define claim_recruits")
+            ensure(isinstance(weekly_recruits, dict) and bool(weekly_recruits), errors, f"Neutral dwelling {site_id} must define weekly_recruits")
+            for recruit_payload in (claim_recruits, weekly_recruits):
+                if not isinstance(recruit_payload, dict):
+                    continue
+                for unit_id, amount in recruit_payload.items():
+                    ensure(str(unit_id) in units, errors, f"Logistics site {site_id} references missing unit {unit_id}")
+                    ensure(int(amount) > 0, errors, f"Logistics site {site_id} must define positive recruit counts for {unit_id}")
+        elif family == "faction_outpost":
+            ensure(int(site.get("vision_radius", 0)) > 0, errors, f"Faction outpost {site_id} must keep a scouting radius payoff")
+            ensure(int(site.get("pressure_guard", 0)) > 0, errors, f"Faction outpost {site_id} must keep a pressure_guard payoff")
+        elif family == "frontier_shrine":
+            spell_id = str(site.get("learn_spell_id", ""))
+            ensure(spell_id in spells, errors, f"Frontier shrine {site_id} references missing spell {spell_id}")
+            ensure(str(spells.get(spell_id, {}).get("context", "")) == "overworld", errors, f"Frontier shrine {site_id} must teach an overworld spell")
+
+    beacon_path = spells.get("spell_beacon_path", {})
+    ensure(bool(beacon_path), errors, "Release overworld logistics slice must keep Beacon Path authored")
+    ensure(str(beacon_path.get("context", "")) == "overworld", errors, "Beacon Path must remain an overworld spell")
+    ensure(str(beacon_path.get("effect", {}).get("type", "")) == "restore_movement", errors, "Beacon Path must remain a restore_movement spell")
+    ensure(int(beacon_path.get("effect", {}).get("amount", 0)) >= 5, errors, "Beacon Path must keep a strong movement-restoration payload")
+
+    total_logistics_placements = 0
+    for scenario_id, scenario in scenarios.items():
+        logistics_families = set()
+        logistics_count = 0
+        for placement in scenario.get("resource_nodes", []):
+            if not isinstance(placement, dict):
+                continue
+            site = resource_sites.get(str(placement.get("site_id", "")), {})
+            family = str(site.get("family", ""))
+            if family in LOGISTICS_SITE_FAMILIES:
+                logistics_families.add(family)
+                logistics_count += 1
+        total_logistics_placements += logistics_count
+        if scenario_id in RELEASE_LOGISTICS_SCENARIO_IDS:
+            ensure(LOGISTICS_SITE_FAMILIES.issubset(logistics_families), errors, f"Scenario {scenario_id} must place at least one neutral dwelling, faction outpost, and frontier shrine")
+        if scenario_id in STRATEGIC_RESPONSE_SCENARIO_IDS:
+            player_recovery_present = any(
+                isinstance(placement, dict)
+                and str(placement.get("owner", "")) == "player"
+                and int((placement.get("recovery", {}) if isinstance(placement.get("recovery", {}), dict) else {}).get("pressure", 0)) > 0
+                for placement in scenario.get("towns", [])
+            )
+            ensure(player_recovery_present, errors, f"Scenario {scenario_id} must surface at least one player-town recovery pressure point for response gameplay")
+        if scenario_id == "glassfen-breakers":
+            ensure(logistics_count >= 3, errors, "Glassfen Breakers must keep multiple logistics sites for skirmish-facing overworld variety")
+        if scenario_id == "lockmarsh-surge":
+            ensure(LOGISTICS_SITE_FAMILIES.issubset(logistics_families), errors, "Lockmarsh Surge must place dwelling, outpost, and shrine logistics sites around Highwater's capital front")
+    ensure(total_logistics_placements >= 18, errors, "Release overworld logistics slice must keep broad authored placement coverage across current scenarios")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func controlled_resource_site_income",
+        "func apply_controlled_resource_site_musters",
+        "func controlled_resource_site_count",
+        "func _resource_site_context_summary",
+        "func _resource_site_is_persistent",
+        "func _find_context_resource_node",
+        "func _grant_site_claim_recruits",
+        "func _learn_site_spell",
+        "func _apply_site_reveal",
+        "func describe_town_response_panel",
+        "func get_town_response_actions",
+        "func perform_town_response_action",
+        "func relieve_town_recovery_pressure",
+        "func _issue_resource_site_response",
+        "func _resource_site_response_profile",
+        "func _resource_site_response_state",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing overworld-logistics token: {required_token}")
+
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    ensure("func spend_active_hero_movement" in hero_command_text, errors, "HeroCommandRules.gd must expose spend_active_hero_movement for strategic response orders")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "OverworldRules.controlled_resource_site_income",
+        "OverworldRules.controlled_resource_site_pressure_bonus",
+        "OverworldRules.player_resource_site_pressure_guard",
+        "OverworldRules.apply_controlled_resource_site_musters",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing logistics-site turn token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _resource_node_contestable_by_faction",
+        "func _resource_site_strategic_value",
+        "func _resource_site_pressure_value",
+        "func _recruit_payload_value",
+        "_resource_node_contestable_by_faction(node, site, faction_id)",
+        "_resource_site_claim_rewards(site)",
+        '"response_until_day"',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing logistics-site contestation token: {required_token}")
+
+
+def validate_overworld_route_security_escort(errors: list[str]) -> None:
+    required_paths = (OVERWORLD_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, ENEMY_TURN_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing overworld escort-route file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"response_commander_id"',
+        '"response_security_rating"',
+        "func _route_security_rating_for_hero",
+        "HeroCommandRules.active_hero(session)",
+        "HeroCommandRules.hero_by_id(session, commander_id)",
+        '"pressure_guard_bonus"',
+        '"growth_bonus_percent"',
+        '"break_pressure"',
+        '"response_growth_bonus_percent"',
+        '"response_pressure_guard_bonus"',
+        "Route escort strength",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing escort-route token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"response_security_rating"',
+        '"response_commander_id"',
+        "breaks its escorted logistics route",
+        "escort_strength",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing escort-route contest token: {required_token}")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    ensure(
+        "OverworldRules.player_resource_site_pressure_guard" in enemy_turn_text,
+        errors,
+        "EnemyTurnRules.gd must continue routing escorted site pressure guard through the shared overworld boundary",
+    )
+
+
+def validate_hostile_empire_personality(errors: list[str]) -> None:
+    required_paths = (ENEMY_TURN_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, CONTENT_DIR / "factions.json", CONTENT_DIR / "scenarios.json", CONTENT_DIR / "resource_sites.json")
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing hostile-empire personality file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "EnemyAdventureRules.enemy_strategy",
+        "EnemyAdventureRules.public_strategy_summary",
+        "func _raid_threshold_for_strategy",
+        "func _max_active_raids_for_strategy",
+        "func _recruit_priority",
+        "Charter columns are pushing measured raids down the lanes",
+        "Warbands are spilling forward in staggered packs",
+        "Compact sorties are testing the frontier behind relay screens",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing hostile-personality token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func enemy_strategy",
+        "func strategy_target_weight",
+        "func priority_target_bonus",
+        "func public_strategy_summary",
+        "func target_site_family",
+        "func target_is_objective_anchor",
+        "func _weighted_priority",
+        '"priority_target_placement_ids"',
+        '"strategy_overrides"',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing hostile-personality token: {required_token}")
+
+    factions = items_index(load_json(CONTENT_DIR / "factions.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    hostile_priority_counts = {faction_id: 0 for faction_id in RELEASE_PLAYER_FACTIONS}
+    hostile_logistics_focus: set[str] = set()
+    authored_priority_fronts = 0
+
+    for scenario in scenarios.values():
+        resource_family_by_placement = {}
+        for placement in scenario.get("resource_nodes", []):
+            if not isinstance(placement, dict):
+                continue
+            placement_id = str(placement.get("placement_id", ""))
+            site = resource_sites.get(str(placement.get("site_id", "")), {})
+            resource_family_by_placement[placement_id] = str(site.get("family", ""))
+        for enemy_faction in scenario.get("enemy_factions", []):
+            if not isinstance(enemy_faction, dict):
+                continue
+            faction_id = str(enemy_faction.get("faction_id", ""))
+            if faction_id not in RELEASE_PLAYER_FACTIONS:
+                continue
+            if enemy_faction.get("priority_target_placement_ids", []) or enemy_faction.get("strategy_overrides", {}):
+                hostile_priority_counts[faction_id] += 1
+                authored_priority_fronts += 1
+            for placement_id in enemy_faction.get("priority_target_placement_ids", []):
+                if resource_family_by_placement.get(str(placement_id), "") in LOGISTICS_SITE_FAMILIES:
+                    hostile_logistics_focus.add(faction_id)
+
+    ensure(authored_priority_fronts >= 8, errors, "Release hostile empire personality must keep at least eight authored fronts with explicit priority targets or strategy overrides")
+    for faction_id in RELEASE_PLAYER_FACTIONS:
+        ensure(hostile_priority_counts[faction_id] >= 1, errors, f"Hostile faction {faction_id} must keep at least one authored priority front")
+        ensure(faction_id in hostile_logistics_focus, errors, f"Hostile faction {faction_id} must keep at least one priority front aimed at a logistics-site family")
+        strategy = factions.get(faction_id, {}).get("enemy_strategy", {})
+        ensure(isinstance(strategy, dict) and bool(strategy), errors, f"Faction {faction_id} must keep enemy_strategy authored")
+
+    glassfen = scenarios.get("glassfen-breakers", {})
+    glassfen_site_ids = {
+        str(placement.get("site_id", ""))
+        for placement in glassfen.get("resource_nodes", [])
+        if isinstance(placement, dict)
+    }
+    ensure("site_prism_watch_relay" in glassfen_site_ids, errors, "Glassfen Breakers must keep a Sunvault relay outpost authored")
+    ensure("site_starlens_sanctum" in glassfen_site_ids, errors, "Glassfen Breakers must keep a Sunvault sanctum authored")
+
+
+def validate_late_game_capital_escalation(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        OVERWORLD_RULES_PATH,
+        TOWN_RULES_PATH,
+        ENEMY_TURN_RULES_PATH,
+        ENEMY_ADVENTURE_RULES_PATH,
+        CONTENT_DIR / "towns.json",
+        CONTENT_DIR / "buildings.json",
+        CONTENT_DIR / "scenarios.json",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing late-game capital escalation file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Late-game capital escalation must preserve save version 9")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func town_strategic_role",
+        "func town_strategic_summary",
+        "func town_capital_project_state",
+        "func _town_capital_project_state",
+        "func _town_capital_project_ids",
+        '"Capital Anchor"',
+        '"Project online"',
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing late-game capital token: {required_token}")
+
+    town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "OverworldRules.town_strategic_summary",
+        "OverworldRules.town_capital_project_state",
+        "Capital project online",
+        "Capital watch:",
+        "Capital Anchor",
+    ):
+        ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing late-game capital surfacing token: {required_token}")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _faction_capital_state",
+        "func _faction_capital_state_from_towns",
+        "func _capital_watch_summary",
+        "func _empire_capital_pressure_bonus",
+        "OverworldRules.town_capital_project_state",
+        "OverworldRules.town_strategic_role",
+        "raid_threshold_reduction",
+        "max_active_raids_bonus",
+        "Capital watch:",
+        "Anchor watch:",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing late-game capital-pressure token: {required_token}")
+
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _town_strategic_priority_bonus",
+        "OverworldRules.town_strategic_role",
+        "OverworldRules.town_capital_project_state",
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing capital-targeting token: {required_token}")
+
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+
+    ensure(CAPITAL_PROJECT_BUILDING_IDS.issubset(buildings.keys()), errors, "Late-game capital escalation must keep all authored capital-project buildings present")
+    for building_id in CAPITAL_PROJECT_BUILDING_IDS:
+        project = buildings.get(building_id, {}).get("capital_project", {})
+        ensure(isinstance(project, dict) and bool(project), errors, f"Capital-project building {building_id} must define capital_project")
+        if isinstance(project, dict):
+            ensure(int(project.get("pressure_bonus", 0)) > 0, errors, f"Capital-project building {building_id} must define pressure_bonus > 0")
+            ensure(int(project.get("raid_threshold_reduction", 0)) > 0, errors, f"Capital-project building {building_id} must define raid_threshold_reduction > 0")
+            ensure(int(project.get("max_active_raids_bonus", 0)) > 0, errors, f"Capital-project building {building_id} must define max_active_raids_bonus > 0")
+            ensure(int(project.get("defense_bonus", 0)) > 0, errors, f"Capital-project building {building_id} must define defense_bonus > 0")
+            ensure(int(project.get("recovery_guard", 0)) > 0, errors, f"Capital-project building {building_id} must define recovery_guard > 0")
+            ensure(bool(str(project.get("summary", ""))), errors, f"Capital-project building {building_id} must define summary")
+            support_requirements = project.get("support_requirements", {})
+            ensure(isinstance(support_requirements, dict) and bool(support_requirements), errors, f"Capital-project building {building_id} must define support_requirements")
+            if isinstance(support_requirements, dict):
+                for family_id in LOGISTICS_SITE_FAMILIES:
+                    ensure(int(support_requirements.get(family_id, 0)) > 0, errors, f"Capital-project building {building_id} must require logistics family {family_id}")
+            vulnerability_penalties = project.get("vulnerability_penalties", {})
+            ensure(isinstance(vulnerability_penalties, dict) and bool(vulnerability_penalties), errors, f"Capital-project building {building_id} must define vulnerability_penalties")
+            if isinstance(vulnerability_penalties, dict):
+                ensure(int(vulnerability_penalties.get("quality_penalty", 0)) > 0, errors, f"Capital-project building {building_id} must define vulnerability quality_penalty > 0")
+                ensure(int(vulnerability_penalties.get("readiness_penalty", 0)) > 0, errors, f"Capital-project building {building_id} must define vulnerability readiness_penalty > 0")
+                ensure(int(vulnerability_penalties.get("pressure_penalty", 0)) > 0, errors, f"Capital-project building {building_id} must define vulnerability pressure_penalty > 0")
+                ensure(int(vulnerability_penalties.get("growth_penalty_percent", 0)) > 0, errors, f"Capital-project building {building_id} must define vulnerability growth_penalty_percent > 0")
+
+    for town_id in STRATEGIC_LOGISTICS_TOWN_IDS:
+        logistics_plan = towns.get(town_id, {}).get("logistics_plan", {})
+        ensure(isinstance(logistics_plan, dict) and bool(logistics_plan), errors, f"Strategic town {town_id} must define logistics_plan")
+        if isinstance(logistics_plan, dict):
+            ensure(int(logistics_plan.get("support_radius", 0)) >= 6, errors, f"Strategic town {town_id} must define logistics support_radius >= 6")
+            ensure(int(logistics_plan.get("recovery_relief", 0)) > 0, errors, f"Strategic town {town_id} must define logistics recovery_relief > 0")
+            ensure(bool(str(logistics_plan.get("vulnerability_summary", ""))), errors, f"Strategic town {town_id} must define logistics vulnerability_summary")
+            support_requirements = logistics_plan.get("support_requirements", {})
+            ensure(isinstance(support_requirements, dict) and bool(support_requirements), errors, f"Strategic town {town_id} must define logistics support_requirements")
+            if isinstance(support_requirements, dict):
+                for family_id in LOGISTICS_SITE_FAMILIES:
+                    ensure(int(support_requirements.get(family_id, 0)) > 0, errors, f"Strategic town {town_id} must require logistics family {family_id}")
+
+    for town_id, building_id in CAPITAL_PROJECT_TOWN_BUILDINGS.items():
+        town = towns.get(town_id, {})
+        ensure(bool(town), errors, f"Late-game capital escalation must keep town {town_id} authored")
+        ensure(str(town.get("strategic_role", "")) == "capital", errors, f"Town {town_id} must keep strategic_role capital")
+        ensure(bool(str(town.get("strategic_summary", ""))), errors, f"Town {town_id} must define strategic_summary")
+        ensure(building_id in [str(value) for value in town.get("buildable_building_ids", [])], errors, f"Town {town_id} must keep capital-project building {building_id} in its build tree")
+
+    for town_id in STRATEGIC_STRONGHOLD_IDS:
+        town = towns.get(town_id, {})
+        ensure(bool(town), errors, f"Late-game capital escalation must keep stronghold town {town_id} authored")
+        ensure(str(town.get("strategic_role", "")) == "stronghold", errors, f"Town {town_id} must keep strategic_role stronghold")
+        ensure(bool(str(town.get("strategic_summary", ""))), errors, f"Stronghold town {town_id} must define strategic_summary")
+
+    for scenario_id, expectation in LATE_GAME_CAPITAL_SCENARIO_EXPECTATIONS.items():
+        scenario = scenarios.get(scenario_id, {})
+        ensure(bool(scenario), errors, f"Late-game capital escalation must keep scenario {scenario_id} authored")
+        if not scenario:
+            continue
+        found_capital_hook = False
+        for hook in scenario.get("script_hooks", []):
+            if not isinstance(hook, dict):
+                continue
+            objective_not_met = any(
+                isinstance(condition, dict)
+                and str(condition.get("type", "")) == "objective_not_met"
+                and str(condition.get("objective_id", "")) == str(expectation["objective_id"])
+                for condition in hook.get("conditions", [])
+            )
+            if not objective_not_met:
+                continue
+            effect_types = {str(effect.get("type", "")) for effect in hook.get("effects", []) if isinstance(effect, dict)}
+            building_match = any(
+                isinstance(effect, dict)
+                and str(effect.get("type", "")) == "town_add_building"
+                and str(effect.get("placement_id", "")) == str(expectation["placement_id"])
+                and str(effect.get("building_id", "")) == str(expectation["building_id"])
+                for effect in hook.get("effects", [])
+            )
+            if building_match:
+                found_capital_hook = True
+                ensure("add_enemy_pressure" in effect_types, errors, f"Scenario {scenario_id} capital escalation hook must add enemy pressure")
+                ensure("spawn_encounter" in effect_types, errors, f"Scenario {scenario_id} capital escalation hook must spawn a fresh encounter")
+                break
+        ensure(found_capital_hook, errors, f"Scenario {scenario_id} must keep a late-game capital escalation hook for {expectation['building_id']}")
+
+
+def validate_capital_front_battle_identity(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        BATTLE_RULES_PATH,
+        BATTLE_AI_RULES_PATH,
+        OVERWORLD_RULES_PATH,
+        TOWN_RULES_PATH,
+        CONTENT_DIR / "army_groups.json",
+        CONTENT_DIR / "encounters.json",
+        CONTENT_DIR / "scenarios.json",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing capital-front battle-identity file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Capital-front battle identity must preserve save version 9")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _capital_front_anchor_side",
+        "func _capital_front_assault_side",
+        "func _battlefield_identity_summary",
+        "Battlefront:",
+        "Capital defense at",
+        "Stronghold defense at",
+        "fortress_lane",
+        "reserve_wave",
+        "battery_nest",
+        "wall_pressure",
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing capital-front battle token: {required_token}")
+
+    battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _capital_front_anchor_side",
+        "func _capital_front_assault_side",
+        "fortress_lane",
+        "reserve_wave",
+        "battery_nest",
+        "wall_pressure",
+    ):
+        ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing capital-front AI token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func town_battlefront_profile",
+        "func _town_battlefront_profile",
+        "Fortress lanes",
+        "Wall pressure",
+        "Battery nests",
+        "reserve_wave",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing capital-front summary token: {required_token}")
+
+    town_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "OverworldRules.town_battlefront_profile",
+        "Battlefront ",
+        "Siege profile:",
+    ):
+        ensure(required_token in town_text, errors, f"TownRules.gd is missing capital-front surfacing token: {required_token}")
+
+    army_groups = items_index(load_json(CONTENT_DIR / "army_groups.json"))
+    encounters = items_index(load_json(CONTENT_DIR / "encounters.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+
+    ensure(CAPITAL_FRONT_SIGNATURE_ARMIES.issubset(army_groups.keys()), errors, "Capital-front battle identity must keep all signature reserve or finale army groups authored")
+
+    signature_tagged_encounters = 0
+    for encounter_id, expectation in CAPITAL_FRONT_ENCOUNTER_EXPECTATIONS.items():
+        encounter = encounters.get(encounter_id, {})
+        ensure(bool(encounter), errors, f"Capital-front battle identity must keep encounter {encounter_id} authored")
+        if not encounter:
+            continue
+        ensure(str(encounter.get("enemy_group_id", "")) == str(expectation["enemy_group_id"]), errors, f"Encounter {encounter_id} must keep enemy_group_id {expectation['enemy_group_id']}")
+        battlefield_tags = {str(tag_id) for tag_id in encounter.get("battlefield_tags", [])}
+        ensure(set(expectation["required_tags"]).issubset(battlefield_tags), errors, f"Encounter {encounter_id} must keep tags {sorted(expectation['required_tags'])}")
+        if battlefield_tags & {"fortress_lane", "reserve_wave", "battery_nest", "wall_pressure"}:
+            signature_tagged_encounters += 1
+
+    ensure(signature_tagged_encounters >= 10, errors, "Capital-front battle identity must keep at least ten authored encounters using the new siege-lane or finale-front tags")
+
+    for scenario_id, expectation in CAPITAL_FRONT_SCENARIO_EXPECTATIONS.items():
+        scenario = scenarios.get(scenario_id, {})
+        ensure(bool(scenario), errors, f"Capital-front battle identity must keep scenario {scenario_id} authored")
+        if not scenario:
+            continue
+
+        placed_encounter_ids = {
+            str(placement.get("encounter_id", ""))
+            for placement in scenario.get("encounters", [])
+            if isinstance(placement, dict)
+        }
+        ensure(set(expectation["front_encounter_ids"]).issubset(placed_encounter_ids), errors, f"Scenario {scenario_id} must keep its capital-front encounter identity authored")
+
+        raid_encounter_ids = {
+            str(encounter_id)
+            for enemy_faction in scenario.get("enemy_factions", [])
+            if isinstance(enemy_faction, dict)
+            for encounter_id in enemy_faction.get("raid_encounter_ids", [])
+        }
+        ensure(set(expectation["raid_encounter_ids"]).issubset(raid_encounter_ids), errors, f"Scenario {scenario_id} must keep signature raid encounter ids for its late-front pressure")
+
+        hook = next((candidate for candidate in scenario.get("script_hooks", []) if isinstance(candidate, dict) and str(candidate.get("id", "")) == str(expectation["hook_id"])), None)
+        ensure(hook is not None, errors, f"Scenario {scenario_id} must keep script hook {expectation['hook_id']}")
+        if not isinstance(hook, dict):
+            continue
+        spawned_encounter_ids = {
+            str(effect.get("placement", {}).get("encounter_id", ""))
+            for effect in hook.get("effects", [])
+            if isinstance(effect, dict) and str(effect.get("type", "")) == "spawn_encounter" and isinstance(effect.get("placement", {}), dict)
+        }
+        ensure(str(expectation["spawn_encounter_id"]) in spawned_encounter_ids, errors, f"Scenario {scenario_id} hook {expectation['hook_id']} must spawn {expectation['spawn_encounter_id']}")
+
+
+def validate_authored_scenario_identity(errors: list[str]) -> None:
+    required_paths = (SCENARIO_SCRIPT_RULES_PATH, SCENARIO_RULES_PATH, OVERWORLD_RULES_PATH)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing authored-scenario identity file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    scenario_script_text = SCENARIO_SCRIPT_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"objective_not_met"',
+        '"active_raid_count_at_least"',
+        '"active_raid_count_at_most"',
+        '"hook_fired"',
+        '"hook_not_fired"',
+        '"add_enemy_pressure"',
+        "func describe_recent_events",
+        "func _add_enemy_pressure",
+    ):
+        ensure(required_token in scenario_script_text, errors, f"ScenarioScriptRules.gd is missing required authored-scenario token: {required_token}")
+
+    scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ('"encounter_resolved"', '"hook_fired"'):
+        ensure(required_token in scenario_rules_text, errors, f"ScenarioRules.gd is missing required authored-scenario token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in ("ScenarioScriptRules.describe_recent_events", "Scenario pulse:"):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required authored-scenario surfacing token: {required_token}")
+
+
+def validate_town_defense_battle_flow(errors: list[str]) -> None:
+    required_paths = (
+        SESSION_STATE_PATH,
+        ENEMY_TURN_RULES_PATH,
+        BATTLE_RULES_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing town-defense battle file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    ensure("const SAVE_VERSION := 9" in session_text, errors, "Town-defense battle flow must preserve save version 9")
+
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _queue_town_defense_battle",
+        '"type": "town_defense"',
+        "BattleRules.create_battle_payload",
+        "session.game_state = \"battle\"",
+        "func _town_defense_candidate",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required town-defense token: {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"player_commander_state"',
+        '"player_commander_source"',
+        '"retreat_allowed"',
+        "func _player_setup_for_battle",
+        "func _finalize_town_defense_loss",
+        "func _sync_player_force_from_battle",
+        "func _sync_enemy_force_from_battle",
+        "func _capture_town_after_assault",
+        "func _apply_battle_context_victory",
+        "func _apply_battle_context_stalemate",
+        '"state": "defeat" if session.scenario_status != "in_progress" else "town_lost"',
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required town-defense token: {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure("AppRouter.go_to_battle()" in overworld_script_text, errors, "OverworldShell.gd must route queued town-defense battles into the battle scene")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("BattleRules.resolve_if_battle_ready", '"town_lost"', "AppRouter.go_to_overworld()"):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required town-defense routing token: {required_token}")
+
+
+def main() -> int:
+    errors: list[str] = []
+    validate_content(errors)
+    validate_project_and_scenes(errors)
+    validate_save_management(errors)
+    validate_skirmish_setup(errors)
+    validate_campaign_browser(errors)
+    validate_settings_and_onboarding(errors)
+    validate_scenario_outcome_shell(errors)
+    validate_difficulty_integration(errors)
+    validate_hero_progression(errors)
+    validate_hero_command(errors)
+    validate_overworld_fog(errors)
+    validate_battle_ability_layer(errors)
+    validate_battle_shell_release_polish(errors)
+    validate_battle_objective_pressure_slice(errors)
+    validate_battle_order_consequence_board(errors)
+    validate_battle_spell_timing_board(errors)
+    validate_battle_faction_identity(errors)
+    validate_town_faction_progression(errors)
+    validate_town_shell_release_polish(errors)
+    validate_town_defense_outlook_board(errors)
+    validate_town_order_readiness_ledger(errors)
+    validate_overworld_shell_release_polish(errors)
+    validate_overworld_command_commitment_board(errors)
+    validate_enemy_empire_management(errors)
+    validate_enemy_strategic_contestation(errors)
+    validate_overworld_logistics_sites(errors)
+    validate_overworld_route_security_escort(errors)
+    validate_hostile_empire_personality(errors)
+    validate_late_game_capital_escalation(errors)
+    validate_capital_front_battle_identity(errors)
+    validate_authored_scenario_identity(errors)
+    validate_town_defense_battle_flow(errors)
+    validate_in_session_save_controls(errors)
+
+    if errors:
+        print("VALIDATION FAILED")
+        for error in errors:
+            print(f"- {error}")
+        return 1
+
+    print("VALIDATION PASSED")
+    print("- content graph is internally consistent")
+    print("- campaign content files, chapter wiring, and multi-arc breadth are present")
+    print("- project and scene resource paths exist")
+    print("- connected scene methods exist on their scripts")
+    print("- save-service APIs and save-browser scene wiring are present")
+    print("- save summaries now expose integrity/load-state guardrails, and restore flow re-reads live slot state before loading")
+    print("- campaign chapter wiring, browser/detail APIs, and menu browser hooks are present")
+    print("- campaign chapters now require authored briefing, aftermath, and chronicle text surfaced through the menu browser and outcome shell")
+    print("- campaign and skirmish selection now surface commander, spellbook, artifact, army, and front-posture previews from core rules")
+    print("- overworld logistics orders now bind hero-led escort state, route pressure guard, and hostile route-break contestation on shared core boundaries")
+    print("- campaign and skirmish launch flow now surfaces terrain, enemy posture, first-contact, objective, and reinforcement intel through a shared operational board")
+    print("- settings persistence, onboarding topics, and main-menu settings/help hooks are present")
+    print("- authored scenarios now require reactive hooks, encounter-clearing side objectives, pressure spikes, and dispatch-visible event identity")
+    print("- post-scenario outcome routing, recap builders, and dedicated outcome-shell hooks are present")
+    print("- fog-of-war, scouting, legacy-save normalization, and overworld UI wiring are present")
+    print("- skirmish metadata, launch-mode session wiring, and setup UI hooks are present")
+    print("- difficulty profiles are wired through core overworld and battle rules without a save-version bump")
+    print("- hero specialties are normalized, surfaced, and carried through overworld/town/runtime progression")
+    print("- hero-command roster, tavern recruitment, transfer flow, and thin UI wiring are present")
+    print("- authored hero metadata, multi-faction campaign starts, skirmish-only fronts, and lead-hero variety are present")
+    print("- authored unit abilities, battle statuses, ability-aware tactical AI, and thin battle UI wiring are present")
+    print("- the battle shell now surfaces commanders, initiative, active context, effect pressure, action guidance, and dispatch feed from core rules")
+    print("- fresh battle entry now surfaces a one-shot tactical briefing in the battle shell using runtime encounter, doctrine, terrain-tag, target, and objective context")
+    print("- the battle shell now also surfaces a live tactical risk and readiness board using current initiative, commander cover, cohesion, ranged pressure, decisive targets, objective urgency, and dispatch state")
+    print("- battle encounters and scenario placements now author objective or hazard control points that drive real pressure, reserve timing, AI scoring, and shell summaries")
+    print("- battle content now keeps distinct battlefield tags, commander traits, specialized army groups, terrain-payoff rules, and doctrine-aware AI scoring")
+    print("- faction identity, town build trees, weekly musters, and thin town-shell progression wiring are present")
+    print("- advanced town works now drive asymmetric pressure, reinforcement quality, and battle-readiness payoffs across Embercourt and Mireclaw")
+    print("- the town shell now surfaces a release-facing overview, exchange hall, defense watch, frontier watch, and dispatch flow from core rules")
+    print("- the town shell now also surfaces a defense outlook and dispatch-readiness board using live wall strength, public raid pressure, logistics, recovery, and hero-coverage data")
+    print("- the town shell now also surfaces an order-readiness ledger using live costs, market coverage, levy bottlenecks, response strain, and wall-coverage consequences")
+    print("- the overworld shell now surfaces objective boards, scouting coverage, frontier watch, dispatch context, and command actions from core rules")
+    print("- fresh scenario launches now surface a one-shot first-turn command briefing in the overworld shell using runtime objective, logistics, scouting, and threat data")
+    print("- the overworld shell now surfaces a live next-day command-risk forecast and a one-shot end-turn warning using runtime pressure, logistics, scouting, town-readiness, objective, and frontier-watch data")
+    print("- enemy towns now build, recruit, reinforce raid armies, and surface public threat posture without a save-version bump")
+    print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
+    print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
+    print("- hostile empires now keep faction-specific build, raid, reinforcement, and priority-front personalities across authored scenarios")
+    print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
+    print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")
+    print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
+    print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

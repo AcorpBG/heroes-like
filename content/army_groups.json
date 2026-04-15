@@ -1,0 +1,400 @@
+{
+  "items": [
+    {
+      "id": "army_emberwell_vanguard",
+      "name": "Emberwell Vanguard",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 10},
+        {"unit_id": "unit_ember_archer", "count": 5}
+      ]
+    },
+    {
+      "id": "army_blackbranch_raiders",
+      "name": "Blackbranch Raiders",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 8},
+        {"unit_id": "unit_mire_slinger", "count": 4}
+      ]
+    },
+    {
+      "id": "army_mireclaw_pack",
+      "name": "Mireclaw Pack",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 7},
+        {"unit_id": "unit_mire_slinger", "count": 6}
+      ]
+    },
+    {
+      "id": "army_mireclaw_raiding_party",
+      "name": "Mireclaw Raiding Party",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 4},
+        {"unit_id": "unit_mire_slinger", "count": 5}
+      ]
+    },
+    {
+      "id": "army_blackbranch_reavers",
+      "name": "Blackbranch Reavers",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 9},
+        {"unit_id": "unit_mire_slinger", "count": 3}
+      ]
+    },
+    {
+      "id": "army_reedward_pickets",
+      "name": "Reedward Pickets",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 10},
+        {"unit_id": "unit_mire_slinger", "count": 5}
+      ]
+    },
+    {
+      "id": "army_blackfen_gateward",
+      "name": "Blackfen Gateward",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 8},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 7}
+      ]
+    },
+    {
+      "id": "army_ashgrove_watch",
+      "name": "Ashgrove Watch",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 9},
+        {"unit_id": "unit_ember_archer", "count": 4},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
+      "id": "army_sluice_raiders",
+      "name": "Sluice Raiders",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 8},
+        {"unit_id": "unit_mire_slinger", "count": 4}
+      ]
+    },
+    {
+      "id": "army_willow_mill_pack",
+      "name": "Willow Mill Pack",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 5}
+      ]
+    },
+    {
+      "id": "army_ford_reavers",
+      "name": "Ford Reavers",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 9},
+        {"unit_id": "unit_mire_slinger", "count": 5}
+      ]
+    },
+    {
+      "id": "army_silt_hunters",
+      "name": "Silt Hunters",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 4},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 7}
+      ]
+    },
+    {
+      "id": "army_barrow_pickets",
+      "name": "Barrow Pickets",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 10},
+        {"unit_id": "unit_mire_slinger", "count": 6}
+      ]
+    },
+    {
+      "id": "army_reedbarrow_chain",
+      "name": "Reedbarrow Chain",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 7},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 5}
+      ]
+    },
+    {
+      "id": "army_drum_circle",
+      "name": "Nightglass Drum Circle",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 9},
+        {"unit_id": "unit_bog_brute", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 6},
+        {"unit_id": "unit_gorefen_ripper", "count": 2}
+      ]
+    },
+    {
+      "id": "army_mirror_causeway_watch",
+      "name": "Mirror Causeway Watch",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 7},
+        {"unit_id": "unit_mire_slinger", "count": 8},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 8},
+        {"unit_id": "unit_gorefen_ripper", "count": 3}
+      ]
+    },
+    {
+      "id": "army_flintmere_column",
+      "name": "Flintmere Column",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 8},
+        {"unit_id": "unit_ember_archer", "count": 7},
+        {"unit_id": "unit_citadel_pikeward", "count": 2}
+      ]
+    },
+    {
+      "id": "army_reedmaw_host",
+      "name": "Reedmaw Host",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 7},
+        {"unit_id": "unit_bog_brute", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 5},
+        {"unit_id": "unit_gorefen_ripper", "count": 2}
+      ]
+    },
+    {
+      "id": "army_riverwatch_relief",
+      "name": "Riverwatch Relief",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 8},
+        {"unit_id": "unit_ember_archer", "count": 6}
+      ]
+    },
+    {
+      "id": "army_lantern_scouts",
+      "name": "Lantern Scouts",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 6},
+        {"unit_id": "unit_ember_archer", "count": 7},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
+      "id": "army_highwater_militia",
+      "name": "Highwater Militia",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 11},
+        {"unit_id": "unit_ember_archer", "count": 4},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
+      "id": "army_charter_bastion_reserve",
+      "name": "Charter Bastion Reserve",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 8},
+        {"unit_id": "unit_ember_archer", "count": 6},
+        {"unit_id": "unit_citadel_pikeward", "count": 4}
+      ]
+    },
+    {
+      "id": "army_beacon_column",
+      "name": "Beacon Column",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 7},
+        {"unit_id": "unit_ember_archer", "count": 8},
+        {"unit_id": "unit_citadel_pikeward", "count": 2}
+      ]
+    },
+    {
+      "id": "army_reed_totemists",
+      "name": "Reed Totemists",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 7},
+        {"unit_id": "unit_mire_slinger", "count": 7},
+        {"unit_id": "unit_bog_brute", "count": 4},
+        {"unit_id": "unit_gorefen_ripper", "count": 2}
+      ]
+    },
+    {
+      "id": "army_bone_ferry_watch",
+      "name": "Bone Ferry Watch",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 8},
+        {"unit_id": "unit_mire_slinger", "count": 5},
+        {"unit_id": "unit_bog_brute", "count": 5},
+        {"unit_id": "unit_gorefen_ripper", "count": 2}
+      ]
+    },
+    {
+      "id": "army_archive_wardens",
+      "name": "Archive Wardens",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 7},
+        {"unit_id": "unit_ember_archer", "count": 7},
+        {"unit_id": "unit_citadel_pikeward", "count": 2}
+      ]
+    },
+    {
+      "id": "army_bridgeward_levies",
+      "name": "Bridgeward Levies",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 10},
+        {"unit_id": "unit_ember_archer", "count": 5},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
+      "id": "army_lantern_battery",
+      "name": "Lantern Battery",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_ember_archer", "count": 10},
+        {"unit_id": "unit_river_guard", "count": 5},
+        {"unit_id": "unit_citadel_pikeward", "count": 2}
+      ]
+    },
+    {
+      "id": "army_causeway_phalanx",
+      "name": "Causeway Phalanx",
+      "faction_id": "faction_embercourt",
+      "stacks": [
+        {"unit_id": "unit_river_guard", "count": 6},
+        {"unit_id": "unit_citadel_pikeward", "count": 4},
+        {"unit_id": "unit_ember_archer", "count": 4}
+      ]
+    },
+    {
+      "id": "army_muckveil_harriers",
+      "name": "Muckveil Harriers",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_mire_slinger", "count": 10},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 6},
+        {"unit_id": "unit_gorefen_ripper", "count": 2}
+      ]
+    },
+    {
+      "id": "army_ripper_vanguard",
+      "name": "Ripper Vanguard",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_gorefen_ripper", "count": 4},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 6},
+        {"unit_id": "unit_mire_slinger", "count": 4}
+      ]
+    },
+    {
+      "id": "army_nightglass_dominion",
+      "name": "Nightglass Dominion",
+      "faction_id": "faction_mireclaw",
+      "stacks": [
+        {"unit_id": "unit_bog_brute", "count": 6},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 7},
+        {"unit_id": "unit_mire_slinger", "count": 5},
+        {"unit_id": "unit_gorefen_ripper", "count": 4}
+      ]
+    },
+    {
+      "id": "army_prismarch_vanguard",
+      "name": "Prismarch Vanguard",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 8},
+        {"unit_id": "unit_prism_adept", "count": 5},
+        {"unit_id": "unit_mirror_duelist", "count": 3}
+      ]
+    },
+    {
+      "id": "army_relay_pickets",
+      "name": "Relay Pickets",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 8},
+        {"unit_id": "unit_prism_adept", "count": 4}
+      ]
+    },
+    {
+      "id": "army_glasswing_sortie",
+      "name": "Glasswing Sortie",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_prism_adept", "count": 9},
+        {"unit_id": "unit_shard_guard", "count": 5},
+        {"unit_id": "unit_mirror_duelist", "count": 2}
+      ]
+    },
+    {
+      "id": "army_mirror_lancers",
+      "name": "Mirror Lancers",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_mirror_duelist", "count": 6},
+        {"unit_id": "unit_shard_guard", "count": 4},
+        {"unit_id": "unit_prism_adept", "count": 4}
+      ]
+    },
+    {
+      "id": "army_aurora_battery",
+      "name": "Aurora Battery",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_aurora_ballista", "count": 3},
+        {"unit_id": "unit_prism_adept", "count": 6},
+        {"unit_id": "unit_shard_guard", "count": 6}
+      ]
+    },
+    {
+      "id": "army_halo_reserve",
+      "name": "Halo Reserve",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 7},
+        {"unit_id": "unit_prism_adept", "count": 5},
+        {"unit_id": "unit_mirror_duelist", "count": 4},
+        {"unit_id": "unit_aurora_ballista", "count": 1}
+      ]
+    },
+    {
+      "id": "army_daybreak_array",
+      "name": "Daybreak Array",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 6},
+        {"unit_id": "unit_prism_adept", "count": 6},
+        {"unit_id": "unit_mirror_duelist", "count": 3},
+        {"unit_id": "unit_aurora_ballista", "count": 2}
+      ]
+    },
+    {
+      "id": "army_daybreak_matrix",
+      "name": "Daybreak Matrix",
+      "faction_id": "faction_sunvault",
+      "stacks": [
+        {"unit_id": "unit_shard_guard", "count": 7},
+        {"unit_id": "unit_prism_adept", "count": 6},
+        {"unit_id": "unit_aurora_ballista", "count": 2},
+        {"unit_id": "unit_mirror_duelist", "count": 4}
+      ]
+    }
+  ]
+}

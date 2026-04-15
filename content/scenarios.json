@@ -1,0 +1,3195 @@
+{
+  "items": [
+    {
+      "id": "river-pass",
+      "name": "River Pass",
+      "selection": {
+        "summary": "Secure Riverwatch's frontier corridor, seize Duskfen Bastion, and break the marsh raiders before Mireclaw pressure collapses the pass.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Compact Frontier (9x5)",
+        "player_summary": "Lyra Emberwell leads an Embercourt vanguard from Riverwatch Hold with an immediate foothold on the pass.",
+        "enemy_summary": "The Mireclaw Warhost holds Duskfen Bastion and feeds the road with raid pressure from the marsh.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 9, "height": 5},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_emberwell_vanguard",
+      "hero_id": "hero_lyra",
+      "starting_resources": {"gold": 1500, "wood": 4, "ore": 3},
+      "map": [
+        ["grass", "grass", "grass", "forest", "grass", "water", "water", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "water", "grass", "forest", "forest", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"]
+      ],
+      "start": {"x": 1, "y": 2},
+      "hero_starts": ["hero_lyra"],
+      "objectives": {
+        "victory_text": "River Pass holds. Duskfen Bastion now answers to Riverwatch.",
+        "defeat_text": "The Mireclaw warhost breaks the pass before Lyra can secure it.",
+        "victory": [
+          {"id": "claim_duskfen", "label": "Claim Duskfen Bastion", "type": "town_owned_by_player", "placement_id": "duskfen_bastion"},
+          {"id": "clear_blackbranch", "label": "Break the Blackbranch raiders", "type": "flag_true", "flag": "pass_cleared"},
+          {"id": "purge_mire", "label": "Purge the Hollow Mire", "type": "flag_true", "flag": "mire_cleared"},
+          {"id": "break_reed_totemists", "label": "Break the Reed Totemists", "type": "encounter_resolved", "placement_id": "river_pass_reed_totemists"}
+        ],
+        "defeat": [
+          {"id": "hold_riverwatch", "label": "Keep Riverwatch Hold under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_hold"},
+          {"id": "lyra_survives", "label": "Lyra must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_pressure", "label": "Do not let Mireclaw pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "north_road_salvage",
+          "priority": 110,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "clear_blackbranch"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "north_road_salvage",
+                "site_id": "site_waystone_cache",
+                "x": 4,
+                "y": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "With the Blackbranch camp broken, frontier carters reopen the north road."
+            }
+          ]
+        },
+        {
+          "id": "riverwatch_relief_column",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "riverwatch_hold"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "riverwatch_hold", "recruits": {"unit_river_guard": 3}},
+            {
+              "type": "message",
+              "text": "A relief column reaches Riverwatch with pay chests and fresh shield bearers."
+            }
+          ]
+        },
+        {
+          "id": "duskfen_counterstroke",
+          "priority": 100,
+          "conditions": [
+            {"type": "town_owned_by_player", "placement_id": "duskfen_bastion"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "duskfen_bastion", "building_id": "building_lantern_archive"},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "duskfen_counterstroke",
+                "encounter_id": "encounter_mire_raid",
+                "x": 8,
+                "y": 3,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Captured signal fires draw a Mireclaw counterstroke out of the marsh."
+            }
+          ]
+        },
+        {
+          "id": "mire_cleansing_boon",
+          "priority": 80,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "river_pass_hollow_mire"}
+          ],
+          "effects": [
+            {"type": "award_experience", "amount": 100},
+            {"type": "set_flag", "flag": "mire_cleansing_rewarded", "value": true},
+            {
+              "type": "message",
+              "text": "The mire drains back from the old stones, leaving Lyra with a hard-won lesson in command."
+            }
+          ]
+        },
+        {
+          "id": "riverwatch_bell_recall",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "riverwatch_hold"},
+            {"type": "active_raid_count_at_least", "faction_id": "faction_mireclaw", "threshold": 2}
+          ],
+          "effects": [
+            {"type": "town_add_recruits", "placement_id": "riverwatch_hold", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Riverwatch rings the basin bells and every free shield along the pass is dragged back onto the walls."
+            }
+          ]
+        },
+        {
+          "id": "reed_totem_host_rallies",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_reed_totemists"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "reed_totem_host_rallies",
+                "encounter_id": "encounter_blackbranch_reavers",
+                "x": 8,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Unbroken reed totems keep the warhost in rhythm, drawing another reaver band down the north road."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "riverwatch_hold", "town_id": "town_riverwatch", "x": 0, "y": 2, "owner": "player", "recovery": {"pressure": 1, "source": "opening raids"}},
+        {"placement_id": "duskfen_bastion", "town_id": "town_duskfen", "x": 8, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Mireclaw Warhost",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 4,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 120},
+          "raid_encounter_ids": ["encounter_mire_raid", "encounter_blackbranch_reavers"],
+          "spawn_points": [
+            {"x": 7, "y": 1},
+            {"x": 7, "y": 3}
+          ],
+          "siege_target_placement_id": "riverwatch_hold",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "riverwatch_hold",
+            "river_signal_post",
+            "river_free_company",
+            "warcrest_ruin"
+          ],
+          "strategy_overrides": {
+            "raid_target_weights": {"resource": 1.35, "artifact": 1.05},
+            "raid": {"site_denial_weight": 1.5, "hero_hunt_weight": 1.15},
+            "reinforcement": {"raid_bias": 1.45}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "north_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "midway_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "southern_ore", "site_id": "site_ore_crates", "x": 6, "y": 4},
+        {"placement_id": "eastern_cache", "site_id": "site_waystone_cache", "x": 7, "y": 0},
+        {"placement_id": "river_signal_post", "site_id": "site_ember_signal_post", "x": 2, "y": 3},
+        {"placement_id": "river_free_company", "site_id": "site_free_company_yard", "x": 0, "y": 4},
+        {"placement_id": "river_sanctum", "site_id": "site_roadside_sanctum", "x": 6, "y": 1}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "trailsinger_cache", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 0},
+        {"placement_id": "warcrest_ruin", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 1},
+        {"placement_id": "quarry_tally_cache", "artifact_id": "artifact_quarry_tally_rod", "x": 3, "y": 4},
+        {"placement_id": "bastion_vault", "artifact_id": "artifact_bastion_gorget", "x": 7, "y": 2}
+      ],
+      "encounters": [
+        {"placement_id": "river_pass_ghoul_grove", "encounter_id": "encounter_ghoul_grove", "x": 3, "y": 1, "difficulty": "low", "combat_seed": 1201},
+        {"placement_id": "river_pass_hollow_mire", "encounter_id": "encounter_hollow_mire", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 1202},
+        {"placement_id": "river_pass_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 5, "y": 0, "difficulty": "medium", "combat_seed": 1203}
+      ]
+    },
+    {
+      "id": "causeway-stand",
+      "name": "Causeway Stand",
+      "selection": {
+        "summary": "Drive along the Reedfall causeway, hold Duskfen as a staging ground, and break Blackfen Gate before the counterhost seals the marsh road.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Causeway Front (10x6)",
+        "player_summary": "Lyra Emberwell begins with a marshhead at Duskfen and must turn that staging post into a sustained advance.",
+        "enemy_summary": "The Blackfen Counterhost defends the gate, launches northern counterraids, and punishes overextension across the reeds.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_emberwell_vanguard",
+      "hero_id": "hero_lyra",
+      "starting_resources": {"gold": 1200, "wood": 3, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_lyra"],
+      "objectives": {
+        "victory_text": "Lyra locks the causeway under Embercourt lanterns and Blackfen Gate falls silent.",
+        "defeat_text": "The Mireclaw counteroffensive swallows Duskfen and closes the road through the marsh.",
+        "victory": [
+          {"id": "claim_blackfen_gate", "label": "Claim Blackfen Gate", "type": "town_owned_by_player", "placement_id": "blackfen_gate"},
+          {"id": "clear_reed_camp", "label": "Break the Reedward camp", "type": "flag_true", "flag": "reed_camp_cleared"},
+          {"id": "break_gate_marshals", "label": "Scatter the gate marshals", "type": "flag_true", "flag": "gate_marshals_broken"},
+          {"id": "clear_levee_cutters", "label": "Clear the levee cutters", "type": "encounter_resolved", "placement_id": "causeway_levee_cutters"}
+        ],
+        "defeat": [
+          {"id": "hold_duskfen", "label": "Keep Duskfen Bastion under your banner", "type": "town_not_owned_by_player", "placement_id": "duskfen_staging"},
+          {"id": "lyra_survives", "label": "Lyra must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_blackfen_pressure", "label": "Do not let Mireclaw pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 10}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "veteran_supply_train",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_pass_cleared"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 200, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "duskfen_staging", "recruits": {"unit_river_guard": 2}},
+            {
+              "type": "message",
+              "text": "Veterans from River Pass arrive with repaired wagons and enough supplies to keep the advance moving."
+            }
+          ]
+        },
+        {
+          "id": "mire_cleansing_cache",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_mire_cleansing_rewarded"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "mire_cleansing_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 5
+              }
+            },
+            {
+              "type": "message",
+              "text": "The stones Lyra cleansed at Hollow Mire reveal a survey cache along the causeway."
+            }
+          ]
+        },
+        {
+          "id": "archive_reopens",
+          "priority": 100,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "clear_reed_camp"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "duskfen_staging", "building_id": "building_lantern_archive"},
+            {"type": "award_artifact", "artifact_id": "artifact_quarry_tally_rod"},
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "archive_waystone_cache",
+                "site_id": "site_waystone_cache",
+                "x": 5,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "With the Reedward camp broken, Duskfen's shuttered archive is reopened and its quartermasters release a surveyor's tally rod from sealed stores."
+            }
+          ]
+        },
+        {
+          "id": "day_three_counterraid",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "duskfen_staging"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "day_three_counterraid",
+                "encounter_id": "encounter_mire_raid",
+                "x": 8,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Signal drums roll across the reeds as a Mireclaw counterraid slips around the northern bank."
+            }
+          ]
+        },
+        {
+          "id": "causeway_cutters_open_the_flank",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "clear_levee_cutters"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "causeway_cutters_open_the_flank",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Levee cutters leave the north bank open, and Mireclaw pours fresh pressure into the causeway flank."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "duskfen_staging", "town_id": "town_duskfen", "x": 0, "y": 3, "owner": "player"},
+        {"placement_id": "blackfen_gate", "town_id": "town_blackfen_gate", "x": 9, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Blackfen Counterhost",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "wood": 1},
+          "raid_encounter_ids": ["encounter_mire_raid", "encounter_gate_marshals"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 4}
+          ],
+          "siege_target_placement_id": "duskfen_staging",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 105,
+          "priority_target_placement_ids": [
+            "duskfen_staging",
+            "causeway_signal_post",
+            "causeway_fenhound_kennels",
+            "causeway_reed_camp"
+          ],
+          "strategy_overrides": {
+            "raid_target_weights": {"resource": 1.3, "encounter": 1.2},
+            "raid": {"site_denial_weight": 1.35, "hero_hunt_weight": 1.2}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "causeway_timber", "site_id": "site_timber_wagon", "x": 2, "y": 0},
+        {"placement_id": "fen_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "midmarsh_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "sappers_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "causeway_signal_post", "site_id": "site_ember_signal_post", "x": 2, "y": 3},
+        {"placement_id": "causeway_fenhound_kennels", "site_id": "site_fenhound_kennels", "x": 5, "y": 3},
+        {"placement_id": "causeway_reedscript_shrine", "site_id": "site_reedscript_shrine", "x": 8, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "causeway_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "causeway_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
+        {"placement_id": "blackfen_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "causeway_reed_camp", "encounter_id": "encounter_reedward_camp", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 2201},
+        {"placement_id": "causeway_gate_marshals", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 2202},
+        {"placement_id": "causeway_levee_cutters", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 2203}
+      ]
+    },
+    {
+      "id": "fen-crown",
+      "name": "Fen Crown",
+      "selection": {
+        "summary": "Push beyond Blackfen Gate, secure the ferry lanes, and break the covenant's crown redoubt before the marsh command can regroup.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Crown Isle (11x6)",
+        "player_summary": "Lyra begins from a captured Blackfen bridgehead with the full campaign carryover and must finish the Reedfall offensive.",
+        "enemy_summary": "The Fen Crown host falls back to an inner redoubt, strikes by ferry, and tries to retake the bridgehead through escalating raids.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_emberwell_vanguard",
+      "hero_id": "hero_lyra",
+      "starting_resources": {"gold": 1000, "wood": 2, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "water", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "forest", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_lyra"],
+      "objectives": {
+        "victory_text": "The Fen Crown redoubt falls, and Reedfall's marsh command finally breaks.",
+        "defeat_text": "Lyra loses the bridgehead before the last marsh redoubt can be taken.",
+        "victory": [
+          {"id": "claim_fen_crown", "label": "Claim the Fen Crown redoubt", "type": "town_owned_by_player", "placement_id": "fen_crown_redoubt"},
+          {"id": "break_crown_watch", "label": "Break the Crown Watch", "type": "flag_true", "flag": "gate_marshals_broken"},
+          {"id": "secure_bone_ferry", "label": "Secure Bone Ferry", "type": "flag_true", "flag": "mire_cleared"},
+          {"id": "break_bone_ferry_watch", "label": "Break the Bone Ferry Watch", "type": "encounter_resolved", "placement_id": "fen_crown_bone_ferry_watch"}
+        ],
+        "defeat": [
+          {"id": "hold_blackfen_bridgehead", "label": "Keep Blackfen Gate under your banner", "type": "town_not_owned_by_player", "placement_id": "blackfen_bridgehead"},
+          {"id": "lyra_survives", "label": "Lyra must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_fen_pressure", "label": "Do not let Fen Crown pressure reach 12", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 12}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "bridgehead_veterans",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_gate_marshals_broken"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "blackfen_bridgehead", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Broken gate marshals leave the bridgehead clear enough for Embercourt veterans and spare shot to reinforce Lyra."
+            }
+          ]
+        },
+        {
+          "id": "reedward_fords_open",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_reed_camp_cleared"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "reedward_ford_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 5
+              }
+            },
+            {
+              "type": "message",
+              "text": "With the Reedward camp already broken, scouts reopen a fordside cache behind the Crown Isle advance."
+            }
+          ]
+        },
+        {
+          "id": "crown_archive_falls",
+          "priority": 100,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "break_crown_watch"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "fen_crown_redoubt", "building_id": "building_starseer_annex"},
+            {"type": "award_experience", "amount": 120},
+            {
+              "type": "message",
+              "text": "When the Crown Watch is broken, the captured redoubt archive yields charts and spell leaves from the inner marsh."
+            }
+          ]
+        },
+        {
+          "id": "day_four_ferry_raid",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "town_owned_by_player", "placement_id": "blackfen_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "day_four_ferry_raid",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 4,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Reed ferries slip through the mist and dump a last desperate raid on the southern bank."
+            }
+          ]
+        },
+        {
+          "id": "bone_ferry_signals_hold",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "break_bone_ferry_watch"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "bone_ferry_signals_hold",
+                "encounter_id": "encounter_mire_raid",
+                "x": 10,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Bone Ferry stays in enemy hands long enough to keep the inner marsh ferries running hot with reinforcements."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "blackfen_bridgehead", "town_id": "town_blackfen_gate", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "fen_crown_redoubt", "town_id": "town_duskfen", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Fen Crown Host",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 2,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 180, "wood": 1},
+          "raid_encounter_ids": ["encounter_mire_raid", "encounter_gate_marshals"],
+          "spawn_points": [
+            {"x": 9, "y": 1},
+            {"x": 9, "y": 4}
+          ],
+          "siege_target_placement_id": "blackfen_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "crown_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "crown_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "ferry_ore", "site_id": "site_ore_crates", "x": 7, "y": 5},
+        {"placement_id": "inner_cache", "site_id": "site_waystone_cache", "x": 8, "y": 0}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "crown_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "crown_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "crown_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 3}
+      ],
+      "encounters": [
+        {"placement_id": "fen_crown_watch", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 3201},
+        {"placement_id": "bone_ferry", "encounter_id": "encounter_hollow_mire", "x": 4, "y": 4, "difficulty": "medium", "combat_seed": 3202},
+        {"placement_id": "fen_crown_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 3203}
+      ]
+    },
+    {
+      "id": "stonewake-watch",
+      "name": "Stonewake Watch",
+      "selection": {
+        "summary": "Hold Highwater Keep, secure Willow Mill, and seize Murkward Ford before the inland host cuts the Stonewake Basin open.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Stonewake Rim (10x6)",
+        "player_summary": "Caelen Ashgrove leads a basin watch from Highwater Keep and must turn a mill-country defense into a crossing.",
+        "enemy_summary": "The Murkward Host presses inland roads from a drowned ford while reavers raid the mills and levees.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_ashgrove_watch",
+      "hero_id": "hero_caelen",
+      "starting_resources": {"gold": 1400, "wood": 4, "ore": 3},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 1, "y": 2},
+      "hero_starts": ["hero_caelen"],
+      "objectives": {
+        "victory_text": "Stonewake's mill rim holds, and Murkward Ford falls under Embercourt beacons.",
+        "defeat_text": "The inland host breaks Highwater Keep before Caelen can secure the basin crossing.",
+        "victory": [
+          {"id": "claim_murkward", "label": "Claim Murkward Ford", "type": "town_owned_by_player", "placement_id": "murkward_ford"},
+          {"id": "clear_sluice_band", "label": "Break the sluice raiders", "type": "flag_true", "flag": "sluice_band_broken"},
+          {"id": "secure_willow_mill", "label": "Secure Willow Mill", "type": "flag_true", "flag": "willow_mill_secured"},
+          {"id": "clear_reed_totemists", "label": "Clear the reed totemists", "type": "encounter_resolved", "placement_id": "stonewake_reed_totemists"}
+        ],
+        "defeat": [
+          {"id": "hold_highwater", "label": "Keep Highwater Keep under your banner", "type": "town_not_owned_by_player", "placement_id": "highwater_keep"},
+          {"id": "caelen_survives", "label": "Caelen must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_stonewake_pressure", "label": "Do not let Murkward pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "highwater_relief_train",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "highwater_keep"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "highwater_keep", "recruits": {"unit_river_guard": 2}},
+            {
+              "type": "message",
+              "text": "Millwright wagons roll into Highwater with grain tallies, spare tools, and a fresh levy from the basin farms."
+            }
+          ]
+        },
+        {
+          "id": "sluice_cache_recovered",
+          "priority": 110,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "clear_sluice_band"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "sluice_cache_recovered",
+                "site_id": "site_waystone_cache",
+                "x": 5,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "Broken sluice raiders leave their survey cache behind the floodgates."
+            }
+          ]
+        },
+        {
+          "id": "willow_mill_rallies",
+          "priority": 100,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "willow_mill"}
+          ],
+          "effects": [
+            {"type": "award_experience", "amount": 100},
+            {
+              "type": "message",
+              "text": "Willow Mill's wardens reopen the grain boats and Caelen turns the victory into a hard lesson in command."
+            }
+          ]
+        },
+        {
+          "id": "murkward_beacons_relit",
+          "priority": 90,
+          "conditions": [
+            {"type": "town_owned_by_player", "placement_id": "murkward_ford"}
+          ],
+          "effects": [
+            {"type": "set_flag", "flag": "ford_beacons_lit", "value": true},
+            {"type": "town_add_building", "placement_id": "murkward_ford", "building_id": "building_lantern_archive"},
+            {
+              "type": "message",
+              "text": "Caelen relights Murkward's ford beacons, turning the captured stockade into a basin crossing station."
+            }
+          ]
+        },
+        {
+          "id": "highwater_mill_horns",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "highwater_keep"},
+            {"type": "active_raid_count_at_least", "faction_id": "faction_mireclaw", "threshold": 2}
+          ],
+          "effects": [
+            {"type": "town_add_recruits", "placement_id": "highwater_keep", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Mill horns echo across Stonewake and farm levies crowd back into Highwater's gatehouse."
+            }
+          ]
+        },
+        {
+          "id": "reed_totemists_mark_the_ford",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "clear_reed_totemists"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "reed_totemists_mark_the_ford",
+                "encounter_id": "encounter_ford_reavers",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Unbroken reed totems keep Murkward's scouts aligned, and another reaver file sweeps in from the ford road."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "highwater_keep", "town_id": "town_highwater_keep", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "murkward_ford", "town_id": "town_murkward_ford", "x": 9, "y": 3, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Murkward Host",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 4,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 120, "wood": 1},
+          "raid_encounter_ids": ["encounter_ford_reavers", "encounter_silt_hunters"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 5}
+          ],
+          "siege_target_placement_id": "highwater_keep",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "stonewake_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "basin_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "levee_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "ford_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "highwater_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 1},
+        {"placement_id": "mill_tally", "artifact_id": "artifact_quarry_tally_rod", "x": 5, "y": 3},
+        {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "sluice_band", "encounter_id": "encounter_sluice_raiders", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 4201},
+        {"placement_id": "willow_mill", "encounter_id": "encounter_willow_mill_pack", "x": 7, "y": 2, "difficulty": "medium", "combat_seed": 4202},
+        {"placement_id": "stonewake_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 4203}
+      ]
+    },
+    {
+      "id": "reedbarrow-ferry",
+      "name": "Reedbarrow Ferry",
+      "selection": {
+        "summary": "Launch from captured Murkward Ford, clear the barrow levees, and take Reedbarrow Ferry before the covenant isolates the crossing.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Ferry March (10x6)",
+        "player_summary": "Caelen begins from the captured ford with Stonewake carryover and must turn it into a lasting inland bridgehead.",
+        "enemy_summary": "Reedbarrow's lashers defend the ferry chain, launch counterraids along the levees, and punish any stalled advance.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_ashgrove_watch",
+      "hero_id": "hero_caelen",
+      "starting_resources": {"gold": 1200, "wood": 3, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_caelen"],
+      "objectives": {
+        "victory_text": "Reedbarrow Ferry falls and the Stonewake crossing becomes a true bridgehead.",
+        "defeat_text": "The lashers isolate Murkward Ford before Caelen can break the ferry chain.",
+        "victory": [
+          {"id": "claim_reedbarrow", "label": "Claim Reedbarrow Ferry", "type": "town_owned_by_player", "placement_id": "reedbarrow_ferry"},
+          {"id": "clear_barrow_pickets", "label": "Break the barrow pickets", "type": "flag_true", "flag": "barrow_pickets_broken"},
+          {"id": "cut_ferry_chain", "label": "Cut the ferry chain", "type": "flag_true", "flag": "ferry_chain_cut"},
+          {"id": "break_levee_totemists", "label": "Break the levee totemists", "type": "encounter_resolved", "placement_id": "reedbarrow_levee_totemists"}
+        ],
+        "defeat": [
+          {"id": "hold_murkward_bridgehead", "label": "Keep Murkward Ford under your banner", "type": "town_not_owned_by_player", "placement_id": "murkward_bridgehead"},
+          {"id": "caelen_survives", "label": "Caelen must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_ferry_pressure", "label": "Do not let Reedbarrow pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 10}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "stonewake_veterans_arrive",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_willow_mill_secured"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 200, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "murkward_bridgehead", "recruits": {"unit_river_guard": 1, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Willow Mill boatmen slip downriver with grain, dry bowstrings, and a veteran file for the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "ford_archive_reopened",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_ford_beacons_lit"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "murkward_bridgehead", "building_id": "building_starseer_annex"},
+            {
+              "type": "message",
+              "text": "Because Murkward's beacons were relit in time, Caelen inherits a working signal loft and a recovered chart room."
+            }
+          ]
+        },
+        {
+          "id": "barrow_signals_broken",
+          "priority": 100,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "clear_barrow_pickets"}
+          ],
+          "effects": [
+            {"type": "set_flag", "flag": "nightglass_route_marked", "value": true},
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "barrow_signals_broken",
+                "site_id": "site_waystone_cache",
+                "x": 5,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "With the barrow pickets scattered, basin scouts mark a hidden route toward the Nightglass marsh."
+            }
+          ]
+        },
+        {
+          "id": "levee_counterraid",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "town_owned_by_player", "placement_id": "murkward_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "levee_counterraid",
+                "encounter_id": "encounter_ford_reavers",
+                "x": 8,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Drums on the upper levee warn of a counterraid slipping around Reedbarrow's north bank."
+            }
+          ]
+        },
+        {
+          "id": "murkward_chain_alarm",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "murkward_bridgehead"},
+            {"type": "active_raid_count_at_least", "faction_id": "faction_mireclaw", "threshold": 2}
+          ],
+          "effects": [
+            {"type": "town_add_recruits", "placement_id": "murkward_bridgehead", "recruits": {"unit_river_guard": 1, "unit_ember_archer": 2}},
+            {
+              "type": "message",
+              "text": "Murkward's beacon chain flashes a warning and Caelen drags every spare bowstring back to the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "levee_totemists_call_the_lashers",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "break_levee_totemists"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "levee_totemists_call_the_lashers",
+                "encounter_id": "encounter_silt_hunters",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Levee totemists keep Reedbarrow's lashers coordinated, and another marsh file slips in behind the ferry road."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "murkward_bridgehead", "town_id": "town_murkward_ford", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "reedbarrow pressure"}},
+        {"placement_id": "reedbarrow_ferry", "town_id": "town_reedbarrow_ferry", "x": 9, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Reedbarrow Lashers",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "wood": 1},
+          "raid_encounter_ids": ["encounter_ford_reavers", "encounter_silt_hunters"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 4}
+          ],
+          "siege_target_placement_id": "murkward_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 120,
+          "priority_target_placement_ids": [
+            "murkward_bridgehead",
+            "reedbarrow_drum_post",
+            "reedbarrow_kennels",
+            "reedbarrow_chain"
+          ],
+          "strategy_overrides": {
+            "site_family_weights": {
+              "neutral_dwelling": 1.5,
+              "faction_outpost": 1.2,
+              "frontier_shrine": 1.1
+            },
+            "raid": {"site_denial_weight": 1.55}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "reedbarrow_timber", "site_id": "site_timber_wagon", "x": 2, "y": 0},
+        {"placement_id": "levee_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "ferry_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "lashers_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "reedbarrow_drum_post", "site_id": "site_bog_drum_outpost", "x": 2, "y": 4},
+        {"placement_id": "reedbarrow_kennels", "site_id": "site_fenhound_kennels", "x": 5, "y": 0},
+        {"placement_id": "reedbarrow_reedscript_shrine", "site_id": "site_reedscript_shrine", "x": 7, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "reedbarrow_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "reedbarrow_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
+        {"placement_id": "reedbarrow_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "barrow_pickets", "encounter_id": "encounter_barrow_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 5201},
+        {
+          "placement_id": "reedbarrow_chain",
+          "encounter_id": "encounter_reedbarrow_chain",
+          "x": 7,
+          "y": 3,
+          "difficulty": "high",
+          "combat_seed": 5202,
+          "field_objectives": [
+            {
+              "id": "chain_slinger_lane",
+              "label": "Reedbarrow Chain Nets",
+              "summary": "The ferry-chain nets own the opening lane unless the bank is taken immediately.",
+              "urgency_round": 1
+            },
+            {
+              "id": "levee_break",
+              "label": "Barrow Levee Gap",
+              "summary": "If the levee gap goes hostile, the close fight starts to collapse fast.",
+              "capture_threshold": 2
+            }
+          ]
+        },
+        {"placement_id": "reedbarrow_levee_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 5203}
+      ]
+    },
+    {
+      "id": "nightglass-redoubt",
+      "name": "Nightglass Redoubt",
+      "selection": {
+        "summary": "Use Reedbarrow Ferry as a bridgehead, clear the mirror causeway, and break the Nightglass shrine-redoubt before the basin host regroups.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Nightglass Marsh (11x6)",
+        "player_summary": "Caelen begins from a captured ferry bridgehead with full inland carryover and must finish the Stonewake counteroffensive.",
+        "enemy_summary": "The Nightglass Covenant retreats to a shrine-redoubt, hammers the roads with drum-guided raids, and tries to retake the ferry line.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_ashgrove_watch",
+      "hero_id": "hero_caelen",
+      "starting_resources": {"gold": 1000, "wood": 2, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "water", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "forest", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_caelen"],
+      "objectives": {
+        "victory_text": "Nightglass Redoubt falls and the Stonewake Basin finally clears of covenant command.",
+        "defeat_text": "The ferry bridgehead is lost before Caelen can break the Nightglass shrine-redoubt.",
+        "victory": [
+          {"id": "claim_nightglass", "label": "Claim Nightglass Redoubt", "type": "town_owned_by_player", "placement_id": "nightglass_redoubt"},
+          {"id": "silence_drum_circle", "label": "Silence the drum circle", "type": "flag_true", "flag": "drum_circle_broken"},
+          {"id": "secure_mirror_causeway", "label": "Secure the mirror causeway", "type": "flag_true", "flag": "mirror_causeway_secured"},
+          {"id": "break_bone_ferry_screen", "label": "Break the Bone Ferry screen", "type": "encounter_resolved", "placement_id": "nightglass_bone_ferry_watch"}
+        ],
+        "defeat": [
+          {"id": "hold_reedbarrow_bridgehead", "label": "Keep Reedbarrow Ferry under your banner", "type": "town_not_owned_by_player", "placement_id": "reedbarrow_bridgehead"},
+          {"id": "caelen_survives", "label": "Caelen must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_nightglass_pressure", "label": "Do not let Nightglass pressure reach 12", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 12}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "ferry_veterans_hold_fast",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_ferry_chain_cut"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "reedbarrow_bridgehead", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Cut ferry chains leave enough intact hulls for veterans, ore, and spare shot to reinforce the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "nightglass_route_cache",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_nightglass_route_marked"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "nightglass_route_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 5
+              }
+            },
+            {
+              "type": "message",
+              "text": "Because the levee route was marked at Reedbarrow, scouts uncover a hidden cache behind the Nightglass marsh."
+            }
+          ]
+        },
+        {
+          "id": "drum_circle_broken",
+          "priority": 100,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "silence_drum_circle"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "nightglass_redoubt", "building_id": "building_starseer_annex"},
+            {"type": "award_experience", "amount": 120},
+            {
+              "type": "message",
+              "text": "When the Nightglass drum circle falls silent, shrine charts and beacon codes finally fall into Caelen's hands."
+            }
+          ]
+        },
+        {
+          "id": "nightglass_dominion_rises",
+          "priority": 94,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "claim_nightglass"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "nightglass_redoubt", "building_id": "building_nightglass_dominion"},
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 3, "minimum": 8},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "nightglass_dominion_rises_raid",
+                "encounter_id": "encounter_nightglass_dominion",
+                "x": 9,
+                "y": 1,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "If Caelen cannot break Nightglass quickly, the Dominion barges and drum-fords come alive, hardening the redoubt into a fresh late-war surge point."
+            }
+          ]
+        },
+        {
+          "id": "last_raid_from_the_marsh",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "town_owned_by_player", "placement_id": "reedbarrow_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "last_raid_from_the_marsh",
+                "encounter_id": "encounter_bone_ferry_watch",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Nightglass sends one last raft-borne raid around the reeds in a final bid to snap the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "reedbarrow_signal_holdfast",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "reedbarrow_bridgehead"},
+            {"type": "active_raid_count_at_least", "faction_id": "faction_mireclaw", "threshold": 2}
+          ],
+          "effects": [
+            {"type": "town_add_recruits", "placement_id": "reedbarrow_bridgehead", "recruits": {"unit_river_guard": 1, "unit_ember_archer": 2}},
+            {
+              "type": "message",
+              "text": "Caelen's ferry signals hold long enough to pull one more reserve watch over the levee into the bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "bone_ferry_screen_holds",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "break_bone_ferry_screen"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "bone_ferry_screen_holds",
+                "encounter_id": "encounter_ford_reavers",
+                "x": 10,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Nightglass keeps a Bone Ferry screen on the water long enough to push fresh raiders past Caelen's flank."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "reedbarrow_bridgehead", "town_id": "town_reedbarrow_ferry", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "nightglass_redoubt", "town_id": "town_nightglass_redoubt", "x": 10, "y": 3, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Nightglass Covenant",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 2,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 180, "wood": 1},
+          "raid_encounter_ids": ["encounter_bone_ferry_watch", "encounter_nightglass_dominion"],
+          "spawn_points": [
+            {"x": 9, "y": 1},
+            {"x": 9, "y": 5}
+          ],
+          "siege_target_placement_id": "reedbarrow_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "reedbarrow_bridgehead",
+            "nightglass_drum_circle",
+            "nightglass_bone_ferry_watch"
+          ],
+          "strategy_overrides": {
+            "build_category_weights": {"support": 1.35, "civic": 1.4},
+            "reinforcement": {"garrison_bias": 1.35, "high_tier_weight": 1.2},
+            "raid": {"threshold_scale": 1.05, "objective_weight": 1.3, "hero_hunt_weight": 0.85}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "nightglass_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "marsh_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "causeway_ore", "site_id": "site_ore_crates", "x": 7, "y": 5},
+        {"placement_id": "inner_reed_cache", "site_id": "site_waystone_cache", "x": 8, "y": 0}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "nightglass_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "nightglass_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 6, "y": 3},
+        {"placement_id": "nightglass_gorget", "artifact_id": "artifact_bastion_gorget", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {
+          "placement_id": "nightglass_drum_circle",
+          "encounter_id": "encounter_drum_circle",
+          "x": 6,
+          "y": 1,
+          "difficulty": "high",
+          "combat_seed": 6201,
+          "field_objectives": [
+            {
+              "id": "drum_circle_pylon",
+              "label": "Nightglass Shrine Ring",
+              "summary": "The shrine ring's pulse starts dragging cohesion apart as soon as the chant settles."
+            },
+            {
+              "id": "silt_sink",
+              "label": "Nightglass Silt Sink",
+              "summary": "The drowned approach keeps punishing the side that fails to seize the firmer lane.",
+              "capture_threshold": 3
+            }
+          ]
+        },
+        {"placement_id": "mirror_causeway", "encounter_id": "encounter_mirror_causeway", "x": 8, "y": 4, "difficulty": "high", "combat_seed": 6202},
+        {"placement_id": "nightglass_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 9, "y": 0, "difficulty": "high", "combat_seed": 6203}
+      ]
+    },
+    {
+      "id": "bogbound-oath",
+      "name": "Bogbound Oath",
+      "selection": {
+        "summary": "Rally Duskfen, cut the survey line, and seize Riverwatch Hold before Embercourt relief hardens the charter road.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Charter Road (9x5)",
+        "player_summary": "Vaska Reedmaw leads a Mireclaw counterthrust from Duskfen and must turn raids into a full road seizure.",
+        "enemy_summary": "Riverwatch Relief answers with scout columns, survey guards, and steady pressure along the charter road.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 9, "height": 5},
+      "player_faction_id": "faction_mireclaw",
+      "player_army_id": "army_reedmaw_host",
+      "hero_id": "hero_vaska",
+      "starting_resources": {"gold": 1400, "wood": 3, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "grass"],
+        ["grass", "forest", "grass", "grass", "grass", "water", "grass", "forest", "grass"],
+        ["grass", "grass", "grass", "forest", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_vaska"],
+      "objectives": {
+        "victory_text": "Riverwatch falls silent under Mireclaw drums and the charter road buckles apart.",
+        "defeat_text": "Embercourt relief hardens the road, crushes Duskfen, and breaks Vaska's counterthrust.",
+        "victory": [
+          {"id": "claim_riverwatch", "label": "Claim Riverwatch Hold", "type": "town_owned_by_player", "placement_id": "riverwatch_hold"},
+          {"id": "clear_lantern_patrol", "label": "Break the Lantern Patrol", "type": "flag_true", "flag": "lantern_patrol_broken"},
+          {"id": "shatter_survey_train", "label": "Shatter the survey train", "type": "flag_true", "flag": "survey_train_broken"},
+          {"id": "break_archive_wardens", "label": "Break the archive wardens", "type": "encounter_resolved", "placement_id": "bogbound_archive_wardens"}
+        ],
+        "defeat": [
+          {"id": "hold_duskfen", "label": "Keep Duskfen Bastion under your banner", "type": "town_not_owned_by_player", "placement_id": "duskfen_bastion"},
+          {"id": "vaska_survives", "label": "Vaska must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_relief_pressure", "label": "Do not let Embercourt pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 8}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "reed_watchers_return",
+          "priority": 120,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "clear_lantern_patrol"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "reed_watchers_cache",
+                "site_id": "site_waystone_cache",
+                "x": 4,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "When the Lantern Patrol breaks, mire scouts drag a seized waystone cache back onto the road."
+            }
+          ]
+        },
+        {
+          "id": "duskfen_oath_musters",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "duskfen_bastion"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "duskfen_bastion", "recruits": {"unit_blackbranch_cutthroat": 3, "unit_mire_slinger": 1}},
+            {
+              "type": "message",
+              "text": "Oath-bound warrens answer Duskfen's fires with fresh blades and sling stones."
+            }
+          ]
+        },
+        {
+          "id": "riverwatch_channels_marked",
+          "priority": 100,
+          "conditions": [
+            {"type": "town_owned_by_player", "placement_id": "riverwatch_hold"}
+          ],
+          "effects": [
+            {"type": "set_flag", "flag": "riverwatch_channels_marked", "value": true},
+            {"type": "town_add_building", "placement_id": "riverwatch_hold", "building_id": "building_lantern_archive"},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "riverwatch_countercolumn",
+                "encounter_id": "encounter_lantern_patrol",
+                "x": 8,
+                "y": 4,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Captured river charts expose every hidden channel, but they also draw one last relief column back toward the hold."
+            }
+          ]
+        },
+        {
+          "id": "survey_spoils",
+          "priority": 90,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "bogbound_survey_guard"}
+          ],
+          "effects": [
+            {"type": "award_experience", "amount": 110},
+            {
+              "type": "message",
+              "text": "Survey crates and charter ledgers teach Vaska exactly where the road can be cut deepest."
+            }
+          ]
+        },
+        {
+          "id": "duskfen_countermusters",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "duskfen_bastion"},
+            {"type": "active_raid_count_at_least", "faction_id": "faction_embercourt", "threshold": 2}
+          ],
+          "effects": [
+            {"type": "town_add_recruits", "placement_id": "duskfen_bastion", "recruits": {"unit_blackbranch_cutthroat": 2, "unit_mire_slinger": 2}},
+            {
+              "type": "message",
+              "text": "Duskfen's wardens answer the rising road pressure with fresh cutters and sling crews from the inner warrens."
+            }
+          ]
+        },
+        {
+          "id": "archive_wardens_hold_the_charter",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_archive_wardens"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "archive_wardens_hold_the_charter",
+                "encounter_id": "encounter_survey_guard",
+                "x": 8,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Archive wardens keep the charter ledgers intact, and Riverwatch throws another survey-backed column onto the road."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "duskfen_bastion", "town_id": "town_duskfen", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "riverwatch_hold", "town_id": "town_riverwatch", "x": 8, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Riverwatch Relief",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 4,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 120, "wood": 1},
+          "raid_encounter_ids": ["encounter_lantern_patrol", "encounter_survey_guard"],
+          "spawn_points": [
+            {"x": 7, "y": 1},
+            {"x": 7, "y": 3}
+          ],
+          "siege_target_placement_id": "duskfen_bastion",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 105,
+          "priority_target_placement_ids": [
+            "duskfen_bastion",
+            "bogbound_survey_guard",
+            "riverbank_cache"
+          ],
+          "strategy_overrides": {
+            "build_category_weights": {"support": 1.4, "civic": 1.25},
+            "reinforcement": {"garrison_bias": 1.4, "raid_bias": 0.8},
+            "raid": {"town_siege_weight": 1.45, "objective_weight": 1.25}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "bogbound_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "road_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "survey_ore", "site_id": "site_ore_crates", "x": 6, "y": 4},
+        {"placement_id": "riverbank_cache", "site_id": "site_waystone_cache", "x": 7, "y": 0}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "bogbound_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 1},
+        {"placement_id": "bogbound_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
+        {"placement_id": "riverwatch_gorget", "artifact_id": "artifact_bastion_gorget", "x": 7, "y": 3}
+      ],
+      "encounters": [
+        {"placement_id": "bogbound_lantern_patrol", "encounter_id": "encounter_lantern_patrol", "x": 3, "y": 1, "difficulty": "medium", "combat_seed": 7201},
+        {"placement_id": "bogbound_survey_guard", "encounter_id": "encounter_survey_guard", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 7202},
+        {"placement_id": "bogbound_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 5, "y": 0, "difficulty": "medium", "combat_seed": 7203}
+      ]
+    },
+    {
+      "id": "charter-pyre",
+      "name": "Charter Pyre",
+      "selection": {
+        "summary": "Turn the captured road into a Mireclaw march, break the granary levies, and burn toward Highwater Keep before Embercourt stabilizes the basin.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Granary March (10x6)",
+        "player_summary": "Vaska advances from seized river holdings with one ford already in hand and must stretch the charter line until it snaps.",
+        "enemy_summary": "The Granary Charter answers with beacon wardens, levy columns, and sustained road pressure out of Highwater Keep.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_mireclaw",
+      "player_army_id": "army_reedmaw_host",
+      "hero_id": "hero_vaska",
+      "starting_resources": {"gold": 1200, "wood": 3, "ore": 3},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "forest", "grass", "grass", "grass", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_vaska"],
+      "objectives": {
+        "victory_text": "The charter road burns from riverbank to granary and Highwater's outer line collapses.",
+        "defeat_text": "Embercourt restores the road net, contains the counterthrust, and forces Mireclaw back into the marsh.",
+        "victory": [
+          {"id": "claim_highwater", "label": "Claim Highwater Keep", "type": "town_owned_by_player", "placement_id": "highwater_keep"},
+          {"id": "break_beacon_line", "label": "Break the Beacon Wardens", "type": "flag_true", "flag": "beacon_wardens_broken"},
+          {"id": "shatter_granary_levies", "label": "Shatter the granary levies", "type": "flag_true", "flag": "granary_levies_broken"},
+          {"id": "break_bridgeward_levies", "label": "Break the bridgeward levies", "type": "encounter_resolved", "placement_id": "charter_bridgeward_levies"}
+        ],
+        "defeat": [
+          {"id": "hold_riverwatch", "label": "Keep Riverwatch Hold under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_bridgehead"},
+          {"id": "hold_murkward", "label": "Keep Murkward Ford under your banner", "type": "town_not_owned_by_player", "placement_id": "murkward_stockade"},
+          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "riverwatch_channels_cache",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_riverwatch_channels_marked"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "riverwatch_channels_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "Because Riverwatch's channels were marked, Mireclaw runners find a hidden crossing cache on the first march."
+            }
+          ]
+        },
+        {
+          "id": "survey_spoils_train",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_survey_train_broken"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 200, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "murkward_stockade", "recruits": {"unit_blackbranch_cutthroat": 2, "unit_mire_slinger": 2}},
+            {
+              "type": "message",
+              "text": "Seized survey wagons are broken apart into spare stakes, ore, and fresh sling stones at Murkward."
+            }
+          ]
+        },
+        {
+          "id": "highwater_storehouses_open",
+          "priority": 100,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "shatter_granary_levies"}
+          ],
+          "effects": [
+            {"type": "award_artifact", "artifact_id": "artifact_quarry_tally_rod"},
+            {"type": "town_add_building", "placement_id": "highwater_keep", "building_id": "building_stone_store"},
+            {
+              "type": "message",
+              "text": "With the levy columns broken, Highwater's storehouse ledgers and tally rods are finally exposed."
+            }
+          ]
+        },
+        {
+          "id": "charter_roads_open",
+          "priority": 95,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "break_beacon_line"}
+          ],
+          "effects": [
+            {"type": "set_flag", "flag": "charter_road_opened", "value": true},
+            {
+              "type": "message",
+              "text": "The beacon line goes dark and the charter roads open all the way to Highwater's walls."
+            }
+          ]
+        },
+        {
+          "id": "charter_countermarch",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "riverwatch_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "charter_countermarch",
+                "encounter_id": "encounter_beacon_wardens",
+                "x": 8,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Highwater sends one more beacon-led road column to cut the captured line in two."
+            }
+          ]
+        },
+        {
+          "id": "charter_bridgewards_hold_the_line",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_bridgeward_levies"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "charter_bridgewards_hold_the_line",
+                "encounter_id": "encounter_road_chaplains",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Bridgeward levies keep the marsh crossings intact, and the Granary Charter pushes another road chaplain column into the breach."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "riverwatch_bridgehead", "town_id": "town_riverwatch", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "murkward_stockade", "town_id": "town_murkward_ford", "x": 2, "y": 5, "owner": "player"},
+        {"placement_id": "highwater_keep", "town_id": "town_highwater_keep", "x": 9, "y": 3, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Granary Charter",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "wood": 1},
+          "raid_encounter_ids": ["encounter_beacon_wardens", "encounter_mill_levies"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 5}
+          ],
+          "siege_target_placement_id": "riverwatch_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "riverwatch_bridgehead",
+            "charter_bridgeward_levies",
+            "granary_cache"
+          ],
+          "strategy_overrides": {
+            "build_value_weights": {"income": 1.2, "readiness": 1.45},
+            "raid_target_weights": {"town": 1.45, "resource": 0.7, "encounter": 1.1},
+            "raid": {"town_siege_weight": 1.5}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "pyre_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "pyre_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "pyre_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "granary_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "pyre_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "pyre_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 4},
+        {"placement_id": "highwater_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "charter_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 8201},
+        {"placement_id": "charter_granary_levies", "encounter_id": "encounter_mill_levies", "x": 7, "y": 4, "difficulty": "high", "combat_seed": 8202},
+        {"placement_id": "charter_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 5, "y": 5, "difficulty": "medium", "combat_seed": 8203}
+      ]
+    },
+    {
+      "id": "lockmarsh-surge",
+      "name": "Lockmarsh Surge",
+      "selection": {
+        "summary": "Drive the broken road net into Highwater's heartland, cut the chaplain column, and end the charter war before Embercourt reforms.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Highwater Reach (11x6)",
+        "player_summary": "Vaska reaches the final charter belt with two captured mustering points and must turn that foothold into a finishing blow.",
+        "enemy_summary": "The Highwater Charter Host falls back on chaplain columns, reserve guards, and desperate counterpressure out of the keep.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_mireclaw",
+      "player_army_id": "army_reedmaw_host",
+      "hero_id": "hero_vaska",
+      "starting_resources": {"gold": 1000, "wood": 2, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "water", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_vaska"],
+      "objectives": {
+        "victory_text": "Highwater falls and the charter marches drown beneath Mireclaw drumfire.",
+        "defeat_text": "Embercourt holds the keep long enough to rebuild its roads and break the counteroffensive.",
+        "victory": [
+          {"id": "claim_highwater_final", "label": "Claim Highwater Keep", "type": "town_owned_by_player", "placement_id": "highwater_keep"},
+          {"id": "break_road_chaplains", "label": "Break the Road Chaplains", "type": "flag_true", "flag": "road_chaplains_broken"},
+          {"id": "shatter_charter_guard", "label": "Shatter the charter guard", "type": "flag_true", "flag": "charter_guard_broken"},
+          {"id": "break_archive_wardens", "label": "Break the archive wardens", "type": "encounter_resolved", "placement_id": "lockmarsh_archive_wardens"}
+        ],
+        "defeat": [
+          {"id": "hold_riverwatch_final", "label": "Keep Riverwatch Hold under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_base"},
+          {"id": "hold_murkward_final", "label": "Keep Murkward Ford under your banner", "type": "town_not_owned_by_player", "placement_id": "murkward_base"},
+          {"id": "contain_final_pressure", "label": "Do not let Embercourt pressure reach 11", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 11}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "open_charter_road",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_charter_road_opened"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "riverwatch_base", "recruits": {"unit_blackbranch_cutthroat": 2, "unit_bog_brute": 1}},
+            {
+              "type": "message",
+              "text": "With the charter road already ripped open, Vaska's warbands begin the final surge with extra stores and fresh brutes."
+            }
+          ]
+        },
+        {
+          "id": "beacon_scout_cache",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_beacon_wardens_broken"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "beacon_scout_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 1
+              }
+            },
+            {
+              "type": "message",
+              "text": "Scattered beacon maps reveal one last cache hidden in the weeds north of Riverwatch."
+            }
+          ]
+        },
+        {
+          "id": "chaplain_firebreak",
+          "priority": 100,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "break_road_chaplains"}
+          ],
+          "effects": [
+            {"type": "award_experience", "amount": 120},
+            {
+              "type": "message",
+              "text": "When the road chaplains fall, their signal corpses leave the basin's last command rhythm in ruins."
+            }
+          ]
+        },
+        {
+          "id": "charter_ledger_breach",
+          "priority": 95,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "shatter_charter_guard"}
+          ],
+          "effects": [
+            {"type": "award_artifact", "artifact_id": "artifact_quarry_tally_rod"},
+            {
+              "type": "message",
+              "text": "The charter guard breaks with Highwater's ledgers in tow, gifting Vaska the basin's last tally rod."
+            }
+          ]
+        },
+        {
+          "id": "charter_bastion_ignites",
+          "priority": 92,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "claim_highwater_final"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "highwater_keep", "building_id": "building_charter_bastion"},
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 3, "minimum": 8},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "charter_bastion_ignites_raid",
+                "encounter_id": "encounter_charter_bastion_reserve",
+                "x": 9,
+                "y": 1,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "If Highwater still stands on the fourth day, the Charter Bastion goes live and throws another disciplined reserve column into the basin."
+            }
+          ]
+        },
+        {
+          "id": "last_charter_counterraid",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "town_owned_by_player", "placement_id": "riverwatch_base"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "last_charter_counterraid",
+                "encounter_id": "encounter_lantern_patrol",
+                "x": 10,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Highwater's remnant captains throw one last lantern-led road raid around the flooded verge."
+            }
+          ]
+        },
+        {
+          "id": "archive_wardens_keep_the_ledgers",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "break_archive_wardens"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "archive_wardens_keep_the_ledgers",
+                "encounter_id": "encounter_lantern_patrol",
+                "x": 10,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Highwater's archive wardens keep the basin ledgers intact, and the charter host squeezes one more raid out of the road net."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "riverwatch_base", "town_id": "town_riverwatch", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "charter road raids"}},
+        {"placement_id": "murkward_base", "town_id": "town_murkward_ford", "x": 2, "y": 5, "owner": "player", "recovery": {"pressure": 1, "source": "charter road raids"}},
+        {"placement_id": "highwater_keep", "town_id": "town_highwater_keep", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Highwater Charter Host",
+          "pressure_per_day": 3,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 6,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 180, "wood": 1},
+          "raid_encounter_ids": ["encounter_charter_bastion_reserve", "encounter_road_chaplains"],
+          "spawn_points": [
+            {"x": 9, "y": 1},
+            {"x": 9, "y": 5}
+          ],
+          "siege_target_placement_id": "riverwatch_base",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "riverwatch_base",
+            "surge_signal_post",
+            "surge_sanctum",
+            "surge_charter_guard",
+            "surge_pennon"
+          ],
+          "strategy_overrides": {
+            "build_category_weights": {"support": 1.45, "civic": 1.35},
+            "reinforcement": {"garrison_bias": 1.45, "high_tier_weight": 1.25},
+            "raid": {"threshold_scale": 1.1, "objective_weight": 1.35, "hero_hunt_weight": 0.7}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "surge_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "surge_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "surge_ore", "site_id": "site_ore_crates", "x": 7, "y": 5},
+        {"placement_id": "surge_cache", "site_id": "site_waystone_cache", "x": 9, "y": 0},
+        {"placement_id": "surge_signal_post", "site_id": "site_ember_signal_post", "x": 8, "y": 1},
+        {"placement_id": "surge_free_company", "site_id": "site_free_company_yard", "x": 8, "y": 5},
+        {"placement_id": "surge_sanctum", "site_id": "site_roadside_sanctum", "x": 6, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "surge_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "surge_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 6, "y": 3},
+        {"placement_id": "surge_gorget", "artifact_id": "artifact_bastion_gorget", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "surge_road_chaplains", "encounter_id": "encounter_road_chaplains", "x": 5, "y": 1, "difficulty": "high", "combat_seed": 9201},
+        {"placement_id": "surge_charter_guard", "encounter_id": "encounter_charter_guard", "x": 8, "y": 4, "difficulty": "high", "combat_seed": 9202},
+        {"placement_id": "lockmarsh_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 9203}
+      ]
+    },
+    {
+      "id": "ironbridge-stand",
+      "name": "Ironbridge Stand",
+      "selection": {
+        "summary": "Mira Flintmere must turn Highwater's bridgehead into a clean advance, retake Murkward Ford, and keep the marsh raiders off the road.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Bridgehead Line (10x6)",
+        "player_summary": "Mira Flintmere commands an Embercourt bridge column built for initiative swings, reserve trains, and hard town retakes.",
+        "enemy_summary": "The Ford Reclaimers answer with brutes, silt hunters, and repeated raids out of Murkward.",
+        "availability": {"campaign": false, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_flintmere_column",
+      "hero_id": "hero_mira",
+      "starting_resources": {"gold": 1300, "wood": 3, "ore": 2},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_mira"],
+      "objectives": {
+        "victory_text": "Mira locks the ironbridge line, retakes Murkward, and turns the ford into a true League bridgehead.",
+        "defeat_text": "The bridgehead collapses under Mireclaw pressure and Murkward remains a raider gate into the basin.",
+        "victory": [
+          {"id": "claim_murkward", "label": "Claim Murkward Ford", "type": "town_owned_by_player", "placement_id": "murkward_ford"},
+          {"id": "break_ford_reavers", "label": "Break the Ford Reavers", "type": "flag_true", "flag": "ford_reavers_broken"},
+          {"id": "purge_silt_hunters", "label": "Purge the Silt Hunters", "type": "flag_true", "flag": "silt_hunters_broken"},
+          {"id": "clear_reed_totemists", "label": "Clear the reed totemists", "type": "encounter_resolved", "placement_id": "ironbridge_reed_totemists"}
+        ],
+        "defeat": [
+          {"id": "hold_highwater", "label": "Keep Highwater Keep under your banner", "type": "town_not_owned_by_player", "placement_id": "highwater_bridgehead"},
+          {"id": "mira_survives", "label": "Mira must survive the expedition", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_ford_pressure", "label": "Do not let Mireclaw pressure reach 9", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 9}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "bridge_sappers_return",
+          "priority": 120,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "purge_silt_hunters"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "bridge_sappers_cache",
+                "site_id": "site_waystone_cache",
+                "x": 4,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "Once the Silt Hunters are cleared, Mira's bridge sappers recover a reserve cache above the flooded road."
+            }
+          ]
+        },
+        {
+          "id": "highwater_reserve_train",
+          "priority": 110,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "highwater_bridgehead"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "highwater_bridgehead", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 2}},
+            {
+              "type": "message",
+              "text": "A reserve train from Highwater reaches the bridgehead with pay chests, pikes, and fresh archers."
+            }
+          ]
+        },
+        {
+          "id": "murkward_signal_douses",
+          "priority": 100,
+          "conditions": [
+            {"type": "town_owned_by_player", "placement_id": "murkward_ford"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "murkward_ford", "building_id": "building_wayfarers_hall"},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "murkward_counterraid",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Murkward's signal drums are doused, but the sound brings one last marsh raid up the southern bank."
+            }
+          ]
+        },
+        {
+          "id": "bridgehorn_recall",
+          "priority": 85,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "highwater_bridgehead"},
+            {"type": "active_raid_count_at_least", "faction_id": "faction_mireclaw", "threshold": 2}
+          ],
+          "effects": [
+            {"type": "town_add_recruits", "placement_id": "highwater_bridgehead", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Mira blows the bridgehorn and reserve line wardens sprint back toward Highwater's battered bridgehead."
+            }
+          ]
+        },
+        {
+          "id": "reed_totemists_flood_the_bridge",
+          "priority": 84,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "clear_reed_totemists"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "reed_totemists_flood_the_bridge",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Reed totemists keep the flooded channels marked, and another marsh raid spills toward Mira's bridge line."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "highwater_bridgehead", "town_id": "town_highwater_keep", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "bridgehead attrition"}},
+        {"placement_id": "murkward_ford", "town_id": "town_murkward_ford", "x": 9, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Ford Reclaimers",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 140, "wood": 1},
+          "raid_encounter_ids": ["encounter_ford_reavers", "encounter_silt_hunters"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 4}
+          ],
+          "siege_target_placement_id": "highwater_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "bridge_timber", "site_id": "site_timber_wagon", "x": 2, "y": 0},
+        {"placement_id": "bridge_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "bridge_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "ford_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "bridge_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "bridge_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
+        {"placement_id": "ford_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "bridge_ford_reavers", "encounter_id": "encounter_ford_reavers", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 10201},
+        {"placement_id": "bridge_silt_hunters", "encounter_id": "encounter_silt_hunters", "x": 7, "y": 4, "difficulty": "medium", "combat_seed": 10202},
+        {"placement_id": "ironbridge_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 0, "difficulty": "medium", "combat_seed": 10203}
+      ]
+    },
+    {
+      "id": "prismhearth-watch",
+      "name": "Prismhearth Watch",
+      "selection": {
+        "summary": "Hold Prismhearth, relight Halo Spire, and break the Mireclaw saboteur bands before the Compact's relay chain collapses.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Relay March (10x6)",
+        "player_summary": "Solera Prismarch leads a Sunvault relief column from Prismhearth and must turn a shrinking ward line into a real bridgehead.",
+        "enemy_summary": "Mireclaw saboteurs hold Halo Spire, raid the south bank, and try to drown the relay chain under mounting pressure.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_sunvault",
+      "player_army_id": "army_prismarch_vanguard",
+      "hero_id": "hero_solera",
+      "starting_resources": {"gold": 1500, "wood": 3, "ore": 4},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_solera"],
+      "objectives": {
+        "victory_text": "Halo Spire burns bright again, and the Compact holds a live relay chain across the march.",
+        "defeat_text": "Prismhearth falls silent before Solera can reclaim the tower line.",
+        "victory": [
+          {"id": "claim_halo_spire", "label": "Claim Halo Spire", "type": "town_owned_by_player", "placement_id": "halo_spire"},
+          {"id": "clear_relay_pickets", "label": "Break the relay pickets", "type": "flag_true", "flag": "relay_pickets_broken"},
+          {"id": "break_glasswing_sortie", "label": "Break the Glasswing Sortie", "type": "flag_true", "flag": "glasswing_sortie_broken"},
+          {"id": "clear_halo_reserve", "label": "Clear the Halo Reserve", "type": "encounter_resolved", "placement_id": "prismhearth_halo_reserve"}
+        ],
+        "defeat": [
+          {"id": "hold_prismhearth", "label": "Keep Prismhearth under your banner", "type": "town_not_owned_by_player", "placement_id": "prismhearth_hold"},
+          {"id": "solera_survives", "label": "Solera must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_saboteur_pressure", "label": "Do not let Mireclaw pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "prismhearth_relay_levies",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "prismhearth_hold"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 220, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "prismhearth_hold", "recruits": {"unit_shard_guard": 2, "unit_prism_adept": 1}},
+            {
+              "type": "message",
+              "text": "Reserve shard crews reach Prismhearth with fresh mirrors, pay chests, and another drilled relay detachment."
+            }
+          ]
+        },
+        {
+          "id": "halo_spire_relit",
+          "priority": 110,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "claim_halo_spire"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "halo_spire", "building_id": "building_starseer_annex"},
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "halo_relay_cache",
+                "site_id": "site_waystone_cache",
+                "x": 5,
+                "y": 0
+              }
+            },
+            {"type": "set_flag", "flag": "halo_relays_lit", "value": true},
+            {
+              "type": "message",
+              "text": "With Halo Spire reclaimed, Sunvault relay crews relight the upper lenses and reopen a sealed signal cache."
+            }
+          ]
+        },
+        {
+          "id": "south_bank_rafts",
+          "priority": 95,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "prismhearth_hold"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "south_bank_rafts",
+                "encounter_id": "encounter_mire_raid",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Mireclaw rafts slide across the south bank as soon as Prismhearth's main lane looks secure."
+            }
+          ]
+        },
+        {
+          "id": "glasswing_signal_chain",
+          "priority": 88,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_glasswing_sortie"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "glasswing_signal_chain",
+                "encounter_id": "encounter_blackbranch_reavers",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Unbroken Glasswing spotters keep the mire lanes marked and draw another saboteur band onto the relay flank."
+            }
+          ]
+        },
+        {
+          "id": "halo_salvage",
+          "priority": 84,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "prismhearth_halo_reserve"}
+          ],
+          "effects": [
+            {"type": "award_experience", "amount": 120},
+            {"type": "set_flag", "flag": "halo_salvage_rewarded", "value": true},
+            {
+              "type": "message",
+              "text": "The broken Halo Reserve leaves behind intact relay plates and a sharper sense of how Sunvault wants to fight."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "prismhearth_hold", "town_id": "town_prismhearth", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "relay pressure"}},
+        {"placement_id": "halo_spire", "town_id": "town_halo_spire", "x": 9, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Reedbreak Saboteurs",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 4,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 120, "ore": 1},
+          "raid_encounter_ids": ["encounter_mire_raid", "encounter_blackbranch_reavers"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 4}
+          ],
+          "siege_target_placement_id": "prismhearth_hold",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "prismhearth_hold",
+            "prismhearth_watch_relay",
+            "prismhearth_lens_house",
+            "prismhearth_halo_reserve"
+          ],
+          "strategy_overrides": {
+            "raid_target_weights": {"resource": 1.3, "encounter": 1.25},
+            "raid": {"hero_hunt_weight": 1.35, "objective_weight": 0.95}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "relay_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "relay_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "southern_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "tower_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "prismhearth_watch_relay", "site_id": "site_prism_watch_relay", "x": 2, "y": 3},
+        {"placement_id": "prismhearth_lens_house", "site_id": "site_lens_house", "x": 5, "y": 5},
+        {"placement_id": "prismhearth_starlens", "site_id": "site_starlens_sanctum", "x": 7, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "relay_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 0},
+        {"placement_id": "halo_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
+        {"placement_id": "spire_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {
+          "placement_id": "prismhearth_relay_pickets",
+          "encounter_id": "encounter_relay_pickets",
+          "x": 4,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 11201,
+          "field_objectives": [
+            {
+              "id": "relay_kill_lane",
+              "label": "Prismhearth Lens Lane",
+              "summary": "The hearth lenses sharpen the opening volley until the lane is wrested away."
+            },
+            {
+              "id": "relay_signal_beacon",
+              "label": "Prismhearth Signal Relay",
+              "summary": "The signal relay keeps the Compact line synchronized and command hard to expose.",
+              "urgency_round": 1
+            }
+          ]
+        },
+        {"placement_id": "prismhearth_glasswing_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 11202},
+        {"placement_id": "prismhearth_halo_reserve", "encounter_id": "encounter_halo_reserve", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 11203}
+      ]
+    },
+    {
+      "id": "glassroad-sundering",
+      "name": "Glassroad Sundering",
+      "selection": {
+        "summary": "Advance from Halo Spire, tear open the charter road, and seize Riverwatch before Embercourt can stabilize the crossings.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Charter Break (11x6)",
+        "player_summary": "Solera begins from reclaimed Halo Spire and must turn a restored relay into a sustained Compact offensive.",
+        "enemy_summary": "Embercourt wardens hold Riverwatch, counterbattery the road, and rely on bridgeward levies to keep the lane closed.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_sunvault",
+      "player_army_id": "army_prismarch_vanguard",
+      "hero_id": "hero_solera",
+      "starting_resources": {"gold": 1300, "wood": 3, "ore": 3},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "grass", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "grass", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "forest", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_solera"],
+      "objectives": {
+        "victory_text": "The charter road is broken and Riverwatch's crossing falls under Sunvault command.",
+        "defeat_text": "Embercourt reties the road line before Solera can force the crossing.",
+        "victory": [
+          {"id": "claim_riverwatch", "label": "Claim Riverwatch", "type": "town_owned_by_player", "placement_id": "riverwatch_market"},
+          {"id": "break_archive_wardens", "label": "Break the Archive Wardens", "type": "flag_true", "flag": "archive_wardens_broken"},
+          {"id": "break_bridgeward", "label": "Break the Bridgeward Levies", "type": "flag_true", "flag": "bridgeward_levies_broken"},
+          {"id": "clear_beacon_line", "label": "Clear the Beacon Wardens", "type": "encounter_resolved", "placement_id": "glassroad_beacon_wardens"}
+        ],
+        "defeat": [
+          {"id": "hold_halo_spire", "label": "Keep Halo Spire under your banner", "type": "town_not_owned_by_player", "placement_id": "halo_spire_bridgehead"},
+          {"id": "solera_survives", "label": "Solera must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "halo_veteran_arrays",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_halo_salvage_rewarded"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 220, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "halo_spire_bridgehead", "recruits": {"unit_prism_adept": 2, "unit_shard_guard": 1}},
+            {
+              "type": "message",
+              "text": "Salvaged relay plates from Halo Spire reach the front and let Solera field another calibrated firing line."
+            }
+          ]
+        },
+        {
+          "id": "relay_cache_unsealed",
+          "priority": 112,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_halo_relays_lit"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "glassroad_relay_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 5
+              }
+            },
+            {
+              "type": "message",
+              "text": "Because Halo Spire was fully relit, Sunvault scouts open a sealed relay cache behind the road push."
+            }
+          ]
+        },
+        {
+          "id": "riverwatch_signal_charts",
+          "priority": 104,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "claim_riverwatch"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "riverwatch_market", "building_id": "building_lantern_archive"},
+            {"type": "award_artifact", "artifact_id": "artifact_quarry_tally_rod"},
+            {"type": "set_flag", "flag": "riverwatch_channels_marked", "value": true},
+            {
+              "type": "message",
+              "text": "Riverwatch's captured ledgers and tide charts mark the channels Solera will need for the final push."
+            }
+          ]
+        },
+        {
+          "id": "charter_counterbattery",
+          "priority": 92,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "halo_spire_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "charter_counterbattery",
+                "encounter_id": "encounter_lantern_patrol",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Riverwatch's lane wardens roll a counterbattery onto the north rise as soon as Halo Spire looks secure."
+            }
+          ]
+        },
+        {
+          "id": "archive_beacons_hold",
+          "priority": 86,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_archive_wardens"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "archive_beacons_hold",
+                "encounter_id": "encounter_road_chaplains",
+                "x": 10,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_embercourt",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "If the Archive Wardens stand too long, Embercourt keeps the road beacons burning and pushes fresh chaplains onto the flank."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "halo_spire_bridgehead", "town_id": "town_halo_spire", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "riverwatch_market", "town_id": "town_riverwatch", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Charter Road Wardens",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "wood": 1},
+          "raid_encounter_ids": ["encounter_lantern_patrol", "encounter_bridgeward_levies"],
+          "spawn_points": [
+            {"x": 9, "y": 1},
+            {"x": 9, "y": 4}
+          ],
+          "siege_target_placement_id": "halo_spire_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "halo_spire_bridgehead",
+            "glassroad_watch_relay",
+            "glassroad_starlens",
+            "glassroad_beacon_wardens"
+          ],
+          "strategy_overrides": {
+            "site_family_weights": {"faction_outpost": 1.55, "frontier_shrine": 1.2},
+            "raid_target_weights": {"town": 1.4, "resource": 0.95, "encounter": 1.2},
+            "raid": {"town_siege_weight": 1.5}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "glassroad_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "glassroad_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "glassroad_ore", "site_id": "site_ore_crates", "x": 7, "y": 5},
+        {"placement_id": "market_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "glassroad_watch_relay", "site_id": "site_prism_watch_relay", "x": 2, "y": 3},
+        {"placement_id": "glassroad_lens_house", "site_id": "site_lens_house", "x": 6, "y": 2},
+        {"placement_id": "glassroad_starlens", "site_id": "site_starlens_sanctum", "x": 9, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "glassroad_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "glassroad_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "market_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "glassroad_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 12201},
+        {"placement_id": "glassroad_bridgeward_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 12202},
+        {"placement_id": "glassroad_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 12203}
+      ]
+    },
+    {
+      "id": "daybreak-spire",
+      "name": "Daybreak Spire",
+      "selection": {
+        "summary": "Launch from broken Riverwatch, reclaim the old daybreak array, and shatter Nightglass before Mireclaw can drown the Compact again.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Nightglass Push (11x6)",
+        "player_summary": "Solera begins from the captured road bridgehead and must convert the charter breach into a final Compact offensive.",
+        "enemy_summary": "Mireclaw falls back to Nightglass, uses ferry raids to keep pressure high, and tries to keep the daybreak array out of Sunvault hands.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_sunvault",
+      "player_army_id": "army_prismarch_vanguard",
+      "hero_id": "hero_solera",
+      "starting_resources": {"gold": 1100, "wood": 2, "ore": 3},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "water", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "forest", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_solera"],
+      "objectives": {
+        "victory_text": "Nightglass breaks and the Sunvault Compact turns a single live relay into a stable frontier network.",
+        "defeat_text": "The Compact is drowned out at the last line before Solera can reclaim the old array.",
+        "victory": [
+          {"id": "claim_nightglass", "label": "Claim Nightglass Redoubt", "type": "town_owned_by_player", "placement_id": "nightglass_redoubt"},
+          {"id": "reclaim_daybreak_array", "label": "Reclaim the daybreak array", "type": "flag_true", "flag": "daybreak_array_secured"},
+          {"id": "break_drum_circle", "label": "Break the drum circle", "type": "flag_true", "flag": "drum_circle_broken"},
+          {"id": "break_bone_ferry_watch", "label": "Break the Bone Ferry Watch", "type": "encounter_resolved", "placement_id": "daybreak_bone_ferry_watch"}
+        ],
+        "defeat": [
+          {"id": "hold_riverwatch", "label": "Keep Riverwatch under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_bridgehead"},
+          {"id": "solera_survives", "label": "Solera must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_nightglass_pressure", "label": "Do not let Mireclaw pressure reach 11", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 11}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "roadline_veterans",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_bridgeward_levies_broken"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "riverwatch_bridgehead", "recruits": {"unit_shard_guard": 2, "unit_prism_adept": 1}},
+            {
+              "type": "message",
+              "text": "Broken bridgeward levies leave the road clear enough for reserve arrays and convoy stores to reach Solera."
+            }
+          ]
+        },
+        {
+          "id": "riverwatch_channels_open",
+          "priority": 112,
+          "conditions": [
+            {"type": "day_at_least", "day": 1},
+            {"type": "flag_true", "flag": "carryover_riverwatch_channels_marked"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "daybreak_channel_cache",
+                "site_id": "site_waystone_cache",
+                "x": 2,
+                "y": 5
+              }
+            },
+            {
+              "type": "message",
+              "text": "Captured Riverwatch charts keep the side channels open long enough to reveal a hidden supply cache."
+            }
+          ]
+        },
+        {
+          "id": "daybreak_array_reclaimed",
+          "priority": 104,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "reclaim_daybreak_array"}
+          ],
+          "effects": [
+            {"type": "award_artifact", "artifact_id": "artifact_warcrest_pennon"},
+            {"type": "town_add_building", "placement_id": "riverwatch_bridgehead", "building_id": "building_lantern_archive"},
+            {
+              "type": "message",
+              "text": "When the daybreak array is reclaimed, Sunvault crews recover an old war pennon and rewire Riverwatch into the relay net."
+            }
+          ]
+        },
+        {
+          "id": "nightglass_dominion_holds",
+          "priority": 94,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "claim_nightglass"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "nightglass_redoubt", "building_id": "building_nightglass_dominion"},
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 3, "minimum": 8},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "nightglass_dominion_holds_raid",
+                "encounter_id": "encounter_nightglass_dominion",
+                "x": 9,
+                "y": 1,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "If Solera cannot crack Nightglass in time, the Dominion ring comes online and the marsh spits another hunter pack onto the line."
+            }
+          ]
+        },
+        {
+          "id": "nightglass_ferry_raid",
+          "priority": 92,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "town_owned_by_player", "placement_id": "riverwatch_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "nightglass_ferry_raid",
+                "encounter_id": "encounter_mire_raid",
+                "x": 10,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Nightglass ferries dump another raid onto the south bank as soon as Riverwatch looks fully stabilized."
+            }
+          ]
+        },
+        {
+          "id": "bone_ferry_signals_hold",
+          "priority": 86,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "break_bone_ferry_watch"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_mireclaw", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "bone_ferry_signals_hold_raid",
+                "encounter_id": "encounter_bone_ferry_watch",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_mireclaw",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "If Bone Ferry stands too long, Mireclaw keeps the inner marsh ferries running and pushes fresh pressure into the march."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "riverwatch_bridgehead", "town_id": "town_riverwatch", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "nightglass_redoubt", "town_id": "town_nightglass_redoubt", "x": 10, "y": 3, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_mireclaw",
+          "label": "Nightglass Reavers",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 160, "wood": 1},
+          "raid_encounter_ids": ["encounter_bone_ferry_watch", "encounter_nightglass_dominion"],
+          "spawn_points": [
+            {"x": 9, "y": 1},
+            {"x": 9, "y": 4}
+          ],
+          "siege_target_placement_id": "riverwatch_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 110,
+          "priority_target_placement_ids": [
+            "riverwatch_bridgehead",
+            "daybreak_watch_relay",
+            "daybreak_array",
+            "array_rod"
+          ],
+          "strategy_overrides": {
+            "raid_target_weights": {"artifact": 1.15, "encounter": 1.2},
+            "raid": {"hero_hunt_weight": 1.4, "site_denial_weight": 1.4}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "daybreak_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "daybreak_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "daybreak_ore", "site_id": "site_ore_crates", "x": 7, "y": 5},
+        {"placement_id": "nightglass_cache", "site_id": "site_waystone_cache", "x": 8, "y": 0},
+        {"placement_id": "daybreak_watch_relay", "site_id": "site_prism_watch_relay", "x": 2, "y": 5},
+        {"placement_id": "daybreak_lens_house", "site_id": "site_lens_house", "x": 6, "y": 2},
+        {"placement_id": "daybreak_starlens", "site_id": "site_starlens_sanctum", "x": 9, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "daybreak_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "nightglass_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "array_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "daybreak_array", "encounter_id": "encounter_daybreak_array", "x": 4, "y": 1, "difficulty": "high", "combat_seed": 13201},
+        {"placement_id": "daybreak_drum_circle", "encounter_id": "encounter_drum_circle", "x": 7, "y": 4, "difficulty": "high", "combat_seed": 13202},
+        {"placement_id": "daybreak_bone_ferry_watch", "encounter_id": "encounter_bone_ferry_watch", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 13203}
+      ]
+    },
+    {
+      "id": "glassfen-breakers",
+      "name": "Glassfen Breakers",
+      "selection": {
+        "summary": "Advance out of Highwater, break Sunvault relay screens, and seize Prismhearth before the Compact turns the field into a battery line.",
+        "recommended_difficulty": "hard",
+        "map_size_label": "Glassfen Front (10x6)",
+        "player_summary": "Caelen Ashgrove leads an Embercourt column into the Glassfen and must keep pressure on Prismhearth before the arrays synchronize.",
+        "enemy_summary": "The Sunvault Compact holds Prismhearth, launches relay pickets and glasswing sorties, and punishes any slow advance with prepared fire lanes.",
+        "availability": {"campaign": false, "skirmish": true}
+      },
+      "map_size": {"width": 10, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_ashgrove_watch",
+      "hero_id": "hero_caelen",
+      "starting_resources": {"gold": 1400, "wood": 3, "ore": 3},
+      "map": [
+        ["grass", "grass", "forest", "grass", "water", "water", "grass", "forest", "grass", "grass"],
+        ["grass", "forest", "forest", "grass", "grass", "water", "grass", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "forest", "grass", "grass"],
+        ["grass", "water", "grass", "forest", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "water", "grass", "grass", "forest", "forest", "grass", "water", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "water", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 3},
+      "hero_starts": ["hero_caelen"],
+      "objectives": {
+        "victory_text": "Prismhearth falls and Embercourt breaks the Glassfen arrays before Sunvault can lock the lane.",
+        "defeat_text": "The Compact turns the front into a killing ground before Caelen can reach Prismhearth.",
+        "victory": [
+          {"id": "claim_prismhearth", "label": "Claim Prismhearth", "type": "town_owned_by_player", "placement_id": "prismhearth_array"},
+          {"id": "break_relay_pickets", "label": "Break the relay pickets", "type": "flag_true", "flag": "relay_pickets_broken"},
+          {"id": "break_aurora_battery", "label": "Break the Aurora Battery", "type": "flag_true", "flag": "aurora_battery_broken"},
+          {"id": "clear_glasswing", "label": "Clear the Glasswing Sortie", "type": "encounter_resolved", "placement_id": "glassfen_glasswing_sortie"}
+        ],
+        "defeat": [
+          {"id": "hold_highwater", "label": "Keep Highwater under your banner", "type": "town_not_owned_by_player", "placement_id": "highwater_bridgehead"},
+          {"id": "caelen_survives", "label": "Caelen must survive the front", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_sunvault_pressure", "label": "Do not let Sunvault pressure reach 9", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 9}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "highwater_mill_reserve",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 2},
+            {"type": "town_owned_by_player", "placement_id": "highwater_bridgehead"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 220, "wood": 1}},
+            {"type": "town_add_recruits", "placement_id": "highwater_bridgehead", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {
+              "type": "message",
+              "text": "Highwater's mills send another pay chest and a fresh line of wardens to keep Caelen's push alive."
+            }
+          ]
+        },
+        {
+          "id": "outer_arrays_silenced",
+          "priority": 108,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "break_relay_pickets"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_resource_node",
+              "placement": {
+                "placement_id": "outer_array_salvage",
+                "site_id": "site_waystone_cache",
+                "x": 4,
+                "y": 0
+              }
+            },
+            {
+              "type": "message",
+              "text": "Breaking the outer relay screens leaves the Glassfen edge scattered with usable crystal stock and chart cases."
+            }
+          ]
+        },
+        {
+          "id": "sunvault_countersortie",
+          "priority": 95,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "highwater_bridgehead"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "sunvault_countersortie",
+                "encounter_id": "encounter_mirror_lancers",
+                "x": 9,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "Sunvault duelists cut a reflected lane along the south bank as soon as Highwater looks stable."
+            }
+          ]
+        },
+        {
+          "id": "daybreak_matrix_locks",
+          "priority": 90,
+          "conditions": [
+            {"type": "day_at_least", "day": 4},
+            {"type": "objective_not_met", "objective_id": "claim_prismhearth"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "prismhearth_array", "building_id": "building_daybreak_matrix"},
+            {"type": "add_enemy_pressure", "faction_id": "faction_sunvault", "amount": 3, "minimum": 7},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "daybreak_matrix_locks_sortie",
+                "encounter_id": "encounter_daybreak_matrix",
+                "x": 8,
+                "y": 1,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "If Prismhearth remains unbroken into the late fight, the Daybreak Matrix aligns its relays and feeds one more glasswing sortie into the front."
+            }
+          ]
+        },
+        {
+          "id": "aurora_signals_hold",
+          "priority": 88,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_aurora_battery"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_sunvault", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "aurora_signals_hold",
+                "encounter_id": "encounter_relay_pickets",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_sunvault",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {
+              "type": "message",
+              "text": "As long as the Aurora Battery holds, Prismhearth can keep feeding fresh relay screens into the front."
+            }
+          ]
+        },
+        {
+          "id": "glasswing_spotters_scattered",
+          "priority": 84,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "glassfen_glasswing_sortie"}
+          ],
+          "effects": [
+            {"type": "award_experience", "amount": 100},
+            {"type": "set_flag", "flag": "glassfen_spotters_scattered", "value": true},
+            {
+              "type": "message",
+              "text": "Caelen scatters the Glasswing spotters and gains a clearer read on how Sunvault layers its battery lanes."
+            }
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "highwater_bridgehead", "town_id": "town_highwater_keep", "x": 0, "y": 3, "owner": "player", "recovery": {"pressure": 1, "source": "array counterfire"}},
+        {"placement_id": "prismhearth_array", "town_id": "town_prismhearth", "x": 9, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_sunvault",
+          "label": "Prismhearth Compact",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 140, "ore": 1},
+          "raid_encounter_ids": ["encounter_aurora_battery", "encounter_daybreak_matrix"],
+          "spawn_points": [
+            {"x": 8, "y": 1},
+            {"x": 8, "y": 4}
+          ],
+          "siege_target_placement_id": "highwater_bridgehead",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "highwater_bridgehead",
+            "glassfen_watch_relay",
+            "glassfen_starlens",
+            "glassfen_aurora_battery",
+            "glassfen_gorget"
+          ],
+          "strategy_overrides": {
+            "site_family_weights": {
+              "neutral_dwelling": 0.8,
+              "faction_outpost": 1.55,
+              "frontier_shrine": 1.5
+            },
+            "raid_target_weights": {"artifact": 1.25, "encounter": 1.2, "town": 1.15},
+            "raid": {"objective_weight": 1.4, "site_denial_weight": 1.15}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "glassfen_timber", "site_id": "site_timber_wagon", "x": 1, "y": 0},
+        {"placement_id": "glassfen_shrine", "site_id": "site_scout_shrine", "x": 4, "y": 2},
+        {"placement_id": "glassfen_ore", "site_id": "site_ore_crates", "x": 6, "y": 5},
+        {"placement_id": "array_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
+        {"placement_id": "glassfen_watch_relay", "site_id": "site_prism_watch_relay", "x": 2, "y": 3},
+        {"placement_id": "glassfen_lens_house", "site_id": "site_lens_house", "x": 5, "y": 5},
+        {"placement_id": "glassfen_starlens", "site_id": "site_starlens_sanctum", "x": 7, "y": 2}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "glassfen_boots", "artifact_id": "artifact_trailsinger_boots", "x": 2, "y": 0},
+        {"placement_id": "glassfen_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 5, "y": 3},
+        {"placement_id": "glassfen_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
+      ],
+      "encounters": [
+        {
+          "placement_id": "glassfen_relay_pickets",
+          "encounter_id": "encounter_relay_pickets",
+          "x": 4,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 14201,
+          "field_objectives": [
+            {
+              "id": "relay_kill_lane",
+              "label": "Glassfen Firing Prism",
+              "summary": "The fog-edge prism still turns the lane into a firing gallery unless it is overrun.",
+              "capture_threshold": 3
+            },
+            {
+              "id": "relay_signal_beacon",
+              "label": "Glassfen Watch Relay",
+              "summary": "The watch relay keeps Sunvault command steadier through the marsh haze."
+            }
+          ]
+        },
+        {"placement_id": "glassfen_glasswing_sortie", "encounter_id": "encounter_glasswing_sortie", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 14202},
+        {"placement_id": "glassfen_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 7, "y": 0, "difficulty": "high", "combat_seed": 14203}
+      ]
+    }
+  ]
+}

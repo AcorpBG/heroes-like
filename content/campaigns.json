@@ -1,0 +1,411 @@
+{
+  "items": [
+    {
+      "id": "campaign_reedfall",
+      "name": "Lanterns Through Reedfall",
+      "description": "Lyra Emberwell turns a frontier defense into an advance through the Reedfall marsh, carrying each victory forward into the next chapter.",
+      "summary": "A three-chapter frontier war campaign about turning a border defense into a full marsh push.",
+      "region": "Reedfall Frontier",
+      "arc_goal": "Break the Reedfall raider road, seize the marsh causeway, and shatter the Fen Crown command post before Mireclaw regains the frontier initiative.",
+      "completion_title": "Reedfall Secured",
+      "completion_summary": "Lyra's drive through River Pass, Blackfen Gate, and the crown isle turns Reedfall from a bleeding border into an Embercourt-held marsh corridor.",
+      "starting_scenario_id": "river-pass",
+      "scenarios": [
+        {
+          "scenario_id": "river-pass",
+          "label": "Chapter I: River Pass",
+          "description": "Hold Riverwatch, purge the raiders, and seize Duskfen Bastion before the Mireclaw warhost breaks the pass.",
+          "chapter_index": 1,
+          "chapter_title": "Break the Pass",
+          "status_hint": "Establish the League foothold and open the road into Reedfall.",
+          "carryover_summary": "Exports Lyra's hero growth, spellbook, relics, and half the recovered stores into the marsh push.",
+          "briefing": "Mireclaw raiders have cracked the border screen. Hold Riverwatch long enough to clear the pass and turn the frontier forts into a launch line.",
+          "intel": "Duskfen Bastion and the marsh approaches are contested by fast raider packs; if they keep the pass open, Lyra loses the road before reinforcements arrive.",
+          "stakes": "Secure Riverwatch, purge the raiders, and seize Duskfen so Embercourt can advance into Reedfall instead of fighting on the border.",
+          "aftermath_victory": "Riverwatch stands, the pass is open, and Lyra can carry men and stores into the marsh for the next push.",
+          "aftermath_defeat": "The pass falls back into chaos, Lyra's line breaks, and Reedfall remains a raider road.",
+          "journal_victory": "Lyra held Riverwatch, broke the pass, and opened the first hard road into Reedfall.",
+          "journal_defeat": "Lyra failed to lock the pass, and the marsh war stayed on Embercourt's doorstep.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 3},
+            "flag_ids": ["pass_cleared", "mire_cleared", "mire_cleansing_rewarded", "raid_repulsed"]
+          }
+        },
+        {
+          "scenario_id": "causeway-stand",
+          "label": "Chapter II: Causeway Stand",
+          "description": "Push from captured Duskfen into the marsh causeway and take Blackfen Gate with whatever Lyra carried out of River Pass.",
+          "chapter_index": 2,
+          "chapter_title": "Seize the Causeway",
+          "status_hint": "Convert the first victory into a durable marsh staging ground.",
+          "carryover_summary": "Imports River Pass carryover and banks a second bundle for the final campaign break.",
+          "briefing": "Lyra must turn the first victory into a real foothold by driving along the flooded causeway before Mireclaw rebuilds Blackfen Gate.",
+          "intel": "The covenant is retreating in order, with marshals buying time around the gate while surviving raiders harry the road behind your bridgehead.",
+          "stakes": "If Blackfen Gate holds, River Pass becomes another isolated win; if it falls, Embercourt gains a durable staging ground in the marsh.",
+          "aftermath_victory": "Blackfen Gate is broken and the causeway is yours, giving Reedfall a stable staging ground for the crown-isle strike.",
+          "aftermath_defeat": "The causeway stalls under counterattack and Lyra's bridgehead starts to shrink back toward Duskfen.",
+          "journal_victory": "Lyra turned Duskfen into a marsh bridgehead and shattered the gate marshals at Blackfen.",
+          "journal_defeat": "Lyra was checked on the causeway, and the marsh gate stayed in Mireclaw hands.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "river-pass", "status": "victory"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "river-pass",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1500, "wood": 4, "ore": 4},
+            "flag_ids": ["reed_camp_cleared", "gate_marshals_broken"]
+          }
+        },
+        {
+          "scenario_id": "fen-crown",
+          "label": "Chapter III: Fen Crown",
+          "description": "Use the captured gate as a bridgehead, drive on the covenant's crown isle, and break the marsh command post before Mireclaw reforms.",
+          "chapter_index": 3,
+          "chapter_title": "Strike the Fen Crown",
+          "status_hint": "Spend the full campaign carryover to finish the Reedfall offensive.",
+          "carryover_summary": "Imports the Causeway Stand bundle and resolves the campaign finale.",
+          "briefing": "With Blackfen taken, Lyra must spend every recovered advantage to strike the covenant crown isle before the marsh command can reform.",
+          "intel": "Fen Crown is ringed by veteran defenders and whatever escaped the gate fight; delay gives Mireclaw time to re-knit the isle into a new command post.",
+          "stakes": "Take the crown isle now and the Reedfall offensive is won; fail and Mireclaw regains the initiative across the whole frontier.",
+          "aftermath_victory": "Fen Crown falls, the marsh command post is broken, and Reedfall is secured under Embercourt pressure.",
+          "aftermath_defeat": "The crown isle holds, buying Mireclaw the time it needs to rebuild the Reedfall warhost.",
+          "journal_victory": "Lyra broke the crown isle and finished the Reedfall offensive in one sustained drive.",
+          "journal_defeat": "Lyra failed at Fen Crown, and the marsh command survived long enough to rally.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "causeway-stand", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "causeway-stand", "flag": "gate_marshals_broken"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "causeway-stand",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_stonewake",
+      "name": "Warden of Stonewake",
+      "description": "Caelen Ashgrove fights across mill roads, ferry booms, and shrine causeways to keep the Stonewake Basin from falling to the Mireclaw inland host.",
+      "summary": "A three-chapter inland counteroffensive about holding mill country, cutting ferry lanes, and storming a marsh redoubt.",
+      "region": "Stonewake Basin",
+      "arc_goal": "Hold the basin rim, cut the ferry chain, and break Nightglass before the inland host can turn Stonewake's crossings into a permanent warfront.",
+      "completion_title": "Stonewake Held",
+      "completion_summary": "Caelen's basin counteroffensive survives the mill roads, ferry levees, and shrine causeway, leaving Nightglass broken and the inland crossings in charter hands.",
+      "starting_scenario_id": "stonewake-watch",
+      "scenarios": [
+        {
+          "scenario_id": "stonewake-watch",
+          "label": "Chapter I: Stonewake Watch",
+          "description": "Hold Highwater Keep, secure Willow Mill, and seize Murkward Ford before the inland host cuts the basin open.",
+          "chapter_index": 1,
+          "chapter_title": "Hold the Basin Rim",
+          "status_hint": "Turn a mill-country defense into a river crossing.",
+          "carryover_summary": "Exports Caelen's hero growth, spellbook, relics, and half the reclaimed stores into the ferry advance.",
+          "briefing": "Caelen must hold the basin rim, keep Highwater supplied, and seize Murkward Ford before the inland host splits Stonewake apart.",
+          "intel": "Mireclaw pressure is coming through the mills and along the ford; if the beacons stay dark, the ferry front cannot be opened.",
+          "stakes": "Save the basin rim and light the ford for a counteroffensive, or lose Stonewake's river crossings before the campaign begins.",
+          "aftermath_victory": "The basin rim holds, Murkward Ford is lit, and Caelen can launch across the water instead of waiting behind the mills.",
+          "aftermath_defeat": "Stonewake's rim cracks, the beacons fail, and the basin is left reacting instead of counterattacking.",
+          "journal_victory": "Caelen held Highwater's rim, secured the mills, and lit Murkward Ford for the next crossing.",
+          "journal_defeat": "Caelen lost the basin tempo at Stonewake, and the ford stayed dark.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 3},
+            "flag_ids": ["sluice_band_broken", "willow_mill_secured", "ford_beacons_lit"]
+          }
+        },
+        {
+          "scenario_id": "reedbarrow-ferry",
+          "label": "Chapter II: Reedbarrow Ferry",
+          "description": "Launch from captured Murkward Ford, clear the barrow levees, and take Reedbarrow Ferry before the covenant isolates the crossing.",
+          "chapter_index": 2,
+          "chapter_title": "Cut the Ferry Chain",
+          "status_hint": "Use the captured ford to open a sustained inland advance.",
+          "carryover_summary": "Imports Stonewake Watch carryover and banks a second bundle for the final inland assault.",
+          "briefing": "With the ford secured, Caelen must clear the levees and cut Reedbarrow Ferry before Mireclaw isolates the inland crossing.",
+          "intel": "Barrow pickets and ferry crews are trying to hold the chain long enough for Nightglass to brace the far bank.",
+          "stakes": "If the ferry chain is cut, Stonewake gains a real inland road; if it holds, the basin offensive chokes at the waterline.",
+          "aftermath_victory": "Reedbarrow Ferry is cut loose from Mireclaw control and Caelen has the bridgehead needed for the Nightglass assault.",
+          "aftermath_defeat": "The levees hold just long enough for the covenant to keep the ferry choke closed.",
+          "journal_victory": "Caelen cut the Reedbarrow ferry chain and opened the inland route to Nightglass.",
+          "journal_defeat": "Caelen failed to break Reedbarrow's chain, and the crossing stayed contested.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "stonewake-watch", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "stonewake-watch", "flag": "ford_beacons_lit"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "stonewake-watch",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1500, "wood": 4, "ore": 4},
+            "flag_ids": ["barrow_pickets_broken", "ferry_chain_cut", "nightglass_route_marked"]
+          }
+        },
+        {
+          "scenario_id": "nightglass-redoubt",
+          "label": "Chapter III: Nightglass Redoubt",
+          "description": "Use Reedbarrow Ferry as a bridgehead, clear the mirror causeway, and break the Nightglass shrine-redoubt before the basin host regroups.",
+          "chapter_index": 3,
+          "chapter_title": "Break Nightglass",
+          "status_hint": "Spend the full inland carryover to finish the Stonewake campaign.",
+          "carryover_summary": "Imports the Reedbarrow Ferry bundle and resolves the Stonewake finale.",
+          "briefing": "Caelen's inland bridgehead is in place; now he must clear the mirror causeway and break the Nightglass redoubt before the basin host regroups.",
+          "intel": "Nightglass is protected by shrine wards, reserve marsh fighters, and anything that escaped Reedbarrow intact.",
+          "stakes": "Destroy the redoubt now and Stonewake survives the inland war; fail and Nightglass becomes the basin's rally point.",
+          "aftermath_victory": "Nightglass is broken, its shrine-redoubt silenced, and Stonewake's inland host is scattered.",
+          "aftermath_defeat": "Nightglass holds the causeway and Mireclaw keeps a hardened redoubt on the basin flank.",
+          "journal_victory": "Caelen smashed Nightglass and ended the inland campaign before the basin line could break again.",
+          "journal_defeat": "Caelen was turned back at Nightglass, leaving the redoubt to anchor another marsh surge.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "reedbarrow-ferry", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "reedbarrow-ferry", "flag": "ferry_chain_cut"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "reedbarrow-ferry",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_bogbound_oath",
+      "name": "Bogbound Oath",
+      "description": "Vaska Reedmaw drags Mireclaw out of Duskfen, cuts the charter roads apart, and drives all the way to Highwater Keep before Embercourt can reform the basin line.",
+      "summary": "A three-chapter Mireclaw counteroffensive about seizing roads, breaking granary levies, and drowning the charter marches.",
+      "region": "Charter Marches",
+      "arc_goal": "Seize Riverwatch, burn the charter road, and drown Highwater before Embercourt can re-form the basin marches.",
+      "completion_title": "Marches Overrun",
+      "completion_summary": "Vaska converts a Duskfen defense into a clean marsh surge, breaking Highwater and leaving the charter marches open to Mireclaw control.",
+      "starting_scenario_id": "bogbound-oath",
+      "scenarios": [
+        {
+          "scenario_id": "bogbound-oath",
+          "label": "Chapter I: Bogbound Oath",
+          "description": "Hold Duskfen, break the lantern scouts and survey train, and seize Riverwatch Hold before Embercourt relief seals the road.",
+          "chapter_index": 1,
+          "chapter_title": "Seize Riverwatch",
+          "status_hint": "Turn a marsh defense into a clean road capture.",
+          "carryover_summary": "Exports Vaska's hero growth, spellbook, relics, and half the seized road stores into the basin push.",
+          "briefing": "Vaska must turn Duskfen's defense into a counterstroke by seizing Riverwatch before Embercourt seals the road with fresh levies.",
+          "intel": "Lantern scouts and a survey train are trying to map the channels for a clean charter advance; break them and the road fight turns.",
+          "stakes": "Take Riverwatch and Mireclaw gains the road war; fail and Embercourt keeps the marsh pinned behind its own border.",
+          "aftermath_victory": "Riverwatch falls, the channels are marked for Mireclaw use, and Vaska can drive straight into the charter belt.",
+          "aftermath_defeat": "Riverwatch holds long enough for Embercourt to keep the road war on Mireclaw's side of the frontier.",
+          "journal_victory": "Vaska broke the lantern screen, seized Riverwatch, and opened the charter road to Mireclaw.",
+          "journal_defeat": "Vaska failed to take Riverwatch, and Embercourt kept the road war contained.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 3},
+            "flag_ids": ["lantern_patrol_broken", "survey_train_broken", "riverwatch_channels_marked"]
+          }
+        },
+        {
+          "scenario_id": "charter-pyre",
+          "label": "Chapter II: Charter Pyre",
+          "description": "Advance from captured Riverwatch, hold Murkward as a flank stockade, and break Highwater's granary line before the basin roads stabilize.",
+          "chapter_index": 2,
+          "chapter_title": "Burn the Charter Road",
+          "status_hint": "Exploit the first breach before Embercourt can retie its road network.",
+          "carryover_summary": "Imports Bogbound Oath carryover and banks a final road-breaking bundle for the Highwater assault.",
+          "briefing": "With Riverwatch taken, Vaska must burn through the granary line and hold Murkward as a flank stockade before Highwater stabilizes.",
+          "intel": "Granary levies and beacon wardens are delaying hard, trying to preserve a serviceable road for Highwater's relief columns.",
+          "stakes": "Break the charter road now and Highwater can be assaulted on open terms; fail and Embercourt reties the basin line.",
+          "aftermath_victory": "The granary line burns, the charter road opens, and Vaska banks a clean route into Highwater.",
+          "aftermath_defeat": "The road belt survives long enough for Embercourt to patch its crossings and deny the final surge.",
+          "journal_victory": "Vaska burned the charter road and turned the basin approach into Mireclaw ground.",
+          "journal_defeat": "Vaska stalled at the charter road, and Embercourt kept its basin lifeline intact.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "bogbound-oath", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "bogbound-oath", "flag": "riverwatch_channels_marked"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "bogbound-oath",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1500, "wood": 4, "ore": 4},
+            "flag_ids": ["granary_levies_broken", "beacon_wardens_broken", "charter_road_opened"]
+          }
+        },
+        {
+          "scenario_id": "lockmarsh-surge",
+          "label": "Chapter III: Lockmarsh Surge",
+          "description": "Launch from the broken charter belt, cut the road chaplains, and storm Highwater Keep before Embercourt can rebuild the basin line.",
+          "chapter_index": 3,
+          "chapter_title": "Break Highwater",
+          "status_hint": "Spend the full road-war carryover to finish the Mireclaw campaign.",
+          "carryover_summary": "Imports the Charter Pyre bundle and resolves the Mireclaw counteroffensive.",
+          "briefing": "The road belt is broken. Vaska must hit Highwater before the charter hosts rebuild their discipline around the keep.",
+          "intel": "Road chaplains and bastion reserves are the last organized wall between Mireclaw and a drowned basin capital.",
+          "stakes": "Storm Highwater now and Embercourt loses the marches; fail and the keep becomes the spine of a renewed charter defense.",
+          "aftermath_victory": "Highwater breaks under the surge, leaving the charter marches shattered and Mireclaw ascendant.",
+          "aftermath_defeat": "Highwater survives the assault, giving Embercourt the time and prestige to rebuild the marches.",
+          "journal_victory": "Vaska drowned Highwater's line and finished the Mireclaw counteroffensive at the basin heart.",
+          "journal_defeat": "Vaska failed to break Highwater, and the charter keep held the marches together.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "charter-pyre", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "charter-pyre", "flag": "charter_road_opened"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "charter-pyre",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    },
+    {
+      "id": "campaign_shards_of_daybreak",
+      "name": "Shards of Daybreak",
+      "description": "Solera Prismarch rallies the Sunvault Compact from Prismhearth, relights Halo Spire, and forces a road through both charter wardens and marsh raiders before the relay network goes dark.",
+      "summary": "A three-chapter Sunvault campaign about reclaiming relay towers, breaking the charter road line, and turning a prepared array into a decisive frontier offensive.",
+      "region": "Glassfen March",
+      "arc_goal": "Relight the relay chain, sever the glassroad, and reclaim the daybreak array before Nightglass can black out Glassfen again.",
+      "completion_title": "Daybreak Restored",
+      "completion_summary": "Solera turns Prismhearth's survival into a full Compact offensive, reclaiming the array and securing Glassfen's relay frontier by force.",
+      "starting_scenario_id": "prismhearth-watch",
+      "scenarios": [
+        {
+          "scenario_id": "prismhearth-watch",
+          "label": "Chapter I: Prismhearth Watch",
+          "description": "Hold Prismhearth, reclaim Halo Spire, and break the saboteur bands before Mireclaw drowns the relay chain.",
+          "chapter_index": 1,
+          "chapter_title": "Relight the Relay",
+          "status_hint": "Turn a shrinking ward line into a real Compact bridgehead.",
+          "carryover_summary": "Exports Solera's hero growth, spellbook, relics, and half the recovered relay stores into the charter-road push.",
+          "briefing": "Solera must keep Prismhearth alive, reclaim Halo Spire, and relight the relay chain before the Compact loses the whole frontier network.",
+          "intel": "Saboteur bands are cutting relay sites one by one; if Halo stays dark, the charter road and the marsh raids will isolate Prismhearth.",
+          "stakes": "Relight the relay and Sunvault gains a true bridgehead; fail and the Compact fights blind across Glassfen.",
+          "aftermath_victory": "Halo Spire is relit, the relay line holds, and Solera can turn defense into an offensive push.",
+          "aftermath_defeat": "The relay chain stays fractured, leaving Prismhearth exposed and the frontier network half-blind.",
+          "journal_victory": "Solera relit Halo Spire and restored the first working relay line of the campaign.",
+          "journal_defeat": "Solera failed to relight the frontier, and Prismhearth remained isolated.",
+          "starts_unlocked": true,
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 4},
+            "flag_ids": ["relay_pickets_broken", "glasswing_sortie_broken", "halo_salvage_rewarded", "halo_relays_lit"]
+          }
+        },
+        {
+          "scenario_id": "glassroad-sundering",
+          "label": "Chapter II: Glassroad Sundering",
+          "description": "Push out of reclaimed Halo Spire, tear open the charter road, and seize Riverwatch before Embercourt can stabilize the market crossings.",
+          "chapter_index": 2,
+          "chapter_title": "Break the Charter Road",
+          "status_hint": "Convert the reclaimed relay into a sustained Sunvault offensive.",
+          "carryover_summary": "Imports Prismhearth Watch carryover and banks a final bundle for the Nightglass push.",
+          "briefing": "With Halo active again, Solera must break the charter road crossings and seize Riverwatch before Embercourt and Mireclaw can close ranks.",
+          "intel": "Archive wardens and bridge levies are trying to hold a market-road lattice together long enough to absorb the Sunvault push.",
+          "stakes": "Shatter the glassroad and the Compact gains a sustained offensive lane; fail and the reclaimed relay becomes an isolated outpost again.",
+          "aftermath_victory": "The charter road is sundered, Riverwatch is seized, and Sunvault carries the war onto the enemy crossings.",
+          "aftermath_defeat": "The road lattice holds and Solera's new bridgehead risks collapsing back toward Halo Spire.",
+          "journal_victory": "Solera broke the glassroad crossings and pushed the Compact out of relay-defense posture.",
+          "journal_defeat": "Solera could not break the road lattice, and the offensive stalled short of Riverwatch.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "prismhearth-watch", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "prismhearth-watch", "flag": "halo_relays_lit"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "prismhearth-watch",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": true,
+            "retain_spells": true,
+            "retain_artifacts": true,
+            "resource_fraction": 0.5,
+            "resource_caps": {"gold": 1500, "wood": 4, "ore": 4},
+            "flag_ids": ["archive_wardens_broken", "bridgeward_levies_broken", "riverwatch_channels_marked"]
+          }
+        },
+        {
+          "scenario_id": "daybreak-spire",
+          "label": "Chapter III: Daybreak Spire",
+          "description": "Launch from the broken road line, seize the old daybreak array, and shatter Nightglass before Mireclaw can drown the Compact in a second time.",
+          "chapter_index": 3,
+          "chapter_title": "Break Nightglass",
+          "status_hint": "Spend the full Compact carryover to finish the Glassfen campaign.",
+          "carryover_summary": "Imports the Glassroad Sundering bundle and resolves the Sunvault campaign finale.",
+          "briefing": "Solera now has a live road into Nightglass. She must seize the old daybreak array and finish the marsh redoubt before the frontier goes dark again.",
+          "intel": "Nightglass still has surviving marsh veterans and reserve batteries guarding the array approaches; a failed strike will hand them the initiative back.",
+          "stakes": "Take the array and break Nightglass now, or the Compact loses its best chance to turn the relay network into a decisive war-winning front.",
+          "aftermath_victory": "The daybreak array is reclaimed, Nightglass is shattered, and the Compact secures Glassfen by force of arms.",
+          "aftermath_defeat": "The array remains contested and Nightglass survives to threaten the relay line anew.",
+          "journal_victory": "Solera reclaimed the daybreak array and finished the Compact campaign with a decisive Nightglass victory.",
+          "journal_defeat": "Solera failed at Daybreak Spire, leaving Nightglass alive to contest the relays again.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "glassroad-sundering", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "glassroad-sundering", "flag": "riverwatch_channels_marked"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "glassroad-sundering",
+            "resources": true,
+            "hero_progression": true,
+            "spells": true,
+            "artifacts": true,
+            "flags_prefix": "carryover_"
+          }
+        }
+      ]
+    }
+  ]
+}

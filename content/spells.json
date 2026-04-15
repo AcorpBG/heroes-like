@@ -1,0 +1,209 @@
+{
+  "items": [
+    {
+      "id": "spell_waystride",
+      "name": "Waystride",
+      "context": "overworld",
+      "mana_cost": 3,
+      "target_mode": "self",
+      "description": "Pulls the marching line into a sharp, tireless cadence.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 4
+      }
+    },
+    {
+      "id": "spell_cinder_burst",
+      "name": "Cinder Burst",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "description": "A compressed flare of embers that tears through the chosen enemy stack.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 18,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {"initiative": -1, "cohesion": -1}
+        }
+      }
+    },
+    {
+      "id": "spell_stone_veil",
+      "name": "Stone Veil",
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "ally_active",
+      "description": "Wraps the acting stack in a gravel-thick ward that blunts incoming blows.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {"defense": 3, "initiative": 1, "cohesion": 2}
+      }
+    },
+    {
+      "id": "spell_quickmarch_hymn",
+      "name": "Quickmarch Hymn",
+      "context": "battle",
+      "mana_cost": 3,
+      "target_mode": "ally_active",
+      "description": "A clipped command-chant that hurls the acting stack forward in the initiative order.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {"initiative": 2, "attack": 1, "momentum": 1}
+      }
+    },
+    {
+      "id": "spell_trailglyph",
+      "name": "Trailglyph",
+      "context": "overworld",
+      "mana_cost": 4,
+      "target_mode": "self",
+      "description": "A brisk sigil-line that pulls a road back under the column's boots.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 6
+      }
+    },
+    {
+      "id": "spell_beacon_path",
+      "name": "Beacon Path",
+      "context": "overworld",
+      "mana_cost": 5,
+      "target_mode": "self",
+      "description": "A lantern-line of fixed bearings that keeps the column moving through broken frontier routes.",
+      "effect": {
+        "type": "restore_movement",
+        "amount": 5
+      }
+    },
+    {
+      "id": "spell_coal_rain",
+      "name": "Coal Rain",
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "A black volley of furnace-bright cinders that crashes into a chosen stack.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 24,
+        "power_scale": 10,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -2}
+        }
+      }
+    },
+    {
+      "id": "spell_bulwark_litany",
+      "name": "Bulwark Litany",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "An ironbound oath that thickens shields and closes the line.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 4,
+        "duration_rounds": 2,
+        "modifiers": {"defense": 4, "attack": 1, "cohesion": 2}
+      }
+    },
+    {
+      "id": "spell_relay_drum",
+      "name": "Relay Drum",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A pulse-beat cast through the ranks that snaps a stack into motion.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {"initiative": 3, "attack": 2, "momentum": 1}
+      }
+    },
+    {
+      "id": "spell_lantern_phalanx",
+      "name": "Lantern Phalanx",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "Signal-lantern commands tighten the acting stack into a pike-backed fighting line.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 2,
+        "duration_rounds": 2,
+        "modifiers": {"attack": 2, "defense": 1, "initiative": 1, "cohesion": 2}
+      }
+    },
+    {
+      "id": "spell_bloodwake_drum",
+      "name": "Bloodwake Drum",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A killing-beat that drives the acting stack toward an already-softened breach.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {"attack": 3, "initiative": 2, "momentum": 2}
+      }
+    },
+    {
+      "id": "spell_prism_bastion",
+      "name": "Prism Bastion",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "Facet wards lock around the acting stack, hardening the line and preserving its rhythm.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 4,
+        "duration_rounds": 2,
+        "modifiers": {"defense": 4, "initiative": 1, "cohesion": 2}
+      }
+    },
+    {
+      "id": "spell_resonant_chorus",
+      "name": "Resonant Chorus",
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "ally_active",
+      "description": "A relay chant snaps the acting stack into the wider array and feeds both tempo and discipline.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {"initiative": 3, "attack": 1, "cohesion": 1, "momentum": 1}
+      }
+    },
+    {
+      "id": "spell_sunlance_arc",
+      "name": "Sunlance Arc",
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "A refracted lance of heat and glare rips through the chosen stack and leaves its formation reeling.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 22,
+        "power_scale": 9,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Dazzled",
+          "duration_rounds": 2,
+          "modifiers": {"initiative": -2, "cohesion": -2}
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,413 @@
+{
+  "items": [
+    {
+      "id": "unit_river_guard",
+      "name": "River Guard",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 1,
+      "hp": 9,
+      "attack": 4,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Hook Reach",
+          "description": "Can strike and retaliate across a partially closed line.",
+          "distance_one_multiplier": 0.9
+        },
+        {
+          "id": "brace",
+          "name": "River Brace",
+          "description": "Defensive retaliations hit harder, steady the line, and stagger the attacker into the next round.",
+          "retaliation_multiplier": 1.3,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {"initiative": -2, "cohesion": -1}
+        }
+      ],
+      "growth": 7,
+      "cost": {"gold": 60}
+    },
+    {
+      "id": "unit_ember_archer",
+      "name": "Ember Archer",
+      "faction_id": "faction_embercourt",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Lantern Volley",
+          "description": "Hits harder while the lines are still opening and the lane is clear.",
+          "damage_multiplier": 1.15,
+          "min_distance": 1,
+          "status_ids": ["status_staggered"],
+          "status_damage_multiplier": 1.12,
+          "ally_defending_multiplier": 1.1
+        },
+        {
+          "id": "harry",
+          "name": "Kindling Barrage",
+          "description": "Surviving targets are harried, losing formation and cohesion for the next exchanges.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -1},
+          "momentum_gain": 1
+        }
+      ],
+      "growth": 5,
+      "cost": {"gold": 85}
+    },
+    {
+      "id": "unit_citadel_pikeward",
+      "name": "Citadel Pikeward",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 3,
+      "hp": 16,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Basin Pike",
+          "description": "Holds partial engagement lanes without giving up the front.",
+          "distance_one_multiplier": 1.0
+        },
+        {
+          "id": "formation_guard",
+          "name": "Citadel Screen",
+          "description": "Anchors the line, hardens allied cohesion, quickens supporting volleys, and punishes staggered breaches.",
+          "ally_ranged_damage_multiplier": 1.15,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 2,
+          "staggered_damage_multiplier": 1.1
+        }
+      ],
+      "growth": 3,
+      "cost": {"gold": 165}
+    },
+    {
+      "id": "unit_blackbranch_cutthroat",
+      "name": "Blackbranch Cutthroat",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 1,
+      "hp": 8,
+      "attack": 4,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Reedline Backstab",
+          "description": "Deals extra damage and builds attack momentum against harried or staggered enemies.",
+          "damage_multiplier": 1.2,
+          "momentum_gain": 1,
+          "status_ids": ["status_harried", "status_staggered"],
+          "health_threshold_ratio": 0.55,
+          "threshold_damage_multiplier": 1.12
+        }
+      ],
+      "growth": 6,
+      "cost": {"gold": 55}
+    },
+    {
+      "id": "unit_mire_slinger",
+      "name": "Mire Slinger",
+      "faction_id": "faction_mireclaw",
+      "role": "ranged",
+      "tier": 1,
+      "hp": 6,
+      "attack": 3,
+      "defense": 3,
+      "min_damage": 1,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Clod Harriers",
+          "description": "Lobs choking mire clods that harry surviving targets, loosen cohesion, and slow their response.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -1},
+          "momentum_gain": 1,
+          "wounded_threshold_ratio": 0.65,
+          "wounded_damage_multiplier": 1.1
+        }
+      ],
+      "growth": 6,
+      "cost": {"gold": 50}
+    },
+    {
+      "id": "unit_bog_brute",
+      "name": "Bog Brute",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 2,
+      "hp": 13,
+      "attack": 6,
+      "defense": 5,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Bogplate Bulk",
+          "description": "Dense hide and layered bogplate turn aside part of incoming ranged fire and keep the stack from buckling.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.8,
+          "engaged_damage_multiplier": 1.12,
+          "harried_damage_multiplier": 1.1
+        }
+      ],
+      "growth": 4,
+      "cost": {"gold": 110}
+    },
+    {
+      "id": "unit_gorefen_ripper",
+      "name": "Gorefen Ripper",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 3,
+      "hp": 12,
+      "attack": 8,
+      "defense": 4,
+      "min_damage": 4,
+      "max_damage": 7,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Canal Hook Finish",
+          "description": "Cuts deeper into prey already slowed or weakened by the pack and snowballs the kill beat.",
+          "damage_multiplier": 1.25,
+          "momentum_gain": 1,
+          "status_ids": ["status_harried", "status_staggered"],
+          "health_threshold_ratio": 0.6,
+          "threshold_damage_multiplier": 1.15
+        },
+        {
+          "id": "bloodrush",
+          "name": "Bloodrush",
+          "description": "Surges faster, strikes harder, and spikes battlefield momentum once prey is wounded or already under pack pressure.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.16,
+          "status_ids": ["status_harried", "status_staggered"],
+          "status_damage_multiplier": 1.12,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ],
+      "growth": 3,
+      "cost": {"gold": 160}
+    },
+    {
+      "id": "unit_shard_guard",
+      "name": "Shard Guard",
+      "faction_id": "faction_sunvault",
+      "role": "melee",
+      "tier": 1,
+      "hp": 10,
+      "attack": 4,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Shard Brace",
+          "description": "Planted crystal pavises harden retaliations and jolt the attacker out of rhythm.",
+          "retaliation_multiplier": 1.25,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {"initiative": -1, "cohesion": -1}
+        },
+        {
+          "id": "shielding",
+          "name": "Facet Ward",
+          "description": "Layered mirror-glass keeps the stack from folding under ranged pressure and sustains the line once engaged.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.85,
+          "engaged_damage_multiplier": 1.08
+        }
+      ],
+      "growth": 7,
+      "cost": {"gold": 65}
+    },
+    {
+      "id": "unit_prism_adept",
+      "name": "Prism Adept",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Refraction Volley",
+          "description": "Prepared firing tiers bend light into harsher volleys, especially into already-staggered targets.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": ["status_staggered"],
+          "status_damage_multiplier": 1.12,
+          "ally_defending_multiplier": 1.05
+        },
+        {
+          "id": "harry",
+          "name": "Glare Splinters",
+          "description": "Splinter flashes harry survivors, roughening their footing and fraying cohesion for the next exchange.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -1},
+          "momentum_gain": 1
+        }
+      ],
+      "growth": 5,
+      "cost": {"gold": 90}
+    },
+    {
+      "id": "unit_mirror_duelist",
+      "name": "Mirror Duelist",
+      "faction_id": "faction_sunvault",
+      "role": "melee",
+      "tier": 2,
+      "hp": 9,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 6,
+      "initiative": 9,
+      "retaliations": 1,
+      "ranged": false,
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Mirror Step",
+          "description": "Uses reflected lanes to cut through half-open gaps without losing tempo.",
+          "distance_one_multiplier": 0.95
+        },
+        {
+          "id": "backstab",
+          "name": "Facet Break",
+          "description": "Cuts deeper into enemies already harried, staggered, or slipping toward a break.",
+          "damage_multiplier": 1.18,
+          "momentum_gain": 1,
+          "status_ids": ["status_harried", "status_staggered"],
+          "health_threshold_ratio": 0.6,
+          "threshold_damage_multiplier": 1.1
+        }
+      ],
+      "growth": 4,
+      "cost": {"gold": 120}
+    },
+    {
+      "id": "unit_aurora_ballista",
+      "name": "Aurora Ballista",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 3,
+      "hp": 12,
+      "attack": 7,
+      "defense": 6,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Aurora Salvo",
+          "description": "Relay-calibrated bolts hit hardest when the battery owns the lane and the target line is already disrupted.",
+          "damage_multiplier": 1.18,
+          "min_distance": 1,
+          "status_ids": ["status_staggered"],
+          "status_damage_multiplier": 1.15,
+          "ally_defending_multiplier": 1.1
+        },
+        {
+          "id": "formation_guard",
+          "name": "Aurora Relay",
+          "description": "A fixed relay lattice steadies nearby arrays, quickens allied volleys, and rewards holding ground.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 1,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.08
+        }
+      ],
+      "growth": 3,
+      "cost": {"gold": 175}
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "id": "artifact_trailsinger_boots",
+      "name": "Trailsinger Boots",
+      "slot": "boots",
+      "description": "Soft-soled boots traced with old road songs. They stretch a march and sharpen a scout's read of the road ahead.",
+      "bonuses": {
+        "overworld_movement": 2,
+        "scouting_radius": 1
+      }
+    },
+    {
+      "id": "artifact_quarry_tally_rod",
+      "name": "Quarry Tally Rod",
+      "slot": "trinket",
+      "description": "A brass counting rod used by frontier surveyors to squeeze one more cart from every shift.",
+      "bonuses": {
+        "daily_income": {
+          "gold": 120,
+          "ore": 1
+        }
+      }
+    },
+    {
+      "id": "artifact_warcrest_pennon",
+      "name": "Warcrest Pennon",
+      "slot": "banner",
+      "description": "A compact command pennon whose bright crest sharpens charges and keeps the line moving.",
+      "bonuses": {
+        "battle_attack": 1,
+        "battle_initiative": 1
+      }
+    },
+    {
+      "id": "artifact_bastion_gorget",
+      "name": "Bastion Gorget",
+      "slot": "armor",
+      "description": "Layered bronze plate forged for siege marshals. It steadies the front under punishing blows.",
+      "bonuses": {
+        "battle_defense": 2
+      }
+    }
+  ]
+}

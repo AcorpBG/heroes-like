@@ -1,0 +1,376 @@
+[gd_scene load_steps=2 format=3 uid="uid://overworld_scene"]
+
+[ext_resource type="Script" path="res://scenes/overworld/OverworldShell.gd" id="1"]
+
+[node name="OverworldShell" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+horizontal_scroll_mode = 0
+
+[node name="ContentMargin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="Content" type="VBoxContainer" parent="Scroll/ContentMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="Banner" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BannerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="BannerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TopBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Overworld"
+
+[node name="Status" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 1
+text = "Day 1"
+
+[node name="Resources" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 1
+text = "Gold 0 | Wood 0 | Ore 0"
+
+[node name="Event" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Orders ready."
+
+[node name="BriefingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BriefingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/BriefingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="BriefingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BriefingTitle" type="Label" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad/BriefingBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Command Briefing"
+
+[node name="Briefing" type="Label" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad/BriefingBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Opening priorities will appear here on a fresh scenario launch."
+
+[node name="CommitmentPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommitmentPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/CommitmentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommitmentBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/CommitmentPanel/CommitmentPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommitmentTitle" type="Label" parent="Scroll/ContentMargin/Content/CommitmentPanel/CommitmentPad/CommitmentBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Command Commitment"
+
+[node name="Commitment" type="Label" parent="Scroll/ContentMargin/Content/CommitmentPanel/CommitmentPad/CommitmentBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Command Commitment"
+
+[node name="Columns" type="HSplitContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 420
+
+[node name="Sidebar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Command"
+
+[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Hero"
+
+[node name="Heroes" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Heroes"
+
+[node name="HeroBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/HeroBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Specialties" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Specialties"
+
+[node name="SpecialtyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/SpecialtyBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Spellbook"
+
+[node name="SpellBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/SpellBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Artifacts" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Artifacts"
+
+[node name="ArtifactBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/ArtifactBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Army"
+
+[node name="FrontierPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="FrontierPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="FrontierBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="FrontierTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Frontier Board"
+
+[node name="Visibility" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Visibility"
+
+[node name="Objectives" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Objectives"
+
+[node name="Threats" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Threats"
+
+[node name="Forecast" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Command Risk"
+
+[node name="MapColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="ContextPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ContextPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/ContextPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="ContextBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/ContextPanel/ContextPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ContextTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/MapColumn/ContextPanel/ContextPad/ContextBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Current Tile"
+
+[node name="Context" type="Label" parent="Scroll/ContentMargin/Content/Columns/MapColumn/ContextPanel/ContextPad/ContextBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "No active site"
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/ContextPanel/ContextPad/ContextBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="MapPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MapPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MapBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="MapTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "March Map"
+
+[node name="Map" type="GridContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox"]
+columns = 8
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MoveBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MoveNorth" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
+layout_mode = 2
+text = "North"
+
+[node name="MoveSouth" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
+layout_mode = 2
+text = "South"
+
+[node name="MoveWest" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
+layout_mode = 2
+text = "West"
+
+[node name="MoveEast" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
+layout_mode = 2
+text = "East"
+
+[node name="Footer" type="HBoxContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EndTurn" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+text = "End Turn"
+
+[node name="SaveStatus" type="Label" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = "Latest ready save: none."
+
+[node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 0)
+
+[node name="Save" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+text = "Save"
+
+[node name="Menu" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+text = "Main Menu"
+
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveNorth" to="." method="_move_north"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveSouth" to="." method="_move_south"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveWest" to="." method="_move_west"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveEast" to="." method="_move_east"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/EndTurn" to="." method="_on_end_turn_pressed"]
+[connection signal="item_selected" from="Scroll/ContentMargin/Content/Footer/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Menu" to="." method="_on_menu_pressed"]

@@ -1,0 +1,979 @@
+{
+  "taskId": 10184,
+  "project": "heroes-like",
+  "updatedAt": "2026-04-15T07:45:57Z",
+  "status": "in_progress",
+  "currentPhase": "release-content-and-shell-polish",
+  "currentSliceId": "phase-1-godot-boot-hardening",
+  "currentSliceTitle": "Fix Godot 4.6 autoload collisions and strict-typing compile blockers so the repo boots cleanly before returning to gameplay work",
+  "steps": [
+    {
+      "id": "phase-1-plan-and-tech-lock",
+      "title": "Lock engine/stack and improve plan",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-1-project-scaffold",
+      "title": "Create production-minded repo scaffold",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-1-app-and-menu-shell",
+      "title": "Implement app boot flow and main menu shell",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-1-world-shell",
+      "title": "Implement first overworld shell",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-1-battle-shell",
+      "title": "Implement first tactical battle shell",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-1-save-load-and-data",
+      "title": "Wire save/load and data-driven content definitions",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-1-foundation-hardening",
+      "title": "Harden the runnable scaffold and content wiring",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-1-validation",
+      "title": "Run stack-appropriate validation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-2-4-data-boundaries",
+      "title": "Split authored content domains and bootstrap sessions through core rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-2-overworld-interactables",
+      "title": "Add movement-budgeted overworld interactions, resource sites, and town capture flow",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-town-economy-loop",
+      "title": "Implement the first town economy, building, recruitment, and hero progression loop",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-3-battle-depth",
+      "title": "Replace the single-stack battle shell with multi-stack tactical combat rules",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-2-4-validation",
+      "title": "Run repository-local validation for the expanded content graph and scene wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-scenario-objectives",
+      "title": "Add authored scenario objectives and runtime victory-defeat handling",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-enemy-pressure-turns",
+      "title": "Implement the first enemy overworld pressure turn with raids, pillage, and siege state",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-5-objective-and-threat-ui",
+      "title": "Expose scenario objectives, threat state, and outcome summaries through thin scene controllers",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-validation",
+      "title": "Re-run repository-local validation for objectives and enemy-turn content",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-artifact-loadout-system",
+      "title": "Implement hero artifacts, equipment slots, and durable save-backed bonuses",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-2-artifact-pickups",
+      "title": "Add authored artifact pickups and overworld recovery flow",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-artifact-validation",
+      "title": "Re-run repository-local validation for artifact content and save-state wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-spellbook-state",
+      "title": "Implement authored spells, hero spellbook state, and mana persistence",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-2-3-spell-simulation",
+      "title": "Add overworld and tactical battle spell effects through core rules",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-4-spell-validation",
+      "title": "Re-run repository-local validation for spell content and scene wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-directed-enemy-adventure",
+      "title": "Upgrade enemy overworld pressure into directed raid movement and target selection",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-3-battle-ai-upgrade",
+      "title": "Improve tactical enemy AI for spells, ranged pressure, closing, and focus fire",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-5-ai-validation",
+      "title": "Re-run repository-local validation for the AI systems slice",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-town-visit-screen",
+      "title": "Add a dedicated town visit screen with core-backed building and recruitment actions",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-mage-guild-progression",
+      "title": "Add tiered town spell-learning progression that plugs into hero spellbooks",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-town-ui-validation",
+      "title": "Re-run repository-local validation for the town interaction slice",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-scenario-scripting-hooks",
+      "title": "Add authored scenario scripting hooks with durable trigger state and map mutations",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-5-scenario-script-validation",
+      "title": "Re-run repository-local validation for the scenario scripting slice",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-campaign-progression",
+      "title": "Add durable campaign progression, unlock tracking, and carryover bundles",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-6-campaign-validation",
+      "title": "Re-run repository-local validation for the campaign progression slice",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-artifact-inventory-hardening",
+      "title": "Harden hero artifact inventory, swap-safe equipment, and duplicate-safe ownership rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-hero-management-ui",
+      "title": "Expose hero artifact inventory management through thin overworld and town controllers",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-artifact-inventory-validation",
+      "title": "Re-run repository-local validation for the artifact inventory hardening slice",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-save-management-service",
+      "title": "Replace the single-slot save path with structured manual/autosave management and hardened restore normalization",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-save-browser-ui",
+      "title": "Expose a real main-menu save browser plus in-game manual slot selection without pushing save logic into scene controllers",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-save-management-validation",
+      "title": "Re-run repository-local validation for save-browser scene wiring and save-management assumptions",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-skirmish-browser-and-start-setup",
+      "title": "Add a release-facing skirmish browser plus difficulty-based start setup through the shared session bootstrap path",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-skirmish-validation",
+      "title": "Re-run repository-local validation for skirmish metadata, launch-mode save summaries, and menu setup wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-core-difficulty-simulation",
+      "title": "Make saved difficulty materially affect overworld and tactical gameplay through shared core rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-difficulty-validation",
+      "title": "Re-run repository-local validation for difficulty integration and save-compatibility assumptions",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-multi-hero-command-layer",
+      "title": "Finish the multi-hero roster, Wayfarers Hall, transfer, and secondary-defeat simulation slice",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-multi-hero-validation",
+      "title": "Re-run repository-local validation for hero-command content, scene wiring, and carryover assumptions",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-2-overworld-fog-and-scouting",
+      "title": "Make overworld exploration matter with save-backed fog-of-war, scouting radius, and visibility-gated information flow",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-2-fog-validation",
+      "title": "Re-run repository-local validation for fog/scouting, legacy-save normalization, and overworld UI wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-3-authored-unit-abilities",
+      "title": "Deepen tactical combat with authored unit abilities and durable status interactions",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-3-unit-ability-validation",
+      "title": "Re-run repository-local validation for unit ability content, battle rules, and AI/status wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-town-faction-progression",
+      "title": "Deepen faction identity and town progression with authored dwelling upgrades, weekly musters, and blocker-aware build rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-town-faction-validation",
+      "title": "Re-run repository-local validation for faction-town progression content, weekly-growth rules, and town-shell wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-campaign-browser-and-authored-progression",
+      "title": "Broaden authored campaign progression and replace the default-campaign button with a release-facing campaign browser",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-campaign-browser-validation",
+      "title": "Re-run repository-local validation for campaign chapter metadata, browser hooks, and campaign save-summary wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-settings-and-onboarding-shell",
+      "title": "Add persistent settings, onboarding surfacing, and accessibility shell controls through a release-facing main-menu tab set",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-settings-and-onboarding-validation",
+      "title": "Re-run repository-local validation for settings persistence, onboarding hooks, and menu settings-help wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-scenario-outcome-shell",
+      "title": "Add a dedicated post-scenario outcome flow with campaign progression recap, carryover surfacing, and skirmish retry-return actions",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-scenario-outcome-validation",
+      "title": "Re-run repository-local validation for outcome routing, recap builders, and dedicated result-shell hooks",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-enemy-empire-management",
+      "title": "Deepen enemy empire management so hostile towns build, recruit, and reinforce field pressure through authored economy state",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-5-enemy-empire-validation",
+      "title": "Re-run repository-local validation for enemy empire state, dynamic raid armies, and public threat surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-town-defense-battle-flow",
+      "title": "Convert hostile raid pressure into real town-defense battles with durable overworld consequences",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-5-town-defense-validation",
+      "title": "Re-run repository-local validation for queued defense-battle routing, raid survivor syncing, and town-loss state",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-town-shell-release-polish",
+      "title": "Make the town shell feel release-facing with richer management presentation, defense watch, and frontier pressure surfacing",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-town-shell-validation",
+      "title": "Re-run repository-local validation for town-shell release polish hooks, layout nodes, and core summaries",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-second-campaign-arc",
+      "title": "Add a second fully authored campaign arc with original chapters, encounters, towns, and carryover wiring",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-campaign-breadth-validation",
+      "title": "Re-run repository-local validation for multi-arc campaign breadth, content wiring, and campaign-browser summaries",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-overworld-shell-release-polish",
+      "title": "Make the overworld shell feel release-facing with richer command, frontier, scouting, and dispatch presentation",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-overworld-shell-validation",
+      "title": "Re-run repository-local validation for overworld-shell release polish hooks, layout nodes, and core summaries",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-shell-release-polish",
+      "title": "Make the battle shell feel release-facing with stronger tactical presentation, initiative visibility, status surfacing, and clearer action guidance",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-shell-validation",
+      "title": "Re-run repository-local validation for battle-shell release polish hooks, layout nodes, core summaries, and save-control wiring",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-save-integrity-hardening",
+      "title": "Harden release-facing save/load integrity with stronger slot metadata, explicit recovery or blocking rules, and clearer resume-state surfacing",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-save-integrity-validation",
+      "title": "Re-run repository-local validation for save-integrity guardrails, save-browser state messaging, and restore-path assumptions",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-strategic-enemy-expansion",
+      "title": "Deepen hostile expansion so enemy raids contest authored sites, relics, neutral fronts, retake pressure, and objective anchors through save-backed core rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-strategic-enemy-validation",
+      "title": "Re-run repository-local validation for strategic enemy contestation, persisted node metadata, and overworld threat surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-in-session-save-controls",
+      "title": "Add release-facing in-session save controls, latest-save context, and safe menu-return resume flow across active play shells",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-in-session-save-validation",
+      "title": "Re-run repository-local validation for router-driven save controls, active-shell wiring, and outcome save support",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-authored-hero-roster-and-scenario-variety",
+      "title": "Expand the authored hero roster, progression-facing identities, and scenario variety across campaign and skirmish fronts",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-authored-roster-and-scenario-validation",
+      "title": "Re-run repository-local validation for hero metadata breadth, multi-faction campaign starts, and skirmish-front coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-authored-scenario-identity",
+      "title": "Deepen authored scenario scripting, neutral encounter variety, and chapter-specific objective-event identity across campaign and skirmish fronts",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-authored-scenario-identity-validation",
+      "title": "Re-run repository-local validation for reactive hook coverage, encounter-driven side objectives, and scenario-pulse surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-town-depth-and-faction-asymmetry",
+      "title": "Deepen town progression, advanced building payoff, and faction-specific readiness-pressure tradeoffs across Embercourt and Mireclaw",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-town-depth-validation",
+      "title": "Re-run repository-local validation for advanced town works, asymmetric pressure-readiness outputs, and late-game town coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-3-battle-faction-identity-and-late-fight-payoff",
+      "title": "Deepen Embercourt and Mireclaw tactical combat identity with doctrine-backed status payoffs, faction-specific spell riders, and stronger late-fight roster payoff",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-3-battle-faction-identity-validation",
+      "title": "Re-run repository-local validation for faction-specific battle payloads, doctrine hooks, and late-fight AI payoff coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-3-battle-variety-and-commander-context",
+      "title": "Broaden battle encounter variety, deepen commander identity, and add stronger terrain-context payoff through the existing battle rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-3-battle-variety-validation",
+      "title": "Re-run repository-local validation for battle variety, commander payloads, and terrain-context combat payoff coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-3-battle-cohesion-and-momentum",
+      "title": "Add morale-cohesion pressure, battlefield momentum, and commander-tempo support through the existing battle rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-3-battle-cohesion-validation",
+      "title": "Re-run repository-local validation for cohesion state, momentum hooks, and morale-aware combat scoring coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-third-playable-faction",
+      "title": "Add a third fully playable original faction across town, battle, scenario, and campaign content through the existing data-driven architecture",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-third-playable-faction-validation",
+      "title": "Re-run repository-local validation for third-faction content, doctrine hooks, scenario entry, and full-system playability coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-overworld-logistics-sites",
+      "title": "Deepen overworld strategic variety with neutral dwellings, faction outposts, and logistics map objects through the existing content pipeline",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-overworld-logistics-validation",
+      "title": "Re-run repository-local validation for overworld logistics sites, contestation hooks, and scenario placement coverage",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-enemy-empire-personality",
+      "title": "Deepen hostile empire personality, faction-specific raid planning, and scenario pressure variety through the existing strategic systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-enemy-empire-personality-validation",
+      "title": "Re-run repository-local validation for faction-specific enemy strategy hooks, authored pressure variety, and hostile summary surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-late-game-capital-escalation",
+      "title": "Deepen late-game capital pressure, stronghold escalation, and finale objective identity through existing town, enemy, and scenario systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-late-game-capital-escalation-validation",
+      "title": "Re-run repository-local validation for capital-project escalation, hostile finale pressure, and summary surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-5-capital-front-battle-identity",
+      "title": "Deepen capital-front battle identity, siege-lane encounter depth, and finale assault variety through existing battle, scenario, town, and encounter systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-5-capital-front-battle-identity-validation",
+      "title": "Re-run repository-local validation for capital-front battle identity, finale assault content, and battle-summary surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-6-capital-logistics-recovery-planning",
+      "title": "Deepen capital projects, logistics chains, and raid recovery planning through existing town and overworld rules",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-6-capital-logistics-recovery-validation",
+      "title": "Re-run repository-local validation for capital logistics plans, vulnerability payoffs, and recovery-planning surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-6-strategic-response-orders",
+      "title": "Turn capital logistics disruption and town recovery pressure into active player-side strategic response orders",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-6-strategic-response-validation",
+      "title": "Re-run repository-local validation for strategic response orders, hostile logistics denial, and command-surface surfacing",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-4-6-town-market-exchange-gameplay",
+      "title": "Turn authored market and exchange buildings into active player-side economy gameplay through existing town systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-4-6-town-market-exchange-validation",
+      "title": "Re-run repository-local validation for town market actions, exchange-rate surfacing, and hostile treasury reuse",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-campaign-briefing-journal-layer",
+      "title": "Add release-facing campaign briefings, aftermath debriefs, and persistent journal surfacing through the existing campaign and outcome systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-campaign-briefing-journal-validation",
+      "title": "Re-run repository-local validation for authored campaign narrative payloads, journal surfacing, and outcome-shell debrief hooks",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-selection-commander-preview-layer",
+      "title": "Add release-facing commander and loadout previews to campaign and skirmish selection through existing hero and scenario data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-selection-commander-preview-validation",
+      "title": "Re-run repository-local validation for commander-preview APIs, menu surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-selection-operational-board-layer",
+      "title": "Add release-facing scenario-start operational boards and battlefield-intel previews through existing scenario and encounter data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-selection-operational-board-validation",
+      "title": "Re-run repository-local validation for operational-board APIs, menu surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-overworld-start-command-briefing-layer",
+      "title": "Add release-facing first-turn command briefings inside the real overworld scenario start flow using existing runtime data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-overworld-start-command-briefing-validation",
+      "title": "Re-run repository-local validation for first-turn briefing APIs, overworld-shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-start-tactical-briefing-layer",
+      "title": "Add release-facing battle-start tactical briefings inside the real battle shell entry flow using existing battle data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-start-tactical-briefing-validation",
+      "title": "Re-run repository-local validation for tactical-briefing APIs, battle-shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-town-defense-outlook-dispatch-board",
+      "title": "Add a release-facing town-side defense outlook and dispatch-readiness board inside the real town shell using existing runtime data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-town-defense-outlook-dispatch-board-validation",
+      "title": "Re-run repository-local validation for town-outlook APIs, town-shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-risk-readiness-board",
+      "title": "Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-risk-readiness-board-validation",
+      "title": "Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-objective-pressure-board",
+      "title": "Add tactical battlefield objectives and hazard pressure through the existing battle payload, encounter content, and battle shell surfaces",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-objective-pressure-board-validation",
+      "title": "Re-run repository-local validation for battle-objective payloads, AI scoring, shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-campaign-arc-completion-surfacing",
+      "title": "Add authored campaign arc-goal and finale-completion surfacing through the existing campaign browser and outcome flow",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-campaign-arc-completion-validation",
+      "title": "Re-run repository-local validation for campaign finale surfacing, outcome recap wiring, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-town-order-readiness-ledger",
+      "title": "Add a release-facing town order-readiness and affordability ledger using existing build, recruit, market, response, and hero-command data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-town-order-readiness-ledger-validation",
+      "title": "Re-run repository-local validation for town order-readiness APIs, town-shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-overworld-command-commitment-board",
+      "title": "Add a release-facing overworld command commitment board using existing context, logistics, hero-coverage, and frontier-risk data",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-overworld-command-commitment-board-validation",
+      "title": "Re-run repository-local validation for overworld commitment-board APIs, shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-order-consequence-board",
+      "title": "Add a release-facing battle order consequence board using existing action, damage, retaliation, objective, spell, and hostile-reply context",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-order-consequence-board-validation",
+      "title": "Re-run repository-local validation for battle order-consequence APIs, shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-battle-spell-timing-board",
+      "title": "Add a release-facing battle spell-and-ability timing board using existing spell actions, live statuses, support windows, protection needs, and hostile burst risk",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-battle-spell-timing-board-validation",
+      "title": "Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-overworld-route-security-escort",
+      "title": "Add a release-facing overworld logistics escort and route-security pass through the existing overworld, town, hero-command, and enemy systems",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-overworld-route-security-escort-validation",
+      "title": "Re-run repository-local validation for overworld escort-route APIs, hostile contestation, and save-version preservation",
+      "status": "completed",
+      "difficulty": "medium"
+    }
+  ],
+  "notes": [
+    "Initial repo created at /root/dev/heroes-like.",
+    "Engine lock recorded in project.md: Godot 4 stable series with GDScript, JSON content, and JSON save snapshots.",
+    "Current run is implementing the first runnable foundation slice across boot, menu, overworld, battle, and persistence.",
+    "Foundation implemented as runnable shell: boot -> menu -> overworld -> battle -> save/load -> resume.",
+    "Validation completed for JSON payload parsing in repository content; headless Godot runtime not available in environment.",
+    "Current run audited the generated scaffold for boot blockers, brittle scene flow, and content id mismatches before expanding scope.",
+    "Foundation hardening completed: fixed the missing project icon target, corrected scene node paths, removed hardcoded battle setup, and normalized scenario -> encounter -> army-group references.",
+    "Repository-local validation passed for project targets, autoload files, scene signal handlers, and content cross references; a Godot executable is still unavailable in this environment.",
+    "This run split gameplay content into factions, heroes, units, army groups, towns, buildings, resource sites, encounters, and scenarios with stable ids and cross-reference validation.",
+    "Scenario startup now routes through core rules modules instead of scene-owned state construction.",
+    "The overworld now supports movement points, resource site collection, town capture, daily income, building construction, recruit growth, stack recruitment, and hero experience/leveling.",
+    "Tactical combat now resolves multi-stack armies with initiative order, ranged and melee actions, defend, retaliation, terrain distance modifiers, and survivor sync back into the overworld army.",
+    "Expanded validation passed via tests/validate_repo.py plus Python bytecode compilation; headless Godot is still unavailable in this environment.",
+    "This run added authored scenario objectives with session-level victory and defeat state stored directly in save data.",
+    "A new enemy overworld turn layer now grows faction pressure, spawns raid encounters, pillages player resources, and escalates siege pressure against player towns.",
+    "Main menu and overworld presentation now surface objective progress, hostile pressure, and completed-scenario summaries while keeping simulation logic in scripts/core.",
+    "Repository-local validation passed again after expanding the content graph checks to cover objectives and enemy-faction turn data; a Godot executable is still unavailable in this environment.",
+    "This run added authored hero artifacts with dedicated content validation and scenario pickup placements.",
+    "Hero loadouts now persist through the save boundary with equipment slots, backpack state, and collected artifact caches normalized for older saves.",
+    "Artifact bonuses now affect real simulation by modifying overworld movement, daily economy, and battle attack, defense, and initiative from core rules.",
+    "Repository-local validation passed again for the artifact content graph and updated scene wiring; a Godot executable is still unavailable in this environment.",
+    "This run added authored spell content plus hero template spell references and validator coverage for the new spell domain.",
+    "Hero state now persists a spellbook and mana pool through the save boundary, with older sessions normalizing to the authored starting spell list.",
+    "The first spell slice now affects real simulation through an overworld movement-restoration spell and tactical battle damage, defense, and initiative spell effects in scripts/core.",
+    "Overworld and battle shells now expose spellbook status and spell actions through thin dynamic UI bars while keeping spell resolution in core rules.",
+    "Repository-local validation passed again for the spell content graph and updated scene wiring; a Godot executable is still unavailable in this environment.",
+    "This run is upgrading AI with directed hostile adventure-map raids and stronger tactical enemy decision-making.",
+    "Enemy overworld pressure now routes through directed raid planning, with hostile encounters choosing objective and town targets, marching across the map, and only counting siege pressure when raids actually reach their assigned fronts.",
+    "Battle encounters can now author enemy commanders with command and spellbook state, and tactical enemy turns score spell casts, ranged fire, melee closes, and wounded-target focus through dedicated core AI rules.",
+    "Repository-local validation passed again after adding the directed AI slice and encounter commander content; no godot4 or godot executable is available in this environment.",
+    "This run is implementing a first dedicated town visit screen plus mage-guild style town spell access on top of the existing economy and spell systems.",
+    "The overworld shell now uses a sectioned command layout with banner, command wing, frontier watch, context, and map panels instead of a stacked debug readout.",
+    "Release-facing overworld status, scout-net, objective board, frontier watch, active-tile context, and dispatch messaging are now shaped in OverworldRules.gd so the scene controller stays thin.",
+    "Repository-local validation now fails if the overworld shell loses its required layout nodes or stops calling the new core summary helpers.",
+    "Owned towns now route into a dedicated town scene backed by TownRules, keeping build, recruit, and study actions out of the overworld controller while preserving the same save-backed simulation state.",
+    "Town and building content now author tiered spell libraries and spell-tier structures, letting developed towns teach additional field and battle spells directly into the hero spellbook.",
+    "Repository-local validation passed again for the town screen, town-route scene wiring, and mage-guild content graph; no godot4 or godot executable is available in this environment.",
+    "This run is implementing a reusable scenario scripting and hooks layer on top of objective state so authored events can grant rewards, mutate map state, and react to campaign progress without scene-owned logic.",
+    "Scenario content now supports declarative script hooks with save-backed fired-state, event logs, and reusable conditions for day thresholds, town ownership, encounter clears, and objective progress.",
+    "The River Pass scenario now authors triggered rewards, relief events, spawned counterattacks, and town/map mutations through core rules instead of scene callbacks.",
+    "Repository-local validation passed again after adding the scenario scripting slice and expanding validator coverage for authored hook conditions/effects; no godot4 or godot executable is available in this environment.",
+    "This run is adding campaign-grade progression scaffolding with persistent chapter unlock state, scenario completion records, and carryover bundles that can feed future scenarios.",
+    "Campaign progression is now backed by authored content in content/campaigns.json, with a two-chapter Reedfall campaign that unlocks Causeway Stand after River Pass and imports resources, hero progression, spells, artifacts, and carryover flags into the downstream scenario.",
+    "Repository-local validation now derives required content files from ContentService.gd and validates campaign startability, chapter references, unlock requirements, and carryover wiring; python3 tests/validate_repo.py passes, while no godot4 or godot executable is available in this environment.",
+    "This run is hardening hero artifact inventory state so pickups, scripted rewards, and campaign carryover stay duplicate-safe while equip, unequip, and swap flow through canonical core rules.",
+    "ArtifactRules.gd now canonicalizes unique artifact ownership across equipped slots and pack inventory, while OverworldRules.gd and TownRules.gd expose the same swap-safe management actions without moving state logic into scene controllers.",
+    "Scenario scripting now supports direct award_artifact effects through the same duplicate-safe artifact claim path, and repository-local validation also checks scripted artifact awards plus repeated authored artifact nodes within a scenario.",
+    "This run is replacing the blind single-slot save flow with structured manual slots, autosave support, hardened resume normalization, and a real main-menu save browser.",
+    "SaveService.gd now manages three manual expedition slots plus autosave, exposes slot metadata summaries for UI, and validates loaded payloads before resuming them into runtime session state.",
+    "Resume flow now tolerates older saves, rejects missing-scenario or newer-version payloads, and safely drops broken battle or town resume state back to an overworld session instead of trusting raw JSON blindly.",
+    "MainMenu.tscn now surfaces a real save browser with slot inspection and load gating, while overworld and town scenes select an explicit manual slot for saves and autosave on scene transitions plus day advancement.",
+    "Repository-local validation passed again after adding save-management API checks and save-browser scene wiring; no godot4 or godot executable is available in this environment.",
+    "This run is implementing a distinct skirmish browser and pre-launch setup flow while keeping campaign chapter starts, save-browser resume, and progression semantics on the existing durable bootstrap path.",
+    "The main menu now separates campaign actions from a skirmish browser, uses authored scenario selection metadata plus a real difficulty setup before launch, and persists skirmish launch mode in session/save summaries so campaign progression is not mutated by skirmish replays.",
+    "Repository-local validation passes for the skirmish slice via python3 tests/validate_repo.py and Python bytecode compilation; no godot4 or godot executable is available in this environment for a headless engine smoke test.",
+    "This run is hardening difficulty so the saved session.difficulty field drives real overworld economy and pressure plus tactical combat resolution instead of staying menu-only metadata.",
+    "DifficultyRules.gd now centralizes profile data for story, normal, and hard, and fresh or restored sessions derive movement, income, reward, raid, initiative, and damage modifiers from that shared core path without changing save version 9.",
+    "Repository-local validation now checks difficulty integration tokens across ScenarioFactory, OverworldRules, EnemyTurnRules, EnemyAdventureRules, BattleRules, and BattleAiRules; no godot4 or godot executable is available in this environment for a headless engine smoke test.",
+    "This run finished the multi-hero command slice by hardening save-backed player roster normalization, Wayfarers Hall hiring, town-only hero switching, garrison transfer, secondary-hero defeat cleanup, and primary-hero campaign carryover handling in scripts/core.",
+    "Overworld and town shells now expose thin command, tavern, and transfer surfaces instead of leaving the slice core-only, and the overworld map marks active versus secondary hero positions for switching context.",
+    "Repository-local validation passes for the expanded hero-command slice via python3 tests/validate_repo.py, including the new content assumptions and overworld/town UI wiring checks.",
+    "This run made multi-hero exploration materially matter by adding save-backed overworld fog state, explored-memory normalization for legacy saves, and per-hero scouting coverage aggregated from progression and artifacts in scripts/core.",
+    "OverworldShell.gd now abstracts unseen tiles, suppresses hidden town/resource/artifact/encounter information, and surfaces exploration progress while still rendering active and secondary hero positions through visible scouting coverage.",
+    "Repository-local validation passes for the fog/scouting slice via python3 tests/validate_repo.py, including checks for save-version preservation, normalization hooks, scripted visibility gating, and overworld UI wiring.",
+    "This run is deepening tactical combat with authored unit abilities, status interactions, and ability-aware AI on top of the current abstract distance-based battle model.",
+    "Tactical combat now authors reach, brace, harry, backstab, shielding, and volley directly in units content, with durable round-to-round status effects normalized through SpellRules and applied in BattleRules instead of placeholder text.",
+    "Battle AI now values status setup and payoff, while the battle shell stays thin by rendering rule-provided roster summaries and disabling unavailable actions through core-owned action availability.",
+    "Repository-local validation passed for the combat-depth slice via python3 tests/validate_repo.py, including unit-ability schema, battle/status tokens, and battle UI wiring.",
+    "This run deepened towns into authored faction engines with economy profiles, dwelling upgrade chains, weekly muster growth, normalized prerequisite graphs, and blocker-aware construction surfaced through thin town UI.",
+    "Repository-local validation passed for the town/faction progression slice via python3 tests/validate_repo.py, including schema checks for faction/town/building progression plus source checks for weekly-muster and town-shell wiring.",
+    "This run broadened campaign progression into a three-chapter authored Reedfall chain, adding a new downstream finale with unlock and carryover wiring instead of stopping at the previous thin default flow.",
+    "MainMenu.tscn and MainMenu.gd now expose a release-facing campaign browser with campaign selection, chapter status, retry/start actions, and authored carryover context driven by CampaignProgression.gd and CampaignRules.gd rather than menu-owned progression logic.",
+    "Save summaries now prefer explicit campaign session flags, and repository-local validation passed again after adding checks for campaign chapter metadata, browser hooks, and campaign-browser scene wiring.",
+    "This run added a dedicated SettingsService autoload with its own user config file, keeping presentation, audio, and accessibility preferences separate from campaign progression and expedition save data.",
+    "MainMenu.tscn and MainMenu.gd now use a tabbed release-facing shell with play, guide, settings, and saves views, including help topics for campaign, skirmish, overworld, town, battle, and save flow.",
+    "Repository-local validation passed again after adding checks for the settings autoload registration, persistence tokens, onboarding topics, and menu settings-help hooks.",
+    "This run added a dedicated ScenarioOutcomeShell and rewired resolved sessions through AppRouter so campaign and skirmish results land on a real recap flow instead of dropping straight back to the menu.",
+    "ScenarioRules.gd now builds shared post-scenario recap models and follow-up actions, while CampaignRules.gd surfaces chapter records, downstream unlock state, and carryover import-export consequences from the real campaign profile.",
+    "Resolved sessions now overwrite autosave before the result shell opens, and repository-local validation passed again after adding checks for outcome routing, recap builders, and result-shell scene wiring.",
+    "This run turned hostile factions into real overworld empires with per-faction treasury, posture, building, recruitment, and reinforcement decisions kept in scripts/core instead of scene controllers.",
+    "Enemy raid encounters now normalize dynamic enemy-army payloads for legacy saves, letting weekly musters and town recruitment materially increase raid pillage pressure and downstream battle strength without changing save version 9.",
+    "Repository-local validation passed again after adding checks for enemy empire state, dynamic raid-army battle wiring, and visibility-safe threat surfacing.",
+    "This run converted hostile town pressure into queued defense battles by extending the existing encounter battle flow with town-defense context, defender commander sources, and post-battle raid-garrison syncing.",
+    "Town assaults now resolve through real combat even when the primary hero is elsewhere, falling back to a town-captain commander payload and routing battle entry through the same thin AppRouter/BattleShell path as normal encounters.",
+    "Repository-local validation passed again after adding checks for town-defense battle routing, battle-context sync hooks, and town-loss consequence handling.",
+    "This run polished the town shell into a release-facing management surface with a sectioned layout, wrapped action controls, and dedicated hall, defense, frontier-watch, and dispatch panels instead of a single stacked debug column.",
+    "TownRules.gd now shapes richer town-facing summaries for identity, construction ledgers, recruit reserves, stationed defenders, visibility-safe local raid pressure, and clearer order-result dispatch text so the scene controller only binds labels and actions.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding town-shell polish coverage for the new layout nodes and core summary hooks.",
+    "This run broadened the authored campaign package from a single Reedfall arc into two full three-chapter arcs by adding the new Stonewake campaign path led by Caelen Ashgrove.",
+    "The new Stonewake scenarios add original maps, towns, encounter chains, carryover flag wiring, and browser-visible metadata while reusing the existing CampaignRules and CampaignProgression flows instead of adding menu-owned branches.",
+    "CampaignRules.gd now advertises region, chapter count, and victory progress directly in campaign-browser summaries, and repository-local validation now enforces at least two authored campaign arcs with at least six total chapters.",
+    "This run polished the battle shell into a release-facing tactical surface with commander boards, initiative visibility, active-stack and target context, effect surfacing, recent combat dispatch, and clearer action guidance while keeping scene mutation thin.",
+    "BattleRules.gd now owns battle-shell summaries plus durable recent event feed shaping, SpellRules.gd now authors spell-action summaries, and BattleShell.gd reuses the expedition save controls without changing save version 9.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding battle-shell release polish coverage for the new layout nodes, summary helpers, and save-control wiring.",
+    "This run hardened release-facing save/load integrity with live slot reinspection, service-owned save timestamps, explicit resume targets, and stronger partial-payload guardrails in SaveService.gd instead of scene controllers.",
+    "Valid saves now distinguish expedition resume versus outcome review, manual-slot and autosave summaries surface blocked or recovered state clearly, and stale slot metadata no longer drives restore decisions.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding save-integrity coverage for service guardrails, menu button state, and restore-path assumptions.",
+    "This run deepened hostile map pressure so enemy raids can contest authored resource sites, relic caches, neutral encounter fronts, retake-sensitive towns, and objective anchors through the same save-backed overworld state the player uses.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding strategic-enemy coverage for contestable map targets, persisted node metadata, and visibility-safe overworld threat surfacing.",
+    "This run moved active-session saving into a shared runtime path so overworld, town, battle, and outcome shells all expose manual-slot saves, latest-ready context, and safe return-to-menu behavior without owning persistence logic themselves.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding in-session save coverage for router-driven resume flow, shell save surfaces, and resolved-outcome manual save support.",
+    "This run expanded hero content into a broader authored roster with progression-seeded specialties, faction-facing identity summaries, and summary helpers that keep recruitment and setup surfaces thin.",
+    "A new Mireclaw campaign arc plus a Mira-led skirmish front now broaden campaign and skirmish variety through the existing content model, while validator coverage enforces multi-faction campaign starts, skirmish-only fronts, and distinct lead-hero breadth.",
+    "This run deepened authored scenario identity with additional encounter-clearing side objectives, reactive counterattacks, relief events, enemy-pressure spikes, and faction-specific neutral encounter mixes across the existing campaign and skirmish fronts.",
+    "ScenarioScriptRules.gd now supports objective-not-met, raid-count, hook-dependency, and add_enemy_pressure hooks, while OverworldRules.gd surfaces recent scripted beats as a scenario pulse so chapter pressure stays legible without scene-owned mutation.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding authored-scenario identity coverage for reactive hooks, encounter side objectives, scripted spawns, and dispatch-visible event surfacing.",
+    "This run deepened town progression with advanced faction-specific buildings, stronger economy and recruitment asymmetry, and late-game outputs that materially change reserve quality, town readiness, and hostile pressure gain.",
+    "OverworldRules.gd now derives town reinforcement quality, battle readiness, and pressure output from authored build trees, spell access, garrisons, and new profile bonuses, while EnemyTurnRules.gd uses those shared metrics for build scoring, pressure gain, and defensive target strength.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding town-depth coverage for advanced build trees, asymmetric readiness-pressure signals, and release-facing town-output surfacing.",
+    "This run deepened Embercourt and Mireclaw battle identity through the existing combat stack by adding elite doctrine units, new late-tier unlock buildings, and broader authored army-group coverage instead of inventing a parallel faction battle system.",
+    "SpellRules.gd now supports attack_buff battle spells, BattleRules.gd derives doctrine bonuses from live stack state plus elite-ability support, and BattleAiRules.gd mirrors those hooks so enemy action choice respects formation-fire and wounded-collapse windows.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding battle-faction identity coverage for elite roster payloads, faction spell hooks, doctrine rules, and late-fight AI scoring.",
+    "This run broadened battle encounter variety with authored battlefield tags, specialized army groups, and commander battle traits so repeated rosters now produce distinct chokepoint, elevated-fire, ambush, bog-channel, and fortified-line fights.",
+    "ScenarioFactory.gd now persists player battle traits, BattleRules.gd normalizes encounter tags and commander traits into battle payloads without a save-version bump, and BattleAiRules.gd scores against those same context hooks for spell value, target pressure, and defend-versus-advance decisions.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding battle-variety coverage for battlefield tags, commander payloads, specialized encounter groups, and terrain-context combat scoring.",
+    "This run deepened tactical combat with persistent stack cohesion and battlefield momentum, so losses, isolation, commander traits, faction doctrines, terrain tags, and spell support now change real battle resolution instead of only changing shell copy.",
+    "BattleRules.gd now tracks cohesion and momentum on stacks, SpellRules.gd carries cohesion and momentum riders through authored battle modifiers, and BattleAiRules.gd scores around wavering targets, recovery buffs, and tempo spikes so both sides can exploit or stabilize breaks.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding morale-aware unit and spell payloads, cohesion/momentum battle-state hooks, and AI scoring coverage for break-and-recovery combat.",
+    "This run added Sunvault Compact as a third fully playable original faction with authored towns, buildings, units, heroes, spells, army groups, encounters, skirmish starts, and a dedicated three-chapter campaign arc through the existing data-driven content model.",
+    "Sunvault battle identity now resolves through relay-formation support, positive-effect resonance, elevated-fire payoff, and new commander spellbooks inside BattleRules.gd and BattleAiRules.gd, while TownRules.gd and OverworldRules.gd surface its economy and pressure profile without a save-version bump.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after expanding release-faction coverage to enforce Sunvault build trees, spell hooks, hero loadouts, encounter anchors, and campaign-skirmish entry points.",
+    "This run deepened overworld strategic variety by turning neutral dwellings, faction outposts, and frontier shrines into reclaimable logistics sites with recurring income, recruit musters, scouting coverage, and shrine-taught overworld spell access through the existing resource-node pipeline.",
+    "OverworldRules.gd now resolves persistent site control, nearest-town logistics musters, outpost sight rings, and claim-side recruit or spell payloads, while EnemyTurnRules.gd and EnemyAdventureRules.gd treat those same sites as income, pressure, reinforcement, and denial targets instead of disposable flavor objects.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding logistics-site coverage for authored site families, scenario placements, shared overworld rule hooks, and hostile contestation priorities.",
+    "This run finished the hostile-empire personality slice by giving Embercourt, Mireclaw, and Sunvault faction-authored enemy strategy profiles plus scenario-authored priority fronts and overrides through the existing enemy turn and raid rules.",
+    "EnemyTurnRules.gd now uses those profiles for build scoring, recruit ordering, garrison-versus-raid reinforcement, raid cadence, and public frontier-watch posture lines, while EnemyAdventureRules.gd uses the same data for target-family weighting across towns, logistics sites, relics, encounters, and hero pressure.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding hostile-personality coverage for faction strategy content, authored priority fronts, logistics-site focus, and hostile-summary surfacing.",
+    "This run deepened late-game strategic escalation by giving major towns strategic roles and faction-specific capital projects, then routing those anchors through the existing town, enemy-turn, and scenario-hook systems instead of inventing a separate finale layer.",
+    "OverworldRules.gd now exposes strategic-role and capital-project state from authored town/building content, while EnemyTurnRules.gd and EnemyAdventureRules.gd turn that state into stronger capital defense budgets, faster raid cadence, and more legible hostile frontier-watch summaries.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding explicit coverage for capital-project content, anchor-front targeting, hostile summary surfacing, and late-front scenario escalation hooks.",
+    "This run deepened capital-front combat identity by deriving battlefront summaries and assault tags from authored town context, then applying those tags in BattleRules.gd and BattleAiRules.gd for fortress lanes, reserve waves, wall pressure, and battery nests without adding a parallel siege subsystem.",
+    "Late-front encounter content now includes signature Embercourt reserve columns, Mireclaw breach surges, and Sunvault battery arrays, and finale scenario hooks now spawn those signature encounters when capital projects come online instead of default late-war filler raids.",
+    "Repository-local validation, Python bytecode compilation, and JSON parsing all passed again after adding explicit coverage for capital-front battle tags, battle-summary surfacing, signature finale encounters, and scripted capital-front reinforcement hooks.",
+    "This run finished the interrupted capital-logistics-recovery slice by authoring full logistics plans for strategic towns, adding vulnerability and recovery fields to capital projects, and turning missing logistics anchors into real readiness, pressure, and recruit-output penalties through OverworldRules.gd instead of summary-only text.",
+    "TownRules.gd now surfaces logistics impact summaries, richer capital-watch lines, and stronger capital-project build projections, while EnemyTurnRules.gd values recovery relief on capitals and strongholds during build scoring; repository-local validation passed again after adding coverage for strategic logistics plans, project support requirements, vulnerability penalties, and recovery guards.",
+    "This run turned that logistics-and-recovery state into active strategy by adding movement-costed site response orders, town recovery stabilization actions, and response-aware disruption handling through OverworldRules.gd, HeroCommandRules.gd, TownRules.gd, and the existing overworld or town command surfaces.",
+    "Persistent logistics sites now author response profiles, playable fronts seed recovery pressure and linked site targets, and EnemyAdventureRules.gd actively contests secured routes by valuing active response sites and worsening disruption when relief lines are overrun.",
+    "Repository-local validation passed again after adding strategic response orders, hostile denial coverage, town and overworld response-surface wiring, Python bytecode compilation for tests/validate_repo.py, and JSON parsing for ops/progress.json.",
+    "This run turned authored market and exchange buildings into active economy play by adding exchange-hall summaries and trade actions in TownRules.gd plus shared market quote and execution helpers in OverworldRules.gd instead of leaving Market Square, River Granary Exchange, and Resonant Exchange as flavor-only income text.",
+    "Exchange rates now derive from the current town's built market tier plus existing faction and town economy profiles, giving Embercourt better river timber trades, Sunvault better ore-relay trades, and baseline market squares real gold-versus-stockpile conversion tradeoffs without changing save version 9.",
+    "EnemyTurnRules.gd now reuses those same market helpers when valuing and affording builds, and repository-local validation passed again after adding market-surface coverage, hostile treasury reuse, Python bytecode compilation for tests/validate_repo.py, and JSON parsing for ops/progress.json.",
+    "This run turned authored campaigns into a release-facing narrative shell by adding chapter briefings, intel, stakes, aftermath beats, and persistent chronicle entries through CampaignRules.gd, ScenarioRules.gd, ScenarioSelectRules.gd, CampaignProgression.gd, and the existing main-menu plus outcome surfaces instead of creating a parallel codex subsystem.",
+    "content/campaigns.json now carries authored briefing and debrief text for every campaign chapter, the main menu surfaces a live campaign chronicle, skirmish setup surfaces authored scenario briefing context, and repository-local validation passed again after adding coverage for narrative payloads, menu journal nodes, and outcome-shell aftermath plus journal hooks.",
+    "This run added release-facing pre-battle commander previews to both campaign and skirmish selection by shaping preview summaries from actual scenario bootstrap state in ScenarioSelectRules.gd and campaign carryover-aware preview sessions in CampaignRules.gd, instead of creating a separate roster or planner subsystem.",
+    "MainMenu.tscn and MainMenu.gd now bind dedicated campaign and skirmish commander-preview labels, surfacing commander identity, command stats, battle traits, battle spellbook, artifact loadout, opening army mix, and expected front posture from existing hero, army-group, spell, artifact, encounter, and scenario data; repository-local validation passed again after adding preview-hook coverage while SAVE_VERSION remained 9.",
+    "This run added a release-facing operational board to campaign and skirmish launch flow by shaping terrain mix, enemy posture, pressure cadence, priority targets, opening objectives, likely first-contact encounters, battlefield identity, doctrine, and reinforcement-risk intel from existing scenario bootstrap state in ScenarioRules.gd.",
+    "CampaignRules.gd, CampaignProgression.gd, ScenarioSelectRules.gd, MainMenu.gd, and MainMenu.tscn now bind dedicated campaign and skirmish operational-board labels without adding a codex or planner subsystem; repository-local validation passed again after adding operational-board hook coverage while SAVE_VERSION remained 9.",
+    "This run added a one-shot first-turn command briefing inside the real overworld start flow by shaping opening posture, objective priorities, logistics exposure, pressure watch, and immediate orders from live scenario, scouting, town, logistics-site, and threat state in OverworldRules.gd instead of a separate tutorial or planner subsystem.",
+    "OverworldShell.gd and OverworldShell.tscn now bind a dedicated First Turn Briefing panel, persist the consumed launch briefing through autosave to avoid noisy resume repetition, and repository-local validation passed again after adding overworld-start briefing coverage while SAVE_VERSION remained 9.",
+    "This run added a one-shot tactical briefing inside the real battle entry flow by shaping battlefield identity, battle aim, enemy doctrine, opening pressure, decisive targets, and immediate cautions from live encounter, commander, doctrine, terrain-tag, objective, and battle-state data in BattleRules.gd instead of a tutorial or planner subsystem.",
+    "BattleShell.gd and BattleShell.tscn now bind a dedicated Tactical Briefing panel, persist the consumed entry briefing through autosave to avoid noisy battle-resume repetition, and repository-local validation passed again after adding battle-start briefing coverage while SAVE_VERSION remained 9.",
+    "This run added a release-facing next-day command-risk forecast inside the real overworld shell by shaping exposed-town, strained-logistics, objective-pressure, raid-window, and field-exposure warnings from live enemy pressure, scouting, readiness, and frontier-watch state in OverworldRules.gd instead of a planner or advisor subsystem.",
+    "OverworldShell.gd and OverworldShell.tscn now bind a live frontier-board Command Risk block plus a one-shot Next-Day Risk Forecast end-turn warning through the existing briefing panel, and repository-local validation plus Python bytecode compilation passed again while SAVE_VERSION remained 9.",
+    "This run added a release-facing defense outlook and dispatch-readiness board inside the real town shell by shaping wall posture, public raid pressure, response readiness, hero coverage, logistics strain, recovery delay, and capital-chain exposure from live town and overworld state in TownRules.gd instead of a planner, tutorial, or codex subsystem.",
+    "TownShell.gd and TownShell.tscn now bind a dedicated full-width Defense Outlook panel, while OverworldRules.gd exposes a shared visibility-safe public town-threat helper so the town board and existing overworld frontier logic read the same raid visibility boundary without duplicating save state.",
+    "Repository-local validation plus Python bytecode compilation passed again after adding town-outlook coverage, and SAVE_VERSION remained 9.",
+    "This run added a release-facing tactical risk and readiness board inside the real battle shell by shaping initiative swing, commander posture, line cohesion, ranged-lane pressure, decisive-target focus, objective urgency, and latest-shift messaging from existing live battle state instead of adding a separate advisor layer.",
+    "Repository-local validation, Python bytecode compilation, JSON parsing, and SAVE_VERSION verification all passed again after adding battle risk-board coverage while preserving save version 9.",
+    "This run extended the battle payload with authored tactical objectives and hazard pressure so control of batteries, pylons, posts, beacons, breach points, and hazard lanes now changes real combat pressure through the existing battle, encounter, scenario, and shell surfaces.",
+    "BattleRules.gd now normalizes and resolves field-objective control inside the live battle payload, BattleAiRules.gd values those same objectives when choosing advance, defend, spell, and attack actions, and battle-shell pressure or risk copy now reports that state through the existing surfaces instead of a parallel subsystem.",
+    "Repository-local validation, Python bytecode compilation, content JSON parsing, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding battle-objective coverage while preserving save version 9.",
+    "This run added authored campaign arc goals plus finale-completion titles and epilogues, then surfaced that state through CampaignRules.gd and CampaignProgression.gd without adding duplicate progression payload outside the existing campaign records.",
+    "Completed campaigns now default back to their finale chapter instead of quietly snapping to chapter one, while MainMenu.tscn, MainMenu.gd, ScenarioRules.gd, and ScenarioOutcomeShell.gd bind dedicated arc-status summaries through the existing campaign browser and result flow.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding campaign arc-completion coverage while preserving save version 9.",
+    "This run added a release-facing town order-readiness and affordability ledger inside the real town shell by shaping construction readiness, levy bottlenecks, exchange-coverable costs, response movement strain, recovery timeline, and wall-coverage consequences from live town state instead of a planner or advisor subsystem.",
+    "OverworldRules.gd now exposes exchange-aware town cost readiness from current reserves plus authored market rates, TownRules.gd ranks build, recruit, response, and hero-coverage pressure into a single ledger, and TownShell.gd plus TownShell.tscn bind that ledger as a thin presentation panel.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding town order-readiness coverage while preserving save version 9.",
+    "This run added a release-facing overworld command commitment board inside the real overworld shell by shaping immediate orders, route pressure, hero coverage, and hold consequences from active context, logistics, frontier risk, and current command posture instead of a planner or advisor subsystem.",
+    "OverworldRules.gd now authors both the commitment board and richer context-action summaries, while OverworldShell.gd plus OverworldShell.tscn bind the new commitment panel as thin presentation without moving mutation out of scripts/core.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding overworld command-commitment coverage while preserving save version 9.",
+    "This run added a release-facing battle order consequence board inside the real battle shell by shaping focused order, trade window, command tools, objective pull, and likely hostile reply from live action availability, damage windows, retaliation exposure, spell windows, and AI posture instead of a planner or advisor subsystem.",
+    "BattleRules.gd now owns read-only damage, retaliation, objective, and hostile-reply previews while BattleShell.gd plus BattleShell.tscn bind a dedicated consequence panel and richer order-button tooltips without moving mutation out of scripts/core.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding battle order-consequence coverage while preserving save version 9.",
+    "This run added a release-facing battle spell-and-ability timing board inside the real battle shell by shaping ready spell windows, support payoff, protection needs, status follow-through, and hostile burst risk from current battle payload only instead of a planner or advisor subsystem.",
+    "BattleRules.gd now owns the read-only timing board while SpellRules.gd adds timing-aware spell summaries and BattleShell.gd plus BattleShell.tscn bind the new timing panel as thin presentation without moving mutation out of scripts/core.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding battle spell-timing coverage while preserving save version 9.",
+    "This run deepened overworld logistics agency by turning the existing site-response order into a hero-bound escort commitment that now changes route pressure guard, weekly musters, recovery fallout, and hostile raid incentives through the same save-backed resource-node state.",
+    "OverworldRules.gd now persists escort commander identity and route-security rating on logistics sites, while EnemyAdventureRules.gd values and breaks those escorted routes directly so the player-facing order has real consequences without adding a parallel planner or advisor layer.",
+    "Repository-local validation, Python bytecode compilation, ops progress JSON parsing, and SAVE_VERSION verification all passed again after adding overworld escort-route coverage while preserving save version 9.",
+    "This run restored Godot 4.6 bootability by removing autoload/class_name collisions across all six autoload singletons, tightening strict-typing in ContentService.gd, and extending validator coverage so those compile blockers fail locally before gameplay work resumes."
+  ]
+}

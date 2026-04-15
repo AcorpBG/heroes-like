@@ -1,0 +1,242 @@
+{
+  "items": [
+    {
+      "id": "faction_embercourt",
+      "name": "Embercourt League",
+      "identity_summary": "Disciplined riverwardens who turn civic investment into steady levy and archer musters.",
+      "economy": {
+        "base_income": {"gold": 60},
+        "pressure_bonus": 0,
+        "per_category_income": {
+          "civic": {"gold": 15},
+          "dwelling": {"gold": 20},
+          "economy": {"gold": 70},
+          "support": {"gold": 40},
+          "magic": {"gold": 20}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 8,
+        "growth_bonus": {
+          "unit_river_guard": 1,
+          "unit_ember_archer": 1,
+          "unit_citadel_pikeward": 1
+        },
+        "cost_discount_percent": {
+          "unit_river_guard": 6,
+          "unit_ember_archer": 7,
+          "unit_citadel_pikeward": 4
+        }
+      },
+      "enemy_strategy": {
+        "build_category_weights": {
+          "civic": 1.2,
+          "dwelling": 0.95,
+          "economy": 1.2,
+          "support": 1.3,
+          "magic": 0.75
+        },
+        "build_value_weights": {
+          "income": 1.15,
+          "growth": 0.9,
+          "quality": 1.0,
+          "readiness": 1.45,
+          "pressure": 0.7
+        },
+        "raid_target_weights": {
+          "town": 1.35,
+          "resource": 0.75,
+          "artifact": 1.0,
+          "encounter": 0.9,
+          "hero": 0.8
+        },
+        "site_family_weights": {
+          "neutral_dwelling": 0.85,
+          "faction_outpost": 1.35,
+          "frontier_shrine": 0.8
+        },
+        "reinforcement": {
+          "garrison_bias": 1.35,
+          "raid_bias": 0.85,
+          "ranged_weight": 1.25,
+          "melee_weight": 1.0,
+          "low_tier_weight": 0.95,
+          "high_tier_weight": 1.15
+        },
+        "raid": {
+          "threshold_scale": 1.15,
+          "max_active_bonus": 0,
+          "pressure_commitment_scale": 1.1,
+          "objective_weight": 1.2,
+          "town_siege_weight": 1.35,
+          "site_denial_weight": 0.8,
+          "hero_hunt_weight": 0.8
+        }
+      },
+      "town_ids": ["town_riverwatch", "town_highwater_keep"],
+      "hero_ids": ["hero_lyra", "hero_caelen", "hero_mira", "hero_seren", "hero_torren"]
+    },
+    {
+      "id": "faction_mireclaw",
+      "name": "Mireclaw Covenant",
+      "identity_summary": "Predatory marsh clans whose dens and warrens swell broad weekly raiding pools.",
+      "economy": {
+        "base_income": {"gold": 35, "wood": 1},
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "civic": {"gold": 10},
+          "dwelling": {"gold": 36},
+          "economy": {"gold": 35},
+          "support": {"gold": 12},
+          "magic": {"gold": 12}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_blackbranch_cutthroat": 2,
+          "unit_mire_slinger": 2,
+          "unit_bog_brute": 1,
+          "unit_gorefen_ripper": 1
+        },
+        "cost_discount_percent": {
+          "unit_blackbranch_cutthroat": 10,
+          "unit_mire_slinger": 7,
+          "unit_bog_brute": 4,
+          "unit_gorefen_ripper": 4
+        }
+      },
+      "enemy_strategy": {
+        "build_category_weights": {
+          "civic": 0.8,
+          "dwelling": 1.35,
+          "economy": 0.95,
+          "support": 1.15,
+          "magic": 0.7
+        },
+        "build_value_weights": {
+          "income": 0.85,
+          "growth": 1.35,
+          "quality": 1.05,
+          "readiness": 0.7,
+          "pressure": 1.6
+        },
+        "raid_target_weights": {
+          "town": 0.9,
+          "resource": 1.2,
+          "artifact": 0.95,
+          "encounter": 1.15,
+          "hero": 1.25
+        },
+        "site_family_weights": {
+          "neutral_dwelling": 1.4,
+          "faction_outpost": 0.85,
+          "frontier_shrine": 0.95
+        },
+        "reinforcement": {
+          "garrison_bias": 0.75,
+          "raid_bias": 1.35,
+          "ranged_weight": 0.9,
+          "melee_weight": 1.25,
+          "low_tier_weight": 1.2,
+          "high_tier_weight": 0.9
+        },
+        "raid": {
+          "threshold_scale": 0.85,
+          "max_active_bonus": 1,
+          "pressure_commitment_scale": 0.85,
+          "objective_weight": 0.9,
+          "town_siege_weight": 0.85,
+          "site_denial_weight": 1.35,
+          "hero_hunt_weight": 1.25
+        }
+      },
+      "town_ids": [
+        "town_duskfen",
+        "town_blackfen_gate",
+        "town_murkward_ford",
+        "town_reedbarrow_ferry",
+        "town_nightglass_redoubt"
+      ],
+      "hero_ids": ["hero_vaska", "hero_sable", "hero_tarn", "hero_orrik"]
+    },
+    {
+      "id": "faction_sunvault",
+      "name": "Sunvault Compact",
+      "identity_summary": "Crystal-array wardens who turn layered spell support and prepared firing relays into resonant combined-arms pushes.",
+      "economy": {
+        "base_income": {"gold": 50, "ore": 1},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "civic": {"gold": 12},
+          "dwelling": {"gold": 24},
+          "economy": {"gold": 50, "ore": 1},
+          "support": {"gold": 36},
+          "magic": {"gold": 34}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 5,
+        "growth_bonus": {
+          "unit_shard_guard": 1,
+          "unit_prism_adept": 1,
+          "unit_mirror_duelist": 1,
+          "unit_aurora_ballista": 1
+        },
+        "cost_discount_percent": {
+          "unit_shard_guard": 5,
+          "unit_prism_adept": 6,
+          "unit_mirror_duelist": 5,
+          "unit_aurora_ballista": 4
+        }
+      },
+      "enemy_strategy": {
+        "build_category_weights": {
+          "civic": 1.0,
+          "dwelling": 0.95,
+          "economy": 1.2,
+          "support": 1.35,
+          "magic": 1.3
+        },
+        "build_value_weights": {
+          "income": 1.15,
+          "growth": 0.95,
+          "quality": 1.15,
+          "readiness": 1.1,
+          "pressure": 1.05
+        },
+        "raid_target_weights": {
+          "town": 1.1,
+          "resource": 0.85,
+          "artifact": 1.15,
+          "encounter": 1.05,
+          "hero": 0.8
+        },
+        "site_family_weights": {
+          "neutral_dwelling": 0.9,
+          "faction_outpost": 1.4,
+          "frontier_shrine": 1.35
+        },
+        "reinforcement": {
+          "garrison_bias": 1.15,
+          "raid_bias": 1.0,
+          "ranged_weight": 1.35,
+          "melee_weight": 0.9,
+          "low_tier_weight": 0.95,
+          "high_tier_weight": 1.2
+        },
+        "raid": {
+          "threshold_scale": 1.0,
+          "max_active_bonus": 0,
+          "pressure_commitment_scale": 1.0,
+          "objective_weight": 1.3,
+          "town_siege_weight": 1.0,
+          "site_denial_weight": 1.25,
+          "hero_hunt_weight": 0.75
+        }
+      },
+      "town_ids": ["town_prismhearth", "town_halo_spire"],
+      "hero_ids": ["hero_solera", "hero_neral", "hero_varis", "hero_thalen"]
+    }
+  ]
+}

@@ -1,0 +1,451 @@
+{
+  "items": [
+    {
+      "id": "building_town_hall",
+      "name": "Town Hall",
+      "category": "civic",
+      "description": "The central civic hall that turns an occupied settlement into a paying stronghold.",
+      "cost": {},
+      "income": {"gold": 500}
+    },
+    {
+      "id": "building_muster_yard",
+      "name": "Muster Yard",
+      "category": "dwelling",
+      "description": "Levy yards that field the disciplined River Guard.",
+      "cost": {},
+      "unlock_unit_id": "unit_river_guard"
+    },
+    {
+      "id": "building_watch_barracks",
+      "name": "Watch Barracks",
+      "category": "support",
+      "description": "Professional barracks that deepen guard rotations and lower their levy cost.",
+      "cost": {"gold": 1400, "ore": 2},
+      "requires": ["building_muster_yard", "building_stone_store"],
+      "upgrade_from": "building_muster_yard",
+      "growth_bonus": {"unit_river_guard": 3},
+      "recruitment_discount_percent": {"unit_river_guard": 10},
+      "readiness_bonus": 8
+    },
+    {
+      "id": "building_market_square",
+      "name": "Market Square",
+      "category": "economy",
+      "description": "Trade stalls and weigh houses that turn every convoy into hard coin.",
+      "cost": {"gold": 1000},
+      "requires": ["building_town_hall"],
+      "income": {"gold": 250}
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "name": "Wayfarers Hall",
+      "category": "civic",
+      "description": "A hired-roads hall where spare captains wait for new contracts.",
+      "cost": {"gold": 800},
+      "requires": ["building_town_hall"]
+    },
+    {
+      "id": "building_bowyer_lodge",
+      "name": "Bowyer Lodge",
+      "category": "dwelling",
+      "description": "Bowyer workshops and firing lanes that train Ember Archers.",
+      "cost": {"gold": 1200, "wood": 2},
+      "requires": ["building_muster_yard"],
+      "unlock_unit_id": "unit_ember_archer"
+    },
+    {
+      "id": "building_beacon_range",
+      "name": "Beacon Range",
+      "category": "dwelling",
+      "description": "Signal-fire ranges that expand archer musters and speed their issue.",
+      "cost": {"gold": 1700, "wood": 2, "ore": 1},
+      "requires": ["building_bowyer_lodge", "building_market_square"],
+      "upgrade_from": "building_bowyer_lodge",
+      "growth_bonus": {"unit_ember_archer": 3},
+      "recruitment_discount_percent": {"unit_ember_archer": 10},
+      "readiness_bonus": 5
+    },
+    {
+      "id": "building_stone_store",
+      "name": "Stone Store",
+      "category": "support",
+      "description": "Quarried stockpiles that keep the walls paid for and the guard lines reinforced.",
+      "cost": {"gold": 900, "ore": 2},
+      "requires": ["building_town_hall"],
+      "income": {"gold": 100},
+      "growth_bonus": {"unit_river_guard": 2},
+      "readiness_bonus": 4
+    },
+    {
+      "id": "building_lantern_archive",
+      "name": "Lantern Archive",
+      "category": "magic",
+      "description": "Archive stacks where civic mages catalogue battle-tested field spells.",
+      "cost": {"gold": 1100, "wood": 1},
+      "requires": ["building_town_hall"],
+      "spell_tier": 1
+    },
+    {
+      "id": "building_starseer_annex",
+      "name": "Starseer Annex",
+      "category": "magic",
+      "description": "An expanded observatory annex that opens higher spell tiers to the town.",
+      "cost": {"gold": 1600, "wood": 2, "ore": 2},
+      "requires": ["building_lantern_archive", "building_market_square"],
+      "upgrade_from": "building_lantern_archive",
+      "spell_tier": 2,
+      "readiness_bonus": 4
+    },
+    {
+      "id": "building_river_granary_exchange",
+      "name": "River Granary Exchange",
+      "category": "economy",
+      "description": "Granary ledgers and bonded barges that turn full stores into convoy coin and steadier levy feed.",
+      "cost": {"gold": 2200, "wood": 1, "ore": 2},
+      "requires": ["building_market_square", "building_stone_store"],
+      "income": {"gold": 350, "wood": 1},
+      "growth_bonus": {"unit_river_guard": 1},
+      "readiness_bonus": 4
+    },
+    {
+      "id": "building_quartermasters_depot",
+      "name": "Quartermaster Depot",
+      "category": "support",
+      "description": "A depot of ferried kit, bowstrings, and ration books that lets Embercourt field cheaper, cleaner musters.",
+      "cost": {"gold": 2100, "wood": 1, "ore": 2},
+      "requires": ["building_watch_barracks", "building_market_square"],
+      "income": {"gold": 150},
+      "growth_bonus": {"unit_river_guard": 1, "unit_ember_archer": 1},
+      "recruitment_discount_percent": {"unit_river_guard": 12, "unit_ember_archer": 10},
+      "readiness_bonus": 10
+    },
+    {
+      "id": "building_signal_citadel",
+      "name": "Signal Citadel",
+      "category": "support",
+      "description": "Citadel towers, beacon lenses, and horn relays that let the riverwardens concentrate archers and wall crews at once.",
+      "cost": {"gold": 2500, "wood": 2, "ore": 3},
+      "requires": ["building_watch_barracks", "building_beacon_range", "building_starseer_annex"],
+      "growth_bonus": {"unit_river_guard": 2, "unit_ember_archer": 2},
+      "recruitment_discount_percent": {"unit_river_guard": 8, "unit_ember_archer": 8},
+      "readiness_bonus": 18,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_citadel_pikehall",
+      "name": "Citadel Pikehall",
+      "category": "dwelling",
+      "description": "A drilled pike hall that fields veteran Pikewards to pin breaches under disciplined lantern command.",
+      "cost": {"gold": 2300, "wood": 1, "ore": 3},
+      "requires": ["building_watch_barracks", "building_beacon_range", "building_starseer_annex"],
+      "unlock_unit_id": "unit_citadel_pikeward",
+      "growth_bonus": {"unit_citadel_pikeward": 2},
+      "recruitment_discount_percent": {"unit_citadel_pikeward": 8},
+      "readiness_bonus": 12
+    },
+    {
+      "id": "building_charter_bastion",
+      "name": "Charter Bastion",
+      "category": "civic",
+      "description": "A basin-command bastion of ledgers, reserve horns, and beacon maps that turns Embercourt's main keep into a true campaign anchor.",
+      "cost": {"gold": 3200, "wood": 2, "ore": 4},
+      "requires": ["building_signal_citadel", "building_citadel_pikehall", "building_river_granary_exchange"],
+      "income": {"gold": 220, "wood": 1},
+      "growth_bonus": {"unit_river_guard": 2, "unit_ember_archer": 1, "unit_citadel_pikeward": 1},
+      "recruitment_discount_percent": {"unit_river_guard": 12, "unit_ember_archer": 10, "unit_citadel_pikeward": 10},
+      "readiness_bonus": 20,
+      "pressure_bonus": 2,
+      "capital_project": {
+        "pressure_bonus": 2,
+        "raid_threshold_reduction": 1,
+        "max_active_raids_bonus": 1,
+        "defense_bonus": 90,
+        "recovery_guard": 2,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "vulnerability_penalties": {
+          "quality_penalty": 4,
+          "readiness_penalty": 6,
+          "pressure_penalty": 1,
+          "growth_penalty_percent": 12
+        },
+        "summary": "The Charter Bastion can pour reserve columns onto the roads while its beacon net hardens the basin line."
+      }
+    },
+    {
+      "id": "building_blackbranch_den",
+      "name": "Blackbranch Den",
+      "category": "dwelling",
+      "description": "Hidden den-runs that arm and loose Blackbranch Cutthroats.",
+      "cost": {"gold": 700, "wood": 1},
+      "requires": ["building_town_hall"],
+      "unlock_unit_id": "unit_blackbranch_cutthroat"
+    },
+    {
+      "id": "building_reed_warren",
+      "name": "Reed Warren",
+      "category": "dwelling",
+      "description": "Nested reed warrens that turn every den into a broader cutthroat reserve.",
+      "cost": {"gold": 1250, "wood": 1, "ore": 1},
+      "requires": ["building_blackbranch_den"],
+      "upgrade_from": "building_blackbranch_den",
+      "growth_bonus": {"unit_blackbranch_cutthroat": 3},
+      "recruitment_discount_percent": {"unit_blackbranch_cutthroat": 10},
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_mire_pens",
+      "name": "Mire Pens",
+      "category": "dwelling",
+      "description": "Caged mirebeasts and brute handlers that unlock Bog Brutes.",
+      "cost": {"gold": 1500, "wood": 2, "ore": 2},
+      "requires": ["building_blackbranch_den"],
+      "unlock_unit_id": "unit_bog_brute"
+    },
+    {
+      "id": "building_fenscale_pens",
+      "name": "Fenscale Pens",
+      "category": "dwelling",
+      "description": "Expanded brute pits that raise larger weekly Bog Brute drafts.",
+      "cost": {"gold": 1900, "wood": 2, "ore": 2},
+      "requires": ["building_mire_pens", "building_market_square"],
+      "upgrade_from": "building_mire_pens",
+      "growth_bonus": {"unit_bog_brute": 2},
+      "recruitment_discount_percent": {"unit_bog_brute": 10},
+      "readiness_bonus": 6,
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_slingers_post",
+      "name": "Slingers Post",
+      "category": "dwelling",
+      "description": "Mud-platform firing posts that train Mire Slingers.",
+      "cost": {"gold": 1000, "wood": 2},
+      "requires": ["building_blackbranch_den"],
+      "unlock_unit_id": "unit_mire_slinger"
+    },
+    {
+      "id": "building_rot_warren",
+      "name": "Rot Warren",
+      "category": "dwelling",
+      "description": "Spoor-fed missile warrens that widen slinger musters and issue gear faster.",
+      "cost": {"gold": 1400, "wood": 2, "ore": 1},
+      "requires": ["building_slingers_post"],
+      "upgrade_from": "building_slingers_post",
+      "growth_bonus": {"unit_mire_slinger": 3},
+      "recruitment_discount_percent": {"unit_mire_slinger": 10},
+      "pressure_bonus": 1
+    },
+    {
+      "id": "building_war_drum_circle",
+      "name": "War Drum Circle",
+      "category": "support",
+      "description": "Raised drum circles that coordinate marsh strikes and pull fast raiders toward the same breach.",
+      "cost": {"gold": 2100, "wood": 2, "ore": 1},
+      "requires": ["building_reed_warren", "building_rot_warren"],
+      "growth_bonus": {"unit_blackbranch_cutthroat": 2, "unit_mire_slinger": 2},
+      "recruitment_discount_percent": {"unit_blackbranch_cutthroat": 10, "unit_mire_slinger": 8},
+      "pressure_bonus": 2,
+      "readiness_bonus": 6
+    },
+    {
+      "id": "building_smugglers_flotilla",
+      "name": "Smugglers Flotilla",
+      "category": "economy",
+      "description": "Hidden punts, chain-boom slips, and midnight brokers that turn captive channels into steady war spoils.",
+      "cost": {"gold": 2000, "wood": 2},
+      "requires": ["building_market_square", "building_wayfarers_hall"],
+      "income": {"gold": 280, "wood": 1},
+      "growth_bonus": {"unit_blackbranch_cutthroat": 1},
+      "pressure_bonus": 1,
+      "readiness_bonus": 4
+    },
+    {
+      "id": "building_floodtide_forge",
+      "name": "Floodtide Forge",
+      "category": "support",
+      "description": "Flood-quenched bog forges that harden brute kit, repair ferries, and turn brute pits into real assault musters.",
+      "cost": {"gold": 2400, "wood": 1, "ore": 3},
+      "requires": ["building_fenscale_pens", "building_market_square"],
+      "income": {"gold": 120, "ore": 1},
+      "growth_bonus": {"unit_bog_brute": 2},
+      "recruitment_discount_percent": {"unit_bog_brute": 10},
+      "pressure_bonus": 1,
+      "readiness_bonus": 12
+    },
+    {
+      "id": "building_gorefen_ring",
+      "name": "Gorefen Ring",
+      "category": "dwelling",
+      "description": "A blood-marked reed ring where pack-callers loose Gorefen Rippers once the prey line starts to buckle.",
+      "cost": {"gold": 2250, "wood": 2, "ore": 2},
+      "requires": ["building_fenscale_pens", "building_rot_warren", "building_starseer_annex"],
+      "unlock_unit_id": "unit_gorefen_ripper",
+      "growth_bonus": {"unit_gorefen_ripper": 2},
+      "recruitment_discount_percent": {"unit_gorefen_ripper": 8},
+      "pressure_bonus": 2,
+      "readiness_bonus": 6
+    },
+    {
+      "id": "building_nightglass_dominion",
+      "name": "Nightglass Dominion",
+      "category": "civic",
+      "description": "A covenant command ring of ferry chains, shrine drums, and kill-signals that turns the marsh capital into a campaign engine.",
+      "cost": {"gold": 3000, "wood": 2, "ore": 3},
+      "requires": ["building_war_drum_circle", "building_floodtide_forge", "building_gorefen_ring"],
+      "income": {"gold": 180, "ore": 1},
+      "growth_bonus": {"unit_blackbranch_cutthroat": 1, "unit_bog_brute": 1, "unit_gorefen_ripper": 1},
+      "recruitment_discount_percent": {"unit_blackbranch_cutthroat": 10, "unit_bog_brute": 10, "unit_gorefen_ripper": 12},
+      "readiness_bonus": 16,
+      "pressure_bonus": 3,
+      "capital_project": {
+        "pressure_bonus": 3,
+        "raid_threshold_reduction": 1,
+        "max_active_raids_bonus": 1,
+        "defense_bonus": 70,
+        "recovery_guard": 2,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "vulnerability_penalties": {
+          "quality_penalty": 4,
+          "readiness_penalty": 5,
+          "pressure_penalty": 2,
+          "growth_penalty_percent": 15
+        },
+        "summary": "Nightglass Dominion keeps the ferry chains moving and lets the covenant sustain a deeper drum-led surge."
+      }
+    },
+    {
+      "id": "building_shard_yard",
+      "name": "Shard Yard",
+      "category": "dwelling",
+      "description": "Mirror-glass drill yards that field the disciplined Shard Guard.",
+      "cost": {"gold": 800, "ore": 1},
+      "requires": ["building_town_hall"],
+      "unlock_unit_id": "unit_shard_guard"
+    },
+    {
+      "id": "building_mirror_forge",
+      "name": "Mirror Forge",
+      "category": "dwelling",
+      "description": "Facet forges recut pavises and bucklers, deepening guard rotations and lowering their issue cost.",
+      "cost": {"gold": 1450, "ore": 2},
+      "requires": ["building_shard_yard", "building_market_square"],
+      "upgrade_from": "building_shard_yard",
+      "growth_bonus": {"unit_shard_guard": 3},
+      "recruitment_discount_percent": {"unit_shard_guard": 10},
+      "readiness_bonus": 6
+    },
+    {
+      "id": "building_prism_range",
+      "name": "Prism Range",
+      "category": "dwelling",
+      "description": "Tiered firing galleries where Prism Adepts learn to bend glare into killing lanes.",
+      "cost": {"gold": 1250, "wood": 1, "ore": 1},
+      "requires": ["building_shard_yard"],
+      "unlock_unit_id": "unit_prism_adept"
+    },
+    {
+      "id": "building_lens_gallery",
+      "name": "Lens Gallery",
+      "category": "dwelling",
+      "description": "Expanded galleries and calibration halls that broaden adept musters and tighten their firing rhythms.",
+      "cost": {"gold": 1750, "wood": 1, "ore": 2},
+      "requires": ["building_prism_range", "building_market_square"],
+      "upgrade_from": "building_prism_range",
+      "growth_bonus": {"unit_prism_adept": 3},
+      "recruitment_discount_percent": {"unit_prism_adept": 10},
+      "readiness_bonus": 5
+    },
+    {
+      "id": "building_duel_circle",
+      "name": "Duel Circle",
+      "category": "dwelling",
+      "description": "Mirror-marked challenge courts where Duelists train to exploit broken timing and reflected lanes.",
+      "cost": {"gold": 1850, "wood": 1, "ore": 2},
+      "requires": ["building_mirror_forge", "building_prism_range"],
+      "unlock_unit_id": "unit_mirror_duelist",
+      "growth_bonus": {"unit_mirror_duelist": 2},
+      "recruitment_discount_percent": {"unit_mirror_duelist": 8},
+      "readiness_bonus": 5
+    },
+    {
+      "id": "building_resonant_exchange",
+      "name": "Resonant Exchange",
+      "category": "economy",
+      "description": "Shard brokers, relay contracts, and lens merchants turn calibrated stock into coin and fresh crystal feed.",
+      "cost": {"gold": 2200, "wood": 1, "ore": 2},
+      "requires": ["building_market_square", "building_prism_range"],
+      "income": {"gold": 320, "ore": 1},
+      "growth_bonus": {"unit_prism_adept": 1},
+      "pressure_bonus": 1,
+      "readiness_bonus": 4
+    },
+    {
+      "id": "building_harmonic_cloister",
+      "name": "Harmonic Cloister",
+      "category": "support",
+      "description": "Choir cloisters and relay wards keep buff cycles running and stop the line from losing resonance under pressure.",
+      "cost": {"gold": 2450, "wood": 1, "ore": 3},
+      "requires": ["building_mirror_forge", "building_lens_gallery", "building_lantern_archive"],
+      "income": {"gold": 120},
+      "growth_bonus": {"unit_shard_guard": 1, "unit_prism_adept": 1, "unit_mirror_duelist": 1},
+      "recruitment_discount_percent": {"unit_shard_guard": 8, "unit_prism_adept": 8, "unit_mirror_duelist": 8},
+      "pressure_bonus": 1,
+      "readiness_bonus": 10
+    },
+    {
+      "id": "building_aurora_spire",
+      "name": "Aurora Spire",
+      "category": "dwelling",
+      "description": "A relay crown tower where the Compact can field Aurora Ballistae to dominate prepared sightlines.",
+      "cost": {"gold": 2400, "wood": 2, "ore": 3},
+      "requires": ["building_lens_gallery", "building_harmonic_cloister", "building_starseer_annex"],
+      "unlock_unit_id": "unit_aurora_ballista",
+      "growth_bonus": {"unit_aurora_ballista": 2},
+      "recruitment_discount_percent": {"unit_aurora_ballista": 8},
+      "pressure_bonus": 1,
+      "readiness_bonus": 10
+    },
+    {
+      "id": "building_daybreak_matrix",
+      "name": "Daybreak Matrix",
+      "category": "magic",
+      "description": "A grand relay lattice of resonant plates and command lenses that lets Sunvault project a calibrated late-war push from its capital.",
+      "cost": {"gold": 3300, "wood": 2, "ore": 4},
+      "requires": ["building_resonant_exchange", "building_harmonic_cloister", "building_aurora_spire"],
+      "income": {"gold": 180, "ore": 1},
+      "growth_bonus": {"unit_shard_guard": 1, "unit_prism_adept": 1, "unit_aurora_ballista": 1},
+      "recruitment_discount_percent": {"unit_shard_guard": 8, "unit_prism_adept": 10, "unit_aurora_ballista": 10},
+      "spell_tier": 2,
+      "readiness_bonus": 18,
+      "pressure_bonus": 2,
+      "capital_project": {
+        "pressure_bonus": 2,
+        "raid_threshold_reduction": 1,
+        "max_active_raids_bonus": 1,
+        "defense_bonus": 80,
+        "recovery_guard": 2,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "vulnerability_penalties": {
+          "quality_penalty": 5,
+          "readiness_penalty": 6,
+          "pressure_penalty": 1,
+          "growth_penalty_percent": 10
+        },
+        "summary": "The Daybreak Matrix aligns Prismhearth's relays into a full-theater battery network for the final push."
+      }
+    }
+  ]
+}

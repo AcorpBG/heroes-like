@@ -1,0 +1,471 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/town/TownShell.gd" id="1"]
+
+[node name="TownShell" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Scroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+horizontal_scroll_mode = 0
+
+[node name="ContentMargin" type="MarginContainer" parent="Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="Content" type="VBoxContainer" parent="Scroll/ContentMargin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="Banner" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BannerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="BannerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TopBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Town"
+
+[node name="Status" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 1
+text = "Week 1 Day 1"
+
+[node name="Resources" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 1
+text = "Gold 0 | Wood 0 | Ore 0"
+
+[node name="Event" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Town dispatch."
+
+[node name="OutlookPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OutlookPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/OutlookPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="OutlookBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/OutlookPanel/OutlookPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OutlookTitle" type="Label" parent="Scroll/ContentMargin/Content/OutlookPanel/OutlookPad/OutlookBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Defense Outlook"
+
+[node name="Outlook" type="Label" parent="Scroll/ContentMargin/Content/OutlookPanel/OutlookPad/OutlookBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Defense Outlook"
+
+[node name="CommandLedgerPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommandLedgerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/CommandLedgerPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandLedgerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/CommandLedgerPanel/CommandLedgerPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommandLedgerTitle" type="Label" parent="Scroll/ContentMargin/Content/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Order Ledger"
+
+[node name="CommandLedger" type="Label" parent="Scroll/ContentMargin/Content/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Order Ledger"
+
+[node name="Columns" type="HSplitContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 440
+
+[node name="LeftColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Command"
+
+[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Hero"
+
+[node name="Heroes" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Command Wing"
+
+[node name="HeroBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox/HeroBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Specialties" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Specialties"
+
+[node name="SpecialtyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox/SpecialtyBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="TownPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TownPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="TownBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TownTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Town Hall"
+
+[node name="TownSummary" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Town Summary"
+
+[node name="Defense" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Defense"
+
+[node name="Pressure" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Frontier Watch"
+
+[node name="RightColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="BuildPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BuildPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="BuildBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BuildTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Construction"
+
+[node name="Buildings" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Buildings"
+
+[node name="BuildBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox/BuildBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="MarketPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarketPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="MarketBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MarketTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Exchange"
+
+[node name="Market" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Exchange Hall"
+
+[node name="MarketBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox/MarketBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="RecruitPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RecruitPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="RecruitBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RecruitTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Recruitment"
+
+[node name="Recruitment" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Recruitment"
+
+[node name="RecruitBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox/RecruitBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="StudyPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StudyPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="StudyBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StudyTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Spellcraft"
+
+[node name="Study" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Spell Study"
+
+[node name="StudyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox/StudyBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Spellbook"
+
+[node name="LogisticsPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LogisticsPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="LogisticsBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LogisticsTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Logistics"
+
+[node name="Tavern" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Wayfarers Hall"
+
+[node name="TavernBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/TavernBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Transfer" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Transfer"
+
+[node name="TransferBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/TransferBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Responses" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Strategic Response"
+
+[node name="ResponseBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/ResponseBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Artifacts" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Artifacts"
+
+[node name="ArtifactBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/ArtifactBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Army"
+
+[node name="Footer" type="HBoxContainer" parent="Scroll/ContentMargin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SaveStatus" type="Label" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = "Latest ready save: none."
+
+[node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+custom_minimum_size = Vector2(140, 0)
+
+[node name="Save" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+text = "Save"
+
+[node name="Leave" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+text = "Leave Town"
+
+[node name="Menu" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+layout_mode = 2
+text = "Main Menu"
+
+[connection signal="item_selected" from="Scroll/ContentMargin/Content/Footer/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Leave" to="." method="_on_leave_pressed"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Menu" to="." method="_on_menu_pressed"]

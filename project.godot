@@ -1,0 +1,27 @@
+; Engine configuration file.
+; This is intentionally minimal yet runnable.
+
+; WARNING: Keep these settings in sync with execution docs in project.md and PLAN.md.
+config_version=5
+
+[application]
+config/name="heroes-like"
+run/main_scene="res://scenes/boot/Boot.tscn"
+config/features=PackedStringArray("4.2")
+config/icon="res://icon.svg"
+
+[autoload]
+ContentService="*res://scripts/autoload/ContentService.gd"
+SessionState="*res://scripts/autoload/SessionState.gd"
+SaveService="*res://scripts/autoload/SaveService.gd"
+CampaignProgression="*res://scripts/autoload/CampaignProgression.gd"
+SettingsService="*res://scripts/autoload/SettingsService.gd"
+AppRouter="*res://scripts/autoload/AppRouter.gd"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/resizable=true
+
+[editor]
+name="heroes-like"

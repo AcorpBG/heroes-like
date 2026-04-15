@@ -1,0 +1,202 @@
+{
+  "items": [
+    {
+      "id": "site_waystone_cache",
+      "name": "Waystone Cache",
+      "rewards": {"gold": 400}
+    },
+    {
+      "id": "site_timber_wagon",
+      "name": "Timber Wagon",
+      "rewards": {"wood": 2, "gold": 150}
+    },
+    {
+      "id": "site_ore_crates",
+      "name": "Ore Crates",
+      "rewards": {"ore": 2, "gold": 100}
+    },
+    {
+      "id": "site_scout_shrine",
+      "name": "Shrine of the Turning Star",
+      "rewards": {"experience": 120}
+    },
+    {
+      "id": "site_free_company_yard",
+      "name": "Free Company Yard",
+      "family": "neutral_dwelling",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 80},
+      "control_income": {"gold": 40},
+      "claim_recruits": {"unit_river_guard": 2, "unit_ember_archer": 1},
+      "weekly_recruits": {"unit_river_guard": 1},
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "The yard throws spare shields, wagons, and hired hands onto the road.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 140},
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 2
+      }
+    },
+    {
+      "id": "site_fenhound_kennels",
+      "name": "Fenhound Kennels",
+      "family": "neutral_dwelling",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 70},
+      "control_income": {"gold": 35},
+      "claim_recruits": {"unit_blackbranch_cutthroat": 2, "unit_mire_slinger": 1},
+      "weekly_recruits": {"unit_blackbranch_cutthroat": 1},
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Handlers loose kennel crews and fast couriers to steady the marsh line.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 130},
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 2,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_lens_house",
+      "name": "Lens House Barracks",
+      "family": "neutral_dwelling",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 90},
+      "control_income": {"gold": 45},
+      "claim_recruits": {"unit_shard_guard": 1, "unit_prism_adept": 1},
+      "weekly_recruits": {"unit_shard_guard": 1},
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Barracks tutors and reserve lenses go forward to keep the relay chain in order.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 150, "ore": 1},
+        "watch_days": 3,
+        "quality_bonus": 3,
+        "readiness_bonus": 1,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_ember_signal_post",
+      "name": "Ember Signal Post",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 50},
+      "control_income": {"gold": 20},
+      "vision_radius": 2,
+      "pressure_guard": 1,
+      "response_profile": {
+        "action_label": "Repair Outpost",
+        "summary": "Signal crews reset braziers, palisades, and road screens along the route.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 110, "wood": 1},
+        "watch_days": 3,
+        "readiness_bonus": 3,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_bog_drum_outpost",
+      "name": "Bog Drum Outpost",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 50},
+      "control_income": {"gold": 20},
+      "vision_radius": 2,
+      "pressure_guard": 1,
+      "pressure_bonus": 1,
+      "response_profile": {
+        "action_label": "Repair Outpost",
+        "summary": "Drum crews and ditchers patch the post and keep marsh scouts in cadence.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 120, "wood": 1},
+        "watch_days": 3,
+        "readiness_bonus": 2,
+        "pressure_bonus": 2,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_prism_watch_relay",
+      "name": "Prism Watch Relay",
+      "family": "faction_outpost",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 60},
+      "control_income": {"gold": 25},
+      "vision_radius": 3,
+      "pressure_guard": 1,
+      "response_profile": {
+        "action_label": "Repair Outpost",
+        "summary": "Relay engineers reset lenses and watch crews so the array can call reserve fire again.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 130, "ore": 1},
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_roadside_sanctum",
+      "name": "Roadside Sanctum",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "claim_rewards": {"experience": 100},
+      "learn_spell_id": "spell_waystride",
+      "response_profile": {
+        "action_label": "Relight Shrine",
+        "summary": "Wardens relight the sanctum and reopen blessed road markers for the nearby line.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 100},
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_reedscript_shrine",
+      "name": "Reedscript Shrine",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "claim_rewards": {"experience": 100},
+      "learn_spell_id": "spell_trailglyph",
+      "response_profile": {
+        "action_label": "Relight Shrine",
+        "summary": "Totem scribes relight the shrine so couriers can follow marked reeds through the fog.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 100},
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "pressure_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_starlens_sanctum",
+      "name": "Starlens Sanctum",
+      "family": "frontier_shrine",
+      "persistent_control": true,
+      "claim_rewards": {"experience": 140},
+      "learn_spell_id": "spell_beacon_path",
+      "response_profile": {
+        "action_label": "Relight Shrine",
+        "summary": "Sanctum keepers relight the lenses and realign the reserve routes under the array.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 120, "ore": 1},
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "pressure_bonus": 1,
+        "recovery_relief": 2
+      }
+    }
+  ]
+}

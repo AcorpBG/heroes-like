@@ -1,0 +1,347 @@
+{
+  "items": [
+    {
+      "id": "hero_lyra",
+      "name": "Lyra Emberwell",
+      "faction_id": "faction_embercourt",
+      "archetype": "pathfinder",
+      "roster_summary": "Fast scouting caster",
+      "identity_summary": "A river frontier outrider who turns tempo magic and road vision into fast objective breaks.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1400
+      },
+      "starting_spell_ids": [
+        "spell_waystride",
+        "spell_cinder_burst",
+        "spell_stone_veil",
+        "spell_quickmarch_hymn"
+      ],
+      "starting_specialties": ["wayfinder"],
+      "specialty_focus_ids": ["wayfinder", "spellwright", "borderwarden"],
+      "battle_traits": ["artillerist", "ambusher"],
+      "command": {
+        "attack": 1,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_caelen",
+      "name": "Caelen Ashgrove",
+      "faction_id": "faction_embercourt",
+      "archetype": "warden",
+      "roster_summary": "Defensive scout-keeper",
+      "identity_summary": "A mill-country sentinel who prefers scouting control, layered defenses, and steady frontier logistics.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1100
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_stone_veil",
+        "spell_lantern_phalanx"
+      ],
+      "starting_specialties": ["borderwarden"],
+      "specialty_focus_ids": ["borderwarden", "ledgerkeeper", "armsmaster"],
+      "battle_traits": ["linekeeper", "ambusher"],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_mira",
+      "name": "Mira Flintmere",
+      "faction_id": "faction_embercourt",
+      "archetype": "marshal",
+      "roster_summary": "Initiative line-breaker",
+      "identity_summary": "A bridgehead marshal who wins by reinforced lines, initiative drills, and relentless levy pressure.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1150
+      },
+      "starting_spell_ids": [
+        "spell_quickmarch_hymn",
+        "spell_bulwark_litany",
+        "spell_lantern_phalanx"
+      ],
+      "starting_specialties": ["drillmaster"],
+      "specialty_focus_ids": ["drillmaster", "mustercaptain", "armsmaster"],
+      "battle_traits": ["vanguard", "linekeeper"],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_seren",
+      "name": "Seren Valechant",
+      "faction_id": "faction_embercourt",
+      "archetype": "starseer",
+      "roster_summary": "Survey cache spellcaster",
+      "identity_summary": "An archive-bred starseer who turns route control, salvage caches, and spell tempo into campaign advantage.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_coal_rain",
+        "spell_stone_veil",
+        "spell_quickmarch_hymn"
+      ],
+      "starting_specialties": ["spellwright"],
+      "specialty_focus_ids": ["spellwright", "ledgerkeeper", "wayfinder"],
+      "battle_traits": ["artillerist", "bogwise"],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_torren",
+      "name": "Torren Pikeward",
+      "faction_id": "faction_embercourt",
+      "archetype": "castellan",
+      "roster_summary": "Cheap-muster quartermaster",
+      "identity_summary": "A road quartermaster whose edge comes from cheaper musters, stocked depots, and stubborn defensive timing.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1050
+      },
+      "starting_spell_ids": [
+        "spell_bulwark_litany",
+        "spell_quickmarch_hymn",
+        "spell_lantern_phalanx"
+      ],
+      "starting_specialties": ["mustercaptain"],
+      "specialty_focus_ids": ["mustercaptain", "ledgerkeeper", "borderwarden"],
+      "battle_traits": ["linekeeper", "artillerist"],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_vaska",
+      "name": "Vaska Reedmaw",
+      "faction_id": "faction_mireclaw",
+      "archetype": "raider",
+      "roster_summary": "Momentum raid captain",
+      "identity_summary": "A road-cut raider who thrives on tempo, shock turns, and collapsing weak fronts before relief can form.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1300
+      },
+      "starting_spell_ids": [
+        "spell_relay_drum",
+        "spell_cinder_burst",
+        "spell_stone_veil",
+        "spell_bloodwake_drum"
+      ],
+      "starting_specialties": ["drillmaster"],
+      "specialty_focus_ids": ["drillmaster", "armsmaster", "wayfinder"],
+      "battle_traits": ["vanguard", "packhunter"],
+      "command": {
+        "attack": 2,
+        "defense": 0,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_sable",
+      "name": "Sable Muckscribe",
+      "faction_id": "faction_mireclaw",
+      "archetype": "hexcaller",
+      "roster_summary": "Relic-pressure spellcaster",
+      "identity_summary": "A fen archivist who weaponizes relic pressure, dirty economy, and late-fight spell swings.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_stone_veil",
+        "spell_coal_rain",
+        "spell_relay_drum"
+      ],
+      "starting_specialties": ["spellwright"],
+      "specialty_focus_ids": ["spellwright", "ledgerkeeper", "borderwarden"],
+      "battle_traits": ["bogwise", "packhunter"],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_tarn",
+      "name": "Tarn Fenhook",
+      "faction_id": "faction_mireclaw",
+      "archetype": "warrenhunter",
+      "roster_summary": "Fog-lane tracker",
+      "identity_summary": "A levee trackmaster who opens blind lanes through mire and pounces on exposed sites before lines can harden.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1150
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_quickmarch_hymn",
+        "spell_coal_rain"
+      ],
+      "starting_specialties": ["borderwarden"],
+      "specialty_focus_ids": ["borderwarden", "wayfinder", "drillmaster"],
+      "battle_traits": ["ambusher", "bogwise"],
+      "command": {
+        "attack": 1,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_orrik",
+      "name": "Orrik Tollreaver",
+      "faction_id": "faction_mireclaw",
+      "archetype": "packlord",
+      "roster_summary": "Dense muster captain",
+      "identity_summary": "A warren captain who snowballs den growth, keeps raiding hosts thick, and grinds out attritional town fights.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1100
+      },
+      "starting_spell_ids": [
+        "spell_relay_drum",
+        "spell_bulwark_litany",
+        "spell_bloodwake_drum",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": ["mustercaptain"],
+      "specialty_focus_ids": ["mustercaptain", "armsmaster", "ledgerkeeper"],
+      "battle_traits": ["linekeeper", "packhunter"],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_solera",
+      "name": "Solera Prismarch",
+      "faction_id": "faction_sunvault",
+      "archetype": "marshal",
+      "roster_summary": "Array line marshal",
+      "identity_summary": "A compact field marshal who layers bastions and relay chants until Sunvault lines hit in sequence.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_prism_bastion",
+        "spell_resonant_chorus",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": ["drillmaster"],
+      "specialty_focus_ids": ["drillmaster", "spellwright", "mustercaptain"],
+      "battle_traits": ["linekeeper", "artillerist"],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_neral",
+      "name": "Neral Glasswind",
+      "faction_id": "faction_sunvault",
+      "archetype": "starseer",
+      "roster_summary": "Sunlance artillery seer",
+      "identity_summary": "An observatory duelist who turns sightlines, reflected fire, and spell timing into ranged kill turns.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1300
+      },
+      "starting_spell_ids": [
+        "spell_sunlance_arc",
+        "spell_prism_bastion",
+        "spell_trailglyph"
+      ],
+      "starting_specialties": ["spellwright"],
+      "specialty_focus_ids": ["spellwright", "wayfinder", "armsmaster"],
+      "battle_traits": ["artillerist", "ambusher"],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_varis",
+      "name": "Varis Mirrorstep",
+      "faction_id": "faction_sunvault",
+      "archetype": "outrider",
+      "roster_summary": "Fast flank commander",
+      "identity_summary": "A mirror-path raider who uses relay tempo and duelist breaches to punish exposed wings before they can recover.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_quickmarch_hymn",
+        "spell_resonant_chorus",
+        "spell_sunlance_arc"
+      ],
+      "starting_specialties": ["wayfinder"],
+      "specialty_focus_ids": ["wayfinder", "drillmaster", "armsmaster"],
+      "battle_traits": ["vanguard", "ambusher"],
+      "command": {
+        "attack": 2,
+        "defense": 0,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_thalen",
+      "name": "Thalen Choirward",
+      "faction_id": "faction_sunvault",
+      "archetype": "castellan",
+      "roster_summary": "Cohesion cloister keeper",
+      "identity_summary": "A cloister keeper who wins by keeping support spells cycling and forcing battered troops back into a resonant line.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1100
+      },
+      "starting_spell_ids": [
+        "spell_bulwark_litany",
+        "spell_prism_bastion",
+        "spell_resonant_chorus",
+        "spell_lantern_phalanx"
+      ],
+      "starting_specialties": ["mustercaptain"],
+      "specialty_focus_ids": ["mustercaptain", "ledgerkeeper", "spellwright"],
+      "battle_traits": ["linekeeper", "vanguard"],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 0
+      }
+    }
+  ]
+}

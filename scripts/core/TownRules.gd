@@ -1,0 +1,1727 @@
+class_name TownRules
+extends RefCounted
+
+const SessionStateStore = preload("res://scripts/core/SessionStateStore.gd")
+static var OverworldRules: Variant = load("res://scripts/core/OverworldRules.gd")
+static var HeroCommandRules: Variant = load("res://scripts/core/HeroCommandRules.gd")
+const SpellRules = preload("res://scripts/core/SpellRules.gd")
+const ArtifactRules = preload("res://scripts/core/ArtifactRules.gd")
+const HeroProgressionRules = preload("res://scripts/core/HeroProgressionRules.gd")
+static var EnemyAdventureRules: Variant = load("res://scripts/core/EnemyAdventureRules.gd")
+static var ScenarioRules: Variant = load("res://scripts/core/ScenarioRules.gd")
+
+static func can_visit_active_town(session: SessionStateStore.SessionData) -> bool:
+	var town := get_active_town(session)
+	return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
+
+static func can_visit_active_town_bridge(session) -> bool:
+	return can_visit_active_town(session)
+
+static func get_active_town(session: SessionStateStore.SessionData) -> Dictionary:
+	var result := _find_active_town_result(session)
+	return result.get("town", {})
+
+static func describe_status(session: SessionStateStore.SessionData) -> String:
+	var pos: Vector2i = OverworldRules.hero_position(session)
+	var days_until_growth: int = OverworldRules.days_until_next_weekly_growth(session.day)
+	var week := _week_of_day(session.day)
+	var weekday := _weekday_of_day(session.day)
+	var growth_clause := "Weekly muster refreshes today." if OverworldRules.is_weekly_growth_day(session.day) else "Next muster Day %d in %d day%s" % [
+		OverworldRules.next_weekly_growth_day(session.day),
+		days_until_growth,
+		"" if days_until_growth == 1 else "s",
+	]
+	return "Week %d Day %d | Field Pos %d,%d | %s" % [
+		week,
+		weekday,
+		pos.x,
+		pos.y,
+		growth_clause,
+	]
+
+static func describe_header(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "No town is under command."
+	var template := ContentService.get_town(String(town.get("town_id", "")))
+	var faction := ContentService.get_faction(String(template.get("faction_id", "")))
+	var role_label := ""
+	match OverworldRules.town_strategic_role(town):
+		"capital":
+			role_label = " | Capital Anchor"
+		"stronghold":
+			role_label = " | Frontier Stronghold"
+	return "%s | %s%s | Owner %s | Spell Tier %d" % [
+		String(template.get("name", town.get("town_id", "Town"))),
+		String(faction.get("name", template.get("faction_id", "Faction"))),
+		role_label,
+		String(town.get("owner", "neutral")).capitalize(),
+		current_spell_tier(town),
+	]
+
+static func describe_summary(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "No active town."
+	var income := _describe_resources(OverworldRules.town_income(town))
+	var weekly_growth := _describe_recruit_delta(OverworldRules.town_weekly_growth(town, session))
+	var reinforcement_quality: int = OverworldRules.town_reinforcement_quality(town, session)
+	var battle_readiness: int = OverworldRules.town_battle_readiness(town, session)
+	var pressure_output: int = OverworldRules.town_pressure_output(town, session)
+	var built_buildings = town.get("built_buildings", [])
+	var available_orders := get_build_actions(session).size()
+	var locked_plans := _locked_building_count(town)
+	var spell_tier := current_spell_tier(town)
+	var days_until_growth: int = OverworldRules.days_until_next_weekly_growth(session.day)
+	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
+	var battlefront: Dictionary = OverworldRules.town_battlefront_profile(town)
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var market: Dictionary = OverworldRules.town_market_state(town)
+	var parts := [
+		"%s" % _town_identity_summary(town),
+		"%s" % OverworldRules.town_strategic_summary(town),
+		"Battlefront %s" % String(battlefront.get("summary", "The defenders will meet the assault in ordinary lines.")),
+		"Daily income %s | Spell tier %d | Built works %d" % [
+			income,
+			spell_tier,
+			built_buildings.size() if built_buildings is Array else 0,
+		],
+		"Next weekly muster Day %d in %d day%s | Growth %s" % [
+			OverworldRules.next_weekly_growth_day(session.day),
+			days_until_growth,
+			"" if days_until_growth == 1 else "s",
+			weekly_growth,
+		],
+		"%s %d | Reinforcement %s | Battle readiness %d" % [
+			_town_pressure_label(town),
+			pressure_output,
+			_reinforcement_grade(reinforcement_quality),
+			battle_readiness,
+		],
+		"Open plans %d | Deferred plans %d | %s" % [
+			available_orders,
+			locked_plans,
+			_describe_building_category_counts(built_buildings),
+		],
+		"Logistics %s" % _logistics_watch_summary(logistics),
+	]
+	if bool(market.get("active", false)):
+		parts.append(
+			"Exchange %s | Buy wood %d, ore %d | Sell wood %d, ore %d" % [
+				String(market.get("building_name", "Market")),
+				int(market.get("buy_rates", {}).get("wood", 0)),
+				int(market.get("buy_rates", {}).get("ore", 0)),
+				int(market.get("sell_rates", {}).get("wood", 0)),
+				int(market.get("sell_rates", {}).get("ore", 0)),
+			]
+		)
+	if bool(recovery.get("active", false)):
+		parts.append("Recovery %s" % String(recovery.get("summary", "")))
+	else:
+		parts.append("Recovery lines steady | %d/day relief" % int(recovery.get("relief_per_day", 1)))
+	if bool(capital_project.get("active", false)):
+		var project_line := "Capital project online %d/%d | %s" % [
+			int(capital_project.get("progress_complete", 0)),
+			int(capital_project.get("progress_total", 0)),
+			String(capital_project.get("summary", "The stronghold is driving a theater-wide escalation.")),
+		]
+		var support_summary := _project_support_summary(capital_project)
+		if support_summary != "":
+			project_line += " | %s" % support_summary
+		parts.append(project_line)
+	elif int(capital_project.get("total", 0)) > 0:
+		parts.append(
+			"Capital project %d/%d | Next %s | %s" % [
+				int(capital_project.get("progress_complete", 0)),
+				int(capital_project.get("progress_total", 0)),
+				String(capital_project.get("next_label", "final anchor works")),
+				_project_support_summary(capital_project),
+			]
+		)
+	return "\n".join(parts)
+
+static func describe_outlook_board(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Defense Outlook\n- No active town."
+
+	var readiness: int = OverworldRules.town_battle_readiness(town, session)
+	var reinforcement_quality: int = OverworldRules.town_reinforcement_quality(town, session)
+	var pressure_output: int = OverworldRules.town_pressure_output(town, session)
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
+	var battlefront: Dictionary = OverworldRules.town_battlefront_profile(town)
+	var threat_state: Dictionary = OverworldRules.town_public_threat_state(session, town)
+	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var reserve_count := _stationed_reserve_count(session, stationed)
+	var response_actions := get_response_actions(session)
+	var ready_response_count := _count_ready_actions(response_actions)
+	var movement_state := _active_hero_movement_state(session)
+	var lines := [
+		"Defense Outlook",
+		"- Outlook: %s | Walls %s | Readiness %d | Reinforcement %s | %s %d" % [
+			_town_outlook_grade(
+				readiness,
+				threat_state,
+				logistics,
+				recovery,
+				capital_project,
+				reserve_count,
+				ready_response_count
+			),
+			_defense_grade(town),
+			readiness,
+			_reinforcement_grade(reinforcement_quality),
+			_town_pressure_label(town),
+			pressure_output,
+		],
+		"- Frontier watch: %s" % _town_frontier_outlook_line(town, threat_state, battlefront),
+		"- Dispatch readiness: %s" % _town_dispatch_readiness_line(
+			response_actions.size(),
+			ready_response_count,
+			movement_state,
+			reserve_count
+		),
+		"- Support chain: %s" % _town_support_watch_line(town, logistics, recovery, capital_project),
+	]
+	return "\n".join(lines)
+
+static func describe_command_ledger(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Order Ledger\n- No active town."
+	var lines := [
+		"Order Ledger",
+		"- Construction: %s" % _build_order_ledger_line(session, town),
+		"- Recruitment: %s" % _recruit_order_ledger_line(session, town),
+		"- Response: %s" % _response_order_ledger_line(session, town),
+		"- Coverage: %s" % _coverage_order_ledger_line(session, town),
+	]
+	return "\n".join(lines)
+
+static func describe_defense(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Defense unavailable."
+
+	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var active_hero_value: Variant = session.overworld.get("hero", {})
+	var active_hero: Dictionary = active_hero_value if active_hero_value is Dictionary else {}
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var reserve_lines := []
+	for hero in stationed:
+		if not (hero is Dictionary):
+			continue
+		if String(hero.get("id", "")) == active_hero_id:
+			continue
+		reserve_lines.append(_hero_command_line(hero))
+
+	var lines := [
+		"Defense Posture",
+		"- %s | %d companies | %d total troops" % [
+			_defense_grade(town),
+			_garrison_company_count(town),
+			_garrison_headcount(town),
+		],
+		"- Battle readiness %d | Reinforcement %s" % [
+			OverworldRules.town_battle_readiness(town, session),
+			_reinforcement_grade(OverworldRules.town_reinforcement_quality(town, session)),
+		],
+		"- Garrison %s" % _describe_garrison(town),
+		"- Logistics %s" % _logistics_watch_summary(OverworldRules.town_logistics_state(session, town)),
+	]
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	if bool(recovery.get("active", false)):
+		lines.append("- Recovery %s" % String(recovery.get("summary", "")))
+	if not active_hero.is_empty():
+		lines.append("- Active defender %s" % _hero_command_line(active_hero))
+	if reserve_lines.is_empty():
+		lines.append("- No reserve commander is stationed. The town captain will lead if the field hero departs.")
+	else:
+		lines.append("- Reserve commanders %s" % "; ".join(reserve_lines))
+	return "\n".join(lines)
+
+static func describe_threats(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Threat watch unavailable."
+
+	var lines := ["Frontier Watch"]
+	var threat_lines := _town_threat_lines(session, town)
+	var capital_project: Dictionary = OverworldRules.town_capital_project_state(town, session)
+	var battlefront: Dictionary = OverworldRules.town_battlefront_profile(town)
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	if threat_lines.is_empty():
+		lines.append("- No hostile raid hosts are currently aligned on %s." % _town_name(town))
+		lines.append("- The walls hold a %s over the frontier roads." % _defense_grade(town).to_lower())
+		if String(battlefront.get("summary", "")) != "":
+			lines.append("- Siege profile: %s" % String(battlefront.get("summary", "")))
+		lines.append("- Logistics chain: %s" % _logistics_watch_summary(logistics))
+		if bool(recovery.get("active", false)):
+			lines.append("- Recovery watch: %s" % String(recovery.get("summary", "")))
+		if int(capital_project.get("total", 0)) > 0:
+			lines.append("- Capital watch: %s" % _project_watch_summary(capital_project))
+		return "\n".join(lines)
+
+	for threat_line in threat_lines:
+		lines.append("- %s" % threat_line)
+	if String(battlefront.get("summary", "")) != "":
+		lines.append("- Siege profile: %s" % String(battlefront.get("summary", "")))
+	lines.append("- Logistics chain: %s" % _logistics_watch_summary(logistics))
+	if logistics.get("disrupted_site_labels", []) is Array and not logistics.get("disrupted_site_labels", []).is_empty():
+		lines.append("- Denied routes: %s" % ", ".join(logistics.get("disrupted_site_labels", [])))
+	if logistics.get("threatened_site_labels", []) is Array and not logistics.get("threatened_site_labels", []).is_empty():
+		lines.append("- Threatened routes: %s" % ", ".join(logistics.get("threatened_site_labels", [])))
+	if logistics.get("response_site_labels", []) is Array and not logistics.get("response_site_labels", []).is_empty():
+		lines.append("- Active route orders: %s" % ", ".join(logistics.get("response_site_labels", [])))
+	if bool(recovery.get("active", false)):
+		lines.append("- Recovery watch: %s" % String(recovery.get("summary", "")))
+	if int(capital_project.get("total", 0)) > 0:
+		lines.append("- Capital watch: %s" % _project_watch_summary(capital_project))
+	return "\n".join(lines)
+
+static func describe_event_feed(session: SessionStateStore.SessionData, last_message: String = "") -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Town Dispatch\n- No active town."
+
+	var open_builds := get_build_actions(session).size()
+	var open_recruits := get_recruit_actions(session).size()
+	var open_study := get_spell_learning_actions(session).size()
+	var lead_line := "Latest order: %s" % last_message if last_message != "" else "The council chamber awaits fresh orders."
+	var pressure_line := _pressure_brief(session, town)
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var market_actions := get_market_actions(session).size()
+	var response_actions := get_response_actions(session).size()
+	var lines := [
+		"Town Dispatch",
+		"- %s" % lead_line,
+		"- Construction %d | Recruitment %d | Study %d" % [open_builds, open_recruits, open_study],
+	]
+	if pressure_line != "":
+		lines.append("- %s" % pressure_line)
+	if bool(recovery.get("active", false)):
+		lines.append("- Recovery watch: %s" % String(recovery.get("summary", "")))
+	elif int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0:
+		lines.append("- Logistics watch: %s" % _logistics_watch_summary(logistics))
+	if market_actions > 0:
+		lines.append("- Exchange orders %d" % market_actions)
+	if response_actions > 0:
+		lines.append("- Strategic response orders %d" % response_actions)
+	return "\n".join(lines)
+
+static func describe_buildings(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Buildings unavailable."
+
+	var built_lines := []
+	for building_id_value in town.get("built_buildings", []):
+		var building_id := String(building_id_value)
+		if building_id == "":
+			continue
+		built_lines.append("- %s" % _building_line(building_id, "built"))
+
+	var available_lines := []
+	for action in get_build_actions(session):
+		if not (action is Dictionary):
+			continue
+		available_lines.append("- %s" % String(action.get("ledger_line", action.get("summary", action.get("label", "Build")))))
+
+	var locked_lines := []
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var built_buildings = town.get("built_buildings", [])
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		var building_id := String(building_id_value)
+		if building_id == "" or building_id in built_buildings:
+			continue
+		var build_status: Dictionary = OverworldRules.get_town_build_status(town, building_id)
+		if bool(build_status.get("buildable", false)):
+			continue
+		locked_lines.append("- %s" % _building_line(building_id, "locked", build_status))
+
+	var parts := []
+	parts.append("Construction Ledger")
+	parts.append(
+		"Built works %d | Open orders %d | Deferred plans %d | %s" % [
+			built_buildings.size() if built_buildings is Array else 0,
+			available_lines.size(),
+			locked_lines.size(),
+			_describe_building_category_counts(built_buildings),
+		]
+	)
+	parts.append("Built Works")
+	parts.append("\n".join(built_lines) if not built_lines.is_empty() else "- No permanent works yet")
+	parts.append("Open Orders")
+	parts.append("\n".join(available_lines) if not available_lines.is_empty() else "- No open construction orders")
+	if not locked_lines.is_empty():
+		parts.append("Deferred Plans")
+		parts.append("\n".join(locked_lines))
+	return "\n".join(parts)
+
+static func describe_recruitment(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Recruitment unavailable."
+
+	var lines := []
+	var recruits = town.get("available_recruits", {})
+	var weekly_growth: Dictionary = OverworldRules.town_weekly_growth(town, session)
+	var days_until_growth: int = OverworldRules.days_until_next_weekly_growth(session.day)
+	var reinforcement_grade := _reinforcement_grade(OverworldRules.town_reinforcement_quality(town, session))
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	for unit_id in _town_unit_ids(town):
+		var unit := ContentService.get_unit(unit_id)
+		var available := int(recruits.get(unit_id, 0))
+		var growth := int(weekly_growth.get(unit_id, 0))
+		if _unit_is_unlocked_in_town(town, unit_id):
+			var growth_sources := _growth_source_summary(town, unit_id)
+			var reserve_label := "x%d" % available if available > 0 else "reserve empty"
+			lines.append(
+				"- %s %s | Weekly +%d%s | Cost %s" % [
+					String(unit.get("name", unit_id)),
+					reserve_label,
+					max(0, growth),
+					" via %s" % growth_sources if growth_sources != "" else "",
+					_describe_resources(OverworldRules.town_recruit_cost(session, town, unit_id)),
+				]
+			)
+			continue
+		var unlock_building_id := _unlock_building_for_unit(town, unit_id)
+		var unlock_building := ContentService.get_building(unlock_building_id)
+		var build_status: Dictionary = OverworldRules.get_town_build_status(town, unlock_building_id)
+		lines.append(
+			"- %s locked | %s" % [
+				String(unit.get("name", unit_id)),
+				String(
+					build_status.get(
+						"blocked_message",
+						"Build %s." % String(unlock_building.get("name", unlock_building_id))
+					)
+				),
+				]
+			)
+	return "Recruit Reserves\nNext levy Day %d in %d day%s\n%s" % [
+		OverworldRules.next_weekly_growth_day(session.day),
+		days_until_growth,
+		"" if days_until_growth == 1 else "s",
+		(
+			"Reserve quality %s | Logistics %s%s\n%s" % [
+				reinforcement_grade,
+				_logistics_watch_summary(logistics),
+				" | Recovery %s" % String(recovery.get("summary", "")) if bool(recovery.get("active", false)) else "",
+				"\n".join(lines),
+			]
+		) if not lines.is_empty() else ("Reserve quality %s\n- No recruits are waiting" % reinforcement_grade),
+	]
+
+static func describe_market(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Exchange Hall\n- No active town."
+	return OverworldRules.describe_town_market(session, town)
+
+static func describe_spell_access(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Spell study unavailable."
+
+	var tier := current_spell_tier(town)
+	if tier <= 0:
+		return "Spell Study\n- No archive halls are standing in this town"
+
+	var lines := []
+	var hero = session.overworld.get("hero", {})
+	for spell_id in accessible_spell_ids(town):
+		var spell := ContentService.get_spell(spell_id)
+		if spell.is_empty():
+			continue
+		lines.append(
+			"- %s | %s" % [
+				String(spell.get("name", spell_id)),
+				"Known" if SpellRules.knows_spell(hero, spell_id) else "Ready to learn",
+			]
+		)
+	return "Spell Study\nTier %d archive access\n%s" % [
+		tier,
+		"\n".join(lines) if not lines.is_empty() else "- No spell leaves are catalogued here",
+	]
+
+static func describe_artifacts(session: SessionStateStore.SessionData) -> String:
+	return ArtifactRules.describe_management(session.overworld.get("hero", {}))
+
+static func describe_heroes(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Command\n- No active town."
+	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var lines := ["Command Wing"]
+	var active_found := false
+	for hero in stationed:
+		if not (hero is Dictionary):
+			continue
+		if String(hero.get("id", "")) == active_hero_id:
+			lines.append("- Gate command: %s" % _hero_command_line(hero))
+			active_found = true
+			break
+	if not active_found:
+		lines.append("- No hero is currently commanding from the walls.")
+	for hero in stationed:
+		if not (hero is Dictionary):
+			continue
+		if String(hero.get("id", "")) == active_hero_id:
+			continue
+		lines.append("- Stationed reserve: %s" % _hero_command_line(hero))
+	if lines.size() == 2 and not active_found:
+		lines.append("- The town captain will anchor the defense if the city is assaulted.")
+	elif lines.size() == 1:
+		lines.append("- No stationed heroes.")
+	return "\n".join(lines)
+
+static func describe_specialties(session: SessionStateStore.SessionData) -> String:
+	return HeroProgressionRules.describe_specialties(session.overworld.get("hero", {}))
+
+static func describe_tavern(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Wayfarers Hall\n- No active town."
+	return HeroCommandRules.describe_tavern(session, town)
+
+static func describe_transfer(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Transfer\n- No active town."
+	return HeroCommandRules.describe_town_transfer(session, town)
+
+static func describe_responses(session: SessionStateStore.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Strategic Response\n- No active town."
+	return OverworldRules.describe_town_response_panel(session, town)
+
+static func get_build_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+
+	var actions := []
+	var resources = session.overworld.get("resources", {})
+	for building_id in _available_building_ids(town):
+		var building := ContentService.get_building(building_id)
+		var build_status: Dictionary = OverworldRules.get_town_build_status(town, building_id)
+		var cost = building.get("cost", {})
+		var projection: String = OverworldRules.describe_town_build_projection(session, town, building_id)
+		var readiness: Dictionary = OverworldRules.town_cost_readiness(town, resources, cost)
+		var direct_affordable := bool(readiness.get("direct_affordable", false))
+		var market_coverable := bool(readiness.get("market_affordable", false)) and not direct_affordable
+		var market_summary := _market_coverage_line(readiness)
+		var shortfall_summary := _cost_shortfall_line(readiness)
+		var summary_lines := [
+			"%s | Cost %s" % [
+				_building_line(building_id, "available", build_status),
+				_describe_resources(cost),
+			],
+			projection,
+		]
+		if direct_affordable:
+			summary_lines.append("Ready now from current stores.")
+		elif market_coverable and market_summary != "":
+			summary_lines.append("Exchange path: %s" % market_summary)
+		elif shortfall_summary != "":
+			summary_lines.append("Blocker: %s" % shortfall_summary)
+		actions.append(
+			{
+				"id": "build:%s" % building_id,
+				"label": "Build %s" % String(building.get("name", building_id)),
+				"summary": "\n".join(summary_lines),
+				"ledger_line": "%s | Cost %s" % [
+					_building_line(building_id, "available", build_status),
+					_describe_resources(cost),
+				],
+				"cost": cost,
+				"direct_affordable": direct_affordable,
+				"market_coverable": market_coverable,
+				"market_summary": market_summary,
+				"shortfall_summary": shortfall_summary,
+				"disabled": not direct_affordable,
+			}
+		)
+	return actions
+
+static func get_recruit_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+
+	var actions := []
+	var resources = session.overworld.get("resources", {})
+	for unit_id in OverworldRules.get_town_recruit_options(town):
+		var unit := ContentService.get_unit(unit_id)
+		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
+		var weekly_growth := int(OverworldRules.town_weekly_growth(town, session).get(unit_id, 0))
+		var unit_cost: Dictionary = OverworldRules.town_recruit_cost(session, town, unit_id)
+		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
+		var market_affordable_count := _max_market_affordable_count(town, resources, unit_cost, available)
+		var market_summary := ""
+		if market_affordable_count > direct_affordable_count:
+			var market_readiness: Dictionary = OverworldRules.town_cost_readiness(
+				town,
+				resources,
+				_multiply_resource_cost(unit_cost, market_affordable_count)
+			)
+			market_summary = _market_coverage_line(market_readiness)
+		var shortfall_summary := ""
+		if market_affordable_count <= 0:
+			shortfall_summary = _cost_shortfall_line(OverworldRules.town_cost_readiness(town, resources, unit_cost))
+		var summary_lines := [
+			"%s x%d | Weekly +%d | Cost %s" % [
+				String(unit.get("name", unit_id)),
+				available,
+				weekly_growth,
+				_describe_resources(unit_cost),
+			]
+		]
+		if direct_affordable_count > 0:
+			summary_lines.append("Current stores can field %d now." % direct_affordable_count)
+		elif market_affordable_count > 0 and market_summary != "":
+			summary_lines.append("Exchange can unlock %d now: %s" % [market_affordable_count, market_summary])
+		elif shortfall_summary != "":
+			summary_lines.append("Blocker: %s" % shortfall_summary)
+		actions.append(
+			{
+				"id": "recruit:%s" % unit_id,
+				"label": "Recruit %s" % String(unit.get("name", unit_id)),
+				"summary": "\n".join(summary_lines),
+				"unit_cost": unit_cost,
+				"available_count": available,
+				"weekly_growth": weekly_growth,
+				"direct_affordable_count": direct_affordable_count,
+				"market_affordable_count": market_affordable_count,
+				"market_coverable": market_affordable_count > direct_affordable_count,
+				"market_summary": market_summary,
+				"shortfall_summary": shortfall_summary,
+				"disabled": direct_affordable_count <= 0,
+			}
+		)
+	return actions
+
+static func get_market_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	return OverworldRules.get_town_market_actions(session, town)
+
+static func get_hero_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	return HeroCommandRules.get_town_switch_actions(session, town)
+
+static func get_tavern_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	return HeroCommandRules.get_tavern_actions(session, town)
+
+static func get_transfer_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	return HeroCommandRules.get_town_transfer_actions(session, town)
+
+static func get_response_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+	return OverworldRules.get_town_response_actions(session, town)
+
+static func get_spell_learning_actions(session: SessionStateStore.SessionData) -> Array:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return []
+
+	var actions := []
+	var hero = session.overworld.get("hero", {})
+	for spell_id in accessible_spell_ids(town):
+		if SpellRules.knows_spell(hero, spell_id):
+			continue
+		var spell := ContentService.get_spell(spell_id)
+		if spell.is_empty():
+			continue
+		actions.append(
+			{
+				"id": "learn_spell:%s" % spell_id,
+				"label": "Learn %s" % String(spell.get("name", spell_id)),
+				"summary": "%s | %s" % [
+					String(spell.get("name", spell_id)),
+					String(spell.get("description", "")),
+				],
+				"disabled": false,
+			}
+		)
+	return actions
+
+static func get_artifact_actions(session: SessionStateStore.SessionData) -> Array:
+	return ArtifactRules.get_management_actions(session.overworld.get("hero", {}))
+
+static func get_specialty_actions(session: SessionStateStore.SessionData) -> Array:
+	return HeroProgressionRules.get_choice_actions(session.overworld.get("hero", {}))
+
+static func build_active_town(session: SessionStateStore.SessionData, building_id: String) -> Dictionary:
+	return OverworldRules.build_in_active_town(session, building_id)
+
+static func switch_active_hero_at_town(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for command changes."}
+	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var stationed_here := false
+	for hero in stationed:
+		if hero is Dictionary and String(hero.get("id", "")) == hero_id:
+			stationed_here = true
+			break
+	if not stationed_here:
+		return {"ok": false, "message": "Only heroes stationed in the active town can take command here."}
+	var result: Dictionary = HeroCommandRules.set_active_hero(session, hero_id)
+	if not bool(result.get("ok", false)):
+		return {"ok": false, "message": String(result.get("message", "Unable to change command."))}
+	return _finalize_town_result(session, true, String(result.get("message", "")))
+
+static func recruit_active_town(session: SessionStateStore.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
+	return OverworldRules.recruit_in_active_town(session, unit_id, requested_count)
+
+static func perform_market_action(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for exchange orders."}
+	return OverworldRules.perform_town_market_action(session, town, action_id)
+
+static func hire_hero_at_active_town(session: SessionStateStore.SessionData, hero_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for hero recruitment."}
+	var result: Dictionary = HeroCommandRules.recruit_hero_at_town(session, town, hero_id)
+	if not bool(result.get("ok", false)):
+		return {"ok": false, "message": String(result.get("message", "Hero recruitment failed."))}
+	return _finalize_town_result(session, true, String(result.get("message", "")))
+
+static func transfer_in_active_town(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for transfer orders."}
+	var parts := action_id.split(":")
+	if parts.size() != 5 or parts[0] != "transfer":
+		return {"ok": false, "message": "That transfer order is invalid."}
+	var result: Dictionary = HeroCommandRules.transfer_town_stack(session, town, parts[1], parts[2], parts[3], parts[4])
+	if not bool(result.get("ok", false)):
+		return {"ok": false, "message": String(result.get("message", "Transfer failed."))}
+	return _finalize_town_result(session, true, String(result.get("message", "")))
+
+static func perform_response_action(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town is available for strategic response orders."}
+	return OverworldRules.perform_town_response_action(session, town, action_id)
+
+static func learn_spell_at_active_town(session: SessionStateStore.SessionData, spell_id: String) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {"ok": false, "message": "No town archives are available here."}
+	if spell_id not in accessible_spell_ids(town):
+		return {"ok": false, "message": "That spell is not catalogued in this town."}
+
+	var hero_value: Variant = session.overworld.get("hero", {})
+	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+	var result: Dictionary = SpellRules.learn_spell(hero, spell_id)
+	if not bool(result.get("ok", false)):
+		return {"ok": false, "message": String(result.get("message", "Study failed."))}
+
+	session.overworld["hero"] = result.get("hero", hero)
+	var message := "%s in %s" % [String(result.get("message", "Spell learned.")), _town_name(town)]
+	return _finalize_town_result(session, true, message)
+
+static func manage_artifact_at_active_town(session: SessionStateStore.SessionData, action_id: String) -> Dictionary:
+	return OverworldRules.perform_artifact_action(session, action_id)
+
+static func choose_specialty_at_active_town(session: SessionStateStore.SessionData, specialty_id: String) -> Dictionary:
+	return OverworldRules.choose_specialty(session, specialty_id)
+
+static func current_spell_tier(town: Dictionary) -> int:
+	var highest_tier := 0
+	for building_id_value in town.get("built_buildings", []):
+		var building := ContentService.get_building(String(building_id_value))
+		highest_tier = max(highest_tier, int(building.get("spell_tier", 0)))
+	return highest_tier
+
+static func accessible_spell_ids(town: Dictionary) -> Array:
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var tier := current_spell_tier(town)
+	if tier <= 0:
+		return []
+
+	var spell_ids := []
+	for entry in town_template.get("spell_library", []):
+		if not (entry is Dictionary):
+			continue
+		if int(entry.get("tier", 0)) > tier:
+			continue
+		for spell_id_value in entry.get("spell_ids", []):
+			var spell_id := String(spell_id_value)
+			if spell_id != "" and spell_id not in spell_ids:
+				spell_ids.append(spell_id)
+	return spell_ids
+
+static func _build_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+	var build_actions := get_build_actions(session)
+	for action in build_actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return "%s is ready now." % String(action.get("ledger_line", action.get("label", "Build order")))
+	for action in build_actions:
+		if action is Dictionary and bool(action.get("market_coverable", false)):
+			return "%s waits on stores. Exchange path: %s." % [
+				String(action.get("ledger_line", action.get("label", "Build order"))),
+				String(action.get("market_summary", "trade through the exchange")),
+			]
+	for action in build_actions:
+		if action is Dictionary:
+			var shortfall := String(action.get("shortfall_summary", ""))
+			if shortfall != "":
+				return "%s is blocked by reserves: %s." % [
+					String(action.get("ledger_line", action.get("label", "Build order"))),
+					shortfall,
+				]
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var built_buildings = town.get("built_buildings", [])
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		var building_id := String(building_id_value)
+		if building_id == "" or building_id in built_buildings:
+			continue
+		var build_status: Dictionary = OverworldRules.get_town_build_status(town, building_id)
+		if bool(build_status.get("buildable", false)):
+			continue
+		return "%s stays deferred: %s." % [
+			String(ContentService.get_building(building_id).get("name", building_id)),
+			String(build_status.get("blocked_message", "No opening order is available.")),
+		]
+	return "No new works are open in this town."
+
+static func _recruit_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+	var recruit_actions := get_recruit_actions(session)
+	var best_ready := {}
+	var best_market := {}
+	var best_blocked := {}
+	for action in recruit_actions:
+		if not (action is Dictionary):
+			continue
+		if int(action.get("direct_affordable_count", 0)) > int(best_ready.get("direct_affordable_count", 0)):
+			best_ready = action
+		if int(action.get("market_affordable_count", 0)) > int(best_market.get("market_affordable_count", 0)):
+			best_market = action
+		if int(action.get("available_count", 0)) > int(best_blocked.get("available_count", 0)):
+			best_blocked = action
+	if not best_ready.is_empty() and int(best_ready.get("direct_affordable_count", 0)) > 0:
+		return "%s can field %d now from current stores." % [
+			String(best_ready.get("label", "Recruit order")).trim_prefix("Recruit "),
+			int(best_ready.get("direct_affordable_count", 0)),
+		]
+	if not best_market.is_empty() and int(best_market.get("market_affordable_count", 0)) > 0:
+		return "%s x%d wait in reserve. Exchange can unlock %d now: %s." % [
+			String(best_market.get("label", "Recruit order")).trim_prefix("Recruit "),
+			int(best_market.get("available_count", 0)),
+			int(best_market.get("market_affordable_count", 0)),
+			String(best_market.get("market_summary", "trade through the exchange")),
+		]
+	if not best_blocked.is_empty() and int(best_blocked.get("available_count", 0)) > 0:
+		var blocker := String(best_blocked.get("shortfall_summary", "stores are too thin"))
+		return "%s x%d wait in reserve, but %s." % [
+			String(best_blocked.get("label", "Recruit order")).trim_prefix("Recruit "),
+			int(best_blocked.get("available_count", 0)),
+			blocker,
+		]
+	var next_levy_day: int = OverworldRules.next_weekly_growth_day(session.day)
+	var best_empty_unit_id := ""
+	var best_empty_growth := 0
+	for unit_id in _town_unit_ids(town):
+		if not _unit_is_unlocked_in_town(town, unit_id):
+			continue
+		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
+		var growth := int(OverworldRules.town_weekly_growth(town, session).get(unit_id, 0))
+		if available <= 0 and growth > best_empty_growth:
+			best_empty_growth = growth
+			best_empty_unit_id = unit_id
+	if best_empty_unit_id != "":
+		var sources := _growth_source_summary(town, best_empty_unit_id)
+		return "%s reserve is empty. Next levy Day %d adds %d%s." % [
+			String(ContentService.get_unit(best_empty_unit_id).get("name", best_empty_unit_id)),
+			next_levy_day,
+			best_empty_growth,
+			" via %s" % sources if sources != "" else "",
+		]
+	for unit_id in _town_unit_ids(town):
+		if _unit_is_unlocked_in_town(town, unit_id):
+			continue
+		var unlock_building_id := _unlock_building_for_unit(town, unit_id)
+		if unlock_building_id == "":
+			continue
+		var build_status: Dictionary = OverworldRules.get_town_build_status(town, unlock_building_id)
+		return "%s stays locked until %s." % [
+			String(ContentService.get_unit(unit_id).get("name", unit_id)),
+			String(build_status.get("blocked_message", "the proper works are raised")),
+		]
+	return "No levy option is currently open."
+
+static func _response_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+	var response_actions := get_response_actions(session)
+	var logistics: Dictionary = OverworldRules.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRules.town_recovery_state(session, town)
+	var movement_state := _active_hero_movement_state(session)
+	for action in response_actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var movement_clause := ""
+			if int(action.get("movement_cost", 0)) > 0:
+				movement_clause = " | %d move left after dispatch" % int(action.get("remaining_movement_after_order", 0))
+			return "%s is ready now%s." % [
+				String(action.get("label", "Response order")),
+				movement_clause,
+			]
+	for action in response_actions:
+		if action is Dictionary and bool(action.get("market_coverable", false)):
+			return "%s waits on stores. Exchange path: %s." % [
+				String(action.get("label", "Response order")),
+				String(action.get("market_summary", "trade through the exchange")),
+			]
+	for action in response_actions:
+		if action is Dictionary and bool(action.get("movement_blocked", false)):
+			return "%s needs %d move, but the active commander only has %d/%d." % [
+				String(action.get("label", "Response order")),
+				int(action.get("movement_cost", 0)),
+				int(movement_state.get("current", 0)),
+				int(movement_state.get("max", 0)),
+			]
+	for action in response_actions:
+		if action is Dictionary and bool(action.get("resource_blocked", false)):
+			return "%s is blocked by reserves: %s." % [
+				String(action.get("label", "Response order")),
+				_cost_shortfall_line(OverworldRules.town_cost_readiness(
+					town,
+					session.overworld.get("resources", {}),
+					action.get("resource_cost", {})
+				)),
+			]
+	if bool(recovery.get("active", false)):
+		return "%s | Stabilization still needs %d day%s at %d/day relief." % [
+			String(logistics.get("summary", "Routes are strained")),
+			int(recovery.get("days_to_clear", 0)),
+			"" if int(recovery.get("days_to_clear", 0)) == 1 else "s",
+			int(recovery.get("relief_per_day", 1)),
+		]
+	if int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0:
+		return "%s. No linked response order is currently open from this town." % _logistics_watch_summary(logistics)
+	return "No immediate route or recovery order is open."
+
+static func _coverage_order_ledger_line(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+	var stationed: Array = HeroCommandRules.stationed_heroes(session, town)
+	var reserve_names := []
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	for hero in stationed:
+		if not (hero is Dictionary):
+			continue
+		if String(hero.get("id", "")) == active_hero_id:
+			continue
+		reserve_names.append(String(hero.get("name", "Reserve commander")))
+	var movement_state := _active_hero_movement_state(session)
+	if reserve_names.is_empty():
+		return "No reserve commander covers the walls if the field hero rides out. Active command holds %d/%d move." % [
+			int(movement_state.get("current", 0)),
+			int(movement_state.get("max", 0)),
+		]
+	var shown_names := reserve_names.slice(0, min(2, reserve_names.size()))
+	var names := ", ".join(shown_names)
+	if reserve_names.size() > shown_names.size():
+		names += ", and %d more" % (reserve_names.size() - shown_names.size())
+	return "%s cover the walls while active command holds %d/%d move for town orders." % [
+		names,
+		int(movement_state.get("current", 0)),
+		int(movement_state.get("max", 0)),
+	]
+
+static func _market_coverage_line(readiness: Dictionary) -> String:
+	var actions = readiness.get("market_actions", [])
+	if not (actions is Array) or actions.is_empty():
+		return ""
+	var shown := []
+	for index in range(min(2, actions.size())):
+		shown.append(String(actions[index]))
+	var summary := "; ".join(shown)
+	if actions.size() > 2:
+		summary += "; %d more step%s" % [
+			actions.size() - 2,
+			"" if actions.size() - 2 == 1 else "s",
+		]
+	return summary
+
+static func _cost_shortfall_line(readiness: Dictionary) -> String:
+	var shortfall_summary := _describe_resources(readiness.get("direct_shortfall", {}), "")
+	var gold_short := int(max(
+		0,
+		int(readiness.get("required_gold_total", 0)) - int(readiness.get("available_gold_total", 0))
+	))
+	if shortfall_summary != "":
+		if bool(readiness.get("market_active", false)) and gold_short > 0:
+			return "need %s, and even a full exchange leaves %d gold short" % [shortfall_summary, gold_short]
+		return "need %s" % shortfall_summary
+	if gold_short > 0:
+		if bool(readiness.get("market_active", false)):
+			return "even a full exchange leaves %d gold short" % gold_short
+		return "need %d more gold" % gold_short
+	return "stores are too thin"
+
+static func _max_market_affordable_count(
+	town: Dictionary,
+	resources: Dictionary,
+	unit_cost: Variant,
+	available_count: int
+) -> int:
+	for recruit_count in range(max(available_count, 0), 0, -1):
+		if OverworldRules.can_afford_cost_with_town_market(
+			town,
+			resources,
+			_multiply_resource_cost(unit_cost, recruit_count)
+		):
+			return recruit_count
+	return 0
+
+static func _multiply_resource_cost(cost: Variant, multiplier: int) -> Dictionary:
+	var scaled := {}
+	if cost is Dictionary:
+		for key in cost.keys():
+			scaled[String(key)] = int(cost[key]) * multiplier
+	return scaled
+
+static func _find_active_town_result(session: SessionStateStore.SessionData) -> Dictionary:
+	OverworldRules.normalize_overworld_state(session)
+	var pos: Vector2i = OverworldRules.hero_position(session)
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		if int(town.get("x", -1)) == pos.x and int(town.get("y", -1)) == pos.y:
+			return {"index": index, "town": town}
+	return {"index": -1, "town": {}}
+
+static func _available_building_ids(town: Dictionary) -> Array:
+	return OverworldRules.get_town_build_options(town)
+
+static func _building_line(building_id: String, state: String, build_status: Dictionary = {}) -> String:
+	var building := ContentService.get_building(building_id)
+	var parts := [String(building.get("name", building_id))]
+	var effect_summary := _building_effect_summary(building)
+	if effect_summary != "":
+		parts.append(effect_summary)
+	if state == "locked":
+		var blocked_message := String(build_status.get("blocked_message", ""))
+		if blocked_message != "":
+			parts.append(blocked_message)
+	return " | ".join(parts)
+
+static func _building_effect_summary(building: Dictionary) -> String:
+	var parts := []
+	var category := String(building.get("category", ""))
+	if category != "":
+		parts.append(category.capitalize())
+	var upgrade_from := String(building.get("upgrade_from", ""))
+	if upgrade_from != "":
+		var upgrade_building := ContentService.get_building(upgrade_from)
+		parts.append("Upgrades %s" % String(upgrade_building.get("name", upgrade_from)))
+	var income := _describe_resources(building.get("income", {}), "")
+	if income != "":
+		parts.append("Income %s" % income)
+	var market_summary := _market_building_summary(building)
+	if market_summary != "":
+		parts.append(market_summary)
+	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
+	if unlock_unit_id != "":
+		var unit := ContentService.get_unit(unlock_unit_id)
+		parts.append("Trains %s" % String(unit.get("name", unlock_unit_id)))
+	if int(building.get("spell_tier", 0)) > 0:
+		parts.append("Spell Tier %d" % int(building.get("spell_tier", 0)))
+	var growth_bonus = building.get("growth_bonus", {})
+	if growth_bonus is Dictionary and not growth_bonus.is_empty():
+		var growth_parts := []
+		for unit_id in growth_bonus.keys():
+			var unit := ContentService.get_unit(String(unit_id))
+			growth_parts.append("+%d %s" % [int(growth_bonus[unit_id]), String(unit.get("name", unit_id))])
+		growth_parts.sort()
+		parts.append("Growth %s" % ", ".join(growth_parts))
+	var recruit_discount = building.get("recruitment_discount_percent", {})
+	if recruit_discount is Dictionary and not recruit_discount.is_empty():
+		var discount_parts := []
+		for unit_id in recruit_discount.keys():
+			var unit := ContentService.get_unit(String(unit_id))
+			discount_parts.append("-%d%% %s" % [int(recruit_discount[unit_id]), String(unit.get("name", unit_id))])
+		discount_parts.sort()
+		parts.append("Discount %s" % ", ".join(discount_parts))
+	if int(building.get("readiness_bonus", 0)) > 0:
+		parts.append("Readiness +%d" % int(building.get("readiness_bonus", 0)))
+	if int(building.get("pressure_bonus", 0)) > 0:
+		parts.append("%s +%d" % [_pressure_noun_for_building(building), int(building.get("pressure_bonus", 0))])
+	if int(building.get("recovery_relief", 0)) > 0:
+		parts.append("Recovery +%d/day" % int(building.get("recovery_relief", 0)))
+	var capital_project = building.get("capital_project", {})
+	if capital_project is Dictionary and not capital_project.is_empty():
+		parts.append("Capital project")
+		if int(capital_project.get("defense_bonus", 0)) > 0:
+			parts.append("Defense +%d" % int(capital_project.get("defense_bonus", 0)))
+		if int(capital_project.get("max_active_raids_bonus", 0)) > 0:
+			parts.append("Raid slots +%d" % int(capital_project.get("max_active_raids_bonus", 0)))
+		if int(capital_project.get("recovery_guard", 0)) > 0:
+			parts.append("Recovery +%d/day" % int(capital_project.get("recovery_guard", 0)))
+		var support_requirements = capital_project.get("support_requirements", {})
+		if support_requirements is Dictionary and not support_requirements.is_empty():
+			parts.append("Needs %s" % _describe_support_requirements(support_requirements))
+		var vulnerability_penalties = capital_project.get("vulnerability_penalties", {})
+		if vulnerability_penalties is Dictionary and not vulnerability_penalties.is_empty():
+			parts.append("Cut chain: %s" % _describe_vulnerability_penalties(vulnerability_penalties))
+	return " | ".join(parts)
+
+static func _describe_building_names(building_ids: Variant) -> String:
+	var names := []
+	if building_ids is Array:
+		for building_id_value in building_ids:
+			var building := ContentService.get_building(String(building_id_value))
+			names.append(String(building.get("name", building_id_value)))
+	return ", ".join(names)
+
+static func _week_of_day(day: int) -> int:
+	return int(floori(float(max(day, 1) - 1) / 7.0)) + 1
+
+static func _weekday_of_day(day: int) -> int:
+	return ((max(day, 1) - 1) % 7) + 1
+
+static func _locked_building_count(town: Dictionary) -> int:
+	var locked_count := 0
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var built_buildings = town.get("built_buildings", [])
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		var building_id := String(building_id_value)
+		if building_id == "" or building_id in built_buildings:
+			continue
+		if not bool(OverworldRules.get_town_build_status(town, building_id).get("buildable", false)):
+			locked_count += 1
+	return locked_count
+
+static func _describe_building_category_counts(building_ids: Variant) -> String:
+	if not (building_ids is Array):
+		return "No standing works"
+	var counts := {}
+	for building_id_value in building_ids:
+		var category := String(ContentService.get_building(String(building_id_value)).get("category", "support"))
+		if category == "":
+			category = "support"
+		counts[category] = int(counts.get(category, 0)) + 1
+	if counts.is_empty():
+		return "No standing works"
+	var categories := counts.keys()
+	categories.sort()
+	var parts := []
+	for category_value in categories:
+		var category := String(category_value)
+		parts.append("%s %d" % [category.capitalize(), int(counts.get(category, 0))])
+	return ", ".join(parts)
+
+static func _describe_garrison(town: Dictionary) -> String:
+	var lines := []
+	for stack in town.get("garrison", []):
+		if not (stack is Dictionary):
+			continue
+		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+		lines.append("%s x%d" % [String(unit.get("name", stack.get("unit_id", ""))), int(stack.get("count", 0))])
+	return ", ".join(lines) if not lines.is_empty() else "No standing garrison"
+
+static func _garrison_company_count(town: Dictionary) -> int:
+	var companies := 0
+	for stack in town.get("garrison", []):
+		if stack is Dictionary and int(stack.get("count", 0)) > 0:
+			companies += 1
+	return companies
+
+static func _garrison_headcount(town: Dictionary) -> int:
+	var headcount := 0
+	for stack in town.get("garrison", []):
+		if stack is Dictionary:
+			headcount += max(0, int(stack.get("count", 0)))
+	return headcount
+
+static func _garrison_strength(town: Dictionary) -> int:
+	var total_strength := 0
+	for stack in town.get("garrison", []):
+		if not (stack is Dictionary):
+			continue
+		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
+		var count := int(max(0, int(stack.get("count", 0))))
+		total_strength += count * max(
+			6,
+			int(unit.get("hp", 1))
+			+ int(unit.get("min_damage", 1))
+			+ int(unit.get("max_damage", 1))
+			+ (3 if bool(unit.get("ranged", false)) else 0)
+		)
+	return total_strength
+
+static func _defense_grade(town: Dictionary) -> String:
+	var strength := _garrison_strength(town)
+	if strength >= 260:
+		return "Fortified Watch"
+	if strength >= 140:
+		return "Steady Watch"
+	if strength > 0:
+		return "Thin Watch"
+	return "Open Walls"
+
+static func _town_name(town: Dictionary) -> String:
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	return String(town_template.get("name", town.get("town_id", "Town")))
+
+static func _town_identity_summary(town: Dictionary) -> String:
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var summary := String(town_template.get("identity_summary", ""))
+	if summary != "":
+		return summary
+	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
+	return String(faction.get("identity_summary", "No town identity has been authored yet."))
+
+static func _hero_command_line(hero: Dictionary) -> String:
+	var command = hero.get("command", {})
+	return "%s Lv%d | A%d D%d | %s" % [
+		String(hero.get("name", "Hero")),
+		int(hero.get("level", 1)),
+		int(command.get("attack", 0)),
+		int(command.get("defense", 0)),
+		_army_summary(hero.get("army", {})),
+	]
+
+static func _army_summary(army: Variant) -> String:
+	var stacks = army.get("stacks", []) if army is Dictionary else []
+	var parts := []
+	if stacks is Array:
+		for stack in stacks:
+			if not (stack is Dictionary):
+				continue
+			var count := int(max(0, int(stack.get("count", 0))))
+			if count <= 0:
+				continue
+			var unit_id := String(stack.get("unit_id", ""))
+			var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
+			parts.append("%s x%d" % [unit_name, count])
+	return ", ".join(parts) if not parts.is_empty() else "No troops"
+
+static func _growth_source_summary(town: Dictionary, unit_id: String) -> String:
+	var source_names := []
+	for building_id_value in town.get("built_buildings", []):
+		var building_id := String(building_id_value)
+		var building := ContentService.get_building(building_id)
+		if String(building.get("unlock_unit_id", "")) == unit_id:
+			source_names.append(String(building.get("name", building_id)))
+			continue
+		var growth_bonus = building.get("growth_bonus", {})
+		if growth_bonus is Dictionary and int(growth_bonus.get(unit_id, 0)) > 0:
+			source_names.append(String(building.get("name", building_id)))
+	source_names.sort()
+	return ", ".join(source_names)
+
+static func _reinforcement_grade(quality: int) -> String:
+	if quality >= 60:
+		return "surge-ready"
+	if quality >= 36:
+		return "field-ready"
+	if quality > 0:
+		return "thin"
+	return "stalled"
+
+static func _town_pressure_label(town: Dictionary) -> String:
+	match String(ContentService.get_town(String(town.get("town_id", ""))).get("faction_id", "")):
+		"faction_embercourt":
+			return "Frontier leverage"
+		"faction_mireclaw":
+			return "Raid pressure"
+		"faction_sunvault":
+			return "Relay reach"
+		_:
+			return "Pressure"
+
+static func _pressure_noun_for_building(building: Dictionary) -> String:
+	var building_id := String(building.get("id", ""))
+	if building_id.begins_with("building_war_drum") or building_id.begins_with("building_smugglers") or building_id.begins_with("building_floodtide"):
+		return "Pressure"
+	if building_id.begins_with("building_resonant") or building_id.begins_with("building_harmonic") or building_id.begins_with("building_aurora"):
+		return "Reach"
+	return "Leverage"
+
+static func _market_building_summary(building: Dictionary) -> String:
+	match String(building.get("id", "")):
+		"building_market_square":
+			return "Exchange wood or ore against gold"
+		"building_river_granary_exchange":
+			return "Bulk wood lots and stronger river timber rates"
+		"building_resonant_exchange":
+			return "Bulk ore lots and stronger relay crystal rates"
+		_:
+			return ""
+
+static func _describe_support_requirements(requirements: Dictionary) -> String:
+	var parts := []
+	for family_id in requirements.keys():
+		var count := int(max(0, int(requirements.get(family_id, 0))))
+		if count <= 0:
+			continue
+		var label := ""
+		match String(family_id):
+			"neutral_dwelling":
+				label = "dwelling"
+			"faction_outpost":
+				label = "outpost"
+			"frontier_shrine":
+				label = "shrine"
+			_:
+				label = String(family_id)
+		parts.append("%d %s" % [count, label])
+	parts.sort()
+	return ", ".join(parts)
+
+static func _describe_vulnerability_penalties(penalties: Dictionary) -> String:
+	var parts := []
+	if int(penalties.get("quality_penalty", 0)) > 0:
+		parts.append("quality -%d" % int(penalties.get("quality_penalty", 0)))
+	if int(penalties.get("readiness_penalty", 0)) > 0:
+		parts.append("readiness -%d" % int(penalties.get("readiness_penalty", 0)))
+	if int(penalties.get("pressure_penalty", 0)) > 0:
+		parts.append("pressure -%d" % int(penalties.get("pressure_penalty", 0)))
+	if int(penalties.get("growth_penalty_percent", 0)) > 0:
+		parts.append("growth -%d%%" % int(penalties.get("growth_penalty_percent", 0)))
+	return ", ".join(parts)
+
+static func _project_support_summary(capital_project: Dictionary) -> String:
+	var parts := []
+	var support_total := int(capital_project.get("support_total", 0))
+	if support_total > 0:
+		var support_summary := "%d/%d support anchors" % [
+			int(capital_project.get("support_met", 0)),
+			support_total,
+		]
+		var missing = capital_project.get("missing_support_labels", [])
+		if missing is Array and not missing.is_empty():
+			support_summary += " | Missing %s" % ", ".join(missing)
+		parts.append(support_summary)
+	else:
+		var next_label := String(capital_project.get("next_label", ""))
+		if next_label != "":
+			parts.append("Next %s" % next_label)
+		else:
+			parts.append("Build the final anchor works here to unlock a stronger late-war push.")
+	if int(capital_project.get("recovery_guard", 0)) > 0:
+		parts.append("Recovery +%d/day" % int(capital_project.get("recovery_guard", 0)))
+	if bool(capital_project.get("vulnerable", false)):
+		var penalties := _describe_vulnerability_penalties(
+			{
+				"quality_penalty": int(capital_project.get("quality_penalty", 0)),
+				"readiness_penalty": int(capital_project.get("readiness_penalty", 0)),
+				"pressure_penalty": int(capital_project.get("pressure_penalty", 0)),
+				"growth_penalty_percent": int(capital_project.get("growth_penalty_percent", 0)),
+			}
+		)
+		if penalties != "":
+			parts.append("Cut chain: %s" % penalties)
+		var vulnerability_summary := String(capital_project.get("vulnerability_summary", ""))
+		if vulnerability_summary != "":
+			parts.append(vulnerability_summary)
+	return " | ".join(parts)
+
+static func _project_watch_summary(capital_project: Dictionary) -> String:
+	var summary := _project_support_summary(capital_project)
+	if bool(capital_project.get("active", false)):
+		summary = "Online | %s" % summary
+	if bool(capital_project.get("vulnerable", false)):
+		summary += " | Vulnerable"
+	return summary
+
+static func _logistics_watch_summary(logistics: Dictionary) -> String:
+	var summary := String(logistics.get("summary", "No linked frontier routes."))
+	var impact_summary := String(logistics.get("impact_summary", ""))
+	if impact_summary != "":
+		return "%s | %s" % [summary, impact_summary]
+	return summary
+
+static func _town_outlook_grade(
+	readiness: int,
+	threat_state: Dictionary,
+	logistics: Dictionary,
+	recovery: Dictionary,
+	capital_project: Dictionary,
+	reserve_count: int,
+	ready_response_count: int
+) -> String:
+	var severity := 0
+	if int(threat_state.get("visible_pressuring", 0)) > 0 or int(threat_state.get("siege_progress", 0)) > 0:
+		severity += 3
+	elif int(threat_state.get("visible_marching", 0)) > 0:
+		severity += 2 if int(threat_state.get("nearest_goal_distance", 9999)) <= 1 else 1
+	elif bool(threat_state.get("hidden_targeting", false)):
+		severity += 1
+	if readiness <= 18:
+		severity += 2
+	elif readiness <= 30:
+		severity += 1
+	if int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("support_gap", 0)) > 0:
+		severity += 2
+	elif int(logistics.get("threatened_count", 0)) > 0:
+		severity += 1
+	if bool(recovery.get("active", false)):
+		severity += 1
+	if bool(capital_project.get("vulnerable", false)):
+		severity += 1
+	if reserve_count <= 0:
+		severity += 1
+	if ready_response_count <= 0 and (int(logistics.get("threatened_count", 0)) > 0 or bool(recovery.get("active", false))):
+		severity += 1
+	if severity >= 7:
+		return "Brittle perimeter"
+	if severity >= 4:
+		return "Contested watch"
+	if readiness >= 40 and reserve_count > 0:
+		return "Strong defensive posture"
+	if severity >= 2:
+		return "Guarded but strained"
+	return "Ready watch"
+
+static func _town_frontier_outlook_line(town: Dictionary, threat_state: Dictionary, battlefront: Dictionary) -> String:
+	var clauses := []
+	var visible_pressuring := int(threat_state.get("visible_pressuring", 0))
+	var visible_marching := int(threat_state.get("visible_marching", 0))
+	var nearest_goal_distance := int(threat_state.get("nearest_goal_distance", 9999))
+	var siege_progress := int(threat_state.get("siege_progress", 0))
+	var siege_capture_progress := int(max(1, int(threat_state.get("siege_capture_progress", 1))))
+	if visible_pressuring > 0:
+		clauses.append("%d known raid host%s already press the approaches" % [
+			visible_pressuring,
+			"" if visible_pressuring == 1 else "s",
+		])
+	if visible_marching > 0:
+		if nearest_goal_distance <= 2:
+			clauses.append("%d known host%s can reach in %d day%s" % [
+				visible_marching,
+				"" if visible_marching == 1 else "s",
+				max(1, nearest_goal_distance),
+				"" if max(1, nearest_goal_distance) == 1 else "s",
+			])
+		else:
+			clauses.append("%d known host%s are marching on the lane" % [
+				visible_marching,
+				"" if visible_marching == 1 else "s",
+			])
+	if bool(threat_state.get("hidden_targeting", false)):
+		clauses.append("scouts report hostile movement beyond the fog")
+	if siege_progress > 0:
+		clauses.append("siege pressure %d/%d is already building" % [siege_progress, siege_capture_progress])
+	if clauses.is_empty():
+		var battlefront_summary := String(battlefront.get("summary", "The approaches currently favor the defenders."))
+		return "No public raid lane is aligned on %s. %s" % [_town_name(town), battlefront_summary]
+	return "; ".join(clauses)
+
+static func _town_dispatch_readiness_line(
+	response_count: int,
+	ready_response_count: int,
+	movement_state: Dictionary,
+	reserve_count: int
+) -> String:
+	var movement_current := int(movement_state.get("current", 0))
+	var movement_max := int(movement_state.get("max", 0))
+	var parts := []
+	if response_count <= 0:
+		parts.append("No immediate route or recovery order is open")
+	elif ready_response_count > 0:
+		parts.append("%d response order%s ready" % [
+			ready_response_count,
+			"" if ready_response_count == 1 else "s",
+		])
+	else:
+		parts.append("Response orders exist, but current stores or movement block dispatch")
+	parts.append("Commander move %d/%d" % [movement_current, movement_max])
+	if reserve_count > 0:
+		parts.append("%d reserve commander%s cover the walls" % [
+			reserve_count,
+			"" if reserve_count == 1 else "s",
+		])
+	else:
+		parts.append("No reserve commander covers the walls if the field hero rides out")
+	return " | ".join(parts)
+
+static func _town_support_watch_line(
+	town: Dictionary,
+	logistics: Dictionary,
+	recovery: Dictionary,
+	capital_project: Dictionary
+) -> String:
+	var parts := []
+	if bool(capital_project.get("vulnerable", false)):
+		var capital_parts := ["Capital chain exposed"]
+		var missing_support = capital_project.get("missing_support_labels", [])
+		if missing_support is Array and not missing_support.is_empty():
+			capital_parts.append("Missing %s" % ", ".join(missing_support.slice(0, min(2, missing_support.size()))))
+		elif String(capital_project.get("vulnerability_summary", "")) != "":
+			capital_parts.append(String(capital_project.get("vulnerability_summary", "")))
+		parts.append(" | ".join(capital_parts))
+	if int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0 or int(logistics.get("support_gap", 0)) > 0:
+		var logistics_line := String(logistics.get("summary", "Strained chain"))
+		var impact_parts := []
+		var disrupted_labels = logistics.get("disrupted_site_labels", [])
+		var threatened_labels = logistics.get("threatened_site_labels", [])
+		var missing_family_labels = logistics.get("missing_family_labels", [])
+		if disrupted_labels is Array and not disrupted_labels.is_empty():
+			impact_parts.append("Denied %s" % ", ".join(disrupted_labels.slice(0, min(2, disrupted_labels.size()))))
+		elif threatened_labels is Array and not threatened_labels.is_empty():
+			impact_parts.append("Threatened %s" % ", ".join(threatened_labels.slice(0, min(2, threatened_labels.size()))))
+		elif missing_family_labels is Array and not missing_family_labels.is_empty():
+			impact_parts.append("Missing %s" % ", ".join(missing_family_labels.slice(0, min(2, missing_family_labels.size()))))
+		if int(logistics.get("gap_readiness_penalty", 0)) > 0:
+			impact_parts.append("Readiness -%d" % int(logistics.get("gap_readiness_penalty", 0)))
+		if int(logistics.get("gap_growth_penalty_percent", 0)) > 0:
+			impact_parts.append("Recruits -%d%%" % int(logistics.get("gap_growth_penalty_percent", 0)))
+		if int(logistics.get("gap_pressure_penalty", 0)) > 0:
+			impact_parts.append("%s -%d" % [_town_pressure_label(town), int(logistics.get("gap_pressure_penalty", 0))])
+		if not impact_parts.is_empty():
+			logistics_line += " | %s" % ", ".join(impact_parts)
+		parts.append(logistics_line)
+	if bool(recovery.get("active", false)):
+		parts.append("Recovery delayed %d day%s at %d/day relief" % [
+			int(recovery.get("days_to_clear", 0)),
+			"" if int(recovery.get("days_to_clear", 0)) == 1 else "s",
+			int(recovery.get("relief_per_day", 1)),
+		])
+	if parts.is_empty():
+		return "%s | Recovery lines clear" % String(logistics.get("summary", "Stable chain"))
+	return " | ".join(parts)
+
+static func _active_hero_movement_state(session: SessionStateStore.SessionData) -> Dictionary:
+	var hero = session.overworld.get("hero", {})
+	var hero_movement = hero.get("movement", {}) if hero is Dictionary else {}
+	var overworld_movement = session.overworld.get("movement", {})
+	return {
+		"current": max(0, int(hero_movement.get("current", overworld_movement.get("current", 0)))),
+		"max": max(0, int(hero_movement.get("max", overworld_movement.get("max", 0)))),
+	}
+
+static func _count_ready_actions(actions: Array) -> int:
+	var ready_count := 0
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			ready_count += 1
+	return ready_count
+
+static func _stationed_reserve_count(session: SessionStateStore.SessionData, stationed: Array) -> int:
+	var reserve_count := 0
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	for hero in stationed:
+		if hero is Dictionary and String(hero.get("id", "")) != active_hero_id:
+			reserve_count += 1
+	return reserve_count
+
+static func _town_threat_lines(session: SessionStateStore.SessionData, town: Dictionary) -> Array:
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var threat_lines := []
+	var town_placement_id := String(town.get("placement_id", ""))
+	if town_placement_id == "":
+		return threat_lines
+
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for config in scenario.get("enemy_factions", []):
+		if not (config is Dictionary):
+			continue
+		var faction_id := String(config.get("faction_id", ""))
+		if faction_id == "":
+			continue
+		var visible_marching := 0
+		var visible_pressuring := 0
+		var hidden_targeting := false
+		for encounter in session.overworld.get("encounters", []):
+			if not (encounter is Dictionary):
+				continue
+			if String(encounter.get("spawned_by_faction_id", "")) != faction_id:
+				continue
+			if String(encounter.get("target_placement_id", "")) != town_placement_id:
+				continue
+			if resolved_encounters is Array and String(encounter.get("placement_id", "")) in resolved_encounters:
+				continue
+			var is_public: bool = EnemyAdventureRules._raid_is_public(session, encounter)
+			var is_pressuring := bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) <= 0
+			if is_public:
+				if is_pressuring:
+					visible_pressuring += 1
+				else:
+					visible_marching += 1
+			else:
+				hidden_targeting = true
+
+		var state := _enemy_state_for_faction(session, faction_id)
+		var siege_progress := 0
+		if String(config.get("siege_target_placement_id", "")) == town_placement_id:
+			siege_progress = max(0, int(state.get("siege_progress", 0)))
+		if visible_marching <= 0 and visible_pressuring <= 0 and not hidden_targeting and siege_progress <= 0:
+			continue
+
+		var clauses := []
+		if visible_pressuring > 0:
+			clauses.append("%d known raid host%s press the approaches" % [
+				visible_pressuring,
+				"" if visible_pressuring == 1 else "s",
+			])
+		if visible_marching > 0:
+			clauses.append("%d known host%s are marching on the town" % [
+				visible_marching,
+				"" if visible_marching == 1 else "s",
+			])
+		if hidden_targeting:
+			clauses.append("scouts report hostile movement beyond the fog")
+		if siege_progress > 0:
+			clauses.append("siege pressure %d/%d" % [
+				siege_progress,
+				max(1, int(config.get("siege_capture_progress", 1))),
+			])
+		threat_lines.append("%s: %s" % [
+			String(config.get("label", ContentService.get_faction(faction_id).get("name", faction_id))),
+			"; ".join(clauses),
+		])
+	return threat_lines
+
+static func _pressure_brief(session: SessionStateStore.SessionData, town: Dictionary) -> String:
+	var threat_lines := _town_threat_lines(session, town)
+	if threat_lines.is_empty():
+		return "%s reports quiet roads beyond the walls." % _town_name(town)
+	return threat_lines[0]
+
+static func _enemy_state_for_faction(session: SessionStateStore.SessionData, faction_id: String) -> Dictionary:
+	for state in session.overworld.get("enemy_states", []):
+		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
+			return state
+	return {}
+
+static func _can_afford(session: SessionStateStore.SessionData, cost: Variant) -> bool:
+	var resources = session.overworld.get("resources", {})
+	if not (cost is Dictionary):
+		return true
+	for key in cost.keys():
+		if int(resources.get(String(key), 0)) < int(cost[key]):
+			return false
+	return true
+
+static func _max_affordable_count(session: SessionStateStore.SessionData, unit_cost: Variant) -> int:
+	if not (unit_cost is Dictionary) or unit_cost.is_empty():
+		return 999
+	var resources = session.overworld.get("resources", {})
+	var max_affordable := 999
+	for key in unit_cost.keys():
+		var price := int(max(1, int(unit_cost[key])))
+		max_affordable = min(max_affordable, int(int(resources.get(String(key), 0)) / price))
+	return max_affordable
+
+static func _merge_resources(base: Variant, delta: Variant) -> Dictionary:
+	var merged := {"gold": 0, "wood": 0, "ore": 0}
+	if base is Dictionary:
+		for key in merged.keys():
+			merged[key] = int(base.get(key, 0))
+	if delta is Dictionary:
+		for key in delta.keys():
+			var resource_key := String(key)
+			if resource_key == "experience":
+				continue
+			merged[resource_key] = int(merged.get(resource_key, 0)) + int(delta[key])
+	return merged
+
+static func _describe_resources(resources: Variant, empty_label: String = "none") -> String:
+	if not (resources is Dictionary):
+		return empty_label
+	var parts := []
+	for key in ["gold", "wood", "ore"]:
+		var amount := int(resources.get(key, 0))
+		if amount > 0:
+			parts.append("%d %s" % [amount, key])
+	return ", ".join(parts) if not parts.is_empty() else empty_label
+
+static func _describe_recruit_delta(delta: Variant) -> String:
+	if not (delta is Dictionary):
+		return "none"
+	var parts := []
+	var unit_ids := []
+	for unit_id_value in delta.keys():
+		unit_ids.append(String(unit_id_value))
+	unit_ids.sort()
+	for unit_id in unit_ids:
+		var amount := int(delta.get(unit_id, 0))
+		if amount <= 0:
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		parts.append("+%d %s" % [amount, String(unit.get("name", unit_id))])
+	return ", ".join(parts) if not parts.is_empty() else "none"
+
+static func _town_unit_ids(town: Dictionary) -> Array:
+	var unit_ids := []
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var building_ids := []
+	for building_id_value in town_template.get("starting_building_ids", []):
+		building_ids.append(String(building_id_value))
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		building_ids.append(String(building_id_value))
+	for building_id in building_ids:
+		var unlock_unit_id := String(ContentService.get_building(building_id).get("unlock_unit_id", ""))
+		if unlock_unit_id != "" and unlock_unit_id not in unit_ids:
+			unit_ids.append(unlock_unit_id)
+	for unit_id_value in town.get("available_recruits", {}).keys():
+		var unit_id := String(unit_id_value)
+		if unit_id != "" and unit_id not in unit_ids:
+			unit_ids.append(unit_id)
+	for unit_id_value in OverworldRules.town_weekly_growth(town).keys():
+		var unit_id := String(unit_id_value)
+		if unit_id != "" and unit_id not in unit_ids:
+			unit_ids.append(unit_id)
+	return unit_ids
+
+static func _unit_is_unlocked_in_town(town: Dictionary, unit_id: String) -> bool:
+	return int(OverworldRules.town_weekly_growth(town).get(unit_id, 0)) > 0
+
+static func _unlock_building_for_unit(town: Dictionary, unit_id: String) -> String:
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var building_ids := []
+	for building_id_value in town_template.get("starting_building_ids", []):
+		building_ids.append(String(building_id_value))
+	for building_id_value in town_template.get("buildable_building_ids", []):
+		building_ids.append(String(building_id_value))
+	for building_id in building_ids:
+		if String(ContentService.get_building(building_id).get("unlock_unit_id", "")) == unit_id:
+			return building_id
+	return ""
+
+static func _finalize_town_result(session: SessionStateStore.SessionData, ok: bool, base_message: String) -> Dictionary:
+	HeroCommandRules.commit_active_hero(session)
+	OverworldRules.refresh_fog_of_war(session)
+	var messages := []
+	if base_message != "":
+		messages.append(base_message)
+
+	var scenario_result: Dictionary = ScenarioRules.evaluate_session(session)
+	var scenario_message := String(scenario_result.get("message", ""))
+	HeroCommandRules.commit_active_hero(session)
+	OverworldRules.refresh_fog_of_war(session)
+	if scenario_message != "":
+		messages.append(scenario_message)
+
+	return {
+		"ok": ok,
+		"message": " ".join(messages),
+		"scenario_status": session.scenario_status,
+	}

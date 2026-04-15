@@ -1,0 +1,505 @@
+{
+  "items": [
+    {
+      "id": "town_riverwatch",
+      "name": "Riverwatch Hold",
+      "faction_id": "faction_embercourt",
+      "identity_summary": "A stone river fort that pays for disciplined levy rotations and signal-line archers.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "Riverwatch anchors the western crossings; if it stands, Embercourt can still reset the road war around a disciplined river line.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "If Riverwatch loses its linked yard, signal post, or sanctum, the river line cannot cycle reserves cleanly."
+      },
+      "economy": {
+        "base_income": {"gold": 120},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "support": {"gold": 30}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_river_guard": 1
+        },
+        "cost_discount_percent": {
+          "unit_river_guard": 5
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_muster_yard", "building_wayfarers_hall"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_stone_store",
+        "building_watch_barracks",
+        "building_bowyer_lodge",
+        "building_beacon_range",
+        "building_river_granary_exchange",
+        "building_quartermasters_depot",
+        "building_citadel_pikehall",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_trailglyph", "spell_bulwark_litany"]},
+        {"tier": 2, "spell_ids": ["spell_coal_rain", "spell_lantern_phalanx"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_river_guard", "count": 4}
+      ]
+    },
+    {
+      "id": "town_duskfen",
+      "name": "Duskfen Bastion",
+      "faction_id": "faction_mireclaw",
+      "identity_summary": "A hidden marsh mustering point that swells raider bands before they hit the roads.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "Duskfen is the oath-host's first mustering basin; if it holds, Mireclaw keeps feeding cutters into every nearby road.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "If Duskfen loses its kennel, drum post, or shrine lane, the marsh musters stop arriving in step."
+      },
+      "economy": {
+        "base_income": {"gold": 75},
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "dwelling": {"gold": 15}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_blackbranch_cutthroat": 1
+        },
+        "cost_discount_percent": {
+          "unit_blackbranch_cutthroat": 5
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_wayfarers_hall"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_mire_pens",
+        "building_reed_warren",
+        "building_slingers_post",
+        "building_rot_warren",
+        "building_fenscale_pens",
+        "building_war_drum_circle",
+        "building_gorefen_ring",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_coal_rain", "spell_relay_drum"]},
+        {"tier": 2, "spell_ids": ["spell_bulwark_litany", "spell_bloodwake_drum"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_bog_brute", "count": 5}
+      ]
+    },
+    {
+      "id": "town_blackfen_gate",
+      "name": "Blackfen Gate",
+      "faction_id": "faction_mireclaw",
+      "identity_summary": "A fortified choke point built around missile nests and a constant trickle of fresh raiders.",
+      "economy": {
+        "base_income": {"gold": 90, "ore": 1},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "magic": {"gold": 20}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 3,
+        "growth_bonus": {
+          "unit_mire_slinger": 1
+        },
+        "cost_discount_percent": {
+          "unit_mire_slinger": 5
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_slingers_post"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_mire_pens",
+        "building_reed_warren",
+        "building_rot_warren",
+        "building_fenscale_pens",
+        "building_war_drum_circle",
+        "building_floodtide_forge",
+        "building_gorefen_ring",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_stone_veil", "spell_relay_drum"]},
+        {"tier": 2, "spell_ids": ["spell_coal_rain", "spell_bloodwake_drum"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_bog_brute", "count": 4},
+        {"unit_id": "unit_mire_slinger", "count": 4}
+      ]
+    },
+    {
+      "id": "town_highwater_keep",
+      "name": "Highwater Keep",
+      "faction_id": "faction_embercourt",
+      "identity_summary": "A mill-fed keep whose watchfires and grain levies keep the basin's roadwardens in the field.",
+      "strategic_role": "capital",
+      "strategic_summary": "Highwater is Embercourt's basin capital. Once its charter bastion is complete, the keep can sustain reserve columns and a final roadward push.",
+      "logistics_plan": {
+        "support_radius": 7,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "If Highwater's basin yard, signal post, or sanctum line is cut, the charter reserve schedule slips and the final push slows."
+      },
+      "economy": {
+        "base_income": {"gold": 110, "wood": 1},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "civic": {"gold": 10},
+          "support": {"gold": 30}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 6,
+        "growth_bonus": {
+          "unit_river_guard": 1,
+          "unit_ember_archer": 1,
+          "unit_citadel_pikeward": 1
+        },
+        "cost_discount_percent": {
+          "unit_river_guard": 5,
+          "unit_ember_archer": 4,
+          "unit_citadel_pikeward": 4
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_muster_yard", "building_watch_barracks"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_stone_store",
+        "building_bowyer_lodge",
+        "building_beacon_range",
+        "building_river_granary_exchange",
+        "building_signal_citadel",
+        "building_citadel_pikehall",
+        "building_charter_bastion",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_trailglyph", "spell_bulwark_litany"]},
+        {"tier": 2, "spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_river_guard", "count": 5},
+        {"unit_id": "unit_ember_archer", "count": 2},
+        {"unit_id": "unit_citadel_pikeward", "count": 1}
+      ]
+    },
+    {
+      "id": "town_murkward_ford",
+      "name": "Murkward Ford",
+      "faction_id": "faction_mireclaw",
+      "identity_summary": "A toll-ford stockade built on drowned pilings, pushing cutters and slingers toward every nearby crossing.",
+      "economy": {
+        "base_income": {"gold": 80, "wood": 1},
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "dwelling": {"gold": 15},
+          "support": {"gold": 15}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_blackbranch_cutthroat": 1,
+          "unit_mire_slinger": 1
+        },
+        "cost_discount_percent": {
+          "unit_blackbranch_cutthroat": 5,
+          "unit_mire_slinger": 5
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_slingers_post"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_mire_pens",
+        "building_reed_warren",
+        "building_rot_warren",
+        "building_fenscale_pens",
+        "building_war_drum_circle",
+        "building_floodtide_forge",
+        "building_gorefen_ring",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_relay_drum", "spell_stone_veil"]},
+        {"tier": 2, "spell_ids": ["spell_cinder_burst", "spell_bloodwake_drum"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 5},
+        {"unit_id": "unit_mire_slinger", "count": 3}
+      ]
+    },
+    {
+      "id": "town_reedbarrow_ferry",
+      "name": "Reedbarrow Ferry",
+      "faction_id": "faction_mireclaw",
+      "identity_summary": "A drum-marked ferry port whose log booms and fish racks keep the covenant moving between channels.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "Reedbarrow's ferry booms keep the covenant stitched together; if the port survives, Mireclaw can reopen the marsh lanes fast.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "If Reedbarrow loses its kennel runs, drum post, or reedscript shrine, the ferry lanes recover too slowly to keep the marsh open."
+      },
+      "economy": {
+        "base_income": {"gold": 85, "ore": 1},
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {"gold": 25},
+          "dwelling": {"gold": 10}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 3,
+        "growth_bonus": {
+          "unit_mire_slinger": 1,
+          "unit_bog_brute": 1
+        },
+        "cost_discount_percent": {
+          "unit_mire_slinger": 5
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_mire_pens"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_reed_warren",
+        "building_slingers_post",
+        "building_rot_warren",
+        "building_fenscale_pens",
+        "building_smugglers_flotilla",
+        "building_floodtide_forge",
+        "building_gorefen_ring",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_relay_drum", "spell_coal_rain"]},
+        {"tier": 2, "spell_ids": ["spell_stone_veil", "spell_bloodwake_drum"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_bog_brute", "count": 4},
+        {"unit_id": "unit_mire_slinger", "count": 3}
+      ]
+    },
+    {
+      "id": "town_nightglass_redoubt",
+      "name": "Nightglass Redoubt",
+      "faction_id": "faction_mireclaw",
+      "identity_summary": "A shrine-redoubt cut from black reedstone where the covenant hoards its last reserves and drum-fires.",
+      "strategic_role": "capital",
+      "strategic_summary": "Nightglass is the covenant's capital redoubt. A completed dominion ring lets it drive ferry raids, elite packs, and a last marsh surge.",
+      "logistics_plan": {
+        "support_radius": 7,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "If Nightglass loses its kennel, drum outpost, or shrine line, the dominion ring cannot keep ferries, packs, and drums aligned."
+      },
+      "economy": {
+        "base_income": {"gold": 95, "ore": 1},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "magic": {"gold": 20},
+          "support": {"gold": 20}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_bog_brute": 1,
+          "unit_blackbranch_cutthroat": 1,
+          "unit_gorefen_ripper": 1
+        },
+        "cost_discount_percent": {
+          "unit_bog_brute": 4,
+          "unit_blackbranch_cutthroat": 4,
+          "unit_gorefen_ripper": 4
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_mire_pens", "building_lantern_archive"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_reed_warren",
+        "building_slingers_post",
+        "building_rot_warren",
+        "building_fenscale_pens",
+        "building_war_drum_circle",
+        "building_floodtide_forge",
+        "building_gorefen_ring",
+        "building_nightglass_dominion",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_stone_veil", "spell_relay_drum"]},
+        {"tier": 2, "spell_ids": ["spell_coal_rain", "spell_bulwark_litany", "spell_bloodwake_drum"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_bog_brute", "count": 5},
+        {"unit_id": "unit_blackbranch_cutthroat", "count": 4},
+        {"unit_id": "unit_gorefen_ripper", "count": 1}
+      ]
+    },
+    {
+      "id": "town_prismhearth",
+      "name": "Prismhearth",
+      "faction_id": "faction_sunvault",
+      "identity_summary": "A buried relay city whose shard yards and cloisters turn spell discipline into steady battle tempo.",
+      "strategic_role": "capital",
+      "strategic_summary": "Prismhearth is the Compact's relay capital. If its daybreak matrix comes online, Sunvault can turn the front into a full-theater firing network.",
+      "logistics_plan": {
+        "support_radius": 7,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 2,
+        "vulnerability_summary": "If Prismhearth loses its lens house, relay post, or sanctum circuit, the daybreak arrays cannot keep their batteries synchronized."
+      },
+      "economy": {
+        "base_income": {"gold": 95, "ore": 1},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "support": {"gold": 20},
+          "magic": {"gold": 20}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_shard_guard": 1,
+          "unit_prism_adept": 1
+        },
+        "cost_discount_percent": {
+          "unit_shard_guard": 5,
+          "unit_prism_adept": 4
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_shard_yard", "building_wayfarers_hall"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_prism_range",
+        "building_mirror_forge",
+        "building_lens_gallery",
+        "building_duel_circle",
+        "building_resonant_exchange",
+        "building_harmonic_cloister",
+        "building_aurora_spire",
+        "building_daybreak_matrix",
+        "building_lantern_archive",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_stone_veil", "spell_prism_bastion"]},
+        {"tier": 2, "spell_ids": ["spell_resonant_chorus", "spell_sunlance_arc"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_shard_guard", "count": 4},
+        {"unit_id": "unit_prism_adept", "count": 2}
+      ]
+    },
+    {
+      "id": "town_halo_spire",
+      "name": "Halo Spire",
+      "faction_id": "faction_sunvault",
+      "identity_summary": "A high relay crown whose galleries, duel courts, and batteries reward prepared lanes and stacked battle magic.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "Halo Spire is Sunvault's forward crown; if it stays lit, the Compact can relay reserves and battery fire far beyond the immediate line.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "If Halo Spire loses its lens house, relay line, or sanctum, the forward batteries lose clean reserve timing."
+      },
+      "economy": {
+        "base_income": {"gold": 100, "wood": 1},
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {"gold": 20},
+          "support": {"gold": 20},
+          "magic": {"gold": 15}
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 5,
+        "growth_bonus": {
+          "unit_shard_guard": 1,
+          "unit_mirror_duelist": 1,
+          "unit_aurora_ballista": 1
+        },
+        "cost_discount_percent": {
+          "unit_shard_guard": 4,
+          "unit_mirror_duelist": 5,
+          "unit_aurora_ballista": 4
+        }
+      },
+      "starting_building_ids": ["building_town_hall", "building_shard_yard", "building_prism_range", "building_lantern_archive"],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_wayfarers_hall",
+        "building_mirror_forge",
+        "building_lens_gallery",
+        "building_duel_circle",
+        "building_resonant_exchange",
+        "building_harmonic_cloister",
+        "building_aurora_spire",
+        "building_starseer_annex"
+      ],
+      "spell_library": [
+        {"tier": 1, "spell_ids": ["spell_prism_bastion", "spell_stone_veil"]},
+        {"tier": 2, "spell_ids": ["spell_resonant_chorus", "spell_sunlance_arc", "spell_bulwark_litany"]}
+      ],
+      "garrison": [
+        {"unit_id": "unit_shard_guard", "count": 5},
+        {"unit_id": "unit_prism_adept", "count": 4},
+        {"unit_id": "unit_aurora_ballista", "count": 1}
+      ]
+    }
+  ]
+}

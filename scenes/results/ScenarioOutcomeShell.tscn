@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://scenario_outcome_shell"]
+
+[ext_resource type="Script" path="res://scenes/results/ScenarioOutcomeShell.gd" id="1"]
+
+[node name="ScenarioOutcomeShell" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = 32.0
+offset_right = -48.0
+offset_bottom = -32.0
+theme_override_constants/separation = 12
+
+[node name="Header" type="Label" parent="VBox"]
+text = "Scenario Outcome"
+horizontal_alignment = 1
+
+[node name="Summary" type="Label" parent="VBox"]
+text = "Outcome summary"
+autowrap_mode = 3
+
+[node name="Mode" type="Label" parent="VBox"]
+text = "Campaign | Captain | Day 1"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ForceSplit" type="HBoxContainer" parent="VBox"]
+theme_override_constants/separation = 12
+
+[node name="Hero" type="Label" parent="VBox/ForceSplit"]
+custom_minimum_size = Vector2(0, 120)
+size_flags_horizontal = 3
+text = "Hero summary"
+autowrap_mode = 3
+
+[node name="Army" type="Label" parent="VBox/ForceSplit"]
+custom_minimum_size = Vector2(0, 120)
+size_flags_horizontal = 3
+text = "Army summary"
+autowrap_mode = 3
+
+[node name="Resources" type="Label" parent="VBox/ForceSplit"]
+custom_minimum_size = Vector2(0, 120)
+size_flags_horizontal = 3
+text = "Resource summary"
+autowrap_mode = 3
+
+[node name="Progression" type="Label" parent="VBox"]
+text = "Progression summary"
+autowrap_mode = 3
+
+[node name="CampaignArc" type="Label" parent="VBox"]
+text = "Campaign arc summary"
+autowrap_mode = 3
+
+[node name="Carryover" type="Label" parent="VBox"]
+text = "Carryover summary"
+autowrap_mode = 3
+
+[node name="Aftermath" type="Label" parent="VBox"]
+text = "Aftermath summary"
+autowrap_mode = 3
+
+[node name="Journal" type="Label" parent="VBox"]
+text = "Campaign chronicle summary"
+autowrap_mode = 3
+
+[node name="SaveStatus" type="Label" parent="VBox"]
+text = "Latest ready save: none."
+autowrap_mode = 3
+
+[node name="SaveBar" type="HBoxContainer" parent="VBox"]
+theme_override_constants/separation = 8
+
+[node name="SaveSlot" type="OptionButton" parent="VBox/SaveBar"]
+custom_minimum_size = Vector2(160, 0)
+
+[node name="Save" type="Button" parent="VBox/SaveBar"]
+text = "Save Outcome"
+
+[node name="Menu" type="Button" parent="VBox/SaveBar"]
+text = "Return to Menu"
+
+[node name="ActionStatus" type="Label" parent="VBox"]
+text = "Review the outcome, then choose the next step."
+autowrap_mode = 3
+
+[node name="Actions" type="HBoxContainer" parent="VBox"]
+theme_override_constants/separation = 8
+
+[connection signal="item_selected" from="VBox/SaveBar/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="VBox/SaveBar/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="VBox/SaveBar/Menu" to="." method="_on_menu_pressed"]

@@ -1,0 +1,696 @@
+{
+  "items": [
+    {
+      "id": "encounter_ghoul_grove",
+      "name": "Ghoul Grove",
+      "enemy_group_id": "army_blackbranch_raiders",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "fog_bank"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Bramble Hexer",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_stone_veil"],
+        "battle_traits": ["ambusher", "bogwise"]
+      },
+      "rewards": {"gold": 250, "experience": 180},
+      "victory_flags": ["pass_cleared"]
+    },
+    {
+      "id": "encounter_hollow_mire",
+      "name": "Hollow Mire",
+      "enemy_group_id": "army_mireclaw_pack",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Mudtongue Caller",
+        "command": {"attack": 0, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_cinder_burst", "spell_quickmarch_hymn"],
+        "battle_traits": ["bogwise", "packhunter"]
+      },
+      "rewards": {"gold": 180, "ore": 2, "experience": 220},
+      "victory_flags": ["mire_cleared"]
+    },
+    {
+      "id": "encounter_mire_raid",
+      "name": "Mireclaw Raid",
+      "enemy_group_id": "army_mireclaw_raiding_party",
+      "terrain": "grass",
+      "battlefield_tags": ["open_lane"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Fen Lash Captain",
+        "command": {"attack": 1, "defense": 0, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_cinder_burst", "spell_bloodwake_drum"],
+        "battle_traits": ["vanguard", "packhunter"]
+      },
+      "rewards": {"gold": 140, "experience": 160},
+      "victory_flags": ["raid_repulsed"]
+    },
+    {
+      "id": "encounter_blackbranch_reavers",
+      "name": "Blackbranch Reavers",
+      "enemy_group_id": "army_blackbranch_reavers",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Reed Banner Adept",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_stone_veil", "spell_quickmarch_hymn"],
+        "battle_traits": ["linekeeper", "ambusher"]
+      },
+      "rewards": {"gold": 160, "wood": 1, "experience": 170},
+      "victory_flags": ["reavers_broken"]
+    },
+    {
+      "id": "encounter_reedward_camp",
+      "name": "Reedward Camp",
+      "enemy_group_id": "army_reedward_pickets",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "chokepoint"],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Reed-Torch Warden",
+        "command": {"attack": 0, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_stone_veil", "spell_coal_rain"],
+        "battle_traits": ["bogwise", "linekeeper"]
+      },
+      "rewards": {"gold": 200, "wood": 1, "experience": 210},
+      "victory_flags": ["reed_camp_cleared"]
+    },
+    {
+      "id": "encounter_gate_marshals",
+      "name": "Gate Marshals",
+      "enemy_group_id": "army_blackfen_gateward",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "open_lane"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Gate Marshal Orsik",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_bloodwake_drum", "spell_cinder_burst"],
+        "battle_traits": ["vanguard", "packhunter"]
+      },
+      "rewards": {"gold": 260, "ore": 1, "experience": 260},
+      "victory_flags": ["gate_marshals_broken"]
+    },
+    {
+      "id": "encounter_sluice_raiders",
+      "name": "Sluice Raiders",
+      "enemy_group_id": "army_muckveil_harriers",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "bog_channels"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Lockjaw Verran",
+        "command": {"attack": 1, "defense": 0, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_coal_rain"],
+        "battle_traits": ["vanguard", "ambusher"]
+      },
+      "rewards": {"gold": 180, "wood": 1, "experience": 190},
+      "victory_flags": ["sluice_band_broken"]
+    },
+    {
+      "id": "encounter_willow_mill_pack",
+      "name": "Willow Mill Pack",
+      "enemy_group_id": "army_willow_mill_pack",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "chokepoint"],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Fenharrow Caller",
+        "command": {"attack": 0, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_cinder_burst", "spell_stone_veil"],
+        "battle_traits": ["bogwise", "ambusher"]
+      },
+      "rewards": {"gold": 210, "ore": 1, "experience": 220},
+      "victory_flags": ["willow_mill_secured"]
+    },
+    {
+      "id": "encounter_ford_reavers",
+      "name": "Ford Reavers",
+      "enemy_group_id": "army_ford_reavers",
+      "terrain": "grass",
+      "battlefield_tags": ["open_lane"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Rushline Adept",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_quickmarch_hymn", "spell_bloodwake_drum"],
+        "battle_traits": ["vanguard", "packhunter"]
+      },
+      "rewards": {"gold": 150, "experience": 170},
+      "victory_flags": ["ford_reavers_broken"]
+    },
+    {
+      "id": "encounter_silt_hunters",
+      "name": "Silt Hunters",
+      "enemy_group_id": "army_silt_hunters",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank"],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Siltmaw Burier",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 0},
+        "starting_spell_ids": ["spell_stone_veil", "spell_coal_rain"],
+        "battle_traits": ["bogwise", "packhunter"]
+      },
+      "rewards": {"gold": 170, "wood": 1, "experience": 180},
+      "victory_flags": ["silt_hunters_broken"]
+    },
+    {
+      "id": "encounter_barrow_pickets",
+      "name": "Barrow Pickets",
+      "enemy_group_id": "army_barrow_pickets",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Barrow Pikehand",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_stone_veil"],
+        "battle_traits": ["linekeeper", "vanguard"]
+      },
+      "rewards": {"gold": 220, "wood": 1, "experience": 230},
+      "victory_flags": ["barrow_pickets_broken"]
+    },
+    {
+      "id": "encounter_reedbarrow_chain",
+      "name": "Reedbarrow Chain",
+      "enemy_group_id": "army_reedbarrow_chain",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "open_lane"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Chainmaster Soll",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_cinder_burst", "spell_bloodwake_drum"],
+        "battle_traits": ["linekeeper", "packhunter"]
+      },
+      "field_objectives": [
+        {
+          "id": "chain_slinger_lane",
+          "type": "lane_battery",
+          "label": "Chain Slinger Lane",
+          "summary": "The ferry-chain slingers keep the open lane murderous until the bank is stormed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["ranged", "initiative", "urgency"]
+        },
+        {
+          "id": "levee_break",
+          "type": "breach_point",
+          "label": "Levee Break",
+          "summary": "Whoever forces the levee break controls the late melee collapse.",
+          "starting_side": "neutral",
+          "capture_threshold": 3,
+          "urgency_round": 3,
+          "pressure_tags": ["momentum", "cohesion", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 260, "ore": 1, "experience": 270},
+      "victory_flags": ["ferry_chain_cut"]
+    },
+    {
+      "id": "encounter_drum_circle",
+      "name": "Nightglass Drum Circle",
+      "enemy_group_id": "army_nightglass_dominion",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank", "wall_pressure", "reserve_wave"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Nightglass Cantor",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_bloodwake_drum", "spell_coal_rain"],
+        "battle_traits": ["bogwise", "packhunter"]
+      },
+      "field_objectives": [
+        {
+          "id": "drum_circle_pylon",
+          "type": "ritual_pylon",
+          "label": "Drum Circle Pylon",
+          "summary": "The shrine drums keep stealing tempo until the pylon ring is broken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "cohesion", "urgency"]
+        },
+        {
+          "id": "silt_sink",
+          "type": "hazard_zone",
+          "label": "Silt Sink",
+          "summary": "The drowned lane keeps chewing cohesion unless the safer footing is seized.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 240, "ore": 1, "experience": 280},
+      "victory_flags": ["drum_circle_broken"]
+    },
+    {
+      "id": "encounter_mirror_causeway",
+      "name": "Mirror Causeway",
+      "enemy_group_id": "army_ripper_vanguard",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "open_lane"],
+      "max_rounds": 16,
+      "enemy_commander": {
+        "name": "Causeway Harrower",
+        "command": {"attack": 2, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_bloodwake_drum", "spell_cinder_burst", "spell_stone_veil"],
+        "battle_traits": ["vanguard", "packhunter"]
+      },
+      "rewards": {"gold": 300, "ore": 1, "experience": 300},
+      "victory_flags": ["mirror_causeway_secured"]
+    },
+    {
+      "id": "encounter_lantern_patrol",
+      "name": "Lantern Patrol",
+      "enemy_group_id": "army_lantern_battery",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "open_lane"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Lantern Scout Marshal",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx", "spell_stone_veil"],
+        "battle_traits": ["artillerist", "vanguard"]
+      },
+      "field_objectives": [
+        {
+          "id": "lantern_lane_battery",
+          "type": "lane_battery",
+          "label": "Lantern Kill Lane",
+          "summary": "The patrol's lantern battery keeps the road under ranged pressure until the rise is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "initiative", "urgency"]
+        },
+        {
+          "id": "road_signal_beacon",
+          "type": "signal_beacon",
+          "label": "Road Signal Beacon",
+          "summary": "A signal mast keeps command steadier and makes the battery harder to break.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "commander"]
+        }
+      ],
+      "rewards": {"gold": 170, "wood": 1, "experience": 190},
+      "victory_flags": ["lantern_patrol_broken"]
+    },
+    {
+      "id": "encounter_survey_guard",
+      "name": "Survey Guard",
+      "enemy_group_id": "army_causeway_phalanx",
+      "terrain": "forest",
+      "battlefield_tags": ["chokepoint", "fog_bank"],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Survey Captain Ellin",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_bulwark_litany", "spell_lantern_phalanx"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "rewards": {"gold": 210, "ore": 1, "experience": 220},
+      "victory_flags": ["survey_train_broken"]
+    },
+    {
+      "id": "encounter_mill_levies",
+      "name": "Mill Levies",
+      "enemy_group_id": "army_highwater_militia",
+      "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "chokepoint"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Granary Captain Voss",
+        "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_bulwark_litany", "spell_stone_veil"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "rewards": {"gold": 220, "wood": 1, "experience": 240},
+      "victory_flags": ["granary_levies_broken"]
+    },
+    {
+      "id": "encounter_beacon_wardens",
+      "name": "Beacon Wardens",
+      "enemy_group_id": "army_lantern_battery",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "open_lane"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Beacon Warden Solme",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx", "spell_coal_rain"],
+        "battle_traits": ["artillerist", "vanguard"]
+      },
+      "rewards": {"gold": 260, "ore": 1, "experience": 260},
+      "victory_flags": ["beacon_wardens_broken"]
+    },
+    {
+      "id": "encounter_road_chaplains",
+      "name": "Road Chaplains",
+      "enemy_group_id": "army_riverwatch_relief",
+      "terrain": "grass",
+      "battlefield_tags": ["open_lane", "fortified_line"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Chaplain-Marshal Derun",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_bulwark_litany", "spell_quickmarch_hymn", "spell_lantern_phalanx"],
+        "battle_traits": ["linekeeper", "vanguard"]
+      },
+      "rewards": {"gold": 230, "ore": 1, "experience": 250},
+      "victory_flags": ["road_chaplains_broken"]
+    },
+    {
+      "id": "encounter_charter_guard",
+      "name": "Charter Guard",
+      "enemy_group_id": "army_charter_bastion_reserve",
+      "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "fortress_lane", "reserve_wave"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Charter Warden Pell",
+        "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_lantern_phalanx", "spell_coal_rain", "spell_stone_veil"],
+        "battle_traits": ["artillerist", "linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "charter_supply_post",
+          "type": "supply_post",
+          "label": "Charter Supply Post",
+          "summary": "Fresh reserves and steadier shields flow through the charter supply post.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "reinforcement"]
+        },
+        {
+          "id": "charter_signal_beacon",
+          "type": "signal_beacon",
+          "label": "Bastion Signal Mast",
+          "summary": "The bastion signal mast keeps the reserve line coordinated under pressure.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "commander"]
+        }
+      ],
+      "rewards": {"gold": 280, "ore": 1, "experience": 280},
+      "victory_flags": ["charter_guard_broken"]
+    },
+    {
+      "id": "encounter_reed_totemists",
+      "name": "Reed Totemists",
+      "enemy_group_id": "army_muckveil_harriers",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Totem Caller Vey",
+        "command": {"attack": 0, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_bloodwake_drum", "spell_stone_veil"],
+        "battle_traits": ["bogwise", "packhunter"]
+      },
+      "field_objectives": [
+        {
+          "id": "reed_totem_pylon",
+          "type": "ritual_pylon",
+          "label": "Reed Totem Ring",
+          "summary": "The totem ring keeps beating on the line's cohesion until the circle is broken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "cohesion", "urgency"]
+        },
+        {
+          "id": "fen_hazard_lane",
+          "type": "hazard_zone",
+          "label": "Fen Hazard Lane",
+          "summary": "The soaked reeds punish the side that fails to take the firmer bank.",
+          "starting_side": "neutral",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 210, "wood": 1, "experience": 220},
+      "victory_flags": ["reed_totemists_broken"]
+    },
+    {
+      "id": "encounter_bone_ferry_watch",
+      "name": "Bone Ferry Watch",
+      "enemy_group_id": "army_ripper_vanguard",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "ambush_cover", "wall_pressure"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Bone Ferry Cantor",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_cinder_burst", "spell_bloodwake_drum"],
+        "battle_traits": ["ambusher", "packhunter"]
+      },
+      "rewards": {"gold": 240, "ore": 1, "experience": 250},
+      "victory_flags": ["bone_ferry_watch_broken"]
+    },
+    {
+      "id": "encounter_archive_wardens",
+      "name": "Archive Wardens",
+      "enemy_group_id": "army_archive_wardens",
+      "terrain": "forest",
+      "battlefield_tags": ["fortified_line", "fog_bank", "fortress_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Archive Warden Sel",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_bulwark_litany", "spell_lantern_phalanx", "spell_stone_veil"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "rewards": {"gold": 220, "ore": 1, "experience": 230},
+      "victory_flags": ["archive_wardens_broken"]
+    },
+    {
+      "id": "encounter_bridgeward_levies",
+      "name": "Bridgeward Levies",
+      "enemy_group_id": "army_causeway_phalanx",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "fortified_line"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bridge Warden Maro",
+        "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx", "spell_bulwark_litany"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "rewards": {"gold": 230, "wood": 1, "experience": 240},
+      "victory_flags": ["bridgeward_levies_broken"]
+    },
+    {
+      "id": "encounter_relay_pickets",
+      "name": "Relay Pickets",
+      "enemy_group_id": "army_relay_pickets",
+      "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "chokepoint", "battery_nest"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Relay Warden Caith",
+        "command": {"attack": 1, "defense": 2, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_prism_bastion", "spell_resonant_chorus"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "field_objectives": [
+        {
+          "id": "relay_kill_lane",
+          "type": "lane_battery",
+          "label": "Relay Kill Lane",
+          "summary": "The mirrored relay lane magnifies ranged pressure until the lens crews are displaced.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "initiative", "urgency"]
+        },
+        {
+          "id": "relay_signal_beacon",
+          "type": "signal_beacon",
+          "label": "Relay Signal Beacon",
+          "summary": "A relay beacon keeps the firing line synchronized and command harder to expose.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "commander"]
+        }
+      ],
+      "rewards": {"gold": 220, "ore": 1, "experience": 220},
+      "victory_flags": ["relay_pickets_broken"]
+    },
+    {
+      "id": "encounter_glasswing_sortie",
+      "name": "Glasswing Sortie",
+      "enemy_group_id": "army_glasswing_sortie",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "open_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Glasswing Cantor",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_resonant_chorus", "spell_sunlance_arc"],
+        "battle_traits": ["artillerist", "vanguard"]
+      },
+      "rewards": {"gold": 230, "wood": 1, "experience": 230},
+      "victory_flags": ["glasswing_sortie_broken"]
+    },
+    {
+      "id": "encounter_mirror_lancers",
+      "name": "Mirror Lancers",
+      "enemy_group_id": "army_mirror_lancers",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "open_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Duelmaster Serev",
+        "command": {"attack": 2, "defense": 0, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_quickmarch_hymn", "spell_resonant_chorus"],
+        "battle_traits": ["ambusher", "vanguard"]
+      },
+      "rewards": {"gold": 210, "wood": 1, "experience": 220},
+      "victory_flags": ["mirror_lancers_broken"]
+    },
+    {
+      "id": "encounter_aurora_battery",
+      "name": "Aurora Battery",
+      "enemy_group_id": "army_aurora_battery",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "fortified_line", "battery_nest", "reserve_wave"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Battery Marshal Rhest",
+        "command": {"attack": 1, "defense": 2, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_prism_bastion", "spell_sunlance_arc", "spell_resonant_chorus"],
+        "battle_traits": ["artillerist", "linekeeper"]
+      },
+      "rewards": {"gold": 270, "ore": 1, "experience": 280},
+      "victory_flags": ["aurora_battery_broken"]
+    },
+    {
+      "id": "encounter_halo_reserve",
+      "name": "Halo Reserve",
+      "enemy_group_id": "army_halo_reserve",
+      "terrain": "grass",
+      "battlefield_tags": ["chokepoint", "fog_bank", "battery_nest", "reserve_wave"],
+      "max_rounds": 15,
+      "enemy_commander": {
+        "name": "Choir Captain Elian",
+        "command": {"attack": 1, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_prism_bastion", "spell_resonant_chorus"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "rewards": {"gold": 240, "ore": 1, "experience": 250},
+      "victory_flags": ["halo_reserve_broken"]
+    },
+    {
+      "id": "encounter_daybreak_array",
+      "name": "Daybreak Array",
+      "enemy_group_id": "army_daybreak_matrix",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "open_lane", "battery_nest", "reserve_wave"],
+      "max_rounds": 16,
+      "enemy_commander": {
+        "name": "Array Provost Maelin",
+        "command": {"attack": 2, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_prism_bastion", "spell_resonant_chorus", "spell_sunlance_arc"],
+        "battle_traits": ["artillerist", "linekeeper"]
+      },
+      "rewards": {"gold": 300, "ore": 1, "experience": 300},
+      "victory_flags": ["daybreak_array_secured"]
+    },
+    {
+      "id": "encounter_charter_bastion_reserve",
+      "name": "Charter Bastion Reserve",
+      "enemy_group_id": "army_charter_bastion_reserve",
+      "terrain": "grass",
+      "battlefield_tags": ["fortified_line", "fortress_lane", "reserve_wave"],
+      "max_rounds": 16,
+      "enemy_commander": {
+        "name": "Bastion Marshal Oren",
+        "command": {"attack": 2, "defense": 2, "power": 0, "knowledge": 1},
+        "starting_spell_ids": ["spell_lantern_phalanx", "spell_quickmarch_hymn", "spell_stone_veil"],
+        "battle_traits": ["linekeeper", "artillerist"]
+      },
+      "rewards": {"gold": 320, "ore": 1, "experience": 320},
+      "victory_flags": ["charter_bastion_reserve_broken"]
+    },
+    {
+      "id": "encounter_nightglass_dominion",
+      "name": "Nightglass Dominion",
+      "enemy_group_id": "army_nightglass_dominion",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "wall_pressure", "reserve_wave"],
+      "max_rounds": 16,
+      "enemy_commander": {
+        "name": "Dominion Harrowcaller",
+        "command": {"attack": 2, "defense": 1, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_relay_drum", "spell_bloodwake_drum", "spell_coal_rain"],
+        "battle_traits": ["bogwise", "packhunter"]
+      },
+      "rewards": {"gold": 320, "ore": 1, "experience": 320},
+      "victory_flags": ["nightglass_dominion_broken"]
+    },
+    {
+      "id": "encounter_daybreak_matrix",
+      "name": "Daybreak Matrix",
+      "enemy_group_id": "army_daybreak_matrix",
+      "terrain": "grass",
+      "battlefield_tags": ["elevated_fire", "battery_nest", "reserve_wave"],
+      "max_rounds": 16,
+      "enemy_commander": {
+        "name": "Matrix Provost Selian",
+        "command": {"attack": 2, "defense": 2, "power": 1, "knowledge": 1},
+        "starting_spell_ids": ["spell_prism_bastion", "spell_resonant_chorus", "spell_sunlance_arc"],
+        "battle_traits": ["artillerist", "linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "matrix_kill_lane",
+          "type": "lane_battery",
+          "label": "Daybreak Kill Lane",
+          "summary": "The matrix arrays keep the approach under concentrated battery fire until the lane is turned.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 1,
+          "pressure_tags": ["ranged", "initiative", "urgency"]
+        },
+        {
+          "id": "matrix_supply_post",
+          "type": "supply_post",
+          "label": "Array Relay Depot",
+          "summary": "The relay depot feeds fresh crews and steadier reserves into the matrix line.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "reinforcement"]
+        },
+        {
+          "id": "matrix_signal_beacon",
+          "type": "signal_beacon",
+          "label": "Daybreak Beacon",
+          "summary": "The daybreak beacon keeps the arrays synchronized and command tempo protected.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "commander"]
+        }
+      ],
+      "rewards": {"gold": 330, "ore": 1, "experience": 330},
+      "victory_flags": ["daybreak_matrix_broken"]
+    }
+  ]
+}
