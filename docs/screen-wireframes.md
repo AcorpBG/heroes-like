@@ -132,152 +132,218 @@ To stay strongly HoMM3-inspired without copying assets:
 
 # 2. Overworld
 
+## Reference basis
+This section is grounded in actual Heroes III adventure-map screenshots.
+
+Screens checked:
+- adventure map screenshot, Lutris
+- adventure map screenshot, Might and Magic Wiki
+- multiple HD-edition adventure-map screenshots surfaced via Steam / Ubisoft / press coverage
+
+Shared pattern across those references:
+- the map owns most of the screen, roughly four-fifths of the surface
+- the interface is concentrated into a carved right-side sidebar, not spread everywhere
+- the minimap sits high in the right column
+- hero or town lists and current selection details live below the minimap in the same right column
+- global resources and date live in a slim bottom ribbon, not in giant cards
+- the map feels framed, not overlaid by app panels
+
 ## Screen fantasy
-An adventure map framed by command chrome. The map is the truth.
+The world itself in a carved command frame. The player is staring at the terrain first and the controls second.
 
 ## Primary player job
-Move, inspect, route, and decide daily strategy.
+Read the terrain fast, move with intent, inspect threats and holdings, then end the day cleanly.
 
 ## Dominant surface
-The map board.
+A large adventure-map canvas with a single fixed right command spine.
 
 ## Layout wireframe
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ hero portrait  resources  movement  day/week  faction crest         │
-├──────────────────────────────────────────────────────────────────────┤
 │                                                                      │
-│  ┌────────────────────── ADVENTURE MAP BOARD ─────────────────────┐  │
-│  │                                                               │  │
-│  │  terrain, roads, towns, mines, heroes, pickups, fog           │  │
-│  │  route preview, threat markers, objective markers             │  │
-│  │                                                               │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                              ┌───────────────────┐   │
-│                                              │ context rail      │   │
-│                                              │ tile / town /     │   │
-│                                              │ enemy summary     │   │
-│                                              │ hero roster tabs  │   │
-│                                              │ objective tabs    │   │
-│                                              └───────────────────┘   │
+│  ┌──────────────────────── ADVENTURE MAP ────────────────────────┐┌─┐│
+│  │                                                               ││M││
+│  │  terrain, roads, towns, mines, heroes, pickups, fog          ││i││
+│  │  the world takes almost everything                            ││n││
+│  │  route and danger are read on-map                             ││i││
+│  │                                                               │├─┤│
+│  │                                                               ││H││
+│  │                                                               ││e││
+│  │                                                               ││r││
+│  │                                                               ││o││
+│  │                                                               ││/││
+│  │                                                               ││T││
+│  │                                                               ││o││
+│  │                                                               ││w││
+│  │                                                               ││n││
+│  │                                                               │├─┤│
+│  │                                                               ││S││
+│  │                                                               ││e││
+│  │                                                               ││l││
+│  │                                                               ││e││
+│  │                                                               ││c││
+│  │                                                               ││t││
+│  └───────────────────────────────────────────────────────────────┘└─┘│
 ├──────────────────────────────────────────────────────────────────────┤
-│ move  wait  visit  hero  town  spellbook  end turn  save           │
+│ resources / date / kingdom values            core command buttons    │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
+## Original-design translation rules
+- preserve the overwhelming dominance of the map
+- use one fixed right sidebar instead of multiple floating context panels
+- keep resource and date data in a slim footer ribbon
+- show hero, town, and tile context inside the sidebar, not in wide text trays
+- let markers, silhouettes, and color carry most meaning before text
+
 ## Required visual ingredients
-- clear tile board and route readability
-- strong hero marker and town marker silhouettes
-- ownership color language
-- objective and threat markers integrated on-map
-- bottom command band with obvious core actions
+- strong terrain readability and roads that read at a glance
+- hero and town markers with unmistakable silhouettes
+- high-contrast minimap in the upper part of the sidebar
+- compact hero-town roster and selected-object detail below it
+- narrow bottom resource ribbon with end-turn and utility actions
 
 ## What should be absent
-- the map shrinking to make room for text
-- long narrative panels dominating the screen
-- stacked readiness reports visible at all times
+- top-heavy dashboard bars
+- big floating reports over the map
+- large narrative panes stealing width from the world
+- multiple equal-size panels competing with the map
 
 ---
 
 # 3. Town
 
+## Reference basis
+This section is grounded in actual Heroes III town-screen references.
+
+Screens checked:
+- Castle / town screenshots from HD-edition press captures
+- Fen town screenshot, heroes3wog
+- additional town references surfaced via Bing image results for HoMM3 town screens
+
+Shared pattern across those references:
+- the upper half to two-thirds is an immersive town illustration
+- buildings are the interface, not just decoration
+- management is pushed into a lower tray instead of side columns
+- creature stacks and visiting-garrison management live in dense horizontal slot groups
+- the scene above stays mostly free of text panels
+- leaving town and core town actions sit as anchored edge buttons, not broad toolbars
+
 ## Screen fantasy
-A living citadel board. The player is looking at a town and touching districts, not reading a municipal spreadsheet.
+A living faction stronghold above a command desk. The player reads the settlement by looking at it and then manages it from the tray below.
 
 ## Primary player job
-Build, recruit, inspect defenses, manage spell or economy lanes, then leave.
+Inspect the town, click a district, recruit or build, compare garrison and visiting forces, then leave.
 
 ## Dominant surface
-A town stage with clickable districts/buildings.
+An upper town tableau with clickable buildings, supported by a lower management tray.
 
 ## Layout wireframe
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ town crest  town name  resources  garrison strength  leave town     │
+│  ┌──────────────────────── TOWN SCENE ───────────────────────────┐   │
+│  │                                                              │   │
+│  │  skyline / courtyard / dwellings / mage tower / fort         │   │
+│  │  buildings themselves are the click targets                  │   │
+│  │  faction identity lives in the art, not in text blocks       │   │
+│  │                                                              │   │
+│  └──────────────────────────────────────────────────────────────┘   │
 ├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌──────────────────────── TOWN STAGE BOARD ──────────────────────┐  │
-│  │                                                               │  │
-│  │  citadel skyline / courtyard / district markers               │  │
-│  │  clickable hall, fort, dwellings, mage tower, market          │  │
-│  │  build-state visuals and locked-state visuals                  │  │
-│  │                                                               │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                 ┌───────────────────────────────┐    │
-│                                 │ active district card          │    │
-│                                 │ build / recruit / spell info  │    │
-│                                 │ small garrison summary        │    │
-│                                 │ pressure / logistics chips    │    │
-│                                 └───────────────────────────────┘    │
-├──────────────────────────────────────────────────────────────────────┤
-│ build  recruit  tavern/hero  spellcraft  market  defense  leave     │
+│ town info │ garrison creature slots │ visiting hero creature slots  │
+│ income    │ 7 slots                 │ 7 slots                       │
+│ build     │ compact stats           │ compact stats                 │
+│ tavern    │                         │                               │
+│ market    │                         │                               │
+│ mage      │                         │                               │
+│ exit      │                         │ next/prev town / confirm      │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
+## Original-design translation rules
+- keep the town art as the first read and the tray as the second read
+- make buildings the primary click targets in the scene itself
+- use a bottom management deck for units, economy, and hero visitation
+- keep detail text reactive and local, not permanently expanded everywhere
+- let faction architecture do the heavy lifting for identity
+
 ## Required visual ingredients
-- town silhouette with faction identity
-- distinct district markers
-- built versus unbuilt states readable at a glance
-- direct click targets on buildings
-- garrison, pressure, and economy shown as compact chips or emblems
+- a strong faction skyline with readable district silhouettes
+- direct clickable building hotspots on the town illustration
+- bottom creature-slot management for garrison and visiting hero
+- compact income, build, and service actions grouped into the lower tray
+- a clear leave-town anchor that does not dominate the scene
 
 ## What should be absent
-- town state rendered primarily as text paragraphs
-- build and recruit as separate dense ledgers before the town image
-- giant side columns of prose
+- side dashboards taller than the town art
+- prose-first descriptions of districts
+- detached card stacks replacing the settlement view
+- large utility ribbons splitting the scene into many equal bands
 
 ---
 
 # 4. Battle
 
+## Reference basis
+This section is grounded in actual Heroes III battle-screen references.
+
+Screens checked:
+- battle screenshot, Lutris
+- battlefield screenshot, Heroes III combat reference imagery
+- additional HD-edition battle screenshots surfaced via press captures and store media
+
+Shared pattern across those references:
+- the hex battlefield sits in a framed tactical window and clearly dominates the screen
+- opposing hero panels or force readouts flank the battlefield like bookends
+- direct battle commands live low and close to the field, not far away in separate sidebars
+- the combat log is narrow and subordinate
+- the screen feels enclosed and tactical, unlike the open adventure map
+
 ## Screen fantasy
-A battlefield first, command rail second.
+A framed duel board with two commanders facing each other across a living battlefield.
 
 ## Primary player job
-Read battlefield state, choose a unit action, execute.
+Read the field state instantly, pick the active stack's action, and execute with minimal mouse travel.
 
 ## Dominant surface
-The battle board.
+A central hex battlefield framed by left and right commander bookends and a bottom combat strip.
 
 ## Layout wireframe
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ commander left    objective / turn / phase    commander right       │
+│ left hero / army      ┌────────── BATTLEFIELD ──────────┐ right hero│
+│ morale / luck / mana  │                                  │ / army    │
+│                       │  hex field, obstacles, stacks    │ morale /  │
+│                       │  active unit highlight            │ luck /    │
+│                       │  target preview and retaliation   │ mana      │
+│                       │                                  │            │
+│                       └──────────────────────────────────┘            │
 ├──────────────────────────────────────────────────────────────────────┤
-│ initiative strip / morale / spell-ready / battlefield condition     │
-├──────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌──────────────────────── BATTLEFIELD BOARD ─────────────────────┐  │
-│  │                                                               │  │
-│  │  units, lanes, cover, obstacles, range, threat, objectives    │  │
-│  │  active stack highlight and target previews                   │  │
-│  │                                                               │  │
-│  └───────────────────────────────────────────────────────────────┘  │
-│                                  ┌──────────────────────────────┐    │
-│                                  │ active unit card            │    │
-│                                  │ attacks / retaliation /     │    │
-│                                  │ effects / hit estimate      │    │
-│                                  │ spell or ability timing     │    │
-│                                  └──────────────────────────────┘    │
-├──────────────────────────────────────────────────────────────────────┤
-│ move  melee  shoot  defend  wait  spell  surrender  auto/end turn   │
+│ spellbook  wait  defend  action help / short combat log  auto/retreat│
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
+## Original-design translation rules
+- preserve the framed duel-board feeling instead of turning combat into an overlay dashboard
+- keep hero context as left-right bookends around the field
+- keep the bottom strip close to the battlefield for fast action selection
+- use a short combat log, not a tall report pane
+- make stack silhouettes, spacing, and targeting cues do the main communication work
+
 ## Required visual ingredients
-- clear board contrast and silhouette readability
-- initiative as a visible strip, not buried in text
-- active unit and targeting preview strongly highlighted
-- commands grouped by action type
+- a highly legible battlefield with strong stack silhouettes
+- flanking commander panels or force summaries on both sides
+- bottom command strip with core combat actions clustered tightly
+- concise combat text feedback integrated into the bottom strip
+- clear active-stack and target-state emphasis
 
 ## What should be absent
-- full combat log dominating first read
-- battle summary columns wider than the battlefield
-- long tactical essays always visible
-
+- giant side inspectors wider than the battlefield margins
+- persistent essay-length combat analysis
+- separate dashboard cards for every stack
+- top bars that break the duel-board composition
 ---
 
 # 5. Outcome

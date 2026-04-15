@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T18:58:00Z",
+  "updatedAt": "2026-04-15T19:24:00Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-cross-screen-wireframe-spec",
-  "currentSliceTitle": "Reset shell rework around descriptive game-screen wireframes and explicit dominant-surface targets",
+  "currentSliceId": "phase-6-homm3-reference-grounded-wireframes",
+  "currentSliceTitle": "Re-ground the main menu, overworld, town, and battle wireframes in actual Heroes III screen references",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Added docs/screen-wireframes.md as the source-of-truth wireframe spec for main menu, overworld, town, battle, and outcome. The next implementation passes should use this document plus generated placeholder art instead of repeating text-panel density passes.",
+  "currentSliceNotes": "Expanded docs/screen-wireframes.md from generic genre guidance into reference-grounded screen grammar. The main menu, overworld, town, and battle sections now describe the real HoMM3 composition patterns to preserve, so the next implementation slices can build original assets and Godot layouts against actual screen structure instead of dashboard-like guesswork.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
