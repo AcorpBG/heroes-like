@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T20:35:27Z",
+  "updatedAt": "2026-04-15T21:05:46Z",
   "status": "in_progress",
-  "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-main-menu-submenu-overlay-pass",
-  "currentSliceTitle": "Keep the scenic main-menu first view clean by moving deeper detail behind summoned overlays",
+  "currentPhase": "core-systems-regression-hardening",
+  "currentSliceId": "phase-2-3-5-core-systems-regression-pass",
+  "currentSliceTitle": "Restore turn advance, auto interactions, hostile battle turns, raid-host presence, and hostile-town context",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Kept the approved scenic main-menu composition, but removed the always-open detail dock from first view. Campaign, skirmish, saves, guide, and settings now open through a summoned secondary board from the right command spine while continue and quit remain direct commands.",
+  "currentSliceNotes": "Removed the forecast gate from one-press end turn so day advance, movement refresh, and hostile empire turns fire immediately again. Overworld movement now auto-resolves claimable sites, artifact caches, owned-town entry, and hostile encounter battle routing, while hostile towns stay hostile on entry instead of silently becoming player-town visits. Battle startup and resume now drain enemy-first initiative windows through core AI so enemy turns execute before the shell waits for player input.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

@@ -283,6 +283,8 @@ Difficulty: High
 139. [completed] Re-run the required menu smoke, full headless Godot boot, and a live `DISPLAY=:99` menu capture after the scenic main-menu composition pass while reporting unrelated validator baseline failures separately.
 140. [completed] Keep the scenic main-menu first view clean by hiding campaign, skirmish, saves, guide, and settings detail behind a summoned overlay board instead of showing the shared dock by default.
 141. [completed] Re-run the required menu smoke, full headless Godot boot, and a live `DISPLAY=:99` menu capture after the submenu-first main-menu pass.
+142. [completed] Restore the live core-systems paths behind the current shells so one-press end turn advances the day, movement refreshes, site stepping auto-resolves, enemy-opening battle turns autoplay, hostile raid-host presence returns, and hostile towns stay hostile until explicitly captured.
+143. [completed] Re-run the required overworld, town-battle, menu-outcome, full headless Godot validations plus a focused core-systems regression smoke scene for turn advance, site interaction, hostile-town context, raid-host presence, and battle-opening enemy turns.
 
 ## Standards
 - no throwaway prototype code if avoidable

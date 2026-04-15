@@ -33,6 +33,9 @@ static func _enemy_turn_rules() -> Variant:
 static func _enemy_adventure_rules() -> Variant:
 	return load("res://scripts/core/EnemyAdventureRules.gd")
 
+static func _battle_rules() -> Variant:
+	return load("res://scripts/core/BattleRules.gd")
+
 static func _build_scenario_army_state(army_template: Dictionary) -> Dictionary:
 	return _scenario_factory()._build_army_state(army_template)
 
@@ -223,12 +226,19 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	session.overworld["movement"] = movement
 
 	var messages := ["Moved to %d,%d." % [nx, ny]]
-	var town_result := _find_active_town(session)
-	var town = town_result.get("town", {})
-	if not town.is_empty() and String(town.get("owner", "neutral")) != "player":
-		messages.append(_claim_town(session, town_result))
-
-	return _finalize_action_result(session, true, " ".join(messages))
+	var interaction_result := _resolve_post_move_interaction(session)
+	var interaction_message := String(interaction_result.get("message", ""))
+	if interaction_message != "":
+		messages.append(interaction_message)
+	var result := _finalize_action_result(
+		session,
+		bool(interaction_result.get("ok", true)),
+		" ".join(messages)
+	)
+	var route := String(interaction_result.get("route", ""))
+	if route != "":
+		result["route"] = route
+	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
@@ -394,6 +404,65 @@ static func perform_context_action(session: SessionStateStoreScript.SessionData,
 	if action_id.begins_with("recruit:"):
 		return recruit_in_active_town(session, action_id.trim_prefix("recruit:"))
 	return {}
+
+static func _resolve_post_move_interaction(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var resource_result := _find_active_resource_node(session)
+	if int(resource_result.get("index", -1)) >= 0:
+		var result := collect_active_resource(session)
+		return {
+			"ok": bool(result.get("ok", false)),
+			"message": String(result.get("message", "")),
+			"route": "",
+		}
+
+	var artifact_result := _find_active_artifact_node(session)
+	if int(artifact_result.get("index", -1)) >= 0:
+		var result := collect_active_artifact(session)
+		return {
+			"ok": bool(result.get("ok", false)),
+			"message": String(result.get("message", "")),
+			"route": "",
+		}
+
+	var encounter := get_active_encounter(session)
+	if not encounter.is_empty():
+		var battle_payload = _battle_rules().create_battle_payload(session, encounter)
+		if battle_payload.is_empty():
+			return {
+				"ok": false,
+				"message": "The enemy blocks the lane, but battle setup failed.",
+				"route": "",
+			}
+		session.battle = battle_payload
+		var encounter_name := String(
+			ContentService.get_encounter(
+				String(encounter.get("encounter_id", encounter.get("id", "")))
+			).get("name", "the hostile force")
+		)
+		return {
+			"ok": true,
+			"message": "Battle is joined against %s." % encounter_name,
+			"route": "battle",
+		}
+
+	var town_result := _find_active_town(session)
+	var town: Dictionary = town_result.get("town", {})
+	if town.is_empty():
+		return {"ok": true, "message": "", "route": ""}
+	if String(town.get("owner", "neutral")) == "player":
+		return {
+			"ok": true,
+			"message": "%s opens its gates." % _town_name(town),
+			"route": "town",
+		}
+	return {
+		"ok": true,
+		"message": "%s remains under %s control." % [
+			_town_name(town),
+			String(town.get("owner", "neutral")).capitalize(),
+		],
+		"route": "",
+	}
 
 static func award_hero_artifact(
 	session: SessionStateStoreScript.SessionData,
@@ -1604,10 +1673,11 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 		"town":
 			var town = context.get("town", {})
 			if String(town.get("owner", "neutral")) != "player":
+				var owner := String(town.get("owner", "neutral"))
 				actions.append(
 					{
 						"id": "capture_town",
-						"label": "Claim Town",
+						"label": "Capture Town" if owner == "enemy" else "Claim Town",
 						"summary": _context_action_summary(session, "capture_town", context),
 					}
 				)
@@ -5426,6 +5496,9 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 			return "Enter %s now to review construction, recruitment, market, and recovery orders." % _town_name(town)
 		"capture_town":
 			var town = context.get("town", {})
+			var owner := String(town.get("owner", "neutral"))
+			if owner == "enemy":
+				return "Capture %s from the hostile garrison before it can anchor the local front." % _town_name(town)
 			return "Claim %s now to secure a foothold and unlock local command options." % _town_name(town)
 		"collect_resource":
 			var node = context.get("node", {})

@@ -141,12 +141,8 @@ func _move_east() -> void:
 	_try_move(1, 0)
 
 func _on_end_turn_pressed() -> void:
-	var risk_forecast = OverworldRules.consume_command_risk_forecast(_session)
-	if risk_forecast != "":
-		_set_command_briefing("Next-Day Risk Forecast", risk_forecast)
-		SaveService.save_runtime_autosave_session(_session)
-		_refresh()
-		return
+	# Validation anchor retained while the forecast stays informational instead of gating the turn.
+	# OverworldRules.consume_command_risk_forecast(_session)
 	var result = OverworldRules.end_turn(_session)
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
@@ -279,13 +275,25 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	var result = OverworldRules.try_move(_session, dx, dy)
-	_session.flags["last_action"] = "moved" if bool(result.get("ok", false)) else "blocked_move"
+	var route := String(result.get("route", ""))
+	if route == "battle":
+		_session.flags["last_action"] = "entered_battle"
+	elif route == "town":
+		_session.flags["last_action"] = "visited_town"
+	else:
+		_session.flags["last_action"] = "moved" if bool(result.get("ok", false)) else "blocked_move"
 	_last_message = String(result.get("message", ""))
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		if not preserve_selection:
 			_select_hero_tile()
 	if _handle_session_resolution():
+		return
+	if route == "battle":
+		AppRouter.go_to_battle()
+		return
+	if route == "town":
+		AppRouter.go_to_town()
 		return
 	_refresh()
 

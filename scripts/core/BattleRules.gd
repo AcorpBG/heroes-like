@@ -563,9 +563,9 @@ static func resolve_if_battle_ready(session: SessionStateStoreScript.SessionData
 	if session == null or session.battle.is_empty():
 		return {"state": "invalid", "message": ""}
 	var outcome = _evaluate_outcome(session)
-	if String(outcome.get("state", "")) == "":
-		return {"state": "continue", "message": ""}
-	return outcome
+	if String(outcome.get("state", "")) != "":
+		return outcome
+	return _drain_enemy_turns(session)
 
 static func get_active_stack(battle: Dictionary) -> Dictionary:
 	return _get_stack_by_id(battle, String(battle.get("active_stack_id", "")))
@@ -2700,20 +2700,11 @@ static func _complete_action(session: SessionStateStoreScript.SessionData, initi
 		_append_nonempty_message(messages, String(outcome.get("message", "")))
 		return {"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))}
 
-	while true:
-		var active_stack = get_active_stack(session.battle)
-		if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
-			break
-		var enemy_result = _run_enemy_turn(session, active_stack)
-		if String(enemy_result.get("message", "")) != "":
-			_record_event(session.battle, String(enemy_result.get("message", "")))
-			messages.append(String(enemy_result.get("message", "")))
-		var enemy_state = String(enemy_result.get("state", ""))
-		if enemy_state != "" and enemy_state not in ["continue", "invalid"]:
-			return {"ok": true, "message": " ".join(messages), "state": enemy_state}
-		if String(enemy_result.get("state", "")) == "invalid":
-			break
-
+	var enemy_result := _drain_enemy_turns(session)
+	_append_nonempty_message(messages, String(enemy_result.get("message", "")))
+	var enemy_state := String(enemy_result.get("state", "continue"))
+	if enemy_state != "" and enemy_state != "continue":
+		return {"ok": true, "message": " ".join(messages), "state": enemy_state}
 	return {"ok": true, "message": " ".join(messages), "state": "continue"}
 
 static func advance_turn(battle: Dictionary) -> void:
@@ -2951,6 +2942,33 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		messages.append(" ".join(objective_messages))
 
 	return _complete_enemy_action(session, " ".join(messages))
+
+static func _drain_enemy_turns(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"state": "invalid", "message": ""}
+
+	var messages := []
+	while true:
+		var active_stack = get_active_stack(session.battle)
+		if active_stack.is_empty():
+			var outcome = _evaluate_outcome(session)
+			if String(outcome.get("state", "")) != "":
+				return outcome
+			break
+		if String(active_stack.get("side", "")) != "enemy":
+			break
+		var enemy_result = _run_enemy_turn(session, active_stack)
+		var enemy_message := String(enemy_result.get("message", ""))
+		if enemy_message != "":
+			_record_event(session.battle, enemy_message)
+			messages.append(enemy_message)
+		var enemy_state := String(enemy_result.get("state", "continue"))
+		if enemy_state != "" and enemy_state not in ["continue", "invalid"]:
+			return {"state": enemy_state, "message": " ".join(messages)}
+		if enemy_state == "invalid":
+			break
+
+	return {"state": "continue", "message": " ".join(messages)}
 
 static func _complete_enemy_action(session: SessionStateStoreScript.SessionData, message: String) -> Dictionary:
 	var outcome = _evaluate_outcome(session)

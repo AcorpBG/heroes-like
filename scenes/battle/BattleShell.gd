@@ -79,6 +79,7 @@ func _ready() -> void:
 		AppRouter.go_to_overworld()
 		return
 	var initial_result := BattleRules.resolve_if_battle_ready(_session)
+	_last_message = String(initial_result.get("message", ""))
 	match String(initial_result.get("state", "continue")):
 		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
 			AppRouter.go_to_overworld()
