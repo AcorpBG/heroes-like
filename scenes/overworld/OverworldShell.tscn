@@ -29,16 +29,16 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 18
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
 
 [node name="Content" type="VBoxContainer" parent="Scroll/ContentMargin"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="Banner" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
 layout_mode = 2
@@ -46,32 +46,35 @@ size_flags_horizontal = 3
 
 [node name="BannerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner"]
 layout_mode = 2
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="BannerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="TopBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 10
 
 [node name="BannerGlyph" type="Control" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
-custom_minimum_size = Vector2(54, 48)
+custom_minimum_size = Vector2(52, 44)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "overworld"
 
-[node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+[node name="TitleBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/TitleBox"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "Overworld"
 
-[node name="Status" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+[node name="Status" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/TitleBox"]
 layout_mode = 2
 text = "Week 1 Day 1"
 
@@ -79,57 +82,88 @@ text = "Week 1 Day 1"
 layout_mode = 2
 text = "Gold 0 | Wood 0 | Ore 0"
 
-[node name="Event" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
+[node name="Spacer" type="Control" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MapCue" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+horizontal_alignment = 2
+text = "WASD or click route"
+
+[node name="SummaryStrip" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="EventPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EventPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/EventPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="EventBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/EventPanel/EventPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EventTitle" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/EventPanel/EventPad/EventBox"]
+layout_mode = 2
+text = "Dispatch"
+
+[node name="Event" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/EventPanel/EventPad/EventBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Frontier reports will surface here."
 
-[node name="BriefingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+[node name="BriefingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BriefingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/BriefingPanel"]
+[node name="BriefingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
-[node name="BriefingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad"]
+[node name="BriefingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel/BriefingPad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
-[node name="BriefingTitle" type="Label" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad/BriefingBox"]
+[node name="BriefingTitle" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel/BriefingPad/BriefingBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
 text = "Command Briefing"
 
-[node name="Briefing" type="Label" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad/BriefingBox"]
+[node name="Briefing" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/BriefingPanel/BriefingPad/BriefingBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Opening priorities will appear here on a fresh scenario launch."
 
-[node name="CommitmentPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
+[node name="CommitmentPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CommitmentPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/CommitmentPanel"]
+[node name="CommitmentPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/CommitmentPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
-[node name="CommitmentBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/CommitmentPanel/CommitmentPad"]
+[node name="CommitmentBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/CommitmentPanel/CommitmentPad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 4
 
-[node name="CommitmentTitle" type="Label" parent="Scroll/ContentMargin/Content/CommitmentPanel/CommitmentPad/CommitmentBox"]
+[node name="CommitmentTitle" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/CommitmentPanel/CommitmentPad/CommitmentBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
 text = "Command Commitment"
 
-[node name="Commitment" type="Label" parent="Scroll/ContentMargin/Content/CommitmentPanel/CommitmentPad/CommitmentBox"]
+[node name="Commitment" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/SummaryStrip/CommitmentPanel/CommitmentPad/CommitmentBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Immediate order, route pressure, and hold risk."
@@ -138,7 +172,7 @@ text = "Immediate order, route pressure, and hold risk."
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offset = 820
+split_offset = 870
 
 [node name="MapColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
 layout_mode = 2
@@ -152,24 +186,24 @@ size_flags_vertical = 3
 
 [node name="MapPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="MapBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="MapHeader" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 
 [node name="MapTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapHeader"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "March Map"
 
 [node name="MapHint" type="Label" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapHeader"]
@@ -186,13 +220,13 @@ size_flags_vertical = 3
 
 [node name="MapInset" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Map" type="Control" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MapFrame/MapInset"]
-custom_minimum_size = Vector2(700, 470)
+custom_minimum_size = Vector2(760, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -201,208 +235,221 @@ script = ExtResource("2")
 [node name="MoveBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox"]
 layout_mode = 2
 alignment = 1
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="MoveNorth" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
 layout_mode = 2
-text = "North"
+text = "N"
 
 [node name="MoveSouth" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
 layout_mode = 2
-text = "South"
+text = "S"
 
 [node name="MoveWest" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
 layout_mode = 2
-text = "West"
+text = "W"
 
 [node name="MoveEast" type="Button" parent="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar"]
 layout_mode = 2
-text = "East"
+text = "E"
 
 [node name="Sidebar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
-custom_minimum_size = Vector2(360, 0)
+custom_minimum_size = Vector2(340, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 12
-
-[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad"]
-layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Command Wing"
-
-[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Hero"
-
-[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Army"
-
-[node name="Heroes" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Heroes"
-
-[node name="HeroBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/HeroBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Spellbook"
-
-[node name="SpellBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/SpellBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="Artifacts" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Artifacts"
-
-[node name="ArtifactBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/ArtifactBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="Specialties" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Specialties"
-
-[node name="SpecialtyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/SpecialtyBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="FrontierPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="FrontierPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="FrontierBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="FrontierTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Frontier Watch"
-
-[node name="Visibility" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Visibility"
-
-[node name="Objectives" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Objectives"
-
-[node name="Threats" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Threats"
-
-[node name="Forecast" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/FrontierPanel/FrontierPad/FrontierBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Forecast"
-
-[node name="ContextPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+[node name="SidebarTabs" type="TabContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ContextPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel"]
+[node name="ContextPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ContextPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="ContextBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad"]
+[node name="ContextBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel/ContextPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="ContextTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox"]
+[node name="ContextTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 17
 text = "Tile Focus"
 
-[node name="Context" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox"]
+[node name="Context" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
 layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
 text = "Current tile details"
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
 layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
 
-[node name="Footer" type="HBoxContainer" parent="Scroll/ContentMargin/Content"]
+[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs"]
 layout_mode = 2
-theme_override_constants/separation = 10
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="EndTurn" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+[node name="CommandScroll" type="ScrollContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Command Wing"
+
+[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Hero"
+
+[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Army"
+
+[node name="Heroes" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Heroes"
+
+[node name="HeroBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/HeroBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="Specialties" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Specialties"
+
+[node name="SpecialtyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/SpecialtyBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Spellbook"
+
+[node name="SpellBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/SpellBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="Artifacts" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Artifacts"
+
+[node name="ArtifactBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/CommandPanel/CommandScroll/CommandPad/CommandBox/ArtifactBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
+[node name="FrontierPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FrontierPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="FrontierBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="FrontierTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "Frontier Watch"
+
+[node name="Visibility" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Visibility"
+
+[node name="Objectives" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Objectives"
+
+[node name="Threats" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Threats"
+
+[node name="Forecast" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Forecast"
+
+[node name="Footer" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="EndTurn" type="Button" parent="Scroll/ContentMargin/Content/Columns/Sidebar/Footer"]
 layout_mode = 2
 text = "End Turn"
 
-[node name="SaveStatus" type="Label" parent="Scroll/ContentMargin/Content/Footer"]
+[node name="SaveStatus" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/Footer"]
 layout_mode = 2
 size_flags_horizontal = 3
-autowrap_mode = 3
 text = "Latest ready save: none."
 
-[node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/Footer"]
+[node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/Columns/Sidebar/Footer"]
 layout_mode = 2
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(76, 0)
 
-[node name="Save" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+[node name="Save" type="Button" parent="Scroll/ContentMargin/Content/Columns/Sidebar/Footer"]
 layout_mode = 2
 text = "Save"
 
-[node name="Menu" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
+[node name="Menu" type="Button" parent="Scroll/ContentMargin/Content/Columns/Sidebar/Footer"]
 layout_mode = 2
 text = "Main Menu"
 
@@ -410,7 +457,7 @@ text = "Main Menu"
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveSouth" to="." method="_move_south"]
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveWest" to="." method="_move_west"]
 [connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/MapColumn/MapPanel/MapPad/MapBox/MoveBar/MoveEast" to="." method="_move_east"]
-[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/EndTurn" to="." method="_on_end_turn_pressed"]
-[connection signal="item_selected" from="Scroll/ContentMargin/Content/Footer/SaveSlot" to="." method="_on_save_slot_selected"]
-[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="Scroll/ContentMargin/Content/Footer/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/Sidebar/Footer/EndTurn" to="." method="_on_end_turn_pressed"]
+[connection signal="item_selected" from="Scroll/ContentMargin/Content/Columns/Sidebar/Footer/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/Sidebar/Footer/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="Scroll/ContentMargin/Content/Columns/Sidebar/Footer/Menu" to="." method="_on_menu_pressed"]

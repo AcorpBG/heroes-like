@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T17:36:00Z",
+  "updatedAt": "2026-04-15T17:40:00Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-shared-visual-kit-cohesion",
-  "currentSliceTitle": "Apply a shared visual kit, tighter card summaries, and cohesive original banner marks across the converted front-end shells",
+  "currentSliceId": "phase-6-overworld-hud-compaction",
+  "currentSliceTitle": "Compact the overworld into a fixed-height, map-first HUD with tabbed detail panes and tighter action surfacing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Added a reusable shell visual kit plus drawn heraldry marks, compacted the heaviest report-style labels in menu and outcome, and moved overworld, town, and battle shell styling onto the same shared presentation treatment without changing routing or gameplay flow.",
+  "currentSliceNotes": "Rebuilt the overworld shell around a short banner, a larger visual map stage, tabbed sidebar detail panes, and a compact system strip so normal desktop play no longer depends on top-level vertical scrolling while movement and current actions stay intact.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1112,6 +1112,8 @@
     "This run turned TownShell and BattleShell into visual-first surfaces by adding a drawn citadel board and a drawn battlefield board, compacting label-heavy readouts into tooltip-backed cards, and keeping build, recruit, study, spell, transfer, response, save, and combat-action flows in the existing core rules.",
     "Godot 4.6.2 headless boot and the dedicated res://tests/town_battle_visual_smoke.tscn both passed after the town/battle visual shell pass, while python3 tests/validate_repo.py still reports unrelated pre-existing token-coverage failures outside this slice.",
     "This run turned the remaining top-level product surfaces into visual-first shells by giving MainMenu a drawn landing board plus grouped campaign, skirmish, guide, settings, and save panels, and by giving ScenarioOutcomeShell a palette-driven result banner with recap cards and clearer outcome actions.",
-    "Godot 4.6.2 headless boot, python3 -m py_compile tests/validate_repo.py, and the dedicated res://tests/menu_outcome_visual_smoke.tscn all passed after the menu/outcome visual pass, while python3 tests/validate_repo.py still reports the same unrelated pre-existing token-audit failures in untouched gameplay files."
+    "Godot 4.6.2 headless boot, python3 -m py_compile tests/validate_repo.py, and the dedicated res://tests/menu_outcome_visual_smoke.tscn all passed after the menu/outcome visual pass, while python3 tests/validate_repo.py still reports the same unrelated pre-existing token-audit failures in untouched gameplay files.",
+    "This run compacted the overworld shell into a fixed-height, map-first HUD by folding the long stacked report into a short dispatch banner, summary cards, a larger map board, tabbed sidebar detail panes, and a compact system strip without moving simulation out of scripts/core.",
+    "Godot 4.6.2 headless boot, the dedicated res://tests/overworld_visual_smoke.tscn smoke scene, and the existing res://.tmp_repro_move.tscn movement repro all passed after the overworld compaction pass; python3 tests/validate_repo.py still reports the same unrelated broad token-audit failures in untouched gameplay and menu files."
   ]
 }

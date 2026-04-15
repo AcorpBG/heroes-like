@@ -243,7 +243,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: finish the remaining top-level front-end pass by turning `MainMenu` and `ScenarioOutcomeShell` into visual-first shells while keeping presentation work inside scene controllers and validating each touched surface with narrow smoke coverage.
+- current item 104 focus: keep tightening top-level playability passes on the shipped shells, starting with a compact overworld HUD pass that removes routine top-level scrolling at `1280x720` while keeping movement and active-session actions intact.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -269,6 +269,8 @@ Difficulty: High
 125. [completed] Re-run repository-local validation, headless Godot boot, and a dedicated town/battle shell smoke scene for the visual shell slice while reporting unrelated pre-existing validator baseline failures separately.
 126. [completed] Rework `MainMenu` and `ScenarioOutcomeShell` into visual-first front-end and results shells with drawn landing or result boards, grouped recap cards, and preserved campaign/skirmish/save routing.
 127. [completed] Re-run headless Godot boot, a dedicated menu/outcome smoke scene, validator bytecode compilation, and repository-local validation while reporting unrelated pre-existing validator baseline failures separately.
+128. [completed] Compact the overworld shell into a fixed-height, map-first HUD with tabbed detail panes, shorter summaries, and fewer always-visible action rows while preserving current movement and core actions.
+129. [completed] Re-run normal Godot headless boot, the existing overworld visual smoke scene, and the existing movement repro after the overworld compaction pass while reporting unrelated validator baseline failures separately.
 
 ## Standards
 - no throwaway prototype code if avoidable
