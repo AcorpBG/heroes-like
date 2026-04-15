@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=3 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -8,6 +9,13 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0509804, 0.0588235, 0.0745098, 1)
 
 [node name="Scroll" type="ScrollContainer" parent="."]
 layout_mode = 1
@@ -37,34 +45,34 @@ size_flags_horizontal = 3
 
 [node name="BannerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
 
 [node name="BannerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="TopBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 14
 
 [node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "Battle"
 
 [node name="Status" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
-size_flags_horizontal = 1
 text = "Round 1"
 
 [node name="Pressure" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
+horizontal_alignment = 2
 text = "Battle pressure"
 
 [node name="Event" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
@@ -72,302 +80,361 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Battle dispatch."
 
-[node name="BriefingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BriefingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/BriefingPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="BriefingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="BriefingTitle" type="Label" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad/BriefingBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Tactical Briefing"
-
-[node name="Briefing" type="Label" parent="Scroll/ContentMargin/Content/BriefingPanel/BriefingPad/BriefingBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Opening tactical guidance will appear here on fresh battle entry."
-
-[node name="RiskPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RiskPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/RiskPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="RiskBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/RiskPanel/RiskPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="RiskTitle" type="Label" parent="Scroll/ContentMargin/Content/RiskPanel/RiskPad/RiskBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Risk, Readiness, and Objective Pressure"
-
-[node name="Risk" type="Label" parent="Scroll/ContentMargin/Content/RiskPanel/RiskPad/RiskBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Live tactical risk, readiness, and battlefield objective or hazard pressure lines will appear here."
-
-[node name="ConsequencePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ConsequencePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/ConsequencePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="ConsequenceBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/ConsequencePanel/ConsequencePad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ConsequenceTitle" type="Label" parent="Scroll/ContentMargin/Content/ConsequencePanel/ConsequencePad/ConsequenceBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Order Consequences"
-
-[node name="Consequence" type="Label" parent="Scroll/ContentMargin/Content/ConsequencePanel/ConsequencePad/ConsequenceBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Live order-consequence lines will appear here from the active battle state."
-
 [node name="Columns" type="HSplitContainer" parent="Scroll/ContentMargin/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offset = 420
+split_offset = 830
 
-[node name="LeftColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+[node name="BattleColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn"]
+[node name="SituationRow" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Command Wing"
-
-[node name="PlayerCommand" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Friendly command"
-
-[node name="EnemyCommand" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Enemy command"
-
-[node name="InitiativePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="InitiativePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/InitiativePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="InitiativeBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/InitiativePanel/InitiativePad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="InitiativeTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/InitiativePanel/InitiativePad/InitiativeBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Initiative Track"
-
-[node name="Initiative" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/InitiativePanel/InitiativePad/InitiativeBox"]
-layout_mode = 2
-size_flags_vertical = 3
-autowrap_mode = 3
-text = "Initiative"
-
-[node name="RightColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="ContextPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+[node name="BriefingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ContextPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/ContextPanel"]
+[node name="BriefingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="ContextBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/ContextPanel/ContextPad"]
+[node name="BriefingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel/BriefingPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="ContextTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/ContextPanel/ContextPad/ContextBox"]
+[node name="BriefingTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel/BriefingPad/BriefingBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Active Exchange"
+text = "Tactical Briefing"
 
-[node name="Active" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/ContextPanel/ContextPad/ContextBox"]
+[node name="Briefing" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/BriefingPanel/BriefingPad/BriefingBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Active stack"
+text = "Opening tactical guidance will appear here on fresh battle entry."
 
-[node name="Target" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/ContextPanel/ContextPad/ContextBox"]
+[node name="RiskPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow"]
 layout_mode = 2
-autowrap_mode = 3
-text = "Target stack"
+size_flags_horizontal = 2
 
-[node name="SpellPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="SpellPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/SpellPanel"]
+[node name="RiskPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="SpellBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/SpellPanel/SpellPad"]
+[node name="RiskBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel/RiskPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="SpellTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/SpellPanel/SpellPad/SpellBox"]
+[node name="RiskTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel/RiskPad/RiskBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Spellcraft and Effects"
+text = "Risk, Readiness, and Objective Pressure"
 
-[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/SpellPanel/SpellPad/SpellBox"]
+[node name="Risk" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/RiskPanel/RiskPad/RiskBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Spellbook"
+text = "Live tactical risk, readiness, and battlefield objective or hazard pressure lines will appear here."
 
-[node name="Effects" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/SpellPanel/SpellPad/SpellBox"]
+[node name="ConsequencePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow"]
 layout_mode = 2
-size_flags_vertical = 3
-autowrap_mode = 3
-text = "Effects"
+size_flags_horizontal = 2
 
-[node name="TimingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TimingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/TimingPanel"]
+[node name="ConsequencePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/ConsequencePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="TimingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/TimingPanel/TimingPad"]
+[node name="ConsequenceBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/ConsequencePanel/ConsequencePad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="TimingTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/TimingPanel/TimingPad/TimingBox"]
+[node name="ConsequenceTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/ConsequencePanel/ConsequencePad/ConsequenceBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "Spell and Ability Timing"
+text = "Order Consequences"
 
-[node name="Timing" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/TimingPanel/TimingPad/TimingBox"]
+[node name="Consequence" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/SituationRow/ConsequencePanel/ConsequencePad/ConsequenceBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Live spell timing, support payoff, protection needs, and burst-risk lines will appear here."
+text = "Live order-consequence lines will appear here from the active battle state."
 
-[node name="ArmyColumns" type="HSplitContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-split_offset = 520
-
-[node name="PlayerPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/ArmyColumns"]
+[node name="BattlefieldPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PlayerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/ArmyColumns/PlayerPanel"]
+[node name="BattlefieldPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="BattlefieldBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="BattlefieldHeader" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BattlefieldTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Battlefield"
+
+[node name="BattlefieldHint" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+horizontal_alignment = 2
+text = "The field stays central: active stack, target pressure, initiative flow, and objective control now read off the board first."
+
+[node name="BattlefieldFrame" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BattlefieldInset" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="BattleBoard" type="Control" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame/BattlefieldInset"]
+custom_minimum_size = Vector2(720, 350)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2")
+
+[node name="ArmyColumns" type="HSplitContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+split_offset = 360
+
+[node name="PlayerPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PlayerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/PlayerPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="PlayerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/ArmyColumns/PlayerPanel/PlayerPad"]
+[node name="PlayerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/PlayerPanel/PlayerPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PlayerTitle" type="Label" parent="Scroll/ContentMargin/Content/ArmyColumns/PlayerPanel/PlayerPad/PlayerBox"]
+[node name="PlayerTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/PlayerPanel/PlayerPad/PlayerBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Friendly Army"
 
-[node name="PlayerRoster" type="Label" parent="Scroll/ContentMargin/Content/ArmyColumns/PlayerPanel/PlayerPad/PlayerBox"]
+[node name="PlayerRoster" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/PlayerPanel/PlayerPad/PlayerBox"]
 layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
 text = "Player roster"
 
-[node name="EnemyPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/ArmyColumns"]
+[node name="EnemyPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="EnemyPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/ArmyColumns/EnemyPanel"]
+[node name="EnemyPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/EnemyPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="EnemyBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/ArmyColumns/EnemyPanel/EnemyPad"]
+[node name="EnemyBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/EnemyPanel/EnemyPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="EnemyTitle" type="Label" parent="Scroll/ContentMargin/Content/ArmyColumns/EnemyPanel/EnemyPad/EnemyBox"]
+[node name="EnemyTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/EnemyPanel/EnemyPad/EnemyBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Enemy Army"
 
-[node name="EnemyRoster" type="Label" parent="Scroll/ContentMargin/Content/ArmyColumns/EnemyPanel/EnemyPad/EnemyBox"]
+[node name="EnemyRoster" type="Label" parent="Scroll/ContentMargin/Content/Columns/BattleColumn/ArmyColumns/EnemyPanel/EnemyPad/EnemyBox"]
 layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
 text = "Enemy roster"
+
+[node name="Sidebar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Command Wing"
+
+[node name="PlayerCommand" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Friendly command"
+
+[node name="EnemyCommand" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Enemy command"
+
+[node name="InitiativePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InitiativePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/InitiativePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="InitiativeBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/InitiativePanel/InitiativePad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="InitiativeTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/InitiativePanel/InitiativePad/InitiativeBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Initiative Track"
+
+[node name="Initiative" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/InitiativePanel/InitiativePad/InitiativeBox"]
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+text = "Initiative"
+
+[node name="ContextPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ContextPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="ContextBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ContextTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Active Exchange"
+
+[node name="Active" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Active stack"
+
+[node name="Target" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/ContextPanel/ContextPad/ContextBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Target stack"
+
+[node name="SpellPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SpellPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="SpellBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel/SpellPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpellTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel/SpellPad/SpellBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Spellcraft and Effects"
+
+[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel/SpellPad/SpellBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Spellbook"
+
+[node name="Effects" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/SpellPanel/SpellPad/SpellBox"]
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+text = "Effects"
+
+[node name="TimingPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimingPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/TimingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="TimingBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/TimingPanel/TimingPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TimingTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/TimingPanel/TimingPad/TimingBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Spell and Ability Timing"
+
+[node name="Timing" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/TimingPanel/TimingPad/TimingBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Live spell timing, support payoff, protection needs, and burst-risk lines will appear here."
 
 [node name="Footer" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
 layout_mode = 2
@@ -380,10 +447,10 @@ theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="FooterColumns" type="HSplitContainer" parent="Scroll/ContentMargin/Content/Footer/FooterPad"]
+[node name="FooterColumns" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Footer/FooterPad"]
 layout_mode = 2
 size_flags_horizontal = 3
-split_offset = 760
+theme_override_constants/separation = 12
 
 [node name="ActionPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns"]
 layout_mode = 2
@@ -461,7 +528,6 @@ text = "Surrender"
 
 [node name="SystemPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns"]
 layout_mode = 2
-size_flags_horizontal = 1
 
 [node name="SystemPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel"]
 layout_mode = 2
@@ -486,6 +552,7 @@ text = "Manual saves remain separate from settings and campaign progression."
 
 [node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(150, 36)
 
 [node name="Save" type="Button" parent="Scroll/ContentMargin/Content/Footer/FooterPad/FooterColumns/SystemPanel/SystemPad/SystemBox"]
 layout_mode = 2

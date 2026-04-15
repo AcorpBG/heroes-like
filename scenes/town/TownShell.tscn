@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/town/TownShell.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/town/TownStageView.gd" id="2"]
 
 [node name="TownShell" type="Control"]
 layout_mode = 3
@@ -8,6 +9,13 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("1")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0509804, 0.0705882, 0.0823529, 1)
 
 [node name="Scroll" type="ScrollContainer" parent="."]
 layout_mode = 1
@@ -37,33 +45,48 @@ size_flags_horizontal = 3
 
 [node name="BannerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner"]
 layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 14
 
 [node name="BannerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="TopBar" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 14
+
+[node name="CrestFrame" type="PanelContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
+layout_mode = 2
+custom_minimum_size = Vector2(74, 0)
+
+[node name="CrestPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="CrestLabel" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+text = "TOWN"
 
 [node name="Header" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 text = "Town"
 
 [node name="Status" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
-size_flags_horizontal = 1
 text = "Week 1 Day 1"
 
 [node name="Resources" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
 layout_mode = 2
-size_flags_horizontal = 1
 text = "Gold 0 | Wood 0 | Ore 0"
 
 [node name="Event" type="Label" parent="Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox"]
@@ -71,373 +94,439 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Town dispatch."
 
-[node name="OutlookPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="OutlookPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/OutlookPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
-
-[node name="OutlookBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/OutlookPanel/OutlookPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="OutlookTitle" type="Label" parent="Scroll/ContentMargin/Content/OutlookPanel/OutlookPad/OutlookBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Defense Outlook"
-
-[node name="Outlook" type="Label" parent="Scroll/ContentMargin/Content/OutlookPanel/OutlookPad/OutlookBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Defense Outlook"
-
-[node name="CommandLedgerPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CommandLedgerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/CommandLedgerPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 12
-
-[node name="CommandLedgerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/CommandLedgerPanel/CommandLedgerPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="CommandLedgerTitle" type="Label" parent="Scroll/ContentMargin/Content/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Order Ledger"
-
-[node name="CommandLedger" type="Label" parent="Scroll/ContentMargin/Content/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Order Ledger"
-
 [node name="Columns" type="HSplitContainer" parent="Scroll/ContentMargin/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-split_offset = 440
+split_offset = 820
 
-[node name="LeftColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+[node name="TownColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn"]
+[node name="TownStagePanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel"]
+[node name="TownStagePad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="TownStageBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="TownStageHeader" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TownStageTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageHeader"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Citadel View"
+
+[node name="TownStageHint" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+horizontal_alignment = 2
+text = "Construction, recruitment, spellcraft, and logistics stay mapped to the town itself instead of a report column."
+
+[node name="TownStageFrame" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TownStageInset" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="TownStage" type="Control" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame/TownStageInset"]
+custom_minimum_size = Vector2(720, 360)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2")
+
+[node name="TownBoards" type="HBoxContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="TownPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards"]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TownPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad"]
+[node name="TownBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Command"
-
-[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Hero"
-
-[node name="Heroes" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Command Wing"
-
-[node name="HeroBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox/HeroBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="Specialties" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Specialties"
-
-[node name="SpecialtyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/CommandPanel/CommandPad/CommandBox/SpecialtyBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="TownPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TownPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="TownBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="TownTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+[node name="TownTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Town Hall"
 
-[node name="TownSummary" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+[node name="TownSummary" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Town Summary"
 
-[node name="Defense" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+[node name="Defense" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Defense"
 
-[node name="Pressure" type="Label" parent="Scroll/ContentMargin/Content/Columns/LeftColumn/TownPanel/TownPad/TownBox"]
+[node name="Pressure" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/TownPanel/TownPad/TownBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Frontier Watch"
 
-[node name="RightColumn" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+[node name="OutlookPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards"]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="OutlookPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/OutlookPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="OutlookBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/OutlookPanel/OutlookPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OutlookTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/OutlookPanel/OutlookPad/OutlookBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Defense Outlook"
+
+[node name="Outlook" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/OutlookPanel/OutlookPad/OutlookBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Defense Outlook"
+
+[node name="CommandLedgerPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards"]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CommandLedgerPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/CommandLedgerPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandLedgerBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/CommandLedgerPanel/CommandLedgerPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommandLedgerTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Order Ledger"
+
+[node name="CommandLedger" type="Label" parent="Scroll/ContentMargin/Content/Columns/TownColumn/TownBoards/CommandLedgerPanel/CommandLedgerPad/CommandLedgerBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Order Ledger"
+
+[node name="Sidebar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns"]
+custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="BuildPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+[node name="CommandPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BuildPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel"]
+[node name="CommandPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="BuildBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad"]
+[node name="CommandBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="BuildTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox"]
+[node name="CommandTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Command Wing"
+
+[node name="Hero" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Hero"
+
+[node name="Heroes" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Command Wing"
+
+[node name="HeroBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/HeroBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Specialties" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Specialties"
+
+[node name="SpecialtyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox/SpecialtyBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Army"
+
+[node name="BuildPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BuildPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="BuildBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BuildTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Construction"
 
-[node name="Buildings" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox"]
+[node name="Buildings" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Buildings"
 
-[node name="BuildBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox"]
+[node name="BuildBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/BuildPanel/BuildPad/BuildBox/BuildBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/BuildPanel/BuildPad/BuildBox/BuildBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="MarketPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+[node name="RecruitPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarketPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel"]
+[node name="RecruitPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="MarketBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad"]
+[node name="RecruitBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MarketTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "Exchange"
-
-[node name="Market" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Exchange Hall"
-
-[node name="MarketBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox"]
-layout_mode = 2
-
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/MarketPanel/MarketPad/MarketBox/MarketBar"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="RecruitPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RecruitPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="RecruitBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="RecruitTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox"]
+[node name="RecruitTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad/RecruitBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Recruitment"
 
-[node name="Recruitment" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox"]
+[node name="Recruitment" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad/RecruitBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Recruitment"
 
-[node name="RecruitBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox"]
+[node name="RecruitBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad/RecruitBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/RecruitPanel/RecruitPad/RecruitBox/RecruitBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/RecruitPanel/RecruitPad/RecruitBox/RecruitBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="StudyPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+[node name="StudyPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="StudyPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel"]
+[node name="StudyPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="StudyBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad"]
+[node name="StudyBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StudyTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+[node name="StudyTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Spellcraft"
 
-[node name="Study" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+[node name="Study" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Spell Study"
+text = "Study"
 
-[node name="StudyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+[node name="StudyBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox/StudyBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox/StudyBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/StudyPanel/StudyPad/StudyBox"]
+[node name="Spellbook" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/StudyPanel/StudyPad/StudyBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Spellbook"
 
-[node name="LogisticsPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn"]
+[node name="MarketPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LogisticsPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel"]
+[node name="MarketPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 12
 theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 12
 theme_override_constants/margin_bottom = 12
 
-[node name="LogisticsBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad"]
+[node name="MarketBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="LogisticsTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="MarketTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad/MarketBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Exchange"
+
+[node name="Market" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad/MarketBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Exchange Hall"
+
+[node name="MarketBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad/MarketBox"]
+layout_mode = 2
+
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/MarketPanel/MarketPad/MarketBox/MarketBar"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="LogisticsPanel" type="PanelContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LogisticsPad" type="MarginContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="LogisticsBox" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LogisticsTitle" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Logistics"
 
-[node name="Tavern" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Tavern" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 autowrap_mode = 3
-text = "Wayfarers Hall"
+text = "Tavern"
 
-[node name="TavernBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="TavernBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/TavernBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/TavernBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="Transfer" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Transfer" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Transfer"
 
-[node name="TransferBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="TransferBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/TransferBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/TransferBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="Responses" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Responses" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Strategic Response"
 
-[node name="ResponseBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="ResponseBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/ResponseBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/ResponseBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="Artifacts" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="Artifacts" type="Label" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 autowrap_mode = 3
 text = "Artifacts"
 
-[node name="ArtifactBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
+[node name="ArtifactBar" type="VBoxContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox"]
 layout_mode = 2
 
-[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox/ArtifactBar"]
+[node name="Actions" type="HFlowContainer" parent="Scroll/ContentMargin/Content/Columns/Sidebar/LogisticsPanel/LogisticsPad/LogisticsBox/ArtifactBar"]
 layout_mode = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
-
-[node name="Army" type="Label" parent="Scroll/ContentMargin/Content/Columns/RightColumn/LogisticsPanel/LogisticsPad/LogisticsBox"]
-layout_mode = 2
-autowrap_mode = 3
-text = "Army"
 
 [node name="Footer" type="HBoxContainer" parent="Scroll/ContentMargin/Content"]
 layout_mode = 2
@@ -451,7 +540,7 @@ text = "Latest ready save: none."
 
 [node name="SaveSlot" type="OptionButton" parent="Scroll/ContentMargin/Content/Footer"]
 layout_mode = 2
-custom_minimum_size = Vector2(140, 0)
+custom_minimum_size = Vector2(150, 36)
 
 [node name="Save" type="Button" parent="Scroll/ContentMargin/Content/Footer"]
 layout_mode = 2

@@ -190,6 +190,8 @@ Town shell presentation decision:
 - the town scene now uses a sectioned management-shell layout with dedicated command, town hall, construction, recruitment, spellcraft, and logistics panels instead of a single stacked debug column
 - `TownRules.gd` owns the release-facing summary shaping for town identity, construction ledgers, recruit reserves, stationed defenders, visibility-safe frontier pressure, and dispatch messaging, keeping `TownShell.gd` thin and save-safe
 - local threat surfacing only reports visible raid counts exactly and falls back to fog-safe warnings for unseen hostile movement, preserving scouting and public-information boundaries even inside the town shell
+- the town scene now also centers on a dedicated drawn citadel board with crest treatment, wall and district markers, and direct visual readouts for readiness, spell tier, logistics strain, and active management lanes instead of presenting town state as the first text column the player reads
+- `TownShell.gd`, `TownShell.tscn`, and `TownStageView.gd` only translate current runtime state plus existing town actions into that visual board and compact summary cards, keeping build, recruit, study, transfer, response, save, and leave-town mutation paths in existing core rules
 
 Overworld shell presentation decision:
 - the overworld scene now uses a sectioned command-shell layout with a banner, command wing, frontier watch, active-context panel, and dedicated map column instead of a single stacked status dump
@@ -205,6 +207,8 @@ Battle shell presentation decision:
 - the battle scene now uses a sectioned command-shell layout with a banner, commander wing, initiative track, active-exchange panel, roster boards, and a dedicated orders footer instead of a stacked combat dump
 - `BattleRules.gd` now owns the release-facing summary shaping for commander state, initiative flow, active and target stack context, outcome pressure, recent combat feed, and action guidance so `BattleShell.gd` only binds labels, buttons, and save controls
 - active spell and status surfacing now stays in core through durable `recent_events`, effect-board summaries, and spell-action descriptions, preserving the existing rules architecture and save boundary without bumping save version `9`
+- the battle scene now also centers on a dedicated drawn battlefield board with deployment cards, distance bands, objective markers, focus links, and turn-order chips so the current fight reads like a tactical board before it reads like a log
+- `BattleShell.gd`, `BattleShell.tscn`, and `BattleBoardView.gd` only translate normalized battle payload state into that board plus compact tactical cards, keeping active-stack actions, spell casting, target cycling, save, retreat, and surrender flow inside `BattleRules.gd`
 
 Battle-start tactical briefing decision:
 - fresh battle entry now surfaces a one-shot tactical briefing inside the existing battle shell, not through a tutorial engine, planner view, or codex subsystem

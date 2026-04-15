@@ -242,7 +242,7 @@ Difficulty: High
 102. [completed] Add a release-facing battle-side tactical risk and readiness board inside the real battle shell using existing runtime battle, initiative, commander, cohesion, objective, and dispatch data.
 103. [completed] Re-run repository-local validation for battle risk-board APIs, battle-shell surfacing, and save-version preservation.
 104. Continue broader campaign content, town UX polish, and release-facing shell work on the same data boundaries.
-- current item 104 focus: keep the main-menu Play tab genuinely usable at the default `1280x720` window by adding scroll-safe containment to the existing campaign/skirmish shell without removing release-facing launch context or changing the overworld start flow.
+- current item 104 focus: continue the remaining release-facing shell polish after the overworld, town, and battle visual-board passes, keeping presentation work inside scene shells with narrow smoke coverage around each touched surface.
 105. Record progress continuously and keep the repo runnable.
 106. [completed] Add a release-facing battle spell-and-ability timing board inside the real battle shell using current spell actions, unit abilities, live statuses, protection needs, and hostile burst risk.
 107. [completed] Re-run repository-local validation for battle timing-board APIs, shell surfacing, and save-version preservation.
@@ -262,6 +262,8 @@ Difficulty: High
 121. [completed] Re-run repository-local validation, validator bytecode compilation, ops JSON parsing, `SAVE_VERSION` verification, and headless Godot boot for the main-menu playtest-usability slice.
 122. [completed] Turn the overworld from a text-dominant shell into a real visual 2D board with rendered terrain, hero markers, key POIs, legible fog-of-war, and lighter HUD surfacing while keeping rules and movement in the existing core layer.
 123. [completed] Re-run repository-local validation, headless Godot boot, and an overworld-specific movement smoke scene for the visual-overworld slice while reporting unrelated pre-existing validator failures separately.
+124. [completed] Rebuild TownShell and BattleShell around visual-first town and battlefield boards so they read like game screens instead of dense report columns while preserving existing gameplay rules, save/resume, and action flows.
+125. [completed] Re-run repository-local validation, headless Godot boot, and a dedicated town/battle shell smoke scene for the visual shell slice while reporting unrelated pre-existing validator baseline failures separately.
 
 ## Standards
 - no throwaway prototype code if avoidable
