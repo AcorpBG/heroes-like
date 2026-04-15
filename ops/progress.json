@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T19:24:00Z",
+  "updatedAt": "2026-04-15T20:19:05Z",
   "status": "in_progress",
   "currentPhase": "release-content-and-shell-polish",
-  "currentSliceId": "phase-6-homm3-reference-grounded-wireframes",
-  "currentSliceTitle": "Re-ground the main menu, overworld, town, and battle wireframes in actual Heroes III screen references",
+  "currentSliceId": "phase-6-main-menu-scenic-composition",
+  "currentSliceTitle": "Implement the selected scenic main-menu composition in the live Godot shell",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Expanded docs/screen-wireframes.md from generic genre guidance into reference-grounded screen grammar. The main menu, overworld, town, and battle sections now describe the real HoMM3 composition patterns to preserve, so the next implementation slices can build original assets and Godot layouts against actual screen structure instead of dashboard-like guesswork.",
+  "currentSliceNotes": "Rebuilt the live main menu around the approved scenic composition using a temporary local painted backdrop plus overlay pockets: a clean top-left logo pocket, one shared lower-left stage dock, a quiet footer pocket, and a far-right command spine. Campaign, skirmish, saves, guide, settings, continue, and quit all remain live inside the existing Godot routing flow.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1148,6 +1148,8 @@
     "This run applied a coordinated shell-density pass across MainMenu, OverworldShell, TownShell, BattleShell, and ScenarioOutcomeShell so each screen now keeps one dominant board or action surface, tighter command rails, shorter copy, and tabbed secondary detail instead of stacked permanent report panels.",
     "The required Godot 4.6.2 headless validations all passed again after the coordinated shell pass: res://tests/menu_outcome_visual_smoke.tscn, res://tests/town_battle_visual_smoke.tscn, res://tests/overworld_visual_smoke.tscn, res://.tmp_repro_move.tscn, and full headless boot; the smoke scenes still emit unrelated ObjectDB leak warnings on exit.",
     "This run corrected the live main menu from a repeated-navigation dashboard into a Heroes-style front end with one dominant play board, larger focal art, shorter copy, and a narrow utility wing for saves, guide, and settings while preserving campaign, skirmish, and resume behavior.",
-    "Godot 4.6.2 headless validation passed again for the corrected menu via res://tests/menu_outcome_visual_smoke.tscn and full headless boot; the menu smoke scene still emits the unrelated baseline ObjectDB leak warning on exit."
+    "Godot 4.6.2 headless validation passed again for the corrected menu via res://tests/menu_outcome_visual_smoke.tscn and full headless boot; the menu smoke scene still emits the unrelated baseline ObjectDB leak warning on exit.",
+    "This run rebuilt the live main menu around the approved scenic composition by anchoring a temporary local painted backdrop behind a clean top-left logo pocket, one shared lower-left stage dock, a quiet footer pocket, and a far-right command spine while preserving continue, campaign, skirmish, saves, guide, settings, and quit routing.",
+    "Godot 4.6.2 headless validation passed again for res://tests/menu_outcome_visual_smoke.tscn and full boot, and a live DISPLAY=:99 capture confirmed the real menu composition; python3 tests/validate_repo.py still reports the same unrelated baseline token-audit failures outside this slice."
   ]
 }

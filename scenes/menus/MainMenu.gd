@@ -3,9 +3,11 @@ extends Control
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
-const UTILITY_TAB_SAVES := 0
-const UTILITY_TAB_GUIDE := 1
-const UTILITY_TAB_SETTINGS := 2
+const TAB_CAMPAIGN := 0
+const TAB_SKIRMISH := 1
+const TAB_SAVES := 2
+const TAB_GUIDE := 3
+const TAB_SETTINGS := 4
 
 @onready var _menu_tabs: TabContainer = %MenuTabs
 @onready var _eyebrow_label: Label = %Eyebrow
@@ -17,6 +19,8 @@ const UTILITY_TAB_SETTINGS := 2
 @onready var _save_pulse_label: Label = %SavePulse
 @onready var _continue_button: Button = %Continue
 @onready var _quit_button: Button = %Quit
+@onready var _open_campaign_button: Button = %OpenCampaign
+@onready var _open_skirmish_button: Button = %OpenSkirmish
 @onready var _open_saves_button: Button = %OpenSaves
 @onready var _open_guide_button: Button = %OpenGuide
 @onready var _open_settings_button: Button = %OpenSettings
@@ -71,7 +75,7 @@ func _ready() -> void:
 	CampaignProgression.ensure_profile()
 	SettingsService.ensure_settings()
 	_apply_visual_theme()
-	_select_utility_tab(UTILITY_TAB_SAVES)
+	_select_menu_tab(TAB_CAMPAIGN)
 	_refresh_menu()
 
 func _refresh_menu() -> void:
@@ -148,14 +152,20 @@ func _on_continue_pressed() -> void:
 	if not AppRouter.resume_latest_session():
 		_refresh_menu()
 
+func _on_open_campaign_pressed() -> void:
+	_select_menu_tab(TAB_CAMPAIGN)
+
+func _on_open_skirmish_pressed() -> void:
+	_select_menu_tab(TAB_SKIRMISH)
+
 func _on_open_saves_pressed() -> void:
-	_select_utility_tab(UTILITY_TAB_SAVES)
+	_select_menu_tab(TAB_SAVES)
 
 func _on_open_guide_pressed() -> void:
-	_select_utility_tab(UTILITY_TAB_GUIDE)
+	_select_menu_tab(TAB_GUIDE)
 
 func _on_open_settings_pressed() -> void:
-	_select_utility_tab(UTILITY_TAB_SETTINGS)
+	_select_menu_tab(TAB_SETTINGS)
 
 func _on_save_selected(index: int) -> void:
 	if index < 0 or index >= _save_summaries.size():
@@ -592,50 +602,51 @@ func _build_save_pulse() -> String:
 		]
 	)
 
-func _select_utility_tab(index: int) -> void:
+func _select_menu_tab(index: int) -> void:
 	if _menu_tabs.get_tab_count() == 0:
 		return
 	_menu_tabs.current_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
-	_sync_utility_button_styles()
+	_sync_command_button_styles()
 
-func _sync_utility_button_styles() -> void:
-	var tab_roles := {
-		UTILITY_TAB_SAVES: [_open_saves_button],
-		UTILITY_TAB_GUIDE: [_open_guide_button],
-		UTILITY_TAB_SETTINGS: [_open_settings_button],
+func _sync_command_button_styles() -> void:
+	var tab_buttons := {
+		TAB_CAMPAIGN: [_open_campaign_button],
+		TAB_SKIRMISH: [_open_skirmish_button],
+		TAB_SAVES: [_open_saves_button],
+		TAB_GUIDE: [_open_guide_button],
+		TAB_SETTINGS: [_open_settings_button],
 	}
-	for tab_index in tab_roles.keys():
-		for button in tab_roles[tab_index]:
-			var role := "primary" if _menu_tabs.current_tab == tab_index else "secondary"
-			FrontierVisualKit.apply_button(button, role, 104.0, 34.0, 13)
+	for tab_index in tab_buttons.keys():
+		for button in tab_buttons[tab_index]:
+			var role := "spine_active" if _menu_tabs.current_tab == tab_index else "spine"
+			FrontierVisualKit.apply_button(button, role, 182.0, 42.0, 15)
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)
 
 func _apply_visual_theme() -> void:
 	var panel_tones := {
-		"HeaderPanel": "banner",
-		"CampaignPulsePanel": "gold",
-		"SavePulsePanel": "ink",
-		"PlayBoardPanel": "frame",
-		"HeroArtPanel": "earth",
-		"SummaryPanel": "teal",
-		"CampaignPanel": "banner",
-		"CampaignListPanel": "ink",
-		"ChapterListPanel": "ink",
-		"CampaignBriefPanel": "gold",
-		"CampaignFieldPanel": "teal",
-		"SkirmishPanel": "ink",
-		"DifficultyPanel": "earth",
-		"SkirmishListPanel": "ink",
-		"SkirmishBriefPanel": "gold",
-		"SkirmishIntelPanel": "blue",
-		"CommandWingPanel": "frame",
-		"WingBriefPanel": "banner",
-		"SaveListPanel": "ink",
-		"SaveDetailPanel": "gold",
-		"GuidePanel": "ink",
-		"SettingsPanel": "earth",
+		"LogoPocketPanel": "smoke",
+		"StageDockPanel": "smoke",
+		"FooterPocketPanel": "smoke",
+		"CommandSpinePanel": "clear",
+		"SpineStatusPanel": "smoke",
+		"CampaignListPanel": "smoke",
+		"CampaignDetailsPanel": "smoke",
+		"ChapterListPanel": "smoke",
+		"ChapterDetailsPanel": "smoke",
+		"CommanderPreviewPanel": "smoke",
+		"OperationalBoardPanel": "smoke",
+		"JournalPanel": "smoke",
+		"DifficultyPanel": "smoke",
+		"SkirmishListPanel": "smoke",
+		"SkirmishBriefPanel": "smoke",
+		"SkirmishCommanderPanel": "smoke",
+		"SkirmishOperationalPanel": "smoke",
+		"SaveListPanel": "smoke",
+		"SaveDetailPanel": "smoke",
+		"GuidePanel": "smoke",
+		"SettingsPanel": "smoke",
 		"MasterVolumePanel": "teal",
 		"MusicVolumePanel": "blue",
 	}
@@ -643,18 +654,18 @@ func _apply_visual_theme() -> void:
 		if panel is PanelContainer and panel.name.ends_with("Panel"):
 			FrontierVisualKit.apply_panel(panel, String(panel_tones.get(panel.name, "ink")))
 
-	FrontierVisualKit.apply_tab_container(_menu_tabs)
+	FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
 
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
-		FrontierVisualKit.apply_item_list(list, "ink")
+		FrontierVisualKit.apply_item_list(list, "smoke")
 
-	FrontierVisualKit.apply_button(_continue_button, "primary", 208.0, 42.0, 15)
-	FrontierVisualKit.apply_button(_quit_button, "danger", 208.0, 36.0, 14)
-	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 38.0, 14)
-	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 38.0, 14)
-	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 184.0, 38.0, 14)
-	FrontierVisualKit.apply_button(_load_selected_button, "primary", 200.0, 36.0, 14)
-	_sync_utility_button_styles()
+	FrontierVisualKit.apply_button(_continue_button, "spine_active", 182.0, 46.0, 16)
+	FrontierVisualKit.apply_button(_quit_button, "danger", 182.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
+	_sync_command_button_styles()
 
 	for picker in [_difficulty_picker, _presentation_mode_picker]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
@@ -678,13 +689,23 @@ func _apply_visual_theme() -> void:
 		if feature_title is Label:
 			FrontierVisualKit.apply_label(feature_title, "title", 20)
 
-	for node_name in ["GuideTitle", "SettingsTitle", "WingBriefTitle", "SummaryTitle"]:
+	for node_name in [
+		"GuideTitle",
+		"SettingsTitle",
+		"CampaignArcTitle",
+		"CommanderPreviewTitle",
+		"OperationalBoardTitle",
+		"JournalTitle",
+		"SkirmishCommanderPreviewTitle",
+		"SkirmishOperationalBoardTitle",
+		"SpineHeader",
+	]:
 		var section_title = find_child(node_name, true, false)
 		if section_title is Label:
 			FrontierVisualKit.apply_label(section_title, "title", 16)
 
 	FrontierVisualKit.apply_label(_eyebrow_label, "gold", 14)
-	FrontierVisualKit.apply_label(_title_label, "title", 34)
+	FrontierVisualKit.apply_label(_title_label, "title", 38)
 	FrontierVisualKit.apply_label(_subtitle_label, "body", 14)
 	FrontierVisualKit.apply_label(_summary_label, "body", 15)
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)

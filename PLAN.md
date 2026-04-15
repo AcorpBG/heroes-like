@@ -279,6 +279,8 @@ Difficulty: High
 135. [completed] Re-run the required menu visual smoke scene and full headless Godot boot after the main-menu front-end correction while reporting unrelated warnings separately.
 136. [completed] Write a descriptive cross-screen wireframe and screen-grammar spec for menu, overworld, town, battle, and outcome so future shell work targets actual game-screen design instead of denser dashboard layouts.
 137. [pending] Use the wireframe spec plus generated placeholder art to rebuild each shell against explicit dominant-surface and command-rail targets instead of another generic panel pass.
+138. [completed] Rebuild the live main menu against the reference-grounded scenic composition using a temporary local painted backdrop, a clean top-left logo pocket, a left-heavy scenic stage, a far-right command spine, and a quiet footer pocket while preserving all existing launch and utility routing.
+139. [completed] Re-run the required menu smoke, full headless Godot boot, and a live `DISPLAY=:99` menu capture after the scenic main-menu composition pass while reporting unrelated validator baseline failures separately.
 
 ## Standards
 - no throwaway prototype code if avoidable

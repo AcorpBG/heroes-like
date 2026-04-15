@@ -378,6 +378,11 @@ Screen-design correction decision:
 - `docs/screen-wireframes.md` is now the explicit source of truth for screen grammar across main menu, overworld, town, battle, and outcome, defining each screen's dominant surface, command rails, secondary-detail boundaries, and required art support before implementation resumes
 - future shell work should only start after the target screen answers five gating questions clearly: dominant surface, first no-text read, primary command rail, secondary-info hiding strategy, and required generated-asset support
 
+Main-menu scenic composition decision:
+- the live main menu now follows one explicit scenic-front composition: a clean logo pocket in the upper-left, one shared lower-left stage dock over a large painted backdrop, a quiet footer pocket, and a far-right command spine for top-level actions instead of a dashboard board plus utility wing
+- campaign, skirmish, saves, guide, and settings now all share that single `MenuTabs` stage dock while continue and quit remain direct spine commands, so the composition changes without splitting launch or routing logic into separate scenes or services
+- the temporary backdrop art now lives locally under `art/ui/` and `MainMenuHeroView.gd` loads it at runtime, keeping the placeholder art local to the repo and the slice confined to menu presentation code rather than gameplay boundaries
+
 This replaces the earlier mixed-content approach and gives towns, armies, recruitment, and battle setup stable ids that can scale into campaign, AI, and authoring tooling.
 
 ## Repository structure

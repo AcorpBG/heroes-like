@@ -16,673 +16,135 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0.0431373, 0.0509804, 0.0627451, 1)
+color = Color(0.0235294, 0.027451, 0.0392157, 1)
 
-[node name="TopGlow" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-anchor_bottom = 0.55
-grow_horizontal = 2
-color = Color(0.509804, 0.356863, 0.184314, 0.12)
-
-[node name="BottomShade" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 0.55
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-color = Color(0.027451, 0.0313726, 0.0392157, 0.45)
-
-[node name="RootMargin" type="MarginContainer" parent="."]
+[node name="HeroStage" type="TextureRect" parent="."]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
+mouse_filter = 2
+script = ExtResource("2")
 
-[node name="Shell" type="VBoxContainer" parent="RootMargin"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 12
+[node name="TopShade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+anchor_bottom = 0.18
+grow_horizontal = 2
+color = Color(0.0431373, 0.0509804, 0.0705882, 0.16)
 
-[node name="HeaderPanel" type="PanelContainer" parent="RootMargin/Shell"]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="BottomShade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 0.78
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.0156863, 0.0196078, 0.0313726, 0.44)
 
-[node name="HeaderPad" type="MarginContainer" parent="RootMargin/Shell/HeaderPanel"]
+[node name="RightShade" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_left = 0.77
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_vertical = 2
+color = Color(0.0196078, 0.0235294, 0.0313726, 0.12)
+
+[node name="LogoPocketPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.032
+anchor_top = 0.028
+anchor_right = 0.362
+anchor_bottom = 0.228
+
+[node name="LogoPocketPad" type="MarginContainer" parent="LogoPocketPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
+theme_override_constants/margin_top = 12
 theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_bottom = 12
 
-[node name="HeaderRow" type="HBoxContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad"]
+[node name="LogoPocketBox" type="VBoxContainer" parent="LogoPocketPanel/LogoPocketPad"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 8
 
-[node name="TitleColumn" type="VBoxContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow"]
+[node name="LogoHeader" type="HBoxContainer" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 10
 
-[node name="WarGlyph" type="Control" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/TitleColumn"]
-custom_minimum_size = Vector2(58, 54)
+[node name="WarGlyph" type="Control" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"]
+custom_minimum_size = Vector2(56, 52)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "menu"
 
-[node name="Eyebrow" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/TitleColumn"]
+[node name="LogoText" type="VBoxContainer" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="Eyebrow" type="Label" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/LogoText"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "WAR TABLE"
+text = "KINGDOM FRONT"
 
-[node name="Title" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/TitleColumn"]
+[node name="Title" type="Label" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/LogoText"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "HEROES-LIKE"
 
-[node name="Subtitle" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/TitleColumn"]
+[node name="Subtitle" type="Label" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/LogoText"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
-text = "One front to choose, one march to resume."
+text = "Choose the next march from the border citadel."
 
-[node name="CampaignPulsePanel" type="PanelContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow"]
-custom_minimum_size = Vector2(220, 0)
-layout_mode = 2
-
-[node name="CampaignPulsePad" type="MarginContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CampaignPulsePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="CampaignPulseBox" type="VBoxContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CampaignPulsePanel/CampaignPulsePad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="CampaignPulseTitle" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CampaignPulsePanel/CampaignPulsePad/CampaignPulseBox"]
-layout_mode = 2
-text = "Campaign"
-
-[node name="CampaignPulse" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CampaignPulsePanel/CampaignPulsePad/CampaignPulseBox"]
+[node name="Summary" type="Label" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 46)
-autowrap_mode = 3
-text = "Campaign pulse"
-
-[node name="SavePulsePanel" type="PanelContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow"]
-custom_minimum_size = Vector2(220, 0)
-layout_mode = 2
-
-[node name="SavePulsePad" type="MarginContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/SavePulsePanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="SavePulseBox" type="VBoxContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/SavePulsePanel/SavePulsePad"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="SavePulseTitle" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/SavePulsePanel/SavePulsePad/SavePulseBox"]
-layout_mode = 2
-text = "Resume"
-
-[node name="SavePulse" type="Label" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/SavePulsePanel/SavePulsePad/SavePulseBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 46)
-autowrap_mode = 3
-text = "Save pulse"
-
-[node name="CommandColumn" type="VBoxContainer" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow"]
-custom_minimum_size = Vector2(208, 0)
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="Continue" type="Button" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CommandColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Continue"
-
-[node name="Quit" type="Button" parent="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CommandColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Quit"
-
-[node name="MainRow" type="HBoxContainer" parent="RootMargin/Shell"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 12
-
-[node name="PlayBoardPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="PlayBoardPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 14
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 14
-theme_override_constants/margin_bottom = 14
-
-[node name="PlayBoard" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 12
-
-[node name="BoardTopRow" type="HBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="HeroArtPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow"]
-custom_minimum_size = Vector2(0, 244)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HeroArtPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow/HeroArtPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="HeroStage" type="Control" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow/HeroArtPanel/HeroArtPad"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 228)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-script = ExtResource("2")
-
-[node name="SummaryPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow"]
-custom_minimum_size = Vector2(284, 0)
-layout_mode = 2
-
-[node name="SummaryPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow/SummaryPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="SummaryBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow/SummaryPanel/SummaryPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="SummaryTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow/SummaryPanel/SummaryPad/SummaryBox"]
-layout_mode = 2
-text = "Front Brief"
-
-[node name="Summary" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/BoardTopRow/SummaryPanel/SummaryPad/SummaryBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 160)
-size_flags_vertical = 3
 autowrap_mode = 3
 text = "Summary"
 
-[node name="PlayColumns" type="HSplitContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-split_offset = 612
+[node name="StageDockPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.032
+anchor_top = 0.47
+anchor_right = 0.765
+anchor_bottom = 0.89
 
-[node name="CampaignPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns"]
+[node name="StageDockPad" type="MarginContainer" parent="StageDockPanel"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="CampaignPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
+theme_override_constants/margin_left = 14
 theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
+theme_override_constants/margin_right = 14
 theme_override_constants/margin_bottom = 12
 
-[node name="CampaignShell" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad"]
+[node name="StageDockBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="CampaignHeader" type="HBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell"]
+[node name="ActionRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
-[node name="CampaignTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignHeader"]
+[node name="ActionLead" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
 layout_mode = 2
-text = "Campaign"
+text = "Painted stage"
 
-[node name="CampaignLead" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignHeader"]
+[node name="ActionHint" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 2
-text = "Carryover arcs and chapter starts."
+text = "Campaigns, skirmishes, and cabinet tools open here without breaking the scenic frame."
 
-[node name="CampaignActions" type="HBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="CampaignPrimaryAction" type="Button" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Advance Campaign"
-
-[node name="StartChapter" type="Button" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Start Chapter"
-
-[node name="CampaignBody" type="HSplitContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell"]
-layout_mode = 2
-size_flags_vertical = 3
-split_offset = 230
-
-[node name="CampaignLists" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="CampaignListPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CampaignListPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/CampaignListPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="CampaignListBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/CampaignListPanel/CampaignListPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="CampaignListTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/CampaignListPanel/CampaignListPad/CampaignListBox"]
-layout_mode = 2
-text = "Arcs"
-
-[node name="CampaignList" type="ItemList" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/CampaignListPanel/CampaignListPad/CampaignListBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 124)
-layout_mode = 2
-size_flags_vertical = 3
-allow_reselect = true
-
-[node name="ChapterListPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ChapterListPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/ChapterListPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="ChapterListBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/ChapterListPanel/ChapterListPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="ChapterListTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/ChapterListPanel/ChapterListPad/ChapterListBox"]
-layout_mode = 2
-text = "Chapters"
-
-[node name="ChapterList" type="ItemList" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/ChapterListPanel/ChapterListPad/ChapterListBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 144)
-layout_mode = 2
-size_flags_vertical = 3
-allow_reselect = true
-
-[node name="CampaignIntel" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="CampaignBriefPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel"]
-layout_mode = 2
-
-[node name="CampaignBriefPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignBriefPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="CampaignBriefBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignBriefPanel/CampaignBriefPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="CampaignBriefTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignBriefPanel/CampaignBriefPad/CampaignBriefBox"]
-layout_mode = 2
-text = "Selected Arc"
-
-[node name="CampaignDetails" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignBriefPanel/CampaignBriefPad/CampaignBriefBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 108)
-autowrap_mode = 3
-text = "Campaign details"
-
-[node name="ChapterDetailsTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignBriefPanel/CampaignBriefPad/CampaignBriefBox"]
-layout_mode = 2
-text = "Selected Chapter"
-
-[node name="ChapterDetails" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignBriefPanel/CampaignBriefPad/CampaignBriefBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 88)
-autowrap_mode = 3
-text = "Chapter details"
-
-[node name="CampaignFieldPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CampaignFieldPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="CampaignFieldBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="CampaignFieldTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-layout_mode = 2
-text = "Field Notes"
-
-[node name="ArcStatusTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-layout_mode = 2
-text = "Arc Status"
-
-[node name="CampaignArcStatus" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
-autowrap_mode = 3
-text = "Arc status"
-
-[node name="CommanderTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-layout_mode = 2
-text = "Commander"
-
-[node name="CampaignCommanderPreview" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 66)
-autowrap_mode = 3
-text = "Commander preview"
-
-[node name="OperationalTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-layout_mode = 2
-text = "Front"
-
-[node name="CampaignOperationalBoard" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 74)
-autowrap_mode = 3
-text = "Operational board"
-
-[node name="JournalTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-layout_mode = 2
-text = "Journal"
-
-[node name="CampaignJournal" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignIntel/CampaignFieldPanel/CampaignFieldPad/CampaignFieldBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 58)
-autowrap_mode = 3
-text = "Campaign journal"
-
-[node name="SkirmishPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="SkirmishPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="SkirmishShell" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="SkirmishHeader" type="HBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="SkirmishTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishHeader"]
-layout_mode = 2
-text = "Skirmish"
-
-[node name="SkirmishLead" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishHeader"]
-layout_mode = 2
-size_flags_horizontal = 3
-horizontal_alignment = 2
-text = "Quick front starts."
-
-[node name="SkirmishActionRow" type="HBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="DifficultyPicker" type="OptionButton" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishActionRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="StartSkirmish" type="Button" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishActionRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Launch Skirmish"
-
-[node name="DifficultyPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
-layout_mode = 2
-
-[node name="DifficultyPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/DifficultyPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="DifficultySummary" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/DifficultyPanel/DifficultyPad"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Difficulty summary"
-
-[node name="SkirmishBody" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="SkirmishListPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="SkirmishListPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishListPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="SkirmishListBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishListPanel/SkirmishListPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="SkirmishListTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
-layout_mode = 2
-text = "Fronts"
-
-[node name="SkirmishList" type="ItemList" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 154)
-layout_mode = 2
-size_flags_vertical = 3
-allow_reselect = true
-
-[node name="SkirmishBriefPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody"]
-layout_mode = 2
-
-[node name="SkirmishBriefPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishBriefPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="SkirmishBriefBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishBriefPanel/SkirmishBriefPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="SkirmishBriefTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
-layout_mode = 2
-text = "Opening Brief"
-
-[node name="SkirmishDetails" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 70)
-autowrap_mode = 3
-text = "Skirmish details"
-
-[node name="SetupTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
-layout_mode = 2
-text = "Setup"
-
-[node name="SetupSummary" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 70)
-autowrap_mode = 3
-text = "Setup summary"
-
-[node name="SkirmishIntelPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="SkirmishIntelPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="SkirmishIntelBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel/SkirmishIntelPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="SkirmishIntelTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel/SkirmishIntelPad/SkirmishIntelBox"]
-layout_mode = 2
-text = "Field Notes"
-
-[node name="SkirmishCommanderTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel/SkirmishIntelPad/SkirmishIntelBox"]
-layout_mode = 2
-text = "Commander"
-
-[node name="SkirmishCommanderPreview" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel/SkirmishIntelPad/SkirmishIntelBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 64)
-autowrap_mode = 3
-text = "Commander preview"
-
-[node name="SkirmishOperationalTitle" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel/SkirmishIntelPad/SkirmishIntelBox"]
-layout_mode = 2
-text = "Front"
-
-[node name="SkirmishOperationalBoard" type="Label" parent="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishIntelPanel/SkirmishIntelPad/SkirmishIntelBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 64)
-autowrap_mode = 3
-text = "Operational board"
-
-[node name="CommandWingPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow"]
-custom_minimum_size = Vector2(348, 0)
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="CommandWingPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
-
-[node name="CommandWing" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="WingBriefPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing"]
-layout_mode = 2
-
-[node name="WingBriefPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/WingBriefPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="WingBriefBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/WingBriefPanel/WingBriefPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="WingBriefTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/WingBriefPanel/WingBriefPad/WingBriefBox"]
-layout_mode = 2
-text = "Current Trail"
-
-[node name="ActiveExpedition" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/WingBriefPanel/WingBriefPad/WingBriefBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 112)
-autowrap_mode = 3
-text = "Active expedition"
-
-[node name="UtilityNav" type="HFlowContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing"]
-layout_mode = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
-
-[node name="OpenSaves" type="Button" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/UtilityNav"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Saves"
-
-[node name="OpenGuide" type="Button" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/UtilityNav"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Guide"
-
-[node name="OpenSettings" type="Button" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/UtilityNav"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Settings"
-
-[node name="MenuTabs" type="TabContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing"]
+[node name="MenuTabs" type="TabContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -690,259 +152,876 @@ size_flags_vertical = 3
 current_tab = 0
 tabs_visible = false
 
-[node name="Saves" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs"]
+[node name="CampaignPanel" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="CampaignScroll" type="ScrollContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CampaignScrollPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="CampaignScrollBody" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="SaveListPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves"]
+[node name="CampaignHeader" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody"]
 layout_mode = 2
-size_flags_vertical = 3
+theme_override_constants/separation = 10
 
-[node name="SaveListPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveListPanel"]
+[node name="CampaignTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignHeader"]
+layout_mode = 2
+text = "Campaign"
+
+[node name="CampaignLead" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+text = "Carryover arcs, chapter starts, and the active front summary."
+
+[node name="CampaignBrowser" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignListPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser"]
+custom_minimum_size = Vector2(214, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CampaignListPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="SaveListBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveListPanel/SaveListPad"]
+[node name="CampaignListBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="SaveListTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveListPanel/SaveListPad/SaveListBox"]
+[node name="CampaignListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox"]
 layout_mode = 2
-text = "Saved Fronts"
+text = "Arcs"
 
-[node name="SaveList" type="ItemList" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveListPanel/SaveListPad/SaveListBox"]
+[node name="CampaignList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 220)
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
 
-[node name="SaveDetailPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves"]
+[node name="CampaignDetailsPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="SaveDetailPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveDetailPanel"]
+[node name="CampaignDetailsPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignDetailsPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="SaveDetailBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveDetailPanel/SaveDetailPad"]
+[node name="CampaignDetailsBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignDetailsPanel/CampaignDetailsPad"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="SaveDetailTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+[node name="CampaignDetailsTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignDetailsPanel/CampaignDetailsPad/CampaignDetailsBox"]
+layout_mode = 2
+text = "Selected Arc"
+
+[node name="CampaignDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignDetailsPanel/CampaignDetailsPad/CampaignDetailsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 84)
+autowrap_mode = 3
+text = "Campaign details"
+
+[node name="CampaignArcTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignDetailsPanel/CampaignDetailsPad/CampaignDetailsBox"]
+layout_mode = 2
+text = "Arc Status"
+
+[node name="CampaignArcStatus" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignDetailsPanel/CampaignDetailsPad/CampaignDetailsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 58)
+autowrap_mode = 3
+text = "Arc status"
+
+[node name="ChapterBrowser" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChapterListPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser"]
+custom_minimum_size = Vector2(214, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ChapterListPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ChapterListBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ChapterListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox"]
+layout_mode = 2
+text = "Chapters"
+
+[node name="ChapterList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 124)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="ChapterDetailsPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ChapterDetailsPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterDetailsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ChapterDetailsBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterDetailsPanel/ChapterDetailsPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ChapterDetailsTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterDetailsPanel/ChapterDetailsPad/ChapterDetailsBox"]
+layout_mode = 2
+text = "Selected Chapter"
+
+[node name="ChapterDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterDetailsPanel/ChapterDetailsPad/ChapterDetailsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 90)
+autowrap_mode = 3
+text = "Chapter details"
+
+[node name="CampaignIntelRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CommanderPreviewPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommanderPreviewPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CommanderPreviewBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CommanderPreviewTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox"]
+layout_mode = 2
+text = "Commander"
+
+[node name="CampaignCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 72)
+autowrap_mode = 3
+text = "Commander preview"
+
+[node name="OperationalBoardPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OperationalBoardPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/OperationalBoardPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="OperationalBoardBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/OperationalBoardPanel/OperationalBoardPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="OperationalBoardTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/OperationalBoardPanel/OperationalBoardPad/OperationalBoardBox"]
+layout_mode = 2
+text = "Operational Board"
+
+[node name="CampaignOperationalBoard" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/OperationalBoardPanel/OperationalBoardPad/OperationalBoardBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 72)
+autowrap_mode = 3
+text = "Operational board"
+
+[node name="JournalPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="JournalPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/JournalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="JournalBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/JournalPanel/JournalPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="JournalTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/JournalPanel/JournalPad/JournalBox"]
+layout_mode = 2
+text = "Journal"
+
+[node name="CampaignJournal" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/JournalPanel/JournalPad/JournalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 72)
+autowrap_mode = 3
+text = "Campaign journal"
+
+[node name="CampaignActions" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody"]
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Advance Campaign"
+
+[node name="StartChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Chapter"
+
+[node name="SkirmishPanel" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkirmishScroll" type="ScrollContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SkirmishScrollPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="SkirmishScrollBody" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="SkirmishHeader" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SkirmishTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishHeader"]
+layout_mode = 2
+text = "Skirmish"
+
+[node name="SkirmishLead" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+text = "Single-front starts with difficulty and first-contact intel."
+
+[node name="SkirmishActionRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 10
+
+[node name="DifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StartSkirmish" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Launch Skirmish"
+
+[node name="DifficultyPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+layout_mode = 2
+
+[node name="DifficultyPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/DifficultyPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="DifficultySummary" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/DifficultyPanel/DifficultyPad"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Difficulty summary"
+
+[node name="ModeSplit" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SkirmishListPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit"]
+custom_minimum_size = Vector2(244, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkirmishListPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishListBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
+layout_mode = 2
+text = "Fronts"
+
+[node name="SkirmishList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 154)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="SkirmishBriefPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkirmishBriefPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishBriefPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishBriefBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishBriefPanel/SkirmishBriefPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishBriefTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
+layout_mode = 2
+text = "Opening Brief"
+
+[node name="SkirmishDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 86)
+autowrap_mode = 3
+text = "Skirmish details"
+
+[node name="SetupTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
+layout_mode = 2
+text = "Setup"
+
+[node name="SetupSummary" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishBriefPanel/SkirmishBriefPad/SkirmishBriefBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 74)
+autowrap_mode = 3
+text = "Setup summary"
+
+[node name="SkirmishIntelRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SkirmishCommanderPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkirmishCommanderPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishCommanderBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishCommanderPreviewTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Commander"
+
+[node name="SkirmishCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 72)
+autowrap_mode = 3
+text = "Commander preview"
+
+[node name="SkirmishOperationalPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkirmishOperationalPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishOperationalPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SkirmishOperationalBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishOperationalPanel/SkirmishOperationalPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SkirmishOperationalBoardTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishOperationalPanel/SkirmishOperationalPad/SkirmishOperationalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Operational Board"
+
+[node name="SkirmishOperationalBoard" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishOperationalPanel/SkirmishOperationalPad/SkirmishOperationalBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 72)
+autowrap_mode = 3
+text = "Operational board"
+
+[node name="Saves" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="SaveHeader" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SaveTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveHeader"]
+layout_mode = 2
+text = "Saved Fronts"
+
+[node name="SaveLead" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+text = "Manual slots and autosave details stay in the citadel ledger."
+
+[node name="SaveSplit" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="SaveListPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SaveListPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SaveListBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="SaveListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox"]
+layout_mode = 2
+text = "Slots"
+
+[node name="SaveList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 212)
+layout_mode = 2
+size_flags_vertical = 3
+allow_reselect = true
+
+[node name="SaveDetailPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SaveDetailPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SaveDetailBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="SaveDetailTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
 layout_mode = 2
 text = "Selected Save"
 
-[node name="SaveDetails" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+[node name="SaveDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 122)
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 124)
 autowrap_mode = 3
 text = "Save details"
 
-[node name="LoadSelected" type="Button" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+[node name="LoadSelected" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Load Save"
 
-[node name="Guide" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs"]
+[node name="Guide" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GuidePanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide"]
+[node name="GuidePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="GuidePad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel"]
+[node name="GuidePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
-[node name="GuideBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad"]
+[node name="GuideBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="GuideTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
+[node name="GuideTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
 layout_mode = 2
 text = "Field Manual"
 
-[node name="HelpIntro" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
+[node name="HelpIntro" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Guide intro"
 
-[node name="GuideColumns" type="HSplitContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
+[node name="GuideColumns" type="HSplitContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
 layout_mode = 2
 size_flags_vertical = 3
-split_offset = 180
+split_offset = 220
 
-[node name="HelpList" type="ItemList" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns"]
+[node name="HelpList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 220)
 layout_mode = 2
 size_flags_vertical = 3
 allow_reselect = true
 
-[node name="HelpDetails" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns"]
+[node name="HelpDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
 text = "Help details"
 
-[node name="Settings" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs"]
+[node name="Settings" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SettingsPanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings"]
+[node name="SettingsPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SettingsPad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel"]
+[node name="SettingsPad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
-[node name="SettingsBox" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad"]
+[node name="SettingsBox" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="SettingsTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="SettingsTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 text = "Cabinet"
 
-[node name="SettingsSummary" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="SettingsSummary" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 66)
 autowrap_mode = 3
 text = "Settings summary"
 
-[node name="PresentationRow" type="HBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="PresentationRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="PresentationTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
+[node name="PresentationTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
 layout_mode = 2
 text = "Window"
 
-[node name="PresentationModePicker" type="OptionButton" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
+[node name="PresentationModePicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MasterVolumePanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="MasterVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 
-[node name="MasterVolumePad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel"]
+[node name="MasterVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="MasterVolumeRow" type="HBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad"]
+[node name="MasterVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MasterVolumeTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+[node name="MasterVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
 layout_mode = 2
 text = "Master"
 
-[node name="MasterVolumeSlider" type="HSlider" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+[node name="MasterVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 100.0
 step = 1.0
 
-[node name="MasterVolumeValue" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
+[node name="MasterVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
 horizontal_alignment = 2
 text = "80%"
 
-[node name="MusicVolumePanel" type="PanelContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="MusicVolumePanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 
-[node name="MusicVolumePad" type="MarginContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel"]
+[node name="MusicVolumePad" type="MarginContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="MusicVolumeRow" type="HBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad"]
+[node name="MusicVolumeRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MusicVolumeTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+[node name="MusicVolumeTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
 layout_mode = 2
 text = "Music"
 
-[node name="MusicVolumeSlider" type="HSlider" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+[node name="MusicVolumeSlider" type="HSlider" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 100.0
 step = 1.0
 
-[node name="MusicVolumeValue" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
+[node name="MusicVolumeValue" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
 horizontal_alignment = 2
 text = "65%"
 
-[node name="AccessibilityTitle" type="Label" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="AccessibilityTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 text = "Readability"
 
-[node name="ToggleColumn" type="VBoxContainer" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+[node name="ToggleColumn" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="LargeTextToggle" type="CheckButton" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
+[node name="LargeTextToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Large Text"
 
-[node name="ReduceMotionToggle" type="CheckButton" parent="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
+[node name="ReduceMotionToggle" type="CheckButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reduce Motion"
 
-[connection signal="pressed" from="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CommandColumn/Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="RootMargin/Shell/HeaderPanel/HeaderPad/HeaderRow/CommandColumn/Quit" to="." method="_on_quit_pressed"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/CampaignListPanel/CampaignListPad/CampaignListBox/CampaignList" to="." method="_on_campaign_selected"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignBody/CampaignLists/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/CampaignPanel/CampaignPad/CampaignShell/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishBody/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishActionRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/PlayBoardPanel/PlayBoardPad/PlayBoard/PlayColumns/SkirmishPanel/SkirmishPad/SkirmishShell/SkirmishActionRow/StartSkirmish" to="." method="_on_start_skirmish_pressed"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/UtilityNav/OpenSaves" to="." method="_on_open_saves_pressed"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/UtilityNav/OpenGuide" to="." method="_on_open_guide_pressed"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/UtilityNav/OpenSettings" to="." method="_on_open_settings_pressed"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveListPanel/SaveListPad/SaveListBox/SaveList" to="." method="_on_save_selected"]
-[connection signal="pressed" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Saves/SaveDetailPanel/SaveDetailPad/SaveDetailBox/LoadSelected" to="." method="_on_load_selected_pressed"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/HelpList" to="." method="_on_help_selected"]
-[connection signal="item_selected" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
-[connection signal="value_changed" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
-[connection signal="value_changed" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
-[connection signal="toggled" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/LargeTextToggle" to="." method="_on_large_text_toggled"]
-[connection signal="toggled" from="RootMargin/Shell/MainRow/CommandWingPanel/CommandWingPad/CommandWing/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]
+[node name="FooterPocketPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.032
+anchor_top = 0.895
+anchor_right = 0.372
+anchor_bottom = 0.975
+
+[node name="FooterPocketPad" type="MarginContainer" parent="FooterPocketPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
+
+[node name="FooterPocketBox" type="VBoxContainer" parent="FooterPocketPanel/FooterPocketPad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="FooterTitle" type="Label" parent="FooterPocketPanel/FooterPocketPad/FooterPocketBox"]
+layout_mode = 2
+text = "Frontier Log"
+
+[node name="ActiveExpedition" type="Label" parent="FooterPocketPanel/FooterPocketPad/FooterPocketBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Active expedition"
+
+[node name="CommandSpinePanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.804
+anchor_top = 0.05
+anchor_right = 0.98
+anchor_bottom = 0.962
+
+[node name="CommandSpinePad" type="MarginContainer" parent="CommandSpinePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="CommandSpineBox" type="VBoxContainer" parent="CommandSpinePanel/CommandSpinePad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="SpineHeaderRow" type="HBoxContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpineGlyph" type="Control" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineHeaderRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+script = ExtResource("3")
+glyph_id = "menu"
+
+[node name="SpineHeader" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineHeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Command"
+
+[node name="Continue" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Continue"
+
+[node name="OpenCampaign" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Campaign"
+
+[node name="OpenSkirmish" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Skirmish"
+
+[node name="OpenSaves" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Saves"
+
+[node name="OpenGuide" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guide"
+
+[node name="OpenSettings" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Settings"
+
+[node name="SpineSpacer" type="Control" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SpineStatusPanel" type="PanelContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+layout_mode = 2
+
+[node name="SpineStatusPad" type="MarginContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineStatusPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="SpineStatusBox" type="VBoxContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineStatusPanel/SpineStatusPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CampaignPulseTitle" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineStatusPanel/SpineStatusPad/SpineStatusBox"]
+layout_mode = 2
+text = "Campaign"
+
+[node name="CampaignPulse" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineStatusPanel/SpineStatusPad/SpineStatusBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Campaign pulse"
+
+[node name="SavePulseTitle" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineStatusPanel/SpineStatusPad/SpineStatusBox"]
+layout_mode = 2
+text = "Resume"
+
+[node name="SavePulse" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineStatusPanel/SpineStatusPad/SpineStatusBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Save pulse"
+
+[node name="Quit" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenCampaign" to="." method="_on_open_campaign_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenSkirmish" to="." method="_on_open_skirmish_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenSaves" to="." method="_on_open_saves_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenGuide" to="." method="_on_open_guide_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenSettings" to="." method="_on_open_settings_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/Quit" to="." method="_on_quit_pressed"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox/CampaignList" to="." method="_on_campaign_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/StartSkirmish" to="." method="_on_start_skirmish_pressed"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveListPanel/SaveListPad/SaveListBox/SaveList" to="." method="_on_save_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/LoadSelected" to="." method="_on_load_selected_pressed"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/HelpList" to="." method="_on_help_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
+[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MasterVolumePanel/MasterVolumePad/MasterVolumeRow/MasterVolumeSlider" to="." method="_on_master_volume_changed"]
+[connection signal="value_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/MusicVolumePanel/MusicVolumePad/MusicVolumeRow/MusicVolumeSlider" to="." method="_on_music_volume_changed"]
+[connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/LargeTextToggle" to="." method="_on_large_text_toggled"]
+[connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox/ToggleColumn/ReduceMotionToggle" to="." method="_on_reduce_motion_toggled"]

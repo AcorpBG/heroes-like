@@ -48,6 +48,14 @@ const PANEL_TONES := {
 		"bg": Color(0.06, 0.08, 0.09, 1.0),
 		"border": Color(0.56, 0.66, 0.71, 0.96),
 	},
+	"smoke": {
+		"bg": Color(0.05, 0.06, 0.08, 0.76),
+		"border": Color(0.80, 0.69, 0.45, 0.82),
+	},
+	"clear": {
+		"bg": Color(0.0, 0.0, 0.0, 0.0),
+		"border": Color(0.0, 0.0, 0.0, 0.0),
+	},
 }
 
 const BUTTON_ROLES := {
@@ -68,6 +76,18 @@ const BUTTON_ROLES := {
 		"hover": Color(0.37, 0.18, 0.15, 1.0),
 		"pressed": Color(0.22, 0.10, 0.09, 1.0),
 		"border": Color(0.88, 0.48, 0.39, 0.97),
+	},
+	"spine": {
+		"fill": Color(0.11, 0.14, 0.17, 0.84),
+		"hover": Color(0.15, 0.19, 0.23, 0.92),
+		"pressed": Color(0.08, 0.11, 0.13, 0.96),
+		"border": Color(0.81, 0.68, 0.42, 0.86),
+	},
+	"spine_active": {
+		"fill": Color(0.31, 0.22, 0.14, 0.92),
+		"hover": Color(0.40, 0.28, 0.17, 0.96),
+		"pressed": Color(0.24, 0.17, 0.11, 0.98),
+		"border": Color(0.92, 0.77, 0.47, 0.94),
 	},
 }
 
@@ -180,8 +200,8 @@ static func apply_item_list(item_list: ItemList, tone: String = "ink") -> void:
 	item_list.add_theme_color_override("selection_fill", text_color("gold").darkened(0.58))
 	item_list.add_theme_color_override("selection_color", text_color("gold"))
 
-static func apply_tab_container(tabs: TabContainer) -> void:
-	tabs.add_theme_stylebox_override("panel", panel_style("ink", 18))
+static func apply_tab_container(tabs: TabContainer, tone: String = "ink") -> void:
+	tabs.add_theme_stylebox_override("panel", panel_style(tone, 18))
 	tabs.add_theme_stylebox_override("tab_selected", badge_style("gold"))
 	tabs.add_theme_stylebox_override("tab_hovered", badge_style("teal"))
 	tabs.add_theme_stylebox_override("tab_unselected", badge_style("ink"))
