@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T18:35:44Z",
+  "updatedAt": "2026-04-16T20:10:25Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "river-pass-live-client-playability-recovery",
-  "currentSliceTitle": "Make River Pass manually completable end-to-end in the live client, with battle, town, UI, save/resume, victory, and defeat recovery",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Manual play audit reset: the project is a prototype / pre-alpha foundation, not a release-ready or HoMM2/3-parity product. The active work is to recover honest playability by making one River Pass scenario manually completable by a real player. Battle usability, town usability, overworld objective clarity, and save/resume correctness are the immediate risks.",
+  "currentSliceId": "town-battle-scenic-redesign-slice",
+  "currentSliceTitle": "Redesign the town and battle shells so the town stage and battle board dominate while existing actions stay usable",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Focused UI recovery slice completed: town and battle shells now prioritize the scenic/play surface, with secondary text collapsed into compact rails, tab pockets, and command bands while routed actions and save/load behavior remain validated.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",

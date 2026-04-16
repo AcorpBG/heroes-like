@@ -186,19 +186,19 @@ func _refresh() -> void:
 	FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)
 	FrontierVisualKit.set_compact_label(_pressure_label, BattleRules.describe_pressure(_session), 1, 44, false)
 	var dispatch_text := _tactical_briefing_text if _tactical_briefing_text != "" else BattleRules.describe_dispatch(_session, _last_message)
-	_set_compact_label(_event_label, dispatch_text, 3)
+	_set_compact_label(_event_label, dispatch_text, 1)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
 	_set_compact_label(_risk_label, BattleRules.describe_risk_readiness_board(_session), 4)
 	_set_compact_label(_consequence_label, BattleRules.describe_order_consequence_board(_session), 4)
-	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 2)
-	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 2)
-	_set_compact_label(_initiative_label, BattleRules.describe_initiative_track(_session), 6)
-	_set_compact_label(_active_label, BattleRules.describe_active_context(_session), 4)
-	_set_compact_label(_target_label, BattleRules.describe_target_context(_session), 5)
-	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 4)
-	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 4)
-	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 4)
+	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 1)
+	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 1)
+	_set_compact_label(_initiative_label, BattleRules.describe_initiative_track(_session), 5)
+	_set_compact_label(_active_label, BattleRules.describe_active_context(_session), 3)
+	_set_compact_label(_target_label, BattleRules.describe_target_context(_session), 3)
+	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
+	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
+	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
 	_set_compact_label(_action_guide, BattleRules.describe_action_surface(_session), 5)
 	_battle_board_view.set_battle_state(_session)
 
@@ -224,7 +224,7 @@ func _rebuild_spell_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Spell")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		_style_action_button(button, false, 172)
+		_style_action_button(button, false, 132)
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
 		_spell_actions.add_child(button)
 
@@ -255,7 +255,7 @@ func _apply_action_surface(button: Button, action: Dictionary) -> void:
 	button.text = String(action.get("label", button.text))
 	button.disabled = bool(action.get("disabled", false))
 	button.tooltip_text = String(action.get("summary", ""))
-	_style_action_button(button, true, 132.0)
+	_style_action_button(button, true, 112.0)
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -455,13 +455,18 @@ func validation_return_to_menu() -> Dictionary:
 	}
 
 func _make_placeholder_label(text: String) -> Label:
-	return FrontierVisualKit.placeholder_label(text)
+	var label := FrontierVisualKit.placeholder_label(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	label.clip_text = true
+	label.custom_minimum_size = Vector2(188.0, 24.0)
+	label.tooltip_text = text
+	return label
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, 96, false)
 
-func _style_action_button(button: Button, primary: bool = false, width: float = 160.0) -> void:
-	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", width, 34.0)
+func _style_action_button(button: Button, primary: bool = false, width: float = 112.0) -> void:
+	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", width, 32.0, 12)
 
 func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_banner_panel, "banner")
@@ -488,16 +493,18 @@ func _apply_visual_theme() -> void:
 	_battle_tabs.set_tab_title(3, "Timing")
 
 	for button in [_prev_target_button, _next_target_button]:
-		_style_action_button(button, false, 108)
-	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button, _save_button, _menu_button]:
+		_style_action_button(button, false, 88)
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button, _retreat_button, _surrender_button]:
 		_style_action_button(button, true)
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 120.0, 34.0, 13)
+	for button in [_save_button, _menu_button]:
+		_style_action_button(button, true, 104)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 104.0, 32.0, 12)
 
 	for title_label in find_children("*Title", "Label", true, false):
 		if title_label is Label:
-			FrontierVisualKit.apply_label(title_label, "title", 14)
+			FrontierVisualKit.apply_label(title_label, "title", 13)
 
-	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_header_label, "title", 20)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
 	FrontierVisualKit.apply_label(_pressure_label, "gold", 12)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)
@@ -518,7 +525,7 @@ func _apply_visual_theme() -> void:
 		_player_roster,
 		_enemy_roster,
 		_action_guide,
-	], "body", 13)
+	], "body", 12)
 
 func _dismiss_tactical_briefing() -> void:
 	_tactical_briefing_text = ""

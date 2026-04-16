@@ -23,16 +23,16 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Content" type="VBoxContainer" parent="ContentMargin"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="Banner" type="PanelContainer" parent="ContentMargin/Content"]
 unique_name_in_owner = true
@@ -42,25 +42,25 @@ size_flags_horizontal = 3
 [node name="BannerPad" type="MarginContainer" parent="ContentMargin/Content/Banner"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="TopBar" type="HBoxContainer" parent="ContentMargin/Content/Banner/BannerPad"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="CrestFrame" type="PanelContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 0)
+custom_minimum_size = Vector2(58, 0)
 layout_mode = 2
 
 [node name="CrestPad" type="MarginContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 6
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
 
 [node name="CrestBox" type="VBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad"]
 layout_mode = 2
@@ -68,13 +68,14 @@ theme_override_constants/separation = 2
 
 [node name="CrestGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(46, 24)
+custom_minimum_size = Vector2(42, 20)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "town"
 
 [node name="CrestLabel" type="Label" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 horizontal_alignment = 1
 text = "TOWN"
@@ -82,7 +83,7 @@ text = "TOWN"
 [node name="HeaderBox" type="VBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+theme_override_constants/separation = 0
 
 [node name="Header" type="Label" parent="ContentMargin/Content/Banner/BannerPad/TopBar/HeaderBox"]
 unique_name_in_owner = true
@@ -93,31 +94,34 @@ text = "Town"
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
+clip_text = true
 text = "Town dispatch."
 
 [node name="Status" type="Label" parent="ContentMargin/Content/Banner/BannerPad/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 vertical_alignment = 1
+clip_text = true
 text = "Week 1 Day 1"
 
 [node name="Resources" type="Label" parent="ContentMargin/Content/Banner/BannerPad/TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
 vertical_alignment = 1
+clip_text = true
 text = "Gold 0 | Wood 0 | Ore 0"
 
 [node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="StageColumn" type="VBoxContainer" parent="ContentMargin/Content/MainRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 0
 
 [node name="TownStagePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/StageColumn"]
 unique_name_in_owner = true
@@ -127,18 +131,19 @@ size_flags_vertical = 3
 
 [node name="TownStagePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
 [node name="TownStageBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 0
 
 [node name="TownStageHeader" type="HBoxContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad/TownStageBox"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -161,20 +166,21 @@ size_flags_vertical = 3
 
 [node name="TownStageInset" type="MarginContainer" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="TownStage" type="Control" parent="ContentMargin/Content/MainRow/StageColumn/TownStagePanel/TownStagePad/TownStageBox/TownStageFrame/TownStageInset"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(760, 420)
+custom_minimum_size = Vector2(620, 320)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2")
 
 [node name="TownBoards" type="HBoxContainer" parent="ContentMargin/Content/MainRow/StageColumn"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
@@ -274,21 +280,21 @@ text = "Order Ledger"
 
 [node name="SidebarShell" type="PanelContainer" parent="ContentMargin/Content/MainRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(352, 0)
+custom_minimum_size = Vector2(292, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="SidebarPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="SidebarBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="CommandPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
@@ -297,14 +303,14 @@ size_flags_horizontal = 3
 
 [node name="CommandPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="CommandBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 3
 
 [node name="CommandTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
 layout_mode = 2
@@ -318,6 +324,7 @@ text = "Hero"
 
 [node name="Heroes" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Heroes"
@@ -330,6 +337,7 @@ theme_override_constants/v_separation = 6
 
 [node name="Specialties" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Specialties"
@@ -342,6 +350,7 @@ theme_override_constants/v_separation = 6
 
 [node name="Army" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 autowrap_mode = 3
 text = "Army"
@@ -358,10 +367,10 @@ layout_mode = 2
 
 [node name="BuildPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="BuildBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/BuildPanel/BuildPad"]
 layout_mode = 2
@@ -389,10 +398,10 @@ layout_mode = 2
 
 [node name="RecruitPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="RecruitBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/RecruitPanel/RecruitPad"]
 layout_mode = 2
@@ -420,10 +429,10 @@ layout_mode = 2
 
 [node name="StudyPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/StudyPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="StudyBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/StudyPanel/StudyPad"]
 layout_mode = 2
@@ -457,10 +466,10 @@ layout_mode = 2
 
 [node name="MarketPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/MarketPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="MarketBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/MarketPanel/MarketPad"]
 layout_mode = 2
@@ -488,10 +497,10 @@ layout_mode = 2
 
 [node name="LogisticsPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="LogisticsBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/ManagementTabs/LogisticsPanel/LogisticsPad"]
 layout_mode = 2
@@ -556,10 +565,10 @@ size_flags_horizontal = 3
 
 [node name="FooterPad" type="MarginContainer" parent="ContentMargin/Content/FooterPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="FooterBar" type="HBoxContainer" parent="ContentMargin/Content/FooterPanel/FooterPad"]
 layout_mode = 2
@@ -567,6 +576,7 @@ theme_override_constants/separation = 8
 
 [node name="SaveStatus" type="Label" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3

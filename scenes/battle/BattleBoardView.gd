@@ -31,7 +31,7 @@ var _field_objectives: Array = []
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	focus_mode = Control.FOCUS_NONE
-	custom_minimum_size = Vector2(720, 350)
+	custom_minimum_size = Vector2(620, 300)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -187,8 +187,9 @@ func _draw_side_stack_cards(field_rect: Rect2, stacks: Array, side: String) -> v
 	if stacks.is_empty():
 		return
 	var fight_rect := _fight_rect(field_rect)
-	var gap := 12.0
-	var card_height := clampf((fight_rect.size.y - gap * float(max(0, stacks.size() - 1))) / float(stacks.size()), 44.0, 62.0)
+	var stack_count: int = max(1, stacks.size())
+	var gap: float = 8.0 if stack_count >= 4 else 12.0
+	var card_height: float = clampf((fight_rect.size.y - gap * float(max(0, stack_count - 1))) / float(stack_count), 26.0, 62.0)
 	var card_width: float = min(180.0, fight_rect.size.x * 0.24)
 	var distance_offset := float(2 - clampi(int(_battle.get("distance", 1)), 0, 2)) * 32.0
 	var x: float = fight_rect.position.x + 10.0 + distance_offset if side == "player" else fight_rect.end.x - card_width - 10.0 - distance_offset
@@ -212,12 +213,13 @@ func _draw_side_stack_cards(field_rect: Rect2, stacks: Array, side: String) -> v
 		var hp_bar := Rect2(rect.position + Vector2(8.0, rect.size.y - 12.0), Vector2((rect.size.x - 16.0) * hp_ratio, 5.0))
 		draw_rect(Rect2(rect.position + Vector2(8.0, rect.size.y - 12.0), Vector2(rect.size.x - 16.0, 5.0)), Color(0.08, 0.10, 0.12, 0.55), true)
 		draw_rect(hp_bar, Color(0.94, 0.79, 0.39, 0.92), true)
-		_draw_text(_stack_short_label(stack), rect.position + Vector2(8.0, 17.0), TEXT_COLOR, 13)
-		_draw_text("x%d | HP %d" % [int(stack.get("count", 0)), total_health], rect.position + Vector2(8.0, 33.0), SUBTEXT_COLOR, 11)
-		var role: String = "RNG %d" % int(stack.get("shots_remaining", 0)) if bool(stack.get("ranged", false)) else "RET %d" % int(stack.get("retaliations_left", 0))
-		if bool(stack.get("defending", false)):
-			role += " | DEF"
-		_draw_text(role, rect.position + Vector2(8.0, 47.0), Color(0.13, 0.17, 0.20, 0.96), 10)
+		_draw_text(_stack_short_label(stack), rect.position + Vector2(8.0, min(17.0, card_height * 0.42)), TEXT_COLOR, 13)
+		_draw_text("x%d | HP %d" % [int(stack.get("count", 0)), total_health], rect.position + Vector2(8.0, min(33.0, card_height * 0.74)), SUBTEXT_COLOR, 11)
+		if card_height >= 48.0:
+			var role: String = "RNG %d" % int(stack.get("shots_remaining", 0)) if bool(stack.get("ranged", false)) else "RET %d" % int(stack.get("retaliations_left", 0))
+			if bool(stack.get("defending", false)):
+				role += " | DEF"
+			_draw_text(role, rect.position + Vector2(8.0, 47.0), Color(0.13, 0.17, 0.20, 0.96), 10)
 
 func _draw_focus_link(field_rect: Rect2) -> void:
 	if _active_stack.is_empty() or _target_stack.is_empty():
@@ -251,9 +253,10 @@ func _fight_rect(field_rect: Rect2) -> Rect2:
 	)
 
 func _stack_vertical_center(stack: Dictionary, side: String, fight_rect: Rect2) -> float:
-	var stacks := _player_stacks if side == "player" else _enemy_stacks
-	var gap := 12.0
-	var card_height := clampf((fight_rect.size.y - gap * float(max(0, stacks.size() - 1))) / float(max(1, stacks.size())), 44.0, 62.0)
+	var stacks: Array = _player_stacks if side == "player" else _enemy_stacks
+	var stack_count: int = max(1, stacks.size())
+	var gap: float = 8.0 if stack_count >= 4 else 12.0
+	var card_height: float = clampf((fight_rect.size.y - gap * float(max(0, stack_count - 1))) / float(stack_count), 26.0, 62.0)
 	for index in range(stacks.size()):
 		var entry = stacks[index]
 		if entry is Dictionary and String(entry.get("battle_id", "")) == String(stack.get("battle_id", "")):

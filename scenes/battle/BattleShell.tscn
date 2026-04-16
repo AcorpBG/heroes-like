@@ -23,16 +23,16 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="Content" type="VBoxContainer" parent="ContentMargin"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="Banner" type="PanelContainer" parent="ContentMargin/Content"]
 unique_name_in_owner = true
@@ -41,20 +41,20 @@ layout_mode = 2
 [node name="BannerPad" type="MarginContainer" parent="ContentMargin/Content/Banner"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="BannerBox" type="VBoxContainer" parent="ContentMargin/Content/Banner/BannerPad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="TopBar" type="HBoxContainer" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="BannerGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar"]
-custom_minimum_size = Vector2(46, 32)
+custom_minimum_size = Vector2(42, 26)
 layout_mode = 2
 script = ExtResource("3")
 glyph_id = "battle"
@@ -83,19 +83,20 @@ text = "Pressure"
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
+clip_text = true
 text = "Battle dispatch."
 
 [node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="FieldColumn" type="VBoxContainer" parent="ContentMargin/Content/MainRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 0
 
 [node name="SituationRow" type="HBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn"]
 visible = false
@@ -189,18 +190,19 @@ size_flags_vertical = 3
 
 [node name="BattlefieldPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
 [node name="BattlefieldBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 0
 
 [node name="BattlefieldHeader" type="HBoxContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -209,6 +211,7 @@ layout_mode = 2
 text = "Field"
 
 [node name="BattlefieldHint" type="Label" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldHeader"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
@@ -223,14 +226,14 @@ size_flags_vertical = 3
 
 [node name="BattlefieldInset" type="MarginContainer" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="BattleBoard" type="Control" parent="ContentMargin/Content/MainRow/FieldColumn/BattlefieldPanel/BattlefieldPad/BattlefieldBox/BattlefieldFrame/BattlefieldInset"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(760, 420)
+custom_minimum_size = Vector2(620, 300)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -298,21 +301,21 @@ text = "Enemy roster"
 
 [node name="SidebarShell" type="PanelContainer" parent="ContentMargin/Content/MainRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(336, 0)
+custom_minimum_size = Vector2(248, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="SidebarPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="SidebarBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="CommandPanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
@@ -320,14 +323,14 @@ layout_mode = 2
 
 [node name="CommandPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="CommandBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 3
 
 [node name="CommandTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
 layout_mode = 2
@@ -357,10 +360,10 @@ layout_mode = 2
 
 [node name="InitiativePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="InitiativeBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel/InitiativePad"]
 layout_mode = 2
@@ -382,10 +385,10 @@ layout_mode = 2
 
 [node name="ContextPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="ContextBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad"]
 layout_mode = 2
@@ -413,10 +416,10 @@ layout_mode = 2
 
 [node name="SpellPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="SpellBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/SpellPanel/SpellPad"]
 layout_mode = 2
@@ -444,10 +447,10 @@ layout_mode = 2
 
 [node name="TimingPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/TimingPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="TimingBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/TimingPanel/TimingPad"]
 layout_mode = 2
@@ -469,10 +472,10 @@ layout_mode = 2
 
 [node name="FooterPad" type="MarginContainer" parent="ContentMargin/Content/Footer"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="FooterRow" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad"]
 layout_mode = 2
@@ -485,16 +488,17 @@ size_flags_horizontal = 3
 
 [node name="ActionPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="ActionBox" type="VBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="ActionTitle" type="Label" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
+visible = false
 layout_mode = 2
 text = "Orders"
 
@@ -562,21 +566,22 @@ text = "Surrender"
 
 [node name="SystemPanel" type="PanelContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(278, 0)
+custom_minimum_size = Vector2(132, 0)
 layout_mode = 2
 
 [node name="SystemPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
 
 [node name="SystemBox" type="VBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="SystemTitle" type="Label" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+visible = false
 layout_mode = 2
 text = "System"
 

@@ -198,23 +198,23 @@ func _refresh() -> void:
 		_crest_glyph.call("set_glyph", "town", _faction_accent())
 	_set_compact_label(_outlook_label, TownRules.describe_outlook_board(_session), 4)
 	_set_compact_label(_command_ledger_label, TownRules.describe_command_ledger(_session), 4)
-	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 4)
-	_set_compact_label(_heroes_label, TownRules.describe_heroes(_session), 4)
-	_set_compact_label(_specialty_label, TownRules.describe_specialties(_session), 4)
-	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 4)
+	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 2)
+	_set_compact_label(_heroes_label, TownRules.describe_heroes(_session), 2)
+	_set_compact_label(_specialty_label, TownRules.describe_specialties(_session), 2)
+	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2)
 	_set_compact_label(_town_label, TownRules.describe_summary(_session), 5)
 	_set_compact_label(_defense_label, TownRules.describe_defense(_session), 4)
 	_set_compact_label(_pressure_label, TownRules.describe_threats(_session), 4)
-	_set_compact_label(_building_label, TownRules.describe_buildings(_session), 4)
-	_set_compact_label(_market_label, TownRules.describe_market(_session), 4)
-	_set_compact_label(_recruit_label, TownRules.describe_recruitment(_session), 4)
-	_set_compact_label(_tavern_label, TownRules.describe_tavern(_session), 4)
-	_set_compact_label(_transfer_label, TownRules.describe_transfer(_session), 4)
-	_set_compact_label(_response_label, TownRules.describe_responses(_session), 4)
-	_set_compact_label(_study_label, TownRules.describe_spell_access(_session), 4)
-	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 4)
-	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 4)
-	_set_compact_label(_event_label, TownRules.describe_event_feed(_session, _last_message), 3)
+	_set_compact_label(_building_label, TownRules.describe_buildings(_session), 2)
+	_set_compact_label(_market_label, TownRules.describe_market(_session), 2)
+	_set_compact_label(_recruit_label, TownRules.describe_recruitment(_session), 2)
+	_set_compact_label(_tavern_label, TownRules.describe_tavern(_session), 2)
+	_set_compact_label(_transfer_label, TownRules.describe_transfer(_session), 2)
+	_set_compact_label(_response_label, TownRules.describe_responses(_session), 2)
+	_set_compact_label(_study_label, TownRules.describe_spell_access(_session), 2)
+	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
+	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 2)
+	_set_compact_label(_event_label, TownRules.describe_event_feed(_session, _last_message), 1)
 	_town_stage_view.set_town_state(_session)
 	_refresh_save_slot_picker()
 	_rebuild_hero_actions()
@@ -726,7 +726,12 @@ func _normalize_string_array(value: Variant) -> Array[String]:
 	return normalized
 
 func _make_placeholder_label(text: String) -> Label:
-	return FrontierVisualKit.placeholder_label(text)
+	var label := FrontierVisualKit.placeholder_label(text)
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	label.clip_text = true
+	label.custom_minimum_size = Vector2(188.0, 24.0)
+	label.tooltip_text = text
+	return label
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines)
@@ -741,7 +746,7 @@ func _crest_text() -> String:
 	return name.left(4).to_upper()
 
 func _style_action_button(button: Button, primary: bool = false) -> void:
-	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", 120.0, 32.0, 13)
+	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", 108.0, 30.0, 12)
 
 func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_banner_panel, "banner")
@@ -768,16 +773,16 @@ func _apply_visual_theme() -> void:
 
 	for button in [_save_button, _leave_button, _menu_button]:
 		_style_action_button(button, true)
-	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 126.0, 34.0, 13)
+	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 112.0, 32.0, 12)
 
 	for label in find_children("*Title", "Label", true, false):
 		if label is Label:
-			FrontierVisualKit.apply_label(label, "title", 14)
+			FrontierVisualKit.apply_label(label, "title", 13)
 
-	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_header_label, "title", 20)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
 	FrontierVisualKit.apply_label(_resource_label, "gold", 12)
-	FrontierVisualKit.apply_label(_crest_label, "title", 18)
+	FrontierVisualKit.apply_label(_crest_label, "title", 16)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
 
@@ -800,7 +805,7 @@ func _apply_visual_theme() -> void:
 		_transfer_label,
 		_response_label,
 		_artifact_label,
-	], "body", 13)
+	], "body", 12)
 
 func _faction_accent() -> Color:
 	var town := TownRules.get_active_town(_session)

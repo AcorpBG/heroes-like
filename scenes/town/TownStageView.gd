@@ -55,7 +55,7 @@ var _threat: Dictionary = {}
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	focus_mode = Control.FOCUS_NONE
-	custom_minimum_size = Vector2(720, 360)
+	custom_minimum_size = Vector2(620, 320)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -235,7 +235,7 @@ func _draw_status_plaques(scene_rect: Rect2) -> void:
 	var spell_tier := TownRulesScript.current_spell_tier(_town)
 	var pressure := OverworldRulesScript.town_pressure_output(_town, _session)
 	var disrupted := int(_logistics.get("disrupted_count", 0))
-	var plaque_width := 132.0
+	var plaque_width: float = min(132.0, (scene_rect.size.x - 54.0) / 4.0)
 	var plaques = [
 		{
 			"title": "Guard",
@@ -254,7 +254,7 @@ func _draw_status_plaques(scene_rect: Rect2) -> void:
 		},
 		{
 			"title": "Routes",
-			"value": "%d cut" % disrupted,
+			"value": "%d blocked" % disrupted,
 			"color": Color(0.36, 0.66, 0.58, 0.95),
 		},
 	]
