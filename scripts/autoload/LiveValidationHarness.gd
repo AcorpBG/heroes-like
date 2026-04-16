@@ -3,6 +3,7 @@ extends Node
 const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"
 const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"
 const FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME := "boot_to_skirmish_resolved_outcome"
+const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
@@ -11,8 +12,17 @@ const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
 const DEFAULT_BATTLE_SAVE_STEP_ID := "battle_saved"
 const DEFAULT_BATTLE_MENU_RETURN_STEP_ID := "main_menu_after_battle_return"
 const DEFAULT_BATTLE_RESUME_STEP_ID := "battle_resumed"
+const DEFAULT_OUTCOME_SAVE_STEP_ID := "outcome_saved"
+const DEFAULT_OUTCOME_MENU_RETURN_STEP_ID := "main_menu_after_outcome_return"
+const DEFAULT_OUTCOME_RESUME_STEP_ID := "outcome_resumed"
+const DEFAULT_OUTCOME_MENU_ACTION_STEP_ID := "main_menu_after_outcome_action"
+const DEFEAT_OUTCOME_SAVE_STEP_ID := "defeat_outcome_saved"
+const DEFEAT_OUTCOME_MENU_RETURN_STEP_ID := "main_menu_after_defeat_outcome_return"
+const DEFEAT_OUTCOME_RESUME_STEP_ID := "defeat_outcome_resumed"
+const DEFEAT_OUTCOME_MENU_ACTION_STEP_ID := "main_menu_after_defeat_outcome_action"
 const MAX_VALIDATION_ROUTE_STEPS := 32
 const MAX_VALIDATION_BATTLE_ACTIONS := 40
+const MAX_VALIDATION_DEFEAT_END_TURNS := 10
 
 var _enabled := false
 var _config := {}
@@ -49,6 +59,8 @@ func _execute_flow() -> bool:
 			return await _execute_boot_to_skirmish_town_battle_flow()
 		FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME:
 			return await _execute_boot_to_skirmish_town_battle_flow()
+		FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME:
+			return await _execute_boot_to_skirmish_defeat_outcome_flow()
 		_:
 			return _fail("Unsupported live validation flow requested.", {"flow": _config.get("flow", "")})
 
@@ -69,6 +81,28 @@ func _execute_boot_to_skirmish_overworld_flow() -> bool:
 	_capture_step("overworld_progressed", after_action_snapshot)
 	_log("Live validation flow completed successfully.")
 	return true
+
+func _execute_boot_to_skirmish_defeat_outcome_flow() -> bool:
+	var launch := await _enter_live_skirmish_overworld()
+	if not bool(launch.get("ok", false)):
+		return false
+	var overworld = launch.get("overworld", null)
+	if overworld == null:
+		return _fail("Live launch did not provide an overworld scene instance for defeat validation.", launch)
+
+	var pressure_route := await _drive_overworld_to_defeat_outcome(overworld)
+	if not bool(pressure_route.get("ok", false)):
+		return false
+	var manual_slot := int(_config.get("manual_slot", 2))
+	var outcome_ok := await _verify_outcome_route_and_followups(
+		pressure_route,
+		manual_slot,
+		"defeat",
+		"defeat_outcome"
+	)
+	if outcome_ok:
+		_log("Live validation flow completed successfully.")
+	return outcome_ok
 
 func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	var launch := await _enter_live_skirmish_overworld()
@@ -261,7 +295,7 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	if not bool(battle_resolution.get("ok", false)):
 		return false
 	if resolving_outcome:
-		var resolved_ok := await _verify_outcome_route_and_followups(battle_resolution, manual_slot)
+		var resolved_ok := await _verify_outcome_route_and_followups(battle_resolution, manual_slot, "victory")
 		return resolved_ok
 
 	var captured_overworld = battle_resolution.get("scene", null)
@@ -348,6 +382,127 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	_capture_step("captured_town_entered", captured_town_snapshot)
 	_log("Live validation flow completed successfully.")
 	return true
+
+func _drive_overworld_to_defeat_outcome(overworld) -> Dictionary:
+	var current_overworld = overworld
+	var turn_history := []
+	var starting_snapshot: Dictionary = current_overworld.call("validation_snapshot") if current_overworld != null else {}
+	_capture_step("defeat_pressure_watch_started", starting_snapshot)
+	for turn_index in range(MAX_VALIDATION_DEFEAT_END_TURNS):
+		if current_overworld == null:
+			return _fail_with_payload("Defeat validation lost the active overworld scene before outcome routing.", {"turn_history": turn_history})
+		var before_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+		var end_turn_result: Dictionary = current_overworld.call("validation_end_turn")
+		turn_history.append(
+			{
+				"turn_index": turn_index,
+				"before": before_snapshot,
+				"result": end_turn_result.duplicate(true),
+			}
+		)
+		if not _require(bool(end_turn_result.get("ok", false)), "Defeat validation end-turn action failed on the shipped overworld shell.", end_turn_result):
+			return {"ok": false}
+		await _settle_frames(8)
+		var current_scene = get_tree().current_scene
+		if current_scene == null:
+			continue
+		var scene_path := String(current_scene.scene_file_path)
+		if scene_path == SCENARIO_OUTCOME_SCENE:
+			var outcome_snapshot: Dictionary = current_scene.call("validation_snapshot")
+			outcome_snapshot["defeat_turn_history"] = turn_history
+			if not _require(String(outcome_snapshot.get("scenario_status", "")) == "defeat", "Defeat validation reached the outcome shell without defeat state.", outcome_snapshot):
+				return {"ok": false}
+			if not _require(String(outcome_snapshot.get("scenario_summary", "")) != "", "Defeat outcome did not expose a scenario summary.", outcome_snapshot):
+				return {"ok": false}
+			_capture_step("defeat_outcome_entered", outcome_snapshot)
+			return {
+				"ok": true,
+				"scene": current_scene,
+				"snapshot": outcome_snapshot,
+			}
+		if scene_path == BATTLE_SCENE:
+			var battle_exit := await _resolve_defeat_pressure_battle_interrupt(current_scene, turn_history)
+			if not bool(battle_exit.get("ok", false)):
+				return battle_exit
+			if String(battle_exit.get("scene_path", "")) == SCENARIO_OUTCOME_SCENE:
+				var outcome_scene = battle_exit.get("scene", null)
+				var outcome_snapshot: Dictionary = battle_exit.get("snapshot", {})
+				outcome_snapshot["defeat_turn_history"] = turn_history
+				_capture_step("defeat_outcome_entered", outcome_snapshot)
+				return {
+					"ok": true,
+					"scene": outcome_scene,
+					"snapshot": outcome_snapshot,
+				}
+			current_overworld = battle_exit.get("scene", null)
+			continue
+		if scene_path != OVERWORLD_SCENE:
+			return _fail_with_payload(
+				"Defeat validation routed to an unexpected scene while advancing authored pressure.",
+				{
+					"scene_path": scene_path,
+					"turn_history": turn_history,
+				}
+			)
+		current_overworld = current_scene
+		var after_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+		after_snapshot["end_turn_result"] = end_turn_result
+		_capture_step("defeat_pressure_day_%d" % int(after_snapshot.get("day", turn_index + 1)), after_snapshot)
+
+	return _fail_with_payload(
+		"Defeat validation did not reach the outcome shell within the end-turn budget.",
+		{
+			"max_turns": MAX_VALIDATION_DEFEAT_END_TURNS,
+			"turn_history": turn_history,
+			"current_scene": _current_scene_path(),
+		}
+	)
+
+func _resolve_defeat_pressure_battle_interrupt(battle, turn_history: Array) -> Dictionary:
+	var battle_snapshot: Dictionary = battle.call("validation_snapshot") if battle != null else {}
+	battle_snapshot["defeat_turn_history"] = turn_history
+	_capture_step("defeat_pressure_battle_interrupt", battle_snapshot)
+	for action_id in ["surrender", "retreat"]:
+		var action_result: Dictionary = battle.call("validation_perform_action", action_id)
+		await _settle_frames(8)
+		var current_scene = get_tree().current_scene
+		var scene_path := _current_scene_path()
+		var payload := {
+			"action_id": action_id,
+			"action_result": action_result,
+			"battle_snapshot": battle_snapshot,
+			"scene_path": scene_path,
+		}
+		if current_scene != null and scene_path == SCENARIO_OUTCOME_SCENE:
+			var outcome_snapshot: Dictionary = current_scene.call("validation_snapshot")
+			if not _require(String(outcome_snapshot.get("scenario_status", "")) == "defeat", "Battle interrupt routed to outcome without defeat state.", outcome_snapshot):
+				return {"ok": false}
+			return {
+				"ok": true,
+				"scene": current_scene,
+				"scene_path": scene_path,
+				"snapshot": outcome_snapshot,
+			}
+		if bool(action_result.get("ok", false)) and current_scene != null and scene_path == OVERWORLD_SCENE:
+			var overworld_snapshot: Dictionary = current_scene.call("validation_snapshot")
+			overworld_snapshot["battle_interrupt_exit"] = payload
+			_capture_step("overworld_after_defeat_pressure_battle_interrupt", overworld_snapshot)
+			return {
+				"ok": true,
+				"scene": current_scene,
+				"scene_path": scene_path,
+				"snapshot": overworld_snapshot,
+			}
+		if not bool(action_result.get("ok", false)):
+			continue
+	return _fail_with_payload(
+		"Defeat validation could not exit an interrupting battle through a real retreat or surrender action.",
+		{
+			"battle_snapshot": battle_snapshot,
+			"turn_history": turn_history,
+			"scene_path": _current_scene_path(),
+		}
+	)
 
 func _enter_live_skirmish_overworld() -> Dictionary:
 	_log("Waiting for main menu boot route.")
@@ -866,7 +1021,12 @@ func _save_and_resume_battle_from_main_menu(battle, manual_slot: int, step_prefi
 		"battle": resumed_battle,
 	}
 
-func _save_and_resume_outcome_from_main_menu(outcome, manual_slot: int) -> Dictionary:
+func _save_and_resume_outcome_from_main_menu(
+	outcome,
+	manual_slot: int,
+	expected_status: String = "victory",
+	step_prefix: String = "outcome"
+) -> Dictionary:
 	if not _require(
 		bool(outcome.call("validation_select_save_slot", manual_slot)),
 		"Outcome validation could not select the requested manual save slot.",
@@ -886,7 +1046,11 @@ func _save_and_resume_outcome_from_main_menu(outcome, manual_slot: int) -> Dicti
 		return {"ok": false}
 	if not _require(String(outcome_save_summary.get("resume_target", "")) == "outcome", "Outcome manual save did not advertise outcome review.", outcome_save_summary):
 		return {"ok": false}
-	if not _require(String(outcome_save_summary.get("scenario_status", "")) == "victory", "Outcome manual save did not preserve victory status.", outcome_save_summary):
+	if not _require(
+		String(outcome_save_summary.get("scenario_status", "")) == expected_status,
+		"Outcome manual save did not preserve %s status." % expected_status,
+		outcome_save_summary
+	):
 		return {"ok": false}
 	if not _require(String(outcome_save_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Outcome manual save summary scenario id did not match the launched scenario.", outcome_save_summary):
 		return {"ok": false}
@@ -898,7 +1062,7 @@ func _save_and_resume_outcome_from_main_menu(outcome, manual_slot: int) -> Dicti
 
 	var outcome_saved_snapshot: Dictionary = outcome.call("validation_snapshot")
 	outcome_saved_snapshot["manual_save"] = outcome_save
-	_capture_step("outcome_saved", outcome_saved_snapshot)
+	_capture_step(_prefixed_step_id(step_prefix, "saved"), outcome_saved_snapshot)
 	var expected_outcome_resume_signature := _outcome_resume_signature(outcome_saved_snapshot)
 
 	var outcome_menu_return: Dictionary = outcome.call("validation_return_to_menu")
@@ -917,10 +1081,16 @@ func _save_and_resume_outcome_from_main_menu(outcome, manual_slot: int) -> Dicti
 		return {"ok": false}
 	if not _require(String(latest_summary_after_menu_return.get("resume_target", "")) == "outcome", "Latest save summary after outcome return-to-menu did not point back to outcome review.", latest_summary_after_menu_return):
 		return {"ok": false}
+	if not _require(
+		String(latest_summary_after_menu_return.get("scenario_status", "")) == expected_status,
+		"Latest save summary after outcome return-to-menu did not preserve %s status." % expected_status,
+		latest_summary_after_menu_return
+	):
+		return {"ok": false}
 	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
 	menu_after_return_snapshot["menu_return"] = outcome_menu_return
 	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
-	_capture_step("main_menu_after_outcome_return", menu_after_return_snapshot)
+	_capture_step(_prefixed_menu_step_id(step_prefix, "return"), menu_after_return_snapshot)
 
 	menu.call("validation_open_saves_stage")
 	await _settle_frames(4)
@@ -944,6 +1114,12 @@ func _save_and_resume_outcome_from_main_menu(outcome, manual_slot: int) -> Dicti
 	var resumed_outcome_snapshot: Dictionary = resumed_outcome.call("validation_snapshot")
 	if not _require(String(resumed_outcome_snapshot.get("resume_target", "")) == "outcome", "Resumed outcome save did not restore outcome review semantics.", resumed_outcome_snapshot):
 		return {"ok": false}
+	if not _require(
+		String(resumed_outcome_snapshot.get("scenario_status", "")) == expected_status,
+		"Resumed outcome save did not restore %s state." % expected_status,
+		resumed_outcome_snapshot
+	):
+		return {"ok": false}
 	var actual_outcome_resume_signature := _outcome_resume_signature(resumed_outcome_snapshot)
 	if not _require(
 		JSON.stringify(actual_outcome_resume_signature) == JSON.stringify(expected_outcome_resume_signature),
@@ -955,36 +1131,51 @@ func _save_and_resume_outcome_from_main_menu(outcome, manual_slot: int) -> Dicti
 	):
 		return {"ok": false}
 	resumed_outcome_snapshot["resume"] = outcome_resume
-	_capture_step("outcome_resumed", resumed_outcome_snapshot)
+	_capture_step(_prefixed_step_id(step_prefix, "resumed"), resumed_outcome_snapshot)
 	return {
 		"ok": true,
 		"outcome": resumed_outcome,
 	}
 
-func _verify_outcome_route_and_followups(outcome_route: Dictionary, manual_slot: int) -> bool:
+func _verify_outcome_route_and_followups(
+	outcome_route: Dictionary,
+	manual_slot: int,
+	expected_status: String = "victory",
+	step_prefix: String = "outcome"
+) -> bool:
 	var outcome = outcome_route.get("scene", null)
 	if outcome == null:
 		return _fail("Resolved scenario routing did not provide an outcome scene instance.", outcome_route)
 	var outcome_snapshot: Dictionary = outcome_route.get("snapshot", {})
-	if not _require(String(outcome_snapshot.get("scenario_status", "")) == "victory", "Outcome shell did not receive a victory session.", outcome_snapshot):
+	if not _require(
+		String(outcome_snapshot.get("scenario_status", "")) == expected_status,
+		"Outcome shell did not receive a %s session." % expected_status,
+		outcome_snapshot
+	):
 		return false
 	if not _require(String(outcome_snapshot.get("resume_target", "")) == "outcome", "Outcome shell did not advertise outcome resume semantics.", outcome_snapshot):
 		return false
 	if not _require(String(outcome_snapshot.get("scenario_summary", "")) != "", "Outcome shell did not expose the resolved scenario summary.", outcome_snapshot):
+		return false
+	if not _require(expected_status.capitalize() in String(outcome_snapshot.get("header", "")), "Outcome header did not surface the expected result state.", outcome_snapshot):
 		return false
 	var latest_outcome_summary := _dictionary_value(outcome_snapshot.get("latest_save_summary", {}))
 	if not _require(not latest_outcome_summary.is_empty(), "Resolved autosave summary was unavailable on the outcome shell.", outcome_snapshot):
 		return false
 	if not _require(String(latest_outcome_summary.get("resume_target", "")) == "outcome", "Resolved autosave did not advertise outcome review.", latest_outcome_summary):
 		return false
-	if not _require(String(latest_outcome_summary.get("scenario_status", "")) == "victory", "Resolved autosave summary did not preserve victory status.", latest_outcome_summary):
+	if not _require(
+		String(latest_outcome_summary.get("scenario_status", "")) == expected_status,
+		"Resolved autosave summary did not preserve %s status." % expected_status,
+		latest_outcome_summary
+	):
 		return false
 	if not _require("skirmish_start:%s" % String(_config.get("scenario_id", "")) in _string_array_value(outcome_snapshot.get("action_ids", [])), "Outcome shell did not offer the real skirmish retry action.", outcome_snapshot):
 		return false
 	if not _require("return_to_menu" in _string_array_value(outcome_snapshot.get("action_ids", [])), "Outcome shell did not offer the return-to-menu action.", outcome_snapshot):
 		return false
 
-	var outcome_resume := await _save_and_resume_outcome_from_main_menu(outcome, manual_slot)
+	var outcome_resume := await _save_and_resume_outcome_from_main_menu(outcome, manual_slot, expected_status, step_prefix)
 	if not bool(outcome_resume.get("ok", false)):
 		return false
 	outcome = outcome_resume.get("outcome", outcome)
@@ -1000,7 +1191,13 @@ func _verify_outcome_route_and_followups(outcome_route: Dictionary, manual_slot:
 	final_menu_snapshot["latest_save_summary"] = SaveService.latest_loadable_summary()
 	if not _require(String(_dictionary_value(final_menu_snapshot.get("latest_save_summary", {})).get("resume_target", "")) == "outcome", "Main menu latest save after outcome action did not keep outcome review semantics.", final_menu_snapshot):
 		return false
-	_capture_step("main_menu_after_outcome_action", final_menu_snapshot)
+	if not _require(
+		String(_dictionary_value(final_menu_snapshot.get("latest_save_summary", {})).get("scenario_status", "")) == expected_status,
+		"Main menu latest save after outcome action did not preserve %s status." % expected_status,
+		final_menu_snapshot
+	):
+		return false
+	_capture_step(_prefixed_menu_step_id(step_prefix, "action"), final_menu_snapshot)
 	return true
 
 func _play_battle_to_overworld(battle, battle_progress_step_id: String, overworld_step_id: String) -> Dictionary:
@@ -1199,6 +1396,10 @@ func _fail(message: String, payload: Dictionary) -> bool:
 	_log("FAIL: %s" % message)
 	return false
 
+func _fail_with_payload(message: String, payload: Dictionary) -> Dictionary:
+	_fail(message, payload)
+	return {"ok": false, "message": message, "payload": payload}
+
 func _log(message: String) -> void:
 	var line := "[live-validation] %s" % message
 	print(line)
@@ -1256,6 +1457,45 @@ func _outcome_resume_signature(snapshot: Dictionary) -> Dictionary:
 		"mode_summary": String(snapshot.get("mode_summary", "")),
 		"action_ids": _string_array_value(snapshot.get("action_ids", [])),
 	}
+
+func _prefixed_step_id(step_prefix: String, suffix: String) -> String:
+	if step_prefix == "" or step_prefix == "outcome":
+		if suffix == "saved":
+			return DEFAULT_OUTCOME_SAVE_STEP_ID
+		if suffix == "resumed":
+			return DEFAULT_OUTCOME_RESUME_STEP_ID
+		return "outcome_%s" % suffix
+	if step_prefix == "defeat_outcome":
+		if suffix == "saved":
+			return DEFEAT_OUTCOME_SAVE_STEP_ID
+		if suffix == "resumed":
+			return DEFEAT_OUTCOME_RESUME_STEP_ID
+	return "%s_%s" % [step_prefix, suffix]
+
+func _prefixed_menu_step_id(step_prefix: String, suffix: String) -> String:
+	if step_prefix == "" or step_prefix == "outcome":
+		match suffix:
+			"return":
+				return DEFAULT_OUTCOME_MENU_RETURN_STEP_ID
+			"action":
+				return DEFAULT_OUTCOME_MENU_ACTION_STEP_ID
+			_:
+				return "main_menu_after_outcome_%s" % suffix
+	if step_prefix == "defeat_outcome":
+		match suffix:
+			"return":
+				return DEFEAT_OUTCOME_MENU_RETURN_STEP_ID
+			"action":
+				return DEFEAT_OUTCOME_MENU_ACTION_STEP_ID
+			_:
+				return "main_menu_after_defeat_outcome_%s" % suffix
+	match suffix:
+		"return":
+			return "main_menu_after_%s_return" % step_prefix
+		"action":
+			return "main_menu_after_%s_action" % step_prefix
+		_:
+			return "main_menu_after_%s_%s" % [step_prefix, suffix]
 
 func _dictionary_value(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}

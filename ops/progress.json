@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T03:38:00Z",
+  "updatedAt": "2026-04-16T03:54:13Z",
   "status": "in_progress",
-  "currentPhase": "live-routed-resolved-outcome-validation-extension",
-  "currentSliceId": "phase-6-live-routed-resolved-outcome-validation-extension",
-  "currentSliceTitle": "Extend the live routed-client validation harness through real scenario resolution and outcome-shell routing on the shipped router and shells",
+  "currentPhase": "live-routed-defeat-outcome-validation",
+  "currentSliceId": "phase-6-live-routed-defeat-outcome-validation",
+  "currentSliceTitle": "Extend the live routed-client validation harness through real defeat resolution and outcome-shell routing on the shipped router and shells",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the resolved-outcome validation slice: the real launched River Pass routed-client harness now claims authored support, clears required encounter objectives, takes Duskfen Bastion through the shipped town-assault route, verifies ScenarioOutcomeShell victory routing, saves and resumes outcome review from MainMenu, and verifies post-outcome menu actions and latest-save outcome semantics without fake completion shortcuts or save-version changes. Latest passing report: .artifacts/live_flow_smoke/20260416T033637Z/live_validation_report.json.",
+  "currentSliceNotes": "Completed the dedicated routed defeat outcome validation slice: the new boot_to_skirmish_defeat_outcome flow launches River Pass through the shipped menu, advances real overworld end-turn/enemy-pressure rules until authored defeat resolution, verifies ScenarioOutcomeShell defeat routing, saves and resumes defeat outcome review from MainMenu, and verifies latest-save outcome semantics plus post-outcome return-to-menu. Latest passing defeat report: .artifacts/live_flow_smoke/20260416T035204Z/live_validation_report.json. Existing victory default also still passes at .artifacts/live_flow_smoke/20260416T035235Z/live_validation_report.json.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1308,6 +1308,9 @@
     "Repository-local validation, python3 -m py_compile for the Python harness files, full headless Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, and tests/run_live_flow_harness.py all passed for the routed save-resume slice; tests/core_systems_regression_smoke.tscn currently fails on the older resource-site auto-collect regression outside this harness change.",
     "This run extended that same shipped routed harness through a real BattleShell manual save/resume proof by selecting the configured manual slot in battle, saving through the existing battle save controls, returning through MainMenu.gd, loading the manual slot through the live save browser, verifying the resumed battle signature, and then continuing the routed battle to completion without moving gameplay or save logic out of SaveService.gd, AppRouter.gd, and BattleRules.gd.",
     "This run extended the same shipped routed harness into a real hostile-town assault and capture proof on River Pass by marching through live overworld movement to Duskfen Bastion, using the shipped town capture action to enter a `town_assault` battle, preserving battle save-resume on that assault, then validating player capture plus occupation and hostile retake-front continuity on the returned overworld and captured-town shells. During that work it also fixed a real captured-town recursion bug in `OverworldRules.gd` by breaking the front or occupation derivation cycle without changing save version 9.",
-    "This run extended the shipped routed-client validation harness beyond hostile-town capture into real River Pass victory resolution: the harness now claims authored support through the overworld shell, clears required encounter objectives, captures Duskfen Bastion through the shipped town-assault battle, verifies ScenarioOutcomeShell victory state, writes and resumes an outcome manual save from MainMenu, and verifies latest-save outcome review semantics plus post-outcome menu routing. Latest passing live report: .artifacts/live_flow_smoke/20260416T033637Z/live_validation_report.json."
+    "This run extended the shipped routed-client validation harness beyond hostile-town capture into real River Pass victory resolution: the harness now claims authored support through the overworld shell, clears required encounter objectives, captures Duskfen Bastion through the shipped town-assault battle, verifies ScenarioOutcomeShell victory state, writes and resumes an outcome manual save from MainMenu, and verifies latest-save outcome review semantics plus post-outcome menu routing. Latest passing live report: .artifacts/live_flow_smoke/20260416T033637Z/live_validation_report.json.",
+    "This run added a dedicated boot_to_skirmish_defeat_outcome live validation flow that launches River Pass through Boot and MainMenu, advances the shipped overworld End Turn action until authored Mireclaw pressure triggers defeat, and verifies ScenarioOutcomeShell receives a real defeat session instead of a direct flag flip.",
+    "The defeat flow now saves the defeat outcome from ScenarioOutcomeShell, returns to MainMenu, resumes that manual outcome save through the shipped save browser, verifies resume_target outcome plus scenario_status defeat, and confirms the return-to-menu follow-up keeps latest-save outcome review semantics.",
+    "Repository-local validation, Python harness bytecode compilation, Godot 4.6.2 headless boot, focused menu/outcome, overworld, and town/battle smoke scenes, the new hard-difficulty defeat live flow, and the existing default victory live flow all passed for this routed outcome validation slice."
   ]
 }

@@ -130,6 +130,7 @@ Difficulty: High
 - add a release-facing town-side order-readiness and affordability ledger inside the real town shell using existing build, recruit, market, response, and hero-command data instead of a planner or advisor layer
 - add a repo-local live client validation harness that launches the real Boot, menu, skirmish-start, owned-town, and battle-routing flow, drives deterministic shell actions through the active scenes, and emits machine-checkable screenshot or report artifacts for regression diagnosis
 - extend the repo-local live client validation harness through real resolved-session routing so a shipped scenario path can prove `ScenarioOutcomeShell`, outcome save summaries, and post-resolution resume semantics without bypassing gameplay state
+- extend the repo-local live client validation harness with a dedicated routed defeat-outcome flow that advances a real launched scenario through authored pressure defeat, proves `ScenarioOutcomeShell` defeat routing, and verifies defeat-state outcome save/resume plus menu follow-up semantics
 - add a release-facing overworld command commitment board inside the real overworld shell using existing context, logistics, hero-coverage, and frontier-risk data instead of a planner or advisor layer
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
 - turn town recruitment and reserve production into frontline reinforcement delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems instead of a parallel convoy subsystem
@@ -304,6 +305,8 @@ Difficulty: High
 149. [completed] Re-run repository-local validation, the strongest relevant Godot headless smokes or boot checks, and the live harness again after the routed save/resume extension.
 150. [completed] Extend the live routed-client harness so it proves a real shipped-router battle save/resume path by saving from `BattleShell.gd`, returning through `MainMenu.gd`, loading the saved run through the real save browser, and resuming back onto the routed battle surface with a preserved battle-state signature.
 151. [completed] Re-run repository-local validation, the strongest relevant Godot headless smokes or boot checks, and the live harness again after the battle-side routed save/resume extension.
+152. [completed] Extend the shipped routed-client validation harness with a dedicated defeat outcome flow through authored scenario pressure, `ScenarioOutcomeShell`, defeat outcome save/resume, and post-outcome menu semantics.
+153. [completed] Re-run repository-local validation, default victory and dedicated defeat live flows, headless Godot boot, and focused menu/outcome, overworld, and town/battle smokes for the routed defeat validation slice.
 
 ## Standards
 - no throwaway prototype code if avoidable

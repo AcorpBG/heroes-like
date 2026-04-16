@@ -829,6 +829,25 @@ func _duplicate_dictionary(value: Variant) -> Dictionary:
 func _duplicate_array(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
+func _validation_enemy_pressure_states() -> Array:
+	var rows := []
+	var enemy_states = _session.overworld.get("enemy_states", [])
+	if not (enemy_states is Array):
+		return rows
+	for state in enemy_states:
+		if not (state is Dictionary):
+			continue
+		rows.append(
+			{
+				"faction_id": String(state.get("faction_id", "")),
+				"pressure": int(state.get("pressure", 0)),
+				"posture": String(state.get("posture", "")),
+				"active_raid_count": int(state.get("active_raid_count", 0)),
+				"siege_progress": int(state.get("siege_progress", 0)),
+			}
+		)
+	return rows
+
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
@@ -863,7 +882,27 @@ func validation_snapshot() -> Dictionary:
 		"objective_summary": OverworldRules.describe_objectives(_session),
 		"threat_summary": OverworldRules.describe_enemy_threats(_session),
 		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
+		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+	}
+
+func validation_end_turn() -> Dictionary:
+	var day_before := _session.day
+	var status_before := _session.scenario_status
+	var pressure_before := _validation_enemy_pressure_states()
+	_on_end_turn_pressed()
+	return {
+		"ok": _session.day > day_before or _session.scenario_status != status_before or not _session.battle.is_empty(),
+		"action": "end_turn",
+		"day_before": day_before,
+		"day_after": _session.day,
+		"scenario_status_before": status_before,
+		"scenario_status_after": _session.scenario_status,
+		"battle_started": not _session.battle.is_empty(),
+		"enemy_pressure_before": pressure_before,
+		"enemy_pressure_after": _validation_enemy_pressure_states(),
+		"last_action": String(_session.flags.get("last_action", "")),
+		"message": _last_message,
 	}
 
 func validation_try_progress_action() -> Dictionary:

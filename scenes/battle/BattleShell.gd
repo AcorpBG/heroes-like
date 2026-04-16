@@ -385,6 +385,30 @@ func validation_try_progress_action() -> Dictionary:
 		"message": _last_message,
 	}
 
+func validation_perform_action(action_id: String) -> Dictionary:
+	if _session.battle.is_empty():
+		return {"ok": false, "action": action_id, "message": "No active battle is loaded for validation.", "state": "invalid"}
+	var result := BattleRules.perform_player_action(_session, action_id)
+	_last_message = String(result.get("message", ""))
+	if bool(result.get("ok", false)):
+		_dismiss_tactical_briefing()
+	if _handle_battle_resolution(result):
+		return {
+			"ok": bool(result.get("ok", false)),
+			"action": action_id,
+			"state": String(result.get("state", "")),
+			"scenario_status": _session.scenario_status,
+			"message": _last_message,
+		}
+	_refresh()
+	return {
+		"ok": bool(result.get("ok", false)),
+		"action": action_id,
+		"state": String(result.get("state", "")),
+		"scenario_status": _session.scenario_status,
+		"message": _last_message,
+	}
+
 func validation_select_save_slot(slot: int) -> bool:
 	var normalized_slot := int(slot)
 	if not SaveService.get_manual_slot_ids().has(normalized_slot):

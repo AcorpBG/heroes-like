@@ -4297,11 +4297,15 @@ def validate_live_client_harness(errors: list[str]) -> None:
     for required_token in (
         'const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"',
         'const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"',
+        'const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"',
         "const TOWN_SCENE :=",
         "const BATTLE_SCENE :=",
         "const SCENARIO_OUTCOME_SCENE :=",
         "FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME",
+        "func _execute_boot_to_skirmish_defeat_outcome_flow",
         "func _enter_live_skirmish_overworld",
+        "func _drive_overworld_to_defeat_outcome",
+        "func _resolve_defeat_pressure_battle_interrupt",
         "func _route_from_overworld_to_scene",
         "func _save_and_resume_battle_from_main_menu",
         "func _save_and_resume_outcome_from_main_menu",
@@ -4330,6 +4334,16 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'main_menu_after_outcome_return',
         'outcome_resumed',
         'main_menu_after_outcome_action',
+        'defeat_pressure_watch_started',
+        'defeat_pressure_day_',
+        'defeat_outcome_entered',
+        'defeat_outcome_saved',
+        'main_menu_after_defeat_outcome_return',
+        'defeat_outcome_resumed',
+        'main_menu_after_defeat_outcome_action',
+        'validation_end_turn',
+        'validation_perform_action',
+        'expected_status',
         'pre_action_town_owner',
         'battle_context_town_placement_id',
         'Occupation watch:',
@@ -4349,6 +4363,11 @@ def validate_live_client_harness(errors: list[str]) -> None:
         errors,
         "run_live_flow_harness.py must default to the resolved-outcome live flow",
     )
+    ensure(
+        'DEFEAT_OUTCOME_FLOW = "boot_to_skirmish_defeat_outcome"' in runner_text,
+        errors,
+        "run_live_flow_harness.py must expose the routed defeat outcome flow id",
+    )
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -4364,11 +4383,13 @@ def validate_live_client_harness(errors: list[str]) -> None:
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func validation_snapshot",
+        "func validation_end_turn",
         "func validation_try_progress_action",
         "func validation_route_step_to_nearest_target",
         "func validation_route_step_to_target_placement",
         '"context_action_ids"',
         '"active_town"',
+        '"enemy_pressure_states"',
         '"capture_town"',
         '"resource"',
         '"artifact"',
@@ -4396,6 +4417,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_select_save_slot",
         "func validation_save_to_selected_slot",
         "func validation_return_to_menu",
+        "func validation_perform_action",
         "func _preferred_validation_action_id",
         '"battle_context_town_placement_id"',
         "func _align_validation_target",

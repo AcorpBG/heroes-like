@@ -13,12 +13,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FLOW = "boot_to_skirmish_resolved_outcome"
+DEFEAT_OUTCOME_FLOW = "boot_to_skirmish_defeat_outcome"
 DEFAULT_DISPLAY = ":99"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the repo-local live Godot validation harness.")
-    parser.add_argument("--flow", default=DEFAULT_FLOW, help="Harness flow id to run.")
+    parser.add_argument(
+        "--flow",
+        default=DEFAULT_FLOW,
+        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for routed defeat outcome validation.",
+    )
     parser.add_argument("--scenario", default="river-pass", help="Scenario id to launch through the real menu.")
     parser.add_argument("--difficulty", default="normal", help="Difficulty id to select before launch.")
     parser.add_argument("--manual-slot", type=int, default=2, help="Manual slot id to use for routed save/resume validation.")
