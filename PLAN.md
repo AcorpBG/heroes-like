@@ -135,6 +135,7 @@ Difficulty: High
 - turn battle withdrawal into a release-facing surrender and pursuit aftermath slice through the existing battle, outcome, town, economy, campaign, and shell flow so retreat and surrender produce different strategic fallout instead of sharing one generic exit path
 - deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities that change movement pressure, ranged threat, commander safety, target priority, and battle summaries through the existing battle pipeline
 - add save-backed captured-town pacification so enemy towns taken by the player stay partially occupied for several days, with reduced output, held local recruits, and slower stabilization under hostile retake pressure instead of instantly acting like fully normalized assets
+- deepen battle exits again with save-backed withdrawal, surrender, pursuit, convoy-loss, and collapse scars routed through the existing battle, commander, logistics, town-front, and outcome systems instead of a separate retreat subsystem
 - add a shared release-facing visual kit with original heraldry marks, compact summary surfacing, and cohesive panel or control treatment across the already-converted main menu, overworld, town, battle, and outcome shells without moving logic out of current scene or core boundaries
 
 ## Immediate execution order
@@ -380,3 +381,5 @@ Difficulty: High
 126. [completed] Re-run the required Godot headless smoke scenes and full boot validation for commander army continuity, rebuild-scar persistence, and summary surfacing.
 127. [completed] Give hostile factions save-backed retake-front and stabilization pressure around lost or endangered towns through the existing overworld, battle, town, and enemy-turn systems.
 128. [completed] Re-run the required Godot headless smoke scenes and full boot validation for hostile town retake pressure, restore continuity, and summary surfacing.
+129. [completed] Deepen battle exits so withdrawal, surrender, and collapse leave different convoy, commander, town-front, and pressure scars through the existing battle, overworld, town, outcome, and save systems.
+130. [completed] Re-run the required Godot smoke scenes and full headless boot for distinct exit-mode aftermath, commander continuity, convoy fallout, and restore persistence.

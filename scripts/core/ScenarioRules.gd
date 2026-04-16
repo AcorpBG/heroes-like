@@ -308,7 +308,17 @@ static func _last_battle_aftermath_text(session: SessionStateStoreScript.Session
 	if not (report is Dictionary) or report.is_empty():
 		return ""
 	var lines := []
-	for key in ["headline", "summary", "resource_summary", "army_summary", "pressure_summary", "recovery_summary"]:
+	for key in [
+		"headline",
+		"summary",
+		"resource_summary",
+		"army_summary",
+		"pressure_summary",
+		"recovery_summary",
+		"front_summary",
+		"logistics_summary",
+		"commander_summary",
+	]:
 		var line := String(report.get(key, "")).strip_edges()
 		if line != "" and line not in lines:
 			lines.append(line)

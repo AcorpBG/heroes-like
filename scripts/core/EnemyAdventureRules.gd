@@ -15,11 +15,17 @@ const COMMANDER_OUTCOME_DEFEATED := "defeated"
 const COMMANDER_OUTCOME_ASSAULT_VICTORY := "assault_victory"
 const COMMANDER_OUTCOME_DEPLOYED := "deployed"
 const COMMANDER_OUTCOME_FIELD_VICTORY := "field_victory"
+const COMMANDER_OUTCOME_PURSUIT_VICTORY := "pursuit_victory"
+const COMMANDER_OUTCOME_CAPITULATION := "capitulation"
+const COMMANDER_OUTCOME_ROUT_VICTORY := "rout_victory"
 const COMMANDER_OUTCOME_STALEMATE := "stalemate"
 const COMMANDER_RECOVERY_DAYS_DEFEATED := 3
 const COMMANDER_RECOVERY_DAYS_ASSAULT_VICTORY := 1
 const COMMANDER_EXPERIENCE_DEPLOYED := 90
 const COMMANDER_EXPERIENCE_FIELD_VICTORY := 180
+const COMMANDER_EXPERIENCE_PURSUIT_VICTORY := 205
+const COMMANDER_EXPERIENCE_CAPITULATION := 150
+const COMMANDER_EXPERIENCE_ROUT_VICTORY := 230
 const COMMANDER_EXPERIENCE_ASSAULT_VICTORY := 210
 const COMMANDER_EXPERIENCE_DEFEATED := 45
 const COMMANDER_EXPERIENCE_STALEMATE := 30
@@ -381,6 +387,17 @@ static func commander_army_brief(source: Variant) -> String:
 			return "scarred host"
 	return ""
 
+static func commander_recent_outcome_brief(source: Variant) -> String:
+	match String(_normalized_commander_record(source).get("last_outcome", "")):
+		COMMANDER_OUTCOME_ROUT_VICTORY:
+			return "fresh from a rout"
+		COMMANDER_OUTCOME_PURSUIT_VICTORY:
+			return "driving a hard pursuit"
+		COMMANDER_OUTCOME_CAPITULATION:
+			return "flush with surrender terms"
+		_:
+			return ""
+
 static func commander_army_summary(source: Variant) -> String:
 	return String(_normalized_commander_army_continuity(source).get("summary", ""))
 
@@ -693,6 +710,15 @@ static func advance_commander_record(commander_state: Dictionary, outcome_id: St
 		COMMANDER_OUTCOME_FIELD_VICTORY:
 			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_FIELD_VICTORY)
+		COMMANDER_OUTCOME_PURSUIT_VICTORY:
+			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_PURSUIT_VICTORY)
+		COMMANDER_OUTCOME_CAPITULATION:
+			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_CAPITULATION)
+		COMMANDER_OUTCOME_ROUT_VICTORY:
+			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
+			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_ROUT_VICTORY)
 		COMMANDER_OUTCOME_ASSAULT_VICTORY:
 			record["battle_wins"] = int(record.get("battle_wins", 0)) + 1
 			updated = _award_enemy_commander_experience(updated, COMMANDER_EXPERIENCE_ASSAULT_VICTORY)
@@ -1917,6 +1943,13 @@ static func desired_raid_strength(encounter: Dictionary) -> int:
 	var veterancy_bonus: int = (max(0, int(commander_record.get("renown", 0))) * 16) + (
 		_commander_veterancy_rank_from_record(commander_record) * 12
 	)
+	match String(commander_record.get("last_outcome", "")):
+		COMMANDER_OUTCOME_ROUT_VICTORY:
+			multiplier += 0.18
+		COMMANDER_OUTCOME_PURSUIT_VICTORY:
+			multiplier += 0.1
+		COMMANDER_OUTCOME_CAPITULATION:
+			multiplier += 0.06
 	return int(round(float(base_strength) * multiplier)) + veterancy_bonus
 
 static func raid_pillage_weight(encounter: Dictionary) -> int:

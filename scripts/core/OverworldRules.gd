@@ -552,7 +552,8 @@ static func stabilize_town_front(
 	session: SessionStateStoreScript.SessionData,
 	placement_id: String,
 	faction_id: String,
-	source: String = ""
+	source: String = "",
+	bonus_days: int = 0
 ) -> Dictionary:
 	if session == null or placement_id == "" or faction_id == "":
 		return {"ok": false, "town": {}, "front": {}}
@@ -561,7 +562,7 @@ static func stabilize_town_front(
 		return {"ok": false, "town": {}, "front": {}}
 	var town = town_result.get("town", {})
 	var towns = session.overworld.get("towns", [])
-	town["front"] = _town_front_stabilizing_state(session, town, faction_id, source)
+	town["front"] = _town_front_stabilizing_state(session, town, faction_id, source, "", bonus_days)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 	return {
@@ -758,7 +759,10 @@ static func encounter_commander_threat_label(encounter: Dictionary) -> String:
 		return ""
 	var memory_brief := String(_enemy_adventure_rules().commander_memory_brief(encounter.get("enemy_commander_state", {})))
 	var army_brief := String(_enemy_adventure_rules().commander_army_brief(encounter.get("enemy_commander_state", {})))
+	var outcome_brief := String(_enemy_adventure_rules().commander_recent_outcome_brief(encounter.get("enemy_commander_state", {})))
 	var parts := []
+	if outcome_brief != "":
+		parts.append(outcome_brief)
 	if memory_brief != "":
 		parts.append(memory_brief)
 	if army_brief != "":
@@ -3286,13 +3290,62 @@ static func apply_delivery_interception_outcome(
 					String(delivery_state.get("recruit_summary", "")),
 				]
 			return result
+		"retreat":
+			node = _clear_resource_site_delivery(node)
+			nodes[int(node_result.get("index", -1))] = node
+			session.overworld["resource_nodes"] = nodes
+			var partition := _split_recruit_payload(
+				_normalize_recruit_payload(delivery_state.get("manifest", {})),
+				0.45
+			)
+			var returned_manifest: Dictionary = partition.get("returned", {})
+			var lost_manifest: Dictionary = partition.get("lost", {})
+			var returned_to := _return_reinforcements_to_source(
+				session,
+				String(delivery_state.get("origin_town_id", "")),
+				returned_manifest
+			)
+			var returned_summary := _describe_recruit_delta(returned_manifest)
+			var lost_summary := _describe_recruit_delta(lost_manifest)
+			if returned_to != "" and returned_summary != "" and lost_summary != "":
+				result["summary"] = "%s convoy scatters under pursuit. %s regathers %s, but %s is lost before it reaches %s." % [
+					String(site.get("name", "The route")),
+					returned_to,
+					returned_summary,
+					lost_summary,
+					String(delivery_state.get("target_label", "the front")),
+				]
+			elif returned_to != "" and returned_summary != "":
+				result["summary"] = "%s convoy breaks contact and turns %s back to %s." % [
+					String(site.get("name", "The route")),
+					returned_summary,
+					returned_to,
+				]
+			else:
+				result["summary"] = "%s convoy is cut apart during the withdrawal (%s)." % [
+					String(site.get("name", "The route")),
+					String(delivery_state.get("recruit_summary", "")),
+				]
+			return result
+		"surrender":
+			node = _clear_resource_site_delivery(node)
+			nodes[int(node_result.get("index", -1))] = node
+			session.overworld["resource_nodes"] = nodes
+			result["summary"] = "%s convoy for %s is handed over intact with the surrender terms (%s)." % [
+				String(site.get("name", "The route")),
+				String(delivery_state.get("target_label", "the front")),
+				String(delivery_state.get("recruit_summary", "")),
+			]
+			return result
 		_:
 			node = _clear_resource_site_delivery(node)
 			nodes[int(node_result.get("index", -1))] = node
 			session.overworld["resource_nodes"] = nodes
-			result["summary"] = "%s convoy for %s is intercepted (%s)." % [
+			var collapse_label := "is overrun in the rout" if outcome in ["hero_defeat", "defeat", "town_lost"] else "is intercepted"
+			result["summary"] = "%s convoy for %s %s (%s)." % [
 				String(site.get("name", "The route")),
 				String(delivery_state.get("target_label", "the front")),
+				collapse_label,
 				String(delivery_state.get("recruit_summary", "")),
 			]
 			return result
@@ -3366,6 +3419,37 @@ static func _return_reinforcements_to_source(
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 	return _town_name(town)
+
+static func _split_recruit_payload(manifest: Dictionary, return_ratio: float) -> Dictionary:
+	var normalized := _normalize_recruit_payload(manifest)
+	var result := {"returned": {}, "lost": {}}
+	if normalized.is_empty():
+		return result
+	var total_units := 0
+	for unit_id_value in normalized.keys():
+		total_units += max(0, int(normalized.get(unit_id_value, 0)))
+	var target_returned := int(floor(float(total_units) * clampf(return_ratio, 0.0, 1.0)))
+	if target_returned <= 0 and total_units >= 4 and return_ratio > 0.0:
+		target_returned = 1
+	target_returned = clampi(target_returned, 0, maxi(0, total_units - 1))
+	var returned := {}
+	var lost := {}
+	var remaining_to_return := target_returned
+	var unit_ids := normalized.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var available: int = max(0, int(normalized.get(unit_id_value, 0)))
+		var returned_count: int = min(available, remaining_to_return)
+		if returned_count > 0:
+			returned[unit_id] = returned_count
+		var lost_count: int = max(0, available - returned_count)
+		if lost_count > 0:
+			lost[unit_id] = lost_count
+		remaining_to_return = max(0, remaining_to_return - returned_count)
+	result["returned"] = returned
+	result["lost"] = lost
+	return result
 
 static func _army_strength_value(stacks: Variant) -> int:
 	var total_strength := 0
@@ -4301,14 +4385,15 @@ static func _town_front_stabilizing_state(
 	town: Dictionary,
 	faction_id: String,
 	source: String,
-	previous_owner: String = ""
+	previous_owner: String = "",
+	bonus_days: int = 0
 ) -> Dictionary:
 	var front := _normalize_town_front_state(town.get("front", {}))
 	front["state"] = "stabilizing"
 	front["faction_id"] = faction_id
 	front["last_change_day"] = int(session.day) if session != null else int(front.get("last_change_day", 0))
 	front["stabilize_until_day"] = (
-		int(session.day) + _town_front_stabilize_days(session, town)
+		int(session.day) + clampi(_town_front_stabilize_days(session, town) + max(0, bonus_days), 2, 8)
 		if session != null
 		else max(0, int(front.get("stabilize_until_day", 0)))
 	)

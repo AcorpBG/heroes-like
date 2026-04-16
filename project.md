@@ -303,6 +303,11 @@ Battle surrender and pursuit decision:
 - retreat and surrender now produce different shared-world consequences in core rules: treasury or stockpile loss, post-battle army attrition, hostile pressure shifts, nearby-town recovery pressure, and durable `last_battle_aftermath` recap state that campaign and skirmish outcome flow can read directly
 - town-defense lock behavior remains enforced through the existing `retreat_allowed` and `surrender_allowed` battle payload flags, while scenes stay thin and save version `9` remains unchanged
 
+Battle exit aftermath decision:
+- the existing battle, commander, convoy, town-front, and outcome paths now also distinguish orderly withdrawal, surrender, and outright collapse instead of treating every non-victory exit as the same retreat-shaped scar
+- `BattleRules.gd` now routes retreat into pursuit losses and partial convoy scatter, surrender into tribute plus intact convoy capture, and defeat or town loss into rout-level pressure, treasury seizure, and commander momentum, while `OverworldRules.gd` keeps those scars on current enemy-state, resource-node, town-recovery, and town-front payloads without a save-version bump
+- `ScenarioRules.gd` and `CampaignRules.gd` only surface the richer core-owned `last_battle_aftermath` recap lines for commander reaction, logistics fate, and front stabilization, so the same compact summaries stay legible across overworld return, outcome review, and save or restore continuity without adding new panels
+
 Difficulty simulation decision:
 - difficulty now resolves through `DifficultyRules.gd` from persisted `session.difficulty`, so campaign starts, skirmish starts, and restored saves all reuse the same rule profile without a save-version bump
 - overworld difficulty now changes daily movement, economy/reward scaling, and hostile raid pressure, while tactical difficulty shifts initiative tempo and damage output through derived battle payloads instead of scene-owned conditionals

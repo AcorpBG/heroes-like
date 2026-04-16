@@ -15,6 +15,8 @@ func _run() -> void:
 		return
 	if not _run_hostile_commander_field_victory_regression():
 		return
+	if not _run_battle_exit_aftermath_regression():
+		return
 	if not _run_hostile_commander_recovery_regression():
 		return
 	if not _run_enemy_hero_intercept_regression():
@@ -592,6 +594,132 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		return false
 	return true
 
+func _run_battle_exit_aftermath_regression() -> bool:
+	var setup := _build_delivery_intercept_exit_setup()
+	if setup.is_empty():
+		return false
+
+	var base_session = setup.get("session")
+	var source_town_id := String(setup.get("source_town_id", ""))
+	var node_id := String(setup.get("node_id", "river_free_company"))
+	var roster_hero_id := String(setup.get("roster_hero_id", ""))
+	var initial_recruits := int(setup.get("initial_recruits", 0))
+	var post_response_recruits := int(setup.get("post_response_recruits", 0))
+
+	var retreat_session = _clone_session(base_session)
+	var retreat_pressure_before := int(_enemy_state_by_faction(retreat_session, "faction_mireclaw").get("pressure", 0))
+	var retreat_gold_before := int(_enemy_state_by_faction(retreat_session, "faction_mireclaw").get("treasury", {}).get("gold", 0))
+	var retreat_result := BattleRules.perform_player_action(retreat_session, "retreat")
+	if String(retreat_result.get("state", "")) != "retreat":
+		push_error("Core systems smoke: retreat did not resolve through the exit-aftermath coverage.")
+		get_tree().quit(1)
+		return false
+	var retreat_town_total := _recruit_payload_total(_town_by_placement(retreat_session, source_town_id).get("available_recruits", {}))
+	if retreat_town_total <= post_response_recruits or retreat_town_total >= initial_recruits:
+		push_error("Core systems smoke: retreat did not scatter part of the live convoy back to its source town.")
+		get_tree().quit(1)
+		return false
+	if _recruit_payload_total(_resource_node_by_placement(retreat_session, node_id).get("delivery_manifest", {})) > 0:
+		push_error("Core systems smoke: retreat did not clear the live convoy state from the route.")
+		get_tree().quit(1)
+		return false
+	var retreat_raid := _active_enemy_raid_by_roster_hero(retreat_session, "faction_mireclaw", roster_hero_id)
+	if String(retreat_raid.get("enemy_commander_state", {}).get("last_outcome", "")) != EnemyAdventureRules.COMMANDER_OUTCOME_PURSUIT_VICTORY:
+		push_error("Core systems smoke: retreat did not stamp the hostile commander with a pursuit-victory record.")
+		get_tree().quit(1)
+		return false
+	var retreat_report: Dictionary = retreat_session.flags.get("last_battle_aftermath", {})
+	if "scatters under pursuit" not in String(retreat_report.get("logistics_summary", "")):
+		push_error("Core systems smoke: retreat aftermath did not record the convoy scatter summary.")
+		get_tree().quit(1)
+		return false
+	var retreat_pressure_delta := int(_enemy_state_by_faction(retreat_session, "faction_mireclaw").get("pressure", 0)) - retreat_pressure_before
+	var retreat_gold_delta := int(_enemy_state_by_faction(retreat_session, "faction_mireclaw").get("treasury", {}).get("gold", 0)) - retreat_gold_before
+	var restored_retreat = _clone_session(retreat_session)
+	if String(restored_retreat.flags.get("last_battle_aftermath", {}).get("logistics_summary", "")) != String(retreat_report.get("logistics_summary", "")):
+		push_error("Core systems smoke: retreat aftermath summary did not survive save-style session cloning.")
+		get_tree().quit(1)
+		return false
+	if String(_active_enemy_raid_by_roster_hero(restored_retreat, "faction_mireclaw", roster_hero_id).get("enemy_commander_state", {}).get("last_outcome", "")) != EnemyAdventureRules.COMMANDER_OUTCOME_PURSUIT_VICTORY:
+		push_error("Core systems smoke: retreat commander pursuit state did not survive save-style session cloning.")
+		get_tree().quit(1)
+		return false
+
+	var surrender_session = _clone_session(base_session)
+	var surrender_pressure_before := int(_enemy_state_by_faction(surrender_session, "faction_mireclaw").get("pressure", 0))
+	var surrender_gold_before := int(_enemy_state_by_faction(surrender_session, "faction_mireclaw").get("treasury", {}).get("gold", 0))
+	var surrender_result := BattleRules.perform_player_action(surrender_session, "surrender")
+	if String(surrender_result.get("state", "")) != "surrender":
+		push_error("Core systems smoke: surrender did not resolve through the exit-aftermath coverage.")
+		get_tree().quit(1)
+		return false
+	var surrender_town_total := _recruit_payload_total(_town_by_placement(surrender_session, source_town_id).get("available_recruits", {}))
+	if surrender_town_total != post_response_recruits:
+		push_error("Core systems smoke: surrender should not return convoy recruits to the source town.")
+		get_tree().quit(1)
+		return false
+	var surrender_raid := _active_enemy_raid_by_roster_hero(surrender_session, "faction_mireclaw", roster_hero_id)
+	if String(surrender_raid.get("enemy_commander_state", {}).get("last_outcome", "")) != EnemyAdventureRules.COMMANDER_OUTCOME_CAPITULATION:
+		push_error("Core systems smoke: surrender did not stamp the hostile commander with a capitulation record.")
+		get_tree().quit(1)
+		return false
+	var surrender_report: Dictionary = surrender_session.flags.get("last_battle_aftermath", {})
+	if "handed over intact" not in String(surrender_report.get("logistics_summary", "")):
+		push_error("Core systems smoke: surrender aftermath did not record the intact-convoy summary.")
+		get_tree().quit(1)
+		return false
+	var surrender_pressure_delta := int(_enemy_state_by_faction(surrender_session, "faction_mireclaw").get("pressure", 0)) - surrender_pressure_before
+	var surrender_gold_delta := int(_enemy_state_by_faction(surrender_session, "faction_mireclaw").get("treasury", {}).get("gold", 0)) - surrender_gold_before
+	if surrender_gold_delta <= retreat_gold_delta:
+		push_error("Core systems smoke: surrender did not transfer more treasury value than retreat.")
+		get_tree().quit(1)
+		return false
+	if surrender_pressure_delta >= retreat_pressure_delta:
+		push_error("Core systems smoke: surrender did not leave a lower hostile pressure spike than retreat.")
+		get_tree().quit(1)
+		return false
+
+	var rout_session = _clone_session(base_session)
+	var rout_pressure_before := int(_enemy_state_by_faction(rout_session, "faction_mireclaw").get("pressure", 0))
+	var rout_gold_before := int(_enemy_state_by_faction(rout_session, "faction_mireclaw").get("treasury", {}).get("gold", 0))
+	var rout_stacks = rout_session.battle.get("stacks", [])
+	for index in range(rout_stacks.size()):
+		var stack = rout_stacks[index]
+		if stack is Dictionary and String(stack.get("side", "")) == "player":
+			stack["total_health"] = 0
+			rout_stacks[index] = stack
+	rout_session.battle["stacks"] = rout_stacks
+	var rout_result := BattleRules.resolve_if_battle_ready(rout_session)
+	if String(rout_result.get("state", "")) != "defeat":
+		push_error("Core systems smoke: routed-collapse coverage did not resolve into defeat.")
+		get_tree().quit(1)
+		return false
+	var rout_raid := _active_enemy_raid_by_roster_hero(rout_session, "faction_mireclaw", roster_hero_id)
+	if String(rout_raid.get("enemy_commander_state", {}).get("last_outcome", "")) != EnemyAdventureRules.COMMANDER_OUTCOME_ROUT_VICTORY:
+		push_error("Core systems smoke: routed-collapse coverage did not stamp the hostile commander with a rout-victory record.")
+		get_tree().quit(1)
+		return false
+	var rout_report: Dictionary = rout_session.flags.get("last_battle_aftermath", {})
+	if "Battle Aftermath | Rout" not in String(rout_report.get("headline", "")):
+		push_error("Core systems smoke: routed-collapse aftermath did not surface a rout headline.")
+		get_tree().quit(1)
+		return false
+	var rout_pressure_delta := int(_enemy_state_by_faction(rout_session, "faction_mireclaw").get("pressure", 0)) - rout_pressure_before
+	var rout_gold_delta := int(_enemy_state_by_faction(rout_session, "faction_mireclaw").get("treasury", {}).get("gold", 0)) - rout_gold_before
+	if rout_pressure_delta <= retreat_pressure_delta:
+		push_error("Core systems smoke: routed-collapse coverage did not create a harsher pressure spike than retreat.")
+		get_tree().quit(1)
+		return false
+	if rout_gold_delta <= retreat_gold_delta:
+		push_error("Core systems smoke: routed-collapse coverage did not strip more battlefield stores than retreat.")
+		get_tree().quit(1)
+		return false
+	if "overrun in the rout" not in String(rout_report.get("logistics_summary", "")):
+		push_error("Core systems smoke: routed-collapse aftermath did not record the convoy overrun summary.")
+		get_tree().quit(1)
+		return false
+	return true
+
 func _run_enemy_hero_intercept_regression() -> bool:
 	var session = ScenarioFactory.create_session(
 		SCENARIO_ID,
@@ -646,6 +774,97 @@ func _run_enemy_hero_intercept_regression() -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _build_delivery_intercept_exit_setup() -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var node_id := "river_free_company"
+	var source_town_id := "riverwatch_hold"
+	_set_town_available_recruits(
+		session,
+		source_town_id,
+		{
+			"unit_river_guard": 5,
+			"unit_ember_archer": 3,
+		}
+	)
+	var initial_recruits := _recruit_payload_total(_town_by_placement(session, source_town_id).get("available_recruits", {}))
+	_set_resource_node_controller(session, node_id, "player")
+	_set_active_hero_position(session, Vector2i(0, 4))
+	_set_active_hero_movement(session, int(session.overworld.get("movement", {}).get("max", 0)))
+	var response_result := OverworldRules.perform_context_action(session, "site_response")
+	if not bool(response_result.get("ok", false)):
+		push_error("Core systems smoke: exit-aftermath setup could not issue the live route-response order.")
+		get_tree().quit(1)
+		return {}
+	var node := _resource_node_by_placement(session, node_id)
+	var manifest_total := _recruit_payload_total(node.get("delivery_manifest", {}))
+	if manifest_total <= 0:
+		push_error("Core systems smoke: exit-aftermath setup did not load a live convoy manifest onto the route.")
+		get_tree().quit(1)
+		return {}
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "exit_aftermath_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 1,
+			"y": 4,
+			"difficulty": "pressure",
+			"combat_seed": 991331,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": true,
+			"goal_distance": 0,
+			"target_kind": "resource",
+			"target_placement_id": node_id,
+			"target_label": "Free Company Yard route",
+			"goal_x": 0,
+			"goal_y": 4,
+			"delivery_intercept_node_placement_id": node_id,
+		},
+		session
+	)
+	var roster_hero_id := String(raid.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		push_error("Core systems smoke: exit-aftermath setup failed to assign a hostile commander to the route raid.")
+		get_tree().quit(1)
+		return {}
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	raid = _register_raid_commander_deployment(session, "faction_mireclaw", "exit_aftermath_raid", roster_hero_id)
+	if raid.is_empty():
+		push_error("Core systems smoke: exit-aftermath setup could not register the route-raid commander deployment.")
+		get_tree().quit(1)
+		return {}
+	session.battle = BattleRules.create_battle_payload(session, raid)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: exit-aftermath setup could not create the interception battle payload.")
+		get_tree().quit(1)
+		return {}
+	var guard := 0
+	while String(BattleRules.get_active_stack(session.battle).get("side", "")) == "enemy" and guard < 8:
+		var autoplay := BattleRules.resolve_if_battle_ready(session)
+		if String(autoplay.get("state", "")) == "invalid":
+			push_error("Core systems smoke: exit-aftermath setup produced an invalid enemy opening turn.")
+			get_tree().quit(1)
+			return {}
+		guard += 1
+	if String(BattleRules.get_active_stack(session.battle).get("side", "")) != "player":
+		push_error("Core systems smoke: exit-aftermath setup did not reach a player-controlled battle turn.")
+		get_tree().quit(1)
+		return {}
+	return {
+		"session": session,
+		"node_id": node_id,
+		"source_town_id": source_town_id,
+		"roster_hero_id": roster_hero_id,
+		"initial_recruits": initial_recruits,
+		"post_response_recruits": _recruit_payload_total(_town_by_placement(session, source_town_id).get("available_recruits", {})),
+	}
 
 func _run_enemy_town_assault_regression() -> bool:
 	var session = ScenarioFactory.create_session(
@@ -1073,6 +1292,34 @@ func _set_town_owner(session, placement_id: String, owner: String) -> void:
 			towns[index] = town
 			break
 	session.overworld["towns"] = towns
+
+func _set_town_available_recruits(session, placement_id: String, recruits: Dictionary) -> void:
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			town["available_recruits"] = recruits.duplicate(true)
+			towns[index] = town
+			break
+	session.overworld["towns"] = towns
+
+func _set_resource_node_controller(session, placement_id: String, controller_id: String) -> void:
+	var nodes = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			node["collected_by_faction_id"] = controller_id
+			nodes[index] = node
+			break
+	session.overworld["resource_nodes"] = nodes
+
+func _clone_session(session):
+	var clone = SessionState.new_session_data()
+	clone.from_dict(session.to_dict())
+	OverworldRules.normalize_overworld_state(clone)
+	if not clone.battle.is_empty():
+		BattleRules.normalize_battle_state(clone)
+	return clone
 
 func _enemy_state_by_faction(session, faction_id: String) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):
