@@ -135,6 +135,90 @@ func _on_save_slot_selected(index: int) -> void:
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
+func validation_snapshot() -> Dictionary:
+	var action_ids: Array[String] = []
+	var actions = _model.get("actions", [])
+	if actions is Array:
+		for action in actions:
+			if action is Dictionary:
+				action_ids.append(String(action.get("id", "")))
+	var save_surface := AppRouter.active_save_surface()
+	return {
+		"scene_path": scene_file_path,
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"scenario_status": _session.scenario_status,
+		"scenario_summary": _session.scenario_summary,
+		"game_state": _session.game_state,
+		"day": _session.day,
+		"resume_target": SaveService.resume_target_for_session(_session),
+		"header": String(_model.get("header", "")),
+		"summary": String(_model.get("summary", "")),
+		"mode_summary": String(_model.get("mode_summary", "")),
+		"progression_summary": String(_model.get("progression_summary", "")),
+		"campaign_arc_summary": String(_model.get("campaign_arc_summary", "")),
+		"carryover_summary": String(_model.get("carryover_summary", "")),
+		"aftermath_summary": String(_model.get("aftermath_summary", "")),
+		"journal_summary": String(_model.get("journal_summary", "")),
+		"action_ids": action_ids,
+		"latest_save_summary": SaveService.latest_loadable_summary(),
+		"save_surface": save_surface,
+	}
+
+func validation_select_save_slot(slot: int) -> bool:
+	var normalized_slot := int(slot)
+	if not SaveService.get_manual_slot_ids().has(normalized_slot):
+		return false
+	SaveService.set_selected_manual_slot(normalized_slot)
+	_refresh_save_surface()
+	return SaveService.get_selected_manual_slot() == normalized_slot
+
+func validation_save_to_selected_slot() -> Dictionary:
+	var selected_slot := SaveService.get_selected_manual_slot()
+	_on_save_pressed()
+	var summary := SaveService.inspect_manual_slot(selected_slot)
+	return {
+		"ok": SaveService.can_load_summary(summary),
+		"selected_slot": selected_slot,
+		"summary": summary,
+		"message": _last_action_message,
+	}
+
+func validation_perform_action(action_id: String) -> Dictionary:
+	var expected_route := "stay"
+	var found := false
+	var actions = _model.get("actions", [])
+	if actions is Array:
+		for action in actions:
+			if action is Dictionary and String(action.get("id", "")) == action_id:
+				found = true
+				if bool(action.get("disabled", false)):
+					return {"ok": false, "action_id": action_id, "message": "Outcome action is disabled."}
+				if action_id == "return_to_menu":
+					expected_route = "main_menu"
+				elif action_id.begins_with("campaign_start:") or action_id.begins_with("skirmish_start:"):
+					expected_route = "overworld"
+				break
+	if not found:
+		return {"ok": false, "action_id": action_id, "message": "Outcome action is not available."}
+	_on_action_pressed(action_id)
+	return {
+		"ok": true,
+		"action_id": action_id,
+		"expected_route": expected_route,
+		"message": _last_action_message,
+	}
+
+func validation_return_to_menu() -> Dictionary:
+	_on_menu_pressed()
+	return {
+		"ok": true,
+		"scenario_id": _session.scenario_id,
+		"scenario_status": _session.scenario_status,
+		"message": "Outcome route returned to the main menu.",
+	}
+
 func _result_status_label(status: String) -> String:
 	var normalized := status.replace("_", " ").strip_edges()
 	if normalized == "":

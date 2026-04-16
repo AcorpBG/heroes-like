@@ -894,7 +894,13 @@ func validation_try_progress_action() -> Dictionary:
 	}
 
 func validation_route_step_to_nearest_target(target_kind: String, owner_id: String = "") -> Dictionary:
-	var route_plan := _validation_route_plan(target_kind, owner_id)
+	return _validation_route_step(target_kind, owner_id, "")
+
+func validation_route_step_to_target_placement(target_kind: String, placement_id: String) -> Dictionary:
+	return _validation_route_step(target_kind, "", placement_id)
+
+func _validation_route_step(target_kind: String, owner_id: String = "", placement_id: String = "") -> Dictionary:
+	var route_plan := _validation_route_plan(target_kind, owner_id, placement_id)
 	if not bool(route_plan.get("ok", false)):
 		return route_plan
 
@@ -903,6 +909,22 @@ func validation_route_step_to_nearest_target(target_kind: String, owner_id: Stri
 	var path: Array = route_plan.get("path", [])
 	var target_tile := Vector2i(int(target.get("x", hero_pos.x)), int(target.get("y", hero_pos.y)))
 	_selected_tile = target_tile
+
+	var movement = _session.overworld.get("movement", {})
+	if path.size() > 1 and int(movement.get("current", 0)) <= 0:
+		var day_before := _session.day
+		_on_end_turn_pressed()
+		return {
+			"ok": _session.day > day_before,
+			"action": "end_turn_for_route",
+			"target_kind": target_kind,
+			"target": target.duplicate(true),
+			"start": _validation_tile_payload(hero_pos),
+			"finish": _validation_tile_payload(OverworldRules.hero_position(_session)),
+			"remaining_steps": maxi(0, path.size() - 1),
+			"last_action": String(_session.flags.get("last_action", "")),
+			"message": _last_message,
+		}
 
 	if path.size() <= 1:
 		match target_kind:
@@ -1035,23 +1057,24 @@ func _first_validation_safe_step(start: Vector2i) -> Vector2i:
 		return tile
 	return Vector2i(-1, -1)
 
-func _validation_route_plan(target_kind: String, owner_id: String = "") -> Dictionary:
+func _validation_route_plan(target_kind: String, owner_id: String = "", placement_id: String = "") -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var best_target := {}
 	var best_path: Array = []
 	var best_priority := 999999
-	for candidate in _validation_targets(target_kind, owner_id):
+	for candidate in _validation_targets(target_kind, owner_id, placement_id):
 		if not (candidate is Dictionary):
 			continue
 		var tile := Vector2i(int(candidate.get("x", -1)), int(candidate.get("y", -1)))
 		if not _tile_in_bounds(tile):
 			continue
+		var target_placement_id := String(candidate.get("placement_id", ""))
 		var path := _build_validation_path(
 			hero_pos,
 			tile,
-			target_kind == "town",
+			target_kind in ["town", "encounter", "resource", "artifact"],
 			target_kind,
-			String(candidate.get("placement_id", ""))
+			target_placement_id
 		)
 		if path.is_empty():
 			continue
@@ -1064,6 +1087,7 @@ func _validation_route_plan(target_kind: String, owner_id: String = "") -> Dicti
 		return {
 			"ok": false,
 			"target_kind": target_kind,
+			"placement_id": placement_id,
 			"message": "No reachable %s target is available for validation." % target_kind,
 		}
 	return {
@@ -1074,7 +1098,7 @@ func _validation_route_plan(target_kind: String, owner_id: String = "") -> Dicti
 		"distance": maxi(0, best_path.size() - 1),
 	}
 
-func _validation_targets(target_kind: String, owner_id: String = "") -> Array:
+func _validation_targets(target_kind: String, owner_id: String = "", placement_id: String = "") -> Array:
 	var targets := []
 	match target_kind:
 		"town":
@@ -1083,14 +1107,40 @@ func _validation_targets(target_kind: String, owner_id: String = "") -> Array:
 					continue
 				if owner_id != "" and String(town.get("owner", "")) != owner_id:
 					continue
+				if placement_id != "" and String(town.get("placement_id", "")) != placement_id:
+					continue
 				targets.append(town)
 		"encounter":
 			for encounter in _session.overworld.get("encounters", []):
 				if not (encounter is Dictionary):
 					continue
+				if placement_id != "" and String(encounter.get("placement_id", "")) != placement_id:
+					continue
 				if OverworldRules.is_encounter_resolved(_session, encounter):
 					continue
 				targets.append(encounter)
+		"resource":
+			for node in _session.overworld.get("resource_nodes", []):
+				if not (node is Dictionary):
+					continue
+				if placement_id != "" and String(node.get("placement_id", "")) != placement_id:
+					continue
+				var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+				if bool(site.get("persistent_control", false)):
+					if String(node.get("collected_by_faction_id", "")) == "player":
+						continue
+				elif bool(node.get("collected", false)):
+					continue
+				targets.append(node)
+		"artifact":
+			for node in _session.overworld.get("artifact_nodes", []):
+				if not (node is Dictionary):
+					continue
+				if placement_id != "" and String(node.get("placement_id", "")) != placement_id:
+					continue
+				if bool(node.get("collected", false)):
+					continue
+				targets.append(node)
 	return targets
 
 func _validation_context_action_ids() -> Array[String]:
@@ -1212,11 +1262,21 @@ func _validation_tile_has_route_hazard(
 			and String(town.get("placement_id", "")) == target_placement_id
 		)
 	if not _resource_node_at(tile.x, tile.y).is_empty():
+		if target_kind == "resource" and String(_resource_node_at(tile.x, tile.y).get("placement_id", "")) == target_placement_id:
+			return false
+		if target_kind == "encounter":
+			return false
 		return true
 	if not _artifact_node_at(tile.x, tile.y).is_empty():
+		if target_kind == "artifact" and String(_artifact_node_at(tile.x, tile.y).get("placement_id", "")) == target_placement_id:
+			return false
+		if target_kind == "encounter":
+			return false
 		return true
 	var encounter := _encounter_at(tile.x, tile.y)
 	if not encounter.is_empty() and not OverworldRules.is_encounter_resolved(_session, encounter):
+		if target_kind == "encounter" and String(encounter.get("placement_id", "")) == target_placement_id:
+			return false
 		return true
 	if not _hero_entries_at(tile.x, tile.y).is_empty():
 		return true

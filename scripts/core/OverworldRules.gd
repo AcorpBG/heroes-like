@@ -224,6 +224,7 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	session.overworld["hero_position"] = {"x": nx, "y": ny}
 	movement["current"] = movement_left - 1
 	session.overworld["movement"] = movement
+	HeroCommandRulesScript.commit_active_hero(session)
 
 	var messages := ["Moved to %d,%d." % [nx, ny]]
 	var interaction_result := _resolve_post_move_interaction(session)
@@ -409,24 +410,6 @@ static func perform_context_action(session: SessionStateStoreScript.SessionData,
 	return {}
 
 static func _resolve_post_move_interaction(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	var resource_result := _find_active_resource_node(session)
-	if int(resource_result.get("index", -1)) >= 0:
-		var result := collect_active_resource(session)
-		return {
-			"ok": bool(result.get("ok", false)),
-			"message": String(result.get("message", "")),
-			"route": "",
-		}
-
-	var artifact_result := _find_active_artifact_node(session)
-	if int(artifact_result.get("index", -1)) >= 0:
-		var result := collect_active_artifact(session)
-		return {
-			"ok": bool(result.get("ok", false)),
-			"message": String(result.get("message", "")),
-			"route": "",
-		}
-
 	var encounter := get_active_encounter(session)
 	if not encounter.is_empty():
 		var battle_payload = _battle_rules().create_battle_payload(session, encounter)
@@ -442,6 +425,24 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 			"ok": true,
 			"message": "Battle is joined against %s." % encounter_name,
 			"route": "battle",
+		}
+
+	var resource_result := _find_active_resource_node(session)
+	if int(resource_result.get("index", -1)) >= 0:
+		var result := collect_active_resource(session)
+		return {
+			"ok": true,
+			"message": String(result.get("message", "")),
+			"route": "",
+		}
+
+	var artifact_result := _find_active_artifact_node(session)
+	if int(artifact_result.get("index", -1)) >= 0:
+		var result := collect_active_artifact(session)
+		return {
+			"ok": true,
+			"message": String(result.get("message", "")),
+			"route": "",
 		}
 
 	var town_result := _find_active_town(session)

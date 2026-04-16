@@ -129,6 +129,7 @@ Difficulty: High
 - add a release-facing town-side defense outlook and dispatch-readiness board inside the real town shell using existing town, hero-command, logistics, recovery, and hostile-pressure data instead of a planner or advisor layer
 - add a release-facing town-side order-readiness and affordability ledger inside the real town shell using existing build, recruit, market, response, and hero-command data instead of a planner or advisor layer
 - add a repo-local live client validation harness that launches the real Boot, menu, skirmish-start, owned-town, and battle-routing flow, drives deterministic shell actions through the active scenes, and emits machine-checkable screenshot or report artifacts for regression diagnosis
+- extend the repo-local live client validation harness through real resolved-session routing so a shipped scenario path can prove `ScenarioOutcomeShell`, outcome save summaries, and post-resolution resume semantics without bypassing gameplay state
 - add a release-facing overworld command commitment board inside the real overworld shell using existing context, logistics, hero-coverage, and frontier-risk data instead of a planner or advisor layer
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
 - turn town recruitment and reserve production into frontline reinforcement delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems instead of a parallel convoy subsystem
@@ -403,3 +404,5 @@ Difficulty: High
 134. [completed] Re-run repository-local validation, validator bytecode compilation, and the strongest relevant Godot headless smokes after the validator realignment slice.
 135. [completed] Extend the live routed-client validation harness through real hostile-town assault, battle save-resume continuity, routed town capture, and post-capture occupation or retake-front validation on the shipped shells.
 136. [completed] Re-run repository-local validation, strongest relevant Godot smokes or boot checks, and the live routed-client harness after the hostile-town assault validation extension.
+137. [completed] Extend the live routed-client validation harness through a real resolved River Pass session, shipped outcome-shell routing, and outcome save/resume semantics.
+138. [completed] Re-run repository-local validation, strongest relevant Godot smokes or boot checks, and the live routed-client harness after the resolved-outcome validation extension.

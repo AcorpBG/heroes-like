@@ -4299,9 +4299,17 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"',
         "const TOWN_SCENE :=",
         "const BATTLE_SCENE :=",
+        "const SCENARIO_OUTCOME_SCENE :=",
+        "FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME",
         "func _enter_live_skirmish_overworld",
         "func _route_from_overworld_to_scene",
         "func _save_and_resume_battle_from_main_menu",
+        "func _save_and_resume_outcome_from_main_menu",
+        "func _clear_required_encounters_to_outcome",
+        "func _clear_required_encounters_to_overworld",
+        "func _required_encounter_placements_for_resolution",
+        "func _direct_required_encounter_placements_for_resolution",
+        "func _play_battle_to_scene",
         'town_entered',
         'town_progressed',
         'town_saved',
@@ -4313,21 +4321,33 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'battle_resumed',
         'overworld_after_battle',
         'captured_town_entered',
+        'support_site_claimed_river_free_company',
+        'support_artifact_claimed_bastion_vault',
+        'pre_outcome_objective_battle_entered_',
+        'overworld_after_pre_outcome_objective_',
+        'outcome_entered',
+        'outcome_saved',
+        'main_menu_after_outcome_return',
+        'outcome_resumed',
+        'main_menu_after_outcome_action',
         'pre_action_town_owner',
         'battle_context_town_placement_id',
         'Occupation watch:',
+        'Review Outcome',
         'func _town_resume_signature',
         'func _battle_resume_signature',
+        'func _outcome_resume_signature',
         'validation_route_step_to_nearest_target',
+        'validation_route_step_to_target_placement',
         'validation_try_progress_action',
     ):
         ensure(required_token in harness_text, errors, f"LiveValidationHarness.gd is missing required routed-harness token: {required_token}")
 
     runner_text = RUN_LIVE_FLOW_HARNESS_PATH.read_text(encoding="utf-8")
     ensure(
-        'DEFAULT_FLOW = "boot_to_skirmish_town_battle"' in runner_text,
+        'DEFAULT_FLOW = "boot_to_skirmish_resolved_outcome"' in runner_text,
         errors,
-        "run_live_flow_harness.py must default to the richer town-and-battle live flow",
+        "run_live_flow_harness.py must default to the resolved-outcome live flow",
     )
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -4346,9 +4366,12 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_snapshot",
         "func validation_try_progress_action",
         "func validation_route_step_to_nearest_target",
+        "func validation_route_step_to_target_placement",
         '"context_action_ids"',
         '"active_town"',
         '"capture_town"',
+        '"resource"',
+        '"artifact"',
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required live-harness token: {required_token}")
 
@@ -4379,6 +4402,18 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func _preferred_validation_target_id",
     ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required live-harness token: {required_token}")
+
+    outcome_script_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_snapshot",
+        "func validation_select_save_slot",
+        "func validation_save_to_selected_slot",
+        "func validation_perform_action",
+        "func validation_return_to_menu",
+        '"resume_target"',
+        '"action_ids"',
+    ):
+        ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required live-harness token: {required_token}")
 
 
 def main() -> int:
@@ -4472,7 +4507,7 @@ def main() -> int:
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
     print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
-    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, manual save/load resume back into town, hostile-town assault routing, manual battle save/load resume back into battle, routed town capture, and occupation-front validation artifacts")
+    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     return 0
 
