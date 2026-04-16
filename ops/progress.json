@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T00:55:56Z",
+  "updatedAt": "2026-04-16T01:26:36Z",
   "status": "in_progress",
-  "currentPhase": "battlefield-cover-obstruction-identity",
-  "currentSliceId": "phase-6-battlefield-cover-obstruction-identity",
-  "currentSliceTitle": "Deepen battlefield cover lines and obstruction lanes through the shared battle, AI, summary, and save state",
+  "currentPhase": "live-client-validation-harness",
+  "currentSliceId": "phase-6-live-client-validation-harness",
+  "currentSliceTitle": "Add a repo-local live client validation harness for routed startup, scenario launch, and overworld entry",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the battlefield terrain-identity refinement on the current architecture: cover lines now materially screen ranged stacks and commanders, held obstruction lanes can stall weak advances instead of always yielding distance, tactical summaries expose the lane implications compactly, AI scoring reacts to screened or exposed targets and breach-capable stacks, and focused regression coverage proves the state survives restore on the existing save boundary.",
+  "currentSliceNotes": "Completed a production-minded real-client validation slice on the current architecture: a dormant CLI-driven harness now launches the actual Boot/AppRouter/MainMenu/Overworld flow, shell-level validation hooks drive deterministic launch plus first-action coverage, repo-local screenshots and JSON reports capture routed-client artifacts under isolated user data, and a stale end-turn movement-refresh regression in the real overworld day roll was corrected without changing save version 9. Live harness, isolated headless boot, and the existing menu, town-battle, and overworld shell smokes passed; the broad core regression smoke and tests/validate_repo.py still expose unrelated pre-existing baseline issues outside this slice.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -980,6 +980,18 @@
       "title": "Re-run the required Godot smoke scenes and headless boot for distinct exit-mode aftermath, commander continuity, convoy fallout, and restore persistence",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-live-client-validation-harness",
+      "title": "Add a repo-local live client validation harness for routed startup, skirmish launch, overworld entry, and artifact capture through the actual game shell",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-live-client-validation-harness-validation",
+      "title": "Re-run repository-local validation, existing shell smokes, isolated Godot boot, and the new live routed-client harness",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1213,6 +1225,8 @@
     "OverworldRules.gd now lets retreat scatter part of a live convoy back to its source town, surrender hand the convoy over intact, and collapse overrun the lane entirely, while focused core smoke coverage proves the distinct outcome scars and their save-style restore persistence.",
     "This run refined the existing battlefield-objective slice so authored cover lines and obstruction lanes change live tactics instead of mostly reading as summary flavor: screened targets now take materially lower ranged damage, weak advances can stall against held chokes, and commander exposure swings harder with lane control.",
     "BattleRules.gd and BattleAiRules.gd now share that stronger terrain identity through real advance resolution, ranged mitigation, target-priority and defend-versus-advance scoring, while battle pressure or briefing surfaces keep the lane implications compact and derived from the current battle payload only.",
-    "Focused core smoke coverage now proves cover-line damage mitigation, obstruction-held advances, compact terrain surfacing, AI score shifts for screened targets, and save-restore continuity for contested battlefield-objective state on the existing save boundary."
+    "Focused core smoke coverage now proves cover-line damage mitigation, obstruction-held advances, compact terrain surfacing, AI score shifts for screened targets, and save-restore continuity for contested battlefield-objective state on the existing save boundary.",
+    "This run added a dormant CLI-driven live validation harness plus narrow menu and overworld validation hooks so the real client can boot through Boot/AppRouter, launch a skirmish from the live menu, enter the overworld, take one deterministic progress action, and emit repo-local screenshots plus a JSON report under isolated user data.",
+    "Validation for the live-harness slice passed for isolated Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, and two live DISPLAY-backed harness runs via tests/run_live_flow_harness.py; tests/core_systems_regression_smoke.tscn still fails on the older resource auto-resolve path and python3 tests/validate_repo.py still reports long-standing stale token or scene expectations outside this slice."
   ]
 }

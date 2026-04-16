@@ -7329,6 +7329,8 @@ static func _refresh_all_player_heroes_for_new_day(session: SessionStateStoreScr
 	var heroes = session.overworld.get("player_heroes", [])
 	if not (heroes is Array):
 		return
+	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var synced_active := false
 	for index in range(heroes.size()):
 		var hero = heroes[index]
 		if not (hero is Dictionary):
@@ -7337,5 +7339,20 @@ static func _refresh_all_player_heroes_for_new_day(session: SessionStateStoreScr
 		var movement_max := _movement_max_from_hero(hero, session)
 		hero["movement"] = {"current": movement_max, "max": movement_max}
 		heroes[index] = hero
+		if String(hero.get("id", "")) != active_hero_id:
+			continue
+		synced_active = true
+		session.overworld["hero"] = hero.duplicate(true)
+		session.overworld["army"] = hero.get("army", {}).duplicate(true)
+		session.overworld["movement"] = hero.get("movement", {}).duplicate(true)
+		session.overworld["hero_position"] = hero.get("position", {}).duplicate(true)
 	session.overworld["player_heroes"] = heroes
-	HeroCommandRulesScript.normalize_session(session)
+	if synced_active:
+		return
+	var active_hero := HeroCommandRulesScript.active_hero(session)
+	if active_hero.is_empty():
+		return
+	session.overworld["hero"] = active_hero.duplicate(true)
+	session.overworld["army"] = active_hero.get("army", {}).duplicate(true)
+	session.overworld["movement"] = active_hero.get("movement", {}).duplicate(true)
+	session.overworld["hero_position"] = active_hero.get("position", {}).duplicate(true)

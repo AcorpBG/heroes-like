@@ -669,6 +669,58 @@ func _refresh_stage_dock_header() -> void:
 	_set_compact_label(_stage_dock_hint_label, String(stage_copy.get("hint", "")), 2, 92)
 	_close_stage_dock_button.tooltip_text = "Dismiss this secondary board and return to the clean scenic first view."
 
+func validation_snapshot() -> Dictionary:
+	return {
+		"scene_path": scene_file_path,
+		"stage_dock_visible": _stage_dock_panel.visible,
+		"current_tab": _menu_tabs.current_tab,
+		"campaign_count": _campaign_entries.size(),
+		"skirmish_count": _skirmish_entries.size(),
+		"selected_skirmish_id": _selected_skirmish_id,
+		"selected_difficulty": _selected_difficulty,
+		"continue_enabled": not _continue_button.disabled,
+		"summary": _summary_label.text,
+	}
+
+func validation_open_skirmish_stage() -> void:
+	_select_menu_tab(TAB_SKIRMISH)
+	_show_stage_dock()
+
+func validation_select_skirmish(scenario_id: String) -> bool:
+	for index in range(_skirmish_entries.size()):
+		if String(_skirmish_entries[index].get("scenario_id", "")) != scenario_id:
+			continue
+		_skirmish_list.select(index)
+		_on_skirmish_selected(index)
+		return true
+	return false
+
+func validation_set_difficulty(difficulty_id: String) -> bool:
+	var normalized := ScenarioSelectRulesScript.normalize_difficulty(difficulty_id)
+	for index in range(_difficulty_picker.get_item_count()):
+		if String(_difficulty_picker.get_item_metadata(index)) != normalized:
+			continue
+		_difficulty_picker.select(index)
+		_on_difficulty_selected(index)
+		return true
+	return false
+
+func validation_start_selected_skirmish() -> Dictionary:
+	var requested_scenario_id := _selected_skirmish_id
+	var requested_difficulty := _selected_difficulty
+	_on_start_skirmish_pressed()
+	var active_session := SessionState.ensure_active_session()
+	return {
+		"requested_scenario_id": requested_scenario_id,
+		"requested_difficulty": requested_difficulty,
+		"started": active_session.scenario_id == requested_scenario_id
+			and active_session.difficulty == requested_difficulty
+			and active_session.launch_mode == SessionState.LAUNCH_MODE_SKIRMISH,
+		"active_scenario_id": active_session.scenario_id,
+		"active_difficulty": active_session.difficulty,
+		"active_launch_mode": active_session.launch_mode,
+	}
+
 func _sync_command_button_styles() -> void:
 	var tab_buttons := {
 		TAB_CAMPAIGN: [_open_campaign_button],

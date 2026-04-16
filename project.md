@@ -440,6 +440,11 @@ Core-systems regression correction decision:
 - post-move interaction now resolves from core rules instead of waiting on extra scene commands for basic site flow: stepping onto claimable resource sites and artifact caches auto-resolves immediately, stepping onto hostile encounters auto-prepares battle and routes there, stepping onto owned towns routes into the town shell, and stepping onto hostile towns leaves them hostile instead of silently converting them into player-town visits
 - battle opening and resume flow now drains enemy initiative windows through `BattleRules.gd` before the shell waits for player input, so enemy-first turn orders execute real AI actions instead of leaving the battle stalled on a non-player active stack
 
+Live client validation decision:
+- the repo now ships a dormant `LiveValidationHarness.gd` autoload that wakes only for explicit `--live-validation-*` CLI args, so a real Boot -> MainMenu -> skirmish launch -> OverworldShell flow can be exercised through the actual app router instead of only through scene-instantiation smoke
+- `MainMenu.gd` and `OverworldShell.gd` expose narrow `validation_*` hooks that call the same controller paths the live client already uses, letting automation select a skirmish, launch it, verify autosave state, and take one deterministic overworld progress action without bypassing core gameplay rules
+- `tests/run_live_flow_harness.py` launches that flow with isolated `XDG_DATA_HOME`, writes repo-local screenshot plus JSON report artifacts under `.artifacts/`, and strengthens repeatable routed-client validation without changing save version `9` or normal player startup
+
 This replaces the earlier mixed-content approach and gives towns, armies, recruitment, and battle setup stable ids that can scale into campaign, AI, and authoring tooling.
 
 ## Repository structure

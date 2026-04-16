@@ -41,6 +41,7 @@ func _run_end_turn_and_enemy_presence() -> bool:
 	)
 	_set_active_hero_movement(session, 0)
 	SessionState.set_active_session(session)
+	var active_session = SessionState.ensure_active_session()
 
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
@@ -51,22 +52,22 @@ func _run_end_turn_and_enemy_presence() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 
-	if int(session.day) != 2:
+	if int(active_session.day) != 2:
 		push_error("Core systems smoke: end turn did not advance the day on first press.")
 		get_tree().quit(1)
 		return false
 
-	var movement: Dictionary = session.overworld.get("movement", {})
+	var movement: Dictionary = active_session.overworld.get("movement", {})
 	if int(movement.get("current", 0)) <= 0 or int(movement.get("current", 0)) != int(movement.get("max", 0)):
 		push_error("Core systems smoke: end turn did not refresh movement to the daily maximum.")
 		get_tree().quit(1)
 		return false
 
-	if EnemyTurnRules.active_raid_count(session, "faction_mireclaw") <= 0:
+	if EnemyTurnRules.active_raid_count(active_session, "faction_mireclaw") <= 0:
 		shell._on_end_turn_pressed()
 		await get_tree().process_frame
 		await get_tree().process_frame
-	if EnemyTurnRules.active_raid_count(session, "faction_mireclaw") <= 0:
+	if EnemyTurnRules.active_raid_count(active_session, "faction_mireclaw") <= 0:
 		push_error("Core systems smoke: enemy turn did not restore hostile raid-host presence after day advance.")
 		get_tree().quit(1)
 		return false

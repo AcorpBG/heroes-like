@@ -826,6 +826,86 @@ func _tile_key(tile: Vector2i) -> String:
 func _duplicate_array(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
+func validation_snapshot() -> Dictionary:
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	return {
+		"scene_path": scene_file_path,
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+		"day": _session.day,
+		"hero_position": {
+			"x": hero_pos.x,
+			"y": hero_pos.y,
+		},
+		"movement_current": int(movement.get("current", 0)),
+		"movement_max": int(movement.get("max", 0)),
+		"map_size": {
+			"x": _map_size.x,
+			"y": _map_size.y,
+		},
+		"selected_tile": {
+			"x": _selected_tile.x,
+			"y": _selected_tile.y,
+		},
+		"context_summary": _describe_focus_tile(),
+		"objective_summary": OverworldRules.describe_objectives(_session),
+		"threat_summary": OverworldRules.describe_enemy_threats(_session),
+		"latest_save_summary": SaveService.latest_loadable_summary(),
+	}
+
+func validation_try_progress_action() -> Dictionary:
+	var start := OverworldRules.hero_position(_session)
+	var safe_step := _first_validation_safe_step(start)
+	if safe_step.x >= 0:
+		_on_map_tile_pressed(safe_step)
+		var finish := OverworldRules.hero_position(_session)
+		return {
+			"ok": finish != start,
+			"action": "move",
+			"start": {"x": start.x, "y": start.y},
+			"target": {"x": safe_step.x, "y": safe_step.y},
+			"finish": {"x": finish.x, "y": finish.y},
+			"last_action": String(_session.flags.get("last_action", "")),
+			"message": _last_message,
+		}
+
+	var day_before := _session.day
+	_on_end_turn_pressed()
+	return {
+		"ok": _session.day > day_before,
+		"action": "end_turn",
+		"day_before": day_before,
+		"day_after": _session.day,
+		"last_action": String(_session.flags.get("last_action", "")),
+		"message": _last_message,
+	}
+
+func _first_validation_safe_step(start: Vector2i) -> Vector2i:
+	for direction in DIRECTIONS:
+		var tile: Vector2i = start + direction
+		if not _tile_in_bounds(tile):
+			continue
+		if OverworldRules.tile_is_blocked(_session, tile.x, tile.y):
+			continue
+		if not OverworldRules.is_tile_explored(_session, tile.x, tile.y):
+			continue
+		if not _town_at(tile.x, tile.y).is_empty():
+			continue
+		if not _resource_node_at(tile.x, tile.y).is_empty():
+			continue
+		if not _artifact_node_at(tile.x, tile.y).is_empty():
+			continue
+		if not _encounter_at(tile.x, tile.y).is_empty():
+			continue
+		if not _hero_entries_at(tile.x, tile.y).is_empty():
+			continue
+		return tile
+	return Vector2i(-1, -1)
+
 func _make_placeholder_label(text: String) -> Label:
 	return FrontierVisualKit.placeholder_label(text)
 

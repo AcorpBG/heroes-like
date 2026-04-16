@@ -17,6 +17,7 @@ SaveService="*res://scripts/autoload/SaveService.gd"
 CampaignProgression="*res://scripts/autoload/CampaignProgression.gd"
 SettingsService="*res://scripts/autoload/SettingsService.gd"
 AppRouter="*res://scripts/autoload/AppRouter.gd"
+LiveValidationHarness="*res://scripts/autoload/LiveValidationHarness.gd"
 
 [display]
 window/size/viewport_width=1280
