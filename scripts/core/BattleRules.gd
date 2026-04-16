@@ -38,7 +38,10 @@ static func create_town_assault_payload(
 		"encounter_id": "encounter_town_assault",
 		"x": int(town.get("x", 0)),
 		"y": int(town.get("y", 0)),
-		"combat_seed": hash("%s:%d:town_assault:%s" % [session.session_id, session.day, town_placement_id]),
+		"combat_seed": hash(
+			"%s:%s:%d:town_assault:%s"
+			% [session.scenario_id, session.launch_mode, session.day, town_placement_id]
+		),
 		"enemy_army": {
 			"id": "town_garrison_%s" % town_placement_id,
 			"name": "%s Garrison" % _town_name(town),
@@ -1969,7 +1972,7 @@ static func _build_withdrawal_aftermath_preview(
 			desired_loss["wood"] = max(0, severity - 1)
 			desired_loss["ore"] = 1 if severity >= 3 else 0
 			preview["casualty_units"] = _casualty_units_from_ratio(player_units, 0.04 + (float(severity) * 0.03))
-			preview["pressure_delta"] = 1 + (1 if enemy_faction_id != "" and severity >= 4 else 0) if enemy_faction_id != "" else 0
+			preview["pressure_delta"] = 1 if enemy_faction_id != "" and severity >= 4 else 0
 			preview["recovery_pressure"] = 1
 		_:
 			desired_loss["gold"] = 90 + (severity * 70) + int(round(float(enemy_strength) / 18.0))
@@ -2912,14 +2915,16 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 					advance_message,
 					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
 				])
-			var advance_objective_messages = _apply_field_objective_action_pressure(
-				session.battle,
-				{
-					"action": "advance",
-					"side": "player",
-					"battle_id": String(active_stack.get("battle_id", "")),
-				}
-			)
+			var advance_objective_messages = []
+			if distance_delta > 0:
+				advance_objective_messages = _apply_field_objective_action_pressure(
+					session.battle,
+					{
+						"action": "advance",
+						"side": "player",
+						"battle_id": String(active_stack.get("battle_id", "")),
+					}
+				)
 			if not advance_objective_messages.is_empty():
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
 			return _complete_action(session, advance_message)
@@ -3153,14 +3158,16 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 					advance_message,
 					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
 				])
-			var advance_objective_messages = _apply_field_objective_action_pressure(
-				session.battle,
-				{
-					"action": "advance",
-					"side": "enemy",
-					"battle_id": String(active_stack.get("battle_id", "")),
-				}
-			)
+			var advance_objective_messages = []
+			if distance_delta > 0:
+				advance_objective_messages = _apply_field_objective_action_pressure(
+					session.battle,
+					{
+						"action": "advance",
+						"side": "enemy",
+						"battle_id": String(active_stack.get("battle_id", "")),
+					}
+				)
 			if not advance_objective_messages.is_empty():
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
 			return _complete_enemy_action(session, advance_message)
@@ -3749,10 +3756,13 @@ static func _apply_enemy_commander_battle_memory(
 			"encounter_key": String(session.battle.get("resolved_key", "")),
 		}
 	)
+	var encounter_id := String(encounter.get("encounter_id", encounter.get("id", "")))
+	if encounter_id == "":
+		encounter_id = String(session.battle.get("encounter_id", ""))
 	updated = EnemyAdventureRulesScript.sync_commander_army_continuity(
 		updated,
 		{"stacks": survivor_stacks},
-		String(encounter.get("encounter_id", encounter.get("id", "")))
+		encounter_id
 	)
 	return updated
 
@@ -6728,7 +6738,7 @@ static func _normalize_field_objective(entry: Dictionary, existing_state: Varian
 	var control_side = _normalize_side_token(String(state.get("control_side", starting_side)))
 	if control_side == "":
 		control_side = starting_side
-	var progress_side = _normalize_side_token(String(state.get("progress_side", "")))
+	var progress_side = _normalize_side_token(String(state.get("progress_side", "")), false)
 	if progress_side == control_side:
 		progress_side = ""
 	var progress_value = clamp(int(state.get("progress_value", 0)), 0, capture_threshold)
@@ -6853,7 +6863,7 @@ static func _field_objective_pressure_brief(battle: Dictionary) -> String:
 				if controller == "enemy" and int(battle.get("distance", 1)) > 0:
 					return "%s is still screening the enemy guns and commander." % _field_objective_label(objective)
 				if controller == "player" and int(battle.get("distance", 1)) > 0:
-					return "%s now shelters the friendly firing line." % _field_objective_label(objective)
+					return "Friendly cover is blunting the opening volleys. %s now shelters the friendly firing line." % _field_objective_label(objective)
 			"obstruction_line":
 				if controller == "enemy" and int(battle.get("distance", 1)) > 0:
 					return "%s is still compressing the approach." % _field_objective_label(objective)
@@ -7243,8 +7253,6 @@ static func _field_objective_action_influence(
 						or _has_ability(acting_stack, "brace")
 						or _has_ability(acting_stack, "formation_guard")
 					) else (1 if contested and not is_ranged else 0)
-				"cast_spell":
-					return 1
 		"obstruction_line":
 			match action:
 				"advance":

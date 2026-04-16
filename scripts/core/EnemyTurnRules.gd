@@ -340,6 +340,9 @@ static func _run_empire_cycle(
 	if reinforcement_message != "":
 		messages.append(reinforcement_message)
 	session.overworld["towns"] = towns
+	var refreshed_state := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	if not refreshed_state.is_empty():
+		state["commander_roster"] = refreshed_state.get("commander_roster", state.get("commander_roster", []))
 
 	var owned_towns = town_entries.size()
 	var capital_state = _faction_capital_state_from_towns(session, towns, faction_id)
@@ -586,6 +589,9 @@ static func _choose_recruit_destination(
 	var current_defense = _army_strength(town.get("garrison", []))
 	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
+	if not best_rebuild.is_empty():
+		return {"type": "rebuild", "roster_hero_id": String(best_rebuild.get("roster_hero_id", ""))}
 	if current_defense < int(round(float(defense_target) * 0.72)):
 		return {"type": "garrison"}
 	if (
@@ -596,7 +602,6 @@ static func _choose_recruit_destination(
 		return {"type": "garrison"}
 
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id)
-	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
 	var faction_front_state := _faction_front_state(session, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)

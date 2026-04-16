@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T04:49:07Z",
-  "status": "in_progress",
-  "currentPhase": "live-routed-campaign-carryover-continuation-validation",
-  "currentSliceId": "phase-6-live-routed-campaign-carryover-continuation-validation",
-  "currentSliceTitle": "Extend the live routed-client validation harness through real downstream campaign carryover launch and save/resume continuation semantics",
+  "updatedAt": "2026-04-16T06:50:27Z",
+  "status": "completed",
+  "currentPhase": "live-routed-full-campaign-arc-validation",
+  "currentSliceId": "phase-6-live-routed-full-campaign-arc-validation",
+  "currentSliceTitle": "Extend the live routed-client validation harness through a complete authored campaign arc",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the carryover-continuation live validation extension: boot_to_campaign_resolved_outcome now launches campaign_reedfall River Pass through the shipped MainMenu campaign browser, wins through the current campaign victory path, starts authored downstream Causeway Stand from the outcome action row, verifies real imported campaign carryover state, saves the downstream chapter from OverworldShell, returns to MainMenu, resumes through the shipped save browser, and contrasts the preserved campaign signature against a fresh shipped skirmish launch of the same scenario. Latest passing report: .artifacts/live_flow_smoke/20260416T044718Z/live_validation_report.json. Repository validation, Python harness compilation, ops JSON parsing, Godot 4.6.2 headless boot, focused menu/outcome, overworld, and town/battle smokes passed. The broader core_systems_regression_smoke.tscn was also run and still fails the pre-existing commander rivalry targeting assertion outside this validation slice.",
+  "currentSliceNotes": "Completed the full campaign arc live validation slice: boot_to_campaign_full_arc now starts from the shipped MainMenu campaign browser, clears all Reedfall chapters through routed gameplay and real outcome actions, proves intermediate carryover and save/resume semantics, verifies finale campaign-complete outcome state, and confirms completed-browser replay/default-action behavior with campaign-scoped save summaries.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1076,9 +1076,18 @@
       "title": "Extend the live routed-client validation harness through real downstream campaign carryover launch and save/resume continuation semantics",
       "status": "completed",
       "difficulty": "high"
+    },
+    {
+      "id": "phase-6-live-routed-full-campaign-arc-validation",
+      "title": "Extend the live routed-client validation harness through the full Reedfall campaign arc and completed-campaign browser semantics",
+      "status": "completed",
+      "difficulty": "high"
     }
   ],
   "notes": [
+    "This run extended the shipped routed-client validation harness through the full Lanterns Through Reedfall arc: the new boot_to_campaign_full_arc flow starts at the real MainMenu campaign browser, routes through every authored chapter via overworld, town, battle, and outcome shells, and uses real next-chapter or completion actions rather than progression writes.",
+    "The full-arc harness now proves intermediate carryover, campaign-scoped latest-save and manual-save summaries, outcome save/resume, finale campaign-complete recap or arc state, completed campaign browser status, replay/default-action semantics, and the absence of a bogus finale next-chapter unlock. Latest passing report: .artifacts/live_flow_smoke/20260416T064533Z/live_validation_report.json.",
+    "Repository-local validation passed via python3 tests/validate_repo.py, Godot 4.6.2 headless boot, tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and python3 tests/run_live_flow_harness.py --flow boot_to_campaign_full_arc --campaign campaign_reedfall --scenario river-pass --difficulty story --manual-slot 2.",
     "This run completed the campaign carryover-continuation live validation extension: River Pass victory now proceeds into authored Causeway Stand through the shipped outcome action, verifies launch_mode=campaign, campaign_id=campaign_reedfall, previous scenario river-pass, imported carryover flags, Lyra level/XP, spellbook, artifacts, resources, and campaign-scoped latest-save summaries, then saves/resumes the downstream chapter through MainMenu's save browser.",
     "The same live flow contrasts that resumed campaign signature against a fresh shipped skirmish launch of Causeway Stand, proving material differences without mutating progression records: campaign resources 2600 gold / 6 wood / 5 ore versus skirmish 1200 / 3 / 2, Lyra level 3 with 840 XP versus level 1 with 0 XP, three carried artifacts versus none, and carryover flags present versus none. Latest passing report: .artifacts/live_flow_smoke/20260416T044718Z/live_validation_report.json.",
     "Validation for the carryover-continuation slice passed via python3 tests/validate_repo.py, python3 -m py_compile tests/validate_repo.py tests/run_live_flow_harness.py, python3 -m json.tool ops/progress.json, Godot 4.6.2 headless boot, res://tests/menu_outcome_visual_smoke.tscn, res://tests/overworld_visual_smoke.tscn, res://tests/town_battle_visual_smoke.tscn, and tests/run_live_flow_harness.py --flow boot_to_campaign_resolved_outcome. The broader res://tests/core_systems_regression_smoke.tscn was also run and still fails the pre-existing commander rivalry targeting assertion.",

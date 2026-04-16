@@ -137,11 +137,13 @@ func _on_menu_pressed() -> void:
 
 func validation_snapshot() -> Dictionary:
 	var action_ids: Array[String] = []
+	var action_payloads := []
 	var actions = _model.get("actions", [])
 	if actions is Array:
 		for action in actions:
 			if action is Dictionary:
 				action_ids.append(String(action.get("id", "")))
+				action_payloads.append(action.duplicate(true))
 	var save_surface := AppRouter.active_save_surface()
 	return {
 		"scene_path": scene_file_path,
@@ -162,6 +164,7 @@ func validation_snapshot() -> Dictionary:
 		"aftermath_summary": String(_model.get("aftermath_summary", "")),
 		"journal_summary": String(_model.get("journal_summary", "")),
 		"action_ids": action_ids,
+		"actions": action_payloads,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"save_surface": save_surface,
 	}

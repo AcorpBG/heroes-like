@@ -44,6 +44,25 @@ static func _normalize_scenario_status(value: Variant) -> String:
 static func _dict_or_empty_value(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
 
+static func new_session_data(
+	session_id: String = "",
+	scenario_id: String = "",
+	hero_id: String = "",
+	day: int = 1,
+	overworld_state: Dictionary = {},
+	difficulty: String = "normal",
+	launch_mode: String = LAUNCH_MODE_CAMPAIGN
+) -> SessionStateStoreScript.SessionData:
+	return SessionStateStoreScript.new_session_data(
+		session_id,
+		scenario_id,
+		hero_id,
+		day,
+		overworld_state,
+		difficulty,
+		launch_mode
+	)
+
 func _ready() -> void:
 	ensure_active_session()
 

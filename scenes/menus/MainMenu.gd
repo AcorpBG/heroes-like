@@ -670,6 +670,8 @@ func _refresh_stage_dock_header() -> void:
 	_close_stage_dock_button.tooltip_text = "Dismiss this secondary board and return to the clean scenic first view."
 
 func validation_snapshot() -> Dictionary:
+	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
+	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
 	return {
 		"scene_path": scene_file_path,
 		"stage_dock_visible": _stage_dock_panel.visible,
@@ -677,8 +679,12 @@ func validation_snapshot() -> Dictionary:
 		"campaign_count": _campaign_entries.size(),
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
+		"primary_campaign_action": primary_campaign_action.duplicate(true),
+		"selected_chapter_action": selected_chapter_action.duplicate(true),
 		"campaign_details": _campaign_details_label.text,
+		"campaign_details_full": _campaign_details_label.tooltip_text,
 		"campaign_arc_status": _campaign_arc_status_label.text,
+		"campaign_arc_status_full": _campaign_arc_status_label.tooltip_text,
 		"chapter_details": _chapter_details_label.text,
 		"chapter_details_full": _chapter_details_label.tooltip_text,
 		"save_count": _save_summaries.size(),

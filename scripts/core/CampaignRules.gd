@@ -300,6 +300,8 @@ static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, 
 			String(record.get("summary", record.get("status", "resolved"))),
 			int(record.get("day", 0)),
 		])
+		if String(record.get("status", "")) == "victory":
+			lines.append("Replay remains available from this completed chapter.")
 	elif not unlocked:
 		var unlock_text := _unlock_requirement_text(scenario_entry.get("unlock_requirements", []))
 		if unlock_text != "":

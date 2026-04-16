@@ -1874,6 +1874,19 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 				var response_action := _resource_site_response_action(session, node, site)
 				if not response_action.is_empty():
 					actions.append(response_action)
+			var artifact_result := _find_active_artifact_node(session)
+			if int(artifact_result.get("index", -1)) >= 0:
+				actions.append(
+					{
+						"id": "collect_artifact",
+						"label": "Recover Artifact",
+						"summary": _context_action_summary(
+							session,
+							"collect_artifact",
+							{"type": "artifact", "node": artifact_result.get("node", {})}
+						),
+					}
+				)
 		"artifact":
 			actions.append(
 				{
@@ -3017,6 +3030,7 @@ static func _grant_site_claim_recruits(session: SessionStateStoreScript.SessionD
 		army["stacks"] = _add_army_stack(army.get("stacks", []), unit_id, count)
 	hero["army"] = army
 	session.overworld["hero"] = hero
+	session.overworld["army"] = army
 	return "Auxiliaries join the field army (%s)." % _describe_recruit_delta(recruits)
 
 static func _learn_site_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> String:

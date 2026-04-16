@@ -350,6 +350,69 @@ func validation_try_progress_action() -> Dictionary:
 		"message": "No enabled town validation action is available.",
 	}
 
+func validation_action_catalog() -> Dictionary:
+	return {
+		"recruit": _duplicate_action_array(TownRules.get_recruit_actions(_session)),
+		"build": _duplicate_action_array(TownRules.get_build_actions(_session)),
+		"study": _duplicate_action_array(TownRules.get_spell_learning_actions(_session)),
+		"market": _duplicate_action_array(TownRules.get_market_actions(_session)),
+		"response": _duplicate_action_array(TownRules.get_response_actions(_session)),
+		"tavern": _duplicate_action_array(TownRules.get_tavern_actions(_session)),
+		"transfer": _duplicate_action_array(TownRules.get_transfer_actions(_session)),
+		"artifact": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
+		"specialty": _duplicate_action_array(TownRules.get_specialty_actions(_session)),
+		"hero": _duplicate_action_array(TownRules.get_hero_actions(_session)),
+	}
+
+func validation_perform_town_action(action_id: String) -> Dictionary:
+	var action := _validation_action_for_id(action_id)
+	if action.is_empty():
+		return {
+			"ok": false,
+			"action_id": action_id,
+			"message": "No enabled town validation action matched the requested id.",
+		}
+
+	var before_signature := JSON.stringify(_validation_progress_signature())
+	var lane := String(action.get("lane", ""))
+	match lane:
+		"recruit":
+			_on_recruit_action_pressed(action_id.trim_prefix("recruit:"))
+		"build":
+			_on_build_action_pressed(action_id.trim_prefix("build:"))
+		"study":
+			_on_study_action_pressed(action_id.trim_prefix("learn_spell:"))
+		"market":
+			_on_market_action_pressed(action_id)
+		"response":
+			_on_response_action_pressed(action_id)
+		"tavern":
+			_on_tavern_action_pressed(action_id)
+		"transfer":
+			_on_transfer_action_pressed(action_id)
+		"artifact":
+			_on_artifact_action_pressed(action_id)
+		"specialty":
+			_on_specialty_action_pressed(action_id)
+		"hero":
+			_on_hero_action_pressed(action_id)
+		_:
+			return {
+				"ok": false,
+				"action_id": action_id,
+				"message": "Unsupported town validation action lane.",
+			}
+
+	var after_signature := JSON.stringify(_validation_progress_signature())
+	return {
+		"ok": before_signature != after_signature,
+		"lane": lane,
+		"action_id": action_id,
+		"label": String(action.get("label", action_id)),
+		"message": _last_message,
+		"state_changed": before_signature != after_signature,
+	}
+
 func validation_select_save_slot(slot: int) -> bool:
 	var normalized_slot := int(slot)
 	if not SaveService.get_manual_slot_ids().has(normalized_slot):
@@ -601,6 +664,33 @@ func _first_enabled_validation_action(actions: Variant) -> Dictionary:
 			return action
 	return {}
 
+func _duplicate_action_array(actions: Variant) -> Array:
+	var duplicated := []
+	if not (actions is Array):
+		return duplicated
+	for action in actions:
+		if action is Dictionary:
+			duplicated.append(action.duplicate(true))
+	return duplicated
+
+func _validation_action_for_id(action_id: String) -> Dictionary:
+	var catalog := validation_action_catalog()
+	for lane in catalog.keys():
+		var actions = catalog.get(lane, [])
+		if not (actions is Array):
+			continue
+		for action in actions:
+			if not (action is Dictionary):
+				continue
+			if bool(action.get("disabled", false)):
+				continue
+			if String(action.get("id", "")) != action_id:
+				continue
+			var result: Dictionary = action.duplicate(true)
+			result["lane"] = String(lane)
+			return result
+	return {}
+
 func _validation_progress_signature() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
 	var hero_value: Variant = _session.overworld.get("hero", {})
@@ -611,6 +701,8 @@ func _validation_progress_signature() -> Dictionary:
 		"active_hero_id": String(_session.overworld.get("active_hero_id", "")),
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"army": _duplicate_dictionary(_session.overworld.get("army", {})),
+		"specialties": _normalize_string_array(hero.get("specialties", [])),
+		"pending_specialty_choices": _duplicate_array(hero.get("pending_specialty_choices", [])),
 		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
 		"known_spell_ids": _normalize_string_array(spellbook.get("known_spell_ids", [])),
@@ -619,6 +711,9 @@ func _validation_progress_signature() -> Dictionary:
 
 func _duplicate_dictionary(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
+
+func _duplicate_array(value: Variant) -> Array:
+	return value.duplicate(true) if value is Array else []
 
 func _normalize_string_array(value: Variant) -> Array[String]:
 	var normalized: Array[String] = []

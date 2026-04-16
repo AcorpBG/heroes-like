@@ -56,7 +56,10 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 var _session: SessionStateStore.SessionData
 var _last_message := ""
 var _tactical_briefing_text := ""
-var _validation_spell_cast := false
+var _validation_spell_casts := 0
+var _validation_max_spell_casts := 1
+var _validation_prioritize_support_spell := false
+var _validation_spell_casting_enabled := true
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -340,7 +343,7 @@ func validation_try_progress_action() -> Dictionary:
 		var spell_result := BattleRules.cast_player_spell(_session, spell_id)
 		_last_message = String(spell_result.get("message", ""))
 		if bool(spell_result.get("ok", false)):
-			_validation_spell_cast = true
+			_validation_spell_casts += 1
 			_dismiss_tactical_briefing()
 		if _handle_battle_resolution(spell_result):
 			return {
@@ -408,6 +411,18 @@ func validation_perform_action(action_id: String) -> Dictionary:
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
 	}
+
+func validation_set_support_spell_priority(enabled: bool) -> bool:
+	_validation_prioritize_support_spell = enabled
+	return _validation_prioritize_support_spell == enabled
+
+func validation_set_spell_casting_enabled(enabled: bool) -> bool:
+	_validation_spell_casting_enabled = enabled
+	return _validation_spell_casting_enabled == enabled
+
+func validation_set_max_spell_casts(max_casts: int) -> bool:
+	_validation_max_spell_casts = max(0, int(max_casts))
+	return _validation_max_spell_casts == max(0, int(max_casts))
 
 func validation_select_save_slot(slot: int) -> bool:
 	var normalized_slot := int(slot)
@@ -507,9 +522,10 @@ func _dismiss_tactical_briefing() -> void:
 	_tactical_briefing_text = ""
 
 func _preferred_validation_spell_action() -> Dictionary:
-	if _validation_spell_cast:
+	if _validation_spell_casts >= _validation_max_spell_casts or not _validation_spell_casting_enabled:
 		return {}
 	var fallback := {}
+	var support_fallback := {}
 	for action in BattleRules.get_spell_actions(_session):
 		if not (action is Dictionary) or bool(action.get("disabled", false)):
 			continue
@@ -517,10 +533,18 @@ func _preferred_validation_spell_action() -> Dictionary:
 		var spell := ContentService.get_spell(spell_id)
 		if spell.is_empty():
 			continue
-		if String(spell.get("effect", {}).get("type", "")) == "damage_enemy":
-			return action
-		if fallback.is_empty():
+		var effect_type := String(spell.get("effect", {}).get("type", ""))
+		if support_fallback.is_empty() and effect_type in ["defense_buff", "initiative_buff", "attack_buff"]:
+			support_fallback = action
+		if effect_type == "damage_enemy":
+			if not _validation_prioritize_support_spell:
+				return action
+			if fallback.is_empty():
+				fallback = action
+		elif fallback.is_empty():
 			fallback = action
+	if _validation_prioritize_support_spell and not support_fallback.is_empty():
+		return support_fallback
 	return fallback
 
 func _align_validation_target() -> String:

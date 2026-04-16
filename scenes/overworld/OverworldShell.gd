@@ -1017,6 +1017,23 @@ func validation_end_turn() -> Dictionary:
 		"message": _last_message,
 	}
 
+func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
+	var movement_before := int(_session.overworld.get("movement", {}).get("current", 0))
+	var mana_before := _duplicate_dictionary(_session.overworld.get("hero", {}).get("spellbook", {}).get("mana", {}))
+	_on_spell_action_pressed("cast_spell:%s" % spell_id)
+	var movement_after := int(_session.overworld.get("movement", {}).get("current", 0))
+	var mana_after := _duplicate_dictionary(_session.overworld.get("hero", {}).get("spellbook", {}).get("mana", {}))
+	return {
+		"ok": movement_after > movement_before,
+		"action": "cast_spell:%s" % spell_id,
+		"movement_before": movement_before,
+		"movement_after": movement_after,
+		"mana_before": mana_before,
+		"mana_after": mana_after,
+		"scenario_status": _session.scenario_status,
+		"message": _last_message,
+	}
+
 func validation_try_progress_action() -> Dictionary:
 	var start := OverworldRules.hero_position(_session)
 	var safe_step := _first_validation_safe_step(start)
@@ -1157,6 +1174,38 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 					"last_action": String(_session.flags.get("last_action", "")),
 					"message": _last_message if _last_message != "" else "Encounter route opened.",
 				}
+			"resource":
+				var resource_context_action_ids := _validation_context_action_ids()
+				if resource_context_action_ids.has("collect_resource"):
+					_on_context_action_pressed("collect_resource")
+					return {
+						"ok": true,
+						"action": "collect_resource",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(OverworldRules.hero_position(_session)),
+						"remaining_steps": 0,
+						"context_action_ids": resource_context_action_ids,
+						"last_action": String(_session.flags.get("last_action", "")),
+						"message": _last_message if _last_message != "" else "Resource route claimed.",
+					}
+			"artifact":
+				var artifact_context_action_ids := _validation_context_action_ids()
+				if artifact_context_action_ids.has("collect_artifact"):
+					_on_context_action_pressed("collect_artifact")
+					return {
+						"ok": true,
+						"action": "collect_artifact",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(OverworldRules.hero_position(_session)),
+						"remaining_steps": 0,
+						"context_action_ids": artifact_context_action_ids,
+						"last_action": String(_session.flags.get("last_action", "")),
+						"message": _last_message if _last_message != "" else "Artifact route claimed.",
+					}
 			_:
 				return {
 					"ok": true,

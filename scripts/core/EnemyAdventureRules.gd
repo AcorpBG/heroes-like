@@ -583,6 +583,12 @@ static func apply_resolved_commander_aftermath(
 			if not (entry is Dictionary) or String(entry.get("roster_hero_id", "")) != roster_hero_id:
 				continue
 			var updated_state := advance_commander_record(commander_state, outcome_id)
+			if outcome_id == COMMANDER_OUTCOME_DEFEATED:
+				var continuity := commander_army_continuity(updated_state)
+				var defeated_encounter_id := String(continuity.get("encounter_id", ""))
+				if defeated_encounter_id == "":
+					defeated_encounter_id = String(commander_army_continuity(commander_state).get("encounter_id", ""))
+				updated_state = sync_commander_army_continuity(updated_state, {"stacks": []}, defeated_encounter_id)
 			entry["status"] = COMMANDER_STATUS_RECOVERING
 			entry["active_placement_id"] = ""
 			entry["last_outcome"] = outcome_id
@@ -1446,11 +1452,13 @@ static func _normalized_commander_army_continuity(
 	if not (entry_commander_state is Dictionary):
 		entry_commander_state = {}
 	var raw_continuity: Dictionary = {}
-	for source_value in [
-		entry.get("army_continuity", {}),
-		entry_commander_state.get("army_continuity", {}),
-		commander_state.get("army_continuity", {}),
-	]:
+	var continuity_sources := []
+	if _is_army_continuity_payload(entry):
+		continuity_sources.append(entry)
+	continuity_sources.append(entry.get("army_continuity", {}))
+	continuity_sources.append(entry_commander_state.get("army_continuity", {}))
+	continuity_sources.append(commander_state.get("army_continuity", {}))
+	for source_value in continuity_sources:
 		if not (source_value is Dictionary):
 			continue
 		var source: Dictionary = source_value
@@ -1484,6 +1492,18 @@ static func _normalized_commander_army_continuity(
 		"summary": _army_continuity_summary(status, current_strength, base_strength),
 	}
 
+static func _is_army_continuity_payload(value: Variant) -> bool:
+	if not (value is Dictionary):
+		return false
+	var payload: Dictionary = value
+	return (
+		payload.has("base_strength")
+		or payload.has("current_strength")
+		or payload.has("rebuild_need")
+		or payload.has("strength_percent")
+		or payload.has("stacks")
+	)
+
 static func sync_commander_army_continuity(
 	commander_state: Dictionary,
 	army_source: Variant,
@@ -1493,10 +1513,20 @@ static func sync_commander_army_continuity(
 		return {}
 	var updated := commander_state.duplicate(true)
 	var continuity := _normalized_commander_army_continuity(updated, updated, encounter_id)
-	var normalized_army := _normalize_army_payload(
-		army_source if army_source is Dictionary else {"stacks": army_source}
+	var army_payload: Variant = army_source if army_source is Dictionary else {"stacks": army_source}
+	var explicit_stacks: bool = (
+		army_payload is Dictionary
+		and army_payload.has("stacks")
+		and army_payload.get("stacks", []) is Array
 	)
-	var stacks: Array = normalized_army.get("stacks", continuity.get("stacks", []))
+	var normalized_army := _normalize_army_payload(army_payload)
+	var stacks: Array = []
+	if normalized_army.has("stacks"):
+		stacks = normalized_army.get("stacks", [])
+	elif explicit_stacks:
+		stacks = []
+	else:
+		stacks = continuity.get("stacks", [])
 	var resolved_encounter_id := encounter_id if encounter_id != "" else String(continuity.get("encounter_id", ""))
 	var base_strength: int = max(
 		int(continuity.get("base_strength", 0)),
@@ -1718,6 +1748,12 @@ static func choose_target(
 			"goal_distance": abs(origin_pos.x - int(hero_position.get("x", 0))) + abs(origin_pos.y - int(hero_position.get("y", 0))),
 		}
 
+	var repeated_rival_memory := _normalized_commander_memory(commander_source)
+	var repeated_rival_kind := String(repeated_rival_memory.get("rival_kind", ""))
+	var repeated_rival_id := String(repeated_rival_memory.get("rival_id", ""))
+	var repeated_rival_count: int = max(0, int(repeated_rival_memory.get("rivalry_count", 0)))
+	var repeated_rival_index: int = -1
+	var best_priority: int = 0
 	for index in range(candidates.size()):
 		if not (candidates[index] is Dictionary):
 			continue
@@ -1726,7 +1762,21 @@ static func choose_target(
 			0,
 			int(candidate.get("priority", 0)) + _commander_memory_priority_bonus(session, candidate, commander_source)
 		)
+		best_priority = max(best_priority, int(candidate.get("priority", 0)))
+		if (
+			repeated_rival_count >= 2
+			and String(candidate.get("target_kind", "")) == repeated_rival_kind
+			and String(candidate.get("target_placement_id", "")) == repeated_rival_id
+		):
+			repeated_rival_index = index
 		candidates[index] = candidate
+	if repeated_rival_index >= 0:
+		var repeated_rival_candidate: Dictionary = candidates[repeated_rival_index]
+		repeated_rival_candidate["priority"] = max(
+			int(repeated_rival_candidate.get("priority", 0)),
+			best_priority + 35 + (min(4, repeated_rival_count) * 10)
+		)
+		candidates[repeated_rival_index] = repeated_rival_candidate
 
 	var best: Dictionary = candidates[0]
 	for index in range(1, candidates.size()):
@@ -2393,6 +2443,7 @@ static func _hero_target_candidates(
 	faction_id: String
 ) -> Array:
 	var candidates := []
+	var seen_hero_ids := {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	for hero_value in session.overworld.get("player_heroes", []):
 		if not (hero_value is Dictionary):
@@ -2401,55 +2452,112 @@ static func _hero_target_candidates(
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "":
 			continue
-		var goal_tile := _player_hero_goal_tile(hero)
-		var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
-		if goal_distance >= 9999:
-			continue
-		var priority = 95
-		if hero_id == active_hero_id:
-			priority += 26
-		if bool(hero.get("is_primary", false)):
-			priority += 18
-		var army_strength: int = _army_strength(hero.get("army", {}).get("stacks", []))
-		if army_strength <= 110:
-			priority += 26
-		elif army_strength <= 180:
-			priority += 14
-		for town in session.overworld.get("towns", []):
-			if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
-				continue
-			var distance: int = abs(goal_tile.x - int(town.get("x", 0))) + abs(goal_tile.y - int(town.get("y", 0)))
-			if distance > 6:
-				continue
-			var defense_priority: int = 120 + max(0, (6 - distance) * 10)
-			match OverworldRulesScript.town_strategic_role(town):
-				"capital":
-					defense_priority += 44
-				"stronghold":
-					defense_priority += 24
-			if int(OverworldRulesScript.town_capital_project_state(town, session).get("active", 0)) > 0:
-				defense_priority += 24
-			if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
-				defense_priority += 28
-			priority = max(priority, defense_priority)
-		candidates.append(
-			{
-				"target_kind": "hero",
-				"target_placement_id": hero_id,
-				"target_label": String(hero.get("name", "the hero")),
-				"target_x": goal_tile.x,
-				"target_y": goal_tile.y,
-				"goal_x": goal_tile.x,
-				"goal_y": goal_tile.y,
-				"goal_distance": goal_distance,
-				"priority": max(
-					0,
-					_weighted_priority(config, faction_id, "hero", hero_id, priority, "", false)
-					- _assignment_penalty(session, "hero", hero_id)
-				),
-			}
-		)
+		seen_hero_ids[hero_id] = true
+		_append_hero_target_candidate(session, candidates, hero, origin_pos, config, faction_id, active_hero_id)
+	if active_hero_id != "" and not seen_hero_ids.has(active_hero_id):
+		var active_hero_value = session.overworld.get("hero", {})
+		if active_hero_value is Dictionary:
+			var active_hero: Dictionary = active_hero_value.duplicate(true)
+			active_hero["id"] = active_hero_id
+			var active_position = active_hero.get("position", {})
+			if not (active_position is Dictionary) or active_position.is_empty():
+				var position_source = session.overworld.get("hero_position", {"x": 0, "y": 0})
+				if position_source is Dictionary:
+					active_hero["position"] = position_source.duplicate(true)
+			active_hero["is_primary"] = true
+			_append_hero_target_candidate(session, candidates, active_hero, origin_pos, config, faction_id, active_hero_id)
 	return candidates
+
+static func _append_hero_target_candidate(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	hero: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String,
+	active_hero_id: String
+) -> void:
+	var hero_id := String(hero.get("id", ""))
+	if hero_id == "":
+		return
+	var goal_tile := _player_hero_goal_tile(hero)
+	var goal_distance: int = _hero_target_goal_distance(session, origin_pos, goal_tile)
+	if goal_distance >= 9999:
+		return
+	var priority = 95
+	if hero_id == active_hero_id:
+		priority += 26
+	if bool(hero.get("is_primary", false)):
+		priority += 18
+	var army_strength: int = _army_strength(hero.get("army", {}).get("stacks", []))
+	if army_strength <= 110:
+		priority += 26
+	elif army_strength <= 180:
+		priority += 14
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
+			continue
+		var distance: int = abs(goal_tile.x - int(town.get("x", 0))) + abs(goal_tile.y - int(town.get("y", 0)))
+		if distance > 6:
+			continue
+		var defense_priority: int = 120 + max(0, (6 - distance) * 10)
+		match OverworldRulesScript.town_strategic_role(town):
+			"capital":
+				defense_priority += 44
+			"stronghold":
+				defense_priority += 24
+		if int(OverworldRulesScript.town_capital_project_state(town, session).get("active", 0)) > 0:
+			defense_priority += 24
+		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
+			defense_priority += 28
+		priority = max(priority, defense_priority)
+	candidates.append(
+		{
+			"target_kind": "hero",
+			"target_placement_id": hero_id,
+			"target_label": String(hero.get("name", "the hero")),
+			"target_x": goal_tile.x,
+			"target_y": goal_tile.y,
+			"goal_x": goal_tile.x,
+			"goal_y": goal_tile.y,
+			"goal_distance": goal_distance,
+			"priority": max(
+				0,
+				_weighted_priority(config, faction_id, "hero", hero_id, priority, "", false)
+				- _assignment_penalty(session, "hero", hero_id)
+			),
+		}
+	)
+
+static func _hero_target_goal_distance(
+	session: SessionStateStoreScript.SessionData,
+	origin_pos: Vector2i,
+	goal_tile: Vector2i
+) -> int:
+	var direct_distance: int = _path_distance(session, origin_pos, [goal_tile], "")
+	if direct_distance < 9999:
+		return direct_distance
+
+	var occupied := _occupied_tiles(session, "")
+	if not occupied.has(_pos_key(goal_tile)):
+		return direct_distance
+
+	var approach_tiles: Array = []
+	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	for delta in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var approach_tile: Vector2i = goal_tile + delta
+		if approach_tile.x < 0 or approach_tile.y < 0 or approach_tile.x >= map_size.x or approach_tile.y >= map_size.y:
+			continue
+		if OverworldRulesScript.tile_is_blocked(session, approach_tile.x, approach_tile.y):
+			continue
+		if approach_tile != origin_pos and occupied.has(_pos_key(approach_tile)):
+			continue
+		approach_tiles.append(approach_tile)
+
+	var approach_distance: int = _path_distance(session, origin_pos, approach_tiles, "")
+	if approach_distance >= 9999:
+		return direct_distance
+	return approach_distance + 1
 
 static func _find_player_hero(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
 	if session == null or hero_id == "":
@@ -2523,7 +2631,7 @@ static func _commander_memory_priority_bonus(
 			target_kind == String(memory.get("rival_kind", ""))
 			and target_id == String(memory.get("rival_id", ""))
 		):
-			bonus += 55 + (min(3, max(1, int(memory.get("rivalry_count", 0)))) * 24)
+			bonus += 140 + (min(4, max(1, int(memory.get("rivalry_count", 0)))) * 40)
 	if String(memory.get("front_label", "")) != "" or String(memory.get("focus_target_id", "")) != "":
 		var target_x := int(candidate.get("target_x", candidate.get("goal_x", 0)))
 		var target_y := int(candidate.get("target_y", candidate.get("goal_y", 0)))

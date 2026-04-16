@@ -4300,6 +4300,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"',
         'const FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME := "boot_to_campaign_resolved_outcome"',
         'const FLOW_BOOT_TO_CAMPAIGN_DEFEAT_OUTCOME := "boot_to_campaign_defeat_outcome"',
+        'const FLOW_BOOT_TO_CAMPAIGN_FULL_ARC := "boot_to_campaign_full_arc"',
         "const TOWN_SCENE :=",
         "const BATTLE_SCENE :=",
         "const SCENARIO_OUTCOME_SCENE :=",
@@ -4307,8 +4308,10 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func _execute_boot_to_skirmish_defeat_outcome_flow",
         "func _execute_boot_to_campaign_resolved_outcome_flow",
         "func _execute_boot_to_campaign_defeat_outcome_flow",
+        "func _execute_boot_to_campaign_full_arc_flow",
         "func _enter_live_skirmish_overworld",
         "func _enter_live_campaign_overworld",
+        "func _drive_campaign_chapter_to_victory_outcome",
         "func _verify_campaign_outcome_route_and_followups",
         "func _verify_campaign_defeat_outcome_route_and_followups",
         "func _save_and_resume_campaign_overworld_from_main_menu",
@@ -4316,6 +4319,8 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func _assert_campaign_downstream_overworld_snapshot",
         "func _assert_downstream_carryover_differs_from_skirmish",
         "func _assert_campaign_outcome_snapshot",
+        "func _assert_campaign_finale_outcome_snapshot",
+        "func _assert_campaign_completed_browser_snapshot",
         "func _assert_campaign_save_summary",
         "func _drive_overworld_to_defeat_outcome",
         "func _defeat_pressure_step_id",
@@ -4329,6 +4334,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func _clear_required_encounters_to_overworld",
         "func _required_encounter_placements_for_resolution",
         "func _direct_required_encounter_placements_for_resolution",
+        "func _prepare_required_encounter_battle_validation",
         "func _play_battle_to_scene",
         'town_entered',
         'town_progressed',
@@ -4398,9 +4404,12 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'func _outcome_resume_signature',
         'func _campaign_carryover_signature',
         'func _campaign_next_scenario_id',
+        'func _campaign_scenario_ids',
+        'func _set_current_validation_scenario',
         'validation_route_step_to_nearest_target',
         'validation_route_step_to_target_placement',
         'validation_try_progress_action',
+        'campaign_arc_completed_browser',
     ):
         ensure(required_token in harness_text, errors, f"LiveValidationHarness.gd is missing required routed-harness token: {required_token}")
 
@@ -4426,6 +4435,11 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "run_live_flow_harness.py must expose the routed campaign defeat outcome flow id",
     )
     ensure(
+        'CAMPAIGN_FULL_ARC_FLOW = "boot_to_campaign_full_arc"' in runner_text,
+        errors,
+        "run_live_flow_harness.py must expose the routed full campaign arc flow id",
+    )
+    ensure(
         'parser.add_argument("--campaign"' in runner_text and "--live-validation-campaign=" in runner_text,
         errors,
         "run_live_flow_harness.py must pass the selected campaign id into the live validation harness",
@@ -4444,6 +4458,10 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_start_selected_campaign_chapter",
         "func validation_start_selected_skirmish",
         '"chapter_details_full"',
+        '"campaign_details_full"',
+        '"campaign_arc_status_full"',
+        '"primary_campaign_action"',
+        '"selected_chapter_action"',
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required live-harness token: {required_token}")
 
@@ -4455,6 +4473,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_select_save_slot",
         "func validation_save_to_selected_slot",
         "func validation_return_to_menu",
+        "func validation_cast_overworld_spell",
         "func validation_route_step_to_nearest_target",
         "func validation_route_step_to_target_placement",
         '"context_action_ids"',
@@ -4493,6 +4512,9 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_save_to_selected_slot",
         "func validation_return_to_menu",
         "func validation_perform_action",
+        "func validation_set_support_spell_priority",
+        "func validation_set_spell_casting_enabled",
+        "func validation_set_max_spell_casts",
         "func _preferred_validation_action_id",
         '"battle_context_town_placement_id"',
         "func _align_validation_target",
@@ -4509,6 +4531,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_return_to_menu",
         '"resume_target"',
         '"action_ids"',
+        '"actions"',
     ):
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required live-harness token: {required_token}")
 
