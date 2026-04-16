@@ -183,15 +183,16 @@ func _refresh() -> void:
 	_refresh_save_slot_picker()
 
 	_header_label.text = BattleRules.describe_header(_session)
-	_status_label.text = BattleRules.describe_status(_session)
-	_set_compact_label(_pressure_label, BattleRules.describe_pressure(_session), 4)
-	_set_compact_label(_event_label, BattleRules.describe_dispatch(_session, _last_message), 3)
+	FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)
+	FrontierVisualKit.set_compact_label(_pressure_label, BattleRules.describe_pressure(_session), 1, 44, false)
+	var dispatch_text := _tactical_briefing_text if _tactical_briefing_text != "" else BattleRules.describe_dispatch(_session, _last_message)
+	_set_compact_label(_event_label, dispatch_text, 3)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
-	_briefing_panel.visible = _tactical_briefing_text != ""
+	_briefing_panel.visible = false
 	_set_compact_label(_risk_label, BattleRules.describe_risk_readiness_board(_session), 4)
 	_set_compact_label(_consequence_label, BattleRules.describe_order_consequence_board(_session), 4)
-	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 5)
-	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 5)
+	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 2)
+	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 2)
 	_set_compact_label(_initiative_label, BattleRules.describe_initiative_track(_session), 6)
 	_set_compact_label(_active_label, BattleRules.describe_active_context(_session), 4)
 	_set_compact_label(_target_label, BattleRules.describe_target_context(_session), 5)
@@ -212,8 +213,9 @@ func _rebuild_spell_actions() -> void:
 
 	var actions = BattleRules.get_spell_actions(_session)
 	if actions.is_empty():
-		_spell_actions.add_child(_make_placeholder_label("No battle spells are ready"))
+		_spell_actions.visible = false
 		return
+	_spell_actions.visible = true
 
 	for action in actions:
 		if not (action is Dictionary):
@@ -246,14 +248,14 @@ func _refresh_action_buttons() -> void:
 	_apply_action_surface(_surrender_button, surface.get("surrender", {}))
 
 	var target_name := String(target_stack.get("name", "No target"))
-	_strike_button.text = "Strike %s" % target_name if player_turn and not target_stack.is_empty() else "Strike"
-	_shoot_button.text = "Shoot %s" % target_name if player_turn and not target_stack.is_empty() else "Shoot"
+	_strike_button.tooltip_text = "%s Target: %s." % [_strike_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _strike_button.tooltip_text
+	_shoot_button.tooltip_text = "%s Target: %s." % [_shoot_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _shoot_button.tooltip_text
 
 func _apply_action_surface(button: Button, action: Dictionary) -> void:
 	button.text = String(action.get("label", button.text))
 	button.disabled = bool(action.get("disabled", false))
 	button.tooltip_text = String(action.get("summary", ""))
-	_style_action_button(button, true)
+	_style_action_button(button, true, 132.0)
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
