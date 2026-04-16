@@ -120,6 +120,7 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 			continue
 		var faction_id = String(config.get("faction_id", ""))
 		var state = _find_state(session.overworld.get("enemy_states", []), faction_id)
+		var front_state := _faction_front_state(session, faction_id)
 		var threshold = _raid_threshold_for_strategy(session, config, faction_id)
 		var line_parts = [
 			String(config.get("label", faction_id)),
@@ -149,6 +150,9 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		var focus = EnemyAdventureRulesScript.describe_focus(session, faction_id, true)
 		if focus != "":
 			line_parts.append(focus)
+		var front_summary := String(front_state.get("summary", ""))
+		if front_summary != "":
+			line_parts.append(front_summary)
 		var commander_recovery = EnemyAdventureRulesScript.public_commander_recovery_summary(
 			session,
 			faction_id,
@@ -221,6 +225,61 @@ static func _visible_raids_for_faction(session: SessionStateStoreScript.SessionD
 		visible.append(encounter)
 	return visible
 
+static func _faction_front_state(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> Dictionary:
+	var retake_labels: Array = []
+	var stabilizing_labels: Array = []
+	var pressure_bonus := 0
+	var threshold_reduction := 0
+	var garrison_bonus := 0
+	var build_bonus := 0
+	var retake_count := 0
+	var stabilizing_count := 0
+	var top_front_priority := 0
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+		if not bool(front.get("active", false)) or String(front.get("faction_id", "")) != faction_id:
+			continue
+		var compact_summary := String(front.get("compact_summary", _town_name(town)))
+		top_front_priority = max(top_front_priority, int(front.get("priority_bonus", 0)))
+		match String(front.get("mode", "")):
+			"retake":
+				retake_count += 1
+				pressure_bonus += int(front.get("pressure_bonus", 0))
+				threshold_reduction = max(threshold_reduction, int(front.get("threshold_reduction", 0)))
+				if compact_summary != "" and compact_summary not in retake_labels:
+					retake_labels.append(compact_summary)
+			"stabilizing":
+				stabilizing_count += 1
+				garrison_bonus += int(front.get("garrison_bonus", 0))
+				build_bonus += int(front.get("build_bonus", 0))
+				if compact_summary != "" and compact_summary not in stabilizing_labels:
+					stabilizing_labels.append(compact_summary)
+	var parts := []
+	if not retake_labels.is_empty():
+		parts.append(
+			"Retake fronts %s" % ", ".join(retake_labels.slice(0, min(2, retake_labels.size())))
+		)
+	if not stabilizing_labels.is_empty():
+		parts.append(
+			"Stabilizing %s" % ", ".join(stabilizing_labels.slice(0, min(2, stabilizing_labels.size())))
+		)
+	return {
+		"retake_count": retake_count,
+		"stabilizing_count": stabilizing_count,
+		"pressure_bonus": clampi(pressure_bonus, 0, 4),
+		"threshold_reduction": clampi(threshold_reduction, 0, 2),
+		"garrison_bonus": clampi(garrison_bonus, 0, 180),
+		"build_bonus": clampi(build_bonus, 0, 160),
+		"top_front_priority": top_front_priority,
+		"summary": " | ".join(parts),
+	}
+
 static func _run_empire_cycle(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -230,9 +289,32 @@ static func _run_empire_cycle(
 	var faction_id = String(config.get("faction_id", ""))
 	var towns = session.overworld.get("towns", [])
 	var town_entries = _owned_town_entries(session, faction_id)
+	var front_state := _faction_front_state(session, faction_id)
 	var messages = []
 	state["captured_artifact_ids"] = _normalize_string_array(state.get("captured_artifact_ids", []))
 	if town_entries.is_empty():
+		if active_raid_count(session, faction_id) > 0:
+			var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
+			state = raid_result.get("state", state)
+			var raid_message = String(raid_result.get("message", ""))
+			if raid_message != "":
+				messages.append(raid_message)
+			var defense_result = _queue_town_defense_battle(session, config, faction_id)
+			if bool(defense_result.get("battle_started", false)):
+				var defense_message = String(defense_result.get("message", ""))
+				if defense_message != "":
+					messages.append(defense_message)
+				state["posture"] = "raiding"
+				return {"state": state, "messages": messages}
+			var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
+			if bool(intercept_result.get("battle_started", false)):
+				var intercept_message = String(intercept_result.get("message", ""))
+				if intercept_message != "":
+					messages.append(intercept_message)
+				state["posture"] = "raiding"
+				return {"state": state, "messages": messages}
+			state["posture"] = "raiding"
+			return {"state": state, "messages": messages}
 		if int(state.get("pressure", 0)) > 0 and active_raid_count(session, faction_id) == 0:
 			state["pressure"] = max(0, int(state.get("pressure", 0)) - 1)
 		state["posture"] = "collapsed"
@@ -268,6 +350,7 @@ static func _run_empire_cycle(
 		+ _captured_artifact_pressure_bonus(state)
 		+ _empire_town_pressure_bonus(session, faction_id, towns)
 		+ _empire_strength_pressure_bonus(session, faction_id, towns)
+		+ int(front_state.get("pressure_bonus", 0))
 		+ _empire_capital_pressure_bonus(capital_state, session.day)
 		+ OverworldRulesScript.controlled_resource_site_pressure_bonus(session, faction_id)
 		- OverworldRulesScript.player_resource_site_pressure_guard(session)
@@ -501,16 +584,27 @@ static func _choose_recruit_destination(
 ) -> Dictionary:
 	var defense_target = _desired_town_strength(session, town, config)
 	var current_defense = _army_strength(town.get("garrison", []))
+	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	if current_defense < int(round(float(defense_target) * 0.72)):
+		return {"type": "garrison"}
+	if (
+		bool(local_front.get("active", false))
+		and String(local_front.get("mode", "")) == "stabilizing"
+		and current_defense < defense_target + int(round(float(int(local_front.get("garrison_bonus", 0))) / 2.0))
+	):
 		return {"type": "garrison"}
 
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id)
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
+	var faction_front_state := _faction_front_state(session, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
 	var garrison_score = float(garrison_gap) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
+	garrison_score += float(int(local_front.get("garrison_bonus", 0)))
 	var raid_score = float(int(best_raid.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+	raid_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.35
 	var rebuild_score = float(int(best_rebuild.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.85
+	rebuild_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.18
 	if not best_rebuild.is_empty() and rebuild_score > max(garrison_score, raid_score):
 		return {"type": "rebuild", "roster_hero_id": String(best_rebuild.get("roster_hero_id", ""))}
 	if not best_raid.is_empty() and raid_score > garrison_score:
@@ -556,6 +650,14 @@ static func _best_raid_reinforcement_target(
 			site_family,
 			objective_anchor
 		)
+		if String(encounter.get("target_kind", "")) == "town":
+			var target_town: Dictionary = _find_town_by_placement(
+				session,
+				String(encounter.get("target_placement_id", ""))
+			).get("town", {})
+			var front_state: Dictionary = OverworldRulesScript.town_front_state(session, target_town)
+			if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
+				score += float(int(front_state.get("priority_bonus", 0))) * 0.4
 		score += float(EnemyAdventureRulesScript.priority_target_bonus(config, String(encounter.get("target_placement_id", ""))))
 		if score > best_score:
 			best_score = score
@@ -655,7 +757,7 @@ static func _advance_siege(
 	state["siege_progress"] = int(state.get("siege_progress", 0)) + 1
 	var town_name = _town_name(target_town)
 	if int(state.get("siege_progress", 0)) >= capture_progress:
-		_set_town_owner(session, target_placement_id, "enemy")
+		_set_town_owner(session, target_placement_id, "enemy", faction_id, "siege breakthrough")
 		state["siege_progress"] = capture_progress
 		return "%s overruns %s." % [String(config.get("label", faction_id)), town_name]
 
@@ -961,6 +1063,7 @@ static func _score_build_candidate(
 	var current_pressure: int = OverworldRulesScript.town_pressure_output(town, session)
 	var current_recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var current_market: Dictionary = OverworldRulesScript.town_market_state(town)
+	var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var projected_town = town.duplicate(true)
 	var built_buildings = projected_town.get("built_buildings", [])
 	if not (built_buildings is Array):
@@ -1027,6 +1130,11 @@ static func _score_build_candidate(
 			score += 120.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
 	if active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id) and category == "dwelling":
 		score += 90.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+	if bool(town_front.get("active", false)) and String(town_front.get("mode", "")) == "stabilizing":
+		if category in ["support", "dwelling", "civic"]:
+			score += 100.0 + float(int(town_front.get("build_bonus", 0)))
+		elif category == "economy":
+			score += 35.0
 	if capital_project is Dictionary and not capital_project.is_empty():
 		var project_score = 260.0
 		match town_role:
@@ -1056,6 +1164,7 @@ static func _determine_posture(
 	towns: Array
 ) -> String:
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
+	var front_state := _faction_front_state(session, faction_id)
 	var threatened_towns = 0
 	for town in towns:
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
@@ -1064,11 +1173,16 @@ static func _determine_posture(
 			continue
 		if _army_strength(town.get("garrison", [])) < _desired_town_strength(session, town, config):
 			threatened_towns += 1
-	if threatened_towns > 0 and EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0) >= 1.0:
+	if (
+		threatened_towns > 0
+		or int(front_state.get("stabilizing_count", 0)) > 0
+	) and EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0) >= 1.0:
 		return "fortifying"
 	if active_raid_count(session, faction_id) > 0:
 		return "raiding"
 	var threshold = _raid_threshold_for_strategy(session, config, faction_id)
+	if int(front_state.get("retake_count", 0)) > 0:
+		return "massing"
 	if (
 		int(state.get("pressure", 0)) >= threshold
 		and not EnemyAdventureRulesScript.has_available_raid_commander(
@@ -1285,6 +1399,7 @@ static func _desired_town_strength(session: SessionStateStoreScript.SessionData,
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var target = 140 + (built_count * 18)
 	target += int(round(float(OverworldRulesScript.town_battle_readiness(town, session)) / 2.0))
 	match town_role:
@@ -1301,6 +1416,8 @@ static func _desired_town_strength(session: SessionStateStoreScript.SessionData,
 	target += int(logistics.get("threatened_count", 0)) * 18
 	target += int(logistics.get("delivery_count", 0)) * 16
 	target += int(recovery.get("pressure", 0)) * 10
+	if bool(front_state.get("active", false)) and String(front_state.get("mode", "")) == "stabilizing":
+		target += 50 + int(round(float(int(front_state.get("garrison_bonus", 0))) / 2.5))
 	if distance <= 6:
 		target += 120
 	if distance <= 3:
@@ -1371,6 +1488,7 @@ static func _raid_threshold_for_strategy(
 	var threshold = max(1, int(round(float(base_threshold) * threshold_scale)))
 	var capital_state = _faction_capital_state(session, faction_id)
 	threshold -= int(capital_state.get("raid_threshold_reduction", 0))
+	threshold -= int(_faction_front_state(session, faction_id).get("threshold_reduction", 0))
 	if session.day >= 5 and int(capital_state.get("active_projects", 0)) > 0:
 		threshold -= 1
 	return max(1, threshold)
@@ -1725,15 +1843,20 @@ static func _hero_is_sheltered_in_player_town(session: SessionStateStoreScript.S
 			return true
 	return false
 
-static func _set_town_owner(session: SessionStateStoreScript.SessionData, placement_id: String, owner: String) -> void:
-	var towns = session.overworld.get("towns", [])
-	for index in range(towns.size()):
-		var town = towns[index]
-		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
-			town["owner"] = owner
-			towns[index] = town
-			break
-	session.overworld["towns"] = towns
+static func _set_town_owner(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	owner: String,
+	controlling_faction_id: String = "",
+	source: String = ""
+) -> void:
+	OverworldRulesScript.transition_town_control(
+		session,
+		placement_id,
+		owner,
+		controlling_faction_id,
+		source
+	)
 
 static func _town_name(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))

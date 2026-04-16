@@ -375,3 +375,5 @@ Difficulty: High
 124. [completed] Re-run the required Godot headless smoke scenes and full boot validation for commander target-memory continuity, rivalry target bias, restore persistence, and summary surfacing.
 125. [completed] Give recurring hostile commanders save-backed army-loss and rebuild continuity through the existing roster, encounter army sync, town reinforcement, and raid-spawn systems.
 126. [completed] Re-run the required Godot headless smoke scenes and full boot validation for commander army continuity, rebuild-scar persistence, and summary surfacing.
+127. [completed] Give hostile factions save-backed retake-front and stabilization pressure around lost or endangered towns through the existing overworld, battle, town, and enemy-turn systems.
+128. [completed] Re-run the required Godot headless smoke scenes and full boot validation for hostile town retake pressure, restore continuity, and summary surfacing.

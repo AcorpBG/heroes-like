@@ -77,6 +77,7 @@ static func describe_summary(session: SessionStateStoreScript.SessionData) -> St
 	var battlefront: Dictionary = OverworldRulesScript.town_battlefront_profile(town)
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var market: Dictionary = OverworldRulesScript.town_market_state(town)
 	var parts := [
 		"%s" % _town_identity_summary(town),
@@ -106,6 +107,8 @@ static func describe_summary(session: SessionStateStoreScript.SessionData) -> St
 		],
 		"Logistics %s" % _logistics_watch_summary(logistics),
 	]
+	if bool(front.get("active", false)):
+		parts.append("Front %s" % String(front.get("summary", "")))
 	var delivery_summary := _convoy_watch_summary(logistics)
 	if delivery_summary != "":
 		parts.append("Convoys %s" % delivery_summary)
@@ -157,6 +160,7 @@ static func describe_outlook_board(session: SessionStateStoreScript.SessionData)
 	var capital_project: Dictionary = OverworldRulesScript.town_capital_project_state(town, session)
 	var battlefront: Dictionary = OverworldRulesScript.town_battlefront_profile(town)
 	var threat_state: Dictionary = OverworldRulesScript.town_public_threat_state(session, town)
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var reserve_count := _stationed_reserve_count(session, stationed)
 	var response_actions := get_response_actions(session)
@@ -168,6 +172,7 @@ static func describe_outlook_board(session: SessionStateStoreScript.SessionData)
 			_town_outlook_grade(
 				readiness,
 				threat_state,
+				front_state,
 				logistics,
 				recovery,
 				capital_project,
@@ -180,7 +185,7 @@ static func describe_outlook_board(session: SessionStateStoreScript.SessionData)
 			_town_pressure_label(town),
 			pressure_output,
 		],
-		"- Frontier watch: %s" % _town_frontier_outlook_line(town, threat_state, battlefront),
+		"- Frontier watch: %s" % _town_frontier_outlook_line(town, threat_state, front_state, battlefront),
 		"- Dispatch readiness: %s" % _town_dispatch_readiness_line(
 			response_actions.size(),
 			ready_response_count,
@@ -257,8 +262,11 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 	var battlefront: Dictionary = OverworldRulesScript.town_battlefront_profile(town)
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	if threat_lines.is_empty():
 		lines.append("- No hostile raid hosts are currently aligned on %s." % _town_name(town))
+		if bool(front_state.get("active", false)):
+			lines.append("- Front watch: %s" % String(front_state.get("summary", "")))
 		lines.append("- The walls hold a %s over the frontier roads." % _defense_grade(town).to_lower())
 		if String(battlefront.get("summary", "")) != "":
 			lines.append("- Siege profile: %s" % String(battlefront.get("summary", "")))
@@ -1389,6 +1397,7 @@ static func _convoy_watch_summary(logistics: Dictionary) -> String:
 static func _town_outlook_grade(
 	readiness: int,
 	threat_state: Dictionary,
+	front_state: Dictionary,
 	logistics: Dictionary,
 	recovery: Dictionary,
 	capital_project: Dictionary,
@@ -1402,6 +1411,8 @@ static func _town_outlook_grade(
 		severity += 2 if int(threat_state.get("nearest_goal_distance", 9999)) <= 1 else 1
 	elif bool(threat_state.get("hidden_targeting", false)):
 		severity += 1
+	if bool(front_state.get("active", false)):
+		severity += 2 if String(front_state.get("mode", "")) == "retake" else 1
 	if readiness <= 18:
 		severity += 2
 	elif readiness <= 30:
@@ -1428,7 +1439,12 @@ static func _town_outlook_grade(
 		return "Guarded but strained"
 	return "Ready watch"
 
-static func _town_frontier_outlook_line(town: Dictionary, threat_state: Dictionary, battlefront: Dictionary) -> String:
+static func _town_frontier_outlook_line(
+	town: Dictionary,
+	threat_state: Dictionary,
+	front_state: Dictionary,
+	battlefront: Dictionary
+) -> String:
 	var clauses := []
 	var visible_pressuring := int(threat_state.get("visible_pressuring", 0))
 	var visible_marching := int(threat_state.get("visible_marching", 0))
@@ -1481,6 +1497,10 @@ static func _town_frontier_outlook_line(town: Dictionary, threat_state: Dictiona
 		clauses.append("scouts report hostile movement beyond the fog")
 	if siege_progress > 0:
 		clauses.append("siege pressure %d/%d is already building" % [siege_progress, siege_capture_progress])
+	if bool(front_state.get("active", false)):
+		var front_summary := String(front_state.get("summary", ""))
+		if front_summary != "":
+			clauses.append(front_summary)
 	if clauses.is_empty():
 		var battlefront_summary := String(battlefront.get("summary", "The approaches currently favor the defenders."))
 		return "No public raid lane is aligned on %s. %s" % [_town_name(town), battlefront_summary]
@@ -1588,6 +1608,7 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var threat_lines := []
 	var town_placement_id := String(town.get("placement_id", ""))
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	if town_placement_id == "":
 		return threat_lines
 
@@ -1690,6 +1711,10 @@ static func _town_threat_lines(session: SessionStateStoreScript.SessionData, tow
 				siege_progress,
 				max(1, int(config.get("siege_capture_progress", 1))),
 			])
+		if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
+			var front_clause := String(front_state.get("public_clause", ""))
+			if front_clause != "":
+				clauses.append(front_clause)
 		if commander_recovery != "":
 			clauses.append(commander_recovery)
 		if commander_rebuild != "":

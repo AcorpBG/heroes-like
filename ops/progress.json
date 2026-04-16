@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-15T13:30:00Z",
+  "updatedAt": "2026-04-16T00:00:48Z",
   "status": "in_progress",
-  "currentPhase": "hostile-commander-army-continuity",
-  "currentSliceId": "phase-5-hostile-overworld-commander-army-continuity",
-  "currentSliceTitle": "Give recurring hostile commanders army-loss and rebuild continuity",
+  "currentPhase": "hostile-town-retake-pressure",
+  "currentSliceId": "phase-5-hostile-town-retake-pressure",
+  "currentSliceTitle": "Give hostile factions durable retake and stabilization pressure around contested towns",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a follow-on hostile-commander slice that keeps save-backed army continuity and rebuild debt on the existing enemy roster, feeds battle survivors and wipeouts back into later raid composition, routes rebuild through current enemy-town recruitment and raid reinforcement logic, surfaces compact scarred-versus-rebuilding hints through existing frontier, town, and battle summaries, and adds focused regression coverage for scarred-host and rebuild-scar persistence.",
+  "currentSliceNotes": "Completed the follow-on hostile-overworld slice that keeps save-backed contested-front state on towns, pushes enemy-turn raid and reinforcement priorities toward recent hostile town losses or endangered strongholds, surfaces compact retake pressure in existing frontier and town summaries, stabilizes hostile towns after failed assaults or recaptures, and preserves the same current save boundaries with focused regression coverage.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

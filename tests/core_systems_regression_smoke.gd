@@ -685,8 +685,68 @@ func _run_enemy_town_assault_regression() -> bool:
 		push_error("Core systems smoke: town assault victory did not resolve through the standard battle flow.")
 		get_tree().quit(1)
 		return false
-	if String(_town_by_placement(session, "duskfen_bastion").get("owner", "")) != "player":
+	var captured_town := _town_by_placement(session, "duskfen_bastion")
+	if String(captured_town.get("owner", "")) != "player":
 		push_error("Core systems smoke: town assault victory did not transfer town ownership.")
+		get_tree().quit(1)
+		return false
+	var retake_front := OverworldRules.town_front_state(session, captured_town)
+	if not bool(retake_front.get("active", false)) or String(retake_front.get("mode", "")) != "retake":
+		push_error("Core systems smoke: captured hostile town did not persist a retake-front state.")
+		get_tree().quit(1)
+		return false
+	if String(retake_front.get("faction_id", "")) != "faction_mireclaw":
+		push_error("Core systems smoke: captured hostile town retake front did not keep the hostile faction anchor.")
+		get_tree().quit(1)
+		return false
+	var town_summary := TownRules.describe_summary(session)
+	if "retake front" not in town_summary.to_lower():
+		push_error("Core systems smoke: town summary did not surface compact hostile retake pressure after capture.")
+		get_tree().quit(1)
+		return false
+	var frontier_watch := OverworldRules.describe_frontier_threats(session)
+	if "Retake fronts retake Duskfen Bastion" not in frontier_watch:
+		push_error("Core systems smoke: frontier watch did not surface the new hostile retake front after capture.")
+		get_tree().quit(1)
+		return false
+	var enemy_config := _enemy_config(session, "faction_mireclaw")
+	var retake_plan := EnemyAdventureRules.choose_target(session, enemy_config, {"x": 7, "y": 1}, {})
+	if String(retake_plan.get("target_kind", "")) != "town" or String(retake_plan.get("target_placement_id", "")) != "duskfen_bastion":
+		push_error("Core systems smoke: hostile target scoring did not bias back toward the newly lost town.")
+		get_tree().quit(1)
+		return false
+	var restored: Variant = SessionState.new_session_data()
+	restored.from_dict(session.to_dict())
+	OverworldRules.normalize_overworld_state(restored)
+	var restored_front := OverworldRules.town_front_state(restored, _town_by_placement(restored, "duskfen_bastion"))
+	if not bool(restored_front.get("active", false)) or String(restored_front.get("mode", "")) != "retake":
+		push_error("Core systems smoke: restored session lost hostile retake-front continuity.")
+		get_tree().quit(1)
+		return false
+
+	var stabilize_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var stabilize_payload := BattleRules.create_town_assault_payload(stabilize_session, "duskfen_bastion")
+	if stabilize_payload.is_empty():
+		push_error("Core systems smoke: hostile-town stabilization coverage could not stage an assault payload.")
+		get_tree().quit(1)
+		return false
+	stabilize_session.battle = stabilize_payload
+	var retreat_result := BattleRules.perform_player_action(stabilize_session, "retreat")
+	if String(retreat_result.get("state", "")) != "retreat":
+		push_error("Core systems smoke: hostile-town stabilization coverage could not resolve a withdrawn assault.")
+		get_tree().quit(1)
+		return false
+	var stabilized_front := OverworldRules.town_front_state(stabilize_session, _town_by_placement(stabilize_session, "duskfen_bastion"))
+	if not bool(stabilized_front.get("active", false)) or String(stabilized_front.get("mode", "")) != "stabilizing":
+		push_error("Core systems smoke: hostile town that held the assault did not enter stabilization posture.")
+		get_tree().quit(1)
+		return false
+	if int(stabilized_front.get("days_remaining", 0)) <= 0:
+		push_error("Core systems smoke: hostile town stabilization posture did not persist for a future day window.")
 		get_tree().quit(1)
 		return false
 	return true

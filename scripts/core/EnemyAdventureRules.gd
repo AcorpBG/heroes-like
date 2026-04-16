@@ -2030,7 +2030,7 @@ static func _append_town_candidate(
 	if goal_distance >= 9999:
 		return
 	var objective_anchor = _town_is_objective_anchor(session, placement_id)
-	var strategic_bonus = _town_strategic_priority_bonus(session, town, objective_anchor)
+	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
 	candidates.append(
 		{
 			"target_kind": "town",
@@ -2260,7 +2260,7 @@ static func _delivery_town_candidate(
 	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
 	var priority = 210 + int(min(180.0, float(int(delivery_state.get("manifest_value", 0))) / 9.0))
 	priority += int(max(0, 3 - int(delivery_state.get("days_remaining", 0)))) * 24
-	priority += _town_strategic_priority_bonus(session, town, objective_anchor)
+	priority += _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
 	priority += int(logistics.get("support_gap", 0)) * 18
 	priority += int(logistics.get("delivery_count", 0)) * 12
 	priority += int(recovery.get("pressure", 0)) * 12
@@ -2508,6 +2508,7 @@ static func _commander_memory_priority_bonus(
 static func _town_strategic_priority_bonus(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
+	faction_id: String,
 	objective_anchor: bool = false
 ) -> int:
 	var bonus = _objective_proximity_bonus(session, int(town.get("x", 0)), int(town.get("y", 0)))
@@ -2528,6 +2529,9 @@ static func _town_strategic_priority_bonus(
 	bonus += int(recovery.get("pressure", 0)) * 10
 	if bool(capital_project.get("vulnerable", false)):
 		bonus += 30
+	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
+		bonus += int(front_state.get("priority_bonus", 0))
 	if objective_anchor:
 		bonus += 20
 	return max(0, bonus)

@@ -3433,6 +3433,9 @@ static func _finalize_primary_defeat(
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
+	var front_summary := ""
+	if _is_town_assault_context(session.battle.get("context", {})):
+		front_summary = _stabilize_hostile_town_front(session, "broken assault")
 	var delivery_summary: String = _apply_delivery_route_aftermath(session, outcome_id)
 	OverworldRulesScript.refresh_fog_of_war(session)
 	session.flags["last_battle_outcome"] = outcome_id
@@ -3444,16 +3447,20 @@ static func _finalize_primary_defeat(
 	_record_battle_aftermath(session, outcome_id, base_summary)
 	session.battle = {}
 	var scenario_result = ScenarioRulesScript.evaluate_session(session)
-	var final_message = _join_messages([base_summary, delivery_summary, String(scenario_result.get("message", ""))])
+	var final_message = _join_messages([base_summary, front_summary, delivery_summary, String(scenario_result.get("message", ""))])
 	return {"state": "defeat", "message": final_message}
 
 static func _finalize_secondary_hero_defeat(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
+	var front_summary := ""
+	if _is_town_assault_context(session.battle.get("context", {})):
+		front_summary = _stabilize_hostile_town_front(session, "broken assault")
 	var delivery_summary: String = _apply_delivery_route_aftermath(session, "hero_defeat")
 	var removal = HeroCommandRulesScript.remove_active_hero_after_defeat(session)
 	session.flags["last_battle_outcome"] = "hero_defeat"
 	var messages = [String(removal.get("message", "A commander falls in battle."))]
+	_append_nonempty_message(messages, front_summary)
 	_append_nonempty_message(messages, delivery_summary)
 	var next_active_name = String(removal.get("next_active_name", ""))
 	if next_active_name != "":
@@ -3478,6 +3485,8 @@ static func _finalize_retreat(session: SessionStateStoreScript.SessionData) -> D
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
+	if _is_town_assault_context(session.battle.get("context", {})):
+		_append_nonempty_message(messages, _stabilize_hostile_town_front(session, "withdrawn assault"))
 	var aftermath := _apply_withdrawal_aftermath(session, "retreat")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "retreat"))
@@ -3503,6 +3512,8 @@ static func _finalize_surrender(session: SessionStateStoreScript.SessionData) ->
 	_sync_player_force_from_battle(session)
 	_record_enemy_commander_battle_continuity(session, EnemyAdventureRulesScript.COMMANDER_OUTCOME_FIELD_VICTORY)
 	_sync_enemy_force_from_battle(session, false)
+	if _is_town_assault_context(session.battle.get("context", {})):
+		_append_nonempty_message(messages, _stabilize_hostile_town_front(session, "yielded assault"))
 	var aftermath := _apply_withdrawal_aftermath(session, "surrender")
 	_append_nonempty_message(messages, String(aftermath.get("summary", "")))
 	_append_nonempty_message(messages, _apply_delivery_route_aftermath(session, "surrender"))
@@ -4951,8 +4962,11 @@ static func _apply_battle_context_stalemate(session: SessionStateStoreScript.Ses
 			town_name if town_name != "" else "The town"
 		)
 		var recovery_message = _apply_town_assault_recovery(session, "stalemate")
+		var front_message = _stabilize_hostile_town_front(session, "repelled assault")
 		if recovery_message != "":
 			message = "%s %s" % [message, recovery_message]
+		if front_message != "":
+			message = "%s %s" % [message, front_message]
 		return message
 	if not _is_town_defense_context(context):
 		return ""
@@ -5109,13 +5123,50 @@ static func _town_assault_recovery_pressure(session: SessionStateStoreScript.Ses
 			pressure += 1
 	return clamp(pressure, 1, 5)
 
+static func _stabilize_hostile_town_front(
+	session: SessionStateStoreScript.SessionData,
+	source: String
+) -> String:
+	if session == null or session.battle.is_empty():
+		return ""
+	var context = session.battle.get("context", {})
+	if not _is_town_assault_context(context):
+		return ""
+	var town_placement_id := String(context.get("town_placement_id", ""))
+	var faction_id := String(context.get("trigger_faction_id", ""))
+	var result := OverworldRulesScript.stabilize_town_front(
+		session,
+		town_placement_id,
+		faction_id,
+		source
+	)
+	if not bool(result.get("ok", false)):
+		return ""
+	var front: Dictionary = result.get("front", {})
+	var town_name := _town_name_from_placement_id(session, town_placement_id)
+	var days_remaining := int(front.get("days_remaining", 0))
+	if days_remaining > 0:
+		return "%s shifts onto stabilization orders for %d day%s." % [
+			town_name if town_name != "" else "The town",
+			days_remaining,
+			"" if days_remaining == 1 else "s",
+		]
+	return "%s stays on stabilization orders." % (town_name if town_name != "" else "The town")
+
 static func _capture_town_after_assault(session: SessionStateStoreScript.SessionData, town_placement_id: String, enemy_survivors: Array) -> void:
 	var town_result = _find_town_by_placement(session, town_placement_id)
 	if int(town_result.get("index", -1)) < 0:
 		return
+	var context = session.battle.get("context", {})
+	var transition := OverworldRulesScript.transition_town_control(
+		session,
+		town_placement_id,
+		"enemy",
+		String(context.get("trigger_faction_id", "")),
+		"retaken town"
+	)
+	var town = transition.get("town", town_result.get("town", {}))
 	var towns = session.overworld.get("towns", [])
-	var town = town_result.get("town", {})
-	town["owner"] = "enemy"
 	town["garrison"] = enemy_survivors.duplicate(true)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns

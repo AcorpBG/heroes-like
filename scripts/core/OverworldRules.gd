@@ -496,6 +496,67 @@ static func capture_town_by_placement(session: SessionStateStoreScript.SessionDa
 		return ""
 	return _claim_town(session, town_result)
 
+static func transition_town_control(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	new_owner: String,
+	controlling_faction_id: String = "",
+	source: String = ""
+) -> Dictionary:
+	if session == null or placement_id == "":
+		return {"ok": false, "changed": false, "town": {}}
+	var town_result := _find_town_by_placement(session, placement_id)
+	if int(town_result.get("index", -1)) < 0:
+		return {"ok": false, "changed": false, "town": {}}
+	var towns = session.overworld.get("towns", [])
+	var town = town_result.get("town", {})
+	var previous_owner := String(town.get("owner", "neutral"))
+	town["owner"] = new_owner
+	town["front"] = _town_front_after_control_change(
+		session,
+		town,
+		previous_owner,
+		new_owner,
+		controlling_faction_id,
+		source
+	)
+	var available_recruits = town.get("available_recruits", {})
+	if new_owner == "player" and (
+		not (available_recruits is Dictionary)
+		or (available_recruits is Dictionary and available_recruits.is_empty())
+	):
+		town["available_recruits"] = _seed_recruits_for_town(town)
+	towns[int(town_result.get("index", -1))] = town
+	session.overworld["towns"] = towns
+	return {
+		"ok": true,
+		"changed": previous_owner != new_owner,
+		"previous_owner": previous_owner,
+		"town": town,
+	}
+
+static func stabilize_town_front(
+	session: SessionStateStoreScript.SessionData,
+	placement_id: String,
+	faction_id: String,
+	source: String = ""
+) -> Dictionary:
+	if session == null or placement_id == "" or faction_id == "":
+		return {"ok": false, "town": {}, "front": {}}
+	var town_result := _find_town_by_placement(session, placement_id)
+	if int(town_result.get("index", -1)) < 0:
+		return {"ok": false, "town": {}, "front": {}}
+	var town = town_result.get("town", {})
+	var towns = session.overworld.get("towns", [])
+	town["front"] = _town_front_stabilizing_state(session, town, faction_id, source)
+	towns[int(town_result.get("index", -1))] = town
+	session.overworld["towns"] = towns
+	return {
+		"ok": true,
+		"town": town,
+		"front": _town_front_state(session, town),
+	}
+
 static func describe_encounter_pressure(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Dictionary,
@@ -1288,6 +1349,9 @@ static func town_public_threat_state(session: SessionStateStoreScript.SessionDat
 static func town_battlefront_profile(town: Dictionary) -> Dictionary:
 	return _town_battlefront_profile(town)
 
+static func town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	return _town_front_state(session, town)
+
 static func town_market_state(town: Dictionary) -> Dictionary:
 	return _town_market_state(town)
 
@@ -1869,6 +1933,7 @@ static func _normalize_towns(towns: Array) -> Array:
 			"available_recruits": _normalize_resource_dict(town.get("available_recruits", {})),
 			"garrison": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],
 			"recovery": _normalize_town_recovery_state(town.get("recovery", {})),
+			"front": _normalize_town_front_state(town.get("front", {})),
 		}
 		normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
 		if not town.has("available_recruits") or not (town.get("available_recruits") is Dictionary):
@@ -3902,6 +3967,223 @@ static func _normalize_town_recovery_state(value: Variant) -> Dictionary:
 		"source": String(value.get("source", "")) if value is Dictionary else "",
 	}
 
+static func _normalize_town_front_state(value: Variant) -> Dictionary:
+	return {
+		"state": String(value.get("state", "")) if value is Dictionary else "",
+		"faction_id": String(value.get("faction_id", "")) if value is Dictionary else "",
+		"last_change_day": max(0, int(value.get("last_change_day", 0))) if value is Dictionary else 0,
+		"stabilize_until_day": max(0, int(value.get("stabilize_until_day", 0))) if value is Dictionary else 0,
+		"last_owner": String(value.get("last_owner", "")) if value is Dictionary else "",
+		"capture_count": max(0, int(value.get("capture_count", 0))) if value is Dictionary else 0,
+		"source": String(value.get("source", "")) if value is Dictionary else "",
+	}
+
+static func _town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var front := _normalize_town_front_state(town.get("front", {}))
+	front = _retake_front_from_legacy_state(session, town, front)
+	var faction_id := _normalized_enemy_front_faction_id(session, front, town)
+	var state_id := String(front.get("state", ""))
+	var owner := String(town.get("owner", "neutral"))
+	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
+	var role := _town_strategic_role(town)
+	var enemy_label := String(ContentService.get_faction(faction_id).get("name", faction_id)) if faction_id != "" else ""
+	var logistics := _town_logistics_state(session, town)
+	var recovery := _town_recovery_state(session, town)
+	var capital_project := _town_capital_project_state(town, session)
+	var base_priority := _town_front_priority_seed(role, objective_anchor)
+	var result := {
+		"active": false,
+		"mode": "",
+		"faction_id": faction_id,
+		"enemy_label": enemy_label,
+		"priority_bonus": 0,
+		"pressure_bonus": 0,
+		"threshold_reduction": 0,
+		"garrison_bonus": 0,
+		"build_bonus": 0,
+		"days_since_change": max(0, session.day - int(front.get("last_change_day", 0))) if session != null else 0,
+		"days_remaining": 0,
+		"summary": "",
+		"compact_summary": "",
+		"public_clause": "",
+		"state": front,
+	}
+	if faction_id == "":
+		return result
+	match state_id:
+		"retake":
+			if owner != "player":
+				return result
+			var recency_bonus: int = max(0, 54 - (int(result.get("days_since_change", 0)) * 8))
+			var weakness_bonus: int = max(0, 34 - _town_battle_readiness(town, session))
+			weakness_bonus += int(recovery.get("pressure", 0)) * 8
+			weakness_bonus += int(logistics.get("support_gap", 0)) * 14
+			if bool(capital_project.get("vulnerable", false)):
+				weakness_bonus += 18
+			var priority_bonus: int = base_priority + recency_bonus + weakness_bonus
+			var threshold_reduction: int = 1 if priority_bonus >= 140 else 0
+			if role == "capital" or objective_anchor:
+				threshold_reduction += 1
+			result["active"] = true
+			result["mode"] = "retake"
+			result["priority_bonus"] = priority_bonus
+			result["pressure_bonus"] = clampi(int(floor(float(priority_bonus) / 115.0)), 1, 4)
+			result["threshold_reduction"] = clampi(threshold_reduction, 0, 2)
+			result["summary"] = "%s still treats %s as a retake front." % [enemy_label, _town_name(town)]
+			result["compact_summary"] = "retake %s" % _town_name(town)
+			result["public_clause"] = "retake orders still center on the lost town"
+			return result
+		"stabilizing":
+			if owner != "enemy":
+				return result
+			var stabilize_until_day: int = int(front.get("stabilize_until_day", 0))
+			var days_remaining: int = max(0, stabilize_until_day - int(session.day) + 1) if session != null else 0
+			if days_remaining <= 0 and not bool(recovery.get("active", false)):
+				return result
+			var pressure_bonus: int = int(recovery.get("pressure", 0)) * 10
+			pressure_bonus += int(logistics.get("support_gap", 0)) * 14
+			pressure_bonus += int(logistics.get("threatened_count", 0)) * 8
+			pressure_bonus += max(0, days_remaining - 1) * 12
+			if bool(capital_project.get("vulnerable", false)):
+				pressure_bonus += 14
+			result["active"] = true
+			result["mode"] = "stabilizing"
+			result["days_remaining"] = days_remaining
+			result["priority_bonus"] = base_priority + pressure_bonus
+			result["garrison_bonus"] = 65 + pressure_bonus
+			result["build_bonus"] = 45 + int(recovery.get("pressure", 0)) * 10 + max(0, days_remaining - 1) * 8
+			result["summary"] = "%s is still stabilizing %s." % [enemy_label, _town_name(town)]
+			result["compact_summary"] = "stabilize %s" % _town_name(town)
+			result["public_clause"] = (
+				"the reclaimed walls stay on stabilization orders for %d day%s"
+				% [days_remaining, "" if days_remaining == 1 else "s"]
+				if days_remaining > 0
+				else "the reclaimed walls are still being stabilized"
+			)
+			return result
+		_:
+			return result
+
+static func _normalized_enemy_front_faction_id(
+	session: SessionStateStoreScript.SessionData,
+	front: Dictionary,
+	town: Dictionary
+) -> String:
+	var faction_id := String(front.get("faction_id", ""))
+	if faction_id != "" and not _enemy_state_for_faction(session, faction_id).is_empty():
+		return faction_id
+	var template_faction_id := _town_faction_id(town)
+	if template_faction_id != "" and not _enemy_state_for_faction(session, template_faction_id).is_empty():
+		return template_faction_id
+	return ""
+
+static func _retake_front_from_legacy_state(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	front: Dictionary
+) -> Dictionary:
+	if session == null or town.is_empty():
+		return front
+	if String(front.get("state", "")) != "":
+		return front
+	var placement_id := String(town.get("placement_id", ""))
+	if String(town.get("owner", "neutral")) != "player" or not _scenario_town_started_enemy(session, placement_id):
+		return front
+	var faction_id := _town_faction_id(town)
+	if faction_id == "" or _enemy_state_for_faction(session, faction_id).is_empty():
+		return front
+	var inferred := front.duplicate(true)
+	inferred["state"] = "retake"
+	inferred["faction_id"] = faction_id
+	inferred["last_change_day"] = max(
+		0,
+		int(_normalize_town_recovery_state(town.get("recovery", {})).get("last_event_day", session.day))
+	)
+	inferred["last_owner"] = "enemy"
+	inferred["capture_count"] = max(1, int(inferred.get("capture_count", 0)))
+	return inferred
+
+static func _town_front_after_control_change(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	previous_owner: String,
+	new_owner: String,
+	controlling_faction_id: String,
+	source: String
+) -> Dictionary:
+	var front := _normalize_town_front_state(town.get("front", {}))
+	var faction_id := controlling_faction_id
+	if faction_id == "" and previous_owner == "enemy":
+		faction_id = _normalized_enemy_front_faction_id(session, front, town)
+	if faction_id == "" and new_owner == "enemy":
+		faction_id = _normalized_enemy_front_faction_id(session, front, town)
+	if previous_owner == new_owner:
+		if new_owner == "enemy" and faction_id != "":
+			return _town_front_stabilizing_state(session, town, faction_id, source)
+		return front
+	if new_owner == "player":
+		if faction_id == "":
+			return _normalize_town_front_state({})
+		front["state"] = "retake"
+		front["faction_id"] = faction_id
+		front["last_change_day"] = int(session.day)
+		front["stabilize_until_day"] = 0
+		front["last_owner"] = previous_owner
+		front["capture_count"] = max(1, int(front.get("capture_count", 0)) + 1)
+		front["source"] = source
+		return front
+	if new_owner == "enemy":
+		if faction_id == "":
+			return _normalize_town_front_state({})
+		return _town_front_stabilizing_state(session, town, faction_id, source, previous_owner)
+	return _normalize_town_front_state({})
+
+static func _town_front_stabilizing_state(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	faction_id: String,
+	source: String,
+	previous_owner: String = ""
+) -> Dictionary:
+	var front := _normalize_town_front_state(town.get("front", {}))
+	front["state"] = "stabilizing"
+	front["faction_id"] = faction_id
+	front["last_change_day"] = int(session.day) if session != null else int(front.get("last_change_day", 0))
+	front["stabilize_until_day"] = (
+		int(session.day) + _town_front_stabilize_days(session, town)
+		if session != null
+		else max(0, int(front.get("stabilize_until_day", 0)))
+	)
+	if previous_owner != "":
+		front["last_owner"] = previous_owner
+	front["capture_count"] = max(1, int(front.get("capture_count", 0)))
+	front["source"] = source
+	return front
+
+static func _town_front_priority_seed(role: String, objective_anchor: bool) -> int:
+	var priority := 88
+	match role:
+		"capital":
+			priority += 92
+		"stronghold":
+			priority += 54
+	if objective_anchor:
+		priority += 30
+	return priority
+
+static func _town_front_stabilize_days(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
+	var days := 2
+	match _town_strategic_role(town):
+		"capital":
+			days += 2
+		"stronghold":
+			days += 1
+	if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
+		days += 1
+	if bool(_town_recovery_state(session, town).get("active", false)):
+		days += 1
+	return clampi(days, 2, 6)
+
 static func _town_recovery_relief_rating(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
 	var relief := int(_town_logistics_plan(town).get("recovery_relief", 0))
 	var logistics := _town_logistics_state(session, town)
@@ -5214,17 +5496,20 @@ static func _begin_town_assault(session: SessionStateStoreScript.SessionData, to
 	}
 
 static func _claim_town(session: SessionStateStoreScript.SessionData, town_result: Dictionary) -> String:
-	var towns = session.overworld.get("towns", [])
 	var town = town_result.get("town", {})
-	var town_index := int(town_result.get("index", -1))
-	if town_index < 0 or town.is_empty():
+	if int(town_result.get("index", -1)) < 0 or town.is_empty():
 		return ""
-
-	town["owner"] = "player"
+	var transition := transition_town_control(
+		session,
+		String(town.get("placement_id", "")),
+		"player",
+		"",
+		"captured town"
+	)
+	town = transition.get("town", town)
 	town["recovery"] = _normalize_town_recovery_state(town.get("recovery", {}))
-	if int(town.get("available_recruits", {}).size()) == 0:
-		town["available_recruits"] = _seed_recruits_for_town(town)
-	towns[town_index] = town
+	var towns = session.overworld.get("towns", [])
+	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 	return "Captured %s." % _town_name(town)
 
@@ -6451,6 +6736,12 @@ static func _town_command_risk_state(session: SessionStateStoreScript.SessionDat
 		"pressuring_commanders": [],
 		"siege_progress": 0,
 		"siege_capture_progress": 1,
+		"front_active": false,
+		"front_mode": "",
+		"front_faction_id": "",
+		"front_enemy_label": "",
+		"front_summary": "",
+		"front_public_clause": "",
 	}
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var placement_id := String(town.get("placement_id", ""))
@@ -6496,6 +6787,13 @@ static func _town_command_risk_state(session: SessionStateStoreScript.SessionDat
 		state["siege_capture_progress"] = max(1, int(config.get("siege_capture_progress", 1)))
 	if int(state.get("nearest_goal_distance", 9999)) == 9999 and int(state.get("visible_pressuring", 0)) > 0:
 		state["nearest_goal_distance"] = 0
+	var front_state := _town_front_state(session, town)
+	state["front_active"] = bool(front_state.get("active", false))
+	state["front_mode"] = String(front_state.get("mode", ""))
+	state["front_faction_id"] = String(front_state.get("faction_id", ""))
+	state["front_enemy_label"] = String(front_state.get("enemy_label", ""))
+	state["front_summary"] = String(front_state.get("summary", ""))
+	state["front_public_clause"] = String(front_state.get("public_clause", ""))
 	return state
 
 static func _town_command_risk_consequence(
@@ -6543,6 +6841,28 @@ static func _enemy_state_for_faction(session: SessionStateStoreScript.SessionDat
 		if state is Dictionary and String(state.get("faction_id", "")) == faction_id:
 			return state
 	return {}
+
+static func _scenario_town_started_enemy(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
+	if session == null or placement_id == "":
+		return false
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	for town in scenario.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			return String(town.get("owner", "neutral")) == "enemy"
+	return false
+
+static func _town_is_objective_anchor(session: SessionStateStoreScript.SessionData, placement_id: String) -> bool:
+	if session == null or placement_id == "":
+		return false
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return false
+	for bucket in ["victory", "defeat"]:
+		for objective in objectives.get(bucket, []):
+			if objective is Dictionary and String(objective.get("placement_id", "")) == placement_id:
+				return true
+	return false
 
 static func _command_risk_grade_label(severity: int) -> String:
 	match clampi(severity, 0, 5):
