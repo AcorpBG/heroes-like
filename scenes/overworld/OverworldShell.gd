@@ -969,6 +969,45 @@ func validation_snapshot() -> Dictionary:
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 	}
 
+func validation_town_state_for_placement(placement_id: String) -> Dictionary:
+	return _validation_town_state_for_placement(placement_id)
+
+func validation_resource_site_state(placement_id: String) -> Dictionary:
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("placement_id", "")) != placement_id:
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var response_state: Dictionary = OverworldRules._resource_site_response_state(_session, node, site)
+		var delivery_state: Dictionary = OverworldRules._resource_site_delivery_state(_session, node, site)
+		var interception_state: Dictionary = OverworldRules._resource_site_delivery_interception(_session, node, site)
+		return {
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"site_name": String(site.get("name", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"collected": bool(node.get("collected", false)),
+			"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+			"response_origin": String(node.get("response_origin", "")),
+			"response_source_town_id": String(node.get("response_source_town_id", "")),
+			"response_until_day": max(0, int(node.get("response_until_day", 0))),
+			"response_commander_id": String(node.get("response_commander_id", "")),
+			"response_security_rating": max(0, int(node.get("response_security_rating", 0))),
+			"delivery_origin_town_id": String(node.get("delivery_origin_town_id", "")),
+			"delivery_target_kind": String(node.get("delivery_target_kind", "")),
+			"delivery_target_id": String(node.get("delivery_target_id", "")),
+			"delivery_target_label": String(node.get("delivery_target_label", "")),
+			"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
+			"delivery_manifest": _duplicate_dictionary(node.get("delivery_manifest", {})),
+			"response": response_state,
+			"delivery": delivery_state,
+			"interception": interception_state,
+		}
+	return {}
+
 func validation_select_save_slot(slot: int) -> bool:
 	var normalized_slot := int(slot)
 	if not SaveService.get_manual_slot_ids().has(normalized_slot):
@@ -1058,6 +1097,28 @@ func validation_try_progress_action() -> Dictionary:
 		"day_before": day_before,
 		"day_after": _session.day,
 		"last_action": String(_session.flags.get("last_action", "")),
+		"message": _last_message,
+	}
+
+func validation_perform_context_action(action_id: String) -> Dictionary:
+	var action_ids := _validation_context_action_ids()
+	if action_id not in action_ids:
+		return {
+			"ok": false,
+			"action_id": action_id,
+			"context_action_ids": action_ids,
+			"message": "The requested context action is not available on the live overworld shell.",
+		}
+	var before_signature := JSON.stringify(_validation_context_action_signature())
+	_on_context_action_pressed(action_id)
+	var after_signature := JSON.stringify(_validation_context_action_signature())
+	return {
+		"ok": before_signature != after_signature or not _session.battle.is_empty() or _session.scenario_status != "in_progress",
+		"action_id": action_id,
+		"context_action_ids": action_ids,
+		"state_changed": before_signature != after_signature,
+		"battle_started": not _session.battle.is_empty(),
+		"scenario_status": _session.scenario_status,
 		"message": _last_message,
 	}
 
@@ -1190,6 +1251,18 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 						"last_action": String(_session.flags.get("last_action", "")),
 						"message": _last_message if _last_message != "" else "Resource route claimed.",
 					}
+				return {
+					"ok": true,
+					"action": "hold_resource",
+					"target_kind": target_kind,
+					"target": target.duplicate(true),
+					"start": _validation_tile_payload(hero_pos),
+					"finish": _validation_tile_payload(hero_pos),
+					"remaining_steps": 0,
+					"context_action_ids": resource_context_action_ids,
+					"last_action": String(_session.flags.get("last_action", "")),
+					"message": _last_message if _last_message != "" else "Resource route reached.",
+				}
 			"artifact":
 				var artifact_context_action_ids := _validation_context_action_ids()
 				if artifact_context_action_ids.has("collect_artifact"):
@@ -1326,6 +1399,13 @@ func _validation_targets(target_kind: String, owner_id: String = "", placement_i
 				if placement_id != "" and String(node.get("placement_id", "")) != placement_id:
 					continue
 				var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+				if (
+					placement_id != ""
+					and bool(site.get("persistent_control", false))
+					and String(node.get("collected_by_faction_id", "")) == "player"
+				):
+					targets.append(node)
+					continue
 				if bool(site.get("persistent_control", false)):
 					if String(node.get("collected_by_faction_id", "")) == "player":
 						continue
@@ -1350,6 +1430,38 @@ func _validation_context_action_ids() -> Array[String]:
 			continue
 		ids.append(String(action.get("id", "")))
 	return ids
+
+func _validation_context_action_signature() -> Dictionary:
+	var hero_pos := OverworldRules.hero_position(_session)
+	var active_context: Dictionary = OverworldRules.get_active_context(_session)
+	var resource_sites := []
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		resource_sites.append(
+			{
+				"placement_id": String(node.get("placement_id", "")),
+				"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+				"response_until_day": max(0, int(node.get("response_until_day", 0))),
+				"response_commander_id": String(node.get("response_commander_id", "")),
+				"delivery_target_kind": String(node.get("delivery_target_kind", "")),
+				"delivery_target_id": String(node.get("delivery_target_id", "")),
+				"delivery_arrival_day": max(0, int(node.get("delivery_arrival_day", 0))),
+				"delivery_manifest": _duplicate_dictionary(node.get("delivery_manifest", {})),
+			}
+		)
+	return {
+		"game_state": _session.game_state,
+		"scenario_status": _session.scenario_status,
+		"day": _session.day,
+		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
+		"movement": _duplicate_dictionary(_session.overworld.get("movement", {})),
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"active_context_type": String(active_context.get("type", "")),
+		"active_town": _validation_active_town_state(),
+		"resource_sites": resource_sites,
+	}
 
 func _validation_active_town_state() -> Dictionary:
 	var context: Dictionary = OverworldRules.get_active_context(_session)
@@ -1376,8 +1488,20 @@ func _validation_town_state_for_placement(placement_id: String) -> Dictionary:
 			"income": OverworldRules.town_income(town, _session),
 			"base_battle_readiness": OverworldRules.town_battle_readiness(town),
 			"battle_readiness": OverworldRules.town_battle_readiness(town, _session),
+			"garrison": _duplicate_array(town.get("garrison", [])),
+			"garrison_headcount": _validation_stack_headcount(town.get("garrison", [])),
 		}
 	return {}
+
+func _validation_stack_headcount(stacks_value: Variant) -> int:
+	var headcount := 0
+	if not (stacks_value is Array):
+		return headcount
+	for stack in stacks_value:
+		if not (stack is Dictionary):
+			continue
+		headcount += max(0, int(stack.get("count", 0)))
+	return headcount
 
 func _validation_target_priority(target_kind: String, target: Dictionary) -> int:
 	if target_kind != "encounter":
@@ -1464,13 +1588,13 @@ func _validation_tile_has_route_hazard(
 	if not _resource_node_at(tile.x, tile.y).is_empty():
 		if target_kind == "resource" and String(_resource_node_at(tile.x, tile.y).get("placement_id", "")) == target_placement_id:
 			return false
-		if target_kind == "encounter":
+		if target_kind in ["encounter", "town"]:
 			return false
 		return true
 	if not _artifact_node_at(tile.x, tile.y).is_empty():
 		if target_kind == "artifact" and String(_artifact_node_at(tile.x, tile.y).get("placement_id", "")) == target_placement_id:
 			return false
-		if target_kind == "encounter":
+		if target_kind in ["encounter", "town"]:
 			return false
 		return true
 	var encounter := _encounter_at(tile.x, tile.y)

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T07:35:00Z",
+  "updatedAt": "2026-04-16T07:59:52Z",
   "status": "completed",
   "currentPhase": "long-horizon-strategic-play-quality",
-  "currentSliceId": "phase-6-extended-strategic-soak-stability",
-  "currentSliceTitle": "Harden repeated-day strategic soak behavior for AI economy, retake pressure, convoy reopening, commander recovery, and save continuity",
+  "currentSliceId": "phase-6-live-routed-strategic-soak-validation",
+  "currentSliceTitle": "Extend the live routed-client validation harness through a multi-day strategic soak with captured-town pacification, reserve convoys, retake pressure, and save continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed extended strategic-soak stability slice: active logistics responses now reopen follow-up reserve convoys while active, disrupted follow-up routes clear without ghost delivery, and core smoke validates multi-day convoy save/restore, disruption fallout, enemy weekly build/recruit/muster/raid spending, and restored continuity.",
+  "currentSliceNotes": "Completed the live routed strategic-soak validation slice: the real Boot/MainMenu/Overworld/Town/Battle route now captures and garrisons Duskfen, survives hostile retake pressure, dispatches and delivers a reserve convoy, reopens a follow-up convoy, advances live days, and preserves both convoy and occupation state through shipped save-browser resume. Latest passing report: .artifacts/live_flow_smoke/20260416T075811Z/live_validation_report.json.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1106,6 +1106,18 @@
       "title": "Validate extended strategic soak behavior through deterministic core regression and strongest relevant repo or Godot checks",
       "status": "completed",
       "difficulty": "very_high"
+    },
+    {
+      "id": "phase-6-live-routed-strategic-soak-validation",
+      "title": "Extend the live routed-client validation harness through multi-day captured-town pacification, reserve convoy delivery or reopening, retake pressure, and save/resume continuity",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-6-live-routed-strategic-soak-validation-checks",
+      "title": "Re-run repository-local validation, Godot headless checks, and the new live routed strategic-soak harness flow",
+      "status": "completed",
+      "difficulty": "very_high"
     }
   ],
   "notes": [
@@ -1368,6 +1380,8 @@
     "This run extended the shipped routed-client validation harness beyond hostile-town capture into real River Pass victory resolution: the harness now claims authored support through the overworld shell, clears required encounter objectives, captures Duskfen Bastion through the shipped town-assault battle, verifies ScenarioOutcomeShell victory state, writes and resumes an outcome manual save from MainMenu, and verifies latest-save outcome review semantics plus post-outcome menu routing. Latest passing live report: .artifacts/live_flow_smoke/20260416T033637Z/live_validation_report.json.",
     "This run added a dedicated boot_to_skirmish_defeat_outcome live validation flow that launches River Pass through Boot and MainMenu, advances the shipped overworld End Turn action until authored Mireclaw pressure triggers defeat, and verifies ScenarioOutcomeShell receives a real defeat session instead of a direct flag flip.",
     "The defeat flow now saves the defeat outcome from ScenarioOutcomeShell, returns to MainMenu, resumes that manual outcome save through the shipped save browser, verifies resume_target outcome plus scenario_status defeat, and confirms the return-to-menu follow-up keeps latest-save outcome review semantics.",
-    "Repository-local validation, Python harness bytecode compilation, Godot 4.6.2 headless boot, focused menu/outcome, overworld, and town/battle smoke scenes, the new hard-difficulty defeat live flow, and the existing default victory live flow all passed for this routed outcome validation slice."
+    "Repository-local validation, Python harness bytecode compilation, Godot 4.6.2 headless boot, focused menu/outcome, overworld, and town/battle smoke scenes, the new hard-difficulty defeat live flow, and the existing default victory live flow all passed for this routed outcome validation slice.",
+    "This run extended the shipped routed-client validation harness into a live multi-day strategic soak: it launches River Pass from the real menu, routes through the starting town and Free Company Yard, captures Duskfen through town-assault battle, garrisons it through town transfer actions, resolves hostile retake pressure, dispatches a reserve convoy, saves and resumes through the shipped save browser, advances live days until convoy delivery and pacification progress, reopens a follow-up convoy, and proves the final strategic state survives another save/resume. Latest passing live report: .artifacts/live_flow_smoke/20260416T075811Z/live_validation_report.json.",
+    "Validation for the live routed strategic-soak slice passed with python3 -m py_compile tests/run_live_flow_harness.py tests/validate_repo.py, python3 -m json.tool ops/progress.json, python3 tests/validate_repo.py, git diff --check, SAVE_VERSION remaining 9, Godot 4.6.2 headless boot, res://tests/core_systems_regression_smoke.tscn, res://tests/overworld_visual_smoke.tscn, and python3 tests/run_live_flow_harness.py --flow boot_to_skirmish_strategic_soak --scenario river-pass --difficulty story --manual-slot 2."
   ]
 }

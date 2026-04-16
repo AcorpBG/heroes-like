@@ -7,6 +7,7 @@ const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"
 const FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME := "boot_to_campaign_resolved_outcome"
 const FLOW_BOOT_TO_CAMPAIGN_DEFEAT_OUTCOME := "boot_to_campaign_defeat_outcome"
 const FLOW_BOOT_TO_CAMPAIGN_FULL_ARC := "boot_to_campaign_full_arc"
+const FLOW_BOOT_TO_SKIRMISH_STRATEGIC_SOAK := "boot_to_skirmish_strategic_soak"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
@@ -39,6 +40,10 @@ const MAX_VALIDATION_BATTLE_ACTIONS := 40
 const MAX_VALIDATION_DEFEAT_END_TURNS := 10
 const MAX_VALIDATION_TOWN_RECRUIT_ACTIONS := 6
 const MAX_VALIDATION_TOWN_PREP_ACTIONS := 12
+const MAX_VALIDATION_STRATEGIC_SOAK_DAYS := 7
+const STRATEGIC_SOAK_CAPTURED_TOWN_ID := "duskfen_bastion"
+const STRATEGIC_SOAK_ROUTE_SITE_ID := "river_free_company"
+const STRATEGIC_SOAK_SOURCE_TOWN_ID := "riverwatch_hold"
 const CAMPAIGN_TOWN_BUILD_PRIORITY := [
 	"building_mire_pens",
 	"building_bowyer_lodge",
@@ -114,6 +119,8 @@ func _execute_flow() -> bool:
 			return await _execute_boot_to_campaign_defeat_outcome_flow()
 		FLOW_BOOT_TO_CAMPAIGN_FULL_ARC:
 			return await _execute_boot_to_campaign_full_arc_flow()
+		FLOW_BOOT_TO_SKIRMISH_STRATEGIC_SOAK:
+			return await _execute_boot_to_skirmish_strategic_soak_flow()
 		_:
 			return _fail("Unsupported live validation flow requested.", {"flow": _config.get("flow", "")})
 
@@ -451,6 +458,229 @@ func _execute_boot_to_campaign_full_arc_flow() -> bool:
 			return false
 
 	return _fail("Campaign full-arc validation ended without reaching the authored finale.", {"campaign_id": campaign_id, "chapter_ids": chapter_ids})
+
+func _execute_boot_to_skirmish_strategic_soak_flow() -> bool:
+	var launch := await _enter_live_skirmish_overworld()
+	if not bool(launch.get("ok", false)):
+		return false
+	var current_overworld = launch.get("overworld", null)
+	if current_overworld == null:
+		return _fail("Strategic soak launch did not provide an overworld scene instance.", launch)
+
+	var source_town_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"town",
+		"player",
+		TOWN_SCENE,
+		STRATEGIC_SOAK_SOURCE_TOWN_ID,
+		"strategic_soak_source_town"
+	)
+	if not _require(bool(source_town_route.get("ok", false)), "Strategic soak could not route through the starting town shell before opening the logistics road.", source_town_route):
+		return false
+	var source_town = source_town_route.get("scene", null)
+	if source_town == null:
+		return _fail("Strategic soak starting-town route completed without a town scene instance.", source_town_route)
+	await _settle_frames(6)
+	var source_town_snapshot: Dictionary = source_town.call("validation_snapshot")
+	source_town_snapshot["route_history"] = source_town_route.get("history", [])
+	_capture_step("strategic_soak_source_town_entered", source_town_snapshot)
+	var source_leave: Dictionary = source_town.call("validation_leave_town")
+	if not _require(bool(source_leave.get("ok", false)), "Strategic soak could not leave the starting town through the live router.", source_leave):
+		return false
+	current_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if current_overworld == null:
+		return _fail("Strategic soak leaving the starting town did not return to the overworld.", source_leave)
+	await _settle_frames(6)
+	var source_exit_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+	source_exit_snapshot["town_exit"] = source_leave
+	_capture_step("strategic_soak_overworld_after_source_town", source_exit_snapshot)
+
+	var support_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"resource",
+		"",
+		OVERWORLD_SCENE,
+		STRATEGIC_SOAK_ROUTE_SITE_ID,
+		"strategic_soak_support_site"
+	)
+	if not _require(bool(support_route.get("ok", false)), "Strategic soak could not route to the support logistics site through the live overworld shell.", support_route):
+		return false
+	current_overworld = support_route.get("scene", current_overworld)
+	var support_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+	var support_site_state := _live_resource_site_state(current_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+	if not _require(String(support_site_state.get("collected_by_faction_id", "")) == "player", "Strategic soak support route was not claimed through the live overworld shell.", support_site_state):
+		return false
+	support_snapshot["route_history"] = support_route.get("history", [])
+	support_snapshot["route_site_state"] = support_site_state
+	_capture_step("strategic_soak_support_site_claimed", support_snapshot)
+
+	var battle_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"town",
+		"enemy",
+		BATTLE_SCENE,
+		STRATEGIC_SOAK_CAPTURED_TOWN_ID,
+		"strategic_soak_capture_route",
+		"town_assault",
+		STRATEGIC_SOAK_CAPTURED_TOWN_ID
+	)
+	if not _require(bool(battle_route.get("ok", false)), "Strategic soak could not route to the hostile town assault through the live overworld shell.", battle_route):
+		return false
+	var battle = battle_route.get("scene", null)
+	if battle == null:
+		return _fail("Strategic soak hostile-town route completed without a battle scene instance.", battle_route)
+	await _settle_frames(6)
+	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
+	if not _require(String(battle_snapshot.get("battle_context_type", "")) == "town_assault", "Strategic soak did not enter a town-assault battle.", battle_snapshot):
+		return false
+	if not _require(String(battle_snapshot.get("battle_context_town_placement_id", "")) == STRATEGIC_SOAK_CAPTURED_TOWN_ID, "Strategic soak assaulted the wrong town.", battle_snapshot):
+		return false
+	battle_snapshot["route_history"] = battle_route.get("history", [])
+	_capture_step("strategic_soak_town_assault_entered", battle_snapshot)
+
+	var battle_resolution := await _play_battle_to_scene(
+		battle,
+		"strategic_soak_town_assault_progressed",
+		"strategic_soak_overworld_after_capture",
+		OVERWORLD_SCENE
+	)
+	if not bool(battle_resolution.get("ok", false)):
+		return false
+	current_overworld = battle_resolution.get("scene", current_overworld)
+	var captured_town_state := _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+	var captured_occupation := _dictionary_value(captured_town_state.get("occupation", {}))
+	var captured_front := _dictionary_value(captured_town_state.get("front", {}))
+	if not _require(String(captured_town_state.get("owner", "")) == "player", "Strategic soak capture did not transfer the town to player control.", captured_town_state):
+		return false
+	if not _require(bool(captured_occupation.get("active", false)) and String(captured_occupation.get("mode", "")) == "pacifying", "Strategic soak captured town did not enter pacification.", captured_town_state):
+		return false
+	if not _require(bool(captured_front.get("active", false)) and String(captured_front.get("mode", "")) == "retake", "Strategic soak captured town did not keep hostile retake pressure.", captured_town_state):
+		return false
+
+	var garrison_result := await _garrison_captured_town_through_shell(
+		current_overworld,
+		STRATEGIC_SOAK_CAPTURED_TOWN_ID
+	)
+	if not bool(garrison_result.get("ok", false)):
+		return false
+	current_overworld = garrison_result.get("overworld", current_overworld)
+	captured_town_state = _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+	captured_occupation = _dictionary_value(captured_town_state.get("occupation", {}))
+	captured_front = _dictionary_value(captured_town_state.get("front", {}))
+	if not _require(String(captured_town_state.get("owner", "")) == "player", "Strategic soak captured-town garrison transfer did not preserve player control.", captured_town_state):
+		return false
+	if not _require(_town_garrison_headcount(captured_town_state) > 0, "Strategic soak captured-town transfer did not leave a real garrison.", garrison_result):
+		return false
+	var initial_occupation_pressure := int(captured_occupation.get("pressure", 0))
+
+	var return_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"resource",
+		"",
+		OVERWORLD_SCENE,
+		STRATEGIC_SOAK_ROUTE_SITE_ID,
+		"strategic_soak_return_to_route"
+	)
+	if not _require(bool(return_route.get("ok", false)), "Strategic soak could not route back to the live logistics site after capture.", return_route):
+		return false
+	current_overworld = return_route.get("scene", current_overworld)
+
+	var response_route := await _perform_live_site_response(current_overworld, "strategic_soak_dispatch")
+	if not bool(response_route.get("ok", false)):
+		return false
+	current_overworld = response_route.get("scene", current_overworld)
+	var dispatched_site_state := _live_resource_site_state(current_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+	var dispatched_delivery := _dictionary_value(dispatched_site_state.get("delivery", {}))
+	if not _require(bool(dispatched_delivery.get("active", false)), "Strategic soak dispatch did not create a live reserve convoy.", dispatched_site_state):
+		return false
+	if not _require(String(dispatched_delivery.get("target_kind", "")) == "town" and String(dispatched_delivery.get("target_id", "")) == STRATEGIC_SOAK_CAPTURED_TOWN_ID, "Strategic soak reserve convoy did not target the occupied retake-front town.", dispatched_site_state):
+		return false
+	if not _require(_manifest_headcount(dispatched_delivery.get("manifest", {})) > 0, "Strategic soak reserve convoy did not carry recruits.", dispatched_site_state):
+		return false
+	var dispatch_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+	dispatch_snapshot["response_result"] = response_route.get("result", {})
+	dispatch_snapshot["route_site_state"] = dispatched_site_state
+	dispatch_snapshot["captured_town_state"] = _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+	_capture_step("strategic_soak_convoy_dispatched", dispatch_snapshot)
+
+	var manual_slot := int(_config.get("manual_slot", 2))
+	var convoy_resume := await _save_and_resume_skirmish_overworld_from_main_menu(
+		current_overworld,
+		manual_slot,
+		"strategic_soak_convoy_live"
+	)
+	if not bool(convoy_resume.get("ok", false)):
+		return false
+	current_overworld = convoy_resume.get("overworld", current_overworld)
+
+	var delivered := false
+	var reopened := false
+	var pacification_progressed := false
+	var retake_pressure_seen := _strategic_soak_retake_pressure_seen(current_overworld.call("validation_snapshot"), captured_town_state)
+	var garrison_before_delivery := _town_garrison_headcount(_live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID))
+	for day_index in range(MAX_VALIDATION_STRATEGIC_SOAK_DAYS):
+		var advance := await _advance_strategic_soak_day(
+			current_overworld,
+			"strategic_soak_day_%d" % int(day_index + 1)
+		)
+		if not bool(advance.get("ok", false)):
+			return false
+		current_overworld = advance.get("scene", current_overworld)
+		var day_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+		var town_state := _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+		var occupation_state := _dictionary_value(town_state.get("occupation", {}))
+		var site_state := _live_resource_site_state(current_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+		var delivery_state := _dictionary_value(site_state.get("delivery", {}))
+		var garrison_headcount := _town_garrison_headcount(town_state)
+		if int(occupation_state.get("pressure", initial_occupation_pressure)) < initial_occupation_pressure:
+			pacification_progressed = true
+		if garrison_headcount > garrison_before_delivery:
+			delivered = true
+		if delivered and bool(delivery_state.get("active", false)) and _manifest_headcount(delivery_state.get("manifest", {})) > 0:
+			reopened = true
+		retake_pressure_seen = retake_pressure_seen or _strategic_soak_retake_pressure_seen(day_snapshot, town_state)
+		day_snapshot["captured_town_state"] = town_state
+		day_snapshot["route_site_state"] = site_state
+		day_snapshot["strategic_flags"] = {
+			"delivered": delivered,
+			"reopened": reopened,
+			"pacification_progressed": pacification_progressed,
+			"retake_pressure_seen": retake_pressure_seen,
+		}
+		_capture_step("strategic_soak_day_%d_state" % int(day_index + 1), day_snapshot)
+		if delivered and not reopened and not bool(delivery_state.get("active", false)):
+			var reopen_result := await _perform_live_site_response(current_overworld, "strategic_soak_reopen")
+			if bool(reopen_result.get("ok", false)):
+				current_overworld = reopen_result.get("scene", current_overworld)
+				site_state = _live_resource_site_state(current_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+				delivery_state = _dictionary_value(site_state.get("delivery", {}))
+				reopened = bool(delivery_state.get("active", false)) and _manifest_headcount(delivery_state.get("manifest", {})) > 0
+				var reopen_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+				reopen_snapshot["response_result"] = reopen_result.get("result", {})
+				reopen_snapshot["route_site_state"] = site_state
+				reopen_snapshot["captured_town_state"] = _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+				_capture_step("strategic_soak_convoy_reopened", reopen_snapshot)
+		if delivered and reopened and pacification_progressed and retake_pressure_seen:
+			break
+
+	if not _require(pacification_progressed, "Strategic soak did not advance captured-town pacification across live day turns.", {"initial_pressure": initial_occupation_pressure, "town": _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)}):
+		return false
+	if not _require(delivered, "Strategic soak did not deliver the reserve convoy through live day turns.", {"site": _live_resource_site_state(current_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID), "town": _live_town_state(current_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)}):
+		return false
+	if not _require(reopened, "Strategic soak did not reopen a reserve convoy while the route system stayed live.", {"site": _live_resource_site_state(current_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)}):
+		return false
+	if not _require(retake_pressure_seen, "Strategic soak did not preserve visible hostile retake or raid pressure during the multi-day run.", current_overworld.call("validation_snapshot")):
+		return false
+
+	var followup_resume := await _save_and_resume_skirmish_overworld_from_main_menu(
+		current_overworld,
+		manual_slot,
+		"strategic_soak_followup_live"
+	)
+	if not bool(followup_resume.get("ok", false)):
+		return false
+	_log("Live validation flow completed successfully.")
+	return true
 
 func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	var launch := await _enter_live_skirmish_overworld()
@@ -1488,6 +1718,253 @@ func _advance_campaign_overworld_day(overworld, step_id: String) -> Dictionary:
 		"snapshot": after_snapshot,
 	}
 
+func _advance_strategic_soak_day(overworld, step_id: String) -> Dictionary:
+	if overworld == null:
+		return _fail_with_payload("Strategic soak day advance started without an overworld scene.", {"step_id": step_id})
+	var before_snapshot: Dictionary = overworld.call("validation_snapshot")
+	var end_turn_result: Dictionary = overworld.call("validation_end_turn")
+	await _settle_frames(8)
+	if not _require(bool(end_turn_result.get("ok", false)), "Strategic soak end-turn action failed on the shipped overworld shell.", end_turn_result):
+		return {"ok": false}
+	var current_scene = get_tree().current_scene
+	if current_scene == null:
+		return _fail_with_payload(
+			"Strategic soak end-turn left no active scene.",
+			{
+				"step_id": step_id,
+				"before": before_snapshot,
+				"result": end_turn_result,
+			}
+		)
+	var scene_path := String(current_scene.scene_file_path)
+	if scene_path == BATTLE_SCENE:
+		var battle_snapshot: Dictionary = current_scene.call("validation_snapshot")
+		battle_snapshot["before_end_turn"] = before_snapshot
+		battle_snapshot["end_turn_result"] = end_turn_result
+		_capture_step("%s_battle_interrupt_entered" % step_id, battle_snapshot)
+		var battle_exit := await _play_battle_to_scene(
+			current_scene,
+			"%s_battle_interrupt_progressed" % step_id,
+			"%s_after_battle_interrupt" % step_id,
+			OVERWORLD_SCENE
+		)
+		if not bool(battle_exit.get("ok", false)):
+			return {"ok": false}
+		current_scene = battle_exit.get("scene", null)
+		if current_scene == null:
+			return _fail_with_payload("Strategic soak battle interrupt did not return an overworld scene.", battle_exit)
+		var interrupted_snapshot: Dictionary = current_scene.call("validation_snapshot")
+		interrupted_snapshot["before_end_turn"] = before_snapshot
+		interrupted_snapshot["end_turn_result"] = end_turn_result
+		interrupted_snapshot["battle_interrupt"] = battle_snapshot
+		_capture_step(step_id, interrupted_snapshot)
+		return {
+			"ok": true,
+			"scene": current_scene,
+			"snapshot": interrupted_snapshot,
+		}
+	if scene_path == SCENARIO_OUTCOME_SCENE:
+		var outcome_snapshot: Dictionary = current_scene.call("validation_snapshot")
+		return _fail_with_payload(
+			"Strategic soak reached an outcome while it should still be validating live strategic pressure.",
+			{
+				"step_id": step_id,
+				"before": before_snapshot,
+				"result": end_turn_result,
+				"outcome": outcome_snapshot,
+			}
+		)
+	if scene_path != OVERWORLD_SCENE:
+		var routed_snapshot := {}
+		if current_scene.has_method("validation_snapshot"):
+			routed_snapshot = current_scene.call("validation_snapshot")
+		return _fail_with_payload(
+			"Strategic soak end-turn routed to an unexpected scene.",
+			{
+				"step_id": step_id,
+				"scene_path": scene_path,
+				"before": before_snapshot,
+				"result": end_turn_result,
+				"snapshot": routed_snapshot,
+			}
+		)
+	var after_snapshot: Dictionary = current_scene.call("validation_snapshot")
+	after_snapshot["before_end_turn"] = before_snapshot
+	after_snapshot["end_turn_result"] = end_turn_result
+	_capture_step(step_id, after_snapshot)
+	return {
+		"ok": true,
+		"scene": current_scene,
+		"snapshot": after_snapshot,
+	}
+
+func _garrison_captured_town_through_shell(overworld, placement_id: String) -> Dictionary:
+	if overworld == null:
+		return _fail_with_payload("Strategic soak captured-town garrison step started without an overworld scene.", {"placement_id": placement_id})
+	var town_route := await _route_with_battle_interrupts(
+		overworld,
+		"town",
+		"player",
+		TOWN_SCENE,
+		placement_id,
+		"strategic_soak_captured_town_garrison"
+	)
+	if not _require(bool(town_route.get("ok", false)), "Strategic soak could not enter the captured town through the live town shell for garrison orders.", town_route):
+		return {"ok": false}
+	var town = town_route.get("scene", null)
+	if town == null:
+		return _fail_with_payload("Strategic soak captured-town route completed without a town scene instance.", town_route)
+	await _settle_frames(6)
+	var town_snapshot: Dictionary = town.call("validation_snapshot")
+	town_snapshot["route_history"] = town_route.get("history", [])
+	_capture_step("strategic_soak_captured_town_entered", town_snapshot)
+
+	var transfer_results := []
+	for transfer_index in range(3):
+		var transfer_action_id := _captured_town_garrison_transfer_action_id(town)
+		if transfer_action_id == "":
+			break
+		var transfer_result: Dictionary = town.call("validation_perform_town_action", transfer_action_id)
+		await _settle_frames(6)
+		if not _require(bool(transfer_result.get("ok", false)), "Strategic soak captured-town garrison transfer failed through the live town shell.", transfer_result):
+			return {"ok": false}
+		transfer_results.append(transfer_result.duplicate(true))
+	if transfer_results.is_empty():
+		return _fail_with_payload(
+			"Strategic soak captured town exposed no hero-to-garrison transfer action.",
+			{
+				"town_snapshot": town_snapshot,
+				"action_catalog": town.call("validation_action_catalog"),
+			}
+		)
+	var transfer_snapshot: Dictionary = town.call("validation_snapshot")
+	transfer_snapshot["transfer_results"] = transfer_results
+	transfer_snapshot["route_history"] = town_route.get("history", [])
+	_capture_step("strategic_soak_captured_town_garrisoned", transfer_snapshot)
+
+	var leave_result: Dictionary = town.call("validation_leave_town")
+	if not _require(bool(leave_result.get("ok", false)), "Strategic soak could not leave the captured town after garrisoning it.", leave_result):
+		return {"ok": false}
+	var returned_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if returned_overworld == null:
+		return _fail_with_payload("Strategic soak captured-town leave route did not return to the overworld.", leave_result)
+	await _settle_frames(6)
+	var returned_snapshot: Dictionary = returned_overworld.call("validation_snapshot")
+	returned_snapshot["town_exit"] = leave_result
+	returned_snapshot["captured_town_state"] = _live_town_state(returned_overworld, placement_id)
+	_capture_step("strategic_soak_overworld_after_garrison", returned_snapshot)
+	return {
+		"ok": true,
+		"overworld": returned_overworld,
+		"town_snapshot": transfer_snapshot,
+	}
+
+func _captured_town_garrison_transfer_action_id(town) -> String:
+	if town == null:
+		return ""
+	var catalog: Dictionary = town.call("validation_action_catalog")
+	var transfer_actions = catalog.get("transfer", [])
+	if not (transfer_actions is Array):
+		return ""
+	var fallback := ""
+	for action_value in transfer_actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			continue
+		var action_id := String(action.get("id", ""))
+		var parts := action_id.split(":")
+		if parts.size() != 5 or String(parts[0]) != "transfer":
+			continue
+		if String(parts[1]) == "garrison" or String(parts[2]) != "garrison":
+			continue
+		if String(parts[4]) == "all":
+			return action_id
+		if fallback == "":
+			fallback = action_id
+	return fallback
+
+func _route_with_battle_interrupts(
+	overworld,
+	target_kind: String,
+	owner_id: String,
+	destination_scene: String,
+	placement_id: String,
+	step_prefix: String,
+	expected_battle_context: String = "",
+	expected_town_placement_id: String = ""
+) -> Dictionary:
+	var current_overworld = overworld
+	var combined_history := []
+	for attempt_index in range(4):
+		var route := await _route_from_overworld_to_scene(
+			current_overworld,
+			target_kind,
+			owner_id,
+			destination_scene,
+			placement_id
+		)
+		var route_history = route.get("history", [])
+		if route_history is Array:
+			combined_history.append_array(route_history)
+		if bool(route.get("ok", false)):
+			if destination_scene == BATTLE_SCENE and expected_battle_context != "":
+				var battle = route.get("scene", null)
+				if battle != null:
+					var battle_snapshot: Dictionary = battle.call("validation_snapshot")
+					if (
+						String(battle_snapshot.get("battle_context_type", "")) == expected_battle_context
+						and (
+							expected_town_placement_id == ""
+							or String(battle_snapshot.get("battle_context_town_placement_id", "")) == expected_town_placement_id
+						)
+					):
+						route["history"] = combined_history
+						return route
+					battle_snapshot["route_history"] = combined_history.duplicate(true)
+					_capture_step("%s_interrupt_battle_entered_%d" % [step_prefix, int(attempt_index + 1)], battle_snapshot)
+					var interrupt_exit := await _play_battle_to_scene(
+						battle,
+						"%s_interrupt_battle_progressed_%d" % [step_prefix, int(attempt_index + 1)],
+						"%s_after_interrupt_%d" % [step_prefix, int(attempt_index + 1)],
+						OVERWORLD_SCENE
+					)
+					if not bool(interrupt_exit.get("ok", false)):
+						return {"ok": false}
+					current_overworld = interrupt_exit.get("scene", current_overworld)
+					continue
+			route["history"] = combined_history
+			return route
+		if String(route.get("scene_path", "")) == BATTLE_SCENE and get_tree().current_scene != null:
+			var interrupt_battle = get_tree().current_scene
+			var interrupt_snapshot: Dictionary = interrupt_battle.call("validation_snapshot")
+			interrupt_snapshot["failed_route"] = route
+			interrupt_snapshot["route_history"] = combined_history.duplicate(true)
+			_capture_step("%s_interrupt_battle_entered_%d" % [step_prefix, int(attempt_index + 1)], interrupt_snapshot)
+			var resolved_interrupt := await _play_battle_to_scene(
+				interrupt_battle,
+				"%s_interrupt_battle_progressed_%d" % [step_prefix, int(attempt_index + 1)],
+				"%s_after_interrupt_%d" % [step_prefix, int(attempt_index + 1)],
+				OVERWORLD_SCENE
+			)
+			if not bool(resolved_interrupt.get("ok", false)):
+				return {"ok": false}
+			current_overworld = resolved_interrupt.get("scene", current_overworld)
+			continue
+		route["history"] = combined_history
+		return route
+	return _fail_with_payload(
+		"Strategic soak route could not reach the requested target after resolving battle interrupts.",
+		{
+			"target_kind": target_kind,
+			"owner_id": owner_id,
+			"destination_scene": destination_scene,
+			"placement_id": placement_id,
+			"history": combined_history,
+		}
+	)
+
 func _route_from_overworld_to_scene(
 	overworld,
 	target_kind: String,
@@ -2356,6 +2833,165 @@ func _verify_campaign_defeat_outcome_route_and_followups(outcome_route: Dictiona
 	_capture_step(CAMPAIGN_DEFEAT_OUTCOME_MENU_ACTION_STEP_ID, browser_snapshot)
 	return true
 
+func _perform_live_site_response(overworld, step_prefix: String) -> Dictionary:
+	var current_overworld = overworld
+	for attempt_index in range(3):
+		if current_overworld == null:
+			return _fail_with_payload("Strategic soak route response started without an overworld scene.", {"step_prefix": step_prefix})
+		var result: Dictionary = current_overworld.call("validation_perform_context_action", "site_response")
+		await _settle_frames(8)
+		var current_scene = get_tree().current_scene
+		var scene_path := _current_scene_path()
+		if bool(result.get("ok", false)) and current_scene != null and scene_path == OVERWORLD_SCENE:
+			var snapshot: Dictionary = current_scene.call("validation_snapshot")
+			snapshot["response_result"] = result
+			snapshot["route_site_state"] = _live_resource_site_state(current_scene, STRATEGIC_SOAK_ROUTE_SITE_ID)
+			_capture_step("%s_response_issued" % step_prefix, snapshot)
+			return {
+				"ok": true,
+				"scene": current_scene,
+				"result": result,
+				"snapshot": snapshot,
+			}
+		if current_scene != null and scene_path == BATTLE_SCENE:
+			var battle_exit := await _play_battle_to_scene(
+				current_scene,
+				"%s_response_interrupt_battle_progressed_%d" % [step_prefix, int(attempt_index + 1)],
+				"%s_after_response_interrupt_%d" % [step_prefix, int(attempt_index + 1)],
+				OVERWORLD_SCENE
+			)
+			if not bool(battle_exit.get("ok", false)):
+				return {"ok": false}
+			current_overworld = battle_exit.get("scene", current_overworld)
+			continue
+		var message := String(result.get("message", ""))
+		if "movement" in message.to_lower() or "not available" in message.to_lower():
+			var refresh_day := await _advance_strategic_soak_day(
+				current_overworld,
+				"%s_movement_refresh_%d" % [step_prefix, int(attempt_index + 1)]
+			)
+			if not bool(refresh_day.get("ok", false)):
+				return refresh_day
+			current_overworld = refresh_day.get("scene", current_overworld)
+			continue
+		return _fail_with_payload(
+			"Strategic soak could not issue the live logistics-site response order.",
+			{
+				"step_prefix": step_prefix,
+				"attempt": attempt_index + 1,
+				"result": result,
+				"scene_path": scene_path,
+				"snapshot": current_overworld.call("validation_snapshot") if current_overworld != null else {},
+			}
+		)
+	return _fail_with_payload(
+		"Strategic soak exhausted attempts to issue the live logistics-site response order.",
+		{
+			"step_prefix": step_prefix,
+			"snapshot": current_overworld.call("validation_snapshot") if current_overworld != null else {},
+		}
+	)
+
+func _save_and_resume_skirmish_overworld_from_main_menu(
+	overworld,
+	manual_slot: int,
+	step_prefix: String
+) -> Dictionary:
+	if overworld == null:
+		return _fail_with_payload("Skirmish overworld save/resume started without an overworld scene.", {"step_prefix": step_prefix})
+	if not _require(
+		bool(overworld.call("validation_select_save_slot", manual_slot)),
+		"Skirmish overworld could not select the requested manual save slot.",
+		{
+			"manual_slot": manual_slot,
+			"overworld_snapshot": overworld.call("validation_snapshot"),
+		}
+	):
+		return {"ok": false}
+	await _settle_frames(3)
+
+	var expected_signature := _strategic_soak_resume_signature(overworld)
+	var overworld_save: Dictionary = overworld.call("validation_save_to_selected_slot")
+	var overworld_save_summary := _dictionary_value(overworld_save.get("summary", {}))
+	if not _require(bool(overworld_save.get("ok", false)), "Skirmish overworld could not write a manual save from the shipped shell.", overworld_save):
+		return {"ok": false}
+	if not _require(int(overworld_save.get("selected_slot", 0)) == manual_slot, "Skirmish overworld saved into the wrong manual slot.", overworld_save):
+		return {"ok": false}
+	if not _require(String(overworld_save_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Skirmish overworld manual save summary scenario id did not match the launched scenario.", overworld_save_summary):
+		return {"ok": false}
+	if not _require(String(overworld_save_summary.get("launch_mode", "")) == "skirmish", "Skirmish overworld manual save did not preserve skirmish launch mode.", overworld_save_summary):
+		return {"ok": false}
+	if not _require(String(overworld_save_summary.get("resume_target", "")) == "overworld", "Skirmish overworld manual save did not advertise overworld resume.", overworld_save_summary):
+		return {"ok": false}
+	await _settle_frames(6)
+
+	var saved_snapshot: Dictionary = overworld.call("validation_snapshot")
+	saved_snapshot["manual_save"] = overworld_save
+	saved_snapshot["strategic_signature"] = expected_signature
+	saved_snapshot["route_site_state"] = _live_resource_site_state(overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+	saved_snapshot["captured_town_state"] = _live_town_state(overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+	_capture_step("%s_saved" % step_prefix, saved_snapshot)
+
+	var menu_return: Dictionary = overworld.call("validation_return_to_menu")
+	if not _require(bool(menu_return.get("ok", false)), "Skirmish overworld could not return to the main menu through the live router.", menu_return):
+		return {"ok": false}
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		_fail("Returning to menu after the skirmish overworld save did not reach the main menu scene.", menu_return)
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var latest_summary_after_menu_return := SaveService.latest_loadable_summary()
+	if not _require(String(latest_summary_after_menu_return.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Latest save after skirmish overworld return did not match the launched scenario.", latest_summary_after_menu_return):
+		return {"ok": false}
+	if not _require(String(latest_summary_after_menu_return.get("resume_target", "")) == "overworld", "Latest save after skirmish overworld return did not point back to overworld.", latest_summary_after_menu_return):
+		return {"ok": false}
+	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
+	menu_after_return_snapshot["menu_return"] = menu_return
+	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
+	_capture_step("main_menu_after_%s_return" % step_prefix, menu_after_return_snapshot)
+
+	menu.call("validation_open_saves_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_save_summary", "manual", str(manual_slot))),
+		"Main menu save browser could not select the skirmish overworld manual save.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	await _settle_frames(4)
+
+	var overworld_resume: Dictionary = menu.call("validation_resume_selected_save")
+	if not _require(bool(overworld_resume.get("ok", false)), "Main menu resume did not restore the selected skirmish overworld save.", overworld_resume):
+		return {"ok": false}
+	var resumed_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if resumed_overworld == null:
+		_fail("Resuming the skirmish overworld save did not route back into the overworld scene.", overworld_resume)
+		return {"ok": false}
+	await _settle_frames(6)
+
+	var actual_signature := _strategic_soak_resume_signature(resumed_overworld)
+	if not _require(
+		JSON.stringify(actual_signature) == JSON.stringify(expected_signature),
+		"Skirmish strategic-soak save/resume did not preserve the live route and occupation state.",
+		{
+			"expected": expected_signature,
+			"actual": actual_signature,
+		}
+	):
+		return {"ok": false}
+	var resumed_snapshot: Dictionary = resumed_overworld.call("validation_snapshot")
+	resumed_snapshot["resume"] = overworld_resume
+	resumed_snapshot["strategic_signature"] = actual_signature
+	resumed_snapshot["route_site_state"] = _live_resource_site_state(resumed_overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+	resumed_snapshot["captured_town_state"] = _live_town_state(resumed_overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+	_capture_step("%s_resumed" % step_prefix, resumed_snapshot)
+	return {
+		"ok": true,
+		"overworld": resumed_overworld,
+		"snapshot": resumed_snapshot,
+	}
+
 func _save_and_resume_campaign_overworld_from_main_menu(
 	overworld,
 	manual_slot: int,
@@ -3055,6 +3691,95 @@ func _set_current_validation_scenario(scenario_id: String) -> void:
 	_config["scenario_id"] = scenario_id
 	if not _report.is_empty():
 		_report["current_scenario_id"] = scenario_id
+
+func _live_town_state(overworld, placement_id: String) -> Dictionary:
+	if overworld == null or not overworld.has_method("validation_town_state_for_placement"):
+		return {}
+	return _dictionary_value(overworld.call("validation_town_state_for_placement", placement_id))
+
+func _live_resource_site_state(overworld, placement_id: String) -> Dictionary:
+	if overworld == null or not overworld.has_method("validation_resource_site_state"):
+		return {}
+	return _dictionary_value(overworld.call("validation_resource_site_state", placement_id))
+
+func _strategic_soak_resume_signature(overworld) -> Dictionary:
+	var snapshot: Dictionary = overworld.call("validation_snapshot") if overworld != null else {}
+	var town_state := _live_town_state(overworld, STRATEGIC_SOAK_CAPTURED_TOWN_ID)
+	var occupation := _dictionary_value(town_state.get("occupation", {}))
+	var front := _dictionary_value(town_state.get("front", {}))
+	var site_state := _live_resource_site_state(overworld, STRATEGIC_SOAK_ROUTE_SITE_ID)
+	var delivery := _dictionary_value(site_state.get("delivery", {}))
+	var response := _dictionary_value(site_state.get("response", {}))
+	var hero_position := _dictionary_value(snapshot.get("hero_position", {}))
+	return {
+		"scenario_id": String(snapshot.get("scenario_id", "")),
+		"difficulty": String(snapshot.get("difficulty", "")),
+		"launch_mode": String(snapshot.get("launch_mode", "")),
+		"game_state": String(snapshot.get("game_state", "")),
+		"day": int(snapshot.get("day", 0)),
+		"hero_position": {
+			"x": int(hero_position.get("x", 0)),
+			"y": int(hero_position.get("y", 0)),
+		},
+		"movement_current": int(snapshot.get("movement_current", 0)),
+		"town_owner": String(town_state.get("owner", "")),
+		"town_garrison_headcount": _town_garrison_headcount(town_state),
+		"occupation_active": bool(occupation.get("active", false)),
+		"occupation_mode": String(occupation.get("mode", "")),
+		"occupation_pressure": int(occupation.get("pressure", 0)),
+		"occupation_days_to_clear": int(occupation.get("days_to_clear", 0)),
+		"front_active": bool(front.get("active", false)),
+		"front_mode": String(front.get("mode", "")),
+		"front_faction_id": String(front.get("faction_id", "")),
+		"route_controller": String(site_state.get("collected_by_faction_id", "")),
+		"route_response_active": bool(response.get("active", false)),
+		"route_response_until_day": int(site_state.get("response_until_day", 0)),
+		"route_response_commander_id": String(site_state.get("response_commander_id", "")),
+		"delivery_active": bool(delivery.get("active", false)),
+		"delivery_target_kind": String(delivery.get("target_kind", "")),
+		"delivery_target_id": String(delivery.get("target_id", "")),
+		"delivery_arrival_day": int(delivery.get("arrival_day", site_state.get("delivery_arrival_day", 0))),
+		"delivery_manifest_headcount": _manifest_headcount(delivery.get("manifest", site_state.get("delivery_manifest", {}))),
+	}
+
+func _town_garrison_headcount(town_state: Dictionary) -> int:
+	var garrison_value = town_state.get("garrison", [])
+	if garrison_value is Array:
+		return _army_stack_headcount(garrison_value)
+	var headcount_value = town_state.get("garrison_headcount", null)
+	if headcount_value != null:
+		return int(headcount_value)
+	return 0
+
+func _army_stack_headcount(stacks_value: Variant) -> int:
+	var headcount := 0
+	if not (stacks_value is Array):
+		return headcount
+	for stack in stacks_value:
+		if not (stack is Dictionary):
+			continue
+		headcount += max(0, int(stack.get("count", 0)))
+	return headcount
+
+func _manifest_headcount(manifest_value: Variant) -> int:
+	var total := 0
+	if not (manifest_value is Dictionary):
+		return total
+	for unit_id_value in manifest_value.keys():
+		total += max(0, int(manifest_value.get(unit_id_value, 0)))
+	return total
+
+func _strategic_soak_retake_pressure_seen(snapshot: Dictionary, town_state: Dictionary) -> bool:
+	var front := _dictionary_value(town_state.get("front", {}))
+	if bool(front.get("active", false)) and String(front.get("mode", "")) in ["retake", "stabilizing"]:
+		return true
+	var frontier_watch := String(snapshot.get("frontier_watch", ""))
+	if "Retake fronts" in frontier_watch or "retake" in frontier_watch.to_lower():
+		return true
+	for state_value in _dictionary_value(snapshot.get("enemy_pressure_states", {})).values():
+		if state_value is Dictionary and int(state_value.get("active_raid_count", 0)) > 0:
+			return true
+	return false
 
 func _last_history_entry(history_value: Variant) -> Dictionary:
 	if not (history_value is Array) or history_value.is_empty():

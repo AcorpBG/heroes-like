@@ -17,6 +17,7 @@ DEFEAT_OUTCOME_FLOW = "boot_to_skirmish_defeat_outcome"
 CAMPAIGN_OUTCOME_FLOW = "boot_to_campaign_resolved_outcome"
 CAMPAIGN_DEFEAT_OUTCOME_FLOW = "boot_to_campaign_defeat_outcome"
 CAMPAIGN_FULL_ARC_FLOW = "boot_to_campaign_full_arc"
+STRATEGIC_SOAK_FLOW = "boot_to_skirmish_strategic_soak"
 DEFAULT_DISPLAY = ":99"
 
 
@@ -25,7 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--flow",
         default=DEFAULT_FLOW,
-        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for skirmish defeat, {CAMPAIGN_OUTCOME_FLOW} for campaign victory plus downstream carryover continuation, {CAMPAIGN_DEFEAT_OUTCOME_FLOW} for campaign defeat validation, or {CAMPAIGN_FULL_ARC_FLOW} for full routed campaign arc validation.",
+        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for skirmish defeat, {CAMPAIGN_OUTCOME_FLOW} for campaign victory plus downstream carryover continuation, {CAMPAIGN_DEFEAT_OUTCOME_FLOW} for campaign defeat validation, {CAMPAIGN_FULL_ARC_FLOW} for full routed campaign arc validation, or {STRATEGIC_SOAK_FLOW} for live multi-day strategic soak validation.",
     )
     parser.add_argument("--campaign", default="campaign_reedfall", help="Campaign id to select through the real campaign browser.")
     parser.add_argument("--scenario", default="river-pass", help="Scenario id to launch through the real menu.")
