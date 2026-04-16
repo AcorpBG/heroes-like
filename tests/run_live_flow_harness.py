@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FLOW = "boot_to_skirmish_resolved_outcome"
 DEFEAT_OUTCOME_FLOW = "boot_to_skirmish_defeat_outcome"
 CAMPAIGN_OUTCOME_FLOW = "boot_to_campaign_resolved_outcome"
+CAMPAIGN_DEFEAT_OUTCOME_FLOW = "boot_to_campaign_defeat_outcome"
 DEFAULT_DISPLAY = ":99"
 
 
@@ -23,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--flow",
         default=DEFAULT_FLOW,
-        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for routed defeat outcome validation or {CAMPAIGN_OUTCOME_FLOW} for campaign outcome validation.",
+        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for skirmish defeat, {CAMPAIGN_OUTCOME_FLOW} for campaign victory, or {CAMPAIGN_DEFEAT_OUTCOME_FLOW} for campaign defeat validation.",
     )
     parser.add_argument("--campaign", default="campaign_reedfall", help="Campaign id to select through the real campaign browser.")
     parser.add_argument("--scenario", default="river-pass", help="Scenario id to launch through the real menu.")

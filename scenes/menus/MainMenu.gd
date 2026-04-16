@@ -680,6 +680,7 @@ func validation_snapshot() -> Dictionary:
 		"campaign_details": _campaign_details_label.text,
 		"campaign_arc_status": _campaign_arc_status_label.text,
 		"chapter_details": _chapter_details_label.text,
+		"chapter_details_full": _chapter_details_label.tooltip_text,
 		"save_count": _save_summaries.size(),
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,

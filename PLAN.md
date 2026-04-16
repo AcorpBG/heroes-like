@@ -132,6 +132,7 @@ Difficulty: High
 - extend the repo-local live client validation harness through real resolved-session routing so a shipped scenario path can prove `ScenarioOutcomeShell`, outcome save summaries, and post-resolution resume semantics without bypassing gameplay state
 - extend the repo-local live client validation harness with a dedicated routed defeat-outcome flow that advances a real launched scenario through authored pressure defeat, proves `ScenarioOutcomeShell` defeat routing, and verifies defeat-state outcome save/resume plus menu follow-up semantics
 - extend the repo-local live client validation harness with a routed campaign-mode flow that launches from the shipped campaign browser, resolves a real chapter victory, verifies campaign recap/carryover/unlock semantics, proves latest-save outcome review, and starts the next chapter through the outcome action row without mutating progression records directly
+- extend the repo-local live client validation harness with a routed campaign-mode defeat flow that launches Reedfall River Pass from the shipped campaign browser, advances authored pressure into `ScenarioOutcomeShell` defeat state, verifies campaign defeat recap/no-next-chapter semantics, and proves campaign-scoped outcome save/resume plus return-to-menu review behavior through the shipped save browser
 - add a release-facing overworld command commitment board inside the real overworld shell using existing context, logistics, hero-coverage, and frontier-risk data instead of a planner or advisor layer
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
 - turn town recruitment and reserve production into frontline reinforcement delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems instead of a parallel convoy subsystem
@@ -308,6 +309,8 @@ Difficulty: High
 151. [completed] Re-run repository-local validation, the strongest relevant Godot headless smokes or boot checks, and the live harness again after the battle-side routed save/resume extension.
 152. [completed] Extend the shipped routed-client validation harness with a dedicated defeat outcome flow through authored scenario pressure, `ScenarioOutcomeShell`, defeat outcome save/resume, and post-outcome menu semantics.
 153. [completed] Re-run repository-local validation, default victory and dedicated defeat live flows, headless Godot boot, and focused menu/outcome, overworld, and town/battle smokes for the routed defeat validation slice.
+154. [completed] Extend the shipped routed-client validation harness with a dedicated campaign defeat outcome flow through the real Reedfall campaign browser launch, authored pressure defeat, campaign-specific outcome recap checks, save-browser resume, and return-to-menu latest-review semantics.
+155. [completed] Re-run repository-local validation, Python harness compilation, Godot headless boot and menu/outcome smoke, the new campaign defeat flow, plus existing skirmish defeat and campaign victory routed live flows after the campaign defeat validation slice.
 
 ## Standards
 - no throwaway prototype code if avoidable
