@@ -3223,13 +3223,65 @@ static func _advance_player_reserve_deliveries(session: SessionStateStoreScript.
 			continue
 		var message = _resolve_player_reserve_delivery(session, site, delivery_state)
 		node = _clear_resource_site_delivery(node)
+		var followup_result := _queue_followup_reserve_delivery(session, node, site)
+		node = followup_result.get("node", node)
 		nodes[index] = node
 		changed = true
 		if message != "":
 			messages.append(message)
+		var followup_message := String(followup_result.get("message", ""))
+		if followup_message != "":
+			messages.append(followup_message)
 	if changed:
 		session.overworld["resource_nodes"] = nodes
 	return messages
+
+static func _queue_followup_reserve_delivery(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	var result := {"node": node, "message": ""}
+	if session == null or node.is_empty() or site.is_empty():
+		return result
+	if String(node.get("collected_by_faction_id", "")) != "player":
+		return result
+	var response_state := _resource_site_response_state(session, node, site)
+	if not bool(response_state.get("active", false)):
+		return result
+	if bool(_resource_site_delivery_state(session, node, site).get("active", false)):
+		return result
+	var linked_town_result := _resource_node_linked_town(session, node, "player")
+	if int(linked_town_result.get("index", -1)) < 0:
+		return result
+	var source_town: Dictionary = linked_town_result.get("town", {})
+	var delivery_plan := _player_reserve_delivery_plan(session, source_town, response_state)
+	if delivery_plan.is_empty():
+		return result
+	var towns = session.overworld.get("towns", [])
+	source_town["available_recruits"] = _consume_recruit_payload(
+		source_town.get("available_recruits", {}),
+		delivery_plan.get("manifest", {})
+	)
+	towns[int(linked_town_result.get("index", -1))] = source_town
+	session.overworld["towns"] = towns
+	var queued := node.duplicate(true)
+	queued["delivery_controller_id"] = "player"
+	queued["delivery_origin_town_id"] = String(source_town.get("placement_id", ""))
+	queued["delivery_target_kind"] = String(delivery_plan.get("target_kind", ""))
+	queued["delivery_target_id"] = String(delivery_plan.get("target_id", ""))
+	queued["delivery_target_label"] = String(delivery_plan.get("target_label", ""))
+	queued["delivery_arrival_day"] = session.day + max(1, int(delivery_plan.get("eta_days", 1)))
+	queued["delivery_manifest"] = _normalize_recruit_payload(delivery_plan.get("manifest", {}))
+	result["node"] = queued
+	result["message"] = "%s loads a follow-up convoy for %s (%s, %d day%s)." % [
+		String(site.get("name", "The route")),
+		String(delivery_plan.get("target_label", "the front")),
+		_describe_recruit_delta(delivery_plan.get("manifest", {})),
+		int(delivery_plan.get("eta_days", 1)),
+		"" if int(delivery_plan.get("eta_days", 1)) == 1 else "s",
+	]
+	return result
 
 static func _resolve_player_reserve_delivery(
 	session: SessionStateStoreScript.SessionData,

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T07:20:28Z",
+  "updatedAt": "2026-04-16T07:35:00Z",
   "status": "completed",
   "currentPhase": "long-horizon-strategic-play-quality",
-  "currentSliceId": "phase-6-long-horizon-strategic-play-quality",
-  "currentSliceTitle": "Improve and validate long-horizon strategic enemy pressure, economy, convoy, commander, and save continuity",
+  "currentSliceId": "phase-6-extended-strategic-soak-stability",
+  "currentSliceTitle": "Harden repeated-day strategic soak behavior for AI economy, retake pressure, convoy reopening, commander recovery, and save continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the long-horizon strategic play-quality slice in core rules and focused smoke coverage: occupied retake-front towns now pull emergency reserve-delivery priority, hostile route disruption can scatter saved convoy state into pressure and treasury, enemy recruit allocation now respects commander recovery timing plus exposed-town garrison needs before rebuilding scarred commanders, and repository-local plus live routed validation passed cleanly.",
+  "currentSliceNotes": "Completed extended strategic-soak stability slice: active logistics responses now reopen follow-up reserve convoys while active, disrupted follow-up routes clear without ghost delivery, and core smoke validates multi-day convoy save/restore, disruption fallout, enemy weekly build/recruit/muster/raid spending, and restored continuity.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1094,9 +1094,24 @@
       "title": "Validate long-horizon strategic play quality through repository, headless Godot, visual smoke, and live routed-client coverage",
       "status": "completed",
       "difficulty": "very_high"
+    },
+    {
+      "id": "phase-6-extended-strategic-soak-stability",
+      "title": "Harden repeated-day strategic soak behavior for AI economy, retake pressure, convoy reopening, commander recovery, and save continuity",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-6-extended-strategic-soak-stability-validation",
+      "title": "Validate extended strategic soak behavior through deterministic core regression and strongest relevant repo or Godot checks",
+      "status": "completed",
+      "difficulty": "very_high"
     }
   ],
   "notes": [
+    "This run hardened extended strategic-soak behavior by letting active logistics response orders reopen follow-up reserve convoys after a delivery lands, keeping multi-day relief pressure alive through the existing resource-site state instead of adding a parallel convoy subsystem.",
+    "Focused core smoke coverage now proves follow-up convoy save/restore continuity, disrupted follow-up routes clearing without ghost deliveries, hostile pressure fallout, enemy weekly town building, recruitment, muster spending, raid presence, and restored economy/garrison/build state across repeated strategic advances.",
+    "Validation passed cleanly for python3 tests/validate_repo.py, Python bytecode compilation, ops/progress.json parsing, SAVE_VERSION 9 verification, tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, full Godot headless boot, and git diff --check.",
     "This run improved long-horizon strategic play quality by making occupied retake-front towns eligible for emergency reserve-delivery priority, so player town recruits can flow into contested captured towns through the existing logistics-site response path.",
     "Enemy recruitment now balances scarred commander rebuilds against exposed-town garrison needs: recovering commanders are not rebuilt early, underdefended towns get first claim when another commander can still take the field, and later recruits rebuild commanders partially through existing army-continuity state.",
     "Focused core smoke coverage now proves a multi-day captured-town occupation, reserve convoy save/restore, route-disruption interception, hostile pressure and treasury fallout, occupied-town pacification continuity, commander recovery timing, partial rebuild debt, and restored army-continuity summaries.",
