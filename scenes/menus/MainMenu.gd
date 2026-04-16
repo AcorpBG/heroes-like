@@ -675,9 +675,12 @@ func validation_snapshot() -> Dictionary:
 		"stage_dock_visible": _stage_dock_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
 		"campaign_count": _campaign_entries.size(),
+		"save_count": _save_summaries.size(),
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_difficulty": _selected_difficulty,
+		"selected_save_key": _selected_save_key,
+		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"continue_enabled": not _continue_button.disabled,
 		"summary": _summary_label.text,
 	}
@@ -685,6 +688,11 @@ func validation_snapshot() -> Dictionary:
 func validation_open_skirmish_stage() -> void:
 	_select_menu_tab(TAB_SKIRMISH)
 	_show_stage_dock()
+
+func validation_open_saves_stage() -> void:
+	_select_menu_tab(TAB_SAVES)
+	_show_stage_dock()
+	_rebuild_save_browser()
 
 func validation_select_skirmish(scenario_id: String) -> bool:
 	for index in range(_skirmish_entries.size()):
@@ -704,6 +712,37 @@ func validation_set_difficulty(difficulty_id: String) -> bool:
 		_on_difficulty_selected(index)
 		return true
 	return false
+
+func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
+	validation_open_saves_stage()
+	var requested_key := "%s:%s" % [slot_type, slot_id]
+	for index in range(_save_summaries.size()):
+		if _summary_key(_save_summaries[index]) != requested_key:
+			continue
+		_save_list.select(index)
+		_on_save_selected(index)
+		return true
+	return false
+
+func validation_resume_selected_save() -> Dictionary:
+	var summary := _selected_summary()
+	if summary.is_empty():
+		return {"ok": false, "message": "No save summary is selected for validation resume."}
+	var expected_scenario_id := String(summary.get("scenario_id", ""))
+	var expected_resume_target := String(summary.get("resume_target", ""))
+	var loadable := SaveService.can_load_summary(summary)
+	_on_load_selected_pressed()
+	var active_session := SessionState.ensure_active_session()
+	return {
+		"ok": loadable
+			and active_session.scenario_id == expected_scenario_id
+			and SaveService.resume_target_for_session(active_session) == expected_resume_target,
+		"selected_key": _summary_key(summary),
+		"scenario_id": expected_scenario_id,
+		"resume_target": expected_resume_target,
+		"active_scenario_id": active_session.scenario_id,
+		"active_resume_target": SaveService.resume_target_for_session(active_session),
+	}
 
 func validation_start_selected_skirmish() -> Dictionary:
 	var requested_scenario_id := _selected_skirmish_id

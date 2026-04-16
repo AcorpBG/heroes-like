@@ -340,6 +340,34 @@ func validation_try_progress_action() -> Dictionary:
 		"message": "No enabled town validation action is available.",
 	}
 
+func validation_select_save_slot(slot: int) -> bool:
+	var normalized_slot := int(slot)
+	if not SaveService.get_manual_slot_ids().has(normalized_slot):
+		return false
+	SaveService.set_selected_manual_slot(normalized_slot)
+	_refresh_save_slot_picker()
+	return SaveService.get_selected_manual_slot() == normalized_slot
+
+func validation_save_to_selected_slot() -> Dictionary:
+	var selected_slot := SaveService.get_selected_manual_slot()
+	_on_save_pressed()
+	var summary := SaveService.inspect_manual_slot(selected_slot)
+	return {
+		"ok": SaveService.can_load_summary(summary),
+		"selected_slot": selected_slot,
+		"summary": summary,
+		"message": _last_message,
+	}
+
+func validation_return_to_menu() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	_on_menu_pressed()
+	return {
+		"ok": true,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"message": "Town route returned to the main menu.",
+	}
+
 func validation_leave_town() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
 	_on_leave_pressed()

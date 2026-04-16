@@ -21,6 +21,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--flow", default=DEFAULT_FLOW, help="Harness flow id to run.")
     parser.add_argument("--scenario", default="river-pass", help="Scenario id to launch through the real menu.")
     parser.add_argument("--difficulty", default="normal", help="Difficulty id to select before launch.")
+    parser.add_argument("--manual-slot", type=int, default=2, help="Manual slot id to use for routed save/resume validation.")
     parser.add_argument("--display", default=os.environ.get("DISPLAY", DEFAULT_DISPLAY), help="Display to use for the live Godot client.")
     parser.add_argument("--godot-bin", default=os.environ.get("GODOT_BIN", ""), help="Path to the Godot executable.")
     parser.add_argument(
@@ -65,6 +66,7 @@ def main() -> int:
         f"--live-validation-flow={args.flow}",
         f"--live-validation-scenario={args.scenario}",
         f"--live-validation-difficulty={args.difficulty}",
+        f"--live-validation-manual-slot={args.manual_slot}",
         f"--live-validation-output={run_dir}",
     ]
     print("Running:", " ".join(command))
@@ -81,6 +83,7 @@ def main() -> int:
     print(f"OK: {report.get('ok', False)}")
     print(f"Flow: {report.get('flow', '')}")
     print(f"Scenario: {report.get('scenario_id', '')} @ {report.get('difficulty', '')}")
+    print(f"Manual slot: {report.get('manual_slot', 0)}")
     print(f"Steps: {len(report.get('steps', []))}")
     for step in report.get("steps", []):
         print(f"- {step.get('id', '')}: {step.get('scene_path', '')} :: {step.get('screenshot', '')}")

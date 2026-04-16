@@ -91,6 +91,88 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	town_after_snapshot["progress_action"] = town_action
 	_capture_step("town_progressed", town_after_snapshot)
 
+	var manual_slot := int(_config.get("manual_slot", 2))
+	if not _require(
+		bool(town.call("validation_select_save_slot", manual_slot)),
+		"Town validation could not select the requested manual save slot.",
+		{
+			"manual_slot": manual_slot,
+			"town_snapshot": town.call("validation_snapshot"),
+		}
+	):
+		return false
+	await _settle_frames(3)
+
+	var town_save: Dictionary = town.call("validation_save_to_selected_slot")
+	var town_save_summary := _dictionary_value(town_save.get("summary", {}))
+	if not _require(bool(town_save.get("ok", false)), "Town validation could not write a manual save from the live shell.", town_save):
+		return false
+	if not _require(int(town_save.get("selected_slot", 0)) == manual_slot, "Town validation saved into the wrong manual slot.", town_save):
+		return false
+	if not _require(String(town_save_summary.get("resume_target", "")) == "town", "Town manual save did not advertise town resume.", town_save_summary):
+		return false
+	if not _require(String(town_save_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Town manual save summary scenario id did not match the launched scenario.", town_save_summary):
+		return false
+	await _settle_frames(6)
+	var town_saved_snapshot: Dictionary = town.call("validation_snapshot")
+	town_saved_snapshot["manual_save"] = town_save
+	_capture_step("town_saved", town_saved_snapshot)
+	var expected_town_resume_signature := _town_resume_signature(town_saved_snapshot)
+
+	var town_menu_return: Dictionary = town.call("validation_return_to_menu")
+	if not _require(bool(town_menu_return.get("ok", false)), "Town validation could not return to the main menu through the live router.", town_menu_return):
+		return false
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		return _fail("Returning to menu after the town manual save did not reach the main menu scene.", town_menu_return)
+	await _settle_frames(8)
+
+	var latest_summary_after_menu_return := SaveService.latest_loadable_summary()
+	if not _require(not latest_summary_after_menu_return.is_empty(), "Latest save summary was unavailable after town return-to-menu routing.", town_menu_return):
+		return false
+	if not _require(String(latest_summary_after_menu_return.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Latest save summary after town return-to-menu did not match the launched scenario.", latest_summary_after_menu_return):
+		return false
+	if not _require(String(latest_summary_after_menu_return.get("resume_target", "")) == "town", "Latest save summary after town return-to-menu did not point back to the town surface.", latest_summary_after_menu_return):
+		return false
+	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
+	menu_after_return_snapshot["menu_return"] = town_menu_return
+	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
+	_capture_step("main_menu_after_town_return", menu_after_return_snapshot)
+
+	menu.call("validation_open_saves_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_save_summary", "manual", str(manual_slot))),
+		"Main menu save browser could not select the routed town manual save.",
+		menu.call("validation_snapshot")
+	):
+		return false
+	await _settle_frames(4)
+	var town_resume: Dictionary = menu.call("validation_resume_selected_save")
+	if not _require(bool(town_resume.get("ok", false)), "Main menu resume did not restore the selected routed town save.", town_resume):
+		return false
+	var resumed_town = await _wait_for_scene(TOWN_SCENE, 10000)
+	if resumed_town == null:
+		return _fail("Resuming the selected manual town save did not route back into the town scene.", town_resume)
+	await _settle_frames(6)
+
+	var resumed_town_snapshot: Dictionary = resumed_town.call("validation_snapshot")
+	if not _require(String(resumed_town_snapshot.get("game_state", "")) == "town", "Resumed town save did not restore the town surface.", resumed_town_snapshot):
+		return false
+	var actual_town_resume_signature := _town_resume_signature(resumed_town_snapshot)
+	if not _require(
+		JSON.stringify(actual_town_resume_signature) == JSON.stringify(expected_town_resume_signature),
+		"Town manual save/resume did not preserve the routed town state.",
+		{
+			"expected": expected_town_resume_signature,
+			"actual": actual_town_resume_signature,
+		}
+	):
+		return false
+	resumed_town_snapshot["resume"] = town_resume
+	_capture_step("town_resumed", resumed_town_snapshot)
+	town = resumed_town
+
 	var leave_result: Dictionary = town.call("validation_leave_town")
 	if not _require(bool(leave_result.get("ok", false)), "Town validation could not leave through the live router.", leave_result):
 		return false
@@ -264,6 +346,7 @@ func _parse_user_args(args: Array) -> Dictionary:
 		"flow": "",
 		"scenario_id": "river-pass",
 		"difficulty": "normal",
+		"manual_slot": 2,
 		"output_dir": "",
 	}
 	for raw_arg in args:
@@ -284,6 +367,10 @@ func _parse_user_args(args: Array) -> Dictionary:
 		if arg.begins_with("--live-validation-difficulty="):
 			config["enabled"] = true
 			config["difficulty"] = arg.trim_prefix("--live-validation-difficulty=")
+			continue
+		if arg.begins_with("--live-validation-manual-slot="):
+			config["enabled"] = true
+			config["manual_slot"] = int(arg.trim_prefix("--live-validation-manual-slot="))
 			continue
 		if arg.begins_with("--live-validation-output="):
 			config["enabled"] = true
@@ -311,6 +398,7 @@ func _begin_report() -> void:
 		"flow": String(_config.get("flow", "")),
 		"scenario_id": String(_config.get("scenario_id", "")),
 		"difficulty": String(_config.get("difficulty", "")),
+		"manual_slot": int(_config.get("manual_slot", 0)),
 		"output_dir": _output_dir,
 		"display": OS.get_environment("DISPLAY"),
 		"engine_version": Engine.get_version_info(),
@@ -396,6 +484,24 @@ func _report_path() -> String:
 
 func _log_path() -> String:
 	return "%s/live_validation.log" % _output_dir
+
+func _town_resume_signature(snapshot: Dictionary) -> Dictionary:
+	return {
+		"scenario_id": String(snapshot.get("scenario_id", "")),
+		"difficulty": String(snapshot.get("difficulty", "")),
+		"launch_mode": String(snapshot.get("launch_mode", "")),
+		"game_state": String(snapshot.get("game_state", "")),
+		"day": int(snapshot.get("day", 0)),
+		"town_placement_id": String(snapshot.get("town_placement_id", "")),
+		"town_id": String(snapshot.get("town_id", "")),
+		"town_owner": String(snapshot.get("town_owner", "")),
+		"built_building_count": int(snapshot.get("built_building_count", 0)),
+		"available_recruits": _dictionary_value(snapshot.get("available_recruits", {})),
+		"resources": _dictionary_value(snapshot.get("resources", {})),
+	}
+
+func _dictionary_value(value: Variant) -> Dictionary:
+	return value.duplicate(true) if value is Dictionary else {}
 
 func _write_json(path: String, payload: Dictionary) -> void:
 	_write_text_file(path, JSON.stringify(payload, "\t"))

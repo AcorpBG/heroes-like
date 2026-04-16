@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T02:12:30Z",
+  "updatedAt": "2026-04-16T02:23:11Z",
   "status": "in_progress",
-  "currentPhase": "live-routed-validation-loop-extension",
-  "currentSliceId": "phase-6-live-routed-validation-loop-extension",
-  "currentSliceTitle": "Deepen the live routed-client validation harness through owned-town orders and battle routing",
+  "currentPhase": "live-routed-save-resume-validation-extension",
+  "currentSliceId": "phase-6-live-routed-save-resume-validation-extension",
+  "currentSliceTitle": "Extend the live routed-client validation harness through shipped-router save and resume",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a production-minded routed-validation slice on the shipped runtime: the dormant live harness now drives Boot -> MainMenu -> Overworld -> Town -> Battle -> Overworld through the real router, uses narrow shell-local validation hooks to take a real recruit order and battle actions, and emits richer screenshot plus JSON artifacts without changing save version 9 or introducing debug-only gameplay systems.",
+  "currentSliceNotes": "Completed a production-minded routed save-resume slice on the shipped runtime: the live harness now takes a real town action, saves through the town shell into a manual slot, returns to MainMenu through AppRouter, reloads that slot through the shipped save browser, proves the router lands back on TownShell with preserved state, then continues through the existing battle route without changing save version 9 or inventing debug-only gameplay systems.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1016,6 +1016,18 @@
       "title": "Re-run repository-local validation, strongest relevant Godot smokes, and the richer live routed-client harness with report artifacts",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-live-routed-save-resume-validation-extension",
+      "title": "Extend the live routed-client validation harness through real town-side manual save, menu return, save-browser load, and routed resume on the shipped shells",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-live-routed-save-resume-validation-extension-validation",
+      "title": "Re-run repository-local validation, strongest relevant Godot smokes or boot checks, and the live routed-client harness after the save-resume extension",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1255,6 +1267,8 @@
     "This run realigned tests/validate_repo.py with the shipped menu, overworld, town, battle, and outcome shells plus the current core *Script APIs, replacing obsolete node-name and token checks with current durable architecture guards instead of restoring dead compatibility paths.",
     "Repository-local validation now passes again, python3 -m py_compile tests/validate_repo.py passes, and the strongest relevant headless Godot smokes passed again via tests/core_systems_regression_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, and full headless boot while preserving save version 9.",
     "This run deepened the live routed-client validation harness from menu-to-overworld smoke into a real town-and-battle gameplay loop by adding narrow validation hooks on the shipped overworld, town, and battle shells instead of inventing parallel debug systems.",
-    "The richer live harness now defaults to Boot -> MainMenu -> Overworld -> player-town recruit order -> Overworld -> encounter battle -> Overworld return on river-pass, and the validation slice passed again through python3 tests/validate_repo.py, full headless Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/core_systems_regression_smoke.tscn, and tests/run_live_flow_harness.py while preserving save version 9."
+    "The richer live harness now defaults to Boot -> MainMenu -> Overworld -> player-town recruit order -> Overworld -> encounter battle -> Overworld return on river-pass, and the validation slice passed again through python3 tests/validate_repo.py, full headless Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/core_systems_regression_smoke.tscn, and tests/run_live_flow_harness.py while preserving save version 9.",
+    "This run extended that same routed harness into a real shipped-router save/resume proof by saving from TownShell.gd into Manual 2, routing back to MainMenu.gd, loading the slot through the live save browser, verifying the resumed town-state signature, and then continuing through the existing battle route without moving save logic out of SaveService.gd and AppRouter.gd.",
+    "Repository-local validation, python3 -m py_compile for the Python harness files, full headless Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, and tests/run_live_flow_harness.py all passed for the routed save-resume slice; tests/core_systems_regression_smoke.tscn currently fails on the older resource-site auto-collect regression outside this harness change."
   ]
 }
