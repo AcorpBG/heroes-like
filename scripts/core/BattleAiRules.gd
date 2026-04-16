@@ -142,27 +142,71 @@ static func _field_objective_commander_modifier(attacker: Dictionary, defender: 
 	var attacker_side := String(attacker.get("side", ""))
 	var defender_side := String(defender.get("side", ""))
 	if _side_controls_field_objective_type(battle, attacker_side, "cover_line") and int(battle.get("distance", 1)) > 0:
-		modifier *= 1.03
+		modifier *= 1.06
 	if _side_controls_field_objective_type(battle, defender_side, "cover_line") and int(battle.get("distance", 1)) > 0:
-		modifier *= 0.97
+		modifier *= 0.94
 	if _side_controls_field_objective_type(battle, attacker_side, "signal_beacon"):
-		modifier *= 1.04
+		modifier *= 1.05
 	if _side_controls_field_objective_type(battle, defender_side, "signal_beacon"):
-		modifier *= 0.96
+		modifier *= 0.95
 	if (
 		not bool(attacker.get("ranged", false))
 		and _side_controls_field_objective_type(battle, defender_side, "obstruction_line")
 		and int(battle.get("distance", 1)) > 0
 	):
-		modifier *= 0.97
+		modifier *= 0.94
 	if (
 		not bool(attacker.get("ranged", false))
 		and _side_controls_field_objective_type(battle, attacker_side, "obstruction_line")
 		and int(battle.get("round", 1)) >= 2
 	):
-		modifier *= 1.02
+		modifier *= 1.04
 	if _side_controls_field_objective_type(battle, attacker_side, "ritual_pylon"):
 		modifier *= 1.03
+	return modifier
+
+static func _stack_is_cover_screened(stack: Dictionary, battle: Dictionary) -> bool:
+	if stack.is_empty():
+		return false
+	if bool(stack.get("ranged", false)):
+		return true
+	if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace"):
+		return true
+	return bool(stack.get("defending", false)) and not _stack_is_isolated(battle, stack)
+
+static func _stack_can_breach_obstruction(stack: Dictionary, battle: Dictionary) -> bool:
+	if stack.is_empty() or bool(stack.get("ranged", false)):
+		return false
+	if _has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard"):
+		return true
+	if _stack_momentum_total(stack, battle) >= 2:
+		return true
+	return int(stack.get("speed", 0)) >= 5
+
+static func _advance_distance_delta(stack: Dictionary, battle: Dictionary) -> int:
+	if stack.is_empty() or int(battle.get("distance", 1)) <= 0:
+		return 0
+	var opposing_side := _opposing_side(String(stack.get("side", "")))
+	if _side_controls_field_objective_type(battle, opposing_side, "obstruction_line") and not _stack_can_breach_obstruction(stack, battle):
+		return 0
+	return 1
+
+static func _field_objective_cover_damage_modifier(
+	attacker: Dictionary,
+	defender: Dictionary,
+	battle: Dictionary,
+	is_ranged: bool,
+	attack_distance: int
+) -> float:
+	if not is_ranged or attack_distance <= 0:
+		return 1.0
+	var modifier := 1.0
+	var attacker_side := String(attacker.get("side", ""))
+	var defender_side := String(defender.get("side", ""))
+	if _side_controls_field_objective_type(battle, defender_side, "cover_line"):
+		modifier *= 0.85 if _stack_is_cover_screened(defender, battle) else 0.93
+	if _side_controls_field_objective_type(battle, attacker_side, "cover_line") and _stack_is_cover_screened(attacker, battle):
+		modifier *= 1.08
 	return modifier
 
 static func _objective_action_score(
@@ -502,6 +546,10 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 2.0
 	if is_ranged and int(battle.get("distance", 1)) == 0:
 		score -= 1.5
+	if is_ranged and int(battle.get("distance", 1)) > 0 and _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line"):
+		score -= 2.5 if _stack_is_cover_screened(target, battle) else 1.0
+	if _side_controls_field_objective_type(battle, String(target.get("side", "")), "cover_line") and _stack_is_cover_screened(target, battle):
+		score += 1.25
 	if _battle_has_tag(battle, "elevated_fire") and is_ranged:
 		score += 2.0
 	if _battle_has_tag(battle, "fog_bank") and is_ranged and int(battle.get("distance", 1)) > 0:
@@ -521,6 +569,13 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 			score += 1.0
 	if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(attacker, battle) and not is_ranged and round_number >= 3:
 		score += 1.75
+	if _side_controls_field_objective_type(battle, String(target.get("side", "")), "obstruction_line") and (
+		_has_ability(target, "formation_guard")
+		or _has_ability(target, "brace")
+		or _has_ability(target, "reach")
+		or bool(target.get("defending", false))
+	):
+		score += 2.0
 	if _battle_has_tag(battle, "bog_channels") and (_has_ability(attacker, "harry") or _has_ability(attacker, "backstab") or _has_ability(attacker, "bloodrush")):
 		score += 1.5
 	if _has_ability(attacker, "harry") and is_ranged and not SpellRulesScript.has_effect_id(target, battle, STATUS_HARRIED):
@@ -546,6 +601,8 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 		score += 1.0
 	if _hero_has_trait(battle, side, "ambusher") and not is_ranged and (String(battle.get("terrain", "")) == "forest" or _battle_has_tag(battle, "ambush_cover")) and int(battle.get("round", 1)) <= 2:
 		score += 1.0
+	if is_ranged and _side_controls_field_objective_type(battle, side, "cover_line") and _stack_is_cover_screened(attacker, battle):
+		score += 1.25
 	score += _objective_action_score(battle, side, "shoot" if is_ranged else "strike", attacker, target)
 	if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and _alive_count(target) > 0 and _can_make_retaliation(target, int(battle.get("distance", 1))):
 		var retaliation_damage := _estimate_damage(target, attacker, battle, false, true)
@@ -718,6 +775,10 @@ static func _defend_score(battle: Dictionary, active_stack: Dictionary, targets:
 		score += 1.5
 	if _battle_has_tag(battle, "battery_nest") and _stack_is_anchor_side(active_stack, battle) and bool(active_stack.get("ranged", false)) and _stack_has_positive_effect(active_stack, battle):
 		score += 1.0
+	if _side_controls_field_objective_type(battle, String(active_stack.get("side", "")), "cover_line") and bool(active_stack.get("ranged", false)) and int(battle.get("distance", 1)) > 0:
+		score += 2.0
+	if _side_controls_field_objective_type(battle, String(active_stack.get("side", "")), "obstruction_line") and _stack_can_breach_obstruction(active_stack, battle) and int(battle.get("distance", 1)) > 0:
+		score += 2.0
 	if int(battle.get("distance", 1)) == 0 and _has_hostile_ranged_pressure(targets):
 		score += 1.0
 	if _stack_is_isolated(battle, active_stack):
@@ -733,6 +794,7 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 	var side := String(active_stack.get("side", ""))
 	var round_number := int(battle.get("round", 1))
 	var ranged := bool(active_stack.get("ranged", false))
+	var distance_delta := _advance_distance_delta(active_stack, battle)
 	var score := -0.5
 	if _should_close_distance(active_stack):
 		score += 2.5
@@ -744,6 +806,15 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 		score -= 1.5
 	if _has_hostile_ranged_pressure(targets) and not ranged:
 		score += 1.0
+	if distance_delta <= 0:
+		score -= 4.0
+	else:
+		score += 0.75
+	if _side_controls_field_objective_type(battle, _opposing_side(side), "obstruction_line"):
+		if _stack_can_breach_obstruction(active_stack, battle):
+			score += 1.5
+		else:
+			score -= 1.5
 	if _stack_cohesion_total(active_stack, battle) <= 4:
 		score -= 1.25
 	if _stack_is_isolated(battle, active_stack):
@@ -793,6 +864,7 @@ static func _estimate_damage(
 	modifier *= _cohesion_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation)
 	modifier *= _ability_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, int(battle.get("distance", 1)))
 	modifier *= _terrain_tag_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
+	modifier *= _field_objective_cover_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
 	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
 	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
 	modifier *= _damage_multiplier_for_side(battle, String(attacker.get("side", "")))

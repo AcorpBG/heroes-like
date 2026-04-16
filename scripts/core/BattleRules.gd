@@ -993,6 +993,9 @@ static func describe_pressure(session: SessionStateStoreScript.SessionData) -> S
 	var battlefront_summary = _battlefield_identity_summary(battle)
 	if battlefront_summary != "":
 		lines.append("Battlefront: %s" % battlefront_summary)
+	var terrain_effect = _terrain_effect_brief(battle)
+	if terrain_effect != "":
+		lines.append("Terrain effect: %s" % terrain_effect)
 	var objective_pressure = _field_objective_pressure_summary(battle)
 	if objective_pressure != "":
 		lines.append("Objective pressure: %s" % objective_pressure)
@@ -1811,15 +1814,21 @@ static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> St
 	var distance = int(battle.get("distance", 1))
 	if distance <= 0:
 		return "The lines are already engaged."
-	var next_distance = max(0, distance - 1)
-	var clauses = [
-		"Close from %s to %s" % [_distance_label(distance), _distance_label(next_distance)],
-	]
+	var distance_delta = _advance_distance_delta(stack, battle)
+	var next_distance = max(0, distance - distance_delta)
+	var clauses = []
+	if distance_delta > 0:
+		clauses.append("Close from %s to %s" % [_distance_label(distance), _distance_label(next_distance)])
+	else:
+		clauses.append("Press into the obstruction but stay at %s" % _distance_label(distance).to_lower())
 	var momentum_gain = _preview_advance_momentum_gain(stack, battle)
 	if momentum_gain > 0:
 		clauses.append("momentum +%d" % momentum_gain)
 	if _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "obstruction_line"):
-		clauses.append("enemy obstruction will tax the push")
+		if distance_delta > 0:
+			clauses.append("enemy obstruction will still tax the push")
+		else:
+			clauses.append("enemy obstruction can still hold the lane")
 	elif _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "cover_line"):
 		clauses.append("closing also strips hostile cover")
 	if not bool(stack.get("ranged", false)) and next_distance <= 0:
@@ -2083,7 +2092,10 @@ static func _preview_advance_momentum_gain(stack: Dictionary, battle: Dictionary
 	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and not bool(stack.get("ranged", false)):
 		momentum_gain += 1
 	if _side_controls_field_objective_type(battle, _opposing_side(String(stack.get("side", ""))), "obstruction_line"):
-		momentum_gain -= 1
+		if _stack_can_breach_obstruction(stack, battle):
+			momentum_gain -= 1
+		else:
+			momentum_gain = 0
 	return max(0, momentum_gain)
 
 static func _preview_defend_cohesion_gain(stack: Dictionary, battle: Dictionary) -> int:
@@ -2307,7 +2319,7 @@ static func _tactical_caution_line(session: SessionStateStoreScript.SessionData,
 	if _side_controls_field_objective_type(battle, "enemy", "cover_line") and int(battle.get("distance", 1)) > 0:
 		return "Tactical caution: Enemy cover still screens the firing line and commander; dislodge it before settling into a long volley."
 	if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and int(battle.get("distance", 1)) > 0:
-		return "Tactical caution: The obstruction line is still taxing the push. Lead with the toughest breach stack."
+		return "Tactical caution: The obstruction line can still hold weaker advances. Lead with the toughest breach stack."
 	if _battle_has_tag(battle, "fortress_lane"):
 		return "Tactical caution: Fortress lanes compress melee into a kill zone. Brace anchors before committing the full assault."
 	if _battle_has_tag(battle, "wall_pressure") and int(battle.get("round", 1)) <= 2:
@@ -2712,6 +2724,8 @@ static func _priority_enemy_stack_for_briefing(battle: Dictionary) -> Dictionary
 				or bool(stack.get("defending", false))
 			):
 				score += 2
+		if _side_controls_field_objective_type(battle, "enemy", "cover_line") and _stack_is_cover_screened(stack, battle):
+			score += 1
 		if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach"):
 			score += 2
 		if _has_ability(stack, "bloodrush") or _has_ability(stack, "backstab") or _has_ability(stack, "harry"):
@@ -2728,6 +2742,8 @@ static func _priority_target_reason(stack: Dictionary, battle: Dictionary) -> St
 		return "its ranged line controls the opening approach"
 	if bool(stack.get("ranged", false)) and _side_controls_field_objective_type(battle, String(stack.get("side", "")), "cover_line"):
 		return "it is firing from a screened cover line"
+	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "cover_line") and _stack_is_cover_screened(stack, battle):
+		return "it is part of the screen keeping the hostile firing line protected"
 	if bool(stack.get("ranged", false)):
 		return "it is the sharpest ranged threat on the field"
 	if _side_controls_field_objective_type(battle, String(stack.get("side", "")), "obstruction_line") and (_has_ability(stack, "formation_guard") or _has_ability(stack, "brace") or _has_ability(stack, "reach")):
@@ -2884,11 +2900,18 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 		"advance":
 			if int(session.battle.get("distance", 1)) <= 0:
 				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
-			session.battle["distance"] = int(session.battle.get("distance", 1)) - 1
+			var start_distance := int(session.battle.get("distance", 1))
+			var distance_delta := _advance_distance_delta(active_stack, session.battle)
+			session.battle["distance"] = max(0, start_distance - distance_delta)
 			var advance_message = "%s advances." % _stack_label(active_stack)
 			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
+			if distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "enemy", "obstruction_line"):
+				advance_message = _join_messages([
+					advance_message,
+					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
+				])
 			var advance_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
@@ -3118,11 +3141,18 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				false
 			)
 		"advance":
-			session.battle["distance"] = max(0, int(session.battle.get("distance", 1)) - 1)
+			var start_distance := int(session.battle.get("distance", 1))
+			var distance_delta := _advance_distance_delta(active_stack, session.battle)
+			session.battle["distance"] = max(0, start_distance - distance_delta)
 			var advance_message = "%s advances." % _stack_label(active_stack)
 			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
 				advance_message += " %s" % advance_pressure
+			if distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "player", "obstruction_line"):
+				advance_message = _join_messages([
+					advance_message,
+					"The obstruction line holds the push at %s." % _distance_label(start_distance).to_lower(),
+				])
 			var advance_objective_messages = _apply_field_objective_action_pressure(
 				session.battle,
 				{
@@ -3156,11 +3186,18 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
 				return _resolve_ai_attack(session, active_stack, fallback, true)
 			if int(session.battle.get("distance", 1)) > 0:
-				session.battle["distance"] = max(0, int(session.battle.get("distance", 1)) - 1)
+				var fallback_start_distance := int(session.battle.get("distance", 1))
+				var fallback_distance_delta := _advance_distance_delta(active_stack, session.battle)
+				session.battle["distance"] = max(0, fallback_start_distance - fallback_distance_delta)
 				var fallback_advance_message = "%s advances." % _stack_label(active_stack)
 				var fallback_advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 				if fallback_advance_pressure != "":
 					fallback_advance_message += " %s" % fallback_advance_pressure
+				if fallback_distance_delta <= 0 and _side_controls_field_objective_type(session.battle, "player", "obstruction_line"):
+					fallback_advance_message = _join_messages([
+						fallback_advance_message,
+						"The obstruction line holds the push at %s." % _distance_label(fallback_start_distance).to_lower(),
+					])
 				var fallback_objective_messages = _apply_field_objective_action_pressure(
 					session.battle,
 					{
@@ -4336,6 +4373,7 @@ static func _damage_modifier(
 	modifier *= _cohesion_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation)
 	modifier *= _ability_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, resolved_distance)
 	modifier *= _terrain_tag_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
+	modifier *= _field_objective_cover_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= float(_hero_payload_for_side(battle, String(attacker.get("side", ""))).get("damage_multiplier", 1.0))
@@ -4467,6 +4505,7 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 	var side = String(stack.get("side", ""))
 	var momentum_gain = 1 if not bool(stack.get("ranged", false)) else 0
 	var hit_obstruction = false
+	var stalled_at_obstruction = false
 	if _hero_has_trait(battle, String(stack.get("side", "")), "vanguard") and not bool(stack.get("ranged", false)):
 		momentum_gain += 1
 	if _hero_has_trait(battle, String(stack.get("side", "")), "ambusher") and _battle_has_any_tags(battle, ["ambush_cover"]) and not bool(stack.get("ranged", false)):
@@ -4477,7 +4516,11 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 		momentum_gain += 1
 	if _side_controls_field_objective_type(battle, _opposing_side(side), "obstruction_line"):
 		hit_obstruction = true
-		momentum_gain = max(0, momentum_gain - 1)
+		if _stack_can_breach_obstruction(stack, battle):
+			momentum_gain = max(0, momentum_gain - 1)
+		else:
+			stalled_at_obstruction = true
+			momentum_gain = 0
 		if not bool(stack.get("ranged", false)) and not (
 			_has_ability(stack, "reach")
 			or _has_ability(stack, "brace")
@@ -4488,7 +4531,10 @@ static func _apply_advance_pressure(battle: Dictionary, battle_id: String) -> St
 	var updated = _get_stack_by_id(battle, battle_id)
 	var notes = []
 	if hit_obstruction:
-		notes.append("%s hits the obstruction line." % _stack_label(updated))
+		if stalled_at_obstruction:
+			notes.append("%s cannot crack the obstruction line yet." % _stack_label(updated))
+		else:
+			notes.append("%s hits the obstruction line." % _stack_label(updated))
 	if _stack_momentum_total(updated, battle) >= 3:
 		notes.append("%s surges into the fight." % _stack_label(updated))
 	return " ".join(notes)
@@ -5613,6 +5659,9 @@ static func _battlefield_identity_summary(battle: Dictionary) -> String:
 		parts.append("wall pressure favors late breach fighting")
 	if _battle_has_tag(battle, "reserve_wave"):
 		parts.append("reserve waves matter after the opening exchanges")
+	var terrain_effect = _terrain_effect_brief(battle)
+	if terrain_effect != "":
+		parts.append(terrain_effect)
 	var objective_brief = _field_objective_status_brief(battle)
 	if objective_brief != "":
 		parts.append(objective_brief.to_lower())
@@ -5670,9 +5719,9 @@ static func _pressure_brief(session: SessionStateStoreScript.SessionData) -> Str
 	if _side_controls_field_objective_type(battle, "player", "cover_line") and int(battle.get("distance", 1)) > 0:
 		return "Friendly cover is blunting the opening volleys."
 	if _side_controls_field_objective_type(battle, "enemy", "obstruction_line") and int(battle.get("distance", 1)) > 0:
-		return "Enemy obstructions are still compressing the approach."
+		return "Enemy obstructions can still hold weaker advances off the line."
 	if _side_controls_field_objective_type(battle, "player", "obstruction_line") and int(battle.get("distance", 1)) > 0:
-		return "Friendly hands now own the choke and can tax the enemy push."
+		return "Friendly hands now own the choke and can force the enemy to breach it."
 	if _battle_has_tag(battle, "battery_nest") and int(battle.get("round", 1)) <= 2 and int(battle.get("distance", 1)) > 0:
 		return "Battery lanes are still punishing the approach."
 	if _battle_has_tag(battle, "fortress_lane") and int(battle.get("round", 1)) <= 2:
@@ -7049,27 +7098,87 @@ static func _field_objective_commander_modifier(attacker: Dictionary, defender: 
 	var attacker_side = String(attacker.get("side", ""))
 	var defender_side = String(defender.get("side", ""))
 	if _side_controls_field_objective_type(battle, attacker_side, "cover_line") and int(battle.get("distance", 1)) > 0:
-		modifier *= 1.03
+		modifier *= 1.06
 	if _side_controls_field_objective_type(battle, defender_side, "cover_line") and int(battle.get("distance", 1)) > 0:
-		modifier *= 0.97
+		modifier *= 0.94
 	if _side_controls_field_objective_type(battle, attacker_side, "signal_beacon"):
-		modifier *= 1.04
+		modifier *= 1.05
 	if _side_controls_field_objective_type(battle, defender_side, "signal_beacon"):
-		modifier *= 0.96
+		modifier *= 0.95
 	if (
 		not bool(attacker.get("ranged", false))
 		and _side_controls_field_objective_type(battle, defender_side, "obstruction_line")
 		and int(battle.get("distance", 1)) > 0
 	):
-		modifier *= 0.97
+		modifier *= 0.94
 	if (
 		not bool(attacker.get("ranged", false))
 		and _side_controls_field_objective_type(battle, attacker_side, "obstruction_line")
 		and int(battle.get("round", 1)) >= 2
 	):
-		modifier *= 1.02
+		modifier *= 1.04
 	if _side_controls_field_objective_type(battle, attacker_side, "ritual_pylon"):
 		modifier *= 1.03
+	return modifier
+
+static func _terrain_effect_brief(battle: Dictionary) -> String:
+	if battle.is_empty():
+		return ""
+	var parts = []
+	var distance = int(battle.get("distance", 1))
+	if distance > 0:
+		if _side_controls_field_objective_type(battle, "enemy", "cover_line"):
+			parts.append("enemy cover still screens ranged stacks and command")
+		elif _side_controls_field_objective_type(battle, "player", "cover_line"):
+			parts.append("friendly cover is screening the firing line")
+		if _side_controls_field_objective_type(battle, "enemy", "obstruction_line"):
+			parts.append("enemy obstruction can hold weak advances at %s" % _distance_label(distance).to_lower())
+		elif _side_controls_field_objective_type(battle, "player", "obstruction_line"):
+			parts.append("friendly obstruction forces the enemy to breach the choke")
+	return " | ".join(parts)
+
+static func _stack_is_cover_screened(stack: Dictionary, battle: Dictionary) -> bool:
+	if stack.is_empty():
+		return false
+	if bool(stack.get("ranged", false)):
+		return true
+	if _has_ability(stack, "formation_guard") or _has_ability(stack, "brace"):
+		return true
+	return bool(stack.get("defending", false)) and not _stack_is_isolated(battle, stack)
+
+static func _stack_can_breach_obstruction(stack: Dictionary, battle: Dictionary) -> bool:
+	if stack.is_empty() or bool(stack.get("ranged", false)):
+		return false
+	if _has_ability(stack, "reach") or _has_ability(stack, "brace") or _has_ability(stack, "formation_guard"):
+		return true
+	if _stack_momentum_total(stack, battle) >= 2:
+		return true
+	return int(stack.get("speed", 0)) >= 5
+
+static func _advance_distance_delta(stack: Dictionary, battle: Dictionary) -> int:
+	if stack.is_empty() or int(battle.get("distance", 1)) <= 0:
+		return 0
+	var opposing_side = _opposing_side(String(stack.get("side", "")))
+	if _side_controls_field_objective_type(battle, opposing_side, "obstruction_line") and not _stack_can_breach_obstruction(stack, battle):
+		return 0
+	return 1
+
+static func _field_objective_cover_damage_modifier(
+	attacker: Dictionary,
+	defender: Dictionary,
+	battle: Dictionary,
+	is_ranged: bool,
+	attack_distance: int
+) -> float:
+	if not is_ranged or attack_distance <= 0:
+		return 1.0
+	var modifier := 1.0
+	var attacker_side = String(attacker.get("side", ""))
+	var defender_side = String(defender.get("side", ""))
+	if _side_controls_field_objective_type(battle, defender_side, "cover_line"):
+		modifier *= 0.85 if _stack_is_cover_screened(defender, battle) else 0.93
+	if _side_controls_field_objective_type(battle, attacker_side, "cover_line") and _stack_is_cover_screened(attacker, battle):
+		modifier *= 1.08
 	return modifier
 
 static func _apply_field_objective_action_pressure(battle: Dictionary, action_context: Dictionary) -> Array:

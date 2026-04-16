@@ -285,7 +285,8 @@ Battle risk and readiness board decision:
 
 Battle objective pressure decision:
 - authored encounters and scenario encounter placements now extend the existing battle payload with `field_objectives` for lane batteries, cover lines, obstruction lines, ritual pylons, supply posts, signal beacons, breach points, and hazard zones instead of creating a separate siege, planner, or advisor subsystem
-- `BattleRules.gd` owns objective normalization, control pressure, reserve-timing shifts, movement tax, ranged safety, commander exposure, target-priority shaping, cohesion or momentum fallout, and shell-summary shaping from current battle state only, while `BattleAiRules.gd` mirrors that pressure in action scoring so enemies contest or defend those points instead of ignoring them
+- `BattleRules.gd` now also treats held `cover_line` and `obstruction_line` states as stronger live screen and breach geometry: screened ranged or guard stacks take heavier ranged mitigation, weak advances can stall at the held choke instead of always closing distance, commander exposure swings harder with lane control, and shell summaries stay derived from that same battle payload only
+- `BattleAiRules.gd` mirrors those same live screen and choke states in action scoring, so enemies value protected ranged stacks, lane-holding guards, breach-capable advances, and exposed targets instead of treating authored terrain as flavor-only text
 - the real battle shell continues to surface this through the existing header, status, pressure, context, briefing, risk, order-consequence, and spell-timing flows, keeping scenes thin and save version `9` unchanged
 
 Battle order consequence decision:

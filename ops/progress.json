@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T00:37:18Z",
+  "updatedAt": "2026-04-16T00:55:56Z",
   "status": "in_progress",
-  "currentPhase": "battle-exit-aftermath-deepening",
-  "currentSliceId": "phase-5-battle-exit-aftermath-deepening",
-  "currentSliceTitle": "Deepen withdrawal, surrender, pursuit, and collapse scars through the shared battle and overworld state",
+  "currentPhase": "battlefield-cover-obstruction-identity",
+  "currentSliceId": "phase-6-battlefield-cover-obstruction-identity",
+  "currentSliceTitle": "Deepen battlefield cover lines and obstruction lanes through the shared battle, AI, summary, and save state",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the follow-on strategic slice that deepens battle exits on the current architecture: retreat now scatters live convoys and fuels pursuit, surrender transfers intact terms and tribute, rout or collapse stamps harsher commander, treasury, pressure, and town-front fallout, and the richer aftermath recap persists across the same save and outcome boundaries with focused regression coverage.",
+  "currentSliceNotes": "Completed the battlefield terrain-identity refinement on the current architecture: cover lines now materially screen ranged stacks and commanders, held obstruction lanes can stall weak advances instead of always yielding distance, tactical summaries expose the lane implications compactly, AI scoring reacts to screened or exposed targets and breach-capable stacks, and focused regression coverage proves the state survives restore on the existing save boundary.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1210,6 +1210,9 @@
     "EnemyAdventureRules.gd, EnemyTurnRules.gd, BattleRules.gd, and OverworldRules.gd now feed that same commander record into future raid-strength demand, battle commander summaries, and frontier labels, while focused smoke coverage proves field-victory continuity, restore persistence, and stronger repeat-deployment return threat.",
     "This run deepened the earlier surrender slice by routing retreat, surrender, and collapse through different convoy, commander, treasury, pressure, and town-front aftermath on the existing battle and overworld state instead of treating them as one generic non-victory exit.",
     "BattleRules.gd now stamps pursuit-victory, capitulation, and rout-victory commander outcomes, records richer `last_battle_aftermath` recap lines for logistics and front stabilization, and pushes collapse fallout into the same enemy pressure, town recovery, and treasury paths already used elsewhere.",
-    "OverworldRules.gd now lets retreat scatter part of a live convoy back to its source town, surrender hand the convoy over intact, and collapse overrun the lane entirely, while focused core smoke coverage proves the distinct outcome scars and their save-style restore persistence."
+    "OverworldRules.gd now lets retreat scatter part of a live convoy back to its source town, surrender hand the convoy over intact, and collapse overrun the lane entirely, while focused core smoke coverage proves the distinct outcome scars and their save-style restore persistence.",
+    "This run refined the existing battlefield-objective slice so authored cover lines and obstruction lanes change live tactics instead of mostly reading as summary flavor: screened targets now take materially lower ranged damage, weak advances can stall against held chokes, and commander exposure swings harder with lane control.",
+    "BattleRules.gd and BattleAiRules.gd now share that stronger terrain identity through real advance resolution, ranged mitigation, target-priority and defend-versus-advance scoring, while battle pressure or briefing surfaces keep the lane implications compact and derived from the current battle payload only.",
+    "Focused core smoke coverage now proves cover-line damage mitigation, obstruction-held advances, compact terrain surfacing, AI score shifts for screened targets, and save-restore continuity for contested battlefield-objective state on the existing save boundary."
   ]
 }

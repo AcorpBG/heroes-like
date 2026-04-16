@@ -17,6 +17,8 @@ func _run() -> void:
 		return
 	if not _run_battle_exit_aftermath_regression():
 		return
+	if not _run_battlefield_cover_obstruction_regression():
+		return
 	if not _run_hostile_commander_recovery_regression():
 		return
 	if not _run_enemy_hero_intercept_regression():
@@ -720,6 +722,122 @@ func _run_battle_exit_aftermath_regression() -> bool:
 		return false
 	return true
 
+func _run_battlefield_cover_obstruction_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	session.battle = BattleRules.create_battle_payload(
+		session,
+		{
+			"placement_id": "cover_obstruction_smoke",
+			"encounter_id": "encounter_bone_ferry_watch",
+			"x": 3,
+			"y": 2,
+			"combat_seed": 991240,
+		}
+	)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: battlefield cover/obstruction coverage could not stage the authored encounter.")
+		get_tree().quit(1)
+		return false
+	var player_ranged := _first_stack_for_side(session.battle, "player", true)
+	var enemy_ranged := _first_stack_for_side(session.battle, "enemy", true)
+	if player_ranged.is_empty() or enemy_ranged.is_empty():
+		push_error("Core systems smoke: battlefield cover/obstruction coverage could not find the required ranged stacks.")
+		get_tree().quit(1)
+		return false
+
+	var covered_preview: Dictionary = BattleRules._damage_range_preview(player_ranged, enemy_ranged, session.battle, true)
+	var covered_attack_score := BattleAiRules._attack_score(player_ranged, enemy_ranged, session.battle, true)
+	_set_battlefield_objective_state(session.battle, "bone_rack_cover_line", "neutral")
+	var open_preview: Dictionary = BattleRules._damage_range_preview(player_ranged, enemy_ranged, session.battle, true)
+	var open_attack_score := BattleAiRules._attack_score(player_ranged, enemy_ranged, session.battle, true)
+	if int(open_preview.get("max_damage", 0)) <= int(covered_preview.get("max_damage", 0)):
+		push_error("Core systems smoke: cover-line coverage did not blunt ranged damage into the screened target.")
+		get_tree().quit(1)
+		return false
+	if open_attack_score <= covered_attack_score:
+		push_error("Core systems smoke: battle AI scoring did not value the exposed target more once cover was removed.")
+		get_tree().quit(1)
+		return false
+
+	_set_battlefield_objective_state(session.battle, "bone_rack_cover_line", "player")
+	_set_battlefield_objective_state(session.battle, "ferry_chain_obstruction", "enemy", "player", 1)
+	session.battle["distance"] = 2
+	_force_battle_turn(session.battle, String(player_ranged.get("battle_id", "")), String(enemy_ranged.get("battle_id", "")), String(enemy_ranged.get("battle_id", "")))
+	var blocked_result := BattleRules.perform_player_action(session, "advance")
+	if not bool(blocked_result.get("ok", false)):
+		push_error("Core systems smoke: battlefield obstruction coverage could not perform the player advance.")
+		get_tree().quit(1)
+		return false
+	if int(session.battle.get("distance", -1)) != 2:
+		push_error("Core systems smoke: obstruction-line coverage did not hold a weak advance on the current lane.")
+		get_tree().quit(1)
+		return false
+	if "obstruction line" not in String(blocked_result.get("message", "")).to_lower():
+		push_error("Core systems smoke: obstruction-line coverage did not surface the stalled-lane message.")
+		get_tree().quit(1)
+		return false
+	var pressure_summary := BattleRules.describe_pressure(session)
+	if "Terrain effect:" not in pressure_summary or "cover" not in pressure_summary.to_lower() or "obstruction" not in pressure_summary.to_lower():
+		push_error("Core systems smoke: battle pressure summary did not surface compact terrain implications for cover and obstruction.")
+		get_tree().quit(1)
+		return false
+
+	var restored = _clone_session(session)
+	var restored_cover := _battlefield_objective(restored.battle, "bone_rack_cover_line")
+	if String(restored_cover.get("control_side", "")) != "player":
+		push_error("Core systems smoke: restored battle lost the cover-line controller state.")
+		get_tree().quit(1)
+		return false
+	var restored_obstruction := _battlefield_objective(restored.battle, "ferry_chain_obstruction")
+	if String(restored_obstruction.get("control_side", "")) != "enemy" or String(restored_obstruction.get("progress_side", "")) != "player" or int(restored_obstruction.get("progress_value", 0)) != 1:
+		push_error("Core systems smoke: restored battle lost the obstruction-line contest state.")
+		get_tree().quit(1)
+		return false
+	var restored_pressure := BattleRules.describe_pressure(restored)
+	if "Friendly cover is blunting the opening volleys." not in restored_pressure:
+		push_error("Core systems smoke: restored battle summary lost the cover-line pressure implication.")
+		get_tree().quit(1)
+		return false
+
+	var clear_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	clear_session.battle = BattleRules.create_battle_payload(
+		clear_session,
+		{
+			"placement_id": "cover_obstruction_smoke_clear",
+			"encounter_id": "encounter_bone_ferry_watch",
+			"x": 3,
+			"y": 2,
+			"combat_seed": 991241,
+		}
+	)
+	if clear_session.battle.is_empty():
+		push_error("Core systems smoke: clear-lane control coverage could not stage the authored encounter.")
+		get_tree().quit(1)
+		return false
+	var clear_player_ranged := _first_stack_for_side(clear_session.battle, "player", true)
+	var clear_enemy_ranged := _first_stack_for_side(clear_session.battle, "enemy", true)
+	_set_battlefield_objective_state(clear_session.battle, "ferry_chain_obstruction", "neutral")
+	clear_session.battle["distance"] = 2
+	_force_battle_turn(clear_session.battle, String(clear_player_ranged.get("battle_id", "")), String(clear_enemy_ranged.get("battle_id", "")), String(clear_enemy_ranged.get("battle_id", "")))
+	var clear_result := BattleRules.perform_player_action(clear_session, "advance")
+	if not bool(clear_result.get("ok", false)):
+		push_error("Core systems smoke: clear-lane coverage could not perform the player advance.")
+		get_tree().quit(1)
+		return false
+	if int(clear_session.battle.get("distance", -1)) != 1:
+		push_error("Core systems smoke: removing the obstruction did not let the advance close the lane again.")
+		get_tree().quit(1)
+		return false
+	return true
+
 func _run_enemy_hero_intercept_regression() -> bool:
 	var session = ScenarioFactory.create_session(
 		SCENARIO_ID,
@@ -1320,6 +1438,48 @@ func _clone_session(session):
 	if not clone.battle.is_empty():
 		BattleRules.normalize_battle_state(clone)
 	return clone
+
+func _first_stack_for_side(battle: Dictionary, side: String, ranged: bool) -> Dictionary:
+	for stack in battle.get("stacks", []):
+		if (
+			stack is Dictionary
+			and String(stack.get("side", "")) == side
+			and bool(stack.get("ranged", false)) == ranged
+			and int(stack.get("total_health", 0)) > 0
+		):
+			return stack
+	return {}
+
+func _battlefield_objective(battle: Dictionary, objective_id: String) -> Dictionary:
+	for objective in battle.get("field_objectives", []):
+		if objective is Dictionary and String(objective.get("id", "")) == objective_id:
+			return objective
+	return {}
+
+func _set_battlefield_objective_state(
+	battle: Dictionary,
+	objective_id: String,
+	control_side: String,
+	progress_side: String = "",
+	progress_value: int = 0
+) -> void:
+	var objectives = battle.get("field_objectives", [])
+	for index in range(objectives.size()):
+		var objective = objectives[index]
+		if not (objective is Dictionary) or String(objective.get("id", "")) != objective_id:
+			continue
+		objective["control_side"] = control_side
+		objective["progress_side"] = progress_side
+		objective["progress_value"] = max(0, progress_value)
+		objectives[index] = objective
+		break
+	battle["field_objectives"] = objectives
+
+func _force_battle_turn(battle: Dictionary, active_id: String, target_id: String, next_enemy_id: String) -> void:
+	battle["turn_order"] = [active_id, next_enemy_id]
+	battle["turn_index"] = 0
+	battle["active_stack_id"] = active_id
+	battle["selected_target_id"] = target_id
 
 func _enemy_state_by_faction(session, faction_id: String) -> Dictionary:
 	for state in session.overworld.get("enemy_states", []):
