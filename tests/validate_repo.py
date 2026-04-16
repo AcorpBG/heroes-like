@@ -4312,6 +4312,10 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'main_menu_after_battle_return',
         'battle_resumed',
         'overworld_after_battle',
+        'captured_town_entered',
+        'pre_action_town_owner',
+        'battle_context_town_placement_id',
+        'Occupation watch:',
         'func _town_resume_signature',
         'func _battle_resume_signature',
         'validation_route_step_to_nearest_target',
@@ -4338,7 +4342,14 @@ def validate_live_client_harness(errors: list[str]) -> None:
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required live-harness token: {required_token}")
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in ("func validation_snapshot", "func validation_try_progress_action", "func validation_route_step_to_nearest_target"):
+    for required_token in (
+        "func validation_snapshot",
+        "func validation_try_progress_action",
+        "func validation_route_step_to_nearest_target",
+        '"context_action_ids"',
+        '"active_town"',
+        '"capture_town"',
+    ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required live-harness token: {required_token}")
 
     town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -4349,6 +4360,9 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_save_to_selected_slot",
         "func validation_return_to_menu",
         "func validation_leave_town",
+        '"summary"',
+        '"front"',
+        '"occupation"',
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required live-harness token: {required_token}")
 
@@ -4360,6 +4374,9 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "func validation_save_to_selected_slot",
         "func validation_return_to_menu",
         "func _preferred_validation_action_id",
+        '"battle_context_town_placement_id"',
+        "func _align_validation_target",
+        "func _preferred_validation_target_id",
     ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required live-harness token: {required_token}")
 
@@ -4455,7 +4472,7 @@ def main() -> int:
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
     print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
-    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, manual save/load resume back into town, encounter routing, manual battle save/load resume back into battle, battle actions, and routed return artifacts")
+    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, manual save/load resume back into town, hostile-town assault routing, manual battle save/load resume back into battle, routed town capture, and occupation-front validation artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     return 0
 

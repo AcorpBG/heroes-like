@@ -4171,7 +4171,7 @@ static func _town_occupation_state(session: SessionStateStoreScript.SessionData,
 		return result
 	var logistics := _town_logistics_state(session, town)
 	var recovery := _town_recovery_state(session, town)
-	var front := _town_front_state(session, town)
+	var front := _town_occupation_front_proxy(session, town, faction_id)
 	var front_active := bool(front.get("active", false)) and String(front.get("faction_id", "")) == faction_id
 	var relief_per_day := _town_occupation_relief_per_day(session, town, logistics, recovery, front)
 	var days_to_clear := int(ceil(float(pressure) / float(max(1, relief_per_day))))
@@ -4219,6 +4219,26 @@ static func _town_occupation_state(session: SessionStateStoreScript.SessionData,
 	result["public_clause"] = "occupation still thins the local musters and tax roads"
 	result["target_bonus"] = (pressure * 12) + (locked_headcount * 2) + (int(logistics.get("support_gap", 0)) * 10) + (18 if front_active else 0)
 	return result
+
+static func _town_occupation_front_proxy(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var front := _normalize_town_front_state(town.get("front", {}))
+	front = _retake_front_from_legacy_state(session, town, front)
+	var front_faction_id := _normalized_enemy_front_faction_id(session, front, town)
+	var active := (
+		String(town.get("owner", "neutral")) == "player"
+		and String(front.get("state", "")) == "retake"
+		and front_faction_id != ""
+		and front_faction_id == faction_id
+	)
+	return {
+		"active": active,
+		"mode": "retake" if active else "",
+		"faction_id": front_faction_id,
+	}
 
 static func _town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var front := _normalize_town_front_state(town.get("front", {}))

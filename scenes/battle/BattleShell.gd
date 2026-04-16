@@ -296,6 +296,8 @@ func validation_snapshot() -> Dictionary:
 		"encounter_id": String(_session.battle.get("encounter_id", "")),
 		"encounter_name": String(_session.battle.get("encounter_name", "")),
 		"battle_context_type": String(context.get("type", "")),
+		"battle_context_town_placement_id": String(context.get("town_placement_id", "")),
+		"battle_context_trigger_faction_id": String(context.get("trigger_faction_id", "")),
 		"round": int(_session.battle.get("round", 0)),
 		"distance": int(_session.battle.get("distance", 0)),
 		"active_side": String(active_stack.get("side", "")),
@@ -331,6 +333,7 @@ func validation_try_progress_action() -> Dictionary:
 			"message": _last_message,
 		}
 
+	var aligned_target_id := _align_validation_target()
 	var spell_action := _preferred_validation_spell_action()
 	if not spell_action.is_empty():
 		var spell_id := String(spell_action.get("id", "")).trim_prefix("cast_spell:")
@@ -344,6 +347,7 @@ func validation_try_progress_action() -> Dictionary:
 				"ok": bool(spell_result.get("ok", false)),
 				"action": "cast_spell",
 				"action_id": String(spell_action.get("id", "")),
+				"target_battle_id": aligned_target_id,
 				"state": String(spell_result.get("state", "")),
 				"message": _last_message,
 			}
@@ -352,6 +356,7 @@ func validation_try_progress_action() -> Dictionary:
 			"ok": bool(spell_result.get("ok", false)),
 			"action": "cast_spell",
 			"action_id": String(spell_action.get("id", "")),
+			"target_battle_id": aligned_target_id,
 			"state": String(spell_result.get("state", "")),
 			"message": _last_message,
 		}
@@ -367,6 +372,7 @@ func validation_try_progress_action() -> Dictionary:
 		return {
 			"ok": bool(action_result.get("ok", false)),
 			"action": action_id,
+			"target_battle_id": aligned_target_id,
 			"state": String(action_result.get("state", "")),
 			"message": _last_message,
 		}
@@ -374,6 +380,7 @@ func validation_try_progress_action() -> Dictionary:
 	return {
 		"ok": bool(action_result.get("ok", false)),
 		"action": action_id,
+		"target_battle_id": aligned_target_id,
 		"state": String(action_result.get("state", "")),
 		"message": _last_message,
 	}
@@ -492,6 +499,28 @@ func _preferred_validation_spell_action() -> Dictionary:
 			fallback = action
 	return fallback
 
+func _align_validation_target() -> String:
+	var target_id := _preferred_validation_target_id()
+	if target_id == "":
+		return String(BattleRules.get_selected_target(_session.battle).get("battle_id", ""))
+	var current_id := String(BattleRules.get_selected_target(_session.battle).get("battle_id", ""))
+	if current_id == target_id:
+		return target_id
+	for _attempt in range(_enemy_target_count()):
+		BattleRules.cycle_target(_session, 1)
+		current_id = String(BattleRules.get_selected_target(_session.battle).get("battle_id", ""))
+		if current_id == target_id:
+			break
+	return current_id
+
+func _preferred_validation_target_id() -> String:
+	if _session.battle.is_empty():
+		return ""
+	var priority_target := BattleRules._priority_enemy_stack_for_briefing(_session.battle)
+	if not priority_target.is_empty():
+		return String(priority_target.get("battle_id", ""))
+	return String(BattleRules.get_selected_target(_session.battle).get("battle_id", ""))
+
 func _preferred_validation_action_id() -> String:
 	var surface := BattleRules.get_action_surface(_session)
 	for action_id in ["shoot", "strike", "advance", "defend"]:
@@ -499,6 +528,18 @@ func _preferred_validation_action_id() -> String:
 		if action is Dictionary and not bool(action.get("disabled", true)):
 			return action_id
 	return ""
+
+func _enemy_target_count() -> int:
+	var count := 0
+	for stack in _session.battle.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		if String(stack.get("side", "")) != "enemy":
+			continue
+		if int(stack.get("total_health", 0)) <= 0:
+			continue
+		count += 1
+	return count
 
 func _normalize_string_array(values: Array) -> Array[String]:
 	var normalized: Array[String] = []

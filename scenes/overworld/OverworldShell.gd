@@ -823,12 +823,17 @@ func _memory_cell_color(x: int, y: int) -> Color:
 func _tile_key(tile: Vector2i) -> String:
 	return "%d,%d" % [tile.x, tile.y]
 
+func _duplicate_dictionary(value: Variant) -> Dictionary:
+	return value.duplicate(true) if value is Dictionary else {}
+
 func _duplicate_array(value: Variant) -> Array:
 	return value.duplicate(true) if value is Array else []
 
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
+	var active_context: Dictionary = OverworldRules.get_active_context(_session)
+	var active_town := _validation_active_town_state()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -852,8 +857,12 @@ func validation_snapshot() -> Dictionary:
 			"y": _selected_tile.y,
 		},
 		"context_summary": _describe_focus_tile(),
+		"active_context_type": String(active_context.get("type", "")),
+		"context_action_ids": _validation_context_action_ids(),
+		"active_town": active_town,
 		"objective_summary": OverworldRules.describe_objectives(_session),
 		"threat_summary": OverworldRules.describe_enemy_threats(_session),
+		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 	}
 
@@ -898,17 +907,69 @@ func validation_route_step_to_nearest_target(target_kind: String, owner_id: Stri
 	if path.size() <= 1:
 		match target_kind:
 			"town":
-				AppRouter.go_to_town()
+				var active_town := _validation_town_state_for_placement(String(target.get("placement_id", "")))
+				if active_town.is_empty():
+					return {
+						"ok": false,
+						"action": "enter_town",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(hero_pos),
+						"remaining_steps": 0,
+						"last_action": String(_session.flags.get("last_action", "")),
+						"message": "The routed town target is no longer active on this tile.",
+					}
+				var owner := String(active_town.get("owner", "neutral"))
+				if owner == "player":
+					AppRouter.go_to_town()
+					return {
+						"ok": true,
+						"action": "enter_town",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(hero_pos),
+						"remaining_steps": 0,
+						"town_state": active_town,
+						"last_action": String(_session.flags.get("last_action", "visited_town")),
+						"message": _last_message if _last_message != "" else "Town route opened.",
+					}
+				var context_action_ids := _validation_context_action_ids()
+				if not context_action_ids.has("capture_town"):
+					return {
+						"ok": false,
+						"action": "capture_town",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(hero_pos),
+						"remaining_steps": 0,
+						"town_state": active_town,
+						"context_action_ids": context_action_ids,
+						"last_action": String(_session.flags.get("last_action", "")),
+						"message": "The hostile town did not expose the shipped capture action.",
+					}
+				_on_context_action_pressed("capture_town")
+				var post_town_state := _validation_town_state_for_placement(String(target.get("placement_id", "")))
+				var battle_context: Dictionary = _duplicate_dictionary(_session.battle.get("context", {}))
 				return {
-					"ok": true,
-					"action": "enter_town",
+					"ok": not _session.battle.is_empty() or owner != String(post_town_state.get("owner", owner)),
+					"action": "capture_town",
 					"target_kind": target_kind,
 					"target": target.duplicate(true),
 					"start": _validation_tile_payload(hero_pos),
 					"finish": _validation_tile_payload(hero_pos),
 					"remaining_steps": 0,
-					"last_action": String(_session.flags.get("last_action", "visited_town")),
-					"message": _last_message if _last_message != "" else "Town route opened.",
+					"pre_action_town_owner": owner,
+					"post_action_town_state": post_town_state,
+					"context_action_ids": context_action_ids,
+					"route": "battle" if not _session.battle.is_empty() else "",
+					"battle_context_type": String(battle_context.get("type", "")),
+					"battle_context_town_placement_id": String(battle_context.get("town_placement_id", "")),
+					"battle_context_trigger_faction_id": String(battle_context.get("trigger_faction_id", "")),
+					"last_action": String(_session.flags.get("last_action", "")),
+					"message": _last_message if _last_message != "" else "Town capture route opened.",
 				}
 			"encounter":
 				_start_encounter()
@@ -985,7 +1046,13 @@ func _validation_route_plan(target_kind: String, owner_id: String = "") -> Dicti
 		var tile := Vector2i(int(candidate.get("x", -1)), int(candidate.get("y", -1)))
 		if not _tile_in_bounds(tile):
 			continue
-		var path := _build_validation_path(hero_pos, tile)
+		var path := _build_validation_path(
+			hero_pos,
+			tile,
+			target_kind == "town",
+			target_kind,
+			String(candidate.get("placement_id", ""))
+		)
 		if path.is_empty():
 			continue
 		var priority := _validation_target_priority(target_kind, candidate)
@@ -1026,6 +1093,42 @@ func _validation_targets(target_kind: String, owner_id: String = "") -> Array:
 				targets.append(encounter)
 	return targets
 
+func _validation_context_action_ids() -> Array[String]:
+	var ids: Array[String] = []
+	for action in OverworldRules.get_context_actions(_session):
+		if not (action is Dictionary):
+			continue
+		ids.append(String(action.get("id", "")))
+	return ids
+
+func _validation_active_town_state() -> Dictionary:
+	var context: Dictionary = OverworldRules.get_active_context(_session)
+	if String(context.get("type", "")) != "town":
+		return {}
+	return _validation_town_state_for_placement(String(_duplicate_dictionary(context.get("town", {})).get("placement_id", "")))
+
+func _validation_town_state_for_placement(placement_id: String) -> Dictionary:
+	if placement_id == "":
+		return {}
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		if String(town_value.get("placement_id", "")) != placement_id:
+			continue
+		var town: Dictionary = town_value
+		return {
+			"placement_id": String(town.get("placement_id", "")),
+			"town_id": String(town.get("town_id", "")),
+			"owner": String(town.get("owner", "")),
+			"front": OverworldRules.town_front_state(_session, town),
+			"occupation": OverworldRules.town_occupation_state(_session, town),
+			"base_income": OverworldRules.town_income(town),
+			"income": OverworldRules.town_income(town, _session),
+			"base_battle_readiness": OverworldRules.town_battle_readiness(town),
+			"battle_readiness": OverworldRules.town_battle_readiness(town, _session),
+		}
+	return {}
+
 func _validation_target_priority(target_kind: String, target: Dictionary) -> int:
 	if target_kind != "encounter":
 		return 0
@@ -1045,7 +1148,13 @@ func _validation_tile_payload(tile: Vector2i) -> Dictionary:
 		"y": tile.y,
 	}
 
-func _build_validation_path(start: Vector2i, goal: Vector2i) -> Array:
+func _build_validation_path(
+	start: Vector2i,
+	goal: Vector2i,
+	avoid_interactables: bool = false,
+	target_kind: String = "",
+	target_placement_id: String = ""
+) -> Array:
 	if not _tile_in_bounds(goal):
 		return []
 	if start == goal:
@@ -1069,6 +1178,8 @@ func _build_validation_path(start: Vector2i, goal: Vector2i) -> Array:
 				continue
 			if OverworldRules.tile_is_blocked(_session, next.x, next.y):
 				continue
+			if avoid_interactables and _validation_tile_has_route_hazard(next, goal, target_kind, target_placement_id):
+				continue
 			var key := _tile_key(next)
 			if visited.has(key):
 				continue
@@ -1085,6 +1196,31 @@ func _build_validation_path(start: Vector2i, goal: Vector2i) -> Array:
 		walker = came_from.get(_tile_key(walker), start)
 		path.push_front(walker)
 	return path
+
+func _validation_tile_has_route_hazard(
+	tile: Vector2i,
+	goal: Vector2i,
+	target_kind: String,
+	target_placement_id: String
+) -> bool:
+	if tile == goal:
+		return false
+	var town := _town_at(tile.x, tile.y)
+	if not town.is_empty():
+		return not (
+			target_kind == "town"
+			and String(town.get("placement_id", "")) == target_placement_id
+		)
+	if not _resource_node_at(tile.x, tile.y).is_empty():
+		return true
+	if not _artifact_node_at(tile.x, tile.y).is_empty():
+		return true
+	var encounter := _encounter_at(tile.x, tile.y)
+	if not encounter.is_empty() and not OverworldRules.is_encounter_resolved(_session, encounter):
+		return true
+	if not _hero_entries_at(tile.x, tile.y).is_empty():
+		return true
+	return false
 
 func _make_placeholder_label(text: String) -> Label:
 	return FrontierVisualKit.placeholder_label(text)

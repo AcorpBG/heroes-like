@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T02:28:48Z",
+  "updatedAt": "2026-04-16T03:18:00Z",
   "status": "in_progress",
-  "currentPhase": "live-routed-battle-save-resume-validation-extension",
-  "currentSliceId": "phase-6-live-routed-battle-save-resume-validation-extension",
-  "currentSliceTitle": "Extend the live routed-client validation harness through shipped-router battle save and resume",
+  "currentPhase": "live-routed-hostile-town-assault-validation-extension",
+  "currentSliceId": "phase-6-live-routed-hostile-town-assault-validation-extension",
+  "currentSliceTitle": "Extend the live routed-client validation harness through real hostile-town assault and capture flow on the shipped router and shells",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a production-minded routed battle save-resume slice on the shipped runtime: after the live harness reaches BattleShell through the real router, it now saves through the shipped battle save controls into a deterministic manual slot, returns to MainMenu through AppRouter, reloads that slot through the shipped save browser, proves the router lands back on BattleShell with the preserved encounter and roster signature, then continues the routed battle flow without changing save version 9 or inventing debug-only gameplay systems.",
+  "currentSliceNotes": "Completed a production-minded hostile-town assault validation slice on the shipped runtime: after town-side save and resume, the live harness now marches around non-target interactables to River Pass's hostile Duskfen Bastion, triggers the shipped capture action into a real town-assault battle, verifies hostile ownership before battle entry plus the correct assault context, performs battle-side save and resume through MainMenu, resolves the routed fight to player capture, and then verifies occupation plus hostile retake-front state on the returned overworld and captured-town shells without changing save version 9 or inventing debug-only gameplay systems.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1040,6 +1040,18 @@
       "title": "Re-run repository-local validation, strongest relevant Godot smokes or boot checks, and the live routed-client harness after the battle save-resume extension",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-live-routed-hostile-town-assault-validation-extension",
+      "title": "Extend the live routed-client validation harness through real hostile-town assault and capture flow on the shipped router and shells",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "phase-6-live-routed-hostile-town-assault-validation-extension-validation",
+      "title": "Re-run repository-local validation, strongest relevant Godot smokes or boot checks, and the live routed-client harness after the hostile-town assault validation extension",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1282,6 +1294,7 @@
     "The richer live harness now defaults to Boot -> MainMenu -> Overworld -> player-town recruit order -> Overworld -> encounter battle -> Overworld return on river-pass, and the validation slice passed again through python3 tests/validate_repo.py, full headless Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/core_systems_regression_smoke.tscn, and tests/run_live_flow_harness.py while preserving save version 9.",
     "This run extended that same routed harness into a real shipped-router save/resume proof by saving from TownShell.gd into Manual 2, routing back to MainMenu.gd, loading the slot through the live save browser, verifying the resumed town-state signature, and then continuing through the existing battle route without moving save logic out of SaveService.gd and AppRouter.gd.",
     "Repository-local validation, python3 -m py_compile for the Python harness files, full headless Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, and tests/run_live_flow_harness.py all passed for the routed save-resume slice; tests/core_systems_regression_smoke.tscn currently fails on the older resource-site auto-collect regression outside this harness change.",
-    "This run extended that same shipped routed harness through a real BattleShell manual save/resume proof by selecting the configured manual slot in battle, saving through the existing battle save controls, returning through MainMenu.gd, loading the manual slot through the live save browser, verifying the resumed battle signature, and then continuing the routed battle to completion without moving gameplay or save logic out of SaveService.gd, AppRouter.gd, and BattleRules.gd."
+    "This run extended that same shipped routed harness through a real BattleShell manual save/resume proof by selecting the configured manual slot in battle, saving through the existing battle save controls, returning through MainMenu.gd, loading the manual slot through the live save browser, verifying the resumed battle signature, and then continuing the routed battle to completion without moving gameplay or save logic out of SaveService.gd, AppRouter.gd, and BattleRules.gd.",
+    "This run extended the same shipped routed harness into a real hostile-town assault and capture proof on River Pass by marching through live overworld movement to Duskfen Bastion, using the shipped town capture action to enter a `town_assault` battle, preserving battle save-resume on that assault, then validating player capture plus occupation and hostile retake-front continuity on the returned overworld and captured-town shells. During that work it also fixed a real captured-town recursion bug in `OverworldRules.gd` by breaking the front or occupation derivation cycle without changing save version 9."
   ]
 }

@@ -258,6 +258,8 @@ func _refresh_save_slot_picker() -> void:
 
 func validation_snapshot() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
+	var occupation := OverworldRules.town_occupation_state(_session, town)
+	var front := OverworldRules.town_front_state(_session, town)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -272,6 +274,14 @@ func validation_snapshot() -> Dictionary:
 		"built_building_count": _normalize_string_array(town.get("built_buildings", [])).size(),
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"summary": TownRules.describe_summary(_session),
+		"front": front,
+		"occupation": occupation,
+		"base_income": OverworldRules.town_income(town),
+		"income": OverworldRules.town_income(town, _session),
+		"base_battle_readiness": OverworldRules.town_battle_readiness(town),
+		"battle_readiness": OverworldRules.town_battle_readiness(town, _session),
+		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
 		"build_action_count": TownRules.get_build_actions(_session).size(),
 		"recruit_action_count": TownRules.get_recruit_actions(_session).size(),
 		"study_action_count": TownRules.get_spell_learning_actions(_session).size(),

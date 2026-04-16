@@ -6,8 +6,11 @@ const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
+const DEFAULT_BATTLE_SAVE_STEP_ID := "battle_saved"
+const DEFAULT_BATTLE_MENU_RETURN_STEP_ID := "main_menu_after_battle_return"
+const DEFAULT_BATTLE_RESUME_STEP_ID := "battle_resumed"
 const MAX_VALIDATION_ROUTE_STEPS := 32
-const MAX_VALIDATION_BATTLE_ACTIONS := 24
+const MAX_VALIDATION_BATTLE_ACTIONS := 40
 
 var _enabled := false
 var _config := {}
@@ -184,62 +187,127 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	overworld_after_town["town_exit"] = leave_result
 	_capture_step("overworld_after_town", overworld_after_town)
 
-	var battle_route := await _route_from_overworld_to_scene(post_town_overworld, "encounter", "", BATTLE_SCENE)
-	if not _require(bool(battle_route.get("ok", false)), "Could not route from the live overworld into a battle encounter.", battle_route):
+	var battle_route := await _route_from_overworld_to_scene(post_town_overworld, "town", "enemy", BATTLE_SCENE)
+	if not _require(bool(battle_route.get("ok", false)), "Could not route from the live overworld into a hostile town assault.", battle_route):
 		return false
 	var battle = battle_route.get("scene", null)
 	if battle == null:
 		return _fail("Battle route completed without a battle scene instance.", battle_route)
 	await _settle_frames(6)
 
+	var assault_route := _last_history_entry(battle_route.get("history", []))
+	var assaulted_town: Dictionary = _dictionary_value(assault_route.get("target", {}))
+	if not _require(String(assault_route.get("pre_action_town_owner", "")) == "enemy", "Hostile-town assault route did not preserve enemy ownership before battle entry.", assault_route):
+		return false
+	var assault_route_town_state := _dictionary_value(assault_route.get("post_action_town_state", {}))
+	if not _require(String(assault_route_town_state.get("owner", "")) == "enemy", "Hostile-town assault route flipped town ownership before battle resolution.", assault_route):
+		return false
 	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
+	if not _require(String(battle_snapshot.get("battle_context_type", "")) == "town_assault", "Battle validation did not enter a town-assault context.", battle_snapshot):
+		return false
+	if not _require(
+		String(battle_snapshot.get("battle_context_town_placement_id", "")) == String(assaulted_town.get("placement_id", "")),
+		"Battle validation routed into the wrong hostile town target.",
+		{
+			"route_target": assaulted_town,
+			"battle_snapshot": battle_snapshot,
+		}
+	):
+		return false
 	battle_snapshot["route_history"] = battle_route.get("history", [])
 	_capture_step("battle_entered", battle_snapshot)
-	var battle_resume := await _save_and_resume_battle_from_main_menu(battle, manual_slot)
+	var battle_resume := await _save_and_resume_battle_from_main_menu(battle, manual_slot, "battle")
 	if not bool(battle_resume.get("ok", false)):
 		return false
 	battle = battle_resume.get("battle", battle)
 
-	var battle_actions := []
-	var battle_progress_captured := false
-	var current_battle = battle
-	for _action_index in range(MAX_VALIDATION_BATTLE_ACTIONS):
-		if current_battle == null:
-			break
-		var battle_action: Dictionary = current_battle.call("validation_try_progress_action")
-		battle_actions.append(battle_action.duplicate(true))
-		if not _require(bool(battle_action.get("ok", false)), "Battle validation action did not change live state.", battle_action):
-			return false
-		await _settle_frames(6)
-		var current_scene = get_tree().current_scene
-		if current_scene == null:
-			continue
-		var scene_path := String(current_scene.scene_file_path)
-		if scene_path == BATTLE_SCENE and not battle_progress_captured:
-			var battle_mid_snapshot: Dictionary = current_scene.call("validation_snapshot")
-			battle_mid_snapshot["progress_action"] = battle_action
-			_capture_step("battle_progressed", battle_mid_snapshot)
-			battle_progress_captured = true
-		if scene_path == OVERWORLD_SCENE:
-			var overworld_after_battle: Dictionary = current_scene.call("validation_snapshot")
-			overworld_after_battle["battle_actions"] = battle_actions
-			_capture_step("overworld_after_battle", overworld_after_battle)
-			_log("Live validation flow completed successfully.")
-			return true
-		if scene_path != BATTLE_SCENE:
-			return _fail(
-				"Battle validation routed to an unexpected scene.",
-				{
-					"scene_path": scene_path,
-					"battle_actions": battle_actions,
-				}
-			)
-		current_battle = current_scene
+	var battle_resolution := await _play_battle_to_overworld(battle, "battle_progressed", "overworld_after_battle")
+	if not bool(battle_resolution.get("ok", false)):
+		return false
+	var captured_overworld = battle_resolution.get("scene", null)
+	if captured_overworld == null:
+		return _fail("Town-assault resolution did not return to the overworld scene.", battle_resolution)
+	var captured_overworld_snapshot: Dictionary = battle_resolution.get("snapshot", {})
+	var captured_town_state := _dictionary_value(captured_overworld_snapshot.get("active_town", {}))
+	if not _require(String(captured_overworld_snapshot.get("active_context_type", "")) == "town", "Town-assault return did not leave the hero on a town context.", captured_overworld_snapshot):
+		return false
+	if not _require(
+		String(captured_town_state.get("placement_id", "")) == String(assaulted_town.get("placement_id", "")),
+		"Town-assault return focused the wrong town after battle resolution.",
+		{
+			"expected_town": assaulted_town,
+			"actual_town": captured_town_state,
+		}
+	):
+		return false
+	if not _require(String(captured_town_state.get("owner", "")) == "player", "Town-assault victory did not transfer the hostile town to the player.", captured_town_state):
+		return false
+	var captured_occupation := _dictionary_value(captured_town_state.get("occupation", {}))
+	if not _require(bool(captured_occupation.get("active", false)), "Captured town did not enter an active occupation state.", captured_town_state):
+		return false
+	if not _require(String(captured_occupation.get("mode", "")) == "pacifying", "Captured town did not enter pacification mode.", captured_occupation):
+		return false
+	if not _require(int(captured_occupation.get("days_to_clear", 0)) > 0, "Captured town pacification did not keep a clearance window.", captured_occupation):
+		return false
+	if not _require(int(captured_occupation.get("locked_headcount", 0)) > 0, "Captured town pacification did not hold back local recruits.", captured_occupation):
+		return false
+	var captured_front := _dictionary_value(captured_town_state.get("front", {}))
+	if not _require(bool(captured_front.get("active", false)), "Captured town did not keep a hostile front anchor.", captured_town_state):
+		return false
+	if not _require(String(captured_front.get("mode", "")) == "retake", "Captured town front did not switch into retake posture.", captured_front):
+		return false
+	if not _require(
+		String(captured_front.get("faction_id", "")) == String(battle_snapshot.get("battle_context_trigger_faction_id", "")),
+		"Captured town retake front did not keep the hostile faction anchor.",
+		{
+			"front": captured_front,
+			"battle_snapshot": battle_snapshot,
+		}
+	):
+		return false
+	if not _require("Occupation watch:" in String(captured_overworld_snapshot.get("frontier_watch", "")), "Frontier watch did not surface the occupied-town state after capture.", captured_overworld_snapshot):
+		return false
+	if not _require("Retake fronts" in String(captured_overworld_snapshot.get("frontier_watch", "")), "Frontier watch did not surface the hostile retake front after capture.", captured_overworld_snapshot):
+		return false
 
-	var final_battle_payload := {"battle_actions": battle_actions}
-	if current_battle != null and String(current_battle.scene_file_path) == BATTLE_SCENE:
-		final_battle_payload["battle_snapshot"] = current_battle.call("validation_snapshot")
-	return _fail("Battle validation did not resolve within the action budget.", final_battle_payload)
+	var captured_town_route := await _route_from_overworld_to_scene(captured_overworld, "town", "player", TOWN_SCENE)
+	if not _require(bool(captured_town_route.get("ok", false)), "Could not route from the captured-town overworld state into the shipped town shell.", captured_town_route):
+		return false
+	var captured_town = captured_town_route.get("scene", null)
+	if captured_town == null:
+		return _fail("Captured-town route completed without a town scene instance.", captured_town_route)
+	await _settle_frames(6)
+
+	var captured_town_snapshot: Dictionary = captured_town.call("validation_snapshot")
+	if not _require(String(captured_town_snapshot.get("town_placement_id", "")) == String(assaulted_town.get("placement_id", "")), "Captured town shell routed to an unexpected town.", captured_town_snapshot):
+		return false
+	if not _require(String(captured_town_snapshot.get("town_owner", "")) == "player", "Captured town shell did not reflect player ownership.", captured_town_snapshot):
+		return false
+	var town_occupation := _dictionary_value(captured_town_snapshot.get("occupation", {}))
+	if not _require(String(town_occupation.get("mode", "")) == "pacifying", "Captured town shell lost pacification state.", captured_town_snapshot):
+		return false
+	var town_front := _dictionary_value(captured_town_snapshot.get("front", {}))
+	if not _require(String(town_front.get("mode", "")) == "retake", "Captured town shell lost hostile retake-front posture.", captured_town_snapshot):
+		return false
+	if not _require(
+		int(_dictionary_value(captured_town_snapshot.get("income", {})).get("gold", 0)) < int(_dictionary_value(captured_town_snapshot.get("base_income", {})).get("gold", 0)),
+		"Captured town shell did not reflect reduced income during occupation.",
+		captured_town_snapshot
+	):
+		return false
+	if not _require(
+		int(captured_town_snapshot.get("battle_readiness", 0)) < int(captured_town_snapshot.get("base_battle_readiness", 0)),
+		"Captured town shell did not reflect reduced battle readiness during occupation.",
+		captured_town_snapshot
+	):
+		return false
+	var town_summary := String(captured_town_snapshot.get("summary", "")).to_lower()
+	if not _require("occupation" in town_summary and "retake front" in town_summary, "Captured town shell summary did not surface occupation and hostile retake pressure.", captured_town_snapshot):
+		return false
+	captured_town_snapshot["route_history"] = captured_town_route.get("history", [])
+	_capture_step("captured_town_entered", captured_town_snapshot)
+	_log("Live validation flow completed successfully.")
+	return true
 
 func _enter_live_skirmish_overworld() -> Dictionary:
 	_log("Waiting for main menu boot route.")
@@ -344,7 +412,14 @@ func _route_from_overworld_to_scene(overworld, target_kind: String, owner_id: St
 		"message": "Route did not reach the requested scene within the step budget.",
 	}
 
-func _save_and_resume_battle_from_main_menu(battle, manual_slot: int) -> Dictionary:
+func _save_and_resume_battle_from_main_menu(battle, manual_slot: int, step_prefix: String = "battle") -> Dictionary:
+	var save_step_id := DEFAULT_BATTLE_SAVE_STEP_ID if step_prefix == "battle" else "%s_saved" % step_prefix
+	var menu_step_id := (
+		DEFAULT_BATTLE_MENU_RETURN_STEP_ID
+		if step_prefix == "battle"
+		else "main_menu_after_%s_return" % step_prefix
+	)
+	var resume_step_id := DEFAULT_BATTLE_RESUME_STEP_ID if step_prefix == "battle" else "%s_resumed" % step_prefix
 	if not _require(
 		bool(battle.call("validation_select_save_slot", manual_slot)),
 		"Battle validation could not select the requested manual save slot.",
@@ -372,7 +447,7 @@ func _save_and_resume_battle_from_main_menu(battle, manual_slot: int) -> Diction
 
 	var battle_saved_snapshot: Dictionary = battle.call("validation_snapshot")
 	battle_saved_snapshot["manual_save"] = battle_save
-	_capture_step("battle_saved", battle_saved_snapshot)
+	_capture_step(save_step_id, battle_saved_snapshot)
 	var expected_battle_resume_signature := _battle_resume_signature(battle_saved_snapshot)
 
 	var battle_menu_return: Dictionary = battle.call("validation_return_to_menu")
@@ -394,7 +469,7 @@ func _save_and_resume_battle_from_main_menu(battle, manual_slot: int) -> Diction
 	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
 	menu_after_return_snapshot["menu_return"] = battle_menu_return
 	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
-	_capture_step("main_menu_after_battle_return", menu_after_return_snapshot)
+	_capture_step(menu_step_id, menu_after_return_snapshot)
 
 	menu.call("validation_open_saves_stage")
 	await _settle_frames(4)
@@ -429,11 +504,58 @@ func _save_and_resume_battle_from_main_menu(battle, manual_slot: int) -> Diction
 	):
 		return {"ok": false}
 	resumed_battle_snapshot["resume"] = battle_resume
-	_capture_step("battle_resumed", resumed_battle_snapshot)
+	_capture_step(resume_step_id, resumed_battle_snapshot)
 	return {
 		"ok": true,
 		"battle": resumed_battle,
 	}
+
+func _play_battle_to_overworld(battle, battle_progress_step_id: String, overworld_step_id: String) -> Dictionary:
+	var battle_actions := []
+	var battle_progress_captured := false
+	var current_battle = battle
+	for _action_index in range(MAX_VALIDATION_BATTLE_ACTIONS):
+		if current_battle == null:
+			break
+		var battle_action: Dictionary = current_battle.call("validation_try_progress_action")
+		battle_actions.append(battle_action.duplicate(true))
+		if not _require(bool(battle_action.get("ok", false)), "Battle validation action did not change live state.", battle_action):
+			return {"ok": false}
+		await _settle_frames(6)
+		var current_scene = get_tree().current_scene
+		if current_scene == null:
+			continue
+		var scene_path := String(current_scene.scene_file_path)
+		if scene_path == BATTLE_SCENE and not battle_progress_captured:
+			var battle_mid_snapshot: Dictionary = current_scene.call("validation_snapshot")
+			battle_mid_snapshot["progress_action"] = battle_action
+			_capture_step(battle_progress_step_id, battle_mid_snapshot)
+			battle_progress_captured = true
+		if scene_path == OVERWORLD_SCENE:
+			var overworld_after_battle: Dictionary = current_scene.call("validation_snapshot")
+			overworld_after_battle["battle_actions"] = battle_actions
+			_capture_step(overworld_step_id, overworld_after_battle)
+			return {
+				"ok": true,
+				"scene": current_scene,
+				"snapshot": overworld_after_battle,
+			}
+		if scene_path != BATTLE_SCENE:
+			_fail(
+				"Battle validation routed to an unexpected scene.",
+				{
+					"scene_path": scene_path,
+					"battle_actions": battle_actions,
+				}
+			)
+			return {"ok": false}
+		current_battle = current_scene
+
+	var final_battle_payload := {"battle_actions": battle_actions}
+	if current_battle != null and String(current_battle.scene_file_path) == BATTLE_SCENE:
+		final_battle_payload["battle_snapshot"] = current_battle.call("validation_snapshot")
+	_fail("Battle validation did not resolve within the action budget.", final_battle_payload)
+	return {"ok": false}
 
 func _parse_user_args(args: Array) -> Dictionary:
 	var config := {
@@ -549,6 +671,12 @@ func _settle_frames(frame_count: int) -> void:
 func _current_scene_path() -> String:
 	var current := get_tree().current_scene
 	return "" if current == null else String(current.scene_file_path)
+
+func _last_history_entry(history_value: Variant) -> Dictionary:
+	if not (history_value is Array) or history_value.is_empty():
+		return {}
+	var last_entry = history_value[history_value.size() - 1]
+	return _dictionary_value(last_entry)
 
 func _require(condition: bool, message: String, payload: Dictionary) -> bool:
 	if condition:
