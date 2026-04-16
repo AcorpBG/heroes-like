@@ -675,6 +675,11 @@ func validation_snapshot() -> Dictionary:
 		"stage_dock_visible": _stage_dock_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
 		"campaign_count": _campaign_entries.size(),
+		"selected_campaign_id": _selected_campaign_id,
+		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
+		"campaign_details": _campaign_details_label.text,
+		"campaign_arc_status": _campaign_arc_status_label.text,
+		"chapter_details": _chapter_details_label.text,
 		"save_count": _save_summaries.size(),
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
@@ -684,6 +689,10 @@ func validation_snapshot() -> Dictionary:
 		"continue_enabled": not _continue_button.disabled,
 		"summary": _summary_label.text,
 	}
+
+func validation_open_campaign_stage() -> void:
+	_select_menu_tab(TAB_CAMPAIGN)
+	_show_stage_dock()
 
 func validation_open_skirmish_stage() -> void:
 	_select_menu_tab(TAB_SKIRMISH)
@@ -700,6 +709,24 @@ func validation_select_skirmish(scenario_id: String) -> bool:
 			continue
 		_skirmish_list.select(index)
 		_on_skirmish_selected(index)
+		return true
+	return false
+
+func validation_select_campaign(campaign_id: String) -> bool:
+	for index in range(_campaign_entries.size()):
+		if String(_campaign_entries[index].get("campaign_id", "")) != campaign_id:
+			continue
+		_campaign_list.select(index)
+		_on_campaign_selected(index)
+		return true
+	return false
+
+func validation_select_campaign_chapter(scenario_id: String) -> bool:
+	for index in range(_campaign_chapter_entries.size()):
+		if String(_campaign_chapter_entries[index].get("scenario_id", "")) != scenario_id:
+			continue
+		_chapter_list.select(index)
+		_on_chapter_selected(index)
 		return true
 	return false
 
@@ -758,6 +785,30 @@ func validation_start_selected_skirmish() -> Dictionary:
 		"active_scenario_id": active_session.scenario_id,
 		"active_difficulty": active_session.difficulty,
 		"active_launch_mode": active_session.launch_mode,
+	}
+
+func validation_start_selected_campaign_chapter() -> Dictionary:
+	var requested_campaign_id := _selected_campaign_id
+	var requested_scenario_id := _selected_campaign_scenario_id
+	var action := CampaignProgression.chapter_action(requested_campaign_id, requested_scenario_id)
+	var action_disabled := _start_chapter_button.disabled or bool(action.get("disabled", false))
+	_on_start_chapter_pressed()
+	var active_session := SessionState.ensure_active_session()
+	var active_campaign_id := String(active_session.flags.get("campaign_id", ""))
+	return {
+		"requested_campaign_id": requested_campaign_id,
+		"requested_scenario_id": requested_scenario_id,
+		"action_disabled": action_disabled,
+		"started": not action_disabled
+			and active_session.scenario_id == requested_scenario_id
+			and active_session.launch_mode == SessionState.LAUNCH_MODE_CAMPAIGN
+			and active_campaign_id == requested_campaign_id,
+		"active_scenario_id": active_session.scenario_id,
+		"active_difficulty": active_session.difficulty,
+		"active_launch_mode": active_session.launch_mode,
+		"active_campaign_id": active_campaign_id,
+		"active_campaign_name": String(active_session.flags.get("campaign_name", "")),
+		"active_campaign_chapter_label": String(active_session.flags.get("campaign_chapter_label", "")),
 	}
 
 func _sync_command_button_styles() -> void:

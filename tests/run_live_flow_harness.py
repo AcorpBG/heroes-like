@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_FLOW = "boot_to_skirmish_resolved_outcome"
 DEFEAT_OUTCOME_FLOW = "boot_to_skirmish_defeat_outcome"
+CAMPAIGN_OUTCOME_FLOW = "boot_to_campaign_resolved_outcome"
 DEFAULT_DISPLAY = ":99"
 
 
@@ -22,8 +23,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--flow",
         default=DEFAULT_FLOW,
-        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for routed defeat outcome validation.",
+        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for routed defeat outcome validation or {CAMPAIGN_OUTCOME_FLOW} for campaign outcome validation.",
     )
+    parser.add_argument("--campaign", default="campaign_reedfall", help="Campaign id to select through the real campaign browser.")
     parser.add_argument("--scenario", default="river-pass", help="Scenario id to launch through the real menu.")
     parser.add_argument("--difficulty", default="normal", help="Difficulty id to select before launch.")
     parser.add_argument("--manual-slot", type=int, default=2, help="Manual slot id to use for routed save/resume validation.")
@@ -69,6 +71,7 @@ def main() -> int:
         str(ROOT),
         "--",
         f"--live-validation-flow={args.flow}",
+        f"--live-validation-campaign={args.campaign}",
         f"--live-validation-scenario={args.scenario}",
         f"--live-validation-difficulty={args.difficulty}",
         f"--live-validation-manual-slot={args.manual_slot}",
@@ -87,6 +90,7 @@ def main() -> int:
     print(f"Log: {run_dir / 'live_validation.log'}")
     print(f"OK: {report.get('ok', False)}")
     print(f"Flow: {report.get('flow', '')}")
+    print(f"Campaign: {report.get('campaign_id', '')}")
     print(f"Scenario: {report.get('scenario_id', '')} @ {report.get('difficulty', '')}")
     print(f"Manual slot: {report.get('manual_slot', 0)}")
     print(f"Steps: {len(report.get('steps', []))}")

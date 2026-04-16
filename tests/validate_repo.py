@@ -4298,12 +4298,18 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"',
         'const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"',
         'const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"',
+        'const FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME := "boot_to_campaign_resolved_outcome"',
         "const TOWN_SCENE :=",
         "const BATTLE_SCENE :=",
         "const SCENARIO_OUTCOME_SCENE :=",
         "FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME",
         "func _execute_boot_to_skirmish_defeat_outcome_flow",
+        "func _execute_boot_to_campaign_resolved_outcome_flow",
         "func _enter_live_skirmish_overworld",
+        "func _enter_live_campaign_overworld",
+        "func _verify_campaign_outcome_route_and_followups",
+        "func _assert_campaign_outcome_snapshot",
+        "func _assert_campaign_save_summary",
         "func _drive_overworld_to_defeat_outcome",
         "func _resolve_defeat_pressure_battle_interrupt",
         "func _route_from_overworld_to_scene",
@@ -4341,6 +4347,19 @@ def validate_live_client_harness(errors: list[str]) -> None:
         'main_menu_after_defeat_outcome_return',
         'defeat_outcome_resumed',
         'main_menu_after_defeat_outcome_action',
+        'main_menu_campaign',
+        'campaign_overworld_entered',
+        'campaign_support_site_claimed_river_free_company',
+        'campaign_support_artifact_claimed_bastion_vault',
+        'campaign_battle_entered',
+        'campaign_outcome_entered',
+        'campaign_outcome_saved',
+        'campaign_outcome_resumed',
+        'campaign_next_chapter_overworld_entered',
+        'Next chapter unlocked',
+        'This victory exports',
+        'Next chapter import ready',
+        'saved_from_launch_mode',
         'validation_end_turn',
         'validation_perform_action',
         'expected_status',
@@ -4368,14 +4387,28 @@ def validate_live_client_harness(errors: list[str]) -> None:
         errors,
         "run_live_flow_harness.py must expose the routed defeat outcome flow id",
     )
+    ensure(
+        'CAMPAIGN_OUTCOME_FLOW = "boot_to_campaign_resolved_outcome"' in runner_text,
+        errors,
+        "run_live_flow_harness.py must expose the routed campaign outcome flow id",
+    )
+    ensure(
+        'parser.add_argument("--campaign"' in runner_text and "--live-validation-campaign=" in runner_text,
+        errors,
+        "run_live_flow_harness.py must pass the selected campaign id into the live validation harness",
+    )
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func validation_snapshot",
+        "func validation_open_campaign_stage",
         "func validation_open_skirmish_stage",
         "func validation_open_saves_stage",
+        "func validation_select_campaign",
+        "func validation_select_campaign_chapter",
         "func validation_select_save_summary",
         "func validation_resume_selected_save",
+        "func validation_start_selected_campaign_chapter",
         "func validation_start_selected_skirmish",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required live-harness token: {required_token}")

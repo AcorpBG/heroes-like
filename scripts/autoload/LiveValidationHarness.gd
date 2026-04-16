@@ -4,11 +4,13 @@ const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"
 const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"
 const FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME := "boot_to_skirmish_resolved_outcome"
 const FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME := "boot_to_skirmish_defeat_outcome"
+const FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME := "boot_to_campaign_resolved_outcome"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
+const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const DEFAULT_BATTLE_SAVE_STEP_ID := "battle_saved"
 const DEFAULT_BATTLE_MENU_RETURN_STEP_ID := "main_menu_after_battle_return"
 const DEFAULT_BATTLE_RESUME_STEP_ID := "battle_resumed"
@@ -20,6 +22,9 @@ const DEFEAT_OUTCOME_SAVE_STEP_ID := "defeat_outcome_saved"
 const DEFEAT_OUTCOME_MENU_RETURN_STEP_ID := "main_menu_after_defeat_outcome_return"
 const DEFEAT_OUTCOME_RESUME_STEP_ID := "defeat_outcome_resumed"
 const DEFEAT_OUTCOME_MENU_ACTION_STEP_ID := "main_menu_after_defeat_outcome_action"
+const CAMPAIGN_OUTCOME_SAVE_STEP_ID := "campaign_outcome_saved"
+const CAMPAIGN_OUTCOME_MENU_RETURN_STEP_ID := "main_menu_after_campaign_outcome_return"
+const CAMPAIGN_OUTCOME_RESUME_STEP_ID := "campaign_outcome_resumed"
 const MAX_VALIDATION_ROUTE_STEPS := 32
 const MAX_VALIDATION_BATTLE_ACTIONS := 40
 const MAX_VALIDATION_DEFEAT_END_TURNS := 10
@@ -61,6 +66,8 @@ func _execute_flow() -> bool:
 			return await _execute_boot_to_skirmish_town_battle_flow()
 		FLOW_BOOT_TO_SKIRMISH_DEFEAT_OUTCOME:
 			return await _execute_boot_to_skirmish_defeat_outcome_flow()
+		FLOW_BOOT_TO_CAMPAIGN_RESOLVED_OUTCOME:
+			return await _execute_boot_to_campaign_resolved_outcome_flow()
 		_:
 			return _fail("Unsupported live validation flow requested.", {"flow": _config.get("flow", "")})
 
@@ -100,6 +107,109 @@ func _execute_boot_to_skirmish_defeat_outcome_flow() -> bool:
 		"defeat",
 		"defeat_outcome"
 	)
+	if outcome_ok:
+		_log("Live validation flow completed successfully.")
+	return outcome_ok
+
+func _execute_boot_to_campaign_resolved_outcome_flow() -> bool:
+	var launch := await _enter_live_campaign_overworld()
+	if not bool(launch.get("ok", false)):
+		return false
+	var current_overworld = launch.get("overworld", null)
+	if current_overworld == null:
+		return _fail("Campaign launch did not provide an overworld scene instance.", launch)
+
+	var town_route := await _route_from_overworld_to_scene(current_overworld, "town", "player", TOWN_SCENE)
+	if not _require(bool(town_route.get("ok", false)), "Could not route from the campaign overworld into the starting player town.", town_route):
+		return false
+	var town = town_route.get("scene", null)
+	if town == null:
+		return _fail("Campaign starting-town route completed without a town scene instance.", town_route)
+	await _settle_frames(6)
+	var town_snapshot: Dictionary = town.call("validation_snapshot")
+	if not _require(String(town_snapshot.get("launch_mode", "")) == "campaign", "Campaign starting-town route did not preserve campaign launch mode.", town_snapshot):
+		return false
+	town_snapshot["route_history"] = town_route.get("history", [])
+	_capture_step("campaign_town_entered", town_snapshot)
+
+	var town_action: Dictionary = town.call("validation_try_progress_action")
+	if not _require(bool(town_action.get("ok", false)), "Campaign starting-town validation action did not change live state.", town_action):
+		return false
+	await _settle_frames(6)
+	var town_after_snapshot: Dictionary = town.call("validation_snapshot")
+	town_after_snapshot["progress_action"] = town_action
+	_capture_step("campaign_town_progressed", town_after_snapshot)
+
+	var leave_result: Dictionary = town.call("validation_leave_town")
+	if not _require(bool(leave_result.get("ok", false)), "Campaign validation could not leave the starting town through the live router.", leave_result):
+		return false
+	current_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if current_overworld == null:
+		return _fail("Leaving the campaign starting town did not route back into the overworld scene.", leave_result)
+	await _settle_frames(6)
+	var post_town_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+	post_town_snapshot["town_exit"] = leave_result
+	_capture_step("campaign_overworld_after_town", post_town_snapshot)
+
+	if String(_config.get("scenario_id", "")) == "river-pass":
+		var free_company_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"resource",
+			"river_free_company",
+			"campaign_support_site_claimed_river_free_company"
+		)
+		if not bool(free_company_claim.get("ok", false)):
+			_fail("Could not claim the authored campaign support site before objective clearing.", free_company_claim)
+			return false
+		current_overworld = free_company_claim.get("scene", current_overworld)
+
+	var objective_clear := await _clear_required_encounters_to_overworld(current_overworld)
+	if not bool(objective_clear.get("ok", false)):
+		return false
+	current_overworld = objective_clear.get("scene", current_overworld)
+
+	if String(_config.get("scenario_id", "")) == "river-pass":
+		var gorget_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"artifact",
+			"bastion_vault",
+			"campaign_support_artifact_claimed_bastion_vault"
+		)
+		if not bool(gorget_claim.get("ok", false)):
+			_fail("Could not claim the authored campaign Bastion Gorget before the final assault.", gorget_claim)
+			return false
+		current_overworld = gorget_claim.get("scene", current_overworld)
+
+	var battle_route := await _route_from_overworld_to_scene(current_overworld, "town", "enemy", BATTLE_SCENE)
+	if not _require(bool(battle_route.get("ok", false)), "Could not route from the campaign overworld into the hostile town assault.", battle_route):
+		return false
+	var battle = battle_route.get("scene", null)
+	if battle == null:
+		return _fail("Campaign town-assault route completed without a battle scene instance.", battle_route)
+	await _settle_frames(6)
+
+	var assault_route := _last_history_entry(battle_route.get("history", []))
+	if not _require(String(assault_route.get("pre_action_town_owner", "")) == "enemy", "Campaign hostile-town route did not preserve enemy ownership before battle entry.", assault_route):
+		return false
+	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
+	if not _require(String(battle_snapshot.get("launch_mode", "")) == "campaign", "Campaign battle route did not preserve campaign launch mode.", battle_snapshot):
+		return false
+	if not _require(String(battle_snapshot.get("battle_context_type", "")) == "town_assault", "Campaign battle validation did not enter a town-assault context.", battle_snapshot):
+		return false
+	battle_snapshot["route_history"] = battle_route.get("history", [])
+	_capture_step("campaign_battle_entered", battle_snapshot)
+
+	var battle_resolution := await _play_battle_to_scene(
+		battle,
+		"campaign_battle_progressed",
+		"campaign_outcome_entered",
+		SCENARIO_OUTCOME_SCENE
+	)
+	if not bool(battle_resolution.get("ok", false)):
+		return false
+
+	var manual_slot := int(_config.get("manual_slot", 2))
+	var outcome_ok := await _verify_campaign_outcome_route_and_followups(battle_resolution, manual_slot)
 	if outcome_ok:
 		_log("Live validation flow completed successfully.")
 	return outcome_ok
@@ -503,6 +613,78 @@ func _resolve_defeat_pressure_battle_interrupt(battle, turn_history: Array) -> D
 			"scene_path": _current_scene_path(),
 		}
 	)
+
+func _enter_live_campaign_overworld() -> Dictionary:
+	_log("Waiting for main menu boot route.")
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		_fail("Boot did not reach the main menu scene.", {})
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var scenario_id := String(_config.get("scenario_id", ""))
+	var campaign_id := _configured_campaign_id()
+	var menu_snapshot: Dictionary = menu.call("validation_snapshot")
+	if not _require(int(menu_snapshot.get("campaign_count", 0)) > 0, "Main menu campaign browser did not populate.", menu_snapshot):
+		return {"ok": false}
+	if not _require(campaign_id != "", "No authored campaign id was available for the requested campaign live validation scenario.", menu_snapshot):
+		return {"ok": false}
+	menu.call("validation_open_campaign_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_campaign", campaign_id)),
+		"Requested campaign is not available in the live campaign browser.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_campaign_chapter", scenario_id)),
+		"Requested campaign chapter is not available in the live campaign browser.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	await _settle_frames(4)
+	menu_snapshot = menu.call("validation_snapshot")
+	_capture_step("main_menu_campaign", menu_snapshot)
+
+	var launch_result: Dictionary = menu.call("validation_start_selected_campaign_chapter")
+	if not _require(bool(launch_result.get("started", false)), "Campaign launch did not stage an active campaign session.", launch_result):
+		return {"ok": false}
+
+	_log("Waiting for overworld route after live campaign menu launch.")
+	var overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if overworld == null:
+		_fail("Campaign launch did not route into the overworld scene.", {"launch": launch_result})
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var overworld_snapshot: Dictionary = overworld.call("validation_snapshot")
+	if not _require(String(overworld_snapshot.get("scenario_id", "")) == scenario_id, "Campaign overworld scenario id did not match the requested live launch.", overworld_snapshot):
+		return {"ok": false}
+	if not _require(String(overworld_snapshot.get("launch_mode", "")) == "campaign", "Campaign overworld did not preserve campaign launch mode.", overworld_snapshot):
+		return {"ok": false}
+	if not _require(String(overworld_snapshot.get("game_state", "")) == "overworld", "Campaign launch did not route to an overworld game state.", overworld_snapshot):
+		return {"ok": false}
+	if not _require(int(overworld_snapshot.get("movement_current", 0)) > 0, "Campaign overworld started without any current movement budget.", overworld_snapshot):
+		return {"ok": false}
+	var latest_summary: Dictionary = SaveService.latest_loadable_summary()
+	if not _assert_campaign_save_summary(
+		latest_summary,
+		"Campaign launch autosave",
+		scenario_id,
+		campaign_id,
+		"in_progress",
+		"overworld"
+	):
+		return {"ok": false}
+	overworld_snapshot["autosave_summary"] = latest_summary
+	_capture_step("campaign_overworld_entered", overworld_snapshot)
+	return {
+		"ok": true,
+		"overworld": overworld,
+		"campaign_id": campaign_id,
+	}
 
 func _enter_live_skirmish_overworld() -> Dictionary:
 	_log("Waiting for main menu boot route.")
@@ -1054,6 +1236,16 @@ func _save_and_resume_outcome_from_main_menu(
 		return {"ok": false}
 	if not _require(String(outcome_save_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Outcome manual save summary scenario id did not match the launched scenario.", outcome_save_summary):
 		return {"ok": false}
+	if String(outcome_save_summary.get("launch_mode", "")) == "campaign":
+		if not _assert_campaign_save_summary(
+			outcome_save_summary,
+			"Campaign outcome manual save",
+			String(_config.get("scenario_id", "")),
+			_configured_campaign_id(),
+			expected_status,
+			"outcome"
+		):
+			return {"ok": false}
 	if not _require(SaveService.load_action_label(outcome_save_summary) == "Review Outcome", "Outcome manual save did not expose the review load action.", outcome_save_summary):
 		return {"ok": false}
 	if not _require(SaveService.continue_action_label(outcome_save_summary) == "Review Latest Outcome", "Outcome manual save did not expose the review continue action.", outcome_save_summary):
@@ -1087,6 +1279,16 @@ func _save_and_resume_outcome_from_main_menu(
 		latest_summary_after_menu_return
 	):
 		return {"ok": false}
+	if String(latest_summary_after_menu_return.get("launch_mode", "")) == "campaign":
+		if not _assert_campaign_save_summary(
+			latest_summary_after_menu_return,
+			"Latest campaign outcome save after menu return",
+			String(_config.get("scenario_id", "")),
+			_configured_campaign_id(),
+			expected_status,
+			"outcome"
+		):
+			return {"ok": false}
 	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
 	menu_after_return_snapshot["menu_return"] = outcome_menu_return
 	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
@@ -1200,6 +1402,155 @@ func _verify_outcome_route_and_followups(
 	_capture_step(_prefixed_menu_step_id(step_prefix, "action"), final_menu_snapshot)
 	return true
 
+func _verify_campaign_outcome_route_and_followups(outcome_route: Dictionary, manual_slot: int) -> bool:
+	var campaign_id := _configured_campaign_id()
+	var scenario_id := String(_config.get("scenario_id", ""))
+	var outcome = outcome_route.get("scene", null)
+	if outcome == null:
+		return _fail("Campaign resolved routing did not provide an outcome scene instance.", outcome_route)
+	var outcome_snapshot: Dictionary = outcome_route.get("snapshot", {})
+	if not _assert_campaign_outcome_snapshot(outcome_snapshot, campaign_id, scenario_id, "victory", true):
+		return false
+
+	var next_action_id := _campaign_next_action_id(outcome_snapshot, scenario_id)
+	if not _require(next_action_id != "", "Campaign victory outcome did not expose an unlocked next-chapter action.", outcome_snapshot):
+		return false
+
+	var outcome_resume := await _save_and_resume_outcome_from_main_menu(outcome, manual_slot, "victory", "campaign_outcome")
+	if not bool(outcome_resume.get("ok", false)):
+		return false
+	outcome = outcome_resume.get("outcome", outcome)
+	var resumed_outcome_snapshot: Dictionary = outcome.call("validation_snapshot")
+	if not _assert_campaign_outcome_snapshot(resumed_outcome_snapshot, campaign_id, scenario_id, "victory", true):
+		return false
+	var resumed_next_action_id := _campaign_next_action_id(resumed_outcome_snapshot, scenario_id)
+	if not _require(resumed_next_action_id == next_action_id, "Campaign outcome save/resume did not preserve the next-chapter follow-up action.", {"expected": next_action_id, "actual": resumed_next_action_id, "snapshot": resumed_outcome_snapshot}):
+		return false
+
+	var outcome_action: Dictionary = outcome.call("validation_perform_action", next_action_id)
+	if not _require(bool(outcome_action.get("ok", false)), "Campaign next-chapter follow-up failed through the shipped outcome action row.", outcome_action):
+		return false
+	var next_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if next_overworld == null:
+		return _fail("Campaign next-chapter follow-up did not route to the overworld scene.", outcome_action)
+	await _settle_frames(8)
+
+	var next_scenario_id := next_action_id.trim_prefix("campaign_start:")
+	var next_snapshot: Dictionary = next_overworld.call("validation_snapshot")
+	if not _require(String(next_snapshot.get("scenario_id", "")) == next_scenario_id, "Campaign follow-up routed to the wrong chapter scenario.", next_snapshot):
+		return false
+	if not _require(next_scenario_id != scenario_id, "Campaign follow-up replayed the completed chapter instead of launching the next chapter.", next_snapshot):
+		return false
+	if not _require(String(next_snapshot.get("launch_mode", "")) == "campaign", "Campaign follow-up did not preserve campaign launch mode.", next_snapshot):
+		return false
+	if not _require(String(next_snapshot.get("game_state", "")) == "overworld", "Campaign follow-up did not route into an overworld game state.", next_snapshot):
+		return false
+	var followup_summary := SaveService.latest_loadable_summary()
+	if not _assert_campaign_save_summary(
+		followup_summary,
+		"Campaign follow-up autosave",
+		next_scenario_id,
+		campaign_id,
+		"in_progress",
+		"overworld"
+	):
+		return false
+	next_snapshot["outcome_action"] = outcome_action
+	next_snapshot["latest_save_summary"] = followup_summary
+	next_snapshot["previous_outcome_signature"] = _outcome_resume_signature(resumed_outcome_snapshot)
+	_capture_step("campaign_next_chapter_overworld_entered", next_snapshot)
+	return true
+
+func _assert_campaign_outcome_snapshot(
+	snapshot: Dictionary,
+	campaign_id: String,
+	scenario_id: String,
+	expected_status: String,
+	require_next_action: bool
+) -> bool:
+	if not _require(String(snapshot.get("scenario_id", "")) == scenario_id, "Campaign outcome scenario id did not match the launched chapter.", snapshot):
+		return false
+	if not _require(String(snapshot.get("launch_mode", "")) == "campaign", "Campaign outcome did not preserve campaign launch mode.", snapshot):
+		return false
+	if not _require(String(snapshot.get("scenario_status", "")) == expected_status, "Campaign outcome did not receive the expected result state.", snapshot):
+		return false
+	if not _require(String(snapshot.get("resume_target", "")) == "outcome", "Campaign outcome did not advertise outcome review semantics.", snapshot):
+		return false
+	if not _require(expected_status.capitalize() in String(snapshot.get("header", "")), "Campaign outcome header did not surface the expected result state.", snapshot):
+		return false
+	var progression_summary := String(snapshot.get("progression_summary", ""))
+	if not _require("Campaign progress" in progression_summary, "Campaign outcome did not expose campaign progression recap text.", snapshot):
+		return false
+	if require_next_action and not _require("Next chapter unlocked" in progression_summary, "Campaign victory recap did not report the downstream chapter unlock.", snapshot):
+		return false
+	var campaign_arc_summary := String(snapshot.get("campaign_arc_summary", ""))
+	if not _require("Campaign Arc" in campaign_arc_summary, "Campaign outcome did not expose campaign arc recap text.", snapshot):
+		return false
+	var carryover_summary := String(snapshot.get("carryover_summary", ""))
+	if not _require("This victory exports" in carryover_summary, "Campaign victory outcome did not expose the carryover export recap.", snapshot):
+		return false
+	if require_next_action and not _require("Next chapter import ready" in carryover_summary, "Campaign victory outcome did not expose the downstream carryover import recap.", snapshot):
+		return false
+	var journal_summary := String(snapshot.get("journal_summary", ""))
+	if not _require("Victory" in journal_summary, "Campaign outcome did not expose the campaign chronicle victory entry.", snapshot):
+		return false
+	var action_ids := _string_array_value(snapshot.get("action_ids", []))
+	if not _require("campaign_start:%s" % scenario_id in action_ids, "Campaign outcome did not offer the real campaign replay action.", snapshot):
+		return false
+	if require_next_action and not _require(_campaign_next_action_id(snapshot, scenario_id) != "", "Campaign outcome did not offer the real campaign next-chapter action.", snapshot):
+		return false
+	if not _require("return_to_menu" in action_ids, "Campaign outcome did not offer the return-to-menu action.", snapshot):
+		return false
+	for action_id in action_ids:
+		if not _require(not String(action_id).begins_with("skirmish_start:"), "Campaign outcome leaked a skirmish retry action into campaign follow-ups.", snapshot):
+			return false
+	var latest_summary := _dictionary_value(snapshot.get("latest_save_summary", {}))
+	return _assert_campaign_save_summary(
+		latest_summary,
+		"Campaign outcome autosave",
+		scenario_id,
+		campaign_id,
+		expected_status,
+		"outcome"
+	)
+
+func _assert_campaign_save_summary(
+	summary: Dictionary,
+	label: String,
+	scenario_id: String,
+	campaign_id: String,
+	expected_status: String = "",
+	expected_resume_target: String = ""
+) -> bool:
+	if not _require(not summary.is_empty(), "%s was unavailable." % label, summary):
+		return false
+	if not _require(String(summary.get("scenario_id", "")) == scenario_id, "%s scenario id did not match the expected chapter." % label, summary):
+		return false
+	if not _require(String(summary.get("launch_mode", "")) == "campaign", "%s did not advertise campaign launch mode." % label, summary):
+		return false
+	if not _require(String(summary.get("saved_from_launch_mode", summary.get("launch_mode", ""))) == "campaign", "%s did not preserve saved-from campaign launch mode." % label, summary):
+		return false
+	if not _require(String(summary.get("campaign_id", "")) == campaign_id, "%s campaign id did not match the launched campaign." % label, summary):
+		return false
+	if not _require(String(summary.get("campaign_name", "")) != "", "%s did not expose the campaign name." % label, summary):
+		return false
+	if not _require(String(summary.get("chapter_label", "")) != "", "%s did not expose the campaign chapter label." % label, summary):
+		return false
+	if expected_status != "" and not _require(String(summary.get("scenario_status", "")) == expected_status, "%s did not preserve %s status." % [label, expected_status], summary):
+		return false
+	if expected_resume_target != "" and not _require(String(summary.get("resume_target", "")) == expected_resume_target, "%s did not preserve %s resume semantics." % [label, expected_resume_target], summary):
+		return false
+	return true
+
+func _campaign_next_action_id(snapshot: Dictionary, current_scenario_id: String) -> String:
+	for action_id in _string_array_value(snapshot.get("action_ids", [])):
+		if not action_id.begins_with("campaign_start:"):
+			continue
+		var scenario_id := action_id.trim_prefix("campaign_start:")
+		if scenario_id != "" and scenario_id != current_scenario_id:
+			return action_id
+	return ""
+
 func _play_battle_to_overworld(battle, battle_progress_step_id: String, overworld_step_id: String) -> Dictionary:
 	return await _play_battle_to_scene(battle, battle_progress_step_id, overworld_step_id, OVERWORLD_SCENE)
 
@@ -1260,6 +1611,7 @@ func _parse_user_args(args: Array) -> Dictionary:
 	var config := {
 		"enabled": false,
 		"flow": "",
+		"campaign_id": "campaign_reedfall",
 		"scenario_id": "river-pass",
 		"difficulty": "normal",
 		"manual_slot": 2,
@@ -1275,6 +1627,10 @@ func _parse_user_args(args: Array) -> Dictionary:
 		if arg.begins_with("--live-validation-flow="):
 			config["enabled"] = true
 			config["flow"] = arg.trim_prefix("--live-validation-flow=")
+			continue
+		if arg.begins_with("--live-validation-campaign="):
+			config["enabled"] = true
+			config["campaign_id"] = arg.trim_prefix("--live-validation-campaign=")
 			continue
 		if arg.begins_with("--live-validation-scenario="):
 			config["enabled"] = true
@@ -1312,6 +1668,7 @@ func _begin_report() -> void:
 	_report = {
 		"ok": false,
 		"flow": String(_config.get("flow", "")),
+		"campaign_id": String(_config.get("campaign_id", "")),
 		"scenario_id": String(_config.get("scenario_id", "")),
 		"difficulty": String(_config.get("difficulty", "")),
 		"manual_slot": int(_config.get("manual_slot", 0)),
@@ -1370,6 +1727,12 @@ func _settle_frames(frame_count: int) -> void:
 func _current_scene_path() -> String:
 	var current := get_tree().current_scene
 	return "" if current == null else String(current.scene_file_path)
+
+func _configured_campaign_id() -> String:
+	var configured := String(_config.get("campaign_id", ""))
+	if configured != "":
+		return configured
+	return CampaignRulesScript.get_campaign_id_for_scenario(String(_config.get("scenario_id", "")))
 
 func _last_history_entry(history_value: Variant) -> Dictionary:
 	if not (history_value is Array) or history_value.is_empty():
@@ -1455,6 +1818,11 @@ func _outcome_resume_signature(snapshot: Dictionary) -> Dictionary:
 		"header": String(snapshot.get("header", "")),
 		"summary": String(snapshot.get("summary", "")),
 		"mode_summary": String(snapshot.get("mode_summary", "")),
+		"progression_summary": String(snapshot.get("progression_summary", "")),
+		"campaign_arc_summary": String(snapshot.get("campaign_arc_summary", "")),
+		"carryover_summary": String(snapshot.get("carryover_summary", "")),
+		"aftermath_summary": String(snapshot.get("aftermath_summary", "")),
+		"journal_summary": String(snapshot.get("journal_summary", "")),
 		"action_ids": _string_array_value(snapshot.get("action_ids", [])),
 	}
 
@@ -1470,6 +1838,11 @@ func _prefixed_step_id(step_prefix: String, suffix: String) -> String:
 			return DEFEAT_OUTCOME_SAVE_STEP_ID
 		if suffix == "resumed":
 			return DEFEAT_OUTCOME_RESUME_STEP_ID
+	if step_prefix == "campaign_outcome":
+		if suffix == "saved":
+			return CAMPAIGN_OUTCOME_SAVE_STEP_ID
+		if suffix == "resumed":
+			return CAMPAIGN_OUTCOME_RESUME_STEP_ID
 	return "%s_%s" % [step_prefix, suffix]
 
 func _prefixed_menu_step_id(step_prefix: String, suffix: String) -> String:
@@ -1489,6 +1862,12 @@ func _prefixed_menu_step_id(step_prefix: String, suffix: String) -> String:
 				return DEFEAT_OUTCOME_MENU_ACTION_STEP_ID
 			_:
 				return "main_menu_after_defeat_outcome_%s" % suffix
+	if step_prefix == "campaign_outcome":
+		match suffix:
+			"return":
+				return CAMPAIGN_OUTCOME_MENU_RETURN_STEP_ID
+			_:
+				return "main_menu_after_campaign_outcome_%s" % suffix
 	match suffix:
 		"return":
 			return "main_menu_after_%s_return" % step_prefix

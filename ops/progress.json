@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T03:54:13Z",
+  "updatedAt": "2026-04-16T04:16:30Z",
   "status": "in_progress",
-  "currentPhase": "live-routed-defeat-outcome-validation",
-  "currentSliceId": "phase-6-live-routed-defeat-outcome-validation",
-  "currentSliceTitle": "Extend the live routed-client validation harness through real defeat resolution and outcome-shell routing on the shipped router and shells",
+  "currentPhase": "live-routed-campaign-outcome-validation",
+  "currentSliceId": "phase-6-live-routed-campaign-outcome-validation",
+  "currentSliceTitle": "Extend the live routed-client validation harness through real campaign-mode launch, outcome recap, save review, and follow-up routing on the shipped router and shells",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the dedicated routed defeat outcome validation slice: the new boot_to_skirmish_defeat_outcome flow launches River Pass through the shipped menu, advances real overworld end-turn/enemy-pressure rules until authored defeat resolution, verifies ScenarioOutcomeShell defeat routing, saves and resumes defeat outcome review from MainMenu, and verifies latest-save outcome semantics plus post-outcome return-to-menu. Latest passing defeat report: .artifacts/live_flow_smoke/20260416T035204Z/live_validation_report.json. Existing victory default also still passes at .artifacts/live_flow_smoke/20260416T035235Z/live_validation_report.json.",
+  "currentSliceNotes": "Completed the campaign-mode live validation extension: boot_to_campaign_resolved_outcome now launches River Pass from the shipped MainMenu campaign browser, routes through real town, overworld, encounter, and town-assault gameplay into a campaign victory, verifies campaign recap/carryover/unlock/latest-save outcome-review semantics, resumes the outcome from MainMenu, and starts the unlocked next chapter through the shipped outcome action row without directly mutating progression records. Latest passing campaign report: .artifacts/live_flow_smoke/20260416T041324Z/live_validation_report.json. Existing skirmish resolved-outcome live flow still passes at .artifacts/live_flow_smoke/20260416T041413Z/live_validation_report.json.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1064,9 +1064,17 @@
       "title": "Re-run repository-local validation, strongest relevant Godot smokes or boot checks, and the live routed-client harness after the resolved-outcome validation extension",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-live-routed-campaign-outcome-validation",
+      "title": "Extend the live routed-client validation harness through real campaign-mode launch, campaign outcome recap, latest-save review, and next-chapter follow-up routing on the shipped shells",
+      "status": "completed",
+      "difficulty": "high"
     }
   ],
   "notes": [
+    "This run completed boot_to_campaign_resolved_outcome as a real campaign-mode routed validation flow: it opens the shipped campaign browser, selects Lanterns Through Reedfall / River Pass, starts the chapter as launch_mode=campaign, visits the starting town through the router for real preparation, claims authored support sites, clears required encounters, captures Duskfen Bastion through a real town-assault battle, and validates ScenarioOutcomeShell campaign victory recap, carryover export/import, next-chapter unlock, latest-save outcome-review summaries, resume from MainMenu, and next-chapter launch via the outcome action row.",
+    "Repository-local validation passed via python3 tests/validate_repo.py, Python harness bytecode compilation, ops/progress.json parsing, Godot 4.6.2 headless boot, focused menu/outcome, overworld, and town/battle visual smoke scenes, the new campaign live flow at .artifacts/live_flow_smoke/20260416T041324Z/live_validation_report.json, and the existing skirmish resolved-outcome live flow at .artifacts/live_flow_smoke/20260416T041413Z/live_validation_report.json. The broader core_systems_regression_smoke.tscn was also run twice and currently fails an unrelated pre-existing commander rivalry targeting assertion outside this campaign harness slice.",
     "Initial repo created at /root/dev/heroes-like.",
     "Engine lock recorded in project.md: Godot 4 stable series with GDScript, JSON content, and JSON save snapshots.",
     "Current run is implementing the first runnable foundation slice across boot, menu, overworld, battle, and persistence.",
