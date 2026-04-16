@@ -281,6 +281,11 @@ func _refresh_save_slot_picker() -> void:
 
 func validation_snapshot() -> Dictionary:
 	var active_stack := BattleRules.get_active_stack(_session.battle)
+	var target_stack := BattleRules.get_selected_target(_session.battle)
+	var context_value: Variant = _session.battle.get("context", {})
+	var context: Dictionary = context_value if context_value is Dictionary else {}
+	var player_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "player"))
+	var enemy_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "enemy"))
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -290,12 +295,16 @@ func validation_snapshot() -> Dictionary:
 		"game_state": _session.game_state,
 		"encounter_id": String(_session.battle.get("encounter_id", "")),
 		"encounter_name": String(_session.battle.get("encounter_name", "")),
+		"battle_context_type": String(context.get("type", "")),
 		"round": int(_session.battle.get("round", 0)),
 		"distance": int(_session.battle.get("distance", 0)),
 		"active_side": String(active_stack.get("side", "")),
 		"active_stack": String(active_stack.get("name", "")),
-		"player_stack_count": BattleRules.roster_lines(_session.battle, "player").size(),
-		"enemy_stack_count": BattleRules.roster_lines(_session.battle, "enemy").size(),
+		"target_stack": String(target_stack.get("name", "")),
+		"player_stack_count": player_roster.size(),
+		"enemy_stack_count": enemy_roster.size(),
+		"player_roster": player_roster,
+		"enemy_roster": enemy_roster,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 	}
 
@@ -367,6 +376,34 @@ func validation_try_progress_action() -> Dictionary:
 		"action": action_id,
 		"state": String(action_result.get("state", "")),
 		"message": _last_message,
+	}
+
+func validation_select_save_slot(slot: int) -> bool:
+	var normalized_slot := int(slot)
+	if not SaveService.get_manual_slot_ids().has(normalized_slot):
+		return false
+	SaveService.set_selected_manual_slot(normalized_slot)
+	_refresh_save_slot_picker()
+	return SaveService.get_selected_manual_slot() == normalized_slot
+
+func validation_save_to_selected_slot() -> Dictionary:
+	var selected_slot := SaveService.get_selected_manual_slot()
+	_on_save_pressed()
+	var summary := SaveService.inspect_manual_slot(selected_slot)
+	return {
+		"ok": SaveService.can_load_summary(summary),
+		"selected_slot": selected_slot,
+		"summary": summary,
+		"message": _last_message,
+	}
+
+func validation_return_to_menu() -> Dictionary:
+	_on_menu_pressed()
+	return {
+		"ok": true,
+		"encounter_id": String(_session.battle.get("encounter_id", "")),
+		"encounter_name": String(_session.battle.get("encounter_name", "")),
+		"message": "Battle route returned to the main menu.",
 	}
 
 func _make_placeholder_label(text: String) -> Label:
@@ -462,3 +499,9 @@ func _preferred_validation_action_id() -> String:
 		if action is Dictionary and not bool(action.get("disabled", true)):
 			return action_id
 	return ""
+
+func _normalize_string_array(values: Array) -> Array[String]:
+	var normalized: Array[String] = []
+	for value in values:
+		normalized.append(String(value))
+	return normalized

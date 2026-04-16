@@ -4301,14 +4301,19 @@ def validate_live_client_harness(errors: list[str]) -> None:
         "const BATTLE_SCENE :=",
         "func _enter_live_skirmish_overworld",
         "func _route_from_overworld_to_scene",
+        "func _save_and_resume_battle_from_main_menu",
         'town_entered',
         'town_progressed',
         'town_saved',
         'main_menu_after_town_return',
         'town_resumed',
         'battle_entered',
+        'battle_saved',
+        'main_menu_after_battle_return',
+        'battle_resumed',
         'overworld_after_battle',
         'func _town_resume_signature',
+        'func _battle_resume_signature',
         'validation_route_step_to_nearest_target',
         'validation_try_progress_action',
     ):
@@ -4348,7 +4353,14 @@ def validate_live_client_harness(errors: list[str]) -> None:
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required live-harness token: {required_token}")
 
     battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
-    for required_token in ("func validation_snapshot", "func validation_try_progress_action", "func _preferred_validation_action_id"):
+    for required_token in (
+        "func validation_snapshot",
+        "func validation_try_progress_action",
+        "func validation_select_save_slot",
+        "func validation_save_to_selected_slot",
+        "func validation_return_to_menu",
+        "func _preferred_validation_action_id",
+    ):
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required live-harness token: {required_token}")
 
 
@@ -4443,7 +4455,7 @@ def main() -> int:
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
     print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
-    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, manual save/load resume back into town, encounter routing, battle actions, and routed return artifacts")
+    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, manual save/load resume back into town, encounter routing, manual battle save/load resume back into battle, battle actions, and routed return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     return 0
 

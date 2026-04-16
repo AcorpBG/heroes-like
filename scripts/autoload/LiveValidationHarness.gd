@@ -195,6 +195,10 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
 	battle_snapshot["route_history"] = battle_route.get("history", [])
 	_capture_step("battle_entered", battle_snapshot)
+	var battle_resume := await _save_and_resume_battle_from_main_menu(battle, manual_slot)
+	if not bool(battle_resume.get("ok", false)):
+		return false
+	battle = battle_resume.get("battle", battle)
 
 	var battle_actions := []
 	var battle_progress_captured := false
@@ -338,6 +342,97 @@ func _route_from_overworld_to_scene(overworld, target_kind: String, owner_id: St
 		"destination_scene": destination_scene,
 		"history": history,
 		"message": "Route did not reach the requested scene within the step budget.",
+	}
+
+func _save_and_resume_battle_from_main_menu(battle, manual_slot: int) -> Dictionary:
+	if not _require(
+		bool(battle.call("validation_select_save_slot", manual_slot)),
+		"Battle validation could not select the requested manual save slot.",
+		{
+			"manual_slot": manual_slot,
+			"battle_snapshot": battle.call("validation_snapshot"),
+		}
+	):
+		return {"ok": false}
+	await _settle_frames(3)
+
+	var battle_save: Dictionary = battle.call("validation_save_to_selected_slot")
+	var battle_save_summary := _dictionary_value(battle_save.get("summary", {}))
+	if not _require(bool(battle_save.get("ok", false)), "Battle validation could not write a manual save from the live shell.", battle_save):
+		return {"ok": false}
+	if not _require(int(battle_save.get("selected_slot", 0)) == manual_slot, "Battle validation saved into the wrong manual slot.", battle_save):
+		return {"ok": false}
+	if not _require(String(battle_save_summary.get("resume_target", "")) == "battle", "Battle manual save did not advertise battle resume.", battle_save_summary):
+		return {"ok": false}
+	if not _require(String(battle_save_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Battle manual save summary scenario id did not match the launched scenario.", battle_save_summary):
+		return {"ok": false}
+	if not _require(String(battle_save_summary.get("battle_name", "")) != "", "Battle manual save summary did not expose the routed battle name.", battle_save_summary):
+		return {"ok": false}
+	await _settle_frames(6)
+
+	var battle_saved_snapshot: Dictionary = battle.call("validation_snapshot")
+	battle_saved_snapshot["manual_save"] = battle_save
+	_capture_step("battle_saved", battle_saved_snapshot)
+	var expected_battle_resume_signature := _battle_resume_signature(battle_saved_snapshot)
+
+	var battle_menu_return: Dictionary = battle.call("validation_return_to_menu")
+	if not _require(bool(battle_menu_return.get("ok", false)), "Battle validation could not return to the main menu through the live router.", battle_menu_return):
+		return {"ok": false}
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		_fail("Returning to menu after the battle manual save did not reach the main menu scene.", battle_menu_return)
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var latest_summary_after_menu_return := SaveService.latest_loadable_summary()
+	if not _require(not latest_summary_after_menu_return.is_empty(), "Latest save summary was unavailable after battle return-to-menu routing.", battle_menu_return):
+		return {"ok": false}
+	if not _require(String(latest_summary_after_menu_return.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Latest save summary after battle return-to-menu did not match the launched scenario.", latest_summary_after_menu_return):
+		return {"ok": false}
+	if not _require(String(latest_summary_after_menu_return.get("resume_target", "")) == "battle", "Latest save summary after battle return-to-menu did not point back to the battle surface.", latest_summary_after_menu_return):
+		return {"ok": false}
+	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
+	menu_after_return_snapshot["menu_return"] = battle_menu_return
+	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
+	_capture_step("main_menu_after_battle_return", menu_after_return_snapshot)
+
+	menu.call("validation_open_saves_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_save_summary", "manual", str(manual_slot))),
+		"Main menu save browser could not select the routed battle manual save.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	await _settle_frames(4)
+
+	var battle_resume: Dictionary = menu.call("validation_resume_selected_save")
+	if not _require(bool(battle_resume.get("ok", false)), "Main menu resume did not restore the selected routed battle save.", battle_resume):
+		return {"ok": false}
+	var resumed_battle = await _wait_for_scene(BATTLE_SCENE, 10000)
+	if resumed_battle == null:
+		_fail("Resuming the selected manual battle save did not route back into the battle scene.", battle_resume)
+		return {"ok": false}
+	await _settle_frames(6)
+
+	var resumed_battle_snapshot: Dictionary = resumed_battle.call("validation_snapshot")
+	if not _require(String(resumed_battle_snapshot.get("game_state", "")) == "battle", "Resumed battle save did not restore the battle surface.", resumed_battle_snapshot):
+		return {"ok": false}
+	var actual_battle_resume_signature := _battle_resume_signature(resumed_battle_snapshot)
+	if not _require(
+		JSON.stringify(actual_battle_resume_signature) == JSON.stringify(expected_battle_resume_signature),
+		"Battle manual save/resume did not preserve the routed battle state.",
+		{
+			"expected": expected_battle_resume_signature,
+			"actual": actual_battle_resume_signature,
+		}
+	):
+		return {"ok": false}
+	resumed_battle_snapshot["resume"] = battle_resume
+	_capture_step("battle_resumed", resumed_battle_snapshot)
+	return {
+		"ok": true,
+		"battle": resumed_battle,
 	}
 
 func _parse_user_args(args: Array) -> Dictionary:
@@ -500,8 +595,34 @@ func _town_resume_signature(snapshot: Dictionary) -> Dictionary:
 		"resources": _dictionary_value(snapshot.get("resources", {})),
 	}
 
+func _battle_resume_signature(snapshot: Dictionary) -> Dictionary:
+	return {
+		"scenario_id": String(snapshot.get("scenario_id", "")),
+		"difficulty": String(snapshot.get("difficulty", "")),
+		"launch_mode": String(snapshot.get("launch_mode", "")),
+		"game_state": String(snapshot.get("game_state", "")),
+		"encounter_id": String(snapshot.get("encounter_id", "")),
+		"encounter_name": String(snapshot.get("encounter_name", "")),
+		"battle_context_type": String(snapshot.get("battle_context_type", "")),
+		"round": int(snapshot.get("round", 0)),
+		"distance": int(snapshot.get("distance", 0)),
+		"active_side": String(snapshot.get("active_side", "")),
+		"active_stack": String(snapshot.get("active_stack", "")),
+		"target_stack": String(snapshot.get("target_stack", "")),
+		"player_roster": _string_array_value(snapshot.get("player_roster", [])),
+		"enemy_roster": _string_array_value(snapshot.get("enemy_roster", [])),
+	}
+
 func _dictionary_value(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
+
+func _string_array_value(value: Variant) -> Array[String]:
+	var normalized: Array[String] = []
+	if not (value is Array):
+		return normalized
+	for entry in value:
+		normalized.append(String(entry))
+	return normalized
 
 func _write_json(path: String, payload: Dictionary) -> void:
 	_write_text_file(path, JSON.stringify(payload, "\t"))
