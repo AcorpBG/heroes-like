@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T01:26:36Z",
+  "updatedAt": "2026-04-16T01:50:17Z",
   "status": "in_progress",
-  "currentPhase": "live-client-validation-harness",
-  "currentSliceId": "phase-6-live-client-validation-harness",
-  "currentSliceTitle": "Add a repo-local live client validation harness for routed startup, scenario launch, and overworld entry",
+  "currentPhase": "validator-baseline-realignment",
+  "currentSliceId": "phase-6-validator-baseline-realignment",
+  "currentSliceTitle": "Realign the repo-local validator baseline with the shipped shell and rules architecture",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a production-minded real-client validation slice on the current architecture: a dormant CLI-driven harness now launches the actual Boot/AppRouter/MainMenu/Overworld flow, shell-level validation hooks drive deterministic launch plus first-action coverage, repo-local screenshots and JSON reports capture routed-client artifacts under isolated user data, and a stale end-turn movement-refresh regression in the real overworld day roll was corrected without changing save version 9. Live harness, isolated headless boot, and the existing menu, town-battle, and overworld shell smokes passed; the broad core regression smoke and tests/validate_repo.py still expose unrelated pre-existing baseline issues outside this slice.",
+  "currentSliceNotes": "Completed a production-minded validator hardening slice on the current architecture: tests/validate_repo.py now checks the shipped shell node layout, current *Script rule integrations, and durable routing boundaries instead of obsolete node names and legacy token aliases. Repository-local validation now passes again, and the strongest relevant headless smokes passed without changing save version 9 or reintroducing compatibility-only shims.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -992,6 +992,18 @@
       "title": "Re-run repository-local validation, existing shell smokes, isolated Godot boot, and the new live routed-client harness",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-validator-baseline-realignment",
+      "title": "Realign the repo-local validator baseline with the shipped shell and rules architecture instead of obsolete UI-node and token expectations",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "phase-6-validator-baseline-realignment-validation",
+      "title": "Re-run repository-local validation, validator bytecode compilation, and the strongest relevant Godot headless smokes after validator realignment",
+      "status": "completed",
+      "difficulty": "medium"
     }
   ],
   "notes": [
@@ -1227,6 +1239,8 @@
     "BattleRules.gd and BattleAiRules.gd now share that stronger terrain identity through real advance resolution, ranged mitigation, target-priority and defend-versus-advance scoring, while battle pressure or briefing surfaces keep the lane implications compact and derived from the current battle payload only.",
     "Focused core smoke coverage now proves cover-line damage mitigation, obstruction-held advances, compact terrain surfacing, AI score shifts for screened targets, and save-restore continuity for contested battlefield-objective state on the existing save boundary.",
     "This run added a dormant CLI-driven live validation harness plus narrow menu and overworld validation hooks so the real client can boot through Boot/AppRouter, launch a skirmish from the live menu, enter the overworld, take one deterministic progress action, and emit repo-local screenshots plus a JSON report under isolated user data.",
-    "Validation for the live-harness slice passed for isolated Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, and two live DISPLAY-backed harness runs via tests/run_live_flow_harness.py; tests/core_systems_regression_smoke.tscn still fails on the older resource auto-resolve path and python3 tests/validate_repo.py still reports long-standing stale token or scene expectations outside this slice."
+    "Validation for the live-harness slice passed for isolated Godot boot, tests/menu_outcome_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, and two live DISPLAY-backed harness runs via tests/run_live_flow_harness.py; tests/core_systems_regression_smoke.tscn still fails on the older resource auto-resolve path and python3 tests/validate_repo.py still reports long-standing stale token or scene expectations outside this slice.",
+    "This run realigned tests/validate_repo.py with the shipped menu, overworld, town, battle, and outcome shells plus the current core *Script APIs, replacing obsolete node-name and token checks with current durable architecture guards instead of restoring dead compatibility paths.",
+    "Repository-local validation now passes again, python3 -m py_compile tests/validate_repo.py passes, and the strongest relevant headless Godot smokes passed again via tests/core_systems_regression_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/overworld_visual_smoke.tscn, and full headless boot while preserving save version 9."
   ]
 }

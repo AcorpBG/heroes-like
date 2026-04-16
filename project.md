@@ -389,6 +389,10 @@ Content validation support decision:
 - `ContentService.gd` now treats battle `attack_buff` spells, `encounter_resolved` objectives, and reactive scenario hook types such as `objective_not_met`, `active_raid_count_at_least`, `active_raid_count_at_most`, `hook_fired`, `hook_not_fired`, and `add_enemy_pressure` as first-class authored constructs instead of tolerated warnings
 - `SpellRules.gd`, `ScenarioRules.gd`, `ScenarioScriptRules.gd`, and `EnemyTurnRules.gd` remain the owning runtime paths for those authored constructs, while `tests/validate_repo.py` now guards the validator/runtime parity so Godot headless validation stays materially cleaner without a save-version bump beyond `9`
 
+Validator baseline realignment decision:
+- `tests/validate_repo.py` now tracks the shipped shell and rules architecture directly, checking current scene nodes, helper functions, and `*Script` rule integrations instead of obsolete node names, stale class-token aliases, or compatibility-era UI expectations
+- validator coverage remains meaningful by asserting current skirmish setup, outcome routing, difficulty hooks, logistics-site pressure, convoy interception, capital-front surfacing, and town-defense battle contracts, so local validation catches real architecture drift without forcing dead-path shims back into the product
+
 Town asymmetry decision:
 - town, faction, and building content now author late-game `pressure_bonus` and `readiness_bonus` signals alongside stronger economy and recruitment profiles, letting advanced works push either frontier leverage and defense readiness or wider raid pressure and faster raider musters without inventing a second town subsystem
 - `OverworldRules.gd` now derives shared town metrics for reinforcement quality, battle readiness, and pressure output from current build trees, spell access, garrisons, and authored bonuses, so player-facing summaries and hostile empire logic read from the same state

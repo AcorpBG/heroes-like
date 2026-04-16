@@ -138,6 +138,7 @@ Difficulty: High
 - add save-backed captured-town pacification so enemy towns taken by the player stay partially occupied for several days, with reduced output, held local recruits, and slower stabilization under hostile retake pressure instead of instantly acting like fully normalized assets
 - deepen battle exits again with save-backed withdrawal, surrender, pursuit, convoy-loss, and collapse scars routed through the existing battle, commander, logistics, town-front, and outcome systems instead of a separate retreat subsystem
 - add a shared release-facing visual kit with original heraldry marks, compact summary surfacing, and cohesive panel or control treatment across the already-converted main menu, overworld, town, battle, and outcome shells without moving logic out of current scene or core boundaries
+- realign `tests/validate_repo.py` with the shipped shell and rules architecture so repo-local validation checks current durable contracts instead of obsolete node names, token aliases, or pre-shell baselines
 
 ## Immediate execution order
 1. Confirm engine, language, content, and save strategy in docs.
@@ -389,3 +390,5 @@ Difficulty: High
 130. [completed] Re-run the required Godot smoke scenes and full headless boot for distinct exit-mode aftermath, commander continuity, convoy fallout, and restore persistence.
 131. [completed] Add a repo-local live-flow validation harness that launches the real game, drives menu-to-overworld routing through the existing shells, and records assertable artifacts for routed-client regression diagnosis.
 132. [completed] Re-run repository-local validation with the new live-flow harness, current shell smokes, and isolated Godot boot while reporting unrelated pre-existing validator and broad core-smoke failures separately.
+133. [completed] Realign `tests/validate_repo.py` with the shipped shell and rules architecture so repo-local validation stops flagging obsolete node names and pre-`*Script` token aliases as regressions.
+134. [completed] Re-run repository-local validation, validator bytecode compilation, and the strongest relevant Godot headless smokes after the validator realignment slice.

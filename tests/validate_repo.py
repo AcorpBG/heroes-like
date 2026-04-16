@@ -262,6 +262,21 @@ def scene_has_node(scene_text: str, node_name: str, node_type: str) -> bool:
     return re.search(pattern, scene_text) is not None
 
 
+def script_has_function(script_text: str, function_name: str) -> bool:
+    pattern = rf"^\s*(?:static\s+)?func\s+{re.escape(function_name)}\s*\("
+    return re.search(pattern, script_text, flags=re.MULTILINE) is not None
+
+
+def ensure_script_functions(script_text: str, errors: list[str], label: str, function_names: list[str]) -> None:
+    for function_name in function_names:
+        ensure(script_has_function(script_text, function_name), errors, f"{label} is missing required function: {function_name}")
+
+
+def ensure_scene_nodes(scene_text: str, errors: list[str], label: str, nodes: list[tuple[str, str]]) -> None:
+    for node_name, node_type in nodes:
+        ensure(scene_has_node(scene_text, node_name, node_type), errors, f"{label} must define {node_name} ({node_type})")
+
+
 def validate_field_objectives(errors: list[str], owner_label: str, objectives: object, allow_partial: bool = False) -> list[str]:
     objective_ids: list[str] = []
     ensure(isinstance(objectives, list) and bool(objectives), errors, f"{owner_label} must define a non-empty field_objectives list")
@@ -1559,28 +1574,47 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ensure(required_token in save_text, errors, f"SaveService.gd is missing required skirmish summary token: {required_token}")
 
     scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        scenario_select_text,
+        errors,
+        "ScenarioSelectRules.gd",
+        [
+            "default_difficulty_id",
+            "normalize_difficulty",
+            "build_difficulty_options",
+            "build_current_session_summary",
+            "build_skirmish_browser_entries",
+            "build_skirmish_setup",
+            "start_skirmish_session",
+            "describe_scenario_commander_preview",
+            "describe_session_commander_preview",
+        ],
+    )
     for required_token in (
-        "func build_skirmish_browser_entries",
-        "func build_skirmish_setup",
-        "func start_skirmish_session",
-        "func describe_scenario_commander_preview",
-        "func describe_session_commander_preview",
         '"operational_board"',
         '"commander_preview"',
-        "SpellRules.describe_spellbook",
-        "ArtifactRules.describe_loadout",
-        "ScenarioRules.describe_scenario_operational_board",
-        "ScenarioFactory.create_session",
-        "SessionStateStore.LAUNCH_MODE_SKIRMISH",
+        "SpellRulesScript.describe_spellbook",
+        "ArtifactRulesScript.describe_loadout",
+        "ScenarioRulesScript.describe_scenario_operational_board",
+        "ScenarioFactoryScript.create_session",
+        "SessionStateStoreScript.LAUNCH_MODE_SKIRMISH",
     ):
         ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing required skirmish token: {required_token}")
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        scenario_rules_text,
+        errors,
+        "ScenarioRules.gd",
+        [
+            "describe_scenario_briefing",
+            "describe_scenario_operational_board",
+            "describe_session_operational_board",
+        ],
+    )
     for required_token in (
-        "SessionStateStore.normalize_launch_mode(session.launch_mode) == SessionStateStore.LAUNCH_MODE_CAMPAIGN",
-        "func describe_scenario_operational_board",
-        "func describe_session_operational_board",
-        "EnemyAdventureRules.public_strategy_summary",
+        "SessionStateStoreScript.normalize_launch_mode(session.launch_mode)",
+        "EnemyAdventureRulesScript.public_strategy_summary",
         "Reinforcement risk:",
         "Likely first contact:",
         "Operational Board",
@@ -1606,9 +1640,9 @@ def validate_skirmish_setup(errors: list[str]) -> None:
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "ScenarioSelectRules.build_skirmish_browser_entries",
-        "ScenarioSelectRules.build_skirmish_setup",
-        "ScenarioSelectRules.start_skirmish_session",
+        "ScenarioSelectRulesScript.build_skirmish_browser_entries",
+        "ScenarioSelectRulesScript.build_skirmish_setup",
+        "ScenarioSelectRulesScript.start_skirmish_session",
         "_skirmish_commander_preview_label",
         "_skirmish_operational_board_label",
         "func _on_start_skirmish_pressed",
@@ -1855,10 +1889,17 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required scenario-outcome token: {required_token}")
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        scenario_rules_text,
+        errors,
+        "ScenarioRules.gd",
+        [
+            "build_outcome_model",
+            "perform_outcome_action",
+            "describe_scenario_briefing",
+        ],
+    )
     for required_token in (
-        "func build_outcome_model",
-        "func perform_outcome_action",
-        "func describe_scenario_briefing",
         "CampaignProgression.outcome_recap",
         "CampaignProgression.outcome_actions",
         "ScenarioSelectRules.start_skirmish_session",
@@ -1892,23 +1933,28 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         ensure(required_token in campaign_progression_text, errors, f"CampaignProgression.gd is missing required outcome-recap token: {required_token}")
 
     outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("Header", "Label"),
-        ("Summary", "Label"),
-        ("Mode", "Label"),
-        ("ForceSplit", "HBoxContainer"),
-        ("Hero", "Label"),
-        ("Army", "Label"),
-        ("Resources", "Label"),
-        ("Progression", "Label"),
-        ("CampaignArc", "Label"),
-        ("Carryover", "Label"),
-        ("Aftermath", "Label"),
-        ("Journal", "Label"),
-        ("ActionStatus", "Label"),
-        ("Actions", "HBoxContainer"),
-    ):
-        ensure(scene_has_node(outcome_scene_text, node_name, node_type), errors, f"ScenarioOutcomeShell.tscn must define {node_name} ({node_type}) for the outcome shell")
+    ensure_scene_nodes(
+        outcome_scene_text,
+        errors,
+        "ScenarioOutcomeShell.tscn",
+        [
+            ("Header", "Label"),
+            ("Summary", "Label"),
+            ("Mode", "Label"),
+            ("ForceCards", "HBoxContainer"),
+            ("Hero", "Label"),
+            ("Army", "Label"),
+            ("Resources", "Label"),
+            ("Progression", "Label"),
+            ("CampaignArc", "Label"),
+            ("Carryover", "Label"),
+            ("Aftermath", "Label"),
+            ("Journal", "Label"),
+            ("ActionStatus", "Label"),
+            ("Actions", "HFlowContainer"),
+            ("SaveBar", "HFlowContainer"),
+        ],
+    )
 
     outcome_script_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -1923,12 +1969,12 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         '"aftermath_summary"',
         '"journal_summary"',
         "AppRouter.go_to_overworld()",
-        "AppRouter.go_to_main_menu()",
+        "AppRouter.return_to_main_menu_from_active_play()",
     ):
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required outcome-shell token: {required_token}")
 
     scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("ScenarioRules.describe_scenario_briefing", "setup_summary"):
+    for required_token in ("ScenarioRulesScript.describe_scenario_briefing", "setup_summary"):
         ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing required briefing token: {required_token}")
 
     for script_path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH, BATTLE_SCRIPT_PATH):
@@ -1953,55 +1999,66 @@ def validate_difficulty_integration(errors: list[str]) -> None:
         return
 
     difficulty_text = DIFFICULTY_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "const DIFFICULTY_PROFILES",
-        '"story"',
-        '"normal"',
-        '"hard"',
-        "func movement_bonus",
-        "func scale_income_resources",
-        "func scale_reward_resources",
-        "func adjust_enemy_pressure_gain",
-        "func adjust_raid_threshold",
-        "func scale_raid_pillage",
-        "func damage_multiplier_for_side",
-    ):
+    ensure_script_functions(
+        difficulty_text,
+        errors,
+        "DifficultyRules.gd",
+        [
+            "normalize_difficulty",
+            "profile_for_difficulty",
+            "profile_for_session",
+            "normalize_session",
+            "movement_bonus",
+            "scale_income_resources",
+            "scale_reward_resources",
+            "adjust_enemy_pressure_gain",
+            "adjust_raid_threshold",
+            "scale_raid_pillage",
+            "initiative_bonus_for_side",
+            "damage_multiplier_for_side",
+        ],
+    )
+    for required_token in ("const DIFFICULTY_PROFILES", '"story"', '"normal"', '"hard"'):
         ensure(required_token in difficulty_text, errors, f"DifficultyRules.gd is missing required token: {required_token}")
 
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
-    for required_token in ("DifficultyRules.normalize_difficulty", "HeroCommandRules.build_hero_from_template"):
+    for required_token in ("DifficultyRulesScript.normalize_difficulty", "HeroCommandRulesScript.build_hero_from_template"):
         ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing required difficulty bootstrap token: {required_token}")
 
     overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "DifficultyRules.normalize_session",
-        "DifficultyRules.scale_income_resources",
-        "DifficultyRules.scale_reward_resources",
+        "DifficultyRulesScript.normalize_session",
+        "DifficultyRulesScript.scale_income_resources",
+        "DifficultyRulesScript.scale_reward_resources",
+        "DifficultyRulesScript.adjust_enemy_pressure_gain",
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required difficulty token: {required_token}")
 
     hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("DifficultyRules.movement_bonus", "DifficultyRules.profile_for_difficulty"):
+    for required_token in ("DifficultyRulesScript.movement_bonus", "DifficultyRulesScript.profile_for_difficulty"):
         ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required difficulty token: {required_token}")
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("DifficultyRules.adjust_enemy_pressure_gain", "DifficultyRules.adjust_raid_threshold"):
+    for required_token in ("DifficultyRulesScript.adjust_enemy_pressure_gain", "DifficultyRulesScript.adjust_raid_threshold"):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing required difficulty token: {required_token}")
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    ensure("DifficultyRules.scale_raid_pillage" in enemy_adventure_text, errors, "EnemyAdventureRules.gd must scale raid pillage by difficulty")
+    for required_token in ("DifficultyRulesScript.normalize_session", "DifficultyRulesScript.scale_raid_pillage"):
+        ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing required difficulty token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        '"enemy_hero_payload"',
-        "DifficultyRules.scale_reward_resources",
-        "DifficultyRules.initiative_bonus_for_side",
-        "DifficultyRules.damage_multiplier_for_side",
+        '"damage_multiplier"',
+        '"initiative"',
+        "DifficultyRulesScript.normalize_session",
+        "DifficultyRulesScript.scale_reward_resources",
+        "DifficultyRulesScript.initiative_bonus_for_side",
+        "DifficultyRulesScript.damage_multiplier_for_side",
     ):
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required difficulty token: {required_token}")
 
     battle_ai_text = BATTLE_AI_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ('"enemy_hero_payload"', "_damage_multiplier_for_side"):
+    for required_token in ("func _damage_multiplier_for_side", '_damage_multiplier_for_side(battle, String(attacker.get("side", "")))', '"damage_multiplier"'):
         ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required difficulty token: {required_token}")
 
 
@@ -2029,6 +2086,26 @@ def validate_hero_progression(errors: list[str]) -> None:
         return
 
     progression_text = HERO_PROGRESSION_RULES_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        progression_text,
+        errors,
+        "HeroProgressionRules.gd",
+        [
+            "ensure_hero_progression",
+            "add_experience",
+            "choose_specialty",
+            "get_choice_actions",
+            "describe_specialties",
+            "brief_summary",
+            "aggregate_bonuses",
+            "summarize_specialty_ids",
+            "scale_recruit_growth",
+            "scale_recruit_cost",
+            "mana_max_bonus",
+            "adjusted_mana_cost",
+            "scale_raid_pillage",
+        ],
+    )
     for required_token in (
         "const SPECIALTIES",
         '"wayfinder"',
@@ -2038,67 +2115,61 @@ def validate_hero_progression(errors: list[str]) -> None:
         '"armsmaster"',
         '"mustercaptain"',
         '"borderwarden"',
-        "func ensure_hero_progression",
-        "func add_experience",
-        "func choose_specialty",
-        "func get_choice_actions",
-        "func aggregate_bonuses",
-        "func summarize_specialty_ids",
         '"specialty_focus_ids"',
         '"pending_specialty_choices"',
     ):
         ensure(required_token in progression_text, errors, f"HeroProgressionRules.gd is missing required token: {required_token}")
 
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
-    ensure("HeroProgressionRules.ensure_hero_progression" in scenario_factory_text, errors, "ScenarioFactory.gd must initialize hero progression state")
+    ensure("HeroProgressionRulesScript.ensure_hero_progression" in scenario_factory_text, errors, "ScenarioFactory.gd must initialize hero progression state")
 
     hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "HeroProgressionRules.ensure_hero_progression",
-        "HeroProgressionRules.aggregate_bonuses",
-        "HeroProgressionRules.summarize_specialty_ids",
-        "func hero_profile_summary",
-        "func hero_identity_summary",
+        "HeroProgressionRulesScript.ensure_hero_progression",
+        "HeroProgressionRulesScript.aggregate_bonuses",
+        "HeroProgressionRulesScript.summarize_specialty_ids",
     ):
         ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required hero progression token: {required_token}")
+    ensure_script_functions(hero_command_text, errors, "HeroCommandRules.gd", ["hero_profile_summary", "hero_identity_summary"])
 
     overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "HeroProgressionRules.add_experience",
-        "HeroProgressionRules.daily_income_bonus",
-        "HeroProgressionRules.scale_recruit_growth",
-        "HeroProgressionRules.scale_recruit_cost",
-        "HeroProgressionRules.describe_specialties",
-        "HeroProgressionRules.get_choice_actions",
-        "HeroProgressionRules.choose_specialty",
+        "HeroProgressionRulesScript.add_experience",
+        "HeroProgressionRulesScript.daily_income_bonus",
+        "HeroProgressionRulesScript.scale_recruit_growth",
+        "HeroProgressionRulesScript.scale_recruit_cost",
+        "HeroProgressionRulesScript.describe_specialties",
+        "HeroProgressionRulesScript.get_choice_actions",
+        "HeroProgressionRulesScript.choose_specialty",
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required hero progression token: {required_token}")
 
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "HeroProgressionRules.describe_specialties",
-        "HeroProgressionRules.get_choice_actions",
-        "OverworldRules.town_recruit_cost",
-        "func choose_specialty_at_active_town",
+        "HeroProgressionRulesScript.describe_specialties",
+        "HeroProgressionRulesScript.get_choice_actions",
+        "OverworldRulesScript.town_recruit_cost",
     ):
         ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required hero progression token: {required_token}")
+    ensure_script_functions(town_rules_text, errors, "TownRules.gd", ["choose_specialty_at_active_town"])
 
     spell_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("HeroProgressionRules.mana_max_bonus", "HeroProgressionRules.adjusted_mana_cost"):
+    for required_token in ("HeroProgressionRulesScript.mana_max_bonus", "HeroProgressionRulesScript.adjusted_mana_cost"):
         ensure(required_token in spell_text, errors, f"SpellRules.gd is missing required hero progression token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
-    ensure("HeroProgressionRules.aggregate_bonuses" in battle_text, errors, "BattleRules.gd must merge specialty bonuses into battle hero payloads")
+    ensure("HeroProgressionRulesScript.aggregate_bonuses" in battle_text, errors, "BattleRules.gd must merge specialty bonuses into battle hero payloads")
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
-    ensure("HeroProgressionRules.scale_raid_pillage" in enemy_adventure_text, errors, "EnemyAdventureRules.gd must apply raid-resistance specialties")
+    ensure("HeroProgressionRulesScript.scale_raid_pillage" in enemy_adventure_text, errors, "EnemyAdventureRules.gd must apply raid-resistance specialties")
 
     campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         '"specialties"',
         '"pending_specialty_choices"',
-        "HeroProgressionRules.ensure_hero_progression",
-        "HeroProgressionRules.brief_summary",
+        "HeroProgressionRulesScript.ensure_hero_progression",
+        "HeroProgressionRulesScript.brief_summary",
+        "HeroProgressionRulesScript.summarize_specialty_ids",
     ):
         ensure(required_token in campaign_text, errors, f"CampaignRules.gd is missing required hero progression token: {required_token}")
 
@@ -2106,16 +2177,24 @@ def validate_hero_progression(errors: list[str]) -> None:
     ensure("hero_specialties_summary" in save_text, errors, "SaveService.gd must surface hero specialties in save summaries")
 
     scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("HeroProgressionRules.brief_summary", "HeroCommandRules.hero_profile_summary", "HeroCommandRules.hero_identity_summary"):
+    for required_token in ("HeroProgressionRulesScript.brief_summary", "HeroCommandRulesScript.hero_profile_summary", "HeroCommandRulesScript.hero_identity_summary"):
         ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing authored-hero summary token: {required_token}")
 
     overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (("Specialties", "Label"), ("SpecialtyBar", "VBoxContainer")):
-        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for hero progression UI")
+    ensure_scene_nodes(
+        overworld_scene_text,
+        errors,
+        "OverworldShell.tscn",
+        [("Specialties", "Label"), ("SpecialtyActions", "HFlowContainer")],
+    )
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (("Specialties", "Label"), ("SpecialtyBar", "VBoxContainer")):
-        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for hero progression UI")
+    ensure_scene_nodes(
+        town_scene_text,
+        errors,
+        "TownShell.tscn",
+        [("Specialties", "Label"), ("SpecialtyActions", "HFlowContainer")],
+    )
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in ("func _on_specialty_action_pressed", "func _rebuild_specialty_actions", "OverworldRules.describe_specialties", "OverworldRules.get_specialty_actions"):
@@ -2145,34 +2224,39 @@ def validate_hero_command(errors: list[str]) -> None:
         return
 
     hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in (
-        "const HALL_BUILDING_ID",
-        "const HERO_LIMIT",
-        "func normalize_session",
-        "func hero_template",
-        "func hero_profile_summary",
-        "func hero_identity_summary",
-        "func set_active_hero",
-        "func get_overworld_switch_actions",
-        "func get_town_switch_actions",
-        "func get_tavern_actions",
-        "func recruit_hero_at_town",
-        "func get_town_transfer_actions",
-        "func transfer_town_stack",
-        "func remove_active_hero_after_defeat",
-        '"player_heroes"',
-        '"active_hero_id"',
-        '"is_primary"',
-    ):
+    ensure_script_functions(
+        hero_command_text,
+        errors,
+        "HeroCommandRules.gd",
+        [
+            "normalize_session",
+            "build_hero_from_template",
+            "hero_template",
+            "hero_profile_summary",
+            "hero_identity_summary",
+            "set_active_hero",
+            "get_overworld_switch_actions",
+            "get_town_switch_actions",
+            "get_tavern_actions",
+            "recruit_hero_at_town",
+            "get_town_transfer_actions",
+            "transfer_town_stack",
+            "remove_active_hero_after_defeat",
+            "stationed_heroes",
+            "describe_tavern",
+            "describe_town_transfer",
+        ],
+    )
+    for required_token in ("const HALL_BUILDING_ID", "const HERO_LIMIT", '"player_heroes"', '"active_hero_id"', '"is_primary"'):
         ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required hero-command token: {required_token}")
 
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
-    for required_token in ('"active_hero_id"', '"player_heroes"', "HeroCommandRules.build_hero_from_template"):
+    for required_token in ('"active_hero_id"', '"player_heroes"', "HeroCommandRulesScript.build_hero_from_template"):
         ensure(required_token in scenario_factory_text, errors, f"ScenarioFactory.gd is missing required hero-command bootstrap token: {required_token}")
 
     overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "HeroCommandRules.normalize_session",
+        "HeroCommandRulesScript.normalize_session",
         "func describe_heroes",
         "func get_hero_actions",
         "func switch_active_hero",
@@ -2194,27 +2278,35 @@ def validate_hero_command(errors: list[str]) -> None:
         ensure(required_token in town_rules_text, errors, f"TownRules.gd is missing required hero-command token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("HeroCommandRules.active_hero_is_primary", "HeroCommandRules.remove_active_hero_after_defeat"):
+    for required_token in ("HeroCommandRulesScript.active_hero_is_primary", "HeroCommandRulesScript.remove_active_hero_after_defeat"):
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required hero-command token: {required_token}")
 
     campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("HeroCommandRules.primary_hero", "HeroCommandRules.normalize_session", '"spell_ids"', '"artifacts"', '"specialties"'):
+    for required_token in ("HeroCommandRulesScript.primary_hero", "HeroCommandRulesScript.normalize_session", '"spell_ids"', '"artifacts"', '"specialties"'):
         ensure(required_token in campaign_text, errors, f"CampaignRules.gd is missing required hero-command token: {required_token}")
 
     overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (("Heroes", "Label"), ("HeroBar", "VBoxContainer")):
-        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for hero-command UI")
+    ensure_scene_nodes(
+        overworld_scene_text,
+        errors,
+        "OverworldShell.tscn",
+        [("Heroes", "Label"), ("HeroActions", "HFlowContainer")],
+    )
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("Heroes", "Label"),
-        ("HeroBar", "VBoxContainer"),
-        ("Tavern", "Label"),
-        ("TavernBar", "VBoxContainer"),
-        ("Transfer", "Label"),
-        ("TransferBar", "VBoxContainer"),
-    ):
-        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for hero-command UI")
+    ensure_scene_nodes(
+        town_scene_text,
+        errors,
+        "TownShell.tscn",
+        [
+            ("Heroes", "Label"),
+            ("HeroActions", "HFlowContainer"),
+            ("Tavern", "Label"),
+            ("TavernActions", "HFlowContainer"),
+            ("Transfer", "Label"),
+            ("TransferActions", "HFlowContainer"),
+        ],
+    )
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -2223,7 +2315,8 @@ def validate_hero_command(errors: list[str]) -> None:
         "OverworldRules.describe_heroes",
         "OverworldRules.get_hero_actions",
         "OverworldRules.switch_active_hero",
-        "HeroCommandRules.hero_positions",
+        "_hero_actions",
+        "_heroes_label",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required hero-command token: {required_token}")
 
@@ -2285,21 +2378,21 @@ def validate_overworld_fog(errors: list[str]) -> None:
         "func is_tile_visible",
         "func is_tile_explored",
         "func describe_visibility",
-        "HeroCommandRules.scouting_radius_for_hero",
+        "HeroCommandRulesScript.scouting_radius_for_hero",
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing required fog/scouting token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
-    ensure("OverworldRules.refresh_fog_of_war" in battle_text, errors, "BattleRules.gd must refresh fog after overworld-facing battle outcomes")
+    ensure("OverworldRulesScript.refresh_fog_of_war" in battle_text, errors, "BattleRules.gd must refresh fog after overworld-facing battle outcomes")
 
     campaign_text = CAMPAIGN_RULES_PATH.read_text(encoding="utf-8")
-    ensure("OverworldRules.normalize_overworld_state" in campaign_text, errors, "CampaignRules.gd must normalize fog/scouting state when building campaign sessions")
+    ensure("normalize_overworld_state(session)" in campaign_text, errors, "CampaignRules.gd must normalize fog/scouting state when building campaign sessions")
 
     scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
-    ensure("OverworldRules.normalize_overworld_state" in scenario_select_text, errors, "ScenarioSelectRules.gd must normalize fog/scouting state for new skirmish sessions")
+    ensure("OverworldRulesScript.normalize_overworld_state" in scenario_select_text, errors, "ScenarioSelectRules.gd must normalize fog/scouting state for new skirmish sessions")
 
     scenario_script_text = SCENARIO_SCRIPT_RULES_PATH.read_text(encoding="utf-8")
-    ensure("OverworldRules.is_tile_visible" in scenario_script_text, errors, "ScenarioScriptRules.gd must hide scripted map-reveal details behind visibility checks")
+    ensure("is_tile_visible" in scenario_script_text, errors, "ScenarioScriptRules.gd must hide scripted map-reveal details behind visibility checks")
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -2335,8 +2428,8 @@ def validate_battle_ability_layer(errors: list[str]) -> None:
         "func _apply_attack_ability_effects",
         "func _apply_retaliation_ability_effects",
         "func _ability_damage_modifier",
-        "SpellRules.build_battle_effect",
-        "SpellRules.has_any_effect_ids",
+        "SpellRulesScript.build_battle_effect",
+        "SpellRulesScript.has_any_effect_ids",
     ):
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing required battle-ability token: {required_token}")
 
@@ -2346,8 +2439,8 @@ def validate_battle_ability_layer(errors: list[str]) -> None:
         "STATUS_STAGGERED",
         "func _can_make_melee_attack",
         "func _ability_damage_modifier",
-        "SpellRules.has_effect_id",
-        "SpellRules.has_any_effect_ids",
+        "SpellRulesScript.has_effect_id",
+        "SpellRulesScript.has_any_effect_ids",
     ):
         ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required battle-ability token: {required_token}")
 
@@ -2364,8 +2457,10 @@ def validate_battle_ability_layer(errors: list[str]) -> None:
     for required_token in (
         "BattleRules.roster_lines",
         "BattleRules.get_action_surface",
-        "_player_roster.text",
-        "_enemy_roster.text",
+        "_player_roster",
+        "_enemy_roster",
+        "_set_compact_label(_player_roster",
+        "_set_compact_label(_enemy_roster",
     ):
         ensure(required_token in battle_shell_text, errors, f"BattleShell.gd is missing required battle-ability UI token: {required_token}")
 
@@ -2386,25 +2481,29 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         return
 
     battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("Scroll", "ScrollContainer"),
-        ("Banner", "PanelContainer"),
-        ("BriefingPanel", "PanelContainer"),
-        ("RiskPanel", "PanelContainer"),
-        ("CommandPanel", "PanelContainer"),
-        ("InitiativePanel", "PanelContainer"),
-        ("ContextPanel", "PanelContainer"),
-        ("SpellPanel", "PanelContainer"),
-        ("ArmyColumns", "HSplitContainer"),
-        ("BriefingTitle", "Label"),
-        ("Briefing", "Label"),
-        ("RiskTitle", "Label"),
-        ("Risk", "Label"),
-        ("ActionGuide", "Label"),
-        ("Footer", "PanelContainer"),
-        ("SaveSlot", "OptionButton"),
-    ):
-        ensure(scene_has_node(battle_scene_text, node_name, node_type), errors, f"BattleShell.tscn must define {node_name} ({node_type}) for the release-facing battle shell")
+    ensure_scene_nodes(
+        battle_scene_text,
+        errors,
+        "BattleShell.tscn",
+        [
+            ("Banner", "PanelContainer"),
+            ("BriefingPanel", "PanelContainer"),
+            ("RiskPanel", "PanelContainer"),
+            ("ConsequencePanel", "PanelContainer"),
+            ("BattlefieldPanel", "PanelContainer"),
+            ("PlayerPanel", "PanelContainer"),
+            ("EnemyPanel", "PanelContainer"),
+            ("CommandPanel", "PanelContainer"),
+            ("InitiativePanel", "PanelContainer"),
+            ("ContextPanel", "PanelContainer"),
+            ("SpellPanel", "PanelContainer"),
+            ("TimingPanel", "PanelContainer"),
+            ("BattleBoard", "Control"),
+            ("ActionGuide", "Label"),
+            ("Footer", "PanelContainer"),
+            ("SaveSlot", "OptionButton"),
+        ],
+    )
 
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -2432,7 +2531,7 @@ def validate_battle_shell_release_polish(errors: list[str]) -> None:
         "func _risk_board_priority_line",
         "func _risk_board_objective_line",
         "func _risk_board_dispatch_line",
-        "func _normalize_tactical_briefing_state",
+        "func _should_surface_tactical_briefing",
         "func _tactical_briefing_lines",
         "func _tactical_enemy_doctrine_line",
         "func _tactical_decisive_target_line",
@@ -2570,7 +2669,7 @@ def validate_battle_order_consequence_board(errors: list[str]) -> None:
         "Trade window:",
         "Command tools:",
         "Enemy reply:",
-        "BattleAiRules.choose_enemy_action",
+        "BattleAiRulesScript.choose_enemy_action",
     ):
         ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle order-consequence token: {required_token}")
 
@@ -2622,8 +2721,8 @@ def validate_battle_spell_timing_board(errors: list[str]) -> None:
         "Protection need:",
         "Burst risk:",
         "there is no authored cleanse in the current spellbook",
-        "SpellRules.battle_spell_timing_summary",
-        "BattleAiRules.choose_enemy_action",
+        "SpellRulesScript.battle_spell_timing_summary",
+        "BattleAiRulesScript.choose_enemy_action",
     ):
         ensure(required_token in battle_rules_text, errors, f"BattleRules.gd is missing required battle spell-timing token: {required_token}")
 
@@ -2712,7 +2811,7 @@ def validate_battle_faction_identity(errors: list[str]) -> None:
         '"faction_sunvault"',
         '"cohesion"',
         '"momentum"',
-        "SpellRules.battle_spell_modifiers",
+        "SpellRulesScript.battle_spell_modifiers",
     ):
         ensure(required_token in battle_ai_text, errors, f"BattleAiRules.gd is missing required faction-battle token: {required_token}")
 
@@ -2857,7 +2956,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
     for node_name, node_type in (
         ("SaveStatus", "Label"),
-        ("SaveBar", "HBoxContainer"),
+        ("SaveBar", "HFlowContainer"),
         ("SaveSlot", "OptionButton"),
         ("Save", "Button"),
         ("Menu", "Button"),
@@ -2913,14 +3012,14 @@ def validate_town_faction_progression(errors: list[str]) -> None:
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func describe_status",
-        "OverworldRules.town_income",
-        "OverworldRules.town_weekly_growth",
-        "OverworldRules.town_reinforcement_quality",
-        "OverworldRules.town_battle_readiness",
-        "OverworldRules.town_pressure_output",
-        "OverworldRules.town_market_state",
-        "OverworldRules.town_recruit_cost",
-        "OverworldRules.get_town_build_status",
+        "OverworldRulesScript.town_income",
+        "OverworldRulesScript.town_weekly_growth",
+        "OverworldRulesScript.town_reinforcement_quality",
+        "OverworldRulesScript.town_battle_readiness",
+        "OverworldRulesScript.town_pressure_output",
+        "OverworldRulesScript.town_market_state",
+        "OverworldRulesScript.town_recruit_cost",
+        "OverworldRulesScript.get_town_build_status",
         "func _town_identity_summary",
         "func _town_unit_ids",
     ):
@@ -2942,26 +3041,31 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         return
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("Scroll", "ScrollContainer"),
-        ("Banner", "PanelContainer"),
-        ("CommandPanel", "PanelContainer"),
-        ("TownPanel", "PanelContainer"),
-        ("BuildPanel", "PanelContainer"),
-        ("MarketPanel", "PanelContainer"),
-        ("RecruitPanel", "PanelContainer"),
-        ("StudyPanel", "PanelContainer"),
-        ("LogisticsPanel", "PanelContainer"),
-        ("Defense", "Label"),
-        ("Pressure", "Label"),
-        ("Market", "Label"),
-        ("MarketBar", "VBoxContainer"),
-        ("Responses", "Label"),
-        ("ResponseBar", "VBoxContainer"),
-        ("Event", "Label"),
-        ("Footer", "HBoxContainer"),
-    ):
-        ensure(scene_has_node(town_scene_text, node_name, node_type), errors, f"TownShell.tscn must define {node_name} ({node_type}) for the release-facing town shell")
+    ensure_scene_nodes(
+        town_scene_text,
+        errors,
+        "TownShell.tscn",
+        [
+            ("Banner", "PanelContainer"),
+            ("TownStagePanel", "PanelContainer"),
+            ("TownPanel", "PanelContainer"),
+            ("OutlookPanel", "PanelContainer"),
+            ("CommandLedgerPanel", "PanelContainer"),
+            ("CommandPanel", "PanelContainer"),
+            ("ManagementTabs", "TabContainer"),
+            ("BuildPanel", "PanelContainer"),
+            ("RecruitPanel", "PanelContainer"),
+            ("StudyPanel", "PanelContainer"),
+            ("MarketPanel", "PanelContainer"),
+            ("LogisticsPanel", "PanelContainer"),
+            ("Defense", "Label"),
+            ("Pressure", "Label"),
+            ("Market", "Label"),
+            ("Responses", "Label"),
+            ("Event", "Label"),
+            ("FooterPanel", "PanelContainer"),
+        ],
+    )
 
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -3118,24 +3222,31 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         return
 
     overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
-    for node_name, node_type in (
-        ("Scroll", "ScrollContainer"),
-        ("Banner", "PanelContainer"),
-        ("BriefingPanel", "PanelContainer"),
-        ("CommandPanel", "PanelContainer"),
-        ("FrontierPanel", "PanelContainer"),
-        ("ContextPanel", "PanelContainer"),
-        ("MapPanel", "PanelContainer"),
-        ("BriefingTitle", "Label"),
-        ("Briefing", "Label"),
-        ("Visibility", "Label"),
-        ("Objectives", "Label"),
-        ("Threats", "Label"),
-        ("Forecast", "Label"),
-        ("Event", "Label"),
-        ("Footer", "HBoxContainer"),
-    ):
-        ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for the release-facing overworld shell")
+    ensure_scene_nodes(
+        overworld_scene_text,
+        errors,
+        "OverworldShell.tscn",
+        [
+            ("TopStrip", "PanelContainer"),
+            ("EventPanel", "PanelContainer"),
+            ("CommitmentPanel", "PanelContainer"),
+            ("BriefingPanel", "PanelContainer"),
+            ("MapPanel", "PanelContainer"),
+            ("CommandBand", "PanelContainer"),
+            ("SidebarTabs", "TabContainer"),
+            ("ContextPanel", "PanelContainer"),
+            ("CommandPanel", "PanelContainer"),
+            ("FrontierPanel", "PanelContainer"),
+            ("BriefingTitle", "Label"),
+            ("Briefing", "Label"),
+            ("Visibility", "Label"),
+            ("Objectives", "Label"),
+            ("Threats", "Label"),
+            ("Forecast", "Label"),
+            ("Event", "Label"),
+            ("SaveSlot", "OptionButton"),
+        ],
+    )
 
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -3262,15 +3373,15 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         '"treasury": _blank_resource_pool()',
         '"posture": "probing"',
         '"captured_artifact_ids": []',
-        "EnemyAdventureRules.normalize_raid_armies",
-        "OverworldRules.town_income",
-        "OverworldRules.town_weekly_growth",
-        "OverworldRules.town_reinforcement_quality",
-        "OverworldRules.town_battle_readiness",
-        "OverworldRules.town_pressure_output",
-        "OverworldRules.can_afford_cost_with_town_market",
-        "OverworldRules.apply_market_cost_coverage",
-        "OverworldRules.get_town_build_options",
+        "EnemyAdventureRulesScript.normalize_raid_armies",
+        "OverworldRulesScript.town_income",
+        "OverworldRulesScript.town_weekly_growth",
+        "OverworldRulesScript.town_reinforcement_quality",
+        "OverworldRulesScript.town_battle_readiness",
+        "OverworldRulesScript.town_pressure_output",
+        "OverworldRulesScript.can_afford_cost_with_town_market",
+        "OverworldRulesScript.apply_market_cost_coverage",
+        "OverworldRulesScript.get_town_build_options",
         "func _run_empire_cycle",
         "func _build_in_enemy_towns",
         "func _reinforce_enemy_forces",
@@ -3339,8 +3450,8 @@ def validate_enemy_strategic_contestation(errors: list[str]) -> None:
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "EnemyAdventureRules.advance_raids(session, config, faction_id, state)",
-        "EnemyAdventureRules.describe_contestation",
+        "EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)",
+        "EnemyAdventureRulesScript.describe_contestation",
         '"captured_artifact_ids": _normalize_string_array',
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing strategic-turn token: {required_token}")
@@ -3512,10 +3623,10 @@ def validate_overworld_logistics_sites(errors: list[str]) -> None:
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "OverworldRules.controlled_resource_site_income",
-        "OverworldRules.controlled_resource_site_pressure_bonus",
-        "OverworldRules.player_resource_site_pressure_guard",
-        "OverworldRules.apply_controlled_resource_site_musters",
+        "OverworldRulesScript.controlled_resource_site_income",
+        "OverworldRulesScript.controlled_resource_site_pressure_bonus",
+        "OverworldRulesScript.player_resource_site_pressure_guard",
+        "OverworldRulesScript.apply_controlled_resource_site_musters",
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing logistics-site turn token: {required_token}")
 
@@ -3544,8 +3655,8 @@ def validate_overworld_route_security_escort(errors: list[str]) -> None:
         '"response_commander_id"',
         '"response_security_rating"',
         "func _route_security_rating_for_hero",
-        "HeroCommandRules.active_hero(session)",
-        "HeroCommandRules.hero_by_id(session, commander_id)",
+        "HeroCommandRulesScript.active_hero(session)",
+        "HeroCommandRulesScript.hero_by_id(session, commander_id)",
         '"pressure_guard_bonus"',
         '"growth_bonus_percent"',
         '"break_pressure"',
@@ -3566,7 +3677,7 @@ def validate_overworld_route_security_escort(errors: list[str]) -> None:
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     ensure(
-        "OverworldRules.player_resource_site_pressure_guard" in enemy_turn_text,
+        "OverworldRulesScript.player_resource_site_pressure_guard" in enemy_turn_text,
         errors,
         "EnemyTurnRules.gd must continue routing escorted site pressure guard through the shared overworld boundary",
     )
@@ -3617,7 +3728,7 @@ def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing convoy-disruption token: {required_token}")
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
-    for required_token in ("OverworldRules.town_logistics_state(session, town)", '"delivery_count"'):
+    for required_token in ("OverworldRulesScript.town_logistics_state(session, town)", '"delivery_count"'):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing reinforcement-line AI token: {required_token}")
 
 
@@ -3640,7 +3751,7 @@ def validate_convoy_interception_clash_slice(errors: list[str]) -> None:
         '"holding under interception"',
         "route holds. %s keeps marching toward %s.",
         "convoy turns back to %s after the lane stalls",
-        "convoy for %s is intercepted",
+        "is intercepted before it reaches",
     ):
         ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing convoy-interception token: {required_token}")
 
@@ -3651,19 +3762,19 @@ def validate_convoy_interception_clash_slice(errors: list[str]) -> None:
         "func _delivery_hero_candidate",
         '"delivery_intercept_node_placement_id"',
         '"delivery_intercept_target_kind"',
-        "OverworldRules.delivery_interception_context_for_encounter",
+        "OverworldRulesScript.delivery_interception_context_for_encounter",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing convoy-hunt token: {required_token}")
 
     battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "OverworldRules.delivery_interception_context_for_encounter",
+        "OverworldRulesScript.delivery_interception_context_for_encounter",
         '"delivery_node_placement_id"',
         '"delivery_route_label"',
         '"delivery_pressure_label"',
         "func _has_delivery_context",
         "func _apply_delivery_route_aftermath",
-        "OverworldRules.apply_delivery_interception_outcome",
+        "OverworldRulesScript.apply_delivery_interception_outcome",
         '"Relief defense at %s"',
         '"Convoy clash near %s"',
     ):
@@ -3679,8 +3790,8 @@ def validate_hostile_empire_personality(errors: list[str]) -> None:
 
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "EnemyAdventureRules.enemy_strategy",
-        "EnemyAdventureRules.public_strategy_summary",
+        "EnemyAdventureRulesScript.enemy_strategy",
+        "EnemyAdventureRulesScript.public_strategy_summary",
         "func _raid_threshold_for_strategy",
         "func _max_active_raids_for_strategy",
         "func _recruit_priority",
@@ -3782,8 +3893,8 @@ def validate_late_game_capital_escalation(errors: list[str]) -> None:
 
     town_rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "OverworldRules.town_strategic_summary",
-        "OverworldRules.town_capital_project_state",
+        "OverworldRulesScript.town_strategic_summary",
+        "OverworldRulesScript.town_capital_project_state",
         "Capital project online",
         "Capital watch:",
         "Capital Anchor",
@@ -3796,8 +3907,8 @@ def validate_late_game_capital_escalation(errors: list[str]) -> None:
         "func _faction_capital_state_from_towns",
         "func _capital_watch_summary",
         "func _empire_capital_pressure_bonus",
-        "OverworldRules.town_capital_project_state",
-        "OverworldRules.town_strategic_role",
+        "OverworldRulesScript.town_capital_project_state",
+        "OverworldRulesScript.town_strategic_role",
         "raid_threshold_reduction",
         "max_active_raids_bonus",
         "Capital watch:",
@@ -3808,8 +3919,8 @@ def validate_late_game_capital_escalation(errors: list[str]) -> None:
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func _town_strategic_priority_bonus",
-        "OverworldRules.town_strategic_role",
-        "OverworldRules.town_capital_project_state",
+        "OverworldRulesScript.town_strategic_role",
+        "OverworldRulesScript.town_capital_project_state",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing capital-targeting token: {required_token}")
 
@@ -3958,7 +4069,7 @@ def validate_capital_front_battle_identity(errors: list[str]) -> None:
 
     town_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "OverworldRules.town_battlefront_profile",
+        "OverworldRulesScript.town_battlefront_profile",
         "Battlefront ",
         "Siege profile:",
     ):
@@ -4136,7 +4247,7 @@ def validate_town_defense_battle_flow(errors: list[str]) -> None:
     for required_token in (
         "func _queue_town_defense_battle",
         '"type": "town_defense"',
-        "BattleRules.create_battle_payload",
+        "BattleRulesScript.create_battle_payload",
         "session.game_state = \"battle\"",
         "func _town_defense_candidate",
     ):
