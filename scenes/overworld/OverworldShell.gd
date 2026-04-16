@@ -884,6 +884,74 @@ func validation_try_progress_action() -> Dictionary:
 		"message": _last_message,
 	}
 
+func validation_route_step_to_nearest_target(target_kind: String, owner_id: String = "") -> Dictionary:
+	var route_plan := _validation_route_plan(target_kind, owner_id)
+	if not bool(route_plan.get("ok", false)):
+		return route_plan
+
+	var hero_pos := OverworldRules.hero_position(_session)
+	var target: Dictionary = route_plan.get("target", {})
+	var path: Array = route_plan.get("path", [])
+	var target_tile := Vector2i(int(target.get("x", hero_pos.x)), int(target.get("y", hero_pos.y)))
+	_selected_tile = target_tile
+
+	if path.size() <= 1:
+		match target_kind:
+			"town":
+				AppRouter.go_to_town()
+				return {
+					"ok": true,
+					"action": "enter_town",
+					"target_kind": target_kind,
+					"target": target.duplicate(true),
+					"start": _validation_tile_payload(hero_pos),
+					"finish": _validation_tile_payload(hero_pos),
+					"remaining_steps": 0,
+					"last_action": String(_session.flags.get("last_action", "visited_town")),
+					"message": _last_message if _last_message != "" else "Town route opened.",
+				}
+			"encounter":
+				_start_encounter()
+				return {
+					"ok": not _session.battle.is_empty(),
+					"action": "enter_battle",
+					"target_kind": target_kind,
+					"target": target.duplicate(true),
+					"start": _validation_tile_payload(hero_pos),
+					"finish": _validation_tile_payload(hero_pos),
+					"remaining_steps": 0,
+					"last_action": String(_session.flags.get("last_action", "")),
+					"message": _last_message if _last_message != "" else "Encounter route opened.",
+				}
+			_:
+				return {
+					"ok": true,
+					"action": "hold_position",
+					"target_kind": target_kind,
+					"target": target.duplicate(true),
+					"start": _validation_tile_payload(hero_pos),
+					"finish": _validation_tile_payload(hero_pos),
+					"remaining_steps": 0,
+					"last_action": String(_session.flags.get("last_action", "")),
+					"message": "Already holding the requested target tile.",
+				}
+
+	var next_step: Vector2i = path[1]
+	_try_move(next_step.x - hero_pos.x, next_step.y - hero_pos.y, true)
+	var finish := OverworldRules.hero_position(_session)
+	return {
+		"ok": finish != hero_pos or String(_session.flags.get("last_action", "")) in ["visited_town", "entered_battle"],
+		"action": "route_step",
+		"target_kind": target_kind,
+		"target": target.duplicate(true),
+		"start": _validation_tile_payload(hero_pos),
+		"step": _validation_tile_payload(next_step),
+		"finish": _validation_tile_payload(finish),
+		"remaining_steps": maxi(0, path.size() - 2),
+		"last_action": String(_session.flags.get("last_action", "")),
+		"message": _last_message,
+	}
+
 func _first_validation_safe_step(start: Vector2i) -> Vector2i:
 	for direction in DIRECTIONS:
 		var tile: Vector2i = start + direction
@@ -905,6 +973,118 @@ func _first_validation_safe_step(start: Vector2i) -> Vector2i:
 			continue
 		return tile
 	return Vector2i(-1, -1)
+
+func _validation_route_plan(target_kind: String, owner_id: String = "") -> Dictionary:
+	var hero_pos := OverworldRules.hero_position(_session)
+	var best_target := {}
+	var best_path: Array = []
+	var best_priority := 999999
+	for candidate in _validation_targets(target_kind, owner_id):
+		if not (candidate is Dictionary):
+			continue
+		var tile := Vector2i(int(candidate.get("x", -1)), int(candidate.get("y", -1)))
+		if not _tile_in_bounds(tile):
+			continue
+		var path := _build_validation_path(hero_pos, tile)
+		if path.is_empty():
+			continue
+		var priority := _validation_target_priority(target_kind, candidate)
+		if best_target.is_empty() or priority < best_priority or (priority == best_priority and path.size() < best_path.size()):
+			best_target = candidate
+			best_path = path
+			best_priority = priority
+	if best_target.is_empty():
+		return {
+			"ok": false,
+			"target_kind": target_kind,
+			"message": "No reachable %s target is available for validation." % target_kind,
+		}
+	return {
+		"ok": true,
+		"target_kind": target_kind,
+		"target": best_target.duplicate(true),
+		"path": best_path.duplicate(true),
+		"distance": maxi(0, best_path.size() - 1),
+	}
+
+func _validation_targets(target_kind: String, owner_id: String = "") -> Array:
+	var targets := []
+	match target_kind:
+		"town":
+			for town in _session.overworld.get("towns", []):
+				if not (town is Dictionary):
+					continue
+				if owner_id != "" and String(town.get("owner", "")) != owner_id:
+					continue
+				targets.append(town)
+		"encounter":
+			for encounter in _session.overworld.get("encounters", []):
+				if not (encounter is Dictionary):
+					continue
+				if OverworldRules.is_encounter_resolved(_session, encounter):
+					continue
+				targets.append(encounter)
+	return targets
+
+func _validation_target_priority(target_kind: String, target: Dictionary) -> int:
+	if target_kind != "encounter":
+		return 0
+	match String(target.get("difficulty", "medium")):
+		"low":
+			return 0
+		"medium":
+			return 1
+		"high":
+			return 2
+		_:
+			return 3
+
+func _validation_tile_payload(tile: Vector2i) -> Dictionary:
+	return {
+		"x": tile.x,
+		"y": tile.y,
+	}
+
+func _build_validation_path(start: Vector2i, goal: Vector2i) -> Array:
+	if not _tile_in_bounds(goal):
+		return []
+	if start == goal:
+		return [start]
+	if OverworldRules.tile_is_blocked(_session, goal.x, goal.y):
+		return []
+
+	var queue: Array = [start]
+	var visited = {_tile_key(start): true}
+	var came_from = {_tile_key(start): start}
+	var found := false
+
+	while not queue.is_empty():
+		var current: Vector2i = queue.pop_front()
+		if current == goal:
+			found = true
+			break
+		for direction in DIRECTIONS:
+			var next: Vector2i = current + direction
+			if not _tile_in_bounds(next):
+				continue
+			if OverworldRules.tile_is_blocked(_session, next.x, next.y):
+				continue
+			var key := _tile_key(next)
+			if visited.has(key):
+				continue
+			visited[key] = true
+			came_from[key] = current
+			queue.append(next)
+
+	if not found:
+		return []
+
+	var path: Array = [goal]
+	var walker: Vector2i = goal
+	while walker != start:
+		walker = came_from.get(_tile_key(walker), start)
+		path.push_front(walker)
+	return path
 
 func _make_placeholder_label(text: String) -> Label:
 	return FrontierVisualKit.placeholder_label(text)

@@ -256,6 +256,99 @@ func _refresh_save_slot_picker() -> void:
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
+func validation_snapshot() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	return {
+		"scene_path": scene_file_path,
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+		"day": _session.day,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"town_owner": String(town.get("owner", "")),
+		"built_building_count": _normalize_string_array(town.get("built_buildings", [])).size(),
+		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"build_action_count": TownRules.get_build_actions(_session).size(),
+		"recruit_action_count": TownRules.get_recruit_actions(_session).size(),
+		"study_action_count": TownRules.get_spell_learning_actions(_session).size(),
+		"latest_save_summary": SaveService.latest_loadable_summary(),
+	}
+
+func validation_try_progress_action() -> Dictionary:
+	var before_signature := JSON.stringify(_validation_progress_signature())
+	var lanes := [
+		{"lane": "recruit", "actions": TownRules.get_recruit_actions(_session)},
+		{"lane": "build", "actions": TownRules.get_build_actions(_session)},
+		{"lane": "study", "actions": TownRules.get_spell_learning_actions(_session)},
+		{"lane": "market", "actions": TownRules.get_market_actions(_session)},
+		{"lane": "response", "actions": TownRules.get_response_actions(_session)},
+		{"lane": "tavern", "actions": TownRules.get_tavern_actions(_session)},
+		{"lane": "transfer", "actions": TownRules.get_transfer_actions(_session)},
+		{"lane": "artifact", "actions": TownRules.get_artifact_actions(_session)},
+		{"lane": "specialty", "actions": TownRules.get_specialty_actions(_session)},
+		{"lane": "hero", "actions": TownRules.get_hero_actions(_session)},
+	]
+
+	for lane_entry in lanes:
+		if not (lane_entry is Dictionary):
+			continue
+		var action := _first_enabled_validation_action(lane_entry.get("actions", []))
+		if action.is_empty():
+			continue
+		var lane := String(lane_entry.get("lane", ""))
+		var action_id := String(action.get("id", ""))
+		match lane:
+			"recruit":
+				_on_recruit_action_pressed(action_id.trim_prefix("recruit:"))
+			"build":
+				_on_build_action_pressed(action_id.trim_prefix("build:"))
+			"study":
+				_on_study_action_pressed(action_id.trim_prefix("learn_spell:"))
+			"market":
+				_on_market_action_pressed(action_id)
+			"response":
+				_on_response_action_pressed(action_id)
+			"tavern":
+				_on_tavern_action_pressed(action_id)
+			"transfer":
+				_on_transfer_action_pressed(action_id)
+			"artifact":
+				_on_artifact_action_pressed(action_id)
+			"specialty":
+				_on_specialty_action_pressed(action_id)
+			"hero":
+				_on_hero_action_pressed(action_id)
+			_:
+				continue
+
+		var after_signature := JSON.stringify(_validation_progress_signature())
+		return {
+			"ok": before_signature != after_signature,
+			"lane": lane,
+			"action_id": action_id,
+			"label": String(action.get("label", action_id)),
+			"message": _last_message,
+			"state_changed": before_signature != after_signature,
+		}
+
+	return {
+		"ok": false,
+		"message": "No enabled town validation action is available.",
+	}
+
+func validation_leave_town() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	_on_leave_pressed()
+	return {
+		"ok": true,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"message": "Town route closed.",
+	}
+
 func _rebuild_hero_actions() -> void:
 	for child in _hero_actions.get_children():
 		child.queue_free()
@@ -461,6 +554,43 @@ func _handle_session_resolution() -> bool:
 		return false
 	AppRouter.go_to_scenario_outcome()
 	return true
+
+func _first_enabled_validation_action(actions: Variant) -> Dictionary:
+	if not (actions is Array):
+		return {}
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return action
+	return {}
+
+func _validation_progress_signature() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	var hero_value: Variant = _session.overworld.get("hero", {})
+	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+	var spellbook_value: Variant = hero.get("spellbook", {})
+	var spellbook: Dictionary = spellbook_value if spellbook_value is Dictionary else {}
+	return {
+		"active_hero_id": String(_session.overworld.get("active_hero_id", "")),
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"army": _duplicate_dictionary(_session.overworld.get("army", {})),
+		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
+		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
+		"known_spell_ids": _normalize_string_array(spellbook.get("known_spell_ids", [])),
+		"artifacts": _duplicate_dictionary(hero.get("artifacts", {})),
+	}
+
+func _duplicate_dictionary(value: Variant) -> Dictionary:
+	return value.duplicate(true) if value is Dictionary else {}
+
+func _normalize_string_array(value: Variant) -> Array[String]:
+	var normalized: Array[String] = []
+	if not (value is Array):
+		return normalized
+	for entry in value:
+		var text := String(entry)
+		if text != "":
+			normalized.append(text)
+	return normalized
 
 func _make_placeholder_label(text: String) -> Label:
 	return FrontierVisualKit.placeholder_label(text)

@@ -56,6 +56,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 var _session: SessionStateStore.SessionData
 var _last_message := ""
 var _tactical_briefing_text := ""
+var _validation_spell_cast := false
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -278,6 +279,96 @@ func _refresh_save_slot_picker() -> void:
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
+func validation_snapshot() -> Dictionary:
+	var active_stack := BattleRules.get_active_stack(_session.battle)
+	return {
+		"scene_path": scene_file_path,
+		"scenario_id": _session.scenario_id,
+		"difficulty": _session.difficulty,
+		"launch_mode": _session.launch_mode,
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+		"encounter_id": String(_session.battle.get("encounter_id", "")),
+		"encounter_name": String(_session.battle.get("encounter_name", "")),
+		"round": int(_session.battle.get("round", 0)),
+		"distance": int(_session.battle.get("distance", 0)),
+		"active_side": String(active_stack.get("side", "")),
+		"active_stack": String(active_stack.get("name", "")),
+		"player_stack_count": BattleRules.roster_lines(_session.battle, "player").size(),
+		"enemy_stack_count": BattleRules.roster_lines(_session.battle, "enemy").size(),
+		"latest_save_summary": SaveService.latest_loadable_summary(),
+	}
+
+func validation_try_progress_action() -> Dictionary:
+	if _session.battle.is_empty():
+		return {"ok": false, "message": "No active battle is loaded for validation."}
+
+	var active_stack := BattleRules.get_active_stack(_session.battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		var ready_result := BattleRules.resolve_if_battle_ready(_session)
+		_last_message = String(ready_result.get("message", ""))
+		if _handle_battle_resolution(ready_result):
+			return {
+				"ok": String(ready_result.get("state", "")) != "invalid",
+				"action": "resolve_ready_state",
+				"state": String(ready_result.get("state", "")),
+				"message": _last_message,
+			}
+		_refresh()
+		return {
+			"ok": String(ready_result.get("state", "")) != "invalid",
+			"action": "resolve_ready_state",
+			"state": String(ready_result.get("state", "")),
+			"message": _last_message,
+		}
+
+	var spell_action := _preferred_validation_spell_action()
+	if not spell_action.is_empty():
+		var spell_id := String(spell_action.get("id", "")).trim_prefix("cast_spell:")
+		var spell_result := BattleRules.cast_player_spell(_session, spell_id)
+		_last_message = String(spell_result.get("message", ""))
+		if bool(spell_result.get("ok", false)):
+			_validation_spell_cast = true
+			_dismiss_tactical_briefing()
+		if _handle_battle_resolution(spell_result):
+			return {
+				"ok": bool(spell_result.get("ok", false)),
+				"action": "cast_spell",
+				"action_id": String(spell_action.get("id", "")),
+				"state": String(spell_result.get("state", "")),
+				"message": _last_message,
+			}
+		_refresh()
+		return {
+			"ok": bool(spell_result.get("ok", false)),
+			"action": "cast_spell",
+			"action_id": String(spell_action.get("id", "")),
+			"state": String(spell_result.get("state", "")),
+			"message": _last_message,
+		}
+
+	var action_id := _preferred_validation_action_id()
+	if action_id == "":
+		return {"ok": false, "message": "No legal battle validation action is available."}
+	var action_result := BattleRules.perform_player_action(_session, action_id)
+	_last_message = String(action_result.get("message", ""))
+	if bool(action_result.get("ok", false)):
+		_dismiss_tactical_briefing()
+	if _handle_battle_resolution(action_result):
+		return {
+			"ok": bool(action_result.get("ok", false)),
+			"action": action_id,
+			"state": String(action_result.get("state", "")),
+			"message": _last_message,
+		}
+	_refresh()
+	return {
+		"ok": bool(action_result.get("ok", false)),
+		"action": action_id,
+		"state": String(action_result.get("state", "")),
+		"message": _last_message,
+	}
+
 func _make_placeholder_label(text: String) -> Label:
 	return FrontierVisualKit.placeholder_label(text)
 
@@ -346,3 +437,28 @@ func _apply_visual_theme() -> void:
 
 func _dismiss_tactical_briefing() -> void:
 	_tactical_briefing_text = ""
+
+func _preferred_validation_spell_action() -> Dictionary:
+	if _validation_spell_cast:
+		return {}
+	var fallback := {}
+	for action in BattleRules.get_spell_actions(_session):
+		if not (action is Dictionary) or bool(action.get("disabled", false)):
+			continue
+		var spell_id := String(action.get("id", "")).trim_prefix("cast_spell:")
+		var spell := ContentService.get_spell(spell_id)
+		if spell.is_empty():
+			continue
+		if String(spell.get("effect", {}).get("type", "")) == "damage_enemy":
+			return action
+		if fallback.is_empty():
+			fallback = action
+	return fallback
+
+func _preferred_validation_action_id() -> String:
+	var surface := BattleRules.get_action_surface(_session)
+	for action_id in ["shoot", "strike", "advance", "defend"]:
+		var action = surface.get(action_id, {})
+		if action is Dictionary and not bool(action.get("disabled", true)):
+			return action_id
+	return ""

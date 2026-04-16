@@ -128,7 +128,7 @@ Difficulty: High
 - add a release-facing battle-start tactical briefing inside the real battle shell using existing encounter, commander, doctrine, terrain-tag, objective, and live battle-state data instead of a tutorial or planner layer
 - add a release-facing town-side defense outlook and dispatch-readiness board inside the real town shell using existing town, hero-command, logistics, recovery, and hostile-pressure data instead of a planner or advisor layer
 - add a release-facing town-side order-readiness and affordability ledger inside the real town shell using existing build, recruit, market, response, and hero-command data instead of a planner or advisor layer
-- add a repo-local live client validation harness that launches the real Boot, menu, skirmish-start, and overworld flow, drives one deterministic progress action through the active shell, and emits machine-checkable screenshot or report artifacts for regression diagnosis
+- add a repo-local live client validation harness that launches the real Boot, menu, skirmish-start, owned-town, and battle-routing flow, drives deterministic shell actions through the active scenes, and emits machine-checkable screenshot or report artifacts for regression diagnosis
 - add a release-facing overworld command commitment board inside the real overworld shell using existing context, logistics, hero-coverage, and frontier-risk data instead of a planner or advisor layer
 - deepen overworld logistics agency with hero-bound escort and route-security orders that change musters, pressure guard, recovery fallout, and hostile raid incentives through the existing site-response path instead of a new subsystem
 - turn town recruitment and reserve production into frontline reinforcement delivery through existing town, overworld, hero-command, logistics-site, and enemy-turn systems instead of a parallel convoy subsystem
@@ -297,6 +297,8 @@ Difficulty: High
 143. [completed] Re-run the required overworld, town-battle, menu-outcome, full headless Godot validations plus a focused core-systems regression smoke scene for turn advance, site interaction, hostile-town context, raid-host presence, and battle-opening enemy turns.
 144. [completed] Harden save/load and resume reliability around `hero_intercept` and `town_assault` battles so degraded or stale battle metadata restores through explicit context normalization instead of generic encounter fallback.
 145. [completed] Re-run the required core-systems, overworld, town-battle, menu-outcome, and full headless Godot validations for the hostile-pressure save-hardening slice while preserving save version `9`.
+146. [completed] Deepen the live routed-client validation harness through owned-town orders, post-town overworld routing, encounter entry, and battle-side action coverage on the shipped shells.
+147. [completed] Re-run repository-local validation, the strongest relevant Godot headless smokes or boot checks, and the richer live routed-client harness with report artifacts after the harness extension slice.
 
 ## Standards
 - no throwaway prototype code if avoidable
@@ -306,7 +308,7 @@ Difficulty: High
 
 ## Validation approach
 - preferred: headless Godot import and smoke boot if a Godot 4 executable is available
-- when a live display is available, also run the repo-local live-flow harness so routed client boot, menu launch, and overworld entry are exercised beyond scene-instantiation smoke
+- when a live display is available, also run the repo-local live-flow harness so routed client boot, menu launch, owned-town orders, encounter routing, and battle return are exercised beyond scene-instantiation smoke
 - fallback: JSON validation, file integrity checks, and structural review when the engine is unavailable in the environment
 
 ## Current hardening notes
@@ -340,8 +342,8 @@ Difficulty: High
 - the overworld shell now also surfaces a live command-risk forecast plus a one-shot end-turn warning, while `OverworldRules.gd` owns the risk scoring, summary shaping, and acknowledgement state from real raid, logistics, readiness, objective, and field-posture data instead of a separate planner or advisor layer
 - the battle shell now uses a sectioned tactical layout, while `BattleRules.gd` owns commander, initiative, effect-board, action-guide, pressure, and dispatch formatting so the scene stays declarative and save-safe
 - the battle shell now also surfaces a live tactical risk and readiness board, while `BattleRules.gd` derives tempo, commander-cover, cohesion, fire-lane, decisive-target, objective-urgency, and latest-shift messaging entirely from current battle state instead of adding a second advisor subsystem
-- live client validation now runs through a dormant `LiveValidationHarness.gd` autoload plus narrow `validation_*` hooks on `MainMenu.gd` and `OverworldShell.gd`, so repo-local automation can drive the actual boot, routing, skirmish launch, autosave, and first overworld action flow without moving gameplay rules out of `scripts/core/`
-- `tests/run_live_flow_harness.py` now launches Godot with isolated `XDG_DATA_HOME`, writes repo-local screenshots and JSON reports under `.artifacts/`, and gives the existing smoke suite a stronger routed-client check when `DISPLAY` is available
+- live client validation now runs through a dormant `LiveValidationHarness.gd` autoload plus narrow `validation_*` hooks on `MainMenu.gd`, `OverworldShell.gd`, `TownShell.gd`, and `BattleShell.gd`, so repo-local automation can drive the actual boot, routing, skirmish launch, owned-town orders, encounter entry, battle actions, and routed return without moving gameplay rules out of `scripts/core/`
+- `tests/run_live_flow_harness.py` now defaults to that richer town-and-battle routed flow, launches Godot with isolated `XDG_DATA_HOME`, writes repo-local screenshots and JSON reports under `.artifacts/`, and gives the existing smoke suite a stronger routed-client check when `DISPLAY` is available
 - Embercourt and Mireclaw battle identity now stays data-driven through authored unit and spell payloads, with elite roster units, attack-buff spell support, post-damage status effects, and doctrine-aware AI scoring all routed through the existing battle rules instead of inventing a parallel faction combat subsystem
 - tactical combat now carries persistent per-stack cohesion and momentum through the same battle payload, with casualty shocks, isolation penalties, commander-trait support, morale-aware spell modifiers, and AI target/buff scoring all resolved inside `scripts/core` instead of a separate morale minigame
 - battle encounter variety now stays data-driven through authored `battlefield_tags`, commander `battle_traits`, and specialized army-group compositions, with `BattleRules.gd` and `BattleAiRules.gd` reading those payloads for initiative, damage, target priority, and spell-value changes instead of moving context logic into scenes

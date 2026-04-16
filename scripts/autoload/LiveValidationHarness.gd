@@ -1,8 +1,13 @@
 extends Node
 
 const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"
+const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"
 const MAIN_MENU_SCENE := "res://scenes/menus/MainMenu.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
+const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
+const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
+const MAX_VALIDATION_ROUTE_STEPS := 32
+const MAX_VALIDATION_BATTLE_ACTIONS := 24
 
 var _enabled := false
 var _config := {}
@@ -32,59 +37,21 @@ func _run_live_validation() -> void:
 	get_tree().quit(0 if success else 1)
 
 func _execute_flow() -> bool:
-	if String(_config.get("flow", "")) != FLOW_BOOT_TO_SKIRMISH_OVERWORLD:
-		return _fail("Unsupported live validation flow requested.", {"flow": _config.get("flow", "")})
+	match String(_config.get("flow", "")):
+		FLOW_BOOT_TO_SKIRMISH_OVERWORLD:
+			return await _execute_boot_to_skirmish_overworld_flow()
+		FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE:
+			return await _execute_boot_to_skirmish_town_battle_flow()
+		_:
+			return _fail("Unsupported live validation flow requested.", {"flow": _config.get("flow", "")})
 
-	_log("Waiting for main menu boot route.")
-	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
-	if menu == null:
-		return _fail("Boot did not reach the main menu scene.", {})
-	await _settle_frames(8)
-
-	var menu_snapshot: Dictionary = menu.call("validation_snapshot")
-	if not _require(int(menu_snapshot.get("skirmish_count", 0)) > 0, "Main menu skirmish browser did not populate.", menu_snapshot):
+func _execute_boot_to_skirmish_overworld_flow() -> bool:
+	var launch := await _enter_live_skirmish_overworld()
+	if not bool(launch.get("ok", false)):
 		return false
-	menu.call("validation_open_skirmish_stage")
-	await _settle_frames(4)
-	if not _require(
-		bool(menu.call("validation_select_skirmish", String(_config.get("scenario_id", "")))),
-		"Requested skirmish scenario is not available in the live menu.",
-		menu.call("validation_snapshot")
-	):
-		return false
-	if not _require(
-		bool(menu.call("validation_set_difficulty", String(_config.get("difficulty", "")))),
-		"Requested difficulty is not available in the live menu.",
-		menu.call("validation_snapshot")
-	):
-		return false
-	menu_snapshot = menu.call("validation_snapshot")
-	_capture_step("main_menu", menu_snapshot)
-
-	var launch_result: Dictionary = menu.call("validation_start_selected_skirmish")
-	if not _require(bool(launch_result.get("started", false)), "Skirmish launch did not stage an active session.", launch_result):
-		return false
-
-	_log("Waiting for overworld route after live menu launch.")
-	var overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	var overworld = launch.get("overworld", null)
 	if overworld == null:
-		return _fail("Live launch did not route into the overworld scene.", {"launch": launch_result})
-	await _settle_frames(8)
-
-	var overworld_snapshot: Dictionary = overworld.call("validation_snapshot")
-	if not _require(String(overworld_snapshot.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Overworld session scenario id did not match the requested live launch.", overworld_snapshot):
-		return false
-	if not _require(String(overworld_snapshot.get("game_state", "")) == "overworld", "Overworld scene did not hold an overworld game state.", overworld_snapshot):
-		return false
-	if not _require(int(overworld_snapshot.get("movement_current", 0)) > 0, "Overworld scene started without any current movement budget.", overworld_snapshot):
-		return false
-	var latest_summary: Dictionary = SaveService.latest_loadable_summary()
-	if not _require(not latest_summary.is_empty(), "Autosave summary was not available after routing into the overworld.", overworld_snapshot):
-		return false
-	if not _require(String(latest_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Autosave summary scenario id did not match the launched scenario.", latest_summary):
-		return false
-	overworld_snapshot["autosave_summary"] = latest_summary
-	_capture_step("overworld_entered", overworld_snapshot)
+		return _fail("Live launch did not provide an overworld scene instance.", launch)
 
 	var action_result: Dictionary = overworld.call("validation_try_progress_action")
 	if not _require(bool(action_result.get("ok", false)), "Overworld validation action did not change live state.", action_result):
@@ -95,6 +62,201 @@ func _execute_flow() -> bool:
 	_capture_step("overworld_progressed", after_action_snapshot)
 	_log("Live validation flow completed successfully.")
 	return true
+
+func _execute_boot_to_skirmish_town_battle_flow() -> bool:
+	var launch := await _enter_live_skirmish_overworld()
+	if not bool(launch.get("ok", false)):
+		return false
+	var overworld = launch.get("overworld", null)
+	if overworld == null:
+		return _fail("Live launch did not provide an overworld scene instance.", launch)
+
+	var town_route := await _route_from_overworld_to_scene(overworld, "town", "player", TOWN_SCENE)
+	if not _require(bool(town_route.get("ok", false)), "Could not route from the live overworld into a player-owned town.", town_route):
+		return false
+	var town = town_route.get("scene", null)
+	if town == null:
+		return _fail("Town route completed without a town scene instance.", town_route)
+	await _settle_frames(6)
+
+	var town_snapshot: Dictionary = town.call("validation_snapshot")
+	town_snapshot["route_history"] = town_route.get("history", [])
+	_capture_step("town_entered", town_snapshot)
+
+	var town_action: Dictionary = town.call("validation_try_progress_action")
+	if not _require(bool(town_action.get("ok", false)), "Town validation action did not change live state.", town_action):
+		return false
+	await _settle_frames(6)
+	var town_after_snapshot: Dictionary = town.call("validation_snapshot")
+	town_after_snapshot["progress_action"] = town_action
+	_capture_step("town_progressed", town_after_snapshot)
+
+	var leave_result: Dictionary = town.call("validation_leave_town")
+	if not _require(bool(leave_result.get("ok", false)), "Town validation could not leave through the live router.", leave_result):
+		return false
+	var post_town_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if post_town_overworld == null:
+		return _fail("Leaving town did not route back into the overworld scene.", leave_result)
+	await _settle_frames(6)
+	var overworld_after_town: Dictionary = post_town_overworld.call("validation_snapshot")
+	overworld_after_town["town_exit"] = leave_result
+	_capture_step("overworld_after_town", overworld_after_town)
+
+	var battle_route := await _route_from_overworld_to_scene(post_town_overworld, "encounter", "", BATTLE_SCENE)
+	if not _require(bool(battle_route.get("ok", false)), "Could not route from the live overworld into a battle encounter.", battle_route):
+		return false
+	var battle = battle_route.get("scene", null)
+	if battle == null:
+		return _fail("Battle route completed without a battle scene instance.", battle_route)
+	await _settle_frames(6)
+
+	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
+	battle_snapshot["route_history"] = battle_route.get("history", [])
+	_capture_step("battle_entered", battle_snapshot)
+
+	var battle_actions := []
+	var battle_progress_captured := false
+	var current_battle = battle
+	for _action_index in range(MAX_VALIDATION_BATTLE_ACTIONS):
+		if current_battle == null:
+			break
+		var battle_action: Dictionary = current_battle.call("validation_try_progress_action")
+		battle_actions.append(battle_action.duplicate(true))
+		if not _require(bool(battle_action.get("ok", false)), "Battle validation action did not change live state.", battle_action):
+			return false
+		await _settle_frames(6)
+		var current_scene = get_tree().current_scene
+		if current_scene == null:
+			continue
+		var scene_path := String(current_scene.scene_file_path)
+		if scene_path == BATTLE_SCENE and not battle_progress_captured:
+			var battle_mid_snapshot: Dictionary = current_scene.call("validation_snapshot")
+			battle_mid_snapshot["progress_action"] = battle_action
+			_capture_step("battle_progressed", battle_mid_snapshot)
+			battle_progress_captured = true
+		if scene_path == OVERWORLD_SCENE:
+			var overworld_after_battle: Dictionary = current_scene.call("validation_snapshot")
+			overworld_after_battle["battle_actions"] = battle_actions
+			_capture_step("overworld_after_battle", overworld_after_battle)
+			_log("Live validation flow completed successfully.")
+			return true
+		if scene_path != BATTLE_SCENE:
+			return _fail(
+				"Battle validation routed to an unexpected scene.",
+				{
+					"scene_path": scene_path,
+					"battle_actions": battle_actions,
+				}
+			)
+		current_battle = current_scene
+
+	var final_battle_payload := {"battle_actions": battle_actions}
+	if current_battle != null and String(current_battle.scene_file_path) == BATTLE_SCENE:
+		final_battle_payload["battle_snapshot"] = current_battle.call("validation_snapshot")
+	return _fail("Battle validation did not resolve within the action budget.", final_battle_payload)
+
+func _enter_live_skirmish_overworld() -> Dictionary:
+	_log("Waiting for main menu boot route.")
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		_fail("Boot did not reach the main menu scene.", {})
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var menu_snapshot: Dictionary = menu.call("validation_snapshot")
+	if not _require(int(menu_snapshot.get("skirmish_count", 0)) > 0, "Main menu skirmish browser did not populate.", menu_snapshot):
+		return {"ok": false}
+	menu.call("validation_open_skirmish_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_skirmish", String(_config.get("scenario_id", "")))),
+		"Requested skirmish scenario is not available in the live menu.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	if not _require(
+		bool(menu.call("validation_set_difficulty", String(_config.get("difficulty", "")))),
+		"Requested difficulty is not available in the live menu.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	menu_snapshot = menu.call("validation_snapshot")
+	_capture_step("main_menu", menu_snapshot)
+
+	var launch_result: Dictionary = menu.call("validation_start_selected_skirmish")
+	if not _require(bool(launch_result.get("started", false)), "Skirmish launch did not stage an active session.", launch_result):
+		return {"ok": false}
+
+	_log("Waiting for overworld route after live menu launch.")
+	var overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if overworld == null:
+		_fail("Live launch did not route into the overworld scene.", {"launch": launch_result})
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var overworld_snapshot: Dictionary = overworld.call("validation_snapshot")
+	if not _require(String(overworld_snapshot.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Overworld session scenario id did not match the requested live launch.", overworld_snapshot):
+		return {"ok": false}
+	if not _require(String(overworld_snapshot.get("game_state", "")) == "overworld", "Overworld scene did not hold an overworld game state.", overworld_snapshot):
+		return {"ok": false}
+	if not _require(int(overworld_snapshot.get("movement_current", 0)) > 0, "Overworld scene started without any current movement budget.", overworld_snapshot):
+		return {"ok": false}
+	var latest_summary: Dictionary = SaveService.latest_loadable_summary()
+	if not _require(not latest_summary.is_empty(), "Autosave summary was not available after routing into the overworld.", overworld_snapshot):
+		return {"ok": false}
+	if not _require(String(latest_summary.get("scenario_id", "")) == String(_config.get("scenario_id", "")), "Autosave summary scenario id did not match the launched scenario.", latest_summary):
+		return {"ok": false}
+	overworld_snapshot["autosave_summary"] = latest_summary
+	_capture_step("overworld_entered", overworld_snapshot)
+	return {
+		"ok": true,
+		"overworld": overworld,
+	}
+
+func _route_from_overworld_to_scene(overworld, target_kind: String, owner_id: String, destination_scene: String) -> Dictionary:
+	var history := []
+	var current_overworld = overworld
+	for _step_index in range(MAX_VALIDATION_ROUTE_STEPS):
+		if current_overworld == null:
+			break
+		var route_result: Dictionary = current_overworld.call("validation_route_step_to_nearest_target", target_kind, owner_id)
+		history.append(route_result.duplicate(true))
+		if not bool(route_result.get("ok", false)):
+			return {
+				"ok": false,
+				"target_kind": target_kind,
+				"destination_scene": destination_scene,
+				"history": history,
+				"message": String(route_result.get("message", "Route step failed.")),
+			}
+		await _settle_frames(6)
+		var current_scene = get_tree().current_scene
+		if current_scene == null:
+			continue
+		var scene_path := String(current_scene.scene_file_path)
+		if scene_path == destination_scene:
+			return {
+				"ok": true,
+				"scene": current_scene,
+				"history": history,
+			}
+		if scene_path != OVERWORLD_SCENE:
+			return {
+				"ok": false,
+				"target_kind": target_kind,
+				"destination_scene": destination_scene,
+				"scene_path": scene_path,
+				"history": history,
+				"message": "Route entered an unexpected scene.",
+			}
+		current_overworld = current_scene
+	return {
+		"ok": false,
+		"target_kind": target_kind,
+		"destination_scene": destination_scene,
+		"history": history,
+		"message": "Route did not reach the requested scene within the step budget.",
+	}
 
 func _parse_user_args(args: Array) -> Dictionary:
 	var config := {
@@ -109,7 +271,7 @@ func _parse_user_args(args: Array) -> Dictionary:
 		if arg == "--live-validation":
 			config["enabled"] = true
 			if String(config.get("flow", "")) == "":
-				config["flow"] = FLOW_BOOT_TO_SKIRMISH_OVERWORLD
+				config["flow"] = FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE
 			continue
 		if arg.begins_with("--live-validation-flow="):
 			config["enabled"] = true
@@ -128,7 +290,7 @@ func _parse_user_args(args: Array) -> Dictionary:
 			config["output_dir"] = arg.trim_prefix("--live-validation-output=")
 			continue
 	if bool(config.get("enabled", false)) and String(config.get("flow", "")) == "":
-		config["flow"] = FLOW_BOOT_TO_SKIRMISH_OVERWORLD
+		config["flow"] = FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE
 	return config
 
 func _resolve_output_dir(path_value: String) -> String:

@@ -13,6 +13,7 @@ CONTENT_SERVICE_PATH = ROOT / "scripts" / "autoload" / "ContentService.gd"
 SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
 CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
 SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
+LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
 APP_ROUTER_PATH = ROOT / "scripts" / "autoload" / "AppRouter.gd"
 SESSION_STATE_PATH = ROOT / "scripts" / "autoload" / "SessionState.gd"
 SESSION_STATE_STORE_PATH = ROOT / "scripts" / "core" / "SessionStateStore.gd"
@@ -43,6 +44,7 @@ BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
 BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
+RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -4277,6 +4279,61 @@ def validate_town_defense_battle_flow(errors: list[str]) -> None:
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required town-defense routing token: {required_token}")
 
 
+def validate_live_client_harness(errors: list[str]) -> None:
+    required_paths = (
+        LIVE_VALIDATION_HARNESS_PATH,
+        RUN_LIVE_FLOW_HARNESS_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing live-validation harness file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    harness_text = LIVE_VALIDATION_HARNESS_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"',
+        'const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"',
+        "const TOWN_SCENE :=",
+        "const BATTLE_SCENE :=",
+        "func _enter_live_skirmish_overworld",
+        "func _route_from_overworld_to_scene",
+        'town_entered',
+        'town_progressed',
+        'battle_entered',
+        'overworld_after_battle',
+        'validation_route_step_to_nearest_target',
+        'validation_try_progress_action',
+    ):
+        ensure(required_token in harness_text, errors, f"LiveValidationHarness.gd is missing required routed-harness token: {required_token}")
+
+    runner_text = RUN_LIVE_FLOW_HARNESS_PATH.read_text(encoding="utf-8")
+    ensure(
+        'DEFAULT_FLOW = "boot_to_skirmish_town_battle"' in runner_text,
+        errors,
+        "run_live_flow_harness.py must default to the richer town-and-battle live flow",
+    )
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("func validation_snapshot", "func validation_open_skirmish_stage", "func validation_start_selected_skirmish"):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required live-harness token: {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("func validation_snapshot", "func validation_try_progress_action", "func validation_route_step_to_nearest_target"):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required live-harness token: {required_token}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("func validation_snapshot", "func validation_try_progress_action", "func validation_leave_town"):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required live-harness token: {required_token}")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("func validation_snapshot", "func validation_try_progress_action", "func _preferred_validation_action_id"):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required live-harness token: {required_token}")
+
+
 def main() -> int:
     errors: list[str] = []
     validate_content(errors)
@@ -4314,6 +4371,7 @@ def main() -> int:
     validate_authored_scenario_identity(errors)
     validate_battle_surrender_pursuit_aftermath(errors)
     validate_town_defense_battle_flow(errors)
+    validate_live_client_harness(errors)
     validate_in_session_save_controls(errors)
 
     if errors:
@@ -4367,6 +4425,7 @@ def main() -> int:
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
     print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
+    print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, encounter routing, battle actions, and routed return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     return 0
 

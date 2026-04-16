@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_FLOW = "boot_to_skirmish_overworld"
+DEFAULT_FLOW = "boot_to_skirmish_town_battle"
 DEFAULT_DISPLAY = ":99"
 
 
