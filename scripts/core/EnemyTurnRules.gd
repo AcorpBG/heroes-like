@@ -590,7 +590,14 @@ static func _choose_recruit_destination(
 	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
-	if not best_rebuild.is_empty():
+	if (
+		not best_rebuild.is_empty()
+		and not EnemyAdventureRulesScript.has_available_raid_commander(
+			session,
+			faction_id,
+			EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
+		)
+	):
 		return {"type": "rebuild", "roster_hero_id": String(best_rebuild.get("roster_hero_id", ""))}
 	if current_defense < int(round(float(defense_target) * 0.72)):
 		return {"type": "garrison"}
@@ -686,7 +693,10 @@ static func _best_commander_rebuild_target(
 			continue
 		if String(entry_value.get("roster_hero_id", "")) == "":
 			continue
-		if String(entry_value.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE)) == EnemyAdventureRulesScript.COMMANDER_STATUS_ACTIVE:
+		var commander_status := String(entry_value.get("status", EnemyAdventureRulesScript.COMMANDER_STATUS_AVAILABLE))
+		if commander_status == EnemyAdventureRulesScript.COMMANDER_STATUS_ACTIVE:
+			continue
+		if commander_status == EnemyAdventureRulesScript.COMMANDER_STATUS_RECOVERING and int(entry_value.get("recovery_day", 0)) > int(session.day):
 			continue
 		var continuity := EnemyAdventureRulesScript.commander_army_continuity(entry_value)
 		var need: int = max(0, int(continuity.get("rebuild_need", 0)))
@@ -703,6 +713,7 @@ static func _best_commander_rebuild_target(
 			best_score = score
 			best = {
 				"roster_hero_id": String(entry_value.get("roster_hero_id", "")),
+				"status": commander_status,
 				"need": need,
 				"score": score,
 			}

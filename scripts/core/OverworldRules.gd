@@ -2658,7 +2658,14 @@ static func _player_reserve_delivery_candidates(
 			continue
 		var target_position = Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
 		var distance = abs(source_position.x - target_position.x) + abs(source_position.y - target_position.y)
-		if distance > max_range:
+		var front = _town_front_state(session, town)
+		var occupation = _town_occupation_state(session, town)
+		var emergency_range_bonus := 0
+		if bool(front.get("active", false)) and String(front.get("mode", "")) == "retake":
+			emergency_range_bonus += 2
+		if bool(occupation.get("active", false)):
+			emergency_range_bonus += 2
+		if distance > max_range + emergency_range_bonus:
 			continue
 		var threat_state = _town_command_risk_state(session, town)
 		var recovery = _town_recovery_state(session, town)
@@ -2668,6 +2675,10 @@ static func _player_reserve_delivery_candidates(
 		priority += int(threat_state.get("visible_marching", 0)) * 22
 		if bool(threat_state.get("hidden_targeting", false)):
 			priority += 10
+		if bool(front.get("active", false)) and String(front.get("mode", "")) == "retake":
+			priority += 26 + int(round(float(int(front.get("priority_bonus", 0))) / 8.0))
+		if bool(occupation.get("active", false)):
+			priority += 18 + int(occupation.get("pressure", 0)) * 12 + min(28, int(occupation.get("locked_headcount", 0)) * 2)
 		priority += int(recovery.get("pressure", 0)) * 18
 		priority += int(logistics.get("disrupted_count", 0)) * 18
 		priority += int(logistics.get("threatened_count", 0)) * 10

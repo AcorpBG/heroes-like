@@ -25,6 +25,8 @@ func _run() -> void:
 		return
 	if not _run_enemy_town_assault_regression():
 		return
+	if not _run_long_horizon_strategic_layer_regression():
+		return
 	if not _run_save_restore_hero_intercept_resume_regression():
 		return
 	if not _run_save_restore_town_assault_resume_regression():
@@ -232,6 +234,7 @@ func _run_hostile_commander_recovery_regression() -> bool:
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
 	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
 	var states = session.overworld.get("enemy_states", [])
 	for index in range(states.size()):
 		var state = states[index]
@@ -436,6 +439,7 @@ func _run_hostile_commander_field_victory_regression() -> bool:
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
 	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
 	var states = session.overworld.get("enemy_states", [])
 	for index in range(states.size()):
 		var state = states[index]
@@ -1147,6 +1151,212 @@ func _run_enemy_town_assault_regression() -> bool:
 		return false
 	return true
 
+func _run_long_horizon_strategic_layer_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	if not _capture_duskfen_for_long_horizon(session):
+		return false
+
+	var captured_town := _town_by_placement(session, "duskfen_bastion")
+	var occupation_before: Dictionary = OverworldRules.town_occupation_state(session, captured_town)
+	var front_before: Dictionary = OverworldRules.town_front_state(session, captured_town)
+	if not bool(occupation_before.get("active", false)) or not bool(front_before.get("active", false)):
+		push_error("Core systems smoke: long-horizon setup did not create occupied retake-front town state.")
+		get_tree().quit(1)
+		return false
+
+	var source_town_id := "riverwatch_hold"
+	var route_node_id := "river_free_company"
+	_set_resource_node_controller(session, route_node_id, "player")
+	_set_town_available_recruits(
+		session,
+		source_town_id,
+		{
+			"unit_river_guard": 7,
+			"unit_ember_archer": 5,
+		}
+	)
+	var source_recruits_before := _recruit_payload_total(_town_by_placement(session, source_town_id).get("available_recruits", {}))
+	_set_active_hero_position(session, Vector2i(0, 4))
+	_set_active_hero_movement(session, int(session.overworld.get("movement", {}).get("max", 0)))
+	var response_result := OverworldRules.perform_context_action(session, "site_response")
+	if not bool(response_result.get("ok", false)):
+		push_error("Core systems smoke: long-horizon route-response order could not be issued.")
+		get_tree().quit(1)
+		return false
+
+	var route_node := _resource_node_by_placement(session, route_node_id)
+	var delivery_state: Dictionary = OverworldRules._resource_site_delivery_state(session, route_node)
+	if not bool(delivery_state.get("active", false)):
+		push_error("Core systems smoke: long-horizon route-response order did not create a reserve convoy.")
+		get_tree().quit(1)
+		return false
+	if String(delivery_state.get("target_kind", "")) != "town" or String(delivery_state.get("target_id", "")) != "duskfen_bastion":
+		push_error("Core systems smoke: reserve convoy did not prioritize the occupied retake-front town.")
+		get_tree().quit(1)
+		return false
+	if _recruit_payload_total(delivery_state.get("manifest", {})) <= 0:
+		push_error("Core systems smoke: reserve convoy carried no recruits.")
+		get_tree().quit(1)
+		return false
+	if _recruit_payload_total(_town_by_placement(session, source_town_id).get("available_recruits", {})) >= source_recruits_before:
+		push_error("Core systems smoke: reserve convoy did not reserve recruits from its source town.")
+		get_tree().quit(1)
+		return false
+
+	session.game_state = "overworld"
+	var save_path := SaveService.save_manual_session(session.to_dict(), 1)
+	if save_path == "":
+		push_error("Core systems smoke: long-horizon convoy state could not be saved before day advance.")
+		get_tree().quit(1)
+		return false
+	var summary := SaveService.inspect_manual_slot(1)
+	if not SaveService.can_load_summary(summary):
+		push_error("Core systems smoke: long-horizon convoy save summary was not loadable.")
+		get_tree().quit(1)
+		return false
+	var restored = SaveService.restore_session_from_summary(summary)
+	if restored == null:
+		push_error("Core systems smoke: long-horizon convoy save did not restore through SaveService.")
+		get_tree().quit(1)
+		return false
+	var restored_delivery: Dictionary = OverworldRules._resource_site_delivery_state(restored, _resource_node_by_placement(restored, route_node_id))
+	if String(restored_delivery.get("target_id", "")) != "duskfen_bastion" or _recruit_payload_total(restored_delivery.get("manifest", {})) <= 0:
+		push_error("Core systems smoke: restored long-horizon convoy lost its target or manifest.")
+		get_tree().quit(1)
+		return false
+	if int(OverworldRules.town_occupation_state(restored, _town_by_placement(restored, "duskfen_bastion")).get("pressure", 0)) != int(occupation_before.get("pressure", 0)):
+		push_error("Core systems smoke: restored long-horizon save changed occupied-town pressure before play resumed.")
+		get_tree().quit(1)
+		return false
+
+	session = restored
+	_append_route_disruption_raid(session, route_node_id)
+	var block_state: Dictionary = OverworldRules._resource_site_delivery_interception(session, _resource_node_by_placement(session, route_node_id))
+	if not bool(block_state.get("blocks_delivery", false)):
+		push_error("Core systems smoke: route disruption raid did not block the active reserve convoy.")
+		get_tree().quit(1)
+		return false
+	var target_garrison_before := _army_stack_headcount(_town_by_placement(session, "duskfen_bastion").get("garrison", []))
+	var enemy_pressure_before := int(_enemy_state_by_faction(session, "faction_mireclaw").get("pressure", 0))
+	var enemy_treasury_before := int(_enemy_state_by_faction(session, "faction_mireclaw").get("treasury", {}).get("gold", 0))
+	var day_before := int(session.day)
+	var turn_result := OverworldRules.end_turn(session)
+	if not bool(turn_result.get("ok", false)):
+		push_error("Core systems smoke: long-horizon day advance failed.")
+		get_tree().quit(1)
+		return false
+	if int(session.day) != day_before + 1:
+		push_error("Core systems smoke: long-horizon day advance did not increment the day.")
+		get_tree().quit(1)
+		return false
+	var disrupted_node := _resource_node_by_placement(session, route_node_id)
+	if String(disrupted_node.get("delivery_controller_id", "")) != "":
+		push_error("Core systems smoke: disrupted reserve convoy was not cleared from the route.")
+		get_tree().quit(1)
+		return false
+	if String(disrupted_node.get("collected_by_faction_id", "")) != "faction_mireclaw":
+		push_error("Core systems smoke: route disruption did not transfer the logistics site to the hostile faction.")
+		get_tree().quit(1)
+		return false
+	if _army_stack_headcount(_town_by_placement(session, "duskfen_bastion").get("garrison", [])) != target_garrison_before:
+		push_error("Core systems smoke: blocked convoy still reinforced the occupied target town.")
+		get_tree().quit(1)
+		return false
+	if int(_enemy_state_by_faction(session, "faction_mireclaw").get("pressure", 0)) <= enemy_pressure_before:
+		push_error("Core systems smoke: route disruption did not raise hostile strategic pressure.")
+		get_tree().quit(1)
+		return false
+	if int(_enemy_state_by_faction(session, "faction_mireclaw").get("treasury", {}).get("gold", 0)) <= enemy_treasury_before:
+		push_error("Core systems smoke: route disruption did not add seized logistics value to hostile treasury.")
+		get_tree().quit(1)
+		return false
+	var occupation_after: Dictionary = OverworldRules.town_occupation_state(session, _town_by_placement(session, "duskfen_bastion"))
+	if int(occupation_after.get("pressure", 0)) >= int(occupation_before.get("pressure", 0)):
+		push_error("Core systems smoke: occupied-town pacification did not progress across the long-horizon day.")
+		get_tree().quit(1)
+		return false
+	var disrupted_restore = _clone_session(session)
+	if String(_resource_node_by_placement(disrupted_restore, route_node_id).get("delivery_controller_id", "")) != "":
+		push_error("Core systems smoke: restored disrupted route resurrected a cleared convoy.")
+		get_tree().quit(1)
+		return false
+	if int(OverworldRules.town_occupation_state(disrupted_restore, _town_by_placement(disrupted_restore, "duskfen_bastion")).get("pressure", 0)) != int(occupation_after.get("pressure", 0)):
+		push_error("Core systems smoke: restored disrupted route lost occupied-town pressure continuity.")
+		get_tree().quit(1)
+		return false
+
+	if not _run_long_horizon_enemy_recruit_allocation_regression():
+		return false
+	return true
+
+func _run_long_horizon_enemy_recruit_allocation_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var roster_hero_id := _stage_shattered_enemy_commander(session)
+	if roster_hero_id == "":
+		return false
+	_set_enemy_pressure(session, "faction_mireclaw", 0)
+	_set_enemy_treasury(session, "faction_mireclaw", {"gold": 9000, "wood": 80, "ore": 80})
+	_set_town_garrison(session, "duskfen_bastion", [])
+	_set_town_available_recruits(session, "duskfen_bastion", {"unit_mire_slinger": 4})
+	var garrison_before := _army_stack_headcount(_town_by_placement(session, "duskfen_bastion").get("garrison", []))
+	var rebuild_before := EnemyAdventureRules.commander_army_continuity(
+		_enemy_commander_entry(_enemy_state_by_faction(session, "faction_mireclaw"), roster_hero_id)
+	)
+	if int(rebuild_before.get("current_strength", 0)) != 0 or int(rebuild_before.get("rebuild_need", 0)) <= 0:
+		push_error("Core systems smoke: long-horizon rebuild setup did not create a shattered commander host.")
+		get_tree().quit(1)
+		return false
+	EnemyTurnRules.run_enemy_turn(session)
+	var garrison_after := _army_stack_headcount(_town_by_placement(session, "duskfen_bastion").get("garrison", []))
+	var rebuild_after_garrison := EnemyAdventureRules.commander_army_continuity(
+		_enemy_commander_entry(_enemy_state_by_faction(session, "faction_mireclaw"), roster_hero_id)
+	)
+	if garrison_after <= garrison_before:
+		push_error("Core systems smoke: underdefended enemy town did not spend first recruits on its garrison.")
+		get_tree().quit(1)
+		return false
+	if int(rebuild_after_garrison.get("current_strength", 0)) > 0:
+		push_error("Core systems smoke: enemy recruitment rebuilt a commander before covering an exposed town.")
+		get_tree().quit(1)
+		return false
+
+	var recovery_ready_entry := _enemy_commander_entry(_enemy_state_by_faction(session, "faction_mireclaw"), roster_hero_id)
+	session.day = max(int(session.day), int(recovery_ready_entry.get("recovery_day", session.day)))
+	_set_enemy_treasury(session, "faction_mireclaw", {"gold": 9000, "wood": 80, "ore": 80})
+	_set_town_garrison(session, "duskfen_bastion", [{"unit_id": "unit_bog_brute", "count": 50}])
+	_set_town_available_recruits(session, "duskfen_bastion", {"unit_mire_slinger": 5})
+	EnemyTurnRules.run_enemy_turn(session)
+	var rebuilt_entry := _enemy_commander_entry(_enemy_state_by_faction(session, "faction_mireclaw"), roster_hero_id)
+	var rebuilt_continuity := EnemyAdventureRules.commander_army_continuity(rebuilt_entry)
+	if int(rebuilt_continuity.get("current_strength", 0)) <= 0:
+		push_error("Core systems smoke: defended enemy town did not spend later recruits on commander rebuild continuity.")
+		get_tree().quit(1)
+		return false
+	if int(rebuilt_continuity.get("current_strength", 0)) >= int(rebuilt_continuity.get("base_strength", 0)):
+		push_error("Core systems smoke: commander rebuild jumped to full strength instead of preserving long-horizon rebuild debt.")
+		get_tree().quit(1)
+		return false
+	var restored = _clone_session(session)
+	var restored_entry := _enemy_commander_entry(_enemy_state_by_faction(restored, "faction_mireclaw"), roster_hero_id)
+	var restored_continuity := EnemyAdventureRules.commander_army_continuity(restored_entry)
+	if int(restored_continuity.get("current_strength", 0)) != int(rebuilt_continuity.get("current_strength", 0)):
+		push_error("Core systems smoke: restored long-horizon commander rebuild strength changed unexpectedly.")
+		get_tree().quit(1)
+		return false
+	if EnemyAdventureRules.commander_army_brief(restored_entry) == "":
+		push_error("Core systems smoke: rebuilt but scarred commander did not surface army-continuity detail.")
+		get_tree().quit(1)
+		return false
+	return true
+
 func _run_save_restore_hero_intercept_resume_regression() -> bool:
 	var session = ScenarioFactory.create_session(
 		SCENARIO_ID,
@@ -1352,6 +1562,141 @@ func _run_enemy_opening_turn_regression() -> bool:
 		return false
 	return true
 
+func _capture_duskfen_for_long_horizon(session) -> bool:
+	var town := _town_by_placement(session, "duskfen_bastion")
+	if town.is_empty():
+		push_error("Core systems smoke: long-horizon coverage is missing Duskfen Bastion.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(session, Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+	var result := OverworldRules.capture_active_town(session)
+	if String(result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: long-horizon setup could not enter the Duskfen assault battle.")
+		get_tree().quit(1)
+		return false
+	for index in range(session.battle.get("stacks", []).size()):
+		var stack = session.battle.get("stacks", [])[index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+			continue
+		stack["total_health"] = 0
+		session.battle["stacks"][index] = stack
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "victory":
+		push_error("Core systems smoke: long-horizon Duskfen assault did not resolve as a player victory.")
+		get_tree().quit(1)
+		return false
+	if String(_town_by_placement(session, "duskfen_bastion").get("owner", "")) != "player":
+		push_error("Core systems smoke: long-horizon Duskfen assault did not transfer ownership.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _append_route_disruption_raid(session, node_id: String) -> void:
+	var node := _resource_node_by_placement(session, node_id)
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "long_horizon_route_breaker",
+			"encounter_id": "encounter_mire_raid",
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"difficulty": "pressure",
+			"combat_seed": 991440,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": true,
+			"goal_distance": 0,
+			"target_kind": "resource",
+			"target_placement_id": node_id,
+			"target_label": "Free Company Yard route",
+			"goal_x": int(node.get("x", 0)),
+			"goal_y": int(node.get("y", 0)),
+			"delivery_intercept_node_placement_id": node_id,
+		},
+		session
+	)
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+
+func _stage_shattered_enemy_commander(session) -> String:
+	OverworldRules.normalize_overworld_state(session)
+	EnemyTurnRules.normalize_enemy_states(session)
+	var states = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != "faction_mireclaw":
+			continue
+		var roster = state.get("commander_roster", [])
+		for roster_index in range(roster.size()):
+			var entry = roster[roster_index]
+			if not (entry is Dictionary):
+				continue
+			entry["status"] = EnemyAdventureRules.COMMANDER_STATUS_AVAILABLE
+			entry["active_placement_id"] = ""
+			entry["recovery_day"] = 0
+			roster[roster_index] = entry
+		state["commander_roster"] = roster
+		state["pressure"] = 0
+		state["raid_counter"] = 0
+		state["commander_counter"] = 0
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
+
+	_set_active_hero_position(session, Vector2i(2, 2))
+	var raid := EnemyAdventureRules.ensure_raid_army(
+		{
+			"placement_id": "long_horizon_rebuild_raid",
+			"encounter_id": "encounter_mire_raid",
+			"x": 3,
+			"y": 2,
+			"difficulty": "pressure",
+			"combat_seed": 991441,
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 1,
+			"arrived": false,
+			"goal_distance": 1,
+			"target_kind": "town",
+			"target_placement_id": "riverwatch_hold",
+			"target_label": "Riverwatch Hold",
+			"target_x": 0,
+			"target_y": 2,
+			"goal_x": 2,
+			"goal_y": 2,
+		},
+		session
+	)
+	var roster_hero_id := String(raid.get("enemy_commander_state", {}).get("roster_hero_id", ""))
+	if roster_hero_id == "":
+		push_error("Core systems smoke: long-horizon rebuild setup failed to assign a hostile commander.")
+		get_tree().quit(1)
+		return ""
+	var encounters = session.overworld.get("encounters", [])
+	encounters.append(raid)
+	session.overworld["encounters"] = encounters
+	raid = _register_raid_commander_deployment(session, "faction_mireclaw", "long_horizon_rebuild_raid", roster_hero_id)
+	if raid.is_empty():
+		push_error("Core systems smoke: long-horizon rebuild setup could not register commander deployment.")
+		get_tree().quit(1)
+		return ""
+	var engage_result := OverworldRules.try_move(session, 1, 0)
+	if String(engage_result.get("route", "")) != "battle" or session.battle.is_empty():
+		push_error("Core systems smoke: long-horizon rebuild setup failed to enter commander battle.")
+		get_tree().quit(1)
+		return ""
+	for stack_index in range(session.battle.get("stacks", []).size()):
+		var stack = session.battle.get("stacks", [])[stack_index]
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+			continue
+		stack["total_health"] = 0
+		session.battle["stacks"][stack_index] = stack
+	var outcome := BattleRules.resolve_if_battle_ready(session)
+	if String(outcome.get("state", "")) != "victory":
+		push_error("Core systems smoke: long-horizon rebuild setup did not defeat the hostile commander.")
+		get_tree().quit(1)
+		return ""
+	return roster_hero_id
+
 func _set_active_hero_position(session, tile: Vector2i) -> void:
 	var position := {"x": tile.x, "y": tile.y}
 	session.overworld["hero_position"] = position.duplicate(true)
@@ -1422,6 +1767,16 @@ func _set_town_available_recruits(session, placement_id: String, recruits: Dicti
 			break
 	session.overworld["towns"] = towns
 
+func _set_town_garrison(session, placement_id: String, garrison: Array) -> void:
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			town["garrison"] = garrison.duplicate(true)
+			towns[index] = town
+			break
+	session.overworld["towns"] = towns
+
 func _set_resource_node_controller(session, placement_id: String, controller_id: String) -> void:
 	var nodes = session.overworld.get("resource_nodes", [])
 	for index in range(nodes.size()):
@@ -1431,6 +1786,27 @@ func _set_resource_node_controller(session, placement_id: String, controller_id:
 			nodes[index] = node
 			break
 	session.overworld["resource_nodes"] = nodes
+
+func _set_enemy_treasury(session, faction_id: String, resources: Dictionary) -> void:
+	var states = session.overworld.get("enemy_states", [])
+	for index in range(states.size()):
+		var state = states[index]
+		if not (state is Dictionary) or String(state.get("faction_id", "")) != faction_id:
+			continue
+		state["treasury"] = resources.duplicate(true)
+		states[index] = state
+		break
+	session.overworld["enemy_states"] = states
+
+func _army_stack_headcount(stacks: Variant) -> int:
+	var total := 0
+	if not (stacks is Array):
+		return total
+	for stack in stacks:
+		if not (stack is Dictionary):
+			continue
+		total += max(0, int(stack.get("count", 0)))
+	return total
 
 func _clone_session(session):
 	var clone = SessionState.new_session_data()

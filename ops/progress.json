@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T06:50:27Z",
+  "updatedAt": "2026-04-16T07:20:28Z",
   "status": "completed",
-  "currentPhase": "live-routed-full-campaign-arc-validation",
-  "currentSliceId": "phase-6-live-routed-full-campaign-arc-validation",
-  "currentSliceTitle": "Extend the live routed-client validation harness through a complete authored campaign arc",
+  "currentPhase": "long-horizon-strategic-play-quality",
+  "currentSliceId": "phase-6-long-horizon-strategic-play-quality",
+  "currentSliceTitle": "Improve and validate long-horizon strategic enemy pressure, economy, convoy, commander, and save continuity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the full campaign arc live validation slice: boot_to_campaign_full_arc now starts from the shipped MainMenu campaign browser, clears all Reedfall chapters through routed gameplay and real outcome actions, proves intermediate carryover and save/resume semantics, verifies finale campaign-complete outcome state, and confirms completed-browser replay/default-action behavior with campaign-scoped save summaries.",
+  "currentSliceNotes": "Completed the long-horizon strategic play-quality slice in core rules and focused smoke coverage: occupied retake-front towns now pull emergency reserve-delivery priority, hostile route disruption can scatter saved convoy state into pressure and treasury, enemy recruit allocation now respects commander recovery timing plus exposed-town garrison needs before rebuilding scarred commanders, and repository-local plus live routed validation passed cleanly.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",
@@ -1082,9 +1082,25 @@
       "title": "Extend the live routed-client validation harness through the full Reedfall campaign arc and completed-campaign browser semantics",
       "status": "completed",
       "difficulty": "high"
+    },
+    {
+      "id": "phase-6-long-horizon-strategic-play-quality",
+      "title": "Improve long-horizon strategic enemy pressure, town economy, convoy disruption, commander rebuild continuity, and save/load resilience",
+      "status": "completed",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "phase-6-long-horizon-strategic-play-quality-validation",
+      "title": "Validate long-horizon strategic play quality through repository, headless Godot, visual smoke, and live routed-client coverage",
+      "status": "completed",
+      "difficulty": "very_high"
     }
   ],
   "notes": [
+    "This run improved long-horizon strategic play quality by making occupied retake-front towns eligible for emergency reserve-delivery priority, so player town recruits can flow into contested captured towns through the existing logistics-site response path.",
+    "Enemy recruitment now balances scarred commander rebuilds against exposed-town garrison needs: recovering commanders are not rebuilt early, underdefended towns get first claim when another commander can still take the field, and later recruits rebuild commanders partially through existing army-continuity state.",
+    "Focused core smoke coverage now proves a multi-day captured-town occupation, reserve convoy save/restore, route-disruption interception, hostile pressure and treasury fallout, occupied-town pacification continuity, commander recovery timing, partial rebuild debt, and restored army-continuity summaries.",
+    "Validation passed cleanly for python3 tests/validate_repo.py, Python bytecode compilation, JSON parsing, SAVE_VERSION 9 verification, tests/core_systems_regression_smoke.tscn, overworld/town-battle/menu-outcome visual smoke scenes, full Godot headless boot, and the live boot_to_skirmish_resolved_outcome harness with 29 captured routed-client steps.",
     "This run extended the shipped routed-client validation harness through the full Lanterns Through Reedfall arc: the new boot_to_campaign_full_arc flow starts at the real MainMenu campaign browser, routes through every authored chapter via overworld, town, battle, and outcome shells, and uses real next-chapter or completion actions rather than progression writes.",
     "The full-arc harness now proves intermediate carryover, campaign-scoped latest-save and manual-save summaries, outcome save/resume, finale campaign-complete recap or arc state, completed campaign browser status, replay/default-action semantics, and the absence of a bogus finale next-chapter unlock. Latest passing report: .artifacts/live_flow_smoke/20260416T064533Z/live_validation_report.json.",
     "Repository-local validation passed via python3 tests/validate_repo.py, Godot 4.6.2 headless boot, tests/core_systems_regression_smoke.tscn, tests/overworld_visual_smoke.tscn, tests/town_battle_visual_smoke.tscn, tests/menu_outcome_visual_smoke.tscn, and python3 tests/run_live_flow_harness.py --flow boot_to_campaign_full_arc --campaign campaign_reedfall --scenario river-pass --difficulty story --manual-slot 2.",
