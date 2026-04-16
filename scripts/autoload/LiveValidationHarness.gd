@@ -26,6 +26,9 @@ const DEFEAT_OUTCOME_MENU_ACTION_STEP_ID := "main_menu_after_defeat_outcome_acti
 const CAMPAIGN_OUTCOME_SAVE_STEP_ID := "campaign_outcome_saved"
 const CAMPAIGN_OUTCOME_MENU_RETURN_STEP_ID := "main_menu_after_campaign_outcome_return"
 const CAMPAIGN_OUTCOME_RESUME_STEP_ID := "campaign_outcome_resumed"
+const CAMPAIGN_NEXT_CHAPTER_SAVE_STEP_ID := "campaign_next_chapter_saved"
+const CAMPAIGN_NEXT_CHAPTER_MENU_RETURN_STEP_ID := "main_menu_after_campaign_next_chapter_return"
+const CAMPAIGN_NEXT_CHAPTER_RESUME_STEP_ID := "campaign_next_chapter_resumed"
 const CAMPAIGN_DEFEAT_OUTCOME_SAVE_STEP_ID := "campaign_defeat_outcome_saved"
 const CAMPAIGN_DEFEAT_OUTCOME_MENU_RETURN_STEP_ID := "main_menu_after_campaign_defeat_outcome_return"
 const CAMPAIGN_DEFEAT_OUTCOME_RESUME_STEP_ID := "campaign_defeat_outcome_resumed"
@@ -1460,14 +1463,17 @@ func _verify_campaign_outcome_route_and_followups(outcome_route: Dictionary, man
 	await _settle_frames(8)
 
 	var next_scenario_id := next_action_id.trim_prefix("campaign_start:")
+	var authored_next_scenario_id := _campaign_next_scenario_id(campaign_id, scenario_id)
+	if not _require(authored_next_scenario_id != "", "Campaign victory did not have an authored downstream chapter to validate.", {"campaign_id": campaign_id, "scenario_id": scenario_id}):
+		return false
+	if not _require(next_scenario_id == authored_next_scenario_id, "Campaign next-chapter action did not target the authored downstream chapter.", {"action_id": next_action_id, "authored_next_scenario_id": authored_next_scenario_id}):
+		return false
 	var next_snapshot: Dictionary = next_overworld.call("validation_snapshot")
 	if not _require(String(next_snapshot.get("scenario_id", "")) == next_scenario_id, "Campaign follow-up routed to the wrong chapter scenario.", next_snapshot):
 		return false
 	if not _require(next_scenario_id != scenario_id, "Campaign follow-up replayed the completed chapter instead of launching the next chapter.", next_snapshot):
 		return false
-	if not _require(String(next_snapshot.get("launch_mode", "")) == "campaign", "Campaign follow-up did not preserve campaign launch mode.", next_snapshot):
-		return false
-	if not _require(String(next_snapshot.get("game_state", "")) == "overworld", "Campaign follow-up did not route into an overworld game state.", next_snapshot):
+	if not _assert_campaign_downstream_overworld_snapshot(next_snapshot, campaign_id, next_scenario_id, scenario_id, "Campaign follow-up overworld"):
 		return false
 	var followup_summary := SaveService.latest_loadable_summary()
 	if not _assert_campaign_save_summary(
@@ -1483,6 +1489,34 @@ func _verify_campaign_outcome_route_and_followups(outcome_route: Dictionary, man
 	next_snapshot["latest_save_summary"] = followup_summary
 	next_snapshot["previous_outcome_signature"] = _outcome_resume_signature(resumed_outcome_snapshot)
 	_capture_step("campaign_next_chapter_overworld_entered", next_snapshot)
+
+	var downstream_resume := await _save_and_resume_campaign_overworld_from_main_menu(
+		next_overworld,
+		manual_slot,
+		next_scenario_id,
+		campaign_id,
+		"campaign_next_chapter"
+	)
+	if not bool(downstream_resume.get("ok", false)):
+		return false
+	next_overworld = downstream_resume.get("overworld", next_overworld)
+	var resumed_next_snapshot: Dictionary = downstream_resume.get("snapshot", {})
+	if not _assert_campaign_downstream_overworld_snapshot(resumed_next_snapshot, campaign_id, next_scenario_id, scenario_id, "Resumed campaign follow-up overworld"):
+		return false
+
+	var skirmish_baseline := await _launch_skirmish_baseline_from_campaign_overworld(
+		next_overworld,
+		next_scenario_id,
+		campaign_id
+	)
+	if not bool(skirmish_baseline.get("ok", false)):
+		return false
+	var skirmish_snapshot: Dictionary = skirmish_baseline.get("snapshot", {})
+	if not _assert_downstream_carryover_differs_from_skirmish(resumed_next_snapshot, skirmish_snapshot, scenario_id):
+		return false
+	skirmish_snapshot["campaign_carryover_signature"] = _campaign_carryover_signature(resumed_next_snapshot)
+	skirmish_snapshot["skirmish_baseline_signature"] = _campaign_carryover_signature(skirmish_snapshot)
+	_capture_step("campaign_next_chapter_skirmish_baseline", skirmish_snapshot)
 	return true
 
 func _verify_campaign_defeat_outcome_route_and_followups(outcome_route: Dictionary, manual_slot: int) -> bool:
@@ -1554,6 +1588,253 @@ func _verify_campaign_defeat_outcome_route_and_followups(outcome_route: Dictiona
 	browser_snapshot["latest_save_summary"] = latest_summary
 	browser_snapshot["previous_outcome_signature"] = _outcome_resume_signature(resumed_outcome_snapshot)
 	_capture_step(CAMPAIGN_DEFEAT_OUTCOME_MENU_ACTION_STEP_ID, browser_snapshot)
+	return true
+
+func _save_and_resume_campaign_overworld_from_main_menu(
+	overworld,
+	manual_slot: int,
+	scenario_id: String,
+	campaign_id: String,
+	step_prefix: String
+) -> Dictionary:
+	var save_step_id := CAMPAIGN_NEXT_CHAPTER_SAVE_STEP_ID if step_prefix == "campaign_next_chapter" else "%s_saved" % step_prefix
+	var menu_return_step_id := CAMPAIGN_NEXT_CHAPTER_MENU_RETURN_STEP_ID if step_prefix == "campaign_next_chapter" else "main_menu_after_%s_return" % step_prefix
+	var resume_step_id := CAMPAIGN_NEXT_CHAPTER_RESUME_STEP_ID if step_prefix == "campaign_next_chapter" else "%s_resumed" % step_prefix
+	if not _require(
+		bool(overworld.call("validation_select_save_slot", manual_slot)),
+		"Campaign downstream overworld could not select the requested manual save slot.",
+		{
+			"manual_slot": manual_slot,
+			"overworld_snapshot": overworld.call("validation_snapshot"),
+		}
+	):
+		return {"ok": false}
+	await _settle_frames(3)
+
+	var overworld_save: Dictionary = overworld.call("validation_save_to_selected_slot")
+	var overworld_save_summary := _dictionary_value(overworld_save.get("summary", {}))
+	if not _require(bool(overworld_save.get("ok", false)), "Campaign downstream overworld could not write a manual save from the shipped shell.", overworld_save):
+		return {"ok": false}
+	if not _require(int(overworld_save.get("selected_slot", 0)) == manual_slot, "Campaign downstream overworld saved into the wrong manual slot.", overworld_save):
+		return {"ok": false}
+	if not _assert_campaign_save_summary(
+		overworld_save_summary,
+		"Campaign downstream manual save",
+		scenario_id,
+		campaign_id,
+		"in_progress",
+		"overworld"
+	):
+		return {"ok": false}
+	await _settle_frames(6)
+
+	var overworld_saved_snapshot: Dictionary = overworld.call("validation_snapshot")
+	overworld_saved_snapshot["manual_save"] = overworld_save
+	_capture_step(save_step_id, overworld_saved_snapshot)
+	var expected_resume_signature := _campaign_carryover_signature(overworld_saved_snapshot)
+
+	var overworld_menu_return: Dictionary = overworld.call("validation_return_to_menu")
+	if not _require(bool(overworld_menu_return.get("ok", false)), "Campaign downstream overworld could not return to the main menu through the live router.", overworld_menu_return):
+		return {"ok": false}
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		_fail("Returning to menu after the downstream campaign save did not reach the main menu scene.", overworld_menu_return)
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var latest_summary_after_menu_return := SaveService.latest_loadable_summary()
+	if not _assert_campaign_save_summary(
+		latest_summary_after_menu_return,
+		"Latest campaign downstream save after menu return",
+		scenario_id,
+		campaign_id,
+		"in_progress",
+		"overworld"
+	):
+		return {"ok": false}
+	var menu_after_return_snapshot: Dictionary = menu.call("validation_snapshot")
+	menu_after_return_snapshot["menu_return"] = overworld_menu_return
+	menu_after_return_snapshot["latest_save_summary"] = latest_summary_after_menu_return
+	_capture_step(menu_return_step_id, menu_after_return_snapshot)
+
+	menu.call("validation_open_saves_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_save_summary", "manual", str(manual_slot))),
+		"Main menu save browser could not select the downstream campaign manual save.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	await _settle_frames(4)
+
+	var overworld_resume: Dictionary = menu.call("validation_resume_selected_save")
+	if not _require(bool(overworld_resume.get("ok", false)), "Main menu resume did not restore the selected downstream campaign save.", overworld_resume):
+		return {"ok": false}
+	var resumed_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if resumed_overworld == null:
+		_fail("Resuming the downstream campaign save did not route back into the overworld scene.", overworld_resume)
+		return {"ok": false}
+	await _settle_frames(6)
+
+	var resumed_snapshot: Dictionary = resumed_overworld.call("validation_snapshot")
+	if not _require(String(resumed_snapshot.get("game_state", "")) == "overworld", "Resumed downstream campaign save did not restore overworld state.", resumed_snapshot):
+		return {"ok": false}
+	var actual_resume_signature := _campaign_carryover_signature(resumed_snapshot)
+	if not _require(
+		JSON.stringify(actual_resume_signature) == JSON.stringify(expected_resume_signature),
+		"Downstream campaign manual save/resume did not preserve imported carryover state.",
+		{
+			"expected": expected_resume_signature,
+			"actual": actual_resume_signature,
+		}
+	):
+		return {"ok": false}
+	resumed_snapshot["resume"] = overworld_resume
+	_capture_step(resume_step_id, resumed_snapshot)
+	return {
+		"ok": true,
+		"overworld": resumed_overworld,
+		"snapshot": resumed_snapshot,
+	}
+
+func _launch_skirmish_baseline_from_campaign_overworld(overworld, scenario_id: String, campaign_id: String) -> Dictionary:
+	var menu_return: Dictionary = overworld.call("validation_return_to_menu")
+	if not _require(bool(menu_return.get("ok", false)), "Resumed downstream campaign overworld could not return to menu before skirmish contrast.", menu_return):
+		return {"ok": false}
+	var menu = await _wait_for_scene(MAIN_MENU_SCENE, 10000)
+	if menu == null:
+		_fail("Returning to menu before downstream skirmish contrast did not reach the main menu.", menu_return)
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var latest_summary := SaveService.latest_loadable_summary()
+	if not _assert_campaign_save_summary(
+		latest_summary,
+		"Latest campaign downstream save before skirmish contrast",
+		scenario_id,
+		campaign_id,
+		"in_progress",
+		"overworld"
+	):
+		return {"ok": false}
+	var menu_snapshot: Dictionary = menu.call("validation_snapshot")
+	menu_snapshot["menu_return"] = menu_return
+	menu_snapshot["latest_save_summary"] = latest_summary
+	_capture_step("main_menu_after_campaign_next_chapter_resume_return", menu_snapshot)
+
+	menu.call("validation_open_skirmish_stage")
+	await _settle_frames(4)
+	if not _require(
+		bool(menu.call("validation_select_skirmish", scenario_id)),
+		"Downstream chapter was not available for fresh skirmish contrast through the shipped browser.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	if not _require(
+		bool(menu.call("validation_set_difficulty", String(_config.get("difficulty", "")))),
+		"Requested difficulty was not available for downstream skirmish contrast.",
+		menu.call("validation_snapshot")
+	):
+		return {"ok": false}
+	await _settle_frames(4)
+	var skirmish_menu_snapshot: Dictionary = menu.call("validation_snapshot")
+	_capture_step("main_menu_downstream_skirmish_selected", skirmish_menu_snapshot)
+
+	var launch_result: Dictionary = menu.call("validation_start_selected_skirmish")
+	if not _require(bool(launch_result.get("started", false)), "Downstream skirmish contrast launch did not stage a skirmish session.", launch_result):
+		return {"ok": false}
+	var skirmish_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if skirmish_overworld == null:
+		_fail("Downstream skirmish contrast did not route into the overworld scene.", launch_result)
+		return {"ok": false}
+	await _settle_frames(8)
+
+	var skirmish_snapshot: Dictionary = skirmish_overworld.call("validation_snapshot")
+	if not _require(String(skirmish_snapshot.get("scenario_id", "")) == scenario_id, "Downstream skirmish contrast launched the wrong scenario.", skirmish_snapshot):
+		return {"ok": false}
+	if not _require(String(skirmish_snapshot.get("launch_mode", "")) == "skirmish", "Downstream skirmish contrast did not preserve skirmish launch mode.", skirmish_snapshot):
+		return {"ok": false}
+	if not _require(String(skirmish_snapshot.get("campaign_id", "")) == "", "Fresh skirmish contrast inherited campaign id state.", skirmish_snapshot):
+		return {"ok": false}
+	if not _require(_dictionary_value(skirmish_snapshot.get("carryover_flags", {})).is_empty(), "Fresh skirmish contrast inherited campaign carryover flags.", skirmish_snapshot):
+		return {"ok": false}
+	skirmish_snapshot["launch_result"] = launch_result
+	return {
+		"ok": true,
+		"overworld": skirmish_overworld,
+		"snapshot": skirmish_snapshot,
+	}
+
+func _assert_campaign_downstream_overworld_snapshot(
+	snapshot: Dictionary,
+	campaign_id: String,
+	scenario_id: String,
+	previous_scenario_id: String,
+	label: String
+) -> bool:
+	if not _require(String(snapshot.get("scenario_id", "")) == scenario_id, "%s scenario id did not match the downstream chapter." % label, snapshot):
+		return false
+	if not _require(String(snapshot.get("launch_mode", "")) == "campaign", "%s did not preserve campaign launch mode." % label, snapshot):
+		return false
+	if not _require(String(snapshot.get("campaign_id", "")) == campaign_id, "%s did not preserve campaign id." % label, snapshot):
+		return false
+	if not _require(String(snapshot.get("campaign_chapter_label", "")) != "", "%s did not expose campaign chapter metadata." % label, snapshot):
+		return false
+	if not _require(String(snapshot.get("campaign_previous_scenario_id", "")) == previous_scenario_id, "%s did not record the imported carryover source chapter." % label, snapshot):
+		return false
+	if not _require(String(snapshot.get("game_state", "")) == "overworld", "%s did not route into an overworld game state." % label, snapshot):
+		return false
+	var commander := _dictionary_value(snapshot.get("commander_state", {}))
+	if not _require(String(commander.get("hero_id", "")) != "", "%s did not expose imported commander state." % label, snapshot):
+		return false
+	if not _require(not _string_array_value(commander.get("spell_ids", [])).is_empty(), "%s did not expose a real spellbook payload." % label, snapshot):
+		return false
+	var latest_summary := _dictionary_value(snapshot.get("latest_save_summary", {}))
+	return _assert_campaign_save_summary(
+		latest_summary,
+		"%s latest save" % label,
+		scenario_id,
+		campaign_id,
+		"in_progress",
+		"overworld"
+	)
+
+func _assert_downstream_carryover_differs_from_skirmish(
+	campaign_snapshot: Dictionary,
+	skirmish_snapshot: Dictionary,
+	previous_scenario_id: String
+) -> bool:
+	var campaign_signature := _campaign_carryover_signature(campaign_snapshot)
+	var skirmish_signature := _campaign_carryover_signature(skirmish_snapshot)
+	var campaign_commander := _dictionary_value(campaign_signature.get("commander", {}))
+	var skirmish_commander := _dictionary_value(skirmish_signature.get("commander", {}))
+	var material_differences: Array[String] = []
+	if JSON.stringify(campaign_signature.get("resources", {})) != JSON.stringify(skirmish_signature.get("resources", {})):
+		material_differences.append("resources")
+	if int(campaign_commander.get("level", 1)) > int(skirmish_commander.get("level", 1)) or int(campaign_commander.get("experience", 0)) > int(skirmish_commander.get("experience", 0)):
+		material_differences.append("commander_progression")
+	if JSON.stringify(campaign_commander.get("artifact_ids", [])) != JSON.stringify(skirmish_commander.get("artifact_ids", [])):
+		material_differences.append("artifacts")
+	if JSON.stringify(campaign_commander.get("spell_ids", [])) != JSON.stringify(skirmish_commander.get("spell_ids", [])):
+		material_differences.append("spellbook")
+	if JSON.stringify(campaign_signature.get("carryover_flags", {})) != JSON.stringify(skirmish_signature.get("carryover_flags", {})):
+		material_differences.append("flags")
+
+	var campaign_flags := _dictionary_value(campaign_signature.get("carryover_flags", {}))
+	if not _require(not campaign_flags.is_empty(), "Downstream campaign launch did not import any carryover flags.", {"campaign": campaign_signature, "skirmish": skirmish_signature}):
+		return false
+	if previous_scenario_id == "river-pass" and not _require(bool(campaign_flags.get("carryover_pass_cleared", false)), "River Pass carryover did not import the authored pass-cleared flag.", {"campaign": campaign_signature, "skirmish": skirmish_signature}):
+		return false
+	if not _require("resources" in material_differences, "Downstream campaign resources did not materially differ from a fresh skirmish launch.", {"campaign": campaign_signature, "skirmish": skirmish_signature, "differences": material_differences}):
+		return false
+	if previous_scenario_id == "river-pass" and not _require("artifacts" in material_differences, "River Pass artifact carryover did not materially differ from a fresh skirmish launch.", {"campaign": campaign_signature, "skirmish": skirmish_signature, "differences": material_differences}):
+		return false
+	if not _require(
+		"commander_progression" in material_differences or "spellbook" in material_differences or "artifacts" in material_differences,
+		"Downstream campaign commander payload did not materially differ from a fresh skirmish launch.",
+		{"campaign": campaign_signature, "skirmish": skirmish_signature, "differences": material_differences}
+	):
+		return false
 	return true
 
 func _assert_campaign_outcome_snapshot(
@@ -1676,6 +1957,18 @@ func _campaign_scenario_entry(campaign_id: String, scenario_id: String) -> Dicti
 		if entry is Dictionary and String(entry.get("scenario_id", "")) == scenario_id:
 			return entry.duplicate(true)
 	return {}
+
+func _campaign_next_scenario_id(campaign_id: String, scenario_id: String) -> String:
+	var campaign := ContentService.get_campaign(campaign_id)
+	var found_current := false
+	for entry in campaign.get("scenarios", []):
+		if not (entry is Dictionary):
+			continue
+		var entry_scenario_id := String(entry.get("scenario_id", ""))
+		if found_current:
+			return entry_scenario_id
+		found_current = entry_scenario_id == scenario_id
+	return ""
 
 func _campaign_aftermath_text(campaign_id: String, scenario_id: String, status: String) -> String:
 	var entry := _campaign_scenario_entry(campaign_id, scenario_id)
@@ -1965,6 +2258,43 @@ func _outcome_resume_signature(snapshot: Dictionary) -> Dictionary:
 		"aftermath_summary": String(snapshot.get("aftermath_summary", "")),
 		"journal_summary": String(snapshot.get("journal_summary", "")),
 		"action_ids": _string_array_value(snapshot.get("action_ids", [])),
+	}
+
+func _campaign_carryover_signature(snapshot: Dictionary) -> Dictionary:
+	var commander := _dictionary_value(snapshot.get("commander_state", {}))
+	return {
+		"scenario_id": String(snapshot.get("scenario_id", "")),
+		"difficulty": String(snapshot.get("difficulty", "")),
+		"launch_mode": String(snapshot.get("launch_mode", "")),
+		"game_state": String(snapshot.get("game_state", "")),
+		"day": int(snapshot.get("day", 0)),
+		"campaign_id": String(snapshot.get("campaign_id", "")),
+		"campaign_chapter_label": String(snapshot.get("campaign_chapter_label", "")),
+		"campaign_previous_scenario_id": String(snapshot.get("campaign_previous_scenario_id", "")),
+		"resources": _dictionary_value(snapshot.get("resources", {})),
+		"carryover_flags": _dictionary_value(snapshot.get("carryover_flags", {})),
+		"commander": {
+			"hero_id": String(commander.get("hero_id", "")),
+			"hero_name": String(commander.get("hero_name", "")),
+			"level": int(commander.get("level", 1)),
+			"experience": int(commander.get("experience", 0)),
+			"next_level_experience": int(commander.get("next_level_experience", 250)),
+			"command": _command_signature(commander.get("command", {})),
+			"specialties": _string_array_value(commander.get("specialties", [])),
+			"spell_ids": _string_array_value(commander.get("spell_ids", [])),
+			"artifact_ids": _string_array_value(commander.get("artifact_ids", [])),
+			"artifacts": _dictionary_value(commander.get("artifacts", {})),
+			"army": _dictionary_value(commander.get("army", {})),
+		},
+	}
+
+func _command_signature(value: Variant) -> Dictionary:
+	var command := _dictionary_value(value)
+	return {
+		"attack": int(command.get("attack", 0)),
+		"defense": int(command.get("defense", 0)),
+		"power": int(command.get("power", 0)),
+		"knowledge": int(command.get("knowledge", 0)),
 	}
 
 func _prefixed_step_id(step_prefix: String, suffix: String) -> String:

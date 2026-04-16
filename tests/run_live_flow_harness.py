@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--flow",
         default=DEFAULT_FLOW,
-        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for skirmish defeat, {CAMPAIGN_OUTCOME_FLOW} for campaign victory, or {CAMPAIGN_DEFEAT_OUTCOME_FLOW} for campaign defeat validation.",
+        help=f"Harness flow id to run. Use {DEFEAT_OUTCOME_FLOW} for skirmish defeat, {CAMPAIGN_OUTCOME_FLOW} for campaign victory plus downstream carryover continuation, or {CAMPAIGN_DEFEAT_OUTCOME_FLOW} for campaign defeat validation.",
     )
     parser.add_argument("--campaign", default="campaign_reedfall", help="Campaign id to select through the real campaign browser.")
     parser.add_argument("--scenario", default="river-pass", help="Scenario id to launch through the real menu.")

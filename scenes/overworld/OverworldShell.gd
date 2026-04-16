@@ -848,6 +848,82 @@ func _validation_enemy_pressure_states() -> Array:
 		)
 	return rows
 
+func _validation_carryover_flags() -> Dictionary:
+	var flags := {}
+	for flag_key_value in _session.flags.keys():
+		var flag_key := String(flag_key_value)
+		if not flag_key.begins_with("carryover_"):
+			continue
+		flags[flag_key] = bool(_session.flags.get(flag_key, false))
+	return flags
+
+func _validation_commander_state() -> Dictionary:
+	var hero := _duplicate_dictionary(_session.overworld.get("hero", {}))
+	var spellbook := _duplicate_dictionary(hero.get("spellbook", {}))
+	var mana := _duplicate_dictionary(spellbook.get("mana", {}))
+	return {
+		"hero_id": String(hero.get("id", "")),
+		"hero_name": String(hero.get("name", "")),
+		"level": int(hero.get("level", 1)),
+		"experience": int(hero.get("experience", 0)),
+		"next_level_experience": int(hero.get("next_level_experience", 250)),
+		"command": _validation_command_state(hero.get("command", {})),
+		"specialties": _validation_string_array(hero.get("specialties", [])),
+		"pending_specialty_choices": _validation_string_array(hero.get("pending_specialty_choices", [])),
+		"spell_ids": _validation_string_array(spellbook.get("known_spell_ids", [])),
+		"mana": {
+			"current": int(mana.get("current", 0)),
+			"max": int(mana.get("max", 0)),
+		},
+		"artifact_ids": _validation_string_array(ArtifactRules.owned_artifact_ids(hero)),
+		"artifacts": ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {})),
+		"army": _validation_army_state(hero.get("army", _session.overworld.get("army", {}))),
+	}
+
+func _validation_army_state(value: Variant) -> Dictionary:
+	var army := _duplicate_dictionary(value)
+	var stacks := []
+	var stack_values = army.get("stacks", [])
+	if stack_values is Array:
+		for stack_value in stack_values:
+			if not (stack_value is Dictionary):
+				continue
+			stacks.append(
+				{
+					"unit_id": String(stack_value.get("unit_id", "")),
+					"count": int(stack_value.get("count", 0)),
+				}
+			)
+	return {
+		"army_id": String(army.get("id", "")),
+		"army_name": String(army.get("name", "")),
+		"stacks": stacks,
+	}
+
+func _validation_command_state(value: Variant) -> Dictionary:
+	var command := _duplicate_dictionary(value)
+	return {
+		"attack": int(command.get("attack", 0)),
+		"defense": int(command.get("defense", 0)),
+		"power": int(command.get("power", 0)),
+		"knowledge": int(command.get("knowledge", 0)),
+	}
+
+func _validation_string_array(value: Variant) -> Array:
+	var items := []
+	if value is Array:
+		for item_value in value:
+			var item := ""
+			if item_value is Dictionary:
+				var item_dictionary: Dictionary = item_value
+				item = String(item_dictionary.get("id", item_dictionary.get("specialty_id", "")))
+			else:
+				item = str(item_value)
+			if item != "" and item not in items:
+				items.append(item)
+	items.sort()
+	return items
+
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
@@ -858,6 +934,10 @@ func validation_snapshot() -> Dictionary:
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
+		"campaign_id": String(_session.flags.get("campaign_id", "")),
+		"campaign_name": String(_session.flags.get("campaign_name", "")),
+		"campaign_chapter_label": String(_session.flags.get("campaign_chapter_label", "")),
+		"campaign_previous_scenario_id": String(_session.flags.get("campaign_previous_scenario_id", "")),
 		"scenario_status": _session.scenario_status,
 		"game_state": _session.game_state,
 		"day": _session.day,
@@ -879,11 +959,43 @@ func validation_snapshot() -> Dictionary:
 		"active_context_type": String(active_context.get("type", "")),
 		"context_action_ids": _validation_context_action_ids(),
 		"active_town": active_town,
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"commander_state": _validation_commander_state(),
+		"carryover_flags": _validation_carryover_flags(),
 		"objective_summary": OverworldRules.describe_objectives(_session),
 		"threat_summary": OverworldRules.describe_enemy_threats(_session),
 		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+	}
+
+func validation_select_save_slot(slot: int) -> bool:
+	var normalized_slot := int(slot)
+	if not SaveService.get_manual_slot_ids().has(normalized_slot):
+		return false
+	SaveService.set_selected_manual_slot(normalized_slot)
+	_refresh_save_slot_picker()
+	return SaveService.get_selected_manual_slot() == normalized_slot
+
+func validation_save_to_selected_slot() -> Dictionary:
+	var selected_slot := SaveService.get_selected_manual_slot()
+	_on_save_pressed()
+	var summary := SaveService.inspect_manual_slot(selected_slot)
+	return {
+		"ok": SaveService.can_load_summary(summary),
+		"selected_slot": selected_slot,
+		"summary": summary,
+		"message": _last_message,
+	}
+
+func validation_return_to_menu() -> Dictionary:
+	var scenario_id := _session.scenario_id
+	var resume_target := SaveService.resume_target_for_session(_session)
+	_on_menu_pressed()
+	return {
+		"ok": true,
+		"scenario_id": scenario_id,
+		"resume_target": resume_target,
 	}
 
 func validation_end_turn() -> Dictionary:
