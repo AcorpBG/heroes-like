@@ -134,6 +134,7 @@ Difficulty: High
 - add a release-facing battle-side order consequence board inside the real battle shell using current action availability, damage windows, retaliation exposure, spell windows, objective pull, and likely hostile reply state instead of a planner or advisor layer
 - turn battle withdrawal into a release-facing surrender and pursuit aftermath slice through the existing battle, outcome, town, economy, campaign, and shell flow so retreat and surrender produce different strategic fallout instead of sharing one generic exit path
 - deepen tactical combat with authored battlefield cover lines, obstruction lanes, and firing-lane identities that change movement pressure, ranged threat, commander safety, target priority, and battle summaries through the existing battle pipeline
+- add save-backed captured-town pacification so enemy towns taken by the player stay partially occupied for several days, with reduced output, held local recruits, and slower stabilization under hostile retake pressure instead of instantly acting like fully normalized assets
 - add a shared release-facing visual kit with original heraldry marks, compact summary surfacing, and cohesive panel or control treatment across the already-converted main menu, overworld, town, battle, and outcome shells without moving logic out of current scene or core boundaries
 
 ## Immediate execution order
@@ -258,6 +259,8 @@ Difficulty: High
 116. [completed] Turn town recruitment and reserve production into frontline reinforcement delivery through the existing town, overworld, hero-command, logistics-site, and enemy-turn systems.
 117. [completed] Re-run repository-local validation and Godot headless boot for reserve-delivery routing, convoy surfacing, hostile disruption, and save-version preservation.
 118. [completed] Turn live frontline reserve-delivery pressure into real convoy interception clashes through the existing overworld, encounter, battle, town, and enemy-turn systems.
+119. [completed] Add save-backed captured-town pacification so newly taken enemy towns stay partially occupied, operate below normal output, and remain easier to retake until secured through the existing overworld, battle, enemy-turn, and town rules.
+120. [completed] Re-run repository-local validation and Godot headless boot for occupied-town persistence, summary surfacing, hostile retake bias, and save-version preservation.
 119. [completed] Give hostile raid encounters durable commander identity seeded from faction hero rosters and existing encounter doctrine through the current enemy-turn and battle payload path.
 120. [completed] Re-run repository-local validation and Godot headless smoke coverage for hostile commander readouts, battle continuity, and save-resume preservation.
 119. [completed] Re-run repository-local validation and Godot headless boot for convoy-hunt targeting, battle-aftermath routing, interception surfacing, and save-version preservation.

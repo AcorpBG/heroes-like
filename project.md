@@ -224,6 +224,11 @@ Hostile town retake-front decision:
 - `OverworldRules.gd` updates that same front state on town capture, enemy recapture, and hostile assault aftermath, while `EnemyTurnRules.gd` plus `EnemyAdventureRules.gd` read it back into raid targeting, garrison demand, build priorities, posture, and commander deployment so lost or endangered hostile towns create durable strategic pressure
 - `TownRules.gd`, `OverworldRules.gd`, and `BattleRules.gd` only surface compact retake-front and stabilization hints from that shared payload inside current town, frontier, and assault summaries, keeping the map scenery-first, preserving save continuity on current boundaries, and keeping `SAVE_VERSION` at `9`
 
+Captured-town pacification decision:
+- towns now also keep save-backed `occupation` state on the existing town payload, recording hostile source faction, current pacification pressure, held local recruits, and last occupation event instead of inventing a separate governor or unrest subsystem
+- `OverworldRules.gd` now seeds that state when the player captures an enemy town, advances it during the normal day-roll from current recovery and logistics support, and lets the existing hostile retake-front pressure slow clearance, while income, weekly growth, reserve access, and battle readiness all read the same pacification payload before a town behaves like a normal holding
+- `TownRules.gd`, `OverworldRules.gd`, `EnemyAdventureRules.gd`, and save normalization only surface compact occupation clauses and target bias from that shared state, so hostile retake fronts remain the strategic anchor, player occupation stays legible on existing shells, and `SAVE_VERSION` remains `9`
+
 Town shell presentation decision:
 - the town scene now uses a sectioned management-shell layout with dedicated command, town hall, construction, recruitment, spellcraft, and logistics panels instead of a single stacked debug column
 - `TownRules.gd` owns the release-facing summary shaping for town identity, construction ledgers, recruit reserves, stationed defenders, visibility-safe frontier pressure, and dispatch messaging, keeping `TownShell.gd` thin and save-safe

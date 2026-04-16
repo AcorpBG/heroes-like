@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T00:00:48Z",
+  "updatedAt": "2026-04-16T00:19:02Z",
   "status": "in_progress",
-  "currentPhase": "hostile-town-retake-pressure",
-  "currentSliceId": "phase-5-hostile-town-retake-pressure",
-  "currentSliceTitle": "Give hostile factions durable retake and stabilization pressure around contested towns",
+  "currentPhase": "captured-town-pacification",
+  "currentSliceId": "phase-5-captured-town-pacification",
+  "currentSliceTitle": "Make newly captured enemy towns stay occupied and vulnerable until pacified",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the follow-on hostile-overworld slice that keeps save-backed contested-front state on towns, pushes enemy-turn raid and reinforcement priorities toward recent hostile town losses or endangered strongholds, surfaces compact retake pressure in existing frontier and town summaries, stabilizes hostile towns after failed assaults or recaptures, and preserves the same current save boundaries with focused regression coverage.",
+  "currentSliceNotes": "Completed the follow-on strategic slice that keeps save-backed pacification state on newly captured enemy towns, with held local recruits, reduced income and readiness, logistics-and-recovery-driven clearance, compact occupation surfacing on existing town and frontier summaries, stronger hostile retake scoring against occupied holdings, and continuity preserved on the current save boundaries with focused regression coverage.",
   "steps": [
     {
       "id": "phase-1-plan-and-tech-lock",

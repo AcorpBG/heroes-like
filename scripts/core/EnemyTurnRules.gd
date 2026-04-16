@@ -407,7 +407,7 @@ static func _apply_empire_income(
 	var faction_id = String(state.get("faction_id", ""))
 	for entry in town_entries:
 		var town = entry.get("town", {})
-		total_income = _merge_resource_pools(total_income, OverworldRulesScript.town_income(town))
+		total_income = _merge_resource_pools(total_income, OverworldRulesScript.town_income(town, session))
 	total_income = _merge_resource_pools(total_income, _captured_artifact_income(state))
 	if faction_id != "":
 		total_income = _merge_resource_pools(total_income, OverworldRulesScript.controlled_resource_site_income(session, faction_id))
@@ -1057,7 +1057,7 @@ static func _score_build_candidate(
 ) -> float:
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var building_id = String(building.get("id", ""))
-	var current_income: Dictionary = OverworldRulesScript.town_income(town)
+	var current_income: Dictionary = OverworldRulesScript.town_income(town, session)
 	var current_quality: int = OverworldRulesScript.town_reinforcement_quality(town, session)
 	var current_readiness: int = OverworldRulesScript.town_battle_readiness(town, session)
 	var current_pressure: int = OverworldRulesScript.town_pressure_output(town, session)
@@ -1070,7 +1070,7 @@ static func _score_build_candidate(
 		built_buildings = []
 	built_buildings.append(building_id)
 	projected_town["built_buildings"] = built_buildings
-	var projected_income: Dictionary = OverworldRulesScript.town_income(projected_town)
+	var projected_income: Dictionary = OverworldRulesScript.town_income(projected_town, session)
 	var projected_quality: int = OverworldRulesScript.town_reinforcement_quality(projected_town, session)
 	var projected_readiness: int = OverworldRulesScript.town_battle_readiness(projected_town, session)
 	var projected_pressure: int = OverworldRulesScript.town_pressure_output(projected_town, session)

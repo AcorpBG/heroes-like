@@ -690,7 +690,30 @@ func _run_enemy_town_assault_regression() -> bool:
 		push_error("Core systems smoke: town assault victory did not transfer town ownership.")
 		get_tree().quit(1)
 		return false
-	var retake_front := OverworldRules.town_front_state(session, captured_town)
+	var occupation: Dictionary = OverworldRules.town_occupation_state(session, captured_town)
+	if not bool(occupation.get("active", false)) or String(occupation.get("mode", "")) != "pacifying":
+		push_error("Core systems smoke: captured hostile town did not enter pacification.")
+		get_tree().quit(1)
+		return false
+	if int(occupation.get("days_to_clear", 0)) <= 0:
+		push_error("Core systems smoke: captured hostile town pacification did not persist a clearance window.")
+		get_tree().quit(1)
+		return false
+	if int(occupation.get("locked_headcount", 0)) <= 0:
+		push_error("Core systems smoke: captured hostile town did not hold back local recruits during pacification.")
+		get_tree().quit(1)
+		return false
+	var base_income := OverworldRules.town_income(captured_town)
+	var occupied_income := OverworldRules.town_income(captured_town, session)
+	if int(occupied_income.get("gold", 0)) >= int(base_income.get("gold", 0)):
+		push_error("Core systems smoke: occupied hostile town did not reduce income output.")
+		get_tree().quit(1)
+		return false
+	if OverworldRules.town_battle_readiness(captured_town, session) >= OverworldRules.town_battle_readiness(captured_town):
+		push_error("Core systems smoke: occupied hostile town did not reduce battle readiness.")
+		get_tree().quit(1)
+		return false
+	var retake_front: Dictionary = OverworldRules.town_front_state(session, captured_town)
 	if not bool(retake_front.get("active", false)) or String(retake_front.get("mode", "")) != "retake":
 		push_error("Core systems smoke: captured hostile town did not persist a retake-front state.")
 		get_tree().quit(1)
@@ -704,9 +727,17 @@ func _run_enemy_town_assault_regression() -> bool:
 		push_error("Core systems smoke: town summary did not surface compact hostile retake pressure after capture.")
 		get_tree().quit(1)
 		return false
+	if "occupation" not in town_summary.to_lower():
+		push_error("Core systems smoke: town summary did not surface pacification after capture.")
+		get_tree().quit(1)
+		return false
 	var frontier_watch := OverworldRules.describe_frontier_threats(session)
 	if "Retake fronts retake Duskfen Bastion" not in frontier_watch:
 		push_error("Core systems smoke: frontier watch did not surface the new hostile retake front after capture.")
+		get_tree().quit(1)
+		return false
+	if "Occupation watch:" not in frontier_watch or "Duskfen Bastion" not in frontier_watch:
+		push_error("Core systems smoke: frontier watch did not surface the occupied-town pacification watch.")
 		get_tree().quit(1)
 		return false
 	var enemy_config := _enemy_config(session, "faction_mireclaw")
@@ -718,9 +749,36 @@ func _run_enemy_town_assault_regression() -> bool:
 	var restored: Variant = SessionState.new_session_data()
 	restored.from_dict(session.to_dict())
 	OverworldRules.normalize_overworld_state(restored)
-	var restored_front := OverworldRules.town_front_state(restored, _town_by_placement(restored, "duskfen_bastion"))
+	var restored_front: Dictionary = OverworldRules.town_front_state(restored, _town_by_placement(restored, "duskfen_bastion"))
 	if not bool(restored_front.get("active", false)) or String(restored_front.get("mode", "")) != "retake":
 		push_error("Core systems smoke: restored session lost hostile retake-front continuity.")
+		get_tree().quit(1)
+		return false
+	var restored_occupation: Dictionary = OverworldRules.town_occupation_state(restored, _town_by_placement(restored, "duskfen_bastion"))
+	if not bool(restored_occupation.get("active", false)) or String(restored_occupation.get("mode", "")) != "pacifying":
+		push_error("Core systems smoke: restored session lost occupied-town pacification continuity.")
+		get_tree().quit(1)
+		return false
+	restored.day += 1
+	var advanced: Dictionary = OverworldRules._advance_town_occupation(restored, _town_by_placement(restored, "duskfen_bastion"))
+	var advanced_town: Dictionary = advanced.get("town", {})
+	var advanced_occupation: Dictionary = OverworldRules.town_occupation_state(restored, advanced_town)
+	if int(advanced_occupation.get("pressure", 0)) >= int(restored_occupation.get("pressure", 0)):
+		push_error("Core systems smoke: occupied-town pacification did not advance on a new day.")
+		get_tree().quit(1)
+		return false
+	var settling_town: Dictionary = captured_town.duplicate(true)
+	var settling_occupation: Dictionary = settling_town.get("occupation", {})
+	settling_occupation["pressure"] = 1
+	settling_town["occupation"] = settling_occupation
+	var settled: Dictionary = OverworldRules._advance_town_occupation(session, settling_town)
+	var settled_town: Dictionary = settled.get("town", {})
+	if bool(OverworldRules.town_occupation_state(session, settled_town).get("active", false)):
+		push_error("Core systems smoke: occupied-town pacification did not clear after final relief.")
+		get_tree().quit(1)
+		return false
+	if _recruit_payload_total(settled_town.get("available_recruits", {})) <= _recruit_payload_total(captured_town.get("available_recruits", {})):
+		push_error("Core systems smoke: pacified town did not release held local recruits.")
 		get_tree().quit(1)
 		return false
 
@@ -998,6 +1056,13 @@ func _town_by_placement(session, placement_id: String) -> Dictionary:
 		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
 			return town
 	return {}
+
+func _recruit_payload_total(value: Variant) -> int:
+	var total := 0
+	if value is Dictionary:
+		for unit_id_value in value.keys():
+			total += max(0, int(value.get(unit_id_value, 0)))
+	return total
 
 func _set_town_owner(session, placement_id: String, owner: String) -> void:
 	var towns = session.overworld.get("towns", [])

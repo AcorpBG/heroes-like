@@ -2532,6 +2532,9 @@ static func _town_strategic_priority_bonus(
 	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	if bool(front_state.get("active", false)) and String(front_state.get("faction_id", "")) == faction_id:
 		bonus += int(front_state.get("priority_bonus", 0))
+	var occupation_state: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
+	if bool(occupation_state.get("active", false)) and String(occupation_state.get("faction_id", "")) == faction_id:
+		bonus += int(occupation_state.get("target_bonus", 0))
 	if objective_anchor:
 		bonus += 20
 	return max(0, bonus)

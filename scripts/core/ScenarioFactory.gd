@@ -131,6 +131,8 @@ static func _build_town_states(placements: Variant) -> Array:
 			"available_recruits": {},
 			"garrison": _duplicate_array(town_template.get("garrison", [])),
 			"recovery": _duplicate_dict(placement.get("recovery", {})),
+			"front": _duplicate_dict(placement.get("front", {})),
+			"occupation": _duplicate_dict(placement.get("occupation", {})),
 		}
 		town_state["available_recruits"] = _seed_recruits_for_town_state(town_state)
 		towns.append(

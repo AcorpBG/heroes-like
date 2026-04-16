@@ -245,6 +245,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	HeroCommandRulesScript.commit_active_hero(session)
 	session.day += 1
 
+	var occupation_messages := _advance_all_town_occupations(session)
 	var recovery_messages := _advance_all_town_recovery(session)
 	var town_income := {"gold": 0, "wood": 0, "ore": 0}
 	var weekly_growth_messages := []
@@ -255,7 +256,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
 
-		var income := DifficultyRulesScript.scale_income_resources(session, _calculate_town_income(town))
+		var income := DifficultyRulesScript.scale_income_resources(session, _calculate_town_income(town, session))
 		town_income = _add_resource_sets(town_income, income)
 		if should_apply_weekly_growth:
 			var growth_summary := _describe_recruit_delta(_growth_tick_town(session, town))
@@ -288,6 +289,8 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	var town_income_summary := _describe_resource_delta(town_income)
 	if town_income_summary != "":
 		messages.append("Town income %s." % town_income_summary)
+	if not occupation_messages.is_empty():
+		messages.append("Occupation lines %s." % "; ".join(occupation_messages))
 	if not recovery_messages.is_empty():
 		messages.append("Recovery lines %s." % "; ".join(recovery_messages))
 	if not weekly_growth_messages.is_empty():
@@ -511,6 +514,8 @@ static func transition_town_control(
 	var towns = session.overworld.get("towns", [])
 	var town = town_result.get("town", {})
 	var previous_owner := String(town.get("owner", "neutral"))
+	if previous_owner != new_owner and previous_owner == "player":
+		town = _release_town_occupation_reserves(town)
 	town["owner"] = new_owner
 	town["front"] = _town_front_after_control_change(
 		session,
@@ -523,9 +528,17 @@ static func transition_town_control(
 	var available_recruits = town.get("available_recruits", {})
 	if new_owner == "player" and (
 		not (available_recruits is Dictionary)
-		or (available_recruits is Dictionary and available_recruits.is_empty())
+		or (previous_owner != "enemy" and available_recruits is Dictionary and available_recruits.is_empty())
 	):
 		town["available_recruits"] = _seed_recruits_for_town(town)
+	town["occupation"] = _town_occupation_after_control_change(
+		session,
+		town,
+		previous_owner,
+		new_owner,
+		controlling_faction_id,
+		source
+	)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 	return {
@@ -949,7 +962,7 @@ static func next_weekly_growth_day(day: int) -> int:
 	return max(day, 1) + days_until_next_weekly_growth(day)
 
 static func describe_town_context(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
-	var income := _describe_resource_delta(_calculate_town_income(town))
+	var income := _describe_resource_delta(_calculate_town_income(town, session))
 	var weekly_growth := _describe_recruit_delta(town_weekly_growth(town, session))
 	var defense := _town_defense_summary(town)
 	var readiness := town_battle_readiness(town, session)
@@ -957,6 +970,7 @@ static func describe_town_context(town: Dictionary, session: SessionStateStoreSc
 	var strategic_role := town_strategic_role(town)
 	var capital_project := town_capital_project_state(town, session)
 	var battlefront := town_battlefront_profile(town)
+	var occupation := town_occupation_state(session, town)
 	var parts := [
 		_town_name(town),
 		String(ContentService.get_faction(_town_faction_id(town)).get("name", _town_faction_id(town))),
@@ -970,6 +984,11 @@ static func describe_town_context(town: Dictionary, session: SessionStateStoreSc
 		parts.append("Daily %s" % income)
 	if weekly_growth != "":
 		parts.append("Weekly %s" % weekly_growth)
+	if bool(occupation.get("active", false)):
+		parts.append("Pacifying %d day%s" % [
+			int(occupation.get("days_to_clear", 0)),
+			"" if int(occupation.get("days_to_clear", 0)) == 1 else "s",
+		])
 	if defense != "":
 		parts.append("Defense %s" % defense)
 	if String(town.get("owner", "neutral")) == "enemy" and _town_garrison_headcount(town) > 0:
@@ -1123,6 +1142,9 @@ static func describe_frontier_threats(session: SessionStateStoreScript.SessionDa
 	var local_warning := _local_visible_threat_summary(session)
 	if local_warning != "":
 		lines.append("Local watch: %s" % local_warning)
+	var occupation_watch := _occupied_town_watch_summary(session)
+	if occupation_watch != "":
+		lines.append("Occupation watch: %s" % occupation_watch)
 	return "\n".join(lines)
 
 static func _local_visible_threat_summary(session: SessionStateStoreScript.SessionData, fallback: String = "") -> String:
@@ -1203,6 +1225,29 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 	if parts.is_empty():
 		return fallback
 	return " | ".join(parts)
+
+static func _occupied_town_watch_summary(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null:
+		return ""
+	var clauses := []
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary) or String(town_value.get("owner", "neutral")) != "player":
+			continue
+		var occupation := _town_occupation_state(session, town_value)
+		if not bool(occupation.get("active", false)):
+			continue
+		var clause := String(occupation.get("compact_summary", _town_name(town_value)))
+		var front := _town_front_state(session, town_value)
+		if bool(front.get("active", false)) and String(front.get("mode", "")) == "retake":
+			clause += " under retake pressure"
+		clauses.append(clause)
+	if clauses.is_empty():
+		return ""
+	var shown := clauses.slice(0, min(2, clauses.size()))
+	var summary := "; ".join(shown)
+	if clauses.size() > shown.size():
+		summary += "; %d more holding%s" % [clauses.size() - shown.size(), "" if clauses.size() - shown.size() == 1 else "s"]
+	return summary
 
 static func describe_enemy_threats(session: SessionStateStoreScript.SessionData) -> String:
 	return describe_frontier_threats(session)
@@ -1316,8 +1361,8 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	return _town_weekly_growth(town, session)
 
-static func town_income(town: Dictionary) -> Dictionary:
-	return _calculate_town_income(town)
+static func town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+	return _calculate_town_income(town, session)
 
 static func town_reinforcement_quality(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
 	return _town_reinforcement_quality(town, session)
@@ -1351,6 +1396,9 @@ static func town_battlefront_profile(town: Dictionary) -> Dictionary:
 
 static func town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	return _town_front_state(session, town)
+
+static func town_occupation_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	return _town_occupation_state(session, town)
 
 static func town_market_state(town: Dictionary) -> Dictionary:
 	return _town_market_state(town)
@@ -1934,6 +1982,7 @@ static func _normalize_towns(towns: Array) -> Array:
 			"garrison": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],
 			"recovery": _normalize_town_recovery_state(town.get("recovery", {})),
 			"front": _normalize_town_front_state(town.get("front", {})),
+			"occupation": _normalize_town_occupation_state(town.get("occupation", {})),
 		}
 		normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
 		if not town.has("available_recruits") or not (town.get("available_recruits") is Dictionary):
@@ -3396,7 +3445,7 @@ static func _add_army_stack(stacks: Variant, unit_id: String, amount: int) -> Ar
 static func _movement_max_from_hero(hero: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
 	return HeroCommandRulesScript.movement_max_for_hero(hero, session)
 
-static func _calculate_town_income(town: Dictionary) -> Dictionary:
+static func _calculate_town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	var income := {"gold": 0, "wood": 0, "ore": 0}
 	var built_buildings := _normalize_built_buildings_for_town_state(town)
 	for building_id_value in built_buildings:
@@ -3408,6 +3457,9 @@ static func _calculate_town_income(town: Dictionary) -> Dictionary:
 		_economy_profile_income(ContentService.get_faction(String(town_template.get("faction_id", ""))).get("economy", {}), built_buildings)
 	)
 	income = _add_resource_sets(income, _economy_profile_income(town_template.get("economy", {}), built_buildings))
+	if session != null:
+		var occupation := _town_occupation_state(session, town)
+		income = _apply_resource_percent_scale(income, 100 - int(occupation.get("income_penalty_percent", 0)))
 	return income
 
 static func _growth_tick_town(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
@@ -3437,6 +3489,8 @@ static func _town_weekly_growth(town: Dictionary, session: SessionStateStoreScri
 	growth_percent -= int(recovery.get("growth_penalty_percent", 0))
 	var capital_project := _town_capital_project_state(town, session)
 	growth_percent -= int(capital_project.get("growth_penalty_percent", 0))
+	var occupation := _town_occupation_state(session, town)
+	growth_percent -= int(occupation.get("growth_penalty_percent", 0))
 	return _apply_recruit_percent(growth, growth_percent)
 
 static func _town_reinforcement_quality(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
@@ -3451,6 +3505,8 @@ static func _town_reinforcement_quality(town: Dictionary, session: SessionStateS
 	var capital_project := town_capital_project_state(town, session)
 	quality += int(capital_project.get("quality_bonus", 0))
 	quality -= int(capital_project.get("quality_penalty", 0))
+	var occupation := _town_occupation_state(session, town)
+	quality -= int(occupation.get("quality_penalty", 0))
 	return max(0, quality)
 
 static func _town_battle_readiness(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
@@ -3472,6 +3528,8 @@ static func _town_battle_readiness(town: Dictionary, session: SessionStateStoreS
 	var capital_project := town_capital_project_state(town, session)
 	readiness += int(round(float(int(capital_project.get("defense_bonus", 0))) / 8.0))
 	readiness -= int(capital_project.get("readiness_penalty", 0))
+	var occupation := _town_occupation_state(session, town)
+	readiness -= int(occupation.get("readiness_penalty", 0))
 	return max(0, readiness)
 
 static func _town_pressure_output(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
@@ -3492,6 +3550,8 @@ static func _town_pressure_output(town: Dictionary, session: SessionStateStoreSc
 	var capital_project := town_capital_project_state(town, session)
 	pressure += int(capital_project.get("pressure_bonus", 0))
 	pressure -= int(capital_project.get("pressure_penalty", 0))
+	var occupation := _town_occupation_state(session, town)
+	pressure -= int(occupation.get("pressure_penalty", 0))
 	return max(0, pressure)
 
 static func _town_logistics_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
@@ -3967,6 +4027,19 @@ static func _normalize_town_recovery_state(value: Variant) -> Dictionary:
 		"source": String(value.get("source", "")) if value is Dictionary else "",
 	}
 
+static func _normalize_town_occupation_state(value: Variant) -> Dictionary:
+	return {
+		"state": String(value.get("state", "")) if value is Dictionary else "",
+		"faction_id": String(value.get("faction_id", "")) if value is Dictionary else "",
+		"pressure": max(0, int(value.get("pressure", 0))) if value is Dictionary else 0,
+		"initial_pressure": max(0, int(value.get("initial_pressure", 0))) if value is Dictionary else 0,
+		"start_day": max(0, int(value.get("start_day", 0))) if value is Dictionary else 0,
+		"last_event_day": max(0, int(value.get("last_event_day", 0))) if value is Dictionary else 0,
+		"last_owner": String(value.get("last_owner", "")) if value is Dictionary else "",
+		"source": String(value.get("source", "")) if value is Dictionary else "",
+		"locked_recruits": _normalize_recruit_payload(value.get("locked_recruits", {})) if value is Dictionary else {},
+	}
+
 static func _normalize_town_front_state(value: Variant) -> Dictionary:
 	return {
 		"state": String(value.get("state", "")) if value is Dictionary else "",
@@ -3977,6 +4050,91 @@ static func _normalize_town_front_state(value: Variant) -> Dictionary:
 		"capture_count": max(0, int(value.get("capture_count", 0))) if value is Dictionary else 0,
 		"source": String(value.get("source", "")) if value is Dictionary else "",
 	}
+
+static func _town_occupation_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var occupation := _normalize_town_occupation_state(town.get("occupation", {}))
+	var faction_id := String(occupation.get("faction_id", ""))
+	var pressure: int = max(0, int(occupation.get("pressure", 0)))
+	var result := {
+		"active": false,
+		"mode": "",
+		"faction_id": faction_id,
+		"enemy_label": String(ContentService.get_faction(faction_id).get("name", faction_id)) if faction_id != "" else "",
+		"pressure": pressure,
+		"initial_pressure": max(pressure, int(occupation.get("initial_pressure", 0))),
+		"days_active": 0,
+		"relief_per_day": 0,
+		"days_to_clear": 0,
+		"income_penalty_percent": 0,
+		"growth_penalty_percent": 0,
+		"quality_penalty": 0,
+		"readiness_penalty": 0,
+		"pressure_penalty": 0,
+		"locked_recruits": _normalize_recruit_payload(occupation.get("locked_recruits", {})),
+		"locked_headcount": 0,
+		"summary": "",
+		"compact_summary": "",
+		"public_clause": "",
+		"target_bonus": 0,
+		"state": occupation,
+	}
+	result["locked_headcount"] = _recruit_payload_total(result.get("locked_recruits", {}))
+	if session == null:
+		return result
+	if String(town.get("owner", "neutral")) != "player":
+		return result
+	if String(occupation.get("state", "")) != "pacifying" or faction_id == "" or pressure <= 0:
+		return result
+	var logistics := _town_logistics_state(session, town)
+	var recovery := _town_recovery_state(session, town)
+	var front := _town_front_state(session, town)
+	var front_active := bool(front.get("active", false)) and String(front.get("faction_id", "")) == faction_id
+	var relief_per_day := _town_occupation_relief_per_day(session, town, logistics, recovery, front)
+	var days_to_clear := int(ceil(float(pressure) / float(max(1, relief_per_day))))
+	var income_penalty := clampi(
+		18 + (pressure * 8) + (int(logistics.get("support_gap", 0)) * 6) + (10 if front_active else 0),
+		20,
+		75
+	)
+	var growth_penalty := clampi(
+		12 + (pressure * 9) + (int(logistics.get("support_gap", 0)) * 5) + (int(recovery.get("pressure", 0)) * 6),
+		15,
+		80
+	)
+	var quality_penalty: int = (pressure * 3) + (int(logistics.get("support_gap", 0)) * 2) + (6 if front_active else 0)
+	var readiness_penalty: int = (pressure * 4) + (int(logistics.get("support_gap", 0)) * 3) + (8 if front_active else 0)
+	var pressure_penalty: int = max(1, int(ceil(float(quality_penalty) / 5.0)))
+	var locked_headcount := int(result.get("locked_headcount", 0))
+	var reserve_clause := (
+		"%d held levy%s" % [locked_headcount, "" if locked_headcount == 1 else "ies"]
+		if locked_headcount > 0
+		else "musters still sorting under occupation orders"
+	)
+	result["active"] = true
+	result["mode"] = "pacifying"
+	result["days_active"] = max(0, session.day - int(occupation.get("start_day", session.day)))
+	result["relief_per_day"] = relief_per_day
+	result["days_to_clear"] = days_to_clear
+	result["income_penalty_percent"] = income_penalty
+	result["growth_penalty_percent"] = growth_penalty
+	result["quality_penalty"] = quality_penalty
+	result["readiness_penalty"] = readiness_penalty
+	result["pressure_penalty"] = pressure_penalty
+	result["summary"] = "%s remains under pacification for %d day%s | income -%d%% | %s." % [
+		_town_name(town),
+		days_to_clear,
+		"" if days_to_clear == 1 else "s",
+		income_penalty,
+		reserve_clause,
+	]
+	result["compact_summary"] = "%s pacifies in %d day%s" % [
+		_town_name(town),
+		days_to_clear,
+		"" if days_to_clear == 1 else "s",
+	]
+	result["public_clause"] = "occupation still thins the local musters and tax roads"
+	result["target_bonus"] = (pressure * 12) + (locked_headcount * 2) + (int(logistics.get("support_gap", 0)) * 10) + (18 if front_active else 0)
+	return result
 
 static func _town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	var front := _normalize_town_front_state(town.get("front", {}))
@@ -4184,6 +4342,116 @@ static func _town_front_stabilize_days(session: SessionStateStoreScript.SessionD
 		days += 1
 	return clampi(days, 2, 6)
 
+static func _town_occupation_relief_per_day(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	logistics: Dictionary = {},
+	recovery: Dictionary = {},
+	front: Dictionary = {}
+) -> int:
+	if session == null:
+		return 1
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town)
+	if front.is_empty():
+		front = _town_front_state(session, town)
+	var relief := 1 + int(floor(float(_town_recovery_relief_rating(session, town)) / 4.0))
+	relief += min(2, int(logistics.get("met_requirements", 0)))
+	relief -= int(logistics.get("support_gap", 0))
+	if bool(recovery.get("active", false)):
+		relief -= 1
+	if bool(front.get("active", false)) and String(front.get("mode", "")) == "retake":
+		relief -= 1
+	return clampi(relief, 1, 4)
+
+static func _town_occupation_after_control_change(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	previous_owner: String,
+	new_owner: String,
+	controlling_faction_id: String,
+	source: String
+) -> Dictionary:
+	var occupation := _normalize_town_occupation_state(town.get("occupation", {}))
+	if previous_owner == new_owner:
+		if new_owner != "player":
+			return _normalize_town_occupation_state({})
+		return occupation
+	if new_owner != "player":
+		return _normalize_town_occupation_state({})
+	if previous_owner != "enemy":
+		return _normalize_town_occupation_state({})
+	var faction_id := controlling_faction_id
+	if faction_id == "":
+		faction_id = _town_faction_id(town)
+	if faction_id == "":
+		return _normalize_town_occupation_state({})
+	var pressure := _town_occupation_seed_pressure(session, town)
+	occupation["state"] = "pacifying"
+	occupation["faction_id"] = faction_id
+	occupation["pressure"] = pressure
+	occupation["initial_pressure"] = pressure
+	occupation["start_day"] = session.day if session != null else 0
+	occupation["last_event_day"] = session.day if session != null else 0
+	occupation["last_owner"] = previous_owner
+	occupation["source"] = source
+	occupation["locked_recruits"] = {}
+	_lock_town_occupation_reserves(town, occupation)
+	return occupation
+
+static func _town_occupation_seed_pressure(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
+	var pressure := 3
+	match _town_strategic_role(town):
+		"capital":
+			pressure += 4
+		"stronghold":
+			pressure += 2
+		_:
+			pressure += 1
+	if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
+		pressure += 1
+	if _town_garrison_headcount(town) > 0:
+		pressure += 1
+	return clampi(pressure, 4, 10)
+
+static func _lock_town_occupation_reserves(town: Dictionary, occupation: Dictionary) -> void:
+	if town.is_empty():
+		return
+	var available := _normalize_recruit_payload(town.get("available_recruits", {}))
+	if available.is_empty():
+		occupation["locked_recruits"] = {}
+		return
+	var access_percent := clampi(80 - (int(occupation.get("initial_pressure", 0)) * 8), 20, 55)
+	var accessible := {}
+	var locked := {}
+	for unit_id_value in available.keys():
+		var unit_id := String(unit_id_value)
+		var count: int = max(0, int(available.get(unit_id, 0)))
+		if unit_id == "" or count <= 0:
+			continue
+		var released := int(floor(float(count) * float(access_percent) / 100.0))
+		if released <= 0:
+			released = 1
+		released = clampi(released, 0, count)
+		if released > 0:
+			accessible[unit_id] = released
+		if count > released:
+			locked[unit_id] = count - released
+	town["available_recruits"] = accessible
+	occupation["locked_recruits"] = locked
+
+static func _release_town_occupation_reserves(town: Dictionary) -> Dictionary:
+	var occupation := _normalize_town_occupation_state(town.get("occupation", {}))
+	var locked := _normalize_recruit_payload(occupation.get("locked_recruits", {}))
+	if locked.is_empty():
+		town["occupation"] = _normalize_town_occupation_state({})
+		return town
+	town["available_recruits"] = _add_recruit_growth(town.get("available_recruits", {}), locked)
+	town["occupation"] = _normalize_town_occupation_state({})
+	return town
+
 static func _town_recovery_relief_rating(session: SessionStateStoreScript.SessionData, town: Dictionary) -> int:
 	var relief := int(_town_logistics_plan(town).get("recovery_relief", 0))
 	var logistics := _town_logistics_state(session, town)
@@ -4292,6 +4560,16 @@ static func _apply_recruit_percent(recruits: Variant, percent_modifier: int) -> 
 			continue
 		adjusted[unit_id] = max(0, int(round(float(base_count) * max(0.0, float(100 + percent_modifier)) / 100.0)))
 	return adjusted
+
+static func _apply_resource_percent_scale(resources: Variant, percent: int) -> Dictionary:
+	var scaled := _normalize_resource_dict(resources)
+	var applied_percent: int = max(0, percent)
+	for resource_id in scaled.keys():
+		scaled[resource_id] = max(
+			0,
+			int(round(float(int(scaled.get(resource_id, 0))) * float(applied_percent) / 100.0))
+		)
+	return scaled
 
 static func _resource_site_family_short_label(family_id: String) -> String:
 	match family_id:
@@ -5285,6 +5563,13 @@ static func _normalize_recruit_payload(value: Variant) -> Dictionary:
 			normalized[unit_id] = count
 	return normalized
 
+static func _recruit_payload_total(value: Variant) -> int:
+	var total := 0
+	if value is Dictionary:
+		for unit_id_value in value.keys():
+			total += max(0, int(value.get(unit_id_value, 0)))
+	return total
+
 static func _describe_resource_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):
 		return ""
@@ -5372,6 +5657,55 @@ static func _find_encounter_by_placement(session: SessionStateStoreScript.Sessio
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return {"index": index, "encounter": encounter}
 	return {"index": -1, "encounter": {}}
+
+static func _advance_all_town_occupations(session: SessionStateStoreScript.SessionData) -> Array:
+	var messages := []
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
+		if not (town is Dictionary):
+			continue
+		var result := _advance_town_occupation(session, town)
+		town = result.get("town", town)
+		towns[index] = town
+		var message := String(result.get("message", ""))
+		if message != "":
+			messages.append(message)
+	session.overworld["towns"] = towns
+	return messages
+
+static func _advance_town_occupation(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var occupation := _normalize_town_occupation_state(town.get("occupation", {}))
+	if String(town.get("owner", "neutral")) != "player":
+		town["occupation"] = _normalize_town_occupation_state({})
+		return {"town": town, "message": ""}
+	if String(occupation.get("state", "")) != "pacifying" or int(occupation.get("pressure", 0)) <= 0:
+		town["occupation"] = occupation
+		return {"town": town, "message": ""}
+	var occupation_state: Dictionary = _town_occupation_state(session, town)
+	var relief_per_day: int = max(1, int(occupation_state.get("relief_per_day", 1)))
+	var pressure: int = max(0, int(occupation.get("pressure", 0)))
+	var relieved: int = min(pressure, relief_per_day)
+	occupation["pressure"] = max(0, pressure - relieved)
+	occupation["last_event_day"] = session.day if session != null else int(occupation.get("last_event_day", 0))
+	town["occupation"] = occupation
+	if int(occupation.get("pressure", 0)) <= 0:
+		var locked_headcount := _recruit_payload_total(occupation.get("locked_recruits", {}))
+		town = _release_town_occupation_reserves(town)
+		var release_clause := ""
+		if locked_headcount > 0:
+			release_clause = " %d held levy%s now answer the banner." % [
+				locked_headcount,
+				"y" if locked_headcount == 1 else "ies",
+			]
+		return {
+			"town": town,
+			"message": "%s pacifies into secure control.%s" % [_town_name(town), release_clause],
+		}
+	return {
+		"town": town,
+		"message": "%s pacification sheds %d unrest." % [_town_name(town), relieved],
+	}
 
 static func _advance_all_town_recovery(session: SessionStateStoreScript.SessionData) -> Array:
 	var messages := []
@@ -5508,6 +5842,7 @@ static func _claim_town(session: SessionStateStoreScript.SessionData, town_resul
 	)
 	town = transition.get("town", town)
 	town["recovery"] = _normalize_town_recovery_state(town.get("recovery", {}))
+	town["occupation"] = _normalize_town_occupation_state(town.get("occupation", {}))
 	var towns = session.overworld.get("towns", [])
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
