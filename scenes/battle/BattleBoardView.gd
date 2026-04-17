@@ -28,6 +28,7 @@ const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
 const SHADOW_COLOR := Color(0.025, 0.028, 0.031, 0.72)
 const TERRAIN_COLORS := {
+	"grass": Color(0.31, 0.40, 0.24, 1.0),
 	"plains": Color(0.30, 0.38, 0.24, 1.0),
 	"forest": Color(0.18, 0.31, 0.22, 1.0),
 	"swamp": Color(0.24, 0.29, 0.22, 1.0),
@@ -35,6 +36,25 @@ const TERRAIN_COLORS := {
 	"road": Color(0.35, 0.30, 0.24, 1.0),
 	"mire": Color(0.21, 0.27, 0.22, 1.0),
 }
+const TERRAIN_TEXTURE_ALIASES := {
+	"plains": "grass",
+	"grass": "grass",
+	"forest": "forest",
+	"swamp": "swamp",
+	"hills": "hills",
+	"road": "road",
+	"mire": "mire",
+}
+const TERRAIN_TEXTURE_PATHS := {
+	"grass": "res://art/battle/terrain/grass.png",
+	"forest": "res://art/battle/terrain/forest.png",
+	"swamp": "res://art/battle/terrain/swamp.png",
+	"hills": "res://art/battle/terrain/hills.png",
+	"road": "res://art/battle/terrain/road.png",
+	"mire": "res://art/battle/terrain/mire.png",
+}
+const TERRAIN_TEXTURE_MODULATE := Color(0.90, 0.91, 0.86, 0.96)
+const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.16)
 
 var _session = null
 var _battle: Dictionary = {}
@@ -45,12 +65,15 @@ var _target_stack: Dictionary = {}
 var _field_objectives: Array = []
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
+var _terrain_textures: Dictionary = {}
+var _terrain_texture_missing: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
 	custom_minimum_size = Vector2(620.0, 320.0)
 	tooltip_text = "Green hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
+	_load_terrain_textures()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -198,6 +221,9 @@ func set_battle_state(session) -> void:
 func validation_hex_layout_summary() -> Dictionary:
 	var stack_cells := _stack_cells()
 	var hex_state := BattleRulesScript.battle_hex_state_summary(_battle) if not _battle.is_empty() else {}
+	var terrain_id := _battle_terrain_id()
+	var terrain_texture_id := _terrain_texture_id(terrain_id)
+	var terrain_texture = _terrain_texture_for(terrain_id)
 	var player_input_active := String(_active_stack.get("side", "")) == "player"
 	var legal_destinations: Array = hex_state.get("legal_destinations", []) if hex_state.get("legal_destinations", []) is Array else []
 	var legal_melee_targets: Array = hex_state.get("legal_melee_targets", []) if hex_state.get("legal_melee_targets", []) is Array else []
@@ -276,6 +302,11 @@ func validation_hex_layout_summary() -> Dictionary:
 		"columns": HEX_COLUMNS,
 		"rows": HEX_ROWS,
 		"hex_count": HEX_COLUMNS * HEX_ROWS,
+		"terrain": terrain_id,
+		"terrain_texture_id": terrain_texture_id,
+		"terrain_texture_path": _terrain_texture_path_for(terrain_texture_id),
+		"terrain_texture_loaded": terrain_texture != null,
+		"terrain_texture_fallback": terrain_texture == null,
 		"distance": int(_battle.get("distance", 1)),
 		"player_stack_count": _player_stacks.size(),
 		"enemy_stack_count": _enemy_stacks.size(),
@@ -312,6 +343,25 @@ func validation_hex_layout_summary() -> Dictionary:
 		"selected_target_attackable": bool(selected_legality.get("attackable", false)),
 		"has_active_cell": _stack_has_cell(String(_battle.get("active_stack_id", "")), stack_cells),
 		"has_selected_target_cell": _stack_has_cell(selected_target_id, stack_cells),
+	}
+
+func validation_terrain_backdrop_summary() -> Dictionary:
+	var terrain_id := _battle_terrain_id()
+	var texture_id := _terrain_texture_id(terrain_id)
+	var texture_path := _terrain_texture_path_for(texture_id)
+	var texture = _terrain_texture_for(terrain_id)
+	var texture_size := Vector2.ZERO
+	if texture != null:
+		texture_size = texture.get_size()
+	return {
+		"terrain": terrain_id,
+		"texture_id": texture_id,
+		"texture_path": texture_path,
+		"texture_loaded": texture != null,
+		"fallback": texture == null,
+		"mapped": terrain_id != texture_id,
+		"texture_width": texture_size.x,
+		"texture_height": texture_size.y,
 	}
 
 func validation_preview_hex_destination(q: int, r: int) -> Dictionary:
@@ -576,11 +626,32 @@ func _draw() -> void:
 	_draw_footer_line(field_rect)
 
 func _draw_terrain(field_rect: Rect2) -> void:
-	var terrain := String(_battle.get("terrain", "plains"))
-	var base_color: Color = TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["plains"])
+	var terrain := _battle_terrain_id()
+	var base_color := _terrain_color_for(terrain)
 	draw_rect(field_rect, base_color, true)
+	var terrain_texture = _terrain_texture_for(terrain)
+	if terrain_texture != null:
+		_draw_terrain_texture(field_rect, terrain_texture)
+		draw_rect(field_rect, TERRAIN_TEXTURE_READABILITY_WASH, true)
+	else:
+		_draw_procedural_terrain_details(field_rect, terrain)
 	draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
 
+func _draw_terrain_texture(field_rect: Rect2, texture: Texture2D) -> void:
+	var texture_size := texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or field_rect.size.x <= 0.0 or field_rect.size.y <= 0.0:
+		return
+	var target_aspect := field_rect.size.x / field_rect.size.y
+	var texture_aspect := texture_size.x / texture_size.y
+	var source_size := texture_size
+	if texture_aspect > target_aspect:
+		source_size.x = texture_size.y * target_aspect
+	else:
+		source_size.y = texture_size.x / target_aspect
+	var source_position := (texture_size - source_size) * 0.5
+	draw_texture_rect_region(texture, field_rect, Rect2(source_position, source_size), TERRAIN_TEXTURE_MODULATE)
+
+func _draw_procedural_terrain_details(field_rect: Rect2, terrain: String) -> void:
 	var horizon := field_rect.position + Vector2(field_rect.size.x * 0.08, field_rect.size.y * 0.22)
 	var far_path := PackedVector2Array([
 		horizon,
@@ -627,6 +698,56 @@ func _draw_terrain(field_rect: Rect2) -> void:
 			for index in range(9):
 				var start := field_rect.position + Vector2(field_rect.size.x * (0.05 + float(index) * 0.11), field_rect.size.y * 0.78)
 				draw_line(start, start + Vector2(18.0, -8.0), Color(0.16, 0.23, 0.12, 0.24), 2.0)
+
+func _load_terrain_textures() -> void:
+	for terrain_id_value in TERRAIN_TEXTURE_PATHS.keys():
+		_load_terrain_texture(String(terrain_id_value))
+
+func _load_terrain_texture(terrain_id: String) -> void:
+	if _terrain_textures.has(terrain_id) or _terrain_texture_missing.has(terrain_id):
+		return
+	var texture_path := _terrain_texture_path_for(terrain_id)
+	if texture_path == "":
+		_terrain_texture_missing[terrain_id] = texture_path
+		return
+	if ResourceLoader.exists(texture_path):
+		var resource = load(texture_path)
+		if resource is Texture2D:
+			_terrain_textures[terrain_id] = resource
+			return
+	if FileAccess.file_exists(texture_path):
+		var image := Image.new()
+		var load_result := image.load(texture_path)
+		if load_result == OK:
+			_terrain_textures[terrain_id] = ImageTexture.create_from_image(image)
+			return
+	_terrain_texture_missing[terrain_id] = texture_path
+
+func _terrain_texture_for(terrain_id: String):
+	var texture_id := _terrain_texture_id(terrain_id)
+	if texture_id == "":
+		return null
+	_load_terrain_texture(texture_id)
+	return _terrain_textures.get(texture_id, null)
+
+func _terrain_texture_id(terrain_id: String) -> String:
+	var normalized := terrain_id.strip_edges().to_lower()
+	if normalized == "":
+		normalized = "plains"
+	return String(TERRAIN_TEXTURE_ALIASES.get(normalized, normalized))
+
+func _terrain_texture_path_for(texture_id: String) -> String:
+	return String(TERRAIN_TEXTURE_PATHS.get(texture_id, ""))
+
+func _battle_terrain_id() -> String:
+	var terrain_id := String(_battle.get("terrain", "plains")).strip_edges().to_lower()
+	return terrain_id if terrain_id != "" else "plains"
+
+func _terrain_color_for(terrain_id: String) -> Color:
+	if TERRAIN_COLORS.has(terrain_id):
+		return TERRAIN_COLORS[terrain_id]
+	var texture_id := _terrain_texture_id(terrain_id)
+	return TERRAIN_COLORS.get(texture_id, TERRAIN_COLORS["plains"])
 
 func _draw_hex_grid(hex_layout: Dictionary) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))

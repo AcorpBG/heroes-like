@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T15:42:55Z",
+  "updatedAt": "2026-04-17T16:19:19Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "battle-enemy-turn-risk-retarget-lock-10184",
-  "currentSliceTitle": "Lock risk-board retarget wording during enemy initiative",
+  "currentSliceId": "battle-terrain-texture-backdrop-10184",
+  "currentSliceTitle": "Integrate generated terrain textures into the battle board",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed thin follow-up: enemy-turn Risk board priority guidance no longer tells the player to shift focus while retargeting is locked during enemy initiative. Focused core systems and battle layout smokes are green.",
+  "currentSliceNotes": "Completed battle visual slice: copied normalized generated terrain PNGs into art/battle/terrain, rendered terrain texture backdrops in BattleBoardView with plains-to-grass mapping and procedural fallback, and added focused validation for texture loading. Focused town/battle visual smoke, battle layout smoke, and repo validation are green.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",

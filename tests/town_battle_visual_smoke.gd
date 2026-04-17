@@ -73,11 +73,36 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board does not expose hex layout validation.")
 		get_tree().quit(1)
 		return false
+	if not board.has_method("validation_terrain_backdrop_summary"):
+		push_error("Battle smoke: battle board does not expose terrain backdrop validation.")
+		get_tree().quit(1)
+		return false
 	var hex_summary: Dictionary = board.call("validation_hex_layout_summary")
 	if String(hex_summary.get("presentation", "")) != "hex":
 		push_error("Battle smoke: battle board did not render through the hex-field presentation.")
 		get_tree().quit(1)
 		return false
+	if not bool(hex_summary.get("terrain_texture_loaded", false)):
+		push_error("Battle smoke: terrain texture was not loaded for the active battlefield: %s." % hex_summary)
+		get_tree().quit(1)
+		return false
+	var terrain_summary: Dictionary = board.call("validation_terrain_backdrop_summary")
+	if not bool(terrain_summary.get("texture_loaded", false)) or float(terrain_summary.get("texture_width", 0.0)) <= 0.0 or float(terrain_summary.get("texture_height", 0.0)) <= 0.0:
+		push_error("Battle smoke: terrain backdrop validation did not report a usable runtime texture: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
+	var original_terrain := String(session.battle.get("terrain", ""))
+	session.battle["terrain"] = "plains"
+	board.call("set_battle_state", session)
+	await get_tree().process_frame
+	var plains_summary: Dictionary = board.call("validation_terrain_backdrop_summary")
+	if String(plains_summary.get("texture_id", "")) != "grass" or not bool(plains_summary.get("texture_loaded", false)) or not bool(plains_summary.get("mapped", false)):
+		push_error("Battle smoke: plains terrain did not map cleanly to the grass battlefield texture: %s." % plains_summary)
+		get_tree().quit(1)
+		return false
+	session.battle["terrain"] = original_terrain
+	board.call("set_battle_state", session)
+	await get_tree().process_frame
 	if int(hex_summary.get("hex_count", 0)) < 70:
 		push_error("Battle smoke: hex battlefield is too small to be a proper tactical surface: %s." % hex_summary)
 		get_tree().quit(1)
