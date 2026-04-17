@@ -30,7 +30,6 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
-	var right_shade = shell.get_node_or_null("RightShade")
 	if shell.get_node_or_null("TopShade") != null or shell.get_node_or_null("BottomShade") != null:
 		push_error("Main menu smoke: broad top/bottom backdrop shade layers returned.")
 		get_tree().quit(1)
@@ -39,41 +38,65 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: hero backdrop view is still drawing broad wash overlays.")
 		get_tree().quit(1)
 		return false
-	if not (right_shade is ColorRect):
-		push_error("Main menu smoke: right command gutter shade is missing.")
-		get_tree().quit(1)
-		return false
-	var right_shade_rect := right_shade as ColorRect
-	if right_shade_rect.anchor_left < 0.78 or right_shade_rect.color.a < 0.28:
-		push_error("Main menu smoke: right command gutter is not a narrow darkened stage edge.")
+	if shell.get_node_or_null("RightShade") != null:
+		push_error("Main menu smoke: separate right-side shade returned over the painted command door.")
 		get_tree().quit(1)
 		return false
 
-	var command_block = shell.get_node_or_null("%CommandBlockPanel")
-	var command_title = shell.get_node_or_null("%CommandBlockTitle")
-	var menu_button = shell.get_node_or_null("%Menu")
+	var hotspot_surface = shell.get_node_or_null("%BackdropCommandHotspots")
+	if hotspot_surface == null:
+		push_error("Main menu smoke: painted backdrop command hotspot surface is missing.")
+		get_tree().quit(1)
+		return false
+
+	for removed_node in ["CommandSpinePanel", "SpineStatusPanel", "CommandBlockPanel", "Continue", "OpenGuide", "Menu"]:
+		if shell.get_node_or_null(removed_node) != null or shell.find_child(removed_node, true, false) != null:
+			push_error("Main menu smoke: removed first-view shell node returned: %s." % removed_node)
+			get_tree().quit(1)
+			return false
+
 	var quit_button = shell.get_node_or_null("%Quit")
 	var campaign_button = shell.get_node_or_null("%OpenCampaign")
-	var spine_header = shell.get_node_or_null("CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineHeaderRow/SpineHeader")
-	if command_block == null or command_title == null or menu_button == null or quit_button == null or campaign_button == null or spine_header == null:
-		push_error("Main menu smoke: command block grouping nodes are missing.")
+	var skirmish_button = shell.get_node_or_null("%OpenSkirmish")
+	var load_button = shell.get_node_or_null("%OpenSaves")
+	var settings_button = shell.get_node_or_null("%OpenSettings")
+	if quit_button == null or campaign_button == null or skirmish_button == null or load_button == null or settings_button == null:
+		push_error("Main menu smoke: one or more painted-plaque command buttons are missing.")
 		get_tree().quit(1)
 		return false
-	if not (command_title is Label) or not (menu_button is Button) or not (quit_button is Button) or not (campaign_button is Button) or not (spine_header is Label):
-		push_error("Main menu smoke: command block grouping nodes have unexpected types.")
+	for button in [campaign_button, skirmish_button, load_button, settings_button, quit_button]:
+		if not (button is Button) or button.get_parent() != hotspot_surface:
+			push_error("Main menu smoke: first-view command is not a direct painted-backdrop hotspot.")
+			get_tree().quit(1)
+			return false
+	var first_view_labels := [
+		String((campaign_button as Button).text),
+		String((skirmish_button as Button).text),
+		String((load_button as Button).text),
+		String((settings_button as Button).text),
+		String((quit_button as Button).text),
+	]
+	if first_view_labels != ["Campaign", "Skirmish", "Load", "Settings", "Quit"]:
+		push_error("Main menu smoke: first-view command labels are not the five approved plaque commands: %s." % [first_view_labels])
 		get_tree().quit(1)
 		return false
-	var command_title_label := command_title as Label
-	var menu_command_button := menu_button as Button
-	var quit_command_button := quit_button as Button
-	var campaign_nav_button := campaign_button as Button
-	var spine_header_label := spine_header as Label
-	if String(spine_header_label.text) != "Menu" or String(command_title_label.text) != "Command":
-		push_error("Main menu smoke: command spine titles do not match the wireframe grouping.")
+	var load_rect := (load_button as Button).get_global_rect()
+	if load_rect.position.x < shell.get_viewport_rect().size.x * 0.82:
+		push_error("Main menu smoke: Load hotspot is not mapped onto the painted right-side plaque column.")
 		get_tree().quit(1)
 		return false
-	if not command_block.is_ancestor_of(menu_command_button) or not command_block.is_ancestor_of(quit_command_button) or command_block.is_ancestor_of(campaign_nav_button):
-		push_error("Main menu smoke: Menu/Quit are not isolated from the main navigation spine.")
+
+	var first_view_snapshot: Dictionary = shell.call("validation_snapshot")
+	if String(first_view_snapshot.get("first_view_command_surface", "")) != "painted_backdrop_hotspots":
+		push_error("Main menu smoke: validation snapshot does not report painted backdrop hotspots.")
+		get_tree().quit(1)
+		return false
+	if bool(first_view_snapshot.get("has_generated_command_spine", true)) or bool(first_view_snapshot.get("has_first_view_status_box", true)):
+		push_error("Main menu smoke: validation snapshot still sees generated command spine or status box.")
+		get_tree().quit(1)
+		return false
+	if first_view_snapshot.get("first_view_commands", []) != ["Campaign", "Skirmish", "Load", "Settings", "Quit"]:
+		push_error("Main menu smoke: validation snapshot first-view commands are wrong: %s." % [first_view_snapshot])
 		get_tree().quit(1)
 		return false
 
@@ -95,8 +118,9 @@ func _run_main_menu_smoke() -> bool:
 		return false
 
 	shell.call("validation_open_settings_stage")
-	if menu_command_button.disabled:
-		push_error("Main menu smoke: Menu command did not become available after opening a secondary board.")
+	var close_stage_button = shell.get_node_or_null("%CloseStageDock")
+	if not (close_stage_button is Button) or (close_stage_button as Button).disabled:
+		push_error("Main menu smoke: secondary board close command is unavailable after opening settings.")
 		get_tree().quit(1)
 		return false
 

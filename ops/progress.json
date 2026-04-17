@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T19:56:40Z",
+  "updatedAt": "2026-04-17T20:18:04Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "main-menu-shadow-followup-10184",
-  "currentSliceTitle": "Remove residual main-menu global backdrop veil",
+  "currentSliceId": "main-menu-backdrop-hotspots-10184",
+  "currentSliceTitle": "Map first-view menu commands onto painted backdrop plaques",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow AcOrP follow-up for residual main-menu shadow after commit 3886c2c: removed the full-width TopShade/BottomShade scene layers and stopped MainMenuHeroView.gd from drawing top/lower/edge washes over the painted backdrop, while preserving the right-side gutter shade behind the command spine. Focused menu/outcome smoke now guards against those broad veil sources returning. menu_outcome_visual_smoke, shell_heraldry_smoke, and validate_repo are green. No manual visual proof is claimed.",
+  "currentSliceNotes": "Completed a narrow AcOrP menu composition slice: replaced the generated first-view command-spine/menu-panel read with five painted-backdrop plaque hotspots only (Campaign, Skirmish, Load, Settings, Quit), removed Continue Latest, Guide, Menu, the separate right shade, and the campaign/save status box from the first-view shell, and preserved secondary Campaign/Skirmish/Saves/Settings detail boards after clicking matching plaques. menu_outcome_visual_smoke, shell_heraldry_smoke, validate_repo, and git diff --check are green. No manual visual proof is claimed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",

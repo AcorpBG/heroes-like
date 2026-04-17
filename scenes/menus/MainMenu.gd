@@ -41,15 +41,10 @@ const TAB_STAGE_COPY := {
 @onready var _subtitle_label: Label = %Subtitle
 @onready var _summary_label: Label = %Summary
 @onready var _active_expedition_label: Label = %ActiveExpedition
-@onready var _campaign_pulse_label: Label = %CampaignPulse
-@onready var _save_pulse_label: Label = %SavePulse
-@onready var _continue_button: Button = %Continue
-@onready var _menu_button: Button = %Menu
 @onready var _quit_button: Button = %Quit
 @onready var _open_campaign_button: Button = %OpenCampaign
 @onready var _open_skirmish_button: Button = %OpenSkirmish
 @onready var _open_saves_button: Button = %OpenSaves
-@onready var _open_guide_button: Button = %OpenGuide
 @onready var _open_settings_button: Button = %OpenSettings
 @onready var _campaign_list: ItemList = %CampaignList
 @onready var _campaign_details_label: Label = %CampaignDetails
@@ -110,7 +105,6 @@ func _ready() -> void:
 func _refresh_menu() -> void:
 	_menu_notice = AppRouter.consume_menu_notice()
 	_rebuild_save_browser()
-	_update_continue_enabled()
 	_rebuild_campaign_browser()
 	_configure_difficulty_picker()
 	_rebuild_skirmish_browser()
@@ -122,19 +116,17 @@ func _refresh_menu() -> void:
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 
-func _update_continue_enabled() -> void:
+func _latest_continue_surface() -> Dictionary:
 	var latest_summary := SaveService.latest_loadable_summary()
-	_continue_button.text = SaveService.continue_action_label(latest_summary)
-	_continue_button.disabled = latest_summary.is_empty()
-	_continue_button.tooltip_text = SaveService.load_action_tooltip(latest_summary)
+	return {
+		"text": SaveService.continue_action_label(latest_summary),
+		"enabled": not latest_summary.is_empty(),
+		"tooltip": SaveService.load_action_tooltip(latest_summary),
+	}
 
 func _refresh_summary() -> void:
 	var lead := _menu_notice
-	if lead == "":
-		if _stage_dock_panel.visible:
-			lead = "The command board is open. Review detail here, then close it to return to the scenic front."
-		else:
-			lead = "First view stays scenic. Open deeper boards from the right spine when needed."
+	_summary_label.visible = lead != ""
 	_set_compact_label(_summary_label, lead, 3, 84)
 	_set_compact_label(
 		_active_expedition_label,
@@ -142,8 +134,6 @@ func _refresh_summary() -> void:
 		4,
 		84
 	)
-	_set_compact_label(_campaign_pulse_label, _build_campaign_pulse(), 2, 80)
-	_set_compact_label(_save_pulse_label, _build_save_pulse(), 2, 80)
 
 func _on_campaign_selected(index: int) -> void:
 	if index < 0 or index >= _campaign_entries.size():
@@ -703,10 +693,15 @@ func validation_snapshot() -> Dictionary:
 	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
 	var selected_save_summary := _selected_summary()
+	var latest_continue := _latest_continue_surface()
 	return {
 		"scene_path": scene_file_path,
 		"stage_dock_visible": _stage_dock_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
+		"first_view_command_surface": "painted_backdrop_hotspots",
+		"first_view_commands": _first_view_command_labels(),
+		"has_generated_command_spine": get_node_or_null("CommandSpinePanel") != null,
+		"has_first_view_status_box": get_node_or_null("SpineStatusPanel") != null,
 		"campaign_count": _campaign_entries.size(),
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
@@ -728,11 +723,11 @@ func validation_snapshot() -> Dictionary:
 		"save_browser_items": _save_browser_item_labels(),
 		"save_details": _save_details_label.text,
 		"save_details_full": _save_details_label.tooltip_text,
-		"save_pulse": _save_pulse_label.text,
-		"save_pulse_full": _save_pulse_label.tooltip_text,
-		"continue_text": _continue_button.text,
-		"continue_tooltip": _continue_button.tooltip_text,
-		"continue_enabled": not _continue_button.disabled,
+		"save_pulse": _build_save_pulse(),
+		"save_pulse_full": _build_save_pulse(),
+		"continue_text": String(latest_continue.get("text", "")),
+		"continue_tooltip": String(latest_continue.get("tooltip", "")),
+		"continue_enabled": bool(latest_continue.get("enabled", false)),
 		"load_selected_text": _load_selected_button.text,
 		"load_selected_tooltip": _load_selected_button.tooltip_text,
 		"load_selected_enabled": not _load_selected_button.disabled,
@@ -745,6 +740,13 @@ func validation_snapshot() -> Dictionary:
 		"resolution_picker_items": _picker_item_labels(_resolution_picker),
 		"summary": _summary_label.text,
 	}
+
+func _first_view_command_labels() -> Array:
+	var labels := []
+	for button in [_open_campaign_button, _open_skirmish_button, _open_saves_button, _open_settings_button, _quit_button]:
+		if button is Button and button.visible:
+			labels.append(String(button.text))
+	return labels
 
 func _save_browser_item_labels() -> Array:
 	var labels := []
@@ -867,7 +869,7 @@ func validation_resume_latest() -> Dictionary:
 	var expected_resume_target := String(summary.get("resume_target", ""))
 	var expected_game_state := _validation_expected_game_state_for_resume_target(expected_resume_target)
 	var loadable := SaveService.can_load_summary(summary)
-	_on_continue_pressed()
+	AppRouter.resume_latest_session()
 	var active_session := SessionState.ensure_active_session()
 	return {
 		"ok": loadable
@@ -940,20 +942,49 @@ func _sync_command_button_styles() -> void:
 		TAB_CAMPAIGN: [_open_campaign_button],
 		TAB_SKIRMISH: [_open_skirmish_button],
 		TAB_SAVES: [_open_saves_button],
-		TAB_GUIDE: [_open_guide_button],
 		TAB_SETTINGS: [_open_settings_button],
 	}
 	for tab_index in tab_buttons.keys():
 		for button in tab_buttons[tab_index]:
 			var is_active: bool = _stage_dock_panel.visible and _menu_tabs.current_tab == tab_index
-			var role := "spine_active" if is_active else "spine"
-			FrontierVisualKit.apply_button(button, role, 182.0, 42.0, 15)
+			_apply_backdrop_plaque_button(button, is_active, false)
 
 func _sync_system_command_buttons() -> void:
-	_menu_button.disabled = not _stage_dock_panel.visible
-	_menu_button.tooltip_text = "Return to the clean scenic menu view." if _stage_dock_panel.visible else "The clean scenic menu view is already showing."
-	FrontierVisualKit.apply_button(_menu_button, "secondary", 162.0, 36.0, 13)
-	FrontierVisualKit.apply_button(_quit_button, "danger", 162.0, 36.0, 13)
+	_apply_backdrop_plaque_button(_quit_button, false, true)
+
+func _apply_backdrop_plaque_button(button: BaseButton, active: bool, danger: bool) -> void:
+	button.focus_mode = Control.FOCUS_NONE
+	button.add_theme_font_size_override("font_size", 19 if not danger else 18)
+	button.add_theme_color_override("font_color", Color(0.95, 0.94, 0.88, 1.0))
+	button.add_theme_color_override("font_hover_color", Color(1.0, 0.91, 0.60, 1.0))
+	button.add_theme_color_override("font_pressed_color", Color(0.98, 0.82, 0.50, 1.0))
+	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
+	button.add_theme_color_override("font_outline_color", Color(0.02, 0.025, 0.03, 0.92))
+	button.add_theme_constant_override("outline_size", 4)
+	var accent := Color(0.92, 0.74, 0.42, 0.60)
+	if danger:
+		accent = Color(0.88, 0.48, 0.39, 0.62)
+	var normal := _plaque_button_style(Color(0.0, 0.0, 0.0, 0.0), Color(0.0, 0.0, 0.0, 0.0), 0)
+	var hover := _plaque_button_style(accent.darkened(0.18), accent, 2)
+	hover.bg_color.a = 0.14
+	var pressed := _plaque_button_style(accent.darkened(0.32), accent.lightened(0.18), 2)
+	pressed.bg_color.a = 0.24
+	var active_style := _plaque_button_style(accent.darkened(0.25), accent.lightened(0.10), 2)
+	active_style.bg_color.a = 0.18
+	button.add_theme_stylebox_override("normal", active_style if active else normal)
+	button.add_theme_stylebox_override("hover", hover)
+	button.add_theme_stylebox_override("pressed", pressed)
+	button.add_theme_stylebox_override("disabled", normal)
+
+func _plaque_button_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = fill
+	style.border_color = border
+	style.set_border_width_all(border_width)
+	style.set_corner_radius_all(6)
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.0)
+	style.shadow_size = 0
+	return style
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and _stage_dock_panel.visible:
@@ -968,9 +999,6 @@ func _apply_visual_theme() -> void:
 		"LogoPocketPanel": "smoke",
 		"StageDockPanel": "smoke",
 		"FooterPocketPanel": "smoke",
-		"CommandSpinePanel": "clear",
-		"SpineStatusPanel": "smoke",
-		"CommandBlockPanel": "smoke",
 		"CampaignListPanel": "smoke",
 		"CampaignDetailsPanel": "smoke",
 		"ChapterListPanel": "smoke",
@@ -999,7 +1027,6 @@ func _apply_visual_theme() -> void:
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
 		FrontierVisualKit.apply_item_list(list, "smoke")
 
-	FrontierVisualKit.apply_button(_continue_button, "spine_active", 182.0, 46.0, 16)
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
@@ -1039,8 +1066,6 @@ func _apply_visual_theme() -> void:
 		"JournalTitle",
 		"SkirmishCommanderPreviewTitle",
 		"SkirmishOperationalBoardTitle",
-		"SpineHeader",
-		"CommandBlockTitle",
 	]:
 		var section_title = find_child(node_name, true, false)
 		if section_title is Label:
@@ -1053,7 +1078,5 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_stage_dock_title_label, "title", 18)
 	FrontierVisualKit.apply_label(_stage_dock_hint_label, "muted", 13)
 	FrontierVisualKit.apply_label(_active_expedition_label, "body", 13)
-	FrontierVisualKit.apply_label(_campaign_pulse_label, "body", 13)
-	FrontierVisualKit.apply_label(_save_pulse_label, "muted", 13)
 	FrontierVisualKit.apply_label(_master_volume_value, "gold", 13)
 	FrontierVisualKit.apply_label(_music_volume_value, "gold", 13)

@@ -1920,6 +1920,62 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required settings/onboarding token: {required_token}")
 
 
+def validate_main_menu_first_view(errors: list[str]) -> None:
+    ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for first-view composition validation")
+    ensure(MAIN_MENU_SCRIPT_PATH.exists(), errors, "Missing main menu script for first-view composition validation")
+    if not MAIN_MENU_SCENE_PATH.exists() or not MAIN_MENU_SCRIPT_PATH.exists():
+        return
+
+    main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        scene_has_node(main_menu_scene_text, "BackdropCommandHotspots", "Control"),
+        errors,
+        "MainMenu.tscn must map first-view commands onto BackdropCommandHotspots instead of a command panel",
+    )
+    expected_plaque_buttons = {
+        "OpenCampaign": "Campaign",
+        "OpenSkirmish": "Skirmish",
+        "OpenSaves": "Load",
+        "OpenSettings": "Settings",
+        "Quit": "Quit",
+    }
+    for node_name, label in expected_plaque_buttons.items():
+        pattern = (
+            rf'\[node name="{re.escape(node_name)}" type="Button" parent="BackdropCommandHotspots"\]'
+            rf'(?:(?!\n\[node ).)*?\ntext = "{re.escape(label)}"'
+        )
+        ensure(
+            re.search(pattern, main_menu_scene_text, flags=re.DOTALL) is not None,
+            errors,
+            f"MainMenu.tscn must expose first-view {label} as a painted backdrop hotspot",
+        )
+
+    for removed_node, node_type in (
+        ("CommandSpinePanel", "PanelContainer"),
+        ("SpineStatusPanel", "PanelContainer"),
+        ("CommandBlockPanel", "PanelContainer"),
+        ("RightShade", "ColorRect"),
+        ("Continue", "Button"),
+        ("OpenGuide", "Button"),
+        ("Menu", "Button"),
+    ):
+        ensure(
+            not scene_has_node(main_menu_scene_text, removed_node, node_type),
+            errors,
+            f"MainMenu.tscn must not restore first-view {removed_node} ({node_type})",
+        )
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"painted_backdrop_hotspots"',
+        '"first_view_commands"',
+        "func _apply_backdrop_plaque_button",
+        "func _latest_continue_surface",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required first-view menu token: {required_token}")
+    ensure("_open_guide_button" not in main_menu_script_text, errors, "MainMenu.gd must not keep a first-view Guide button binding")
+
+
 def validate_scenario_outcome_shell(errors: list[str]) -> None:
     required_paths = (
         APP_ROUTER_PATH,
@@ -4608,6 +4664,7 @@ def main() -> int:
     validate_skirmish_setup(errors)
     validate_campaign_browser(errors)
     validate_settings_and_onboarding(errors)
+    validate_main_menu_first_view(errors)
     validate_scenario_outcome_shell(errors)
     validate_difficulty_integration(errors)
     validate_hero_progression(errors)
@@ -4659,6 +4716,7 @@ def main() -> int:
     print("- overworld logistics orders now bind hero-led escort state, route pressure guard, and hostile route-break contestation on shared core boundaries")
     print("- campaign and skirmish launch flow now surfaces terrain, enemy posture, first-contact, objective, and reinforcement intel through a shared operational board")
     print("- settings persistence, 16:9 runtime resolution guardrails, onboarding topics, and main-menu settings/help hooks are present")
+    print("- main-menu first-view commands are mapped onto painted backdrop hotspots without the generated command spine")
     print("- authored scenarios now require reactive hooks, encounter-clearing side objectives, pressure spikes, and dispatch-visible event identity")
     print("- post-scenario outcome routing, recap builders, and dedicated outcome-shell hooks are present")
     print("- fog-of-war, scouting, legacy-save normalization, and overworld UI wiring are present")
