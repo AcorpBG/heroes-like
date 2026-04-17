@@ -73,6 +73,7 @@ const TAB_STAGE_COPY := {
 @onready var _help_details_label: Label = %HelpDetails
 @onready var _settings_summary_label: Label = %SettingsSummary
 @onready var _presentation_mode_picker: OptionButton = %PresentationModePicker
+@onready var _resolution_picker: OptionButton = %ResolutionPicker
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
 @onready var _master_volume_value: Label = %MasterVolumeValue
 @onready var _music_volume_slider: HSlider = %MusicVolumeSlider
@@ -246,6 +247,13 @@ func _on_presentation_mode_selected(index: int) -> void:
 		return
 	var mode_id := String(_presentation_mode_picker.get_item_metadata(index))
 	SettingsService.set_presentation_mode(mode_id)
+	_refresh_settings_panel()
+
+func _on_resolution_selected(index: int) -> void:
+	if _syncing_settings_ui or index < 0 or index >= _resolution_picker.get_item_count():
+		return
+	var resolution_id := String(_resolution_picker.get_item_metadata(index))
+	SettingsService.set_presentation_resolution(resolution_id)
 	_refresh_settings_panel()
 
 func _on_master_volume_changed(value: float) -> void:
@@ -446,6 +454,21 @@ func _refresh_settings_panel() -> void:
 			selected_index = index
 	if selected_index >= 0:
 		_presentation_mode_picker.select(selected_index)
+		_presentation_mode_picker.tooltip_text = String(options[selected_index].get("summary", ""))
+
+	_resolution_picker.clear()
+	var resolution_options := SettingsService.build_resolution_options()
+	var selected_resolution_index := -1
+	for index in range(resolution_options.size()):
+		var option = resolution_options[index]
+		var label := String(option.get("label", option.get("id", "Resolution")))
+		_resolution_picker.add_item(label, index)
+		_resolution_picker.set_item_metadata(index, String(option.get("id", "")))
+		if bool(option.get("selected", false)):
+			selected_resolution_index = index
+	if selected_resolution_index >= 0:
+		_resolution_picker.select(selected_resolution_index)
+		_resolution_picker.tooltip_text = String(resolution_options[selected_resolution_index].get("summary", ""))
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
 	_master_volume_value.text = "%d%%" % SettingsService.master_volume_percent()
@@ -706,6 +729,13 @@ func validation_snapshot() -> Dictionary:
 		"load_selected_text": _load_selected_button.text,
 		"load_selected_tooltip": _load_selected_button.tooltip_text,
 		"load_selected_enabled": not _load_selected_button.disabled,
+		"settings_summary": _settings_summary_label.text,
+		"settings_summary_full": _settings_summary_label.tooltip_text,
+		"presentation_mode": SettingsService.presentation_mode_id(),
+		"presentation_resolution": SettingsService.presentation_resolution_id(),
+		"presentation_resolution_size": SettingsService.presentation_resolution_size(),
+		"presentation_resolution_options": SettingsService.build_resolution_options(),
+		"resolution_picker_items": _picker_item_labels(_resolution_picker),
 		"summary": _summary_label.text,
 	}
 
@@ -713,6 +743,12 @@ func _save_browser_item_labels() -> Array:
 	var labels := []
 	for index in range(_save_list.get_item_count()):
 		labels.append(_save_list.get_item_text(index))
+	return labels
+
+func _picker_item_labels(picker: OptionButton) -> Array:
+	var labels := []
+	for index in range(picker.get_item_count()):
+		labels.append(picker.get_item_text(index))
 	return labels
 
 func validation_open_campaign_stage() -> void:
@@ -727,6 +763,11 @@ func validation_open_saves_stage() -> void:
 	_select_menu_tab(TAB_SAVES)
 	_show_stage_dock()
 	_rebuild_save_browser()
+
+func validation_open_settings_stage() -> void:
+	_select_menu_tab(TAB_SETTINGS)
+	_show_stage_dock()
+	_refresh_settings_panel()
 
 func validation_select_skirmish(scenario_id: String) -> bool:
 	for index in range(_skirmish_entries.size()):
@@ -763,6 +804,16 @@ func validation_set_difficulty(difficulty_id: String) -> bool:
 		_difficulty_picker.select(index)
 		_on_difficulty_selected(index)
 		return true
+	return false
+
+func validation_select_resolution(resolution_id: String) -> bool:
+	validation_open_settings_stage()
+	for index in range(_resolution_picker.get_item_count()):
+		if String(_resolution_picker.get_item_metadata(index)) != resolution_id:
+			continue
+		_resolution_picker.select(index)
+		_on_resolution_selected(index)
+		return SettingsService.presentation_resolution_id() == resolution_id
 	return false
 
 func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
@@ -943,7 +994,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	_sync_command_button_styles()
 
-	for picker in [_difficulty_picker, _presentation_mode_picker]:
+	for picker in [_difficulty_picker, _presentation_mode_picker, _resolution_picker]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
 
 	for toggle in [_large_text_toggle, _reduce_motion_toggle]:

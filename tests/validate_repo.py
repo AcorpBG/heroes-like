@@ -279,6 +279,31 @@ def ensure_scene_nodes(scene_text: str, errors: list[str], label: str, nodes: li
         ensure(scene_has_node(scene_text, node_name, node_type), errors, f"{label} must define {node_name} ({node_type})")
 
 
+def extract_settings_resolution_options(settings_text: str, errors: list[str]) -> dict[str, tuple[int, int]]:
+    default_match = re.search(r'const\s+PRESENTATION_RESOLUTION_DEFAULT\s*:=\s*"([^"]+)"', settings_text)
+    ensure(default_match is not None, errors, "SettingsService.gd must declare PRESENTATION_RESOLUTION_DEFAULT")
+    default_id = default_match.group(1) if default_match else "1920x1080"
+    parse_text = settings_text.replace("PRESENTATION_RESOLUTION_DEFAULT", f'"{default_id}"')
+    block_match = re.search(r"const\s+RESOLUTION_OPTIONS\s*:=\s*\[(.*?)\]\s*\n\s*const\s+HELP_TOPICS", parse_text, flags=re.DOTALL)
+    ensure(block_match is not None, errors, "SettingsService.gd must declare RESOLUTION_OPTIONS before HELP_TOPICS")
+    if block_match is None:
+        return {}
+
+    options: dict[str, tuple[int, int]] = {}
+    for match in re.finditer(
+        r'\{\s*"id":\s*"(?P<id>\d+x\d+)"\s*,\s*"label":\s*"[^"]+"\s*,\s*"width":\s*(?P<width>\d+)\s*,\s*"height":\s*(?P<height>\d+)',
+        block_match.group(1),
+        flags=re.DOTALL,
+    ):
+        option_id = match.group("id")
+        width = int(match.group("width"))
+        height = int(match.group("height"))
+        ensure(option_id not in options, errors, f"SettingsService.gd repeats resolution option {option_id}")
+        options[option_id] = (width, height)
+    ensure(bool(options), errors, "SettingsService.gd must expose parseable resolution options")
+    return options
+
+
 def validate_field_objectives(errors: list[str], owner_label: str, objectives: object, allow_partial: bool = False) -> list[str]:
     objective_ids: list[str] = []
     ensure(isinstance(objectives, list) and bool(objectives), errors, f"{owner_label} must define a non-empty field_objectives list")
@@ -1818,6 +1843,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func load_settings",
         "func save_settings",
         "func build_presentation_options",
+        "func build_resolution_options",
         "func describe_settings",
         "func build_help_topics",
         "func help_browser_summary",
@@ -1825,13 +1851,26 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "func set_master_volume_percent",
         "func set_music_volume_percent",
         "func set_presentation_mode",
+        "func set_presentation_resolution",
         "func set_large_ui_text_enabled",
         "func set_reduced_motion_enabled",
+        '"resolution"',
         "DisplayServer.window_set_mode",
+        "DisplayServer.window_set_size",
         "AudioServer.set_bus_volume_db",
         "content_scale_factor",
     ):
         ensure(required_token in settings_text, errors, f"SettingsService.gd is missing required settings/onboarding token: {required_token}")
+
+    resolution_options = extract_settings_resolution_options(settings_text, errors)
+    expected_resolutions = {"1280x720", "1600x900", "1920x1080", "2560x1440"}
+    missing_resolutions = sorted(expected_resolutions - set(resolution_options.keys()))
+    ensure(not missing_resolutions, errors, f"SettingsService.gd is missing expected 16:9 desktop resolutions: {', '.join(missing_resolutions)}")
+    for option_id, (width, height) in resolution_options.items():
+        ensure(f"{width}x{height}" == option_id, errors, f"Resolution option {option_id} must match its width/height payload")
+        ensure(width * 9 == height * 16, errors, f"Resolution option {option_id} must be exactly 16:9")
+        ensure(width <= 2560 and height <= 1440, errors, f"Resolution option {option_id} must not exceed the 1440p runtime cap")
+    ensure(resolution_options.get("1920x1080") == (1920, 1080), errors, "SettingsService.gd must keep 1920x1080 as a selectable runtime resolution")
 
     main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
     for node_name, node_type in (
@@ -1843,6 +1882,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ("Settings", "VBoxContainer"),
         ("SettingsSummary", "Label"),
         ("PresentationModePicker", "OptionButton"),
+        ("ResolutionPicker", "OptionButton"),
         ("MasterVolumeSlider", "HSlider"),
         ("MusicVolumeSlider", "HSlider"),
         ("LargeTextToggle", "CheckButton"),
@@ -1858,19 +1898,24 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "SettingsService.describe_help_topic",
         "SettingsService.describe_settings",
         "SettingsService.build_presentation_options",
+        "SettingsService.build_resolution_options",
         "SettingsService.set_master_volume_percent",
         "SettingsService.set_music_volume_percent",
         "SettingsService.set_presentation_mode",
+        "SettingsService.set_presentation_resolution",
         "SettingsService.set_large_ui_text_enabled",
         "SettingsService.set_reduced_motion_enabled",
         "func _on_help_selected",
         "func _on_presentation_mode_selected",
+        "func _on_resolution_selected",
         "func _on_master_volume_changed",
         "func _on_music_volume_changed",
         "func _on_large_text_toggled",
         "func _on_reduce_motion_toggled",
         "func _refresh_settings_panel",
         "func _rebuild_help_browser",
+        "func validation_open_settings_stage",
+        "func validation_select_resolution",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required settings/onboarding token: {required_token}")
 
@@ -4613,7 +4658,7 @@ def main() -> int:
     print("- campaign and skirmish selection now surface commander, spellbook, artifact, army, and front-posture previews from core rules")
     print("- overworld logistics orders now bind hero-led escort state, route pressure guard, and hostile route-break contestation on shared core boundaries")
     print("- campaign and skirmish launch flow now surfaces terrain, enemy posture, first-contact, objective, and reinforcement intel through a shared operational board")
-    print("- settings persistence, onboarding topics, and main-menu settings/help hooks are present")
+    print("- settings persistence, 16:9 runtime resolution guardrails, onboarding topics, and main-menu settings/help hooks are present")
     print("- authored scenarios now require reactive hooks, encounter-clearing side objectives, pressure spikes, and dispatch-visible event identity")
     print("- post-scenario outcome routing, recap builders, and dedicated outcome-shell hooks are present")
     print("- fog-of-war, scouting, legacy-save normalization, and overworld UI wiring are present")

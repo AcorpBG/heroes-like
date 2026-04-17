@@ -3,13 +3,14 @@ extends Node
 
 signal settings_changed(settings: Dictionary)
 
-const SETTINGS_VERSION := 1
+const SETTINGS_VERSION := 2
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 
 const PRESENTATION_WINDOWED := "windowed"
 const PRESENTATION_BORDERLESS := "borderless"
 const PRESENTATION_FULLSCREEN := "fullscreen"
+const PRESENTATION_RESOLUTION_DEFAULT := "1920x1080"
 
 const PRESENTATION_OPTIONS := [
 	{
@@ -26,6 +27,37 @@ const PRESENTATION_OPTIONS := [
 		"id": PRESENTATION_FULLSCREEN,
 		"label": "Fullscreen",
 		"summary": "Dedicated fullscreen focus for the cleanest presentation.",
+	},
+]
+
+const RESOLUTION_OPTIONS := [
+	{
+		"id": "1280x720",
+		"label": "1280 x 720",
+		"width": 1280,
+		"height": 720,
+		"summary": "HD 16:9 desktop window.",
+	},
+	{
+		"id": "1600x900",
+		"label": "1600 x 900",
+		"width": 1600,
+		"height": 900,
+		"summary": "Mid-size 16:9 desktop window.",
+	},
+	{
+		"id": PRESENTATION_RESOLUTION_DEFAULT,
+		"label": "1920 x 1080",
+		"width": 1920,
+		"height": 1080,
+		"summary": "Default 1080p 16:9 presentation.",
+	},
+	{
+		"id": "2560x1440",
+		"label": "2560 x 1440",
+		"width": 2560,
+		"height": 1440,
+		"summary": "1440p 16:9 desktop window.",
 	},
 ]
 
@@ -87,6 +119,7 @@ func build_default_settings() -> Dictionary:
 		},
 		"presentation": {
 			"mode": PRESENTATION_WINDOWED,
+			"resolution": PRESENTATION_RESOLUTION_DEFAULT,
 		},
 		"accessibility": {
 			"large_ui_text": false,
@@ -104,6 +137,7 @@ func load_settings() -> void:
 		settings["audio"]["master_volume_percent"] = clampi(int(config.get_value("audio", "master_volume_percent", defaults["audio"]["master_volume_percent"])), 0, 100)
 		settings["audio"]["music_volume_percent"] = clampi(int(config.get_value("audio", "music_volume_percent", defaults["audio"]["music_volume_percent"])), 0, 100)
 		settings["presentation"]["mode"] = _normalize_presentation_mode(String(config.get_value("presentation", "mode", defaults["presentation"]["mode"])))
+		settings["presentation"]["resolution"] = _normalize_presentation_resolution(String(config.get_value("presentation", "resolution", defaults["presentation"]["resolution"])))
 		settings["accessibility"]["large_ui_text"] = bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
 		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
 
@@ -120,6 +154,7 @@ func save_settings() -> String:
 	config.set_value("audio", "master_volume_percent", master_volume_percent())
 	config.set_value("audio", "music_volume_percent", music_volume_percent())
 	config.set_value("presentation", "mode", presentation_mode_id())
+	config.set_value("presentation", "resolution", presentation_resolution_id())
 	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
 	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
 	var error := config.save(SETTINGS_FILE)
@@ -142,14 +177,41 @@ func build_presentation_options() -> Array:
 		)
 	return options
 
+func build_resolution_options() -> Array:
+	var selected_resolution := presentation_resolution_id()
+	var options := []
+	for option in RESOLUTION_OPTIONS:
+		options.append(
+			{
+				"id": String(option.get("id", "")),
+				"label": String(option.get("label", option.get("id", "Resolution"))),
+				"width": int(option.get("width", 0)),
+				"height": int(option.get("height", 0)),
+				"summary": String(option.get("summary", "")),
+				"selected": String(option.get("id", "")) == selected_resolution,
+			}
+		)
+	return options
+
 func presentation_mode_id() -> String:
 	return String(ensure_settings().get("presentation", {}).get("mode", PRESENTATION_WINDOWED))
+
+func presentation_resolution_id() -> String:
+	return _normalize_presentation_resolution(String(ensure_settings().get("presentation", {}).get("resolution", PRESENTATION_RESOLUTION_DEFAULT)))
+
+func presentation_resolution_size() -> Vector2i:
+	var option := _presentation_resolution_option(presentation_resolution_id())
+	return Vector2i(int(option.get("width", 1920)), int(option.get("height", 1080)))
 
 func presentation_mode_label(mode_id: String) -> String:
 	for option in PRESENTATION_OPTIONS:
 		if String(option.get("id", "")) == mode_id:
 			return String(option.get("label", mode_id))
 	return "Windowed"
+
+func presentation_resolution_label(resolution_id: String) -> String:
+	var option := _presentation_resolution_option(resolution_id)
+	return String(option.get("label", "1920 x 1080"))
 
 func master_volume_percent() -> int:
 	return int(ensure_settings().get("audio", {}).get("master_volume_percent", 80))
@@ -178,6 +240,11 @@ func set_presentation_mode(mode_id: String) -> void:
 	settings["presentation"]["mode"] = _normalize_presentation_mode(mode_id)
 	_commit_settings()
 
+func set_presentation_resolution(resolution_id: String) -> void:
+	ensure_settings()
+	settings["presentation"]["resolution"] = _normalize_presentation_resolution(resolution_id)
+	_commit_settings()
+
 func set_large_ui_text_enabled(enabled: bool) -> void:
 	ensure_settings()
 	settings["accessibility"]["large_ui_text"] = enabled
@@ -194,7 +261,7 @@ func describe_settings() -> String:
 	accessibility_parts.append("Reduced motion %s" % ("On" if reduced_motion_enabled() else "Off"))
 	return "\n".join(
 		[
-			"Presentation: %s" % presentation_mode_label(presentation_mode_id()),
+			"Presentation: %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id())],
 			"Audio: Master %d%% | Music %d%%" % [master_volume_percent(), music_volume_percent()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
 			"Device settings are saved separately from campaign progression and expedition slots.",
@@ -247,15 +314,21 @@ func _apply_accessibility_settings() -> void:
 		root.content_scale_factor = 1.15 if large_ui_text_enabled() else 1.0
 
 func _apply_presentation_settings() -> void:
+	var resolution := presentation_resolution_size()
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 	match presentation_mode_id():
 		PRESENTATION_FULLSCREEN:
+			DisplayServer.window_set_size(resolution)
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		PRESENTATION_BORDERLESS:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_size(resolution)
+			_center_window(resolution)
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
 		_:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+			DisplayServer.window_set_size(resolution)
+			_center_window(resolution)
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
@@ -280,6 +353,32 @@ func _normalize_presentation_mode(mode_id: String) -> String:
 		if String(option.get("id", "")) == mode_id:
 			return mode_id
 	return PRESENTATION_WINDOWED
+
+func _normalize_presentation_resolution(resolution_id: String) -> String:
+	for option in RESOLUTION_OPTIONS:
+		if String(option.get("id", "")) == resolution_id:
+			return resolution_id
+	return PRESENTATION_RESOLUTION_DEFAULT
+
+func _presentation_resolution_option(resolution_id: String) -> Dictionary:
+	var normalized := _normalize_presentation_resolution(resolution_id)
+	for option in RESOLUTION_OPTIONS:
+		if String(option.get("id", "")) == normalized:
+			return option
+	return RESOLUTION_OPTIONS[2]
+
+func _center_window(resolution: Vector2i) -> void:
+	var screen_index := DisplayServer.window_get_current_screen()
+	if screen_index < 0:
+		return
+	var usable_rect := DisplayServer.screen_get_usable_rect(screen_index)
+	if usable_rect.size.x <= 0 or usable_rect.size.y <= 0:
+		return
+	var offset := Vector2i(
+		maxi(0, int((usable_rect.size.x - resolution.x) / 2)),
+		maxi(0, int((usable_rect.size.y - resolution.y) / 2))
+	)
+	DisplayServer.window_set_position(usable_rect.position + offset)
 
 func _ensure_settings_dir() -> bool:
 	var absolute_path := ProjectSettings.globalize_path(SETTINGS_DIR)

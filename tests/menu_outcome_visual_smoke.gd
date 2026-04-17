@@ -11,6 +11,7 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _run_main_menu_smoke() -> bool:
+	var original_resolution := SettingsService.presentation_resolution_id()
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -41,9 +42,50 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
+	if not shell.has_method("validation_open_settings_stage") or not shell.has_method("validation_select_resolution"):
+		push_error("Main menu smoke: settings resolution validation hooks are missing.")
+		get_tree().quit(1)
+		return false
+
+	shell.call("validation_open_settings_stage")
+	var settings_snapshot: Dictionary = shell.call("validation_snapshot")
+	var resolution_ids := _resolution_ids_from_snapshot(settings_snapshot)
+	for expected_id in ["1280x720", "1600x900", "1920x1080", "2560x1440"]:
+		if not resolution_ids.has(expected_id):
+			push_error("Main menu smoke: settings resolution picker omitted %s: %s." % [expected_id, resolution_ids])
+			get_tree().quit(1)
+			return false
+
+	if not bool(shell.call("validation_select_resolution", "1600x900")):
+		push_error("Main menu smoke: settings resolution picker could not select 1600x900.")
+		get_tree().quit(1)
+		return false
+
+	settings_snapshot = shell.call("validation_snapshot")
+	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
+	if String(settings_snapshot.get("presentation_resolution", "")) != "1600x900" or not settings_summary.contains("1600 x 900"):
+		if original_resolution != "1600x900":
+			shell.call("validation_select_resolution", original_resolution)
+		push_error("Main menu smoke: settings summary did not reflect selected 1600x900 resolution: %s." % settings_snapshot)
+		get_tree().quit(1)
+		return false
+
+	if original_resolution != "1600x900" and not bool(shell.call("validation_select_resolution", original_resolution)):
+		push_error("Main menu smoke: settings resolution picker could not restore %s." % original_resolution)
+		get_tree().quit(1)
+		return false
+
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _resolution_ids_from_snapshot(snapshot: Dictionary) -> Array:
+	var ids := []
+	var options: Array = snapshot.get("presentation_resolution_options", [])
+	for option in options:
+		if option is Dictionary:
+			ids.append(String(option.get("id", "")))
+	return ids
 
 func _run_outcome_smoke() -> bool:
 	var session = ScenarioFactory.create_session(

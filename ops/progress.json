@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T17:52:11Z",
+  "updatedAt": "2026-04-17T19:02:04Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "display-1080p-baseline-10184",
-  "currentSliceTitle": "Target 1920x1080 cleanly from the Godot project baseline",
+  "currentSliceId": "settings-resolution-controls-10184",
+  "currentSliceTitle": "Add durable 16:9 runtime resolution controls to Settings",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed focused 1920x1080 baseline pass: project.godot now starts at 1920x1080 with canvas_items/expand stretch, validate_repo guards the display contract, and battle_layout_smoke now treats 1920x1080 as the primary viewport while retaining 1280x720 and 1024x600 compact regression coverage. The 1080p audit exposed test-side assumptions around neighboring stack hit-shape overlap; BattleBoardView validation now reports whether that overlap is geometrically possible at the current board scale, and the board-click fixture explicitly stages melee blockers. Focused menu/outcome, overworld, town/battle, battle layout, and repo validation are green. No manual visual proof is claimed.",
+  "currentSliceNotes": "Completed a narrow settings resolution slice: SettingsService now persists and applies a normalized 16:9 runtime resolution choice, MainMenu Settings exposes a Resolution picker and summary alongside window mode, validate_repo guards exact 16:9 options up to 2560x1440 while preserving the 1920x1080 project baseline, and menu_outcome_visual_smoke exercises the picker path. Focused repo validation and menu/outcome smoke are green. No manual visual proof is claimed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",
