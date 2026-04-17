@@ -9,7 +9,7 @@ func _ready() -> void:
 func _run() -> void:
 	if not await _run_end_turn_and_enemy_presence():
 		return
-	if not _run_auto_interaction_regressions():
+	if not await _run_auto_interaction_regressions():
 		return
 	if not _run_hostile_commander_identity_regression():
 		return
@@ -18,6 +18,24 @@ func _run() -> void:
 	if not _run_battle_exit_aftermath_regression():
 		return
 	if not _run_battlefield_cover_obstruction_regression():
+		return
+	if not _run_battle_hex_occupancy_legality_regression():
+		return
+	if not _run_battle_setup_move_target_continuity_regression():
+		return
+	if not _run_battle_direct_actionable_after_move_regression():
+		return
+	if not _run_battle_direct_actionable_after_move_invalidation_regression():
+		return
+	if not _run_battle_direct_actionable_after_move_direct_handoff_regression():
+		return
+	if not _run_battle_direct_actionable_after_move_prefers_attackable_handoff_regression():
+		return
+	if not _run_battle_direct_actionable_after_move_empty_handoff_regression():
+		return
+	if not _run_battle_setup_move_target_blocked_surface_regression():
+		return
+	if not _run_battle_commander_spell_cadence_regression():
 		return
 	if not _run_hostile_commander_recovery_regression():
 		return
@@ -86,6 +104,8 @@ func _run_auto_interaction_regressions() -> bool:
 	if not _run_encounter_auto_battle_regression():
 		return false
 	if not _run_enemy_town_context_regression():
+		return false
+	if not await _run_overworld_primary_action_regression():
 		return false
 	return true
 
@@ -172,6 +192,110 @@ func _run_enemy_town_context_regression() -> bool:
 		push_error("Core systems smoke: hostile town entry still routes as a player town visit.")
 		get_tree().quit(1)
 		return false
+	return true
+
+func _run_overworld_primary_action_regression() -> bool:
+	var town_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var town := _town_by_placement(town_session, "duskfen_bastion")
+	if town.is_empty():
+		push_error("Core systems smoke: sample scenario is missing Duskfen for primary action coverage.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(town_session, Vector2i(int(town.get("x", 0)), int(town.get("y", 0))))
+	OverworldRules.refresh_fog_of_war(town_session)
+	town_session = SessionState.set_active_session(town_session)
+	var town_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(town_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var town_snapshot: Dictionary = town_shell.call("validation_snapshot")
+	if String(town_snapshot.get("primary_action_id", "")) != "capture_town":
+		push_error("Core systems smoke: Duskfen did not expose capture as the overworld primary action.")
+		get_tree().quit(1)
+		return false
+	town_shell.queue_free()
+	await get_tree().process_frame
+
+	var owned_town_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var owned_town := _town_by_placement(owned_town_session, "duskfen_bastion")
+	if owned_town.is_empty():
+		push_error("Core systems smoke: sample scenario is missing Duskfen for owned-town primary action coverage.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(owned_town_session, Vector2i(int(owned_town.get("x", 0)), int(owned_town.get("y", 0))))
+	var capture_result := OverworldRules.capture_active_town(owned_town_session)
+	if String(capture_result.get("route", "")) != "battle" or owned_town_session.battle.is_empty():
+		push_error("Core systems smoke: Duskfen setup did not stage a town-assault battle for owned-town primary action coverage.")
+		get_tree().quit(1)
+		return false
+	if not _force_player_victory_if_battle_started(owned_town_session, "owned-town primary action setup"):
+		return false
+	var captured_town := _town_by_placement(owned_town_session, "duskfen_bastion")
+	if String(captured_town.get("owner", "")) != "player":
+		push_error("Core systems smoke: Duskfen setup did not transfer ownership for Visit Town primary action coverage.")
+		get_tree().quit(1)
+		return false
+	OverworldRules.refresh_fog_of_war(owned_town_session)
+	owned_town_session = SessionState.set_active_session(owned_town_session)
+	var owned_town_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(owned_town_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var owned_town_snapshot: Dictionary = owned_town_shell.call("validation_snapshot")
+	if (
+		String(owned_town_snapshot.get("primary_action_id", "")) != "visit_town"
+		or bool(owned_town_snapshot.get("primary_action_button_disabled", true))
+		or not String(owned_town_snapshot.get("primary_action_button_text", "")).begins_with("Visit Town")
+	):
+		push_error("Core systems smoke: owned Duskfen did not expose Visit Town as the rendered overworld primary action. %s" % JSON.stringify(owned_town_snapshot))
+		get_tree().quit(1)
+		return false
+	owned_town_shell.queue_free()
+	await get_tree().process_frame
+
+	var resource_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var resource_node := _resource_node_by_placement(resource_session, "north_timber")
+	if resource_node.is_empty():
+		push_error("Core systems smoke: sample scenario is missing north_timber for primary action coverage.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(resource_session, Vector2i(int(resource_node.get("x", 0)), int(resource_node.get("y", 0))))
+	OverworldRules.refresh_fog_of_war(resource_session)
+	resource_session = SessionState.set_active_session(resource_session)
+	var resource_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(resource_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var resource_snapshot: Dictionary = resource_shell.call("validation_snapshot")
+	if String(resource_snapshot.get("primary_action_id", "")) != "collect_resource":
+		push_error("Core systems smoke: resource site did not expose collection as the overworld primary action.")
+		get_tree().quit(1)
+		return false
+	var primary_result: Dictionary = resource_shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	var resource_after := _resource_node_by_placement(resource_session, "north_timber")
+	if not bool(primary_result.get("ok", false)) or String(resource_after.get("collected_by_faction_id", "")) != "player":
+		push_error("Core systems smoke: overworld primary action did not collect the active resource site. %s" % JSON.stringify({
+			"primary_result": primary_result,
+			"resource_after": resource_after,
+			"resource_snapshot": resource_snapshot,
+		}))
+		get_tree().quit(1)
+		return false
+	resource_shell.queue_free()
+	await get_tree().process_frame
 	return true
 
 func _run_hostile_commander_identity_regression() -> bool:
@@ -794,19 +918,29 @@ func _run_battlefield_cover_obstruction_regression() -> bool:
 		return false
 
 	var restored = _clone_session(session)
+	var current_cover := _battlefield_objective(session.battle, "bone_rack_cover_line")
+	var current_obstruction := _battlefield_objective(session.battle, "ferry_chain_obstruction")
 	var restored_cover := _battlefield_objective(restored.battle, "bone_rack_cover_line")
-	if String(restored_cover.get("control_side", "")) != "player":
-		push_error("Core systems smoke: restored battle lost the cover-line controller state.")
+	if (
+		String(restored_cover.get("control_side", "")) != String(current_cover.get("control_side", ""))
+		or String(restored_cover.get("progress_side", "")) != String(current_cover.get("progress_side", ""))
+		or int(restored_cover.get("progress_value", 0)) != int(current_cover.get("progress_value", 0))
+	):
+		push_error("Core systems smoke: restored battle lost the cover-line controller state: current=%s restored=%s." % [current_cover, restored_cover])
 		get_tree().quit(1)
 		return false
 	var restored_obstruction := _battlefield_objective(restored.battle, "ferry_chain_obstruction")
-	if String(restored_obstruction.get("control_side", "")) != "enemy" or String(restored_obstruction.get("progress_side", "")) != "player" or int(restored_obstruction.get("progress_value", 0)) != 1:
-		push_error("Core systems smoke: restored battle lost the obstruction-line contest state.")
+	if (
+		String(restored_obstruction.get("control_side", "")) != String(current_obstruction.get("control_side", ""))
+		or String(restored_obstruction.get("progress_side", "")) != String(current_obstruction.get("progress_side", ""))
+		or int(restored_obstruction.get("progress_value", 0)) != int(current_obstruction.get("progress_value", 0))
+	):
+		push_error("Core systems smoke: restored battle lost the obstruction-line contest state: current=%s restored=%s." % [current_obstruction, restored_obstruction])
 		get_tree().quit(1)
 		return false
 	var restored_pressure := BattleRules.describe_pressure(restored)
-	if "Friendly cover is blunting the opening volleys." not in restored_pressure:
-		push_error("Core systems smoke: restored battle summary lost the cover-line pressure implication.")
+	if "Terrain effect:" not in restored_pressure or "cover" not in restored_pressure.to_lower() or "obstruction" not in restored_pressure.to_lower():
+		push_error("Core systems smoke: restored battle summary lost the compact terrain implications for cover and obstruction.")
 		get_tree().quit(1)
 		return false
 
@@ -839,8 +973,1530 @@ func _run_battlefield_cover_obstruction_regression() -> bool:
 		push_error("Core systems smoke: clear-lane coverage could not perform the player advance.")
 		get_tree().quit(1)
 		return false
-	if int(clear_session.battle.get("distance", -1)) != 1:
+	if int(clear_session.battle.get("distance", -1)) >= 2:
 		push_error("Core systems smoke: removing the obstruction did not let the advance close the lane again.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_hex_occupancy_legality_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: hex legality coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: hex legality coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var occupancy: Dictionary = BattleRules.battle_occupancy_map(session.battle)
+	var living_stacks := _living_battle_stack_count(session.battle)
+	if occupancy.size() != living_stacks:
+		push_error("Core systems smoke: battle hex occupancy did not match living stack count.")
+		get_tree().quit(1)
+		return false
+	for stack in session.battle.get("stacks", []):
+		if not (stack is Dictionary) or int(stack.get("total_health", 0)) <= 0:
+			continue
+		var hex := _stack_hex_for_test(stack)
+		if hex.is_empty() or not occupancy.has(_hex_key_for_test(hex)):
+			push_error("Core systems smoke: live stack is missing a saved occupied hex: %s." % stack)
+			get_tree().quit(1)
+			return false
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var enemy_melee := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or enemy_melee.is_empty():
+		push_error("Core systems smoke: hex legality coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var enemy_id := String(enemy_melee.get("battle_id", ""))
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(session.battle, enemy_id, {"q": 5, "r": 3})
+	session.battle["distance"] = 0
+	_force_battle_turn(session.battle, player_id, enemy_id, enemy_id)
+	BattleRules.normalize_battle_state(session)
+	if not bool(BattleRules.action_availability(session.battle).get("strike", false)):
+		push_error("Core systems smoke: adjacent hexes did not make melee strike legal.")
+		get_tree().quit(1)
+		return false
+	var adjacent_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	if not bool(adjacent_legality.get("attackable", false)) or bool(adjacent_legality.get("blocked", false)):
+		push_error("Core systems smoke: adjacent selected target was not surfaced as attackable: %s." % adjacent_legality)
+		get_tree().quit(1)
+		return false
+	var melee_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	if String(melee_click_intent.get("action", "")) != "strike" or String(melee_click_intent.get("label", "")) != "Strike":
+		push_error("Core systems smoke: adjacent melee selected target did not surface Strike board-click intent: %s." % melee_click_intent)
+		get_tree().quit(1)
+		return false
+	var melee_target_context := BattleRules.describe_target_context(session).to_lower()
+	if "board click will strike" not in melee_target_context:
+		push_error("Core systems smoke: adjacent melee target context did not preview Strike board-click intent: %s." % melee_target_context)
+		get_tree().quit(1)
+		return false
+
+	var player_ranged := _first_stack_for_side(session.battle, "player", true)
+	if player_ranged.is_empty():
+		push_error("Core systems smoke: board-click intent coverage could not find a player ranged stack.")
+		get_tree().quit(1)
+		return false
+	var player_ranged_id := String(player_ranged.get("battle_id", ""))
+	_set_stack_hex_for_test(session.battle, player_ranged_id, {"q": 4, "r": 2})
+	_set_stack_hex_for_test(session.battle, enemy_id, {"q": 5, "r": 2})
+	_force_battle_turn(session.battle, player_ranged_id, enemy_id, enemy_id)
+	BattleRules.normalize_battle_state(session)
+	var ranged_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	if String(ranged_click_intent.get("action", "")) != "shoot" or String(ranged_click_intent.get("label", "")) != "Shoot":
+		push_error("Core systems smoke: legal ranged selected target did not surface Shoot board-click intent: %s." % ranged_click_intent)
+		get_tree().quit(1)
+		return false
+	var ranged_target_context := BattleRules.describe_target_context(session).to_lower()
+	if "board click will shoot" not in ranged_target_context:
+		push_error("Core systems smoke: ranged target context did not preview Shoot board-click intent: %s." % ranged_target_context)
+		get_tree().quit(1)
+		return false
+
+	_set_stack_hex_for_test(session.battle, enemy_id, {"q": 8, "r": 3})
+	session.battle["distance"] = 0
+	_force_battle_turn(session.battle, player_id, enemy_id, enemy_id)
+	BattleRules.normalize_battle_state(session)
+	if bool(BattleRules.action_availability(session.battle).get("strike", false)):
+		push_error("Core systems smoke: non-adjacent hexes still allowed a melee strike.")
+		get_tree().quit(1)
+		return false
+	var blocked_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	if bool(blocked_legality.get("attackable", false)) or not bool(blocked_legality.get("blocked", false)):
+		push_error("Core systems smoke: non-adjacent selected target was not surfaced as blocked: %s." % blocked_legality)
+		get_tree().quit(1)
+		return false
+	var blocked_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	if String(blocked_click_intent.get("action", "")) != "" or not bool(blocked_click_intent.get("blocked", false)):
+		push_error("Core systems smoke: blocked selected target exposed an executable board-click intent: %s." % blocked_click_intent)
+		get_tree().quit(1)
+		return false
+	if not bool(BattleRules.action_availability(session.battle).get("advance", false)):
+		push_error("Core systems smoke: engaged non-adjacent stacks did not expose legal repositioning.")
+		get_tree().quit(1)
+		return false
+
+	var legal_enemy_id := "test_legal_enemy_target"
+	_ensure_enemy_stack_for_test(session.battle, enemy_melee, legal_enemy_id)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(session.battle, legal_enemy_id, {"q": 5, "r": 3})
+	_set_stack_hex_for_test(session.battle, enemy_id, {"q": 8, "r": 3})
+	session.battle["distance"] = 0
+	_force_battle_turn(session.battle, player_id, enemy_id, legal_enemy_id)
+	BattleRules.normalize_battle_state(session)
+	session.battle["selected_target_id"] = enemy_id
+	var legal_target_ids: Array = BattleRules.legal_attack_target_ids_for_active_stack(session.battle)
+	if legal_enemy_id not in legal_target_ids or enemy_id in legal_target_ids:
+		push_error("Core systems smoke: legal target ids did not separate reachable and blocked enemies: legal=%s blocked=%s all=%s." % [legal_enemy_id, enemy_id, legal_target_ids])
+		get_tree().quit(1)
+		return false
+	var blocked_target_context := BattleRules.describe_target_context(session).to_lower()
+	if "selected target blocked" not in blocked_target_context or "highlighted enemy" not in blocked_target_context or "green hex click" not in blocked_target_context:
+		push_error("Core systems smoke: blocked selected target context was not explicit: %s." % blocked_target_context)
+		get_tree().quit(1)
+		return false
+	blocked_click_intent = BattleRules.selected_target_board_click_intent(session.battle)
+	var blocked_intent_message := String(blocked_click_intent.get("message", "")).to_lower()
+	if "board click blocked" not in blocked_intent_message or "highlighted enemy" not in blocked_intent_message:
+		push_error("Core systems smoke: blocked selected target board-click intent was not explicit: %s." % blocked_click_intent)
+		get_tree().quit(1)
+		return false
+	var blocked_action_surface: Dictionary = BattleRules.get_action_surface(session)
+	var strike_summary := String(blocked_action_surface.get("strike", {}).get("summary", "")).to_lower()
+	if "blocked" not in strike_summary or "highlighted enemy" not in strike_summary or "green hex click" not in strike_summary:
+		push_error("Core systems smoke: blocked selected target strike guidance was not explicit: %s." % strike_summary)
+		get_tree().quit(1)
+		return false
+	var blocked_action_text := BattleRules.describe_action_surface(session).to_lower()
+	if "green hex click: move" not in blocked_action_text:
+		push_error("Core systems smoke: action context did not expose green-hex Move intent while target was blocked: %s." % blocked_action_text)
+		get_tree().quit(1)
+		return false
+	BattleRules.cycle_target(session, 1)
+	if String(BattleRules.get_selected_target(session.battle).get("battle_id", "")) != legal_enemy_id:
+		push_error("Core systems smoke: target cycling did not prefer the legal target when a blocked target was selected: %s." % session.battle.get("selected_target_id", ""))
+		get_tree().quit(1)
+		return false
+	_remove_battle_stack_for_test(session.battle, legal_enemy_id)
+	_force_battle_turn(session.battle, player_id, enemy_id, enemy_id)
+	BattleRules.normalize_battle_state(session)
+	session.battle["selected_target_id"] = enemy_id
+
+	var out_of_bounds_move := BattleRules.move_active_stack_to_hex(session, -1, 3)
+	if bool(out_of_bounds_move.get("ok", false)):
+		push_error("Core systems smoke: out-of-bounds hex movement was accepted.")
+		get_tree().quit(1)
+		return false
+
+	var occupied_move := BattleRules.move_active_stack_to_hex(session, 8, 3)
+	if bool(occupied_move.get("ok", false)):
+		push_error("Core systems smoke: movement into an occupied hex was accepted.")
+		get_tree().quit(1)
+		return false
+
+	var legal_destinations: Array = BattleRules.legal_destinations_for_active_stack(session.battle)
+	if legal_destinations.is_empty():
+		push_error("Core systems smoke: active stack had no legal hex destinations on an open board.")
+		get_tree().quit(1)
+		return false
+	var setup_case := _stage_later_attack_destination_for_test(session.battle, player_id, enemy_id)
+	if setup_case.is_empty():
+		push_error("Core systems smoke: could not stage a green-hex destination that truthfully sets up a later attack.")
+		get_tree().quit(1)
+		return false
+	var destination: Dictionary = setup_case.get("destination", {})
+	var movement_intent: Dictionary = setup_case.get("intent", {})
+	var movement_message := String(movement_intent.get("message", "")).to_lower()
+	if String(movement_intent.get("action", "")) != "move" or String(movement_intent.get("label", "")) != "Move" or "green hex click: move" not in movement_message:
+		push_error("Core systems smoke: legal movement destination did not expose Move board-click intent: %s." % movement_intent)
+		get_tree().quit(1)
+		return false
+	var expected_destination_label := "hex %d,%d" % [int(destination.get("q", -1)), int(destination.get("r", -1))]
+	var destination_detail := String(movement_intent.get("destination_detail", "")).to_lower()
+	if expected_destination_label not in destination_detail or "step" not in destination_detail:
+		push_error("Core systems smoke: movement intent did not expose exact destination detail: destination=%s intent=%s." % [destination, movement_intent])
+		get_tree().quit(1)
+		return false
+	if int(movement_intent.get("steps", -1)) != int(destination.get("steps", -2)) or int(movement_intent.get("steps", 0)) <= 0:
+		push_error("Core systems smoke: movement intent step count did not match the legal destination: destination=%s intent=%s." % [destination, movement_intent])
+		get_tree().quit(1)
+		return false
+	if not bool(movement_intent.get("sets_up_selected_target_attack", false)) or String(movement_intent.get("selected_target_setup_label", "")) != "Strike" or "later strike" not in movement_message:
+		push_error("Core systems smoke: movement intent did not truthfully surface later-attack setup on the blocked target: %s." % movement_intent)
+		get_tree().quit(1)
+		return false
+	var hex_state: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var active_movement_intent: Dictionary = hex_state.get("active_movement_board_click_intent", {})
+	if String(active_movement_intent.get("action", "")) != "move" or String(active_movement_intent.get("label", "")) != "Move":
+		push_error("Core systems smoke: hex state did not expose active movement board-click intent: %s." % hex_state)
+		get_tree().quit(1)
+		return false
+	var legal_movement_intents: Array = hex_state.get("legal_movement_intents", [])
+	var refreshed_legal_destinations: Array = BattleRules.legal_destinations_for_active_stack(session.battle)
+	if legal_movement_intents.size() != refreshed_legal_destinations.size():
+		push_error("Core systems smoke: movement intent count did not match legal destinations: intents=%s destinations=%s." % [legal_movement_intents, refreshed_legal_destinations])
+		get_tree().quit(1)
+		return false
+	var move_result := BattleRules.move_active_stack_to_hex(
+		session,
+		int(destination.get("q", -1)),
+		int(destination.get("r", -1))
+	)
+	if not bool(move_result.get("ok", false)):
+		push_error("Core systems smoke: legal hex movement was rejected: %s." % move_result)
+		get_tree().quit(1)
+		return false
+	var move_result_message := String(move_result.get("message", ""))
+	if not move_result_message.begins_with(String(movement_intent.get("message", ""))):
+		push_error("Core systems smoke: clicked move did not preserve the preview movement language: preview=%s result=%s." % [movement_intent, move_result])
+		get_tree().quit(1)
+		return false
+	if String(move_result.get("preview_message", "")) != String(movement_intent.get("message", "")):
+		push_error("Core systems smoke: clicked move validation result did not retain the preview message: preview=%s result=%s." % [movement_intent, move_result])
+		get_tree().quit(1)
+		return false
+	if String(move_result.get("destination_detail", "")) != String(movement_intent.get("destination_detail", "")) or int(move_result.get("steps", -1)) != int(movement_intent.get("steps", -2)):
+		push_error("Core systems smoke: clicked move result did not retain destination detail/steps: preview=%s result=%s." % [movement_intent, move_result])
+		get_tree().quit(1)
+		return false
+	if bool(move_result.get("sets_up_selected_target_attack", false)) != bool(movement_intent.get("sets_up_selected_target_attack", false)) or String(move_result.get("selected_target_setup_label", "")) != String(movement_intent.get("selected_target_setup_label", "")):
+		push_error("Core systems smoke: clicked move result did not retain the later-attack setup hint: preview=%s result=%s." % [movement_intent, move_result])
+		get_tree().quit(1)
+		return false
+	var moved_stack := _battle_stack_by_id(session.battle, player_id)
+	if _hex_key_for_test(_stack_hex_for_test(moved_stack)) != _hex_key_for_test(destination):
+		push_error("Core systems smoke: legal movement did not update the stack hex.")
+		get_tree().quit(1)
+		return false
+	var restored = _clone_session(session)
+	var restored_stack := _battle_stack_by_id(restored.battle, player_id)
+	if _hex_key_for_test(_stack_hex_for_test(restored_stack)) != _hex_key_for_test(destination):
+		push_error("Core systems smoke: saved battle hex state did not survive restore normalization.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_setup_move_target_continuity_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: setup-move target continuity coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: setup-move target continuity coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var default_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or default_enemy.is_empty():
+		push_error("Core systems smoke: setup-move target continuity coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var default_enemy_id := String(default_enemy.get("battle_id", ""))
+	var continuity_target_id := "setup_move_continuity_target"
+	_ensure_enemy_stack_for_test(session.battle, default_enemy, continuity_target_id)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(session.battle, default_enemy_id, {"q": 5, "r": 3})
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, default_enemy_id, continuity_target_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = continuity_target_id
+	BattleRules.normalize_battle_state(session)
+	session.battle["selected_target_id"] = continuity_target_id
+
+	var setup_case := _stage_later_attack_destination_for_test(session.battle, player_id, continuity_target_id)
+	if setup_case.is_empty():
+		push_error("Core systems smoke: setup-move target continuity coverage could not stage a later-attack destination.")
+		get_tree().quit(1)
+		return false
+	var destination: Dictionary = setup_case.get("destination", {})
+	var blocked_setup_intent: Dictionary = setup_case.get("intent", {})
+	var target_hex: Dictionary = setup_case.get("target_hex", {})
+	var default_enemy_hex := _open_neighbor_for_test(session.battle, destination, [_hex_key_for_test(target_hex)])
+	if default_enemy_hex.is_empty():
+		push_error("Core systems smoke: setup-move target continuity coverage could not place a default legal target near the destination.")
+		get_tree().quit(1)
+		return false
+	_set_stack_hex_for_test(session.battle, default_enemy_id, default_enemy_hex)
+	session.battle["selected_target_id"] = continuity_target_id
+	var movement_intent := BattleRules.movement_intent_for_destination(
+		session.battle,
+		int(destination.get("q", -1)),
+		int(destination.get("r", -1))
+	)
+	if not bool(movement_intent.get("sets_up_selected_target_attack", false)):
+		push_error("Core systems smoke: setup-move target continuity coverage lost the later-attack setup after adding a default legal target: before=%s after=%s." % [blocked_setup_intent, movement_intent])
+		get_tree().quit(1)
+		return false
+	var pre_move_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	if not bool(pre_move_legality.get("blocked", false)):
+		push_error("Core systems smoke: setup-move target continuity setup did not keep the continuity target blocked before movement: %s." % [pre_move_legality])
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(
+		session,
+		int(destination.get("q", -1)),
+		int(destination.get("r", -1))
+	)
+	if not bool(move_result.get("ok", false)):
+		push_error("Core systems smoke: setup-move target continuity move was rejected: %s." % move_result)
+		get_tree().quit(1)
+		return false
+	if not bool(move_result.get("selected_target_continuity_preserved", false)):
+		push_error("Core systems smoke: setup-move target continuity was not marked preserved: %s." % move_result)
+		get_tree().quit(1)
+		return false
+	var selected_after_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	if selected_after_id != continuity_target_id:
+		push_error("Core systems smoke: setup move did not keep the selected blocked target after resolving. expected=%s actual=%s result=%s." % [continuity_target_id, selected_after_id, move_result])
+		get_tree().quit(1)
+		return false
+	if String(move_result.get("selected_target_after_move_battle_id", "")) != continuity_target_id:
+		push_error("Core systems smoke: setup-move result did not report the preserved selected target: %s." % move_result)
+		get_tree().quit(1)
+		return false
+	var post_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var post_move_legal_targets: Array = BattleRules.legal_attack_target_ids_for_active_stack(session.battle)
+	if default_enemy_id not in post_move_legal_targets:
+		push_error("Core systems smoke: setup-move target continuity did not retain the competing legal default target after movement: legal=%s result=%s." % [post_move_legal_targets, move_result])
+		get_tree().quit(1)
+		return false
+	var result_legality: Dictionary = move_result.get("selected_target_after_move_legality", {})
+	if bool(result_legality.get("attackable", false)) != bool(post_legality.get("attackable", false)) or bool(result_legality.get("blocked", false)) != bool(post_legality.get("blocked", false)):
+		push_error("Core systems smoke: setup-move result legality did not match the post-move battle state: result=%s state=%s." % [result_legality, post_legality])
+		get_tree().quit(1)
+		return false
+	var post_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var continuity_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	if continuity_context.is_empty() or not bool(continuity_context.get("preserved_setup_target", false)):
+		push_error("Core systems smoke: setup-move target continuity did not expose preserved setup context after movement: result=%s context=%s." % [move_result, continuity_context])
+		get_tree().quit(1)
+		return false
+	var post_guidance := BattleRules.describe_target_context(session).to_lower()
+	var post_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if "preserved setup target" not in post_action_guidance:
+		push_error("Core systems smoke: setup-move action surface did not call out the preserved setup target: %s." % post_action_guidance)
+		get_tree().quit(1)
+		return false
+	if bool(post_legality.get("attackable", false)):
+		var post_action_id := String(post_click_intent.get("action", ""))
+		var post_action_surface: Dictionary = BattleRules.get_action_surface(session)
+		var surfaced_action: Dictionary = post_action_surface.get(post_action_id, {})
+		if (
+			post_action_id not in ["strike", "shoot"]
+			or "board click will" not in post_guidance
+			or "board click will" not in post_action_guidance
+			or surfaced_action.is_empty()
+			or bool(surfaced_action.get("disabled", true))
+		):
+			push_error("Core systems smoke: setup-move post guidance did not expose the legal attack truthfully: legality=%s intent=%s guidance=%s." % [post_legality, post_click_intent, post_guidance])
+			get_tree().quit(1)
+			return false
+	elif bool(post_legality.get("blocked", false)):
+		if not bool(post_click_intent.get("blocked", false)) or "still blocked" not in post_guidance or "still blocked" not in post_action_guidance:
+			push_error("Core systems smoke: setup-move post guidance did not expose the still-blocked truthfully: legality=%s intent=%s guidance=%s." % [post_legality, post_click_intent, post_guidance])
+			get_tree().quit(1)
+			return false
+	else:
+		push_error("Core systems smoke: setup-move post legality was neither attackable nor blocked: %s." % post_legality)
+		get_tree().quit(1)
+		return false
+	if String(move_result.get("selected_target_after_move_board_click_action", "")) != String(post_click_intent.get("action", "")):
+		push_error("Core systems smoke: setup-move result did not report the same post-move board-click action as the battle state: result=%s state=%s." % [move_result, post_click_intent])
+		get_tree().quit(1)
+		return false
+	BattleRules.cycle_target(session, 1)
+	var retargeted_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	if retargeted_id == "" or retargeted_id == continuity_target_id:
+		push_error("Core systems smoke: setup-move retarget cycle did not move focus away from the preserved setup target. selected=%s preserved=%s." % [retargeted_id, continuity_target_id])
+		get_tree().quit(1)
+		return false
+	var retarget_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var retarget_guidance := BattleRules.describe_target_context(session).to_lower()
+	var retarget_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY) or not retarget_context.is_empty() or "preserved setup target" in retarget_guidance or "preserved setup target" in retarget_action_guidance:
+		push_error("Core systems smoke: explicit target cycling left preserved setup context stuck on the old target: selected=%s context=%s target=%s action=%s battle=%s." % [retargeted_id, retarget_context, retarget_guidance, retarget_action_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+	var normalized_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	if normalized_id == continuity_target_id or not BattleRules.selected_target_continuity_context(session.battle).is_empty():
+		push_error("Core systems smoke: cleared setup-target continuity reasserted after battle normalization: selected=%s preserved=%s battle=%s." % [normalized_id, continuity_target_id, session.battle])
+		get_tree().quit(1)
+		return false
+	var active_after_clear := BattleRules.get_active_stack(session.battle)
+	var refocus_hex := _open_neighbor_for_test(session.battle, _stack_hex_for_test(active_after_clear))
+	if refocus_hex.is_empty():
+		push_error("Core systems smoke: cleared setup-target continuity coverage could not place the old target for cycle-back proof.")
+		get_tree().quit(1)
+		return false
+	_set_stack_hex_for_test(session.battle, continuity_target_id, refocus_hex)
+	BattleRules.select_target(session, retargeted_id)
+	var cycled_back_id := ""
+	for _attempt in range(4):
+		BattleRules.cycle_target(session, 1)
+		cycled_back_id = String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+		if cycled_back_id == continuity_target_id:
+			break
+	var cycled_back_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var cycled_back_guidance := BattleRules.describe_target_context(session).to_lower()
+	var cycled_back_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		cycled_back_id != continuity_target_id
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or not cycled_back_context.is_empty()
+		or "preserved setup target" in cycled_back_guidance
+		or "preserved setup target" in cycled_back_action_guidance
+	):
+		push_error("Core systems smoke: cycling back to the old setup target resurrected preserved context or failed to refocus it normally: selected=%s context=%s target=%s action=%s battle=%s." % [cycled_back_id, cycled_back_context, cycled_back_guidance, cycled_back_action_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+	var reselect_other := BattleRules.select_target(session, retargeted_id)
+	if not bool(reselect_other.get("ok", false)):
+		push_error("Core systems smoke: cleared setup-target continuity coverage could not reselect the replacement target: %s." % reselect_other)
+		get_tree().quit(1)
+		return false
+	var old_target_selection := BattleRules.select_target(session, continuity_target_id)
+	var old_target_selection_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var old_target_selection_result_context: Dictionary = old_target_selection.get("selected_target_continuity_context", {}) if old_target_selection.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var old_target_selection_guidance := BattleRules.describe_target_context(session).to_lower()
+	var old_target_selection_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		not bool(old_target_selection.get("ok", false))
+		or bool(old_target_selection.get("selected_target_preserved_setup", false))
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or not old_target_selection_context.is_empty()
+		or not old_target_selection_result_context.is_empty()
+		or "preserved setup target" in old_target_selection_guidance
+		or "preserved setup target" in old_target_selection_action_guidance
+	):
+		push_error("Core systems smoke: selecting back to the old setup target resurrected preserved context instead of normal target focus: result=%s context=%s target=%s action=%s battle=%s." % [old_target_selection, old_target_selection_context, old_target_selection_guidance, old_target_selection_action_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+	var followup_player_id := "post_clear_normal_move_player"
+	_ensure_player_stack_for_test(session.battle, active_after_clear, followup_player_id)
+	_remove_battle_stack_for_test(session.battle, retargeted_id)
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, continuity_target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	var alternate_enemy_id := "ordinary_closing_retarget_enemy"
+	_ensure_enemy_stack_for_test(session.battle, _battle_stack_by_id(session.battle, continuity_target_id), alternate_enemy_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, followup_player_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, followup_player_id, 999)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, followup_player_id, {"q": 0, "r": 0})
+	_set_stack_hex_for_test(session.battle, continuity_target_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(session.battle, alternate_enemy_id, {"q": 10, "r": 6})
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+	session.battle["turn_order"] = [player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = continuity_target_id
+	var normal_move_intent := BattleRules.movement_intent_for_destination(session.battle, 1, 3)
+	if (
+		String(normal_move_intent.get("action", "")) != "move"
+		or not bool(normal_move_intent.get("closes_on_selected_target", false))
+		or bool(normal_move_intent.get("sets_up_selected_target_attack", false))
+		or String(normal_move_intent.get("selected_target_battle_id", "")) != continuity_target_id
+	):
+		push_error("Core systems smoke: post-clear old-target normal movement setup was not a non-continuity move toward the target: %s battle=%s." % [normal_move_intent, session.battle])
+		get_tree().quit(1)
+		return false
+	var normal_move_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var normal_result_context: Dictionary = normal_move_result.get("selected_target_continuity_context", {}) if normal_move_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var normal_closing_context: Dictionary = normal_move_result.get("selected_target_closing_context", {}) if normal_move_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var normal_state_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var normal_state_closing_context: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var normal_post_guidance := String(normal_move_result.get("post_move_target_guidance", "")).to_lower()
+	var normal_target_guidance := BattleRules.describe_target_context(session).to_lower()
+	var normal_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	var normal_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	if (
+		not bool(normal_move_result.get("ok", false))
+		or bool(normal_move_result.get("selected_target_continuity_preserved", false))
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or not normal_result_context.is_empty()
+		or not normal_state_context.is_empty()
+		or String(normal_move_result.get("selected_target_after_move_battle_id", "")) != continuity_target_id
+		or not bool(normal_click_intent.get("blocked", false))
+		or not bool(normal_move_result.get("closes_on_selected_target", false))
+		or not bool(normal_move_result.get("selected_target_closing_on_target", false))
+		or normal_closing_context.is_empty()
+		or not bool(normal_closing_context.get("ordinary_closing_target", false))
+		or bool(normal_closing_context.get("preserved_setup_target", false))
+		or normal_state_closing_context.is_empty()
+		or String(normal_state_closing_context.get("battle_id", "")) != continuity_target_id
+		or "closing on target" not in normal_post_guidance
+		or "closing on target" not in normal_target_guidance
+		or "closing on target" not in normal_action_guidance
+		or "preserved setup target" in normal_post_guidance
+		or "preserved setup target" in normal_target_guidance
+		or "preserved setup target" in normal_action_guidance
+	):
+		push_error("Core systems smoke: post-clear normal movement toward the old setup target did not stay ordinary while surfacing closing progress: intent=%s result=%s continuity=%s closing=%s target=%s action=%s battle=%s." % [normal_move_intent, normal_move_result, normal_state_context, normal_state_closing_context, normal_target_guidance, normal_action_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+
+	_set_stack_hex_for_test(session.battle, continuity_target_id, {"q": 2, "r": 3})
+	var attackable_closing_context: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var attackable_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var attackable_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var attackable_action_surface: Dictionary = BattleRules.get_action_surface(session)
+	var attackable_action_id := String(attackable_click_intent.get("action", ""))
+	var attackable_action: Dictionary = attackable_action_surface.get(attackable_action_id, {}) if attackable_action_surface.get(attackable_action_id, {}) is Dictionary else {}
+	var attackable_target_guidance := BattleRules.describe_target_context(session).to_lower()
+	var attackable_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	var attackable_hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var attackable_summary_closing: Dictionary = attackable_hex_summary.get("selected_target_closing_context", {}) if attackable_hex_summary.get("selected_target_closing_context", {}) is Dictionary else {}
+	if (
+		session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or not attackable_closing_context.is_empty()
+		or not attackable_summary_closing.is_empty()
+		or not bool(attackable_legality.get("attackable", false))
+		or attackable_action_id not in ["strike", "shoot"]
+		or attackable_action.is_empty()
+		or bool(attackable_action.get("disabled", true))
+		or "closing on target" in attackable_target_guidance
+		or "closing on target" in attackable_action_guidance
+		or "board click will" not in attackable_target_guidance
+		or "board click will" not in attackable_action_guidance
+	):
+		push_error("Core systems smoke: ordinary closing context did not clear when the selected target became attackable: closing=%s legality=%s intent=%s target=%s action=%s summary=%s battle=%s." % [attackable_closing_context, attackable_legality, attackable_click_intent, attackable_target_guidance, attackable_action_guidance, attackable_hex_summary, session.battle])
+		get_tree().quit(1)
+		return false
+
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, continuity_target_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(session.battle, alternate_enemy_id, {"q": 10, "r": 6})
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+	session.battle["turn_order"] = [player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = continuity_target_id
+	var retarget_stage_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var retarget_stage_context := BattleRules.selected_target_closing_context(session.battle)
+	if not bool(retarget_stage_result.get("ok", false)) or retarget_stage_context.is_empty():
+		push_error("Core systems smoke: ordinary closing retarget-clear setup did not recreate closing context: result=%s context=%s battle=%s." % [retarget_stage_result, retarget_stage_context, session.battle])
+		get_tree().quit(1)
+		return false
+	var closing_retarget_result := BattleRules.select_target(session, alternate_enemy_id)
+	var retarget_closing_context: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var retarget_action_guidance_after_closing := BattleRules.describe_action_surface(session).to_lower()
+	var retarget_target_guidance_after_closing := BattleRules.describe_target_context(session).to_lower()
+	var retarget_result_closing: Dictionary = closing_retarget_result.get("selected_target_closing_context", {}) if closing_retarget_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	if (
+		not bool(closing_retarget_result.get("ok", false))
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or bool(closing_retarget_result.get("selected_target_closing_on_target", false))
+		or not retarget_result_closing.is_empty()
+		or not retarget_closing_context.is_empty()
+		or "closing on target" in retarget_action_guidance_after_closing
+		or "closing on target" in retarget_target_guidance_after_closing
+	):
+		push_error("Core systems smoke: ordinary closing context did not clear when selected target changed: result=%s context=%s target=%s action=%s battle=%s." % [closing_retarget_result, retarget_closing_context, retarget_target_guidance_after_closing, retarget_action_guidance_after_closing, session.battle])
+		get_tree().quit(1)
+		return false
+
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, followup_player_id, {"q": 0, "r": 0})
+	_set_stack_hex_for_test(session.battle, continuity_target_id, {"q": 4, "r": 3})
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+	session.battle["turn_order"] = [player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = continuity_target_id
+	var active_change_stage_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var active_change_stage_context := BattleRules.selected_target_closing_context(session.battle)
+	if not bool(active_change_stage_result.get("ok", false)) or active_change_stage_context.is_empty():
+		push_error("Core systems smoke: ordinary closing active-change setup did not recreate closing context: result=%s context=%s battle=%s." % [active_change_stage_result, active_change_stage_context, session.battle])
+		get_tree().quit(1)
+		return false
+	session.battle["turn_order"] = [followup_player_id, followup_player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = followup_player_id
+	var active_changed_closing_context: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var active_changed_target_guidance := BattleRules.describe_target_context(session).to_lower()
+	var active_changed_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or not active_changed_closing_context.is_empty()
+		or "closing on target" in active_changed_target_guidance
+		or "closing on target" in active_changed_action_guidance
+	):
+		push_error("Core systems smoke: ordinary closing context did not clear after active stack changed: context=%s target=%s action=%s battle=%s." % [active_changed_closing_context, active_changed_target_guidance, active_changed_action_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+
+	session.battle["selected_target_id"] = continuity_target_id
+	var fresh_setup_case := _stage_later_attack_destination_for_test(session.battle, followup_player_id, continuity_target_id)
+	if fresh_setup_case.is_empty():
+		push_error("Core systems smoke: post-clear fresh setup coverage could not stage a new setup move for the old target.")
+		get_tree().quit(1)
+		return false
+	var fresh_destination: Dictionary = fresh_setup_case.get("destination", {})
+	var fresh_intent := BattleRules.movement_intent_for_destination(
+		session.battle,
+		int(fresh_destination.get("q", -1)),
+		int(fresh_destination.get("r", -1))
+	)
+	if not bool(fresh_intent.get("sets_up_selected_target_attack", false)):
+		push_error("Core systems smoke: post-clear fresh setup move did not truthfully preview recreated continuity: %s." % fresh_intent)
+		get_tree().quit(1)
+		return false
+	var fresh_result := BattleRules.move_active_stack_to_hex(
+		session,
+		int(fresh_destination.get("q", -1)),
+		int(fresh_destination.get("r", -1))
+	)
+	var fresh_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	if (
+		not bool(fresh_result.get("ok", false))
+		or not bool(fresh_result.get("selected_target_continuity_preserved", false))
+		or bool(fresh_result.get("selected_target_closing_on_target", false))
+		or not BattleRules.selected_target_closing_context(session.battle).is_empty()
+		or fresh_context.is_empty()
+		or not bool(fresh_context.get("preserved_setup_target", false))
+		or String(fresh_context.get("battle_id", "")) != continuity_target_id
+	):
+		push_error("Core systems smoke: fresh setup move after retarget clear did not recreate preserved setup continuity: intent=%s result=%s context=%s battle=%s." % [fresh_intent, fresh_result, fresh_context, session.battle])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_direct_actionable_after_move_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: direct actionable move coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: direct actionable move coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var selected_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or selected_enemy.is_empty():
+		push_error("Core systems smoke: direct actionable move coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var target_id := String(selected_enemy.get("battle_id", ""))
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, target_id, 999)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, target_id, {"q": 3, "r": 3})
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = target_id
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+
+	var first_intent := BattleRules.movement_intent_for_destination(session.battle, 1, 3)
+	if (
+		String(first_intent.get("action", "")) != "move"
+		or not bool(first_intent.get("closes_on_selected_target", false))
+		or bool(first_intent.get("sets_up_selected_target_attack", false))
+	):
+		push_error("Core systems smoke: direct actionable move coverage could not stage the ordinary closing lead-in: intent=%s battle=%s." % [first_intent, session.battle])
+		get_tree().quit(1)
+		return false
+	var first_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var lead_in_closing_context: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if (
+		not bool(first_result.get("ok", false))
+		or lead_in_closing_context.is_empty()
+		or not bool(lead_in_closing_context.get("ordinary_closing_target", false))
+		or bool(lead_in_closing_context.get("preserved_setup_target", false))
+	):
+		push_error("Core systems smoke: direct actionable move coverage did not create an ordinary closing lead-in: result=%s context=%s battle=%s." % [first_result, lead_in_closing_context, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var movement_intent := BattleRules.movement_intent_for_destination(session.battle, 2, 3)
+	var pre_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	if (
+		not bool(pre_legality.get("blocked", false))
+		or not bool(movement_intent.get("sets_up_selected_target_attack", false))
+		or not bool(movement_intent.get("selected_target_after_move_attackable", false))
+		or not bool(movement_intent.get("selected_target_closing_before_move", false))
+	):
+		push_error("Core systems smoke: direct actionable move setup was not an ordinary-closing target that becomes attackable after movement: legality=%s intent=%s battle=%s." % [pre_legality, movement_intent, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(session, 2, 3)
+	var result_context: Dictionary = move_result.get("selected_target_continuity_context", {}) if move_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var result_closing_context: Dictionary = move_result.get("selected_target_closing_context", {}) if move_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var state_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var state_closing_context: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var post_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var post_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var post_action_id := String(post_click_intent.get("action", ""))
+	var post_action_surface: Dictionary = BattleRules.get_action_surface(session)
+	var post_action: Dictionary = post_action_surface.get(post_action_id, {}) if post_action_surface.get(post_action_id, {}) is Dictionary else {}
+	var post_guidance := String(move_result.get("post_move_target_guidance", "")).to_lower()
+	var target_context := BattleRules.describe_target_context(session).to_lower()
+	var action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	var hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	if (
+		not bool(move_result.get("ok", false))
+		or String(BattleRules.get_selected_target(session.battle).get("battle_id", "")) != target_id
+		or String(move_result.get("selected_target_after_move_battle_id", "")) != target_id
+		or not bool(post_legality.get("attackable", false))
+		or post_action_id not in ["strike", "shoot"]
+		or post_action.is_empty()
+		or bool(post_action.get("disabled", true))
+		or not bool(move_result.get("selected_target_actionable_after_move", false))
+		or not bool(hex_summary.get("selected_target_direct_actionable", false))
+		or bool(move_result.get("selected_target_continuity_preserved", false))
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or not result_context.is_empty()
+		or not state_context.is_empty()
+		or bool(move_result.get("selected_target_closing_on_target", false))
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or not result_closing_context.is_empty()
+		or not state_closing_context.is_empty()
+		or "board click will" not in post_guidance
+		or "board click will" not in target_context
+		or "board click will" not in action_guidance
+		or "preserved setup target" in post_guidance
+		or "preserved setup target" in target_context
+		or "preserved setup target" in action_guidance
+		or "closing on target" in post_guidance
+		or "closing on target" in target_context
+		or "closing on target" in action_guidance
+	):
+		push_error("Core systems smoke: direct actionable move did not surface normal board-click action without setup/closing state: intent=%s result=%s legality=%s click=%s target=%s action=%s summary=%s battle=%s." % [movement_intent, move_result, post_legality, post_click_intent, target_context, action_guidance, hex_summary, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var health_before_attack := int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0))
+	var attack_result := BattleRules.perform_player_action(session, post_action_id)
+	var attack_context: Dictionary = attack_result.get("selected_target_continuity_context", {}) if attack_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var attack_closing_context: Dictionary = attack_result.get("selected_target_closing_context", {}) if attack_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var state_context_after_attack: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var state_closing_after_attack: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var selected_after_attack_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	var attack_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var attack_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var attack_hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var attack_summary_legality: Dictionary = attack_hex_summary.get("selected_target_legality", {}) if attack_hex_summary.get("selected_target_legality", {}) is Dictionary else {}
+	var attack_target_context := BattleRules.describe_target_context(session).to_lower()
+	var attack_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		not bool(attack_result.get("ok", false))
+		or String(attack_result.get("attack_action", "")) != post_action_id
+		or String(attack_result.get("attack_target_battle_id", "")) != target_id
+		or int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0)) >= health_before_attack
+		or selected_after_attack_id != target_id
+		or String(attack_result.get("selected_target_after_attack_battle_id", "")) != target_id
+		or not bool(attack_legality.get("attackable", false))
+		or String(attack_click_intent.get("action", "")) not in ["strike", "shoot"]
+		or bool(attack_result.get("selected_target_preserved_setup", false))
+		or not attack_context.is_empty()
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or bool(attack_result.get("selected_target_closing_on_target", false))
+		or not attack_closing_context.is_empty()
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or not state_context_after_attack.is_empty()
+		or not state_closing_after_attack.is_empty()
+		or attack_result.has("selected_target_actionable_after_move")
+		or bool(attack_hex_summary.get("selected_target_preserved_setup", false))
+		or bool(attack_hex_summary.get("selected_target_closing_on_target", false))
+		or not bool(attack_hex_summary.get("selected_target_direct_actionable", false))
+		or "board click will" not in attack_target_context
+		or "board click will" not in attack_action_guidance
+		or "direct actionable after move" in attack_target_context
+		or "direct actionable after move" in attack_action_guidance
+		or "preserved setup target" in attack_target_context
+		or "preserved setup target" in attack_action_guidance
+		or "closing on target" in attack_target_context
+		or "closing on target" in attack_action_guidance
+		):
+			push_error("Core systems smoke: immediate board-click attack after direct actionable move left stale transition state or left the normal attack path: attack=%s legality=%s click=%s target=%s action=%s summary=%s battle=%s." % [attack_result, attack_legality, attack_click_intent, attack_target_context, attack_action_guidance, attack_hex_summary, session.battle])
+			get_tree().quit(1)
+			return false
+	return true
+
+func _run_battle_direct_actionable_after_move_invalidation_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: direct actionable invalidation coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: direct actionable invalidation coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var selected_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or selected_enemy.is_empty():
+		push_error("Core systems smoke: direct actionable invalidation coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var target_id := String(selected_enemy.get("battle_id", ""))
+	var handoff_target_id := "direct_actionable_after_move_handoff_target"
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	_ensure_enemy_stack_for_test(session.battle, selected_enemy, handoff_target_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, target_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, handoff_target_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, target_id, 1)
+	_set_stack_health_for_test(session.battle, handoff_target_id, 999)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, target_id, {"q": 3, "r": 3})
+	_set_stack_hex_for_test(session.battle, handoff_target_id, {"q": 5, "r": 3})
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = target_id
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+
+	var first_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var first_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if not bool(first_result.get("ok", false)) or first_closing.is_empty() or not bool(first_closing.get("ordinary_closing_target", false)):
+		push_error("Core systems smoke: direct actionable invalidation setup did not create the ordinary closing lead-in: result=%s context=%s battle=%s." % [first_result, first_closing, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var movement_intent := BattleRules.movement_intent_for_destination(session.battle, 2, 3)
+	if (
+		String(movement_intent.get("action", "")) != "move"
+		or not bool(movement_intent.get("selected_target_closing_before_move", false))
+		or not bool(movement_intent.get("sets_up_selected_target_attack", false))
+		or not bool(movement_intent.get("selected_target_after_move_attackable", false))
+	):
+		push_error("Core systems smoke: direct actionable invalidation setup did not preview the closing-to-actionable move: intent=%s battle=%s." % [movement_intent, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(session, 2, 3)
+	var action_id := String(move_result.get("selected_target_after_move_board_click_action", ""))
+	if (
+		not bool(move_result.get("ok", false))
+		or String(move_result.get("selected_target_after_move_battle_id", "")) != target_id
+		or action_id not in ["strike", "shoot"]
+		or not bool(move_result.get("selected_target_actionable_after_move", false))
+		or bool(move_result.get("selected_target_preserved_setup", false))
+		or bool(move_result.get("selected_target_closing_on_target", false))
+	):
+		push_error("Core systems smoke: direct actionable invalidation move did not reach the normal immediate attack state: result=%s battle=%s." % [move_result, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var attack_result := BattleRules.perform_player_action(session, action_id)
+	var selected_after_attack_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	var attack_context: Dictionary = attack_result.get("selected_target_continuity_context", {}) if attack_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var attack_closing: Dictionary = attack_result.get("selected_target_closing_context", {}) if attack_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var state_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var state_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var attack_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var attack_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var attack_hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var attack_summary_legality: Dictionary = attack_hex_summary.get("selected_target_legality", {}) if attack_hex_summary.get("selected_target_legality", {}) is Dictionary else {}
+	var attack_target_context := BattleRules.describe_target_context(session).to_lower()
+	var attack_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		not bool(attack_result.get("ok", false))
+		or String(attack_result.get("attack_action", "")) != action_id
+		or String(attack_result.get("attack_target_battle_id", "")) != target_id
+		or int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0)) > 0
+		or not bool(attack_result.get("attack_target_invalidated_after_attack", false))
+		or bool(attack_result.get("attack_target_still_selected_after_attack", true))
+			or bool(attack_result.get("attack_target_alive_after_attack", true))
+			or selected_after_attack_id != handoff_target_id
+			or String(attack_result.get("selected_target_after_attack_battle_id", "")) != handoff_target_id
+			or not bool(attack_result.get("selected_target_valid_after_attack", false))
+			or not bool(attack_result.get("selected_target_handoff_after_attack", false))
+			or bool(attack_result.get("selected_target_handoff_direct_actionable_after_attack", false))
+			or not bool(attack_result.get("selected_target_handoff_blocked_after_attack", false))
+			or not bool(attack_legality.get("blocked", false))
+			or bool(attack_legality.get("attackable", false))
+		or String(attack_click_intent.get("action", "")) != ""
+		or bool(attack_result.get("selected_target_direct_actionable_after_attack", false))
+		or bool(attack_result.get("selected_target_preserved_setup", false))
+		or bool(attack_result.get("selected_target_closing_on_target", false))
+		or not attack_context.is_empty()
+		or not attack_closing.is_empty()
+		or not state_context.is_empty()
+		or not state_closing.is_empty()
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or attack_result.has("selected_target_actionable_after_move")
+		or attack_result.has("selected_target_after_move_battle_id")
+		or bool(attack_hex_summary.get("selected_target_direct_actionable", false))
+		or not bool(attack_summary_legality.get("blocked", false))
+		or "direct actionable after move" in attack_target_context
+		or "direct actionable after move" in attack_action_guidance
+		or "preserved setup target" in attack_target_context
+		or "preserved setup target" in attack_action_guidance
+		or "closing on target" in attack_target_context
+		or "closing on target" in attack_action_guidance
+	):
+		push_error("Core systems smoke: invalidating immediate attack after direct actionable move did not clear transition state or hand off to the normal blocked target: attack=%s legality=%s click=%s target=%s action=%s summary=%s battle=%s." % [attack_result, attack_legality, attack_click_intent, attack_target_context, attack_action_guidance, attack_hex_summary, session.battle])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_direct_actionable_after_move_direct_handoff_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: direct actionable handoff coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: direct actionable handoff coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var selected_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or selected_enemy.is_empty():
+		push_error("Core systems smoke: direct actionable handoff coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var target_id := String(selected_enemy.get("battle_id", ""))
+	var handoff_target_id := "direct_actionable_after_move_direct_handoff_target"
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	_ensure_enemy_stack_for_test(session.battle, selected_enemy, handoff_target_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, target_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, handoff_target_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, target_id, 1)
+	_set_stack_health_for_test(session.battle, handoff_target_id, 999)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, target_id, {"q": 3, "r": 3})
+	_set_stack_hex_for_test(session.battle, handoff_target_id, {"q": 3, "r": 2})
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = target_id
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+
+	var first_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var first_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if not bool(first_result.get("ok", false)) or first_closing.is_empty() or not bool(first_closing.get("ordinary_closing_target", false)):
+		push_error("Core systems smoke: direct actionable handoff setup did not create the ordinary closing lead-in: result=%s context=%s battle=%s." % [first_result, first_closing, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var movement_intent := BattleRules.movement_intent_for_destination(session.battle, 2, 3)
+	if (
+		String(movement_intent.get("action", "")) != "move"
+		or not bool(movement_intent.get("selected_target_closing_before_move", false))
+		or not bool(movement_intent.get("sets_up_selected_target_attack", false))
+		or not bool(movement_intent.get("selected_target_after_move_attackable", false))
+	):
+		push_error("Core systems smoke: direct actionable handoff setup did not preview the closing-to-actionable move: intent=%s battle=%s." % [movement_intent, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(session, 2, 3)
+	var action_id := String(move_result.get("selected_target_after_move_board_click_action", ""))
+	if (
+		not bool(move_result.get("ok", false))
+		or String(move_result.get("selected_target_after_move_battle_id", "")) != target_id
+		or action_id not in ["strike", "shoot"]
+		or not bool(move_result.get("selected_target_actionable_after_move", false))
+		or bool(move_result.get("selected_target_preserved_setup", false))
+		or bool(move_result.get("selected_target_closing_on_target", false))
+	):
+		push_error("Core systems smoke: direct actionable handoff move did not reach the normal immediate attack state: result=%s battle=%s." % [move_result, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var attack_result := BattleRules.perform_player_action(session, action_id)
+	var selected_after_attack_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	var attack_context: Dictionary = attack_result.get("selected_target_continuity_context", {}) if attack_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var attack_closing: Dictionary = attack_result.get("selected_target_closing_context", {}) if attack_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var state_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var state_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var attack_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var attack_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var attack_hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var attack_summary_legality: Dictionary = attack_hex_summary.get("selected_target_legality", {}) if attack_hex_summary.get("selected_target_legality", {}) is Dictionary else {}
+	var attack_action_surface: Dictionary = BattleRules.get_action_surface(session)
+	var handoff_action: Dictionary = attack_action_surface.get(String(attack_click_intent.get("action", "")), {}) if attack_action_surface.get(String(attack_click_intent.get("action", "")), {}) is Dictionary else {}
+	var attack_target_context := BattleRules.describe_target_context(session).to_lower()
+	var attack_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		not bool(attack_result.get("ok", false))
+		or String(attack_result.get("attack_action", "")) != action_id
+		or String(attack_result.get("attack_target_battle_id", "")) != target_id
+		or int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0)) > 0
+		or not bool(attack_result.get("attack_target_invalidated_after_attack", false))
+		or bool(attack_result.get("attack_target_still_selected_after_attack", true))
+		or bool(attack_result.get("attack_target_alive_after_attack", true))
+		or selected_after_attack_id != handoff_target_id
+		or String(attack_result.get("selected_target_after_attack_battle_id", "")) != handoff_target_id
+		or not bool(attack_result.get("selected_target_valid_after_attack", false))
+		or not bool(attack_result.get("selected_target_handoff_after_attack", false))
+		or not bool(attack_result.get("selected_target_handoff_direct_actionable_after_attack", false))
+		or bool(attack_result.get("selected_target_handoff_blocked_after_attack", false))
+		or not bool(attack_result.get("selected_target_direct_actionable_after_attack", false))
+		or not bool(attack_legality.get("attackable", false))
+		or bool(attack_legality.get("blocked", false))
+		or String(attack_click_intent.get("action", "")) not in ["strike", "shoot"]
+		or handoff_action.is_empty()
+		or bool(handoff_action.get("disabled", true))
+		or bool(attack_result.get("selected_target_preserved_setup", false))
+		or bool(attack_result.get("selected_target_closing_on_target", false))
+		or not attack_context.is_empty()
+		or not attack_closing.is_empty()
+		or not state_context.is_empty()
+		or not state_closing.is_empty()
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or attack_result.has("selected_target_actionable_after_move")
+		or attack_result.has("selected_target_after_move_battle_id")
+		or not bool(attack_hex_summary.get("selected_target_direct_actionable", false))
+		or bool(attack_hex_summary.get("selected_target_preserved_setup", false))
+		or bool(attack_hex_summary.get("selected_target_closing_on_target", false))
+		or not bool(attack_summary_legality.get("attackable", false))
+		or bool(attack_summary_legality.get("blocked", false))
+		or "board click will" not in attack_target_context
+		or "board click will" not in attack_action_guidance
+		or "direct actionable after move" in attack_target_context
+		or "direct actionable after move" in attack_action_guidance
+		or "preserved setup target" in attack_target_context
+		or "preserved setup target" in attack_action_guidance
+		or "closing on target" in attack_target_context
+		or "closing on target" in attack_action_guidance
+	):
+		push_error("Core systems smoke: invalidating immediate attack did not hand off to a normal directly attackable target: attack=%s legality=%s click=%s target=%s action=%s summary=%s battle=%s." % [attack_result, attack_legality, attack_click_intent, attack_target_context, attack_action_guidance, attack_hex_summary, session.battle])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_direct_actionable_after_move_prefers_attackable_handoff_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: actionable-preferred handoff coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: actionable-preferred handoff coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var selected_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or selected_enemy.is_empty():
+		push_error("Core systems smoke: actionable-preferred handoff coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var target_id := String(selected_enemy.get("battle_id", ""))
+	var blocked_handoff_id := "direct_actionable_after_move_blocked_handoff_candidate"
+	var attackable_handoff_id := "direct_actionable_after_move_attackable_handoff_candidate"
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	_ensure_enemy_stack_for_test(session.battle, selected_enemy, blocked_handoff_id)
+	_ensure_enemy_stack_for_test(session.battle, selected_enemy, attackable_handoff_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, target_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, blocked_handoff_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, attackable_handoff_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, target_id, 1)
+	_set_stack_health_for_test(session.battle, blocked_handoff_id, 999)
+	_set_stack_health_for_test(session.battle, attackable_handoff_id, 999)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, target_id, {"q": 3, "r": 3})
+	_set_stack_hex_for_test(session.battle, blocked_handoff_id, {"q": 5, "r": 3})
+	_set_stack_hex_for_test(session.battle, attackable_handoff_id, {"q": 3, "r": 2})
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = target_id
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+
+	var enemy_order := []
+	for stack in session.battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("side", "")) == "enemy":
+			enemy_order.append(String(stack.get("battle_id", "")))
+	if enemy_order.find(blocked_handoff_id) < 0 or enemy_order.find(attackable_handoff_id) < 0 or enemy_order.find(blocked_handoff_id) > enemy_order.find(attackable_handoff_id):
+		push_error("Core systems smoke: actionable-preferred handoff setup did not put the blocked candidate before the attackable candidate: order=%s." % [enemy_order])
+		get_tree().quit(1)
+		return false
+
+	var first_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var first_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if not bool(first_result.get("ok", false)) or first_closing.is_empty() or not bool(first_closing.get("ordinary_closing_target", false)):
+		push_error("Core systems smoke: actionable-preferred handoff setup did not create the ordinary closing lead-in: result=%s context=%s battle=%s." % [first_result, first_closing, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var movement_intent := BattleRules.movement_intent_for_destination(session.battle, 2, 3)
+	if (
+		String(movement_intent.get("action", "")) != "move"
+		or not bool(movement_intent.get("selected_target_closing_before_move", false))
+		or not bool(movement_intent.get("sets_up_selected_target_attack", false))
+		or not bool(movement_intent.get("selected_target_after_move_attackable", false))
+	):
+		push_error("Core systems smoke: actionable-preferred handoff setup did not preview the closing-to-actionable move: intent=%s battle=%s." % [movement_intent, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(session, 2, 3)
+	var action_id := String(move_result.get("selected_target_after_move_board_click_action", ""))
+	if (
+		not bool(move_result.get("ok", false))
+		or String(move_result.get("selected_target_after_move_battle_id", "")) != target_id
+		or action_id not in ["strike", "shoot"]
+		or not bool(move_result.get("selected_target_actionable_after_move", false))
+		or bool(move_result.get("selected_target_preserved_setup", false))
+		or bool(move_result.get("selected_target_closing_on_target", false))
+	):
+		push_error("Core systems smoke: actionable-preferred handoff move did not reach the normal immediate attack state: result=%s battle=%s." % [move_result, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var blocked_candidate_intent_before: Dictionary = BattleRules.board_click_attack_intent_for_target(session.battle, blocked_handoff_id)
+	var attackable_candidate_intent_before: Dictionary = BattleRules.board_click_attack_intent_for_target(session.battle, attackable_handoff_id)
+	if (
+		not bool(blocked_candidate_intent_before.get("blocked", false))
+		or bool(blocked_candidate_intent_before.get("attackable", false))
+		or String(attackable_candidate_intent_before.get("action", "")) not in ["strike", "shoot"]
+		or not bool(attackable_candidate_intent_before.get("attackable", false))
+	):
+		push_error("Core systems smoke: actionable-preferred handoff setup did not stage one blocked and one attackable survivor: blocked=%s attackable=%s battle=%s." % [blocked_candidate_intent_before, attackable_candidate_intent_before, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var attack_result := BattleRules.perform_player_action(session, action_id)
+	var selected_after_attack_id := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	var attack_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var attack_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var blocked_candidate_intent_after: Dictionary = BattleRules.board_click_attack_intent_for_target(session.battle, blocked_handoff_id)
+	var attack_hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var attack_summary_legality: Dictionary = attack_hex_summary.get("selected_target_legality", {}) if attack_hex_summary.get("selected_target_legality", {}) is Dictionary else {}
+	var attack_context: Dictionary = attack_result.get("selected_target_continuity_context", {}) if attack_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var attack_closing: Dictionary = attack_result.get("selected_target_closing_context", {}) if attack_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var state_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var state_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if (
+		not bool(attack_result.get("ok", false))
+		or String(attack_result.get("attack_action", "")) != action_id
+		or String(attack_result.get("attack_target_battle_id", "")) != target_id
+		or int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0)) > 0
+		or not bool(attack_result.get("attack_target_invalidated_after_attack", false))
+		or bool(attack_result.get("attack_target_still_selected_after_attack", true))
+		or bool(attack_result.get("attack_target_alive_after_attack", true))
+		or selected_after_attack_id != attackable_handoff_id
+		or String(attack_result.get("selected_target_after_attack_battle_id", "")) != attackable_handoff_id
+		or not bool(attack_result.get("selected_target_valid_after_attack", false))
+		or not bool(attack_result.get("selected_target_handoff_after_attack", false))
+		or not bool(attack_result.get("selected_target_handoff_direct_actionable_after_attack", false))
+		or bool(attack_result.get("selected_target_handoff_blocked_after_attack", false))
+		or not bool(attack_result.get("selected_target_direct_actionable_after_attack", false))
+		or not bool(attack_legality.get("attackable", false))
+		or bool(attack_legality.get("blocked", false))
+		or String(attack_click_intent.get("action", "")) not in ["strike", "shoot"]
+		or not bool(blocked_candidate_intent_after.get("blocked", false))
+		or bool(blocked_candidate_intent_after.get("attackable", false))
+		or not bool(attack_hex_summary.get("selected_target_direct_actionable", false))
+		or not bool(attack_summary_legality.get("attackable", false))
+		or bool(attack_summary_legality.get("blocked", false))
+		or bool(attack_result.get("selected_target_preserved_setup", false))
+		or bool(attack_result.get("selected_target_closing_on_target", false))
+		or not attack_context.is_empty()
+		or not attack_closing.is_empty()
+		or not state_context.is_empty()
+		or not state_closing.is_empty()
+		or session.battle.has(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or attack_result.has("selected_target_actionable_after_move")
+		or attack_result.has("selected_target_after_move_battle_id")
+	):
+		push_error("Core systems smoke: invalidating immediate attack did not prefer the attackable handoff target over the earlier blocked survivor: attack=%s legality=%s click=%s blocked=%s summary=%s battle=%s." % [attack_result, attack_legality, attack_click_intent, blocked_candidate_intent_after, attack_hex_summary, session.battle])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_direct_actionable_after_move_empty_handoff_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: empty handoff coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: empty handoff coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var selected_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or selected_enemy.is_empty():
+		push_error("Core systems smoke: empty handoff coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var target_id := String(selected_enemy.get("battle_id", ""))
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_combat_profile_for_test(session.battle, target_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, target_id, 1)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, target_id, {"q": 3, "r": 3})
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = target_id
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+
+	var first_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var first_closing: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if not bool(first_result.get("ok", false)) or first_closing.is_empty() or not bool(first_closing.get("ordinary_closing_target", false)):
+		push_error("Core systems smoke: empty handoff setup did not create the ordinary closing lead-in: result=%s context=%s battle=%s." % [first_result, first_closing, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var movement_intent := BattleRules.movement_intent_for_destination(session.battle, 2, 3)
+	if (
+		String(movement_intent.get("action", "")) != "move"
+		or not bool(movement_intent.get("selected_target_closing_before_move", false))
+		or not bool(movement_intent.get("sets_up_selected_target_attack", false))
+		or not bool(movement_intent.get("selected_target_after_move_attackable", false))
+	):
+		push_error("Core systems smoke: empty handoff setup did not preview the closing-to-actionable move: intent=%s battle=%s." % [movement_intent, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(session, 2, 3)
+	var action_id := String(move_result.get("selected_target_after_move_board_click_action", ""))
+	if (
+		not bool(move_result.get("ok", false))
+		or String(move_result.get("selected_target_after_move_battle_id", "")) != target_id
+		or action_id not in ["strike", "shoot"]
+		or not bool(move_result.get("selected_target_actionable_after_move", false))
+		or bool(move_result.get("selected_target_preserved_setup", false))
+		or bool(move_result.get("selected_target_closing_on_target", false))
+	):
+		push_error("Core systems smoke: empty handoff move did not reach the normal immediate attack state: result=%s battle=%s." % [move_result, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var attack_result := BattleRules.perform_player_action(session, action_id)
+	var attack_context: Dictionary = attack_result.get("selected_target_continuity_context", {}) if attack_result.get("selected_target_continuity_context", {}) is Dictionary else {}
+	var attack_closing: Dictionary = attack_result.get("selected_target_closing_context", {}) if attack_result.get("selected_target_closing_context", {}) is Dictionary else {}
+	var attack_legality: Dictionary = attack_result.get("selected_target_after_attack_legality", {}) if attack_result.get("selected_target_after_attack_legality", {}) is Dictionary else {}
+	var attack_click_intent: Dictionary = attack_result.get("selected_target_after_attack_board_click_intent", {}) if attack_result.get("selected_target_after_attack_board_click_intent", {}) is Dictionary else {}
+	var attack_message := String(attack_result.get("message", "")).to_lower()
+	if (
+		not bool(attack_result.get("ok", false))
+		or String(attack_result.get("state", "")) != "victory"
+		or not session.battle.is_empty()
+		or String(attack_result.get("attack_action", "")) != action_id
+		or String(attack_result.get("attack_target_battle_id", "")) != target_id
+		or not bool(attack_result.get("attack_target_invalidated_after_attack", false))
+		or bool(attack_result.get("attack_target_still_selected_after_attack", true))
+		or bool(attack_result.get("attack_target_alive_after_attack", true))
+		or String(attack_result.get("active_stack_after_attack_battle_id", "")) != ""
+		or String(attack_result.get("selected_target_after_attack_battle_id", "")) != ""
+		or bool(attack_result.get("selected_target_valid_after_attack", true))
+		or bool(attack_result.get("selected_target_handoff_after_attack", true))
+		or bool(attack_result.get("selected_target_handoff_direct_actionable_after_attack", true))
+		or bool(attack_result.get("selected_target_handoff_blocked_after_attack", true))
+		or bool(attack_result.get("selected_target_direct_actionable_after_attack", true))
+		or bool(attack_result.get("selected_target_preserved_setup", true))
+		or bool(attack_result.get("selected_target_closing_on_target", true))
+		or not attack_context.is_empty()
+		or not attack_closing.is_empty()
+		or bool(attack_legality.get("attackable", false))
+		or bool(attack_legality.get("blocked", false))
+		or String(attack_click_intent.get("action", "")) != ""
+		or attack_result.has("selected_target_actionable_after_move")
+		or attack_result.has("selected_target_after_move_battle_id")
+		or attack_result.has("post_move_target_guidance")
+		or "direct actionable after move" in attack_message
+		or "preserved setup target" in attack_message
+		or "closing on target" in attack_message
+	):
+		push_error("Core systems smoke: invalidating immediate attack with no handoff did not settle onto an empty normal post-attack state: attack=%s legality=%s click=%s." % [attack_result, attack_legality, attack_click_intent])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_setup_move_target_blocked_surface_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: blocked setup-target surface coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: blocked setup-target surface coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var source_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or source_enemy.is_empty():
+		push_error("Core systems smoke: blocked setup-target surface coverage could not find source stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var source_enemy_id := String(source_enemy.get("battle_id", ""))
+	var followup_player_id := "setup_move_followup_player"
+	var continuity_target_id := "setup_move_blocked_surface_target"
+	_ensure_player_stack_for_test(session.battle, player_melee, followup_player_id)
+	_ensure_enemy_stack_for_test(session.battle, source_enemy, continuity_target_id)
+	_remove_battle_stack_for_test(session.battle, source_enemy_id)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(session.battle, followup_player_id, {"q": 0, "r": 0})
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, followup_player_id, 999)
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, followup_player_id, continuity_target_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = continuity_target_id
+
+	var setup_case := _stage_later_attack_destination_for_test(session.battle, player_id, continuity_target_id)
+	if setup_case.is_empty():
+		push_error("Core systems smoke: blocked setup-target surface coverage could not stage a setup move.")
+		get_tree().quit(1)
+		return false
+	var destination: Dictionary = setup_case.get("destination", {})
+	var target_hex: Dictionary = setup_case.get("target_hex", {})
+	var followup_hex := _far_open_hex_for_test(session.battle, target_hex, 3)
+	if followup_hex.is_empty():
+		push_error("Core systems smoke: blocked setup-target surface coverage could not place the follow-up stack away from the target.")
+		get_tree().quit(1)
+		return false
+	_set_stack_hex_for_test(session.battle, followup_player_id, followup_hex)
+	session.battle["selected_target_id"] = continuity_target_id
+	var movement_intent := BattleRules.movement_intent_for_destination(
+		session.battle,
+		int(destination.get("q", -1)),
+		int(destination.get("r", -1))
+	)
+	if not bool(movement_intent.get("sets_up_selected_target_attack", false)):
+		push_error("Core systems smoke: blocked setup-target surface lost the setup-move preview before execution: %s." % movement_intent)
+		get_tree().quit(1)
+		return false
+
+	var move_result := BattleRules.move_active_stack_to_hex(
+		session,
+		int(destination.get("q", -1)),
+		int(destination.get("r", -1))
+	)
+	if not bool(move_result.get("ok", false)) or not bool(move_result.get("selected_target_continuity_preserved", false)):
+		push_error("Core systems smoke: blocked setup-target surface move did not preserve target continuity: %s." % move_result)
+		get_tree().quit(1)
+		return false
+	if String(BattleRules.get_active_stack(session.battle).get("battle_id", "")) != followup_player_id:
+		push_error("Core systems smoke: blocked setup-target surface did not stop on the follow-up player stack: %s." % move_result)
+		get_tree().quit(1)
+		return false
+	if String(BattleRules.get_selected_target(session.battle).get("battle_id", "")) != continuity_target_id:
+		push_error("Core systems smoke: blocked setup-target surface did not keep the preserved target selected: %s." % move_result)
+		get_tree().quit(1)
+		return false
+
+	var post_legality: Dictionary = BattleRules.selected_target_legality(session.battle)
+	var post_click_intent: Dictionary = BattleRules.selected_target_board_click_intent(session.battle)
+	var continuity_context: Dictionary = BattleRules.selected_target_continuity_context(session.battle)
+	var post_target_guidance := BattleRules.describe_target_context(session).to_lower()
+	var post_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	if (
+		not bool(post_legality.get("blocked", false))
+		or not bool(post_click_intent.get("blocked", false))
+		or continuity_context.is_empty()
+		or not bool(continuity_context.get("blocked", false))
+		or "still blocked" not in String(continuity_context.get("message", "")).to_lower()
+		or "still blocked" not in post_target_guidance
+		or "still blocked" not in post_action_guidance
+	):
+		push_error("Core systems smoke: preserved setup target did not surface the still-blocked post-move state clearly: legality=%s intent=%s context=%s target=%s action=%s." % [post_legality, post_click_intent, continuity_context, post_target_guidance, post_action_guidance])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_commander_spell_cadence_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _encounter_by_id(session, "encounter_hollow_mire")
+	if encounter.is_empty():
+		push_error("Core systems smoke: commander spell cadence coverage could not find Hollow Mire.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: commander spell cadence coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var first_result := BattleRules.perform_player_action(session, "defend")
+	if not bool(first_result.get("ok", false)):
+		push_error("Core systems smoke: commander cadence setup first defend failed: %s." % first_result)
+		get_tree().quit(1)
+		return false
+	var second_result := BattleRules.perform_player_action(session, "defend")
+	if not bool(second_result.get("ok", false)):
+		push_error("Core systems smoke: commander cadence setup second defend failed: %s." % second_result)
+		get_tree().quit(1)
+		return false
+	var enemy_phase_message := String(second_result.get("message", ""))
+	var cast_count := _substring_count(enemy_phase_message, " casts ")
+	if cast_count != 1:
+		push_error("Core systems smoke: enemy commander should cast once per round, got %d casts in: %s." % [cast_count, enemy_phase_message])
+		get_tree().quit(1)
+		return false
+	var cast_rounds = session.battle.get(BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	var enemy_cast_round := int(cast_rounds.get("enemy", 0)) if cast_rounds is Dictionary else 0
+	if enemy_cast_round <= 0 or enemy_cast_round > int(session.battle.get("round", 1)):
+		push_error("Core systems smoke: enemy commander spell cast round was not saved on battle state.")
+		get_tree().quit(1)
+		return false
+	var restored = _clone_session(session)
+	var restored_cast_rounds = restored.battle.get(BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	if not (restored_cast_rounds is Dictionary) or int(restored_cast_rounds.get("enemy", 0)) != enemy_cast_round:
+		push_error("Core systems smoke: commander spell cadence state did not survive restore normalization.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -1672,7 +3328,6 @@ func _run_save_restore_town_assault_resume_regression() -> bool:
 	degraded_battle.erase("context")
 	degraded_battle.erase("stacks")
 	session.battle = degraded_battle
-	_set_town_owner(session, "duskfen_bastion", "player")
 	session.game_state = "overworld"
 
 	var path := SaveService.save_manual_session(session.to_dict(), 3)
@@ -1713,6 +3368,61 @@ func _run_save_restore_town_assault_resume_regression() -> bool:
 		return false
 	if String(restored.game_state) != "battle" or SaveService.resume_target_for_session(restored) != "battle":
 		push_error("Core systems smoke: town-assault restore did not normalize back to battle resume.")
+		get_tree().quit(1)
+		return false
+
+	var stale_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var stale_town := _town_by_placement(stale_session, "duskfen_bastion")
+	if stale_town.is_empty():
+		push_error("Core systems smoke: sample scenario is missing the stale hostile town restore target.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(stale_session, Vector2i(int(stale_town.get("x", 0)), int(stale_town.get("y", 0))))
+	var stale_result := OverworldRules.capture_active_town(stale_session)
+	if String(stale_result.get("route", "")) != "battle" or stale_session.battle.is_empty():
+		push_error("Core systems smoke: stale town-assault setup did not create a live assault battle.")
+		get_tree().quit(1)
+		return false
+	var stale_battle: Dictionary = stale_session.battle.duplicate(true)
+	stale_battle.erase("context")
+	stale_battle.erase("stacks")
+	stale_session.battle = stale_battle
+	_set_town_owner(stale_session, "duskfen_bastion", "player")
+	stale_session.game_state = "overworld"
+
+	var stale_path := SaveService.save_manual_session(stale_session.to_dict(), 1)
+	if stale_path == "":
+		push_error("Core systems smoke: stale town-assault save/restore setup could not write the manual slot.")
+		get_tree().quit(1)
+		return false
+	var stale_summary := SaveService.inspect_manual_slot(1)
+	if not SaveService.can_load_summary(stale_summary):
+		push_error("Core systems smoke: stale town-assault save should remain loadable as an overworld snapshot.")
+		get_tree().quit(1)
+		return false
+	if String(stale_summary.get("resume_target", "")) == "battle":
+		push_error("Core systems smoke: stale post-capture town-assault save must not advertise battle resume.")
+		get_tree().quit(1)
+		return false
+	var stale_restored = SaveService.restore_session_from_summary(stale_summary)
+	if stale_restored == null:
+		push_error("Core systems smoke: stale town-assault save could not be restored through the public save service.")
+		get_tree().quit(1)
+		return false
+	if not stale_restored.battle.is_empty():
+		push_error("Core systems smoke: stale post-capture battle payload was not discarded on restore.")
+		get_tree().quit(1)
+		return false
+	if String(_town_by_placement(stale_restored, "duskfen_bastion").get("owner", "")) != "player":
+		push_error("Core systems smoke: stale post-capture restore rewound captured town ownership.")
+		get_tree().quit(1)
+		return false
+	if String(stale_restored.game_state) != "overworld" or SaveService.resume_target_for_session(stale_restored) != "overworld":
+		push_error("Core systems smoke: stale post-capture restore did not normalize to overworld resume.")
 		get_tree().quit(1)
 		return false
 	return true
@@ -2075,6 +3785,194 @@ func _first_stack_for_side(battle: Dictionary, side: String, ranged: bool) -> Di
 			return stack
 	return {}
 
+func _living_battle_stack_count(battle: Dictionary) -> int:
+	var total := 0
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and int(stack.get("total_health", 0)) > 0:
+			total += 1
+	return total
+
+func _battle_stack_by_id(battle: Dictionary, battle_id: String) -> Dictionary:
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
+			return stack
+	return {}
+
+func _ensure_enemy_stack_for_test(battle: Dictionary, source_stack: Dictionary, battle_id: String) -> Dictionary:
+	var existing := _battle_stack_by_id(battle, battle_id)
+	if not existing.is_empty():
+		return existing
+	var clone := source_stack.duplicate(true)
+	clone["battle_id"] = battle_id
+	clone["side"] = "enemy"
+	clone["name"] = "%s Test Target" % String(source_stack.get("name", "Enemy"))
+	clone["total_health"] = max(1, int(clone.get("total_health", clone.get("unit_hp", clone.get("hp", 1)))))
+	var stacks: Array = battle.get("stacks", [])
+	stacks.append(clone)
+	battle["stacks"] = stacks
+	return clone
+
+func _ensure_player_stack_for_test(battle: Dictionary, source_stack: Dictionary, battle_id: String) -> Dictionary:
+	var existing := _battle_stack_by_id(battle, battle_id)
+	if not existing.is_empty():
+		return existing
+	var clone := source_stack.duplicate(true)
+	clone["battle_id"] = battle_id
+	clone["side"] = "player"
+	clone["name"] = "%s Follow-up Test Stack" % String(source_stack.get("name", "Player"))
+	clone["ranged"] = false
+	clone["total_health"] = max(1, int(clone.get("total_health", clone.get("unit_hp", clone.get("hp", 1)))))
+	var stacks: Array = battle.get("stacks", [])
+	stacks.append(clone)
+	battle["stacks"] = stacks
+	return clone
+
+func _remove_battle_stack_for_test(battle: Dictionary, battle_id: String) -> void:
+	var stacks: Array = battle.get("stacks", [])
+	for index in range(stacks.size() - 1, -1, -1):
+		var stack = stacks[index]
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
+			stacks.remove_at(index)
+	battle["stacks"] = stacks
+
+func _enemy_stack_ids_except_for_test(battle: Dictionary, retained_battle_id: String) -> Array[String]:
+	var ids: Array[String] = []
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		if String(stack.get("side", "")) == "enemy" and battle_id != retained_battle_id:
+			ids.append(battle_id)
+	return ids
+
+func _stack_hex_for_test(stack: Dictionary) -> Dictionary:
+	var hex = stack.get("hex", {})
+	return hex.duplicate(true) if hex is Dictionary else {}
+
+func _set_stack_hex_for_test(battle: Dictionary, battle_id: String, hex: Dictionary) -> void:
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
+			continue
+		stack["hex"] = {"q": int(hex.get("q", 0)), "r": int(hex.get("r", 0))}
+		stacks[index] = stack
+		break
+	battle["stacks"] = stacks
+
+func _set_stack_health_for_test(battle: Dictionary, battle_id: String, total_health: int) -> void:
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
+			continue
+		stack["total_health"] = max(1, total_health)
+		stack["count"] = max(1, int(stack.get("count", 1)))
+		stacks[index] = stack
+		break
+	battle["stacks"] = stacks
+
+func _set_stack_combat_profile_for_test(
+	battle: Dictionary,
+	battle_id: String,
+	speed: int,
+	ranged: bool,
+	abilities: Array
+) -> void:
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
+			continue
+		stack["speed"] = max(1, speed)
+		stack["ranged"] = ranged
+		stack["shots_remaining"] = max(1, int(stack.get("shots_remaining", 1))) if ranged else 0
+		stack["abilities"] = abilities.duplicate(true)
+		stacks[index] = stack
+		break
+	battle["stacks"] = stacks
+
+func _hex_key_for_test(hex: Dictionary) -> String:
+	return "%d,%d" % [int(hex.get("q", -1)), int(hex.get("r", -1))]
+
+func _stage_later_attack_destination_for_test(battle: Dictionary, player_id: String, target_id: String) -> Dictionary:
+	var active_stack := _battle_stack_by_id(battle, player_id)
+	if active_stack.is_empty():
+		return {}
+	var active_hex := _stack_hex_for_test(active_stack)
+	for destination_value in BattleRules.legal_destinations_for_active_stack(battle):
+		if not (destination_value is Dictionary):
+			continue
+		var destination: Dictionary = destination_value
+		for neighbor_value in BattleRules._hex_neighbors(destination):
+			if not (neighbor_value is Dictionary):
+				continue
+			var target_hex: Dictionary = neighbor_value
+			if _hex_key_for_test(target_hex) == _hex_key_for_test(active_hex):
+				continue
+			if _hex_occupied_by_other_for_test(battle, target_id, target_hex):
+				continue
+			_set_stack_hex_for_test(battle, target_id, target_hex)
+			battle["selected_target_id"] = target_id
+			var selected_legality: Dictionary = BattleRules.selected_target_legality(battle)
+			if not bool(selected_legality.get("blocked", false)):
+				continue
+			var intent: Dictionary = BattleRules.movement_intent_for_destination(
+				battle,
+				int(destination.get("q", -1)),
+				int(destination.get("r", -1))
+			)
+			if bool(intent.get("sets_up_selected_target_attack", false)):
+				return {
+					"destination": destination,
+					"target_hex": target_hex,
+					"intent": intent,
+				}
+	return {}
+
+func _open_neighbor_for_test(battle: Dictionary, origin: Dictionary, forbidden_keys: Array = []) -> Dictionary:
+	for neighbor_value in BattleRules._hex_neighbors(origin):
+		if not (neighbor_value is Dictionary):
+			continue
+		var neighbor: Dictionary = neighbor_value
+		var key := _hex_key_for_test(neighbor)
+		if key in forbidden_keys:
+			continue
+		if _hex_occupied_by_other_for_test(battle, "", neighbor):
+			continue
+		return neighbor
+	return {}
+
+func _far_open_hex_for_test(battle: Dictionary, origin: Dictionary, min_distance: int) -> Dictionary:
+	var candidates := [
+		{"q": 0, "r": 0},
+		{"q": 0, "r": 6},
+		{"q": 10, "r": 0},
+		{"q": 10, "r": 6},
+		{"q": 1, "r": 3},
+		{"q": 9, "r": 3},
+	]
+	for candidate in candidates:
+		if BattleRules._hex_distance(candidate, origin) < min_distance:
+			continue
+		if _hex_occupied_by_other_for_test(battle, "", candidate):
+			continue
+		return candidate
+	return {}
+
+func _hex_occupied_by_other_for_test(battle: Dictionary, allowed_battle_id: String, hex: Dictionary) -> bool:
+	var key := _hex_key_for_test(hex)
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		if String(stack.get("battle_id", "")) == allowed_battle_id:
+			continue
+		if int(stack.get("total_health", 0)) <= 0:
+			continue
+		if _hex_key_for_test(_stack_hex_for_test(stack)) == key:
+			return true
+	return false
+
 func _battlefield_objective(battle: Dictionary, objective_id: String) -> Dictionary:
 	for objective in battle.get("field_objectives", []):
 		if objective is Dictionary and String(objective.get("id", "")) == objective_id:
@@ -2229,6 +4127,22 @@ func _first_encounter(session) -> Dictionary:
 		if encounter is Dictionary:
 			return encounter
 	return {}
+
+func _encounter_by_id(session, encounter_id: String) -> Dictionary:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("encounter_id", "")) == encounter_id:
+			return encounter
+	return {}
+
+func _substring_count(text: String, needle: String) -> int:
+	if needle == "":
+		return 0
+	var count := 0
+	var offset := text.find(needle)
+	while offset >= 0:
+		count += 1
+		offset = text.find(needle, offset + needle.length())
+	return count
 
 func _adjacent_open_tile(session, target: Vector2i) -> Vector2i:
 	for offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:

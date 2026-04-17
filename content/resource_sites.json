@@ -41,6 +41,26 @@
       }
     },
     {
+      "id": "site_riverwatch_free_company_yard",
+      "name": "Riverwatch Free Company Yard",
+      "family": "neutral_dwelling",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 80},
+      "control_income": {"gold": 40},
+      "claim_recruits": {"unit_river_guard": 5, "unit_ember_archer": 3},
+      "weekly_recruits": {"unit_river_guard": 1},
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "The Riverwatch yard commits its closest reserve shields, bow crews, wagons, and hired hands onto the pass road.",
+        "movement_cost": 4,
+        "resource_cost": {"gold": 140},
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 2
+      }
+    },
+    {
       "id": "site_fenhound_kennels",
       "name": "Fenhound Kennels",
       "family": "neutral_dwelling",

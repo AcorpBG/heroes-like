@@ -2,7 +2,7 @@ class_name SessionStateStore
 extends RefCounted
 
 const SAVE_VERSION := 9
-const SUPPORTED_GAME_STATES := ["overworld", "town", "battle"]
+const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
 const SUPPORTED_SCENARIO_STATUSES := ["in_progress", "victory", "defeat"]
 const LAUNCH_MODE_CAMPAIGN := "campaign"
 const LAUNCH_MODE_SKIRMISH := "skirmish"
@@ -10,7 +10,7 @@ const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH]
 
 class SessionData:
 	const SAVE_VERSION := 9
-	const SUPPORTED_GAME_STATES := ["overworld", "town", "battle"]
+	const SUPPORTED_GAME_STATES := ["overworld", "town", "battle", "outcome"]
 	const SUPPORTED_SCENARIO_STATUSES := ["in_progress", "victory", "defeat"]
 	const LAUNCH_MODE_CAMPAIGN := "campaign"
 	const LAUNCH_MODE_SKIRMISH := "skirmish"

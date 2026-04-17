@@ -111,6 +111,9 @@ func _rebuild_actions() -> void:
 		_actions_bar.add_child(button)
 
 func _on_action_pressed(action_id: String) -> void:
+	_perform_outcome_action(action_id)
+
+func _perform_outcome_action(action_id: String) -> Dictionary:
 	var result := ScenarioRules.perform_outcome_action(_session, action_id)
 	_last_action_message = String(result.get("message", ""))
 	match String(result.get("route", "stay")):
@@ -120,6 +123,7 @@ func _on_action_pressed(action_id: String) -> void:
 			AppRouter.return_to_main_menu_from_active_play()
 		_:
 			_refresh()
+	return result
 
 func _on_save_pressed() -> void:
 	var result := AppRouter.save_active_session_to_selected_manual_slot()
@@ -205,11 +209,24 @@ func validation_perform_action(action_id: String) -> Dictionary:
 				break
 	if not found:
 		return {"ok": false, "action_id": action_id, "message": "Outcome action is not available."}
-	_on_action_pressed(action_id)
+	var source_scenario_id := _session.scenario_id
+	var source_scenario_status := _session.scenario_status
+	var result := _perform_outcome_action(action_id)
+	var active_session := SessionState.ensure_active_session()
+	var result_route := String(result.get("route", "stay"))
 	return {
-		"ok": true,
+		"ok": bool(result.get("ok", false)) and result_route == expected_route,
 		"action_id": action_id,
 		"expected_route": expected_route,
+		"route": result_route,
+		"action_result": result.duplicate(true),
+		"source_scenario_id": source_scenario_id,
+		"source_scenario_status": source_scenario_status,
+		"active_scenario_id": active_session.scenario_id,
+		"active_scenario_status": active_session.scenario_status,
+		"active_game_state": active_session.game_state,
+		"active_resume_target": SaveService.resume_target_for_session(active_session),
+		"active_battle_empty": active_session.battle.is_empty(),
 		"message": _last_action_message,
 	}
 

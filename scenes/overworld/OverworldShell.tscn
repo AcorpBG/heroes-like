@@ -380,6 +380,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Orders"
 
+[node name="PrimaryAction" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Select Site"
+
 [node name="ContextActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -646,6 +652,7 @@ text = "Forecast"
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveSouth" to="." method="_move_south"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveWest" to="." method="_move_west"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveEast" to="." method="_move_east"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox/PrimaryAction" to="." method="_on_primary_action_pressed"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/TurnRow/EndTurn" to="." method="_on_end_turn_pressed"]
 [connection signal="item_selected" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/TurnRow/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveRow/Save" to="." method="_on_save_pressed"]

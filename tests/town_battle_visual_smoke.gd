@@ -69,6 +69,29 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board did not load.")
 		get_tree().quit(1)
 		return false
+	if not board.has_method("validation_hex_layout_summary"):
+		push_error("Battle smoke: battle board does not expose hex layout validation.")
+		get_tree().quit(1)
+		return false
+	var hex_summary: Dictionary = board.call("validation_hex_layout_summary")
+	if String(hex_summary.get("presentation", "")) != "hex":
+		push_error("Battle smoke: battle board did not render through the hex-field presentation.")
+		get_tree().quit(1)
+		return false
+	if int(hex_summary.get("hex_count", 0)) < 70:
+		push_error("Battle smoke: hex battlefield is too small to be a proper tactical surface: %s." % hex_summary)
+		get_tree().quit(1)
+		return false
+	if int(hex_summary.get("player_stack_count", 0)) <= 0 or int(hex_summary.get("enemy_stack_count", 0)) <= 0:
+		push_error("Battle smoke: both armies must have on-field stacks in the hex presentation: %s." % hex_summary)
+		get_tree().quit(1)
+		return false
+	var expected_stack_count := int(hex_summary.get("player_stack_count", 0)) + int(hex_summary.get("enemy_stack_count", 0))
+	var occupied_hexes: Dictionary = hex_summary.get("occupied_hexes", {})
+	if occupied_hexes.size() != expected_stack_count:
+		push_error("Battle smoke: occupied hex map did not match the on-field stacks: %s." % hex_summary)
+		get_tree().quit(1)
+		return false
 
 	var recent_before: int = int(session.battle.get("recent_events", []).size())
 	var active_stack := BattleRules.get_active_stack(session.battle)

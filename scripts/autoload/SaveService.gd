@@ -536,11 +536,25 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 				validity = _degraded_validity(validity)
 				warnings.append("Battle payload could not be restored and the session was returned to the overworld.")
 		"town":
+			if not session.battle.is_empty():
+				session.battle = {}
+				validity = _degraded_validity(validity)
+				warnings.append("Stale battle payload was ignored because its overworld anchors were already resolved.")
 			if not TownRulesScript.can_visit_active_town_bridge(session):
 				session.game_state = "overworld"
 				validity = _degraded_validity(validity)
 				warnings.append("Town visit state was invalid and the session was returned to the overworld.")
+		"outcome":
+			if not session.battle.is_empty():
+				session.battle = {}
+				validity = _degraded_validity(validity)
+				warnings.append("Stale battle payload was ignored because the scenario is already resolved.")
+			session.game_state = "outcome"
 		_:
+			if not session.battle.is_empty():
+				session.battle = {}
+				validity = _degraded_validity(validity)
+				warnings.append("Stale battle payload was ignored because its overworld anchors were already resolved.")
 			session.game_state = "overworld"
 
 	var resume_target := _resume_target_for_session(session)
@@ -549,6 +563,8 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 			session.game_state = "battle"
 		"town":
 			session.game_state = "town"
+		"outcome":
+			session.game_state = "outcome"
 		_:
 			if session.scenario_status == "in_progress":
 				session.game_state = "overworld"
@@ -847,7 +863,7 @@ func _resume_target_for_session(session: SessionStateStoreScript.SessionData) ->
 		return "blocked"
 	if session.scenario_status != "in_progress":
 		return "outcome"
-	if not session.battle.is_empty():
+	if not session.battle.is_empty() and BattleRulesScript.battle_payload_can_resume_bridge(session):
 		return "battle"
 	if String(session.game_state) == "town" and TownRulesScript.can_visit_active_town_bridge(session):
 		return "town"

@@ -9,6 +9,11 @@ const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
 const FIELD_OBJECTIVES_KEY := "field_objectives"
+const STACK_HEX_KEY := "hex"
+const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
+const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
+const BATTLE_HEX_COLUMNS := 11
+const BATTLE_HEX_ROWS := 7
 
 static func _opposing_side(side: String) -> String:
 	if side == "player":
@@ -20,6 +25,16 @@ static func _opposing_side(side: String) -> String:
 static func _field_objectives(battle: Dictionary) -> Array:
 	var objectives = battle.get(FIELD_OBJECTIVES_KEY, [])
 	return objectives if objectives is Array else []
+
+static func _commander_spell_cast_this_round(battle: Dictionary, side: String) -> bool:
+	if battle.is_empty() or side == "":
+		return false
+	if side == "enemy" and bool(battle.get(ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY, false)):
+		return true
+	var cast_rounds = battle.get(COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	if not (cast_rounds is Dictionary):
+		return false
+	return int(cast_rounds.get(side, 0)) >= int(battle.get("round", 1))
 
 static func _side_controls_field_objective_type(battle: Dictionary, side: String, objective_type: String) -> bool:
 	for objective in _field_objectives(battle):
@@ -419,6 +434,8 @@ static func _best_spell_action(
 	enemy_hero: Dictionary,
 	targets: Array
 ) -> Dictionary:
+	if _commander_spell_cast_this_round(battle, String(active_stack.get("side", ""))):
+		return {}
 	var best := {}
 	for spell in SpellRulesScript.known_spells(enemy_hero, SpellRulesScript.CONTEXT_BATTLE):
 		if not (spell is Dictionary):
@@ -498,6 +515,8 @@ static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, ta
 		for target in targets:
 			if not (target is Dictionary):
 				continue
+			if not _can_make_ranged_attack(active_stack, battle, target):
+				continue
 			var ranged_candidate := {
 				"action": "shoot",
 				"target_battle_id": String(target.get("battle_id", "")),
@@ -506,22 +525,24 @@ static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, ta
 			if _candidate_beats(ranged_candidate, best):
 				best = ranged_candidate
 
-	if _can_make_melee_attack(active_stack, battle):
-		for target in targets:
-			if not (target is Dictionary):
-				continue
-			var melee_candidate := {
-				"action": "strike",
-				"target_battle_id": String(target.get("battle_id", "")),
-				"score": _attack_score(active_stack, target, battle, false),
-			}
-			if _candidate_beats(melee_candidate, best):
-				best = melee_candidate
+	for target in targets:
+		if not (target is Dictionary):
+			continue
+		if not _can_make_melee_attack(active_stack, battle, target):
+			continue
+		var melee_candidate := {
+			"action": "strike",
+			"target_battle_id": String(target.get("battle_id", "")),
+			"score": _attack_score(active_stack, target, battle, false),
+		}
+		if _candidate_beats(melee_candidate, best):
+			best = melee_candidate
 
 	return best
 
 static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> float:
-	var damage := _estimate_damage(attacker, target, battle, is_ranged)
+	var attack_distance := _attack_distance_for_action(attacker, target, battle, is_ranged)
+	var damage := _estimate_damage(attacker, target, battle, is_ranged, false, attack_distance)
 	var target_health: int = max(1, int(target.get("total_health", 0)))
 	var side := String(attacker.get("side", ""))
 	var round_number := int(battle.get("round", 1))
@@ -604,8 +625,8 @@ static func _attack_score(attacker: Dictionary, target: Dictionary, battle: Dict
 	if is_ranged and _side_controls_field_objective_type(battle, side, "cover_line") and _stack_is_cover_screened(attacker, battle):
 		score += 1.25
 	score += _objective_action_score(battle, side, "shoot" if is_ranged else "strike", attacker, target)
-	if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and _alive_count(target) > 0 and _can_make_retaliation(target, int(battle.get("distance", 1))):
-		var retaliation_damage := _estimate_damage(target, attacker, battle, false, true)
+	if not is_ranged and int(target.get("retaliations_left", 0)) > 0 and _alive_count(target) > 0 and _can_make_retaliation(target, attack_distance):
+		var retaliation_damage := _estimate_damage(target, attacker, battle, false, true, attack_distance)
 		score -= (float(retaliation_damage) / float(max(1, int(attacker.get("unit_hp", 1))))) * 0.45
 	return score
 
@@ -810,13 +831,15 @@ static func _advance_score(battle: Dictionary, active_stack: Dictionary, targets
 		score -= 4.0
 	else:
 		score += 0.75
-	if _side_controls_field_objective_type(battle, _opposing_side(side), "obstruction_line"):
-		if _stack_can_breach_obstruction(active_stack, battle):
-			score += 1.5
-		else:
-			score -= 1.5
-	if _stack_cohesion_total(active_stack, battle) <= 4:
-		score -= 1.25
+		if _side_controls_field_objective_type(battle, _opposing_side(side), "obstruction_line"):
+			if _stack_can_breach_obstruction(active_stack, battle):
+				score += 1.5
+			else:
+				score -= 1.5
+		if _side_controls_field_objective_type(battle, side, "obstruction_line"):
+			score -= 3.0
+		if _stack_cohesion_total(active_stack, battle) <= 4:
+			score -= 1.25
 	if _stack_is_isolated(battle, active_stack):
 		score -= 0.5
 	if _battle_has_tag(battle, "wall_pressure") and _stack_is_assault_side(active_stack, battle) and not ranged and round_number >= 3:
@@ -838,7 +861,8 @@ static func _estimate_damage(
 	defender: Dictionary,
 	battle: Dictionary,
 	is_ranged: bool,
-	is_retaliation: bool = false
+	is_retaliation: bool = false,
+	attack_distance: int = -1
 ) -> int:
 	var attacker_count: int = max(1, _alive_count(attacker))
 	var min_damage: int = int(attacker.get("min_damage", 1))
@@ -855,18 +879,19 @@ static func _estimate_damage(
 	var modifier := 1.0 + (clampf(float(attack_stat - defense_stat), -8.0, 8.0) * 0.05)
 	if is_ranged and String(battle.get("terrain", "")) == "forest":
 		modifier *= 0.8
-	if is_ranged and int(battle.get("distance", 1)) == 0:
+	var resolved_distance := int(battle.get("distance", 1)) if attack_distance < 0 else attack_distance
+	if is_ranged and resolved_distance == 0:
 		modifier *= 0.6
 	if not is_ranged and String(battle.get("terrain", "")) == "mire":
 		modifier *= 0.9
 	if is_retaliation:
 		modifier *= 0.9
 	modifier *= _cohesion_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation)
-	modifier *= _ability_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, int(battle.get("distance", 1)))
-	modifier *= _terrain_tag_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
-	modifier *= _field_objective_cover_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
-	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
-	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, int(battle.get("distance", 1)))
+	modifier *= _ability_damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, resolved_distance)
+	modifier *= _terrain_tag_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
+	modifier *= _field_objective_cover_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
+	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
+	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _damage_multiplier_for_side(battle, String(attacker.get("side", "")))
 
 	return max(1, int(round(float(base_damage) * modifier)))
@@ -1071,11 +1096,96 @@ static func _has_hostile_ranged_pressure(targets: Array) -> bool:
 			return true
 	return false
 
-static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary) -> bool:
-	var distance := int(battle.get("distance", 1))
-	if distance <= 0:
+static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target: Dictionary = {}) -> bool:
+	if stack.is_empty() or _alive_count(stack) <= 0:
+		return false
+	if target.is_empty():
+		for candidate in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+			if _can_make_melee_attack(stack, battle, candidate):
+				return true
+		return false
+	if _alive_count(target) <= 0 or String(stack.get("side", "")) == String(target.get("side", "")):
+		return false
+	var hex_distance := _stack_hex_distance(stack, target)
+	if hex_distance <= 1:
 		return true
-	return distance == 1 and _has_ability(stack, "reach")
+	return hex_distance == 2 and _has_ability(stack, "reach")
+
+static func _can_make_ranged_attack(stack: Dictionary, battle: Dictionary, target: Dictionary) -> bool:
+	return (
+		not stack.is_empty()
+		and not target.is_empty()
+		and _alive_count(stack) > 0
+		and _alive_count(target) > 0
+		and String(stack.get("side", "")) != String(target.get("side", ""))
+		and bool(stack.get("ranged", false))
+		and int(stack.get("shots_remaining", 0)) > 0
+		and not _stack_hex(stack).is_empty()
+		and not _stack_hex(target).is_empty()
+	)
+
+static func _attack_distance_for_action(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
+	var hex_distance := _stack_hex_distance(attacker, target)
+	if hex_distance >= 999:
+		return int(battle.get("distance", 1))
+	if is_ranged:
+		return _distance_band_from_hex_distance(hex_distance)
+	if hex_distance <= 1:
+		return 0
+	if hex_distance == 2 and _has_ability(attacker, "reach"):
+		return 1
+	return int(battle.get("distance", 1))
+
+static func _stack_hex(stack: Dictionary) -> Dictionary:
+	return _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
+
+static func _normalize_hex_cell(value: Variant) -> Dictionary:
+	if value is Vector2i:
+		return _hex_cell(value.x, value.y)
+	if value is Dictionary:
+		var q := int(value.get("q", value.get("x", -1)))
+		var r := int(value.get("r", value.get("y", -1)))
+		if _hex_in_bounds(q, r):
+			return _hex_cell(q, r)
+	return {}
+
+static func _hex_cell(q: int, r: int) -> Dictionary:
+	return {
+		"q": clamp(q, 0, BATTLE_HEX_COLUMNS - 1),
+		"r": clamp(r, 0, BATTLE_HEX_ROWS - 1),
+	}
+
+static func _hex_in_bounds(q: int, r: int) -> bool:
+	return q >= 0 and q < BATTLE_HEX_COLUMNS and r >= 0 and r < BATTLE_HEX_ROWS
+
+static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
+	return _hex_distance(_stack_hex(lhs), _stack_hex(rhs))
+
+static func _hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
+	if lhs.is_empty() or rhs.is_empty():
+		return 999
+	var lhs_cube := _offset_to_cube(int(lhs.get("q", 0)), int(lhs.get("r", 0)))
+	var rhs_cube := _offset_to_cube(int(rhs.get("q", 0)), int(rhs.get("r", 0)))
+	return int(
+		(
+			abs(int(lhs_cube.get("x", 0)) - int(rhs_cube.get("x", 0)))
+			+ abs(int(lhs_cube.get("y", 0)) - int(rhs_cube.get("y", 0)))
+			+ abs(int(lhs_cube.get("z", 0)) - int(rhs_cube.get("z", 0)))
+		) / 2
+	)
+
+static func _offset_to_cube(q: int, r: int) -> Dictionary:
+	var x := q - int((r - (r % 2)) / 2)
+	var z := r
+	var y := -x - z
+	return {"x": x, "y": y, "z": z}
+
+static func _distance_band_from_hex_distance(hex_distance: int) -> int:
+	if hex_distance <= 1:
+		return 0
+	if hex_distance <= 5:
+		return 1
+	return 2
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int) -> bool:
 	if attack_distance <= 0:

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-16T20:10:25Z",
+  "updatedAt": "2026-04-17T09:10:45Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "town-battle-scenic-redesign-slice",
-  "currentSliceTitle": "Redesign the town and battle shells so the town stage and battle board dominate while existing actions stay usable",
+  "currentSliceId": "battle-post-move-final-kill-outcome-action-execution-followup",
+  "currentSliceTitle": "Prove outcome action execution truthfulness after immediate final-kill routing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Focused UI recovery slice completed: town and battle shells now prioritize the scenic/play surface, with secondary text collapsed into compact rails, tab pockets, and command bands while routed actions and save/load behavior remain validated.",
+  "currentSliceNotes": "Follow-up completed: immediate post-move final-kill outcome action execution now has automated truthfulness coverage. After the resolved routed final-kill branch reaches ScenarioOutcomeShell, the battle layout smoke executes the real outcome Return to Menu action, resumes the outcome again through the main-menu Continue Latest path, then executes the outcome Retry Skirmish action and verifies the route lands on a clean restarted overworld session with no battle payload or selected-target residue. ScenarioOutcomeShell validation now reports underlying action route and active session truth fields. Focused core, battle layout, town/battle visual, and repo validation checks pass. No live manual proof is claimed because host noVNC/X11 remains tooling-blocked.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",
@@ -114,7 +114,7 @@
     {
       "id": "river-pass-battle-ui-recovery",
       "title": "Recover battle usability for turn clarity, legal actions, targeting, enemy turns, and battle resolution",
-      "status": "pending",
+      "status": "in_progress",
       "difficulty": "very_high"
     },
     {
@@ -126,13 +126,13 @@
     {
       "id": "river-pass-save-resume-proof",
       "title": "Prove save/resume from overworld, town, and battle during the real scenario path",
-      "status": "pending",
+      "status": "in_progress",
       "difficulty": "high"
     },
     {
       "id": "river-pass-outcome-proof",
       "title": "Prove victory and defeat outcome routing plus restart and menu return behavior",
-      "status": "pending",
+      "status": "in_progress",
       "difficulty": "medium"
     },
     {
@@ -143,9 +143,9 @@
     }
   ],
   "nextActions": [
-    "Start River Pass from the live client and record the first blocker without editing code.",
-    "Fill the River Pass parity ledger with live-client evidence.",
-    "Prioritize battle and town usability recovery before adding content breadth."
+    "Resume live manual battle feel proof only after the host noVNC/X11 display recursion blocker is cleared.",
+    "Continue remaining River Pass outcome proof beyond the immediate post-move final-kill outcome action execution branch, including live-client manual verification once display tooling is available.",
+    "Fill the River Pass parity ledger with live-client evidence, including the routed victory and save/resume artifacts."
   ],
   "blocked": false
 }

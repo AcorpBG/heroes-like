@@ -49,6 +49,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _forecast_label: Label = %Forecast
 @onready var _move_state_label: Label = %MoveState
 @onready var _orders_title_label: Label = %OrdersTitle
+@onready var _primary_action_button: Button = %PrimaryAction
 @onready var _map_view = %Map
 @onready var _context_label: Label = %Context
 @onready var _context_actions: Container = %ContextActions
@@ -115,6 +116,9 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
+			KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
+				if _activate_primary_action():
+					get_viewport().set_input_as_handled()
 			KEY_UP, KEY_W:
 				_move_north()
 				get_viewport().set_input_as_handled()
@@ -171,6 +175,9 @@ func _on_save_slot_selected(index: int) -> void:
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
+func _on_primary_action_pressed() -> void:
+	_activate_primary_action()
+
 func _on_context_action_pressed(action_id: String) -> void:
 	if action_id == "advance_route":
 		_move_toward_selected_tile()
@@ -183,6 +190,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		_start_encounter()
 		return
 	if action_id == "visit_town":
+		_session.flags["last_action"] = "visited_town"
 		AppRouter.go_to_town()
 		return
 
@@ -258,7 +266,10 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if not _tile_in_bounds(tile):
 		return
 	if tile == _selected_tile:
-		_move_toward_selected_tile()
+		if tile == OverworldRules.hero_position(_session):
+			_activate_primary_action()
+		else:
+			_move_toward_selected_tile()
 		return
 
 	_selected_tile = tile
@@ -351,8 +362,8 @@ func _refresh() -> void:
 	var resource_text := OverworldRules.describe_resources(_session)
 	_resource_label.tooltip_text = resource_text
 	_resource_label.text = resource_text
-	_map_cue_label.text = "Click route | WASD march"
-	_map_cue_label.tooltip_text = "Click adjacent tiles to march, click distant tiles to set a route, or use WASD and arrow keys."
+	_map_cue_label.text = _map_cue_text()
+	_map_cue_label.tooltip_text = _map_cue_tooltip()
 	_set_compact_label(_commitment_label, OverworldRules.describe_commitment_board(_session), 2, 72)
 	_set_compact_label(_visibility_label, OverworldRules.describe_visibility_panel(_session), 3, 72)
 	_set_compact_label(_hero_label, _hero_card_text(), 2, 72)
@@ -424,20 +435,24 @@ func _rebuild_context_actions() -> void:
 	for child in _context_actions.get_children():
 		child.queue_free()
 
-	var actions = []
-	if _selected_tile == OverworldRules.hero_position(_session):
-		actions = OverworldRules.get_context_actions(_session)
-	else:
-		var movement_action = _selected_tile_movement_action()
-		if not movement_action.is_empty():
-			actions.append(movement_action)
+	var actions := _current_context_actions()
+	var primary_action := _first_enabled_action(actions)
+	_refresh_primary_action_button(primary_action)
 
 	if actions.is_empty():
 		_context_actions.add_child(_make_placeholder_label("Select a tile for orders"))
 		return
 
+	var skipped_primary := false
 	for action in actions:
 		if not (action is Dictionary):
+			continue
+		if (
+			not skipped_primary
+			and not primary_action.is_empty()
+			and String(action.get("id", "")) == String(primary_action.get("id", ""))
+		):
+			skipped_primary = true
 			continue
 		var button = Button.new()
 		button.text = String(action.get("label", action.get("id", "Action")))
@@ -446,6 +461,86 @@ func _rebuild_context_actions() -> void:
 		FrontierVisualKit.apply_button(button, "primary", 112.0, 34.0, 13)
 		button.pressed.connect(_on_context_action_pressed.bind(String(action.get("id", ""))))
 		_context_actions.add_child(button)
+
+func _current_context_actions() -> Array:
+	var actions: Array = []
+	if _selected_tile == OverworldRules.hero_position(_session):
+		actions = OverworldRules.get_context_actions(_session)
+		actions = _promote_selected_owned_town_action(actions)
+	else:
+		var movement_action = _selected_tile_movement_action()
+		if not movement_action.is_empty():
+			actions.append(movement_action)
+	return actions
+
+func _first_enabled_action(actions: Array) -> Dictionary:
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if String(action.get("id", "")) == "":
+			continue
+		if not bool(action.get("disabled", false)):
+			return action
+	return {}
+
+func _promote_selected_owned_town_action(actions: Array) -> Array:
+	var town_action := _selected_owned_town_visit_action()
+	if town_action.is_empty():
+		return actions
+	var promoted: Array = [town_action]
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if String(action.get("id", "")) == String(town_action.get("id", "")):
+			continue
+		promoted.append(action)
+	return promoted
+
+func _selected_owned_town_visit_action() -> Dictionary:
+	if not _tile_in_bounds(_selected_tile):
+		return {}
+	if _selected_tile != OverworldRules.hero_position(_session):
+		return {}
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if town.is_empty() or String(town.get("owner", "neutral")) != "player":
+		return {}
+	var town_name := _selected_tile_destination_name()
+	if town_name == "":
+		town_name = "this town"
+	return {
+		"id": "visit_town",
+		"label": "Visit Town",
+		"summary": "Enter %s now to review construction, recruitment, market, and recovery orders." % town_name,
+	}
+
+func _current_primary_action() -> Dictionary:
+	return _first_enabled_action(_current_context_actions())
+
+func _refresh_primary_action_button(action: Dictionary) -> void:
+	if action.is_empty():
+		_primary_action_button.text = "Select Site"
+		_primary_action_button.disabled = true
+		_primary_action_button.tooltip_text = "Select a visible destination or stand on a site to reveal its primary order."
+		return
+
+	_primary_action_button.text = "%s [Enter]" % _short_action_label(String(action.get("label", "Action")), 22)
+	_primary_action_button.disabled = bool(action.get("disabled", false))
+	var summary := String(action.get("summary", ""))
+	if summary == "":
+		summary = "Commit %s." % String(action.get("label", "the primary order")).to_lower()
+	_primary_action_button.tooltip_text = "%s\nPress Enter or Space to commit this order." % summary
+
+func _activate_primary_action() -> bool:
+	var action := _current_primary_action()
+	if action.is_empty() or bool(action.get("disabled", false)):
+		return false
+	var action_id := String(action.get("id", ""))
+	if action_id == "":
+		return false
+	_on_context_action_pressed(action_id)
+	return true
 
 func _selected_tile_movement_action() -> Dictionary:
 	if not _tile_in_bounds(_selected_tile):
@@ -459,8 +554,8 @@ func _selected_tile_movement_action() -> Dictionary:
 	if _is_adjacent_move_target(hero_pos, _selected_tile):
 		return {
 			"id": "march_selected",
-			"label": "March",
-			"summary": "Advance one tile to %d,%d." % [_selected_tile.x, _selected_tile.y],
+			"label": _selected_tile_order_label(true),
+			"summary": _selected_tile_order_summary(true),
 		}
 
 	var route = _selected_route()
@@ -468,15 +563,87 @@ func _selected_tile_movement_action() -> Dictionary:
 		var steps = route.size() - 1
 		return {
 			"id": "advance_route",
-			"label": "Advance",
-			"summary": "Take the next step toward %d,%d. Route length %d step%s." % [
-				_selected_tile.x,
-				_selected_tile.y,
+			"label": _selected_tile_order_label(false),
+			"summary": "%s Route length %d step%s." % [
+				_selected_tile_order_summary(false),
 				steps,
 				"" if steps == 1 else "s",
 			],
 		}
 	return {}
+
+func _selected_tile_order_label(adjacent: bool) -> String:
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		var owner := String(town.get("owner", "neutral"))
+		if adjacent:
+			return "Visit Town" if owner == "player" else "Approach Town"
+		return "Advance to Town"
+
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		if adjacent:
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			if bool(site.get("persistent_control", false)) and String(node.get("collected_by_faction_id", "")) == "player":
+				return "Enter Site"
+			return "Secure Site"
+		return "Advance to Site"
+
+	if not _artifact_node_at(_selected_tile.x, _selected_tile.y).is_empty():
+		return "Recover Artifact" if adjacent else "Advance to Artifact"
+
+	if not _encounter_at(_selected_tile.x, _selected_tile.y).is_empty():
+		return "Enter Battle" if adjacent else "Advance to Battle"
+
+	return "March" if adjacent else "Advance"
+
+func _selected_tile_order_summary(adjacent: bool) -> String:
+	var destination := _selected_tile_destination_name()
+	var target := "%d,%d" % [_selected_tile.x, _selected_tile.y]
+	if destination != "":
+		target = "%s at %s" % [destination, target]
+	if adjacent:
+		return "%s %s." % [_selected_tile_order_label(true), target]
+	return "Take the next step toward %s." % target
+
+func _selected_tile_destination_name() -> String:
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		var town_data := ContentService.get_town(String(town.get("town_id", "")))
+		return String(town_data.get("name", town.get("placement_id", "Town")))
+
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		return String(site.get("name", "Resource site"))
+
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		return ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", "")))
+
+	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		return OverworldRules.encounter_display_name(encounter)
+
+	return ""
+
+func _map_cue_text() -> String:
+	var action := _current_primary_action()
+	if action.is_empty():
+		return "Click route | WASD march"
+	return "Enter: %s | WASD march" % _short_action_label(String(action.get("label", "Action")), 20)
+
+func _map_cue_tooltip() -> String:
+	var action := _current_primary_action()
+	if action.is_empty():
+		return "Click adjacent tiles to march, click distant tiles to set a route, or use WASD and arrow keys."
+	return "Press Enter or Space for %s. Click adjacent tiles to march, click distant tiles to set a route, or use WASD and arrow keys." % String(action.get("label", "the primary order"))
+
+func _short_action_label(label: String, max_chars: int) -> String:
+	var trimmed := label.strip_edges()
+	if trimmed.length() <= max_chars:
+		return trimmed
+	return "%s..." % trimmed.left(max(1, max_chars - 3))
 
 func _rebuild_artifact_actions() -> void:
 	for child in _artifact_actions.get_children():
@@ -658,9 +825,15 @@ func _update_map_hint() -> void:
 func _map_hint_text() -> String:
 	var hero_pos = OverworldRules.hero_position(_session)
 	var movement_left = int(_session.overworld.get("movement", {}).get("current", 0))
+	var primary_action := _current_primary_action()
 	if _hovered_tile.x >= 0 and _hovered_tile != _selected_tile:
 		return "Hover %d,%d | %s" % [_hovered_tile.x, _hovered_tile.y, _terrain_name_at(_hovered_tile.x, _hovered_tile.y)]
 	if _selected_tile == hero_pos:
+		if not primary_action.is_empty():
+			return "%s | Enter: %s" % [
+				OverworldRules.describe_visibility(_session),
+				_short_action_label(String(primary_action.get("label", "Action")), 22),
+			]
 		return "%s | Click adjacent to move, distant to route | WASD works" % OverworldRules.describe_visibility(_session)
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Selected %d,%d | Unexplored ground | Move closer to reveal it." % [_selected_tile.x, _selected_tile.y]
@@ -669,12 +842,13 @@ func _map_hint_text() -> String:
 	var route = _selected_route()
 	if route.size() > 1:
 		var steps = route.size() - 1
-		return "Selected %d,%d | Route %d step%s | Move %d today | Click again to advance." % [
+		return "Selected %d,%d | Route %d step%s | Move %d today | Enter: %s." % [
 			_selected_tile.x,
 			_selected_tile.y,
 			steps,
 			"" if steps == 1 else "s",
 			movement_left,
+			_short_action_label(String(primary_action.get("label", "Advance")), 22),
 		]
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
 
@@ -929,6 +1103,7 @@ func validation_snapshot() -> Dictionary:
 	var movement = _session.overworld.get("movement", {})
 	var active_context: Dictionary = OverworldRules.get_active_context(_session)
 	var active_town := _validation_active_town_state()
+	var primary_action := _current_primary_action()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -951,15 +1126,19 @@ func validation_snapshot() -> Dictionary:
 			"x": _map_size.x,
 			"y": _map_size.y,
 		},
-		"selected_tile": {
-			"x": _selected_tile.x,
-			"y": _selected_tile.y,
-		},
-		"context_summary": _describe_focus_tile(),
-		"active_context_type": String(active_context.get("type", "")),
-		"context_action_ids": _validation_context_action_ids(),
-		"active_town": active_town,
-		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+			"selected_tile": {
+				"x": _selected_tile.x,
+				"y": _selected_tile.y,
+			},
+			"context_summary": _describe_focus_tile(),
+			"active_context_type": String(active_context.get("type", "")),
+			"primary_action_id": String(primary_action.get("id", "")),
+			"primary_action": _validation_action_payload(primary_action),
+			"primary_action_button_text": _primary_action_button.text,
+			"primary_action_button_disabled": _primary_action_button.disabled,
+			"context_action_ids": _validation_context_action_ids(),
+			"active_town": active_town,
+			"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"commander_state": _validation_commander_state(),
 		"carryover_flags": _validation_carryover_flags(),
 		"objective_summary": OverworldRules.describe_objectives(_session),
@@ -1122,6 +1301,36 @@ func validation_perform_context_action(action_id: String) -> Dictionary:
 		"message": _last_message,
 	}
 
+func validation_perform_primary_action() -> Dictionary:
+	var primary_action := _current_primary_action()
+	if primary_action.is_empty():
+		return {
+			"ok": false,
+			"action_id": "",
+			"primary_action": {},
+			"message": "No primary order is available on the live overworld shell.",
+		}
+	var before_signature := JSON.stringify(_validation_context_action_signature())
+	var action_id := String(primary_action.get("id", ""))
+	var activated := _activate_primary_action()
+	var after_signature := JSON.stringify(_validation_context_action_signature())
+	return {
+		"ok": activated and (
+			before_signature != after_signature
+			or not _session.battle.is_empty()
+			or _session.scenario_status != "in_progress"
+			or String(_session.game_state) != "overworld"
+		),
+		"action_id": action_id,
+		"primary_action": _validation_action_payload(primary_action),
+		"state_changed": before_signature != after_signature,
+		"battle_started": not _session.battle.is_empty(),
+		"game_state": _session.game_state,
+		"scenario_status": _session.scenario_status,
+		"last_action": String(_session.flags.get("last_action", "")),
+		"message": _last_message,
+	}
+
 func validation_route_step_to_nearest_target(target_kind: String, owner_id: String = "") -> Dictionary:
 	return _validation_route_step(target_kind, owner_id, "")
 
@@ -1170,12 +1379,27 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 						"remaining_steps": 0,
 						"last_action": String(_session.flags.get("last_action", "")),
 						"message": "The routed town target is no longer active on this tile.",
-					}
+				}
 				var owner := String(active_town.get("owner", "neutral"))
 				if owner == "player":
-					AppRouter.go_to_town()
+					var visit_primary_action := _current_primary_action()
+					if String(visit_primary_action.get("id", "")) != "visit_town":
+						return {
+							"ok": false,
+							"action": "enter_town",
+							"target_kind": target_kind,
+							"target": target.duplicate(true),
+							"start": _validation_tile_payload(hero_pos),
+							"finish": _validation_tile_payload(hero_pos),
+							"remaining_steps": 0,
+							"town_state": active_town,
+							"primary_action": _validation_action_payload(visit_primary_action),
+							"last_action": String(_session.flags.get("last_action", "")),
+							"message": "The player town did not expose Visit Town as the primary order.",
+						}
+					var visit_result := validation_perform_primary_action()
 					return {
-						"ok": true,
+						"ok": bool(visit_result.get("ok", false)) and String(_session.game_state) == "town",
 						"action": "enter_town",
 						"target_kind": target_kind,
 						"target": target.duplicate(true),
@@ -1183,6 +1407,8 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 						"finish": _validation_tile_payload(hero_pos),
 						"remaining_steps": 0,
 						"town_state": active_town,
+						"primary_action": visit_result.get("primary_action", {}),
+						"primary_result": visit_result,
 						"last_action": String(_session.flags.get("last_action", "visited_town")),
 						"message": _last_message if _last_message != "" else "Town route opened.",
 					}
@@ -1201,11 +1427,27 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 						"last_action": String(_session.flags.get("last_action", "")),
 						"message": "The hostile town did not expose the shipped capture action.",
 					}
-				_on_context_action_pressed("capture_town")
+				var capture_primary_action := _current_primary_action()
+				if String(capture_primary_action.get("id", "")) != "capture_town":
+					return {
+						"ok": false,
+						"action": "capture_town",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(hero_pos),
+						"remaining_steps": 0,
+						"town_state": active_town,
+						"context_action_ids": context_action_ids,
+						"primary_action": _validation_action_payload(capture_primary_action),
+						"last_action": String(_session.flags.get("last_action", "")),
+						"message": "The hostile town did not expose Capture Town as the primary order.",
+					}
+				var capture_result := validation_perform_primary_action()
 				var post_town_state := _validation_town_state_for_placement(String(target.get("placement_id", "")))
 				var battle_context: Dictionary = _duplicate_dictionary(_session.battle.get("context", {}))
 				return {
-					"ok": not _session.battle.is_empty() or owner != String(post_town_state.get("owner", owner)),
+					"ok": bool(capture_result.get("ok", false)) and (not _session.battle.is_empty() or owner != String(post_town_state.get("owner", owner))),
 					"action": "capture_town",
 					"target_kind": target_kind,
 					"target": target.duplicate(true),
@@ -1215,6 +1457,8 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 					"pre_action_town_owner": owner,
 					"post_action_town_state": post_town_state,
 					"context_action_ids": context_action_ids,
+					"primary_action": capture_result.get("primary_action", {}),
+					"primary_result": capture_result,
 					"route": "battle" if not _session.battle.is_empty() else "",
 					"battle_context_type": String(battle_context.get("type", "")),
 					"battle_context_town_placement_id": String(battle_context.get("town_placement_id", "")),
@@ -1223,24 +1467,55 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 					"message": _last_message if _last_message != "" else "Town capture route opened.",
 				}
 			"encounter":
-				_start_encounter()
+				var encounter_primary_action := _current_primary_action()
+				if String(encounter_primary_action.get("id", "")) != "enter_battle":
+					return {
+						"ok": false,
+						"action": "enter_battle",
+						"target_kind": target_kind,
+						"target": target.duplicate(true),
+						"start": _validation_tile_payload(hero_pos),
+						"finish": _validation_tile_payload(hero_pos),
+						"remaining_steps": 0,
+						"primary_action": _validation_action_payload(encounter_primary_action),
+						"last_action": String(_session.flags.get("last_action", "")),
+						"message": "The encounter did not expose Enter Battle as the primary order.",
+					}
+				var battle_result := validation_perform_primary_action()
 				return {
-					"ok": not _session.battle.is_empty(),
+					"ok": bool(battle_result.get("ok", false)) and not _session.battle.is_empty(),
 					"action": "enter_battle",
 					"target_kind": target_kind,
 					"target": target.duplicate(true),
 					"start": _validation_tile_payload(hero_pos),
 					"finish": _validation_tile_payload(hero_pos),
 					"remaining_steps": 0,
+					"primary_action": battle_result.get("primary_action", {}),
+					"primary_result": battle_result,
 					"last_action": String(_session.flags.get("last_action", "")),
 					"message": _last_message if _last_message != "" else "Encounter route opened.",
 				}
 			"resource":
 				var resource_context_action_ids := _validation_context_action_ids()
 				if resource_context_action_ids.has("collect_resource"):
-					_on_context_action_pressed("collect_resource")
+					var resource_primary_action := _current_primary_action()
+					if String(resource_primary_action.get("id", "")) != "collect_resource":
+						return {
+							"ok": false,
+							"action": "collect_resource",
+							"target_kind": target_kind,
+							"target": target.duplicate(true),
+							"start": _validation_tile_payload(hero_pos),
+							"finish": _validation_tile_payload(hero_pos),
+							"remaining_steps": 0,
+							"context_action_ids": resource_context_action_ids,
+							"primary_action": _validation_action_payload(resource_primary_action),
+							"last_action": String(_session.flags.get("last_action", "")),
+							"message": "The resource site did not expose collection as the primary order.",
+						}
+					var collect_result := validation_perform_primary_action()
 					return {
-						"ok": true,
+						"ok": bool(collect_result.get("ok", false)),
 						"action": "collect_resource",
 						"target_kind": target_kind,
 						"target": target.duplicate(true),
@@ -1248,6 +1523,8 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 						"finish": _validation_tile_payload(OverworldRules.hero_position(_session)),
 						"remaining_steps": 0,
 						"context_action_ids": resource_context_action_ids,
+						"primary_action": collect_result.get("primary_action", {}),
+						"primary_result": collect_result,
 						"last_action": String(_session.flags.get("last_action", "")),
 						"message": _last_message if _last_message != "" else "Resource route claimed.",
 					}
@@ -1266,9 +1543,24 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 			"artifact":
 				var artifact_context_action_ids := _validation_context_action_ids()
 				if artifact_context_action_ids.has("collect_artifact"):
-					_on_context_action_pressed("collect_artifact")
+					var artifact_primary_action := _current_primary_action()
+					if String(artifact_primary_action.get("id", "")) != "collect_artifact":
+						return {
+							"ok": false,
+							"action": "collect_artifact",
+							"target_kind": target_kind,
+							"target": target.duplicate(true),
+							"start": _validation_tile_payload(hero_pos),
+							"finish": _validation_tile_payload(hero_pos),
+							"remaining_steps": 0,
+							"context_action_ids": artifact_context_action_ids,
+							"primary_action": _validation_action_payload(artifact_primary_action),
+							"last_action": String(_session.flags.get("last_action", "")),
+							"message": "The artifact cache did not expose recovery as the primary order.",
+						}
+					var artifact_result := validation_perform_primary_action()
 					return {
-						"ok": true,
+						"ok": bool(artifact_result.get("ok", false)),
 						"action": "collect_artifact",
 						"target_kind": target_kind,
 						"target": target.duplicate(true),
@@ -1276,6 +1568,8 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 						"finish": _validation_tile_payload(OverworldRules.hero_position(_session)),
 						"remaining_steps": 0,
 						"context_action_ids": artifact_context_action_ids,
+						"primary_action": artifact_result.get("primary_action", {}),
+						"primary_result": artifact_result,
 						"last_action": String(_session.flags.get("last_action", "")),
 						"message": _last_message if _last_message != "" else "Artifact route claimed.",
 					}
@@ -1431,6 +1725,16 @@ func _validation_context_action_ids() -> Array[String]:
 		ids.append(String(action.get("id", "")))
 	return ids
 
+func _validation_action_payload(action: Dictionary) -> Dictionary:
+	if action.is_empty():
+		return {}
+	return {
+		"id": String(action.get("id", "")),
+		"label": String(action.get("label", "")),
+		"summary": String(action.get("summary", "")),
+		"disabled": bool(action.get("disabled", false)),
+	}
+
 func _validation_context_action_signature() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var active_context: Dictionary = OverworldRules.get_active_context(_session)
@@ -1456,6 +1760,7 @@ func _validation_context_action_signature() -> Dictionary:
 		"scenario_status": _session.scenario_status,
 		"day": _session.day,
 		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
+		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
 		"movement": _duplicate_dictionary(_session.overworld.get("movement", {})),
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"active_context_type": String(active_context.get("type", "")),
@@ -1655,6 +1960,7 @@ func _apply_visual_theme() -> void:
 
 	for button in [_move_north_button, _move_south_button, _move_west_button, _move_east_button]:
 		_style_action_button(button, 50.0, 34.0)
+	FrontierVisualKit.apply_button(_primary_action_button, "primary", 210.0, 36.0, 13)
 	FrontierVisualKit.apply_button(_end_turn_button, "primary", 104.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_save_button, "secondary", 78.0, 32.0, 13)
 	FrontierVisualKit.apply_button(_menu_button, "secondary", 78.0, 32.0, 13)

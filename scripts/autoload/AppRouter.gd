@@ -81,6 +81,7 @@ func go_to_scenario_outcome() -> void:
 	if session.scenario_status == "in_progress":
 		go_to_overworld()
 		return
+	session.game_state = "outcome"
 	SaveService.save_runtime_autosave_session(session)
 	_change_scene(SCENARIO_OUTCOME_SCENE)
 

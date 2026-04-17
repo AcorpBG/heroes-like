@@ -672,6 +672,7 @@ func _refresh_stage_dock_header() -> void:
 func validation_snapshot() -> Dictionary:
 	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
+	var selected_save_summary := _selected_summary()
 	return {
 		"scene_path": scene_file_path,
 		"stage_dock_visible": _stage_dock_panel.visible,
@@ -693,9 +694,26 @@ func validation_snapshot() -> Dictionary:
 		"selected_difficulty": _selected_difficulty,
 		"selected_save_key": _selected_save_key,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+		"selected_save_summary": selected_save_summary.duplicate(true),
+		"save_browser_items": _save_browser_item_labels(),
+		"save_details": _save_details_label.text,
+		"save_details_full": _save_details_label.tooltip_text,
+		"save_pulse": _save_pulse_label.text,
+		"save_pulse_full": _save_pulse_label.tooltip_text,
+		"continue_text": _continue_button.text,
+		"continue_tooltip": _continue_button.tooltip_text,
 		"continue_enabled": not _continue_button.disabled,
+		"load_selected_text": _load_selected_button.text,
+		"load_selected_tooltip": _load_selected_button.tooltip_text,
+		"load_selected_enabled": not _load_selected_button.disabled,
 		"summary": _summary_label.text,
 	}
+
+func _save_browser_item_labels() -> Array:
+	var labels := []
+	for index in range(_save_list.get_item_count()):
+		labels.append(_save_list.get_item_text(index))
+	return labels
 
 func validation_open_campaign_stage() -> void:
 	_select_menu_tab(TAB_CAMPAIGN)
@@ -764,19 +782,60 @@ func validation_resume_selected_save() -> Dictionary:
 		return {"ok": false, "message": "No save summary is selected for validation resume."}
 	var expected_scenario_id := String(summary.get("scenario_id", ""))
 	var expected_resume_target := String(summary.get("resume_target", ""))
+	var expected_game_state := _validation_expected_game_state_for_resume_target(expected_resume_target)
 	var loadable := SaveService.can_load_summary(summary)
 	_on_load_selected_pressed()
 	var active_session := SessionState.ensure_active_session()
 	return {
 		"ok": loadable
 			and active_session.scenario_id == expected_scenario_id
-			and SaveService.resume_target_for_session(active_session) == expected_resume_target,
+			and SaveService.resume_target_for_session(active_session) == expected_resume_target
+			and active_session.game_state == expected_game_state,
 		"selected_key": _summary_key(summary),
 		"scenario_id": expected_scenario_id,
 		"resume_target": expected_resume_target,
+		"game_state": expected_game_state,
 		"active_scenario_id": active_session.scenario_id,
 		"active_resume_target": SaveService.resume_target_for_session(active_session),
+		"active_game_state": active_session.game_state,
+		"active_battle_empty": active_session.battle.is_empty(),
 	}
+
+func validation_resume_latest() -> Dictionary:
+	var summary := SaveService.latest_loadable_summary()
+	if summary.is_empty():
+		return {"ok": false, "message": "No latest save summary is available for validation resume."}
+	var expected_scenario_id := String(summary.get("scenario_id", ""))
+	var expected_resume_target := String(summary.get("resume_target", ""))
+	var expected_game_state := _validation_expected_game_state_for_resume_target(expected_resume_target)
+	var loadable := SaveService.can_load_summary(summary)
+	_on_continue_pressed()
+	var active_session := SessionState.ensure_active_session()
+	return {
+		"ok": loadable
+			and active_session.scenario_id == expected_scenario_id
+			and SaveService.resume_target_for_session(active_session) == expected_resume_target
+			and active_session.game_state == expected_game_state,
+		"selected_key": _summary_key(summary),
+		"scenario_id": expected_scenario_id,
+		"resume_target": expected_resume_target,
+		"game_state": expected_game_state,
+		"active_scenario_id": active_session.scenario_id,
+		"active_resume_target": SaveService.resume_target_for_session(active_session),
+		"active_game_state": active_session.game_state,
+		"active_battle_empty": active_session.battle.is_empty(),
+	}
+
+func _validation_expected_game_state_for_resume_target(resume_target: String) -> String:
+	match resume_target:
+		"battle":
+			return "battle"
+		"town":
+			return "town"
+		"outcome":
+			return "outcome"
+		_:
+			return "overworld"
 
 func validation_start_selected_skirmish() -> Dictionary:
 	var requested_scenario_id := _selected_skirmish_id

@@ -17,6 +17,15 @@ const STATUS_STAGGERED := "status_staggered"
 const RECENT_EVENT_LIMIT := 6
 const TACTICAL_BRIEFING_KEY := "tactical_briefing"
 const FIELD_OBJECTIVES_KEY := "field_objectives"
+const HEX_BOARD_KEY := "hex_board"
+const OCCUPIED_HEXES_KEY := "occupied_hexes"
+const STACK_HEX_KEY := "hex"
+const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
+const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
+const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
+const SELECTED_TARGET_CLOSING_KEY := "selected_target_closing_context"
+const BATTLE_HEX_COLUMNS := 11
+const BATTLE_HEX_ROWS := 7
 const COHESION_MIN := 0
 const COHESION_MAX := 10
 const MOMENTUM_MAX := 4
@@ -103,9 +112,12 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"turn_index": 0,
 		"active_stack_id": "",
 		"selected_target_id": "",
-		"recent_events": [],
-		FIELD_OBJECTIVES_KEY: _normalize_field_objectives(
-			[],
+			"recent_events": [],
+			HEX_BOARD_KEY: _hex_board_descriptor(),
+			OCCUPIED_HEXES_KEY: {},
+			COMMANDER_SPELL_CAST_ROUNDS_KEY: {},
+			FIELD_OBJECTIVES_KEY: _normalize_field_objectives(
+				[],
 			encounter,
 			encounter_placement,
 			scenario,
@@ -148,11 +160,31 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 			)
 
 	battle["stacks"] = stacks
+	_ensure_battle_hex_state(battle)
 	_prepare_round(battle, 1)
 	return battle
 
 static func normalize_battle_state_bridge(session) -> bool:
 	return normalize_battle_state(session)
+
+static func battle_payload_can_resume_bridge(session) -> bool:
+	return battle_payload_can_resume(session)
+
+static func battle_payload_can_resume(session: SessionStateStoreScript.SessionData) -> bool:
+	if session == null or session.scenario_id == "" or session.scenario_status != "in_progress" or session.battle.is_empty():
+		return false
+	var battle_context_seed := _battle_context_seed(session)
+	var normalized_context := _normalized_battle_context(session, battle_context_seed)
+	if not _battle_context_is_restorable(session, normalized_context):
+		return false
+	if _battle_context_already_resolved(session, normalized_context):
+		return false
+	if session.battle.has("stacks"):
+		return _battle_has_living_opposition(session.battle)
+	var encounter_stub := _current_battle_encounter_placement(session)
+	if encounter_stub.is_empty():
+		encounter_stub = _synthetic_battle_encounter_placement(session, normalized_context)
+	return not encounter_stub.is_empty() and String(encounter_stub.get("encounter_id", session.battle.get("encounter_id", ""))) != ""
 
 static func _resolved_encounter_placement(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary) -> Dictionary:
 	if session == null:
@@ -421,6 +453,41 @@ static func _battle_context_is_restorable(
 			return int(_find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("index", -1)) >= 0
 		_:
 			return true
+
+static func _battle_context_already_resolved(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary
+) -> bool:
+	if session == null or session.battle.is_empty():
+		return true
+	match String(context.get("type", "encounter")):
+		"town_assault":
+			var assaulted_town: Dictionary = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
+			return assaulted_town.is_empty() or String(assaulted_town.get("owner", "neutral")) != "enemy"
+		"town_defense":
+			var defended_town: Dictionary = _find_town_by_placement(session, String(context.get("town_placement_id", ""))).get("town", {})
+			return defended_town.is_empty() or String(defended_town.get("owner", "neutral")) != "player"
+		_:
+			var resolved_key := String(session.battle.get("resolved_key", ""))
+			var resolved = session.overworld.get("resolved_encounters", [])
+			return resolved_key != "" and (resolved is Array) and resolved_key in resolved
+
+static func _battle_has_living_opposition(battle: Dictionary) -> bool:
+	if battle.is_empty():
+		return false
+	var player_alive := false
+	var enemy_alive := false
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary) or _alive_count(stack) <= 0:
+			continue
+		match String(stack.get("side", "")):
+			"player":
+				player_alive = true
+			"enemy":
+				enemy_alive = true
+		if player_alive and enemy_alive:
+			return true
+	return false
 
 static func _sync_battle_context_anchors(
 	session: SessionStateStoreScript.SessionData,
@@ -808,6 +875,8 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	var normalized_context := _normalized_battle_context(session, battle_context_seed)
 	if not _battle_context_is_restorable(session, normalized_context):
 		return false
+	if _battle_context_already_resolved(session, normalized_context):
+		return false
 	_sync_battle_context_anchors(session, normalized_context)
 
 	if not session.battle.has("stacks"):
@@ -838,6 +907,9 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	session.battle[TACTICAL_BRIEFING_KEY] = _normalize_tactical_briefing_state(session.battle.get(TACTICAL_BRIEFING_KEY, {}), session)
 	session.battle["round"] = max(1, int(session.battle.get("round", 1)))
 	session.battle["max_rounds"] = max(1, int(session.battle.get("max_rounds", 12)))
+	session.battle[COMMANDER_SPELL_CAST_ROUNDS_KEY] = _normalize_commander_spell_cast_rounds(
+		session.battle.get(COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	)
 	session.battle["terrain"] = String(session.battle.get("terrain", "plains"))
 	var battle_position = session.battle.get("position", {})
 	session.battle["position"] = {
@@ -862,6 +934,8 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 		0,
 		2
 	)
+	session.battle[HEX_BOARD_KEY] = _hex_board_descriptor()
+	_ensure_battle_hex_state(session.battle)
 	session.battle["player_commander_state"] = _normalize_player_commander_state(
 		session,
 		session.battle.get("player_commander_state", {}),
@@ -913,6 +987,520 @@ static func get_active_stack(battle: Dictionary) -> Dictionary:
 static func get_selected_target(battle: Dictionary) -> Dictionary:
 	return _get_stack_by_id(battle, String(battle.get("selected_target_id", "")))
 
+static func select_target(session: SessionStateStoreScript.SessionData, battle_id: String) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"ok": false, "target_battle_id": battle_id, "message": "No battle is active.", "state": "invalid"}
+	var active_stack = get_active_stack(session.battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return {"ok": false, "target_battle_id": battle_id, "message": "It is not the player's turn.", "state": "invalid"}
+	var target = _get_stack_by_id(session.battle, battle_id)
+	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(active_stack.get("side", "")):
+		return {"ok": false, "target_battle_id": battle_id, "message": "Only living enemy stacks can be selected.", "state": "invalid"}
+	_set_selected_target(session.battle, battle_id, true)
+	var click_intent := board_click_attack_intent_for_target(session.battle, battle_id)
+	var continuity_context := selected_target_continuity_context(session.battle)
+	var closing_context := selected_target_closing_context(session.battle)
+	return {
+		"ok": true,
+		"target_battle_id": battle_id,
+		"target_name": _stack_label(target),
+		"selected_target_board_click_intent": click_intent.duplicate(true),
+		"selected_target_continuity_context": continuity_context.duplicate(true),
+		"selected_target_preserved_setup": not continuity_context.is_empty(),
+		"selected_target_closing_context": closing_context.duplicate(true),
+		"selected_target_closing_on_target": not closing_context.is_empty(),
+		"state": "continue",
+		"message": String(click_intent.get("message", "")),
+	}
+
+static func battle_hex_board_size() -> Dictionary:
+	return _hex_board_descriptor()
+
+static func battle_occupancy_map(battle: Dictionary) -> Dictionary:
+	if battle.is_empty():
+		return {}
+	return _build_occupancy_map(battle)
+
+static func legal_destinations_for_active_stack(battle: Dictionary) -> Array:
+	return legal_destinations_for_stack(battle, String(battle.get("active_stack_id", "")))
+
+static func legal_destinations_for_stack(battle: Dictionary, battle_id: String) -> Array:
+	var stack = _get_stack_by_id(battle, battle_id)
+	if stack.is_empty() or _alive_count(stack) <= 0:
+		return []
+	if _advance_distance_delta(stack, battle) <= 0 and int(battle.get("distance", 1)) > 0:
+		return []
+	return _reachable_empty_hexes(battle, stack, _stack_movement_points(stack))
+
+static func legal_attack_targets_for_active_stack(battle: Dictionary, ranged: bool = false) -> Array:
+	var active_stack = get_active_stack(battle)
+	if active_stack.is_empty() or _alive_count(active_stack) <= 0:
+		return []
+	var targets := []
+	for target in _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))):
+		if ranged:
+			if _can_make_ranged_attack(active_stack, battle, target):
+				targets.append(String(target.get("battle_id", "")))
+		elif _can_make_melee_attack(active_stack, battle, target):
+			targets.append(String(target.get("battle_id", "")))
+	return targets
+
+static func legal_attack_target_ids_for_active_stack(battle: Dictionary) -> Array:
+	return _legal_attack_target_ids_for_active_stack(battle)
+
+static func selected_target_legality(battle: Dictionary) -> Dictionary:
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
+	return _attack_legality_for_target(active_stack, target, battle)
+
+static func selected_target_board_click_intent(battle: Dictionary) -> Dictionary:
+	return board_click_attack_intent_for_target(battle, String(battle.get("selected_target_id", "")))
+
+static func selected_target_continuity_context(battle: Dictionary) -> Dictionary:
+	if battle.is_empty():
+		return {}
+	var target_id := String(battle.get(SELECTED_TARGET_CONTINUITY_KEY, ""))
+	if target_id == "" or String(battle.get("selected_target_id", "")) != target_id:
+		return {}
+	var active_stack = get_active_stack(battle)
+	var target = _get_stack_by_id(battle, target_id)
+	if (
+		active_stack.is_empty()
+		or target.is_empty()
+		or _alive_count(target) <= 0
+		or String(active_stack.get("side", "")) != "player"
+		or String(target.get("side", "")) == String(active_stack.get("side", ""))
+	):
+		return {}
+
+	var target_label := _stack_label(target)
+	var legality := _attack_legality_for_target(active_stack, target, battle)
+	var click_intent := board_click_attack_intent_for_target(battle, target_id)
+	var action_id := String(click_intent.get("action", ""))
+	var action_label := String(click_intent.get("label", ""))
+	var context := {
+		"preserved_setup_target": true,
+		"battle_id": target_id,
+		"target_name": target_label,
+		"active_battle_id": String(active_stack.get("battle_id", "")),
+		"active_stack_name": _stack_label(active_stack),
+		"attackable": bool(legality.get("attackable", false)),
+		"blocked": bool(legality.get("blocked", false)),
+		"board_click_action": action_id,
+		"board_click_label": action_label,
+		"board_click_intent": click_intent.duplicate(true),
+		"legality": legality.duplicate(true),
+		"emphasis": "",
+		"footer_label": "",
+		"message": "",
+		"target_line": "",
+	}
+	if bool(legality.get("attackable", false)) and action_label != "":
+		var ready_message := "Preserved setup target: board click will %s %s now." % [action_label, target_label]
+		context["emphasis"] = "attackable"
+		context["footer_label"] = "Setup: %s" % action_label
+		context["message"] = ready_message
+		context["target_line"] = ready_message
+		return context
+	if bool(legality.get("blocked", false)):
+		var blocked_message := ""
+		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
+			blocked_message = "Preserved setup target: %s is still blocked from this hex; highlighted enemies can attack now, or move again to keep setting it up." % target_label
+		else:
+			blocked_message = "Preserved setup target: %s is still blocked from this hex; green hex movement is still needed." % target_label
+		context["emphasis"] = "blocked"
+		context["footer_label"] = "Setup: blocked"
+		context["message"] = blocked_message
+		context["target_line"] = blocked_message
+		return context
+
+	var fallback_message := "Preserved setup target: %s remains selected." % target_label
+	context["emphasis"] = "selected"
+	context["footer_label"] = "Setup: selected"
+	context["message"] = fallback_message
+	context["target_line"] = fallback_message
+	return context
+
+static func selected_target_closing_context(battle: Dictionary) -> Dictionary:
+	if battle.is_empty():
+		return {}
+	if not selected_target_continuity_context(battle).is_empty():
+		_clear_selected_target_closing(battle)
+		return {}
+	if _clear_stale_selected_target_closing(battle):
+		return {}
+	var context_value: Variant = battle.get(SELECTED_TARGET_CLOSING_KEY, {})
+	if not (context_value is Dictionary):
+		return {}
+	var stored_context: Dictionary = context_value
+	var target_id := String(stored_context.get("battle_id", ""))
+	if target_id == "" or String(battle.get("selected_target_id", "")) != target_id:
+		return {}
+	var active_stack = get_active_stack(battle)
+	var expected_active_id := String(stored_context.get("active_battle_id", ""))
+	if (
+		active_stack.is_empty()
+		or String(active_stack.get("side", "")) != "player"
+		or (expected_active_id != "" and String(active_stack.get("battle_id", "")) != expected_active_id)
+	):
+		return {}
+	var target = _get_stack_by_id(battle, target_id)
+	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(active_stack.get("side", "")):
+		return {}
+
+	var mover_label := String(stored_context.get("mover_name", "A stack"))
+	var target_label := _stack_label(target)
+	var legality := _attack_legality_for_target(active_stack, target, battle)
+	var click_intent := board_click_attack_intent_for_target(battle, target_id)
+	var action_id := String(click_intent.get("action", ""))
+	var action_label := String(click_intent.get("label", ""))
+	var context := stored_context.duplicate(true)
+	context["ordinary_closing_target"] = true
+	context["preserved_setup_target"] = false
+	context["battle_id"] = target_id
+	context["target_name"] = target_label
+	context["active_battle_id"] = String(active_stack.get("battle_id", ""))
+	context["active_stack_name"] = _stack_label(active_stack)
+	context["attackable"] = bool(legality.get("attackable", false))
+	context["blocked"] = bool(legality.get("blocked", false))
+	context["board_click_action"] = action_id
+	context["board_click_label"] = action_label
+	context["board_click_intent"] = click_intent.duplicate(true)
+	context["legality"] = legality.duplicate(true)
+	context["emphasis"] = ""
+	context["footer_label"] = ""
+	context["message"] = ""
+	context["target_line"] = ""
+	if bool(legality.get("blocked", false)):
+		var blocked_message := ""
+		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
+			blocked_message = "Closing on target: %s moved closer to %s; target is still blocked here, but highlighted enemies can attack now." % [mover_label, target_label]
+		else:
+			blocked_message = "Closing on target: %s moved closer to %s; target is still blocked here, so green hex movement continues the approach." % [mover_label, target_label]
+		context["emphasis"] = "blocked"
+		context["footer_label"] = "Closing: blocked"
+		context["message"] = blocked_message
+		context["target_line"] = blocked_message
+		return context
+
+	var fallback_message := "Closing on target: %s moved closer to %s." % [mover_label, target_label]
+	context["emphasis"] = "selected"
+	context["footer_label"] = "Closing: selected"
+	context["message"] = fallback_message
+	context["target_line"] = fallback_message
+	return context
+
+static func active_movement_board_click_intent(battle: Dictionary) -> Dictionary:
+	var active_stack = get_active_stack(battle)
+	var destinations := legal_destinations_for_active_stack(battle)
+	var intent := _movement_intent_skeleton(battle, active_stack, {})
+	intent["destination_count"] = destinations.size()
+	if battle.is_empty():
+		intent["message"] = "Green hex click: no battle is active."
+		return intent
+	if active_stack.is_empty():
+		intent["message"] = "Green hex click: no stack is ready to move."
+		return intent
+	if String(active_stack.get("side", "")) != "player":
+		intent["message"] = "Green hex click: wait for player initiative."
+		return intent
+	if destinations.is_empty():
+		intent["blocked"] = true
+		intent["message"] = _movement_intent_message(battle, active_stack, {}, 0)
+		return intent
+
+	intent["action"] = "move"
+	intent["label"] = "Move"
+	intent["movable"] = true
+	intent["message"] = _movement_intent_message(battle, active_stack, {}, destinations.size())
+	return intent
+
+static func movement_intent_for_destination(battle: Dictionary, q: int, r: int) -> Dictionary:
+	var active_stack = get_active_stack(battle)
+	var destination := _hex_cell(q, r) if _hex_in_bounds(q, r) else {}
+	var intent := _movement_intent_skeleton(battle, active_stack, destination)
+	if battle.is_empty():
+		intent["message"] = "Green hex click: no battle is active."
+		return intent
+	if active_stack.is_empty():
+		intent["message"] = "Green hex click: no stack is ready to move."
+		return intent
+	if String(active_stack.get("side", "")) != "player":
+		intent["message"] = "Green hex click: wait for player initiative."
+		return intent
+	if destination.is_empty():
+		intent["blocked"] = true
+		intent["message"] = "Green hex click blocked: that hex is outside the battlefield."
+		return intent
+	var legal_destination := _legal_destination_for_stack(battle, active_stack, destination)
+	if legal_destination.is_empty():
+		intent["blocked"] = true
+		intent["message"] = "Green hex click blocked: %s is not a legal move destination for %s." % [
+			_hex_label(destination),
+			_stack_label(active_stack),
+		]
+		return intent
+
+	destination = legal_destination
+	intent = _movement_intent_skeleton(battle, active_stack, destination)
+	intent["action"] = "move"
+	intent["label"] = "Move"
+	intent["movable"] = true
+	intent["destination_count"] = 1
+	intent["message"] = _movement_intent_message(battle, active_stack, destination, 1)
+	return intent
+
+static func legal_movement_intents_for_active_stack(battle: Dictionary) -> Array:
+	var intents := []
+	for destination in legal_destinations_for_active_stack(battle):
+		if not (destination is Dictionary):
+			continue
+		intents.append(movement_intent_for_destination(
+			battle,
+			int(destination.get("q", -1)),
+			int(destination.get("r", -1))
+		))
+	return intents
+
+static func board_click_attack_intent_for_target(battle: Dictionary, battle_id: String) -> Dictionary:
+	var active_stack = get_active_stack(battle)
+	var target = _get_stack_by_id(battle, battle_id)
+	var target_label := _stack_label(target) if not target.is_empty() else "that target"
+	var intent := {
+		"target_battle_id": battle_id,
+		"target_name": target_label,
+		"action": "",
+		"label": "",
+		"attackable": false,
+		"blocked": false,
+		"message": "",
+	}
+	if battle.is_empty() or battle_id == "":
+		intent["message"] = "Board click: no battle target is selected."
+		return intent
+	if active_stack.is_empty():
+		intent["message"] = "Board click: no stack is ready to act."
+		return intent
+	if String(active_stack.get("side", "")) != "player":
+		intent["message"] = "Board click: wait for player initiative."
+		return intent
+	if target.is_empty() or String(target.get("side", "")) != "enemy":
+		intent["message"] = "Board click: only enemy stacks can be attacked."
+		return intent
+
+	var legal_ranged_targets := legal_attack_targets_for_active_stack(battle, true)
+	var legal_melee_targets := legal_attack_targets_for_active_stack(battle, false)
+	var action_id := ""
+	if bool(active_stack.get("ranged", false)) and battle_id in legal_ranged_targets:
+		action_id = "shoot"
+	elif battle_id in legal_melee_targets:
+		action_id = "strike"
+	elif battle_id in legal_ranged_targets:
+		action_id = "shoot"
+
+	if action_id != "":
+		var action_label := action_id.capitalize()
+		intent["action"] = action_id
+		intent["label"] = action_label
+		intent["attackable"] = true
+		intent["message"] = "Board click will %s %s now." % [action_label, target_label]
+		return intent
+
+	intent["blocked"] = true
+	if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
+		intent["message"] = "Board click blocked: %s cannot be attacked from this hex; click a highlighted enemy to attack, or move first." % target_label
+	else:
+		intent["message"] = "Board click blocked: %s cannot be attacked from this hex; move to a highlighted hex before attacking." % target_label
+	return intent
+
+static func _movement_intent_skeleton(battle: Dictionary, active_stack: Dictionary, destination: Dictionary) -> Dictionary:
+	var selected_target := get_selected_target(battle)
+	var selected_legality := _attack_legality_for_target(active_stack, selected_target, battle)
+	var selected_closing_context := selected_target_closing_context(battle)
+	var q := int(destination.get("q", -1)) if not destination.is_empty() else -1
+	var r := int(destination.get("r", -1)) if not destination.is_empty() else -1
+	var steps := int(destination.get("steps", 0)) if not destination.is_empty() else 0
+	var target_setup := _movement_target_setup_for_destination(battle, active_stack, destination)
+	return {
+		"action": "",
+		"label": "",
+		"movable": false,
+		"blocked": false,
+		"q": q,
+		"r": r,
+		"steps": steps,
+		"step_count": steps,
+		"step_label": _step_count_label(steps) if steps > 0 else "",
+		"destination_label": _hex_label(destination) if not destination.is_empty() else "",
+		"destination_detail": _movement_destination_phrase(destination) if not destination.is_empty() else "",
+		"active_battle_id": String(active_stack.get("battle_id", "")),
+		"active_stack_name": _stack_label(active_stack) if not active_stack.is_empty() else "",
+		"selected_target_battle_id": String(selected_target.get("battle_id", "")),
+		"selected_target_name": _stack_label(selected_target) if not selected_target.is_empty() else "",
+		"selected_target_blocked": bool(selected_legality.get("blocked", false)),
+		"selected_target_attackable": bool(selected_legality.get("attackable", false)),
+		"selected_target_closing_before_move": (
+			not selected_closing_context.is_empty()
+			and String(selected_closing_context.get("battle_id", "")) == String(selected_target.get("battle_id", ""))
+		),
+		"selected_target_after_move_hex_distance": int(target_setup.get("after_move_hex_distance", -1)),
+		"selected_target_after_move_attackable": bool(target_setup.get("after_move_attackable", false)),
+		"sets_up_selected_target_attack": bool(target_setup.get("sets_up_attack", false)),
+		"selected_target_setup_action": String(target_setup.get("action", "")),
+		"selected_target_setup_label": String(target_setup.get("label", "")),
+		"closes_on_selected_target": bool(target_setup.get("closes_on_target", false)),
+		"destination_count": 0,
+		"message": "",
+	}
+
+static func _step_count_label(steps: int) -> String:
+	return "%d step%s" % [max(0, steps), "" if steps == 1 else "s"]
+
+static func _movement_destination_phrase(destination: Dictionary) -> String:
+	if destination.is_empty():
+		return "a highlighted hex"
+	var phrase := _hex_label(destination)
+	var steps := int(destination.get("steps", 0))
+	if steps > 0:
+		phrase = "%s (%s)" % [phrase, _step_count_label(steps)]
+	return phrase
+
+static func _movement_target_setup_for_destination(battle: Dictionary, active_stack: Dictionary, destination: Dictionary) -> Dictionary:
+	var result := {
+		"after_move_hex_distance": -1,
+		"after_move_attackable": false,
+		"sets_up_attack": false,
+		"action": "",
+		"label": "",
+		"closes_on_target": false,
+	}
+	var selected_target := get_selected_target(battle)
+	if active_stack.is_empty() or selected_target.is_empty() or destination.is_empty() or int(destination.get("steps", 0)) <= 0:
+		return result
+	if String(selected_target.get("side", "")) == String(active_stack.get("side", "")):
+		return result
+
+	var current_legality := _attack_legality_for_target(active_stack, selected_target, battle)
+	var current_distance := int(current_legality.get("hex_distance", -1))
+	var projected_stack := active_stack.duplicate(true)
+	projected_stack[STACK_HEX_KEY] = _normalize_hex_cell(destination)
+	var projected_legality := _attack_legality_for_target(projected_stack, selected_target, battle)
+	var after_distance := int(projected_legality.get("hex_distance", -1))
+	result["after_move_hex_distance"] = after_distance
+	result["after_move_attackable"] = bool(projected_legality.get("attackable", false))
+	result["closes_on_target"] = current_distance >= 0 and after_distance >= 0 and after_distance < current_distance
+	if bool(projected_legality.get("melee", false)):
+		result["action"] = "strike"
+		result["label"] = "Strike"
+	elif bool(projected_legality.get("ranged", false)):
+		result["action"] = "shoot"
+		result["label"] = "Shoot"
+	result["sets_up_attack"] = bool(current_legality.get("blocked", false)) and bool(projected_legality.get("attackable", false))
+	return result
+
+static func _movement_intent_message(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	destination: Dictionary,
+	destination_count: int
+) -> String:
+	var active_label := _stack_label(active_stack) if not active_stack.is_empty() else "the active stack"
+	var selected_target := get_selected_target(battle)
+	var selected_legality := _attack_legality_for_target(active_stack, selected_target, battle)
+	var selected_blocked := (
+		not selected_target.is_empty()
+		and String(selected_target.get("side", "")) != String(active_stack.get("side", ""))
+		and bool(selected_legality.get("blocked", false))
+	)
+	var legal_attack_count := _legal_attack_target_ids_for_active_stack(battle).size()
+	if destination_count <= 0:
+		if selected_blocked:
+			return "Green hex click blocked: no legal move is available; %s stays blocked from this hex." % _stack_label(selected_target)
+		return "Green hex click blocked: no legal movement hex is available for %s." % active_label
+
+	var destination_phrase := "a highlighted hex"
+	if not destination.is_empty():
+		destination_phrase = _movement_destination_phrase(destination)
+
+	if selected_blocked:
+		var target_setup := _movement_target_setup_for_destination(battle, active_stack, destination)
+		if not destination.is_empty() and bool(target_setup.get("sets_up_attack", false)):
+			return "Green hex click: Move %s to %s; sets up a later %s on %s." % [
+				active_label,
+				destination_phrase,
+				String(target_setup.get("label", "attack")),
+				_stack_label(selected_target),
+			]
+		if not destination.is_empty() and bool(target_setup.get("closes_on_target", false)):
+			return "Green hex click: Move %s to %s; closes toward blocked %s." % [
+				active_label,
+				destination_phrase,
+				_stack_label(selected_target),
+			]
+		if not destination.is_empty():
+			return "Green hex click: Move %s to %s; %s remains blocked from there." % [
+				active_label,
+				destination_phrase,
+				_stack_label(selected_target),
+			]
+		if legal_attack_count > 0:
+			return "Green hex click: Move %s to %s; highlighted enemies attack now, blocked targets need movement." % [
+				active_label,
+				destination_phrase,
+			]
+		return "Green hex click: Move %s to %s toward %s." % [
+			active_label,
+			destination_phrase,
+			_stack_label(selected_target),
+		]
+	return "Green hex click: Move %s to %s." % [active_label, destination_phrase]
+
+static func _attack_legality_for_target(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> Dictionary:
+	if active_stack.is_empty() or target.is_empty():
+		return {"battle_id": "", "melee": false, "ranged": false, "attackable": false, "blocked": false, "hex_distance": -1}
+	var hex_distance := _stack_hex_distance(active_stack, target)
+	var melee_legal := _can_make_melee_attack(active_stack, battle, target)
+	var ranged_legal := _can_make_ranged_attack(active_stack, battle, target)
+	return {
+		"battle_id": String(target.get("battle_id", "")),
+		"melee": melee_legal,
+		"ranged": ranged_legal,
+		"attackable": melee_legal or ranged_legal,
+		"blocked": not melee_legal and not ranged_legal,
+		"hex_distance": hex_distance,
+	}
+
+static func battle_hex_state_summary(battle: Dictionary) -> Dictionary:
+	var active_stack = get_active_stack(battle)
+	var active_hex := _stack_hex(active_stack)
+	var selected_legality := selected_target_legality(battle)
+	var selected_click_intent := selected_target_board_click_intent(battle)
+	var selected_continuity_context := selected_target_continuity_context(battle)
+	var selected_closing_context := selected_target_closing_context(battle)
+	var movement_click_intent := active_movement_board_click_intent(battle)
+	var selected_action_label := String(selected_click_intent.get("label", ""))
+	return {
+		"columns": BATTLE_HEX_COLUMNS,
+		"rows": BATTLE_HEX_ROWS,
+		"occupied_hexes": _build_occupancy_map(battle),
+		"legal_destinations": legal_destinations_for_active_stack(battle),
+		"legal_movement_intents": legal_movement_intents_for_active_stack(battle),
+		"legal_melee_targets": legal_attack_targets_for_active_stack(battle, false),
+		"legal_ranged_targets": legal_attack_targets_for_active_stack(battle, true),
+		"active_hex": active_hex,
+		"active_movement_board_click_intent": movement_click_intent,
+		"selected_target_legality": selected_legality,
+		"selected_target_board_click_intent": selected_click_intent,
+		"selected_target_direct_actionable": (
+			selected_continuity_context.is_empty()
+			and selected_closing_context.is_empty()
+			and bool(selected_legality.get("attackable", false))
+			and selected_action_label != ""
+		),
+		"selected_target_continuity_context": selected_continuity_context,
+		"selected_target_closing_context": selected_closing_context,
+	}
+
 static func cycle_target(session: SessionStateStoreScript.SessionData, direction: int) -> void:
 	if session == null or session.battle.is_empty():
 		return
@@ -922,17 +1510,29 @@ static func cycle_target(session: SessionStateStoreScript.SessionData, direction
 
 	var enemies = _alive_stacks_for_side(session.battle, "enemy")
 	if enemies.is_empty():
-		session.battle["selected_target_id"] = ""
+		_set_selected_target(session.battle, "", true)
 		return
 
+	var candidates := []
+	var legal_target_ids := _legal_attack_target_ids_for_active_stack(session.battle)
+	if not legal_target_ids.is_empty():
+		for enemy in enemies:
+			if String(enemy.get("battle_id", "")) in legal_target_ids:
+				candidates.append(enemy)
+	else:
+		candidates = enemies
+	if candidates.is_empty():
+		candidates = enemies
+
 	var current_id = String(session.battle.get("selected_target_id", ""))
-	var index = 0
-	for enemy_index in range(enemies.size()):
-		if String(enemies[enemy_index].get("battle_id", "")) == current_id:
-			index = enemy_index
+	var step := -1 if direction < 0 else 1
+	var index := -1 if step > 0 else 0
+	for candidate_index in range(candidates.size()):
+		if String(candidates[candidate_index].get("battle_id", "")) == current_id:
+			index = candidate_index
 			break
-	index = posmod(index + direction, enemies.size())
-	session.battle["selected_target_id"] = String(enemies[index].get("battle_id", ""))
+	index = posmod(index + step, candidates.size())
+	_set_selected_target(session.battle, String(candidates[index].get("battle_id", "")), true)
 
 static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
@@ -941,6 +1541,8 @@ static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> 
 
 static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null or session.battle.is_empty():
+		return []
+	if _commander_spell_cast_this_round(session.battle, "player"):
 		return []
 	return SpellRulesScript.get_battle_actions(
 		_player_commander_state(session),
@@ -1156,6 +1758,9 @@ static func describe_target_context(session: SessionStateStoreScript.SessionData
 	var active_stack = get_active_stack(battle)
 	if active_stack.is_empty():
 		return summary
+	var legality_line := _target_legality_line(active_stack, target, battle)
+	if legality_line != "":
+		return "%s\n%s\nEngagement: %s" % [summary, legality_line, _engagement_preview(active_stack, target, battle)]
 	return "%s\nEngagement: %s" % [summary, _engagement_preview(active_stack, target, battle)]
 
 static func describe_effect_board(session: SessionStateStoreScript.SessionData) -> String:
@@ -1204,9 +1809,25 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 		return "%s is acting now. Hold the line until command returns." % _stack_label(active_stack)
 	var target = get_selected_target(battle)
 	var actions = get_action_surface(session)
+	var target_line := _target_focus_action_line(active_stack, target, battle)
+	var click_intent := selected_target_board_click_intent(battle)
+	var movement_intent := active_movement_board_click_intent(battle)
+	var continuity_context := selected_target_continuity_context(battle)
+	var closing_context := selected_target_closing_context(battle)
+	var board_click_line := String(click_intent.get("message", ""))
+	if board_click_line == "":
+		board_click_line = "Board click: highlighted enemy attacks now; green hex moves."
+	if not continuity_context.is_empty():
+		board_click_line = String(continuity_context.get("message", board_click_line))
+	elif not closing_context.is_empty():
+		board_click_line = String(closing_context.get("message", board_click_line))
+	var movement_click_line := String(movement_intent.get("message", ""))
 	var lines = [
-		"Target focus: %s" % String(target.get("name", "No target selected")),
+		"Target focus: %s" % target_line,
+		board_click_line,
 	]
+	if movement_click_line != "":
+		lines.append(movement_click_line)
 	for action_id in ["advance", "strike", "shoot", "defend", "retreat", "surrender"]:
 		var action = actions.get(action_id, {})
 		lines.append("%s: %s" % [
@@ -1776,7 +2397,7 @@ static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dicti
 static func _attack_action_summary(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> String:
 	if attacker.is_empty() or target.is_empty():
 		return "No clean target is lined up yet."
-	var attack_distance = int(battle.get("distance", 1))
+	var attack_distance = _attack_distance_for_action(attacker, target, battle, is_ranged)
 	var attack_preview = _damage_range_preview(attacker, target, battle, is_ranged, false, attack_distance)
 	if attack_preview.is_empty():
 		return "No clean target is lined up yet."
@@ -1813,13 +2434,84 @@ static func _attack_action_summary(attacker: Dictionary, target: Dictionary, bat
 		clauses.append(objective_preview)
 	return "%s." % " | ".join(clauses)
 
+static func _attack_unavailable_summary(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> String:
+	if attacker.is_empty():
+		return "No stack is ready to act."
+	if target.is_empty():
+		return "No target is selected."
+	var target_label := _stack_label(target)
+	var legality := _attack_legality_for_target(attacker, target, battle)
+	if is_ranged:
+		if not bool(attacker.get("ranged", false)):
+			if bool(legality.get("melee", false)):
+				return "%s has no ranged attack; Strike is legal on %s." % [_stack_label(attacker), target_label]
+			return "%s has no ranged attack; %s needs melee positioning before it can be attacked." % [_stack_label(attacker), target_label]
+		if int(attacker.get("shots_remaining", 0)) <= 0:
+			if bool(legality.get("melee", false)):
+				return "No shots remain; Strike is legal on %s." % target_label
+			return "No shots remain, and %s is blocked from melee at this hex." % target_label
+		return "%s is not a legal ranged target from this hex." % target_label
+	if bool(legality.get("ranged", false)):
+		return "%s is outside melee reach; Shoot is the legal order from this hex." % target_label
+	if bool(legality.get("blocked", false)):
+		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
+			return "%s is blocked for Strike from this hex; click a highlighted enemy to attack now, or green hex click moves for later reach." % target_label
+		return "%s is blocked for Strike from this hex; green hex click moves toward attack range." % target_label
+	return "Close the distance or secure a target before striking."
+
+static func _target_focus_action_line(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
+	if target.is_empty():
+		return "No target selected"
+	var target_label := _stack_label(target)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return target_label
+	var legality := _attack_legality_for_target(active_stack, target, battle)
+	var closing_context := selected_target_closing_context(battle)
+	if not closing_context.is_empty():
+		if bool(legality.get("attackable", false)):
+			var closing_action_label := String(closing_context.get("board_click_label", "attack"))
+			return "%s (closing; click: %s)" % [target_label, closing_action_label]
+		if bool(legality.get("blocked", false)):
+			return "%s (closing; blocked)" % target_label
+	if bool(legality.get("attackable", false)):
+		var click_intent := board_click_attack_intent_for_target(battle, String(target.get("battle_id", "")))
+		var action_label := String(click_intent.get("label", ""))
+		if action_label != "":
+			return "%s (board click: %s)" % [target_label, action_label]
+		return "%s (board click attacks)" % target_label
+	if bool(legality.get("blocked", false)):
+		return "%s (blocked from current hex)" % target_label
+	return target_label
+
+static func _target_legality_line(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
+	if active_stack.is_empty() or target.is_empty() or String(active_stack.get("side", "")) != "player":
+		return ""
+	var continuity_context := selected_target_continuity_context(battle)
+	if not continuity_context.is_empty():
+		return String(continuity_context.get("target_line", continuity_context.get("message", "")))
+	var closing_context := selected_target_closing_context(battle)
+	if not closing_context.is_empty():
+		return String(closing_context.get("target_line", closing_context.get("message", "")))
+	var legality := _attack_legality_for_target(active_stack, target, battle)
+	if bool(legality.get("attackable", false)):
+		var click_intent := board_click_attack_intent_for_target(battle, String(target.get("battle_id", "")))
+		var action_label := String(click_intent.get("label", "attack"))
+		return "Target legality: board click will %s %s now." % [action_label, _stack_label(target)]
+	if bool(legality.get("blocked", false)):
+		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
+			return "Selected target blocked: this hex cannot attack %s; click a highlighted enemy to attack now, or green hex click moves for later reach." % _stack_label(target)
+		return "Selected target blocked: this hex cannot attack %s; green hex click moves toward attack range." % _stack_label(target)
+	return ""
+
 static func _advance_action_summary(battle: Dictionary, stack: Dictionary) -> String:
 	var distance = int(battle.get("distance", 1))
 	if distance <= 0:
-		return "The lines are already engaged."
+		return "Reposition on the engaged line; green hex clicks choose the exact Move destination."
 	var distance_delta = _advance_distance_delta(stack, battle)
 	var next_distance = max(0, distance - distance_delta)
 	var clauses = []
+	if not legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))).is_empty():
+		clauses.append("green hex clicks choose exact movement")
 	if distance_delta > 0:
 		clauses.append("Close from %s to %s" % [_distance_label(distance), _distance_label(next_distance)])
 	else:
@@ -2778,7 +3470,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 	}
 	var strike_summary = "Await the enemy move."
 	if player_turn:
-		strike_summary = _attack_action_summary(active_stack, target, battle, false) if bool(availability.get("strike", false)) else "Close the distance or secure a target before striking."
+		strike_summary = _attack_action_summary(active_stack, target, battle, false) if bool(availability.get("strike", false)) else _attack_unavailable_summary(active_stack, target, battle, false)
 	surface["strike"] = {
 		"label": "Strike",
 		"disabled": not player_turn or not bool(availability.get("strike", false)),
@@ -2786,7 +3478,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 	}
 	var shoot_summary = "Await the enemy move."
 	if player_turn:
-		shoot_summary = _attack_action_summary(active_stack, target, battle, true) if bool(availability.get("shoot", false)) else "Only ranged stacks with shots remaining can fire."
+		shoot_summary = _attack_action_summary(active_stack, target, battle, true) if bool(availability.get("shoot", false)) else _attack_unavailable_summary(active_stack, target, battle, true)
 	surface["shoot"] = {
 		"label": "Shoot",
 		"disabled": not player_turn or not bool(availability.get("shoot", false)),
@@ -2821,6 +3513,9 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 
 	var active_stack = get_active_stack(session.battle)
 	var target_stack = get_selected_target(session.battle)
+	_clear_selected_target_continuity(session.battle)
+	if _commander_spell_cast_this_round(session.battle, "player"):
+		return {"ok": false, "message": "The commander has already cast a spell this round.", "state": "invalid"}
 	var resolution = SpellRulesScript.resolve_battle_spell(
 		_player_commander_state(session),
 		session.battle,
@@ -2830,6 +3525,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "Spell casting failed.")), "state": "invalid"}
+	_mark_commander_spell_cast(session.battle, "player")
 
 	session.battle["player_commander_state"] = resolution.get("hero", _player_commander_state(session))
 	session.battle["player_hero"] = _hero_payload_from_state(
@@ -2891,6 +3587,30 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 
 	return _complete_action(session, message)
 
+static func move_active_stack_to_hex(session: SessionStateStoreScript.SessionData, q: int, r: int) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
+	var movement_intent := movement_intent_for_destination(session.battle, q, r)
+	var active_stack = get_active_stack(session.battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return _attach_movement_intent_to_result(
+			{"ok": false, "message": String(movement_intent.get("message", "It is not the player's turn.")), "state": "invalid"},
+			movement_intent
+		)
+	if not _hex_in_bounds(q, r):
+		return _attach_movement_intent_to_result(
+			{"ok": false, "message": String(movement_intent.get("message", "That hex is outside the battlefield.")), "state": "invalid"},
+			movement_intent
+		)
+	var destination := _hex_cell(q, r)
+	var legal_destination := _legal_destination_for_stack(session.battle, active_stack, destination)
+	if legal_destination.is_empty():
+		return _attach_movement_intent_to_result(
+			{"ok": false, "message": String(movement_intent.get("message", "That hex is not a legal destination for this stack.")), "state": "invalid"},
+			movement_intent
+		)
+	return _resolve_move_action(session, active_stack, legal_destination, "moves", movement_intent)
+
 static func perform_player_action(session: SessionStateStoreScript.SessionData, action: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
@@ -2898,14 +3618,15 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 	var active_stack = get_active_stack(session.battle)
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return {"ok": false, "message": "It is not the player's turn.", "state": "invalid"}
+	_clear_selected_target_continuity(session.battle)
+	_clear_selected_target_closing(session.battle)
 
 	match action:
 		"advance":
-			if int(session.battle.get("distance", 1)) <= 0:
+			if int(session.battle.get("distance", 1)) <= 0 and legal_destinations_for_active_stack(session.battle).is_empty():
 				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
 			var start_distance := int(session.battle.get("distance", 1))
-			var distance_delta := _advance_distance_delta(active_stack, session.battle)
-			session.battle["distance"] = max(0, start_distance - distance_delta)
+			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
 			var advance_message = "%s advances." % _stack_label(active_stack)
 			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
@@ -2929,14 +3650,12 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
 			return _complete_action(session, advance_message)
 		"strike":
-			if not _can_make_melee_attack(active_stack, session.battle):
+			if not _can_make_melee_attack(active_stack, session.battle, get_selected_target(session.battle)):
 				return {"ok": false, "message": "This stack cannot reach the enemy line yet.", "state": "invalid"}
 			return _resolve_attack_action(session, active_stack, get_selected_target(session.battle), false)
 		"shoot":
-			if not bool(active_stack.get("ranged", false)):
-				return {"ok": false, "message": "This stack cannot make a ranged attack.", "state": "invalid"}
-			if int(active_stack.get("shots_remaining", 0)) <= 0:
-				return {"ok": false, "message": "No shots remain for this stack.", "state": "invalid"}
+			if not _can_make_ranged_attack(active_stack, session.battle, get_selected_target(session.battle)):
+				return {"ok": false, "message": "This stack cannot make a ranged attack at that target.", "state": "invalid"}
 			return _resolve_attack_action(session, active_stack, get_selected_target(session.battle), true)
 		"defend":
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
@@ -2984,12 +3703,11 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 		}
 
 	return {
-		"advance": int(battle.get("distance", 1)) > 0,
-		"strike": not selected_target.is_empty() and _can_make_melee_attack(active_stack, battle),
+		"advance": int(battle.get("distance", 1)) > 0 or not legal_destinations_for_active_stack(battle).is_empty(),
+		"strike": not selected_target.is_empty() and _can_make_melee_attack(active_stack, battle, selected_target),
 		"shoot": (
 			not selected_target.is_empty()
-			and bool(active_stack.get("ranged", false))
-			and int(active_stack.get("shots_remaining", 0)) > 0
+			and _can_make_ranged_attack(active_stack, battle, selected_target)
 		),
 		"defend": true,
 		"retreat": bool(battle.get("retreat_allowed", true)),
@@ -3004,13 +3722,18 @@ static func _resolve_attack_action(
 ) -> Dictionary:
 	if target.is_empty():
 		return {"ok": false, "message": "No target is selected.", "state": "invalid"}
+	if is_ranged:
+		if not _can_make_ranged_attack(attacker, session.battle, target):
+			return {"ok": false, "message": "This stack cannot make a ranged attack at that target.", "state": "invalid"}
+	elif not _can_make_melee_attack(attacker, session.battle, target):
+		return {"ok": false, "message": "This stack cannot reach that target.", "state": "invalid"}
 
 	var rng = RandomNumberGenerator.new()
 	rng.seed = _battle_seed(session)
 	rng.state = _battle_state_counter(session)
 
 	var messages = []
-	var attack_distance = int(session.battle.get("distance", 1))
+	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
 	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
@@ -3053,10 +3776,18 @@ static func _resolve_attack_action(
 		)
 		retaliated = true
 
+	var action_id := "shoot" if is_ranged else "strike"
+	var target_after_before_outcome := _get_stack_by_id(session.battle, String(target.get("battle_id", "")))
 	var outcome = _evaluate_outcome(session)
 	if String(outcome.get("state", "")) != "":
 		_append_nonempty_message(messages, String(outcome.get("message", "")))
-		return {"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))}
+		return _attach_post_attack_target_context(
+			{"ok": true, "message": " ".join(messages), "state": String(outcome.get("state", ""))},
+			session,
+			action_id,
+			target_before,
+			target_after_before_outcome
+		)
 
 	if not retaliated and _alive_count(_get_stack_by_id(session.battle, String(target.get("battle_id", "")))) <= 0:
 		messages.append("%s is destroyed." % _stack_label(target))
@@ -3072,7 +3803,133 @@ static func _resolve_attack_action(
 	if not objective_messages.is_empty():
 		messages.append(" ".join(objective_messages))
 
-	return _complete_action(session, " ".join(messages))
+	return _attach_post_attack_target_context(
+		_complete_action(session, " ".join(messages)),
+		session,
+		action_id,
+		target_before,
+		target_after_before_outcome
+	)
+
+static func _attach_post_attack_target_context(
+	result: Dictionary,
+	session: SessionStateStoreScript.SessionData,
+	action_id: String,
+	target_before: Dictionary,
+	target_after_before_outcome: Dictionary = {}
+) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		_clear_post_move_transition_result_fields(result)
+		var attack_target_id := String(target_before.get("battle_id", ""))
+		var attack_target_alive_after := (
+			attack_target_id != ""
+			and String(target_after_before_outcome.get("battle_id", "")) == attack_target_id
+			and _alive_count(target_after_before_outcome) > 0
+		)
+		var empty_legality := _attack_legality_for_target({}, {}, {})
+		var empty_click_intent := board_click_attack_intent_for_target({}, "")
+		result["attack_action"] = action_id
+		result["attack_target_battle_id"] = attack_target_id
+		result["attack_target_name"] = _stack_label(target_before) if not target_before.is_empty() else ""
+		result["attack_target_alive_after_attack"] = attack_target_alive_after
+		result["attack_target_still_selected_after_attack"] = false
+		result["attack_target_invalidated_after_attack"] = attack_target_id != ""
+		result["active_stack_after_attack_battle_id"] = ""
+		result["active_stack_after_attack_side"] = ""
+		result["selected_target_after_attack_battle_id"] = ""
+		result["selected_target_after_attack_name"] = ""
+		result["selected_target_valid_after_attack"] = false
+		result["selected_target_after_attack_legality"] = empty_legality.duplicate(true)
+		result["selected_target_after_attack_board_click_intent"] = empty_click_intent.duplicate(true)
+		result["selected_target_after_attack_board_click_action"] = ""
+		result["selected_target_after_attack_board_click_label"] = ""
+		result["selected_target_handoff_after_attack"] = false
+		result["selected_target_handoff_direct_actionable_after_attack"] = false
+		result["selected_target_handoff_blocked_after_attack"] = false
+		result["selected_target_direct_actionable_after_attack"] = false
+		result["selected_target_continuity_context"] = {}
+		result["selected_target_preserved_setup"] = false
+		result["selected_target_closing_context"] = {}
+		result["selected_target_closing_on_target"] = false
+		return result
+	_clear_post_move_transition_result_fields(result)
+	_clear_selected_target_continuity(session.battle)
+	_clear_selected_target_closing(session.battle)
+	var active_stack = get_active_stack(session.battle)
+	var selected_target = get_selected_target(session.battle)
+	var attack_target_id := String(target_before.get("battle_id", ""))
+	var selected_target_id := String(selected_target.get("battle_id", ""))
+	var attack_target_after := _get_stack_by_id(session.battle, attack_target_id)
+	var attack_target_alive_after := not attack_target_after.is_empty() and _alive_count(attack_target_after) > 0
+	var selected_target_valid_after_attack := _selected_target_can_remain_for_active_stack(session.battle, active_stack, selected_target_id)
+	var attack_target_still_selected_after_attack := (
+		attack_target_id != ""
+		and selected_target_id == attack_target_id
+		and attack_target_alive_after
+		and selected_target_valid_after_attack
+	)
+	var selected_legality := selected_target_legality(session.battle)
+	var selected_click_intent := selected_target_board_click_intent(session.battle)
+	var selected_continuity_context := selected_target_continuity_context(session.battle)
+	var selected_closing_context := selected_target_closing_context(session.battle)
+	var selected_action_label := String(selected_click_intent.get("label", ""))
+	var selected_target_handoff_after_attack := (
+		attack_target_id != ""
+		and selected_target_id != ""
+		and selected_target_id != attack_target_id
+		and not attack_target_still_selected_after_attack
+	)
+	var selected_target_direct_actionable_after_attack := (
+		selected_continuity_context.is_empty()
+		and selected_closing_context.is_empty()
+		and bool(selected_legality.get("attackable", false))
+		and selected_action_label != ""
+	)
+	result["attack_action"] = action_id
+	result["attack_target_battle_id"] = attack_target_id
+	result["attack_target_name"] = _stack_label(target_before) if not target_before.is_empty() else ""
+	result["attack_target_alive_after_attack"] = attack_target_alive_after
+	result["attack_target_still_selected_after_attack"] = attack_target_still_selected_after_attack
+	result["attack_target_invalidated_after_attack"] = attack_target_id != "" and not attack_target_still_selected_after_attack
+	result["active_stack_after_attack_battle_id"] = String(active_stack.get("battle_id", ""))
+	result["active_stack_after_attack_side"] = String(active_stack.get("side", ""))
+	result["selected_target_after_attack_battle_id"] = selected_target_id
+	result["selected_target_after_attack_name"] = _stack_label(selected_target) if not selected_target.is_empty() else ""
+	result["selected_target_valid_after_attack"] = selected_target_valid_after_attack
+	result["selected_target_after_attack_legality"] = selected_legality.duplicate(true)
+	result["selected_target_after_attack_board_click_intent"] = selected_click_intent.duplicate(true)
+	result["selected_target_after_attack_board_click_action"] = String(selected_click_intent.get("action", ""))
+	result["selected_target_after_attack_board_click_label"] = selected_action_label
+	result["selected_target_handoff_after_attack"] = selected_target_handoff_after_attack
+	result["selected_target_handoff_direct_actionable_after_attack"] = selected_target_handoff_after_attack and selected_target_direct_actionable_after_attack
+	result["selected_target_handoff_blocked_after_attack"] = selected_target_handoff_after_attack and bool(selected_legality.get("blocked", false))
+	result["selected_target_direct_actionable_after_attack"] = selected_target_direct_actionable_after_attack
+	result["selected_target_continuity_context"] = selected_continuity_context.duplicate(true)
+	result["selected_target_preserved_setup"] = not selected_continuity_context.is_empty()
+	result["selected_target_closing_context"] = selected_closing_context.duplicate(true)
+	result["selected_target_closing_on_target"] = not selected_closing_context.is_empty()
+	return result
+
+static func _clear_post_move_transition_result_fields(result: Dictionary) -> void:
+	for key in [
+		"movement_intent",
+		"sets_up_selected_target_attack",
+		"selected_target_setup_label",
+		"selected_target_after_move_attackable",
+		"selected_target_after_move_hex_distance",
+		"selected_target_after_move_battle_id",
+		"selected_target_after_move_name",
+		"selected_target_after_move_legality",
+		"selected_target_after_move_board_click_intent",
+		"selected_target_after_move_board_click_action",
+		"selected_target_after_move_board_click_label",
+		"selected_target_actionable_after_move",
+		"selected_target_continuity_preserved",
+		"selected_target_closing_before_move",
+		"closes_on_selected_target",
+		"post_move_target_guidance",
+	]:
+		result.erase(key)
 
 static func _complete_action(session: SessionStateStoreScript.SessionData, initial_message: String) -> Dictionary:
 	var messages = [initial_message]
@@ -3147,8 +4004,7 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			)
 		"advance":
 			var start_distance := int(session.battle.get("distance", 1))
-			var distance_delta := _advance_distance_delta(active_stack, session.battle)
-			session.battle["distance"] = max(0, start_distance - distance_delta)
+			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
 			var advance_message = "%s advances." % _stack_label(active_stack)
 			var advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 			if advance_pressure != "":
@@ -3194,8 +4050,7 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				return _resolve_ai_attack(session, active_stack, fallback, true)
 			if int(session.battle.get("distance", 1)) > 0:
 				var fallback_start_distance := int(session.battle.get("distance", 1))
-				var fallback_distance_delta := _advance_distance_delta(active_stack, session.battle)
-				session.battle["distance"] = max(0, fallback_start_distance - fallback_distance_delta)
+				var fallback_distance_delta := _apply_auto_advance_movement(session.battle, active_stack, fallback_start_distance)
 				var fallback_advance_message = "%s advances." % _stack_label(active_stack)
 				var fallback_advance_pressure = _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
 				if fallback_advance_pressure != "":
@@ -3230,6 +4085,8 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "")), "state": "invalid"}
+	_mark_commander_spell_cast(session.battle, "enemy")
+	session.battle[ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY] = true
 
 	session.battle["enemy_hero"] = resolution.get("hero", session.battle.get("enemy_hero", {}))
 	session.battle["enemy_hero_payload"] = _hero_payload_from_state(session.battle.get("enemy_hero", {}), {}, session, "enemy")
@@ -3289,11 +4146,16 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, attacker: Dictionary, target: Dictionary, is_ranged: bool) -> Dictionary:
 	if target.is_empty():
 		return {"ok": false, "message": "", "state": "invalid"}
+	if is_ranged:
+		if not _can_make_ranged_attack(attacker, session.battle, target):
+			return {"ok": false, "message": "", "state": "invalid"}
+	elif not _can_make_melee_attack(attacker, session.battle, target):
+		return {"ok": false, "message": "", "state": "invalid"}
 	var rng = RandomNumberGenerator.new()
 	rng.seed = _battle_seed(session)
 	rng.state = _battle_state_counter(session)
 	var messages = []
-	var attack_distance = int(session.battle.get("distance", 1))
+	var attack_distance = _attack_distance_for_action(attacker, target, session.battle, is_ranged)
 	var target_before = target.duplicate(true)
 	var damage = _calculate_damage(attacker, target, session.battle, rng, is_ranged, false, attack_distance)
 	_apply_damage_to_stack(session.battle, String(target.get("battle_id", "")), damage)
@@ -3352,11 +4214,13 @@ static func _drain_enemy_turns(session: SessionStateStoreScript.SessionData) -> 
 		return {"state": "invalid", "message": ""}
 
 	var messages := []
+	session.battle[ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY] = false
 	while true:
 		var active_stack = get_active_stack(session.battle)
 		if active_stack.is_empty():
 			var outcome = _evaluate_outcome(session)
 			if String(outcome.get("state", "")) != "":
+				session.battle.erase(ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY)
 				return outcome
 			break
 		if String(active_stack.get("side", "")) != "enemy":
@@ -3368,10 +4232,12 @@ static func _drain_enemy_turns(session: SessionStateStoreScript.SessionData) -> 
 			messages.append(enemy_message)
 		var enemy_state := String(enemy_result.get("state", "continue"))
 		if enemy_state != "" and enemy_state not in ["continue", "invalid"]:
+			session.battle.erase(ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY)
 			return {"state": enemy_state, "message": " ".join(messages)}
 		if enemy_state == "invalid":
 			break
 
+	session.battle.erase(ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY)
 	return {"state": "continue", "message": " ".join(messages)}
 
 static func _complete_enemy_action(session: SessionStateStoreScript.SessionData, message: String) -> Dictionary:
@@ -4205,6 +5071,7 @@ static func _build_battle_stack(
 		"cohesion_base": cohesion_base,
 		"cohesion": cohesion_base,
 		"momentum": 0,
+		STACK_HEX_KEY: {},
 		"abilities": _normalize_unit_abilities(unit.get("abilities", [])),
 		"effects": [],
 		"source_type": String(source.get("source_type", "")),
@@ -4224,6 +5091,7 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		return {}
 	var unit_hp = max(1, int(unit.get("hp", 1)))
 	var cohesion_base = _cohesion_base_for_unit(unit)
+	var normalized_hex := _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 	return {
 		"battle_id": String(stack.get("battle_id", "%s_%s" % [String(stack.get("side", "stack")), unit_id])),
 		"side": String(stack.get("side", "player")),
@@ -4247,6 +5115,7 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"cohesion_base": clamp(int(stack.get("cohesion_base", cohesion_base)), COHESION_MIN, COHESION_MAX),
 		"cohesion": clamp(int(stack.get("cohesion", stack.get("cohesion_base", cohesion_base))), COHESION_MIN, COHESION_MAX),
 		"momentum": clamp(int(stack.get("momentum", 0)), 0, MOMENTUM_MAX),
+		STACK_HEX_KEY: normalized_hex,
 		"abilities": _normalize_unit_abilities(unit.get("abilities", [])),
 		"effects": stack.get("effects", []).duplicate(true) if stack.get("effects", []) is Array else [],
 		"source_type": String(stack.get("source_type", "")),
@@ -4255,7 +5124,674 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"source_encounter_key": String(stack.get("source_encounter_key", "")),
 	}
 
+static func _hex_board_descriptor() -> Dictionary:
+	return {
+		"columns": BATTLE_HEX_COLUMNS,
+		"rows": BATTLE_HEX_ROWS,
+	}
+
+static func _normalize_commander_spell_cast_rounds(value: Variant) -> Dictionary:
+	var normalized := {}
+	if not (value is Dictionary):
+		return normalized
+	for side_value in value.keys():
+		var side := String(side_value)
+		if side not in ["player", "enemy"]:
+			continue
+		normalized[side] = max(0, int(value.get(side_value, 0)))
+	return normalized
+
+static func _commander_spell_cast_this_round(battle: Dictionary, side: String) -> bool:
+	if battle.is_empty() or side == "":
+		return false
+	var cast_rounds: Dictionary = _normalize_commander_spell_cast_rounds(
+		battle.get(COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	)
+	return int(cast_rounds.get(side, 0)) >= int(battle.get("round", 1))
+
+static func _mark_commander_spell_cast(battle: Dictionary, side: String) -> void:
+	if battle.is_empty() or side == "":
+		return
+	var cast_rounds: Dictionary = _normalize_commander_spell_cast_rounds(
+		battle.get(COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	)
+	cast_rounds[side] = int(battle.get("round", 1))
+	battle[COMMANDER_SPELL_CAST_ROUNDS_KEY] = cast_rounds
+
+static func _ensure_battle_hex_state(battle: Dictionary) -> void:
+	if battle.is_empty():
+		return
+	battle[HEX_BOARD_KEY] = _hex_board_descriptor()
+	var stacks = battle.get("stacks", [])
+	if not (stacks is Array):
+		battle["stacks"] = []
+		battle[OCCUPIED_HEXES_KEY] = {}
+		return
+	var used := {}
+	var side_indices := {"player": 0, "enemy": 0}
+	var side_counts := {
+		"player": _alive_stack_count_for_side(battle, "player"),
+		"enemy": _alive_stack_count_for_side(battle, "enemy"),
+	}
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if not (stack is Dictionary):
+			continue
+		var side := String(stack.get("side", "player"))
+		var side_index := int(side_indices.get(side, 0))
+		side_indices[side] = side_index + 1
+		if _alive_count(stack) <= 0:
+			stack[STACK_HEX_KEY] = _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
+			stacks[index] = stack
+			continue
+		var cell := _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
+		if cell.is_empty() or used.has(_hex_key(cell)):
+			cell = _default_stack_hex(side, side_index, int(side_counts.get(side, 1)), stack, int(battle.get("distance", 1)))
+			cell = _first_open_hex_near(cell, used)
+		stack[STACK_HEX_KEY] = cell
+		used[_hex_key(cell)] = String(stack.get("battle_id", ""))
+		stacks[index] = stack
+	battle["stacks"] = stacks
+	_sync_occupied_hexes(battle)
+
+static func _alive_stack_count_for_side(battle: Dictionary, side: String) -> int:
+	var total := 0
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("side", "")) == side and _alive_count(stack) > 0:
+			total += 1
+	return total
+
+static func _default_stack_hex(side: String, index: int, stack_count: int, stack: Dictionary, distance: int) -> Dictionary:
+	var rows := _formation_rows(stack_count)
+	var row: int = int(rows[index]) if index >= 0 and index < rows.size() else int(clamp(index, 0, BATTLE_HEX_ROWS - 1))
+	var column: int = _deployment_column(side, int(clamp(distance, 0, 2)))
+	if bool(stack.get("ranged", false)):
+		column += -1 if side == "player" else 1
+	return _hex_cell(clamp(column, 0, BATTLE_HEX_COLUMNS - 1), row)
+
+static func _deployment_column(side: String, distance: int) -> int:
+	var normalized: int = int(clamp(distance, 0, 2))
+	if side == "player":
+		return [4, 3, 1][normalized]
+	return [5, 7, 9][normalized]
+
+static func _formation_rows(stack_count: int) -> Array:
+	match stack_count:
+		0:
+			return []
+		1:
+			return [3]
+		2:
+			return [2, 4]
+		3:
+			return [1, 3, 5]
+		4:
+			return [1, 2, 4, 5]
+		5:
+			return [0, 2, 3, 4, 6]
+		6:
+			return [0, 1, 2, 4, 5, 6]
+		_:
+			return [0, 1, 2, 3, 4, 5, 6]
+
+static func _hex_cell(q: int, r: int) -> Dictionary:
+	return {
+		"q": clamp(q, 0, BATTLE_HEX_COLUMNS - 1),
+		"r": clamp(r, 0, BATTLE_HEX_ROWS - 1),
+	}
+
+static func _normalize_hex_cell(value: Variant) -> Dictionary:
+	if value is Vector2i:
+		return _hex_cell(value.x, value.y)
+	if value is Dictionary:
+		var q := int(value.get("q", value.get("x", -1)))
+		var r := int(value.get("r", value.get("y", -1)))
+		if _hex_in_bounds(q, r):
+			return _hex_cell(q, r)
+	return {}
+
+static func _hex_in_bounds(q: int, r: int) -> bool:
+	return q >= 0 and q < BATTLE_HEX_COLUMNS and r >= 0 and r < BATTLE_HEX_ROWS
+
+static func _hex_key(cell: Dictionary) -> String:
+	return "%d,%d" % [int(cell.get("q", -1)), int(cell.get("r", -1))]
+
+static func _hex_key_from_coords(q: int, r: int) -> String:
+	return "%d,%d" % [q, r]
+
+static func _first_open_hex_near(preferred: Dictionary, used: Dictionary) -> Dictionary:
+	var preferred_key := _hex_key(preferred)
+	if not used.has(preferred_key):
+		return preferred
+	var frontier := [preferred]
+	var seen := {preferred_key: true}
+	while not frontier.is_empty():
+		var current: Dictionary = frontier.pop_front()
+		for neighbor in _hex_neighbors(current):
+			var key := _hex_key(neighbor)
+			if seen.has(key):
+				continue
+			if not used.has(key):
+				return neighbor
+			seen[key] = true
+			frontier.append(neighbor)
+	return preferred
+
+static func _stack_hex(stack: Dictionary) -> Dictionary:
+	return _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
+
+static func _stack_movement_points(stack: Dictionary) -> int:
+	return clamp(int(stack.get("speed", 1)), 1, 6)
+
+static func _build_occupancy_map(battle: Dictionary) -> Dictionary:
+	var occupied := {}
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary) or _alive_count(stack) <= 0:
+			continue
+		var cell := _stack_hex(stack)
+		if cell.is_empty():
+			continue
+		occupied[_hex_key(cell)] = String(stack.get("battle_id", ""))
+	return occupied
+
+static func _sync_occupied_hexes(battle: Dictionary) -> void:
+	battle[OCCUPIED_HEXES_KEY] = _build_occupancy_map(battle)
+
+static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictionary) -> void:
+	var normalized := _normalize_hex_cell(cell)
+	if normalized.is_empty():
+		return
+	var stacks = battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
+			stack[STACK_HEX_KEY] = normalized
+			stacks[index] = stack
+			break
+	battle["stacks"] = stacks
+	_sync_occupied_hexes(battle)
+
+static func _hex_neighbors(cell: Dictionary) -> Array:
+	var q := int(cell.get("q", -1))
+	var r := int(cell.get("r", -1))
+	var offsets: Array[Vector2i] = []
+	if r % 2 == 0:
+		offsets = [
+			Vector2i(1, 0),
+			Vector2i(0, -1),
+			Vector2i(-1, -1),
+			Vector2i(-1, 0),
+			Vector2i(-1, 1),
+			Vector2i(0, 1),
+		]
+	else:
+		offsets = [
+			Vector2i(1, 0),
+			Vector2i(1, -1),
+			Vector2i(0, -1),
+			Vector2i(-1, 0),
+			Vector2i(0, 1),
+			Vector2i(1, 1),
+		]
+	var neighbors := []
+	for offset_value in offsets:
+		var offset: Vector2i = offset_value
+		var next_q: int = q + offset.x
+		var next_r: int = r + offset.y
+		if _hex_in_bounds(next_q, next_r):
+			neighbors.append(_hex_cell(next_q, next_r))
+	return neighbors
+
+static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_steps: int) -> Array:
+	var start := _stack_hex(stack)
+	if start.is_empty() or max_steps <= 0:
+		return []
+	var occupied := _build_occupancy_map(battle)
+	var start_key := _hex_key(start)
+	occupied.erase(start_key)
+	var frontier := [{"cell": start, "steps": 0}]
+	var seen := {start_key: 0}
+	var reachable := []
+	while not frontier.is_empty():
+		var current: Dictionary = frontier.pop_front()
+		var current_cell: Dictionary = current.get("cell", {})
+		var steps := int(current.get("steps", 0))
+		if steps >= max_steps:
+			continue
+		for neighbor in _hex_neighbors(current_cell):
+			var key := _hex_key(neighbor)
+			if seen.has(key) or occupied.has(key):
+				continue
+			var next_steps := steps + 1
+			seen[key] = next_steps
+			var entry: Dictionary = neighbor.duplicate(true)
+			entry["steps"] = next_steps
+			reachable.append(entry)
+			frontier.append({"cell": neighbor, "steps": next_steps})
+	return reachable
+
+static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
+	return _hex_distance(_stack_hex(lhs), _stack_hex(rhs))
+
+static func _hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
+	if lhs.is_empty() or rhs.is_empty():
+		return 999
+	var lhs_cube := _offset_to_cube(int(lhs.get("q", 0)), int(lhs.get("r", 0)))
+	var rhs_cube := _offset_to_cube(int(rhs.get("q", 0)), int(rhs.get("r", 0)))
+	return int(
+		(
+			abs(int(lhs_cube.get("x", 0)) - int(rhs_cube.get("x", 0)))
+			+ abs(int(lhs_cube.get("y", 0)) - int(rhs_cube.get("y", 0)))
+			+ abs(int(lhs_cube.get("z", 0)) - int(rhs_cube.get("z", 0)))
+		) / 2
+	)
+
+static func _offset_to_cube(q: int, r: int) -> Dictionary:
+	var x := q - int((r - (r % 2)) / 2)
+	var z := r
+	var y := -x - z
+	return {"x": x, "y": y, "z": z}
+
+static func _distance_band_from_hex_distance(hex_distance: int) -> int:
+	if hex_distance <= 1:
+		return 0
+	if hex_distance <= 5:
+		return 1
+	return 2
+
+static func _sync_distance_from_hexes(battle: Dictionary) -> void:
+	var best := 999
+	for player_stack in _alive_stacks_for_side(battle, "player"):
+		for enemy_stack in _alive_stacks_for_side(battle, "enemy"):
+			best = min(best, _stack_hex_distance(player_stack, enemy_stack))
+	if best < 999:
+		battle["distance"] = _distance_band_from_hex_distance(best)
+
+static func _best_advance_destination(
+	battle: Dictionary,
+	stack: Dictionary,
+	preferred_target: Dictionary = {},
+	desired_distance_band: int = -1
+) -> Dictionary:
+	var destinations := legal_destinations_for_stack(battle, String(stack.get("battle_id", "")))
+	if destinations.is_empty():
+		return {}
+	var target := preferred_target
+	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(stack.get("side", "")):
+		target = _nearest_opposing_stack(battle, stack)
+	var best := {}
+	var best_score := 99999
+	for destination in destinations:
+		if not (destination is Dictionary):
+			continue
+		var score := 0
+		if not target.is_empty():
+			var projected_distance := _hex_distance(destination, _stack_hex(target))
+			if desired_distance_band >= 0:
+				var projected_band := _distance_band_from_hex_distance(_projected_min_opposing_hex_distance(battle, stack, destination))
+				if projected_band < desired_distance_band:
+					score += (desired_distance_band - projected_band) * 1000
+				elif projected_band > desired_distance_band:
+					score += (projected_band - desired_distance_band) * 200
+			score += projected_distance * 10
+		score += int(destination.get("steps", 1))
+		score += _advance_lateral_penalty(stack, destination)
+		if best.is_empty() or score < best_score:
+			best = destination
+			best_score = score
+	return best
+
+static func _destination_is_legal(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> bool:
+	return not _legal_destination_for_stack(battle, stack, destination).is_empty()
+
+static func _legal_destination_for_stack(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> Dictionary:
+	var normalized := _normalize_hex_cell(destination)
+	if normalized.is_empty():
+		return {}
+	for candidate in legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))):
+		if candidate is Dictionary and _hex_key(candidate) == _hex_key(normalized):
+			return candidate.duplicate(true)
+	return {}
+
+static func _resolve_move_action(
+	session: SessionStateStoreScript.SessionData,
+	active_stack: Dictionary,
+	destination: Dictionary,
+	verb: String,
+	movement_intent: Dictionary = {}
+) -> Dictionary:
+	var start_hex := _stack_hex(active_stack)
+	_set_stack_hex(session.battle, String(active_stack.get("battle_id", "")), destination)
+	_sync_distance_from_hexes(session.battle)
+	var pressure_message := _apply_advance_pressure(session.battle, String(active_stack.get("battle_id", "")))
+	var updated_stack := _get_stack_by_id(session.battle, String(active_stack.get("battle_id", "")))
+	var message := String(movement_intent.get("message", "")).strip_edges()
+	if message == "":
+		message = "%s %s from %s to %s." % [
+			_stack_label(updated_stack),
+			verb,
+			_hex_label(start_hex),
+			_hex_label(destination),
+		]
+	if pressure_message != "":
+		message = _join_messages([message, pressure_message])
+	var objective_messages := _apply_field_objective_action_pressure(
+		session.battle,
+		{
+			"action": "advance",
+			"side": String(updated_stack.get("side", "")),
+			"battle_id": String(updated_stack.get("battle_id", "")),
+		}
+	)
+	if not objective_messages.is_empty():
+		message = _join_messages([message, " ".join(objective_messages)])
+	var result := _complete_action(session, message)
+	var continuity_preserved := _apply_setup_move_target_continuity(session.battle, movement_intent, result)
+	var ordinary_closing_recorded := false
+	if continuity_preserved:
+		_clear_selected_target_closing(session.battle)
+	else:
+		ordinary_closing_recorded = _apply_ordinary_closing_target_context(session.battle, movement_intent, result)
+	result = _attach_movement_intent_to_result(result, movement_intent)
+	result["selected_target_continuity_preserved"] = continuity_preserved
+	result["selected_target_closing_on_target"] = ordinary_closing_recorded
+	return _attach_post_move_target_context(result, session.battle)
+
+static func _attach_movement_intent_to_result(result: Dictionary, movement_intent: Dictionary) -> Dictionary:
+	if movement_intent.is_empty():
+		return result
+	result["movement_intent"] = movement_intent.duplicate(true)
+	result["preview_message"] = String(movement_intent.get("message", ""))
+	result["destination_detail"] = String(movement_intent.get("destination_detail", ""))
+	result["steps"] = int(movement_intent.get("steps", 0))
+	result["step_count"] = int(movement_intent.get("step_count", result.get("steps", 0)))
+	result["sets_up_selected_target_attack"] = bool(movement_intent.get("sets_up_selected_target_attack", false))
+	result["selected_target_setup_label"] = String(movement_intent.get("selected_target_setup_label", ""))
+	result["selected_target_after_move_attackable"] = bool(movement_intent.get("selected_target_after_move_attackable", false))
+	result["selected_target_after_move_hex_distance"] = int(movement_intent.get("selected_target_after_move_hex_distance", -1))
+	result["selected_target_closing_before_move"] = bool(movement_intent.get("selected_target_closing_before_move", false))
+	result["closes_on_selected_target"] = bool(movement_intent.get("closes_on_selected_target", false))
+	return result
+
+static func _attach_post_move_target_context(result: Dictionary, battle: Dictionary) -> Dictionary:
+	if battle.is_empty():
+		return result
+	var active_stack = get_active_stack(battle)
+	var selected_target = get_selected_target(battle)
+	var selected_legality := selected_target_legality(battle)
+	var selected_click_intent := selected_target_board_click_intent(battle)
+	var selected_continuity_context := selected_target_continuity_context(battle)
+	var selected_closing_context := selected_target_closing_context(battle)
+	result["active_stack_after_move_battle_id"] = String(active_stack.get("battle_id", ""))
+	result["active_stack_after_move_side"] = String(active_stack.get("side", ""))
+	result["selected_target_after_move_battle_id"] = String(selected_target.get("battle_id", ""))
+	result["selected_target_after_move_name"] = _stack_label(selected_target) if not selected_target.is_empty() else ""
+	result["selected_target_after_move_legality"] = selected_legality.duplicate(true)
+	result["selected_target_after_move_board_click_intent"] = selected_click_intent.duplicate(true)
+	result["selected_target_after_move_board_click_action"] = String(selected_click_intent.get("action", ""))
+	result["selected_target_after_move_board_click_label"] = String(selected_click_intent.get("label", ""))
+	result["selected_target_continuity_context"] = selected_continuity_context.duplicate(true)
+	result["selected_target_preserved_setup"] = not selected_continuity_context.is_empty()
+	result["selected_target_closing_context"] = selected_closing_context.duplicate(true)
+	result["selected_target_closing_on_target"] = not selected_closing_context.is_empty()
+	var selected_action_label := String(selected_click_intent.get("label", ""))
+	result["selected_target_actionable_after_move"] = (
+		selected_continuity_context.is_empty()
+		and selected_closing_context.is_empty()
+		and bool(selected_legality.get("attackable", false))
+		and selected_action_label != ""
+	)
+	if not selected_continuity_context.is_empty():
+		result["post_move_target_guidance"] = String(selected_continuity_context.get("message", selected_click_intent.get("message", "")))
+	elif not selected_closing_context.is_empty():
+		result["post_move_target_guidance"] = String(selected_closing_context.get("message", selected_click_intent.get("message", "")))
+	elif bool(result.get("selected_target_actionable_after_move", false)):
+		result["post_move_target_guidance"] = "Target legality: board click will %s %s now." % [
+			selected_action_label,
+			_stack_label(selected_target),
+		]
+	else:
+		result["post_move_target_guidance"] = String(selected_click_intent.get("message", ""))
+	return result
+
+static func _apply_setup_move_target_continuity(
+	battle: Dictionary,
+	movement_intent: Dictionary,
+	result: Dictionary
+) -> bool:
+	if battle.is_empty():
+		return false
+	var result_state := String(result.get("state", "continue"))
+	if result_state != "" and result_state != "continue":
+		_clear_selected_target_continuity(battle)
+		return false
+	if not bool(movement_intent.get("sets_up_selected_target_attack", false)):
+		return false
+	if bool(movement_intent.get("selected_target_closing_before_move", false)):
+		_clear_selected_target_continuity(battle)
+		return false
+	var target_id := String(movement_intent.get("selected_target_battle_id", ""))
+	var active_stack = get_active_stack(battle)
+	if _selected_target_can_remain_for_active_stack(battle, active_stack, target_id):
+		battle[SELECTED_TARGET_CONTINUITY_KEY] = target_id
+		_set_selected_target(battle, target_id)
+		return true
+	if String(active_stack.get("side", "")) == "player":
+		_clear_selected_target_continuity(battle)
+	return false
+
+static func _apply_ordinary_closing_target_context(
+	battle: Dictionary,
+	movement_intent: Dictionary,
+	result: Dictionary
+) -> bool:
+	_clear_selected_target_closing(battle)
+	if battle.is_empty():
+		return false
+	var result_state := String(result.get("state", "continue"))
+	if result_state != "" and result_state != "continue":
+		return false
+	if (
+		bool(movement_intent.get("sets_up_selected_target_attack", false))
+		or not bool(movement_intent.get("closes_on_selected_target", false))
+		or not bool(movement_intent.get("selected_target_blocked", false))
+		or bool(movement_intent.get("selected_target_after_move_attackable", false))
+	):
+		return false
+	var target_id := String(movement_intent.get("selected_target_battle_id", ""))
+	if target_id == "" or String(battle.get("selected_target_id", "")) != target_id:
+		return false
+	var active_stack = get_active_stack(battle)
+	var selected_target = get_selected_target(battle)
+	var selected_legality := selected_target_legality(battle)
+	var mover_id := String(movement_intent.get("active_battle_id", ""))
+	if (
+		active_stack.is_empty()
+		or String(active_stack.get("side", "")) != "player"
+		or mover_id == ""
+		or String(active_stack.get("battle_id", "")) != mover_id
+		or selected_target.is_empty()
+		or String(selected_target.get("battle_id", "")) != target_id
+		or not bool(selected_legality.get("blocked", false))
+	):
+		return false
+	battle[SELECTED_TARGET_CLOSING_KEY] = {
+		"ordinary_closing_target": true,
+		"preserved_setup_target": false,
+		"battle_id": target_id,
+		"target_name": String(movement_intent.get("selected_target_name", _stack_label(selected_target))),
+		"mover_battle_id": String(movement_intent.get("active_battle_id", "")),
+		"mover_name": String(movement_intent.get("active_stack_name", "")),
+		"active_battle_id": String(active_stack.get("battle_id", "")),
+		"active_stack_name": _stack_label(active_stack),
+		"destination_detail": String(movement_intent.get("destination_detail", "")),
+		"step_count": int(movement_intent.get("step_count", movement_intent.get("steps", 0))),
+		"after_move_hex_distance": int(movement_intent.get("selected_target_after_move_hex_distance", -1)),
+	}
+	return true
+
+static func _clear_selected_target_continuity(battle: Dictionary) -> void:
+	if battle.is_empty():
+		return
+	battle.erase(SELECTED_TARGET_CONTINUITY_KEY)
+
+static func _clear_selected_target_closing(battle: Dictionary) -> void:
+	if battle.is_empty():
+		return
+	battle.erase(SELECTED_TARGET_CLOSING_KEY)
+
+static func _clear_stale_selected_target_closing(battle: Dictionary, clear_attackable: bool = true) -> bool:
+	if battle.is_empty() or not battle.has(SELECTED_TARGET_CLOSING_KEY):
+		return false
+	var context_value: Variant = battle.get(SELECTED_TARGET_CLOSING_KEY, {})
+	if not (context_value is Dictionary):
+		_clear_selected_target_closing(battle)
+		return true
+	var stored_context: Dictionary = context_value
+	var target_id := String(stored_context.get("battle_id", ""))
+	if target_id == "" or String(battle.get("selected_target_id", "")) != target_id:
+		_clear_selected_target_closing(battle)
+		return true
+	var active_stack = get_active_stack(battle)
+	var expected_active_id := String(stored_context.get("active_battle_id", ""))
+	if (
+		active_stack.is_empty()
+		or String(active_stack.get("side", "")) != "player"
+		or (expected_active_id != "" and String(active_stack.get("battle_id", "")) != expected_active_id)
+	):
+		_clear_selected_target_closing(battle)
+		return true
+	var target = _get_stack_by_id(battle, target_id)
+	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(active_stack.get("side", "")):
+		_clear_selected_target_closing(battle)
+		return true
+	var legality := _attack_legality_for_target(active_stack, target, battle)
+	if (clear_attackable and bool(legality.get("attackable", false))) or not bool(legality.get("blocked", false)):
+		_clear_selected_target_closing(battle)
+		return true
+	return false
+
+static func _set_selected_target(battle: Dictionary, target_id: String, explicit_retarget: bool = false) -> void:
+	if battle.is_empty():
+		return
+	var normalized_target_id := String(target_id)
+	if explicit_retarget:
+		var continuity_target_id := String(battle.get(SELECTED_TARGET_CONTINUITY_KEY, ""))
+		if continuity_target_id != "" and normalized_target_id != continuity_target_id:
+			_clear_selected_target_continuity(battle)
+		var explicit_closing_value: Variant = battle.get(SELECTED_TARGET_CLOSING_KEY, {})
+		var explicit_closing_target_id := String(explicit_closing_value.get("battle_id", "")) if explicit_closing_value is Dictionary else ""
+		if explicit_closing_target_id != "" and normalized_target_id != explicit_closing_target_id:
+			_clear_selected_target_closing(battle)
+	else:
+		var current_closing_value: Variant = battle.get(SELECTED_TARGET_CLOSING_KEY, {})
+		var current_closing_target_id := String(current_closing_value.get("battle_id", "")) if current_closing_value is Dictionary else ""
+		if current_closing_target_id != "" and normalized_target_id != current_closing_target_id:
+			_clear_selected_target_closing(battle)
+	battle["selected_target_id"] = normalized_target_id
+
+static func _selected_target_can_remain_for_active_stack(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target_id: String
+) -> bool:
+	if battle.is_empty() or active_stack.is_empty() or target_id == "":
+		return false
+	var target := _get_stack_by_id(battle, target_id)
+	return (
+		not target.is_empty()
+		and _alive_count(target) > 0
+		and String(target.get("side", "")) != String(active_stack.get("side", ""))
+	)
+
+static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dictionary, start_distance: int) -> int:
+	var distance_delta := _advance_distance_delta(active_stack, battle)
+	if distance_delta <= 0:
+		if start_distance <= 0:
+			var reposition_destination: Dictionary = _best_advance_destination(
+				battle,
+				active_stack,
+				_nearest_opposing_stack(battle, active_stack),
+				0
+			)
+			if not reposition_destination.is_empty():
+				_set_stack_hex(battle, String(active_stack.get("battle_id", "")), reposition_destination)
+				_sync_distance_from_hexes(battle)
+		return distance_delta
+	var desired_distance: int = max(0, start_distance - distance_delta)
+	if start_distance <= 1 and _has_ability(active_stack, "reach") and not bool(active_stack.get("ranged", false)):
+		desired_distance = max(desired_distance, 1)
+	var destination: Dictionary = _best_advance_destination(
+		battle,
+		active_stack,
+		_nearest_opposing_stack(battle, active_stack),
+		desired_distance
+	)
+	if not destination.is_empty():
+		_set_stack_hex(battle, String(active_stack.get("battle_id", "")), destination)
+		_sync_distance_from_hexes(battle)
+	else:
+		battle["distance"] = max(0, start_distance - distance_delta)
+	return distance_delta
+
+static func _hex_label(cell: Dictionary) -> String:
+	if cell.is_empty():
+		return "unknown hex"
+	return "hex %d,%d" % [int(cell.get("q", 0)), int(cell.get("r", 0))]
+
+static func _nearest_opposing_stack(battle: Dictionary, stack: Dictionary) -> Dictionary:
+	var best := {}
+	var best_distance := 999
+	for target in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+		var distance := _stack_hex_distance(stack, target)
+		if best.is_empty() or distance < best_distance:
+			best = target
+			best_distance = distance
+	return best
+
+static func _projected_min_opposing_hex_distance(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> int:
+	var best := 999
+	for target in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+		best = min(best, _hex_distance(destination, _stack_hex(target)))
+	return best
+
+static func _advance_lateral_penalty(stack: Dictionary, destination: Dictionary) -> int:
+	var current := _stack_hex(stack)
+	if current.is_empty():
+		return 0
+	var forward_delta := int(destination.get("q", 0)) - int(current.get("q", 0))
+	if String(stack.get("side", "")) == "enemy":
+		forward_delta = -forward_delta
+	var lateral: int = abs(int(destination.get("r", 0)) - int(current.get("r", 0)))
+	return lateral + max(0, -forward_delta) * 2
+
+static func _can_make_ranged_attack(stack: Dictionary, battle: Dictionary, target: Dictionary) -> bool:
+	return (
+		not stack.is_empty()
+		and not target.is_empty()
+		and _alive_count(stack) > 0
+		and _alive_count(target) > 0
+		and String(stack.get("side", "")) != String(target.get("side", ""))
+		and bool(stack.get("ranged", false))
+		and int(stack.get("shots_remaining", 0)) > 0
+		and not _stack_hex(stack).is_empty()
+		and not _stack_hex(target).is_empty()
+	)
+
+static func _attack_distance_for_action(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> int:
+	var hex_distance := _stack_hex_distance(attacker, target)
+	if hex_distance >= 999:
+		return int(battle.get("distance", 1))
+	if is_ranged:
+		return _distance_band_from_hex_distance(hex_distance)
+	if hex_distance <= 1:
+		return 0
+	if hex_distance == 2 and _has_ability(attacker, "reach"):
+		return 1
+	return int(battle.get("distance", 1))
+
 static func _prepare_round(battle: Dictionary, round_number: int) -> void:
+	_ensure_battle_hex_state(battle)
 	battle["round"] = round_number
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
@@ -4268,6 +5804,7 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		stack["momentum"] = max(0, int(stack.get("momentum", 0)) - 1)
 		stacks[index] = stack
 	battle["stacks"] = stacks
+	_sync_occupied_hexes(battle)
 	_apply_round_pressure_shifts(battle)
 	battle["turn_order"] = _sorted_turn_order(battle)
 	battle["turn_index"] = 0
@@ -4333,12 +5870,66 @@ static func _advance_to_next_alive(battle: Dictionary, start_index: int) -> Stri
 
 static func _assign_default_target(battle: Dictionary) -> void:
 	var active_stack = get_active_stack(battle)
+	_clear_stale_selected_target_closing(battle)
 	if active_stack.is_empty():
-		battle["selected_target_id"] = ""
+		_set_selected_target(battle, "")
 		return
 	var target_side = "enemy" if String(active_stack.get("side", "")) == "player" else "player"
 	var targets = _alive_stacks_for_side(battle, target_side)
-	battle["selected_target_id"] = String(targets[0].get("battle_id", "")) if not targets.is_empty() else ""
+	if targets.is_empty():
+		_set_selected_target(battle, "")
+		return
+	var continuity_target_id := String(battle.get(SELECTED_TARGET_CONTINUITY_KEY, ""))
+	var current_selected_id := String(battle.get("selected_target_id", ""))
+	if (
+		continuity_target_id != ""
+		and current_selected_id != ""
+		and current_selected_id != continuity_target_id
+		and String(active_stack.get("side", "")) == "player"
+	):
+		_clear_selected_target_continuity(battle)
+		continuity_target_id = ""
+	if continuity_target_id != "":
+		if _selected_target_can_remain_for_active_stack(battle, active_stack, continuity_target_id):
+			_set_selected_target(battle, continuity_target_id)
+			return
+		if String(active_stack.get("side", "")) == "player":
+			_clear_selected_target_continuity(battle)
+	var preferred_target := _preferred_default_target_for_active_stack(battle, active_stack, targets)
+	_set_selected_target(battle, String(preferred_target.get("battle_id", "")))
+
+static func _preferred_default_target_for_active_stack(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	targets: Array
+) -> Dictionary:
+	if battle.is_empty() or active_stack.is_empty() or targets.is_empty():
+		return {}
+	var legal_target_ids := _legal_attack_target_ids_for_active_stack(battle)
+	for legal_target_id_value in legal_target_ids:
+		var legal_target_id := String(legal_target_id_value)
+		for target in targets:
+			if target is Dictionary and String(target.get("battle_id", "")) == legal_target_id:
+				return target
+	for target in targets:
+		if target is Dictionary:
+			return target
+	return {}
+
+static func _legal_attack_target_ids_for_active_stack(battle: Dictionary) -> Array:
+	var ids := []
+	var seen := {}
+	for battle_id_value in legal_attack_targets_for_active_stack(battle, false):
+		var battle_id := String(battle_id_value)
+		if battle_id != "" and not seen.has(battle_id):
+			seen[battle_id] = true
+			ids.append(battle_id)
+	for battle_id_value in legal_attack_targets_for_active_stack(battle, true):
+		var battle_id := String(battle_id_value)
+		if battle_id != "" and not seen.has(battle_id):
+			seen[battle_id] = true
+			ids.append(battle_id)
+	return ids
 
 static func _calculate_damage(
 	attacker: Dictionary,
@@ -4477,6 +6068,7 @@ static func _apply_damage_to_stack(battle: Dictionary, battle_id: String, damage
 			stacks[index] = stack
 			break
 	battle["stacks"] = stacks
+	_sync_occupied_hexes(battle)
 
 static func _consume_retaliation(battle: Dictionary, battle_id: String) -> void:
 	var stacks = battle.get("stacks", [])
@@ -4601,11 +6193,20 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 		break
 	battle["stacks"] = stacks
 
-static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary) -> bool:
-	var distance = int(battle.get("distance", 1))
-	if distance <= 0:
+static func _can_make_melee_attack(stack: Dictionary, battle: Dictionary, target: Dictionary = {}) -> bool:
+	if stack.is_empty() or _alive_count(stack) <= 0:
+		return false
+	if target.is_empty():
+		for candidate in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
+			if _can_make_melee_attack(stack, battle, candidate):
+				return true
+		return false
+	if _alive_count(target) <= 0 or String(stack.get("side", "")) == String(target.get("side", "")):
+		return false
+	var hex_distance := _stack_hex_distance(stack, target)
+	if hex_distance <= 1:
 		return true
-	return distance == 1 and _has_ability(stack, "reach")
+	return hex_distance == 2 and _has_ability(stack, "reach")
 
 static func _can_make_retaliation(stack: Dictionary, attack_distance: int) -> bool:
 	if attack_distance <= 0:
@@ -5763,12 +7364,13 @@ static func _engagement_preview(active_stack: Dictionary, target: Dictionary, ba
 	if String(active_stack.get("side", "")) == String(target.get("side", "")):
 		return "Friendly stack selected."
 	if String(active_stack.get("side", "")) == "player":
-		var availability = action_availability(battle)
-		if bool(availability.get("shoot", false)) and bool(active_stack.get("ranged", false)):
-			return "%s can shoot now." % _stack_label(active_stack)
-		if bool(availability.get("strike", false)):
-			return "%s can strike now." % _stack_label(active_stack)
-		return "Advance is needed before %s can be reached." % _stack_label(target)
+		var click_intent := board_click_attack_intent_for_target(battle, String(target.get("battle_id", "")))
+		var action_label := String(click_intent.get("label", ""))
+		if action_label != "":
+			return "Board click will %s %s now." % [action_label, _stack_label(target)]
+		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
+			return "%s is blocked from this hex; click a highlighted enemy to attack, or green hex click moves." % _stack_label(target)
+		return "Green hex movement is needed before %s can be reached." % _stack_label(target)
 	return "%s is threatening %s." % [_stack_label(active_stack), _stack_label(target)]
 
 static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_active: bool) -> String:

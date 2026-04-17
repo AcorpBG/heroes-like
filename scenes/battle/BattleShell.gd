@@ -60,9 +60,14 @@ var _validation_spell_casts := 0
 var _validation_max_spell_casts := 1
 var _validation_prioritize_support_spell := false
 var _validation_spell_casting_enabled := true
+var _validation_battle_resolution_routing_enabled := true
 
 func _ready() -> void:
 	_apply_visual_theme()
+	if _battle_board_view.has_signal("stack_focus_requested"):
+		_battle_board_view.stack_focus_requested.connect(_on_board_stack_focus_requested)
+	if _battle_board_view.has_signal("hex_destination_requested"):
+		_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
 	_battle_tabs.current_tab = 0
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
@@ -105,6 +110,151 @@ func _on_prev_target_pressed() -> void:
 func _on_next_target_pressed() -> void:
 	BattleRules.cycle_target(_session, 1)
 	_refresh()
+
+func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
+	if _session == null or _session.battle.is_empty() or battle_id == "":
+		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "No battle target was clicked.", "state": "invalid"}
+	var active_stack := BattleRules.get_active_stack(_session.battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "It is not the player's turn.", "state": "invalid"}
+	var clicked_stack := _stack_by_battle_id(battle_id)
+	if clicked_stack.is_empty() or String(clicked_stack.get("side", "")) != "enemy":
+		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "Only enemy stacks can be targeted from the battle board.", "state": "invalid"}
+
+	var selected_before := String(BattleRules.get_selected_target(_session.battle).get("battle_id", "")) == battle_id
+	var selection_result := BattleRules.select_target(_session, battle_id)
+	if not bool(selection_result.get("ok", false)):
+		return {
+			"ok": false,
+			"action": "",
+			"target_battle_id": battle_id,
+			"selected_before": selected_before,
+			"state": String(selection_result.get("state", "invalid")),
+			"message": String(selection_result.get("message", "Could not select that target.")),
+		}
+	var board_intent := BattleRules.board_click_attack_intent_for_target(_session.battle, battle_id)
+	var board_action := String(board_intent.get("action", ""))
+	if board_action != "":
+		var result := BattleRules.perform_player_action(_session, board_action)
+		_last_message = String(result.get("message", ""))
+		if bool(result.get("ok", false)):
+			_dismiss_tactical_briefing()
+		var routed := _handle_battle_resolution(result)
+		if not routed:
+			_refresh()
+		var selected_after := {}
+		var selected_legality := {}
+		var selected_click_intent := {}
+		var selected_continuity_context := {}
+		var selected_closing_context := {}
+		var selected_direct_actionable := false
+		var action_guidance := ""
+		var target_context := ""
+		var board_summary := {}
+		if _session != null and not _session.battle.is_empty():
+			selected_after = BattleRules.get_selected_target(_session.battle)
+			selected_legality = BattleRules.selected_target_legality(_session.battle)
+			selected_click_intent = BattleRules.selected_target_board_click_intent(_session.battle)
+			selected_continuity_context = BattleRules.selected_target_continuity_context(_session.battle)
+			selected_closing_context = BattleRules.selected_target_closing_context(_session.battle)
+			selected_direct_actionable = (
+				selected_continuity_context.is_empty()
+				and selected_closing_context.is_empty()
+				and bool(selected_legality.get("attackable", false))
+				and String(selected_click_intent.get("label", "")) != ""
+			)
+			action_guidance = BattleRules.describe_action_surface(_session)
+			target_context = BattleRules.describe_target_context(_session)
+			if not routed:
+				board_summary = _validation_battle_board_summary()
+		return {
+			"ok": bool(result.get("ok", false)),
+			"action": board_action,
+			"target_battle_id": battle_id,
+			"selected_before": selected_before,
+			"attack_result": result.duplicate(true),
+			"attack_target_battle_id": String(result.get("attack_target_battle_id", battle_id)),
+			"selected_target_after_click": String(selected_after.get("battle_id", "")),
+			"selected_target_after_attack_battle_id": String(result.get("selected_target_after_attack_battle_id", selected_after.get("battle_id", ""))),
+			"selected_target_after_attack_legality": selected_legality.duplicate(true),
+			"selected_target_after_attack_board_click_intent": selected_click_intent.duplicate(true),
+			"selected_target_after_attack_board_click_action": String(selected_click_intent.get("action", "")),
+			"selected_target_after_attack_board_click_label": String(selected_click_intent.get("label", "")),
+			"selected_target_direct_actionable": selected_direct_actionable,
+			"selected_target_direct_actionable_after_attack": bool(result.get("selected_target_direct_actionable_after_attack", false)),
+			"selected_target_handoff_after_attack": bool(result.get("selected_target_handoff_after_attack", false)),
+			"selected_target_handoff_direct_actionable_after_attack": bool(result.get("selected_target_handoff_direct_actionable_after_attack", false)),
+			"selected_target_handoff_blocked_after_attack": bool(result.get("selected_target_handoff_blocked_after_attack", false)),
+			"selected_target_continuity_context": selected_continuity_context.duplicate(true),
+			"selected_target_preserved_setup": not selected_continuity_context.is_empty(),
+			"selected_target_closing_context": selected_closing_context.duplicate(true),
+			"selected_target_closing_on_target": not selected_closing_context.is_empty(),
+			"action_guidance": action_guidance,
+			"target_context": target_context,
+			"battle_board": board_summary,
+			"state": String(result.get("state", "")),
+			"message": _last_message,
+			"routed": routed,
+		}
+
+	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(_session.battle)
+	var selected_after := BattleRules.get_selected_target(_session.battle)
+	var selected_continuity_context := BattleRules.selected_target_continuity_context(_session.battle)
+	var selected_closing_context := BattleRules.selected_target_closing_context(_session.battle)
+	if not legal_target_ids.is_empty() and battle_id not in legal_target_ids:
+		_last_message = String(board_intent.get("message", "%s is blocked from this hex. Click a highlighted enemy to attack, or move first." % String(clicked_stack.get("name", "That target"))))
+		_refresh()
+		var blocked_alternative_board_summary := _validation_battle_board_summary()
+		return {
+			"ok": false,
+			"action": "blocked_target",
+			"target_battle_id": battle_id,
+			"selected_before": selected_before,
+			"selected_target_after_click": String(selected_after.get("battle_id", "")),
+			"selected_target_continuity_context": selected_continuity_context.duplicate(true),
+			"selected_target_preserved_setup": not selected_continuity_context.is_empty(),
+			"selected_target_closing_context": selected_closing_context.duplicate(true),
+			"selected_target_closing_on_target": not selected_closing_context.is_empty(),
+			"action_guidance": BattleRules.describe_action_surface(_session),
+			"target_context": BattleRules.describe_target_context(_session),
+			"battle_board": blocked_alternative_board_summary,
+			"state": "invalid",
+			"message": _last_message,
+		}
+
+	_last_message = String(board_intent.get("message", "%s is blocked from this hex. Move to a highlighted hex before attacking." % String(clicked_stack.get("name", "That target"))))
+	_refresh()
+	var blocked_only_board_summary := _validation_battle_board_summary()
+	return {
+		"ok": false,
+		"action": "blocked_target",
+		"target_battle_id": battle_id,
+		"selected_before": selected_before,
+		"selected_target_after_click": String(selected_after.get("battle_id", "")),
+		"selected_target_continuity_context": selected_continuity_context.duplicate(true),
+		"selected_target_preserved_setup": not selected_continuity_context.is_empty(),
+		"selected_target_closing_context": selected_closing_context.duplicate(true),
+		"selected_target_closing_on_target": not selected_closing_context.is_empty(),
+		"action_guidance": BattleRules.describe_action_surface(_session),
+		"target_context": BattleRules.describe_target_context(_session),
+		"battle_board": blocked_only_board_summary,
+		"state": "invalid",
+		"message": _last_message,
+	}
+
+func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
+	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
+	var result := BattleRules.move_active_stack_to_hex(_session, q, r)
+	var result_intent_value: Variant = result.get("movement_intent", movement_intent)
+	if result_intent_value is Dictionary:
+		movement_intent = result_intent_value
+	_last_message = String(result.get("message", ""))
+	if bool(result.get("ok", false)):
+		_dismiss_tactical_briefing()
+	if _handle_battle_resolution(result):
+		return _movement_click_response(result, movement_intent, q, r, true)
+	_refresh()
+	return _movement_click_response(result, movement_intent, q, r, false)
 
 func _on_advance_pressed() -> void:
 	_perform_action("advance")
@@ -160,14 +310,17 @@ func _perform_action(action: String) -> void:
 
 func _handle_battle_resolution(result: Dictionary) -> bool:
 	if _session.scenario_status != "in_progress":
-		AppRouter.go_to_scenario_outcome()
+		if _validation_battle_resolution_routing_enabled:
+			AppRouter.go_to_scenario_outcome()
 		return true
 	match String(result.get("state", "continue")):
 		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
-			AppRouter.go_to_overworld()
+			if _validation_battle_resolution_routing_enabled:
+				AppRouter.go_to_overworld()
 			return true
 		"defeat":
-			AppRouter.go_to_scenario_outcome()
+			if _validation_battle_resolution_routing_enabled:
+				AppRouter.go_to_scenario_outcome()
 			return true
 	return false
 
@@ -234,11 +387,13 @@ func _refresh_action_buttons() -> void:
 	var player_turn := not active_stack.is_empty() and String(active_stack.get("side", "")) == "player"
 	var enemy_lines = BattleRules.roster_lines(_session.battle, "enemy")
 	var surface := BattleRules.get_action_surface(_session)
+	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(_session.battle)
+	var cycle_target_count := legal_target_ids.size() if not legal_target_ids.is_empty() else enemy_lines.size()
 
-	_prev_target_button.disabled = not player_turn or enemy_lines.size() <= 1
-	_next_target_button.disabled = not player_turn or enemy_lines.size() <= 1
-	_prev_target_button.tooltip_text = "Cycle focus to the previous enemy stack."
-	_next_target_button.tooltip_text = "Cycle focus to the next enemy stack."
+	_prev_target_button.disabled = not player_turn or cycle_target_count <= 1
+	_next_target_button.disabled = not player_turn or cycle_target_count <= 1
+	_prev_target_button.tooltip_text = "Cycle focus to the previous legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the previous enemy stack."
+	_next_target_button.tooltip_text = "Cycle focus to the next legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the next enemy stack."
 
 	_apply_action_surface(_advance_button, surface.get("advance", {}))
 	_apply_action_surface(_strike_button, surface.get("strike", {}))
@@ -285,12 +440,26 @@ func _refresh_save_slot_picker() -> void:
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func validation_snapshot() -> Dictionary:
+	if _session != null and _session.battle.is_empty() and _battle_board_view != null and _battle_board_view.has_method("set_battle_state"):
+		_battle_board_view.set_battle_state(_session)
 	var active_stack := BattleRules.get_active_stack(_session.battle)
 	var target_stack := BattleRules.get_selected_target(_session.battle)
+	var selected_click_intent := BattleRules.selected_target_board_click_intent(_session.battle)
+	var selected_continuity_context := BattleRules.selected_target_continuity_context(_session.battle)
+	var selected_closing_context := BattleRules.selected_target_closing_context(_session.battle)
+	var selected_legality := BattleRules.selected_target_legality(_session.battle)
+	var selected_direct_actionable := (
+		selected_continuity_context.is_empty()
+		and selected_closing_context.is_empty()
+		and bool(selected_legality.get("attackable", false))
+		and String(selected_click_intent.get("label", "")) != ""
+	)
+	var movement_click_intent := BattleRules.active_movement_board_click_intent(_session.battle)
 	var context_value: Variant = _session.battle.get("context", {})
 	var context: Dictionary = context_value if context_value is Dictionary else {}
 	var player_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "player"))
 	var enemy_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "enemy"))
+	var action_surface := BattleRules.get_action_surface(_session)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -307,11 +476,27 @@ func validation_snapshot() -> Dictionary:
 		"distance": int(_session.battle.get("distance", 0)),
 		"active_side": String(active_stack.get("side", "")),
 		"active_stack": String(active_stack.get("name", "")),
+		"selected_target_battle_id": String(target_stack.get("battle_id", "")),
 		"target_stack": String(target_stack.get("name", "")),
+		"selected_target_board_click_intent": selected_click_intent,
+		"selected_target_board_click_action": String(selected_click_intent.get("action", "")),
+		"selected_target_board_click_label": String(selected_click_intent.get("label", "")),
+		"selected_target_direct_actionable": selected_direct_actionable,
+		"selected_target_continuity_context": selected_continuity_context,
+		"selected_target_preserved_setup": not selected_continuity_context.is_empty(),
+		"selected_target_closing_context": selected_closing_context,
+		"selected_target_closing_on_target": not selected_closing_context.is_empty(),
+		"active_movement_board_click_intent": movement_click_intent,
+		"active_movement_board_click_action": String(movement_click_intent.get("action", "")),
+		"active_movement_board_click_label": String(movement_click_intent.get("label", "")),
+		"action_surface": action_surface,
+		"action_guidance": BattleRules.describe_action_surface(_session),
+		"target_context": BattleRules.describe_target_context(_session),
 		"player_stack_count": player_roster.size(),
 		"enemy_stack_count": enemy_roster.size(),
 		"player_roster": player_roster,
 		"enemy_roster": enemy_roster,
+		"battle_board": _battle_board_view.validation_hex_layout_summary() if _battle_board_view.has_method("validation_hex_layout_summary") else {},
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 	}
 
@@ -397,21 +582,110 @@ func validation_perform_action(action_id: String) -> Dictionary:
 	_last_message = String(result.get("message", ""))
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
-	if _handle_battle_resolution(result):
-		return {
-			"ok": bool(result.get("ok", false)),
-			"action": action_id,
-			"state": String(result.get("state", "")),
-			"scenario_status": _session.scenario_status,
-			"message": _last_message,
-		}
+	var routed := _handle_battle_resolution(result)
+	if not routed:
+		_refresh()
+	return _action_validation_response(action_id, result, routed)
+
+func validation_perform_board_stack_click(battle_id: String) -> Dictionary:
+	if _session.battle.is_empty():
+		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "No active battle is loaded for validation.", "state": "invalid"}
+	return _on_board_stack_focus_requested(battle_id)
+
+func _action_validation_response(action_id: String, result: Dictionary, routed: bool) -> Dictionary:
+	var selected_after := {}
+	var selected_legality := {}
+	var selected_click_intent := {}
+	var selected_continuity_context := {}
+	var selected_closing_context := {}
+	var action_surface := {}
+	var action_guidance := ""
+	var target_context := ""
+	var board_summary := {}
+	var scenario_status := ""
+	if _session != null:
+		scenario_status = _session.scenario_status
+		if not _session.battle.is_empty():
+			selected_after = BattleRules.get_selected_target(_session.battle)
+			selected_legality = BattleRules.selected_target_legality(_session.battle)
+			selected_click_intent = BattleRules.selected_target_board_click_intent(_session.battle)
+			selected_continuity_context = BattleRules.selected_target_continuity_context(_session.battle)
+			selected_closing_context = BattleRules.selected_target_closing_context(_session.battle)
+			action_surface = BattleRules.get_action_surface(_session)
+			action_guidance = BattleRules.describe_action_surface(_session)
+			target_context = BattleRules.describe_target_context(_session)
+			if _battle_board_view != null and _battle_board_view.has_method("validation_hex_layout_summary"):
+				board_summary = _battle_board_view.validation_hex_layout_summary()
+	var selected_direct_actionable := (
+		selected_continuity_context.is_empty()
+		and selected_closing_context.is_empty()
+		and bool(selected_legality.get("attackable", false))
+		and String(selected_click_intent.get("label", "")) != ""
+	)
+	var response := result.duplicate(true)
+	response["ok"] = bool(result.get("ok", false))
+	response["action"] = action_id
+	response["action_result"] = result.duplicate(true)
+	if result.has("attack_action"):
+		response["attack_result"] = result.duplicate(true)
+	response["state"] = String(result.get("state", ""))
+	response["scenario_status"] = scenario_status
+	response["message"] = _last_message
+	response["routed"] = routed
+	response["selected_target_after_action_battle_id"] = String(selected_after.get("battle_id", ""))
+	response["selected_target_after_action_name"] = String(selected_after.get("name", ""))
+	response["selected_target_after_action_legality"] = selected_legality.duplicate(true)
+	response["selected_target_after_action_board_click_intent"] = selected_click_intent.duplicate(true)
+	response["selected_target_after_action_board_click_action"] = String(selected_click_intent.get("action", ""))
+	response["selected_target_after_action_board_click_label"] = String(selected_click_intent.get("label", ""))
+	response["selected_target_direct_actionable"] = selected_direct_actionable
+	response["selected_target_direct_actionable_after_action"] = selected_direct_actionable
+	response["selected_target_continuity_context"] = selected_continuity_context.duplicate(true)
+	response["selected_target_preserved_setup"] = not selected_continuity_context.is_empty()
+	response["selected_target_closing_context"] = selected_closing_context.duplicate(true)
+	response["selected_target_closing_on_target"] = not selected_closing_context.is_empty()
+	response["action_surface"] = action_surface
+	response["action_guidance"] = action_guidance
+	response["target_context"] = target_context
+	response["battle_board"] = board_summary
+	return response
+
+func _validation_battle_board_summary() -> Dictionary:
+	if _battle_board_view != null and _battle_board_view.has_method("validation_hex_layout_summary"):
+		return _battle_board_view.validation_hex_layout_summary()
+	return {}
+
+func validation_perform_board_hex_click(q: int, r: int) -> Dictionary:
+	if _session.battle.is_empty():
+		return {"ok": false, "action": "", "q": q, "r": r, "message": "No active battle is loaded for validation.", "state": "invalid"}
+	return _on_board_hex_destination_requested(q, r)
+
+func validation_cycle_target(direction: int) -> Dictionary:
+	if _session.battle.is_empty():
+		return {"ok": false, "action": "cycle_target", "message": "No active battle is loaded for validation.", "state": "invalid"}
+	var selected_before := String(BattleRules.get_selected_target(_session.battle).get("battle_id", ""))
+	var continuity_before := BattleRules.selected_target_continuity_context(_session.battle)
+	BattleRules.cycle_target(_session, direction)
 	_refresh()
+	var selected_after := BattleRules.get_selected_target(_session.battle)
+	var continuity_after := BattleRules.selected_target_continuity_context(_session.battle)
+	var closing_after := BattleRules.selected_target_closing_context(_session.battle)
 	return {
-		"ok": bool(result.get("ok", false)),
-		"action": action_id,
-		"state": String(result.get("state", "")),
-		"scenario_status": _session.scenario_status,
-		"message": _last_message,
+		"ok": true,
+		"action": "cycle_target",
+		"direction": direction,
+		"selected_target_before": selected_before,
+		"selected_target_after": String(selected_after.get("battle_id", "")),
+		"selected_target_continuity_before": continuity_before.duplicate(true),
+		"selected_target_continuity_context": continuity_after.duplicate(true),
+		"selected_target_preserved_setup": not continuity_after.is_empty(),
+		"selected_target_closing_context": closing_after.duplicate(true),
+		"selected_target_closing_on_target": not closing_after.is_empty(),
+		"action_guidance": BattleRules.describe_action_surface(_session),
+		"target_context": BattleRules.describe_target_context(_session),
+		"battle_board": _battle_board_view.validation_hex_layout_summary() if _battle_board_view.has_method("validation_hex_layout_summary") else {},
+		"state": "continue",
+		"message": "Target focus cycled.",
 	}
 
 func validation_set_support_spell_priority(enabled: bool) -> bool:
@@ -421,6 +695,10 @@ func validation_set_support_spell_priority(enabled: bool) -> bool:
 func validation_set_spell_casting_enabled(enabled: bool) -> bool:
 	_validation_spell_casting_enabled = enabled
 	return _validation_spell_casting_enabled == enabled
+
+func validation_set_battle_resolution_routing_enabled(enabled: bool) -> bool:
+	_validation_battle_resolution_routing_enabled = enabled
+	return _validation_battle_resolution_routing_enabled == enabled
 
 func validation_set_max_spell_casts(max_casts: int) -> bool:
 	_validation_max_spell_casts = max(0, int(max_casts))
@@ -467,6 +745,81 @@ func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void
 
 func _style_action_button(button: Button, primary: bool = false, width: float = 112.0) -> void:
 	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", width, 32.0, 12)
+
+func _movement_click_response(
+	result: Dictionary,
+	movement_intent: Dictionary,
+	q: int,
+	r: int,
+	routed: bool
+) -> Dictionary:
+	var active_after := {}
+	var selected_after := {}
+	var selected_legality := {}
+	var selected_click_intent := {}
+	var selected_continuity_context := {}
+	var selected_closing_context := {}
+	var action_surface := {}
+	var action_guidance := ""
+	var target_context := ""
+	var board_summary := {}
+	if _session != null and not _session.battle.is_empty():
+		active_after = BattleRules.get_active_stack(_session.battle)
+		selected_after = BattleRules.get_selected_target(_session.battle)
+		selected_legality = BattleRules.selected_target_legality(_session.battle)
+		selected_click_intent = BattleRules.selected_target_board_click_intent(_session.battle)
+		selected_continuity_context = BattleRules.selected_target_continuity_context(_session.battle)
+		selected_closing_context = BattleRules.selected_target_closing_context(_session.battle)
+		action_surface = BattleRules.get_action_surface(_session)
+		action_guidance = BattleRules.describe_action_surface(_session)
+		target_context = BattleRules.describe_target_context(_session)
+		if _battle_board_view != null and _battle_board_view.has_method("validation_hex_layout_summary"):
+			board_summary = _battle_board_view.validation_hex_layout_summary()
+	return {
+		"ok": bool(result.get("ok", false)),
+		"action": String(movement_intent.get("action", "")),
+		"q": q,
+		"r": r,
+		"state": String(result.get("state", "")),
+		"message": _last_message,
+		"routed": routed,
+		"movement_intent": movement_intent.duplicate(true),
+		"preview_message": String(movement_intent.get("message", "")),
+		"destination_detail": String(movement_intent.get("destination_detail", "")),
+		"steps": int(movement_intent.get("steps", 0)),
+		"step_count": int(movement_intent.get("step_count", movement_intent.get("steps", 0))),
+		"sets_up_selected_target_attack": bool(movement_intent.get("sets_up_selected_target_attack", false)),
+		"selected_target_setup_label": String(movement_intent.get("selected_target_setup_label", "")),
+		"selected_target_after_move_attackable": bool(movement_intent.get("selected_target_after_move_attackable", false)),
+		"selected_target_after_move_hex_distance": int(movement_intent.get("selected_target_after_move_hex_distance", -1)),
+		"selected_target_closing_before_move": bool(movement_intent.get("selected_target_closing_before_move", false)),
+		"closes_on_selected_target": bool(movement_intent.get("closes_on_selected_target", false)),
+		"selected_target_continuity_preserved": bool(result.get("selected_target_continuity_preserved", false)),
+		"selected_target_closing_on_target": not selected_closing_context.is_empty(),
+		"active_stack_after_move_battle_id": String(active_after.get("battle_id", "")),
+		"active_stack_after_move_side": String(active_after.get("side", "")),
+		"selected_target_after_move_battle_id": String(selected_after.get("battle_id", "")),
+		"selected_target_after_move_name": String(selected_after.get("name", "")),
+		"selected_target_after_move_legality": selected_legality.duplicate(true),
+		"selected_target_after_move_board_click_intent": selected_click_intent.duplicate(true),
+		"selected_target_after_move_board_click_action": String(selected_click_intent.get("action", "")),
+		"selected_target_after_move_board_click_label": String(selected_click_intent.get("label", "")),
+		"selected_target_actionable_after_move": bool(result.get("selected_target_actionable_after_move", false)),
+		"selected_target_continuity_context": selected_continuity_context.duplicate(true),
+		"selected_target_preserved_setup": not selected_continuity_context.is_empty(),
+		"selected_target_closing_context": selected_closing_context.duplicate(true),
+		"post_move_target_guidance": String(result.get(
+			"post_move_target_guidance",
+			selected_continuity_context.get(
+				"message",
+				selected_closing_context.get("message", selected_click_intent.get("message", ""))
+			)
+		)),
+		"post_move_action_surface": action_surface,
+		"post_move_action_guidance": action_guidance,
+		"post_move_target_context": target_context,
+		"post_move_board_summary": board_summary,
+	}
 
 func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_banner_panel, "banner")
@@ -573,6 +926,9 @@ func _align_validation_target() -> String:
 func _preferred_validation_target_id() -> String:
 	if _session.battle.is_empty():
 		return ""
+	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(_session.battle)
+	if not legal_target_ids.is_empty():
+		return String(legal_target_ids[0])
 	var priority_target := BattleRules._priority_enemy_stack_for_briefing(_session.battle)
 	if not priority_target.is_empty():
 		return String(priority_target.get("battle_id", ""))
@@ -597,6 +953,12 @@ func _enemy_target_count() -> int:
 			continue
 		count += 1
 	return count
+
+func _stack_by_battle_id(battle_id: String) -> Dictionary:
+	for stack in _session.battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
+			return stack
+	return {}
 
 func _normalize_string_array(values: Array) -> Array[String]:
 	var normalized: Array[String] = []

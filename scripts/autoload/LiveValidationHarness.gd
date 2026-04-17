@@ -958,6 +958,62 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 		return false
 	captured_town_snapshot["route_history"] = captured_town_route.get("history", [])
 	_capture_step("captured_town_entered", captured_town_snapshot)
+
+	var captured_leave: Dictionary = captured_town.call("validation_leave_town")
+	if not _require(bool(captured_leave.get("ok", false)), "Captured town validation could not leave through the live router.", captured_leave):
+		return false
+	var captured_return_overworld = await _wait_for_scene(OVERWORLD_SCENE, 10000)
+	if captured_return_overworld == null:
+		return _fail("Leaving the captured town did not route back into the overworld scene.", captured_leave)
+	await _settle_frames(6)
+	var captured_return_snapshot: Dictionary = captured_return_overworld.call("validation_snapshot")
+	captured_return_snapshot["town_exit"] = captured_leave
+	_capture_step("overworld_after_captured_town_leave", captured_return_snapshot)
+	if not _require(String(captured_return_snapshot.get("active_context_type", "")) == "town", "Captured-town leave did not return to a town context.", captured_return_snapshot):
+		return false
+	var returned_town_state := _dictionary_value(captured_return_snapshot.get("active_town", {}))
+	if not _require(
+		String(returned_town_state.get("placement_id", "")) == String(assaulted_town.get("placement_id", "")),
+		"Captured-town leave returned to the wrong selected town.",
+		captured_return_snapshot
+	):
+		return false
+	if not _require(String(returned_town_state.get("owner", "")) == "player", "Captured-town leave did not preserve player ownership.", captured_return_snapshot):
+		return false
+	if not _require(
+		String(captured_return_snapshot.get("primary_action_id", "")) == "visit_town",
+		"Captured owned town did not expose Visit Town as the computed primary order after leaving town.",
+		captured_return_snapshot
+	):
+		return false
+	if not _require(
+		not bool(captured_return_snapshot.get("primary_action_button_disabled", true))
+		and String(captured_return_snapshot.get("primary_action_button_text", "")).begins_with("Visit Town"),
+		"Captured owned town did not render Visit Town on the primary-action button after leaving town.",
+		captured_return_snapshot
+	):
+		return false
+	var captured_reenter: Dictionary = captured_return_overworld.call("validation_perform_primary_action")
+	if not _require(
+		bool(captured_reenter.get("ok", false))
+		and String(captured_reenter.get("action_id", "")) == "visit_town",
+		"Captured owned town primary action did not route through Visit Town.",
+		captured_reenter
+	):
+		return false
+	var reentered_captured_town = await _wait_for_scene(TOWN_SCENE, 10000)
+	if reentered_captured_town == null:
+		return _fail("Captured owned town primary action did not re-enter the town scene.", captured_reenter)
+	await _settle_frames(6)
+	var reentered_captured_town_snapshot: Dictionary = reentered_captured_town.call("validation_snapshot")
+	if not _require(
+		String(reentered_captured_town_snapshot.get("town_placement_id", "")) == String(assaulted_town.get("placement_id", "")),
+		"Captured owned town primary action re-entered the wrong town shell.",
+		reentered_captured_town_snapshot
+	):
+		return false
+	reentered_captured_town_snapshot["primary_result"] = captured_reenter
+	_capture_step("captured_town_reentered_by_primary", reentered_captured_town_snapshot)
 	_log("Live validation flow completed successfully.")
 	return true
 
@@ -2219,6 +2275,10 @@ func _next_required_encounter_placement(overworld, required_placements: Array[St
 	var direct_placements := _direct_required_encounter_placements_for_resolution()
 	var best_placement_id := ""
 	var best_score := 999999
+	if String(_config.get("scenario_id", "")) == "river-pass":
+		for placement_id in ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists"]:
+			if not _encounter_placement_resolved(placement_id):
+				return placement_id
 	if String(_config.get("scenario_id", "")) == "causeway-stand":
 		if not _encounter_placement_resolved("causeway_gate_marshals"):
 			return "causeway_gate_marshals"
@@ -2367,13 +2427,13 @@ func _prepare_required_encounter_battle_validation(battle, placement_id: String)
 	var encounter_placement := _scenario_encounter_placement(scenario, placement_id)
 	var is_high_difficulty := String(encounter_placement.get("difficulty", "")) == "high"
 	var is_fen_crown_route := String(scenario.get("id", "")) == "fen-crown"
-	var should_enable_spells := is_high_difficulty or placement_id in ["causeway_reed_camp", "causeway_levee_cutters"]
+	var should_enable_spells := is_high_difficulty or placement_id in ["causeway_reed_camp", "causeway_levee_cutters", "river_pass_hollow_mire", "river_pass_reed_totemists"]
 	if battle.has_method("validation_set_spell_casting_enabled"):
 		battle.call("validation_set_spell_casting_enabled", should_enable_spells)
 	if battle.has_method("validation_set_support_spell_priority"):
 		battle.call("validation_set_support_spell_priority", is_high_difficulty and not is_fen_crown_route and placement_id != "causeway_gate_marshals")
 	if battle.has_method("validation_set_max_spell_casts"):
-		battle.call("validation_set_max_spell_casts", 2 if is_fen_crown_route and should_enable_spells else 1)
+		battle.call("validation_set_max_spell_casts", 2 if (is_fen_crown_route or placement_id == "river_pass_hollow_mire") and should_enable_spells else 1)
 
 func _save_and_resume_battle_from_main_menu(battle, manual_slot: int, step_prefix: String = "battle") -> Dictionary:
 	var save_step_id := DEFAULT_BATTLE_SAVE_STEP_ID if step_prefix == "battle" else "%s_saved" % step_prefix
@@ -3671,6 +3731,9 @@ func _wait_for_scene(scene_path: String, timeout_ms: int):
 		if current != null and String(current.scene_file_path) == scene_path:
 			return current
 		await get_tree().process_frame
+	var final_current := get_tree().current_scene
+	if final_current != null and String(final_current.scene_file_path) == scene_path:
+		return final_current
 	return null
 
 func _settle_frames(frame_count: int) -> void:
