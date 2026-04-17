@@ -1949,6 +1949,25 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
             errors,
             f"MainMenu.tscn must expose first-view {label} as a painted backdrop hotspot",
         )
+    lower_plaque_bounds = {
+        "OpenSaves": ("0.473", "0.523"),
+        "OpenSettings": ("0.611", "0.66"),
+        "Quit": ("0.749", "0.798"),
+    }
+    for node_name, (anchor_top, anchor_bottom) in lower_plaque_bounds.items():
+        block_match = re.search(
+            rf'\[node name="{re.escape(node_name)}" type="Button" parent="BackdropCommandHotspots"\]'
+            rf'(?P<body>(?:(?!\n\[node ).)*)',
+            main_menu_scene_text,
+            flags=re.DOTALL,
+        )
+        block = block_match.group("body") if block_match else ""
+        ensure(
+            re.search(rf"anchor_top\s*=\s*{re.escape(anchor_top)}(?:\s|$)", block) is not None
+            and re.search(rf"anchor_bottom\s*=\s*{re.escape(anchor_bottom)}(?:\s|$)", block) is not None,
+            errors,
+            f"MainMenu.tscn must keep {node_name} centered on its painted lower plaque",
+        )
 
     for removed_node, node_type in (
         ("CommandSpinePanel", "PanelContainer"),
@@ -1971,9 +1990,14 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         '"first_view_commands"',
         "func _apply_backdrop_plaque_button",
         "func _latest_continue_surface",
+        'button.add_theme_color_override("font_color", highlight_color if active else normal_color)',
+        'button.add_theme_stylebox_override("hover", transparent_style.duplicate())',
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required first-view menu token: {required_token}")
     ensure("_open_guide_button" not in main_menu_script_text, errors, "MainMenu.gd must not keep a first-view Guide button binding")
+    ensure("active_style" not in main_menu_script_text, errors, "MainMenu.gd must not draw an active rounded plaque box")
+    ensure('"hover", hover' not in main_menu_script_text, errors, "MainMenu.gd must not draw a hover rounded plaque box")
+    ensure('"pressed", pressed' not in main_menu_script_text, errors, "MainMenu.gd must not draw a pressed rounded plaque box")
 
 
 def validate_scenario_outcome_shell(errors: list[str]) -> None:

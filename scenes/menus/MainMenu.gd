@@ -955,26 +955,23 @@ func _sync_system_command_buttons() -> void:
 func _apply_backdrop_plaque_button(button: BaseButton, active: bool, danger: bool) -> void:
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 19 if not danger else 18)
-	button.add_theme_color_override("font_color", Color(0.95, 0.94, 0.88, 1.0))
-	button.add_theme_color_override("font_hover_color", Color(1.0, 0.91, 0.60, 1.0))
-	button.add_theme_color_override("font_pressed_color", Color(0.98, 0.82, 0.50, 1.0))
+	var normal_color := Color(0.95, 0.94, 0.88, 1.0)
+	var highlight_color := Color(1.0, 0.91, 0.60, 1.0)
+	var pressed_color := Color(0.98, 0.82, 0.50, 1.0)
+	if danger:
+		highlight_color = Color(1.0, 0.72, 0.62, 1.0)
+		pressed_color = Color(1.0, 0.61, 0.50, 1.0)
+	button.add_theme_color_override("font_color", highlight_color if active else normal_color)
+	button.add_theme_color_override("font_hover_color", highlight_color)
+	button.add_theme_color_override("font_pressed_color", pressed_color)
 	button.add_theme_color_override("font_disabled_color", Color(0.48, 0.50, 0.53))
 	button.add_theme_color_override("font_outline_color", Color(0.02, 0.025, 0.03, 0.92))
 	button.add_theme_constant_override("outline_size", 4)
-	var accent := Color(0.92, 0.74, 0.42, 0.60)
-	if danger:
-		accent = Color(0.88, 0.48, 0.39, 0.62)
-	var normal := _plaque_button_style(Color(0.0, 0.0, 0.0, 0.0), Color(0.0, 0.0, 0.0, 0.0), 0)
-	var hover := _plaque_button_style(accent.darkened(0.18), accent, 2)
-	hover.bg_color.a = 0.14
-	var pressed := _plaque_button_style(accent.darkened(0.32), accent.lightened(0.18), 2)
-	pressed.bg_color.a = 0.24
-	var active_style := _plaque_button_style(accent.darkened(0.25), accent.lightened(0.10), 2)
-	active_style.bg_color.a = 0.18
-	button.add_theme_stylebox_override("normal", active_style if active else normal)
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", pressed)
-	button.add_theme_stylebox_override("disabled", normal)
+	var transparent_style := _plaque_button_style(Color(0.0, 0.0, 0.0, 0.0), Color(0.0, 0.0, 0.0, 0.0), 0)
+	button.add_theme_stylebox_override("normal", transparent_style.duplicate())
+	button.add_theme_stylebox_override("hover", transparent_style.duplicate())
+	button.add_theme_stylebox_override("pressed", transparent_style.duplicate())
+	button.add_theme_stylebox_override("disabled", transparent_style.duplicate())
 
 func _plaque_button_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()

@@ -69,6 +69,9 @@ func _run_main_menu_smoke() -> bool:
 			push_error("Main menu smoke: first-view command is not a direct painted-backdrop hotspot.")
 			get_tree().quit(1)
 			return false
+		if not _assert_text_only_plaque_style(button as Button, String((button as Button).text)):
+			get_tree().quit(1)
+			return false
 	var first_view_labels := [
 		String((campaign_button as Button).text),
 		String((skirmish_button as Button).text),
@@ -83,6 +86,15 @@ func _run_main_menu_smoke() -> bool:
 	var load_rect := (load_button as Button).get_global_rect()
 	if load_rect.position.x < shell.get_viewport_rect().size.x * 0.82:
 		push_error("Main menu smoke: Load hotspot is not mapped onto the painted right-side plaque column.")
+		get_tree().quit(1)
+		return false
+	if not _assert_plaque_anchor(load_button as Button, "Load", 0.473, 0.523):
+		get_tree().quit(1)
+		return false
+	if not _assert_plaque_anchor(settings_button as Button, "Settings", 0.611, 0.66):
+		get_tree().quit(1)
+		return false
+	if not _assert_plaque_anchor(quit_button as Button, "Quit", 0.749, 0.798):
 		get_tree().quit(1)
 		return false
 
@@ -117,7 +129,16 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
+	var inactive_settings_text_color := (settings_button as Button).get_theme_color("font_color")
 	shell.call("validation_open_settings_stage")
+	var active_settings_text_color := (settings_button as Button).get_theme_color("font_color")
+	if _colors_close(inactive_settings_text_color, active_settings_text_color):
+		push_error("Main menu smoke: active painted-plaque feedback no longer changes the command text color.")
+		get_tree().quit(1)
+		return false
+	if not _assert_text_only_plaque_style(settings_button as Button, "Settings active"):
+		get_tree().quit(1)
+		return false
 	var close_stage_button = shell.get_node_or_null("%CloseStageDock")
 	if not (close_stage_button is Button) or (close_stage_button as Button).disabled:
 		push_error("Main menu smoke: secondary board close command is unavailable after opening settings.")
@@ -154,6 +175,49 @@ func _run_main_menu_smoke() -> bool:
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _assert_plaque_anchor(button: Button, label: String, expected_top: float, expected_bottom: float) -> bool:
+	if not is_equal_approx(button.anchor_top, expected_top) or not is_equal_approx(button.anchor_bottom, expected_bottom):
+		push_error(
+			"Main menu smoke: %s plaque anchors drifted from art-centered bounds: top %.3f bottom %.3f." % [
+				label,
+				button.anchor_top,
+				button.anchor_bottom,
+			]
+		)
+		return false
+	return true
+
+func _assert_text_only_plaque_style(button: Button, label: String) -> bool:
+	for style_name in ["normal", "hover", "pressed", "disabled"]:
+		var style := button.get_theme_stylebox(style_name)
+		if not (style is StyleBoxFlat):
+			push_error("Main menu smoke: %s plaque %s style is not a StyleBoxFlat override." % [label, style_name])
+			return false
+		var flat_style := style as StyleBoxFlat
+		var border_width := (
+			flat_style.get_border_width(SIDE_LEFT)
+			+ flat_style.get_border_width(SIDE_TOP)
+			+ flat_style.get_border_width(SIDE_RIGHT)
+			+ flat_style.get_border_width(SIDE_BOTTOM)
+		)
+		if flat_style.bg_color.a > 0.01 or border_width > 0:
+			push_error(
+				"Main menu smoke: %s plaque %s style draws a hotspot box instead of text-only feedback." % [
+					label,
+					style_name,
+				]
+			)
+			return false
+	return true
+
+func _colors_close(first: Color, second: Color, tolerance: float = 0.01) -> bool:
+	return (
+		absf(first.r - second.r) <= tolerance
+		and absf(first.g - second.g) <= tolerance
+		and absf(first.b - second.b) <= tolerance
+		and absf(first.a - second.a) <= tolerance
+	)
 
 func _resolution_ids_from_snapshot(snapshot: Dictionary) -> Array:
 	var ids := []

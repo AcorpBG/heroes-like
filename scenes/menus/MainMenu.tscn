@@ -924,25 +924,25 @@ layout_mode = 1
 anchor_left = 0.852
 anchor_top = 0.473
 anchor_right = 0.975
-anchor_bottom = 0.539
+anchor_bottom = 0.523
 text = "Load"
 
 [node name="OpenSettings" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.852
-anchor_top = 0.618
+anchor_top = 0.611
 anchor_right = 0.975
-anchor_bottom = 0.686
+anchor_bottom = 0.66
 text = "Settings"
 
 [node name="Quit" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.852
-anchor_top = 0.763
+anchor_top = 0.749
 anchor_right = 0.975
-anchor_bottom = 0.831
+anchor_bottom = 0.798
 text = "Quit"
 
 [connection signal="pressed" from="BackdropCommandHotspots/OpenCampaign" to="." method="_on_open_campaign_pressed"]
