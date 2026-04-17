@@ -30,6 +30,53 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
+	var top_shade = shell.get_node_or_null("TopShade")
+	var bottom_shade = shell.get_node_or_null("BottomShade")
+	var right_shade = shell.get_node_or_null("RightShade")
+	if not (top_shade is ColorRect) or not (bottom_shade is ColorRect) or not (right_shade is ColorRect):
+		push_error("Main menu smoke: backdrop shade layers are missing.")
+		get_tree().quit(1)
+		return false
+	var top_shade_rect := top_shade as ColorRect
+	var bottom_shade_rect := bottom_shade as ColorRect
+	var right_shade_rect := right_shade as ColorRect
+	if top_shade_rect.color.a > 0.06 or bottom_shade_rect.color.a > 0.14:
+		push_error("Main menu smoke: global backdrop wash is too heavy for the painted-stage menu.")
+		get_tree().quit(1)
+		return false
+	if right_shade_rect.anchor_left < 0.78 or right_shade_rect.color.a < 0.28:
+		push_error("Main menu smoke: right command gutter is not a narrow darkened stage edge.")
+		get_tree().quit(1)
+		return false
+
+	var command_block = shell.get_node_or_null("%CommandBlockPanel")
+	var command_title = shell.get_node_or_null("%CommandBlockTitle")
+	var menu_button = shell.get_node_or_null("%Menu")
+	var quit_button = shell.get_node_or_null("%Quit")
+	var campaign_button = shell.get_node_or_null("%OpenCampaign")
+	var spine_header = shell.get_node_or_null("CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineHeaderRow/SpineHeader")
+	if command_block == null or command_title == null or menu_button == null or quit_button == null or campaign_button == null or spine_header == null:
+		push_error("Main menu smoke: command block grouping nodes are missing.")
+		get_tree().quit(1)
+		return false
+	if not (command_title is Label) or not (menu_button is Button) or not (quit_button is Button) or not (campaign_button is Button) or not (spine_header is Label):
+		push_error("Main menu smoke: command block grouping nodes have unexpected types.")
+		get_tree().quit(1)
+		return false
+	var command_title_label := command_title as Label
+	var menu_command_button := menu_button as Button
+	var quit_command_button := quit_button as Button
+	var campaign_nav_button := campaign_button as Button
+	var spine_header_label := spine_header as Label
+	if String(spine_header_label.text) != "Menu" or String(command_title_label.text) != "Command":
+		push_error("Main menu smoke: command spine titles do not match the wireframe grouping.")
+		get_tree().quit(1)
+		return false
+	if not command_block.is_ancestor_of(menu_command_button) or not command_block.is_ancestor_of(quit_command_button) or command_block.is_ancestor_of(campaign_nav_button):
+		push_error("Main menu smoke: Menu/Quit are not isolated from the main navigation spine.")
+		get_tree().quit(1)
+		return false
+
 	var campaign_list = shell.get_node_or_null("%CampaignList")
 	if campaign_list == null or int(campaign_list.get_item_count()) <= 0:
 		push_error("Main menu smoke: campaign browser did not populate.")
@@ -48,6 +95,11 @@ func _run_main_menu_smoke() -> bool:
 		return false
 
 	shell.call("validation_open_settings_stage")
+	if menu_command_button.disabled:
+		push_error("Main menu smoke: Menu command did not become available after opening a secondary board.")
+		get_tree().quit(1)
+		return false
+
 	var settings_snapshot: Dictionary = shell.call("validation_snapshot")
 	var resolution_ids := _resolution_ids_from_snapshot(settings_snapshot)
 	for expected_id in ["1280x720", "1600x900", "1920x1080", "2560x1440"]:

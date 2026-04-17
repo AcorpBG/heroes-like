@@ -31,29 +31,29 @@ script = ExtResource("2")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 0.18
+anchor_bottom = 0.14
 grow_horizontal = 2
-color = Color(0.0431373, 0.0509804, 0.0705882, 0.16)
+color = Color(0.0431373, 0.0509804, 0.0705882, 0.04)
 
 [node name="BottomShade" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 12
-anchor_top = 0.78
+anchor_top = 0.84
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
-color = Color(0.0156863, 0.0196078, 0.0313726, 0.44)
+color = Color(0.0156863, 0.0196078, 0.0313726, 0.12)
 
 [node name="RightShade" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 9
-anchor_left = 0.77
+anchor_left = 0.79
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_vertical = 2
-color = Color(0.0196078, 0.0235294, 0.0313726, 0.12)
+color = Color(0.0196078, 0.0235294, 0.0313726, 0.34)
 
 [node name="LogoPocketPanel" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -953,7 +953,7 @@ glyph_id = "menu"
 [node name="SpineHeader" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/SpineHeaderRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Command"
+text = "Menu"
 
 [node name="Continue" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
 unique_name_in_owner = true
@@ -1024,7 +1024,32 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Save pulse"
 
-[node name="Quit" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+[node name="CommandBlockPanel" type="PanelContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="CommandBlockPad" type="MarginContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CommandBlockBox" type="VBoxContainer" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel/CommandBlockPad"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CommandBlockTitle" type="Label" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel/CommandBlockPad/CommandBlockBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Command"
+
+[node name="Menu" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel/CommandBlockPad/CommandBlockBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Menu"
+
+[node name="Quit" type="Button" parent="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel/CommandBlockPad/CommandBlockBox"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Quit"
@@ -1035,7 +1060,8 @@ text = "Quit"
 [connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenSaves" to="." method="_on_open_saves_pressed"]
 [connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenGuide" to="." method="_on_open_guide_pressed"]
 [connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/OpenSettings" to="." method="_on_open_settings_pressed"]
-[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel/CommandBlockPad/CommandBlockBox/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="CommandSpinePanel/CommandSpinePad/CommandSpineBox/CommandBlockPanel/CommandBlockPad/CommandBlockBox/Quit" to="." method="_on_quit_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox/CampaignList" to="." method="_on_campaign_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]

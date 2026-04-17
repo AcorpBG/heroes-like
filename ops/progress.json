@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T19:02:04Z",
+  "updatedAt": "2026-04-17T19:37:29Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "settings-resolution-controls-10184",
-  "currentSliceTitle": "Add durable 16:9 runtime resolution controls to Settings",
+  "currentSliceId": "main-menu-shell-correction-10184",
+  "currentSliceTitle": "Correct main-menu backdrop wash and command block grouping",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow settings resolution slice: SettingsService now persists and applies a normalized 16:9 runtime resolution choice, MainMenu Settings exposes a Resolution picker and summary alongside window mode, validate_repo guards exact 16:9 options up to 2560x1440 while preserving the 1920x1080 project baseline, and menu_outcome_visual_smoke exercises the picker path. Focused repo validation and menu/outcome smoke are green. No manual visual proof is claimed.",
+  "currentSliceNotes": "Completed a narrow main-menu shell correction from docs/screen-wireframes.md and AcOrP feedback: reduced heavy global backdrop washes so the painted stage reads cleaner, kept a darker quieter right command gutter, retitled the main rail as Menu, moved Menu/Quit into a separate titled Command block, and updated focused smoke coverage for shade/gutter and command grouping. Focused menu/outcome smoke, shell heraldry smoke, and repo validation are green. No manual visual proof is claimed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",

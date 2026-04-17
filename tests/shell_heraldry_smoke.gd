@@ -25,7 +25,7 @@ func _run_menu_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/menus/MainMenu.tscn",
-		"RootMargin/Shell/HeroPanel/HeroPad/HeroLayout/HeroInfo/TopRow/TitleBox/WarGlyph",
+		"LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/WarGlyph",
 		"Menu heraldry glyph"
 	)
 
@@ -38,7 +38,7 @@ func _run_overworld_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/overworld/OverworldShell.tscn",
-		"Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/BannerGlyph",
+		"ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/BannerGlyph",
 		"Overworld heraldry glyph"
 	)
 
@@ -57,7 +57,7 @@ func _run_town_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/town/TownShell.tscn",
-		"Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/CrestFrame/CrestPad/CrestBox/CrestGlyph",
+		"ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestGlyph",
 		"Town heraldry glyph"
 	)
 
@@ -76,7 +76,7 @@ func _run_battle_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/battle/BattleShell.tscn",
-		"Scroll/ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/BannerGlyph",
+		"ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/BannerGlyph",
 		"Battle heraldry glyph"
 	)
 
@@ -90,7 +90,7 @@ func _run_outcome_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/results/ScenarioOutcomeShell.tscn",
-		"Scroll/ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine/ResultGlyph",
+		"ContentMargin/Content/Banner/BannerPad/BannerColumns/BannerInfo/TopLine/ResultGlyph",
 		"Outcome heraldry glyph"
 	)
 

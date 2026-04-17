@@ -44,6 +44,7 @@ const TAB_STAGE_COPY := {
 @onready var _campaign_pulse_label: Label = %CampaignPulse
 @onready var _save_pulse_label: Label = %SavePulse
 @onready var _continue_button: Button = %Continue
+@onready var _menu_button: Button = %Menu
 @onready var _quit_button: Button = %Quit
 @onready var _open_campaign_button: Button = %OpenCampaign
 @onready var _open_skirmish_button: Button = %OpenSkirmish
@@ -119,6 +120,7 @@ func _refresh_menu() -> void:
 	_refresh_stage_dock_header()
 	_refresh_summary()
 	_sync_command_button_styles()
+	_sync_system_command_buttons()
 
 func _update_continue_enabled() -> void:
 	var latest_summary := SaveService.latest_loadable_summary()
@@ -201,6 +203,9 @@ func _on_open_settings_pressed() -> void:
 	_toggle_stage_dock(TAB_SETTINGS)
 
 func _on_close_stage_dock_pressed() -> void:
+	_hide_stage_dock()
+
+func _on_menu_pressed() -> void:
 	_hide_stage_dock()
 
 func _on_save_selected(index: int) -> void:
@@ -680,11 +685,13 @@ func _show_stage_dock() -> void:
 	_refresh_stage_dock_header()
 	_refresh_summary()
 	_sync_command_button_styles()
+	_sync_system_command_buttons()
 
 func _hide_stage_dock() -> void:
 	_stage_dock_panel.visible = false
 	_refresh_summary()
 	_sync_command_button_styles()
+	_sync_system_command_buttons()
 
 func _refresh_stage_dock_header() -> void:
 	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
@@ -942,6 +949,12 @@ func _sync_command_button_styles() -> void:
 			var role := "spine_active" if is_active else "spine"
 			FrontierVisualKit.apply_button(button, role, 182.0, 42.0, 15)
 
+func _sync_system_command_buttons() -> void:
+	_menu_button.disabled = not _stage_dock_panel.visible
+	_menu_button.tooltip_text = "Return to the clean scenic menu view." if _stage_dock_panel.visible else "The clean scenic menu view is already showing."
+	FrontierVisualKit.apply_button(_menu_button, "secondary", 162.0, 36.0, 13)
+	FrontierVisualKit.apply_button(_quit_button, "danger", 162.0, 36.0, 13)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and _stage_dock_panel.visible:
 		_hide_stage_dock()
@@ -957,6 +970,7 @@ func _apply_visual_theme() -> void:
 		"FooterPocketPanel": "smoke",
 		"CommandSpinePanel": "clear",
 		"SpineStatusPanel": "smoke",
+		"CommandBlockPanel": "smoke",
 		"CampaignListPanel": "smoke",
 		"CampaignDetailsPanel": "smoke",
 		"ChapterListPanel": "smoke",
@@ -986,13 +1000,13 @@ func _apply_visual_theme() -> void:
 		FrontierVisualKit.apply_item_list(list, "smoke")
 
 	FrontierVisualKit.apply_button(_continue_button, "spine_active", 182.0, 46.0, 16)
-	FrontierVisualKit.apply_button(_quit_button, "danger", 182.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_load_selected_button, "primary", 184.0, 38.0, 14)
 	_sync_command_button_styles()
+	_sync_system_command_buttons()
 
 	for picker in [_difficulty_picker, _presentation_mode_picker, _resolution_picker]:
 		FrontierVisualKit.apply_option_button(picker, "secondary", maxf(picker.custom_minimum_size.x, 176.0), 34.0, 13)
@@ -1026,6 +1040,7 @@ func _apply_visual_theme() -> void:
 		"SkirmishCommanderPreviewTitle",
 		"SkirmishOperationalBoardTitle",
 		"SpineHeader",
+		"CommandBlockTitle",
 	]:
 		var section_title = find_child(node_name, true, false)
 		if section_title is Label:
