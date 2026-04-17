@@ -17,6 +17,8 @@ func _run() -> void:
 		return
 	if not _run_battle_exit_aftermath_regression():
 		return
+	if not _run_town_defense_withdrawal_surface_regression():
+		return
 	if not _run_battlefield_cover_obstruction_regression():
 		return
 	if not _run_battle_hex_occupancy_legality_regression():
@@ -34,6 +36,8 @@ func _run() -> void:
 	if not _run_battle_direct_actionable_after_move_empty_handoff_regression():
 		return
 	if not _run_battle_setup_move_target_blocked_surface_regression():
+		return
+	if not _run_battle_spell_clears_closing_context_regression():
 		return
 	if not _run_battle_commander_spell_cadence_regression():
 		return
@@ -849,6 +853,103 @@ func _run_battle_exit_aftermath_regression() -> bool:
 		return false
 	if "overrun in the rout" not in String(rout_report.get("logistics_summary", "")):
 		push_error("Core systems smoke: routed-collapse aftermath did not record the convoy overrun summary.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_town_defense_withdrawal_surface_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var town := _town_by_placement(session, "riverwatch_hold")
+	if town.is_empty():
+		push_error("Core systems smoke: town-defense withdrawal surface coverage is missing Riverwatch Hold.")
+		get_tree().quit(1)
+		return false
+	var placement := {
+		"placement_id": "town_defense_withdrawal_surface_probe",
+		"encounter_id": "encounter_mire_raid",
+		"x": int(town.get("x", 0)),
+		"y": int(town.get("y", 0)),
+		"combat_seed": 991268,
+		"spawned_by_faction_id": "faction_mireclaw",
+		"target_kind": "town",
+		"target_placement_id": "riverwatch_hold",
+		"target_label": String(town.get("name", "Riverwatch Hold")),
+		"arrived": true,
+		"goal_distance": 0,
+		"battle_context": {
+			"type": "town_defense",
+			"town_placement_id": "riverwatch_hold",
+			"defending_hero_id": "",
+			"raid_encounter_key": "town_defense_withdrawal_surface_probe",
+			"trigger_faction_id": "faction_mireclaw",
+		},
+	}
+	session.battle = BattleRules.create_battle_payload(session, placement)
+	session.game_state = "battle"
+	if session.battle.is_empty() or String(session.battle.get("context", {}).get("type", "")) != "town_defense":
+		push_error("Core systems smoke: town-defense withdrawal surface coverage could not stage a defense battle.")
+		get_tree().quit(1)
+		return false
+
+	session.battle["retreat_allowed"] = true
+	session.battle["surrender_allowed"] = true
+	var restored = _clone_session(session)
+	if restored == null or restored.battle.is_empty():
+		push_error("Core systems smoke: stale town-defense withdrawal restore lost the battle payload.")
+		get_tree().quit(1)
+		return false
+	var player_stack := _first_stack_for_side(restored.battle, "player", false)
+	if player_stack.is_empty():
+		player_stack = _first_stack_for_side(restored.battle, "player", true)
+	var enemy_stack := _first_stack_for_side(restored.battle, "enemy", false)
+	if enemy_stack.is_empty():
+		enemy_stack = _first_stack_for_side(restored.battle, "enemy", true)
+	if player_stack.is_empty() or enemy_stack.is_empty():
+		push_error("Core systems smoke: town-defense withdrawal surface coverage lacks live opposing stacks.")
+		get_tree().quit(1)
+		return false
+	_force_battle_turn(
+		restored.battle,
+		String(player_stack.get("battle_id", "")),
+		String(enemy_stack.get("battle_id", "")),
+		String(enemy_stack.get("battle_id", ""))
+	)
+
+	var surface: Dictionary = BattleRules.get_action_surface(restored)
+	var retreat_action: Dictionary = surface.get("retreat", {}) if surface.get("retreat", {}) is Dictionary else {}
+	var surrender_action: Dictionary = surface.get("surrender", {}) if surface.get("surrender", {}) is Dictionary else {}
+	var retreat_summary := String(retreat_action.get("summary", "")).to_lower()
+	var surrender_summary := String(surrender_action.get("summary", "")).to_lower()
+	var pressure_summary := BattleRules.describe_pressure(restored)
+	if (
+		bool(restored.battle.get("retreat_allowed", true))
+		or bool(restored.battle.get("surrender_allowed", true))
+		or not bool(retreat_action.get("disabled", false))
+		or not bool(surrender_action.get("disabled", false))
+		or "defending a town" not in retreat_summary
+		or "defending a town" not in surrender_summary
+		or "Retreat: Locked" not in pressure_summary
+		or "Surrender: Locked" not in pressure_summary
+	):
+		push_error("Core systems smoke: stale town-defense withdrawal flags leaked into player-facing action state: surface=%s pressure=%s battle=%s." % [surface, pressure_summary, restored.battle])
+		get_tree().quit(1)
+		return false
+
+	var retreat_result := BattleRules.perform_player_action(restored, "retreat")
+	var surrender_result := BattleRules.perform_player_action(restored, "surrender")
+	if (
+		bool(retreat_result.get("ok", false))
+		or bool(surrender_result.get("ok", false))
+		or String(retreat_result.get("state", "")) != "invalid"
+		or String(surrender_result.get("state", "")) != "invalid"
+		or "cannot abandon" not in String(retreat_result.get("message", "")).to_lower()
+		or "cannot surrender" not in String(surrender_result.get("message", "")).to_lower()
+	):
+		push_error("Core systems smoke: town-defense withdrawal execution no longer matches the locked action surface: retreat=%s surrender=%s." % [retreat_result, surrender_result])
 		get_tree().quit(1)
 		return false
 	return true
@@ -2497,6 +2598,208 @@ func _run_battle_commander_spell_cadence_regression() -> bool:
 	var restored_cast_rounds = restored.battle.get(BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
 	if not (restored_cast_rounds is Dictionary) or int(restored_cast_rounds.get("enemy", 0)) != enemy_cast_round:
 		push_error("Core systems smoke: commander spell cadence state did not survive restore normalization.")
+		get_tree().quit(1)
+		return false
+
+	var player_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var player_encounter := _encounter_by_id(player_session, "encounter_hollow_mire")
+	if player_encounter.is_empty():
+		push_error("Core systems smoke: player commander spell cadence coverage could not find Hollow Mire.")
+		get_tree().quit(1)
+		return false
+	player_session.battle = BattleRules.create_battle_payload(player_session, player_encounter)
+	if player_session.battle.is_empty():
+		push_error("Core systems smoke: player commander spell cadence coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(player_session)
+
+	var caster_stack := _first_stack_for_side(player_session.battle, "player", false)
+	if caster_stack.is_empty():
+		caster_stack = _first_stack_for_side(player_session.battle, "player", true)
+	var target_stack := _first_stack_for_side(player_session.battle, "enemy", false)
+	if target_stack.is_empty():
+		target_stack = _first_stack_for_side(player_session.battle, "enemy", true)
+	if caster_stack.is_empty() or target_stack.is_empty():
+		push_error("Core systems smoke: player commander spell cadence coverage could not find caster and target stacks.")
+		get_tree().quit(1)
+		return false
+	var caster_id := String(caster_stack.get("battle_id", ""))
+	var target_id := String(target_stack.get("battle_id", ""))
+	var followup_stack := {}
+	for stack in player_session.battle.get("stacks", []):
+		if (
+			stack is Dictionary
+			and String(stack.get("side", "")) == "player"
+			and String(stack.get("battle_id", "")) != caster_id
+			and int(stack.get("total_health", 0)) > 0
+		):
+			followup_stack = stack
+			break
+	if followup_stack.is_empty():
+		followup_stack = _ensure_player_stack_for_test(
+			player_session.battle,
+			caster_stack,
+			"test_player_spell_followup_stack"
+		)
+	var followup_id := String(followup_stack.get("battle_id", ""))
+	_set_stack_health_for_test(player_session.battle, target_id, 999)
+	player_session.battle["turn_order"] = [caster_id, followup_id]
+	player_session.battle["turn_index"] = 0
+	player_session.battle["active_stack_id"] = caster_id
+	player_session.battle["selected_target_id"] = target_id
+	player_session.battle.erase(BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY)
+
+	var player_spell_result := BattleRules.cast_player_spell(player_session, "spell_cinder_burst")
+	if not bool(player_spell_result.get("ok", false)):
+		push_error("Core systems smoke: player commander spell cadence setup cast failed: %s." % player_spell_result)
+		get_tree().quit(1)
+		return false
+	if String(BattleRules.get_active_stack(player_session.battle).get("battle_id", "")) != followup_id:
+		push_error("Core systems smoke: player commander spell cadence did not stop on a follow-up player stack: %s." % player_spell_result)
+		get_tree().quit(1)
+		return false
+	var repeat_spell_result := BattleRules.cast_player_spell(player_session, "spell_cinder_burst")
+	var spell_actions := BattleRules.get_spell_actions(player_session)
+	var spell_timing := BattleRules.describe_spell_timing_board(player_session).to_lower()
+	var consequence_board := BattleRules.describe_order_consequence_board(player_session).to_lower()
+	var spellbook_summary := BattleRules.describe_spellbook(player_session).to_lower()
+	if (
+		not spell_actions.is_empty()
+		or bool(repeat_spell_result.get("ok", false))
+		or "already cast" not in String(repeat_spell_result.get("message", "")).to_lower()
+		or "already cast this round" not in spell_timing
+		or "already cast this round" not in consequence_board
+		or "already cast this round" not in spellbook_summary
+	):
+		push_error("Core systems smoke: player commander spell cadence was not surfaced truthfully after a same-round cast: repeat=%s actions=%s timing=%s consequence=%s spellbook=%s." % [repeat_spell_result, spell_actions, spell_timing, consequence_board, spellbook_summary])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_battle_spell_clears_closing_context_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		push_error("Core systems smoke: spell closing-clear coverage could not find a battle encounter.")
+		get_tree().quit(1)
+		return false
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	if session.battle.is_empty():
+		push_error("Core systems smoke: spell closing-clear coverage could not create a battle payload.")
+		get_tree().quit(1)
+		return false
+	BattleRules.normalize_battle_state(session)
+
+	var player_melee := _first_stack_for_side(session.battle, "player", false)
+	var selected_enemy := _first_stack_for_side(session.battle, "enemy", false)
+	if player_melee.is_empty() or selected_enemy.is_empty():
+		push_error("Core systems smoke: spell closing-clear coverage could not find opposing melee stacks.")
+		get_tree().quit(1)
+		return false
+
+	var player_id := String(player_melee.get("battle_id", ""))
+	var target_id := String(selected_enemy.get("battle_id", ""))
+	for enemy_id in _enemy_stack_ids_except_for_test(session.battle, target_id):
+		_remove_battle_stack_for_test(session.battle, enemy_id)
+	_set_stack_combat_profile_for_test(session.battle, player_id, 1, false, [])
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_health_for_test(session.battle, target_id, 999)
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 0, "r": 3})
+	_set_stack_hex_for_test(session.battle, target_id, {"q": 4, "r": 3})
+	session.battle["distance"] = 0
+	session.battle["turn_order"] = [player_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = player_id
+	session.battle["selected_target_id"] = target_id
+	session.battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	session.battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+
+	var close_intent := BattleRules.movement_intent_for_destination(session.battle, 1, 3)
+	if (
+		String(close_intent.get("action", "")) != "move"
+		or not bool(close_intent.get("closes_on_selected_target", false))
+		or bool(close_intent.get("sets_up_selected_target_attack", false))
+	):
+		push_error("Core systems smoke: spell closing-clear setup did not stage an ordinary closing move: intent=%s battle=%s." % [close_intent, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var close_result := BattleRules.move_active_stack_to_hex(session, 1, 3)
+	var closing_before_spell: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	if (
+		not bool(close_result.get("ok", false))
+		or closing_before_spell.is_empty()
+		or not bool(closing_before_spell.get("ordinary_closing_target", false))
+	):
+		push_error("Core systems smoke: spell closing-clear setup did not create ordinary closing context: result=%s context=%s battle=%s." % [close_result, closing_before_spell, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var cast_rounds_value = session.battle.get(BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY, {})
+	var cast_rounds: Dictionary = cast_rounds_value.duplicate(true) if cast_rounds_value is Dictionary else {}
+	cast_rounds["player"] = int(session.battle.get("round", 1))
+	session.battle[BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY] = cast_rounds
+	var blocked_spell_result := BattleRules.cast_player_spell(session, "spell_cinder_burst")
+	var closing_after_blocked_spell: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var blocked_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	var blocked_target_guidance := BattleRules.describe_target_context(session).to_lower()
+	if (
+		bool(blocked_spell_result.get("ok", false))
+		or String(blocked_spell_result.get("state", "")) != "invalid"
+		or not session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or closing_after_blocked_spell.is_empty()
+		or not bool(closing_after_blocked_spell.get("ordinary_closing_target", false))
+		or "closing on target" not in blocked_action_guidance
+		or "closing on target" not in blocked_target_guidance
+	):
+		push_error("Core systems smoke: invalid commander spell attempt mutated ordinary closing context: spell=%s closing=%s action=%s target=%s battle=%s." % [blocked_spell_result, closing_after_blocked_spell, blocked_action_guidance, blocked_target_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+
+	var blocked_order_result := BattleRules.perform_player_action(session, "shoot")
+	var closing_after_blocked_order: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var blocked_order_action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	var blocked_order_target_guidance := BattleRules.describe_target_context(session).to_lower()
+	if (
+		bool(blocked_order_result.get("ok", false))
+		or String(blocked_order_result.get("state", "")) != "invalid"
+		or not session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or closing_after_blocked_order.is_empty()
+		or not bool(closing_after_blocked_order.get("ordinary_closing_target", false))
+		or "closing on target" not in blocked_order_action_guidance
+		or "closing on target" not in blocked_order_target_guidance
+	):
+		push_error("Core systems smoke: invalid ordinary battle order mutated ordinary closing context: order=%s closing=%s action=%s target=%s battle=%s." % [blocked_order_result, closing_after_blocked_order, blocked_order_action_guidance, blocked_order_target_guidance, session.battle])
+		get_tree().quit(1)
+		return false
+	cast_rounds.erase("player")
+	session.battle[BattleRules.COMMANDER_SPELL_CAST_ROUNDS_KEY] = cast_rounds
+
+	var spell_result := BattleRules.cast_player_spell(session, "spell_cinder_burst")
+	var closing_after_spell: Dictionary = BattleRules.selected_target_closing_context(session.battle)
+	var action_guidance := BattleRules.describe_action_surface(session).to_lower()
+	var target_guidance := BattleRules.describe_target_context(session).to_lower()
+	var hex_summary: Dictionary = BattleRules.battle_hex_state_summary(session.battle)
+	var summary_closing: Dictionary = hex_summary.get("selected_target_closing_context", {}) if hex_summary.get("selected_target_closing_context", {}) is Dictionary else {}
+	if (
+		not bool(spell_result.get("ok", false))
+		or session.battle.has(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+		or not closing_after_spell.is_empty()
+		or not summary_closing.is_empty()
+		or bool(hex_summary.get("selected_target_closing_on_target", false))
+		or "closing on target" in action_guidance
+		or "closing on target" in target_guidance
+	):
+		push_error("Core systems smoke: commander spell action left stale ordinary closing context: spell=%s closing=%s action=%s target=%s summary=%s battle=%s." % [spell_result, closing_after_spell, action_guidance, target_guidance, hex_summary, session.battle])
 		get_tree().quit(1)
 		return false
 	return true

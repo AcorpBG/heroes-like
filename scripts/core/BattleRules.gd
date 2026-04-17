@@ -540,6 +540,24 @@ static func _is_town_defense_context(context: Variant) -> bool:
 static func _is_town_assault_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("type", "")) == "town_assault"
 
+static func _battle_retreat_allowed(battle: Dictionary) -> bool:
+	if battle.is_empty() or _is_town_defense_context(battle.get("context", {})):
+		return false
+	return bool(battle.get("retreat_allowed", true))
+
+static func _battle_surrender_allowed(battle: Dictionary) -> bool:
+	if battle.is_empty() or _is_town_defense_context(battle.get("context", {})):
+		return false
+	return bool(battle.get("surrender_allowed", true))
+
+static func _withdrawal_pressure_label(battle: Dictionary, allowed: bool) -> String:
+	if not allowed:
+		return "Locked"
+	var active_stack := get_active_stack(battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return "Window closed"
+	return "Open"
+
 static func _has_delivery_context(context: Variant) -> bool:
 	return context is Dictionary and String(context.get("delivery_node_placement_id", "")) != ""
 
@@ -897,11 +915,16 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 			stacks.append(normalized)
 	session.battle["stacks"] = stacks
 	session.battle["context"] = normalized_context
-	session.battle["retreat_allowed"] = bool(
-		session.battle.get("retreat_allowed", not _is_town_defense_context(session.battle.get("context", {})))
+	var town_defense_context := _is_town_defense_context(session.battle.get("context", {}))
+	session.battle["retreat_allowed"] = (
+		false
+		if town_defense_context
+		else bool(session.battle.get("retreat_allowed", true))
 	)
-	session.battle["surrender_allowed"] = bool(
-		session.battle.get("surrender_allowed", not _is_town_defense_context(session.battle.get("context", {})))
+	session.battle["surrender_allowed"] = (
+		false
+		if town_defense_context
+		else bool(session.battle.get("surrender_allowed", true))
 	)
 	session.battle["recent_events"] = _normalize_recent_events(session.battle.get("recent_events", []))
 	session.battle[TACTICAL_BRIEFING_KEY] = _normalize_tactical_briefing_state(session.battle.get(TACTICAL_BRIEFING_KEY, {}), session)
@@ -1202,7 +1225,7 @@ static func active_movement_board_click_intent(battle: Dictionary) -> Dictionary
 		intent["message"] = "Green hex click: no stack is ready to move."
 		return intent
 	if String(active_stack.get("side", "")) != "player":
-		intent["message"] = "Green hex click: wait for player initiative."
+		intent["message"] = "It is not the player's turn."
 		return intent
 	if destinations.is_empty():
 		intent["blocked"] = true
@@ -1226,7 +1249,7 @@ static func movement_intent_for_destination(battle: Dictionary, q: int, r: int) 
 		intent["message"] = "Green hex click: no stack is ready to move."
 		return intent
 	if String(active_stack.get("side", "")) != "player":
-		intent["message"] = "Green hex click: wait for player initiative."
+		intent["message"] = "It is not the player's turn."
 		return intent
 	if destination.is_empty():
 		intent["blocked"] = true
@@ -1282,7 +1305,7 @@ static func board_click_attack_intent_for_target(battle: Dictionary, battle_id: 
 		intent["message"] = "Board click: no stack is ready to act."
 		return intent
 	if String(active_stack.get("side", "")) != "player":
-		intent["message"] = "Board click: wait for player initiative."
+		intent["message"] = _player_input_locked_summary()
 		return intent
 	if target.is_empty() or String(target.get("side", "")) != "enemy":
 		intent["message"] = "Board click: only enemy stacks can be attacked."
@@ -1537,17 +1560,29 @@ static func cycle_target(session: SessionStateStoreScript.SessionData, direction
 static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return "Battle Spells | Mana 0/0 | No known spells"
-	return SpellRulesScript.describe_spellbook(_player_commander_state(session), SpellRulesScript.CONTEXT_BATTLE)
+	var summary := SpellRulesScript.describe_spellbook(_player_commander_state(session), SpellRulesScript.CONTEXT_BATTLE)
+	if not session.battle.is_empty() and _commander_spell_cast_this_round(session.battle, "player"):
+		summary += " | Commander spell already cast this round"
+	return summary
+
+static func _player_spell_cast_used_summary() -> String:
+	return "Commander spell already cast this round; the next spell window opens next round."
+
+static func _player_input_locked_summary() -> String:
+	return "Input locked: it is not the player's turn."
 
 static func get_spell_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	if session == null or session.battle.is_empty():
+		return []
+	var active_stack := get_active_stack(session.battle)
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return []
 	if _commander_spell_cast_this_round(session.battle, "player"):
 		return []
 	return SpellRulesScript.get_battle_actions(
 		_player_commander_state(session),
 		session.battle,
-		get_active_stack(session.battle),
+		active_stack,
 		get_selected_target(session.battle)
 	)
 
@@ -1605,8 +1640,8 @@ static func describe_pressure(session: SessionStateStoreScript.SessionData) -> S
 	if objective_pressure != "":
 		lines.append("Objective pressure: %s" % objective_pressure)
 	lines.append("Pressure: %s" % _pressure_brief(session))
-	lines.append("Retreat: %s" % ("Open" if bool(battle.get("retreat_allowed", true)) else "Locked"))
-	lines.append("Surrender: %s" % ("Open" if bool(battle.get("surrender_allowed", true)) else "Locked"))
+	lines.append("Retreat: %s" % _withdrawal_pressure_label(battle, _battle_retreat_allowed(battle)))
+	lines.append("Surrender: %s" % _withdrawal_pressure_label(battle, _battle_surrender_allowed(battle)))
 	return "\n".join(lines)
 
 static func describe_risk_readiness_board(session: SessionStateStoreScript.SessionData) -> String:
@@ -1876,6 +1911,17 @@ static func describe_spell_timing_board(session: SessionStateStoreScript.Session
 	var battle = session.battle
 	var active_stack = get_active_stack(battle)
 	var target = get_selected_target(battle)
+	if active_stack.is_empty():
+		return "Spell and Ability Timing\n- No active stack is shaping a timing window."
+	if String(active_stack.get("side", "")) != "player":
+		return "\n".join(
+			[
+				"Spell and Ability Timing",
+				"- Enemy initiative: %s is acting now; the player spell and order windows are closed." % _stack_label(active_stack),
+				"- Enemy spell pressure: %s" % _enemy_spell_threat_line(battle, active_stack),
+				"- Incoming burst: %s" % _burst_risk_line(session, battle),
+			]
+		)
 	return "\n".join(
 		[
 			"Spell and Ability Timing",
@@ -1896,6 +1942,8 @@ static func _spell_window_line(
 		return "No active stack is shaping a timing window."
 	if String(active_stack.get("side", "")) != "player":
 		return _enemy_spell_threat_line(battle, active_stack)
+	if _commander_spell_cast_this_round(battle, "player"):
+		return _player_spell_cast_used_summary()
 	var preferred_action = _preferred_spell_timing_action(session, battle, active_stack, target)
 	if not preferred_action.is_empty():
 		return "%s: %s" % [
@@ -2298,6 +2346,7 @@ static func _command_tools_line(
 	active_stack: Dictionary,
 	target: Dictionary
 ) -> String:
+	var player_spell_cast_used := String(active_stack.get("side", "")) == "player" and _commander_spell_cast_this_round(battle, "player")
 	for action in get_spell_actions(session):
 		if not (action is Dictionary):
 			continue
@@ -2306,7 +2355,11 @@ static func _command_tools_line(
 		return "Spell: %s" % String(action.get("summary", "A battle spell is ready."))
 	var ability_summary = _active_ability_window_summary(active_stack, battle, target)
 	if ability_summary != "":
+		if player_spell_cast_used:
+			return "%s | %s" % [ability_summary, _player_spell_cast_used_summary()]
 		return ability_summary
+	if player_spell_cast_used:
+		return _player_spell_cast_used_summary()
 	return "No live spell or ability edge is opening beyond the base exchange."
 
 static func _objective_pull_line(
@@ -2575,8 +2628,10 @@ static func _retreat_action_summary(session: SessionStateStoreScript.SessionData
 	if session == null or session.battle.is_empty():
 		return "No battle is active."
 	var battle = session.battle
-	if not bool(battle.get("retreat_allowed", true)):
+	if _is_town_defense_context(battle.get("context", {})):
 		return "Retreat is locked while defending a town."
+	if not _battle_retreat_allowed(battle):
+		return "Retreat is locked in this battle."
 	var player_totals = _army_totals(battle, "player")
 	var clauses = [
 		"Break contact and preserve %d surviving stack%s from the field" % [
@@ -2593,8 +2648,10 @@ static func _retreat_action_summary(session: SessionStateStoreScript.SessionData
 static func _surrender_action_summary(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No battle is active."
-	if not bool(session.battle.get("surrender_allowed", true)):
+	if _is_town_defense_context(session.battle.get("context", {})):
 		return "Surrender is locked while defending a town."
+	if not _battle_surrender_allowed(session.battle):
+		return "Surrender is locked in this battle."
 	var player_totals = _army_totals(session.battle, "player")
 	var clauses = [
 		"Yield the field and preserve %d surviving stack%s under surrender terms" % [
@@ -2996,7 +3053,7 @@ static func _tactical_opening_pressure_line(session: SessionStateStoreScript.Ses
 		_pressure_brief(session),
 		int(player_totals.get("ranged_stacks", 0)),
 		int(enemy_totals.get("ranged_stacks", 0)),
-		"Open" if bool(battle.get("retreat_allowed", true)) else "Locked",
+		_withdrawal_pressure_label(battle, _battle_retreat_allowed(battle)),
 	]
 
 static func _tactical_decisive_target_line(battle: Dictionary) -> String:
@@ -3080,7 +3137,7 @@ static func _risk_readiness_grade(session: SessionStateStoreScript.SessionData, 
 			severity += 1
 		elif player_shots > enemy_shots:
 			stability += 1
-	if not bool(battle.get("retreat_allowed", true)):
+	if not _battle_retreat_allowed(battle):
 		severity += 1
 	if max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1) <= 2:
 		severity += 1
@@ -3252,6 +3309,9 @@ static func _risk_board_priority_line(battle: Dictionary) -> String:
 	var decisive_target = _priority_enemy_stack_for_briefing(battle)
 	if decisive_target.is_empty():
 		return "no decisive target is exposed yet."
+	var active_stack = get_active_stack(battle)
+	if not active_stack.is_empty() and String(active_stack.get("side", "")) != "player":
+		return "%s remains the next break point, but enemy initiative is active and retargeting is locked." % _stack_label(decisive_target)
 	var selected_target = get_selected_target(battle)
 	if not selected_target.is_empty() and String(selected_target.get("battle_id", "")) == String(decisive_target.get("battle_id", "")):
 		return "%s is already marked; %s." % [
@@ -3460,7 +3520,8 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 	var target = get_selected_target(battle)
 	var availability = action_availability(battle)
 	var player_turn = not active_stack.is_empty() and String(active_stack.get("side", "")) == "player"
-	var advance_summary = "Await the enemy move."
+	var locked_summary := _player_input_locked_summary()
+	var advance_summary = locked_summary
 	if player_turn:
 		advance_summary = _advance_action_summary(battle, active_stack) if bool(availability.get("advance", false)) else "The lines are already engaged."
 	surface["advance"] = {
@@ -3468,7 +3529,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("advance", false)),
 		"summary": advance_summary,
 	}
-	var strike_summary = "Await the enemy move."
+	var strike_summary = locked_summary
 	if player_turn:
 		strike_summary = _attack_action_summary(active_stack, target, battle, false) if bool(availability.get("strike", false)) else _attack_unavailable_summary(active_stack, target, battle, false)
 	surface["strike"] = {
@@ -3476,7 +3537,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("strike", false)),
 		"summary": strike_summary,
 	}
-	var shoot_summary = "Await the enemy move."
+	var shoot_summary = locked_summary
 	if player_turn:
 		shoot_summary = _attack_action_summary(active_stack, target, battle, true) if bool(availability.get("shoot", false)) else _attack_unavailable_summary(active_stack, target, battle, true)
 	surface["shoot"] = {
@@ -3487,9 +3548,9 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 	surface["defend"] = {
 		"label": "Defend",
 		"disabled": not player_turn or not bool(availability.get("defend", false)),
-		"summary": "Await the enemy move." if not player_turn else _defend_action_summary(battle, active_stack),
+		"summary": locked_summary if not player_turn else _defend_action_summary(battle, active_stack),
 	}
-	var retreat_summary = "Await the enemy move."
+	var retreat_summary = locked_summary
 	if player_turn:
 		retreat_summary = _retreat_action_summary(session)
 	surface["retreat"] = {
@@ -3497,7 +3558,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("retreat", false)),
 		"summary": retreat_summary,
 	}
-	var surrender_summary = "Await the enemy move."
+	var surrender_summary = locked_summary
 	if player_turn:
 		surrender_summary = _surrender_action_summary(session)
 	surface["surrender"] = {
@@ -3513,7 +3574,6 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 
 	var active_stack = get_active_stack(session.battle)
 	var target_stack = get_selected_target(session.battle)
-	_clear_selected_target_continuity(session.battle)
 	if _commander_spell_cast_this_round(session.battle, "player"):
 		return {"ok": false, "message": "The commander has already cast a spell this round.", "state": "invalid"}
 	var resolution = SpellRulesScript.resolve_battle_spell(
@@ -3525,6 +3585,8 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "Spell casting failed.")), "state": "invalid"}
+	_clear_selected_target_continuity(session.battle)
+	_clear_selected_target_closing(session.battle)
 	_mark_commander_spell_cast(session.battle, "player")
 
 	session.battle["player_commander_state"] = resolution.get("hero", _player_commander_state(session))
@@ -3618,13 +3680,13 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 	var active_stack = get_active_stack(session.battle)
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return {"ok": false, "message": "It is not the player's turn.", "state": "invalid"}
-	_clear_selected_target_continuity(session.battle)
-	_clear_selected_target_closing(session.battle)
 
 	match action:
 		"advance":
 			if int(session.battle.get("distance", 1)) <= 0 and legal_destinations_for_active_stack(session.battle).is_empty():
 				return {"ok": false, "message": "The lines are already engaged.", "state": "invalid"}
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
 			var start_distance := int(session.battle.get("distance", 1))
 			var distance_delta := _apply_auto_advance_movement(session.battle, active_stack, start_distance)
 			var advance_message = "%s advances." % _stack_label(active_stack)
@@ -3650,14 +3712,22 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 				advance_message = _join_messages([advance_message, " ".join(advance_objective_messages)])
 			return _complete_action(session, advance_message)
 		"strike":
-			if not _can_make_melee_attack(active_stack, session.battle, get_selected_target(session.battle)):
+			var strike_target = get_selected_target(session.battle)
+			if not _can_make_melee_attack(active_stack, session.battle, strike_target):
 				return {"ok": false, "message": "This stack cannot reach the enemy line yet.", "state": "invalid"}
-			return _resolve_attack_action(session, active_stack, get_selected_target(session.battle), false)
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
+			return _resolve_attack_action(session, active_stack, strike_target, false)
 		"shoot":
-			if not _can_make_ranged_attack(active_stack, session.battle, get_selected_target(session.battle)):
+			var shoot_target = get_selected_target(session.battle)
+			if not _can_make_ranged_attack(active_stack, session.battle, shoot_target):
 				return {"ok": false, "message": "This stack cannot make a ranged attack at that target.", "state": "invalid"}
-			return _resolve_attack_action(session, active_stack, get_selected_target(session.battle), true)
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
+			return _resolve_attack_action(session, active_stack, shoot_target, true)
 		"defend":
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
 			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
 			var defend_message = "%s braces for impact." % _stack_label(active_stack)
 			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
@@ -3675,8 +3745,20 @@ static func perform_player_action(session: SessionStateStoreScript.SessionData, 
 				defend_message = _join_messages([defend_message, " ".join(defend_objective_messages)])
 			return _complete_action(session, defend_message)
 		"retreat":
+			if _is_town_defense_context(session.battle.get("context", {})):
+				return {"ok": false, "message": "Town defenders cannot abandon the walls mid-assault.", "state": "invalid"}
+			if not _battle_retreat_allowed(session.battle):
+				return {"ok": false, "message": _retreat_action_summary(session), "state": "invalid"}
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
 			return _finalize_retreat(session)
 		"surrender":
+			if _is_town_defense_context(session.battle.get("context", {})):
+				return {"ok": false, "message": "Town defenders cannot surrender the walls mid-assault.", "state": "invalid"}
+			if not _battle_surrender_allowed(session.battle):
+				return {"ok": false, "message": _surrender_action_summary(session), "state": "invalid"}
+			_clear_selected_target_continuity(session.battle)
+			_clear_selected_target_closing(session.battle)
 			return _finalize_surrender(session)
 		_:
 			return {"ok": false, "message": "Unknown action.", "state": "invalid"}
@@ -3710,8 +3792,8 @@ static func action_availability(battle: Dictionary) -> Dictionary:
 			and _can_make_ranged_attack(active_stack, battle, selected_target)
 		),
 		"defend": true,
-		"retreat": bool(battle.get("retreat_allowed", true)),
-		"surrender": bool(battle.get("surrender_allowed", true)),
+		"retreat": _battle_retreat_allowed(battle),
+		"surrender": _battle_surrender_allowed(battle),
 	}
 
 static func _resolve_attack_action(
@@ -8514,7 +8596,7 @@ static func _field_objective_urgency_summary(session: SessionStateStoreScript.Se
 	var rounds_remaining = max(0, int(battle.get("max_rounds", 12)) - int(battle.get("round", 1)) + 1)
 	if rounds_remaining <= 2:
 		parts.append("%d round%s remain before stalemate" % [rounds_remaining, "" if rounds_remaining == 1 else "s"])
-	if not bool(battle.get("retreat_allowed", true)):
+	if not _battle_retreat_allowed(battle):
 		parts.append("retreat locked")
 	return " | ".join(parts)
 

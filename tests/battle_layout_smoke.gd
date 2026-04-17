@@ -165,11 +165,23 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		get_tree().quit(1)
 		return false
 
+	if not await _run_invalid_friendly_board_stack_click_feedback_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
+	if not await _run_enemy_turn_active_stack_tooltip_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
+	if not await _run_invalid_empty_board_hex_click_feedback_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
 	if not _run_board_hex_click_movement_case(shell, SessionState.ensure_active_session(), movement_preview, viewport_size):
 		return false
 	if not await _run_setup_move_target_continuity_case(shell, SessionState.ensure_active_session(), viewport_size):
 		return false
 	if not await _run_direct_actionable_after_move_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
+	if not await _run_overlapped_friendly_shape_movement_click_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
+	if not await _run_overlapped_enemy_shape_movement_click_case(shell, SessionState.ensure_active_session(), viewport_size):
+		return false
+	if not await _run_overlapped_enemy_shape_enemy_hex_attack_click_case(shell, SessionState.ensure_active_session(), viewport_size):
 		return false
 	board_click_setup = _stage_board_click_dispatch_state(SessionState.ensure_active_session().battle)
 	if board_click_setup.is_empty():
@@ -181,6 +193,8 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 	await get_tree().process_frame
 
 	if not _run_board_click_dispatch_case(shell, SessionState.ensure_active_session(), board_click_setup, viewport_size):
+		return false
+	if not await _run_ranged_board_hex_click_dispatch_case(shell, SessionState.ensure_active_session(), viewport_size):
 		return false
 	for cell_value in stack_cells:
 		if not (cell_value is Dictionary):
@@ -260,6 +274,572 @@ func _stage_board_click_dispatch_state(battle: Dictionary) -> Dictionary:
 		"player_id": player_id,
 		"legal_target_id": legal_target_id,
 		"blocked_target_id": blocked_target_id,
+	}
+
+func _stage_ranged_board_hex_click_dispatch_state(battle: Dictionary) -> Dictionary:
+	var player_stack := _first_stack_for_side(battle, "player")
+	var legal_target := _first_stack_for_side(battle, "enemy")
+	if player_stack.is_empty() or legal_target.is_empty():
+		return {}
+	var player_id := String(player_stack.get("battle_id", ""))
+	var legal_target_id := String(legal_target.get("battle_id", ""))
+	_set_stack_combat_profile_for_test(battle, player_id, 5, true, [])
+	_set_stack_health_for_test(battle, player_id, 999)
+	_set_stack_health_for_test(battle, legal_target_id, 999)
+	_set_stack_hex_for_test(battle, player_id, {"q": 4, "r": 2})
+	_set_stack_hex_for_test(battle, legal_target_id, {"q": 6, "r": 2})
+	battle["distance"] = 0
+	battle["turn_order"] = [player_id, legal_target_id]
+	battle["turn_index"] = 0
+	battle["active_stack_id"] = player_id
+	battle["selected_target_id"] = legal_target_id
+	return {
+		"player_id": player_id,
+		"legal_target_id": legal_target_id,
+		"target_q": 6,
+		"target_r": 2,
+	}
+
+func _run_invalid_friendly_board_stack_click_feedback_case(shell, session, viewport_size: Vector2) -> bool:
+	if shell == null or not shell.has_method("validation_perform_board_stack_click") or not shell.has_method("validation_snapshot"):
+		push_error("Battle layout smoke: battle shell does not expose board stack-click validation.")
+		get_tree().quit(1)
+		return false
+	var event_label: Label = shell.get_node_or_null("%Event")
+	if event_label == null:
+		push_error("Battle layout smoke: battle dispatch label is missing for invalid board-click feedback.")
+		get_tree().quit(1)
+		return false
+	var active_stack := BattleRules.get_active_stack(session.battle)
+	var selected_before := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	var active_id := String(active_stack.get("battle_id", ""))
+	if active_id == "" or String(active_stack.get("side", "")) != "player" or selected_before == "":
+		push_error("Battle layout smoke: could not stage a friendly board-click rejection with a player stack and selected enemy at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+
+	shell.set("_tactical_briefing_text", "Opening tactical briefing still visible.")
+	shell.set("_last_message", "")
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	var click_result: Dictionary = shell.call("validation_perform_board_stack_click", active_id)
+	await get_tree().process_frame
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var event_text := "%s\n%s" % [String(event_label.text), String(event_label.tooltip_text)]
+	if (
+		bool(click_result.get("ok", false))
+		or String(click_result.get("state", "")) != "invalid"
+		or "only enemy stacks" not in String(click_result.get("message", "")).to_lower()
+		or "only enemy stacks" not in event_text.to_lower()
+		or String(shell.get("_tactical_briefing_text")) == ""
+		or String(BattleRules.get_selected_target(session.battle).get("battle_id", "")) != selected_before
+		or String(snapshot.get("selected_target_battle_id", "")) != selected_before
+	):
+		push_error("Battle layout smoke: invalid friendly board click did not surface a visible rejection over the opening briefing without changing target focus at %s: click=%s event=%s snapshot=%s." % [viewport_size, click_result, event_text, snapshot])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_enemy_turn_active_stack_tooltip_case(shell, session, viewport_size: Vector2) -> bool:
+	var board: Control = shell.get_node_or_null("%BattleBoard")
+	if (
+		board == null
+		or not board.has_method("validation_perform_hex_cell_mouse_click")
+		or not board.has_method("validation_hex_layout_summary")
+		or not board.has_method("validation_preview_hex_destination")
+		or not board.has_method("validation_board_fallback_tooltip")
+		or not board.has_method("_movement_state_label")
+	):
+		push_error("Battle layout smoke: battle board does not expose enemy-turn active-stack tooltip validation.")
+		get_tree().quit(1)
+		return false
+	var event_label: Label = shell.get_node_or_null("%Event")
+	if event_label == null:
+		push_error("Battle layout smoke: battle dispatch label is missing for enemy-turn click feedback.")
+		get_tree().quit(1)
+		return false
+	var enemy_stack := _first_stack_for_side(session.battle, "enemy")
+	var player_stack := _first_stack_for_side(session.battle, "player")
+	if enemy_stack.is_empty() or player_stack.is_empty():
+		push_error("Battle layout smoke: could not stage enemy-turn active-stack tooltip coverage at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var enemy_id := String(enemy_stack.get("battle_id", ""))
+	var player_id := String(player_stack.get("battle_id", ""))
+	var original_stacks: Array = session.battle.get("stacks", []).duplicate(true) if session.battle.get("stacks", []) is Array else []
+	var original_turn_order: Array = session.battle.get("turn_order", []).duplicate(true) if session.battle.get("turn_order", []) is Array else []
+	var original_turn_index := int(session.battle.get("turn_index", 0))
+	var original_active_id := String(session.battle.get("active_stack_id", ""))
+	var original_selected_id := String(session.battle.get("selected_target_id", ""))
+	var original_retreat_allowed := bool(session.battle.get("retreat_allowed", true))
+	var original_surrender_allowed := bool(session.battle.get("surrender_allowed", true))
+	for extra_enemy_id in _stack_ids_for_side_except_for_test(session.battle, "enemy", enemy_id):
+		_remove_battle_stack_for_test(session.battle, extra_enemy_id)
+	for extra_player_id in _stack_ids_for_side_except_for_test(session.battle, "player", player_id):
+		_remove_battle_stack_for_test(session.battle, extra_player_id)
+	_set_stack_combat_profile_for_test(session.battle, enemy_id, 5, false, [])
+	_set_stack_combat_profile_for_test(session.battle, player_id, 5, false, [])
+	_set_stack_health_for_test(session.battle, enemy_id, 999)
+	_set_stack_health_for_test(session.battle, player_id, 999)
+	_set_stack_hex_for_test(session.battle, enemy_id, {"q": 5, "r": 3})
+	_set_stack_hex_for_test(session.battle, player_id, {"q": 6, "r": 3})
+	var enemy_hex := {"q": 5, "r": 3}
+	session.battle["turn_order"] = [enemy_id, player_id]
+	session.battle["turn_index"] = 0
+	session.battle["active_stack_id"] = enemy_id
+	session.battle["selected_target_id"] = player_id
+	session.battle["retreat_allowed"] = true
+	session.battle["surrender_allowed"] = true
+	var enemy_destinations := BattleRules.legal_destinations_for_active_stack(session.battle)
+	if enemy_destinations.is_empty():
+		push_error("Battle layout smoke: could not stage an enemy-turn empty-hex tooltip coverage destination at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var enemy_destination: Dictionary = enemy_destinations[0]
+	var enemy_destination_intent: Dictionary = BattleRules.movement_intent_for_destination(
+		session.battle,
+		int(enemy_destination.get("q", -1)),
+		int(enemy_destination.get("r", -1))
+	)
+	var enemy_movement_intent: Dictionary = BattleRules.active_movement_board_click_intent(session.battle)
+	if (
+		"not the player's turn" not in String(enemy_destination_intent.get("message", "")).to_lower()
+		or "green hex" in String(enemy_destination_intent.get("message", "")).to_lower()
+		or "not the player's turn" not in String(enemy_movement_intent.get("message", "")).to_lower()
+		or "green hex" in String(enemy_movement_intent.get("message", "")).to_lower()
+	):
+		push_error("Battle layout smoke: enemy-turn movement intents advertised green-hex input instead of locked initiative at %s: destination=%s active=%s." % [viewport_size, enemy_destination_intent, enemy_movement_intent])
+		get_tree().quit(1)
+		return false
+
+	shell.set("_last_message", "")
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	var pressure_label: Label = shell.get_node_or_null("%Pressure")
+	if pressure_label == null:
+		push_error("Battle layout smoke: enemy-turn pressure label is missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var enemy_turn_pressure := BattleRules.describe_pressure(session)
+	var visible_pressure_text := "%s\n%s\n%s" % [
+		enemy_turn_pressure,
+		String(pressure_label.text),
+		String(pressure_label.tooltip_text),
+	]
+	var visible_pressure_lower := visible_pressure_text.to_lower()
+	if (
+		"retreat: window closed" not in visible_pressure_lower
+		or "surrender: window closed" not in visible_pressure_lower
+		or "retreat: open" in visible_pressure_lower
+		or "surrender: open" in visible_pressure_lower
+	):
+		push_error("Battle layout smoke: enemy-turn pressure surface advertised open withdrawal while input was locked at %s: pressure=%s." % [viewport_size, visible_pressure_text])
+		get_tree().quit(1)
+		return false
+	var risk_label: Label = shell.get_node_or_null("%Risk")
+	if risk_label == null:
+		push_error("Battle layout smoke: enemy-turn risk board is missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var enemy_turn_risk := BattleRules.describe_risk_readiness_board(session)
+	var visible_risk_text := "%s\n%s\n%s" % [
+		enemy_turn_risk,
+		String(risk_label.text),
+		String(risk_label.tooltip_text),
+	]
+	var visible_risk_lower := visible_risk_text.to_lower()
+	if (
+		"retargeting is locked" not in visible_risk_lower
+		or "shift focus" in visible_risk_lower
+		or "cycle focus" in visible_risk_lower
+	):
+		push_error("Battle layout smoke: enemy-turn risk board advertised retargeting while input was locked at %s: risk=%s." % [viewport_size, visible_risk_text])
+		get_tree().quit(1)
+		return false
+	var spell_actions: Control = shell.get_node_or_null("%SpellActions")
+	var enemy_turn_spell_actions := BattleRules.get_spell_actions(session)
+	if spell_actions == null:
+		push_error("Battle layout smoke: enemy-turn spell action row is missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	if not enemy_turn_spell_actions.is_empty() or spell_actions.visible:
+		push_error("Battle layout smoke: enemy-turn spell actions advertised player casting while input was locked at %s: actions=%s visible=%s children=%d." % [viewport_size, enemy_turn_spell_actions, spell_actions.visible, spell_actions.get_child_count()])
+		get_tree().quit(1)
+		return false
+	var timing_label: Label = shell.get_node_or_null("%Timing")
+	if timing_label == null:
+		push_error("Battle layout smoke: enemy-turn timing panel is missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var enemy_turn_timing := BattleRules.describe_spell_timing_board(session)
+	var visible_timing_text := "%s\n%s\n%s" % [
+		enemy_turn_timing,
+		String(timing_label.text),
+		String(timing_label.tooltip_text),
+	]
+	var visible_timing_lower := visible_timing_text.to_lower()
+	if (
+		"player spell and order windows are closed" not in visible_timing_lower
+		or "trade this turn" in visible_timing_lower
+		or "next player order" in visible_timing_lower
+	):
+		push_error("Battle layout smoke: enemy-turn timing guidance advertised player timing while input was locked at %s: timing=%s." % [viewport_size, visible_timing_text])
+		get_tree().quit(1)
+		return false
+	var prev_target_button: Button = shell.get_node_or_null("%PrevTarget")
+	var next_target_button: Button = shell.get_node_or_null("%NextTarget")
+	if prev_target_button == null or next_target_button == null:
+		push_error("Battle layout smoke: enemy-turn target-cycle controls are missing at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var target_cycle_tooltips := "%s\n%s" % [
+		String(prev_target_button.tooltip_text),
+		String(next_target_button.tooltip_text),
+	]
+	var target_cycle_lower := target_cycle_tooltips.to_lower()
+	if (
+		not prev_target_button.disabled
+		or not next_target_button.disabled
+		or "not the player's turn" not in target_cycle_lower
+		or "cycle focus" in target_cycle_lower
+		or "legal enemy target" in target_cycle_lower
+	):
+		push_error("Battle layout smoke: enemy-turn target-cycle controls advertised target cycling while input was locked at %s: prev_disabled=%s next_disabled=%s tooltips=%s." % [viewport_size, prev_target_button.disabled, next_target_button.disabled, target_cycle_tooltips])
+		get_tree().quit(1)
+		return false
+	var locked_action_surface := BattleRules.get_action_surface(session)
+	var locked_action_text := ""
+	var locked_action_failures := []
+	for action_id in ["advance", "strike", "shoot", "defend", "retreat", "surrender"]:
+		var action: Dictionary = locked_action_surface.get(action_id, {}) if locked_action_surface.get(action_id, {}) is Dictionary else {}
+		var button: Button = shell.get_node_or_null("%" + String(action_id).capitalize())
+		if button == null:
+			locked_action_failures.append("%s button missing" % action_id)
+			continue
+		var action_text := "%s\n%s" % [
+			String(action.get("summary", "")),
+			String(button.tooltip_text),
+		]
+		var action_lower := action_text.to_lower()
+		locked_action_text += "\n%s: %s" % [action_id, action_text]
+		if not bool(action.get("disabled", false)):
+			locked_action_failures.append("%s surface enabled" % action_id)
+		if not button.disabled:
+			locked_action_failures.append("%s button enabled" % action_id)
+		if "not the player's turn" not in action_lower:
+			locked_action_failures.append("%s missing input-lock wording" % action_id)
+		if "await the enemy move" in action_lower:
+			locked_action_failures.append("%s kept generic await wording" % action_id)
+	if not locked_action_failures.is_empty():
+		push_error("Battle layout smoke: enemy-turn primary command controls did not surface locked input truthfully at %s: failures=%s text=%s surface=%s." % [viewport_size, locked_action_failures, locked_action_text, locked_action_surface])
+		get_tree().quit(1)
+		return false
+	var enemy_turn_board: Dictionary = board.call("validation_hex_layout_summary")
+	var footer_label := String(enemy_turn_board.get("selected_target_footer_label", ""))
+	var footer_lower := footer_label.to_lower()
+	if (
+		footer_label != "Input locked"
+		or String(enemy_turn_board.get("selected_target_battle_id", "")) != player_id
+		or "target:" in footer_lower
+		or "green" in footer_lower
+		or "click" in footer_lower
+	):
+		push_error("Battle layout smoke: enemy-turn board footer advertised target/action legality while input was locked at %s: footer=%s board=%s." % [viewport_size, footer_label, enemy_turn_board])
+		get_tree().quit(1)
+		return false
+	var selected_intent: Dictionary = enemy_turn_board.get("selected_target_board_click_intent", {}) if enemy_turn_board.get("selected_target_board_click_intent", {}) is Dictionary else {}
+	var selected_legality: Dictionary = enemy_turn_board.get("selected_target_legality", {}) if enemy_turn_board.get("selected_target_legality", {}) is Dictionary else {}
+	var highlighted_stack_ids := []
+	for stack_entry_value in enemy_turn_board.get("stack_cells", []):
+		if stack_entry_value is Dictionary and bool(stack_entry_value.get("legal_attack_target", false)):
+			highlighted_stack_ids.append(String(stack_entry_value.get("battle_id", "")))
+	if (
+		int(enemy_turn_board.get("legal_attack_target_count", 0)) != 0
+		or not enemy_turn_board.get("legal_melee_targets", []).is_empty()
+		or not enemy_turn_board.get("legal_ranged_targets", []).is_empty()
+		or not highlighted_stack_ids.is_empty()
+		or bool(enemy_turn_board.get("selected_target_attackable", false))
+		or not bool(selected_legality.get("input_locked", false))
+		or bool(selected_legality.get("attackable", false))
+		or "board click" in String(selected_intent.get("message", "")).to_lower()
+	):
+		push_error("Battle layout smoke: enemy-turn board presentation still exposed attack affordances while input was locked at %s: highlighted=%s selected_legality=%s selected_intent=%s board=%s." % [viewport_size, highlighted_stack_ids, selected_legality, selected_intent, enemy_turn_board])
+		get_tree().quit(1)
+		return false
+	var enemy_hover_preview: Dictionary = board.call(
+		"validation_preview_hex_destination",
+		int(enemy_destination.get("q", -1)),
+		int(enemy_destination.get("r", -1))
+	)
+	var enemy_hover_footer := String(board.call("_movement_state_label"))
+	if (
+		"not the player's turn" not in String(enemy_hover_preview.get("message", "")).to_lower()
+		or enemy_hover_footer != ""
+		or "green" in enemy_hover_footer.to_lower()
+	):
+		push_error("Battle layout smoke: enemy-turn hover footer still advertised green movement while input was locked at %s: preview=%s footer=%s board=%s." % [viewport_size, enemy_hover_preview, enemy_hover_footer, enemy_turn_board])
+		get_tree().quit(1)
+		return false
+	var click: Dictionary = board.call(
+		"validation_perform_hex_cell_mouse_click",
+		int(enemy_hex.get("q", -1)),
+		int(enemy_hex.get("r", -1))
+	)
+	await get_tree().process_frame
+	var tooltip_before := String(click.get("tooltip_before", ""))
+	var tooltip_lower := tooltip_before.to_lower()
+	var event_text := "%s\n%s" % [String(event_label.text), String(event_label.tooltip_text)]
+	if (
+		not bool(click.get("accepted", false))
+		or String(click.get("battle_id", "")) != enemy_id
+		or "not the player's turn" not in tooltip_lower
+		or "green hex" in tooltip_lower
+		or "highlighted enemies" in tooltip_lower
+		or "not the player's turn" not in event_text.to_lower()
+		or String(session.battle.get("active_stack_id", "")) != enemy_id
+	):
+		push_error("Battle layout smoke: enemy-turn active stack hover/click advertised player actions or failed to surface the rejection at %s: click=%s tooltip=%s event=%s battle=%s." % [viewport_size, click, tooltip_before, event_text, session.battle])
+		get_tree().quit(1)
+		return false
+	var empty_click: Dictionary = board.call(
+		"validation_perform_hex_cell_mouse_click",
+		int(enemy_destination.get("q", -1)),
+		int(enemy_destination.get("r", -1))
+	)
+	await get_tree().process_frame
+	var empty_tooltip_before := String(empty_click.get("tooltip_before", ""))
+	var empty_tooltip_lower := empty_tooltip_before.to_lower()
+	event_text = "%s\n%s" % [String(event_label.text), String(event_label.tooltip_text)]
+	if (
+		not bool(empty_click.get("accepted", false))
+		or String(empty_click.get("dispatch", "")) != "destination"
+		or "not the player's turn" not in empty_tooltip_lower
+		or "green hex" in empty_tooltip_lower
+		or "not the player's turn" not in event_text.to_lower()
+		or "green hex" in event_text.to_lower()
+		or String(session.battle.get("active_stack_id", "")) != enemy_id
+	):
+		push_error("Battle layout smoke: enemy-turn empty hex hover/click advertised green-hex movement or failed to surface locked initiative at %s: click=%s tooltip=%s event=%s battle=%s." % [viewport_size, empty_click, empty_tooltip_before, event_text, session.battle])
+		get_tree().quit(1)
+		return false
+	var fallback_tooltip_result: Dictionary = board.call("validation_board_fallback_tooltip")
+	var fallback_tooltip := String(fallback_tooltip_result.get("tooltip", ""))
+	var fallback_tooltip_lower := fallback_tooltip.to_lower()
+	if (
+		not bool(fallback_tooltip_result.get("ok", false))
+		or int(fallback_tooltip_result.get("resolved_q", 0)) >= 0
+		or String(fallback_tooltip_result.get("shape_target", "")) != ""
+		or "not the player's turn" not in fallback_tooltip_lower
+		or "green hex" in fallback_tooltip_lower
+		or "highlighted enemies" in fallback_tooltip_lower
+	):
+		push_error("Battle layout smoke: enemy-turn board fallback tooltip advertised player actions while input was locked at %s: fallback=%s battle=%s." % [viewport_size, fallback_tooltip_result, session.battle])
+		get_tree().quit(1)
+		return false
+
+	session.battle["stacks"] = original_stacks
+	session.battle["turn_order"] = original_turn_order
+	session.battle["turn_index"] = original_turn_index
+	session.battle["active_stack_id"] = original_active_id
+	session.battle["selected_target_id"] = original_selected_id
+	session.battle["retreat_allowed"] = original_retreat_allowed
+	session.battle["surrender_allowed"] = original_surrender_allowed
+	shell.set("_last_message", "")
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	return true
+
+func _run_invalid_empty_board_hex_click_feedback_case(shell, session, viewport_size: Vector2) -> bool:
+	var board: Control = shell.get_node_or_null("%BattleBoard")
+	if (
+		board == null
+		or not board.has_method("validation_perform_hex_cell_mouse_click")
+		or not shell.has_method("validation_snapshot")
+	):
+		push_error("Battle layout smoke: battle board does not expose invalid empty-hex click validation.")
+		get_tree().quit(1)
+		return false
+	var event_label: Label = shell.get_node_or_null("%Event")
+	if event_label == null:
+		push_error("Battle layout smoke: battle dispatch label is missing for invalid empty-hex feedback.")
+		get_tree().quit(1)
+		return false
+	var invalid_cell := _invalid_empty_destination_hex_for_test(session.battle)
+	if invalid_cell.is_empty():
+		push_error("Battle layout smoke: could not find an empty non-green battlefield hex for rejection coverage at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var active_before := BattleRules.get_active_stack(session.battle)
+	var active_before_hex := _stack_hex_for_test(active_before)
+	var selected_before := String(BattleRules.get_selected_target(session.battle).get("battle_id", ""))
+	var expected_intent := BattleRules.movement_intent_for_destination(
+		session.battle,
+		int(invalid_cell.get("q", -1)),
+		int(invalid_cell.get("r", -1))
+	)
+	var expected_message := String(expected_intent.get("message", ""))
+	if (
+		String(expected_intent.get("action", "")) == "move"
+		or not bool(expected_intent.get("blocked", false))
+		or "not a legal move destination" not in expected_message.to_lower()
+	):
+		push_error("Battle layout smoke: invalid empty-hex coverage staged a truthful move instead of a blocked destination: cell=%s intent=%s." % [invalid_cell, expected_intent])
+		get_tree().quit(1)
+		return false
+
+	shell.set("_tactical_briefing_text", "Opening tactical briefing still visible.")
+	shell.set("_last_message", "")
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	var click: Dictionary = board.call(
+		"validation_perform_hex_cell_mouse_click",
+		int(invalid_cell.get("q", -1)),
+		int(invalid_cell.get("r", -1))
+	)
+	await get_tree().process_frame
+	var active_after := BattleRules.get_active_stack(session.battle)
+	var active_after_hex := _stack_hex_for_test(active_after)
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var event_text := "%s\n%s" % [String(event_label.text), String(event_label.tooltip_text)]
+	if (
+		not bool(click.get("accepted", false))
+		or String(click.get("dispatch", "")) != "destination_blocked"
+		or String(click.get("message", "")) != expected_message
+		or String(click.get("tooltip_before", "")) != expected_message
+		or "green hex click blocked" not in event_text.to_lower()
+		or "not a legal move destination" not in event_text.to_lower()
+		or String(shell.get("_tactical_briefing_text")) == ""
+		or _hex_key_for_test(active_after_hex) != _hex_key_for_test(active_before_hex)
+		or String(BattleRules.get_selected_target(session.battle).get("battle_id", "")) != selected_before
+		or String(snapshot.get("selected_target_battle_id", "")) != selected_before
+	):
+		push_error("Battle layout smoke: invalid empty battlefield hex click did not surface a visible blocked Move rejection without moving or retargeting at %s: cell=%s click=%s event=%s before=%s after=%s snapshot=%s." % [viewport_size, invalid_cell, click, event_text, active_before_hex, active_after_hex, snapshot])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _stage_overlapped_friendly_shape_movement_click_state(battle: Dictionary) -> Dictionary:
+	var player_stack := _first_stack_for_side(battle, "player")
+	var enemy_stack := _first_stack_for_side(battle, "enemy")
+	if player_stack.is_empty() or enemy_stack.is_empty():
+		return {}
+	var player_id := String(player_stack.get("battle_id", ""))
+	var enemy_id := String(enemy_stack.get("battle_id", ""))
+	for extra_player_id in _stack_ids_for_side_except_for_test(battle, "player", player_id):
+		_remove_battle_stack_for_test(battle, extra_player_id)
+	for extra_enemy_id in _stack_ids_for_side_except_for_test(battle, "enemy", enemy_id):
+		_remove_battle_stack_for_test(battle, extra_enemy_id)
+	_set_stack_combat_profile_for_test(battle, player_id, 5, false, [])
+	_set_stack_health_for_test(battle, player_id, 999)
+	_set_stack_health_for_test(battle, enemy_id, 999)
+	_set_stack_hex_for_test(battle, player_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(battle, enemy_id, {"q": 9, "r": 3})
+	battle["distance"] = 0
+	battle["round"] = 1
+	battle["max_rounds"] = 12
+	battle["turn_order"] = [player_id, enemy_id]
+	battle["turn_index"] = 0
+	battle["active_stack_id"] = player_id
+	battle["selected_target_id"] = enemy_id
+	battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+	var movement_intent := BattleRules.movement_intent_for_destination(battle, 5, 3)
+	if String(movement_intent.get("action", "")) != "move":
+		return {}
+	return {
+		"player_id": player_id,
+		"enemy_id": enemy_id,
+		"destination_q": 5,
+		"destination_r": 3,
+		"intent": movement_intent,
+	}
+
+func _stage_overlapped_enemy_shape_movement_click_state(battle: Dictionary) -> Dictionary:
+	var player_stack := _first_stack_for_side(battle, "player")
+	var enemy_stack := _first_stack_for_side(battle, "enemy")
+	if player_stack.is_empty() or enemy_stack.is_empty():
+		return {}
+	var player_id := String(player_stack.get("battle_id", ""))
+	var enemy_id := String(enemy_stack.get("battle_id", ""))
+	for extra_player_id in _stack_ids_for_side_except_for_test(battle, "player", player_id):
+		_remove_battle_stack_for_test(battle, extra_player_id)
+	for extra_enemy_id in _stack_ids_for_side_except_for_test(battle, "enemy", enemy_id):
+		_remove_battle_stack_for_test(battle, extra_enemy_id)
+	_set_stack_combat_profile_for_test(battle, player_id, 5, false, [])
+	_set_stack_health_for_test(battle, player_id, 999)
+	_set_stack_health_for_test(battle, enemy_id, 999)
+	_set_stack_hex_for_test(battle, player_id, {"q": 4, "r": 3})
+	_set_stack_hex_for_test(battle, enemy_id, {"q": 6, "r": 3})
+	battle["distance"] = 0
+	battle["round"] = 1
+	battle["max_rounds"] = 12
+	battle["turn_order"] = [player_id, enemy_id]
+	battle["turn_index"] = 0
+	battle["active_stack_id"] = player_id
+	battle["selected_target_id"] = enemy_id
+	battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+	var movement_intent := BattleRules.movement_intent_for_destination(battle, 5, 3)
+	if (
+		String(movement_intent.get("action", "")) != "move"
+		or not bool(movement_intent.get("selected_target_blocked", false))
+	):
+		return {}
+	return {
+		"player_id": player_id,
+		"enemy_id": enemy_id,
+		"destination_q": 5,
+		"destination_r": 3,
+		"intent": movement_intent,
+	}
+
+func _stage_overlapped_enemy_shape_enemy_hex_attack_click_state(battle: Dictionary) -> Dictionary:
+	var player_stack := _first_stack_for_side(battle, "player")
+	var enemy_stack := _first_stack_for_side(battle, "enemy")
+	if player_stack.is_empty() or enemy_stack.is_empty():
+		return {}
+	var player_id := String(player_stack.get("battle_id", ""))
+	var target_id := String(enemy_stack.get("battle_id", ""))
+	var overlap_enemy_id := "enemy_hex_overlap_neighbor"
+	for extra_player_id in _stack_ids_for_side_except_for_test(battle, "player", player_id):
+		_remove_battle_stack_for_test(battle, extra_player_id)
+	for extra_enemy_id in _stack_ids_for_side_except_for_test(battle, "enemy", target_id):
+		_remove_battle_stack_for_test(battle, extra_enemy_id)
+	_ensure_enemy_stack_for_test(battle, enemy_stack, overlap_enemy_id)
+	_set_stack_combat_profile_for_test(battle, player_id, 5, true, [])
+	_set_stack_combat_profile_for_test(battle, target_id, 5, false, [])
+	_set_stack_combat_profile_for_test(battle, overlap_enemy_id, 5, false, [])
+	_set_stack_health_for_test(battle, player_id, 999)
+	_set_stack_health_for_test(battle, target_id, 999)
+	_set_stack_health_for_test(battle, overlap_enemy_id, 999)
+	_set_stack_hex_for_test(battle, player_id, {"q": 3, "r": 3})
+	_set_stack_hex_for_test(battle, target_id, {"q": 5, "r": 3})
+	_set_stack_hex_for_test(battle, overlap_enemy_id, {"q": 6, "r": 3})
+	battle["distance"] = 0
+	battle["round"] = 1
+	battle["max_rounds"] = 12
+	battle["turn_order"] = [player_id, target_id, overlap_enemy_id]
+	battle["turn_index"] = 0
+	battle["active_stack_id"] = player_id
+	battle["selected_target_id"] = target_id
+	battle.erase(BattleRules.SELECTED_TARGET_CONTINUITY_KEY)
+	battle.erase(BattleRules.SELECTED_TARGET_CLOSING_KEY)
+	var target_intent := BattleRules.board_click_attack_intent_for_target(battle, target_id)
+	var overlap_intent := BattleRules.board_click_attack_intent_for_target(battle, overlap_enemy_id)
+	if String(target_intent.get("action", "")) != "shoot" or String(overlap_intent.get("action", "")) != "shoot":
+		return {}
+	return {
+		"player_id": player_id,
+		"target_id": target_id,
+		"overlap_enemy_id": overlap_enemy_id,
+		"target_q": 5,
+		"target_r": 3,
+		"target_intent": target_intent,
+		"overlap_intent": overlap_intent,
 	}
 
 func _stage_setup_move_target_continuity_state(battle: Dictionary) -> Dictionary:
@@ -2762,6 +3342,239 @@ func _run_board_click_dispatch_case(shell, session, setup: Dictionary, viewport_
 		return false
 	return true
 
+func _run_ranged_board_hex_click_dispatch_case(shell, session, viewport_size: Vector2) -> bool:
+	var board: Control = shell.get_node_or_null("%BattleBoard")
+	if (
+		board == null
+		or not board.has_method("validation_perform_hex_cell_mouse_click")
+		or not board.has_method("validation_perform_outer_hex_ring_mouse_click")
+	):
+		push_error("Battle layout smoke: battle board does not expose mouse-position hex click validation.")
+		get_tree().quit(1)
+		return false
+	var setup := _stage_ranged_board_hex_click_dispatch_state(session.battle)
+	if setup.is_empty():
+		push_error("Battle layout smoke: could not stage a ranged board hex-click attack case at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var legal_target_id := String(setup.get("legal_target_id", ""))
+	var target_before := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
+	var mouse_click: Dictionary = board.call(
+		"validation_perform_hex_cell_mouse_click",
+		int(setup.get("target_q", -1)),
+		int(setup.get("target_r", -1))
+	)
+	var target_after := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
+	var found_shape_miss := bool(mouse_click.get("found_shape_miss_position", false))
+	var dispatch_kind := String(mouse_click.get("dispatch", ""))
+	if not bool(mouse_click.get("accepted", false)) or dispatch_kind not in ["stack_hex", "stack_token"]:
+		push_error("Battle layout smoke: ranged enemy hex-edge mouse click did not dispatch as a stack click at %s: %s." % [viewport_size, mouse_click])
+		get_tree().quit(1)
+		return false
+	if String(mouse_click.get("battle_id", "")) != legal_target_id or String(mouse_click.get("cell_target_before", "")) != legal_target_id:
+		push_error("Battle layout smoke: ranged enemy hex-edge mouse click targeted the wrong stack at %s: setup=%s click=%s." % [viewport_size, setup, mouse_click])
+		get_tree().quit(1)
+		return false
+	if found_shape_miss and (dispatch_kind != "stack_hex" or String(mouse_click.get("shape_target_before", "")) != ""):
+		push_error("Battle layout smoke: ranged enemy mouse validation did not exercise the hex-but-not-token click gap at %s: %s." % [viewport_size, mouse_click])
+		get_tree().quit(1)
+		return false
+	if target_after >= target_before:
+		push_error("Battle layout smoke: ranged enemy hex-edge mouse click did not execute Shoot damage at %s: before=%d after=%d click=%s." % [viewport_size, target_before, target_after, mouse_click])
+		get_tree().quit(1)
+		return false
+	if viewport_size.x >= 1200.0:
+		setup = _stage_ranged_board_hex_click_dispatch_state(session.battle)
+		if setup.is_empty():
+			push_error("Battle layout smoke: could not restage a ranged outer-ring attack case at %s." % [viewport_size])
+			get_tree().quit(1)
+			return false
+		if shell.has_method("_refresh"):
+			shell.call("_refresh")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		legal_target_id = String(setup.get("legal_target_id", ""))
+		var outer_target_before := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
+		var outer_click: Dictionary = board.call(
+			"validation_perform_outer_hex_ring_mouse_click",
+			int(setup.get("target_q", -1)),
+			int(setup.get("target_r", -1))
+		)
+		var outer_target_after := int(_battle_stack_by_id(session.battle, legal_target_id).get("total_health", 0))
+		if (
+			not bool(outer_click.get("found_outer_ring_position", false))
+			or float(outer_click.get("radius_factor", 0.0)) <= 0.92
+			or String(outer_click.get("shape_target_before", "")) != ""
+			or String(outer_click.get("dispatch", "")) != "stack_hex"
+			or not bool(outer_click.get("accepted", false))
+			or String(outer_click.get("battle_id", "")) != legal_target_id
+			or String(outer_click.get("cell_target_before", "")) != legal_target_id
+			or int(outer_click.get("resolved_q", -1)) != int(setup.get("target_q", -2))
+			or int(outer_click.get("resolved_r", -1)) != int(setup.get("target_r", -2))
+		):
+			push_error("Battle layout smoke: ranged enemy outer hex-ring click did not resolve through occupied-hex dispatch at %s: setup=%s click=%s." % [viewport_size, setup, outer_click])
+			get_tree().quit(1)
+			return false
+		if outer_target_after >= outer_target_before:
+			push_error("Battle layout smoke: ranged enemy outer hex-ring click did not execute Shoot damage at %s: before=%d after=%d click=%s." % [viewport_size, outer_target_before, outer_target_after, outer_click])
+			get_tree().quit(1)
+			return false
+	return true
+
+func _run_overlapped_friendly_shape_movement_click_case(shell, session, viewport_size: Vector2) -> bool:
+	var board: Control = shell.get_node_or_null("%BattleBoard")
+	if board == null or not board.has_method("validation_perform_overlapped_hex_destination_mouse_click"):
+		push_error("Battle layout smoke: battle board does not expose overlapped movement-click validation.")
+		get_tree().quit(1)
+		return false
+	var setup := _stage_overlapped_friendly_shape_movement_click_state(session.battle)
+	if setup.is_empty():
+		push_error("Battle layout smoke: could not stage an overlapped friendly-shape movement click at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var player_id := String(setup.get("player_id", ""))
+	var destination_q := int(setup.get("destination_q", -1))
+	var destination_r := int(setup.get("destination_r", -1))
+	var click: Dictionary = board.call(
+		"validation_perform_overlapped_hex_destination_mouse_click",
+		destination_q,
+		destination_r
+	)
+	var player_after := _battle_stack_by_id(session.battle, player_id)
+	var player_hex_after := _stack_hex_for_test(player_after)
+	var expected_tooltip := String(setup.get("intent", {}).get("message", ""))
+	var tooltip_before := String(click.get("tooltip_before", ""))
+	if (
+		not bool(click.get("found_friendly_shape_overlap", false))
+		or not bool(click.get("legal_destination_before", false))
+		or String(click.get("shape_target_before", "")) != player_id
+		or String(click.get("shape_target_side_before", "")) != "player"
+		or tooltip_before != expected_tooltip
+		or String(click.get("movement_tooltip_before", "")) != expected_tooltip
+		or String(click.get("shape_battle_id", "")) != player_id
+		or String(click.get("dispatch", "")) != "destination"
+		or not bool(click.get("accepted", false))
+		or int(click.get("resolved_q", -1)) != destination_q
+		or int(click.get("resolved_r", -1)) != destination_r
+		or int(player_hex_after.get("q", -1)) != destination_q
+		or int(player_hex_after.get("r", -1)) != destination_r
+	):
+		push_error("Battle layout smoke: overlapped friendly hit shape swallowed a visible green movement hex click at %s: setup=%s click=%s player_hex=%s." % [viewport_size, setup, click, player_hex_after])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_overlapped_enemy_shape_movement_click_case(shell, session, viewport_size: Vector2) -> bool:
+	var board: Control = shell.get_node_or_null("%BattleBoard")
+	if board == null or not board.has_method("validation_perform_enemy_overlapped_hex_destination_mouse_click"):
+		push_error("Battle layout smoke: battle board does not expose enemy-overlapped movement-click validation.")
+		get_tree().quit(1)
+		return false
+	var setup := _stage_overlapped_enemy_shape_movement_click_state(session.battle)
+	if setup.is_empty():
+		push_error("Battle layout smoke: could not stage an overlapped enemy-shape movement click at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var player_id := String(setup.get("player_id", ""))
+	var enemy_id := String(setup.get("enemy_id", ""))
+	var destination_q := int(setup.get("destination_q", -1))
+	var destination_r := int(setup.get("destination_r", -1))
+	var click: Dictionary = board.call(
+		"validation_perform_enemy_overlapped_hex_destination_mouse_click",
+		destination_q,
+		destination_r
+	)
+	var player_after := _battle_stack_by_id(session.battle, player_id)
+	var player_hex_after := _stack_hex_for_test(player_after)
+	var tooltip_before := String(click.get("tooltip_before", ""))
+	var movement_tooltip_before := String(click.get("movement_tooltip_before", ""))
+	if (
+		not bool(click.get("found_enemy_shape_overlap", false))
+		or not bool(click.get("legal_destination_before", false))
+		or String(click.get("shape_target_before", "")) != enemy_id
+		or String(click.get("shape_target_side_before", "")) != "enemy"
+		or tooltip_before != movement_tooltip_before
+		or "green hex click" not in tooltip_before.to_lower()
+		or String(click.get("shape_battle_id", "")) != enemy_id
+		or String(click.get("dispatch", "")) != "destination"
+		or not bool(click.get("accepted", false))
+		or int(click.get("resolved_q", -1)) != destination_q
+		or int(click.get("resolved_r", -1)) != destination_r
+		or int(player_hex_after.get("q", -1)) != destination_q
+		or int(player_hex_after.get("r", -1)) != destination_r
+	):
+		push_error("Battle layout smoke: overlapped enemy hit shape swallowed a visible green movement hex click at %s: setup=%s click=%s player_hex=%s." % [viewport_size, setup, click, player_hex_after])
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_overlapped_enemy_shape_enemy_hex_attack_click_case(shell, session, viewport_size: Vector2) -> bool:
+	var board: Control = shell.get_node_or_null("%BattleBoard")
+	if board == null or not board.has_method("validation_perform_enemy_overlapped_occupied_hex_mouse_click"):
+		push_error("Battle layout smoke: battle board does not expose occupied-hex overlap click validation.")
+		get_tree().quit(1)
+		return false
+	var setup := _stage_overlapped_enemy_shape_enemy_hex_attack_click_state(session.battle)
+	if setup.is_empty():
+		push_error("Battle layout smoke: could not stage an enemy-overlapped occupied enemy hex click at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	if shell.has_method("_refresh"):
+		shell.call("_refresh")
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var target_id := String(setup.get("target_id", ""))
+	var overlap_enemy_id := String(setup.get("overlap_enemy_id", ""))
+	var target_before := int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0))
+	var overlap_before := int(_battle_stack_by_id(session.battle, overlap_enemy_id).get("total_health", 0))
+	var click: Dictionary = board.call(
+		"validation_perform_enemy_overlapped_occupied_hex_mouse_click",
+		int(setup.get("target_q", -1)),
+		int(setup.get("target_r", -1))
+	)
+	var target_after := int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0))
+	var overlap_after := int(_battle_stack_by_id(session.battle, overlap_enemy_id).get("total_health", 0))
+	var tooltip_before := String(click.get("tooltip_before", "")).to_lower()
+	var expected_tooltip := String(click.get("cell_target_tooltip_before", ""))
+	if (
+		not bool(click.get("found_enemy_shape_overlap", false))
+		or String(click.get("shape_target_before", "")) != overlap_enemy_id
+		or String(click.get("shape_target_side_before", "")) != "enemy"
+		or String(click.get("cell_target_before", "")) != target_id
+		or String(click.get("cell_target_side_before", "")) != "enemy"
+		or String(click.get("cell_target_click_action_before", "")) != "shoot"
+		or String(click.get("tooltip_before", "")) != expected_tooltip
+		or "board click will shoot" not in tooltip_before
+		or String(click.get("shape_battle_id", "")) != overlap_enemy_id
+		or String(click.get("dispatch", "")) != "stack_hex"
+		or not bool(click.get("accepted", false))
+		or String(click.get("battle_id", "")) != target_id
+		or int(click.get("resolved_q", -1)) != int(setup.get("target_q", -2))
+		or int(click.get("resolved_r", -1)) != int(setup.get("target_r", -2))
+		or target_after >= target_before
+		or overlap_after != overlap_before
+	):
+		push_error("Battle layout smoke: neighboring enemy token overlap stole a visible occupied enemy hex click at %s: setup=%s click=%s target_before=%d target_after=%d overlap_before=%d overlap_after=%d." % [viewport_size, setup, click, target_before, target_after, overlap_before, overlap_after])
+		get_tree().quit(1)
+		return false
+	return true
+
 func _first_stack_for_side(battle: Dictionary, side: String) -> Dictionary:
 	for stack in battle.get("stacks", []):
 		if stack is Dictionary and String(stack.get("side", "")) == side and int(stack.get("total_health", 0)) > 0:
@@ -2813,6 +3626,16 @@ func _enemy_stack_ids_except_for_test(battle: Dictionary, retained_battle_id: St
 			continue
 		var battle_id := String(stack.get("battle_id", ""))
 		if String(stack.get("side", "")) == "enemy" and battle_id != retained_battle_id:
+			ids.append(battle_id)
+	return ids
+
+func _stack_ids_for_side_except_for_test(battle: Dictionary, side: String, retained_battle_id: String) -> Array[String]:
+	var ids: Array[String] = []
+	for stack in battle.get("stacks", []):
+		if not (stack is Dictionary):
+			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		if String(stack.get("side", "")) == side and battle_id != retained_battle_id:
 			ids.append(battle_id)
 	return ids
 
@@ -2932,6 +3755,30 @@ func _far_open_hex_for_test(battle: Dictionary, origin: Dictionary, min_distance
 			continue
 		return candidate
 	return {}
+
+func _invalid_empty_destination_hex_for_test(battle: Dictionary) -> Dictionary:
+	var active_stack := BattleRules.get_active_stack(battle)
+	var active_hex := _stack_hex_for_test(active_stack)
+	var legal_keys := {}
+	for destination_value in BattleRules.legal_destinations_for_active_stack(battle):
+		if destination_value is Dictionary:
+			legal_keys[_hex_key_for_test(destination_value)] = true
+	var best := {}
+	var best_distance := -1
+	for r in range(7):
+		for q in range(11):
+			var candidate := {"q": q, "r": r}
+			var key := _hex_key_for_test(candidate)
+			if legal_keys.has(key) or _hex_occupied_by_other_for_test(battle, "", candidate):
+				continue
+			var intent := BattleRules.movement_intent_for_destination(battle, q, r)
+			if String(intent.get("action", "")) == "move" or not bool(intent.get("blocked", false)):
+				continue
+			var distance := BattleRules._hex_distance(active_hex, candidate)
+			if best.is_empty() or distance > best_distance:
+				best = candidate
+				best_distance = distance
+	return best
 
 func _hex_occupied_by_other_for_test(battle: Dictionary, allowed_battle_id: String, hex: Dictionary) -> bool:
 	var key := _hex_key_for_test(hex)

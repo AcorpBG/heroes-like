@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T09:10:45Z",
+  "updatedAt": "2026-04-17T15:42:55Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "battle-post-move-final-kill-outcome-action-execution-followup",
-  "currentSliceTitle": "Prove outcome action execution truthfulness after immediate final-kill routing",
+  "currentSliceId": "battle-enemy-turn-risk-retarget-lock-10184",
+  "currentSliceTitle": "Lock risk-board retarget wording during enemy initiative",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Follow-up completed: immediate post-move final-kill outcome action execution now has automated truthfulness coverage. After the resolved routed final-kill branch reaches ScenarioOutcomeShell, the battle layout smoke executes the real outcome Return to Menu action, resumes the outcome again through the main-menu Continue Latest path, then executes the outcome Retry Skirmish action and verifies the route lands on a clean restarted overworld session with no battle payload or selected-target residue. ScenarioOutcomeShell validation now reports underlying action route and active session truth fields. Focused core, battle layout, town/battle visual, and repo validation checks pass. No live manual proof is claimed because host noVNC/X11 remains tooling-blocked.",
+  "currentSliceNotes": "Completed thin follow-up: enemy-turn Risk board priority guidance no longer tells the player to shift focus while retargeting is locked during enemy initiative. Focused core systems and battle layout smokes are green.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",
@@ -143,8 +143,9 @@
     }
   ],
   "nextActions": [
-    "Resume live manual battle feel proof only after the host noVNC/X11 display recursion blocker is cleared.",
-    "Continue remaining River Pass outcome proof beyond the immediate post-move final-kill outcome action execution branch, including live-client manual verification once display tooling is available.",
+    "Continue battle blocker search from live/manual River Pass evidence beyond the confirmed Ghoul Grove ranged shot path, green movement overlap fixes, occupied enemy hex overlap fix, invalid-spell/invalid-order closing-guidance fixes, town-defense withdrawal surface truth fix, same-round commander spell cooldown truth fix, invalid friendly board-click dispatch feedback fix, opening-briefing dispatch override fix, empty non-green hex blocked Move feedback fix, empty non-green hover/click alignment fix, enemy-turn active-stack tooltip truth fix, enemy-turn empty-hex input-lock wording fix, enemy-turn board-footer input-lock wording fix, enemy-turn hover-footer movement lock fix, enemy-turn fallback-tooltip lock fix, enemy-turn attack-highlight lock fix, enemy-turn target-cycle tooltip lock fix, enemy-turn spell-action lock fix, enemy-turn timing-guidance lock fix, enemy-turn withdrawal pressure lock fix, enemy-turn primary command-surface lock fix, and enemy-turn Risk board retarget-lock fix.",
+    "Continue looking for battle interaction gaps that are supported by code/test or live-client evidence before broadening into new battle UI surfaces.",
+    "Continue remaining River Pass outcome proof beyond the routed resolved-flow pass, including manual verification notes where the live client exposes new friction.",
     "Fill the River Pass parity ledger with live-client evidence, including the routed victory and save/resume artifacts."
   ],
   "blocked": false

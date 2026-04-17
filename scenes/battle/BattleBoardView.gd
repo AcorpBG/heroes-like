@@ -71,28 +71,104 @@ func _gui_input(event: InputEvent) -> void:
 	var mouse_event := event as InputEventMouseButton
 	if mouse_event.button_index != MOUSE_BUTTON_LEFT or not mouse_event.pressed:
 		return
-	var battle_id := _stack_id_at_position(mouse_event.position)
-	if battle_id == "":
-		var destination_cell := _hex_cell_at_position(mouse_event.position)
-		if destination_cell.x < 0 or not _is_legal_destination_cell(destination_cell):
-			return
-		hex_destination_requested.emit(destination_cell.x, destination_cell.y)
+	var dispatch := _dispatch_board_click_at_position(mouse_event.position)
+	if bool(dispatch.get("accepted", false)):
 		accept_event()
-		return
+
+func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
+	var target_cell := _hex_cell_at_position(position)
+	var battle_id := _stack_id_at_position(position)
+	if battle_id != "":
+		if _is_legal_destination_cell(target_cell):
+			hex_destination_requested.emit(target_cell.x, target_cell.y)
+			return {
+				"accepted": true,
+				"dispatch": "destination",
+				"battle_id": "",
+				"shape_battle_id": battle_id,
+				"q": target_cell.x,
+				"r": target_cell.y,
+			}
+		var cell_battle_id := _stack_id_at_cell(target_cell)
+		if cell_battle_id != "" and cell_battle_id != battle_id:
+			stack_focus_requested.emit(cell_battle_id)
+			return {
+				"accepted": true,
+				"dispatch": "stack_hex",
+				"battle_id": cell_battle_id,
+				"shape_battle_id": battle_id,
+				"q": target_cell.x,
+				"r": target_cell.y,
+			}
+	if battle_id == "":
+		battle_id = _stack_id_at_cell(target_cell)
+		if battle_id != "":
+			stack_focus_requested.emit(battle_id)
+			return {
+				"accepted": true,
+				"dispatch": "stack_hex",
+				"battle_id": battle_id,
+				"q": target_cell.x,
+				"r": target_cell.y,
+			}
+		if target_cell.x < 0:
+			return {
+				"accepted": false,
+				"dispatch": "",
+				"battle_id": "",
+				"q": target_cell.x,
+				"r": target_cell.y,
+			}
+		if not _is_legal_destination_cell(target_cell):
+			var movement_intent := BattleRulesScript.movement_intent_for_destination(_battle, target_cell.x, target_cell.y)
+			hex_destination_requested.emit(target_cell.x, target_cell.y)
+			return {
+				"accepted": true,
+				"dispatch": "destination_blocked",
+				"battle_id": "",
+				"q": target_cell.x,
+				"r": target_cell.y,
+				"message": String(movement_intent.get("message", "")),
+			}
+		hex_destination_requested.emit(target_cell.x, target_cell.y)
+		return {
+			"accepted": true,
+			"dispatch": "destination",
+			"battle_id": "",
+			"q": target_cell.x,
+			"r": target_cell.y,
+		}
 	stack_focus_requested.emit(battle_id)
-	accept_event()
+	var stack_cell := _stack_cell_for_battle_id(battle_id)
+	return {
+		"accepted": true,
+		"dispatch": "stack_token",
+		"battle_id": battle_id,
+		"q": stack_cell.x,
+		"r": stack_cell.y,
+	}
 
 func _get_tooltip(at_position: Vector2) -> String:
+	var destination_cell := _hex_cell_at_position(at_position)
 	var battle_id := _stack_id_at_position(at_position)
 	if battle_id != "":
+		if _is_legal_destination_cell(destination_cell):
+			return _movement_board_tooltip(destination_cell)
+		var cell_battle_id := _stack_id_at_cell(destination_cell)
+		if cell_battle_id != "" and cell_battle_id != battle_id:
+			return _stack_board_tooltip(cell_battle_id)
 		return _stack_board_tooltip(battle_id)
-	var destination_cell := _hex_cell_at_position(at_position)
+	battle_id = _stack_id_at_cell(destination_cell)
+	if battle_id != "":
+		return _stack_board_tooltip(battle_id)
 	if _is_legal_destination_cell(destination_cell):
+		return _movement_board_tooltip(destination_cell)
+	if _cell_in_bounds(destination_cell):
 		var movement_intent := BattleRulesScript.movement_intent_for_destination(_battle, destination_cell.x, destination_cell.y)
 		var message := String(movement_intent.get("message", ""))
-		if message != "":
+		if bool(movement_intent.get("blocked", false)) and message != "":
 			return message
-	return tooltip_text
+	return _fallback_board_tooltip()
 
 func set_battle_state(session) -> void:
 	_session = session
@@ -122,6 +198,7 @@ func set_battle_state(session) -> void:
 func validation_hex_layout_summary() -> Dictionary:
 	var stack_cells := _stack_cells()
 	var hex_state := BattleRulesScript.battle_hex_state_summary(_battle) if not _battle.is_empty() else {}
+	var player_input_active := String(_active_stack.get("side", "")) == "player"
 	var legal_destinations: Array = hex_state.get("legal_destinations", []) if hex_state.get("legal_destinations", []) is Array else []
 	var legal_melee_targets: Array = hex_state.get("legal_melee_targets", []) if hex_state.get("legal_melee_targets", []) is Array else []
 	var legal_ranged_targets: Array = hex_state.get("legal_ranged_targets", []) if hex_state.get("legal_ranged_targets", []) is Array else []
@@ -132,6 +209,25 @@ func validation_hex_layout_summary() -> Dictionary:
 	var selected_closing_context: Dictionary = hex_state.get("selected_target_closing_context", {}) if hex_state.get("selected_target_closing_context", {}) is Dictionary else {}
 	var movement_click_intent: Dictionary = hex_state.get("active_movement_board_click_intent", {}) if hex_state.get("active_movement_board_click_intent", {}) is Dictionary else {}
 	var legal_movement_intents: Array = hex_state.get("legal_movement_intents", []) if hex_state.get("legal_movement_intents", []) is Array else []
+	if not player_input_active:
+		legal_destinations = []
+		legal_melee_targets = []
+		legal_ranged_targets = []
+		legal_movement_intents = []
+		if not selected_legality.is_empty():
+			selected_legality = selected_legality.duplicate(true)
+			selected_legality["melee"] = false
+			selected_legality["ranged"] = false
+			selected_legality["attackable"] = false
+			selected_legality["blocked"] = false
+			selected_legality["input_locked"] = true
+		if not selected_click_intent.is_empty():
+			selected_click_intent = selected_click_intent.duplicate(true)
+			selected_click_intent["action"] = ""
+			selected_click_intent["label"] = ""
+			selected_click_intent["attackable"] = false
+			selected_click_intent["blocked"] = false
+			selected_click_intent["message"] = "Input locked: it is not the player's turn."
 	var hovered_destination_preview := _hover_destination_preview()
 	var selected_target_id := String(_battle.get("selected_target_id", ""))
 	var selected_target_blocked := selected_target_id != "" and bool(selected_legality.get("blocked", false))
@@ -226,6 +322,236 @@ func validation_preview_hex_destination(q: int, r: int) -> Dictionary:
 		_hover_destination_cell = Vector2i(-1, -1)
 	queue_redraw()
 	return BattleRulesScript.movement_intent_for_destination(_battle, q, r)
+
+func validation_perform_hex_cell_mouse_click(q: int, r: int) -> Dictionary:
+	var cell := Vector2i(q, r)
+	if not _cell_in_bounds(cell):
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click cell is outside the battlefield.",
+		}
+	var probe := _validation_click_position_for_cell(cell)
+	if probe.is_empty():
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click could not resolve a point inside the requested cell.",
+		}
+	var position: Vector2 = probe.get("position", Vector2.ZERO)
+	var shape_target_before := _stack_id_at_position(position)
+	var resolved_cell := _hex_cell_at_position(position)
+	var cell_target_before := _stack_id_at_cell(resolved_cell)
+	var tooltip_before := _get_tooltip(position)
+	var dispatch := _dispatch_board_click_at_position(position)
+	dispatch["shape_target_before"] = shape_target_before
+	dispatch["cell_target_before"] = cell_target_before
+	dispatch["tooltip_before"] = tooltip_before
+	dispatch["position_x"] = position.x
+	dispatch["position_y"] = position.y
+	dispatch["found_shape_miss_position"] = bool(probe.get("found_shape_miss_position", false))
+	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	return dispatch
+
+func validation_perform_outer_hex_ring_mouse_click(q: int, r: int) -> Dictionary:
+	var cell := Vector2i(q, r)
+	if not _cell_in_bounds(cell):
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click cell is outside the battlefield.",
+		}
+	var probe := _validation_outer_ring_click_position_for_cell(cell)
+	if probe.is_empty():
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click could not find a token-miss point in the visible outer hex ring.",
+		}
+	var position: Vector2 = probe.get("position", Vector2.ZERO)
+	var shape_target_before := _stack_id_at_position(position)
+	var resolved_cell := _hex_cell_at_position(position)
+	var cell_target_before := _stack_id_at_cell(resolved_cell)
+	var dispatch := _dispatch_board_click_at_position(position)
+	dispatch["shape_target_before"] = shape_target_before
+	dispatch["cell_target_before"] = cell_target_before
+	dispatch["resolved_q"] = resolved_cell.x
+	dispatch["resolved_r"] = resolved_cell.y
+	dispatch["position_x"] = position.x
+	dispatch["position_y"] = position.y
+	dispatch["found_outer_ring_position"] = bool(probe.get("found_outer_ring_position", false))
+	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
+	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	return dispatch
+
+func validation_perform_overlapped_hex_destination_mouse_click(q: int, r: int) -> Dictionary:
+	var cell := Vector2i(q, r)
+	if not _cell_in_bounds(cell):
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click cell is outside the battlefield.",
+		}
+	var probe := _validation_overlapped_destination_click_position_for_cell(cell)
+	if probe.is_empty():
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click could not find a friendly-shape overlap inside the requested movement cell.",
+		}
+	var position: Vector2 = probe.get("position", Vector2.ZERO)
+	var shape_target_before := _stack_id_at_position(position)
+	var resolved_cell := _hex_cell_at_position(position)
+	var legal_destination_before := _is_legal_destination_cell(resolved_cell)
+	var movement_intent_before := BattleRulesScript.movement_intent_for_destination(_battle, resolved_cell.x, resolved_cell.y)
+	var tooltip_before := _get_tooltip(position)
+	var dispatch := _dispatch_board_click_at_position(position)
+	dispatch["shape_target_before"] = shape_target_before
+	dispatch["shape_target_side_before"] = String(_stack_by_id(shape_target_before).get("side", ""))
+	dispatch["resolved_q"] = resolved_cell.x
+	dispatch["resolved_r"] = resolved_cell.y
+	dispatch["legal_destination_before"] = legal_destination_before
+	dispatch["movement_tooltip_before"] = String(movement_intent_before.get("message", ""))
+	dispatch["tooltip_before"] = tooltip_before
+	dispatch["position_x"] = position.x
+	dispatch["position_y"] = position.y
+	dispatch["found_friendly_shape_overlap"] = bool(probe.get("found_shape_overlap", probe.get("found_friendly_shape_overlap", false)))
+	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
+	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	return dispatch
+
+func validation_perform_enemy_overlapped_hex_destination_mouse_click(q: int, r: int) -> Dictionary:
+	var cell := Vector2i(q, r)
+	if not _cell_in_bounds(cell):
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click cell is outside the battlefield.",
+		}
+	var probe := _validation_overlapped_destination_click_position_for_cell(cell, "enemy")
+	if probe.is_empty():
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click could not find an enemy-shape overlap inside the requested movement cell.",
+		}
+	var position: Vector2 = probe.get("position", Vector2.ZERO)
+	var shape_target_before := _stack_id_at_position(position)
+	var resolved_cell := _hex_cell_at_position(position)
+	var legal_destination_before := _is_legal_destination_cell(resolved_cell)
+	var movement_intent_before := BattleRulesScript.movement_intent_for_destination(_battle, resolved_cell.x, resolved_cell.y)
+	var tooltip_before := _get_tooltip(position)
+	var dispatch := _dispatch_board_click_at_position(position)
+	dispatch["shape_target_before"] = shape_target_before
+	dispatch["shape_target_side_before"] = String(_stack_by_id(shape_target_before).get("side", ""))
+	dispatch["resolved_q"] = resolved_cell.x
+	dispatch["resolved_r"] = resolved_cell.y
+	dispatch["legal_destination_before"] = legal_destination_before
+	dispatch["movement_tooltip_before"] = String(movement_intent_before.get("message", ""))
+	dispatch["tooltip_before"] = tooltip_before
+	dispatch["position_x"] = position.x
+	dispatch["position_y"] = position.y
+	dispatch["found_enemy_shape_overlap"] = bool(probe.get("found_shape_overlap", false))
+	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
+	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	return dispatch
+
+func validation_perform_enemy_overlapped_occupied_hex_mouse_click(q: int, r: int) -> Dictionary:
+	var cell := Vector2i(q, r)
+	if not _cell_in_bounds(cell):
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click cell is outside the battlefield.",
+		}
+	var cell_target_before := _stack_id_at_cell(cell)
+	if cell_target_before == "":
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click cell is not occupied by a stack.",
+		}
+	var probe := _validation_overlapped_occupied_hex_click_position_for_cell(cell, "enemy")
+	if probe.is_empty():
+		return {
+			"accepted": false,
+			"dispatch": "",
+			"battle_id": "",
+			"q": q,
+			"r": r,
+			"message": "Validation click could not find an enemy-shape overlap inside the occupied hex.",
+		}
+	var position: Vector2 = probe.get("position", Vector2.ZERO)
+	var shape_target_before := _stack_id_at_position(position)
+	var resolved_cell := _hex_cell_at_position(position)
+	cell_target_before = _stack_id_at_cell(resolved_cell)
+	var cell_target_intent_before := BattleRulesScript.board_click_attack_intent_for_target(_battle, cell_target_before)
+	var tooltip_before := _get_tooltip(position)
+	var dispatch := _dispatch_board_click_at_position(position)
+	dispatch["shape_target_before"] = shape_target_before
+	dispatch["shape_target_side_before"] = String(_stack_by_id(shape_target_before).get("side", ""))
+	dispatch["cell_target_before"] = cell_target_before
+	dispatch["cell_target_side_before"] = String(_stack_by_id(cell_target_before).get("side", ""))
+	dispatch["cell_target_click_action_before"] = String(cell_target_intent_before.get("action", ""))
+	dispatch["cell_target_tooltip_before"] = String(cell_target_intent_before.get("message", ""))
+	dispatch["tooltip_before"] = tooltip_before
+	dispatch["resolved_q"] = resolved_cell.x
+	dispatch["resolved_r"] = resolved_cell.y
+	dispatch["position_x"] = position.x
+	dispatch["position_y"] = position.y
+	dispatch["found_enemy_shape_overlap"] = bool(probe.get("found_shape_overlap", false))
+	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
+	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	return dispatch
+
+func validation_board_fallback_tooltip() -> Dictionary:
+	var position := _validation_fallback_tooltip_position()
+	if position.x < 0.0:
+		return {
+			"ok": false,
+			"message": "Validation could not find an empty board fallback tooltip position.",
+		}
+	var resolved_cell := _hex_cell_at_position(position)
+	var shape_target := _stack_id_at_position(position)
+	return {
+		"ok": true,
+		"tooltip": _get_tooltip(position),
+		"position_x": position.x,
+		"position_y": position.y,
+		"resolved_q": resolved_cell.x,
+		"resolved_r": resolved_cell.y,
+		"shape_target": shape_target,
+	}
 
 func _draw() -> void:
 	_stack_hit_shapes = []
@@ -342,8 +668,9 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 	var radius := float(hex_layout.get("radius", 1.0))
 	var active_cell: Vector2i = stack_cells.get(active_id)
 	var active_center := _hex_center(active_cell, hex_layout)
+	var player_input_active := String(_active_stack.get("side", "")) == "player"
 
-	if String(_active_stack.get("side", "")) == "player":
+	if player_input_active:
 		for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):
 			if not (destination is Dictionary):
 				continue
@@ -354,20 +681,21 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 
 	_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)
 
-	var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)
-	var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)
-	for battle_id_value in legal_ranged_targets:
-		var ranged_id := String(battle_id_value)
-		if not stack_cells.has(ranged_id):
-			continue
-		_draw_hex_outline(_hex_center(stack_cells.get(ranged_id), hex_layout), radius * 0.90, LEGAL_RANGED_COLOR, 2.0)
-	for battle_id_value in legal_melee_targets:
-		var melee_id := String(battle_id_value)
-		if not stack_cells.has(melee_id):
-			continue
-		_draw_hex_outline(_hex_center(stack_cells.get(melee_id), hex_layout), radius * 0.96, LEGAL_MELEE_COLOR, 2.4)
+	if player_input_active:
+		var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)
+		var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)
+		for battle_id_value in legal_ranged_targets:
+			var ranged_id := String(battle_id_value)
+			if not stack_cells.has(ranged_id):
+				continue
+			_draw_hex_outline(_hex_center(stack_cells.get(ranged_id), hex_layout), radius * 0.90, LEGAL_RANGED_COLOR, 2.0)
+		for battle_id_value in legal_melee_targets:
+			var melee_id := String(battle_id_value)
+			if not stack_cells.has(melee_id):
+				continue
+			_draw_hex_outline(_hex_center(stack_cells.get(melee_id), hex_layout), radius * 0.96, LEGAL_MELEE_COLOR, 2.4)
 
-	if not _target_stack.is_empty():
+	if player_input_active and not _target_stack.is_empty():
 		var target_id := String(_target_stack.get("battle_id", ""))
 		if stack_cells.has(target_id):
 			var target_cell: Vector2i = stack_cells.get(target_id)
@@ -731,12 +1059,24 @@ func _cell_in_bounds(cell: Vector2i) -> bool:
 func _hex_cell_at_position(position: Vector2) -> Vector2i:
 	if _battle.is_empty():
 		return Vector2i(-1, -1)
-	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
-	var field_rect := board_rect.grow(-12.0)
-	var hex_layout := _hex_layout(_hex_field_rect(field_rect))
+	var hex_layout := _current_hex_layout()
 	var radius := float(hex_layout.get("radius", 1.0))
 	var best_cell := Vector2i(-1, -1)
-	var best_distance := radius * 0.92
+	var best_distance := 999999.0
+	for row in range(HEX_ROWS):
+		for column in range(HEX_COLUMNS):
+			var cell := Vector2i(column, row)
+			var center := _hex_center(cell, hex_layout)
+			if not Geometry2D.is_point_in_polygon(position, _hex_points(center, radius)):
+				continue
+			var distance := position.distance_to(center)
+			if distance < best_distance:
+				best_distance = distance
+				best_cell = cell
+	if best_cell.x >= 0:
+		return best_cell
+
+	best_distance = radius * 0.92
 	for row in range(HEX_ROWS):
 		for column in range(HEX_COLUMNS):
 			var cell := Vector2i(column, row)
@@ -745,6 +1085,11 @@ func _hex_cell_at_position(position: Vector2) -> Vector2i:
 				best_distance = distance
 				best_cell = cell
 	return best_cell
+
+func _current_hex_layout() -> Dictionary:
+	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
+	var field_rect := board_rect.grow(-12.0)
+	return _hex_layout(_hex_field_rect(field_rect))
 
 func _is_legal_destination_cell(cell: Vector2i) -> bool:
 	if not _cell_in_bounds(cell):
@@ -766,6 +1111,9 @@ func _selected_target_is_blocked() -> bool:
 func _target_state_label() -> String:
 	if _target_stack.is_empty():
 		return ""
+	var active_side := String(_active_stack.get("side", ""))
+	if active_side != "" and active_side != "player":
+		return "Input locked"
 	var continuity_context := BattleRulesScript.selected_target_continuity_context(_battle)
 	if not continuity_context.is_empty():
 		return String(continuity_context.get("footer_label", "Setup target"))
@@ -788,6 +1136,8 @@ func _target_state_label() -> String:
 	return ""
 
 func _movement_state_label() -> String:
+	if String(_active_stack.get("side", "")) != "player":
+		return ""
 	var hovered_preview := _hover_destination_preview()
 	if not hovered_preview.is_empty():
 		var detail := String(hovered_preview.get("destination_detail", ""))
@@ -817,6 +1167,14 @@ func _stack_board_tooltip(battle_id: String) -> String:
 	if stack.is_empty():
 		return tooltip_text
 	var side := String(stack.get("side", ""))
+	var active_side := String(_active_stack.get("side", ""))
+	if active_side != "" and active_side != "player":
+		if battle_id == String(_battle.get("active_stack_id", "")):
+			return "Active: %s. It is not the player's turn." % String(stack.get("name", "Stack"))
+		return "%s is %s stack. It is not the player's turn." % [
+			String(stack.get("name", "Stack")),
+			"a friendly" if side == "player" else "an enemy",
+		]
 	if String(_active_stack.get("side", "")) == "player" and side == "enemy":
 		var continuity_context := BattleRulesScript.selected_target_continuity_context(_battle)
 		if not continuity_context.is_empty() and String(continuity_context.get("battle_id", "")) == battle_id:
@@ -833,6 +1191,16 @@ func _stack_board_tooltip(battle_id: String) -> String:
 	if side == "player":
 		return "%s is a friendly stack." % String(stack.get("name", "Stack"))
 	return "%s is an enemy stack." % String(stack.get("name", "Stack"))
+
+func _movement_board_tooltip(cell: Vector2i) -> String:
+	var movement_intent := BattleRulesScript.movement_intent_for_destination(_battle, cell.x, cell.y)
+	var message := String(movement_intent.get("message", ""))
+	return message if message != "" else tooltip_text
+
+func _fallback_board_tooltip() -> String:
+	if String(_active_stack.get("side", "")) != "" and String(_active_stack.get("side", "")) != "player":
+		return "Input locked: it is not the player's turn."
+	return tooltip_text
 
 func _unique_target_count(primary: Array, secondary: Array) -> int:
 	var seen := {}
@@ -853,6 +1221,188 @@ func _stack_id_at_position(position: Vector2) -> String:
 		if position.distance_to(center) <= radius:
 			return String(shape.get("battle_id", ""))
 	return ""
+
+func _stack_id_at_cell(cell: Vector2i) -> String:
+	if not _cell_in_bounds(cell):
+		return ""
+	var stack_cells := _stack_cells()
+	for stack in _all_visible_stacks():
+		if not (stack is Dictionary):
+			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		if battle_id == "":
+			continue
+		var stack_cell: Vector2i = stack_cells.get(battle_id, Vector2i(-1, -1))
+		if stack_cell == cell:
+			return battle_id
+	return ""
+
+func _stack_cell_for_battle_id(battle_id: String) -> Vector2i:
+	if battle_id == "":
+		return Vector2i(-1, -1)
+	var stack_cells := _stack_cells()
+	return stack_cells.get(battle_id, Vector2i(-1, -1))
+
+func _validation_click_position_for_cell(cell: Vector2i) -> Dictionary:
+	var layout := _current_hex_layout()
+	var center := _hex_center(cell, layout)
+	var radius := float(layout.get("radius", 1.0))
+	var fallback_position := center
+	var angles := [0.0, 60.0, 120.0, 180.0, 240.0, 300.0, 30.0, 90.0, 150.0, 210.0, 270.0, 330.0]
+	for factor in [0.91, 0.86, 0.80, 0.72, 0.64, 0.56, 0.48]:
+		for angle_degrees in angles:
+			var angle := deg_to_rad(float(angle_degrees))
+			var position := center + Vector2(cos(angle), sin(angle)) * radius * float(factor)
+			if _hex_cell_at_position(position) != cell:
+				continue
+			fallback_position = position
+			if _stack_id_at_position(position) == "":
+				return {
+					"position": position,
+					"found_shape_miss_position": true,
+					"hex_radius": radius,
+				}
+	return {
+		"position": fallback_position,
+		"found_shape_miss_position": false,
+		"hex_radius": radius,
+	}
+
+func _validation_outer_ring_click_position_for_cell(cell: Vector2i) -> Dictionary:
+	var layout := _current_hex_layout()
+	var center := _hex_center(cell, layout)
+	var radius := float(layout.get("radius", 1.0))
+	var angles := [30.0, 90.0, 150.0, 210.0, 270.0, 330.0, 0.0, 60.0, 120.0, 180.0, 240.0, 300.0]
+	for factor in [0.99, 0.97, 0.95, 0.93]:
+		for angle_degrees in angles:
+			var angle := deg_to_rad(float(angle_degrees))
+			var position := center + Vector2(cos(angle), sin(angle)) * radius * float(factor)
+			if position.distance_to(center) <= radius * 0.92:
+				continue
+			if _hex_cell_at_position(position) != cell:
+				continue
+			if _stack_id_at_position(position) != "":
+				continue
+			return {
+				"position": position,
+				"found_outer_ring_position": true,
+				"radius_factor": float(factor),
+				"hex_radius": radius,
+			}
+	return {}
+
+func _validation_overlapped_destination_click_position_for_cell(cell: Vector2i, overlap_side: String = "player") -> Dictionary:
+	if not _is_legal_destination_cell(cell):
+		return {}
+	var layout := _current_hex_layout()
+	var center := _hex_center(cell, layout)
+	var radius := float(layout.get("radius", 1.0))
+	var stack_cells := _stack_cells()
+	var candidate_ids := []
+	var active_id := String(_battle.get("active_stack_id", ""))
+	if active_id != "" and overlap_side == "player":
+		candidate_ids.append(active_id)
+	for stack in _all_visible_stacks():
+		if not (stack is Dictionary):
+			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		if battle_id == "" or battle_id in candidate_ids:
+			continue
+		if overlap_side != "" and String(stack.get("side", "")) != overlap_side:
+			continue
+		candidate_ids.append(battle_id)
+	for battle_id in candidate_ids:
+		var stack_cell: Vector2i = stack_cells.get(String(battle_id), Vector2i(-1, -1))
+		if not _cell_in_bounds(stack_cell) or stack_cell == cell:
+			continue
+		var stack_center := _hex_center(stack_cell, layout)
+		var toward_stack := stack_center - center
+		if toward_stack.length() <= 0.01:
+			continue
+		var direction := toward_stack.normalized()
+		for factor in [0.86, 0.84, 0.82, 0.78, 0.74, 0.70, 0.66, 0.62, 0.58, 0.54, 0.50]:
+			var position := center + direction * radius * float(factor)
+			if _hex_cell_at_position(position) != cell:
+				continue
+			var overlap_id := _stack_id_at_position(position)
+			if overlap_id == "":
+				continue
+			if overlap_side != "" and String(_stack_by_id(overlap_id).get("side", "")) != overlap_side:
+				continue
+			var overlap_result := {
+				"position": position,
+				"found_shape_overlap": true,
+				"radius_factor": float(factor),
+				"hex_radius": radius,
+			}
+			overlap_result["found_%s_shape_overlap" % overlap_side] = true
+			return overlap_result
+	return {}
+
+func _validation_overlapped_occupied_hex_click_position_for_cell(cell: Vector2i, overlap_side: String = "enemy") -> Dictionary:
+	var cell_battle_id := _stack_id_at_cell(cell)
+	if cell_battle_id == "":
+		return {}
+	var layout := _current_hex_layout()
+	var center := _hex_center(cell, layout)
+	var radius := float(layout.get("radius", 1.0))
+	var stack_cells := _stack_cells()
+	var candidate_ids := []
+	for stack in _all_visible_stacks():
+		if not (stack is Dictionary):
+			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		if battle_id == "" or battle_id == cell_battle_id:
+			continue
+		if overlap_side != "" and String(stack.get("side", "")) != overlap_side:
+			continue
+		candidate_ids.append(battle_id)
+	for battle_id in candidate_ids:
+		var stack_cell: Vector2i = stack_cells.get(String(battle_id), Vector2i(-1, -1))
+		if not _cell_in_bounds(stack_cell) or stack_cell == cell:
+			continue
+		var stack_center := _hex_center(stack_cell, layout)
+		var toward_stack := stack_center - center
+		if toward_stack.length() <= 0.01:
+			continue
+		var direction := toward_stack.normalized()
+		for factor in [0.86, 0.84, 0.82, 0.78, 0.74, 0.70, 0.66, 0.62, 0.58, 0.54, 0.50]:
+			var position := center + direction * radius * float(factor)
+			if _hex_cell_at_position(position) != cell:
+				continue
+			var overlap_id := _stack_id_at_position(position)
+			if overlap_id == "" or overlap_id == cell_battle_id:
+				continue
+			if overlap_side != "" and String(_stack_by_id(overlap_id).get("side", "")) != overlap_side:
+				continue
+			var overlap_result := {
+				"position": position,
+				"found_shape_overlap": true,
+				"radius_factor": float(factor),
+				"hex_radius": radius,
+			}
+			overlap_result["found_%s_shape_overlap" % overlap_side] = true
+			return overlap_result
+	return {}
+
+func _validation_fallback_tooltip_position() -> Vector2:
+	var candidates := [
+		Vector2(4.0, 4.0),
+		Vector2(maxf(4.0, size.x - 4.0), 4.0),
+		Vector2(4.0, maxf(4.0, size.y - 4.0)),
+		Vector2(maxf(4.0, size.x - 4.0), maxf(4.0, size.y - 4.0)),
+		Vector2(size.x * 0.5, 20.0),
+		Vector2(size.x * 0.5, maxf(20.0, size.y - 20.0)),
+	]
+	for position in candidates:
+		if position.x < 0.0 or position.y < 0.0 or position.x > size.x or position.y > size.y:
+			continue
+		if _hex_cell_at_position(position).x >= 0:
+			continue
+		if _stack_id_at_position(position) != "":
+			continue
+		return position
+	return Vector2(-1.0, -1.0)
 
 func _all_visible_stacks() -> Array:
 	var stacks := []

@@ -113,25 +113,23 @@ func _on_next_target_pressed() -> void:
 
 func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	if _session == null or _session.battle.is_empty() or battle_id == "":
-		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "No battle target was clicked.", "state": "invalid"}
+		return _reject_board_stack_click(battle_id, "No battle target was clicked.")
 	var active_stack := BattleRules.get_active_stack(_session.battle)
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
-		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "It is not the player's turn.", "state": "invalid"}
+		return _reject_board_stack_click(battle_id, "It is not the player's turn.")
 	var clicked_stack := _stack_by_battle_id(battle_id)
 	if clicked_stack.is_empty() or String(clicked_stack.get("side", "")) != "enemy":
-		return {"ok": false, "action": "", "target_battle_id": battle_id, "message": "Only enemy stacks can be targeted from the battle board.", "state": "invalid"}
+		return _reject_board_stack_click(battle_id, "Only enemy stacks can be targeted from the battle board.")
 
 	var selected_before := String(BattleRules.get_selected_target(_session.battle).get("battle_id", "")) == battle_id
 	var selection_result := BattleRules.select_target(_session, battle_id)
 	if not bool(selection_result.get("ok", false)):
-		return {
-			"ok": false,
-			"action": "",
-			"target_battle_id": battle_id,
-			"selected_before": selected_before,
-			"state": String(selection_result.get("state", "invalid")),
-			"message": String(selection_result.get("message", "Could not select that target.")),
-		}
+		return _reject_board_stack_click(
+			battle_id,
+			String(selection_result.get("message", "Could not select that target.")),
+			String(selection_result.get("state", "invalid")),
+			{"selected_before": selected_before}
+		)
 	var board_intent := BattleRules.board_click_attack_intent_for_target(_session.battle, battle_id)
 	var board_action := String(board_intent.get("action", ""))
 	if board_action != "":
@@ -242,6 +240,26 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 		"message": _last_message,
 	}
 
+func _reject_board_stack_click(
+	battle_id: String,
+	message: String,
+	state: String = "invalid",
+	extra_fields: Dictionary = {}
+) -> Dictionary:
+	_last_message = message
+	if _session != null and not _session.battle.is_empty():
+		_refresh()
+	var response := {
+		"ok": false,
+		"action": "",
+		"target_battle_id": battle_id,
+		"state": state,
+		"message": _last_message,
+	}
+	for key in extra_fields.keys():
+		response[key] = extra_fields[key]
+	return response
+
 func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
 	var result := BattleRules.move_active_stack_to_hex(_session, q, r)
@@ -338,7 +356,9 @@ func _refresh() -> void:
 	_header_label.text = BattleRules.describe_header(_session)
 	FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)
 	FrontierVisualKit.set_compact_label(_pressure_label, BattleRules.describe_pressure(_session), 1, 44, false)
-	var dispatch_text := _tactical_briefing_text if _tactical_briefing_text != "" else BattleRules.describe_dispatch(_session, _last_message)
+	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
+	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
+		dispatch_text = _tactical_briefing_text
 	_set_compact_label(_event_label, dispatch_text, 1)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
@@ -392,8 +412,12 @@ func _refresh_action_buttons() -> void:
 
 	_prev_target_button.disabled = not player_turn or cycle_target_count <= 1
 	_next_target_button.disabled = not player_turn or cycle_target_count <= 1
-	_prev_target_button.tooltip_text = "Cycle focus to the previous legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the previous enemy stack."
-	_next_target_button.tooltip_text = "Cycle focus to the next legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the next enemy stack."
+	if not player_turn:
+		_prev_target_button.tooltip_text = "Input locked: it is not the player's turn."
+		_next_target_button.tooltip_text = "Input locked: it is not the player's turn."
+	else:
+		_prev_target_button.tooltip_text = "Cycle focus to the previous legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the previous enemy stack."
+		_next_target_button.tooltip_text = "Cycle focus to the next legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the next enemy stack."
 
 	_apply_action_surface(_advance_button, surface.get("advance", {}))
 	_apply_action_surface(_strike_button, surface.get("strike", {}))
