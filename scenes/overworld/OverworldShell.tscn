@@ -36,10 +36,10 @@ size_flags_vertical = 3
 
 [node name="ShellPad" type="MarginContainer" parent="ShellMargin/Shell"]
 layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
 
 [node name="Content" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad"]
 layout_mode = 2
@@ -47,217 +47,45 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="TopStrip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TopPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="TopBar" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="BannerGlyph" type="Control" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar"]
-custom_minimum_size = Vector2(48, 42)
-layout_mode = 2
-script = ExtResource("3")
-glyph_id = "overworld"
-
-[node name="TitleBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="Header" type="Label" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/TitleBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Adventure Map"
-
-[node name="StatusChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="StatusPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/StatusChip"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 7
-
-[node name="Status" type="Label" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/StatusChip/StatusPad"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Week 1 Day 1"
-
-[node name="ResourceChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ResourcePad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/ResourceChip"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 7
-
-[node name="Resources" type="Label" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/ResourceChip/ResourcePad"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Gold 0 | Wood 0 | Ore 0"
-
-[node name="CueChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="CuePad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/CueChip"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 7
-
-[node name="MapCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/CueChip/CuePad"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Click route | WASD march"
-
 [node name="BodyRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="MapColumn" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="MapPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn"]
+[node name="MapPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MapPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="MapBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 8
-
-[node name="SummaryStrip" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="EventPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/EventPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 7
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 7
-theme_override_constants/margin_bottom = 6
-
-[node name="EventBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/EventPanel/EventPad"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="EventTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/EventPanel/EventPad/EventBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Log"
-
-[node name="Event" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/EventPanel/EventPad/EventBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Field reports will surface here."
-
-[node name="CommitmentPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CommitmentPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/CommitmentPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 7
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 7
-theme_override_constants/margin_bottom = 6
-
-[node name="CommitmentBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/CommitmentPanel/CommitmentPad"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="CommitmentTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/CommitmentPanel/CommitmentPad/CommitmentBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Order"
-
-[node name="Commitment" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/CommitmentPanel/CommitmentPad/CommitmentBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Immediate order and hold risk."
-
-[node name="BriefingPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="BriefingPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/BriefingPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 7
-theme_override_constants/margin_top = 6
-theme_override_constants/margin_right = 7
-theme_override_constants/margin_bottom = 6
-
-[node name="BriefingBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/BriefingPanel/BriefingPad"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="BriefingTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/BriefingPanel/BriefingPad/BriefingBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Notice"
-
-[node name="Briefing" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/SummaryStrip/BriefingPanel/BriefingPad/BriefingBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-text = "Opening priorities will surface here."
-
-[node name="MapFrame" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="MapInset" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/MapFrame"]
+[node name="MapPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Map" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/MapFrame/MapInset"]
+[node name="MapBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="MapFrame" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MapInset" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFrame"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="Map" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFrame/MapInset"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(640, 400)
 layout_mode = 2
@@ -265,217 +93,85 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("2")
 
-[node name="MapFooter" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox"]
+[node name="MapFooter" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
-[node name="MapHint" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/MapPanel/MapPad/MapBox/MapFooter"]
+[node name="MapHint" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapPanel/MapPad/MapBox/MapFooter"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 autowrap_mode = 3
 text = "Click adjacent tiles to march. Click distant tiles to route."
 
-[node name="CommandBand" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 112)
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="CommandRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="MarchPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(172, 0)
-layout_mode = 2
-
-[node name="MarchPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="MarchBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="MarchTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox"]
-layout_mode = 2
-text = "March"
-
-[node name="MarchGrid" type="GridContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox"]
-layout_mode = 2
-columns = 3
-
-[node name="BlankNW" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-layout_mode = 2
-
-[node name="MoveNorth" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "N"
-
-[node name="BlankNE" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-layout_mode = 2
-
-[node name="MoveWest" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "W"
-
-[node name="MoveState" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(74, 44)
-layout_mode = 2
-autowrap_mode = 3
-horizontal_alignment = 1
-vertical_alignment = 1
-text = "Mv 0/0\nPos 0,0"
-
-[node name="MoveEast" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "E"
-
-[node name="BlankSW" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-layout_mode = 2
-
-[node name="MoveSouth" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "S"
-
-[node name="BlankSE" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
-layout_mode = 2
-
-[node name="OrdersPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="OrdersPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="OrdersBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 8
-
-[node name="OrdersTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Orders"
-
-[node name="PrimaryAction" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Select Site"
-
-[node name="ContextActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-
-[node name="SystemPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 0)
-layout_mode = 2
-
-[node name="SystemPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 8
-
-[node name="SystemBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="SaveStatus" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "M1 none"
-
-[node name="TurnRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="EndTurn" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/TurnRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "End Turn"
-
-[node name="SaveSlot" type="OptionButton" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/TurnRow"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="SaveRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="Save" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Save"
-
-[node name="Menu" type="Button" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Menu"
-
 [node name="SidebarShell" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(316, 0)
+custom_minimum_size = Vector2(304, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="SidebarPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="SidebarBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
+
+[node name="TopStrip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="TopBar" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BannerGlyph" type="Control" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar"]
+custom_minimum_size = Vector2(42, 38)
+layout_mode = 2
+script = ExtResource("3")
+glyph_id = "overworld"
+
+[node name="TitleBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Header" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar/TitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Adventure Map"
 
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 156)
+custom_minimum_size = Vector2(0, 124)
 layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="HeroPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="HeroBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 
 [node name="HeroTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
@@ -504,7 +200,91 @@ text = "Heroes"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+theme_override_constants/v_separation = 4
+
+[node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EventPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="EventBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="EventTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad/EventBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Log"
+
+[node name="Event" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad/EventBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Field reports will surface here."
+
+[node name="CommitmentPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommitmentPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommitmentPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="CommitmentBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommitmentPanel/CommitmentPad"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="CommitmentTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommitmentPanel/CommitmentPad/CommitmentBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Order"
+
+[node name="Commitment" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommitmentPanel/CommitmentPad/CommitmentBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Immediate order and hold risk."
+
+[node name="BriefingPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BriefingPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/BriefingPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="BriefingBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/BriefingPanel/BriefingPad"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BriefingTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/BriefingPanel/BriefingPad/BriefingBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Notice"
+
+[node name="Briefing" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/BriefingPanel/BriefingPad/BriefingBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Opening priorities will surface here."
 
 [node name="SidebarTabs" type="TabContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
@@ -520,10 +300,10 @@ size_flags_vertical = 3
 
 [node name="ContextPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="ContextBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel/ContextPad"]
 layout_mode = 2
@@ -543,6 +323,13 @@ size_flags_vertical = 3
 autowrap_mode = 3
 text = "Tile details"
 
+[node name="ContextActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+
 [node name="CommandPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -551,10 +338,10 @@ size_flags_vertical = 3
 
 [node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="CommandBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad"]
 layout_mode = 2
@@ -610,10 +397,10 @@ size_flags_vertical = 3
 
 [node name="FrontierPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
 [node name="FrontierBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad"]
 layout_mode = 2
@@ -648,12 +435,202 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Forecast"
 
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveNorth" to="." method="_move_north"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveSouth" to="." method="_move_south"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveWest" to="." method="_move_west"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveEast" to="." method="_move_east"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox/PrimaryAction" to="." method="_on_primary_action_pressed"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/TurnRow/EndTurn" to="." method="_on_end_turn_pressed"]
-[connection signal="item_selected" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/TurnRow/SaveSlot" to="." method="_on_save_slot_selected"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveRow/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/BodyRow/MapColumn/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveRow/Menu" to="." method="_on_menu_pressed"]
+[node name="CommandBand" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 74)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand"]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 5
+
+[node name="CommandRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="ResourceChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+
+[node name="ResourcePad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="Resources" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Gold 0 | Wood 0 | Ore 0"
+
+[node name="StatusChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(118, 0)
+layout_mode = 2
+
+[node name="StatusPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/StatusChip"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="Status" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/StatusChip/StatusPad"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Week 1 Day 1"
+
+[node name="CueChip" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 0)
+layout_mode = 2
+
+[node name="CuePad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 6
+
+[node name="MapCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Click route | WASD march"
+
+[node name="MarchPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(270, 0)
+layout_mode = 2
+
+[node name="MarchPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 7
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 7
+theme_override_constants/margin_bottom = 5
+
+[node name="MarchBox" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="MarchTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox"]
+layout_mode = 2
+text = "March"
+
+[node name="MarchGrid" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="MoveWest" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "W"
+
+[node name="MoveNorth" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "N"
+
+[node name="MoveState" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(74, 34)
+layout_mode = 2
+autowrap_mode = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "Mv 0/0\nPos 0,0"
+
+[node name="MoveSouth" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "S"
+
+[node name="MoveEast" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "E"
+
+[node name="OrdersPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OrdersPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 5
+
+[node name="OrdersBox" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="OrdersTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Orders"
+
+[node name="PrimaryAction" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Select Site"
+
+[node name="SystemPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(308, 0)
+layout_mode = 2
+
+[node name="SystemPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 5
+
+[node name="SystemBox" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="SaveStatus" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(62, 0)
+layout_mode = 2
+text = "M1 none"
+
+[node name="EndTurn" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "End Turn"
+
+[node name="SaveSlot" type="OptionButton" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Save" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save"
+
+[node name="Menu" type="Button" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Menu"
+
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveNorth" to="." method="_move_north"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveSouth" to="." method="_move_south"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveWest" to="." method="_move_west"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/MarchPanel/MarchPad/MarchBox/MarchGrid/MoveEast" to="." method="_move_east"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/OrdersPanel/OrdersPad/OrdersBox/PrimaryAction" to="." method="_on_primary_action_pressed"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/EndTurn" to="." method="_on_end_turn_pressed"]
+[connection signal="item_selected" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/Menu" to="." method="_on_menu_pressed"]

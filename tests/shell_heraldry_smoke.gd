@@ -38,7 +38,7 @@ func _run_overworld_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/overworld/OverworldShell.tscn",
-		"ShellMargin/Shell/ShellPad/Content/TopStrip/TopPad/TopBar/BannerGlyph",
+		"ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar/BannerGlyph",
 		"Overworld heraldry glyph"
 	)
 

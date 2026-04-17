@@ -264,6 +264,12 @@ def scene_has_node(scene_text: str, node_name: str, node_type: str) -> bool:
     return re.search(pattern, scene_text) is not None
 
 
+def scene_node_parent(scene_text: str, node_name: str, node_type: str) -> str:
+    pattern = rf'\[node name="{re.escape(node_name)}" type="{re.escape(node_type)}" parent="([^"]*)"'
+    match = re.search(pattern, scene_text)
+    return match.group(1) if match else ""
+
+
 def script_has_function(script_text: str, function_name: str) -> bool:
     pattern = rf"^\s*(?:static\s+)?func\s+{re.escape(function_name)}\s*\("
     return re.search(pattern, script_text, flags=re.MULTILINE) is not None
@@ -3393,6 +3399,53 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             ("SaveSlot", "OptionButton"),
         ],
     )
+    ensure(
+        'name="MapColumn"' not in overworld_scene_text,
+        errors,
+        "OverworldShell.tscn must not keep the old map-column dashboard wrapper",
+    )
+    ensure(
+        'name="SummaryStrip"' not in overworld_scene_text,
+        errors,
+        "OverworldShell.tscn must not keep contextual report panels embedded above the adventure map",
+    )
+    ensure(
+        scene_node_parent(overworld_scene_text, "MapPanel", "PanelContainer")
+        == "ShellMargin/Shell/ShellPad/Content/BodyRow",
+        errors,
+        "OverworldShell.tscn must make MapPanel the direct dominant BodyRow surface",
+    )
+    ensure(
+        scene_node_parent(overworld_scene_text, "SidebarShell", "PanelContainer")
+        == "ShellMargin/Shell/ShellPad/Content/BodyRow",
+        errors,
+        "OverworldShell.tscn must keep one fixed right-side command spine beside the map",
+    )
+    ensure(
+        scene_node_parent(overworld_scene_text, "CommandBand", "PanelContainer")
+        == "ShellMargin/Shell/ShellPad/Content",
+        errors,
+        "OverworldShell.tscn must keep CommandBand as a footer ribbon below the map stage",
+    )
+    ensure(
+        "custom_minimum_size = Vector2(0, 74)" in overworld_scene_text,
+        errors,
+        "OverworldShell.tscn must keep the overworld command footer slim",
+    )
+    sidebar_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/"
+    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "SidebarTabs"):
+        ensure(
+            scene_node_parent(overworld_scene_text, node_name, "PanelContainer" if node_name != "SidebarTabs" else "TabContainer").startswith(sidebar_prefix),
+            errors,
+            f"OverworldShell.tscn must keep {node_name} inside the right-side command spine",
+        )
+    footer_prefix = "ShellMargin/Shell/ShellPad/Content/CommandBand/"
+    for node_name in ("ResourceChip", "StatusChip", "CueChip", "MarchPanel", "OrdersPanel", "SystemPanel"):
+        ensure(
+            scene_node_parent(overworld_scene_text, node_name, "PanelContainer").startswith(footer_prefix),
+            errors,
+            f"OverworldShell.tscn must keep {node_name} inside the slim footer ribbon",
+        )
 
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
