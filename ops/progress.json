@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T16:19:19Z",
+  "updatedAt": "2026-04-17T16:36:27Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "battle-terrain-texture-backdrop-10184",
-  "currentSliceTitle": "Integrate generated terrain textures into the battle board",
+  "currentSliceId": "battle-terrain-hex-alignment-10184",
+  "currentSliceTitle": "Snap battle terrain texture rendering to the hex grid",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed battle visual slice: copied normalized generated terrain PNGs into art/battle/terrain, rendered terrain texture backdrops in BattleBoardView with plains-to-grass mapping and procedural fallback, and added focused validation for texture loading. Focused town/battle visual smoke, battle layout smoke, and repo validation are green.",
+  "currentSliceNotes": "Completed AcOrP's battle terrain alignment follow-up: BattleBoardView now renders generated terrain PNGs as clipped per-hex texture samples instead of a single full-board backdrop, preserves existing tactical overlays/tokens/objectives, keeps plains-to-grass texture mapping, and falls back to per-hex procedural color/detail if textures are missing. Added focused terrain-rendering validation to town_battle_visual_smoke and battle_layout_smoke. Focused town/battle visual smoke, battle layout smoke, and repo validation are green.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",

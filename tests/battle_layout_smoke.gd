@@ -81,6 +81,19 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		push_error("Battle layout smoke: tactical board is not presenting a real hex field at %s: %s." % [viewport_size, hex_summary])
 		get_tree().quit(1)
 		return false
+	if not bool(hex_summary.get("terrain_hex_snapped", false)) or bool(hex_summary.get("terrain_single_board_backdrop", true)):
+		push_error("Battle layout smoke: terrain rendering is not snapped to the tactical hex grid at %s: %s." % [viewport_size, hex_summary])
+		get_tree().quit(1)
+		return false
+	if not board.has_method("validation_terrain_rendering_summary"):
+		push_error("Battle layout smoke: tactical board does not expose terrain rendering validation at %s." % [viewport_size])
+		get_tree().quit(1)
+		return false
+	var terrain_summary: Dictionary = board.call("validation_terrain_rendering_summary")
+	if String(terrain_summary.get("rendering_mode", "")) != "hex_snapped_texture" or int(terrain_summary.get("hex_tile_count", 0)) != int(hex_summary.get("hex_count", -1)):
+		push_error("Battle layout smoke: terrain rendering validation did not prove per-hex texture layout at %s: terrain=%s hex=%s." % [viewport_size, terrain_summary, hex_summary])
+		get_tree().quit(1)
+		return false
 	var stack_cells: Array = hex_summary.get("stack_cells", [])
 	var expected_stack_count := int(hex_summary.get("player_stack_count", 0)) + int(hex_summary.get("enemy_stack_count", 0))
 	if stack_cells.size() < expected_stack_count:

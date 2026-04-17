@@ -55,6 +55,8 @@ const TERRAIN_TEXTURE_PATHS := {
 }
 const TERRAIN_TEXTURE_MODULATE := Color(0.90, 0.91, 0.86, 0.96)
 const TERRAIN_TEXTURE_READABILITY_WASH := Color(0.02, 0.025, 0.022, 0.16)
+const TERRAIN_HEX_TEXTURE_INSET := 0.985
+const TERRAIN_HEX_FALLBACK_INSET := 0.975
 
 var _session = null
 var _battle: Dictionary = {}
@@ -307,6 +309,10 @@ func validation_hex_layout_summary() -> Dictionary:
 		"terrain_texture_path": _terrain_texture_path_for(terrain_texture_id),
 		"terrain_texture_loaded": terrain_texture != null,
 		"terrain_texture_fallback": terrain_texture == null,
+		"terrain_rendering_mode": _terrain_rendering_mode(terrain_texture != null),
+		"terrain_hex_snapped": true,
+		"terrain_hex_tile_count": _terrain_hex_tile_count(),
+		"terrain_single_board_backdrop": false,
 		"distance": int(_battle.get("distance", 1)),
 		"player_stack_count": _player_stacks.size(),
 		"enemy_stack_count": _enemy_stacks.size(),
@@ -346,13 +352,18 @@ func validation_hex_layout_summary() -> Dictionary:
 	}
 
 func validation_terrain_backdrop_summary() -> Dictionary:
+	return validation_terrain_rendering_summary()
+
+func validation_terrain_rendering_summary() -> Dictionary:
 	var terrain_id := _battle_terrain_id()
 	var texture_id := _terrain_texture_id(terrain_id)
 	var texture_path := _terrain_texture_path_for(texture_id)
 	var texture = _terrain_texture_for(terrain_id)
 	var texture_size := Vector2.ZERO
+	var source_size := Vector2.ZERO
 	if texture != null:
 		texture_size = texture.get_size()
+		source_size = _terrain_hex_texture_source_size(texture_size)
 	return {
 		"terrain": terrain_id,
 		"texture_id": texture_id,
@@ -362,6 +373,13 @@ func validation_terrain_backdrop_summary() -> Dictionary:
 		"mapped": terrain_id != texture_id,
 		"texture_width": texture_size.x,
 		"texture_height": texture_size.y,
+		"rendering_mode": _terrain_rendering_mode(texture != null),
+		"hex_snapped": true,
+		"single_board_backdrop": false,
+		"hex_tile_count": _terrain_hex_tile_count(),
+		"texture_sample_mode": "per_hex_clipped" if texture != null else "",
+		"source_tile_width": source_size.x,
+		"source_tile_height": source_size.y,
 	}
 
 func validation_preview_hex_destination(q: int, r: int) -> Dictionary:
@@ -614,9 +632,9 @@ func _draw() -> void:
 	draw_rect(board_rect, FRAME_COLOR, false, 3.0)
 
 	var field_rect := board_rect.grow(-12.0)
-	_draw_terrain(field_rect)
 	var hex_field_rect := _hex_field_rect(field_rect)
 	var hex_layout := _hex_layout(hex_field_rect)
+	_draw_terrain(field_rect, hex_layout)
 	_draw_hex_grid(hex_layout)
 	_draw_field_objectives(hex_layout)
 	var stack_cells := _stack_cells()
@@ -625,79 +643,88 @@ func _draw() -> void:
 	_draw_turn_strip(field_rect)
 	_draw_footer_line(field_rect)
 
-func _draw_terrain(field_rect: Rect2) -> void:
+func _draw_terrain(field_rect: Rect2, hex_layout: Dictionary) -> void:
 	var terrain := _battle_terrain_id()
 	var base_color := _terrain_color_for(terrain)
 	draw_rect(field_rect, base_color, true)
 	var terrain_texture = _terrain_texture_for(terrain)
 	if terrain_texture != null:
-		_draw_terrain_texture(field_rect, terrain_texture)
+		_draw_hex_snapped_terrain_texture(hex_layout, terrain_texture)
 		draw_rect(field_rect, TERRAIN_TEXTURE_READABILITY_WASH, true)
 	else:
-		_draw_procedural_terrain_details(field_rect, terrain)
+		_draw_hex_snapped_procedural_terrain(hex_layout, terrain)
 	draw_rect(field_rect, Color(0.0, 0.0, 0.0, 0.14), false, 2.0)
 
-func _draw_terrain_texture(field_rect: Rect2, texture: Texture2D) -> void:
+func _draw_hex_snapped_terrain_texture(hex_layout: Dictionary, texture: Texture2D) -> void:
 	var texture_size := texture.get_size()
-	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or field_rect.size.x <= 0.0 or field_rect.size.y <= 0.0:
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
 		return
-	var target_aspect := field_rect.size.x / field_rect.size.y
-	var texture_aspect := texture_size.x / texture_size.y
-	var source_size := texture_size
-	if texture_aspect > target_aspect:
-		source_size.x = texture_size.y * target_aspect
-	else:
-		source_size.y = texture_size.x / target_aspect
-	var source_position := (texture_size - source_size) * 0.5
-	draw_texture_rect_region(texture, field_rect, Rect2(source_position, source_size), TERRAIN_TEXTURE_MODULATE)
+	var radius := float(hex_layout.get("radius", 1.0))
+	var source_size := _terrain_hex_texture_source_size(texture_size)
+	for row in range(HEX_ROWS):
+		for column in range(HEX_COLUMNS):
+			var cell := Vector2i(column, row)
+			var center := _hex_center(cell, hex_layout)
+			var points := _hex_points(center, radius * TERRAIN_HEX_TEXTURE_INSET)
+			var bounds := _points_bounds(points)
+			if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
+				continue
+			var source_rect := Rect2(_terrain_hex_texture_source_position(cell, texture_size, source_size), source_size)
+			var uvs := PackedVector2Array()
+			for point in points:
+				var relative := Vector2(
+					(point.x - bounds.position.x) / bounds.size.x,
+					(point.y - bounds.position.y) / bounds.size.y
+				)
+				uvs.append(source_rect.position + Vector2(relative.x * source_rect.size.x, relative.y * source_rect.size.y))
+			var shade := 0.92 + _hex_variation(cell, 43.0) * 0.10
+			var modulate := Color(
+				clampf(TERRAIN_TEXTURE_MODULATE.r * shade, 0.0, 1.0),
+				clampf(TERRAIN_TEXTURE_MODULATE.g * shade, 0.0, 1.0),
+				clampf(TERRAIN_TEXTURE_MODULATE.b * shade, 0.0, 1.0),
+				0.86
+			)
+			var colors := PackedColorArray()
+			for _point in points:
+				colors.append(modulate)
+			draw_polygon(points, colors, uvs, texture)
 
-func _draw_procedural_terrain_details(field_rect: Rect2, terrain: String) -> void:
-	var horizon := field_rect.position + Vector2(field_rect.size.x * 0.08, field_rect.size.y * 0.22)
-	var far_path := PackedVector2Array([
-		horizon,
-		field_rect.position + Vector2(field_rect.size.x * 0.40, field_rect.size.y * 0.30),
-		field_rect.position + Vector2(field_rect.size.x * 0.68, field_rect.size.y * 0.21),
-		field_rect.position + Vector2(field_rect.size.x * 0.94, field_rect.size.y * 0.34),
-	])
-	draw_polyline(far_path, Color(0.96, 0.82, 0.50, 0.12), 10.0, true)
-	draw_polyline(far_path, Color(0.11, 0.08, 0.05, 0.22), 2.0, true)
+func _draw_hex_snapped_procedural_terrain(hex_layout: Dictionary, terrain: String) -> void:
+	var radius := float(hex_layout.get("radius", 1.0))
+	var base_color := _terrain_color_for(terrain)
+	for row in range(HEX_ROWS):
+		for column in range(HEX_COLUMNS):
+			var cell := Vector2i(column, row)
+			var center := _hex_center(cell, hex_layout)
+			var shade := 0.88 + _hex_variation(cell, 11.0) * 0.18
+			var fill := Color(
+				clampf(base_color.r * shade, 0.0, 1.0),
+				clampf(base_color.g * shade, 0.0, 1.0),
+				clampf(base_color.b * shade, 0.0, 1.0),
+				0.92
+			)
+			_draw_hex(center, radius * TERRAIN_HEX_FALLBACK_INSET, fill, Color(0.0, 0.0, 0.0, 0.0), 0.0)
+			_draw_hex_procedural_detail(center, radius, terrain, cell)
 
+func _draw_hex_procedural_detail(center: Vector2, radius: float, terrain: String, cell: Vector2i) -> void:
+	var detail_roll := _hex_variation(cell, 29.0)
 	match terrain:
 		"forest":
-			for index in range(10):
-				var center := field_rect.position + Vector2(
-					field_rect.size.x * (0.08 + float(index % 5) * 0.20),
-					field_rect.size.y * (0.15 + float(index / 5) * 0.62)
-				)
-				_draw_tree(center, 13.0 + float(index % 3) * 3.0)
+			if detail_roll > 0.34:
+				_draw_tree(center + Vector2(radius * 0.12, -radius * 0.08), radius * (0.26 + detail_roll * 0.08))
 		"swamp", "mire":
-			for index in range(7):
-				var center := field_rect.position + Vector2(
-					field_rect.size.x * (0.13 + float(index % 4) * 0.24),
-					field_rect.size.y * (0.22 + float(index / 4) * 0.48)
-				)
-				draw_circle(center, 18.0 + float(index % 2) * 6.0, Color(0.13, 0.20, 0.19, 0.30))
-				draw_circle(center + Vector2(8.0, -2.0), 9.0, Color(0.36, 0.42, 0.31, 0.16))
+			if detail_roll > 0.24:
+				draw_circle(center + Vector2(radius * 0.12, radius * 0.04), radius * 0.24, Color(0.10, 0.17, 0.16, 0.28))
+				draw_circle(center + Vector2(radius * 0.02, -radius * 0.04), radius * 0.12, Color(0.36, 0.42, 0.31, 0.15))
 		"hills":
-			for index in range(5):
-				var center := field_rect.position + Vector2(
-					field_rect.size.x * (0.16 + float(index) * 0.18),
-					field_rect.size.y * (0.24 + float(index % 2) * 0.48)
-				)
-				_draw_hill(center, 52.0, 24.0)
+			if detail_roll > 0.30:
+				_draw_hill(center + Vector2(0.0, radius * 0.06), radius * 0.88, radius * 0.38)
 		"road":
-			var road := PackedVector2Array([
-				field_rect.position + Vector2(0.0, field_rect.size.y * 0.72),
-				field_rect.position + Vector2(field_rect.size.x * 0.33, field_rect.size.y * 0.58),
-				field_rect.position + Vector2(field_rect.size.x * 0.70, field_rect.size.y * 0.64),
-				field_rect.position + Vector2(field_rect.size.x, field_rect.size.y * 0.50),
-			])
-			draw_polyline(road, Color(0.49, 0.39, 0.25, 0.34), 30.0, true)
-			draw_polyline(road, Color(0.21, 0.16, 0.10, 0.22), 3.0, true)
+			if cell.y == 3 or (cell.y == 2 and cell.x < 4) or (cell.y == 4 and cell.x > 6):
+				draw_line(center + Vector2(-radius * 0.46, radius * 0.18), center + Vector2(radius * 0.46, -radius * 0.12), Color(0.50, 0.39, 0.24, 0.36), radius * 0.20, true)
 		_:
-			for index in range(9):
-				var start := field_rect.position + Vector2(field_rect.size.x * (0.05 + float(index) * 0.11), field_rect.size.y * 0.78)
-				draw_line(start, start + Vector2(18.0, -8.0), Color(0.16, 0.23, 0.12, 0.24), 2.0)
+			if detail_roll > 0.48:
+				draw_line(center + Vector2(-radius * 0.26, radius * 0.22), center + Vector2(radius * 0.18, radius * 0.02), Color(0.16, 0.23, 0.12, 0.24), 1.6, true)
 
 func _load_terrain_textures() -> void:
 	for terrain_id_value in TERRAIN_TEXTURE_PATHS.keys():
@@ -1058,6 +1085,42 @@ func _closed_points(points: PackedVector2Array) -> PackedVector2Array:
 	if points.size() > 0:
 		closed.append(points[0])
 	return closed
+
+func _points_bounds(points: PackedVector2Array) -> Rect2:
+	if points.is_empty():
+		return Rect2()
+	var min_position := points[0]
+	var max_position := points[0]
+	for point in points:
+		min_position.x = minf(min_position.x, point.x)
+		min_position.y = minf(min_position.y, point.y)
+		max_position.x = maxf(max_position.x, point.x)
+		max_position.y = maxf(max_position.y, point.y)
+	return Rect2(min_position, max_position - min_position)
+
+func _terrain_hex_texture_source_size(texture_size: Vector2) -> Vector2:
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return Vector2.ZERO
+	var source_height: float = clampf(texture_size.y * 0.24, 48.0, texture_size.y)
+	var source_width: float = clampf(source_height * 0.92, 48.0, texture_size.x)
+	return Vector2(source_width, source_height)
+
+func _terrain_hex_texture_source_position(cell: Vector2i, texture_size: Vector2, source_size: Vector2) -> Vector2:
+	var usable := Vector2(maxf(0.0, texture_size.x - source_size.x), maxf(0.0, texture_size.y - source_size.y))
+	return Vector2(
+		floor(usable.x * _hex_variation(cell, 3.0)),
+		floor(usable.y * _hex_variation(cell, 17.0))
+	)
+
+func _hex_variation(cell: Vector2i, salt: float) -> float:
+	var value := sin(float(cell.x) * 12.9898 + float(cell.y) * 78.233 + salt) * 43758.5453
+	return value - floor(value)
+
+func _terrain_hex_tile_count() -> int:
+	return HEX_COLUMNS * HEX_ROWS
+
+func _terrain_rendering_mode(texture_loaded: bool) -> String:
+	return "hex_snapped_texture" if texture_loaded else "hex_snapped_color_fallback"
 
 func _hex_field_rect(field_rect: Rect2) -> Rect2:
 	return Rect2(

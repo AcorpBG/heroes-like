@@ -73,8 +73,8 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board does not expose hex layout validation.")
 		get_tree().quit(1)
 		return false
-	if not board.has_method("validation_terrain_backdrop_summary"):
-		push_error("Battle smoke: battle board does not expose terrain backdrop validation.")
+	if not board.has_method("validation_terrain_rendering_summary"):
+		push_error("Battle smoke: battle board does not expose terrain rendering validation.")
 		get_tree().quit(1)
 		return false
 	var hex_summary: Dictionary = board.call("validation_hex_layout_summary")
@@ -86,18 +86,42 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: terrain texture was not loaded for the active battlefield: %s." % hex_summary)
 		get_tree().quit(1)
 		return false
-	var terrain_summary: Dictionary = board.call("validation_terrain_backdrop_summary")
+	if not bool(hex_summary.get("terrain_hex_snapped", false)) or bool(hex_summary.get("terrain_single_board_backdrop", true)):
+		push_error("Battle smoke: terrain texture rendering is not snapped to the hex grid: %s." % hex_summary)
+		get_tree().quit(1)
+		return false
+	var terrain_summary: Dictionary = board.call("validation_terrain_rendering_summary")
 	if not bool(terrain_summary.get("texture_loaded", false)) or float(terrain_summary.get("texture_width", 0.0)) <= 0.0 or float(terrain_summary.get("texture_height", 0.0)) <= 0.0:
-		push_error("Battle smoke: terrain backdrop validation did not report a usable runtime texture: %s." % terrain_summary)
+		push_error("Battle smoke: terrain rendering validation did not report a usable runtime texture: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
+	if String(terrain_summary.get("rendering_mode", "")) != "hex_snapped_texture" or not bool(terrain_summary.get("hex_snapped", false)) or bool(terrain_summary.get("single_board_backdrop", true)):
+		push_error("Battle smoke: terrain texture is not using the hex-snapped rendering path: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
+	if int(terrain_summary.get("hex_tile_count", 0)) != int(hex_summary.get("hex_count", -1)):
+		push_error("Battle smoke: terrain texture tile count does not match the tactical hex count: terrain=%s hex=%s." % [terrain_summary, hex_summary])
+		get_tree().quit(1)
+		return false
+	if float(terrain_summary.get("source_tile_width", 0.0)) <= 0.0 or float(terrain_summary.get("source_tile_height", 0.0)) <= 0.0:
+		push_error("Battle smoke: terrain texture did not expose a usable per-hex source sample size: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
 	var original_terrain := String(session.battle.get("terrain", ""))
 	session.battle["terrain"] = "plains"
 	board.call("set_battle_state", session)
 	await get_tree().process_frame
-	var plains_summary: Dictionary = board.call("validation_terrain_backdrop_summary")
-	if String(plains_summary.get("texture_id", "")) != "grass" or not bool(plains_summary.get("texture_loaded", false)) or not bool(plains_summary.get("mapped", false)):
+	var plains_summary: Dictionary = board.call("validation_terrain_rendering_summary")
+	if String(plains_summary.get("texture_id", "")) != "grass" or not bool(plains_summary.get("texture_loaded", false)) or not bool(plains_summary.get("mapped", false)) or String(plains_summary.get("rendering_mode", "")) != "hex_snapped_texture":
 		push_error("Battle smoke: plains terrain did not map cleanly to the grass battlefield texture: %s." % plains_summary)
+		get_tree().quit(1)
+		return false
+	session.battle["terrain"] = "validation_missing_texture"
+	board.call("set_battle_state", session)
+	await get_tree().process_frame
+	var missing_summary: Dictionary = board.call("validation_terrain_rendering_summary")
+	if bool(missing_summary.get("texture_loaded", true)) or not bool(missing_summary.get("fallback", false)) or String(missing_summary.get("rendering_mode", "")) != "hex_snapped_color_fallback" or not bool(missing_summary.get("hex_snapped", false)) or bool(missing_summary.get("single_board_backdrop", true)):
+		push_error("Battle smoke: missing terrain texture did not fall back to hex-snapped color/detail rendering: %s." % missing_summary)
 		get_tree().quit(1)
 		return false
 	session.battle["terrain"] = original_terrain
