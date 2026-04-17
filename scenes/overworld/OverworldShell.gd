@@ -74,6 +74,7 @@ const DIRECTIONS := [
 	Vector2i.RIGHT,
 ]
 const RAIL_ACTION_WIDTH := 248.0
+const RAIL_LINE_CHARS := 42
 
 var _session: SessionStateStore.SessionData
 var _map_data: Array = []
@@ -360,22 +361,35 @@ func _refresh() -> void:
 	_resource_label.text = resource_text
 	_map_cue_label.text = _map_cue_text()
 	_map_cue_label.tooltip_text = _map_cue_tooltip()
-	_set_compact_label(_commitment_label, OverworldRules.describe_commitment_board(_session), 2, 72)
-	_set_compact_label(_visibility_label, OverworldRules.describe_visibility_panel(_session), 3, 72)
-	_set_compact_label(_hero_label, _hero_card_text(), 2, 72)
-	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2, 72)
-	_set_compact_label(_heroes_label, OverworldRules.describe_heroes(_session), 2, 72)
-	_set_compact_label(_specialty_label, OverworldRules.describe_specialties(_session), 2, 72)
-	_set_compact_label(_spell_label, OverworldRules.describe_spellbook(_session), 2, 72)
-	_set_compact_label(_artifact_label, OverworldRules.describe_artifacts(_session), 2, 72)
-	_set_compact_label(_objective_label, OverworldRules.describe_objectives(_session), 3, 72)
-	_set_compact_label(_threat_label, OverworldRules.describe_enemy_threats(_session), 3, 72)
-	_set_compact_label(_forecast_label, OverworldRules.describe_command_risk(_session), 2, 72)
-	_set_compact_label(_context_label, _describe_focus_tile(), 5, 74)
-	_set_compact_label(_event_label, OverworldRules.describe_dispatch(_session, _last_message), 2, 68)
+	var commitment_text := OverworldRules.describe_commitment_board(_session)
+	_set_rail_text(_commitment_label, commitment_text, _rail_order_text(commitment_text), 2)
+	var visibility_text := OverworldRules.describe_visibility_panel(_session)
+	_set_rail_text(_visibility_label, visibility_text, _rail_prefixed_summary("Sight", visibility_text), 1)
+	var hero_text := _hero_card_text()
+	_set_rail_text(_hero_label, hero_text, hero_text, 2)
+	var army_text := OverworldRules.describe_army(_session)
+	_set_rail_text(_army_label, army_text, _rail_prefixed_summary("Army", army_text), 1)
+	var heroes_text := OverworldRules.describe_heroes(_session)
+	_set_rail_text(_heroes_label, heroes_text, _rail_prefixed_summary("Heroes", heroes_text), 1)
+	var specialty_text := OverworldRules.describe_specialties(_session)
+	_set_rail_text(_specialty_label, specialty_text, _rail_prefixed_summary("Spec", specialty_text), 1)
+	var spell_text := OverworldRules.describe_spellbook(_session)
+	_set_rail_text(_spell_label, spell_text, _rail_prefixed_summary("Spell", spell_text), 1)
+	var artifact_text := OverworldRules.describe_artifacts(_session)
+	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
+	var objective_text := OverworldRules.describe_objectives(_session)
+	_set_rail_text(_objective_label, objective_text, _rail_prefixed_summary("Obj", objective_text), 1)
+	var threat_text := OverworldRules.describe_enemy_threats(_session)
+	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
+	var forecast_text := OverworldRules.describe_command_risk(_session)
+	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Risk", forecast_text), 1)
+	var context_text := _describe_focus_tile()
+	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
+	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
+	_set_rail_text(_event_label, dispatch_text, _rail_log_text(), 1)
 	_end_turn_button.tooltip_text = OverworldRules.describe_command_risk_forecast(_session)
 	_briefing_title_label.text = _briefing_title_text
-	_set_compact_label(_briefing_label, _command_briefing_text, 2, 68, false)
+	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
 	_update_map_hint()
 
@@ -734,6 +748,109 @@ func _describe_focus_tile() -> String:
 	if _selected_tile == OverworldRules.hero_position(_session):
 		return OverworldRules.describe_context(_session)
 	return _describe_selected_tile()
+
+func _rail_log_text() -> String:
+	var message := _last_message.strip_edges()
+	if message == "":
+		message = "Awaiting order"
+	return "Log: %s" % message
+
+func _rail_order_text(commitment_text: String) -> String:
+	var primary_action := _current_primary_action()
+	var order_line := "Order: select tile"
+	if not primary_action.is_empty():
+		order_line = "Order: %s" % _short_action_label(String(primary_action.get("label", "Action")), 24)
+		if bool(primary_action.get("disabled", false)):
+			order_line += " locked"
+	var support_line := ""
+	for raw_line in commitment_text.split("\n", false):
+		var line := _clean_rail_line(raw_line)
+		if line.begins_with("Route:") or line.begins_with("Cover:") or line.begins_with("Hold:"):
+			support_line = line
+			break
+	if support_line == "":
+		var movement = _session.overworld.get("movement", {})
+		var hero_pos := OverworldRules.hero_position(_session)
+		support_line = "Move %d/%d | Pos %d,%d" % [
+			int(movement.get("current", 0)),
+			int(movement.get("max", 0)),
+			hero_pos.x,
+			hero_pos.y,
+		]
+	return "%s\n%s" % [order_line, support_line]
+
+func _rail_tile_text() -> String:
+	if not _tile_in_bounds(_selected_tile):
+		return "Tile: none\nSelect map"
+	var terrain := _terrain_name_at(_selected_tile.x, _selected_tile.y)
+	var coords := "%d,%d" % [_selected_tile.x, _selected_tile.y]
+	var action_hint := _rail_action_hint()
+	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
+		return "Tile %s | Unexplored\nScout closer" % coords
+	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+		return "Tile %s | Mapped %s\nOut of scout net" % [coords, terrain]
+
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		var town_line := "Town: %s" % _selected_tile_destination_name()
+		var owner := String(town.get("owner", "neutral")).capitalize()
+		return "%s\n%s%s" % [town_line, "Owner %s | %s" % [owner, terrain], "" if action_hint == "" else " | %s" % action_hint]
+
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var site_state := "Ready"
+		if bool(site.get("persistent_control", false)):
+			match String(node.get("collected_by_faction_id", "")):
+				"player":
+					site_state = "Held"
+				"enemy":
+					site_state = "Hostile"
+				_:
+					site_state = "Unclaimed"
+		elif bool(node.get("collected", false)):
+			site_state = "Spent"
+		return "Site: %s\n%s | %s%s" % [
+			String(site.get("name", "Frontier site")),
+			site_state,
+			terrain,
+			"" if action_hint == "" else " | %s" % action_hint,
+		]
+
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		return "Artifact: %s\n%s%s" % [
+			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			terrain,
+			"" if action_hint == "" else " | %s" % action_hint,
+		]
+
+	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		return "Hostile: %s\n%s%s" % [
+			OverworldRules.encounter_display_name(encounter),
+			terrain,
+			"" if action_hint == "" else " | %s" % action_hint,
+		]
+
+	var heroes_here := _hero_entries_at(_selected_tile.x, _selected_tile.y)
+	if not heroes_here.is_empty():
+		var names := []
+		for entry in heroes_here:
+			if entry is Dictionary:
+				names.append(String(entry.get("name", "Hero")))
+		return "Marker: %s\n%s" % [", ".join(names), terrain]
+
+	return "Open: %s | %s\n%s" % [coords, terrain, action_hint if action_hint != "" else "Route or march"]
+
+func _rail_action_hint() -> String:
+	var primary_action := _current_primary_action()
+	if primary_action.is_empty():
+		return ""
+	var label := _short_action_label(String(primary_action.get("label", "Action")), 20)
+	if bool(primary_action.get("disabled", false)):
+		return "Locked %s" % label
+	return "Enter %s" % label
 
 func _describe_selected_tile() -> String:
 	if not _tile_in_bounds(_selected_tile):
@@ -1910,6 +2027,8 @@ func _validation_tile_has_route_hazard(
 func _make_placeholder_label(text: String) -> Label:
 	var placeholder := FrontierVisualKit.placeholder_label(text)
 	placeholder.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	placeholder.autowrap_mode = TextServer.AUTOWRAP_OFF
+	placeholder.clip_text = true
 	return placeholder
 
 func _compact_text(full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> String:
@@ -1917,6 +2036,123 @@ func _compact_text(full_text: String, max_lines: int, max_chars: int = 92, drop_
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars, drop_headings)
+
+func _set_rail_label(label: Label, full_text: String, max_lines: int = 1, max_chars: int = RAIL_LINE_CHARS, drop_headings: bool = true) -> void:
+	_set_rail_text(label, full_text, _compact_rail_text(full_text, max_lines, max_chars, drop_headings), max_lines, max_chars)
+
+func _set_rail_text(label: Label, full_text: String, visible_text: String, max_lines: int = 1, max_chars: int = RAIL_LINE_CHARS) -> void:
+	label.tooltip_text = full_text
+	label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	label.clip_text = true
+	label.text = _trim_rail_visible_text(visible_text, max_lines, max_chars)
+
+func _rail_prefixed_summary(prefix: String, full_text: String, max_chars: int = RAIL_LINE_CHARS) -> String:
+	var line := _compact_rail_text(full_text, 1, max_chars, true)
+	if line == "":
+		line = "Ready"
+	if line.begins_with("%s:" % prefix):
+		return line
+	return "%s: %s" % [prefix, _strip_repeated_rail_prefix(line)]
+
+func _compact_rail_text(full_text: String, max_lines: int, max_chars: int = RAIL_LINE_CHARS, drop_headings: bool = true) -> String:
+	var raw_lines := full_text.split("\n", false)
+	var lines: Array[String] = []
+	for raw_line in raw_lines:
+		var line := _clean_rail_line(raw_line)
+		if line == "":
+			continue
+		if drop_headings and _rail_line_is_heading(line, raw_lines.size()):
+			continue
+		lines.append(_short_text(line, max_chars))
+		if lines.size() >= max_lines:
+			break
+	if lines.is_empty():
+		var fallback := full_text.strip_edges().replace("\n", " | ")
+		if fallback == "":
+			fallback = "Ready"
+		lines.append(_short_text(fallback, max_chars))
+	return "\n".join(lines)
+
+func _trim_rail_visible_text(visible_text: String, max_lines: int, max_chars: int) -> String:
+	var lines: Array[String] = []
+	for raw_line in visible_text.split("\n", false):
+		var line := _short_text(raw_line, max_chars)
+		if line == "":
+			continue
+		lines.append(line)
+		if lines.size() >= max_lines:
+			break
+	if lines.is_empty():
+		lines.append("Ready")
+	return "\n".join(lines)
+
+func _clean_rail_line(raw_line: String) -> String:
+	var line := raw_line.strip_edges()
+	if line.begins_with("- "):
+		line = line.trim_prefix("- ").strip_edges()
+	var replacements := [
+		["Latest order:", "Log:"],
+		["Active tile:", "Tile:"],
+		["Immediate order:", "Order:"],
+		["Route pressure:", "Route:"],
+		["Coverage:", "Cover:"],
+		["If you hold:", "Hold:"],
+		["Controlled heroes", "Heroes"],
+		["Held outposts", "Outposts"],
+		["Held shrines", "Shrines"],
+		["Local watch:", "Local:"],
+		["Occupation watch:", "Occupy:"],
+		["Management watch:", "Mgmt:"],
+		["Scenario pulse:", "Pulse:"],
+		["Next-day posture:", "Risk:"],
+		["Steady watch", "Steady"],
+		["Command posture:", "Posture:"],
+		["Logistics watch:", "Logistics:"],
+		["Pressure watch:", "Pressure:"],
+		["Immediate orders:", "Orders:"],
+	]
+	for replacement in replacements:
+		var source := String(replacement[0])
+		var target := String(replacement[1])
+		if line.begins_with(source):
+			line = "%s %s" % [target, line.trim_prefix(source).strip_edges()]
+			break
+	return line
+
+func _strip_repeated_rail_prefix(line: String) -> String:
+	var separator := line.find(":")
+	if separator > 0 and separator <= 10:
+		return line.substr(separator + 1).strip_edges()
+	return line
+
+func _rail_line_is_heading(line: String, raw_count: int) -> bool:
+	if raw_count <= 1:
+		return false
+	if line in [
+		"Field Dispatch",
+		"Command Commitment",
+		"Scout Net",
+		"Objective Board",
+		"Frontier Watch",
+		"Command Risk",
+		"Command Wing",
+		"Marching Army",
+		"Specialties",
+		"Equipped",
+		"Pack",
+	]:
+		return true
+	if line.find(":") >= 0 or line.find("|") >= 0 or line.find(".") >= 0:
+		return false
+	return line.split(" ", false).size() <= 3
+
+func _short_text(text: String, max_chars: int) -> String:
+	var normalized := text.strip_edges().replace("\n", " ")
+	while normalized.find("  ") >= 0:
+		normalized = normalized.replace("  ", " ")
+	if normalized.length() <= max_chars:
+		return normalized
+	return "%s..." % normalized.left(max(1, max_chars - 3)).strip_edges()
 
 func _save_status_text(selected_slot: int, summary: Dictionary, latest_context: String) -> String:
 	var status := "M%d" % selected_slot

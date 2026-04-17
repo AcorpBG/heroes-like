@@ -128,7 +128,7 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			push_error("Overworld smoke: contextual panels must live inside the carved right command spine.")
 			get_tree().quit(1)
 			return false
-	if not _assert_readable_command_spine(sidebar_shell, command_spine, [hero_actions, context_actions, specialty_actions, spell_actions, artifact_actions]):
+	if not _assert_readable_command_spine(shell, sidebar_shell, command_spine, [hero_actions, context_actions, specialty_actions, spell_actions, artifact_actions]):
 		return false
 	for chip in [resource_chip, status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):
@@ -137,7 +137,7 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			return false
 	return true
 
-func _assert_readable_command_spine(sidebar_shell: Control, command_spine: Control, action_containers: Array) -> bool:
+func _assert_readable_command_spine(shell: Node, sidebar_shell: Control, command_spine: Control, action_containers: Array) -> bool:
 	if command_spine == null or not (command_spine is VBoxContainer):
 		push_error("Overworld smoke: right rail must use a stacked command spine, not a tab strip.")
 		get_tree().quit(1)
@@ -168,7 +168,63 @@ func _assert_readable_command_spine(sidebar_shell: Control, command_spine: Contr
 		push_error("Overworld smoke: right rail contains a visible label/control shaped like vertical text.")
 		get_tree().quit(1)
 		return false
+	if not _assert_compact_rail_text(shell):
+		return false
 	return true
+
+func _assert_compact_rail_text(shell: Node) -> bool:
+	var label_budgets := {
+		"Event": 1,
+		"Commitment": 2,
+		"Briefing": 2,
+		"Hero": 2,
+		"Army": 1,
+		"Heroes": 1,
+		"Context": 2,
+		"Specialties": 1,
+		"Spellbook": 1,
+		"Artifacts": 1,
+		"Visibility": 1,
+		"Objectives": 1,
+		"Threats": 1,
+		"Forecast": 1,
+	}
+	for label_name in label_budgets.keys():
+		var label_node = shell.get_node_or_null("%" + String(label_name))
+		if not (label_node is Label):
+			push_error("Overworld smoke: compact rail label %s is missing." % String(label_name))
+			get_tree().quit(1)
+			return false
+		var label := label_node as Label
+		if not label.is_visible_in_tree():
+			continue
+		var lines := _visible_text_lines(label.text)
+		if lines.size() > int(label_budgets[label_name]):
+			push_error("Overworld smoke: %s rail label has %d visible lines; budget is %d." % [String(label_name), lines.size(), int(label_budgets[label_name])])
+			get_tree().quit(1)
+			return false
+		if label.text.find("+ ") >= 0 and label.text.find("more") >= 0:
+			push_error("Overworld smoke: %s rail label exposes hidden-report '+ more' wording." % String(label_name))
+			get_tree().quit(1)
+			return false
+		if label.autowrap_mode != TextServer.AUTOWRAP_OFF or not label.clip_text:
+			push_error("Overworld smoke: %s rail label must trim overflow instead of wrapping into a text wall." % String(label_name))
+			get_tree().quit(1)
+			return false
+		for line in lines:
+			if String(line).length() > 48:
+				push_error("Overworld smoke: %s rail label line is too long for the compact right rail: %s" % [String(label_name), String(line)])
+				get_tree().quit(1)
+				return false
+	return true
+
+func _visible_text_lines(text: String) -> Array[String]:
+	var lines: Array[String] = []
+	for raw_line in text.split("\n", false):
+		var line := raw_line.strip_edges()
+		if line != "":
+			lines.append(line)
+	return lines
 
 func _contains_tab_container(node: Node) -> bool:
 	if node is TabContainer:

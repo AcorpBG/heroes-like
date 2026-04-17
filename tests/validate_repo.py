@@ -3515,6 +3515,14 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "OverworldRules.describe_enemy_threats",
         "OverworldRules.describe_context",
         "_set_command_briefing",
+        "_set_rail_text",
+        "_set_rail_label",
+        "_compact_rail_text",
+        "_rail_log_text",
+        "_rail_order_text",
+        "_rail_tile_text",
+        "TextServer.AUTOWRAP_OFF",
+        "label.clip_text = true",
         "_style_action_button",
         "_style_rail_action_button",
         "RAIL_ACTION_WIDTH",
@@ -3524,6 +3532,16 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "_sidebar_tabs" not in overworld_script_text and "apply_tab_container(_sidebar_tabs)" not in overworld_script_text,
         errors,
         "OverworldShell.gd must not drive the removed right-rail tab strip",
+    )
+    ensure(
+        "_set_compact_label(_context_label, _describe_focus_tile(), 5, 74)" not in overworld_script_text,
+        errors,
+        "OverworldShell.gd must not expose long wrapped Tile reports in the right rail",
+    )
+    ensure(
+        "_set_compact_label(_event_label, OverworldRules.describe_dispatch" not in overworld_script_text,
+        errors,
+        "OverworldShell.gd must not expose multi-line Field Dispatch reports in the Log rail",
     )
 
 
