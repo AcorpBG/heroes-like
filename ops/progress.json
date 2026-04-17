@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T16:36:27Z",
+  "updatedAt": "2026-04-17T16:50:23Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "battle-terrain-hex-alignment-10184",
-  "currentSliceTitle": "Snap battle terrain texture rendering to the hex grid",
+  "currentSliceId": "battle-terrain-texture-visibility-10184",
+  "currentSliceTitle": "Restore visible battle terrain textures and clean hex borders",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP's battle terrain alignment follow-up: BattleBoardView now renders generated terrain PNGs as clipped per-hex texture samples instead of a single full-board backdrop, preserves existing tactical overlays/tokens/objectives, keeps plains-to-grass texture mapping, and falls back to per-hex procedural color/detail if textures are missing. Added focused terrain-rendering validation to town_battle_visual_smoke and battle_layout_smoke. Focused town/battle visual smoke, battle layout smoke, and repo validation are green.",
+  "currentSliceNotes": "Completed AcOrP's post hex-snapped terrain visibility follow-up: BattleBoardView now keeps loaded terrain textures visible by reducing texture wash, using full-hex texture coverage, skipping semi-opaque all-cell grid fills over textured cells, preserving front/center cues as subtle tints, and drawing textured grid borders through a deduplicated single-line path. Missing textures still use the stronger hex-snapped color/detail fallback. Added focused validation fields and smoke assertions for texture visibility, grid fill opacity, cleaned border mode, and fallback readability. Focused town/battle visual smoke, battle layout smoke, and repo validation are green.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",

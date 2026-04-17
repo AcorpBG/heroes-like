@@ -94,6 +94,18 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		push_error("Battle layout smoke: terrain rendering validation did not prove per-hex texture layout at %s: terrain=%s hex=%s." % [viewport_size, terrain_summary, hex_summary])
 		get_tree().quit(1)
 		return false
+	if not bool(terrain_summary.get("texture_visible", false)) or bool(terrain_summary.get("grid_repaints_texture_cells", true)):
+		push_error("Battle layout smoke: textured terrain is still being muted by grid fills at %s: %s." % [viewport_size, terrain_summary])
+		get_tree().quit(1)
+		return false
+	if String(terrain_summary.get("grid_fill_mode", "")) != "texture_transparent_tactical_tint" or float(terrain_summary.get("grid_max_fill_alpha", 1.0)) > 0.05:
+		push_error("Battle layout smoke: textured terrain grid fills are too heavy at %s: %s." % [viewport_size, terrain_summary])
+		get_tree().quit(1)
+		return false
+	if String(terrain_summary.get("grid_border_mode", "")) != "deduplicated_texture_grid" or not bool(terrain_summary.get("grid_border_deduplicated", false)):
+		push_error("Battle layout smoke: textured terrain grid borders are not on the cleaned border path at %s: %s." % [viewport_size, terrain_summary])
+		get_tree().quit(1)
+		return false
 	var stack_cells: Array = hex_summary.get("stack_cells", [])
 	var expected_stack_count := int(hex_summary.get("player_stack_count", 0)) + int(hex_summary.get("enemy_stack_count", 0))
 	if stack_cells.size() < expected_stack_count:
