@@ -27,24 +27,6 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("2")
 
-[node name="TopShade" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-anchor_bottom = 0.14
-grow_horizontal = 2
-color = Color(0.0431373, 0.0509804, 0.0705882, 0.04)
-
-[node name="BottomShade" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 0.84
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0
-color = Color(0.0156863, 0.0196078, 0.0313726, 0.12)
-
 [node name="RightShade" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 9

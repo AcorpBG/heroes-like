@@ -30,20 +30,20 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
-	var top_shade = shell.get_node_or_null("TopShade")
-	var bottom_shade = shell.get_node_or_null("BottomShade")
 	var right_shade = shell.get_node_or_null("RightShade")
-	if not (top_shade is ColorRect) or not (bottom_shade is ColorRect) or not (right_shade is ColorRect):
-		push_error("Main menu smoke: backdrop shade layers are missing.")
+	if shell.get_node_or_null("TopShade") != null or shell.get_node_or_null("BottomShade") != null:
+		push_error("Main menu smoke: broad top/bottom backdrop shade layers returned.")
 		get_tree().quit(1)
 		return false
-	var top_shade_rect := top_shade as ColorRect
-	var bottom_shade_rect := bottom_shade as ColorRect
+	if _hero_view_draws_backdrop_washes():
+		push_error("Main menu smoke: hero backdrop view is still drawing broad wash overlays.")
+		get_tree().quit(1)
+		return false
+	if not (right_shade is ColorRect):
+		push_error("Main menu smoke: right command gutter shade is missing.")
+		get_tree().quit(1)
+		return false
 	var right_shade_rect := right_shade as ColorRect
-	if top_shade_rect.color.a > 0.06 or bottom_shade_rect.color.a > 0.14:
-		push_error("Main menu smoke: global backdrop wash is too heavy for the painted-stage menu.")
-		get_tree().quit(1)
-		return false
 	if right_shade_rect.anchor_left < 0.78 or right_shade_rect.color.a < 0.28:
 		push_error("Main menu smoke: right command gutter is not a narrow darkened stage edge.")
 		get_tree().quit(1)
@@ -138,6 +138,13 @@ func _resolution_ids_from_snapshot(snapshot: Dictionary) -> Array:
 		if option is Dictionary:
 			ids.append(String(option.get("id", "")))
 	return ids
+
+func _hero_view_draws_backdrop_washes() -> bool:
+	var source_file := FileAccess.open("res://scenes/menus/MainMenuHeroView.gd", FileAccess.READ)
+	if source_file == null:
+		return true
+	var source := source_file.get_as_text()
+	return source.contains("draw_rect(") or source.contains("TOP_WASH") or source.contains("LOWER_SHADE")
 
 func _run_outcome_smoke() -> bool:
 	var session = ScenarioFactory.create_session(
