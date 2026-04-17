@@ -106,7 +106,7 @@ text = "Click adjacent tiles to march. Click distant tiles to route."
 
 [node name="SidebarShell" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(304, 0)
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_vertical = 3
 
@@ -158,7 +158,7 @@ text = "Adventure Map"
 
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 124)
+custom_minimum_size = Vector2(0, 142)
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -196,11 +196,11 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Heroes"
 
-[node name="HeroActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
+[node name="HeroActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/HeroPanel/HeroPad/HeroBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 4
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
 [node name="EventPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
@@ -286,150 +286,151 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Opening priorities will surface here."
 
-[node name="SidebarTabs" type="TabContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+[node name="CommandSpine" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 6
+
+[node name="ContextPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ContextPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ContextPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel"]
+[node name="ContextPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/ContextPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="ContextBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel/ContextPad"]
+[node name="ContextBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/ContextPanel/ContextPad"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 6
 
-[node name="ContextTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
+[node name="ContextTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/ContextPanel/ContextPad/ContextBox"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Tile"
 
-[node name="Context" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
+[node name="Context" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/ContextPanel/ContextPad/ContextBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 autowrap_mode = 3
 text = "Tile details"
 
-[node name="ContextActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/ContextPanel/ContextPad/ContextBox"]
+[node name="ContextActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/ContextPanel/ContextPad/ContextBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+theme_override_constants/separation = 5
 
-[node name="CommandPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs"]
+[node name="CommandPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel"]
+[node name="CommandPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="CommandBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad"]
+[node name="CommandBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 6
+size_flags_vertical = 3
+theme_override_constants/separation = 5
 
-[node name="CommandTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="CommandTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Kit"
+text = "Command"
 
-[node name="Specialties" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="Specialties" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Specialties"
 
-[node name="SpecialtyActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="SpecialtyActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
-[node name="Spellbook" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="Spellbook" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Spellbook"
 
-[node name="SpellActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="SpellActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
-[node name="Artifacts" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="Artifacts" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Artifacts"
 
-[node name="ArtifactActions" type="HFlowContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/CommandPanel/CommandPad/CommandBox"]
+[node name="ArtifactActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
-[node name="FrontierPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs"]
+[node name="FrontierPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="FrontierPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel"]
+[node name="FrontierPad" type="MarginContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="FrontierBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad"]
+[node name="FrontierBox" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="FrontierTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+[node name="FrontierTitle" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Intel"
+text = "Frontier"
 
-[node name="Visibility" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+[node name="Visibility" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Visibility"
 
-[node name="Objectives" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+[node name="Objectives" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Objectives"
 
-[node name="Threats" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+[node name="Threats" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Threats"
 
-[node name="Forecast" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/SidebarTabs/FrontierPanel/FrontierPad/FrontierBox"]
+[node name="Forecast" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/FrontierPanel/FrontierPad/FrontierBox"]
 unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3

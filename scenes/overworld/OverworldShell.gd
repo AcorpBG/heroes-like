@@ -14,7 +14,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _map_frame_panel: PanelContainer = %MapFrame
 @onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
 @onready var _hero_panel: PanelContainer = %HeroPanel
-@onready var _sidebar_tabs: TabContainer = %SidebarTabs
+@onready var _command_spine: VBoxContainer = %CommandSpine
 @onready var _command_panel: PanelContainer = %CommandPanel
 @onready var _frontier_panel: PanelContainer = %FrontierPanel
 @onready var _context_panel: PanelContainer = %ContextPanel
@@ -73,9 +73,7 @@ const DIRECTIONS := [
 	Vector2i.LEFT,
 	Vector2i.RIGHT,
 ]
-const SIDEBAR_TAB_CONTEXT := 0
-const SIDEBAR_TAB_COMMAND := 1
-const SIDEBAR_TAB_FRONTIER := 2
+const RAIL_ACTION_WIDTH := 248.0
 
 var _session: SessionStateStore.SessionData
 var _map_data: Array = []
@@ -88,7 +86,6 @@ var _command_briefing_text := ""
 
 func _ready() -> void:
 	_apply_visual_theme()
-	_sidebar_tabs.current_tab = SIDEBAR_TAB_CONTEXT
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
@@ -273,7 +270,6 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 
 	_selected_tile = tile
-	_sidebar_tabs.current_tab = SIDEBAR_TAB_CONTEXT
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, tile):
 		_try_move(tile.x - hero_pos.x, tile.y - hero_pos.y, true)
@@ -427,7 +423,7 @@ func _rebuild_hero_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Command")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		_style_action_button(button)
+		_style_rail_action_button(button)
 		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
 		_hero_actions.add_child(button)
 
@@ -458,7 +454,7 @@ func _rebuild_context_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		FrontierVisualKit.apply_button(button, "primary", 112.0, 34.0, 13)
+		_style_rail_action_button(button, "primary", 34.0)
 		button.pressed.connect(_on_context_action_pressed.bind(String(action.get("id", ""))))
 		_context_actions.add_child(button)
 
@@ -661,7 +657,7 @@ func _rebuild_artifact_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		_style_action_button(button)
+		_style_rail_action_button(button)
 		button.pressed.connect(_on_artifact_action_pressed.bind(String(action.get("id", ""))))
 		_artifact_actions.add_child(button)
 
@@ -681,7 +677,7 @@ func _rebuild_specialty_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Choose Specialty")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		_style_action_button(button)
+		_style_rail_action_button(button)
 		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
 		_specialty_actions.add_child(button)
 
@@ -701,7 +697,7 @@ func _rebuild_spell_actions() -> void:
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
-		_style_action_button(button)
+		_style_rail_action_button(button)
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
 		_spell_actions.add_child(button)
 
@@ -1912,7 +1908,9 @@ func _validation_tile_has_route_hazard(
 	return false
 
 func _make_placeholder_label(text: String) -> Label:
-	return FrontierVisualKit.placeholder_label(text)
+	var placeholder := FrontierVisualKit.placeholder_label(text)
+	placeholder.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	return placeholder
 
 func _compact_text(full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> String:
 	return FrontierVisualKit.compact_text(full_text, max_lines, max_chars, drop_headings)
@@ -1932,6 +1930,11 @@ func _save_status_text(selected_slot: int, summary: Dictionary, latest_context: 
 
 func _style_action_button(button: Button, width: float = 96.0, height: float = 30.0) -> void:
 	FrontierVisualKit.apply_button(button, "secondary", width, height, 13)
+
+func _style_rail_action_button(button: Button, role: String = "secondary", height: float = 32.0) -> void:
+	FrontierVisualKit.apply_button(button, role, RAIL_ACTION_WIDTH, height, 13)
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.clip_text = true
 
 func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_shell_panel, "earth", 24)
@@ -1953,10 +1956,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_march_panel, "frame", 18)
 	FrontierVisualKit.apply_panel(_orders_panel, "ink", 18)
 	FrontierVisualKit.apply_panel(_system_panel, "banner", 18)
-	FrontierVisualKit.apply_tab_container(_sidebar_tabs)
-	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_CONTEXT, "Tile")
-	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_COMMAND, "Kit")
-	_sidebar_tabs.set_tab_title(SIDEBAR_TAB_FRONTIER, "Intel")
+	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 	for button in [_move_north_button, _move_south_button, _move_west_button, _move_east_button]:
 		_style_action_button(button, 50.0, 34.0)

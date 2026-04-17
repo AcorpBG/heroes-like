@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T21:01:12Z",
+  "updatedAt": "2026-04-17T21:17:58Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "overworld-wireframe-rework-10184",
-  "currentSliceTitle": "Start overworld structural wireframe rework",
+  "currentSliceId": "overworld-command-spine-readability-10184",
+  "currentSliceTitle": "Repair overworld right rail command spine readability",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the first narrow OverworldShell structural wireframe pass: the adventure map is now the direct dominant BodyRow surface, the former top strip plus Event/Order/Notice context cards live in one carved right-side command spine, the map-embedded summary strip is gone, and resources/date/core orders/save/menu controls are compressed into a 74px footer ribbon. Secondary context actions moved into the right-spine Tile tab so they cannot grow the footer. overworld_visual_smoke, shell_heraldry_smoke, validate_repo, and git diff --check are green. No manual visual proof is claimed.",
+  "currentSliceNotes": "Completed AcOrP overworld right-rail readability follow-up: removed the cramped right-rail TabContainer/tab strip, replaced squeezed HeroActions/context/kit chips with full-width vertical command rows in a stacked CommandSpine, kept map dominance intact, and added focused smoke/static guards against tab-strip return, action-chip collapse, and vertical-text-shaped labels. overworld_visual_smoke, shell_heraldry_smoke, and validate_repo are green. No manual visual proof is claimed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",
@@ -102,7 +102,7 @@
     {
       "id": "river-pass-launch-and-objective-recovery",
       "title": "Fix launch, objective, opening guidance, and overworld readability blockers",
-      "status": "pending",
+      "status": "in_progress",
       "difficulty": "high"
     },
     {
@@ -143,6 +143,7 @@
     }
   ],
   "nextActions": [
+    "Use the next live/manual River Pass overworld pass to verify the new stacked right rail under real player navigation and capture any remaining readability friction.",
     "Continue battle blocker search from live/manual River Pass evidence beyond the confirmed Ghoul Grove ranged shot path, green movement overlap fixes, occupied enemy hex overlap fix, invalid-spell/invalid-order closing-guidance fixes, town-defense withdrawal surface truth fix, same-round commander spell cooldown truth fix, invalid friendly board-click dispatch feedback fix, opening-briefing dispatch override fix, empty non-green hex blocked Move feedback fix, empty non-green hover/click alignment fix, enemy-turn active-stack tooltip truth fix, enemy-turn empty-hex input-lock wording fix, enemy-turn board-footer input-lock wording fix, enemy-turn hover-footer movement lock fix, enemy-turn fallback-tooltip lock fix, enemy-turn attack-highlight lock fix, enemy-turn target-cycle tooltip lock fix, enemy-turn spell-action lock fix, enemy-turn timing-guidance lock fix, enemy-turn withdrawal pressure lock fix, enemy-turn primary command-surface lock fix, and enemy-turn Risk board retarget-lock fix.",
     "Continue looking for battle interaction gaps that are supported by code/test or live-client evidence before broadening into new battle UI surfaces.",
     "Continue remaining River Pass outcome proof beyond the routed resolved-flow pass, including manual verification notes where the live client exposes new friction.",

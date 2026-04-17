@@ -58,11 +58,17 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 	var map_panel: Control = shell.get_node_or_null("%MapPanel")
 	var map_frame: Control = shell.get_node_or_null("%MapFrame")
 	var sidebar_shell: Control = shell.get_node_or_null("%SidebarShell")
+	var command_spine: Control = shell.get_node_or_null("%CommandSpine")
 	var command_band: Control = shell.get_node_or_null("%CommandBand")
 	var top_strip: Control = shell.get_node_or_null("%TopStrip")
 	var event_panel: Control = shell.get_node_or_null("%EventPanel")
 	var commitment_panel: Control = shell.get_node_or_null("%CommitmentPanel")
 	var briefing_panel: Control = shell.get_node_or_null("%BriefingPanel")
+	var hero_actions: Control = shell.get_node_or_null("%HeroActions")
+	var context_actions: Control = shell.get_node_or_null("%ContextActions")
+	var specialty_actions: Control = shell.get_node_or_null("%SpecialtyActions")
+	var spell_actions: Control = shell.get_node_or_null("%SpellActions")
+	var artifact_actions: Control = shell.get_node_or_null("%ArtifactActions")
 	var resource_chip: Control = shell.get_node_or_null("%ResourceChip")
 	var status_chip: Control = shell.get_node_or_null("%StatusChip")
 	var cue_chip: Control = shell.get_node_or_null("%CueChip")
@@ -70,11 +76,17 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 		map_panel,
 		map_frame,
 		sidebar_shell,
+		command_spine,
 		command_band,
 		top_strip,
 		event_panel,
 		commitment_panel,
 		briefing_panel,
+		hero_actions,
+		context_actions,
+		specialty_actions,
+		spell_actions,
+		artifact_actions,
 		resource_chip,
 		status_chip,
 		cue_chip,
@@ -116,12 +128,73 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			push_error("Overworld smoke: contextual panels must live inside the carved right command spine.")
 			get_tree().quit(1)
 			return false
+	if not _assert_readable_command_spine(sidebar_shell, command_spine, [hero_actions, context_actions, specialty_actions, spell_actions, artifact_actions]):
+		return false
 	for chip in [resource_chip, status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):
 			push_error("Overworld smoke: resources, date, and map cue must live inside the footer ribbon.")
 			get_tree().quit(1)
 			return false
 	return true
+
+func _assert_readable_command_spine(sidebar_shell: Control, command_spine: Control, action_containers: Array) -> bool:
+	if command_spine == null or not (command_spine is VBoxContainer):
+		push_error("Overworld smoke: right rail must use a stacked command spine, not a tab strip.")
+		get_tree().quit(1)
+		return false
+	if _contains_tab_container(sidebar_shell):
+		push_error("Overworld smoke: cramped right-rail TabContainer returned and can collapse labels into vertical text.")
+		get_tree().quit(1)
+		return false
+	if command_spine.get_global_rect().size.x < 250.0:
+		push_error("Overworld smoke: command spine is too narrow for readable section labels.")
+		get_tree().quit(1)
+		return false
+	for container in action_containers:
+		if container == null or not (container is VBoxContainer):
+			push_error("Overworld smoke: right-rail actions must be full-width vertical command rows.")
+			get_tree().quit(1)
+			return false
+		if container.get_global_rect().size.x < 220.0:
+			push_error("Overworld smoke: action rail width collapsed below readable command-button width.")
+			get_tree().quit(1)
+			return false
+		for child in container.get_children():
+			if child is Button and child.visible and child.get_global_rect().size.x < 200.0:
+				push_error("Overworld smoke: command button collapsed into an unreadable chip.")
+				get_tree().quit(1)
+				return false
+	if _has_vertical_text_like_label(sidebar_shell):
+		push_error("Overworld smoke: right rail contains a visible label/control shaped like vertical text.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _contains_tab_container(node: Node) -> bool:
+	if node is TabContainer:
+		return true
+	for child in node.get_children():
+		if _contains_tab_container(child):
+			return true
+	return false
+
+func _has_vertical_text_like_label(node: Node) -> bool:
+	if node is Label or node is Button:
+		var control := node as Control
+		if control.visible:
+			var text := ""
+			if node is Label:
+				text = String((node as Label).text)
+			elif node is Button:
+				text = String((node as Button).text)
+			text = text.strip_edges()
+			var rect := control.get_global_rect()
+			if text.length() >= 5 and rect.size.x < 70.0 and rect.size.y > rect.size.x * 1.4:
+				return true
+	for child in node.get_children():
+		if _has_vertical_text_like_label(child):
+			return true
+	return false
 
 func _is_descendant_of(node: Node, ancestor: Node) -> bool:
 	var cursor := node.get_parent()

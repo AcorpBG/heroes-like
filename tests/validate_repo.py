@@ -2337,7 +2337,7 @@ def validate_hero_progression(errors: list[str]) -> None:
         overworld_scene_text,
         errors,
         "OverworldShell.tscn",
-        [("Specialties", "Label"), ("SpecialtyActions", "HFlowContainer")],
+        [("Specialties", "Label"), ("SpecialtyActions", "VBoxContainer")],
     )
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
@@ -2442,7 +2442,7 @@ def validate_hero_command(errors: list[str]) -> None:
         overworld_scene_text,
         errors,
         "OverworldShell.tscn",
-        [("Heroes", "Label"), ("HeroActions", "HFlowContainer")],
+        [("Heroes", "Label"), ("HeroActions", "VBoxContainer")],
     )
 
     town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
@@ -3385,10 +3385,15 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             ("BriefingPanel", "PanelContainer"),
             ("MapPanel", "PanelContainer"),
             ("CommandBand", "PanelContainer"),
-            ("SidebarTabs", "TabContainer"),
+            ("CommandSpine", "VBoxContainer"),
             ("ContextPanel", "PanelContainer"),
             ("CommandPanel", "PanelContainer"),
             ("FrontierPanel", "PanelContainer"),
+            ("HeroActions", "VBoxContainer"),
+            ("ContextActions", "VBoxContainer"),
+            ("SpecialtyActions", "VBoxContainer"),
+            ("SpellActions", "VBoxContainer"),
+            ("ArtifactActions", "VBoxContainer"),
             ("BriefingTitle", "Label"),
             ("Briefing", "Label"),
             ("Visibility", "Label"),
@@ -3408,6 +3413,11 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         'name="SummaryStrip"' not in overworld_scene_text,
         errors,
         "OverworldShell.tscn must not keep contextual report panels embedded above the adventure map",
+    )
+    ensure(
+        'type="TabContainer"' not in overworld_scene_text and 'name="SidebarTabs"' not in overworld_scene_text,
+        errors,
+        "OverworldShell.tscn must not reintroduce the cramped right-rail tab strip",
     )
     ensure(
         scene_node_parent(overworld_scene_text, "MapPanel", "PanelContainer")
@@ -3433,11 +3443,18 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "OverworldShell.tscn must keep the overworld command footer slim",
     )
     sidebar_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/"
-    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "SidebarTabs"):
+    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "CommandSpine"):
         ensure(
-            scene_node_parent(overworld_scene_text, node_name, "PanelContainer" if node_name != "SidebarTabs" else "TabContainer").startswith(sidebar_prefix),
+            scene_node_parent(overworld_scene_text, node_name, "PanelContainer" if node_name != "CommandSpine" else "VBoxContainer").startswith(sidebar_prefix),
             errors,
             f"OverworldShell.tscn must keep {node_name} inside the right-side command spine",
+        )
+    command_spine_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"
+    for node_name in ("ContextPanel", "CommandPanel", "FrontierPanel"):
+        ensure(
+            scene_node_parent(overworld_scene_text, node_name, "PanelContainer").startswith(command_spine_prefix),
+            errors,
+            f"OverworldShell.tscn must keep {node_name} as a readable section in the right command spine",
         )
     footer_prefix = "ShellMargin/Shell/ShellPad/Content/CommandBand/"
     for node_name in ("ResourceChip", "StatusChip", "CueChip", "MarchPanel", "OrdersPanel", "SystemPanel"):
@@ -3499,8 +3516,15 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "OverworldRules.describe_context",
         "_set_command_briefing",
         "_style_action_button",
+        "_style_rail_action_button",
+        "RAIL_ACTION_WIDTH",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required overworld-shell polish token: {required_token}")
+    ensure(
+        "_sidebar_tabs" not in overworld_script_text and "apply_tab_container(_sidebar_tabs)" not in overworld_script_text,
+        errors,
+        "OverworldShell.gd must not drive the removed right-rail tab strip",
+    )
 
 
 def validate_overworld_command_commitment_board(errors: list[str]) -> None:
