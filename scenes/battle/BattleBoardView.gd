@@ -229,6 +229,8 @@ func set_battle_state(session) -> void:
 func validation_hex_layout_summary() -> Dictionary:
 	var stack_cells := _stack_cells()
 	var hex_state := BattleRulesScript.battle_hex_state_summary(_battle) if not _battle.is_empty() else {}
+	var layout := _current_hex_layout()
+	var hex_radius := float(layout.get("radius", 1.0))
 	var terrain_id := _battle_terrain_id()
 	var terrain_texture_id := _terrain_texture_id(terrain_id)
 	var terrain_texture = _terrain_texture_for(terrain_id)
@@ -311,6 +313,9 @@ func validation_hex_layout_summary() -> Dictionary:
 		"columns": HEX_COLUMNS,
 		"rows": HEX_ROWS,
 		"hex_count": HEX_COLUMNS * HEX_ROWS,
+		"hex_radius": hex_radius,
+		"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
+		"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 		"terrain": terrain_id,
 		"terrain_texture_id": terrain_texture_id,
 		"terrain_texture_path": _terrain_texture_path_for(terrain_texture_id),
@@ -515,12 +520,17 @@ func validation_perform_overlapped_hex_destination_mouse_click(q: int, r: int) -
 		}
 	var probe := _validation_overlapped_destination_click_position_for_cell(cell)
 	if probe.is_empty():
+		var layout := _current_hex_layout()
+		var hex_radius := float(layout.get("radius", 1.0))
 		return {
 			"accepted": false,
 			"dispatch": "",
 			"battle_id": "",
 			"q": q,
 			"r": r,
+			"hex_radius": hex_radius,
+			"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
+			"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 			"message": "Validation click could not find a friendly-shape overlap inside the requested movement cell.",
 		}
 	var position: Vector2 = probe.get("position", Vector2.ZERO)
@@ -542,6 +552,8 @@ func validation_perform_overlapped_hex_destination_mouse_click(q: int, r: int) -
 	dispatch["found_friendly_shape_overlap"] = bool(probe.get("found_shape_overlap", probe.get("found_friendly_shape_overlap", false)))
 	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
 	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	dispatch["stack_hit_shape_radius"] = _stack_hit_shape_radius(float(probe.get("hex_radius", 1.0)))
+	dispatch["neighboring_stack_hit_shape_overlap_possible"] = _neighboring_stack_hit_shape_overlap_possible(float(probe.get("hex_radius", 1.0)))
 	return dispatch
 
 func validation_perform_enemy_overlapped_hex_destination_mouse_click(q: int, r: int) -> Dictionary:
@@ -557,12 +569,17 @@ func validation_perform_enemy_overlapped_hex_destination_mouse_click(q: int, r: 
 		}
 	var probe := _validation_overlapped_destination_click_position_for_cell(cell, "enemy")
 	if probe.is_empty():
+		var layout := _current_hex_layout()
+		var hex_radius := float(layout.get("radius", 1.0))
 		return {
 			"accepted": false,
 			"dispatch": "",
 			"battle_id": "",
 			"q": q,
 			"r": r,
+			"hex_radius": hex_radius,
+			"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
+			"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 			"message": "Validation click could not find an enemy-shape overlap inside the requested movement cell.",
 		}
 	var position: Vector2 = probe.get("position", Vector2.ZERO)
@@ -584,6 +601,8 @@ func validation_perform_enemy_overlapped_hex_destination_mouse_click(q: int, r: 
 	dispatch["found_enemy_shape_overlap"] = bool(probe.get("found_shape_overlap", false))
 	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
 	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	dispatch["stack_hit_shape_radius"] = _stack_hit_shape_radius(float(probe.get("hex_radius", 1.0)))
+	dispatch["neighboring_stack_hit_shape_overlap_possible"] = _neighboring_stack_hit_shape_overlap_possible(float(probe.get("hex_radius", 1.0)))
 	return dispatch
 
 func validation_perform_enemy_overlapped_occupied_hex_mouse_click(q: int, r: int) -> Dictionary:
@@ -609,12 +628,17 @@ func validation_perform_enemy_overlapped_occupied_hex_mouse_click(q: int, r: int
 		}
 	var probe := _validation_overlapped_occupied_hex_click_position_for_cell(cell, "enemy")
 	if probe.is_empty():
+		var layout := _current_hex_layout()
+		var hex_radius := float(layout.get("radius", 1.0))
 		return {
 			"accepted": false,
 			"dispatch": "",
 			"battle_id": "",
 			"q": q,
 			"r": r,
+			"hex_radius": hex_radius,
+			"stack_hit_shape_radius": _stack_hit_shape_radius(hex_radius),
+			"neighboring_stack_hit_shape_overlap_possible": _neighboring_stack_hit_shape_overlap_possible(hex_radius),
 			"message": "Validation click could not find an enemy-shape overlap inside the occupied hex.",
 		}
 	var position: Vector2 = probe.get("position", Vector2.ZERO)
@@ -638,6 +662,8 @@ func validation_perform_enemy_overlapped_occupied_hex_mouse_click(q: int, r: int
 	dispatch["found_enemy_shape_overlap"] = bool(probe.get("found_shape_overlap", false))
 	dispatch["radius_factor"] = float(probe.get("radius_factor", 0.0))
 	dispatch["hex_radius"] = float(probe.get("hex_radius", 0.0))
+	dispatch["stack_hit_shape_radius"] = _stack_hit_shape_radius(float(probe.get("hex_radius", 1.0)))
+	dispatch["neighboring_stack_hit_shape_overlap_possible"] = _neighboring_stack_hit_shape_overlap_possible(float(probe.get("hex_radius", 1.0)))
 	return dispatch
 
 func validation_board_fallback_tooltip() -> Dictionary:
@@ -918,7 +944,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			continue
 		var cell: Vector2i = stack_cells.get(battle_id)
 		var center := _hex_center(cell, hex_layout)
-		var token_radius: float = clampf(radius * 0.58, 13.0, 28.0)
+		var token_radius: float = _stack_token_radius(radius)
 		var side := String(stack.get("side", ""))
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
 		var is_target := battle_id == String(_battle.get("selected_target_id", ""))
@@ -938,7 +964,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				"battle_id": battle_id,
 				"side": side,
 				"center": center,
-				"radius": token_radius + 10.0,
+				"radius": _stack_hit_shape_radius(radius),
 			}
 		)
 
@@ -1603,6 +1629,15 @@ func _stack_id_at_position(position: Vector2) -> String:
 		if position.distance_to(center) <= radius:
 			return String(shape.get("battle_id", ""))
 	return ""
+
+func _stack_token_radius(hex_radius: float) -> float:
+	return clampf(hex_radius * 0.58, 13.0, 28.0)
+
+func _stack_hit_shape_radius(hex_radius: float) -> float:
+	return _stack_token_radius(hex_radius) + 10.0
+
+func _neighboring_stack_hit_shape_overlap_possible(hex_radius: float) -> bool:
+	return _stack_hit_shape_radius(hex_radius) >= cos(deg_to_rad(30.0)) * hex_radius
 
 func _stack_id_at_cell(cell: Vector2i) -> String:
 	if not _cell_in_bounds(cell):

@@ -1,6 +1,7 @@
 extends Control
 
 const TARGET_VIEWPORT_SIZES := [
+	Vector2(1920.0, 1080.0),
 	Vector2(1280.0, 720.0),
 	Vector2(1024.0, 600.0),
 ]
@@ -295,6 +296,7 @@ func _stage_board_click_dispatch_state(battle: Dictionary) -> Dictionary:
 	var legal_target_id := String(legal_target.get("battle_id", ""))
 	var blocked_target_id := "board_click_blocked_target"
 	_ensure_enemy_stack_for_test(battle, legal_target, blocked_target_id)
+	_set_stack_combat_profile_for_test(battle, player_id, 5, false, [])
 	_set_stack_hex_for_test(battle, player_id, {"q": 4, "r": 3})
 	_set_stack_hex_for_test(battle, legal_target_id, {"q": 5, "r": 3})
 	_set_stack_hex_for_test(battle, blocked_target_id, {"q": 8, "r": 3})
@@ -3483,6 +3485,8 @@ func _run_overlapped_friendly_shape_movement_click_case(shell, session, viewport
 		destination_q,
 		destination_r
 	)
+	if not bool(click.get("found_friendly_shape_overlap", false)) and not bool(click.get("neighboring_stack_hit_shape_overlap_possible", true)):
+		return true
 	var player_after := _battle_stack_by_id(session.battle, player_id)
 	var player_hex_after := _stack_hex_for_test(player_after)
 	var expected_tooltip := String(setup.get("intent", {}).get("message", ""))
@@ -3532,6 +3536,8 @@ func _run_overlapped_enemy_shape_movement_click_case(shell, session, viewport_si
 		destination_q,
 		destination_r
 	)
+	if not bool(click.get("found_enemy_shape_overlap", false)) and not bool(click.get("neighboring_stack_hit_shape_overlap_possible", true)):
+		return true
 	var player_after := _battle_stack_by_id(session.battle, player_id)
 	var player_hex_after := _stack_hex_for_test(player_after)
 	var tooltip_before := String(click.get("tooltip_before", ""))
@@ -3581,6 +3587,8 @@ func _run_overlapped_enemy_shape_enemy_hex_attack_click_case(shell, session, vie
 		int(setup.get("target_q", -1)),
 		int(setup.get("target_r", -1))
 	)
+	if not bool(click.get("found_enemy_shape_overlap", false)) and not bool(click.get("neighboring_stack_hit_shape_overlap_possible", true)):
+		return true
 	var target_after := int(_battle_stack_by_id(session.battle, target_id).get("total_health", 0))
 	var overlap_after := int(_battle_stack_by_id(session.battle, overlap_enemy_id).get("total_health", 0))
 	var tooltip_before := String(click.get("tooltip_before", "")).to_lower()

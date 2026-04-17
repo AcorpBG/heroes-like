@@ -1453,6 +1453,25 @@ def validate_project_and_scenes(errors: list[str]) -> None:
         main_scene = ROOT / main_scene_match.group(1).replace("res://", "")
         ensure(main_scene.exists(), errors, f"Main scene is missing: {main_scene.relative_to(ROOT)}")
 
+    viewport_width_match = re.search(r"^window/size/viewport_width=(\d+)", project_text, flags=re.MULTILINE)
+    viewport_height_match = re.search(r"^window/size/viewport_height=(\d+)", project_text, flags=re.MULTILINE)
+    ensure(viewport_width_match is not None, errors, "project.godot is missing display/window/size/viewport_width")
+    ensure(viewport_height_match is not None, errors, "project.godot is missing display/window/size/viewport_height")
+    if viewport_width_match is not None:
+        ensure(int(viewport_width_match.group(1)) == 1920, errors, "project.godot must target a 1920 viewport width")
+    if viewport_height_match is not None:
+        ensure(int(viewport_height_match.group(1)) == 1080, errors, "project.godot must target a 1080 viewport height")
+    ensure(
+        'window/stretch/mode="canvas_items"' in project_text,
+        errors,
+        "project.godot must use canvas_items stretch for the 1080p presentation baseline",
+    )
+    ensure(
+        'window/stretch/aspect="expand"' in project_text,
+        errors,
+        "project.godot must expand the 1080p presentation baseline instead of letterboxing UI surfaces",
+    )
+
     autoload_entries = re.findall(r'^([A-Za-z0-9_]+)="[*]?(res://[^"]+)"', project_text, flags=re.MULTILINE)
     for autoload_name, autoload_path in autoload_entries:
         file_path = ROOT / autoload_path.replace("res://", "")

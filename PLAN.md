@@ -69,6 +69,9 @@ Current save/resume focus:
 - Continue proving any remaining River Pass save/resume surfaces through live-client routes before treating the save/resume milestone as complete.
 - Recently completed slice: overworld selected-site primary action usability added a primary selected-site order path with Enter/Space activation and routed live validation coverage.
 
+Current display/layout focus:
+- Recently completed slice: the Godot project display baseline now targets 1920x1080 with `canvas_items` / `expand` stretch, repo validation guards that display contract, and battle layout smoke promotes 1920x1080 as the primary viewport while retaining compact 1280x720 and 1024x600 regression coverage. The audit found the remaining 1280x720 coupling was test-side; at 1080p the battle board validation now reports when neighboring stack hit-shape overlap is geometrically impossible instead of treating that compact-layout edge case as a failure. Focused menu/outcome, overworld, town/battle, battle layout, and repo validation are green; no manual visual proof is claimed.
+
 Current battle focus:
 - Recently completed slice: the live battle board now reflects the landed hex legality model by showing legal movement and legal attack targets distinctly, marking selected-but-blocked targets as blocked, and keeping button previews aligned with the same rule checks that execute actions.
 - Recently completed follow-up: target cycling, board-click focus, validation target alignment, and compact action/target summaries now prefer legal attack targets when any exist and explicitly call out selected targets that are blocked from the current hex.
