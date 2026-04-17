@@ -119,6 +119,18 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: terrain texture did not expose a usable per-hex source sample size: %s." % terrain_summary)
 		get_tree().quit(1)
 		return false
+	if String(terrain_summary.get("texture_uv_space", "")) != "normalized_0_1" or not bool(terrain_summary.get("texture_uv_within_0_1", false)):
+		push_error("Battle smoke: terrain texture UV sampling is not normalized for draw_polygon: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
+	if not bool(terrain_summary.get("texture_source_within_texture", false)) or int(terrain_summary.get("texture_source_sample_count", 0)) != int(hex_summary.get("hex_count", -1)):
+		push_error("Battle smoke: terrain texture source samples do not stay inside the runtime texture: terrain=%s hex=%s." % [terrain_summary, hex_summary])
+		get_tree().quit(1)
+		return false
+	if float(terrain_summary.get("texture_uv_min_x", -1.0)) < 0.0 or float(terrain_summary.get("texture_uv_min_y", -1.0)) < 0.0 or float(terrain_summary.get("texture_uv_max_x", 2.0)) > 1.0 or float(terrain_summary.get("texture_uv_max_y", 2.0)) > 1.0:
+		push_error("Battle smoke: terrain texture normalized UV range is outside 0..1: %s." % terrain_summary)
+		get_tree().quit(1)
+		return false
 	var original_terrain := String(session.battle.get("terrain", ""))
 	session.battle["terrain"] = "plains"
 	board.call("set_battle_state", session)

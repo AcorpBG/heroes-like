@@ -232,6 +232,7 @@ func validation_hex_layout_summary() -> Dictionary:
 	var terrain_id := _battle_terrain_id()
 	var terrain_texture_id := _terrain_texture_id(terrain_id)
 	var terrain_texture = _terrain_texture_for(terrain_id)
+	var terrain_sampling_summary := _terrain_texture_sampling_summary(terrain_texture)
 	var player_input_active := String(_active_stack.get("side", "")) == "player"
 	var legal_destinations: Array = hex_state.get("legal_destinations", []) if hex_state.get("legal_destinations", []) is Array else []
 	var legal_melee_targets: Array = hex_state.get("legal_melee_targets", []) if hex_state.get("legal_melee_targets", []) is Array else []
@@ -324,6 +325,10 @@ func validation_hex_layout_summary() -> Dictionary:
 		"terrain_grid_max_fill_alpha": _terrain_grid_max_fill_alpha(terrain_texture != null),
 		"terrain_grid_border_mode": _terrain_grid_border_mode(terrain_texture != null),
 		"terrain_grid_repaints_texture_cells": _terrain_grid_repaints_texture_cells(terrain_texture != null),
+		"terrain_texture_uv_space": String(terrain_sampling_summary.get("texture_uv_space", "")),
+		"terrain_texture_uv_within_0_1": bool(terrain_sampling_summary.get("texture_uv_within_0_1", false)),
+		"terrain_texture_source_within_texture": bool(terrain_sampling_summary.get("texture_source_within_texture", false)),
+		"terrain_texture_source_sample_count": int(terrain_sampling_summary.get("texture_source_sample_count", 0)),
 		"distance": int(_battle.get("distance", 1)),
 		"player_stack_count": _player_stacks.size(),
 		"enemy_stack_count": _enemy_stacks.size(),
@@ -370,6 +375,7 @@ func validation_terrain_rendering_summary() -> Dictionary:
 	var texture_id := _terrain_texture_id(terrain_id)
 	var texture_path := _terrain_texture_path_for(texture_id)
 	var texture = _terrain_texture_for(terrain_id)
+	var sampling_summary := _terrain_texture_sampling_summary(texture)
 	var texture_size := Vector2.ZERO
 	var source_size := Vector2.ZERO
 	if texture != null:
@@ -400,6 +406,18 @@ func validation_terrain_rendering_summary() -> Dictionary:
 		"grid_border_mode": _terrain_grid_border_mode(texture != null),
 		"grid_border_deduplicated": _terrain_grid_border_deduplicated(texture != null),
 		"grid_repaints_texture_cells": _terrain_grid_repaints_texture_cells(texture != null),
+		"texture_uv_space": String(sampling_summary.get("texture_uv_space", "")),
+		"texture_uv_min_x": float(sampling_summary.get("texture_uv_min_x", 0.0)),
+		"texture_uv_min_y": float(sampling_summary.get("texture_uv_min_y", 0.0)),
+		"texture_uv_max_x": float(sampling_summary.get("texture_uv_max_x", 0.0)),
+		"texture_uv_max_y": float(sampling_summary.get("texture_uv_max_y", 0.0)),
+		"texture_uv_within_0_1": bool(sampling_summary.get("texture_uv_within_0_1", false)),
+		"texture_source_min_x": float(sampling_summary.get("texture_source_min_x", 0.0)),
+		"texture_source_min_y": float(sampling_summary.get("texture_source_min_y", 0.0)),
+		"texture_source_max_x": float(sampling_summary.get("texture_source_max_x", 0.0)),
+		"texture_source_max_y": float(sampling_summary.get("texture_source_max_y", 0.0)),
+		"texture_source_within_texture": bool(sampling_summary.get("texture_source_within_texture", false)),
+		"texture_source_sample_count": int(sampling_summary.get("texture_source_sample_count", 0)),
 	}
 
 func validation_preview_hex_destination(q: int, r: int) -> Dictionary:
@@ -693,13 +711,9 @@ func _draw_hex_snapped_terrain_texture(hex_layout: Dictionary, texture: Texture2
 			if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
 				continue
 			var source_rect := Rect2(_terrain_hex_texture_source_position(cell, texture_size, source_size), source_size)
-			var uvs := PackedVector2Array()
-			for point in points:
-				var relative := Vector2(
-					(point.x - bounds.position.x) / bounds.size.x,
-					(point.y - bounds.position.y) / bounds.size.y
-				)
-				uvs.append(source_rect.position + Vector2(relative.x * source_rect.size.x, relative.y * source_rect.size.y))
+			var uvs := _terrain_hex_texture_uvs(points, bounds, source_rect, texture_size)
+			if uvs.size() != points.size():
+				continue
 			var shade := 0.92 + _hex_variation(cell, 43.0) * 0.10
 			var modulate := Color(
 				clampf(TERRAIN_TEXTURE_MODULATE.r * shade, 0.0, 1.0),
@@ -1171,6 +1185,91 @@ func _terrain_hex_texture_source_position(cell: Vector2i, texture_size: Vector2,
 		floor(usable.x * _hex_variation(cell, 3.0)),
 		floor(usable.y * _hex_variation(cell, 17.0))
 	)
+
+func _terrain_hex_texture_uvs(points: PackedVector2Array, bounds: Rect2, source_rect: Rect2, texture_size: Vector2) -> PackedVector2Array:
+	var uvs := PackedVector2Array()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
+		return uvs
+	for point in points:
+		var relative := Vector2(
+			(point.x - bounds.position.x) / bounds.size.x,
+			(point.y - bounds.position.y) / bounds.size.y
+		)
+		var source_point := source_rect.position + Vector2(
+			relative.x * source_rect.size.x,
+			relative.y * source_rect.size.y
+		)
+		# CanvasItem.draw_polygon samples Texture2D with normalized UVs.
+		uvs.append(_terrain_texture_normalized_uv(source_point, texture_size))
+	return uvs
+
+func _terrain_texture_normalized_uv(source_point: Vector2, texture_size: Vector2) -> Vector2:
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return Vector2.ZERO
+	return Vector2(
+		clampf(source_point.x / texture_size.x, 0.0, 1.0),
+		clampf(source_point.y / texture_size.y, 0.0, 1.0)
+	)
+
+func _terrain_texture_sampling_summary(texture) -> Dictionary:
+	var empty_summary := {
+		"texture_uv_space": "",
+		"texture_uv_min_x": 0.0,
+		"texture_uv_min_y": 0.0,
+		"texture_uv_max_x": 0.0,
+		"texture_uv_max_y": 0.0,
+		"texture_uv_within_0_1": false,
+		"texture_source_min_x": 0.0,
+		"texture_source_min_y": 0.0,
+		"texture_source_max_x": 0.0,
+		"texture_source_max_y": 0.0,
+		"texture_source_within_texture": false,
+		"texture_source_sample_count": 0,
+	}
+	if texture == null:
+		return empty_summary
+	var texture_size: Vector2 = texture.get_size()
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return empty_summary
+	var source_size := _terrain_hex_texture_source_size(texture_size)
+	if source_size.x <= 0.0 or source_size.y <= 0.0:
+		return empty_summary
+	var min_source := texture_size
+	var max_source := Vector2.ZERO
+	var min_uv := Vector2(1.0, 1.0)
+	var max_uv := Vector2.ZERO
+	var sample_count := 0
+	for row in range(HEX_ROWS):
+		for column in range(HEX_COLUMNS):
+			var cell := Vector2i(column, row)
+			var source_rect := Rect2(_terrain_hex_texture_source_position(cell, texture_size, source_size), source_size)
+			var source_min := source_rect.position
+			var source_max := source_rect.position + source_rect.size
+			var uv_min := _terrain_texture_normalized_uv(source_min, texture_size)
+			var uv_max := _terrain_texture_normalized_uv(source_max, texture_size)
+			min_source.x = minf(min_source.x, source_min.x)
+			min_source.y = minf(min_source.y, source_min.y)
+			max_source.x = maxf(max_source.x, source_max.x)
+			max_source.y = maxf(max_source.y, source_max.y)
+			min_uv.x = minf(min_uv.x, uv_min.x)
+			min_uv.y = minf(min_uv.y, uv_min.y)
+			max_uv.x = maxf(max_uv.x, uv_max.x)
+			max_uv.y = maxf(max_uv.y, uv_max.y)
+			sample_count += 1
+	return {
+		"texture_uv_space": "normalized_0_1",
+		"texture_uv_min_x": min_uv.x,
+		"texture_uv_min_y": min_uv.y,
+		"texture_uv_max_x": max_uv.x,
+		"texture_uv_max_y": max_uv.y,
+		"texture_uv_within_0_1": min_uv.x >= 0.0 and min_uv.y >= 0.0 and max_uv.x <= 1.0 and max_uv.y <= 1.0,
+		"texture_source_min_x": min_source.x,
+		"texture_source_min_y": min_source.y,
+		"texture_source_max_x": max_source.x,
+		"texture_source_max_y": max_source.y,
+		"texture_source_within_texture": min_source.x >= 0.0 and min_source.y >= 0.0 and max_source.x <= texture_size.x and max_source.y <= texture_size.y,
+		"texture_source_sample_count": sample_count,
+	}
 
 func _hex_variation(cell: Vector2i, salt: float) -> float:
 	var value := sin(float(cell.x) * 12.9898 + float(cell.y) * 78.233 + salt) * 43758.5453

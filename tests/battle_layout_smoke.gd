@@ -106,6 +106,14 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 		push_error("Battle layout smoke: textured terrain grid borders are not on the cleaned border path at %s: %s." % [viewport_size, terrain_summary])
 		get_tree().quit(1)
 		return false
+	if String(terrain_summary.get("texture_uv_space", "")) != "normalized_0_1" or not bool(terrain_summary.get("texture_uv_within_0_1", false)):
+		push_error("Battle layout smoke: terrain texture UV sampling is not normalized at %s: %s." % [viewport_size, terrain_summary])
+		get_tree().quit(1)
+		return false
+	if not bool(terrain_summary.get("texture_source_within_texture", false)) or int(terrain_summary.get("texture_source_sample_count", 0)) != int(hex_summary.get("hex_count", -1)):
+		push_error("Battle layout smoke: terrain texture source sampling range is invalid at %s: terrain=%s hex=%s." % [viewport_size, terrain_summary, hex_summary])
+		get_tree().quit(1)
+		return false
 	var stack_cells: Array = hex_summary.get("stack_cells", [])
 	var expected_stack_count := int(hex_summary.get("player_stack_count", 0)) + int(hex_summary.get("enemy_stack_count", 0))
 	if stack_cells.size() < expected_stack_count:
