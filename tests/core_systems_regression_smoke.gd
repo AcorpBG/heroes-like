@@ -11,6 +11,8 @@ func _run() -> void:
 		return
 	if not await _run_auto_interaction_regressions():
 		return
+	if not _run_neutral_dwelling_unit_slice_regression():
+		return
 	if not _run_hostile_commander_identity_regression():
 		return
 	if not _run_hostile_commander_field_victory_regression():
@@ -110,6 +112,90 @@ func _run_auto_interaction_regressions() -> bool:
 	if not _run_enemy_town_context_regression():
 		return false
 	if not await _run_overworld_primary_action_regression():
+		return false
+	return true
+
+func _run_neutral_dwelling_unit_slice_regression() -> bool:
+	var roadwarden := ContentService.get_unit("unit_neutral_roadwardens")
+	if roadwarden.is_empty() or String(roadwarden.get("affiliation", "")) != "neutral" or String(roadwarden.get("faction_id", "")) != "":
+		push_error("Core systems smoke: neutral Roadwardens are not authored outside faction ladders.")
+		get_tree().quit(1)
+		return false
+
+	var dwelling := ContentService.get_neutral_dwelling("neutral_dwelling_roadward_lodge")
+	if dwelling.is_empty() or "unit_neutral_roadwardens" not in dwelling.get("unit_ids", []):
+		push_error("Core systems smoke: Roadward Lodge family does not link to its neutral unit roster.")
+		get_tree().quit(1)
+		return false
+
+	var site := ContentService.get_resource_site("site_free_company_yard")
+	if String(site.get("dwelling_scope", "")) != "neutral" or String(site.get("neutral_dwelling_family_id", "")) != "neutral_dwelling_roadward_lodge":
+		push_error("Core systems smoke: Free Company Yard is not wired as a neutral dwelling family site.")
+		get_tree().quit(1)
+		return false
+
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var nodes = session.overworld.get("resource_nodes", [])
+	nodes.append(
+		{
+			"placement_id": "neutral_test_roadward_lodge",
+			"site_id": "site_free_company_yard",
+			"x": 1,
+			"y": 3,
+		}
+	)
+	session.overworld["resource_nodes"] = nodes
+	_set_active_hero_position(session, Vector2i(1, 3))
+
+	var roadwardens_before := _army_unit_count(session.overworld.get("army", {}), "unit_neutral_roadwardens")
+	var collect_result := OverworldRules.collect_active_resource(session)
+	var claimed_node := _resource_node_by_placement(session, "neutral_test_roadward_lodge")
+	var roadwardens_after := _army_unit_count(session.overworld.get("army", {}), "unit_neutral_roadwardens")
+	if not bool(collect_result.get("ok", false)) or String(claimed_node.get("collected_by_faction_id", "")) != "player":
+		push_error("Core systems smoke: neutral dwelling claim did not resolve through overworld rules.")
+		get_tree().quit(1)
+		return false
+	if roadwardens_after <= roadwardens_before:
+		push_error("Core systems smoke: neutral dwelling claim did not add neutral recruits to the field army.")
+		get_tree().quit(1)
+		return false
+
+	var town_before := _recruit_unit_count(_town_by_placement(session, "riverwatch_hold").get("available_recruits", {}), "unit_neutral_roadwardens")
+	var muster_messages := OverworldRules.apply_controlled_resource_site_musters(session, "player")
+	var town_after := _recruit_unit_count(_town_by_placement(session, "riverwatch_hold").get("available_recruits", {}), "unit_neutral_roadwardens")
+	if muster_messages.is_empty() or town_after <= town_before:
+		push_error("Core systems smoke: controlled neutral dwelling did not feed weekly neutral musters to the nearest town.")
+		get_tree().quit(1)
+		return false
+
+	var battle_payload := BattleRules.create_battle_payload(
+		session,
+		{
+			"placement_id": "neutral_test_roadward_watch",
+			"encounter_id": "encounter_roadward_lodge_watch",
+			"x": 1,
+			"y": 3,
+			"combat_seed": 7711,
+		}
+	)
+	if battle_payload.is_empty() or String(battle_payload.get("enemy_army_affiliation", "")) != "neutral":
+		push_error("Core systems smoke: neutral encounter did not build a neutral battle payload.")
+		get_tree().quit(1)
+		return false
+	var neutral_enemy_seen := false
+	for stack in battle_payload.get("stacks", []):
+		if not (stack is Dictionary) or String(stack.get("side", "")) != "enemy":
+			continue
+		if String(stack.get("affiliation", "")) == "neutral" and String(stack.get("faction_id", "")) == "":
+			neutral_enemy_seen = true
+			break
+	if not neutral_enemy_seen:
+		push_error("Core systems smoke: neutral encounter enemy stacks did not preserve neutral affiliation.")
+		get_tree().quit(1)
 		return false
 	return true
 
@@ -3985,6 +4071,24 @@ func _recruit_payload_total(value: Variant) -> int:
 	if value is Dictionary:
 		for unit_id_value in value.keys():
 			total += max(0, int(value.get(unit_id_value, 0)))
+	return total
+
+func _recruit_unit_count(value: Variant, unit_id: String) -> int:
+	if not (value is Dictionary):
+		return 0
+	return max(0, int(value.get(unit_id, 0)))
+
+func _army_unit_count(army: Variant, unit_id: String) -> int:
+	if not (army is Dictionary):
+		return 0
+	var total := 0
+	var stacks = army.get("stacks", [])
+	if not (stacks is Array):
+		return total
+	for stack in stacks:
+		if not (stack is Dictionary) or String(stack.get("unit_id", "")) != unit_id:
+			continue
+		total += max(0, int(stack.get("count", stack.get("base_count", 0))))
 	return total
 
 func _normalized_array_size(value: Variant) -> int:

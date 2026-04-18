@@ -1,0 +1,28 @@
+{
+  "items": [
+    {
+      "id": "neutral_dwelling_roadward_lodge",
+      "name": "Roadward Lodge",
+      "summary": "Independent toll-road companies that sell pikehook guards and hearthbow crews to whichever banner keeps the road paid and passable.",
+      "biome_ids": ["biome_grasslands", "biome_snow_frost_marches"],
+      "unit_ids": ["unit_neutral_roadwardens", "unit_neutral_hearthbow_carriers"],
+      "site_ids": ["site_free_company_yard"],
+      "map_object_ids": ["object_roadward_lodge"],
+      "army_group_ids": ["army_neutral_roadward_lodge_watch"],
+      "encounter_ids": ["encounter_roadward_lodge_watch"],
+      "content_status": "neutral_dwelling_slice"
+    },
+    {
+      "id": "neutral_dwelling_fenhound_kennels",
+      "name": "Fenhound Kennels",
+      "summary": "Marsh-side handlers who breed fast hounds and mossglass-armored sentinels for local patrol contracts rather than faction levies.",
+      "biome_ids": ["biome_mire_fen", "biome_deep_forest", "biome_coast_archipelago"],
+      "unit_ids": ["unit_neutral_fenhound_runners", "unit_neutral_mossglass_sentinels"],
+      "site_ids": ["site_fenhound_kennels"],
+      "map_object_ids": ["object_fenhound_kennels"],
+      "army_group_ids": ["army_neutral_fenhound_kennel_watch"],
+      "encounter_ids": ["encounter_fenhound_kennel_watch"],
+      "content_status": "neutral_dwelling_slice"
+    }
+  ]
+}

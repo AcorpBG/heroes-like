@@ -804,6 +804,62 @@
       ],
       "rewards": {"gold": 330, "ore": 1, "experience": 330},
       "victory_flags": ["daybreak_matrix_broken"]
+    },
+    {
+      "id": "encounter_roadward_lodge_watch",
+      "name": "Roadward Lodge Watch",
+      "enemy_group_id": "army_neutral_roadward_lodge_watch",
+      "affiliation": "neutral",
+      "terrain": "grass",
+      "battlefield_tags": ["open_lane", "chokepoint"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Toll Yard Captain",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "roadward_toll_line",
+          "type": "supply_post",
+          "label": "Toll Stores",
+          "summary": "The lodge keeps spare shafts, bolts, and pay chests behind the front line until the yard is secured.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["cohesion", "reinforcement"]
+        }
+      ],
+      "rewards": {"gold": 120, "experience": 120}
+    },
+    {
+      "id": "encounter_fenhound_kennel_watch",
+      "name": "Fenhound Kennel Watch",
+      "enemy_group_id": "army_neutral_fenhound_kennel_watch",
+      "affiliation": "neutral",
+      "terrain": "mire",
+      "battlefield_tags": ["bog_channels", "fog_bank"],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Kennel Caller",
+        "command": {"attack": 1, "defense": 1, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["bogwise"]
+      },
+      "field_objectives": [
+        {
+          "id": "kennel_mire_run",
+          "type": "hazard_zone",
+          "label": "Kennel Run",
+          "summary": "The kennel run gives the hounds a clean rush lane until the firmer ground is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "momentum"]
+        }
+      ],
+      "rewards": {"gold": 100, "experience": 130}
     }
   ]
 }

@@ -116,6 +116,7 @@ The authored content boundary remains split into JSON domains under `content/`:
 - `resource_sites.json`
 - `biomes.json`
 - `map_objects.json`
+- `neutral_dwellings.json`
 - `artifacts.json`
 - `spells.json`
 - `encounters.json`
@@ -134,6 +135,10 @@ The next companion design source is `docs/overworld-content-bible.md`. It define
 Implementation note date: 2026-04-18
 
 The first overworld-content foundation slice now implements that direction as real content domains and runtime hooks: `content/biomes.json`, `content/map_objects.json`, expanded `resource_sites.json` families, ContentService validation/loading, authored biome terrain labels/passability, and expanded overworld site-family context/action handling. This is a foundation for future scenario placement, not proof of broad adventure-map playability.
+
+Implementation note date: 2026-04-18
+
+The first neutral dwelling/unit slice adds `content/neutral_dwellings.json` as a small canonical family layer tying neutral recruit sites, neutral units, map-object silhouettes, guard army groups, and neutral encounters together. Neutral units are authored with `affiliation: "neutral"` and no faction id, so they can appear in recruit sources and battles without becoming a seventh faction ladder or inheriting six-faction doctrine bonuses. This is a first neutral-content slice, not a complete neutral ecology.
 
 ## Repository Structure
 - `content/`: authored gameplay domains.

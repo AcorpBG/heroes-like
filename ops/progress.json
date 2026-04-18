@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T20:02:43Z",
+  "updatedAt": "2026-04-18T20:26:44Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-content-foundation-10184",
-  "currentSliceTitle": "Implement first overworld biome and map-object content foundation",
+  "currentSliceId": "neutral-dwelling-unit-slice-10184",
+  "currentSliceTitle": "Implement first neutral dwelling and neutral-unit slice",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented the first real overworld-content foundation slice from docs/overworld-content-bible.md. Added content/biomes.json and content/map_objects.json, expanded resource_sites with mines, scouting structures, guarded reward sites, transit objects, and repeatable service buildings, and wired ContentService/OverworldRules/ScenarioRules/overworld map rendering plus repo validation around the richer content grammar. Current scenarios were kept stable; this is content/runtime foundation, not a claim of HoMM3-class overworld breadth. Verification: python3 tests/validate_repo.py, godot4 --headless --path . tests/overworld_visual_smoke.tscn, godot4 --headless --path . tests/core_systems_regression_smoke.tscn, and git diff --check passed.",
+  "currentSliceNotes": "Completed the first neutral-content implementation slice: authored neutral unit records outside the six faction ladders, added neutral dwelling families with recruit/guard data, converted selected generic neutral dwelling sites to neutral rosters, and wired ContentService, OverworldRules, BattleRules, repo validation, and focused core smoke coverage so neutral recruit sources and neutral encounters can use real neutral rosters. This is a first slice, not a complete neutral ecology; existing scenarios were preserved except for truthful generic site data.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -112,6 +112,12 @@
       "difficulty": "high"
     },
     {
+      "id": "neutral-dwelling-unit-slice",
+      "title": "Implement first real neutral dwellings and neutral units for overworld and battle",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -167,6 +173,8 @@
     }
   ],
   "nextActions": [
+    "Add one narrow manually-audited guarded-neutral-dwelling placement only after proving its overworld entry, battle resolution, rewards, and save/resume behavior in the live client.",
+    "Expand neutral ecology with wandering stacks, neutral banks, surrender/recruit diplomacy, and biome-specific neutral palettes after this first neutral dwelling foundation stays stable.",
     "Place selected new overworld object families in one narrow scenario slice only after defining truthful encounter, transit, and service behavior for that scenario.",
     "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",
     "Integrate selected scaffold factions into scenario placements, army groups, encounters, overworld landmarks, AI fronts, and manual play notes.",

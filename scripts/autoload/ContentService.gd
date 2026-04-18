@@ -13,6 +13,7 @@ const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
 const RESOURCE_SITES_PATH := "%s/resource_sites.json" % CONTENT_DIR
 const BIOMES_PATH := "%s/biomes.json" % CONTENT_DIR
 const MAP_OBJECTS_PATH := "%s/map_objects.json" % CONTENT_DIR
+const NEUTRAL_DWELLINGS_PATH := "%s/neutral_dwellings.json" % CONTENT_DIR
 const ARTIFACTS_PATH := "%s/artifacts.json" % CONTENT_DIR
 const SPELLS_PATH := "%s/spells.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
@@ -112,6 +113,9 @@ func get_biome_for_terrain(terrain_id: String) -> Dictionary:
 func get_map_object(id: String) -> Dictionary:
 	return get_content_by_id(MAP_OBJECTS_PATH, id)
 
+func get_neutral_dwelling(id: String) -> Dictionary:
+	return get_content_by_id(NEUTRAL_DWELLINGS_PATH, id)
+
 func get_artifact(id: String) -> Dictionary:
 	return get_content_by_id(ARTIFACTS_PATH, id)
 
@@ -157,6 +161,7 @@ func _validate_content() -> void:
 	var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
 	var biome_index := _index_items(_items_from_raw(load_json(BIOMES_PATH)))
 	var map_object_index := _index_items(_items_from_raw(load_json(MAP_OBJECTS_PATH)))
+	var neutral_dwelling_index := _index_items(_items_from_raw(load_json(NEUTRAL_DWELLINGS_PATH)))
 	var artifact_index := _index_items(_items_from_raw(load_json(ARTIFACTS_PATH)))
 	var spell_index := _index_items(_items_from_raw(load_json(SPELLS_PATH)))
 	var campaign_index := _index_items(_items_from_raw(load_json(CAMPAIGNS_PATH)))
@@ -166,9 +171,19 @@ func _validate_content() -> void:
 	for biome in biome_index.values():
 		_validate_biome(biome)
 	for resource_site in resource_site_index.values():
-		_validate_resource_site(resource_site, unit_index, spell_index)
+		_validate_resource_site(resource_site, unit_index, spell_index, neutral_dwelling_index, army_group_index, encounter_index)
 	for map_object in map_object_index.values():
 		_validate_map_object(map_object, biome_index, resource_site_index, faction_index)
+	for neutral_dwelling in neutral_dwelling_index.values():
+		_validate_neutral_dwelling(
+			neutral_dwelling,
+			unit_index,
+			resource_site_index,
+			map_object_index,
+			army_group_index,
+			encounter_index,
+			biome_index
+		)
 	for faction in faction_index.values():
 		_validate_faction(faction, town_index, hero_index)
 	for hero in hero_index.values():
@@ -255,7 +270,39 @@ func _validate_biome(biome: Dictionary) -> void:
 		if not (values is Array) or values.is_empty():
 			push_warning("Biome %s must define non-empty %s." % [biome_id, list_key])
 
-func _validate_resource_site(site: Dictionary, unit_index: Dictionary, spell_index: Dictionary) -> void:
+func _unit_is_neutral(unit: Dictionary) -> bool:
+	return bool(unit.get("neutral", false)) or String(unit.get("affiliation", "")) == "neutral"
+
+func _validate_recruit_payload(
+	label: String,
+	recruits: Variant,
+	unit_index: Dictionary,
+	require_neutral_units: bool = false
+) -> void:
+	if recruits == null:
+		return
+	if not (recruits is Dictionary):
+		push_warning("%s must be a dictionary." % label)
+		return
+	var payload: Dictionary = recruits
+	for unit_id_value in payload.keys():
+		var unit_id := String(unit_id_value)
+		if unit_id == "" or not unit_index.has(unit_id):
+			push_warning("%s references missing unit %s." % [label, unit_id])
+			continue
+		if int(payload[unit_id_value]) <= 0:
+			push_warning("%s must define positive recruit counts for %s." % [label, unit_id])
+		if require_neutral_units and not _unit_is_neutral(unit_index.get(unit_id, {})):
+			push_warning("%s must use neutral units; %s is faction-linked." % [label, unit_id])
+
+func _validate_resource_site(
+	site: Dictionary,
+	unit_index: Dictionary,
+	spell_index: Dictionary,
+	neutral_dwelling_index: Dictionary,
+	army_group_index: Dictionary,
+	encounter_index: Dictionary
+) -> void:
 	var site_id := String(site.get("id", ""))
 	if String(site.get("name", "")) == "":
 		push_warning("Resource site %s must define a name." % site_id)
@@ -281,12 +328,31 @@ func _validate_resource_site(site: Dictionary, unit_index: Dictionary, spell_ind
 		if site.has(recruit_key) and not (recruits is Dictionary):
 			push_warning("Resource site %s %s must be a dictionary." % [site_id, recruit_key])
 		elif recruits is Dictionary:
-			for unit_id_value in recruits.keys():
-				var unit_id := String(unit_id_value)
-				if unit_id == "" or not unit_index.has(unit_id):
-					push_warning("Resource site %s references missing unit %s." % [site_id, unit_id])
-				if int(recruits[unit_id_value]) <= 0:
-					push_warning("Resource site %s %s must define positive recruit counts for %s." % [site_id, recruit_key, unit_id])
+			_validate_recruit_payload("Resource site %s %s" % [site_id, recruit_key], recruits, unit_index)
+
+	var neutral_roster = site.get("neutral_roster", {})
+	if site.has("neutral_roster"):
+		if not (neutral_roster is Dictionary):
+			push_warning("Resource site %s neutral_roster must be a dictionary." % site_id)
+		else:
+			_validate_recruit_payload(
+				"Resource site %s neutral_roster claim_recruits" % site_id,
+				neutral_roster.get("claim_recruits", {}),
+				unit_index,
+				true
+			)
+			_validate_recruit_payload(
+				"Resource site %s neutral_roster weekly_recruits" % site_id,
+				neutral_roster.get("weekly_recruits", {}),
+				unit_index,
+				true
+			)
+			var guard_army_group_id := String(neutral_roster.get("guard_army_group_id", ""))
+			if guard_army_group_id != "" and not army_group_index.has(guard_army_group_id):
+				push_warning("Resource site %s neutral_roster references missing guard army group %s." % [site_id, guard_army_group_id])
+			var guard_encounter_id := String(neutral_roster.get("guard_encounter_id", ""))
+			if guard_encounter_id != "" and not encounter_index.has(guard_encounter_id):
+				push_warning("Resource site %s neutral_roster references missing guard encounter %s." % [site_id, guard_encounter_id])
 
 	var spell_id := String(site.get("learn_spell_id", ""))
 	if spell_id != "":
@@ -301,6 +367,15 @@ func _validate_resource_site(site: Dictionary, unit_index: Dictionary, spell_ind
 				push_warning("Mine site %s must be persistent-control content." % site_id)
 			if not (site.get("control_income", {}) is Dictionary) or site.get("control_income", {}).is_empty():
 				push_warning("Mine site %s must define control_income." % site_id)
+		"neutral_dwelling":
+			var dwelling_family_id := String(site.get("neutral_dwelling_family_id", ""))
+			if dwelling_family_id != "" and not neutral_dwelling_index.has(dwelling_family_id):
+				push_warning("Neutral dwelling site %s references missing neutral dwelling family %s." % [site_id, dwelling_family_id])
+			var scope := String(site.get("dwelling_scope", ""))
+			if scope != "" and scope not in ["neutral", "faction_linked", "biome_linked"]:
+				push_warning("Neutral dwelling site %s uses unsupported dwelling_scope %s." % [site_id, scope])
+			if scope == "neutral" and not (neutral_roster is Dictionary and not neutral_roster.is_empty()):
+				push_warning("Neutral dwelling site %s must define neutral_roster when dwelling_scope is neutral." % site_id)
 		"scouting_structure":
 			if not bool(site.get("persistent_control", false)):
 				push_warning("Scouting site %s must be persistent-control content." % site_id)
@@ -362,6 +437,68 @@ func _validate_map_object(
 	if not (roles is Array) or roles.is_empty():
 		push_warning("Map object %s must define non-empty map_roles." % object_id)
 
+func _validate_neutral_dwelling(
+	dwelling: Dictionary,
+	unit_index: Dictionary,
+	resource_site_index: Dictionary,
+	map_object_index: Dictionary,
+	army_group_index: Dictionary,
+	encounter_index: Dictionary,
+	biome_index: Dictionary
+) -> void:
+	var dwelling_id := String(dwelling.get("id", ""))
+	if String(dwelling.get("name", "")) == "":
+		push_warning("Neutral dwelling %s must define a name." % dwelling_id)
+	if String(dwelling.get("summary", "")) == "":
+		push_warning("Neutral dwelling %s must define a summary." % dwelling_id)
+	for biome_id_value in dwelling.get("biome_ids", []):
+		var biome_id := String(biome_id_value)
+		if biome_id == "" or not biome_index.has(biome_id):
+			push_warning("Neutral dwelling %s references missing biome %s." % [dwelling_id, biome_id])
+	var unit_ids = dwelling.get("unit_ids", [])
+	if not (unit_ids is Array) or unit_ids.is_empty():
+		push_warning("Neutral dwelling %s must define unit_ids." % dwelling_id)
+	elif unit_ids is Array:
+		for unit_id_value in unit_ids:
+			var unit_id := String(unit_id_value)
+			if unit_id == "" or not unit_index.has(unit_id):
+				push_warning("Neutral dwelling %s references missing unit %s." % [dwelling_id, unit_id])
+			elif not _unit_is_neutral(unit_index.get(unit_id, {})):
+				push_warning("Neutral dwelling %s unit %s must be authored as neutral." % [dwelling_id, unit_id])
+	for site_id_value in dwelling.get("site_ids", []):
+		var site_id := String(site_id_value)
+		if site_id == "" or not resource_site_index.has(site_id):
+			push_warning("Neutral dwelling %s references missing site %s." % [dwelling_id, site_id])
+			continue
+		var site: Dictionary = resource_site_index.get(site_id, {})
+		if String(site.get("family", "")) != "neutral_dwelling":
+			push_warning("Neutral dwelling %s site %s must use family neutral_dwelling." % [dwelling_id, site_id])
+		if String(site.get("neutral_dwelling_family_id", "")) not in ["", dwelling_id]:
+			push_warning("Neutral dwelling %s site %s references a different neutral_dwelling_family_id." % [dwelling_id, site_id])
+	for object_id_value in dwelling.get("map_object_ids", []):
+		var object_id := String(object_id_value)
+		if object_id == "" or not map_object_index.has(object_id):
+			push_warning("Neutral dwelling %s references missing map object %s." % [dwelling_id, object_id])
+			continue
+		if String(map_object_index.get(object_id, {}).get("family", "")) != "neutral_dwelling":
+			push_warning("Neutral dwelling %s map object %s must use family neutral_dwelling." % [dwelling_id, object_id])
+	for group_id_value in dwelling.get("army_group_ids", []):
+		var group_id := String(group_id_value)
+		if group_id == "" or not army_group_index.has(group_id):
+			push_warning("Neutral dwelling %s references missing army group %s." % [dwelling_id, group_id])
+			continue
+		if String(army_group_index.get(group_id, {}).get("affiliation", "")) != "neutral":
+			push_warning("Neutral dwelling %s army group %s must be neutral." % [dwelling_id, group_id])
+	for encounter_id_value in dwelling.get("encounter_ids", []):
+		var encounter_id := String(encounter_id_value)
+		if encounter_id == "" or not encounter_index.has(encounter_id):
+			push_warning("Neutral dwelling %s references missing encounter %s." % [dwelling_id, encounter_id])
+			continue
+		var encounter_group_id := String(encounter_index.get(encounter_id, {}).get("enemy_group_id", ""))
+		if encounter_group_id != "" and army_group_index.has(encounter_group_id):
+			if String(army_group_index.get(encounter_group_id, {}).get("affiliation", "")) != "neutral":
+				push_warning("Neutral dwelling %s encounter %s must use a neutral army group." % [dwelling_id, encounter_id])
+
 func _validate_faction(faction: Dictionary, town_index: Dictionary, hero_index: Dictionary) -> void:
 	var faction_id := String(faction.get("id", ""))
 	for town_id_value in faction.get("town_ids", []):
@@ -399,7 +536,10 @@ func _validate_hero(hero: Dictionary, faction_index: Dictionary, spell_index: Di
 func _validate_unit(unit: Dictionary, faction_index: Dictionary) -> void:
 	var unit_id := String(unit.get("id", ""))
 	var faction_id := String(unit.get("faction_id", ""))
-	if faction_id == "" or not faction_index.has(faction_id):
+	if _unit_is_neutral(unit):
+		if faction_id != "":
+			push_warning("Neutral unit %s should not reference faction id %s." % [unit_id, faction_id])
+	elif faction_id == "" or not faction_index.has(faction_id):
 		push_warning("Unit %s references missing faction id %s." % [unit_id, faction_id])
 	if int(unit.get("hp", 0)) <= 0:
 		push_warning("Unit %s must define hp > 0." % unit_id)
@@ -409,7 +549,13 @@ func _validate_unit(unit: Dictionary, faction_index: Dictionary) -> void:
 func _validate_army_group(army_group: Dictionary, faction_index: Dictionary, unit_index: Dictionary) -> void:
 	var group_id := String(army_group.get("id", ""))
 	var faction_id := String(army_group.get("faction_id", ""))
-	if faction_id != "" and not faction_index.has(faction_id):
+	var affiliation := String(army_group.get("affiliation", ""))
+	if affiliation == "neutral":
+		if faction_id != "":
+			push_warning("Neutral army group %s should not reference faction id %s." % [group_id, faction_id])
+	elif faction_id == "":
+		push_warning("Army group %s must define faction_id or affiliation=neutral." % group_id)
+	elif not faction_index.has(faction_id):
 		push_warning("Army group %s references missing faction id %s." % [group_id, faction_id])
 
 	var stacks = army_group.get("stacks", [])
@@ -423,6 +569,8 @@ func _validate_army_group(army_group: Dictionary, faction_index: Dictionary, uni
 		var unit_id := String(stack.get("unit_id", ""))
 		if unit_id == "" or not unit_index.has(unit_id):
 			push_warning("Army group %s references missing unit id %s." % [group_id, unit_id])
+		elif affiliation == "neutral" and not _unit_is_neutral(unit_index.get(unit_id, {})):
+			push_warning("Neutral army group %s stack %s must use neutral units." % [group_id, unit_id])
 		if int(stack.get("count", 0)) <= 0:
 			push_warning("Army group %s has non-positive stack count for unit %s." % [group_id, unit_id])
 

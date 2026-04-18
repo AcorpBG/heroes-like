@@ -70,6 +70,26 @@ Limits:
 - Transit objects are authored and validated as route-control content, but paired transit traversal is still a future scenario/system slice.
 - Guarded reward sites are authored with guard profiles and reward grammar; full encounter-linked bank resolution remains future work.
 
+## Current Implementation Slice: Neutral Dwelling And Neutral Unit Foundation
+Status: completed on 2026-04-18 as the first real neutral-content implementation slice.
+
+Purpose:
+- Add neutral units and neutral dwelling families that can exist outside the six faction ladders.
+- Let neutral recruit sources and neutral encounters use real neutral rosters without creating a seventh playable faction or borrowing faction armies.
+- Keep current scenario disruption narrow; this slice changes only the generic Free Company Yard and Fenhound Kennels into neutral-roster sites while preserving River Pass's scenario-specific Riverwatch relief yard.
+
+Implemented:
+- Added `content/neutral_dwellings.json` as a family layer for neutral recruit sites, map objects, guard armies, and neutral encounters.
+- Added neutral unit records with `affiliation: "neutral"` and no faction id.
+- Added neutral army groups and neutral encounters for Roadward Lodge and Fenhound Kennels guards.
+- Wired ContentService, OverworldRules, BattleRules, and validation around neutral affiliations, neutral rosters, neutral dwelling family labels, neutral battle payloads, and neutral recruit musters.
+- Added focused core-system smoke coverage proving a neutral dwelling site can grant neutral claim recruits, feed neutral weekly musters, and produce a battle payload whose enemy army and stacks remain neutral.
+
+Limits:
+- This is a first neutral dwelling/unit slice, not a complete neutral ecology.
+- Guarded dwelling encounters are authored and battle-ready, but existing scenarios do not yet place a full guarded-neutral-dwelling flow as route-critical content.
+- Broader neutral banks, wandering monsters, surrender/recruit diplomacy, and biome-wide neutral ecology are future slices.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

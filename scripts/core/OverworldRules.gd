@@ -366,7 +366,7 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	var reward_summary := _describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Stores %s." % reward_summary)
-	var recruit_message := _grant_site_claim_recruits(session, site.get("claim_recruits", {}))
+	var recruit_message := _grant_site_claim_recruits(session, _resource_site_claim_recruits(site))
 	if recruit_message != "":
 		messages.append(recruit_message)
 	var spell_message := _learn_site_spell(session, String(site.get("learn_spell_id", "")))
@@ -1502,7 +1502,7 @@ static func controlled_resource_site_pressure_bonus(session: SessionStateStoreSc
 		if not _resource_site_is_persistent(site) or not _resource_node_matches_controller(node, controller_id):
 			continue
 		total += max(0, int(site.get("pressure_bonus", 0)))
-		var weekly_recruits = site.get("weekly_recruits", {})
+		var weekly_recruits = _resource_site_weekly_recruits(site)
 		if controller_id != "player" and weekly_recruits is Dictionary and not weekly_recruits.is_empty():
 			total += 1
 	return total
@@ -1528,7 +1528,7 @@ static func apply_controlled_resource_site_musters(session: SessionStateStoreScr
 		if not (node is Dictionary):
 			continue
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-		var weekly_recruits = site.get("weekly_recruits", {})
+		var weekly_recruits = _resource_site_weekly_recruits(site)
 		if not _resource_site_is_persistent(site) or not _resource_node_matches_controller(node, controller_id):
 			continue
 		if not (weekly_recruits is Dictionary) or weekly_recruits.is_empty():
@@ -2181,6 +2181,37 @@ static func _resource_node_claimable_by_player(
 static func _resource_site_claim_rewards(site: Dictionary) -> Dictionary:
 	var rewards = site.get("claim_rewards", site.get("rewards", {}))
 	return rewards if rewards is Dictionary else {}
+
+static func _resource_site_claim_recruits(site: Dictionary) -> Dictionary:
+	var recruits = site.get("claim_recruits", {})
+	if recruits is Dictionary and not recruits.is_empty():
+		return recruits
+	var roster = site.get("neutral_roster", {})
+	if roster is Dictionary:
+		var roster_recruits = roster.get("claim_recruits", {})
+		if roster_recruits is Dictionary:
+			return roster_recruits
+	return {}
+
+static func _resource_site_weekly_recruits(site: Dictionary) -> Dictionary:
+	var recruits = site.get("weekly_recruits", {})
+	if recruits is Dictionary and not recruits.is_empty():
+		return recruits
+	var roster = site.get("neutral_roster", {})
+	if roster is Dictionary:
+		var roster_recruits = roster.get("weekly_recruits", {})
+		if roster_recruits is Dictionary:
+			return roster_recruits
+	return {}
+
+static func _resource_site_neutral_dwelling_label(site: Dictionary) -> String:
+	var dwelling_id := String(site.get("neutral_dwelling_family_id", ""))
+	if dwelling_id == "":
+		return ""
+	var dwelling := ContentService.get_neutral_dwelling(dwelling_id)
+	if dwelling.is_empty():
+		return dwelling_id
+	return String(dwelling.get("name", dwelling_id))
 
 static func _resource_site_family_label(site: Dictionary) -> String:
 	match String(site.get("family", "")):
@@ -3068,13 +3099,16 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 				parts.append("Control secured")
 			_:
 				parts.append("Control denied by %s" % String(ContentService.get_faction(controller).get("name", controller)))
+	var neutral_dwelling_label := _resource_site_neutral_dwelling_label(site)
+	if neutral_dwelling_label != "":
+		parts.append("Neutral family %s" % neutral_dwelling_label)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
 	if income_summary != "":
 		parts.append("Daily %s" % income_summary)
-	var weekly_summary := _describe_recruit_delta(site.get("weekly_recruits", {}))
+	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
 	if weekly_summary != "":
 		parts.append("Weekly %s" % weekly_summary)
-	var claim_summary := _describe_recruit_delta(site.get("claim_recruits", {}))
+	var claim_summary := _describe_recruit_delta(_resource_site_claim_recruits(site))
 	if claim_summary != "":
 		parts.append("Field recruits %s" % claim_summary)
 	var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
@@ -4837,7 +4871,7 @@ static func _resource_site_town_support(site: Dictionary) -> Dictionary:
 			support["recovery_relief"] = 1
 			support["disruption_pressure"] = 1
 		"neutral_dwelling":
-			support["quality_bonus"] = max(2, int(round(float(_weighted_recruit_value(site.get("weekly_recruits", {}))) / 28.0)))
+			support["quality_bonus"] = max(2, int(round(float(_weighted_recruit_value(_resource_site_weekly_recruits(site))) / 28.0)))
 			support["growth_bonus_percent"] = 12
 			support["recovery_relief"] = 1
 			support["disruption_pressure"] = 1

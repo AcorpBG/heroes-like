@@ -395,6 +395,34 @@
         {"unit_id": "unit_aurora_ballista", "count": 2},
         {"unit_id": "unit_mirror_duelist", "count": 4}
       ]
+    },
+    {
+      "id": "army_neutral_roadward_lodge_watch",
+      "name": "Roadward Lodge Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_roadwardens", "count": 8},
+        {"unit_id": "unit_neutral_hearthbow_carriers", "count": 4}
+      ]
+    },
+    {
+      "id": "army_neutral_fenhound_kennel_watch",
+      "name": "Fenhound Kennel Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_fenhound_runners", "count": 7},
+        {"unit_id": "unit_neutral_mossglass_sentinels", "count": 2}
+      ]
+    },
+    {
+      "id": "army_neutral_mixed_frontier_watch",
+      "name": "Mixed Frontier Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {"unit_id": "unit_neutral_roadwardens", "count": 5},
+        {"unit_id": "unit_neutral_hearthbow_carriers", "count": 3},
+        {"unit_id": "unit_neutral_fenhound_runners", "count": 3}
+      ]
     }
   ]
 }

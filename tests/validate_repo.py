@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "content"
 CONTENT_SERVICE_PATH = ROOT / "scripts" / "autoload" / "ContentService.gd"
+NEUTRAL_DWELLINGS_PATH = CONTENT_DIR / "neutral_dwellings.json"
 SAVE_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SaveService.gd"
 CAMPAIGN_PROGRESSION_PATH = ROOT / "scripts" / "autoload" / "CampaignProgression.gd"
 SETTINGS_SERVICE_PATH = ROOT / "scripts" / "autoload" / "SettingsService.gd"
@@ -299,6 +300,14 @@ def load_json(path: Path) -> dict:
 
 def items_index(payload: dict) -> dict[str, dict]:
     return {str(item["id"]): item for item in payload.get("items", []) if isinstance(item, dict) and "id" in item}
+
+
+def is_neutral_unit(unit: dict) -> bool:
+    return bool(unit.get("neutral", False)) or str(unit.get("affiliation", "")) == "neutral"
+
+
+def is_neutral_army_group(group: dict) -> bool:
+    return str(group.get("affiliation", "")) == "neutral"
 
 
 def fail(errors: list[str], message: str) -> None:
@@ -665,6 +674,7 @@ def validate_content(errors: list[str]) -> None:
         "resource_sites",
         "biomes",
         "map_objects",
+        "neutral_dwellings",
         "artifacts",
         "spells",
         "encounters",
@@ -692,6 +702,7 @@ def validate_content(errors: list[str]) -> None:
     resource_sites = items_index(payloads["resource_sites"])
     biomes = items_index(payloads["biomes"])
     map_objects = items_index(payloads["map_objects"])
+    neutral_dwellings = items_index(payloads["neutral_dwellings"])
     artifacts = items_index(payloads["artifacts"])
     spells = items_index(payloads["spells"])
     encounters = items_index(payloads["encounters"])
@@ -793,7 +804,11 @@ def validate_content(errors: list[str]) -> None:
             ensure(str(spell_id) in spells, errors, f"Hero {hero_id} references missing starting spell {spell_id}")
 
     for unit_id, unit in units.items():
-        ensure(str(unit.get("faction_id", "")) in factions, errors, f"Unit {unit_id} references missing faction")
+        if is_neutral_unit(unit):
+            ensure(str(unit.get("faction_id", "")) == "", errors, f"Neutral unit {unit_id} must not belong to a faction ladder")
+            ensure(str(unit.get("content_status", "")) == "neutral_dwelling_slice", errors, f"Neutral unit {unit_id} must be marked as neutral_dwelling_slice")
+        else:
+            ensure(str(unit.get("faction_id", "")) in factions, errors, f"Unit {unit_id} references missing faction")
         ensure(int(unit.get("hp", 0)) > 0, errors, f"Unit {unit_id} must define hp > 0")
         ensure(int(unit.get("max_damage", 0)) >= int(unit.get("min_damage", 0)) > 0, errors, f"Unit {unit_id} has invalid damage range")
         role = str(unit.get("role", ""))
@@ -926,7 +941,10 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(ripper_bloodrush.get("momentum_gain", 0)) > 0, errors, "Gorefen Ripper must keep its bloodrush momentum payoff authored")
 
     for group_id, group in army_groups.items():
-        ensure(str(group.get("faction_id", "")) in factions, errors, f"Army group {group_id} references missing faction")
+        if is_neutral_army_group(group):
+            ensure(str(group.get("faction_id", "")) == "", errors, f"Neutral army group {group_id} must not declare faction_id")
+        else:
+            ensure(str(group.get("faction_id", "")) in factions, errors, f"Army group {group_id} references missing faction")
         stacks = group.get("stacks", [])
         ensure(bool(stacks), errors, f"Army group {group_id} must define at least one stack")
         for stack in stacks:
@@ -935,6 +953,8 @@ def validate_content(errors: list[str]) -> None:
                 continue
             unit_id = str(stack.get("unit_id", ""))
             ensure(unit_id in units, errors, f"Army group {group_id} references missing unit {unit_id}")
+            if is_neutral_army_group(group) and unit_id in units:
+                ensure(is_neutral_unit(units[unit_id]), errors, f"Neutral army group {group_id} stack {unit_id} must use a neutral unit")
             ensure(int(stack.get("count", 0)) > 0, errors, f"Army group {group_id} has non-positive stack count for {unit_id}")
 
     embercourt_elite_groups = sum(
@@ -4151,6 +4171,8 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         "factions": load_json(CONTENT_DIR / "factions.json"),
         "spells": load_json(CONTENT_DIR / "spells.json"),
         "units": load_json(CONTENT_DIR / "units.json"),
+        "army_groups": load_json(CONTENT_DIR / "army_groups.json"),
+        "encounters": load_json(CONTENT_DIR / "encounters.json"),
     }
     biomes = items_index(payloads["biomes"])
     map_objects = items_index(payloads["map_objects"])
@@ -4158,6 +4180,8 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
     factions = items_index(payloads["factions"])
     spells = items_index(payloads["spells"])
     units = items_index(payloads["units"])
+    army_groups = items_index(payloads["army_groups"])
+    encounters = items_index(payloads["encounters"])
 
     ensure(len(biomes) >= 9, errors, "Overworld content foundation must author at least the nine bible biome families")
     terrain_to_biome: dict[str, str] = {}
@@ -4214,6 +4238,27 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
                 for unit_id, amount in recruits.items():
                     ensure(str(unit_id) in units, errors, f"Resource site {site_id} references missing unit {unit_id}")
                     ensure(int(amount) > 0, errors, f"Resource site {site_id} {recruit_key} must define positive counts for {unit_id}")
+        neutral_roster = site.get("neutral_roster", {})
+        if "neutral_roster" in site:
+            ensure(isinstance(neutral_roster, dict) and bool(neutral_roster), errors, f"Resource site {site_id} neutral_roster must be a non-empty dictionary")
+            if isinstance(neutral_roster, dict):
+                for recruit_key in ("claim_recruits", "weekly_recruits"):
+                    roster_recruits = neutral_roster.get(recruit_key, {})
+                    ensure(isinstance(roster_recruits, dict) and bool(roster_recruits), errors, f"Resource site {site_id} neutral_roster must define {recruit_key}")
+                    if isinstance(roster_recruits, dict):
+                        for unit_id, amount in roster_recruits.items():
+                            ensure(str(unit_id) in units, errors, f"Resource site {site_id} neutral_roster references missing unit {unit_id}")
+                            if str(unit_id) in units:
+                                ensure(is_neutral_unit(units[str(unit_id)]), errors, f"Resource site {site_id} neutral_roster unit {unit_id} must be neutral")
+                            ensure(int(amount) > 0, errors, f"Resource site {site_id} neutral_roster {recruit_key} must define positive counts for {unit_id}")
+                guard_army_group_id = str(neutral_roster.get("guard_army_group_id", ""))
+                if guard_army_group_id:
+                    ensure(guard_army_group_id in army_groups, errors, f"Resource site {site_id} neutral_roster references missing guard army group {guard_army_group_id}")
+                    if guard_army_group_id in army_groups:
+                        ensure(is_neutral_army_group(army_groups[guard_army_group_id]), errors, f"Resource site {site_id} guard army group must be neutral")
+                guard_encounter_id = str(neutral_roster.get("guard_encounter_id", ""))
+                if guard_encounter_id:
+                    ensure(guard_encounter_id in encounters, errors, f"Resource site {site_id} neutral_roster references missing guard encounter {guard_encounter_id}")
         spell_id = str(site.get("learn_spell_id", ""))
         if spell_id:
             ensure(spell_id in spells, errors, f"Resource site {site_id} references missing learn_spell_id {spell_id}")
@@ -4295,6 +4340,128 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
     ensure("ContentService.get_biome_for_terrain" in scenario_rules_text, errors, "ScenarioRules.gd must label scenario terrain through authored biomes")
+
+
+def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
+    required_paths = (
+        NEUTRAL_DWELLINGS_PATH,
+        CONTENT_SERVICE_PATH,
+        OVERWORLD_RULES_PATH,
+        BATTLE_RULES_PATH,
+        CONTENT_DIR / "units.json",
+        CONTENT_DIR / "army_groups.json",
+        CONTENT_DIR / "resource_sites.json",
+        CONTENT_DIR / "map_objects.json",
+        CONTENT_DIR / "encounters.json",
+        CONTENT_DIR / "factions.json",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing neutral dwelling/unit slice file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    payloads = {
+        "neutral_dwellings": load_json(NEUTRAL_DWELLINGS_PATH),
+        "units": load_json(CONTENT_DIR / "units.json"),
+        "army_groups": load_json(CONTENT_DIR / "army_groups.json"),
+        "resource_sites": load_json(CONTENT_DIR / "resource_sites.json"),
+        "map_objects": load_json(CONTENT_DIR / "map_objects.json"),
+        "encounters": load_json(CONTENT_DIR / "encounters.json"),
+        "factions": load_json(CONTENT_DIR / "factions.json"),
+    }
+    neutral_dwellings = items_index(payloads["neutral_dwellings"])
+    units = items_index(payloads["units"])
+    army_groups = items_index(payloads["army_groups"])
+    resource_sites = items_index(payloads["resource_sites"])
+    map_objects = items_index(payloads["map_objects"])
+    encounters = items_index(payloads["encounters"])
+    factions = items_index(payloads["factions"])
+
+    neutral_units = {unit_id: unit for unit_id, unit in units.items() if is_neutral_unit(unit)}
+    ensure(len(neutral_units) >= 4, errors, "Neutral slice must author at least four neutral units outside faction ladders")
+    faction_ladder_unit_ids = {
+        str(unit_id)
+        for faction in factions.values()
+        for unit_id in faction.get("unit_ladder_ids", [])
+    }
+    for unit_id, unit in neutral_units.items():
+        ensure(unit_id not in faction_ladder_unit_ids, errors, f"Neutral unit {unit_id} must not be listed in a faction ladder")
+        ensure(str(unit.get("faction_id", "")) == "", errors, f"Neutral unit {unit_id} must not declare faction_id")
+        ensure(str(unit.get("content_status", "")) == "neutral_dwelling_slice", errors, f"Neutral unit {unit_id} must be marked neutral_dwelling_slice")
+
+    ensure(len(neutral_dwellings) >= 2, errors, "Neutral slice must author multiple neutral dwelling families")
+    for dwelling_id, dwelling in neutral_dwellings.items():
+        ensure(bool(str(dwelling.get("summary", ""))), errors, f"Neutral dwelling {dwelling_id} must define summary")
+        unit_ids = [str(unit_id) for unit_id in dwelling.get("unit_ids", [])]
+        ensure(len(unit_ids) >= 2, errors, f"Neutral dwelling {dwelling_id} must reference at least two neutral units")
+        for unit_id in unit_ids:
+            ensure(unit_id in neutral_units, errors, f"Neutral dwelling {dwelling_id} references missing neutral unit {unit_id}")
+        site_ids = [str(site_id) for site_id in dwelling.get("site_ids", [])]
+        for site_id in site_ids:
+            site = resource_sites.get(site_id, {})
+            ensure(bool(site), errors, f"Neutral dwelling {dwelling_id} references missing site {site_id}")
+            if not site:
+                continue
+            ensure(str(site.get("family", "")) == "neutral_dwelling", errors, f"Neutral dwelling site {site_id} must use neutral_dwelling family")
+            ensure(str(site.get("dwelling_scope", "")) == "neutral", errors, f"Neutral dwelling site {site_id} must be marked dwelling_scope neutral")
+            ensure(str(site.get("neutral_dwelling_family_id", "")) == dwelling_id, errors, f"Neutral dwelling site {site_id} must reference family {dwelling_id}")
+            for recruit_key in ("claim_recruits", "weekly_recruits"):
+                recruits = site.get(recruit_key, {})
+                ensure(isinstance(recruits, dict) and bool(recruits), errors, f"Neutral dwelling site {site_id} must define {recruit_key}")
+                if isinstance(recruits, dict):
+                    for unit_id, amount in recruits.items():
+                        ensure(str(unit_id) in neutral_units, errors, f"Neutral dwelling site {site_id} {recruit_key} must use neutral unit {unit_id}")
+                        ensure(int(amount) > 0, errors, f"Neutral dwelling site {site_id} {recruit_key} must define positive count for {unit_id}")
+            roster = site.get("neutral_roster", {})
+            ensure(isinstance(roster, dict) and bool(roster), errors, f"Neutral dwelling site {site_id} must define neutral_roster")
+            if isinstance(roster, dict):
+                guard_group_id = str(roster.get("guard_army_group_id", ""))
+                guard_encounter_id = str(roster.get("guard_encounter_id", ""))
+                ensure(guard_group_id in army_groups, errors, f"Neutral dwelling site {site_id} guard army group {guard_group_id} is missing")
+                ensure(guard_encounter_id in encounters, errors, f"Neutral dwelling site {site_id} guard encounter {guard_encounter_id} is missing")
+        for object_id in [str(object_id) for object_id in dwelling.get("map_object_ids", [])]:
+            obj = map_objects.get(object_id, {})
+            ensure(bool(obj), errors, f"Neutral dwelling {dwelling_id} references missing map object {object_id}")
+            if obj:
+                ensure(str(obj.get("family", "")) == "neutral_dwelling", errors, f"Neutral dwelling map object {object_id} must use neutral_dwelling family")
+                ensure(str(obj.get("resource_site_id", "")) in site_ids, errors, f"Neutral dwelling map object {object_id} must link to one of its family sites")
+        for group_id in [str(group_id) for group_id in dwelling.get("army_group_ids", [])]:
+            group = army_groups.get(group_id, {})
+            ensure(is_neutral_army_group(group), errors, f"Neutral dwelling {dwelling_id} army group {group_id} must be neutral")
+            for stack in group.get("stacks", []) if isinstance(group, dict) else []:
+                if isinstance(stack, dict):
+                    ensure(str(stack.get("unit_id", "")) in neutral_units, errors, f"Neutral army group {group_id} stack must use neutral units")
+        for encounter_id in [str(encounter_id) for encounter_id in dwelling.get("encounter_ids", [])]:
+            encounter = encounters.get(encounter_id, {})
+            ensure(str(encounter.get("affiliation", "")) == "neutral", errors, f"Neutral dwelling encounter {encounter_id} must be marked neutral")
+            group_id = str(encounter.get("enemy_group_id", ""))
+            ensure(group_id in army_groups and is_neutral_army_group(army_groups[group_id]), errors, f"Neutral dwelling encounter {encounter_id} must use a neutral army group")
+
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "NEUTRAL_DWELLINGS_PATH",
+        "func get_neutral_dwelling",
+        "func _validate_neutral_dwelling",
+        "func _unit_is_neutral",
+    ):
+        ensure(required_token in content_service_text, errors, f"ContentService.gd is missing neutral dwelling token {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _resource_site_claim_recruits",
+        "func _resource_site_weekly_recruits",
+        "func _resource_site_neutral_dwelling_label",
+        "Neutral family",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing neutral dwelling token {required_token}")
+
+    battle_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"enemy_army_affiliation"',
+        '"affiliation"',
+        "func _army_affiliation",
+    ):
+        ensure(required_token in battle_text, errors, f"BattleRules.gd is missing neutral battle token {required_token}")
 
 
 def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
@@ -5179,6 +5346,7 @@ def main() -> int:
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
+    validate_neutral_dwelling_unit_slice(errors)
     validate_town_frontline_reinforcement_delivery(errors)
     validate_convoy_interception_clash_slice(errors)
     validate_hostile_empire_personality(errors)

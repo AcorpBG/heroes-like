@@ -2427,6 +2427,150 @@
           "harried_damage_multiplier": 1.1
         }
       ]
+    },
+    {
+      "id": "unit_neutral_roadwardens",
+      "name": "Roadwardens",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 1,
+      "hp": 8,
+      "attack": 4,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 7,
+      "cost": {
+        "gold": 55
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Pikehook Stand",
+          "description": "Roadwardens hold toll lanes with hooked polearms and can answer a partially closed line.",
+          "distance_one_multiplier": 0.85
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_hearthbow_carriers",
+      "name": "Hearthbow Carriers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 80
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Warning Shot",
+          "description": "Hearthbow crews pepper advancing lines to break formation before the toll guards close.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_fenhound_runners",
+      "name": "Fenhound Runners",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 6,
+      "defense": 3,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 7,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Scented Rush",
+          "description": "Kennel runners accelerate when prey is wounded or thrown off rhythm.",
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_mossglass_sentinels",
+      "name": "Mossglass Sentinels",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 3,
+      "hp": 18,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 155,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Glassmoss Hide",
+          "description": "Layered mossglass plates blunt arrows and keep the sentinel steady in close lanes.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.8,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.1
+        }
+      ]
     }
   ]
 }

@@ -95,6 +95,8 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"max_rounds": max(1, int(encounter.get("max_rounds", 12))),
 		"distance": _starting_distance_for_encounter(encounter, battle_context),
 		"context": battle_context,
+		"enemy_army_id": String(enemy_army.get("id", "")),
+		"enemy_army_affiliation": _army_affiliation(enemy_army),
 		"retreat_allowed": not _is_town_defense_context(battle_context),
 		"surrender_allowed": not _is_town_defense_context(battle_context),
 		"player_commander_state": player_commander_state.duplicate(true) if player_commander_state is Dictionary else {},
@@ -622,6 +624,12 @@ static func _enemy_army_for_battle(
 			"stacks": town.get("garrison", []).duplicate(true) if town.get("garrison", []) is Array else [],
 		}
 	return _enemy_army_for_encounter(encounter_placement, encounter)
+
+static func _army_affiliation(army: Dictionary) -> String:
+	var affiliation := String(army.get("affiliation", ""))
+	if affiliation != "":
+		return affiliation
+	return "faction" if String(army.get("faction_id", "")) != "" else "neutral"
 
 static func _enemy_commander_state_for_battle(
 	session: SessionStateStoreScript.SessionData,
@@ -5130,10 +5138,15 @@ static func _build_battle_stack(
 		return {}
 	var unit_hp = max(1, int(unit.get("hp", 1)))
 	var cohesion_base = _cohesion_base_for_unit(unit)
+	var faction_id := String(unit.get("faction_id", ""))
+	var affiliation := String(unit.get("affiliation", ""))
+	if affiliation == "":
+		affiliation = "faction" if faction_id != "" else "neutral"
 	return {
 		"battle_id": "%s_%d_%s" % [side, index, unit_id],
 		"side": side,
-		"faction_id": String(unit.get("faction_id", "")),
+		"faction_id": faction_id,
+		"affiliation": affiliation,
 		"unit_id": unit_id,
 		"name": String(unit.get("name", unit_id)),
 		"unit_hp": unit_hp,
@@ -5174,10 +5187,15 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 	var unit_hp = max(1, int(unit.get("hp", 1)))
 	var cohesion_base = _cohesion_base_for_unit(unit)
 	var normalized_hex := _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
+	var faction_id := String(stack.get("faction_id", unit.get("faction_id", "")))
+	var affiliation := String(stack.get("affiliation", unit.get("affiliation", "")))
+	if affiliation == "":
+		affiliation = "faction" if faction_id != "" else "neutral"
 	return {
 		"battle_id": String(stack.get("battle_id", "%s_%s" % [String(stack.get("side", "stack")), unit_id])),
 		"side": String(stack.get("side", "player")),
-		"faction_id": String(stack.get("faction_id", unit.get("faction_id", ""))),
+		"faction_id": faction_id,
+		"affiliation": affiliation,
 		"unit_id": unit_id,
 		"name": String(stack.get("name", unit.get("name", unit_id))),
 		"unit_hp": unit_hp,
