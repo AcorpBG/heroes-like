@@ -23,6 +23,8 @@ func _run() -> void:
 		return
 	if not _assert_wireframe_contract(shell):
 		return
+	if not _assert_small_map_fit(shell):
+		return
 
 	var start = OverworldRules.hero_position(SessionState.ensure_active_session())
 	var map_size = OverworldRules.derive_map_size(SessionState.ensure_active_session())
@@ -141,6 +143,32 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			push_error("Overworld smoke: resources, date, and map cue must live inside the footer ribbon.")
 			get_tree().quit(1)
 			return false
+	return true
+
+func _assert_small_map_fit(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell validation snapshot is missing.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var viewport_metrics: Dictionary = snapshot.get("map_viewport", {})
+	if viewport_metrics.is_empty():
+		push_error("Overworld smoke: map viewport metrics are missing from validation snapshot.")
+		get_tree().quit(1)
+		return false
+	if not bool(viewport_metrics.get("full_map_visible", false)):
+		push_error("Overworld smoke: River Pass should still fit inside the overworld viewport. metrics=%s" % viewport_metrics)
+		get_tree().quit(1)
+		return false
+	if not bool(viewport_metrics.get("fit_entire_map", false)):
+		push_error("Overworld smoke: small-map fit mode is not active for River Pass. metrics=%s" % viewport_metrics)
+		get_tree().quit(1)
+		return false
+	var map_size: Dictionary = viewport_metrics.get("map_size", {})
+	if int(map_size.get("x", 0)) > 12 or int(map_size.get("y", 0)) > 12:
+		push_error("Overworld smoke: small-map fit assertion was run against a non-small map. metrics=%s" % viewport_metrics)
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, command_spine: Control, action_panel: Control, action_containers: Array) -> bool:

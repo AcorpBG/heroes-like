@@ -1296,8 +1296,14 @@ func validation_snapshot() -> Dictionary:
 		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+		"map_viewport": _validation_map_viewport_state(),
 		"chrome": _validation_chrome_state(),
 	}
+
+func _validation_map_viewport_state() -> Dictionary:
+	if _map_view == null or not _map_view.has_method("validation_view_metrics"):
+		return {}
+	return _map_view.call("validation_view_metrics")
 
 func _validation_chrome_state() -> Dictionary:
 	return {

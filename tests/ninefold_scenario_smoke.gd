@@ -53,6 +53,29 @@ func _run() -> void:
 	if String(snapshot.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Ninefold smoke: OverworldShell snapshot is not bound to Ninefold Confluence.")
 		return
+	var viewport_metrics: Dictionary = snapshot.get("map_viewport", {})
+	if viewport_metrics.is_empty():
+		_fail("Ninefold smoke: OverworldShell snapshot did not expose map viewport metrics.")
+		return
+	if bool(viewport_metrics.get("full_map_visible", true)):
+		_fail("Ninefold smoke: 64x64 overworld map is still fully visible instead of using tactical framing.")
+		return
+	if bool(viewport_metrics.get("fit_entire_map", true)):
+		_fail("Ninefold smoke: 64x64 overworld map was treated as a fit-entire-map case.")
+		return
+	var visible_columns := float(viewport_metrics.get("visible_tile_columns", 0.0))
+	var visible_rows := float(viewport_metrics.get("visible_tile_rows", 0.0))
+	var visible_area := float(viewport_metrics.get("visible_tile_area", 0.0))
+	if visible_columns <= 0.0 or visible_rows <= 0.0 or visible_area <= 0.0:
+		_fail("Ninefold smoke: tactical viewport metrics were empty: %s." % viewport_metrics)
+		return
+	if visible_columns >= 32.0 or visible_rows >= 32.0 or visible_area > 220.0:
+		_fail("Ninefold smoke: tactical viewport still shows too much of the 64x64 map: %s." % viewport_metrics)
+		return
+	var focus_tile: Dictionary = viewport_metrics.get("camera_focus_tile", {})
+	if int(focus_tile.get("x", -1)) != 23 or int(focus_tile.get("y", -1)) != 26:
+		_fail("Ninefold smoke: tactical viewport is not centered on Mira's starting hero tile: %s." % viewport_metrics)
+		return
 
 	var progress_result: Dictionary = shell.call("validation_try_progress_action")
 	if not bool(progress_result.get("ok", false)):

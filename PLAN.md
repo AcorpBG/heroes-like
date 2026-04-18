@@ -131,6 +131,24 @@ Limits:
 - Transit objects are placed as authored route-control content, but paired transit traversal is still not proven as route-critical gameplay.
 - Blocker and faction-landmark map objects remain content-vocabulary records; the current scenario schema still places gameplay through resource sites, towns, artifacts, and encounters rather than raw map-object placements.
 
+## Current Implementation Slice: Overworld Fixed Tactical Framing
+Status: completed on 2026-04-18 as a narrow live-play presentation bugfix after the first Ninefold Confluence audit.
+
+Purpose:
+- Fix the large-map overworld presentation regression where 64x64 scenarios could open zoomed out far enough to read like a whole-map atlas instead of a tactical adventure view.
+- Preserve the existing small-map behavior where River Pass-scale maps fit fully inside the overworld panel.
+- Keep the fix inside the overworld presentation layer and validation snapshot surface rather than changing scenario data or overworld rules.
+
+Implemented:
+- Changed `OverworldMapView.gd` so maps at or under the 12x12 small-map threshold still fit fully, while larger maps use a hero-centered tactical viewport targeting roughly a 12x12 tile area in the current rectangular map surface.
+- Added viewport metrics to the map view and surfaced them through `OverworldShell.validation_snapshot()`.
+- Extended the Ninefold Confluence smoke so the 64x64 shell must not report full-map visibility and must stay within a bounded tactical visible-tile budget.
+- Extended the River Pass overworld visual smoke so small-map fit behavior remains guarded.
+
+Limits:
+- This is a default framing fix, not a full overworld camera feature. Manual panning/zoom controls remain future work if large-map navigation needs them.
+- Ninefold Confluence still needs manual route, balance, and readability passes before it can be treated as a proven playable map.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

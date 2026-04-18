@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T21:38:00Z",
+  "updatedAt": "2026-04-18T21:41:29Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "six-faction-biome-scenario-breadth-10184",
-  "currentSliceTitle": "Author one 64x64 breadth scenario using the six-faction, biome, dwelling, and overworld-site scaffold",
+  "currentSliceId": "overworld-fixed-tactical-framing-10184",
+  "currentSliceTitle": "Fix large-map overworld default framing so 64x64 scenarios do not auto-fit the entire map",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a large authored scenario breadth slice: Ninefold Confluence is a skirmish-only 64x64 scenario that places all six faction scaffolds, all nine authored biomes, all 25 neutral dwelling families, and the newer supported overworld site families. Added narrow Thornwake, Brasshollow, and Veilmourn army/encounter support plus validator and Godot loading smoke coverage. This is content breadth and loading proof only, not tuning or manual-play proof.",
+  "currentSliceNotes": "Completed a narrow overworld presentation bugfix after AcOrP found that Ninefold Confluence could open zoomed out like a whole-map atlas. Large maps now use hero-centered tactical framing around a bounded visible-tile budget, small River Pass-scale maps still fit fully, and OverworldShell/Ninefold/River Pass smokes guard the viewport metrics.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -130,6 +130,12 @@
       "difficulty": "high"
     },
     {
+      "id": "overworld-fixed-tactical-framing",
+      "title": "Fix overworld default framing so large maps open at a tactical zoom instead of fitting the whole map",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -186,6 +192,7 @@
   ],
   "nextActions": [
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
+    "Manually inspect Ninefold Confluence's tactical framing in the live client at the supported 16:9 runtime resolutions before adding camera pan or zoom controls.",
     "Deepen selected neutral dwelling families in Ninefold Confluence with encounter tuning and manual play notes before claiming balance or player-facing readiness.",
     "Define truthful paired transit behavior before making Ninefold Confluence ferry or rope-lift placements route-critical.",
     "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",

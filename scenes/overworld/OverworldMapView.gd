@@ -7,6 +7,9 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
 const MAP_PADDING := 22.0
+const TACTICAL_VISIBLE_TILE_SPAN := 12.0
+const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
+const MIN_TILE_EXTENT := 24.0
 const GRID_COLOR := Color(0.08, 0.10, 0.12, 0.55)
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
@@ -70,6 +73,7 @@ var _movement_left := 0
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
+	clip_contents = true
 	custom_minimum_size = Vector2(640, 400)
 
 func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i) -> void:
@@ -111,25 +115,29 @@ func _draw() -> void:
 	if _session == null:
 		return
 
+	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
-	var frame_rect = board_rect.grow(12.0)
+	var frame_rect = viewport_rect.grow(12.0)
 	draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
-	draw_rect(frame_rect, FRAME_COLOR, false, 3.0)
+	draw_rect(viewport_rect, FRAME_FILL, true)
 
-	for y in range(_map_size.y):
-		for x in range(_map_size.x):
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
+		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			_draw_tile_background(tile, rect)
 
 	_draw_route(board_rect)
 
-	for y in range(_map_size.y):
-		for x in range(_map_size.x):
+	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
+		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			_draw_tile_focus(tile, rect)
 			_draw_tile_icon(tile, rect)
+	_draw_viewport_mask(viewport_rect)
+	draw_rect(frame_rect, FRAME_COLOR, false, 3.0)
 
 func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
@@ -353,12 +361,59 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 		draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
 
 func _board_rect() -> Rect2:
-	var available = size - Vector2(MAP_PADDING * 2.0, MAP_PADDING * 2.0)
-	var tile_extent: float = floor(min(available.x / float(max(_map_size.x, 1)), available.y / float(max(_map_size.y, 1))))
-	tile_extent = max(tile_extent, 24.0)
+	var viewport_rect := _map_viewport_rect()
+	var tile_extent := _tile_extent_for_viewport(viewport_rect.size)
 	var board_size = Vector2(tile_extent * _map_size.x, tile_extent * _map_size.y)
-	var board_position = ((size - board_size) * 0.5).floor()
+	var board_position = _board_position_for_focus(viewport_rect, board_size, tile_extent)
 	return Rect2(board_position, board_size)
+
+func _map_viewport_rect() -> Rect2:
+	var viewport_position := Vector2(MAP_PADDING, MAP_PADDING)
+	var viewport_size := Vector2(
+		max(size.x - (MAP_PADDING * 2.0), 1.0),
+		max(size.y - (MAP_PADDING * 2.0), 1.0)
+	)
+	return Rect2(viewport_position, viewport_size)
+
+func _tile_extent_for_viewport(viewport_size: Vector2) -> float:
+	if _should_fit_entire_map():
+		var fit_extent: float = floor(
+			min(
+				viewport_size.x / float(max(_map_size.x, 1)),
+				viewport_size.y / float(max(_map_size.y, 1))
+			)
+		)
+		return max(fit_extent, MIN_TILE_EXTENT)
+	var tactical_extent: float = floor(sqrt(max(viewport_size.x * viewport_size.y, 1.0) / TACTICAL_VISIBLE_TILE_AREA))
+	return max(tactical_extent, MIN_TILE_EXTENT)
+
+func _should_fit_entire_map() -> bool:
+	return _map_size.x <= int(TACTICAL_VISIBLE_TILE_SPAN) and _map_size.y <= int(TACTICAL_VISIBLE_TILE_SPAN)
+
+func _board_position_for_focus(viewport_rect: Rect2, board_size: Vector2, tile_extent: float) -> Vector2:
+	var focus_tile := _camera_focus_tile()
+	var focus_center := Vector2(
+		(float(focus_tile.x) + 0.5) * tile_extent,
+		(float(focus_tile.y) + 0.5) * tile_extent
+	)
+	var board_position := viewport_rect.position + (viewport_rect.size * 0.5) - focus_center
+	if board_size.x <= viewport_rect.size.x:
+		board_position.x = viewport_rect.position.x + ((viewport_rect.size.x - board_size.x) * 0.5)
+	else:
+		board_position.x = clamp(board_position.x, viewport_rect.end.x - board_size.x, viewport_rect.position.x)
+	if board_size.y <= viewport_rect.size.y:
+		board_position.y = viewport_rect.position.y + ((viewport_rect.size.y - board_size.y) * 0.5)
+	else:
+		board_position.y = clamp(board_position.y, viewport_rect.end.y - board_size.y, viewport_rect.position.y)
+	return board_position.floor()
+
+func _camera_focus_tile() -> Vector2i:
+	if _hero_tile.x >= 0 and _hero_tile.y >= 0 and _hero_tile.x < _map_size.x and _hero_tile.y < _map_size.y:
+		return _hero_tile
+	return Vector2i(
+		clampi(int(_map_size.x / 2), 0, max(_map_size.x - 1, 0)),
+		clampi(int(_map_size.y / 2), 0, max(_map_size.y - 1, 0))
+	)
 
 func _tile_rect(board_rect: Rect2, tile: Vector2i) -> Rect2:
 	var cell_size = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
@@ -368,6 +423,9 @@ func _tile_rect(board_rect: Rect2, tile: Vector2i) -> Rect2:
 	)
 
 func _tile_from_local(local_position: Vector2) -> Vector2i:
+	var viewport_rect := _map_viewport_rect()
+	if not viewport_rect.has_point(local_position):
+		return Vector2i(-1, -1)
 	var board_rect = _board_rect()
 	if not board_rect.has_point(local_position):
 		return Vector2i(-1, -1)
@@ -377,6 +435,53 @@ func _tile_from_local(local_position: Vector2) -> Vector2i:
 	if x < 0 or y < 0 or x >= _map_size.x or y >= _map_size.y:
 		return Vector2i(-1, -1)
 	return Vector2i(x, y)
+
+func _visible_tile_bounds(board_rect: Rect2, viewport_rect: Rect2) -> Rect2i:
+	var cell_size = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
+	var start_x = clampi(int(floor((viewport_rect.position.x - board_rect.position.x) / cell_size.x)) - 1, 0, max(_map_size.x - 1, 0))
+	var start_y = clampi(int(floor((viewport_rect.position.y - board_rect.position.y) / cell_size.y)) - 1, 0, max(_map_size.y - 1, 0))
+	var end_x = clampi(int(ceil((viewport_rect.end.x - board_rect.position.x) / cell_size.x)) + 1, 0, _map_size.x)
+	var end_y = clampi(int(ceil((viewport_rect.end.y - board_rect.position.y) / cell_size.y)) + 1, 0, _map_size.y)
+	return Rect2i(
+		Vector2i(start_x, start_y),
+		Vector2i(max(end_x - start_x, 0), max(end_y - start_y, 0))
+	)
+
+func _draw_viewport_mask(viewport_rect: Rect2) -> void:
+	draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, viewport_rect.position.y)), FRAME_FILL, true)
+	draw_rect(Rect2(Vector2(0.0, viewport_rect.end.y), Vector2(size.x, max(size.y - viewport_rect.end.y, 0.0))), FRAME_FILL, true)
+	draw_rect(Rect2(Vector2(0.0, 0.0), Vector2(viewport_rect.position.x, size.y)), FRAME_FILL, true)
+	draw_rect(Rect2(Vector2(viewport_rect.end.x, 0.0), Vector2(max(size.x - viewport_rect.end.x, 0.0), size.y)), FRAME_FILL, true)
+
+func validation_view_metrics() -> Dictionary:
+	var viewport_rect := _map_viewport_rect()
+	var board_rect := _board_rect()
+	var cell_size: Vector2 = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
+	var visible_columns: float = min(float(_map_size.x), viewport_rect.size.x / max(cell_size.x, 1.0))
+	var visible_rows: float = min(float(_map_size.y), viewport_rect.size.y / max(cell_size.y, 1.0))
+	var focus_tile := _camera_focus_tile()
+	return {
+		"map_size": {"x": _map_size.x, "y": _map_size.y},
+		"viewport_rect": _rect_payload(viewport_rect),
+		"board_rect": _rect_payload(board_rect),
+		"tile_extent": cell_size.x,
+		"visible_tile_columns": visible_columns,
+		"visible_tile_rows": visible_rows,
+		"visible_tile_area": visible_columns * visible_rows,
+		"full_map_visible": board_rect.size.x <= viewport_rect.size.x + 0.01 and board_rect.size.y <= viewport_rect.size.y + 0.01,
+		"fit_entire_map": _should_fit_entire_map(),
+		"camera_focus_tile": {"x": focus_tile.x, "y": focus_tile.y},
+	}
+
+func _rect_payload(rect: Rect2) -> Dictionary:
+	return {
+		"x": rect.position.x,
+		"y": rect.position.y,
+		"width": rect.size.x,
+		"height": rect.size.y,
+		"end_x": rect.end.x,
+		"end_y": rect.end.y,
+	}
 
 func _terrain_at(tile: Vector2i) -> String:
 	if tile.y < 0 or tile.y >= _map_data.size():
