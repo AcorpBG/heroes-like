@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-17T22:33:00Z",
+  "updatedAt": "2026-04-18T18:03:26Z",
   "status": "in_progress",
   "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "overworld-command-spine-readability-10184",
-  "currentSliceTitle": "Repair overworld right rail command spine readability",
+  "currentSliceId": "overworld-declutter-popouts-10184",
+  "currentSliceTitle": "Declutter overworld permanent chrome into contextual popouts",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP overworld right-rail density follow-up: visible Log, Order, Tile, Command, Frontier, hero, and notice labels now use clipped no-wrap rail summaries with longer source detail retained in tooltips and validation payloads. Focused smoke coverage now guards line budgets, overflow clipping, no '+ more' report fragments, no tab-strip return, no action-chip collapse, and no vertical-text-shaped labels. overworld_visual_smoke, shell_heraldry_smoke, and validate_repo are green. No manual visual proof is claimed.",
+  "currentSliceNotes": "Completed AcOrP overworld declutter iteration: Order/commitment is hidden by default and surfaced through current-action feedback/tooltips, Tile details are contextual instead of a permanent right-rail panel, Command and Frontier are compact buttons that open hidden drawers, Frontier keeps only a tiny collapsed indicator, and the footer no longer carries permanent movement hint text or march direction buttons. Save, end-turn, menu, resources, status/date, and primary selected-site action remain accessible. Focused overworld visual smoke guards against permanent drawer, map hint, and footer march-control regressions; shell heraldry smoke and repo validation are green. No manual visual proof is claimed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "not_honestly_playable_yet",
@@ -143,7 +143,7 @@
     }
   ],
   "nextActions": [
-    "Use the next live/manual River Pass overworld pass to verify the compact stacked right rail under real player navigation and capture any remaining readability friction.",
+    "Use the next live/manual River Pass overworld pass to verify the decluttered right shell, Command/Frontier drawers, selected-tile context behavior, and click-to-move flow under real player navigation.",
     "Continue battle blocker search from live/manual River Pass evidence beyond the confirmed Ghoul Grove ranged shot path, green movement overlap fixes, occupied enemy hex overlap fix, invalid-spell/invalid-order closing-guidance fixes, town-defense withdrawal surface truth fix, same-round commander spell cooldown truth fix, invalid friendly board-click dispatch feedback fix, opening-briefing dispatch override fix, empty non-green hex blocked Move feedback fix, empty non-green hover/click alignment fix, enemy-turn active-stack tooltip truth fix, enemy-turn empty-hex input-lock wording fix, enemy-turn board-footer input-lock wording fix, enemy-turn hover-footer movement lock fix, enemy-turn fallback-tooltip lock fix, enemy-turn attack-highlight lock fix, enemy-turn target-cycle tooltip lock fix, enemy-turn spell-action lock fix, enemy-turn timing-guidance lock fix, enemy-turn withdrawal pressure lock fix, enemy-turn primary command-surface lock fix, and enemy-turn Risk board retarget-lock fix.",
     "Continue looking for battle interaction gaps that are supported by code/test or live-client evidence before broadening into new battle UI surfaces.",
     "Continue remaining River Pass outcome proof beyond the routed resolved-flow pass, including manual verification notes where the live client exposes new friction.",

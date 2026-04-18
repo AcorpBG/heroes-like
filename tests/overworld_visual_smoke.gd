@@ -64,6 +64,9 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 	var event_panel: Control = shell.get_node_or_null("%EventPanel")
 	var commitment_panel: Control = shell.get_node_or_null("%CommitmentPanel")
 	var briefing_panel: Control = shell.get_node_or_null("%BriefingPanel")
+	var action_panel: Control = shell.get_node_or_null("%ActionPanel")
+	var open_command: Button = shell.get_node_or_null("%OpenCommand")
+	var open_frontier: Button = shell.get_node_or_null("%OpenFrontier")
 	var hero_actions: Control = shell.get_node_or_null("%HeroActions")
 	var context_actions: Control = shell.get_node_or_null("%ContextActions")
 	var specialty_actions: Control = shell.get_node_or_null("%SpecialtyActions")
@@ -82,6 +85,9 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 		event_panel,
 		commitment_panel,
 		briefing_panel,
+		action_panel,
+		open_command,
+		open_frontier,
 		hero_actions,
 		context_actions,
 		specialty_actions,
@@ -125,10 +131,10 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 		return false
 	for panel in [top_strip, event_panel, commitment_panel, briefing_panel]:
 		if not _is_descendant_of(panel, sidebar_shell):
-			push_error("Overworld smoke: contextual panels must live inside the carved right command spine.")
+			push_error("Overworld smoke: light status panels must live inside the carved right shell.")
 			get_tree().quit(1)
 			return false
-	if not _assert_readable_command_spine(shell, sidebar_shell, command_spine, [hero_actions, context_actions, specialty_actions, spell_actions, artifact_actions]):
+	if not _assert_decluttered_right_shell(shell, sidebar_shell, command_spine, action_panel, [hero_actions, context_actions, specialty_actions, spell_actions, artifact_actions]):
 		return false
 	for chip in [resource_chip, status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):
@@ -137,31 +143,55 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 			return false
 	return true
 
-func _assert_readable_command_spine(shell: Node, sidebar_shell: Control, command_spine: Control, action_containers: Array) -> bool:
+func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, command_spine: Control, action_panel: Control, action_containers: Array) -> bool:
 	if command_spine == null or not (command_spine is VBoxContainer):
-		push_error("Overworld smoke: right rail must use a stacked command spine, not a tab strip.")
+		push_error("Overworld smoke: contextual drawers must use a stacked command container, not a tab strip.")
 		get_tree().quit(1)
 		return false
 	if _contains_tab_container(sidebar_shell):
 		push_error("Overworld smoke: cramped right-rail TabContainer returned and can collapse labels into vertical text.")
 		get_tree().quit(1)
 		return false
-	if command_spine.get_global_rect().size.x < 250.0:
-		push_error("Overworld smoke: command spine is too narrow for readable section labels.")
+	if command_spine.is_visible_in_tree():
+		push_error("Overworld smoke: Command/Frontier/Tile drawers must not be permanently visible at startup.")
 		get_tree().quit(1)
+		return false
+	if action_panel == null or not action_panel.is_visible_in_tree():
+		push_error("Overworld smoke: Command and Frontier must remain accessible through compact drawer buttons.")
+		get_tree().quit(1)
+		return false
+	if shell.get_node_or_null("%MarchPanel") != null or shell.get_node_or_null("%MapHint") != null:
+		push_error("Overworld smoke: old permanent movement hint or march-control footer returned.")
+		get_tree().quit(1)
+		return false
+	for direction_button in ["MoveNorth", "MoveSouth", "MoveWest", "MoveEast"]:
+		if shell.get_node_or_null("%" + direction_button) != null:
+			push_error("Overworld smoke: footer march direction button %s returned." % direction_button)
+			get_tree().quit(1)
+			return false
+	var map_cue = shell.get_node_or_null("%MapCue")
+	if map_cue is Label:
+		var cue_text := String((map_cue as Label).text)
+		if cue_text.find("WASD") >= 0 or cue_text.find("Click route") >= 0 or cue_text.find("Click adjacent") >= 0:
+			push_error("Overworld smoke: footer cue regressed into permanent movement-hint text: %s" % cue_text)
+			get_tree().quit(1)
+			return false
+	if not _assert_drawer_toggle(shell, "command"):
+		return false
+	if not _assert_drawer_toggle(shell, "frontier"):
 		return false
 	for container in action_containers:
 		if container == null or not (container is VBoxContainer):
-			push_error("Overworld smoke: right-rail actions must be full-width vertical command rows.")
+			push_error("Overworld smoke: drawer actions must be full-width vertical command rows.")
 			get_tree().quit(1)
 			return false
-		if container.get_global_rect().size.x < 220.0:
-			push_error("Overworld smoke: action rail width collapsed below readable command-button width.")
+		if container.is_visible_in_tree() and container.get_global_rect().size.x < 220.0:
+			push_error("Overworld smoke: action drawer width collapsed below readable command-button width.")
 			get_tree().quit(1)
 			return false
 		for child in container.get_children():
 			if child is Button and child.visible and child.get_global_rect().size.x < 200.0:
-				push_error("Overworld smoke: command button collapsed into an unreadable chip.")
+				push_error("Overworld smoke: drawer command button collapsed into an unreadable chip.")
 				get_tree().quit(1)
 				return false
 	if _has_vertical_text_like_label(sidebar_shell):
@@ -169,6 +199,45 @@ func _assert_readable_command_spine(shell: Node, sidebar_shell: Control, command
 		get_tree().quit(1)
 		return false
 	if not _assert_compact_rail_text(shell):
+		return false
+	return true
+
+func _assert_drawer_toggle(shell: Node, drawer: String) -> bool:
+	var state: Dictionary = {}
+	match drawer:
+		"command":
+			state = shell.validation_open_command_drawer()
+			if not bool(state.get("command_drawer_visible", false)):
+				push_error("Overworld smoke: Command button did not open the command drawer.")
+				get_tree().quit(1)
+				return false
+			if bool(state.get("frontier_drawer_visible", false)):
+				push_error("Overworld smoke: Command drawer opened on top of the Frontier drawer.")
+				get_tree().quit(1)
+				return false
+		"frontier":
+			state = shell.validation_open_frontier_drawer()
+			if not bool(state.get("frontier_drawer_visible", false)):
+				push_error("Overworld smoke: Frontier button did not open the frontier drawer.")
+				get_tree().quit(1)
+				return false
+			if bool(state.get("command_drawer_visible", false)):
+				push_error("Overworld smoke: Frontier drawer opened on top of the Command drawer.")
+				get_tree().quit(1)
+				return false
+		_:
+			push_error("Overworld smoke: unknown drawer assertion %s." % drawer)
+			get_tree().quit(1)
+			return false
+	if bool(state.get("order_panel_visible", false)):
+		push_error("Overworld smoke: hidden Order panel became permanent while opening %s." % drawer)
+		get_tree().quit(1)
+		return false
+	shell._on_close_drawers_pressed()
+	var closed_state: Dictionary = shell._validation_chrome_state()
+	if bool(closed_state.get("command_spine_visible", false)):
+		push_error("Overworld smoke: drawer spine stayed visible after closing %s." % drawer)
+		get_tree().quit(1)
 		return false
 	return true
 
@@ -237,7 +306,7 @@ func _contains_tab_container(node: Node) -> bool:
 func _has_vertical_text_like_label(node: Node) -> bool:
 	if node is Label or node is Button:
 		var control := node as Control
-		if control.visible:
+		if control.is_visible_in_tree():
 			var text := ""
 			if node is Label:
 				text = String((node as Label).text)

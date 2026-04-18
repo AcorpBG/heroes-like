@@ -270,6 +270,12 @@ def scene_node_parent(scene_text: str, node_name: str, node_type: str) -> str:
     return match.group(1) if match else ""
 
 
+def scene_node_block(scene_text: str, node_name: str, node_type: str) -> str:
+    pattern = rf'(\[node name="{re.escape(node_name)}" type="{re.escape(node_type)}"[^\n]*\](?:\n(?!\[node ).*)*)'
+    match = re.search(pattern, scene_text)
+    return match.group(1) if match else ""
+
+
 def script_has_function(script_text: str, function_name: str) -> bool:
     pattern = rf"^\s*(?:static\s+)?func\s+{re.escape(function_name)}\s*\("
     return re.search(pattern, script_text, flags=re.MULTILINE) is not None
@@ -3385,10 +3391,16 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             ("BriefingPanel", "PanelContainer"),
             ("MapPanel", "PanelContainer"),
             ("CommandBand", "PanelContainer"),
+            ("ActionPanel", "PanelContainer"),
+            ("OpenCommand", "Button"),
+            ("OpenFrontier", "Button"),
+            ("FrontierIndicator", "Label"),
             ("CommandSpine", "VBoxContainer"),
             ("ContextPanel", "PanelContainer"),
             ("CommandPanel", "PanelContainer"),
             ("FrontierPanel", "PanelContainer"),
+            ("CloseCommand", "Button"),
+            ("CloseFrontier", "Button"),
             ("HeroActions", "VBoxContainer"),
             ("ContextActions", "VBoxContainer"),
             ("SpecialtyActions", "VBoxContainer"),
@@ -3419,6 +3431,24 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         errors,
         "OverworldShell.tscn must not reintroduce the cramped right-rail tab strip",
     )
+    for removed_node in ("MapHint", "MarchPanel", "MoveNorth", "MoveSouth", "MoveWest", "MoveEast", "MoveState"):
+        ensure(
+            f'name="{removed_node}"' not in overworld_scene_text,
+            errors,
+            f"OverworldShell.tscn must not reintroduce permanent movement hint/control node {removed_node}",
+        )
+    for hidden_node, hidden_type in (
+        ("CommitmentPanel", "PanelContainer"),
+        ("CommandSpine", "VBoxContainer"),
+        ("ContextPanel", "PanelContainer"),
+        ("CommandPanel", "PanelContainer"),
+        ("FrontierPanel", "PanelContainer"),
+    ):
+        ensure(
+            "visible = false" in scene_node_block(overworld_scene_text, hidden_node, hidden_type),
+            errors,
+            f"OverworldShell.tscn must keep {hidden_node} hidden by default so it cannot reserve permanent map-side space",
+        )
     ensure(
         scene_node_parent(overworld_scene_text, "MapPanel", "PanelContainer")
         == "ShellMargin/Shell/ShellPad/Content/BodyRow",
@@ -3443,25 +3473,31 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "OverworldShell.tscn must keep the overworld command footer slim",
     )
     sidebar_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/"
-    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "CommandSpine"):
+    for node_name in ("TopStrip", "EventPanel", "CommitmentPanel", "BriefingPanel", "HeroPanel", "ActionPanel", "CommandSpine"):
         ensure(
             scene_node_parent(overworld_scene_text, node_name, "PanelContainer" if node_name != "CommandSpine" else "VBoxContainer").startswith(sidebar_prefix),
             errors,
-            f"OverworldShell.tscn must keep {node_name} inside the right-side command spine",
+            f"OverworldShell.tscn must keep {node_name} inside the light right-side status shell",
         )
     command_spine_prefix = "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine"
     for node_name in ("ContextPanel", "CommandPanel", "FrontierPanel"):
         ensure(
             scene_node_parent(overworld_scene_text, node_name, "PanelContainer").startswith(command_spine_prefix),
             errors,
-            f"OverworldShell.tscn must keep {node_name} as a readable section in the right command spine",
+            f"OverworldShell.tscn must keep {node_name} as a hidden drawer section opened by explicit context/buttons",
         )
     footer_prefix = "ShellMargin/Shell/ShellPad/Content/CommandBand/"
-    for node_name in ("ResourceChip", "StatusChip", "CueChip", "MarchPanel", "OrdersPanel", "SystemPanel"):
+    for node_name in ("ResourceChip", "StatusChip", "CueChip", "OrdersPanel", "SystemPanel"):
         ensure(
             scene_node_parent(overworld_scene_text, node_name, "PanelContainer").startswith(footer_prefix),
             errors,
             f"OverworldShell.tscn must keep {node_name} inside the slim footer ribbon",
+        )
+    for forbidden_text in ("Click route | WASD march", "Click adjacent tiles to march", "WASD march"):
+        ensure(
+            forbidden_text not in overworld_scene_text,
+            errors,
+            f"OverworldShell.tscn must not keep permanent movement explainer text: {forbidden_text}",
         )
 
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
@@ -3521,6 +3557,14 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "_rail_log_text",
         "_rail_order_text",
         "_rail_tile_text",
+        "_active_drawer",
+        "_sync_context_drawers",
+        "_should_show_tile_context",
+        "_frontier_indicator_text",
+        "_update_map_tooltip",
+        "validation_open_command_drawer",
+        "validation_open_frontier_drawer",
+        "_validation_chrome_state",
         "TextServer.AUTOWRAP_OFF",
         "label.clip_text = true",
         "_style_action_button",
@@ -3543,6 +3587,20 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         errors,
         "OverworldShell.gd must not expose multi-line Field Dispatch reports in the Log rail",
     )
+    ensure(
+        "_move_north_button" not in overworld_script_text
+        and "_move_south_button" not in overworld_script_text
+        and "_move_west_button" not in overworld_script_text
+        and "_move_east_button" not in overworld_script_text,
+        errors,
+        "OverworldShell.gd must not drive permanent footer march direction buttons",
+    )
+    for forbidden_text in ("Click route | WASD march", "Click adjacent tiles to march", "WASD march"):
+        ensure(
+            forbidden_text not in overworld_script_text,
+            errors,
+            f"OverworldShell.gd must not keep permanent movement explainer text: {forbidden_text}",
+        )
 
 
 def validate_overworld_command_commitment_board(errors: list[str]) -> None:
@@ -3562,6 +3620,11 @@ def validate_overworld_command_commitment_board(errors: list[str]) -> None:
         ("Commitment", "Label"),
     ):
         ensure(scene_has_node(overworld_scene_text, node_name, node_type), errors, f"OverworldShell.tscn must define {node_name} ({node_type}) for the command commitment board")
+    ensure(
+        "visible = false" in scene_node_block(overworld_scene_text, "CommitmentPanel", "PanelContainer"),
+        errors,
+        "OverworldShell.tscn must keep the order/commitment board hidden by default and use current-action feedback instead of permanent real estate",
+    )
 
     overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (

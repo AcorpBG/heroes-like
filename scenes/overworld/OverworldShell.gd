@@ -14,12 +14,12 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _map_frame_panel: PanelContainer = %MapFrame
 @onready var _sidebar_shell_panel: PanelContainer = %SidebarShell
 @onready var _hero_panel: PanelContainer = %HeroPanel
+@onready var _action_panel: PanelContainer = %ActionPanel
 @onready var _command_spine: VBoxContainer = %CommandSpine
 @onready var _command_panel: PanelContainer = %CommandPanel
 @onready var _frontier_panel: PanelContainer = %FrontierPanel
 @onready var _context_panel: PanelContainer = %ContextPanel
 @onready var _command_band_panel: PanelContainer = %CommandBand
-@onready var _march_panel: PanelContainer = %MarchPanel
 @onready var _orders_panel: PanelContainer = %OrdersPanel
 @onready var _system_panel: PanelContainer = %SystemPanel
 @onready var _header_label: Label = %Header
@@ -32,11 +32,12 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _briefing_label: Label = %Briefing
 @onready var _commitment_title_label: Label = %CommitmentTitle
 @onready var _commitment_label: Label = %Commitment
-@onready var _map_hint_label: Label = %MapHint
 @onready var _hero_title_label: Label = %HeroTitle
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
 @onready var _heroes_label: Label = %Heroes
+@onready var _action_title_label: Label = %ActionTitle
+@onready var _frontier_indicator_label: Label = %FrontierIndicator
 @onready var _command_title_label: Label = %CommandTitle
 @onready var _specialty_label: Label = %Specialties
 @onready var _spell_label: Label = %Spellbook
@@ -47,7 +48,6 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _objective_label: Label = %Objectives
 @onready var _threat_label: Label = %Threats
 @onready var _forecast_label: Label = %Forecast
-@onready var _move_state_label: Label = %MoveState
 @onready var _orders_title_label: Label = %OrdersTitle
 @onready var _primary_action_button: Button = %PrimaryAction
 @onready var _map_view = %Map
@@ -57,10 +57,10 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _spell_actions: Container = %SpellActions
 @onready var _specialty_actions: Container = %SpecialtyActions
 @onready var _artifact_actions: Container = %ArtifactActions
-@onready var _move_north_button: Button = %MoveNorth
-@onready var _move_south_button: Button = %MoveSouth
-@onready var _move_west_button: Button = %MoveWest
-@onready var _move_east_button: Button = %MoveEast
+@onready var _open_command_button: Button = %OpenCommand
+@onready var _open_frontier_button: Button = %OpenFrontier
+@onready var _close_command_button: Button = %CloseCommand
+@onready var _close_frontier_button: Button = %CloseFrontier
 @onready var _end_turn_button: Button = %EndTurn
 @onready var _save_status_label: Label = %SaveStatus
 @onready var _save_slot_picker: OptionButton = %SaveSlot
@@ -84,6 +84,7 @@ var _hovered_tile := Vector2i(-1, -1)
 var _last_message := ""
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
+var _active_drawer := ""
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -175,6 +176,18 @@ func _on_menu_pressed() -> void:
 
 func _on_primary_action_pressed() -> void:
 	_activate_primary_action()
+
+func _on_open_command_pressed() -> void:
+	_active_drawer = "" if _active_drawer == "command" else "command"
+	_sync_context_drawers()
+
+func _on_open_frontier_pressed() -> void:
+	_active_drawer = "" if _active_drawer == "frontier" else "frontier"
+	_sync_context_drawers()
+
+func _on_close_drawers_pressed() -> void:
+	_active_drawer = ""
+	_sync_context_drawers()
 
 func _on_context_action_pressed(action_id: String) -> void:
 	if action_id == "advance_route":
@@ -275,11 +288,13 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _is_adjacent_move_target(hero_pos, tile):
 		_try_move(tile.x - hero_pos.x, tile.y - hero_pos.y, true)
 		return
+	_active_drawer = ""
 	_refresh()
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_hovered_tile = tile
-	_update_map_hint()
+	_update_map_tooltip()
+	_sync_context_drawers()
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	var result = OverworldRules.try_move(_session, dx, dy)
@@ -354,8 +369,6 @@ func _refresh() -> void:
 	var status_text := OverworldRules.describe_status(_session)
 	_status_label.tooltip_text = status_text
 	_status_label.text = _compact_text(status_text, 1, 64, false)
-	_move_state_label.tooltip_text = status_text
-	_move_state_label.text = _march_state_text()
 	var resource_text := OverworldRules.describe_resources(_session)
 	_resource_label.tooltip_text = resource_text
 	_resource_label.text = resource_text
@@ -383,6 +396,8 @@ func _refresh() -> void:
 	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
 	var forecast_text := OverworldRules.describe_command_risk(_session)
 	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Risk", forecast_text), 1)
+	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
+	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
 	var context_text := _describe_focus_tile()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
@@ -391,7 +406,8 @@ func _refresh() -> void:
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
-	_update_map_hint()
+	_update_map_tooltip()
+	_sync_context_drawers()
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -640,14 +656,18 @@ func _selected_tile_destination_name() -> String:
 func _map_cue_text() -> String:
 	var action := _current_primary_action()
 	if action.is_empty():
-		return "Click route | WASD march"
-	return "Enter: %s | WASD march" % _short_action_label(String(action.get("label", "Action")), 20)
+		var movement = _session.overworld.get("movement", {})
+		return "Move %d/%d | Select destination" % [
+			int(movement.get("current", 0)),
+			int(movement.get("max", 0)),
+		]
+	return "Action: %s [Enter]" % _short_action_label(String(action.get("label", "Action")), 20)
 
 func _map_cue_tooltip() -> String:
 	var action := _current_primary_action()
 	if action.is_empty():
-		return "Click adjacent tiles to march, click distant tiles to set a route, or use WASD and arrow keys."
-	return "Press Enter or Space for %s. Click adjacent tiles to march, click distant tiles to set a route, or use WASD and arrow keys." % String(action.get("label", "the primary order"))
+		return "Click a visible adjacent tile to move now, or select a farther visible tile to set the next route step."
+	return "Press Enter or Space for %s. Click the map to move or change the selected route." % String(action.get("label", "the primary order"))
 
 func _short_action_label(label: String, max_chars: int) -> String:
 	var trimmed := label.strip_edges()
@@ -732,16 +752,6 @@ func _hero_card_text() -> String:
 		int(command.get("power", 0)),
 		int(command.get("knowledge", 0)),
 		HeroCommandRules.scouting_radius_for_hero(hero),
-	]
-
-func _march_state_text() -> String:
-	var movement = _session.overworld.get("movement", {})
-	var hero_pos = OverworldRules.hero_position(_session)
-	return "Mv %d/%d\nPos %d,%d" % [
-		int(movement.get("current", 0)),
-		int(movement.get("max", 0)),
-		hero_pos.x,
-		hero_pos.y,
 	]
 
 func _describe_focus_tile() -> String:
@@ -852,6 +862,33 @@ func _rail_action_hint() -> String:
 		return "Locked %s" % label
 	return "Enter %s" % label
 
+func _sync_context_drawers() -> void:
+	var show_command := _active_drawer == "command"
+	var show_frontier := _active_drawer == "frontier"
+	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
+	_command_panel.visible = show_command
+	_frontier_panel.visible = show_frontier
+	_context_panel.visible = show_tile
+	_command_spine.visible = show_command or show_frontier or show_tile
+	_open_command_button.button_pressed = show_command
+	_open_frontier_button.button_pressed = show_frontier
+
+func _should_show_tile_context() -> bool:
+	if not _tile_in_bounds(_selected_tile):
+		return false
+	if _selected_tile == OverworldRules.hero_position(_session):
+		return false
+	return true
+
+func _frontier_indicator_text(threat_text: String, forecast_text: String) -> String:
+	var threat_line := _compact_rail_text(threat_text, 1, 26, true)
+	if threat_line == "":
+		threat_line = "steady"
+	var forecast_line := _compact_rail_text(forecast_text, 1, 26, true)
+	if forecast_line == "":
+		return "Frontier: %s" % _short_text(threat_line, 24)
+	return "Frontier: %s" % _short_text(_strip_repeated_rail_prefix(forecast_line), 24)
+
 func _describe_selected_tile() -> String:
 	if not _tile_in_bounds(_selected_tile):
 		return OverworldRules.describe_context(_session)
@@ -932,10 +969,10 @@ func _describe_selected_tile() -> String:
 		terrain,
 	]
 
-func _update_map_hint() -> void:
-	_map_hint_label.text = _map_hint_text()
+func _update_map_tooltip() -> void:
+	_map_view.tooltip_text = _map_tooltip_text()
 
-func _map_hint_text() -> String:
+func _map_tooltip_text() -> String:
 	var hero_pos = OverworldRules.hero_position(_session)
 	var movement_left = int(_session.overworld.get("movement", {}).get("current", 0))
 	var primary_action := _current_primary_action()
@@ -947,7 +984,7 @@ func _map_hint_text() -> String:
 				OverworldRules.describe_visibility(_session),
 				_short_action_label(String(primary_action.get("label", "Action")), 22),
 			]
-		return "%s | Click adjacent to move, distant to route | WASD works" % OverworldRules.describe_visibility(_session)
+		return "%s | Select a visible destination on the map." % OverworldRules.describe_visibility(_session)
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Selected %d,%d | Unexplored ground | Move closer to reveal it." % [_selected_tile.x, _selected_tile.y]
 	if OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y):
@@ -1239,19 +1276,19 @@ func validation_snapshot() -> Dictionary:
 			"x": _map_size.x,
 			"y": _map_size.y,
 		},
-			"selected_tile": {
-				"x": _selected_tile.x,
-				"y": _selected_tile.y,
-			},
-			"context_summary": _describe_focus_tile(),
-			"active_context_type": String(active_context.get("type", "")),
-			"primary_action_id": String(primary_action.get("id", "")),
-			"primary_action": _validation_action_payload(primary_action),
-			"primary_action_button_text": _primary_action_button.text,
-			"primary_action_button_disabled": _primary_action_button.disabled,
-			"context_action_ids": _validation_context_action_ids(),
-			"active_town": active_town,
-			"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"selected_tile": {
+			"x": _selected_tile.x,
+			"y": _selected_tile.y,
+		},
+		"context_summary": _describe_focus_tile(),
+		"active_context_type": String(active_context.get("type", "")),
+		"primary_action_id": String(primary_action.get("id", "")),
+		"primary_action": _validation_action_payload(primary_action),
+		"primary_action_button_text": _primary_action_button.text,
+		"primary_action_button_disabled": _primary_action_button.disabled,
+		"context_action_ids": _validation_context_action_ids(),
+		"active_town": active_town,
+		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"commander_state": _validation_commander_state(),
 		"carryover_flags": _validation_carryover_flags(),
 		"objective_summary": OverworldRules.describe_objectives(_session),
@@ -1259,7 +1296,38 @@ func validation_snapshot() -> Dictionary:
 		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+		"chrome": _validation_chrome_state(),
 	}
+
+func _validation_chrome_state() -> Dictionary:
+	return {
+		"active_drawer": _active_drawer,
+		"command_drawer_visible": _command_panel.visible,
+		"frontier_drawer_visible": _frontier_panel.visible,
+		"tile_context_visible": _context_panel.visible,
+		"order_panel_visible": _commitment_panel.visible,
+		"command_spine_visible": _command_spine.visible,
+		"has_map_hint": get_node_or_null("%MapHint") != null,
+		"has_march_panel": get_node_or_null("%MarchPanel") != null,
+		"has_march_direction_buttons": (
+			get_node_or_null("%MoveNorth") != null
+			or get_node_or_null("%MoveSouth") != null
+			or get_node_or_null("%MoveWest") != null
+			or get_node_or_null("%MoveEast") != null
+		),
+		"map_cue_text": _map_cue_label.text,
+		"frontier_indicator": _frontier_indicator_label.text,
+	}
+
+func validation_open_command_drawer() -> Dictionary:
+	_active_drawer = "command"
+	_sync_context_drawers()
+	return _validation_chrome_state()
+
+func validation_open_frontier_drawer() -> Dictionary:
+	_active_drawer = "frontier"
+	_sync_context_drawers()
+	return _validation_chrome_state()
 
 func validation_town_state_for_placement(placement_id: String) -> Dictionary:
 	return _validation_town_state_for_placement(placement_id)
@@ -2185,17 +2253,19 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_panel(_map_frame_panel, "frame", 18)
 	FrontierVisualKit.apply_panel(_sidebar_shell_panel, "frame", 22)
 	FrontierVisualKit.apply_panel(_hero_panel, "banner", 18)
+	FrontierVisualKit.apply_panel(_action_panel, "ink", 18)
 	FrontierVisualKit.apply_panel(_command_panel, "ink", 18)
 	FrontierVisualKit.apply_panel(_frontier_panel, "teal", 18)
 	FrontierVisualKit.apply_panel(_context_panel, "gold", 18)
 	FrontierVisualKit.apply_panel(_command_band_panel, "earth", 22)
-	FrontierVisualKit.apply_panel(_march_panel, "frame", 18)
 	FrontierVisualKit.apply_panel(_orders_panel, "ink", 18)
 	FrontierVisualKit.apply_panel(_system_panel, "banner", 18)
 	_command_spine.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-	for button in [_move_north_button, _move_south_button, _move_west_button, _move_east_button]:
-		_style_action_button(button, 50.0, 34.0)
+	FrontierVisualKit.apply_button(_open_command_button, "secondary", 128.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_open_frontier_button, "secondary", 128.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_close_command_button, "secondary", 108.0, 30.0, 12)
+	FrontierVisualKit.apply_button(_close_frontier_button, "secondary", 108.0, 30.0, 12)
 	FrontierVisualKit.apply_button(_primary_action_button, "primary", 210.0, 36.0, 13)
 	FrontierVisualKit.apply_button(_end_turn_button, "primary", 104.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_save_button, "secondary", 78.0, 32.0, 13)
@@ -2211,13 +2281,13 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_briefing_title_label, "gold", 11)
 	FrontierVisualKit.apply_label(_commitment_title_label, "green", 11)
 	FrontierVisualKit.apply_label(_hero_title_label, "gold", 13)
+	FrontierVisualKit.apply_label(_action_title_label, "muted", 12)
+	FrontierVisualKit.apply_label(_frontier_indicator_label, "teal", 12)
 	FrontierVisualKit.apply_label(_command_title_label, "muted", 13)
 	FrontierVisualKit.apply_label(_context_title_label, "gold", 13)
 	FrontierVisualKit.apply_label(_frontier_title_label, "teal", 13)
 	FrontierVisualKit.apply_label(_orders_title_label, "gold", 13)
-	FrontierVisualKit.apply_label(_move_state_label, "gold", 13)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
-	FrontierVisualKit.apply_label(_map_hint_label, "blue", 12)
 	FrontierVisualKit.apply_labels([
 		_commitment_label,
 		_briefing_label,
