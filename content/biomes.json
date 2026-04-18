@@ -51,7 +51,7 @@
       "sight_modifier": 1,
       "passable": true,
       "encounter_palette_tags": ["elevated_fire", "chokepoint"],
-      "allowed_site_families": ["one_shot_pickup", "mine", "frontier_shrine", "scouting_structure", "transit_object", "repeatable_service", "guarded_reward_site"],
+      "allowed_site_families": ["one_shot_pickup", "mine", "neutral_dwelling", "frontier_shrine", "scouting_structure", "transit_object", "repeatable_service", "guarded_reward_site"],
       "decoration_palette": ["switchbacks", "wind_flags", "scree", "ridge_pines"],
       "blocker_palette": ["cliff_wall", "rockfall", "narrow_pass"],
       "route_roles": ["scouting_lane", "defended_lane", "late_unlock_lane"]
@@ -79,7 +79,7 @@
       "sight_modifier": 0,
       "passable": true,
       "encounter_palette_tags": ["hazard_zone", "battery_nest", "wall_pressure"],
-      "allowed_site_families": ["one_shot_pickup", "mine", "frontier_shrine", "scouting_structure", "transit_object", "guarded_reward_site"],
+      "allowed_site_families": ["one_shot_pickup", "mine", "neutral_dwelling", "frontier_shrine", "scouting_structure", "transit_object", "guarded_reward_site"],
       "decoration_palette": ["cinder_drifts", "obsidian_shards", "slag_forges", "smoke_flags"],
       "blocker_palette": ["lava_crack", "ash_gorge", "unstable_bridge"],
       "route_roles": ["high_risk_lane", "magic_lane", "siege_lane"]
@@ -107,7 +107,7 @@
       "sight_modifier": -1,
       "passable": true,
       "encounter_palette_tags": ["chokepoint", "fog_bank", "fortress_lane"],
-      "allowed_site_families": ["one_shot_pickup", "mine", "frontier_shrine", "scouting_structure", "transit_object", "repeatable_service", "guarded_reward_site"],
+      "allowed_site_families": ["one_shot_pickup", "mine", "neutral_dwelling", "frontier_shrine", "scouting_structure", "transit_object", "repeatable_service", "guarded_reward_site"],
       "decoration_palette": ["fungus_caverns", "crystal_seams", "tunnel_pylons", "buried_steps"],
       "blocker_palette": ["collapsed_tunnel", "stone_choke", "sinkhole"],
       "route_roles": ["hidden_lane", "mining_lane", "shortcut_lane"]

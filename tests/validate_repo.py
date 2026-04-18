@@ -4354,6 +4354,7 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
         CONTENT_DIR / "map_objects.json",
         CONTENT_DIR / "encounters.json",
         CONTENT_DIR / "factions.json",
+        CONTENT_DIR / "biomes.json",
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing neutral dwelling/unit slice file: {path.relative_to(ROOT)}")
@@ -4368,6 +4369,7 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
         "map_objects": load_json(CONTENT_DIR / "map_objects.json"),
         "encounters": load_json(CONTENT_DIR / "encounters.json"),
         "factions": load_json(CONTENT_DIR / "factions.json"),
+        "biomes": load_json(CONTENT_DIR / "biomes.json"),
     }
     neutral_dwellings = items_index(payloads["neutral_dwellings"])
     units = items_index(payloads["units"])
@@ -4376,9 +4378,10 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
     map_objects = items_index(payloads["map_objects"])
     encounters = items_index(payloads["encounters"])
     factions = items_index(payloads["factions"])
+    biomes = items_index(payloads["biomes"])
 
     neutral_units = {unit_id: unit for unit_id, unit in units.items() if is_neutral_unit(unit)}
-    ensure(len(neutral_units) >= 4, errors, "Neutral slice must author at least four neutral units outside faction ladders")
+    ensure(len(neutral_units) >= 50, errors, "Neutral dwelling breadth slice must author at least fifty neutral units outside faction ladders")
     faction_ladder_unit_ids = {
         str(unit_id)
         for faction in factions.values()
@@ -4389,14 +4392,25 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
         ensure(str(unit.get("faction_id", "")) == "", errors, f"Neutral unit {unit_id} must not declare faction_id")
         ensure(str(unit.get("content_status", "")) == "neutral_dwelling_slice", errors, f"Neutral unit {unit_id} must be marked neutral_dwelling_slice")
 
-    ensure(len(neutral_dwellings) >= 2, errors, "Neutral slice must author multiple neutral dwelling families")
+    ensure(len(neutral_dwellings) >= 25, errors, "Neutral dwelling breadth slice must author at least twenty-five neutral dwelling families")
     for dwelling_id, dwelling in neutral_dwellings.items():
         ensure(bool(str(dwelling.get("summary", ""))), errors, f"Neutral dwelling {dwelling_id} must define summary")
+        biome_ids = [str(biome_id) for biome_id in dwelling.get("biome_ids", [])]
+        ensure(bool(biome_ids), errors, f"Neutral dwelling {dwelling_id} must reference at least one biome")
+        for biome_id in biome_ids:
+            ensure(biome_id in biomes, errors, f"Neutral dwelling {dwelling_id} references missing biome {biome_id}")
         unit_ids = [str(unit_id) for unit_id in dwelling.get("unit_ids", [])]
         ensure(len(unit_ids) >= 2, errors, f"Neutral dwelling {dwelling_id} must reference at least two neutral units")
         for unit_id in unit_ids:
             ensure(unit_id in neutral_units, errors, f"Neutral dwelling {dwelling_id} references missing neutral unit {unit_id}")
         site_ids = [str(site_id) for site_id in dwelling.get("site_ids", [])]
+        ensure(bool(site_ids), errors, f"Neutral dwelling {dwelling_id} must reference at least one neutral dwelling site")
+        object_ids = [str(object_id) for object_id in dwelling.get("map_object_ids", [])]
+        ensure(bool(object_ids), errors, f"Neutral dwelling {dwelling_id} must reference at least one neutral dwelling map object")
+        group_ids = [str(group_id) for group_id in dwelling.get("army_group_ids", [])]
+        ensure(bool(group_ids), errors, f"Neutral dwelling {dwelling_id} must reference at least one neutral guard army")
+        encounter_ids = [str(encounter_id) for encounter_id in dwelling.get("encounter_ids", [])]
+        ensure(bool(encounter_ids), errors, f"Neutral dwelling {dwelling_id} must reference at least one neutral guard encounter")
         for site_id in site_ids:
             site = resource_sites.get(site_id, {})
             ensure(bool(site), errors, f"Neutral dwelling {dwelling_id} references missing site {site_id}")
@@ -4418,20 +4432,22 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
                 guard_group_id = str(roster.get("guard_army_group_id", ""))
                 guard_encounter_id = str(roster.get("guard_encounter_id", ""))
                 ensure(guard_group_id in army_groups, errors, f"Neutral dwelling site {site_id} guard army group {guard_group_id} is missing")
+                ensure(guard_group_id in group_ids, errors, f"Neutral dwelling site {site_id} guard army group {guard_group_id} must be listed by family {dwelling_id}")
                 ensure(guard_encounter_id in encounters, errors, f"Neutral dwelling site {site_id} guard encounter {guard_encounter_id} is missing")
-        for object_id in [str(object_id) for object_id in dwelling.get("map_object_ids", [])]:
+                ensure(guard_encounter_id in encounter_ids, errors, f"Neutral dwelling site {site_id} guard encounter {guard_encounter_id} must be listed by family {dwelling_id}")
+        for object_id in object_ids:
             obj = map_objects.get(object_id, {})
             ensure(bool(obj), errors, f"Neutral dwelling {dwelling_id} references missing map object {object_id}")
             if obj:
                 ensure(str(obj.get("family", "")) == "neutral_dwelling", errors, f"Neutral dwelling map object {object_id} must use neutral_dwelling family")
                 ensure(str(obj.get("resource_site_id", "")) in site_ids, errors, f"Neutral dwelling map object {object_id} must link to one of its family sites")
-        for group_id in [str(group_id) for group_id in dwelling.get("army_group_ids", [])]:
+        for group_id in group_ids:
             group = army_groups.get(group_id, {})
             ensure(is_neutral_army_group(group), errors, f"Neutral dwelling {dwelling_id} army group {group_id} must be neutral")
             for stack in group.get("stacks", []) if isinstance(group, dict) else []:
                 if isinstance(stack, dict):
                     ensure(str(stack.get("unit_id", "")) in neutral_units, errors, f"Neutral army group {group_id} stack must use neutral units")
-        for encounter_id in [str(encounter_id) for encounter_id in dwelling.get("encounter_ids", [])]:
+        for encounter_id in encounter_ids:
             encounter = encounters.get(encounter_id, {})
             ensure(str(encounter.get("affiliation", "")) == "neutral", errors, f"Neutral dwelling encounter {encounter_id} must be marked neutral")
             group_id = str(encounter.get("enemy_group_id", ""))

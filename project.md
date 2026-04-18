@@ -140,6 +140,10 @@ Implementation note date: 2026-04-18
 
 The first neutral dwelling/unit slice adds `content/neutral_dwellings.json` as a small canonical family layer tying neutral recruit sites, neutral units, map-object silhouettes, guard army groups, and neutral encounters together. Neutral units are authored with `affiliation: "neutral"` and no faction id, so they can appear in recruit sources and battles without becoming a seventh faction ladder or inheriting six-faction doctrine bonuses. This is a first neutral-content slice, not a complete neutral ecology.
 
+Implementation note date: 2026-04-18
+
+The neutral dwelling breadth slice expands that family layer to 25 authored neutral dwelling families with matching neutral units, neutral-scoped site definitions, map objects, guard army groups, and neutral encounters. This records content breadth only: the added families are internally linked and validator-enforced, but they are not yet scenario-placed, balanced, or manually play-proven.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

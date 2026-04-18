@@ -98,6 +98,1110 @@
       }
     },
     {
+      "id": "site_cliffhawk_roost",
+      "name": "Cliffhawk Roost",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_cliffhawk_roost",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_cliffhawk_wardens": 2,
+        "unit_neutral_windglass_slingers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_cliffhawk_wardens": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_cliffhawk_wardens": 2,
+          "unit_neutral_windglass_slingers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_cliffhawk_wardens": 1
+        },
+        "guard_army_group_id": "army_neutral_cliffhawk_roost_watch",
+        "guard_encounter_id": "encounter_cliffhawk_roost_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Cliffhawk Roost sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 130
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_reedbarge_mooring",
+      "name": "Reedbarge Mooring",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_reedbarge_mooring",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "claim_recruits": {
+        "unit_neutral_reedbarge_poles": 2,
+        "unit_neutral_lanternet_throwers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_reedbarge_poles": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_reedbarge_poles": 2,
+          "unit_neutral_lanternet_throwers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_reedbarge_poles": 1
+        },
+        "guard_army_group_id": "army_neutral_reedbarge_mooring_watch",
+        "guard_encounter_id": "encounter_reedbarge_mooring_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Reedbarge Mooring sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_glowcap_croft",
+      "name": "Glowcap Croft",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_glowcap_croft",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 105
+      },
+      "control_income": {
+        "gold": 40
+      },
+      "claim_recruits": {
+        "unit_neutral_glowcap_bulwarks": 2,
+        "unit_neutral_sporelamp_tossers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_glowcap_bulwarks": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_glowcap_bulwarks": 2,
+          "unit_neutral_sporelamp_tossers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_glowcap_bulwarks": 1
+        },
+        "guard_army_group_id": "army_neutral_glowcap_croft_watch",
+        "guard_encounter_id": "encounter_glowcap_croft_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Glowcap Croft sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 150
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_dustjack_yard",
+      "name": "Dustjack Yard",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_dustjack_yard",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 60
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_dustjack_blades": 2,
+        "unit_neutral_scrapbow_teams": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_dustjack_blades": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_dustjack_blades": 2,
+          "unit_neutral_scrapbow_teams": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_dustjack_blades": 1
+        },
+        "guard_army_group_id": "army_neutral_dustjack_yard_watch",
+        "guard_encounter_id": "encounter_dustjack_yard_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Dustjack Yard sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 160
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_cinder_kiln",
+      "name": "Cinder Kiln",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_cinder_kiln",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_kilnward_mallets": 2,
+        "unit_neutral_cinderpot_hurlers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_kilnward_mallets": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_kilnward_mallets": 2,
+          "unit_neutral_cinderpot_hurlers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_kilnward_mallets": 1
+        },
+        "guard_army_group_id": "army_neutral_cinder_kiln_watch",
+        "guard_encounter_id": "encounter_cinder_kiln_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Cinder Kiln sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 120
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_frostbeacon_bothy",
+      "name": "Frostbeacon Bothy",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_frostbeacon_bothy",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "claim_recruits": {
+        "unit_neutral_frostbeacon_pikes": 2,
+        "unit_neutral_snowglass_markers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_frostbeacon_pikes": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_frostbeacon_pikes": 2,
+          "unit_neutral_snowglass_markers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_frostbeacon_pikes": 1
+        },
+        "guard_army_group_id": "army_neutral_frostbeacon_bothy_watch",
+        "guard_encounter_id": "encounter_frostbeacon_bothy_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Frostbeacon Bothy sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 130
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_orchard_levy",
+      "name": "Orchard Levy Grounds",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_orchard_levy",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 105
+      },
+      "control_income": {
+        "gold": 40
+      },
+      "claim_recruits": {
+        "unit_neutral_orchard_halberds": 2,
+        "unit_neutral_millstone_slingers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_orchard_halberds": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_orchard_halberds": 2,
+          "unit_neutral_millstone_slingers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_orchard_halberds": 1
+        },
+        "guard_army_group_id": "army_neutral_orchard_levy_watch",
+        "guard_encounter_id": "encounter_orchard_levy_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Orchard Levy Grounds sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_bramble_hedge",
+      "name": "Bramble Hedge",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_bramble_hedge",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 60
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_hedgehook_watch": 2,
+        "unit_neutral_thornbow_scouts": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_hedgehook_watch": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_hedgehook_watch": 2,
+          "unit_neutral_thornbow_scouts": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_hedgehook_watch": 1
+        },
+        "guard_army_group_id": "army_neutral_bramble_hedge_watch",
+        "guard_encounter_id": "encounter_bramble_hedge_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Bramble Hedge sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 150
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_tidepool_skiffyard",
+      "name": "Tidepool Skiffyard",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_tidepool_skiffyard",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_tidepool_cutters": 2,
+        "unit_neutral_reefbolt_crews": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_tidepool_cutters": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_tidepool_cutters": 2,
+          "unit_neutral_reefbolt_crews": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_tidepool_cutters": 1
+        },
+        "guard_army_group_id": "army_neutral_tidepool_skiffyard_watch",
+        "guard_encounter_id": "encounter_tidepool_skiffyard_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Tidepool Skiffyard sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 160
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_switchback_hostel",
+      "name": "Switchback Hostel",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_switchback_hostel",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "claim_recruits": {
+        "unit_neutral_switchback_pikes": 2,
+        "unit_neutral_cairnshield_porters": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_switchback_pikes": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_switchback_pikes": 2,
+          "unit_neutral_cairnshield_porters": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_switchback_pikes": 1
+        },
+        "guard_army_group_id": "army_neutral_switchback_hostel_watch",
+        "guard_encounter_id": "encounter_switchback_hostel_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Switchback Hostel sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 120
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_saltpan_camp",
+      "name": "Saltpan Camp",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_saltpan_camp",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 105
+      },
+      "control_income": {
+        "gold": 40
+      },
+      "claim_recruits": {
+        "unit_neutral_saltpan_bucklers": 2,
+        "unit_neutral_suncrack_throwers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_saltpan_bucklers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_saltpan_bucklers": 2,
+          "unit_neutral_suncrack_throwers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_saltpan_bucklers": 1
+        },
+        "guard_army_group_id": "army_neutral_saltpan_camp_watch",
+        "guard_encounter_id": "encounter_saltpan_camp_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Saltpan Camp sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 130
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_crystal_sump",
+      "name": "Crystal Sump",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_crystal_sump",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 60
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_sumpstone_guards": 2,
+        "unit_neutral_echodart_casts": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_sumpstone_guards": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_sumpstone_guards": 2,
+          "unit_neutral_echodart_casts": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_sumpstone_guards": 1
+        },
+        "guard_army_group_id": "army_neutral_crystal_sump_watch",
+        "guard_encounter_id": "encounter_crystal_sump_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Crystal Sump sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_icehook_trapper_lodge",
+      "name": "Icehook Trapper Lodge",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_icehook_trapper_lodge",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_icehook_trappers": 2,
+        "unit_neutral_whitepike_keepers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_icehook_trappers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_icehook_trappers": 2,
+          "unit_neutral_whitepike_keepers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_icehook_trappers": 1
+        },
+        "guard_army_group_id": "army_neutral_icehook_trapper_lodge_watch",
+        "guard_encounter_id": "encounter_icehook_trapper_lodge_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Icehook Trapper Lodge sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 150
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_obsidian_scar",
+      "name": "Obsidian Scar Camp",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_obsidian_scar",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "claim_recruits": {
+        "unit_neutral_scarshield_veterans": 2,
+        "unit_neutral_ashdart_stalkers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_scarshield_veterans": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_scarshield_veterans": 2,
+          "unit_neutral_ashdart_stalkers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_scarshield_veterans": 1
+        },
+        "guard_army_group_id": "army_neutral_obsidian_scar_watch",
+        "guard_encounter_id": "encounter_obsidian_scar_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Obsidian Scar Camp sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 160
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_greenbranch_copse",
+      "name": "Greenbranch Copse",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_greenbranch_copse",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 105
+      },
+      "control_income": {
+        "gold": 40
+      },
+      "claim_recruits": {
+        "unit_neutral_greenbranch_cudgels": 2,
+        "unit_neutral_sapwhistle_callers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_greenbranch_cudgels": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_greenbranch_cudgels": 2,
+          "unit_neutral_sapwhistle_callers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_greenbranch_cudgels": 1
+        },
+        "guard_army_group_id": "army_neutral_greenbranch_copse_watch",
+        "guard_encounter_id": "encounter_greenbranch_copse_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Greenbranch Copse sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 120
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_harbor_pilot_house",
+      "name": "Harbor Pilot House",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_harbor_pilot_house",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 60
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_harbor_polearms": 2,
+        "unit_neutral_flaremast_crews": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_harbor_polearms": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_harbor_polearms": 2,
+          "unit_neutral_flaremast_crews": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_harbor_polearms": 1
+        },
+        "guard_army_group_id": "army_neutral_harbor_pilot_house_watch",
+        "guard_encounter_id": "encounter_harbor_pilot_house_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Harbor Pilot House sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 130
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_kite_signal_eyrie",
+      "name": "Kite Signal Eyrie",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_kite_signal_eyrie",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_kitehook_runners": 2,
+        "unit_neutral_ridgeflare_shots": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_kitehook_runners": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_kitehook_runners": 2,
+          "unit_neutral_ridgeflare_shots": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_kitehook_runners": 1
+        },
+        "guard_army_group_id": "army_neutral_kite_signal_eyrie_watch",
+        "guard_encounter_id": "encounter_kite_signal_eyrie_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Kite Signal Eyrie sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_lantern_warren",
+      "name": "Lantern Warren",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_lantern_warren",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "claim_recruits": {
+        "unit_neutral_tunnel_lanterns": 2,
+        "unit_neutral_glimmercap_needlers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_tunnel_lanterns": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_tunnel_lanterns": 2,
+          "unit_neutral_glimmercap_needlers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_tunnel_lanterns": 1
+        },
+        "guard_army_group_id": "army_neutral_lantern_warren_watch",
+        "guard_encounter_id": "encounter_lantern_warren_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Lantern Warren sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 150
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_bogbell_croft",
+      "name": "Bogbell Croft",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_bogbell_croft",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 105
+      },
+      "control_income": {
+        "gold": 40
+      },
+      "claim_recruits": {
+        "unit_neutral_bogbell_mauls": 2,
+        "unit_neutral_peatflare_jarriers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_bogbell_mauls": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_bogbell_mauls": 2,
+          "unit_neutral_peatflare_jarriers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_bogbell_mauls": 1
+        },
+        "guard_army_group_id": "army_neutral_bogbell_croft_watch",
+        "guard_encounter_id": "encounter_bogbell_croft_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Bogbell Croft sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 160
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_milestone_arsenal",
+      "name": "Milestone Arsenal",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_milestone_arsenal",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 60
+      },
+      "control_income": {
+        "gold": 25
+      },
+      "claim_recruits": {
+        "unit_neutral_milestone_bucklers": 2,
+        "unit_neutral_cartbow_tenders": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_milestone_bucklers": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_milestone_bucklers": 2,
+          "unit_neutral_cartbow_tenders": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_milestone_bucklers": 1
+        },
+        "guard_army_group_id": "army_neutral_milestone_arsenal_watch",
+        "guard_encounter_id": "encounter_milestone_arsenal_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Milestone Arsenal sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 120
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_frostwharf_house",
+      "name": "Frostwharf House",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_frostwharf_house",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 75
+      },
+      "control_income": {
+        "gold": 30
+      },
+      "claim_recruits": {
+        "unit_neutral_frostwharf_cutters": 2,
+        "unit_neutral_lanternskate_throwers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_frostwharf_cutters": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_frostwharf_cutters": 2,
+          "unit_neutral_lanternskate_throwers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_frostwharf_cutters": 1
+        },
+        "guard_army_group_id": "army_neutral_frostwharf_house_watch",
+        "guard_encounter_id": "encounter_frostwharf_house_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 10,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Frostwharf House sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 130
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_charcoal_burners",
+      "name": "Charcoal Burners Camp",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_charcoal_burners",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 90
+      },
+      "control_income": {
+        "gold": 35
+      },
+      "claim_recruits": {
+        "unit_neutral_charcoal_mauls": 2,
+        "unit_neutral_emberpack_lobbers": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_charcoal_mauls": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_charcoal_mauls": 2,
+          "unit_neutral_emberpack_lobbers": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_charcoal_mauls": 1
+        },
+        "guard_army_group_id": "army_neutral_charcoal_burners_watch",
+        "guard_encounter_id": "encounter_charcoal_burners_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 12,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Charcoal Burners Camp sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 140
+        },
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_basalt_gatehouse",
+      "name": "Basalt Gatehouse",
+      "family": "neutral_dwelling",
+      "dwelling_scope": "neutral",
+      "neutral_dwelling_family_id": "neutral_dwelling_basalt_gatehouse",
+      "persistent_control": true,
+      "claim_rewards": {
+        "gold": 105
+      },
+      "control_income": {
+        "gold": 40
+      },
+      "claim_recruits": {
+        "unit_neutral_basalt_wardens": 2,
+        "unit_neutral_tunnelmark_bolters": 1
+      },
+      "weekly_recruits": {
+        "unit_neutral_basalt_wardens": 1
+      },
+      "neutral_roster": {
+        "claim_recruits": {
+          "unit_neutral_basalt_wardens": 2,
+          "unit_neutral_tunnelmark_bolters": 1
+        },
+        "weekly_recruits": {
+          "unit_neutral_basalt_wardens": 1
+        },
+        "guard_army_group_id": "army_neutral_basalt_gatehouse_watch",
+        "guard_encounter_id": "encounter_basalt_gatehouse_watch"
+      },
+      "town_support": {
+        "growth_bonus_percent": 14,
+        "recovery_relief": 1
+      },
+      "response_profile": {
+        "action_label": "Dispatch Relief",
+        "summary": "Basalt Gatehouse sends its contracted neutral crews toward the nearest controlled line.",
+        "movement_cost": 4,
+        "resource_cost": {
+          "gold": 150
+        },
+        "watch_days": 3,
+        "quality_bonus": 2,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
       "id": "site_lens_house",
       "name": "Lens House Barracks",
       "family": "neutral_dwelling",

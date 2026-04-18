@@ -423,6 +423,351 @@
         {"unit_id": "unit_neutral_hearthbow_carriers", "count": 3},
         {"unit_id": "unit_neutral_fenhound_runners", "count": 3}
       ]
+    },
+    {
+      "id": "army_neutral_cliffhawk_roost_watch",
+      "name": "Cliffhawk Roost Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_cliffhawk_wardens",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_neutral_windglass_slingers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_reedbarge_mooring_watch",
+      "name": "Reedbarge Mooring Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_reedbarge_poles",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_neutral_lanternet_throwers",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_glowcap_croft_watch",
+      "name": "Glowcap Croft Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_glowcap_bulwarks",
+          "count": 9
+        },
+        {
+          "unit_id": "unit_neutral_sporelamp_tossers",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_dustjack_yard_watch",
+      "name": "Dustjack Yard Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_dustjack_blades",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_neutral_scrapbow_teams",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_cinder_kiln_watch",
+      "name": "Cinder Kiln Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_kilnward_mallets",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_neutral_cinderpot_hurlers",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_frostbeacon_bothy_watch",
+      "name": "Frostbeacon Bothy Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_frostbeacon_pikes",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_neutral_snowglass_markers",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_orchard_levy_watch",
+      "name": "Orchard Levy Grounds Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_orchard_halberds",
+          "count": 9
+        },
+        {
+          "unit_id": "unit_neutral_millstone_slingers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_bramble_hedge_watch",
+      "name": "Bramble Hedge Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_hedgehook_watch",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_neutral_thornbow_scouts",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_tidepool_skiffyard_watch",
+      "name": "Tidepool Skiffyard Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_tidepool_cutters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_neutral_reefbolt_crews",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_switchback_hostel_watch",
+      "name": "Switchback Hostel Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_switchback_pikes",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_neutral_cairnshield_porters",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_saltpan_camp_watch",
+      "name": "Saltpan Camp Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_saltpan_bucklers",
+          "count": 9
+        },
+        {
+          "unit_id": "unit_neutral_suncrack_throwers",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_crystal_sump_watch",
+      "name": "Crystal Sump Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_sumpstone_guards",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_neutral_echodart_casts",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_icehook_trapper_lodge_watch",
+      "name": "Icehook Trapper Lodge Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_icehook_trappers",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_neutral_whitepike_keepers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_obsidian_scar_watch",
+      "name": "Obsidian Scar Camp Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_scarshield_veterans",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_neutral_ashdart_stalkers",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_greenbranch_copse_watch",
+      "name": "Greenbranch Copse Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_greenbranch_cudgels",
+          "count": 9
+        },
+        {
+          "unit_id": "unit_neutral_sapwhistle_callers",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_harbor_pilot_house_watch",
+      "name": "Harbor Pilot House Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_harbor_polearms",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_neutral_flaremast_crews",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_kite_signal_eyrie_watch",
+      "name": "Kite Signal Eyrie Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_kitehook_runners",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_neutral_ridgeflare_shots",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_lantern_warren_watch",
+      "name": "Lantern Warren Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_tunnel_lanterns",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_neutral_glimmercap_needlers",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_bogbell_croft_watch",
+      "name": "Bogbell Croft Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_bogbell_mauls",
+          "count": 9
+        },
+        {
+          "unit_id": "unit_neutral_peatflare_jarriers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_milestone_arsenal_watch",
+      "name": "Milestone Arsenal Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_milestone_bucklers",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_neutral_cartbow_tenders",
+          "count": 4
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_frostwharf_house_watch",
+      "name": "Frostwharf House Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_frostwharf_cutters",
+          "count": 7
+        },
+        {
+          "unit_id": "unit_neutral_lanternskate_throwers",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_charcoal_burners_watch",
+      "name": "Charcoal Burners Camp Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_charcoal_mauls",
+          "count": 8
+        },
+        {
+          "unit_id": "unit_neutral_emberpack_lobbers",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "id": "army_neutral_basalt_gatehouse_watch",
+      "name": "Basalt Gatehouse Watch",
+      "affiliation": "neutral",
+      "stacks": [
+        {
+          "unit_id": "unit_neutral_basalt_wardens",
+          "count": 9
+        },
+        {
+          "unit_id": "unit_neutral_tunnelmark_bolters",
+          "count": 4
+        }
+      ]
     }
   ]
 }

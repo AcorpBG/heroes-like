@@ -2571,6 +2571,1672 @@
           "harried_damage_multiplier": 1.1
         }
       ]
+    },
+    {
+      "id": "unit_neutral_cliffhawk_wardens",
+      "name": "Cliffhawk Wardens",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 11,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Hooked Sky-Pike",
+          "description": "Roost wardens use hooked pikes to hold narrow ridges from a half step away.",
+          "distance_one_multiplier": 0.9
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_windglass_slingers",
+      "name": "Windglass Slingers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "High Arc Stones",
+          "description": "Windglass slingers punish exposed lines from above the pass.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_reedbarge_poles",
+      "name": "Reedbarge Poles",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 1,
+      "hp": 9,
+      "attack": 4,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 7,
+      "cost": {
+        "gold": 60
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Dock-Pole Reach",
+          "description": "Barge crews hold muddy approaches with long hooked dock poles.",
+          "distance_one_multiplier": 0.85
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_lanternet_throwers",
+      "name": "Lanternet Throwers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 85
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Lantern Net",
+          "description": "Weighted lantern nets foul footing and break formation in the reeds.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_glowcap_bulwarks",
+      "name": "Glowcap Bulwarks",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 14,
+      "attack": 5,
+      "defense": 7,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 115,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Fungus Buckler Wall",
+          "description": "Layered fungus shields soak arrows and hold their shape in cramped tunnels.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_sporelamp_tossers",
+      "name": "Sporelamp Tossers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Sporelamp Burst",
+          "description": "Glass lamps scatter choking spores that loosen a clean advance.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_dustjack_blades",
+      "name": "Dustjack Blades",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 6,
+      "defense": 3,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 7,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Dust Sprint",
+          "description": "Dustjacks surge hardest once a line is wounded or knocked out of step.",
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_scrapbow_teams",
+      "name": "Scrapbow Teams",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Crank-Bow Volley",
+          "description": "Salvaged crank-bows hit harder across open badland lanes.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_kilnward_mallets",
+      "name": "Kilnward Mallets",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 13,
+      "attack": 5,
+      "defense": 6,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 110,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Kiln Door Brace",
+          "description": "Mallet crews brace behind kiln plates and stagger attackers on the counterblow.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_cinderpot_hurlers",
+      "name": "Cinderpot Hurlers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Cinderpot Smoke",
+          "description": "Clay cinderpots burst into hot smoke that scatters formation.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_frostbeacon_pikes",
+      "name": "Frostbeacon Pikes",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 11,
+      "attack": 5,
+      "defense": 5,
+      "min_damage": 3,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Ice Road Pike",
+          "description": "Bothy pikes hold long snow roads without yielding the crossing.",
+          "distance_one_multiplier": 0.9
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_snowglass_markers",
+      "name": "Snowglass Markers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "White-Lane Mark",
+          "description": "Snowglass shots strike cleanly when the target is exposed on open ground.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_orchard_halberds",
+      "name": "Orchard Halberds",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 1,
+      "hp": 9,
+      "attack": 4,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 7,
+      "cost": {
+        "gold": 60
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Hedgerow Brace",
+          "description": "Seasonal halberds lock shields against the hedge and punish a forced push.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_millstone_slingers",
+      "name": "Millstone Slingers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 1,
+      "hp": 6,
+      "attack": 4,
+      "defense": 3,
+      "min_damage": 1,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 6,
+      "cost": {
+        "gold": 55
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Millstone Chips",
+          "description": "Slingers chip at knees and shields until the enemy line loses order.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_hedgehook_watch",
+      "name": "Hedgehook Watch",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 80
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Hedgehook Cut",
+          "description": "Watch crews strike harder when prey is already slowed in the thorns.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_thornbow_scouts",
+      "name": "Thornbow Scouts",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "growth": 5,
+      "cost": {
+        "gold": 85
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Thornbow Prick",
+          "description": "Short thornbows pin loose armor and slow a clean response.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_tidepool_cutters",
+      "name": "Tidepool Cutters",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 6,
+      "defense": 3,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Low-Tide Cut",
+          "description": "Cutters exploit staggered footing around wet stones and shallows.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_reefbolt_crews",
+      "name": "Reefbolt Crews",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Reefbolt Line",
+          "description": "Heavy shore bolts punish targets that cannot find cover on the beach.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_switchback_pikes",
+      "name": "Switchback Pikes",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 12,
+      "attack": 5,
+      "defense": 5,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Switchback Reach",
+          "description": "Guide pikes hold hairpin turns from a half-closed lane.",
+          "distance_one_multiplier": 0.9
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_cairnshield_porters",
+      "name": "Cairnshield Porters",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 3,
+      "hp": 18,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 160,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Cairnshield Load",
+          "description": "Porters stack travel shields into a dense wall against missile fire.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_saltpan_bucklers",
+      "name": "Saltpan Bucklers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 12,
+      "attack": 5,
+      "defense": 6,
+      "min_damage": 3,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Salt-Hide Bucklers",
+          "description": "Salt-cured bucklers blunt arrows and keep haulers upright in glare.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_suncrack_throwers",
+      "name": "Suncrack Throwers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Suncrack Flask",
+          "description": "Bright flasks burst into grit and glare that disrupt shield order.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_sumpstone_guards",
+      "name": "Sumpstone Guards",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 3,
+      "hp": 17,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 155,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Sumpstone Plate",
+          "description": "Sumpstone guards carry wet crystal plates that deflect poor shots.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_echodart_casts",
+      "name": "Echodart Casts",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 105
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Echo-Dart Pattern",
+          "description": "Dart casts bounce shots through tunnel angles into exposed ranks.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_icehook_trappers",
+      "name": "Icehook Trappers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Snare-Hook Finish",
+          "description": "Icehook trappers hit hardest when prey is already slowed or wounded.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_whitepike_keepers",
+      "name": "Whitepike Keepers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 12,
+      "attack": 5,
+      "defense": 5,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 100
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Whitepike Hold",
+          "description": "Keepers extend pikes over snow banks and broken deadfall.",
+          "distance_one_multiplier": 0.9
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_scarshield_veterans",
+      "name": "Scarshield Veterans",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 3,
+      "hp": 18,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 6,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 165,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Scarshield Lock",
+          "description": "Veterans lock scarred shields and stagger attackers against the glass line.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_ashdart_stalkers",
+      "name": "Ashdart Stalkers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 6,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "growth": 5,
+      "cost": {
+        "gold": 100
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Ashdart Veil",
+          "description": "Fine ash darts leave targets coughing and out of cadence.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_greenbranch_cudgels",
+      "name": "Greenbranch Cudgels",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 1,
+      "hp": 10,
+      "attack": 4,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 6,
+      "cost": {
+        "gold": 65
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Woven Branch Guard",
+          "description": "Woven greenwood shields catch light missiles and steady the cudgel line.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_sapwhistle_callers",
+      "name": "Sapwhistle Callers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 85
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Sapwhistle Signal",
+          "description": "Shrill whistles and resin darts disrupt enemy timing in the trees.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_harbor_polearms",
+      "name": "Harbor Polearms",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 1,
+      "hp": 9,
+      "attack": 4,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 7,
+      "cost": {
+        "gold": 60
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Boarding Pole",
+          "description": "Pilot-house guards use boarding poles to control a half-open lane.",
+          "distance_one_multiplier": 0.85
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_flaremast_crews",
+      "name": "Flaremast Crews",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 85
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Signal-Flare Volley",
+          "description": "Flaremast shots punish exposed ranks crossing an open landing.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_kitehook_runners",
+      "name": "Kitehook Runners",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 6,
+      "defense": 3,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 7,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Kitehook Sprint",
+          "description": "Runners build speed when a wounded line starts to drift.",
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_ridgeflare_shots",
+      "name": "Ridgeflare Shots",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 8,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Ridgeflare Aim",
+          "description": "Signal shots carry farther when fired down an exposed ridge.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_tunnel_lanterns",
+      "name": "Tunnel Lanterns",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 12,
+      "attack": 5,
+      "defense": 6,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 100
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Lantern Brace",
+          "description": "Shielded lanterns hold a narrow tunnel and stagger attackers in the glare.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_glimmercap_needlers",
+      "name": "Glimmercap Needlers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 85
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Glimmercap Needles",
+          "description": "Needles tipped with tunnel sap break discipline without claiming a banner.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_bogbell_mauls",
+      "name": "Bogbell Mauls",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 13,
+      "attack": 5,
+      "defense": 6,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 105
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Bell-Mud Hide",
+          "description": "Layered mud hides and broad mauls keep the croft line from buckling.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_peatflare_jarriers",
+      "name": "Peatflare Jarriers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 5,
+      "cost": {
+        "gold": 85
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Peatflare Jar",
+          "description": "Smoldering peat jars throw smoke and sparks through tight fen lanes.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_milestone_bucklers",
+      "name": "Milestone Bucklers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 13,
+      "attack": 5,
+      "defense": 6,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 110
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Road File Drill",
+          "description": "Buckler files steady nearby crews and make ranged support more reliable.",
+          "ally_ranged_damage_multiplier": 1.1,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_cartbow_tenders",
+      "name": "Cartbow Tenders",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 3,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 95,
+        "wood": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Cartbow Crank",
+          "description": "Cart-mounted bows strike harder down a prepared road lane.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_frostwharf_cutters",
+      "name": "Frostwharf Cutters",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Iceplank Cut",
+          "description": "Cutters punish wounded targets slipping across iced planks.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_lanternskate_throwers",
+      "name": "Lanternskate Throwers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Skate-Lantern Toss",
+          "description": "Sliding lanterns burst low and scatter clean formations.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_charcoal_mauls",
+      "name": "Charcoal Mauls",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 2,
+      "hp": 12,
+      "attack": 5,
+      "defense": 6,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 100
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Clamp Brace",
+          "description": "Maul crews brace beside coal clamps and batter attackers out of rhythm.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_emberpack_lobbers",
+      "name": "Emberpack Lobbers",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 5,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 6,
+      "growth": 5,
+      "cost": {
+        "gold": 90
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Emberpack Burst",
+          "description": "Packed coals burst into sparks that harry shield lines.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_basalt_wardens",
+      "name": "Basalt Wardens",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "melee",
+      "tier": 3,
+      "hp": 19,
+      "attack": 7,
+      "defense": 9,
+      "min_damage": 4,
+      "max_damage": 7,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 175,
+        "ore": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Basalt Mantlet",
+          "description": "Basalt mantlets absorb poor shots and keep the gate line intact.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.78,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_neutral_tunnelmark_bolters",
+      "name": "Tunnelmark Bolters",
+      "faction_id": "",
+      "affiliation": "neutral",
+      "role": "ranged",
+      "tier": 3,
+      "hp": 9,
+      "attack": 7,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 3,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "shots": 7,
+      "growth": 4,
+      "cost": {
+        "gold": 130,
+        "wood": 1
+      },
+      "content_status": "neutral_dwelling_slice",
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Marked Bolt Lane",
+          "description": "Bolters fire through measured tunnel marks into exposed ranks.",
+          "damage_multiplier": 1.12,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1
+        }
+      ]
     }
   ]
 }

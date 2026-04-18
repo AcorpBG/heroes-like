@@ -45,6 +45,492 @@
       "map_roles": ["neutral_recruit_source", "mire_pressure", "weekly_muster"]
     },
     {
+      "id": "object_cliffhawk_roost",
+      "name": "Cliffhawk Roost",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_cliffhawk_roost",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "ridge_watch",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_reedbarge_mooring",
+      "name": "Reedbarge Mooring",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_reedbarge_mooring",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "water_route_control",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_glowcap_croft",
+      "name": "Glowcap Croft",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_glowcap_croft",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "underway_pressure",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_dustjack_yard",
+      "name": "Dustjack Yard",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_dustjack_yard",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "salvage_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_cinder_kiln",
+      "name": "Cinder Kiln",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_cinder_kiln",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "ash_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_frostbeacon_bothy",
+      "name": "Frostbeacon Bothy",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_frostbeacon_bothy",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "frontier_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_orchard_levy",
+      "name": "Orchard Levy Grounds",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_orchard_levy",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "safe_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_bramble_hedge",
+      "name": "Bramble Hedge",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_bramble_hedge",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "ambush_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_tidepool_skiffyard",
+      "name": "Tidepool Skiffyard",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_tidepool_skiffyard",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "coastal_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_switchback_hostel",
+      "name": "Switchback Hostel",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_switchback_hostel",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "pass_control",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_saltpan_camp",
+      "name": "Saltpan Camp",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_saltpan_camp",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "exposed_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_crystal_sump",
+      "name": "Crystal Sump",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_crystal_sump",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "mining_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_icehook_trapper_lodge",
+      "name": "Icehook Trapper Lodge",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_icehook_trapper_lodge",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "frontier_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_obsidian_scar",
+      "name": "Obsidian Scar Camp",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_obsidian_scar",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "ash_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_greenbranch_copse",
+      "name": "Greenbranch Copse",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_greenbranch_copse",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "forest_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_harbor_pilot_house",
+      "name": "Harbor Pilot House",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_harbor_pilot_house",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "logistics_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_kite_signal_eyrie",
+      "name": "Kite Signal Eyrie",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_kite_signal_eyrie",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "scouting_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_lantern_warren",
+      "name": "Lantern Warren",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_lantern_warren",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "hidden_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_bogbell_croft",
+      "name": "Bogbell Croft",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_bogbell_croft",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "slow_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_milestone_arsenal",
+      "name": "Milestone Arsenal",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_milestone_arsenal",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "road_control",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_frostwharf_house",
+      "name": "Frostwharf House",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_frostwharf_house",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 2
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "coastal_frontier",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_charcoal_burners",
+      "name": "Charcoal Burners Camp",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_charcoal_burners",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands",
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "burn_lane",
+        "weekly_muster"
+      ]
+    },
+    {
+      "id": "object_basalt_gatehouse",
+      "name": "Basalt Gatehouse",
+      "family": "neutral_dwelling",
+      "resource_site_id": "site_basalt_gatehouse",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 2,
+        "height": 1
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "neutral_recruit_source",
+        "gate_control",
+        "weekly_muster"
+      ]
+    },
+    {
       "id": "object_brightwood_sawmill",
       "name": "Brightwood Sawmill",
       "family": "mine",

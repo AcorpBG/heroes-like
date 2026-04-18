@@ -23,6 +23,607 @@
       "army_group_ids": ["army_neutral_fenhound_kennel_watch"],
       "encounter_ids": ["encounter_fenhound_kennel_watch"],
       "content_status": "neutral_dwelling_slice"
+    },
+    {
+      "id": "neutral_dwelling_cliffhawk_roost",
+      "name": "Cliffhawk Roost",
+      "summary": "Ridge roost keepers who lease cliff-trained sentries and windglass slingers for hard passes without swearing to any crown.",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "unit_ids": [
+        "unit_neutral_cliffhawk_wardens",
+        "unit_neutral_windglass_slingers"
+      ],
+      "site_ids": [
+        "site_cliffhawk_roost"
+      ],
+      "map_object_ids": [
+        "object_cliffhawk_roost"
+      ],
+      "army_group_ids": [
+        "army_neutral_cliffhawk_roost_watch"
+      ],
+      "encounter_ids": [
+        "encounter_cliffhawk_roost_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_reedbarge_mooring",
+      "name": "Reedbarge Mooring",
+      "summary": "Loose flotilla crews who sell polefighters, lantern nets, and marsh ferry muscle to whoever keeps the channel tolls fair.",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "unit_ids": [
+        "unit_neutral_reedbarge_poles",
+        "unit_neutral_lanternet_throwers"
+      ],
+      "site_ids": [
+        "site_reedbarge_mooring"
+      ],
+      "map_object_ids": [
+        "object_reedbarge_mooring"
+      ],
+      "army_group_ids": [
+        "army_neutral_reedbarge_mooring_watch"
+      ],
+      "encounter_ids": [
+        "encounter_reedbarge_mooring_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_glowcap_croft",
+      "name": "Glowcap Croft",
+      "summary": "Underway farmers and fungus wardens who trade sturdy lantern shields and spore lamps as hired tunnel guards.",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "unit_ids": [
+        "unit_neutral_glowcap_bulwarks",
+        "unit_neutral_sporelamp_tossers"
+      ],
+      "site_ids": [
+        "site_glowcap_croft"
+      ],
+      "map_object_ids": [
+        "object_glowcap_croft"
+      ],
+      "army_group_ids": [
+        "army_neutral_glowcap_croft_watch"
+      ],
+      "encounter_ids": [
+        "encounter_glowcap_croft_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_dustjack_yard",
+      "name": "Dustjack Yard",
+      "summary": "Badland salvagers who hire out hard-running blades and crank-bow teams from roadside repair yards.",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_dustjack_blades",
+        "unit_neutral_scrapbow_teams"
+      ],
+      "site_ids": [
+        "site_dustjack_yard"
+      ],
+      "map_object_ids": [
+        "object_dustjack_yard"
+      ],
+      "army_group_ids": [
+        "army_neutral_dustjack_yard_watch"
+      ],
+      "encounter_ids": [
+        "encounter_dustjack_yard_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_cinder_kiln",
+      "name": "Cinder Kiln",
+      "summary": "Ash-road kiln guilds who rent out shielded hammer crews and cinderpot hurlers for dangerous furnace approaches.",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "unit_ids": [
+        "unit_neutral_kilnward_mallets",
+        "unit_neutral_cinderpot_hurlers"
+      ],
+      "site_ids": [
+        "site_cinder_kiln"
+      ],
+      "map_object_ids": [
+        "object_cinder_kiln"
+      ],
+      "army_group_ids": [
+        "army_neutral_cinder_kiln_watch"
+      ],
+      "encounter_ids": [
+        "encounter_cinder_kiln_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_frostbeacon_bothy",
+      "name": "Frostbeacon Bothy",
+      "summary": "Remote beacon crews that sell disciplined pikes and long-sight marker teams to armies crossing the frost roads.",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ],
+      "unit_ids": [
+        "unit_neutral_frostbeacon_pikes",
+        "unit_neutral_snowglass_markers"
+      ],
+      "site_ids": [
+        "site_frostbeacon_bothy"
+      ],
+      "map_object_ids": [
+        "object_frostbeacon_bothy"
+      ],
+      "army_group_ids": [
+        "army_neutral_frostbeacon_bothy_watch"
+      ],
+      "encounter_ids": [
+        "encounter_frostbeacon_bothy_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_orchard_levy",
+      "name": "Orchard Levy Grounds",
+      "summary": "Independent orchard villages that muster pole crews and millstone slingers as paid seasonal guards.",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ],
+      "unit_ids": [
+        "unit_neutral_orchard_halberds",
+        "unit_neutral_millstone_slingers"
+      ],
+      "site_ids": [
+        "site_orchard_levy"
+      ],
+      "map_object_ids": [
+        "object_orchard_levy"
+      ],
+      "army_group_ids": [
+        "army_neutral_orchard_levy_watch"
+      ],
+      "encounter_ids": [
+        "encounter_orchard_levy_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_bramble_hedge",
+      "name": "Bramble Hedge",
+      "summary": "Forest-edge hedge keepers who offer hook fighters and thornbow scouts to caravans crossing old green roads.",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_hedgehook_watch",
+        "unit_neutral_thornbow_scouts"
+      ],
+      "site_ids": [
+        "site_bramble_hedge"
+      ],
+      "map_object_ids": [
+        "object_bramble_hedge"
+      ],
+      "army_group_ids": [
+        "army_neutral_bramble_hedge_watch"
+      ],
+      "encounter_ids": [
+        "encounter_bramble_hedge_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_tidepool_skiffyard",
+      "name": "Tidepool Skiffyard",
+      "summary": "Shore skiff crews who hire out tide cutters and reefbolt teams wherever a landing route needs teeth.",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_tidepool_cutters",
+        "unit_neutral_reefbolt_crews"
+      ],
+      "site_ids": [
+        "site_tidepool_skiffyard"
+      ],
+      "map_object_ids": [
+        "object_tidepool_skiffyard"
+      ],
+      "army_group_ids": [
+        "army_neutral_tidepool_skiffyard_watch"
+      ],
+      "encounter_ids": [
+        "encounter_tidepool_skiffyard_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_switchback_hostel",
+      "name": "Switchback Hostel",
+      "summary": "Pass hostels that keep independent porter bands, pike guides, and shield carriers for hire on steep routes.",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_snow_frost_marches"
+      ],
+      "unit_ids": [
+        "unit_neutral_switchback_pikes",
+        "unit_neutral_cairnshield_porters"
+      ],
+      "site_ids": [
+        "site_switchback_hostel"
+      ],
+      "map_object_ids": [
+        "object_switchback_hostel"
+      ],
+      "army_group_ids": [
+        "army_neutral_switchback_hostel_watch"
+      ],
+      "encounter_ids": [
+        "encounter_switchback_hostel_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_saltpan_camp",
+      "name": "Saltpan Camp",
+      "summary": "Dry-country salt haulers who lease shield hands and glare-bottle throwers to protect exposed wagon roads.",
+      "biome_ids": [
+        "biome_rough_badlands",
+        "biome_coast_archipelago"
+      ],
+      "unit_ids": [
+        "unit_neutral_saltpan_bucklers",
+        "unit_neutral_suncrack_throwers"
+      ],
+      "site_ids": [
+        "site_saltpan_camp"
+      ],
+      "map_object_ids": [
+        "object_saltpan_camp"
+      ],
+      "army_group_ids": [
+        "army_neutral_saltpan_camp_watch"
+      ],
+      "encounter_ids": [
+        "encounter_saltpan_camp_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_crystal_sump",
+      "name": "Crystal Sump",
+      "summary": "Mineral-sump crews that trade sturdy sump guards and echo-dart teams as neutral tunnel auxiliaries.",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_highland_ridge"
+      ],
+      "unit_ids": [
+        "unit_neutral_sumpstone_guards",
+        "unit_neutral_echodart_casts"
+      ],
+      "site_ids": [
+        "site_crystal_sump"
+      ],
+      "map_object_ids": [
+        "object_crystal_sump"
+      ],
+      "army_group_ids": [
+        "army_neutral_crystal_sump_watch"
+      ],
+      "encounter_ids": [
+        "encounter_crystal_sump_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_icehook_trapper_lodge",
+      "name": "Icehook Trapper Lodge",
+      "summary": "Cold-road trappers who sell hooked scouts and patient whitepike keepers for work beyond settled borders.",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_deep_forest"
+      ],
+      "unit_ids": [
+        "unit_neutral_icehook_trappers",
+        "unit_neutral_whitepike_keepers"
+      ],
+      "site_ids": [
+        "site_icehook_trapper_lodge"
+      ],
+      "map_object_ids": [
+        "object_icehook_trapper_lodge"
+      ],
+      "army_group_ids": [
+        "army_neutral_icehook_trapper_lodge_watch"
+      ],
+      "encounter_ids": [
+        "encounter_icehook_trapper_lodge_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_obsidian_scar",
+      "name": "Obsidian Scar Camp",
+      "summary": "Scar-road shield veterans and ashdart scouts who sell dangerous-route protection without joining an empire.",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "unit_ids": [
+        "unit_neutral_scarshield_veterans",
+        "unit_neutral_ashdart_stalkers"
+      ],
+      "site_ids": [
+        "site_obsidian_scar"
+      ],
+      "map_object_ids": [
+        "object_obsidian_scar"
+      ],
+      "army_group_ids": [
+        "army_neutral_obsidian_scar_watch"
+      ],
+      "encounter_ids": [
+        "encounter_obsidian_scar_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_greenbranch_copse",
+      "name": "Greenbranch Copse",
+      "summary": "Old coppice keepers who hire out cudgel lines and sapwhistle callers as neutral path guards.",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_greenbranch_cudgels",
+        "unit_neutral_sapwhistle_callers"
+      ],
+      "site_ids": [
+        "site_greenbranch_copse"
+      ],
+      "map_object_ids": [
+        "object_greenbranch_copse"
+      ],
+      "army_group_ids": [
+        "army_neutral_greenbranch_copse_watch"
+      ],
+      "encounter_ids": [
+        "encounter_greenbranch_copse_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_harbor_pilot_house",
+      "name": "Harbor Pilot House",
+      "summary": "Independent harbor pilots who rent out polearm boarders and flaremast crews to landward commanders.",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_harbor_polearms",
+        "unit_neutral_flaremast_crews"
+      ],
+      "site_ids": [
+        "site_harbor_pilot_house"
+      ],
+      "map_object_ids": [
+        "object_harbor_pilot_house"
+      ],
+      "army_group_ids": [
+        "army_neutral_harbor_pilot_house_watch"
+      ],
+      "encounter_ids": [
+        "encounter_harbor_pilot_house_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_kite_signal_eyrie",
+      "name": "Kite Signal Eyrie",
+      "summary": "Wind-signal couriers who hire fast hook runners and ridgeflare shot teams from high signal nests.",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_grasslands"
+      ],
+      "unit_ids": [
+        "unit_neutral_kitehook_runners",
+        "unit_neutral_ridgeflare_shots"
+      ],
+      "site_ids": [
+        "site_kite_signal_eyrie"
+      ],
+      "map_object_ids": [
+        "object_kite_signal_eyrie"
+      ],
+      "army_group_ids": [
+        "army_neutral_kite_signal_eyrie_watch"
+      ],
+      "encounter_ids": [
+        "encounter_kite_signal_eyrie_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_lantern_warren",
+      "name": "Lantern Warren",
+      "summary": "Buried lantern-keepers who sell tunnel shielders and glimmercap needlers for contracts below the old roads.",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_mire_fen"
+      ],
+      "unit_ids": [
+        "unit_neutral_tunnel_lanterns",
+        "unit_neutral_glimmercap_needlers"
+      ],
+      "site_ids": [
+        "site_lantern_warren"
+      ],
+      "map_object_ids": [
+        "object_lantern_warren"
+      ],
+      "army_group_ids": [
+        "army_neutral_lantern_warren_watch"
+      ],
+      "encounter_ids": [
+        "encounter_lantern_warren_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_bogbell_croft",
+      "name": "Bogbell Croft",
+      "summary": "Fen crofters who maintain bell-marked paths and sell maul crews plus peatflare jars to passing lords.",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_deep_forest"
+      ],
+      "unit_ids": [
+        "unit_neutral_bogbell_mauls",
+        "unit_neutral_peatflare_jarriers"
+      ],
+      "site_ids": [
+        "site_bogbell_croft"
+      ],
+      "map_object_ids": [
+        "object_bogbell_croft"
+      ],
+      "army_group_ids": [
+        "army_neutral_bogbell_croft_watch"
+      ],
+      "encounter_ids": [
+        "encounter_bogbell_croft_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_milestone_arsenal",
+      "name": "Milestone Arsenal",
+      "summary": "Road arsenals that arm neutral buckler files and cartbow tenders for rulers who keep the milestones repaired.",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge"
+      ],
+      "unit_ids": [
+        "unit_neutral_milestone_bucklers",
+        "unit_neutral_cartbow_tenders"
+      ],
+      "site_ids": [
+        "site_milestone_arsenal"
+      ],
+      "map_object_ids": [
+        "object_milestone_arsenal"
+      ],
+      "army_group_ids": [
+        "army_neutral_milestone_arsenal_watch"
+      ],
+      "encounter_ids": [
+        "encounter_milestone_arsenal_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_frostwharf_house",
+      "name": "Frostwharf House",
+      "summary": "Cold-water wharf houses that contract cutter crews and lanternskate throwers along icy shores.",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_coast_archipelago"
+      ],
+      "unit_ids": [
+        "unit_neutral_frostwharf_cutters",
+        "unit_neutral_lanternskate_throwers"
+      ],
+      "site_ids": [
+        "site_frostwharf_house"
+      ],
+      "map_object_ids": [
+        "object_frostwharf_house"
+      ],
+      "army_group_ids": [
+        "army_neutral_frostwharf_house_watch"
+      ],
+      "encounter_ids": [
+        "encounter_frostwharf_house_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_charcoal_burners",
+      "name": "Charcoal Burners Camp",
+      "summary": "Charcoal road camps that lend maul crews and emberpack lobbers to armies willing to pay in coin and cordwood.",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands",
+        "biome_deep_forest"
+      ],
+      "unit_ids": [
+        "unit_neutral_charcoal_mauls",
+        "unit_neutral_emberpack_lobbers"
+      ],
+      "site_ids": [
+        "site_charcoal_burners"
+      ],
+      "map_object_ids": [
+        "object_charcoal_burners"
+      ],
+      "army_group_ids": [
+        "army_neutral_charcoal_burners_watch"
+      ],
+      "encounter_ids": [
+        "encounter_charcoal_burners_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
+    },
+    {
+      "id": "neutral_dwelling_basalt_gatehouse",
+      "name": "Basalt Gatehouse",
+      "summary": "Independent tunnel-gate custodians who rent basalt wardens and tunnelmark bolters to control hard underground thresholds.",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes",
+        "biome_highland_ridge"
+      ],
+      "unit_ids": [
+        "unit_neutral_basalt_wardens",
+        "unit_neutral_tunnelmark_bolters"
+      ],
+      "site_ids": [
+        "site_basalt_gatehouse"
+      ],
+      "map_object_ids": [
+        "object_basalt_gatehouse"
+      ],
+      "army_group_ids": [
+        "army_neutral_basalt_gatehouse_watch"
+      ],
+      "encounter_ids": [
+        "encounter_basalt_gatehouse_watch"
+      ],
+      "content_status": "neutral_dwelling_breadth_slice"
     }
   ]
 }

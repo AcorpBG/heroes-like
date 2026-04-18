@@ -860,6 +860,1030 @@
         }
       ],
       "rewards": {"gold": 100, "experience": 130}
+    },
+    {
+      "id": "encounter_cliffhawk_roost_watch",
+      "name": "Cliffhawk Roost Watch",
+      "enemy_group_id": "army_neutral_cliffhawk_roost_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "elevated_fire",
+        "chokepoint"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Cliffhawk Roost Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "cliffhawk_roost_hold",
+          "type": "signal_beacon",
+          "label": "Wind Perch",
+          "summary": "The high perch keeps the roost crews coordinated until the approach ridge is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "commander"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
+    },
+    {
+      "id": "encounter_reedbarge_mooring_watch",
+      "name": "Reedbarge Mooring Watch",
+      "enemy_group_id": "army_neutral_reedbarge_mooring_watch",
+      "affiliation": "neutral",
+      "terrain": "mire",
+      "battlefield_tags": [
+        "bog_channels",
+        "chokepoint"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Reedbarge Mooring Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "bogwise"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "reedbarge_mooring_hold",
+          "type": "supply_post",
+          "label": "Barge Stores",
+          "summary": "Spare poles, nets, and lamp oil keep the mooring defenders supplied until the dock is secured.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 110,
+        "wood": 1,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_glowcap_croft_watch",
+      "name": "Glowcap Croft Watch",
+      "enemy_group_id": "army_neutral_glowcap_croft_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "fog_bank",
+        "chokepoint"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Glowcap Croft Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "ambusher"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "glowcap_croft_hold",
+          "type": "hazard_zone",
+          "label": "Spore Beds",
+          "summary": "The glowing beds make the tunnel approach treacherous until the crop rows are controlled.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
+    },
+    {
+      "id": "encounter_dustjack_yard_watch",
+      "name": "Dustjack Yard Watch",
+      "enemy_group_id": "army_neutral_dustjack_yard_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "open_lane",
+        "wall_pressure"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Dustjack Yard Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "dustjack_yard_hold",
+          "type": "supply_post",
+          "label": "Repair Pile",
+          "summary": "The repair pile feeds spare blades and bow arms into the watch until the yard is claimed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "momentum",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_cinder_kiln_watch",
+      "name": "Cinder Kiln Watch",
+      "enemy_group_id": "army_neutral_cinder_kiln_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "battery_nest",
+        "wall_pressure"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Cinder Kiln Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "cinder_kiln_hold",
+          "type": "hazard_zone",
+          "label": "Hot Kiln Yard",
+          "summary": "Open furnace trenches punish a rushed assault until the kiln yard is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "urgency",
+            "momentum"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_frostbeacon_bothy_watch",
+      "name": "Frostbeacon Bothy Watch",
+      "enemy_group_id": "army_neutral_frostbeacon_bothy_watch",
+      "affiliation": "neutral",
+      "terrain": "grass",
+      "battlefield_tags": [
+        "open_lane",
+        "reserve_wave"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Frostbeacon Bothy Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "frostbeacon_bothy_hold",
+          "type": "signal_beacon",
+          "label": "Storm Beacon",
+          "summary": "The storm beacon keeps the bothy watch coordinated across the white road.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 100,
+        "experience": 130
+      }
+    },
+    {
+      "id": "encounter_orchard_levy_watch",
+      "name": "Orchard Levy Grounds Watch",
+      "enemy_group_id": "army_neutral_orchard_levy_watch",
+      "affiliation": "neutral",
+      "terrain": "grass",
+      "battlefield_tags": [
+        "open_lane",
+        "fortified_line"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Orchard Levy Grounds Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "orchard_levy_hold",
+          "type": "supply_post",
+          "label": "Orchard Stores",
+          "summary": "Food stores and tool sheds let the levy keep rotating fresh crews into the lane.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 100,
+        "experience": 130
+      }
+    },
+    {
+      "id": "encounter_bramble_hedge_watch",
+      "name": "Bramble Hedge Watch",
+      "enemy_group_id": "army_neutral_bramble_hedge_watch",
+      "affiliation": "neutral",
+      "terrain": "forest",
+      "battlefield_tags": [
+        "ambush_cover",
+        "chokepoint"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Bramble Hedge Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "ambusher"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "bramble_hedge_hold",
+          "type": "cover_line",
+          "label": "Bramble Screen",
+          "summary": "The screen hides hedge fighters until the thorn line is pushed back.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "ranged",
+            "cohesion"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 110,
+        "wood": 1,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_tidepool_skiffyard_watch",
+      "name": "Tidepool Skiffyard Watch",
+      "enemy_group_id": "army_neutral_tidepool_skiffyard_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "fog_bank",
+        "open_lane"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Tidepool Skiffyard Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "tidepool_skiffyard_hold",
+          "type": "supply_post",
+          "label": "Skiff Racks",
+          "summary": "Boat racks and tide marks keep the skiffyard crews moving until the beach is held.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_switchback_hostel_watch",
+      "name": "Switchback Hostel Watch",
+      "enemy_group_id": "army_neutral_switchback_hostel_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "elevated_fire",
+        "chokepoint"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Switchback Hostel Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "switchback_hostel_hold",
+          "type": "supply_post",
+          "label": "Guide Stores",
+          "summary": "Guide ropes and packed stores let the hostel watch hold the switchback longer than expected.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
+    },
+    {
+      "id": "encounter_saltpan_camp_watch",
+      "name": "Saltpan Camp Watch",
+      "enemy_group_id": "army_neutral_saltpan_camp_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "open_lane",
+        "wall_pressure"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Saltpan Camp Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "saltpan_camp_hold",
+          "type": "hazard_zone",
+          "label": "Blinding Flats",
+          "summary": "White flats and salt glare keep attackers exposed until the camp center is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "ranged",
+            "initiative"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_crystal_sump_watch",
+      "name": "Crystal Sump Watch",
+      "enemy_group_id": "army_neutral_crystal_sump_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "chokepoint",
+        "fog_bank"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Crystal Sump Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "crystal_sump_hold",
+          "type": "cover_line",
+          "label": "Crystal Choke",
+          "summary": "Reflective stone breaks sight lines and protects the sump defenders until the choke is cleared.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "ranged",
+            "cohesion"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
+    },
+    {
+      "id": "encounter_icehook_trapper_lodge_watch",
+      "name": "Icehook Trapper Lodge Watch",
+      "enemy_group_id": "army_neutral_icehook_trapper_lodge_watch",
+      "affiliation": "neutral",
+      "terrain": "forest",
+      "battlefield_tags": [
+        "fog_bank",
+        "ambush_cover"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Icehook Trapper Lodge Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "ambusher"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "icehook_trapper_lodge_hold",
+          "type": "cover_line",
+          "label": "Snare Line",
+          "summary": "Hidden snare lines break a careless approach until the lodge path is found.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 110,
+        "wood": 1,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_obsidian_scar_watch",
+      "name": "Obsidian Scar Camp Watch",
+      "enemy_group_id": "army_neutral_obsidian_scar_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "open_lane",
+        "wall_pressure"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Obsidian Scar Camp Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "obsidian_scar_hold",
+          "type": "obstruction_line",
+          "label": "Glass Scar",
+          "summary": "Knife-edged scar glass narrows the approach and protects the camp line.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "momentum"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_greenbranch_copse_watch",
+      "name": "Greenbranch Copse Watch",
+      "enemy_group_id": "army_neutral_greenbranch_copse_watch",
+      "affiliation": "neutral",
+      "terrain": "forest",
+      "battlefield_tags": [
+        "ambush_cover",
+        "fog_bank"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Greenbranch Copse Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "ambusher"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "greenbranch_copse_hold",
+          "type": "cover_line",
+          "label": "Coppice Screen",
+          "summary": "Layered coppice rows hide the copse watch until the trail center is held.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "ranged"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 110,
+        "wood": 1,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_harbor_pilot_house_watch",
+      "name": "Harbor Pilot House Watch",
+      "enemy_group_id": "army_neutral_harbor_pilot_house_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "open_lane",
+        "fog_bank"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Harbor Pilot House Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "harbor_pilot_house_hold",
+          "type": "signal_beacon",
+          "label": "Flaremast",
+          "summary": "The flaremast lets pilots coordinate beach routes until the house is secured.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "commander"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_kite_signal_eyrie_watch",
+      "name": "Kite Signal Eyrie Watch",
+      "enemy_group_id": "army_neutral_kite_signal_eyrie_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "elevated_fire",
+        "open_lane"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Kite Signal Eyrie Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "kite_signal_eyrie_hold",
+          "type": "signal_beacon",
+          "label": "Kite Mast",
+          "summary": "Signal kites keep the eyrie watch moving faster until the mast is grounded.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
+    },
+    {
+      "id": "encounter_lantern_warren_watch",
+      "name": "Lantern Warren Watch",
+      "enemy_group_id": "army_neutral_lantern_warren_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "chokepoint",
+        "fog_bank"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Lantern Warren Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "lantern_warren_hold",
+          "type": "supply_post",
+          "label": "Oil Niche",
+          "summary": "Lamp oil and needle stores keep the warren watch effective until the niche is taken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
+    },
+    {
+      "id": "encounter_bogbell_croft_watch",
+      "name": "Bogbell Croft Watch",
+      "enemy_group_id": "army_neutral_bogbell_croft_watch",
+      "affiliation": "neutral",
+      "terrain": "mire",
+      "battlefield_tags": [
+        "bog_channels",
+        "fog_bank"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Bogbell Croft Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "bogwise"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "bogbell_croft_hold",
+          "type": "hazard_zone",
+          "label": "Bell Path",
+          "summary": "Bell-marked mud lanes confuse the approach until the croft center is held.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 110,
+        "wood": 1,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_milestone_arsenal_watch",
+      "name": "Milestone Arsenal Watch",
+      "enemy_group_id": "army_neutral_milestone_arsenal_watch",
+      "affiliation": "neutral",
+      "terrain": "grass",
+      "battlefield_tags": [
+        "open_lane",
+        "fortified_line"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Milestone Arsenal Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "milestone_arsenal_hold",
+          "type": "supply_post",
+          "label": "Milestone Stores",
+          "summary": "The arsenal storeyard keeps spare bucklers and cartbows flowing until the milestone is claimed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "reinforcement"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 100,
+        "experience": 130
+      }
+    },
+    {
+      "id": "encounter_frostwharf_house_watch",
+      "name": "Frostwharf House Watch",
+      "enemy_group_id": "army_neutral_frostwharf_house_watch",
+      "affiliation": "neutral",
+      "terrain": "grass",
+      "battlefield_tags": [
+        "fog_bank",
+        "open_lane"
+      ],
+      "max_rounds": 12,
+      "enemy_commander": {
+        "name": "Frostwharf House Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "vanguard"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "frostwharf_house_hold",
+          "type": "supply_post",
+          "label": "Iced Wharf",
+          "summary": "Iced planks and signal lamps let the wharf guard keep its footing until the house is held.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "initiative",
+            "cohesion"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 100,
+        "experience": 130
+      }
+    },
+    {
+      "id": "encounter_charcoal_burners_watch",
+      "name": "Charcoal Burners Camp Watch",
+      "enemy_group_id": "army_neutral_charcoal_burners_watch",
+      "affiliation": "neutral",
+      "terrain": "road",
+      "battlefield_tags": [
+        "wall_pressure",
+        "battery_nest"
+      ],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Charcoal Burners Camp Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "artillerist"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "charcoal_burners_hold",
+          "type": "hazard_zone",
+          "label": "Coal Clamp",
+          "summary": "Smoking coal clamps make the center lane dangerous until the camp is scattered.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "ranged",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "experience": 140
+      }
+    },
+    {
+      "id": "encounter_basalt_gatehouse_watch",
+      "name": "Basalt Gatehouse Watch",
+      "enemy_group_id": "army_neutral_basalt_gatehouse_watch",
+      "affiliation": "neutral",
+      "terrain": "hills",
+      "battlefield_tags": [
+        "fortress_lane",
+        "chokepoint"
+      ],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Basalt Gatehouse Captain",
+        "command": {
+          "attack": 1,
+          "defense": 1,
+          "power": 0,
+          "knowledge": 0
+        },
+        "starting_spell_ids": [],
+        "battle_traits": [
+          "linekeeper"
+        ]
+      },
+      "field_objectives": [
+        {
+          "id": "basalt_gatehouse_hold",
+          "type": "breach_point",
+          "label": "Basalt Gate",
+          "summary": "The gate throat turns every approach into a narrow breach until the custodians are broken.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": [
+            "cohesion",
+            "urgency"
+          ]
+        }
+      ],
+      "rewards": {
+        "gold": 120,
+        "ore": 1,
+        "experience": 150
+      }
     }
   ]
 }

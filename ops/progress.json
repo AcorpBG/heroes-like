@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T20:26:44Z",
+  "updatedAt": "2026-04-18T20:43:24Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "neutral-dwelling-unit-slice-10184",
-  "currentSliceTitle": "Implement first neutral dwelling and neutral-unit slice",
+  "currentSliceId": "neutral-dwelling-breadth-10184",
+  "currentSliceTitle": "Expand neutral dwelling breadth to 25 authored families",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the first neutral-content implementation slice: authored neutral unit records outside the six faction ladders, added neutral dwelling families with recruit/guard data, converted selected generic neutral dwelling sites to neutral rosters, and wired ContentService, OverworldRules, BattleRules, repo validation, and focused core smoke coverage so neutral recruit sources and neutral encounters can use real neutral rosters. This is a first slice, not a complete neutral ecology; existing scenarios were preserved except for truthful generic site data.",
+  "currentSliceNotes": "Completed a neutral dwelling breadth expansion: content/neutral_dwellings.json now has 25 authored neutral dwelling families, with matching neutral units, neutral-scoped resource sites, map objects, guard army groups, and neutral guard encounters. This is honest breadth scaffolding only; the new families are not claimed to be scenario-played or balanced, and current scenarios were preserved.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -118,6 +118,12 @@
       "difficulty": "high"
     },
     {
+      "id": "neutral-dwelling-breadth",
+      "title": "Expand neutral dwellings to 25 authored content families",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -173,8 +179,8 @@
     }
   ],
   "nextActions": [
-    "Add one narrow manually-audited guarded-neutral-dwelling placement only after proving its overworld entry, battle resolution, rewards, and save/resume behavior in the live client.",
-    "Expand neutral ecology with wandering stacks, neutral banks, surrender/recruit diplomacy, and biome-specific neutral palettes after this first neutral dwelling foundation stays stable.",
+    "Add one narrow manually-audited guarded-neutral-dwelling placement from the new 25-family pool only after proving its overworld entry, battle resolution, rewards, and save/resume behavior in the live client.",
+    "Deepen selected neutral dwelling families with scenario placement, encounter tuning, and manual play notes before claiming balance or player-facing readiness.",
     "Place selected new overworld object families in one narrow scenario slice only after defining truthful encounter, transit, and service behavior for that scenario.",
     "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",
     "Integrate selected scaffold factions into scenario placements, army groups, encounters, overworld landmarks, AI fronts, and manual play notes.",

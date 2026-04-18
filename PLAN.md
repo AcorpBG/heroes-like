@@ -90,6 +90,26 @@ Limits:
 - Guarded dwelling encounters are authored and battle-ready, but existing scenarios do not yet place a full guarded-neutral-dwelling flow as route-critical content.
 - Broader neutral banks, wandering monsters, surrender/recruit diplomacy, and biome-wide neutral ecology are future slices.
 
+## Current Implementation Slice: Neutral Dwelling Breadth Expansion
+Status: completed on 2026-04-18 as a breadth content slice after the first neutral dwelling foundation.
+
+Purpose:
+- Expand neutral dwelling families from the first two examples to a broad authored set of 25 families in the content layer.
+- Keep the work as real JSON content across neutral dwelling families, neutral units, neutral-scoped sites, map objects, guard army groups, and neutral encounters.
+- Preserve current scenarios instead of pretending this breadth has been scenario-played, tuned, or manually proven.
+
+Implemented:
+- Expanded `content/neutral_dwellings.json` to 25 authored neutral dwelling families.
+- Added 46 additional neutral units, bringing the neutral roster to 50 units outside the six faction ladders.
+- Added matching neutral dwelling resource-site definitions, map-object silhouettes, guard army groups, and neutral guard encounters for each new family.
+- Opened highland, ash, and underways biome palettes to neutral dwelling content where the new authored families live.
+- Tightened repo validation so the 25-family/50-unit breadth target and per-family site/object/guard/encounter links are enforced.
+
+Limits:
+- This is breadth scaffolding, not a balance pass.
+- None of the new 23 families are placed in current scenarios yet.
+- Guard encounters and recruit sources are internally coherent content records, but they are not claimed to be manually scenario-played or tuned.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 
