@@ -1289,6 +1289,12 @@ static func _town_pressure_label(town: Dictionary) -> String:
 			return "Raid pressure"
 		"faction_sunvault":
 			return "Relay reach"
+		"faction_thornwake":
+			return "Root pressure"
+		"faction_brasshollow":
+			return "Siege pressure"
+		"faction_veilmourn":
+			return "Fog pressure"
 		_:
 			return "Pressure"
 
@@ -1298,6 +1304,12 @@ static func _pressure_noun_for_building(building: Dictionary) -> String:
 		return "Pressure"
 	if building_id.begins_with("building_resonant") or building_id.begins_with("building_harmonic") or building_id.begins_with("building_aurora"):
 		return "Reach"
+	if building_id.begins_with("building_thornwake"):
+		return "Rooting"
+	if building_id.begins_with("building_brasshollow"):
+		return "Pressure"
+	if building_id.begins_with("building_veilmourn"):
+		return "Fog"
 	return "Leverage"
 
 static func _market_building_summary(building: Dictionary) -> String:

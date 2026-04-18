@@ -17,7 +17,7 @@ The current state is not that product. A manual play audit showed that the game 
 - Several docs previously implied completion, release-facing polish, or broad content readiness. Those claims are no longer accepted unless verified by manual play in the live client.
 - HoMM2-class breadth and HoMM3-class breadth are future product horizons, not current milestones.
 - The first product milestone was one manually completable scenario rather than a full campaign package, and AcOrP reported that River Pass manual gate passed on 2026-04-18.
-- The next staged target is a playable alpha baseline with two fully realized factions, not an immediate jump to six fully implemented factions at once.
+- With River Pass manually cleared, implementation has started on all six bible factions as real content scaffolds. This is not a claim that six factions are fully playable; playable alpha still requires deep vertical slices, scenario integration, AI behavior, save/load proof, and manual play evidence.
 
 ## Delivery Strategy
 The project now advances through explicit proof gates:
@@ -33,7 +33,7 @@ The project now advances through explicit proof gates:
    - This is the first truth source for whether the game is playable.
 
 3. Playable alpha baseline
-   - Expand from one scenario to a small, coherent alpha with two fully realized factions.
+   - Expand from one scenario to a small, coherent alpha with at least two deeply proven factions while broader six-faction scaffolds mature under validation.
    - Town, battle, overworld, and front-end UX must be usable without debug interpretation.
    - Units, spells, artifacts, map objects, and scenario content must be deep enough to sustain repeated play.
 
@@ -120,12 +120,14 @@ The authored content boundary remains split into JSON domains under `content/`:
 - `scenarios.json`
 - `campaigns.json`
 
-Near-term content work now shifts from proving River Pass completion to using that passed gate responsibly: select two factions from the content bible, implement them deeply, and avoid pretending six-faction breadth exists before the alpha layers are real.
+Near-term content work now shifts from proving River Pass completion to using that passed gate responsibly: begin the six-faction implementation loop as real JSON content scaffolds, then deepen selected factions through complete town, battle, overworld, AI, scenario, save/load, and manual-play slices before calling them playable.
 
 ## Content Direction Note
 Decision date: 2026-04-18
 
-The target broad faction set is six original, asymmetric factions defined first in `docs/factions-content-bible.md`. That bible is a design source, not current implementation evidence. Future faction JSON work must preserve the no-commons and no-shared-template constraints: factions need distinct fantasy, mechanics, town identity, hero identity, economy, map pressure, battle style, and unit ladder feel. With River Pass manually gated by AcOrP, the next staged expansion is a two-faction alpha implementation from that bible, not an immediate six-faction rollout.
+The target broad faction set is six original, asymmetric factions defined first in `docs/factions-content-bible.md`. The first implementation slice now carries those factions as real scaffold records across faction metadata, unit ladders, hero concepts, signature buildings, and seed towns where needed. This remains content infrastructure, not playability proof. Future JSON and runtime work must preserve the no-commons and no-shared-template constraints: factions need distinct fantasy, mechanics, town identity, hero identity, economy, map pressure, battle style, and unit ladder feel. A faction should not be called fully playable until its scenario placement, AI fronts, town play, battle tuning, save/load behavior, and manual play notes exist.
+
+The next companion design source is `docs/overworld-content-bible.md`. It defines the adventure-map grammar needed to support that faction breadth: biome families, pickup sites, flaggable economy, dwellings, shrines, guarded reward sites, scouting structures, blockers, transit objects, and faction landmarks. The game should move toward richer overworld object vocabulary through explicit content families and biome logic, not by sprinkling random flavor nodes on otherwise empty maps.
 
 ## Repository Structure
 - `content/`: authored gameplay domains.

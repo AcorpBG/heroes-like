@@ -27,7 +27,10 @@
           "effect_id": "status_staggered",
           "label": "Staggered",
           "duration_rounds": 2,
-          "modifiers": {"initiative": -1, "cohesion": -1}
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
         }
       }
     },
@@ -42,7 +45,11 @@
         "type": "defense_buff",
         "amount": 3,
         "duration_rounds": 2,
-        "modifiers": {"defense": 3, "initiative": 1, "cohesion": 2}
+        "modifiers": {
+          "defense": 3,
+          "initiative": 1,
+          "cohesion": 2
+        }
       }
     },
     {
@@ -56,7 +63,11 @@
         "type": "initiative_buff",
         "amount": 2,
         "duration_rounds": 2,
-        "modifiers": {"initiative": 2, "attack": 1, "momentum": 1}
+        "modifiers": {
+          "initiative": 2,
+          "attack": 1,
+          "momentum": 1
+        }
       }
     },
     {
@@ -98,7 +109,11 @@
           "effect_id": "status_harried",
           "label": "Harried",
           "duration_rounds": 2,
-          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -2}
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          }
         }
       }
     },
@@ -113,7 +128,11 @@
         "type": "defense_buff",
         "amount": 4,
         "duration_rounds": 2,
-        "modifiers": {"defense": 4, "attack": 1, "cohesion": 2}
+        "modifiers": {
+          "defense": 4,
+          "attack": 1,
+          "cohesion": 2
+        }
       }
     },
     {
@@ -127,7 +146,11 @@
         "type": "initiative_buff",
         "amount": 3,
         "duration_rounds": 2,
-        "modifiers": {"initiative": 3, "attack": 2, "momentum": 1}
+        "modifiers": {
+          "initiative": 3,
+          "attack": 2,
+          "momentum": 1
+        }
       }
     },
     {
@@ -141,7 +164,12 @@
         "type": "attack_buff",
         "amount": 2,
         "duration_rounds": 2,
-        "modifiers": {"attack": 2, "defense": 1, "initiative": 1, "cohesion": 2}
+        "modifiers": {
+          "attack": 2,
+          "defense": 1,
+          "initiative": 1,
+          "cohesion": 2
+        }
       }
     },
     {
@@ -155,7 +183,11 @@
         "type": "attack_buff",
         "amount": 3,
         "duration_rounds": 2,
-        "modifiers": {"attack": 3, "initiative": 2, "momentum": 2}
+        "modifiers": {
+          "attack": 3,
+          "initiative": 2,
+          "momentum": 2
+        }
       }
     },
     {
@@ -169,7 +201,11 @@
         "type": "defense_buff",
         "amount": 4,
         "duration_rounds": 2,
-        "modifiers": {"defense": 4, "initiative": 1, "cohesion": 2}
+        "modifiers": {
+          "defense": 4,
+          "initiative": 1,
+          "cohesion": 2
+        }
       }
     },
     {
@@ -183,7 +219,12 @@
         "type": "initiative_buff",
         "amount": 3,
         "duration_rounds": 2,
-        "modifiers": {"initiative": 3, "attack": 1, "cohesion": 1, "momentum": 1}
+        "modifiers": {
+          "initiative": 3,
+          "attack": 1,
+          "cohesion": 1,
+          "momentum": 1
+        }
       }
     },
     {
@@ -201,7 +242,131 @@
           "effect_id": "status_staggered",
           "label": "Dazzled",
           "duration_rounds": 2,
-          "modifiers": {"initiative": -2, "cohesion": -2}
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_briar_bind",
+      "name": "Briar Bind",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "enemy_selected",
+      "description": "Root-script thorns lash a chosen stack and pull its formation out of rhythm.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 16,
+        "power_scale": 7,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Root-Bound",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_graft_mend",
+      "name": "Graft Mend",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "Living splints and seedglass resin harden the acting stack for a long exchange.",
+      "effect": {
+        "type": "defense_buff",
+        "amount": 4,
+        "duration_rounds": 2,
+        "modifiers": {
+          "defense": 4,
+          "cohesion": 2,
+          "initiative": 1
+        }
+      }
+    },
+    {
+      "id": "spell_heat_rite",
+      "name": "Heat Rite",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A furnace clause opens the vents and turns stored pressure into a timed attack surge.",
+      "effect": {
+        "type": "attack_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "attack": 3,
+          "defense": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_pressure_clause",
+      "name": "Pressure Clause",
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "Stamped pressure seals hammer a chosen stack and leave its formation counting broken clauses.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 20,
+        "power_scale": 9,
+        "status_effect": {
+          "effect_id": "status_staggered",
+          "label": "Overpressured",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "cohesion": -2
+          }
+        }
+      }
+    },
+    {
+      "id": "spell_fogwake_step",
+      "name": "Fogwake Step",
+      "context": "battle",
+      "mana_cost": 4,
+      "target_mode": "ally_active",
+      "description": "A stolen chart folds mist around the acting stack and lets it slip into the next opening.",
+      "effect": {
+        "type": "initiative_buff",
+        "amount": 3,
+        "duration_rounds": 2,
+        "modifiers": {
+          "initiative": 3,
+          "defense": 1,
+          "momentum": 1
+        }
+      }
+    },
+    {
+      "id": "spell_obituary_mark",
+      "name": "Obituary Mark",
+      "context": "battle",
+      "mana_cost": 5,
+      "target_mode": "enemy_selected",
+      "description": "Ink from an unfinished obituary marks a chosen stack for isolation and faltering answers.",
+      "effect": {
+        "type": "damage_enemy",
+        "base_damage": 18,
+        "power_scale": 8,
+        "status_effect": {
+          "effect_id": "status_harried",
+          "label": "Marked",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          }
         }
       }
     }

@@ -18,10 +18,14 @@
         "vulnerability_summary": "If Riverwatch loses its linked yard, signal post, or sanctum, the river line cannot cycle reserves cleanly."
       },
       "economy": {
-        "base_income": {"gold": 120},
+        "base_income": {
+          "gold": 120
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "support": {"gold": 30}
+          "support": {
+            "gold": 30
+          }
         }
       },
       "recruitment": {
@@ -33,7 +37,11 @@
           "unit_river_guard": 5
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_muster_yard", "building_wayfarers_hall"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_muster_yard",
+        "building_wayfarers_hall"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_stone_store",
@@ -47,11 +55,26 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_trailglyph", "spell_bulwark_litany"]},
-        {"tier": 2, "spell_ids": ["spell_coal_rain", "spell_lantern_phalanx"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_bulwark_litany"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_coal_rain",
+            "spell_lantern_phalanx"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_river_guard", "count": 4}
+        {
+          "unit_id": "unit_river_guard",
+          "count": 4
+        }
       ]
     },
     {
@@ -72,10 +95,14 @@
         "vulnerability_summary": "If Duskfen loses its kennel, drum post, or shrine lane, the marsh musters stop arriving in step."
       },
       "economy": {
-        "base_income": {"gold": 75},
+        "base_income": {
+          "gold": 75
+        },
         "pressure_bonus": 2,
         "per_category_income": {
-          "dwelling": {"gold": 15}
+          "dwelling": {
+            "gold": 15
+          }
         }
       },
       "recruitment": {
@@ -87,7 +114,11 @@
           "unit_blackbranch_cutthroat": 5
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_wayfarers_hall"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_blackbranch_den",
+        "building_wayfarers_hall"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_mire_pens",
@@ -101,11 +132,26 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_coal_rain", "spell_relay_drum"]},
-        {"tier": 2, "spell_ids": ["spell_bulwark_litany", "spell_bloodwake_drum"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_coal_rain",
+            "spell_relay_drum"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_bulwark_litany",
+            "spell_bloodwake_drum"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_bog_brute", "count": 5}
+        {
+          "unit_id": "unit_bog_brute",
+          "count": 5
+        }
       ]
     },
     {
@@ -114,10 +160,15 @@
       "faction_id": "faction_mireclaw",
       "identity_summary": "A fortified choke point built around missile nests and a constant trickle of fresh raiders.",
       "economy": {
-        "base_income": {"gold": 90, "ore": 1},
+        "base_income": {
+          "gold": 90,
+          "ore": 1
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "magic": {"gold": 20}
+          "magic": {
+            "gold": 20
+          }
         }
       },
       "recruitment": {
@@ -129,7 +180,11 @@
           "unit_mire_slinger": 5
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_slingers_post"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_blackbranch_den",
+        "building_slingers_post"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_wayfarers_hall",
@@ -144,12 +199,30 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_stone_veil", "spell_relay_drum"]},
-        {"tier": 2, "spell_ids": ["spell_coal_rain", "spell_bloodwake_drum"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_relay_drum"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_coal_rain",
+            "spell_bloodwake_drum"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_bog_brute", "count": 4},
-        {"unit_id": "unit_mire_slinger", "count": 4}
+        {
+          "unit_id": "unit_bog_brute",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_mire_slinger",
+          "count": 4
+        }
       ]
     },
     {
@@ -170,11 +243,18 @@
         "vulnerability_summary": "If Highwater's basin yard, signal post, or sanctum line is cut, the charter reserve schedule slips and the final push slows."
       },
       "economy": {
-        "base_income": {"gold": 110, "wood": 1},
+        "base_income": {
+          "gold": 110,
+          "wood": 1
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "civic": {"gold": 10},
-          "support": {"gold": 30}
+          "civic": {
+            "gold": 10
+          },
+          "support": {
+            "gold": 30
+          }
         }
       },
       "recruitment": {
@@ -190,7 +270,11 @@
           "unit_citadel_pikeward": 4
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_muster_yard", "building_watch_barracks"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_muster_yard",
+        "building_watch_barracks"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_wayfarers_hall",
@@ -205,13 +289,34 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_trailglyph", "spell_bulwark_litany"]},
-        {"tier": 2, "spell_ids": ["spell_quickmarch_hymn", "spell_lantern_phalanx"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_trailglyph",
+            "spell_bulwark_litany"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_quickmarch_hymn",
+            "spell_lantern_phalanx"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_river_guard", "count": 5},
-        {"unit_id": "unit_ember_archer", "count": 2},
-        {"unit_id": "unit_citadel_pikeward", "count": 1}
+        {
+          "unit_id": "unit_river_guard",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_ember_archer",
+          "count": 2
+        },
+        {
+          "unit_id": "unit_citadel_pikeward",
+          "count": 1
+        }
       ]
     },
     {
@@ -220,11 +325,18 @@
       "faction_id": "faction_mireclaw",
       "identity_summary": "A toll-ford stockade built on drowned pilings, pushing cutters and slingers toward every nearby crossing.",
       "economy": {
-        "base_income": {"gold": 80, "wood": 1},
+        "base_income": {
+          "gold": 80,
+          "wood": 1
+        },
         "pressure_bonus": 2,
         "per_category_income": {
-          "dwelling": {"gold": 15},
-          "support": {"gold": 15}
+          "dwelling": {
+            "gold": 15
+          },
+          "support": {
+            "gold": 15
+          }
         }
       },
       "recruitment": {
@@ -238,7 +350,11 @@
           "unit_mire_slinger": 5
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_slingers_post"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_blackbranch_den",
+        "building_slingers_post"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_wayfarers_hall",
@@ -253,12 +369,30 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_relay_drum", "spell_stone_veil"]},
-        {"tier": 2, "spell_ids": ["spell_cinder_burst", "spell_bloodwake_drum"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_relay_drum",
+            "spell_stone_veil"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_cinder_burst",
+            "spell_bloodwake_drum"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_blackbranch_cutthroat", "count": 5},
-        {"unit_id": "unit_mire_slinger", "count": 3}
+        {
+          "unit_id": "unit_blackbranch_cutthroat",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_mire_slinger",
+          "count": 3
+        }
       ]
     },
     {
@@ -279,11 +413,18 @@
         "vulnerability_summary": "If Reedbarrow loses its kennel runs, drum post, or reedscript shrine, the ferry lanes recover too slowly to keep the marsh open."
       },
       "economy": {
-        "base_income": {"gold": 85, "ore": 1},
+        "base_income": {
+          "gold": 85,
+          "ore": 1
+        },
         "pressure_bonus": 2,
         "per_category_income": {
-          "economy": {"gold": 25},
-          "dwelling": {"gold": 10}
+          "economy": {
+            "gold": 25
+          },
+          "dwelling": {
+            "gold": 10
+          }
         }
       },
       "recruitment": {
@@ -296,7 +437,11 @@
           "unit_mire_slinger": 5
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_mire_pens"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_blackbranch_den",
+        "building_mire_pens"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_wayfarers_hall",
@@ -311,12 +456,30 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_relay_drum", "spell_coal_rain"]},
-        {"tier": 2, "spell_ids": ["spell_stone_veil", "spell_bloodwake_drum"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_relay_drum",
+            "spell_coal_rain"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_bloodwake_drum"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_bog_brute", "count": 4},
-        {"unit_id": "unit_mire_slinger", "count": 3}
+        {
+          "unit_id": "unit_bog_brute",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_mire_slinger",
+          "count": 3
+        }
       ]
     },
     {
@@ -337,11 +500,18 @@
         "vulnerability_summary": "If Nightglass loses its kennel, drum outpost, or shrine line, the dominion ring cannot keep ferries, packs, and drums aligned."
       },
       "economy": {
-        "base_income": {"gold": 95, "ore": 1},
+        "base_income": {
+          "gold": 95,
+          "ore": 1
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "magic": {"gold": 20},
-          "support": {"gold": 20}
+          "magic": {
+            "gold": 20
+          },
+          "support": {
+            "gold": 20
+          }
         }
       },
       "recruitment": {
@@ -357,7 +527,12 @@
           "unit_gorefen_ripper": 4
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_blackbranch_den", "building_mire_pens", "building_lantern_archive"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_blackbranch_den",
+        "building_mire_pens",
+        "building_lantern_archive"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_wayfarers_hall",
@@ -372,13 +547,35 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_stone_veil", "spell_relay_drum"]},
-        {"tier": 2, "spell_ids": ["spell_coal_rain", "spell_bulwark_litany", "spell_bloodwake_drum"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_relay_drum"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_coal_rain",
+            "spell_bulwark_litany",
+            "spell_bloodwake_drum"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_bog_brute", "count": 5},
-        {"unit_id": "unit_blackbranch_cutthroat", "count": 4},
-        {"unit_id": "unit_gorefen_ripper", "count": 1}
+        {
+          "unit_id": "unit_bog_brute",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_blackbranch_cutthroat",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_gorefen_ripper",
+          "count": 1
+        }
       ]
     },
     {
@@ -399,11 +596,18 @@
         "vulnerability_summary": "If Prismhearth loses its lens house, relay post, or sanctum circuit, the daybreak arrays cannot keep their batteries synchronized."
       },
       "economy": {
-        "base_income": {"gold": 95, "ore": 1},
+        "base_income": {
+          "gold": 95,
+          "ore": 1
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "support": {"gold": 20},
-          "magic": {"gold": 20}
+          "support": {
+            "gold": 20
+          },
+          "magic": {
+            "gold": 20
+          }
         }
       },
       "recruitment": {
@@ -417,7 +621,11 @@
           "unit_prism_adept": 4
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_shard_yard", "building_wayfarers_hall"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_shard_yard",
+        "building_wayfarers_hall"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_prism_range",
@@ -432,12 +640,30 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_stone_veil", "spell_prism_bastion"]},
-        {"tier": 2, "spell_ids": ["spell_resonant_chorus", "spell_sunlance_arc"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_prism_bastion"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_resonant_chorus",
+            "spell_sunlance_arc"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_shard_guard", "count": 4},
-        {"unit_id": "unit_prism_adept", "count": 2}
+        {
+          "unit_id": "unit_shard_guard",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_prism_adept",
+          "count": 2
+        }
       ]
     },
     {
@@ -458,12 +684,21 @@
         "vulnerability_summary": "If Halo Spire loses its lens house, relay line, or sanctum, the forward batteries lose clean reserve timing."
       },
       "economy": {
-        "base_income": {"gold": 100, "wood": 1},
+        "base_income": {
+          "gold": 100,
+          "wood": 1
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "economy": {"gold": 20},
-          "support": {"gold": 20},
-          "magic": {"gold": 15}
+          "economy": {
+            "gold": 20
+          },
+          "support": {
+            "gold": 20
+          },
+          "magic": {
+            "gold": 15
+          }
         }
       },
       "recruitment": {
@@ -479,7 +714,12 @@
           "unit_aurora_ballista": 4
         }
       },
-      "starting_building_ids": ["building_town_hall", "building_shard_yard", "building_prism_range", "building_lantern_archive"],
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_shard_yard",
+        "building_prism_range",
+        "building_lantern_archive"
+      ],
       "buildable_building_ids": [
         "building_market_square",
         "building_wayfarers_hall",
@@ -492,14 +732,293 @@
         "building_starseer_annex"
       ],
       "spell_library": [
-        {"tier": 1, "spell_ids": ["spell_prism_bastion", "spell_stone_veil"]},
-        {"tier": 2, "spell_ids": ["spell_resonant_chorus", "spell_sunlance_arc", "spell_bulwark_litany"]}
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_prism_bastion",
+            "spell_stone_veil"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_resonant_chorus",
+            "spell_sunlance_arc",
+            "spell_bulwark_litany"
+          ]
+        }
       ],
       "garrison": [
-        {"unit_id": "unit_shard_guard", "count": 5},
-        {"unit_id": "unit_prism_adept", "count": 4},
-        {"unit_id": "unit_aurora_ballista", "count": 1}
+        {
+          "unit_id": "unit_shard_guard",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_prism_adept",
+          "count": 4
+        },
+        {
+          "unit_id": "unit_aurora_ballista",
+          "count": 1
+        }
       ]
+    },
+    {
+      "id": "town_thornwake_graftroot_caravan",
+      "name": "Graftroot Caravan",
+      "faction_id": "faction_thornwake",
+      "identity_summary": "A migratory orchard-fort of seed vaults, graft halls, and bramble toll roads.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "A migratory orchard-fort of seed vaults, graft halls, and bramble toll roads.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "This seed town has no scenario placement yet; logistics hooks are authored for future integration."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 85,
+          "wood": 1
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 20,
+            "wood": 1
+          },
+          "support": {
+            "gold": 15
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 3,
+        "growth_bonus": {
+          "unit_thornwake_seedcutters": 1,
+          "unit_thornwake_thornwhip_carriers": 1
+        },
+        "cost_discount_percent": {
+          "unit_thornwake_seedcutters": 5,
+          "unit_thornwake_thornwhip_carriers": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_thornwake_seed_vault",
+        "building_wayfarers_hall"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_thornwake_bramble_toll",
+        "building_thornwake_sporeglass_hothouse",
+        "building_thornwake_barkmantle_run",
+        "building_thornwake_pilgrim_orchard",
+        "building_thornwake_graftworks",
+        "building_thornwake_worldroot_gate"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_briar_bind",
+            "spell_graft_mend"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_trailglyph"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_thornwake_seedcutters",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_thornwake_thornwhip_carriers",
+          "count": 3
+        }
+      ],
+      "content_status": "six_faction_seed_town_not_scenario_integrated"
+    },
+    {
+      "id": "town_brasshollow_orevein_gantry",
+      "name": "Orevein Gantry",
+      "faction_id": "faction_brasshollow",
+      "identity_summary": "A contract foundry town of ore lifts, pressure rails, furnace chapels, and brass gantries.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "A contract foundry town of ore lifts, pressure rails, furnace chapels, and brass gantries.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "This seed town has no scenario placement yet; logistics hooks are authored for future integration."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 95,
+          "ore": 1
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 25,
+            "ore": 1
+          },
+          "support": {
+            "gold": 20
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_brasshollow_scrip_haulers": 1,
+          "unit_brasshollow_rivet_hounds": 1
+        },
+        "cost_discount_percent": {
+          "unit_brasshollow_scrip_haulers": 4,
+          "unit_brasshollow_rivet_hounds": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_brasshollow_ore_tithe_office",
+        "building_wayfarers_hall"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_brasshollow_rivet_kennels",
+        "building_brasshollow_pavis_foundry",
+        "building_brasshollow_boiler_cathedral",
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_crucible_dock",
+        "building_brasshollow_titan_charter_hall"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_heat_rite",
+            "spell_pressure_clause"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_stone_veil",
+            "spell_bulwark_litany"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_brasshollow_scrip_haulers",
+          "count": 5
+        },
+        {
+          "unit_id": "unit_brasshollow_rivet_hounds",
+          "count": 3
+        }
+      ],
+      "content_status": "six_faction_seed_town_not_scenario_integrated"
+    },
+    {
+      "id": "town_veilmourn_bellwake_harbor",
+      "name": "Bellwake Harbor",
+      "faction_id": "faction_veilmourn",
+      "identity_summary": "A fog harbor of bell docks, mirror slips, obituary vaults, and black-sail moorings.",
+      "strategic_role": "stronghold",
+      "strategic_summary": "A fog harbor of bell docks, mirror slips, obituary vaults, and black-sail moorings.",
+      "logistics_plan": {
+        "support_radius": 6,
+        "support_requirements": {
+          "neutral_dwelling": 1,
+          "faction_outpost": 1,
+          "frontier_shrine": 1
+        },
+        "recovery_relief": 1,
+        "vulnerability_summary": "This seed town has no scenario placement yet; logistics hooks are authored for future integration."
+      },
+      "economy": {
+        "base_income": {
+          "gold": 80,
+          "wood": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 20
+          },
+          "magic": {
+            "gold": 18
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_veilmourn_bellwake_oars": 1,
+          "unit_veilmourn_mourning_lanterns": 1
+        },
+        "cost_discount_percent": {
+          "unit_veilmourn_bellwake_oars": 5,
+          "unit_veilmourn_mourning_lanterns": 4
+        }
+      },
+      "starting_building_ids": [
+        "building_town_hall",
+        "building_veilmourn_bell_harbor",
+        "building_wayfarers_hall"
+      ],
+      "buildable_building_ids": [
+        "building_market_square",
+        "building_veilmourn_ransom_exchange",
+        "building_veilmourn_mirror_drydock",
+        "building_veilmourn_harpoon_gantry",
+        "building_veilmourn_obituary_vault",
+        "building_veilmourn_mistgate_slip",
+        "building_veilmourn_leviathan_sounding"
+      ],
+      "spell_library": [
+        {
+          "tier": 1,
+          "spell_ids": [
+            "spell_fogwake_step",
+            "spell_obituary_mark"
+          ]
+        },
+        {
+          "tier": 2,
+          "spell_ids": [
+            "spell_coal_rain",
+            "spell_trailglyph"
+          ]
+        }
+      ],
+      "garrison": [
+        {
+          "unit_id": "unit_veilmourn_bellwake_oars",
+          "count": 6
+        },
+        {
+          "unit_id": "unit_veilmourn_mourning_lanterns",
+          "count": 3
+        }
+      ],
+      "content_status": "six_faction_seed_town_not_scenario_integrated"
     }
   ]
 }

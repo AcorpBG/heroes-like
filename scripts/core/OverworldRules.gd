@@ -5379,6 +5379,30 @@ static func _town_battlefront_profile(town: Dictionary) -> Dictionary:
 				tags.append("reserve_wave")
 				tags.append("elevated_fire")
 				summary = "Battery nests lengthen the approach while reserve crews rotate fresh arrays into the line."
+		"faction_thornwake":
+			label = "Rooted roads"
+			tags.append("chokepoint")
+			summary = "Rooted roads slow the approach and reward bramble-backed holding actions."
+			if role == "capital" or project_active:
+				tags.append("reserve_wave")
+				tags.append("ambush_cover")
+				summary = "Rooted roads and nursery reserves make every breach a slow recovery fight."
+		"faction_brasshollow":
+			label = "Siege stages"
+			tags.append("fortress_lane")
+			summary = "Siege stages compress the approach around armor, heat, and engine setup."
+			if role == "capital" or project_active:
+				tags.append("reserve_wave")
+				tags.append("wall_pressure")
+				summary = "Siege stages and foundry reserves turn the town front into a pressure-engine kill lane."
+		"faction_veilmourn":
+			label = "Fog lanes"
+			tags.append("fog_bank")
+			summary = "Fog lanes break clean approaches and reward marked, isolated attackers."
+			if role == "capital" or project_active:
+				tags.append("reserve_wave")
+				tags.append("ambush_cover")
+				summary = "Fog lanes and black-sail reserves let defenders slip behind a stalled assault."
 	if role == "capital" and "reserve_wave" not in tags:
 		tags.append("reserve_wave")
 	elif role == "stronghold" and project_active and "reserve_wave" not in tags:
@@ -5593,6 +5617,12 @@ static func _town_pressure_label(town: Dictionary) -> String:
 			return "Raid pressure"
 		"faction_sunvault":
 			return "Relay reach"
+		"faction_thornwake":
+			return "Root pressure"
+		"faction_brasshollow":
+			return "Siege pressure"
+		"faction_veilmourn":
+			return "Fog pressure"
 		_:
 			return "Pressure"
 

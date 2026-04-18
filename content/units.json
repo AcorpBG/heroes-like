@@ -31,11 +31,16 @@
           "status_id": "status_staggered",
           "status_label": "Staggered",
           "duration_rounds": 2,
-          "modifiers": {"initiative": -2, "cohesion": -1}
+          "modifiers": {
+            "initiative": -2,
+            "cohesion": -1
+          }
         }
       ],
       "growth": 7,
-      "cost": {"gold": 60}
+      "cost": {
+        "gold": 60
+      }
     },
     {
       "id": "unit_ember_archer",
@@ -60,7 +65,9 @@
           "description": "Hits harder while the lines are still opening and the lane is clear.",
           "damage_multiplier": 1.15,
           "min_distance": 1,
-          "status_ids": ["status_staggered"],
+          "status_ids": [
+            "status_staggered"
+          ],
           "status_damage_multiplier": 1.12,
           "ally_defending_multiplier": 1.1
         },
@@ -71,12 +78,18 @@
           "status_id": "status_harried",
           "status_label": "Harried",
           "duration_rounds": 2,
-          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -1},
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
           "momentum_gain": 1
         }
       ],
       "growth": 5,
-      "cost": {"gold": 85}
+      "cost": {
+        "gold": 85
+      }
     },
     {
       "id": "unit_citadel_pikeward",
@@ -113,7 +126,9 @@
         }
       ],
       "growth": 3,
-      "cost": {"gold": 165}
+      "cost": {
+        "gold": 165
+      }
     },
     {
       "id": "unit_blackbranch_cutthroat",
@@ -137,13 +152,18 @@
           "description": "Deals extra damage and builds attack momentum against harried or staggered enemies.",
           "damage_multiplier": 1.2,
           "momentum_gain": 1,
-          "status_ids": ["status_harried", "status_staggered"],
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
           "health_threshold_ratio": 0.55,
           "threshold_damage_multiplier": 1.12
         }
       ],
       "growth": 6,
-      "cost": {"gold": 55}
+      "cost": {
+        "gold": 55
+      }
     },
     {
       "id": "unit_mire_slinger",
@@ -169,14 +189,20 @@
           "status_id": "status_harried",
           "status_label": "Harried",
           "duration_rounds": 2,
-          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -1},
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
           "momentum_gain": 1,
           "wounded_threshold_ratio": 0.65,
           "wounded_damage_multiplier": 1.1
         }
       ],
       "growth": 6,
-      "cost": {"gold": 50}
+      "cost": {
+        "gold": 50
+      }
     },
     {
       "id": "unit_bog_brute",
@@ -205,7 +231,9 @@
         }
       ],
       "growth": 4,
-      "cost": {"gold": 110}
+      "cost": {
+        "gold": 110
+      }
     },
     {
       "id": "unit_gorefen_ripper",
@@ -229,7 +257,10 @@
           "description": "Cuts deeper into prey already slowed or weakened by the pack and snowballs the kill beat.",
           "damage_multiplier": 1.25,
           "momentum_gain": 1,
-          "status_ids": ["status_harried", "status_staggered"],
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
           "health_threshold_ratio": 0.6,
           "threshold_damage_multiplier": 1.15
         },
@@ -239,7 +270,10 @@
           "description": "Surges faster, strikes harder, and spikes battlefield momentum once prey is wounded or already under pack pressure.",
           "wounded_threshold_ratio": 0.75,
           "wounded_damage_multiplier": 1.16,
-          "status_ids": ["status_harried", "status_staggered"],
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
           "status_damage_multiplier": 1.12,
           "wounded_initiative_bonus": 1,
           "max_initiative_bonus": 2,
@@ -249,7 +283,9 @@
         }
       ],
       "growth": 3,
-      "cost": {"gold": 160}
+      "cost": {
+        "gold": 160
+      }
     },
     {
       "id": "unit_shard_guard",
@@ -276,7 +312,10 @@
           "status_id": "status_staggered",
           "status_label": "Staggered",
           "duration_rounds": 2,
-          "modifiers": {"initiative": -1, "cohesion": -1}
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
         },
         {
           "id": "shielding",
@@ -288,7 +327,9 @@
         }
       ],
       "growth": 7,
-      "cost": {"gold": 65}
+      "cost": {
+        "gold": 65
+      }
     },
     {
       "id": "unit_prism_adept",
@@ -313,7 +354,9 @@
           "description": "Prepared firing tiers bend light into harsher volleys, especially into already-staggered targets.",
           "damage_multiplier": 1.12,
           "min_distance": 1,
-          "status_ids": ["status_staggered"],
+          "status_ids": [
+            "status_staggered"
+          ],
           "status_damage_multiplier": 1.12,
           "ally_defending_multiplier": 1.05
         },
@@ -324,12 +367,18 @@
           "status_id": "status_harried",
           "status_label": "Harried",
           "duration_rounds": 2,
-          "modifiers": {"defense": -1, "initiative": -1, "cohesion": -1},
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
           "momentum_gain": 1
         }
       ],
       "growth": 5,
-      "cost": {"gold": 90}
+      "cost": {
+        "gold": 90
+      }
     },
     {
       "id": "unit_mirror_duelist",
@@ -359,13 +408,18 @@
           "description": "Cuts deeper into enemies already harried, staggered, or slipping toward a break.",
           "damage_multiplier": 1.18,
           "momentum_gain": 1,
-          "status_ids": ["status_harried", "status_staggered"],
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
           "health_threshold_ratio": 0.6,
           "threshold_damage_multiplier": 1.1
         }
       ],
       "growth": 4,
-      "cost": {"gold": 120}
+      "cost": {
+        "gold": 120
+      }
     },
     {
       "id": "unit_aurora_ballista",
@@ -390,7 +444,9 @@
           "description": "Relay-calibrated bolts hit hardest when the battery owns the lane and the target line is already disrupted.",
           "damage_multiplier": 1.18,
           "min_distance": 1,
-          "status_ids": ["status_staggered"],
+          "status_ids": [
+            "status_staggered"
+          ],
           "status_damage_multiplier": 1.15,
           "ally_defending_multiplier": 1.1
         },
@@ -407,7 +463,1970 @@
         }
       ],
       "growth": 3,
-      "cost": {"gold": 175}
+      "cost": {
+        "gold": 175
+      }
+    },
+    {
+      "id": "unit_embercourt_fordhook_cadets",
+      "name": "Fordhook Cadets",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 1,
+      "hp": 8,
+      "attack": 3,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 8,
+      "cost": {
+        "gold": 55
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Fordhook Reach",
+          "description": "Hook poles keep crossing enemies at a bad angle.",
+          "distance_one_multiplier": 0.9
+        },
+        {
+          "id": "brace",
+          "name": "Towpath Brace",
+          "description": "Cadets fight harder when the lane is held for the next column.",
+          "retaliation_multiplier": 1.25,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_embercourt_lantern_sappers",
+      "name": "Lantern Sappers",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 2,
+      "hp": 10,
+      "attack": 5,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 5,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Ember Pot Lanes",
+          "description": "Thrown pots mark the lane and leave survivors scrambling.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1,
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12
+        }
+      ]
+    },
+    {
+      "id": "unit_embercourt_bargebow_crews",
+      "name": "Bargebow Crews",
+      "faction_id": "faction_embercourt",
+      "role": "ranged",
+      "tier": 3,
+      "hp": 13,
+      "attack": 7,
+      "defense": 5,
+      "min_damage": 4,
+      "max_damage": 7,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 4,
+      "cost": {
+        "gold": 170,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Bargebow Arc",
+          "description": "Heavy river bows punish enemies held in protected lanes.",
+          "damage_multiplier": 1.18,
+          "min_distance": 2,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_embercourt_ash_oath_bailiffs",
+      "name": "Ash-Oath Bailiffs",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 4,
+      "hp": 22,
+      "attack": 8,
+      "defense": 10,
+      "min_damage": 6,
+      "max_damage": 9,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 260,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Oath Bodyguard",
+          "description": "Bailiffs turn compact formations into retaliation courts.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "brace",
+          "name": "Ash Writ Stand",
+          "description": "A defended oath line staggers attackers that try to break it.",
+          "retaliation_multiplier": 1.35,
+          "defending_cohesion_bonus": 3,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_embercourt_beacon_lectors",
+      "name": "Beacon Lectors",
+      "faction_id": "faction_embercourt",
+      "role": "ranged",
+      "tier": 5,
+      "hp": 18,
+      "attack": 9,
+      "defense": 8,
+      "min_damage": 6,
+      "max_damage": 10,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 2,
+      "cost": {
+        "gold": 360,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 7,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Beacon Mark",
+          "description": "Signal rites mark exposed enemies for cleaner follow-up fire.",
+          "status_id": "status_staggered",
+          "status_label": "Marked",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        },
+        {
+          "id": "formation_guard",
+          "name": "Signal Priority",
+          "description": "Beacon calls tighten nearby firing priorities.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_embercourt_sluicefire_lindworms",
+      "name": "Sluicefire Lindworms",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 6,
+      "hp": 44,
+      "attack": 13,
+      "defense": 11,
+      "min_damage": 12,
+      "max_damage": 18,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 700,
+        "ore": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Sluicefire Surge",
+          "description": "The lock-bred beast hits hardest once a prepared lane starts to collapse.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.14,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        },
+        {
+          "id": "harry",
+          "name": "Scalding Wake",
+          "description": "A passing scorch leaves survivors disordered.",
+          "status_id": "status_staggered",
+          "status_label": "Scalded",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_embercourt_charter_colossus",
+      "name": "Charter Colossus",
+      "faction_id": "faction_embercourt",
+      "role": "melee",
+      "tier": 7,
+      "hp": 82,
+      "attack": 17,
+      "defense": 19,
+      "min_damage": 20,
+      "max_damage": 31,
+      "speed": 4,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 1400,
+        "wood": 2,
+        "ore": 3
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Court-Bell Anchor",
+          "description": "The walking court bell makes compact allies harder to scatter.",
+          "ally_ranged_damage_multiplier": 1.16,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "brace",
+          "name": "Charter Toll",
+          "description": "Enemies that commit into the bell line pay for the breach.",
+          "retaliation_multiplier": 1.4,
+          "defending_cohesion_bonus": 3,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_reedsnare_kin",
+      "name": "Reedsnare Kin",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 1,
+      "hp": 7,
+      "attack": 4,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 9,
+      "cost": {
+        "gold": 45
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Reedsnare Cut",
+          "description": "Snare hooks leave prey marked for the surrounding pack.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1,
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_mudglass_slingers",
+      "name": "Mudglass Slingers",
+      "faction_id": "faction_mireclaw",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 7,
+      "attack": 4,
+      "defense": 3,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 6,
+      "cost": {
+        "gold": 70,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 8,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Mudglass Blind",
+          "description": "Glass-mud pellets blur the target and lower its cohesion.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2,
+            "cohesion": -1
+          },
+          "momentum_gain": 1,
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_bogplate_maulers",
+      "name": "Bogplate Maulers",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 3,
+      "hp": 17,
+      "attack": 7,
+      "defense": 6,
+      "min_damage": 4,
+      "max_damage": 7,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 145,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Bogplate Bulk",
+          "description": "Layered wet plates shrug off missiles and hit harder in the scrum.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.78,
+          "engaged_damage_multiplier": 1.12,
+          "harried_damage_multiplier": 1.12
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_ferrychain_lashers",
+      "name": "Ferrychain Lashers",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 4,
+      "hp": 19,
+      "attack": 8,
+      "defense": 6,
+      "min_damage": 5,
+      "max_damage": 9,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 230,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Ferrychain Snap",
+          "description": "Chain lashes punish targets trying to hold a clean lane.",
+          "distance_one_multiplier": 1.0
+        },
+        {
+          "id": "harry",
+          "name": "Pinning Chain",
+          "description": "A caught stack loses formation while the pack closes.",
+          "status_id": "status_staggered",
+          "status_label": "Pinned",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_sporewake_chanters",
+      "name": "Sporewake Chanters",
+      "faction_id": "faction_mireclaw",
+      "role": "ranged",
+      "tier": 5,
+      "hp": 16,
+      "attack": 8,
+      "defense": 7,
+      "min_damage": 5,
+      "max_damage": 8,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 2,
+      "cost": {
+        "gold": 330,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Rot Chant",
+          "description": "Sporewake chants deny clean recovery and invite wounded-prey attacks.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -2,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1,
+          "wounded_threshold_ratio": 0.7,
+          "wounded_damage_multiplier": 1.12
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_gorefen_rippers",
+      "name": "Gorefen Rippers",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 6,
+      "hp": 30,
+      "attack": 14,
+      "defense": 8,
+      "min_damage": 11,
+      "max_damage": 19,
+      "speed": 7,
+      "initiative": 9,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 660,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Gorefen Finish",
+          "description": "Rippers carve into isolated, harried, or already-wounded prey.",
+          "damage_multiplier": 1.25,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.7,
+          "threshold_damage_multiplier": 1.14
+        },
+        {
+          "id": "bloodrush",
+          "name": "Wounded-Prey Rush",
+          "description": "The pack elite accelerates when a victim starts to fail.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.18,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_mireclaw_drowned_antler_sovereign",
+      "name": "Drowned Antler Sovereign",
+      "faction_id": "faction_mireclaw",
+      "role": "melee",
+      "tier": 7,
+      "hp": 74,
+      "attack": 18,
+      "defense": 15,
+      "min_damage": 19,
+      "max_damage": 32,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 1320,
+        "wood": 2,
+        "ore": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Sovereign Trample",
+          "description": "The bog apex turns wounded lines into rout pressure.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.16,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        },
+        {
+          "id": "harry",
+          "name": "Drowning Fear",
+          "description": "Its passing leaves prey shaken and easier to finish.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -2,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_shard_wardens",
+      "name": "Shard Wardens",
+      "faction_id": "faction_sunvault",
+      "role": "melee",
+      "tier": 1,
+      "hp": 10,
+      "attack": 4,
+      "defense": 6,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 7,
+      "cost": {
+        "gold": 70,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Shard Reflection",
+          "description": "Facet shields blunt missiles and preserve cohesion around the array.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.08
+        },
+        {
+          "id": "brace",
+          "name": "Facet Hold",
+          "description": "A defended warding line kicks attackers out of rhythm.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_prism_adepts",
+      "name": "Prism Adepts",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 5,
+      "cost": {
+        "gold": 105,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 8,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Prism Focus",
+          "description": "Focused rays improve against marked or staggered targets.",
+          "damage_multiplier": 1.15,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered",
+            "status_harried"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_mirror_duelists",
+      "name": "Mirror Duelists",
+      "faction_id": "faction_sunvault",
+      "role": "melee",
+      "tier": 3,
+      "hp": 15,
+      "attack": 8,
+      "defense": 6,
+      "min_damage": 5,
+      "max_damage": 8,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 165,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Reflected Opening",
+          "description": "Duelists exploit broken timing rather than brute force.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.6,
+          "threshold_damage_multiplier": 1.14
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_resonant_choristers",
+      "name": "Resonant Choristers",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 4,
+      "hp": 14,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 7,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 3,
+      "cost": {
+        "gold": 250,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Resonant Meter",
+          "description": "The choir keeps adjacent arrays firing in sequence.",
+          "ally_ranged_damage_multiplier": 1.14,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "harry",
+          "name": "Discordant Note",
+          "description": "A sour note staggers a target out of the timing cycle.",
+          "status_id": "status_staggered",
+          "status_label": "Discordant",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_solar_array_striders",
+      "name": "Solar Array Striders",
+      "faction_id": "faction_sunvault",
+      "role": "melee",
+      "tier": 5,
+      "hp": 32,
+      "attack": 11,
+      "defense": 12,
+      "min_damage": 8,
+      "max_damage": 13,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 430,
+        "ore": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Array Carapace",
+          "description": "Solar plates resist disruption while the strider projects a lane.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.76,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        },
+        {
+          "id": "formation_guard",
+          "name": "Lane Projector",
+          "description": "Projected lanes help ranged allies keep their aim.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_aurora_ballistae",
+      "name": "Aurora Ballistae",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 6,
+      "hp": 28,
+      "attack": 14,
+      "defense": 9,
+      "min_damage": 13,
+      "max_damage": 21,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 1,
+      "cost": {
+        "gold": 720,
+        "wood": 2,
+        "ore": 3
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 5,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Aurora Battery",
+          "description": "The heavy battery excels from prepared protected lanes.",
+          "damage_multiplier": 1.22,
+          "min_distance": 2,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_sunvault_daybreak_colossus",
+      "name": "Daybreak Colossus",
+      "faction_id": "faction_sunvault",
+      "role": "ranged",
+      "tier": 7,
+      "hp": 78,
+      "attack": 18,
+      "defense": 17,
+      "min_damage": 20,
+      "max_damage": 30,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 1,
+      "cost": {
+        "gold": 1450,
+        "ore": 4
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 4,
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Daybreak Array",
+          "description": "The titan amplifies every disciplined firing sequence.",
+          "ally_ranged_damage_multiplier": 1.17,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "volley",
+          "name": "Sun-Crown Beam",
+          "description": "A full-array beam punishes enemies already broken by resonance.",
+          "damage_multiplier": 1.2,
+          "min_distance": 2,
+          "status_ids": [
+            "status_staggered",
+            "status_harried"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_seedcutters",
+      "name": "Seedcutters",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 1,
+      "hp": 9,
+      "attack": 3,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 8,
+      "cost": {
+        "gold": 55,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Bramble Seed",
+          "description": "Seeded cuts leave the enemy tangled for the next exchange.",
+          "status_id": "status_staggered",
+          "status_label": "Rooted",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        },
+        {
+          "id": "brace",
+          "name": "Rooted Stand",
+          "description": "Seedcutters are better when holding prepared ground.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_thornwhip_carriers",
+      "name": "Thornwhip Carriers",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 2,
+      "hp": 11,
+      "attack": 5,
+      "defense": 5,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 95,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "reach",
+          "name": "Thornwhip Reach",
+          "description": "Whip-vines bind targets across a partial lane.",
+          "distance_one_multiplier": 1.0
+        },
+        {
+          "id": "harry",
+          "name": "Briar Bind",
+          "description": "Bound enemies lose clean exits and formation timing.",
+          "status_id": "status_staggered",
+          "status_label": "Bound",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_sporeglass_menders",
+      "name": "Sporeglass Menders",
+      "faction_id": "faction_thornwake",
+      "role": "ranged",
+      "tier": 3,
+      "hp": 12,
+      "attack": 5,
+      "defense": 7,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 4,
+      "cost": {
+        "gold": 150,
+        "wood": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Mender Screen",
+          "description": "Menders keep rooted formations coherent through long exchanges.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "shielding",
+          "name": "Sporeglass Wards",
+          "description": "Seedglass charms soften ranged disruption.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.84,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_barkmantle_rams",
+      "name": "Barkmantle Rams",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 4,
+      "hp": 30,
+      "attack": 9,
+      "defense": 11,
+      "min_damage": 7,
+      "max_damage": 12,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 290,
+        "wood": 2,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Barkmantle Hide",
+          "description": "Layered bark shrugs off arrows while the ram breaks fixed lines.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.72,
+          "engaged_damage_multiplier": 1.1,
+          "harried_damage_multiplier": 1.08
+        },
+        {
+          "id": "brace",
+          "name": "Living Ram Stand",
+          "description": "A planted ram is hard to shove out of the lane.",
+          "retaliation_multiplier": 1.25,
+          "defending_cohesion_bonus": 3,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_stagknot_runners",
+      "name": "Stag-Knot Runners",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 5,
+      "hp": 24,
+      "attack": 11,
+      "defense": 8,
+      "min_damage": 8,
+      "max_damage": 14,
+      "speed": 7,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 2,
+      "cost": {
+        "gold": 410,
+        "wood": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Bramble Leap",
+          "description": "Stag-knots strike hardest through tangled or harried lanes.",
+          "damage_multiplier": 1.18,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.14
+        },
+        {
+          "id": "bloodrush",
+          "name": "Pinned-Prey Bound",
+          "description": "They accelerate once a target is caught or wounded.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.13,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_graft_matriarchs",
+      "name": "Graft Matriarchs",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 6,
+      "hp": 46,
+      "attack": 12,
+      "defense": 14,
+      "min_damage": 11,
+      "max_damage": 17,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 720,
+        "wood": 3,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Graft Command",
+          "description": "Matriarchs make surrounding regrowth lines harder to scatter.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "harry",
+          "name": "Thorn Toll",
+          "description": "Ignoring the matriarch leaves a target bound and exposed.",
+          "status_id": "status_staggered",
+          "status_label": "Toll-Bound",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_thornwake_worldroot_bastion",
+      "name": "Worldroot Bastion",
+      "faction_id": "faction_thornwake",
+      "role": "melee",
+      "tier": 7,
+      "hp": 92,
+      "attack": 16,
+      "defense": 21,
+      "min_damage": 18,
+      "max_damage": 28,
+      "speed": 2,
+      "initiative": 4,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 1380,
+        "wood": 4,
+        "ore": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Worldroot Wall",
+          "description": "A living fortress turns ranged pressure into bark-scarred noise.",
+          "cohesion_hold_bonus": 3,
+          "ranged_damage_multiplier": 0.68,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.1
+        },
+        {
+          "id": "formation_guard",
+          "name": "Root Law",
+          "description": "Nearby allies hold formation while the bastion occupies the lane.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_scrip_haulers",
+      "name": "Scrip Haulers",
+      "faction_id": "faction_brasshollow",
+      "role": "melee",
+      "tier": 1,
+      "hp": 11,
+      "attack": 3,
+      "defense": 6,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 6,
+      "cost": {
+        "gold": 70,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "brace",
+          "name": "Work-Gang Brace",
+          "description": "Haulers lock shields and tools when ordered to hold.",
+          "retaliation_multiplier": 1.2,
+          "defending_cohesion_bonus": 2,
+          "status_id": "status_staggered",
+          "status_label": "Staggered",
+          "duration_rounds": 2,
+          "modifiers": {
+            "initiative": -1,
+            "cohesion": -1
+          }
+        },
+        {
+          "id": "shielding",
+          "name": "Scrip Plate",
+          "description": "Issued plates blunt arrows better than they hit back.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.82,
+          "engaged_damage_multiplier": 1.04,
+          "harried_damage_multiplier": 1.06
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_rivet_hounds",
+      "name": "Rivet Hounds",
+      "faction_id": "faction_brasshollow",
+      "role": "melee",
+      "tier": 2,
+      "hp": 9,
+      "attack": 6,
+      "defense": 4,
+      "min_damage": 3,
+      "max_damage": 5,
+      "speed": 7,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 5,
+      "cost": {
+        "gold": 115,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Rivet Tear",
+          "description": "Clockwork hounds find weak seams in marked armor.",
+          "damage_multiplier": 1.16,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.14
+        },
+        {
+          "id": "harry",
+          "name": "Gauge Bite",
+          "description": "A biting gauge mark exposes poor footing.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_furnace_pavis_teams",
+      "name": "Furnace Pavis Teams",
+      "faction_id": "faction_brasshollow",
+      "role": "melee",
+      "tier": 3,
+      "hp": 20,
+      "attack": 6,
+      "defense": 11,
+      "min_damage": 4,
+      "max_damage": 7,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 3,
+      "cost": {
+        "gold": 180,
+        "wood": 1,
+        "ore": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "shielding",
+          "name": "Furnace Pavis",
+          "description": "Heavy shields keep engines and crews intact.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.7,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.06
+        },
+        {
+          "id": "formation_guard",
+          "name": "Pavis Wall",
+          "description": "The teams give artillery a harder front to fire behind.",
+          "ally_ranged_damage_multiplier": 1.12,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_boiler_rivetcasters",
+      "name": "Boiler Rivetcasters",
+      "faction_id": "faction_brasshollow",
+      "role": "ranged",
+      "tier": 4,
+      "hp": 18,
+      "attack": 9,
+      "defense": 7,
+      "min_damage": 6,
+      "max_damage": 10,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 2,
+      "cost": {
+        "gold": 270,
+        "ore": 2
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Boiler Cast",
+          "description": "Short-range rivet volleys punish clustered and staggered targets.",
+          "damage_multiplier": 1.16,
+          "min_distance": 1,
+          "status_ids": [
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        },
+        {
+          "id": "harry",
+          "name": "Steam Scald",
+          "description": "Escaping steam breaks formation around the impact.",
+          "status_id": "status_harried",
+          "status_label": "Scalded",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_debt_engine_exactors",
+      "name": "Debt-Engine Exactors",
+      "faction_id": "faction_brasshollow",
+      "role": "melee",
+      "tier": 5,
+      "hp": 38,
+      "attack": 12,
+      "defense": 12,
+      "min_damage": 10,
+      "max_damage": 16,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 520,
+        "ore": 3
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "bloodrush",
+          "name": "Overdue Collection",
+          "description": "Exactors overheat into burst damage when a line is already failing.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.16,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        },
+        {
+          "id": "shielding",
+          "name": "Debt Engine Casing",
+          "description": "The engine casing resists missiles while pressure builds.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.74,
+          "engaged_damage_multiplier": 1.1,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_crucible_crawlers",
+      "name": "Crucible Crawlers",
+      "faction_id": "faction_brasshollow",
+      "role": "ranged",
+      "tier": 6,
+      "hp": 48,
+      "attack": 13,
+      "defense": 13,
+      "min_damage": 12,
+      "max_damage": 20,
+      "speed": 2,
+      "initiative": 4,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 1,
+      "cost": {
+        "gold": 820,
+        "wood": 2,
+        "ore": 4
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 4,
+      "abilities": [
+        {
+          "id": "volley",
+          "name": "Crucible Lob",
+          "description": "Siege crucibles reward setup and punish broken formations.",
+          "damage_multiplier": 1.2,
+          "min_distance": 2,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        },
+        {
+          "id": "harry",
+          "name": "Slag Wash",
+          "description": "Molten slag leaves a stack struggling to reform.",
+          "status_id": "status_harried",
+          "status_label": "Harried",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_brasshollow_foundry_saint",
+      "name": "Foundry Saint",
+      "faction_id": "faction_brasshollow",
+      "role": "melee",
+      "tier": 7,
+      "hp": 90,
+      "attack": 17,
+      "defense": 20,
+      "min_damage": 19,
+      "max_damage": 29,
+      "speed": 3,
+      "initiative": 5,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 1500,
+        "ore": 5
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "formation_guard",
+          "name": "Furnace Benediction",
+          "description": "The saint hardens nearby engines and steadies their fire.",
+          "ally_ranged_damage_multiplier": 1.15,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        },
+        {
+          "id": "shielding",
+          "name": "Sainted Hull",
+          "description": "A sanctified furnace hull refuses most clean missile angles.",
+          "cohesion_hold_bonus": 3,
+          "ranged_damage_multiplier": 0.65,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_bellwake_oars",
+      "name": "Bellwake Oars",
+      "faction_id": "faction_veilmourn",
+      "role": "melee",
+      "tier": 1,
+      "hp": 7,
+      "attack": 4,
+      "defense": 4,
+      "min_damage": 2,
+      "max_damage": 3,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 7,
+      "cost": {
+        "gold": 55
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Fogside Oar",
+          "description": "Bellwake crews hit from bad angles when a victim is marked.",
+          "damage_multiplier": 1.12,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.65,
+          "threshold_damage_multiplier": 1.14
+        },
+        {
+          "id": "shielding",
+          "name": "Fog Screen",
+          "description": "Mist and oarwork make clean ranged shots less reliable.",
+          "cohesion_hold_bonus": 1,
+          "ranged_damage_multiplier": 0.84,
+          "engaged_damage_multiplier": 1.06,
+          "harried_damage_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_mourning_lanterns",
+      "name": "Mourning Lanterns",
+      "faction_id": "faction_veilmourn",
+      "role": "ranged",
+      "tier": 2,
+      "hp": 8,
+      "attack": 4,
+      "defense": 5,
+      "min_damage": 2,
+      "max_damage": 4,
+      "speed": 5,
+      "initiative": 7,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 5,
+      "cost": {
+        "gold": 90,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 7,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Lantern Blind",
+          "description": "Funeral lanterns mark and blur a target for isolation.",
+          "status_id": "status_harried",
+          "status_label": "Marked",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2,
+            "cohesion": -1
+          },
+          "momentum_gain": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_maskglass_corsairs",
+      "name": "Maskglass Corsairs",
+      "faction_id": "faction_veilmourn",
+      "role": "melee",
+      "tier": 3,
+      "hp": 14,
+      "attack": 8,
+      "defense": 5,
+      "min_damage": 5,
+      "max_damage": 8,
+      "speed": 6,
+      "initiative": 8,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 4,
+      "cost": {
+        "gold": 155,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Maskglass Cut",
+          "description": "Corsairs punish blinded, marked, or isolated targets.",
+          "damage_multiplier": 1.2,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.7,
+          "threshold_damage_multiplier": 1.14
+        },
+        {
+          "id": "bloodrush",
+          "name": "Boarding Rush",
+          "description": "A faltering enemy line invites a sudden boarding strike.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.12,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_undertow_harpooners",
+      "name": "Undertow Harpooners",
+      "faction_id": "faction_veilmourn",
+      "role": "ranged",
+      "tier": 4,
+      "hp": 16,
+      "attack": 8,
+      "defense": 6,
+      "min_damage": 5,
+      "max_damage": 9,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 3,
+      "cost": {
+        "gold": 245,
+        "wood": 1,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Undertow Pull",
+          "description": "Harpoons drag formation pieces out of place.",
+          "status_id": "status_staggered",
+          "status_label": "Displaced",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        },
+        {
+          "id": "volley",
+          "name": "Tethered Shot",
+          "description": "Harpoon volleys hit harder once a target is marked.",
+          "damage_multiplier": 1.14,
+          "min_distance": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "ally_defending_multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_obituary_scribes",
+      "name": "Obituary Scribes",
+      "faction_id": "faction_veilmourn",
+      "role": "ranged",
+      "tier": 5,
+      "hp": 15,
+      "attack": 7,
+      "defense": 8,
+      "min_damage": 4,
+      "max_damage": 8,
+      "speed": 4,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": true,
+      "growth": 2,
+      "cost": {
+        "gold": 340,
+        "wood": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "shots": 6,
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Obituary Clause",
+          "description": "The written death weakens answers and lowers cohesion.",
+          "status_id": "status_harried",
+          "status_label": "Obituary-Marked",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -2,
+            "initiative": -1,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        },
+        {
+          "id": "formation_guard",
+          "name": "Bell Ledger",
+          "description": "Scribes steady fragile crews by naming the next victim.",
+          "ally_ranged_damage_multiplier": 1.1,
+          "ally_ranged_initiative_bonus": 1,
+          "ally_cohesion_bonus": 1,
+          "defending_cohesion_bonus": 2,
+          "defending_initiative_bonus": 1,
+          "staggered_damage_multiplier": 1.1
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_mirrorkeel_reavers",
+      "name": "Mirror-Keel Reavers",
+      "faction_id": "faction_veilmourn",
+      "role": "melee",
+      "tier": 6,
+      "hp": 28,
+      "attack": 14,
+      "defense": 9,
+      "min_damage": 11,
+      "max_damage": 18,
+      "speed": 8,
+      "initiative": 9,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 680,
+        "wood": 2,
+        "ore": 1
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "backstab",
+          "name": "Mirror-Keel Phase",
+          "description": "Reavers slip through fog lanes to hit marked backs.",
+          "damage_multiplier": 1.24,
+          "momentum_gain": 1,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "health_threshold_ratio": 0.7,
+          "threshold_damage_multiplier": 1.14
+        },
+        {
+          "id": "bloodrush",
+          "name": "Backline Wake",
+          "description": "A weakened or marked line opens a route for the next phase strike.",
+          "wounded_threshold_ratio": 0.75,
+          "wounded_damage_multiplier": 1.15,
+          "status_ids": [
+            "status_harried",
+            "status_staggered"
+          ],
+          "status_damage_multiplier": 1.1,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 2,
+          "momentum_gain": 1,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 1
+        }
+      ]
+    },
+    {
+      "id": "unit_veilmourn_fogbound_leviathan",
+      "name": "Fogbound Leviathan",
+      "faction_id": "faction_veilmourn",
+      "role": "melee",
+      "tier": 7,
+      "hp": 80,
+      "attack": 17,
+      "defense": 17,
+      "min_damage": 18,
+      "max_damage": 31,
+      "speed": 5,
+      "initiative": 6,
+      "retaliations": 1,
+      "ranged": false,
+      "growth": 1,
+      "cost": {
+        "gold": 1420,
+        "wood": 2,
+        "ore": 3
+      },
+      "content_status": "six_faction_scaffold",
+      "abilities": [
+        {
+          "id": "harry",
+          "name": "Leviathan Fogbank",
+          "description": "The leviathan drowns a section of the line in panic and mist.",
+          "status_id": "status_harried",
+          "status_label": "Fogbound",
+          "duration_rounds": 2,
+          "modifiers": {
+            "defense": -1,
+            "initiative": -2,
+            "cohesion": -2
+          },
+          "momentum_gain": 1
+        },
+        {
+          "id": "shielding",
+          "name": "Black-Sail Hide",
+          "description": "Fog-slick bulk makes clean answers unreliable.",
+          "cohesion_hold_bonus": 2,
+          "ranged_damage_multiplier": 0.7,
+          "engaged_damage_multiplier": 1.08,
+          "harried_damage_multiplier": 1.1
+        }
+      ]
     }
   ]
 }

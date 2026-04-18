@@ -21,6 +21,9 @@ const FACTION_COLORS := {
 	"faction_embercourt": Color(0.86, 0.48, 0.23, 1.0),
 	"faction_mireclaw": Color(0.39, 0.69, 0.30, 1.0),
 	"faction_sunvault": Color(0.84, 0.70, 0.26, 1.0),
+	"faction_thornwake": Color(0.46, 0.62, 0.35, 1.0),
+	"faction_brasshollow": Color(0.70, 0.52, 0.31, 1.0),
+	"faction_veilmourn": Color(0.42, 0.52, 0.62, 1.0),
 }
 const DISTRICT_ORDER := ["military", "economy", "spellcraft", "logistics", "defense"]
 const DISTRICT_LABELS := {

@@ -85,6 +85,28 @@ SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
 SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
 VALID_SPECIALTY_IDS = {"wayfinder", "ledgerkeeper", "spellwright", "drillmaster", "armsmaster", "mustercaptain", "borderwarden"}
 RELEASE_PLAYER_FACTIONS = {"faction_embercourt", "faction_mireclaw", "faction_sunvault"}
+SIX_FACTION_BIBLE_IDS = {
+    "faction_embercourt",
+    "faction_mireclaw",
+    "faction_sunvault",
+    "faction_thornwake",
+    "faction_brasshollow",
+    "faction_veilmourn",
+}
+NEW_SIX_FACTION_SCAFFOLD_IDS = {"faction_thornwake", "faction_brasshollow", "faction_veilmourn"}
+SIX_FACTION_COMMON_WORDS = {
+    "militia",
+    "archer",
+    "pikeman",
+    "goblin",
+    "ogre",
+    "skeleton",
+    "zombie",
+    "elf",
+    "dwarf",
+    "angel",
+    "dragon",
+}
 ADVANCED_EMBERCOURT_BUILDING_IDS = {
     "building_river_granary_exchange",
     "building_quartermasters_depot",
@@ -1475,6 +1497,102 @@ def validate_content(errors: list[str]) -> None:
     ensure(bool(skirmish_only_scenario_ids), errors, "Scenario roster should include at least one authored skirmish-only front")
     ensure(RELEASE_PLAYER_FACTIONS.issubset(scenario_player_factions), errors, "Scenario starts must cover all release player factions")
     ensure(len(scenario_hero_ids) >= 4, errors, "Scenario roster must expose at least four distinct lead heroes")
+
+
+def validate_six_faction_content_scaffold(errors: list[str]) -> None:
+    payloads = {
+        "factions": load_json(CONTENT_DIR / "factions.json"),
+        "heroes": load_json(CONTENT_DIR / "heroes.json"),
+        "units": load_json(CONTENT_DIR / "units.json"),
+        "towns": load_json(CONTENT_DIR / "towns.json"),
+        "buildings": load_json(CONTENT_DIR / "buildings.json"),
+    }
+    factions = items_index(payloads["factions"])
+    heroes = items_index(payloads["heroes"])
+    units = items_index(payloads["units"])
+    towns = items_index(payloads["towns"])
+    buildings = items_index(payloads["buildings"])
+
+    ensure(SIX_FACTION_BIBLE_IDS.issubset(factions.keys()), errors, "Six-faction implementation loop must author all bible faction records")
+
+    ladder_fingerprints: set[str] = set()
+    for faction_id in sorted(SIX_FACTION_BIBLE_IDS):
+        faction = factions.get(faction_id, {})
+        design = faction.get("design_pillars", {})
+        ensure(isinstance(design, dict) and bool(design), errors, f"Faction {faction_id} must define six-faction design_pillars")
+        if isinstance(design, dict):
+            for key in ("theme", "economy_style", "map_pressure", "battle_style", "ladder_fingerprint"):
+                ensure(bool(str(design.get(key, ""))), errors, f"Faction {faction_id} design_pillars must define {key}")
+            fingerprint = str(design.get("ladder_fingerprint", ""))
+            ensure(fingerprint not in ladder_fingerprints, errors, f"Faction {faction_id} must not share a ladder_fingerprint with another bible faction")
+            if fingerprint:
+                ladder_fingerprints.add(fingerprint)
+
+        status = faction.get("content_status", {})
+        ensure(isinstance(status, dict) and bool(status), errors, f"Faction {faction_id} must define content_status for six-faction implementation truthfulness")
+        if isinstance(status, dict):
+            ensure(str(status.get("six_faction_loop", "")) == "scaffold_started", errors, f"Faction {faction_id} must be marked scaffold_started in the six-faction loop")
+            ensure(str(status.get("manual_play", "")) == "not_verified_for_six_faction_bundle", errors, f"Faction {faction_id} must not claim six-faction manual play verification")
+            ensure(str(status.get("playability", "")) != "fully_playable", errors, f"Faction {faction_id} must not claim fully_playable during the scaffold slice")
+
+        ladder_ids = [str(value) for value in faction.get("unit_ladder_ids", [])]
+        ensure(len(ladder_ids) == 7 and len(set(ladder_ids)) == 7, errors, f"Faction {faction_id} must define exactly seven unique unit_ladder_ids")
+        tiers: set[int] = set()
+        unit_roles: list[str] = []
+        for unit_id in ladder_ids:
+            unit = units.get(unit_id, {})
+            ensure(bool(unit), errors, f"Faction {faction_id} ladder references missing unit {unit_id}")
+            if not unit:
+                continue
+            ensure(str(unit.get("faction_id", "")) == faction_id, errors, f"Faction {faction_id} ladder unit {unit_id} belongs to another faction")
+            tiers.add(int(unit.get("tier", 0)))
+            unit_roles.append(str(unit.get("role", "")))
+            name_words = {word.lower() for word in re.findall(r"[A-Za-z]+", str(unit.get("name", "")))}
+            common_words = sorted(name_words & SIX_FACTION_COMMON_WORDS)
+            ensure(not common_words, errors, f"Faction {faction_id} ladder unit {unit_id} uses banned common identity word(s): {', '.join(common_words)}")
+            ensure(str(unit.get("content_status", "")) == "six_faction_scaffold", errors, f"Faction {faction_id} ladder unit {unit_id} must be marked as six_faction_scaffold")
+        ensure(tiers == set(range(1, 8)), errors, f"Faction {faction_id} ladder must cover tiers 1 through 7")
+        ensure("melee" in unit_roles and "ranged" in unit_roles, errors, f"Faction {faction_id} ladder must include both melee and ranged pressure")
+
+        bible_hero_ids = [str(value) for value in faction.get("bible_hero_ids", [])]
+        ensure(len(bible_hero_ids) >= 10 and len(set(bible_hero_ids)) == len(bible_hero_ids), errors, f"Faction {faction_id} must define at least ten unique bible_hero_ids")
+        command_path_counts = {"might": 0, "magic": 0}
+        for hero_id in bible_hero_ids:
+            hero = heroes.get(hero_id, {})
+            ensure(bool(hero), errors, f"Faction {faction_id} bible_hero_ids references missing hero {hero_id}")
+            if not hero:
+                continue
+            ensure(str(hero.get("faction_id", "")) == faction_id, errors, f"Faction {faction_id} bible hero {hero_id} belongs to another faction")
+            command_path = str(hero.get("command_path", ""))
+            ensure(command_path in command_path_counts, errors, f"Faction {faction_id} bible hero {hero_id} must declare command_path might or magic")
+            if command_path in command_path_counts:
+                command_path_counts[command_path] += 1
+        ensure(command_path_counts["might"] >= 5, errors, f"Faction {faction_id} must scaffold at least five might hero concepts")
+        ensure(command_path_counts["magic"] >= 5, errors, f"Faction {faction_id} must scaffold at least five magic hero concepts")
+
+        signature_building_ids = [str(value) for value in faction.get("signature_building_ids", [])]
+        ensure(len(signature_building_ids) >= 7 and len(set(signature_building_ids)) == len(signature_building_ids), errors, f"Faction {faction_id} must define at least seven unique signature_building_ids")
+        for building_id in signature_building_ids:
+            building = buildings.get(building_id, {})
+            ensure(bool(building), errors, f"Faction {faction_id} signature building {building_id} is missing")
+            if building:
+                ensure(str(building.get("content_status", "")) == "six_faction_scaffold", errors, f"Faction {faction_id} signature building {building_id} must be marked as six_faction_scaffold")
+
+        seed_town_id = str(faction.get("seed_town_id", ""))
+        ensure(bool(seed_town_id), errors, f"Faction {faction_id} must declare a seed_town_id")
+        if faction_id in NEW_SIX_FACTION_SCAFFOLD_IDS:
+            seed_town = towns.get(seed_town_id, {})
+            ensure(bool(seed_town), errors, f"New bible faction {faction_id} seed town {seed_town_id} must be authored")
+            if seed_town:
+                ensure(str(seed_town.get("content_status", "")) == "six_faction_seed_town_not_scenario_integrated", errors, f"New bible faction {faction_id} seed town must be marked not scenario integrated")
+                town_buildings = [str(value) for value in seed_town.get("starting_building_ids", [])] + [str(value) for value in seed_town.get("buildable_building_ids", [])]
+                ensure(set(signature_building_ids).issubset(set(town_buildings)), errors, f"New bible faction {faction_id} seed town must carry all signature buildings")
+
+    scaffold_heroes = [hero_id for hero_id, hero in heroes.items() if str(hero.get("roster_state", "")) == "scaffold"]
+    ensure(bool(scaffold_heroes), errors, "Six-faction scaffold heroes must be marked with roster_state=scaffold")
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    ensure("func _hero_recruitable_for_scenario" in hero_command_text, errors, "HeroCommandRules.gd must gate scaffold heroes before tavern recruitment")
+    ensure('"allow_scaffold_roster"' in hero_command_text, errors, "HeroCommandRules.gd must support explicit scenario opt-in for scaffold hero rosters")
 
 
 def validate_project_and_scenes(errors: list[str]) -> None:
@@ -4878,6 +4996,7 @@ def main() -> int:
     validate_town_defense_battle_flow(errors)
     validate_live_client_harness(errors)
     validate_in_session_save_controls(errors)
+    validate_six_faction_content_scaffold(errors)
 
     if errors:
         print("VALIDATION FAILED")
@@ -4933,6 +5052,7 @@ def main() -> int:
     print("- town assaults now route into real defense battles with garrison sync, raid-survivor sync, and town-loss consequences")
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
+    print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
     return 0
 
 

@@ -17,15 +17,26 @@
         "spell_stone_veil",
         "spell_quickmarch_hymn"
       ],
-      "starting_specialties": ["wayfinder"],
-      "specialty_focus_ids": ["wayfinder", "spellwright", "borderwarden"],
-      "battle_traits": ["artillerist", "ambusher"],
+      "starting_specialties": [
+        "wayfinder"
+      ],
+      "specialty_focus_ids": [
+        "wayfinder",
+        "spellwright",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "ambusher"
+      ],
       "command": {
         "attack": 1,
         "defense": 1,
         "power": 1,
         "knowledge": 1
-      }
+      },
+      "command_path": "magic",
+      "roster_state": "live"
     },
     {
       "id": "hero_caelen",
@@ -43,15 +54,26 @@
         "spell_stone_veil",
         "spell_lantern_phalanx"
       ],
-      "starting_specialties": ["borderwarden"],
-      "specialty_focus_ids": ["borderwarden", "ledgerkeeper", "armsmaster"],
-      "battle_traits": ["linekeeper", "ambusher"],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "ledgerkeeper",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "ambusher"
+      ],
       "command": {
         "attack": 1,
         "defense": 2,
         "power": 0,
         "knowledge": 1
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_mira",
@@ -69,15 +91,26 @@
         "spell_bulwark_litany",
         "spell_lantern_phalanx"
       ],
-      "starting_specialties": ["drillmaster"],
-      "specialty_focus_ids": ["drillmaster", "mustercaptain", "armsmaster"],
-      "battle_traits": ["vanguard", "linekeeper"],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "mustercaptain",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "linekeeper"
+      ],
       "command": {
         "attack": 2,
         "defense": 1,
         "power": 1,
         "knowledge": 0
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_seren",
@@ -96,15 +129,26 @@
         "spell_stone_veil",
         "spell_quickmarch_hymn"
       ],
-      "starting_specialties": ["spellwright"],
-      "specialty_focus_ids": ["spellwright", "ledgerkeeper", "wayfinder"],
-      "battle_traits": ["artillerist", "bogwise"],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "wayfinder"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "bogwise"
+      ],
       "command": {
         "attack": 0,
         "defense": 1,
         "power": 2,
         "knowledge": 1
-      }
+      },
+      "command_path": "magic",
+      "roster_state": "live"
     },
     {
       "id": "hero_torren",
@@ -122,15 +166,26 @@
         "spell_quickmarch_hymn",
         "spell_lantern_phalanx"
       ],
-      "starting_specialties": ["mustercaptain"],
-      "specialty_focus_ids": ["mustercaptain", "ledgerkeeper", "borderwarden"],
-      "battle_traits": ["linekeeper", "artillerist"],
+      "starting_specialties": [
+        "mustercaptain"
+      ],
+      "specialty_focus_ids": [
+        "mustercaptain",
+        "ledgerkeeper",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
       "command": {
         "attack": 1,
         "defense": 2,
         "power": 0,
         "knowledge": 1
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_vaska",
@@ -149,15 +204,26 @@
         "spell_stone_veil",
         "spell_bloodwake_drum"
       ],
-      "starting_specialties": ["drillmaster"],
-      "specialty_focus_ids": ["drillmaster", "armsmaster", "wayfinder"],
-      "battle_traits": ["vanguard", "packhunter"],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "armsmaster",
+        "wayfinder"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "packhunter"
+      ],
       "command": {
         "attack": 2,
         "defense": 0,
         "power": 1,
         "knowledge": 1
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_sable",
@@ -175,15 +241,26 @@
         "spell_coal_rain",
         "spell_relay_drum"
       ],
-      "starting_specialties": ["spellwright"],
-      "specialty_focus_ids": ["spellwright", "ledgerkeeper", "borderwarden"],
-      "battle_traits": ["bogwise", "packhunter"],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "bogwise",
+        "packhunter"
+      ],
       "command": {
         "attack": 0,
         "defense": 1,
         "power": 2,
         "knowledge": 1
-      }
+      },
+      "command_path": "magic",
+      "roster_state": "live"
     },
     {
       "id": "hero_tarn",
@@ -201,15 +278,26 @@
         "spell_quickmarch_hymn",
         "spell_coal_rain"
       ],
-      "starting_specialties": ["borderwarden"],
-      "specialty_focus_ids": ["borderwarden", "wayfinder", "drillmaster"],
-      "battle_traits": ["ambusher", "bogwise"],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "wayfinder",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "bogwise"
+      ],
       "command": {
         "attack": 1,
         "defense": 1,
         "power": 0,
         "knowledge": 2
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_orrik",
@@ -228,15 +316,26 @@
         "spell_bloodwake_drum",
         "spell_stone_veil"
       ],
-      "starting_specialties": ["mustercaptain"],
-      "specialty_focus_ids": ["mustercaptain", "armsmaster", "ledgerkeeper"],
-      "battle_traits": ["linekeeper", "packhunter"],
+      "starting_specialties": [
+        "mustercaptain"
+      ],
+      "specialty_focus_ids": [
+        "mustercaptain",
+        "armsmaster",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "packhunter"
+      ],
       "command": {
         "attack": 1,
         "defense": 2,
         "power": 1,
         "knowledge": 0
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_solera",
@@ -254,15 +353,26 @@
         "spell_resonant_chorus",
         "spell_stone_veil"
       ],
-      "starting_specialties": ["drillmaster"],
-      "specialty_focus_ids": ["drillmaster", "spellwright", "mustercaptain"],
-      "battle_traits": ["linekeeper", "artillerist"],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "spellwright",
+        "mustercaptain"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
       "command": {
         "attack": 1,
         "defense": 2,
         "power": 1,
         "knowledge": 0
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_neral",
@@ -280,15 +390,26 @@
         "spell_prism_bastion",
         "spell_trailglyph"
       ],
-      "starting_specialties": ["spellwright"],
-      "specialty_focus_ids": ["spellwright", "wayfinder", "armsmaster"],
-      "battle_traits": ["artillerist", "ambusher"],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "wayfinder",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "ambusher"
+      ],
       "command": {
         "attack": 0,
         "defense": 1,
         "power": 2,
         "knowledge": 1
-      }
+      },
+      "command_path": "magic",
+      "roster_state": "live"
     },
     {
       "id": "hero_varis",
@@ -306,15 +427,26 @@
         "spell_resonant_chorus",
         "spell_sunlance_arc"
       ],
-      "starting_specialties": ["wayfinder"],
-      "specialty_focus_ids": ["wayfinder", "drillmaster", "armsmaster"],
-      "battle_traits": ["vanguard", "ambusher"],
+      "starting_specialties": [
+        "wayfinder"
+      ],
+      "specialty_focus_ids": [
+        "wayfinder",
+        "drillmaster",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "ambusher"
+      ],
       "command": {
         "attack": 2,
         "defense": 0,
         "power": 1,
         "knowledge": 1
-      }
+      },
+      "command_path": "might",
+      "roster_state": "live"
     },
     {
       "id": "hero_thalen",
@@ -333,14 +465,1764 @@
         "spell_resonant_chorus",
         "spell_lantern_phalanx"
       ],
-      "starting_specialties": ["mustercaptain"],
-      "specialty_focus_ids": ["mustercaptain", "ledgerkeeper", "spellwright"],
-      "battle_traits": ["linekeeper", "vanguard"],
+      "starting_specialties": [
+        "mustercaptain"
+      ],
+      "specialty_focus_ids": [
+        "mustercaptain",
+        "ledgerkeeper",
+        "spellwright"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "vanguard"
+      ],
       "command": {
         "attack": 1,
         "defense": 2,
         "power": 1,
         "knowledge": 0
+      },
+      "command_path": "magic",
+      "roster_state": "live"
+    },
+    {
+      "id": "hero_embercourt_helva_tollbrand",
+      "name": "Helva Tollbrand",
+      "faction_id": "faction_embercourt",
+      "archetype": "roadwarden",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Road-crossing hunter",
+      "identity_summary": "A toll-road commander who gains value from controlled crossings and overextended enemies.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1150
+      },
+      "starting_spell_ids": [
+        "spell_waystride",
+        "spell_quickmarch_hymn",
+        "spell_lantern_phalanx"
+      ],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "wayfinder",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_embercourt_saren_lockmaster",
+      "name": "Saren Lockmaster",
+      "faction_id": "faction_embercourt",
+      "archetype": "siegelock",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Sapper and bargebow commander",
+      "identity_summary": "A lockworks captain who improves controlled assaults, sappers, and bargebow timing.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_cinder_burst",
+        "spell_lantern_phalanx",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "drillmaster",
+        "mustercaptain"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 2,
+        "power": 0,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_embercourt_orra_cinderquill",
+      "name": "Orra Cinderquill",
+      "faction_id": "faction_embercourt",
+      "archetype": "ashwrit",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Fire-control writ mage",
+      "identity_summary": "An ash writ specialist who strengthens fire-control spells and reveal effects against ambushes.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_cinder_burst",
+        "spell_coal_rain",
+        "spell_beacon_path"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "borderwarden",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_embercourt_belis_rainledger",
+      "name": "Belis Rainledger",
+      "faction_id": "faction_embercourt",
+      "archetype": "granary",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Civic economy mage",
+      "identity_summary": "A granary economist who converts civic works into smoother recovery and spell tempo.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1150
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_stone_veil",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "ledgerkeeper"
+      ],
+      "specialty_focus_ids": [
+        "ledgerkeeper",
+        "spellwright",
+        "mustercaptain"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_embercourt_jorun_beaconscribe",
+      "name": "Jorun Beaconscribe",
+      "faction_id": "faction_embercourt",
+      "archetype": "beaconscribe",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Compact formation signal mage",
+      "identity_summary": "A signal court lector who rewards compact formations with cleaner initiative windows.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_beacon_path",
+        "spell_quickmarch_hymn",
+        "spell_lantern_phalanx"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "drillmaster",
+        "wayfinder"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_mireclaw_kessa_chainboom",
+      "name": "Kessa Chainboom",
+      "faction_id": "faction_mireclaw",
+      "archetype": "chainbreaker",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Ferrychain control captain",
+      "identity_summary": "A crossing breaker who improves chain units and fights around bridges and ferry lanes.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_relay_drum",
+        "spell_bulwark_litany",
+        "spell_coal_rain"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "borderwarden",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_mireclaw_brakka_mudkeel",
+      "name": "Brakka Mudkeel",
+      "faction_id": "faction_mireclaw",
+      "archetype": "bogplate",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Bogplate handler",
+      "identity_summary": "A brute handler who makes bogplate lines cheaper and harder to dislodge.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1150
+      },
+      "starting_spell_ids": [
+        "spell_stone_veil",
+        "spell_relay_drum",
+        "spell_bloodwake_drum"
+      ],
+      "starting_specialties": [
+        "mustercaptain"
+      ],
+      "specialty_focus_ids": [
+        "mustercaptain",
+        "armsmaster",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "packhunter"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_mireclaw_nix_votivejaw",
+      "name": "Nix Votivejaw",
+      "faction_id": "faction_mireclaw",
+      "archetype": "shrinebiter",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Kill-tempo shrine mage",
+      "identity_summary": "A shrine-biter who converts battlefield kills into temporary pressure and spell tempo.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_coal_rain",
+        "spell_bloodwake_drum",
+        "spell_relay_drum"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "armsmaster",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "packhunter",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_mireclaw_edda_rotlamp",
+      "name": "Edda Rotlamp",
+      "faction_id": "faction_mireclaw",
+      "archetype": "sporewake",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Rot and blind mystic",
+      "identity_summary": "A sporewake mystic who strengthens rot, blind, and recovery-denial effects.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_coal_rain",
+        "spell_stone_veil",
+        "spell_bloodwake_drum"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "borderwarden",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "bogwise",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_mireclaw_pell_reedscript",
+      "name": "Pell Reedscript",
+      "faction_id": "faction_mireclaw",
+      "archetype": "denaugur",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Linked-den growth augur",
+      "identity_summary": "A den augur who improves dwelling growth when map sites stay linked.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1100
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_relay_drum",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "ledgerkeeper"
+      ],
+      "specialty_focus_ids": [
+        "ledgerkeeper",
+        "mustercaptain",
+        "spellwright"
+      ],
+      "battle_traits": [
+        "bogwise",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_mireclaw_zhorra_fenwake",
+      "name": "Zhorra Fenwake",
+      "faction_id": "faction_mireclaw",
+      "archetype": "drumoracle",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Harried-prey tempo oracle",
+      "identity_summary": "A drum oracle who accelerates units after enemies become harried or wounded.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_relay_drum",
+        "spell_bloodwake_drum",
+        "spell_coal_rain"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "drillmaster",
+        "wayfinder"
+      ],
+      "battle_traits": [
+        "packhunter",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 0,
+        "power": 1,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_sunvault_ilyr_glassmarshal",
+      "name": "Ilyr Glassmarshal",
+      "faction_id": "faction_sunvault",
+      "archetype": "batterycaptain",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Aurora battery captain",
+      "identity_summary": "A battery captain who improves protected-lane setup and heavy array fire.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1300
+      },
+      "starting_spell_ids": [
+        "spell_prism_bastion",
+        "spell_sunlance_arc",
+        "spell_resonant_chorus"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "spellwright",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_sunvault_dovan_lenscaptain",
+      "name": "Dovan Lens-Captain",
+      "faction_id": "faction_sunvault",
+      "archetype": "relaysurveyor",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Relay surveyor",
+      "identity_summary": "A lens captain who improves watch sites and ranged combat near relay lines.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_beacon_path",
+        "spell_prism_bastion",
+        "spell_sunlance_arc"
+      ],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "wayfinder",
+        "spellwright"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_sunvault_renn_facetlane",
+      "name": "Renn Facetlane",
+      "faction_id": "faction_sunvault",
+      "archetype": "duelline",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Focus-after-delay tactician",
+      "identity_summary": "A duel-line tactician who improves focus after enemy timing breaks.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_resonant_chorus",
+        "spell_quickmarch_hymn",
+        "spell_prism_bastion"
+      ],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "armsmaster",
+        "spellwright"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_sunvault_essa_daynote",
+      "name": "Essa Daynote",
+      "faction_id": "faction_sunvault",
+      "archetype": "harmonicscholar",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Resonance stack scholar",
+      "identity_summary": "A harmonic scholar who improves the generation and payoff of resonance cycles.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_resonant_chorus",
+        "spell_prism_bastion",
+        "spell_sunlance_arc"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_sunvault_calis_sunvein",
+      "name": "Calis Sunvein",
+      "faction_id": "faction_sunvault",
+      "archetype": "solarphysician",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Light-shield physician",
+      "identity_summary": "A solar physician who turns light spells into shields and damage smoothing.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_prism_bastion",
+        "spell_stone_veil",
+        "spell_resonant_chorus"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_sunvault_mirro_halometer",
+      "name": "Mirro Halometer",
+      "faction_id": "faction_sunvault",
+      "archetype": "calibration",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Accuracy and relay mage",
+      "identity_summary": "A calibration mage who improves spell accuracy, dispel resistance, and relay building value.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_sunlance_arc",
+        "spell_resonant_chorus",
+        "spell_beacon_path"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "wayfinder",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_thornwake_ardren_briarmarshal",
+      "name": "Ardren Briar-Marshal",
+      "faction_id": "faction_thornwake",
+      "archetype": "briarmarshal",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Root-ground front commander",
+      "identity_summary": "Improves binds and retaliation on rooted ground.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_briar_bind",
+        "spell_graft_mend",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "armsmaster",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_thornwake_tova_rootwright",
+      "name": "Tova Rootwright",
+      "faction_id": "faction_thornwake",
+      "archetype": "rootwright",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Siege grower",
+      "identity_summary": "Improves Barkmantle Rams and town assault bramble creation.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_briar_bind",
+        "spell_stone_veil",
+        "spell_graft_mend"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "mustercaptain",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_thornwake_halen_thorncart",
+      "name": "Halen Thorncart",
+      "faction_id": "faction_thornwake",
+      "archetype": "pilgrimcaptain",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Root-road pilgrim captain",
+      "identity_summary": "Improves map movement between rooted sites and low-tier growth.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_graft_mend",
+        "spell_quickmarch_hymn"
+      ],
+      "starting_specialties": [
+        "wayfinder"
+      ],
+      "specialty_focus_ids": [
+        "wayfinder",
+        "mustercaptain",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_thornwake_merek_greenbarrow",
+      "name": "Merek Greenbarrow",
+      "faction_id": "faction_thornwake",
+      "archetype": "recoverywarden",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Controlled-region recovery warden",
+      "identity_summary": "Improves post-battle wounded recovery in controlled regions.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_graft_mend",
+        "spell_stone_veil",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "ledgerkeeper"
+      ],
+      "specialty_focus_ids": [
+        "ledgerkeeper",
+        "mustercaptain",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_thornwake_silsa_bramblehound",
+      "name": "Silsa Bramble-Hound",
+      "faction_id": "faction_thornwake",
+      "archetype": "huntleader",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Anti-ranged beast-knot leader",
+      "identity_summary": "Improves Stag-Knot Runners and anti-ranged pinning.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_briar_bind",
+        "spell_quickmarch_hymn",
+        "spell_coal_rain"
+      ],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "wayfinder",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 0,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_thornwake_veyra_seedseer",
+      "name": "Veyra Seedseer",
+      "faction_id": "faction_thornwake",
+      "archetype": "rootoracle",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Rooted-terrain oracle",
+      "identity_summary": "Creates rooted terrain faster and improves rooted-site rewards.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_briar_bind",
+        "spell_trailglyph",
+        "spell_graft_mend"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "wayfinder",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "bogwise",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_thornwake_osmund_pollenglass",
+      "name": "Osmund Pollenglass",
+      "faction_id": "faction_thornwake",
+      "archetype": "sporedoctor",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Healing and cleanse doctor",
+      "identity_summary": "Improves healing, cleanse, and debuff resistance.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_graft_mend",
+        "spell_stone_veil",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_thornwake_elian_loamchant",
+      "name": "Elian Loamchant",
+      "faction_id": "faction_thornwake",
+      "archetype": "loamsinger",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Bind duration mage",
+      "identity_summary": "Strengthens bind spells and bramble duration.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_briar_bind",
+        "spell_coal_rain",
+        "spell_graft_mend"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "drillmaster",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "bogwise",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_thornwake_ralka_mossvein",
+      "name": "Ralka Mossvein",
+      "faction_id": "faction_thornwake",
+      "archetype": "mossmemory",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Long-fight recovery mage",
+      "identity_summary": "Converts long fights into spell power and recovery.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_graft_mend",
+        "spell_resonant_chorus",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": [
+        "ledgerkeeper"
+      ],
+      "specialty_focus_ids": [
+        "ledgerkeeper",
+        "spellwright",
+        "mustercaptain"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_thornwake_nara_graftsibyl",
+      "name": "Nara Graft-Sibyl",
+      "faction_id": "faction_thornwake",
+      "archetype": "graftprophet",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "High-tier graft prophet",
+      "identity_summary": "Improves high-tier support units and growth chains.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1200
+      },
+      "starting_spell_ids": [
+        "spell_graft_mend",
+        "spell_briar_bind",
+        "spell_prism_bastion"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "mustercaptain",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_brasshollow_marka_ironclause",
+      "name": "Marka Ironclause",
+      "faction_id": "faction_brasshollow",
+      "archetype": "contractmarshal",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Attrition contract marshal",
+      "identity_summary": "Improves armored units and morale under attrition.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_heat_rite",
+        "spell_stone_veil",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "armsmaster",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 2,
+        "power": 0,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_brasshollow_oren_bellfounder",
+      "name": "Oren Bellfounder",
+      "faction_id": "faction_brasshollow",
+      "archetype": "siegecaptain",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Artillery setup captain",
+      "identity_summary": "Improves artillery setup and town assault pressure.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_pressure_clause",
+        "spell_heat_rite",
+        "spell_quickmarch_hymn"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "drillmaster",
+        "spellwright"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_brasshollow_kuld_varn",
+      "name": "Kuld Varn",
+      "faction_id": "faction_brasshollow",
+      "archetype": "railhead",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Mine-road enforcer",
+      "identity_summary": "Improves movement between owned mines and towns.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_heat_rite",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": [
+        "wayfinder"
+      ],
+      "specialty_focus_ids": [
+        "wayfinder",
+        "borderwarden",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_brasshollow_selka_pitmarshal",
+      "name": "Selka Pitmarshal",
+      "faction_id": "faction_brasshollow",
+      "archetype": "pitmarshal",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Ore-site defense marshal",
+      "identity_summary": "Improves ore-site defense and machine replacement.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_stone_veil",
+        "spell_bulwark_litany",
+        "spell_pressure_clause"
+      ],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "mustercaptain",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_brasshollow_daxis_chaincaptain",
+      "name": "Daxis Chain-Captain",
+      "faction_id": "faction_brasshollow",
+      "archetype": "pavisforeman",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Bodyguard armor foreman",
+      "identity_summary": "Improves bodyguard rules and frontline armor.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_heat_rite",
+        "spell_bulwark_litany",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "drillmaster",
+        "mustercaptain"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 3,
+        "power": 0,
+        "knowledge": 0
+      }
+    },
+    {
+      "id": "hero_brasshollow_vellum_quench",
+      "name": "Vellum Quench",
+      "faction_id": "faction_brasshollow",
+      "archetype": "heatrice",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Cooldown smoothing engineer",
+      "identity_summary": "Improves overheat spells and cooldown smoothing.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_heat_rite",
+        "spell_pressure_clause",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_brasshollow_odrik_heatpriest",
+      "name": "Odrik Heatpriest",
+      "faction_id": "faction_brasshollow",
+      "archetype": "furnacechaplain",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Damage-to-armor chaplain",
+      "identity_summary": "Converts damage taken into temporary armor or spell power.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_heat_rite",
+        "spell_bulwark_litany",
+        "spell_prism_bastion"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "armsmaster",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 2,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_brasshollow_lina_gaugesavant",
+      "name": "Lina Gauge-Savant",
+      "faction_id": "faction_brasshollow",
+      "archetype": "pressuremath",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Machine accuracy savant",
+      "identity_summary": "Improves machine accuracy and heat thresholds.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_pressure_clause",
+        "spell_heat_rite",
+        "spell_resonant_chorus"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "drillmaster",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_brasshollow_harro_debtrune",
+      "name": "Harro Debt-Rune",
+      "faction_id": "faction_brasshollow",
+      "archetype": "clausemage",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Binding clause mage",
+      "identity_summary": "Specializes in binding, slowing, and punishing broken formations.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_pressure_clause",
+        "spell_briar_bind",
+        "spell_stone_veil"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "borderwarden",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_brasshollow_pava_ashmeter",
+      "name": "Pava Ashmeter",
+      "faction_id": "faction_brasshollow",
+      "archetype": "slagalchemist",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Burn terrain alchemist",
+      "identity_summary": "Improves burn terrain and resource conversion.",
+      "base_movement": 10,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_heat_rite",
+        "spell_coal_rain",
+        "spell_pressure_clause"
+      ],
+      "starting_specialties": [
+        "ledgerkeeper"
+      ],
+      "specialty_focus_ids": [
+        "ledgerkeeper",
+        "spellwright",
+        "wayfinder"
+      ],
+      "battle_traits": [
+        "artillerist",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_veilmourn_ivara_blacktide",
+      "name": "Ivara Blacktide",
+      "faction_id": "faction_veilmourn",
+      "archetype": "admiral",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Isolated-target admiral",
+      "identity_summary": "Improves isolated-target damage and retreat control.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_fogwake_step",
+        "spell_obituary_mark",
+        "spell_quickmarch_hymn"
+      ],
+      "starting_specialties": [
+        "drillmaster"
+      ],
+      "specialty_focus_ids": [
+        "drillmaster",
+        "wayfinder",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 0,
+        "power": 1,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_veilmourn_ruln_vanehook",
+      "name": "Ruln Vanehook",
+      "faction_id": "faction_veilmourn",
+      "archetype": "harpooncaptain",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Displacement harpoon captain",
+      "identity_summary": "Improves pulls, formation breaks, and anti-large tactics.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_obituary_mark",
+        "spell_bulwark_litany",
+        "spell_fogwake_step"
+      ],
+      "starting_specialties": [
+        "armsmaster"
+      ],
+      "specialty_focus_ids": [
+        "armsmaster",
+        "borderwarden",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "vanguard",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_veilmourn_cela_mistcorsair",
+      "name": "Cela Mist-Corsair",
+      "faction_id": "faction_veilmourn",
+      "archetype": "backlineraider",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Fog-lane backline raider",
+      "identity_summary": "Improves phase movement and fog-lane attacks.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_fogwake_step",
+        "spell_waystride",
+        "spell_obituary_mark"
+      ],
+      "starting_specialties": [
+        "wayfinder"
+      ],
+      "specialty_focus_ids": [
+        "wayfinder",
+        "drillmaster",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "packhunter"
+      ],
+      "command": {
+        "attack": 2,
+        "defense": 0,
+        "power": 0,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_veilmourn_damar_oriflag",
+      "name": "Damar Oriflag",
+      "faction_id": "faction_veilmourn",
+      "archetype": "signalthief",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Scouting disruption thief",
+      "identity_summary": "Improves scouting raids and enemy movement disruption.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_trailglyph",
+        "spell_fogwake_step",
+        "spell_coal_rain"
+      ],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "wayfinder",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 1,
+        "power": 0,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_veilmourn_jessa_keelwarden",
+      "name": "Jessa Keelwarden",
+      "faction_id": "faction_veilmourn",
+      "archetype": "fleetdefender",
+      "command_path": "might",
+      "roster_state": "scaffold",
+      "roster_summary": "Fragile-stack survival warden",
+      "identity_summary": "Improves fragile-stack survival and controlled withdrawals.",
+      "base_movement": 12,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_stone_veil",
+        "spell_fogwake_step",
+        "spell_bulwark_litany"
+      ],
+      "starting_specialties": [
+        "borderwarden"
+      ],
+      "specialty_focus_ids": [
+        "borderwarden",
+        "armsmaster",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "linekeeper",
+        "ambusher"
+      ],
+      "command": {
+        "attack": 1,
+        "defense": 2,
+        "power": 0,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_veilmourn_morwen_wakeoracle",
+      "name": "Morwen Wakeoracle",
+      "faction_id": "faction_veilmourn",
+      "archetype": "fogprophet",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Fog-lane prophet",
+      "identity_summary": "Creates fog lanes and improves vision manipulation.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_fogwake_step",
+        "spell_obituary_mark",
+        "spell_beacon_path"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "wayfinder",
+        "borderwarden"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "bogwise"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_veilmourn_thir_obituaryink",
+      "name": "Thir Obituary-Ink",
+      "faction_id": "faction_veilmourn",
+      "archetype": "memoryscribe",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Salvage spell scribe",
+      "identity_summary": "Turns kills, artifacts, and salvage into spell tempo.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_obituary_mark",
+        "spell_coal_rain",
+        "spell_trailglyph"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "ledgerkeeper",
+        "armsmaster"
+      ],
+      "battle_traits": [
+        "packhunter",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_veilmourn_sael_mirrorbell",
+      "name": "Sael Mirrorbell",
+      "faction_id": "faction_veilmourn",
+      "archetype": "mirrornavigator",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Displacement navigator",
+      "identity_summary": "Improves displacement spells and decoy effects.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_fogwake_step",
+        "spell_obituary_mark",
+        "spell_resonant_chorus"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "wayfinder",
+        "drillmaster"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "vanguard"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 2,
+        "knowledge": 2
+      }
+    },
+    {
+      "id": "hero_veilmourn_nacre_vowless",
+      "name": "Nacre Vowless",
+      "faction_id": "faction_veilmourn",
+      "archetype": "funeralhexer",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Retaliation and morale hexer",
+      "identity_summary": "Weakens enemy retaliation and morale-style momentum.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_obituary_mark",
+        "spell_stone_veil",
+        "spell_briar_bind"
+      ],
+      "starting_specialties": [
+        "spellwright"
+      ],
+      "specialty_focus_ids": [
+        "spellwright",
+        "borderwarden",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "bogwise",
+        "linekeeper"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 1,
+        "power": 2,
+        "knowledge": 1
+      }
+    },
+    {
+      "id": "hero_veilmourn_orso_nightchart",
+      "name": "Orso Nightchart",
+      "faction_id": "faction_veilmourn",
+      "archetype": "routediviner",
+      "command_path": "magic",
+      "roster_state": "scaffold",
+      "roster_summary": "Hidden-route diviner",
+      "identity_summary": "Improves scouting rewards and hidden-route map pressure.",
+      "base_movement": 11,
+      "recruit_cost": {
+        "gold": 1250
+      },
+      "starting_spell_ids": [
+        "spell_fogwake_step",
+        "spell_waystride",
+        "spell_beacon_path"
+      ],
+      "starting_specialties": [
+        "wayfinder"
+      ],
+      "specialty_focus_ids": [
+        "wayfinder",
+        "spellwright",
+        "ledgerkeeper"
+      ],
+      "battle_traits": [
+        "ambusher",
+        "artillerist"
+      ],
+      "command": {
+        "attack": 0,
+        "defense": 0,
+        "power": 1,
+        "knowledge": 3
       }
     }
   ]

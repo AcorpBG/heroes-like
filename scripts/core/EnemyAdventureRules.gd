@@ -1849,6 +1849,12 @@ static func public_strategy_summary(config: Dictionary, faction_id: String) -> S
 			return "Priorities: cut logistics sites, chase exposed heroes, and keep raids rolling"
 		"faction_sunvault":
 			return "Priorities: secure relays and shrines, then align focused pushes on objectives"
+		"faction_thornwake":
+			return "Priorities: root roads, hold nurseries, and turn neutral lanes into recovery zones"
+		"faction_brasshollow":
+			return "Priorities: secure mines, stage siege engines, and exhaust resource fronts"
+		"faction_veilmourn":
+			return "Priorities: scout hidden routes, mark weak backs, and raid through fog lanes"
 		_:
 			return "Priorities: pressure objectives while contesting frontier assets"
 

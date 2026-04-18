@@ -1317,6 +1317,27 @@ static func _faction_damage_modifier(
 				modifier *= 1.05
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
 				modifier *= 1.04
+		"faction_thornwake":
+			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+				modifier *= 1.07
+			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:
+				modifier *= 1.05
+			if int(battle.get("round", 1)) >= 4 and _side_defending_count(battle, side) > 0:
+				modifier *= 1.04
+		"faction_brasshollow":
+			if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "battery_nest"]):
+				modifier *= 1.05
+			if is_ranged and attack_distance >= 2:
+				modifier *= 1.04
+			if _side_has_ability(battle, side, "shielding") and int(battle.get("round", 1)) >= 3:
+				modifier *= 1.04
+		"faction_veilmourn":
+			if _stack_is_isolated(battle, defender):
+				modifier *= 1.08
+			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+				modifier *= 1.06
+			if _battle_has_any_tags(battle, ["fog_bank", "ambush_cover"]) and not is_ranged:
+				modifier *= 1.05
 	return modifier
 
 static func _terrain_tag_damage_modifier(

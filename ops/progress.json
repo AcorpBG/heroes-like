@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T18:52:00Z",
+  "updatedAt": "2026-04-18T19:40:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "faction-bible-design-10184",
-  "currentSliceTitle": "Draft six-faction content bible",
+  "currentSliceId": "overworld-content-bible-10184",
+  "currentSliceTitle": "Define overworld biomes, objects, strategic buildings, and resources",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a design-only six-faction content bible in docs/factions-content-bible.md. It defines Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn with distinct fantasy, economy, map pressure, battle style, seven-tier unit ladders, ten hero concepts each, and signature buildings. AcOrP then reported River Pass manual gate passed on 2026-04-18, so this bible now acts as the source for selecting and implementing the two alpha factions rather than waiting on the old gate. Verification: python3 tests/validate_repo.py and git diff --check passed.",
+  "currentSliceNotes": "Drafted docs/overworld-content-bible.md after checking Heroes III map-editor wiki references for inspiration. The doc audits current repo reality, where scenario maps still only use grass/forest/water and resource sites only cover one-shot pickups, neutral dwellings, faction outposts, and frontier shrines. It defines the target biome roster, object families, resource logic, overworld-building grammar, scenario region recipes, and an implementation order for expanding the adventure map layer without pretending HoMM3-class breadth already exists. Verification: python3 tests/validate_repo.py and git diff --check passed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -32,7 +32,7 @@
       "id": "phase-2-playable-alpha-baseline",
       "title": "Playable alpha baseline with 2 fully realized factions",
       "status": "in_progress",
-      "focus": "Use the faction bible to select and deeply implement two alpha factions while keeping town/battle/overworld UX coherent enough for repeated manual play."
+      "focus": "Use the faction bible as the six-faction content scaffold source, then deepen selected alpha factions through scenario, town, battle, AI, save/load, and manual-play slices before claiming playability."
     },
     {
       "id": "phase-3-production-alpha-layer",
@@ -94,6 +94,18 @@
       "difficulty": "medium"
     },
     {
+      "id": "six-faction-content-scaffold",
+      "title": "Start real six-faction implementation with JSON content scaffolds and validation",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "overworld-content-bible",
+      "title": "Define overworld biomes, objects, buildings, and resource grammar",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -149,11 +161,11 @@
     }
   ],
   "nextActions": [
-    "Pick the two alpha factions from docs/factions-content-bible.md and freeze their implementation order.",
-    "Translate the selected alpha factions into implementation bundles across factions, heroes, units, towns, buildings, abilities/spells, AI tuning, and validation.",
+    "Turn the overworld content bible into concrete authored domains, starting with content/biomes.json and a wider map-object vocabulary.",
+    "Expand the adventure-map site families beyond one-shot pickups, neutral dwellings, faction outposts, and frontier shrines into mines, scouting structures, guarded reward sites, transit objects, and repeatable service buildings.",
+    "Integrate selected scaffold factions into scenario placements, army groups, encounters, overworld landmarks, AI fronts, and manual play notes.",
     "Capture a short parity-ledger note for River Pass recording AcOrP's passed manual gate so the milestone stays documented beyond chat history.",
-    "Keep fixing battle, town, and overworld friction that appears during repeated manual play instead of treating the passed gate as a polish-free finish line.",
-    "Avoid pretending six-faction breadth exists until at least two factions are deeply implemented and repeatedly playable."
+    "Avoid pretending HoMM3-class overworld breadth exists until richer biomes, objects, and repeated manual-play scenarios actually land."
   ],
   "blocked": false
 }

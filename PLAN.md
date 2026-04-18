@@ -26,26 +26,28 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Content-Design Slice: Six-Faction Content Bible
-Status: design baseline drafted; River Pass manual gating is reported passed by AcOrP, so two-faction alpha implementation is now unblocked.
+## Current Content Design Slice: Overworld Content Bible
+Status: design source drafted after the six-faction scaffold slice, with HoMM3 map-editor research used as inspiration rather than a copy target.
 
 Purpose:
-- Establish the target six-faction content direction before broad JSON expansion.
-- Preserve useful existing identities only where they pass the uniqueness test.
-- Make future faction work implementation-ready without claiming current playability.
+- Define the basic grammar for the adventure map layer: biomes, pickups, flaggable economy, dwellings, shrines, banks, route-control structures, blockers, transit, landmarks, and decoration sets.
+- Give future scenarios a stronger overworld vocabulary than the current narrow River Pass object set.
+- Keep biome and object expansion original, faction-aware, and production-minded.
 
-Design source:
+Design sources:
+- `docs/overworld-content-bible.md`
 - `docs/factions-content-bible.md`
 
 Hard constraints:
-- No commons: no generic fantasy filler units, names, or town identities as the foundation of a faction.
-- No shared faction template skeletons: each faction needs a distinct fantasy, economy, map pressure, battle plan, hero roster identity, town silhouette, and unit ladder feel.
-- The current live content remains partial. Embercourt, Mireclaw, and Sunvault are prototype implementations until migrated through complete vertical slices.
+- Do not turn the map into a generic HoMM clone object soup.
+- Terrain-specific silhouettes and route grammar should matter at least as much as reward tables.
+- Flaggable economy, scouting, transit, and guarded reward sites should be clearly separated from one-shot pickups.
+- New breadth must not be described as playable breadth until scenarios, AI, save/load, and manual play prove it.
 
 Acceptance criteria for this design slice:
-- Six total factions are defined.
-- Each faction has a theme pillar, mechanical identity, town/building identity, economy style, map pressure style, battle style, seven-tier unit ladder, at least ten hero concepts split across might and magic, and signature buildings.
-- The plan and progress tracker identify this as design-first work, not completed gameplay breadth.
+- The repo has a written design source for overworld biomes, map-object families, resource logic, strategic buildings, lane grammar, and implementation order.
+- The design explicitly audits the current narrow coverage and identifies what is still missing.
+- The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
@@ -221,22 +223,23 @@ Exit gate:
 - Do not begin Phase 2 until River Pass can be completed manually end-to-end and the blockers are documented or fixed.
 
 ## Phase 2: Playable Alpha Baseline
-Status: future, starts after Phase 1 exit gate.
+Status: active; River Pass gate has passed, and the first six-faction scaffold slice has started.
 
 Purpose:
 - Convert the single-scenario proof into a small playable alpha with real strategy loops.
-- Target two fully realized original factions before returning to wider faction count.
+- Deepen playable faction vertical slices while the broader six-faction content scaffold matures under validation.
 
 Scope:
-- 2 fully realized factions with distinct identity.
-- Alpha faction selection should use `docs/factions-content-bible.md` as the design pool, then freeze exactly two factions for implementation.
+- At least two deeply proven factions with distinct town, unit, hero, spell, battle, AI, and scenario identities before the alpha baseline can be called playable.
+- Six target factions may exist as scaffolded content, but no faction counts as complete until scenario placement, AI behavior, save/load, and manual play prove the loop.
 - Usable town, battle, and overworld UX.
 - Deeper units, spells, artifacts, map objects, hero growth, neutral encounters, and scenario scripting.
 - A small set of manually playable scenarios, not a broad campaign promise.
 
 Execution order:
-1. Choose the two alpha factions and freeze their identity targets.
-2. Define the alpha content matrix:
+1. Keep the six-faction scaffold honest with content validation and no playability claims.
+2. Select the first deep-play alpha faction pair or trio from the scaffold and freeze their implementation order.
+3. Define the alpha content matrix:
    - unit tiers
    - town buildings
    - recruit economy
@@ -246,31 +249,31 @@ Execution order:
    - map objects
    - neutral encounters
    - faction-specific battle hooks
-3. Repair overworld UX around the alpha loop.
+4. Repair overworld UX around the alpha loop.
    - map readability
    - movement and pathing
    - fog/scouting
    - site affordances
    - threat surfacing
    - end-turn clarity
-4. Repair town UX around the alpha loop.
+5. Repair town UX around the alpha loop.
    - build decisions
    - recruitment
    - garrison and transfer
    - spell learning where present
    - economy and affordability
    - town defense clarity
-5. Repair battle UX around the alpha loop.
+6. Repair battle UX around the alpha loop.
    - deployment and initiative clarity
    - stack identity
    - targeting
    - retaliation/ranged/melee expectations
    - spell and ability availability
    - win/loss consequences
-6. Build 3-5 alpha scenarios that can be manually completed.
-7. Add AI enough to contest the alpha scenarios without relying on scripted pressure only.
-8. Stabilize save/load across alpha loops.
-9. Run manual play passes, then add automated coverage for the issues found manually.
+7. Build 3-5 alpha scenarios that can be manually completed.
+8. Add AI enough to contest the alpha scenarios without relying on scripted pressure only.
+9. Stabilize save/load across alpha loops.
+10. Run manual play passes, then add automated coverage for the issues found manually.
 
 Acceptance criteria:
 - Two factions are playable with distinct town, unit, hero, spell, and battle identities.
@@ -324,14 +327,14 @@ Purpose:
 - Reach a broad, original fantasy strategy game package comparable in systemic breadth to the Heroes II era while remaining legally distinct.
 
 Scope targets:
-- Multiple original factions beyond the alpha two, with the six-faction bible as the target breadth source.
+- Multiple original factions beyond the manually proven alpha subset, with the six-faction scaffold as the target breadth source.
 - A meaningful roster of heroes, units, towns, spells, artifacts, neutral creatures, map objects, and handcrafted maps.
 - Campaign framework with several completable chapters.
 - Skirmish setup with meaningful map and faction choice.
 - AI that can operate adventure and battle loops across broader content.
 
 Execution order:
-1. Expand faction count only after alpha loops remain stable.
+1. Expand playable faction count only after alpha loops remain stable; scaffold records alone do not satisfy this phase.
 2. Add content in vertical bundles, not isolated JSON dumps.
    - faction data
    - town data

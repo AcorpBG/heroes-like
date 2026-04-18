@@ -597,9 +597,24 @@ static func recruitable_hero_ids(session: SessionStateStoreScript.SessionData) -
 		var hero_id := String(hero_id_value)
 		if hero_id == "" or controlled.has(hero_id):
 			continue
+		if not _hero_recruitable_for_scenario(hero_id, scenario):
+			continue
 		recruitable.append(hero_id)
 	recruitable.sort()
 	return recruitable
+
+static func _hero_recruitable_for_scenario(hero_id: String, scenario: Dictionary) -> bool:
+	var hero := ContentService.get_hero(hero_id)
+	if hero.is_empty():
+		return false
+	if String(hero.get("roster_state", "live")) != "scaffold":
+		return true
+	if bool(scenario.get("allow_scaffold_roster", false)):
+		return true
+	for start_id_value in scenario.get("hero_starts", []):
+		if String(start_id_value) == hero_id:
+			return true
+	return false
 
 static func primary_hero_from_overworld(overworld_state: Variant, primary_hero_id: String = "") -> Dictionary:
 	if overworld_state is Dictionary:

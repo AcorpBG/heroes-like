@@ -3,16 +3,28 @@
     {
       "id": "faction_embercourt",
       "name": "Embercourt League",
-      "identity_summary": "Disciplined riverwardens who turn civic investment into steady levy and archer musters.",
+      "identity_summary": "River charter courts that turn lockworks, beacon law, and civic fire into braced relief lines.",
       "economy": {
-        "base_income": {"gold": 60},
+        "base_income": {
+          "gold": 60
+        },
         "pressure_bonus": 0,
         "per_category_income": {
-          "civic": {"gold": 15},
-          "dwelling": {"gold": 20},
-          "economy": {"gold": 70},
-          "support": {"gold": 40},
-          "magic": {"gold": 20}
+          "civic": {
+            "gold": 15
+          },
+          "dwelling": {
+            "gold": 20
+          },
+          "economy": {
+            "gold": 70
+          },
+          "support": {
+            "gold": 40
+          },
+          "magic": {
+            "gold": 20
+          }
         }
       },
       "recruitment": {
@@ -20,12 +32,18 @@
         "growth_bonus": {
           "unit_river_guard": 1,
           "unit_ember_archer": 1,
-          "unit_citadel_pikeward": 1
+          "unit_citadel_pikeward": 1,
+          "unit_embercourt_fordhook_cadets": 1,
+          "unit_embercourt_lantern_sappers": 1,
+          "unit_embercourt_bargebow_crews": 1
         },
         "cost_discount_percent": {
           "unit_river_guard": 6,
           "unit_ember_archer": 7,
-          "unit_citadel_pikeward": 4
+          "unit_citadel_pikeward": 4,
+          "unit_embercourt_fordhook_cadets": 4,
+          "unit_embercourt_lantern_sappers": 4,
+          "unit_embercourt_bargebow_crews": 4
         }
       },
       "enemy_strategy": {
@@ -73,22 +91,93 @@
           "hero_hunt_weight": 0.8
         }
       },
-      "town_ids": ["town_riverwatch", "town_highwater_keep"],
-      "hero_ids": ["hero_lyra", "hero_caelen", "hero_mira", "hero_seren", "hero_torren"]
+      "town_ids": [
+        "town_riverwatch",
+        "town_highwater_keep"
+      ],
+      "hero_ids": [
+        "hero_lyra",
+        "hero_caelen",
+        "hero_mira",
+        "hero_seren",
+        "hero_torren",
+        "hero_embercourt_helva_tollbrand",
+        "hero_embercourt_saren_lockmaster",
+        "hero_embercourt_orra_cinderquill",
+        "hero_embercourt_belis_rainledger",
+        "hero_embercourt_jorun_beaconscribe"
+      ],
+      "bible_hero_ids": [
+        "hero_mira",
+        "hero_caelen",
+        "hero_torren",
+        "hero_embercourt_helva_tollbrand",
+        "hero_embercourt_saren_lockmaster",
+        "hero_lyra",
+        "hero_seren",
+        "hero_embercourt_orra_cinderquill",
+        "hero_embercourt_belis_rainledger",
+        "hero_embercourt_jorun_beaconscribe"
+      ],
+      "unit_ladder_ids": [
+        "unit_embercourt_fordhook_cadets",
+        "unit_embercourt_lantern_sappers",
+        "unit_embercourt_bargebow_crews",
+        "unit_embercourt_ash_oath_bailiffs",
+        "unit_embercourt_beacon_lectors",
+        "unit_embercourt_sluicefire_lindworms",
+        "unit_embercourt_charter_colossus"
+      ],
+      "signature_building_ids": [
+        "building_embercourt_granary_lock_exchange",
+        "building_embercourt_tollstone_weir",
+        "building_embercourt_bargebow_slip",
+        "building_embercourt_oath_pikehall",
+        "building_embercourt_beacon_court",
+        "building_embercourt_drake_sluice",
+        "building_embercourt_charter_bastion"
+      ],
+      "seed_town_id": "town_highwater_keep",
+      "design_pillars": {
+        "theme": "River charters, lockworks, beacon-fire civic war",
+        "economy_style": "Stable civic investment, readiness, and discounted prepared levies",
+        "map_pressure": "Secure crossings, signal relief, and punish overextension",
+        "battle_style": "Braced lines, counterfire, and late-order reserves",
+        "ladder_fingerprint": "line-control support-fire civic-siege anchor"
+      },
+      "content_status": {
+        "six_faction_loop": "scaffold_started",
+        "playability": "prototype_playable_partial_plus_scaffold",
+        "manual_play": "not_verified_for_six_faction_bundle",
+        "scenario_integration": "existing_legacy_scenarios_only"
+      }
     },
     {
       "id": "faction_mireclaw",
       "name": "Mireclaw Covenant",
-      "identity_summary": "Predatory marsh clans whose dens and warrens swell broad weekly raiding pools.",
+      "identity_summary": "Predatory bog clans that use ferry chains, drum law, and wounded-prey rituals to make the map unsafe.",
       "economy": {
-        "base_income": {"gold": 35, "wood": 1},
+        "base_income": {
+          "gold": 35,
+          "wood": 1
+        },
         "pressure_bonus": 2,
         "per_category_income": {
-          "civic": {"gold": 10},
-          "dwelling": {"gold": 36},
-          "economy": {"gold": 35},
-          "support": {"gold": 12},
-          "magic": {"gold": 12}
+          "civic": {
+            "gold": 10
+          },
+          "dwelling": {
+            "gold": 36
+          },
+          "economy": {
+            "gold": 35
+          },
+          "support": {
+            "gold": 12
+          },
+          "magic": {
+            "gold": 12
+          }
         }
       },
       "recruitment": {
@@ -97,13 +186,19 @@
           "unit_blackbranch_cutthroat": 2,
           "unit_mire_slinger": 2,
           "unit_bog_brute": 1,
-          "unit_gorefen_ripper": 1
+          "unit_gorefen_ripper": 1,
+          "unit_mireclaw_reedsnare_kin": 1,
+          "unit_mireclaw_mudglass_slingers": 1,
+          "unit_mireclaw_bogplate_maulers": 1
         },
         "cost_discount_percent": {
           "unit_blackbranch_cutthroat": 10,
           "unit_mire_slinger": 7,
           "unit_bog_brute": 4,
-          "unit_gorefen_ripper": 4
+          "unit_gorefen_ripper": 4,
+          "unit_mireclaw_reedsnare_kin": 4,
+          "unit_mireclaw_mudglass_slingers": 4,
+          "unit_mireclaw_bogplate_maulers": 4
         }
       },
       "enemy_strategy": {
@@ -158,21 +253,90 @@
         "town_reedbarrow_ferry",
         "town_nightglass_redoubt"
       ],
-      "hero_ids": ["hero_vaska", "hero_sable", "hero_tarn", "hero_orrik"]
+      "hero_ids": [
+        "hero_vaska",
+        "hero_sable",
+        "hero_tarn",
+        "hero_orrik",
+        "hero_mireclaw_kessa_chainboom",
+        "hero_mireclaw_brakka_mudkeel",
+        "hero_mireclaw_nix_votivejaw",
+        "hero_mireclaw_edda_rotlamp",
+        "hero_mireclaw_pell_reedscript",
+        "hero_mireclaw_zhorra_fenwake"
+      ],
+      "bible_hero_ids": [
+        "hero_vaska",
+        "hero_tarn",
+        "hero_orrik",
+        "hero_mireclaw_kessa_chainboom",
+        "hero_mireclaw_brakka_mudkeel",
+        "hero_sable",
+        "hero_mireclaw_nix_votivejaw",
+        "hero_mireclaw_edda_rotlamp",
+        "hero_mireclaw_pell_reedscript",
+        "hero_mireclaw_zhorra_fenwake"
+      ],
+      "unit_ladder_ids": [
+        "unit_mireclaw_reedsnare_kin",
+        "unit_mireclaw_mudglass_slingers",
+        "unit_mireclaw_bogplate_maulers",
+        "unit_mireclaw_ferrychain_lashers",
+        "unit_mireclaw_sporewake_chanters",
+        "unit_mireclaw_gorefen_rippers",
+        "unit_mireclaw_drowned_antler_sovereign"
+      ],
+      "signature_building_ids": [
+        "building_mireclaw_blackbranch_den",
+        "building_mireclaw_chainboom_ferry",
+        "building_mireclaw_war_drum_circle",
+        "building_mireclaw_sporewake_shrine",
+        "building_mireclaw_floodtide_forge",
+        "building_mireclaw_nightglass_dominion",
+        "building_mireclaw_antler_pit"
+      ],
+      "seed_town_id": "town_nightglass_redoubt",
+      "design_pillars": {
+        "theme": "Predatory bog clans, ferry chains, and drum oaths",
+        "economy_style": "Low safe income, high growth, raid spoils, and den replacement",
+        "map_pressure": "Multi-lane raids, site denial, and wounded-prey pressure",
+        "battle_style": "Harried targets, finishers, attrition, and ambushes",
+        "ladder_fingerprint": "swarm-pack control-support elite-finisher bog-apex"
+      },
+      "content_status": {
+        "six_faction_loop": "scaffold_started",
+        "playability": "prototype_playable_partial_plus_scaffold",
+        "manual_play": "not_verified_for_six_faction_bundle",
+        "scenario_integration": "existing_legacy_scenarios_only"
+      }
     },
     {
       "id": "faction_sunvault",
       "name": "Sunvault Compact",
-      "identity_summary": "Crystal-array wardens who turn layered spell support and prepared firing relays into resonant combined-arms pushes.",
+      "identity_summary": "Crystal-array commanders who convert expensive relay infrastructure into prepared lanes and resonance timing.",
       "economy": {
-        "base_income": {"gold": 50, "ore": 1},
+        "base_income": {
+          "gold": 50,
+          "ore": 1
+        },
         "pressure_bonus": 1,
         "per_category_income": {
-          "civic": {"gold": 12},
-          "dwelling": {"gold": 24},
-          "economy": {"gold": 50, "ore": 1},
-          "support": {"gold": 36},
-          "magic": {"gold": 34}
+          "civic": {
+            "gold": 12
+          },
+          "dwelling": {
+            "gold": 24
+          },
+          "economy": {
+            "gold": 50,
+            "ore": 1
+          },
+          "support": {
+            "gold": 36
+          },
+          "magic": {
+            "gold": 34
+          }
         }
       },
       "recruitment": {
@@ -181,13 +345,19 @@
           "unit_shard_guard": 1,
           "unit_prism_adept": 1,
           "unit_mirror_duelist": 1,
-          "unit_aurora_ballista": 1
+          "unit_aurora_ballista": 1,
+          "unit_sunvault_shard_wardens": 1,
+          "unit_sunvault_prism_adepts": 1,
+          "unit_sunvault_mirror_duelists": 1
         },
         "cost_discount_percent": {
           "unit_shard_guard": 5,
           "unit_prism_adept": 6,
           "unit_mirror_duelist": 5,
-          "unit_aurora_ballista": 4
+          "unit_aurora_ballista": 4,
+          "unit_sunvault_shard_wardens": 4,
+          "unit_sunvault_prism_adepts": 4,
+          "unit_sunvault_mirror_duelists": 4
         }
       },
       "enemy_strategy": {
@@ -235,8 +405,488 @@
           "hero_hunt_weight": 0.75
         }
       },
-      "town_ids": ["town_prismhearth", "town_halo_spire"],
-      "hero_ids": ["hero_solera", "hero_neral", "hero_varis", "hero_thalen"]
+      "town_ids": [
+        "town_prismhearth",
+        "town_halo_spire"
+      ],
+      "hero_ids": [
+        "hero_solera",
+        "hero_neral",
+        "hero_varis",
+        "hero_thalen",
+        "hero_sunvault_ilyr_glassmarshal",
+        "hero_sunvault_dovan_lenscaptain",
+        "hero_sunvault_renn_facetlane",
+        "hero_sunvault_essa_daynote",
+        "hero_sunvault_calis_sunvein",
+        "hero_sunvault_mirro_halometer"
+      ],
+      "bible_hero_ids": [
+        "hero_solera",
+        "hero_varis",
+        "hero_sunvault_ilyr_glassmarshal",
+        "hero_sunvault_dovan_lenscaptain",
+        "hero_sunvault_renn_facetlane",
+        "hero_neral",
+        "hero_thalen",
+        "hero_sunvault_essa_daynote",
+        "hero_sunvault_calis_sunvein",
+        "hero_sunvault_mirro_halometer"
+      ],
+      "unit_ladder_ids": [
+        "unit_sunvault_shard_wardens",
+        "unit_sunvault_prism_adepts",
+        "unit_sunvault_mirror_duelists",
+        "unit_sunvault_resonant_choristers",
+        "unit_sunvault_solar_array_striders",
+        "unit_sunvault_aurora_ballistae",
+        "unit_sunvault_daybreak_colossus"
+      ],
+      "signature_building_ids": [
+        "building_sunvault_shard_yard",
+        "building_sunvault_lens_gallery",
+        "building_sunvault_mirror_forge",
+        "building_sunvault_harmonic_cloister",
+        "building_sunvault_zenith_observatory",
+        "building_sunvault_aurora_spire",
+        "building_sunvault_daybreak_matrix"
+      ],
+      "seed_town_id": "town_prismhearth",
+      "design_pillars": {
+        "theme": "Solar crystals, lens relays, and harmonic command",
+        "economy_style": "Ore-heavy quality economy, support buildings, and spell access",
+        "map_pressure": "Relay nodes, battery sightlines, and prepared fronts",
+        "battle_style": "Ranged lanes, shields, and resonance timing",
+        "ladder_fingerprint": "battery-line duel-support construct array-titan"
+      },
+      "content_status": {
+        "six_faction_loop": "scaffold_started",
+        "playability": "prototype_playable_partial_plus_scaffold",
+        "manual_play": "not_verified_for_six_faction_bundle",
+        "scenario_integration": "existing_legacy_scenarios_only"
+      }
+    },
+    {
+      "id": "faction_thornwake",
+      "name": "Thornwake Concord",
+      "identity_summary": "Migratory living orchards that spread root law, recovery zones, and bramble tolls through contested roads.",
+      "economy": {
+        "base_income": {
+          "gold": 42,
+          "wood": 2
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 34,
+            "wood": 1
+          },
+          "support": {
+            "gold": 18
+          },
+          "magic": {
+            "gold": 16
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 3,
+        "growth_bonus": {
+          "unit_thornwake_seedcutters": 2,
+          "unit_thornwake_thornwhip_carriers": 1,
+          "unit_thornwake_sporeglass_menders": 1
+        },
+        "cost_discount_percent": {
+          "unit_thornwake_seedcutters": 8,
+          "unit_thornwake_thornwhip_carriers": 6,
+          "unit_thornwake_sporeglass_menders": 5
+        }
+      },
+      "enemy_strategy": {
+        "build_category_weights": {
+          "civic": 0.9,
+          "dwelling": 1.1,
+          "economy": 1.25,
+          "support": 1.35,
+          "magic": 0.95
+        },
+        "build_value_weights": {
+          "income": 0.9,
+          "growth": 1.35,
+          "quality": 1.0,
+          "readiness": 1.1,
+          "pressure": 1.2
+        },
+        "raid_target_weights": {
+          "town": 0.8,
+          "resource": 1.05,
+          "artifact": 0.85,
+          "encounter": 1.2,
+          "hero": 0.75
+        },
+        "site_family_weights": {
+          "neutral_dwelling": 1.25,
+          "faction_outpost": 1.15,
+          "frontier_shrine": 1.1
+        },
+        "reinforcement": {
+          "garrison_bias": 1.2,
+          "raid_bias": 0.75,
+          "ranged_weight": 0.75,
+          "melee_weight": 1.25,
+          "low_tier_weight": 1.1,
+          "high_tier_weight": 1.0
+        },
+        "raid": {
+          "threshold_scale": 1.2,
+          "max_active_bonus": 0,
+          "pressure_commitment_scale": 1.15,
+          "objective_weight": 1.15,
+          "town_siege_weight": 1.05,
+          "site_denial_weight": 1.25,
+          "hero_hunt_weight": 0.7
+        }
+      },
+      "town_ids": [
+        "town_thornwake_graftroot_caravan"
+      ],
+      "hero_ids": [
+        "hero_thornwake_ardren_briarmarshal",
+        "hero_thornwake_tova_rootwright",
+        "hero_thornwake_halen_thorncart",
+        "hero_thornwake_merek_greenbarrow",
+        "hero_thornwake_silsa_bramblehound",
+        "hero_thornwake_veyra_seedseer",
+        "hero_thornwake_osmund_pollenglass",
+        "hero_thornwake_elian_loamchant",
+        "hero_thornwake_ralka_mossvein",
+        "hero_thornwake_nara_graftsibyl"
+      ],
+      "bible_hero_ids": [
+        "hero_thornwake_ardren_briarmarshal",
+        "hero_thornwake_tova_rootwright",
+        "hero_thornwake_halen_thorncart",
+        "hero_thornwake_merek_greenbarrow",
+        "hero_thornwake_silsa_bramblehound",
+        "hero_thornwake_veyra_seedseer",
+        "hero_thornwake_osmund_pollenglass",
+        "hero_thornwake_elian_loamchant",
+        "hero_thornwake_ralka_mossvein",
+        "hero_thornwake_nara_graftsibyl"
+      ],
+      "unit_ladder_ids": [
+        "unit_thornwake_seedcutters",
+        "unit_thornwake_thornwhip_carriers",
+        "unit_thornwake_sporeglass_menders",
+        "unit_thornwake_barkmantle_rams",
+        "unit_thornwake_stagknot_runners",
+        "unit_thornwake_graft_matriarchs",
+        "unit_thornwake_worldroot_bastion"
+      ],
+      "signature_building_ids": [
+        "building_thornwake_seed_vault",
+        "building_thornwake_bramble_toll",
+        "building_thornwake_sporeglass_hothouse",
+        "building_thornwake_barkmantle_run",
+        "building_thornwake_pilgrim_orchard",
+        "building_thornwake_graftworks",
+        "building_thornwake_worldroot_gate"
+      ],
+      "seed_town_id": "town_thornwake_graftroot_caravan",
+      "design_pillars": {
+        "theme": "Migratory living orchards, grafted pilgrims, and root law",
+        "economy_style": "Site-rooted growth, wood pressure, and slow gold",
+        "map_pressure": "Root roads, deny movement, and recover through nurseries",
+        "battle_style": "Terrain growth, regeneration, binds, and grind",
+        "ladder_fingerprint": "denial-regrowth support-graft mobile-beast rooted-bastion"
+      },
+      "content_status": {
+        "six_faction_loop": "scaffold_started",
+        "playability": "content_scaffold_not_playable",
+        "manual_play": "not_verified_for_six_faction_bundle",
+        "scenario_integration": "not_started"
+      }
+    },
+    {
+      "id": "faction_brasshollow",
+      "name": "Brasshollow Combine",
+      "identity_summary": "Furnace-contract foundries that convert ore, debt, and pressure rails into stubborn machines and siege power.",
+      "economy": {
+        "base_income": {
+          "gold": 48,
+          "ore": 2
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 45,
+            "ore": 1
+          },
+          "support": {
+            "gold": 28
+          },
+          "dwelling": {
+            "gold": 16
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_brasshollow_scrip_haulers": 1,
+          "unit_brasshollow_rivet_hounds": 1,
+          "unit_brasshollow_furnace_pavis_teams": 1
+        },
+        "cost_discount_percent": {
+          "unit_brasshollow_scrip_haulers": 5,
+          "unit_brasshollow_rivet_hounds": 4,
+          "unit_brasshollow_furnace_pavis_teams": 4
+        }
+      },
+      "enemy_strategy": {
+        "build_category_weights": {
+          "civic": 1.05,
+          "dwelling": 0.85,
+          "economy": 1.4,
+          "support": 1.3,
+          "magic": 0.9
+        },
+        "build_value_weights": {
+          "income": 1.25,
+          "growth": 0.75,
+          "quality": 1.35,
+          "readiness": 1.0,
+          "pressure": 0.95
+        },
+        "raid_target_weights": {
+          "town": 1.25,
+          "resource": 1.35,
+          "artifact": 0.75,
+          "encounter": 0.85,
+          "hero": 0.65
+        },
+        "site_family_weights": {
+          "neutral_dwelling": 0.8,
+          "faction_outpost": 1.4,
+          "frontier_shrine": 0.75
+        },
+        "reinforcement": {
+          "garrison_bias": 1.3,
+          "raid_bias": 0.8,
+          "ranged_weight": 1.15,
+          "melee_weight": 1.2,
+          "low_tier_weight": 0.75,
+          "high_tier_weight": 1.35
+        },
+        "raid": {
+          "threshold_scale": 1.25,
+          "max_active_bonus": 0,
+          "pressure_commitment_scale": 1.25,
+          "objective_weight": 1.2,
+          "town_siege_weight": 1.4,
+          "site_denial_weight": 1.0,
+          "hero_hunt_weight": 0.6
+        }
+      },
+      "town_ids": [
+        "town_brasshollow_orevein_gantry"
+      ],
+      "hero_ids": [
+        "hero_brasshollow_marka_ironclause",
+        "hero_brasshollow_oren_bellfounder",
+        "hero_brasshollow_kuld_varn",
+        "hero_brasshollow_selka_pitmarshal",
+        "hero_brasshollow_daxis_chaincaptain",
+        "hero_brasshollow_vellum_quench",
+        "hero_brasshollow_odrik_heatpriest",
+        "hero_brasshollow_lina_gaugesavant",
+        "hero_brasshollow_harro_debtrune",
+        "hero_brasshollow_pava_ashmeter"
+      ],
+      "bible_hero_ids": [
+        "hero_brasshollow_marka_ironclause",
+        "hero_brasshollow_oren_bellfounder",
+        "hero_brasshollow_kuld_varn",
+        "hero_brasshollow_selka_pitmarshal",
+        "hero_brasshollow_daxis_chaincaptain",
+        "hero_brasshollow_vellum_quench",
+        "hero_brasshollow_odrik_heatpriest",
+        "hero_brasshollow_lina_gaugesavant",
+        "hero_brasshollow_harro_debtrune",
+        "hero_brasshollow_pava_ashmeter"
+      ],
+      "unit_ladder_ids": [
+        "unit_brasshollow_scrip_haulers",
+        "unit_brasshollow_rivet_hounds",
+        "unit_brasshollow_furnace_pavis_teams",
+        "unit_brasshollow_boiler_rivetcasters",
+        "unit_brasshollow_debt_engine_exactors",
+        "unit_brasshollow_crucible_crawlers",
+        "unit_brasshollow_foundry_saint"
+      ],
+      "signature_building_ids": [
+        "building_brasshollow_ore_tithe_office",
+        "building_brasshollow_rivet_kennels",
+        "building_brasshollow_pavis_foundry",
+        "building_brasshollow_boiler_cathedral",
+        "building_brasshollow_pressure_rail",
+        "building_brasshollow_crucible_dock",
+        "building_brasshollow_titan_charter_hall"
+      ],
+      "seed_town_id": "town_brasshollow_orevein_gantry",
+      "design_pillars": {
+        "theme": "Furnace contracts, pressure rails, and brass debt engines",
+        "economy_style": "Ore and capital projects, expensive low growth",
+        "map_pressure": "Mining camps, siege staging, and resource exhaustion",
+        "battle_style": "Armor, heat bursts, artillery, and repair windows",
+        "ladder_fingerprint": "machine-skirmish armored-line pressure-artillery foundry-saint"
+      },
+      "content_status": {
+        "six_faction_loop": "scaffold_started",
+        "playability": "content_scaffold_not_playable",
+        "manual_play": "not_verified_for_six_faction_bundle",
+        "scenario_integration": "not_started"
+      }
+    },
+    {
+      "id": "faction_veilmourn",
+      "name": "Veilmourn Armada",
+      "identity_summary": "Fog-bound funeral fleets that steal routes, salvage memory, and strike where maps claim no passage exists.",
+      "economy": {
+        "base_income": {
+          "gold": 38,
+          "wood": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 28
+          },
+          "magic": {
+            "gold": 26
+          },
+          "support": {
+            "gold": 18
+          }
+        }
+      },
+      "recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_veilmourn_bellwake_oars": 2,
+          "unit_veilmourn_mourning_lanterns": 1,
+          "unit_veilmourn_maskglass_corsairs": 1
+        },
+        "cost_discount_percent": {
+          "unit_veilmourn_bellwake_oars": 8,
+          "unit_veilmourn_mourning_lanterns": 6,
+          "unit_veilmourn_maskglass_corsairs": 5
+        }
+      },
+      "enemy_strategy": {
+        "build_category_weights": {
+          "civic": 0.75,
+          "dwelling": 1.0,
+          "economy": 1.15,
+          "support": 1.3,
+          "magic": 1.2
+        },
+        "build_value_weights": {
+          "income": 0.95,
+          "growth": 0.9,
+          "quality": 1.05,
+          "readiness": 0.85,
+          "pressure": 1.45
+        },
+        "raid_target_weights": {
+          "town": 0.75,
+          "resource": 1.15,
+          "artifact": 1.35,
+          "encounter": 1.05,
+          "hero": 1.3
+        },
+        "site_family_weights": {
+          "neutral_dwelling": 0.9,
+          "faction_outpost": 1.1,
+          "frontier_shrine": 1.45
+        },
+        "reinforcement": {
+          "garrison_bias": 0.8,
+          "raid_bias": 1.35,
+          "ranged_weight": 1.05,
+          "melee_weight": 1.1,
+          "low_tier_weight": 1.05,
+          "high_tier_weight": 1.1
+        },
+        "raid": {
+          "threshold_scale": 0.9,
+          "max_active_bonus": 1,
+          "pressure_commitment_scale": 0.9,
+          "objective_weight": 1.05,
+          "town_siege_weight": 0.75,
+          "site_denial_weight": 1.25,
+          "hero_hunt_weight": 1.35
+        }
+      },
+      "town_ids": [
+        "town_veilmourn_bellwake_harbor"
+      ],
+      "hero_ids": [
+        "hero_veilmourn_ivara_blacktide",
+        "hero_veilmourn_ruln_vanehook",
+        "hero_veilmourn_cela_mistcorsair",
+        "hero_veilmourn_damar_oriflag",
+        "hero_veilmourn_jessa_keelwarden",
+        "hero_veilmourn_morwen_wakeoracle",
+        "hero_veilmourn_thir_obituaryink",
+        "hero_veilmourn_sael_mirrorbell",
+        "hero_veilmourn_nacre_vowless",
+        "hero_veilmourn_orso_nightchart"
+      ],
+      "bible_hero_ids": [
+        "hero_veilmourn_ivara_blacktide",
+        "hero_veilmourn_ruln_vanehook",
+        "hero_veilmourn_cela_mistcorsair",
+        "hero_veilmourn_damar_oriflag",
+        "hero_veilmourn_jessa_keelwarden",
+        "hero_veilmourn_morwen_wakeoracle",
+        "hero_veilmourn_thir_obituaryink",
+        "hero_veilmourn_sael_mirrorbell",
+        "hero_veilmourn_nacre_vowless",
+        "hero_veilmourn_orso_nightchart"
+      ],
+      "unit_ladder_ids": [
+        "unit_veilmourn_bellwake_oars",
+        "unit_veilmourn_mourning_lanterns",
+        "unit_veilmourn_maskglass_corsairs",
+        "unit_veilmourn_undertow_harpooners",
+        "unit_veilmourn_obituary_scribes",
+        "unit_veilmourn_mirrorkeel_reavers",
+        "unit_veilmourn_fogbound_leviathan"
+      ],
+      "signature_building_ids": [
+        "building_veilmourn_bell_harbor",
+        "building_veilmourn_ransom_exchange",
+        "building_veilmourn_mirror_drydock",
+        "building_veilmourn_harpoon_gantry",
+        "building_veilmourn_obituary_vault",
+        "building_veilmourn_mistgate_slip",
+        "building_veilmourn_leviathan_sounding"
+      ],
+      "seed_town_id": "town_veilmourn_bellwake_harbor",
+      "design_pillars": {
+        "theme": "Fog-bound funeral fleets, memory piracy, and mirror charts",
+        "economy_style": "Salvage, scouting rewards, and uneven income spikes",
+        "map_pressure": "Fog lanes, bypass routes, and ambush backs",
+        "battle_style": "Displacement, blinds, morale drain, and isolation",
+        "ladder_fingerprint": "evasive-control debuff-support phase-raider fog-leviathan"
+      },
+      "content_status": {
+        "six_faction_loop": "scaffold_started",
+        "playability": "content_scaffold_not_playable",
+        "manual_play": "not_verified_for_six_faction_bundle",
+        "scenario_integration": "not_started"
+      }
     }
   ]
 }

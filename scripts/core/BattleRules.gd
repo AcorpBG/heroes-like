@@ -6457,6 +6457,27 @@ static func _faction_damage_modifier(
 				modifier *= 1.05
 			if is_ranged and _battle_has_any_tags(battle, ["elevated_fire", "open_lane"]) and positive_effect_count > 0:
 				modifier *= 1.04
+		"faction_thornwake":
+			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+				modifier *= 1.07
+			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover", "fortified_line"]) and not is_ranged:
+				modifier *= 1.05
+			if int(battle.get("round", 1)) >= 4 and _side_defending_count(battle, side) > 0:
+				modifier *= 1.04
+		"faction_brasshollow":
+			if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure", "battery_nest"]):
+				modifier *= 1.05
+			if is_ranged and attack_distance >= 2:
+				modifier *= 1.04
+			if _side_has_ability(battle, side, "shielding") and int(battle.get("round", 1)) >= 3:
+				modifier *= 1.04
+		"faction_veilmourn":
+			if _stack_is_isolated(battle, defender):
+				modifier *= 1.08
+			if SpellRulesScript.has_any_effect_ids(defender, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+				modifier *= 1.06
+			if _battle_has_any_tags(battle, ["fog_bank", "ambush_cover"]) and not is_ranged:
+				modifier *= 1.05
 	return modifier
 
 static func _terrain_tag_damage_modifier(
@@ -7819,6 +7840,27 @@ static func _faction_initiative_bonus(stack: Dictionary, battle: Dictionary) -> 
 			if int(battle.get("round", 1)) >= 3 and positive_effect_count >= 2:
 				bonus += 1
 			return bonus
+		"faction_thornwake":
+			var bonus = 0
+			if bool(stack.get("defending", false)) and int(battle.get("round", 1)) >= 3:
+				bonus += 1
+			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover"]) and SpellRulesScript.has_any_effect_ids(stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]) == false:
+				bonus += 1
+			return bonus
+		"faction_brasshollow":
+			var bonus = 0
+			if _side_has_ability(battle, side, "formation_guard") and int(battle.get("round", 1)) >= 3:
+				bonus += 1
+			if bool(stack.get("ranged", false)) and _battle_has_any_tags(battle, ["fortress_lane", "battery_nest"]):
+				bonus += 1
+			return bonus
+		"faction_veilmourn":
+			var bonus = 0
+			if _battle_has_any_tags(battle, ["fog_bank", "ambush_cover"]):
+				bonus += 1
+			if _stack_is_isolated(battle, stack):
+				bonus += 1
+			return bonus
 		_:
 			return 0
 
@@ -8134,6 +8176,30 @@ static func _side_doctrine_summary(battle: Dictionary, side: String) -> String:
 			if positive_effect_count >= 1:
 				return "A resonant array is coming online"
 			return "The array is still gathering signal"
+		"faction_thornwake":
+			if _battle_has_any_tags(battle, ["chokepoint", "ambush_cover"]) and _side_defending_count(battle, side) > 0:
+				return "Rooted lanes are turning the fight into a slow bramble grind"
+			if _side_has_ability(battle, side, "formation_guard"):
+				return "Graft leaders are holding the regrowth line together"
+			if int(battle.get("round", 1)) >= 4:
+				return "The battlefield is starting to root around the fight"
+			return "Seed carriers are looking for ground to claim"
+		"faction_brasshollow":
+			if _battle_has_any_tags(battle, ["fortress_lane", "wall_pressure"]) and _side_has_ability(battle, side, "shielding"):
+				return "Foundry armor is turning the lane into a siege stage"
+			if _side_has_ability(battle, side, "volley"):
+				return "Boiler crews are setting pressure shots behind the line"
+			if int(battle.get("round", 1)) >= 3:
+				return "Heat and contract pressure are building"
+			return "The engines are still coming up to pressure"
+		"faction_veilmourn":
+			if _battle_has_any_tags(battle, ["fog_bank", "ambush_cover"]) and _side_has_ability(battle, side, "backstab"):
+				return "Fog lanes are opening routes into the enemy back"
+			if _enemy_wounded_count(battle, side) > 0:
+				return "Marked victims are losing their clean exits"
+			if _side_has_ability(battle, side, "harry"):
+				return "Lantern marks are testing the enemy formation"
+			return "The fog fleet is measuring the first hidden route"
 		_:
 			return "No doctrine is asserting itself"
 

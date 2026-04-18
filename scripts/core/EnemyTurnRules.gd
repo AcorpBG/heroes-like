@@ -1236,6 +1236,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 					return "Wounded warbands are slipping back into the reeds to regroup"
 				"faction_sunvault":
 					return "Relay commanders are recalibrating after the last exchange"
+				"faction_thornwake":
+					return "Graftwardens are regrowing lanes after the last clash"
+				"faction_brasshollow":
+					return "Foundry officers are cooling engines before the next contract push"
+				"faction_veilmourn":
+					return "Black-sail crews are vanishing into fog to reset their routes"
 			return "Hostile commanders are regrouping before the next push"
 		"fortifying":
 			match faction_id:
@@ -1245,6 +1251,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 					return "Stockades are beating the drums for a local stand"
 				"faction_sunvault":
 					return "Relay keeps are locking into prepared firing lines"
+				"faction_thornwake":
+					return "Root towns are thickening bramble roads around the walls"
+				"faction_brasshollow":
+					return "Foundries are plating the wall engines for a hard stand"
+				"faction_veilmourn":
+					return "Bell harbors are masking their docks behind fresh fog"
 			return "Border towns are pulling fresh troops onto the walls"
 		"raiding":
 			match faction_id:
@@ -1254,6 +1266,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 					return "Warbands are spilling forward in staggered packs"
 				"faction_sunvault":
 					return "Compact sorties are testing the frontier behind relay screens"
+				"faction_thornwake":
+					return "Root pilgrims are spreading bramble tolls onto the frontier"
+				"faction_brasshollow":
+					return "Contract columns are rolling engines toward production sites"
+				"faction_veilmourn":
+					return "Black-sail raiders are slipping through fog lanes toward weak backs"
 			return "Field hosts are driving raids into the frontier"
 		"massing":
 			if int(state.get("pressure", 0)) >= raid_threshold * 2:
@@ -1264,6 +1282,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 						return "A deeper mire surge is gathering in the reeds"
 					"faction_sunvault":
 						return "Another calibrated battery strike is aligning behind the front"
+					"faction_thornwake":
+						return "A rooted nursery front is spreading behind the roads"
+					"faction_brasshollow":
+						return "A heavy foundry assault is staging behind the railhead"
+					"faction_veilmourn":
+						return "A deeper fog wake is gathering beyond the charted routes"
 				return "A heavier strike is gathering behind the lines"
 			match faction_id:
 				"faction_embercourt":
@@ -1272,6 +1296,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 					return "Fresh cutters are massing for another sudden push"
 				"faction_sunvault":
 					return "Arrays are lining up for another focused push"
+				"faction_thornwake":
+					return "Graft hosts are massing around newly rooted roads"
+				"faction_brasshollow":
+					return "Boiler crews are massing for another siege-stage push"
+				"faction_veilmourn":
+					return "Mist crews are massing around a hidden approach"
 			return "War bands are massing for another strike"
 		"collapsed":
 			return "The hostile empire has lost its strongholds"
@@ -1283,6 +1313,12 @@ static func _public_posture_label(state: Dictionary, raid_threshold: int, factio
 					return "Scouts report mire runners probing for soft targets"
 				"faction_sunvault":
 					return "Scouts report relay pickets calibrating the approaches"
+				"faction_thornwake":
+					return "Scouts report root pilgrims seeding the approaches"
+				"faction_brasshollow":
+					return "Scouts report ore contracts and pressure gauges moving forward"
+				"faction_veilmourn":
+					return "Scouts report bell wakes sounding from unseen routes"
 			return "Scouts report patrols probing for openings"
 
 static func _first_open_spawn_point(session: SessionStateStoreScript.SessionData, config: Dictionary) -> Dictionary:

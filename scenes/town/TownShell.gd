@@ -819,5 +819,11 @@ func _faction_accent() -> Color:
 			return Color(0.52, 0.74, 0.43, 1.0)
 		"faction_sunvault":
 			return Color(0.89, 0.77, 0.36, 1.0)
+		"faction_thornwake":
+			return Color(0.54, 0.70, 0.40, 1.0)
+		"faction_brasshollow":
+			return Color(0.76, 0.57, 0.34, 1.0)
+		"faction_veilmourn":
+			return Color(0.50, 0.62, 0.72, 1.0)
 		_:
 			return Color(0.88, 0.72, 0.40, 1.0)
