@@ -11,6 +11,8 @@ const ARMY_GROUPS_PATH := "%s/army_groups.json" % CONTENT_DIR
 const TOWNS_PATH := "%s/towns.json" % CONTENT_DIR
 const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
 const RESOURCE_SITES_PATH := "%s/resource_sites.json" % CONTENT_DIR
+const BIOMES_PATH := "%s/biomes.json" % CONTENT_DIR
+const MAP_OBJECTS_PATH := "%s/map_objects.json" % CONTENT_DIR
 const ARTIFACTS_PATH := "%s/artifacts.json" % CONTENT_DIR
 const SPELLS_PATH := "%s/spells.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
@@ -93,6 +95,23 @@ func get_building(id: String) -> Dictionary:
 func get_resource_site(id: String) -> Dictionary:
 	return get_content_by_id(RESOURCE_SITES_PATH, id)
 
+func get_biome(id: String) -> Dictionary:
+	return get_content_by_id(BIOMES_PATH, id)
+
+func get_biome_for_terrain(terrain_id: String) -> Dictionary:
+	var normalized_terrain := String(terrain_id)
+	if normalized_terrain == "":
+		return {}
+	for biome in _items_from_raw(load_json(BIOMES_PATH)):
+		if not (biome is Dictionary):
+			continue
+		if normalized_terrain in biome.get("map_tile_ids", []):
+			return biome
+	return {}
+
+func get_map_object(id: String) -> Dictionary:
+	return get_content_by_id(MAP_OBJECTS_PATH, id)
+
 func get_artifact(id: String) -> Dictionary:
 	return get_content_by_id(ARTIFACTS_PATH, id)
 
@@ -136,12 +155,20 @@ func _validate_content() -> void:
 	var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
 	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
 	var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
+	var biome_index := _index_items(_items_from_raw(load_json(BIOMES_PATH)))
+	var map_object_index := _index_items(_items_from_raw(load_json(MAP_OBJECTS_PATH)))
 	var artifact_index := _index_items(_items_from_raw(load_json(ARTIFACTS_PATH)))
 	var spell_index := _index_items(_items_from_raw(load_json(SPELLS_PATH)))
 	var campaign_index := _index_items(_items_from_raw(load_json(CAMPAIGNS_PATH)))
 	var encounter_index := _index_items(_items_from_raw(load_json(ENCOUNTERS_PATH)))
 	var scenario_index := _index_items(_items_from_raw(load_json(SCENARIOS_PATH)))
 
+	for biome in biome_index.values():
+		_validate_biome(biome)
+	for resource_site in resource_site_index.values():
+		_validate_resource_site(resource_site, unit_index, spell_index)
+	for map_object in map_object_index.values():
+		_validate_map_object(map_object, biome_index, resource_site_index, faction_index)
 	for faction in faction_index.values():
 		_validate_faction(faction, town_index, hero_index)
 	for hero in hero_index.values():
@@ -175,6 +202,165 @@ func _validate_content() -> void:
 		)
 	for campaign in campaign_index.values():
 		_validate_campaign(campaign, scenario_index)
+
+func _supported_resource_site_families() -> Array:
+	return [
+		"one_shot_pickup",
+		"mine",
+		"neutral_dwelling",
+		"faction_outpost",
+		"frontier_shrine",
+		"guarded_reward_site",
+		"scouting_structure",
+		"transit_object",
+		"repeatable_service",
+	]
+
+func _supported_map_object_families() -> Array:
+	return [
+		"pickup",
+		"mine",
+		"neutral_dwelling",
+		"shrine",
+		"guarded_reward_site",
+		"scouting_structure",
+		"transit_object",
+		"repeatable_service",
+		"blocker",
+		"decoration",
+		"faction_landmark",
+	]
+
+func _validate_biome(biome: Dictionary) -> void:
+	var biome_id := String(biome.get("id", ""))
+	if String(biome.get("name", "")) == "":
+		push_warning("Biome %s must define a name." % biome_id)
+	var map_tile_ids = biome.get("map_tile_ids", [])
+	if not (map_tile_ids is Array) or map_tile_ids.is_empty():
+		push_warning("Biome %s must define at least one map_tile_id." % biome_id)
+	elif map_tile_ids is Array:
+		for tile_id_value in map_tile_ids:
+			if String(tile_id_value) == "":
+				push_warning("Biome %s cannot contain an empty map_tile_id." % biome_id)
+	if int(biome.get("movement_cost", 0)) <= 0:
+		push_warning("Biome %s must define movement_cost > 0." % biome_id)
+	if not biome.has("passable"):
+		push_warning("Biome %s must explicitly define passable." % biome_id)
+	for family_id_value in biome.get("allowed_site_families", []):
+		var family_id := String(family_id_value)
+		if family_id != "" and family_id not in _supported_resource_site_families():
+			push_warning("Biome %s references unsupported site family %s." % [biome_id, family_id])
+	for list_key in ["encounter_palette_tags", "decoration_palette", "blocker_palette", "route_roles"]:
+		var values = biome.get(list_key, [])
+		if not (values is Array) or values.is_empty():
+			push_warning("Biome %s must define non-empty %s." % [biome_id, list_key])
+
+func _validate_resource_site(site: Dictionary, unit_index: Dictionary, spell_index: Dictionary) -> void:
+	var site_id := String(site.get("id", ""))
+	if String(site.get("name", "")) == "":
+		push_warning("Resource site %s must define a name." % site_id)
+	var family := String(site.get("family", "one_shot_pickup"))
+	if family == "":
+		family = "one_shot_pickup"
+	if family not in _supported_resource_site_families():
+		push_warning("Resource site %s uses unsupported family %s." % [site_id, family])
+
+	for resource_key in ["rewards", "claim_rewards", "control_income", "service_cost"]:
+		var resources = site.get(resource_key, {})
+		if site.has(resource_key) and not (resources is Dictionary):
+			push_warning("Resource site %s %s must be a dictionary." % [site_id, resource_key])
+		elif resources is Dictionary:
+			for key in resources.keys():
+				if String(key) == "":
+					push_warning("Resource site %s %s cannot contain an empty resource key." % [site_id, resource_key])
+				if int(resources[key]) < 0:
+					push_warning("Resource site %s %s values must be >= 0 for %s." % [site_id, resource_key, String(key)])
+
+	for recruit_key in ["claim_recruits", "weekly_recruits"]:
+		var recruits = site.get(recruit_key, {})
+		if site.has(recruit_key) and not (recruits is Dictionary):
+			push_warning("Resource site %s %s must be a dictionary." % [site_id, recruit_key])
+		elif recruits is Dictionary:
+			for unit_id_value in recruits.keys():
+				var unit_id := String(unit_id_value)
+				if unit_id == "" or not unit_index.has(unit_id):
+					push_warning("Resource site %s references missing unit %s." % [site_id, unit_id])
+				if int(recruits[unit_id_value]) <= 0:
+					push_warning("Resource site %s %s must define positive recruit counts for %s." % [site_id, recruit_key, unit_id])
+
+	var spell_id := String(site.get("learn_spell_id", ""))
+	if spell_id != "":
+		if not spell_index.has(spell_id):
+			push_warning("Resource site %s references missing learn_spell_id %s." % [site_id, spell_id])
+		elif String(spell_index.get(spell_id, {}).get("context", "")) != "overworld":
+			push_warning("Resource site %s learn_spell_id %s must be an overworld spell." % [site_id, spell_id])
+
+	match family:
+		"mine":
+			if not bool(site.get("persistent_control", false)):
+				push_warning("Mine site %s must be persistent-control content." % site_id)
+			if not (site.get("control_income", {}) is Dictionary) or site.get("control_income", {}).is_empty():
+				push_warning("Mine site %s must define control_income." % site_id)
+		"scouting_structure":
+			if not bool(site.get("persistent_control", false)):
+				push_warning("Scouting site %s must be persistent-control content." % site_id)
+			if int(site.get("vision_radius", 0)) <= 0:
+				push_warning("Scouting site %s must define vision_radius > 0." % site_id)
+		"guarded_reward_site":
+			if not bool(site.get("guarded", false)):
+				push_warning("Guarded reward site %s must set guarded=true." % site_id)
+			var guard_profile = site.get("guard_profile", {})
+			if not (guard_profile is Dictionary) or guard_profile.is_empty():
+				push_warning("Guarded reward site %s must define guard_profile." % site_id)
+		"transit_object":
+			var transit_profile = site.get("transit_profile", {})
+			if not (transit_profile is Dictionary) or transit_profile.is_empty():
+				push_warning("Transit site %s must define transit_profile." % site_id)
+		"repeatable_service":
+			if not bool(site.get("repeatable", false)):
+				push_warning("Repeatable service site %s must set repeatable=true." % site_id)
+			if int(site.get("visit_cooldown_days", 0)) <= 0:
+				push_warning("Repeatable service site %s must define visit_cooldown_days > 0." % site_id)
+
+func _validate_map_object(
+	map_object: Dictionary,
+	biome_index: Dictionary,
+	resource_site_index: Dictionary,
+	faction_index: Dictionary
+) -> void:
+	var object_id := String(map_object.get("id", ""))
+	if String(map_object.get("name", "")) == "":
+		push_warning("Map object %s must define a name." % object_id)
+	var family := String(map_object.get("family", ""))
+	if family == "" or family not in _supported_map_object_families():
+		push_warning("Map object %s uses unsupported family %s." % [object_id, family])
+	var biome_ids = map_object.get("biome_ids", [])
+	if not (biome_ids is Array) or biome_ids.is_empty():
+		push_warning("Map object %s must define at least one biome_id." % object_id)
+	elif biome_ids is Array:
+		for biome_id_value in biome_ids:
+			var biome_id := String(biome_id_value)
+			if biome_id == "" or not biome_index.has(biome_id):
+				push_warning("Map object %s references missing biome %s." % [object_id, biome_id])
+	var site_id := String(map_object.get("resource_site_id", ""))
+	if site_id != "" and not resource_site_index.has(site_id):
+		push_warning("Map object %s references missing resource_site_id %s." % [object_id, site_id])
+	var faction_id := String(map_object.get("faction_id", ""))
+	if faction_id != "" and not faction_index.has(faction_id):
+		push_warning("Map object %s references missing faction_id %s." % [object_id, faction_id])
+	var footprint = map_object.get("footprint", {})
+	if not (footprint is Dictionary):
+		push_warning("Map object %s must define a footprint dictionary." % object_id)
+	else:
+		if int(footprint.get("width", 0)) <= 0 or int(footprint.get("height", 0)) <= 0:
+			push_warning("Map object %s footprint dimensions must be > 0." % object_id)
+	if not map_object.has("passable"):
+		push_warning("Map object %s must explicitly define passable." % object_id)
+	if not map_object.has("visitable"):
+		push_warning("Map object %s must explicitly define visitable." % object_id)
+	var roles = map_object.get("map_roles", [])
+	if not (roles is Array) or roles.is_empty():
+		push_warning("Map object %s must define non-empty map_roles." % object_id)
 
 func _validate_faction(faction: Dictionary, town_index: Dictionary, hero_index: Dictionary) -> void:
 	var faction_id := String(faction.get("id", ""))

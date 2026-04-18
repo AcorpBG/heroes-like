@@ -49,6 +49,27 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: Overworld Content Foundation
+Status: completed on 2026-04-18 as the first real implementation pass from the overworld bible.
+
+Purpose:
+- Turn the overworld bible's first implementation step into checked-in content domains and runtime support.
+- Keep existing scenario gameplay stable while giving future maps a richer authored grammar than pickups, dwellings, outposts, and shrines.
+
+Implemented:
+- Added `content/biomes.json` with nine biome families, terrain tile mappings, passability, movement-cost metadata, battle terrain hooks, encounter palette tags, route roles, and allowed site families.
+- Added `content/map_objects.json` as the canonical overworld object vocabulary for pickups, mines, scouting structures, guarded reward sites, transit objects, repeatable service buildings, blockers, and faction landmarks.
+- Expanded `content/resource_sites.json` with a first meaningful set of new site families: mines, scouting structures, guarded reward sites, transit objects, and repeatable service buildings.
+- Wired `ContentService.gd` to load and validate biomes, map objects, and expanded resource-site families.
+- Wired `OverworldRules.gd` and `ScenarioRules.gd` to use authored biome labels/passability and expanded site-family labels, action text, support defaults, scouting visibility summaries, and repeatable service cooldown/cost hooks.
+- Extended overworld map rendering fallback colors/patterns for the new terrain ids.
+- Extended `tests/validate_repo.py` so the new content layer is enforced.
+
+Limits:
+- This is content foundation and runtime support, not a claim that current scenarios have HoMM3-class adventure-map density.
+- Transit objects are authored and validated as route-control content, but paired transit traversal is still a future scenario/system slice.
+- Guarded reward sites are authored with guard profiles and reward grammar; full encounter-linked bank resolution remains future work.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

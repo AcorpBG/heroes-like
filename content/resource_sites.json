@@ -217,6 +217,192 @@
         "pressure_bonus": 1,
         "recovery_relief": 2
       }
+    },
+    {
+      "id": "site_brightwood_sawmill",
+      "name": "Brightwood Sawmill",
+      "family": "mine",
+      "persistent_control": true,
+      "claim_rewards": {"wood": 2, "gold": 120},
+      "control_income": {"wood": 1},
+      "town_support": {"growth_bonus_percent": 4},
+      "response_profile": {
+        "action_label": "Secure Timber Road",
+        "summary": "Foresters and escorts keep the mill road open for reserve wagons.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 90},
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_ridge_quarry",
+      "name": "Ridge Quarry",
+      "family": "mine",
+      "persistent_control": true,
+      "claim_rewards": {"ore": 2, "gold": 100},
+      "control_income": {"ore": 1},
+      "town_support": {"quality_bonus": 1},
+      "response_profile": {
+        "action_label": "Guard Quarry Road",
+        "summary": "Quarry crews fortify the switchback so ore carts can keep moving.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 100, "wood": 1},
+        "watch_days": 3,
+        "quality_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_marsh_peat_yard",
+      "name": "Marsh Peat Yard",
+      "family": "mine",
+      "persistent_control": true,
+      "claim_rewards": {"wood": 1, "gold": 140},
+      "control_income": {"gold": 35},
+      "town_support": {"recovery_relief": 1},
+      "response_profile": {
+        "action_label": "Mark Sluice Road",
+        "summary": "Peat crews stake the reed road and reopen a safer recovery line.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 90, "wood": 1},
+        "watch_days": 3,
+        "readiness_bonus": 1,
+        "recovery_relief": 1
+      }
+    },
+    {
+      "id": "site_watchtower_beacon",
+      "name": "Watchtower Beacon",
+      "family": "scouting_structure",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 80},
+      "control_income": {"gold": 15},
+      "vision_radius": 4,
+      "pressure_guard": 1,
+      "town_support": {"readiness_bonus": 1},
+      "response_profile": {
+        "action_label": "Staff Beacon Watch",
+        "summary": "A fresh watch crew keeps signal fires lit through the next raid window.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 100, "wood": 1},
+        "watch_days": 4,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 2
+      }
+    },
+    {
+      "id": "site_mist_lighthouse",
+      "name": "Mist Lighthouse",
+      "family": "scouting_structure",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 100},
+      "control_income": {"gold": 20},
+      "vision_radius": 5,
+      "pressure_guard": 1,
+      "response_profile": {
+        "action_label": "Trim Lighthouse Watch",
+        "summary": "Lantern crews sweep the fog line and signal hostile sails before they close.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 120, "ore": 1},
+        "watch_days": 4,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 2
+      }
+    },
+    {
+      "id": "site_barrow_vault",
+      "name": "Barrow Vault",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "guard_profile": {
+        "threat": "medium",
+        "encounter_palette_tags": ["ambush_cover", "chokepoint"],
+        "reward_tone": "gold and command experience"
+      },
+      "rewards": {"gold": 700, "ore": 2, "experience": 160}
+    },
+    {
+      "id": "site_drowned_reliquary",
+      "name": "Drowned Reliquary",
+      "family": "guarded_reward_site",
+      "guarded": true,
+      "guard_profile": {
+        "threat": "high",
+        "encounter_palette_tags": ["bog_channels", "fog_bank"],
+        "reward_tone": "ore, salvage, and command experience"
+      },
+      "rewards": {"gold": 520, "wood": 2, "ore": 2, "experience": 220}
+    },
+    {
+      "id": "site_repaired_ferry_stage",
+      "name": "Repaired Ferry Stage",
+      "family": "transit_object",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 60},
+      "vision_radius": 2,
+      "transit_profile": {
+        "mode": "ferry",
+        "route_role": "shortcut",
+        "requires_repair": true,
+        "paired_link_required": true
+      },
+      "response_profile": {
+        "action_label": "Repair Ferry Stage",
+        "summary": "Boatwrights and escorts make the crossing reliable enough for reserves.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 120, "wood": 2},
+        "watch_days": 4,
+        "readiness_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_rope_lift",
+      "name": "Rope Lift",
+      "family": "transit_object",
+      "persistent_control": true,
+      "claim_rewards": {"gold": 70},
+      "vision_radius": 2,
+      "transit_profile": {
+        "mode": "lift",
+        "route_role": "vertical_shortcut",
+        "requires_repair": true,
+        "paired_link_required": true
+      },
+      "response_profile": {
+        "action_label": "Reeve Rope Lift",
+        "summary": "Winch crews brace the lift and post sentries on both landings.",
+        "movement_cost": 3,
+        "resource_cost": {"gold": 130, "ore": 1},
+        "watch_days": 4,
+        "quality_bonus": 1,
+        "pressure_guard_bonus": 1
+      }
+    },
+    {
+      "id": "site_wayfarer_infirmary",
+      "name": "Wayfarer Infirmary",
+      "family": "repeatable_service",
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "service_cost": {"gold": 120},
+      "rewards": {"experience": 80},
+      "town_support": {"recovery_relief": 1},
+      "action_label": "Use Infirmary",
+      "service_summary": "A field surgeon treats the command retinue and records lessons from the march."
+    },
+    {
+      "id": "site_market_caravanserai",
+      "name": "Market Caravanserai",
+      "family": "repeatable_service",
+      "repeatable": true,
+      "visit_cooldown_days": 7,
+      "service_cost": {"gold": 180},
+      "rewards": {"wood": 1, "ore": 1},
+      "action_label": "Trade at Caravanserai",
+      "service_summary": "Caravans exchange coin for mixed construction lots on a weekly cycle."
     }
   ]
 }

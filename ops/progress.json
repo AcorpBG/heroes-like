@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T19:40:00Z",
+  "updatedAt": "2026-04-18T20:02:43Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-content-bible-10184",
-  "currentSliceTitle": "Define overworld biomes, objects, strategic buildings, and resources",
+  "currentSliceId": "overworld-content-foundation-10184",
+  "currentSliceTitle": "Implement first overworld biome and map-object content foundation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Drafted docs/overworld-content-bible.md after checking Heroes III map-editor wiki references for inspiration. The doc audits current repo reality, where scenario maps still only use grass/forest/water and resource sites only cover one-shot pickups, neutral dwellings, faction outposts, and frontier shrines. It defines the target biome roster, object families, resource logic, overworld-building grammar, scenario region recipes, and an implementation order for expanding the adventure map layer without pretending HoMM3-class breadth already exists. Verification: python3 tests/validate_repo.py and git diff --check passed.",
+  "currentSliceNotes": "Implemented the first real overworld-content foundation slice from docs/overworld-content-bible.md. Added content/biomes.json and content/map_objects.json, expanded resource_sites with mines, scouting structures, guarded reward sites, transit objects, and repeatable service buildings, and wired ContentService/OverworldRules/ScenarioRules/overworld map rendering plus repo validation around the richer content grammar. Current scenarios were kept stable; this is content/runtime foundation, not a claim of HoMM3-class overworld breadth. Verification: python3 tests/validate_repo.py, godot4 --headless --path . tests/overworld_visual_smoke.tscn, godot4 --headless --path . tests/core_systems_regression_smoke.tscn, and git diff --check passed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -106,6 +106,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-content-foundation",
+      "title": "Implement biome and richer overworld object content domains",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -161,8 +167,8 @@
     }
   ],
   "nextActions": [
-    "Turn the overworld content bible into concrete authored domains, starting with content/biomes.json and a wider map-object vocabulary.",
-    "Expand the adventure-map site families beyond one-shot pickups, neutral dwellings, faction outposts, and frontier shrines into mines, scouting structures, guarded reward sites, transit objects, and repeatable service buildings.",
+    "Place selected new overworld object families in one narrow scenario slice only after defining truthful encounter, transit, and service behavior for that scenario.",
+    "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",
     "Integrate selected scaffold factions into scenario placements, army groups, encounters, overworld landmarks, AI fronts, and manual play notes.",
     "Capture a short parity-ledger note for River Pass recording AcOrP's passed manual gate so the milestone stays documented beyond chat history.",
     "Avoid pretending HoMM3-class overworld breadth exists until richer biomes, objects, and repeated manual-play scenarios actually land."

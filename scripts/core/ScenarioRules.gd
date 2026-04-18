@@ -589,17 +589,10 @@ static func _map_tile_id(map_data: Variant, x: int, y: int) -> String:
 	return String(row[x])
 
 static func _terrain_label(terrain_id: String) -> String:
-	match terrain_id:
-		"grass":
-			return "Grassland"
-		"forest":
-			return "Forest"
-		"water":
-			return "Sea"
-		"mire":
-			return "Mire"
-		_:
-			return _titleize_token(terrain_id) if terrain_id != "" else "Unknown terrain"
+	var biome := ContentService.get_biome_for_terrain(terrain_id)
+	if not biome.is_empty():
+		return String(biome.get("name", _titleize_token(terrain_id)))
+	return _titleize_token(terrain_id) if terrain_id != "" else "Unknown terrain"
 
 static func _titleize_token(value: String) -> String:
 	if value == "":

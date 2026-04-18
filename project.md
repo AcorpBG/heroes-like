@@ -114,6 +114,8 @@ The authored content boundary remains split into JSON domains under `content/`:
 - `towns.json`
 - `buildings.json`
 - `resource_sites.json`
+- `biomes.json`
+- `map_objects.json`
 - `artifacts.json`
 - `spells.json`
 - `encounters.json`
@@ -128,6 +130,10 @@ Decision date: 2026-04-18
 The target broad faction set is six original, asymmetric factions defined first in `docs/factions-content-bible.md`. The first implementation slice now carries those factions as real scaffold records across faction metadata, unit ladders, hero concepts, signature buildings, and seed towns where needed. This remains content infrastructure, not playability proof. Future JSON and runtime work must preserve the no-commons and no-shared-template constraints: factions need distinct fantasy, mechanics, town identity, hero identity, economy, map pressure, battle style, and unit ladder feel. A faction should not be called fully playable until its scenario placement, AI fronts, town play, battle tuning, save/load behavior, and manual play notes exist.
 
 The next companion design source is `docs/overworld-content-bible.md`. It defines the adventure-map grammar needed to support that faction breadth: biome families, pickup sites, flaggable economy, dwellings, shrines, guarded reward sites, scouting structures, blockers, transit objects, and faction landmarks. The game should move toward richer overworld object vocabulary through explicit content families and biome logic, not by sprinkling random flavor nodes on otherwise empty maps.
+
+Implementation note date: 2026-04-18
+
+The first overworld-content foundation slice now implements that direction as real content domains and runtime hooks: `content/biomes.json`, `content/map_objects.json`, expanded `resource_sites.json` families, ContentService validation/loading, authored biome terrain labels/passability, and expanded overworld site-family context/action handling. This is a foundation for future scenario placement, not proof of broad adventure-map playability.
 
 ## Repository Structure
 - `content/`: authored gameplay domains.

@@ -1,0 +1,200 @@
+{
+  "items": [
+    {
+      "id": "object_waystone_cache",
+      "name": "Waystone Cache",
+      "family": "pickup",
+      "resource_site_id": "site_waystone_cache",
+      "biome_ids": ["biome_grasslands", "biome_deep_forest", "biome_highland_ridge"],
+      "footprint": {"width": 1, "height": 1},
+      "passable": true,
+      "visitable": true,
+      "map_roles": ["small_reward", "route_pacing"]
+    },
+    {
+      "id": "object_timber_wagon",
+      "name": "Timber Wagon",
+      "family": "pickup",
+      "resource_site_id": "site_timber_wagon",
+      "biome_ids": ["biome_grasslands", "biome_deep_forest", "biome_snow_frost_marches"],
+      "footprint": {"width": 1, "height": 1},
+      "passable": true,
+      "visitable": true,
+      "map_roles": ["small_reward", "build_resource"]
+    },
+    {
+      "id": "object_brightwood_sawmill",
+      "name": "Brightwood Sawmill",
+      "family": "mine",
+      "resource_site_id": "site_brightwood_sawmill",
+      "biome_ids": ["biome_grasslands", "biome_deep_forest"],
+      "footprint": {"width": 2, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["durable_economy", "wood_control", "lane_anchor"]
+    },
+    {
+      "id": "object_ridge_quarry",
+      "name": "Ridge Quarry",
+      "family": "mine",
+      "resource_site_id": "site_ridge_quarry",
+      "biome_ids": ["biome_highland_ridge", "biome_rough_badlands", "biome_subterranean_underways"],
+      "footprint": {"width": 2, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["durable_economy", "ore_control", "chokepoint_anchor"]
+    },
+    {
+      "id": "object_marsh_peat_yard",
+      "name": "Marsh Peat Yard",
+      "family": "mine",
+      "resource_site_id": "site_marsh_peat_yard",
+      "biome_ids": ["biome_mire_fen", "biome_coast_archipelago"],
+      "footprint": {"width": 2, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["durable_economy", "slow_lane_anchor", "recovery_pressure"]
+    },
+    {
+      "id": "object_watchtower_beacon",
+      "name": "Watchtower Beacon",
+      "family": "scouting_structure",
+      "resource_site_id": "site_watchtower_beacon",
+      "biome_ids": ["biome_grasslands", "biome_highland_ridge", "biome_snow_frost_marches"],
+      "footprint": {"width": 1, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["scouting_lane", "route_control", "threat_warning"]
+    },
+    {
+      "id": "object_mist_lighthouse",
+      "name": "Mist Lighthouse",
+      "family": "scouting_structure",
+      "resource_site_id": "site_mist_lighthouse",
+      "biome_ids": ["biome_coast_archipelago", "biome_mire_fen"],
+      "footprint": {"width": 1, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["coastal_scouting", "water_route_control", "threat_warning"]
+    },
+    {
+      "id": "object_barrow_vault",
+      "name": "Barrow Vault",
+      "family": "guarded_reward_site",
+      "resource_site_id": "site_barrow_vault",
+      "biome_ids": ["biome_deep_forest", "biome_highland_ridge", "biome_snow_frost_marches"],
+      "footprint": {"width": 2, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["guarded_reward", "treasure_lane", "subregion_anchor"]
+    },
+    {
+      "id": "object_drowned_reliquary",
+      "name": "Drowned Reliquary",
+      "family": "guarded_reward_site",
+      "resource_site_id": "site_drowned_reliquary",
+      "biome_ids": ["biome_mire_fen", "biome_coast_archipelago", "biome_subterranean_underways"],
+      "footprint": {"width": 2, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["guarded_reward", "waterlogged_treasure", "risk_pocket"]
+    },
+    {
+      "id": "object_repaired_ferry_stage",
+      "name": "Repaired Ferry Stage",
+      "family": "transit_object",
+      "resource_site_id": "site_repaired_ferry_stage",
+      "biome_ids": ["biome_mire_fen", "biome_coast_archipelago", "biome_grasslands"],
+      "footprint": {"width": 2, "height": 1},
+      "passable": true,
+      "visitable": true,
+      "map_roles": ["transit_lane", "late_unlock_lane", "route_shortcut"]
+    },
+    {
+      "id": "object_rope_lift",
+      "name": "Rope Lift",
+      "family": "transit_object",
+      "resource_site_id": "site_rope_lift",
+      "biome_ids": ["biome_highland_ridge", "biome_rough_badlands", "biome_subterranean_underways"],
+      "footprint": {"width": 1, "height": 2},
+      "passable": true,
+      "visitable": true,
+      "map_roles": ["vertical_transit", "shortcut_lane", "route_control"]
+    },
+    {
+      "id": "object_wayfarer_infirmary",
+      "name": "Wayfarer Infirmary",
+      "family": "repeatable_service",
+      "resource_site_id": "site_wayfarer_infirmary",
+      "biome_ids": ["biome_grasslands", "biome_snow_frost_marches", "biome_mire_fen"],
+      "footprint": {"width": 2, "height": 1},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["repeatable_service", "recovery_stop", "return_path_choice"]
+    },
+    {
+      "id": "object_market_caravanserai",
+      "name": "Market Caravanserai",
+      "family": "repeatable_service",
+      "resource_site_id": "site_market_caravanserai",
+      "biome_ids": ["biome_grasslands", "biome_rough_badlands", "biome_coast_archipelago"],
+      "footprint": {"width": 2, "height": 2},
+      "passable": false,
+      "visitable": true,
+      "map_roles": ["repeatable_service", "resource_exchange", "safe_lane"]
+    },
+    {
+      "id": "object_bramble_wall",
+      "name": "Bramble Wall",
+      "family": "blocker",
+      "biome_ids": ["biome_deep_forest", "biome_mire_fen"],
+      "footprint": {"width": 3, "height": 1},
+      "passable": false,
+      "visitable": false,
+      "map_roles": ["lane_shape", "conditional_lock"]
+    },
+    {
+      "id": "object_reef_line",
+      "name": "Reef Line",
+      "family": "blocker",
+      "biome_ids": ["biome_coast_archipelago"],
+      "footprint": {"width": 3, "height": 1},
+      "passable": false,
+      "visitable": false,
+      "map_roles": ["coastal_lane_shape", "water_blocker"]
+    },
+    {
+      "id": "object_ember_signal_brazier",
+      "name": "Ember Signal Brazier",
+      "family": "faction_landmark",
+      "faction_id": "faction_embercourt",
+      "biome_ids": ["biome_grasslands", "biome_highland_ridge", "biome_ash_lava_wastes"],
+      "footprint": {"width": 1, "height": 1},
+      "passable": false,
+      "visitable": false,
+      "map_roles": ["faction_landmark", "route_identity"]
+    },
+    {
+      "id": "object_bog_drum_totem",
+      "name": "Bog Drum Totem",
+      "family": "faction_landmark",
+      "faction_id": "faction_mireclaw",
+      "biome_ids": ["biome_mire_fen", "biome_deep_forest", "biome_coast_archipelago"],
+      "footprint": {"width": 1, "height": 1},
+      "passable": false,
+      "visitable": false,
+      "map_roles": ["faction_landmark", "threat_identity"]
+    },
+    {
+      "id": "object_prism_relay_lens",
+      "name": "Prism Relay Lens",
+      "family": "faction_landmark",
+      "faction_id": "faction_sunvault",
+      "biome_ids": ["biome_grasslands", "biome_highland_ridge", "biome_coast_archipelago"],
+      "footprint": {"width": 1, "height": 1},
+      "passable": false,
+      "visitable": false,
+      "map_roles": ["faction_landmark", "scouting_identity"]
+    }
+  ]
+}

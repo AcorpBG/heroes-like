@@ -128,6 +128,40 @@ MARKET_BUILDING_IDS = {
     "building_resonant_exchange",
 }
 LOGISTICS_SITE_FAMILIES = {"neutral_dwelling", "faction_outpost", "frontier_shrine"}
+OVERWORLD_FOUNDATION_SITE_FAMILIES = {
+    "mine",
+    "scouting_structure",
+    "guarded_reward_site",
+    "transit_object",
+    "repeatable_service",
+}
+SUPPORTED_RESOURCE_SITE_FAMILIES = LOGISTICS_SITE_FAMILIES | OVERWORLD_FOUNDATION_SITE_FAMILIES | {"one_shot_pickup"}
+SUPPORTED_MAP_OBJECT_FAMILIES = {
+    "pickup",
+    "mine",
+    "neutral_dwelling",
+    "shrine",
+    "guarded_reward_site",
+    "scouting_structure",
+    "transit_object",
+    "repeatable_service",
+    "blocker",
+    "decoration",
+    "faction_landmark",
+}
+OVERWORLD_FOUNDATION_RESOURCE_SITE_IDS = {
+    "site_brightwood_sawmill",
+    "site_ridge_quarry",
+    "site_marsh_peat_yard",
+    "site_watchtower_beacon",
+    "site_mist_lighthouse",
+    "site_barrow_vault",
+    "site_drowned_reliquary",
+    "site_repaired_ferry_stage",
+    "site_rope_lift",
+    "site_wayfarer_infirmary",
+    "site_market_caravanserai",
+}
 LOGISTICS_SITE_IDS = {
     "site_free_company_yard",
     "site_fenhound_kennels",
@@ -629,6 +663,8 @@ def validate_content(errors: list[str]) -> None:
         "towns",
         "buildings",
         "resource_sites",
+        "biomes",
+        "map_objects",
         "artifacts",
         "spells",
         "encounters",
@@ -654,6 +690,8 @@ def validate_content(errors: list[str]) -> None:
     towns = items_index(payloads["towns"])
     buildings = items_index(payloads["buildings"])
     resource_sites = items_index(payloads["resource_sites"])
+    biomes = items_index(payloads["biomes"])
+    map_objects = items_index(payloads["map_objects"])
     artifacts = items_index(payloads["artifacts"])
     spells = items_index(payloads["spells"])
     encounters = items_index(payloads["encounters"])
@@ -4105,6 +4143,160 @@ def validate_overworld_route_security_escort(errors: list[str]) -> None:
     )
 
 
+def validate_overworld_content_foundation(errors: list[str]) -> None:
+    payloads = {
+        "biomes": load_json(CONTENT_DIR / "biomes.json"),
+        "map_objects": load_json(CONTENT_DIR / "map_objects.json"),
+        "resource_sites": load_json(CONTENT_DIR / "resource_sites.json"),
+        "factions": load_json(CONTENT_DIR / "factions.json"),
+        "spells": load_json(CONTENT_DIR / "spells.json"),
+        "units": load_json(CONTENT_DIR / "units.json"),
+    }
+    biomes = items_index(payloads["biomes"])
+    map_objects = items_index(payloads["map_objects"])
+    resource_sites = items_index(payloads["resource_sites"])
+    factions = items_index(payloads["factions"])
+    spells = items_index(payloads["spells"])
+    units = items_index(payloads["units"])
+
+    ensure(len(biomes) >= 9, errors, "Overworld content foundation must author at least the nine bible biome families")
+    terrain_to_biome: dict[str, str] = {}
+    site_families_allowed_by_biomes: set[str] = set()
+    for biome_id, biome in biomes.items():
+        ensure(bool(str(biome.get("name", ""))), errors, f"Biome {biome_id} must define name")
+        tile_ids = biome.get("map_tile_ids", [])
+        ensure(isinstance(tile_ids, list) and bool(tile_ids), errors, f"Biome {biome_id} must define map_tile_ids")
+        if isinstance(tile_ids, list):
+            for tile_id in tile_ids:
+                tile_key = str(tile_id)
+                ensure(bool(tile_key), errors, f"Biome {biome_id} contains an empty map tile id")
+                ensure(tile_key not in terrain_to_biome, errors, f"Map tile id {tile_key} is assigned to more than one biome")
+                terrain_to_biome[tile_key] = biome_id
+        ensure(int(biome.get("movement_cost", 0)) > 0, errors, f"Biome {biome_id} must define movement_cost > 0")
+        ensure("passable" in biome, errors, f"Biome {biome_id} must explicitly define passable")
+        ensure(bool(str(biome.get("battle_terrain", ""))), errors, f"Biome {biome_id} must define battle_terrain")
+        for list_key in ("encounter_palette_tags", "decoration_palette", "blocker_palette", "route_roles"):
+            values = biome.get(list_key, [])
+            ensure(isinstance(values, list) and bool(values), errors, f"Biome {biome_id} must define non-empty {list_key}")
+        allowed_families = biome.get("allowed_site_families", [])
+        ensure(isinstance(allowed_families, list) and bool(allowed_families), errors, f"Biome {biome_id} must define allowed_site_families")
+        if isinstance(allowed_families, list):
+            for family_id in allowed_families:
+                family_key = str(family_id)
+                ensure(family_key in SUPPORTED_RESOURCE_SITE_FAMILIES, errors, f"Biome {biome_id} allows unsupported site family {family_key}")
+                site_families_allowed_by_biomes.add(family_key)
+
+    ensure({"grass", "forest", "water"}.issubset(terrain_to_biome.keys()), errors, "Biomes must map the terrain ids used by current scenarios: grass, forest, and water")
+    if "water" in terrain_to_biome:
+        ensure(not bool(biomes.get(terrain_to_biome["water"], {}).get("passable", True)), errors, "The biome mapped from water must remain impassable for current overworld pathing")
+    ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(site_families_allowed_by_biomes), errors, "Biome palettes must allow mines, scouting structures, guarded reward sites, transit objects, and repeatable services")
+
+    ensure(OVERWORLD_FOUNDATION_RESOURCE_SITE_IDS.issubset(resource_sites.keys()), errors, "Overworld content foundation must keep the first new resource-site family set authored")
+    families_present = {str(site.get("family", "one_shot_pickup")) for site in resource_sites.values()}
+    ensure(OVERWORLD_FOUNDATION_SITE_FAMILIES.issubset(families_present), errors, "Resource sites must include mines, scouting structures, guarded reward sites, transit objects, and repeatable services")
+
+    for site_id, site in resource_sites.items():
+        family = str(site.get("family", "one_shot_pickup")) or "one_shot_pickup"
+        ensure(family in SUPPORTED_RESOURCE_SITE_FAMILIES, errors, f"Resource site {site_id} uses unsupported family {family}")
+        for resource_key in ("rewards", "claim_rewards", "control_income", "service_cost"):
+            resources = site.get(resource_key, {})
+            if resource_key in site:
+                ensure(isinstance(resources, dict), errors, f"Resource site {site_id} {resource_key} must be a dictionary")
+            if isinstance(resources, dict):
+                for key, amount in resources.items():
+                    ensure(bool(str(key)), errors, f"Resource site {site_id} {resource_key} cannot contain empty resource keys")
+                    ensure(int(amount) >= 0, errors, f"Resource site {site_id} {resource_key} must be >= 0 for {key}")
+        for recruit_key in ("claim_recruits", "weekly_recruits"):
+            recruits = site.get(recruit_key, {})
+            if recruit_key in site:
+                ensure(isinstance(recruits, dict), errors, f"Resource site {site_id} {recruit_key} must be a dictionary")
+            if isinstance(recruits, dict):
+                for unit_id, amount in recruits.items():
+                    ensure(str(unit_id) in units, errors, f"Resource site {site_id} references missing unit {unit_id}")
+                    ensure(int(amount) > 0, errors, f"Resource site {site_id} {recruit_key} must define positive counts for {unit_id}")
+        spell_id = str(site.get("learn_spell_id", ""))
+        if spell_id:
+            ensure(spell_id in spells, errors, f"Resource site {site_id} references missing learn_spell_id {spell_id}")
+            ensure(str(spells.get(spell_id, {}).get("context", "")) == "overworld", errors, f"Resource site {site_id} learn_spell_id must be an overworld spell")
+        if family == "mine":
+            ensure(bool(site.get("persistent_control", False)), errors, f"Mine {site_id} must be persistent-control content")
+            ensure(isinstance(site.get("control_income", {}), dict) and bool(site.get("control_income", {})), errors, f"Mine {site_id} must define control_income")
+        elif family == "scouting_structure":
+            ensure(bool(site.get("persistent_control", False)), errors, f"Scouting structure {site_id} must be persistent-control content")
+            ensure(int(site.get("vision_radius", 0)) > 0, errors, f"Scouting structure {site_id} must define vision_radius > 0")
+        elif family == "guarded_reward_site":
+            ensure(bool(site.get("guarded", False)), errors, f"Guarded reward site {site_id} must set guarded=true")
+            guard_profile = site.get("guard_profile", {})
+            ensure(isinstance(guard_profile, dict) and bool(guard_profile), errors, f"Guarded reward site {site_id} must define guard_profile")
+            ensure(isinstance(site.get("rewards", site.get("claim_rewards", {})), dict) and bool(site.get("rewards", site.get("claim_rewards", {}))), errors, f"Guarded reward site {site_id} must define a reward payload")
+        elif family == "transit_object":
+            ensure(isinstance(site.get("transit_profile", {}), dict) and bool(site.get("transit_profile", {})), errors, f"Transit site {site_id} must define transit_profile")
+        elif family == "repeatable_service":
+            ensure(bool(site.get("repeatable", False)), errors, f"Repeatable service {site_id} must set repeatable=true")
+            ensure(int(site.get("visit_cooldown_days", 0)) > 0, errors, f"Repeatable service {site_id} must define visit_cooldown_days > 0")
+
+    ensure(len(map_objects) >= 15, errors, "Overworld content foundation must author a meaningful first map-object vocabulary")
+    object_families = {str(obj.get("family", "")) for obj in map_objects.values()}
+    ensure(
+        {"mine", "scouting_structure", "guarded_reward_site", "transit_object", "repeatable_service", "blocker", "faction_landmark"}.issubset(object_families),
+        errors,
+        "Map objects must cover economy, scouting, guarded reward, transit, service, blocker, and faction-landmark families",
+    )
+    for object_id, obj in map_objects.items():
+        family = str(obj.get("family", ""))
+        ensure(family in SUPPORTED_MAP_OBJECT_FAMILIES, errors, f"Map object {object_id} uses unsupported family {family}")
+        biome_ids = obj.get("biome_ids", [])
+        ensure(isinstance(biome_ids, list) and bool(biome_ids), errors, f"Map object {object_id} must define biome_ids")
+        if isinstance(biome_ids, list):
+            for biome_id in biome_ids:
+                ensure(str(biome_id) in biomes, errors, f"Map object {object_id} references missing biome {biome_id}")
+        resource_site_id = str(obj.get("resource_site_id", ""))
+        if resource_site_id:
+            ensure(resource_site_id in resource_sites, errors, f"Map object {object_id} references missing resource site {resource_site_id}")
+            if resource_site_id in resource_sites and family in OVERWORLD_FOUNDATION_SITE_FAMILIES:
+                ensure(str(resource_sites[resource_site_id].get("family", "")) == family, errors, f"Map object {object_id} family must match linked resource site {resource_site_id}")
+        faction_id = str(obj.get("faction_id", ""))
+        if faction_id:
+            ensure(faction_id in factions, errors, f"Map object {object_id} references missing faction {faction_id}")
+        footprint = obj.get("footprint", {})
+        ensure(isinstance(footprint, dict), errors, f"Map object {object_id} must define footprint")
+        if isinstance(footprint, dict):
+            ensure(int(footprint.get("width", 0)) > 0 and int(footprint.get("height", 0)) > 0, errors, f"Map object {object_id} footprint dimensions must be > 0")
+        ensure("passable" in obj and "visitable" in obj, errors, f"Map object {object_id} must explicitly define passable and visitable")
+        map_roles = obj.get("map_roles", [])
+        ensure(isinstance(map_roles, list) and bool(map_roles), errors, f"Map object {object_id} must define map_roles")
+
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const BIOMES_PATH",
+        "const MAP_OBJECTS_PATH",
+        "func get_biome",
+        "func get_biome_for_terrain",
+        "func get_map_object",
+        "func _validate_biome",
+        "func _validate_map_object",
+        "func _validate_resource_site",
+    ):
+        ensure(required_token in content_service_text, errors, f"ContentService.gd is missing overworld-content-foundation token: {required_token}")
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func terrain_profile_at",
+        "ContentService.get_biome_for_terrain",
+        "func _resource_site_is_repeatable",
+        "func _resource_site_visit_cost",
+        '"mine"',
+        '"scouting_structure"',
+        '"guarded_reward_site"',
+        '"transit_object"',
+        '"repeatable_service"',
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing overworld-content-foundation token: {required_token}")
+
+    scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
+    ensure("ContentService.get_biome_for_terrain" in scenario_rules_text, errors, "ScenarioRules.gd must label scenario terrain through authored biomes")
+
+
 def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
     required_paths = (SESSION_STATE_PATH, OVERWORLD_RULES_PATH, TOWN_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, ENEMY_TURN_RULES_PATH)
     for path in required_paths:
@@ -4986,6 +5178,7 @@ def main() -> int:
     validate_enemy_strategic_contestation(errors)
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
+    validate_overworld_content_foundation(errors)
     validate_town_frontline_reinforcement_delivery(errors)
     validate_convoy_interception_clash_slice(errors)
     validate_hostile_empire_personality(errors)
@@ -5046,6 +5239,7 @@ def main() -> int:
     print("- enemy towns now build, recruit, reinforce raid armies, and surface public threat posture without a save-version bump")
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
+    print("- overworld biomes and map-object families now have authored content domains, validation, and runtime family hooks")
     print("- hostile empires now keep faction-specific build, raid, reinforcement, and priority-front personalities across authored scenarios")
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
     print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")

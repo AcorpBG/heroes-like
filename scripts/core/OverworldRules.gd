@@ -326,10 +326,18 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 	if site.is_empty():
 		return {"ok": false, "message": "This site has no authored payload."}
-	if not _resource_node_claimable_by_player(node, site):
+	if not _resource_node_claimable_by_player(node, site, session):
+		if _resource_site_is_repeatable(site):
+			return {"ok": false, "message": _resource_site_repeatable_block_message(session, node, site)}
 		if _resource_site_is_persistent(site):
 			return {"ok": false, "message": "This site is already under your control."}
 		return {"ok": false, "message": "This site has already been gathered."}
+	var visit_cost := _resource_site_visit_cost(site)
+	if not _can_afford(session, visit_cost):
+		return {
+			"ok": false,
+			"message": "Insufficient resources for %s." % String(site.get("action_label", "that service")),
+		}
 
 	var nodes = session.overworld.get("resource_nodes", [])
 	var previous_controller := String(node.get("collected_by_faction_id", ""))
@@ -341,6 +349,8 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	session.overworld["resource_nodes"] = nodes
 
 	var rewards = DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site))
+	if not visit_cost.is_empty():
+		_spend_resources(session, visit_cost)
 	_add_resources(session, rewards)
 	var disruption_message := apply_resource_site_disruption(
 		session,
@@ -350,6 +360,9 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 		"player"
 	)
 	var messages := [_resource_site_claim_message(site, previous_controller)]
+	var cost_summary := _describe_resource_delta(visit_cost)
+	if cost_summary != "":
+		messages.append("Cost %s." % cost_summary)
 	var reward_summary := _describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Stores %s." % reward_summary)
@@ -822,7 +835,26 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	var row = map_data[y]
 	if not (row is Array) or x < 0 or x >= row.size():
 		return false
-	return String(row[x]) == "water"
+	var terrain_id := String(row[x])
+	var biome := ContentService.get_biome_for_terrain(terrain_id)
+	if not biome.is_empty() and biome.has("passable"):
+		return not bool(biome.get("passable", true))
+	return terrain_id == "water"
+
+static func terrain_profile_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	var terrain_id := _terrain_id_at(session, x, y)
+	var biome := ContentService.get_biome_for_terrain(terrain_id)
+	if biome.is_empty():
+		return {
+			"terrain_id": terrain_id,
+			"name": terrain_id.capitalize() if terrain_id != "" else "Unknown terrain",
+			"movement_cost": 1,
+			"sight_modifier": 0,
+			"passable": terrain_id != "water",
+		}
+	var profile := biome.duplicate(true)
+	profile["terrain_id"] = terrain_id
+	return profile
 
 static func describe_resources(session: SessionStateStoreScript.SessionData) -> String:
 	var resources = session.overworld.get("resources", {})
@@ -1025,6 +1057,7 @@ static func describe_visibility_panel(session: SessionStateStoreScript.SessionDa
 	normalize_overworld_state(session)
 	var controlled_outposts := controlled_resource_site_count(session, "player", "faction_outpost")
 	var controlled_shrines := controlled_resource_site_count(session, "player", "frontier_shrine")
+	var controlled_scouting := controlled_resource_site_count(session, "player", "scouting_structure")
 	var lines := [
 		"Scout Net",
 		"- %s" % describe_visibility(session),
@@ -1032,6 +1065,8 @@ static func describe_visibility_panel(session: SessionStateStoreScript.SessionDa
 	]
 	if controlled_outposts > 0:
 		lines.append("- Held outposts %d | Frontier relays extend sight beyond commander scout rings." % controlled_outposts)
+	if controlled_scouting > 0:
+		lines.append("- Held scout structures %d | Watch sites widen route certainty before raids close." % controlled_scouting)
 	if controlled_shrines > 0:
 		lines.append("- Held shrines %d | Sanctums keep spell routes open across the frontier." % controlled_shrines)
 	for hero in session.overworld.get("player_heroes", []):
@@ -1087,22 +1122,20 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			return "Open Ground\nTerrain %s | No immediate site action.\nUse the movement controls to scout, consolidate towns, or intercept raids." % terrain
 
 static func _terrain_name_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> String:
+	var terrain := _terrain_id_at(session, x, y)
+	var biome := ContentService.get_biome_for_terrain(terrain)
+	if not biome.is_empty():
+		return String(biome.get("name", terrain.capitalize()))
+	return terrain.capitalize() if terrain != "" else "Unknown terrain"
+
+static func _terrain_id_at(session: SessionStateStoreScript.SessionData, x: int, y: int) -> String:
 	var map_data = session.overworld.get("map", [])
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
-		return "Unknown terrain"
+		return ""
 	var row = map_data[y]
 	if not (row is Array) or x < 0 or x >= row.size():
-		return "Unknown terrain"
-	match String(row[x]):
-		"grass":
-			return "Grassland"
-		"forest":
-			return "Forest"
-		"water":
-			return "Sea"
-		_:
-			var terrain := String(row[x])
-			return terrain.capitalize() if terrain != "" else "Open ground"
+		return ""
+	return String(row[x])
 
 static func describe_objective_board(session: SessionStateStoreScript.SessionData) -> String:
 	_normalize_scenario_state_rules(session)
@@ -1862,7 +1895,7 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 		"resource":
 			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-			if _resource_node_claimable_by_player(node, site):
+			if _resource_node_claimable_by_player(node, site, session):
 				actions.append(
 					{
 						"id": "collect_resource",
@@ -2086,7 +2119,7 @@ static func _find_active_resource_node(session: SessionStateStoreScript.SessionD
 		return {"index": -1, "node": {}}
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if _resource_node_claimable_by_player(node, site):
+	if _resource_node_claimable_by_player(node, site, session):
 		return node_result
 	return {"index": -1, "node": {}}
 
@@ -2105,7 +2138,42 @@ static func _resource_site_is_persistent(site: Dictionary) -> bool:
 static func _resource_node_matches_controller(node: Dictionary, controller_id: String) -> bool:
 	return String(node.get("collected_by_faction_id", "")) == controller_id
 
-static func _resource_node_claimable_by_player(node: Dictionary, site: Dictionary) -> bool:
+static func _resource_site_is_repeatable(site: Dictionary) -> bool:
+	return bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"
+
+static func _resource_site_visit_cost(site: Dictionary) -> Dictionary:
+	return _normalize_resource_dict(site.get("service_cost", {}))
+
+static func _resource_site_repeat_ready(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> bool:
+	if not _resource_site_is_repeatable(site):
+		return false
+	if not bool(node.get("collected", false)):
+		return true
+	if session == null:
+		return false
+	var cooldown: int = max(1, int(site.get("visit_cooldown_days", 1)))
+	return session.day >= int(node.get("collected_day", 0)) + cooldown
+
+static func _resource_site_next_visit_day(node: Dictionary, site: Dictionary) -> int:
+	return int(node.get("collected_day", 0)) + max(1, int(site.get("visit_cooldown_days", 1)))
+
+static func _resource_site_repeatable_block_message(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var next_day := _resource_site_next_visit_day(node, site)
+	if session != null and session.day < next_day:
+		return "%s can be used again on day %d." % [String(site.get("name", "This service")), next_day]
+	return "%s is not available right now." % String(site.get("name", "This service"))
+
+static func _resource_node_claimable_by_player(
+	node: Dictionary,
+	site: Dictionary,
+	session: SessionStateStoreScript.SessionData = null
+) -> bool:
+	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
+		return _resource_site_repeat_ready(session, node, site)
 	if _resource_site_is_persistent(site):
 		return String(node.get("collected_by_faction_id", "")) != "player"
 	return not bool(node.get("collected", false))
@@ -2116,16 +2184,28 @@ static func _resource_site_claim_rewards(site: Dictionary) -> Dictionary:
 
 static func _resource_site_family_label(site: Dictionary) -> String:
 	match String(site.get("family", "")):
+		"mine":
+			return "Mine"
 		"neutral_dwelling":
 			return "Neutral Dwelling"
 		"faction_outpost":
 			return "Faction Outpost"
 		"frontier_shrine":
 			return "Frontier Shrine"
+		"guarded_reward_site":
+			return "Guarded Reward Site"
+		"scouting_structure":
+			return "Scouting Structure"
+		"transit_object":
+			return "Transit Object"
+		"repeatable_service":
+			return "Service Building"
 		_:
 			return "Resource Site"
 
 static func _resource_site_claim_message(site: Dictionary, previous_controller: String) -> String:
+	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
+		return "Used %s." % String(site.get("name", "the service"))
 	if not _resource_site_is_persistent(site):
 		return "Claimed %s." % String(site.get("name", "the site"))
 	if previous_controller == "":
@@ -2135,15 +2215,28 @@ static func _resource_site_claim_message(site: Dictionary, previous_controller: 
 	return "Retook %s from hostile control." % String(site.get("name", "the site"))
 
 static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> String:
+	var authored_label := String(site.get("action_label", ""))
+	if authored_label != "":
+		return authored_label
 	if _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) not in ["", "player"]:
 		return "Reclaim Site"
 	match String(site.get("family", "")):
+		"mine":
+			return "Claim Mine"
 		"neutral_dwelling":
 			return "Secure Dwelling"
 		"faction_outpost":
 			return "Secure Outpost"
 		"frontier_shrine":
 			return "Bind Shrine"
+		"guarded_reward_site":
+			return "Search Vault"
+		"scouting_structure":
+			return "Secure Watch"
+		"transit_object":
+			return "Open Route"
+		"repeatable_service":
+			return "Use Service"
 		_:
 			return "Claim Site"
 
@@ -2178,37 +2271,61 @@ static func _resource_site_response_profile(site: Dictionary) -> Dictionary:
 		profile["break_pressure"] = max(0, int(authored_profile.get("break_pressure", 0)))
 	if String(profile.get("action_label", "")) == "":
 		match String(site.get("family", "")):
+			"mine":
+				profile["action_label"] = "Secure Work Road"
 			"neutral_dwelling":
 				profile["action_label"] = "Dispatch Relief"
 			"faction_outpost":
 				profile["action_label"] = "Repair Outpost"
 			"frontier_shrine":
 				profile["action_label"] = "Relight Shrine"
+			"scouting_structure":
+				profile["action_label"] = "Staff Watch"
+			"transit_object":
+				profile["action_label"] = "Repair Route"
 			_:
 				profile["action_label"] = "Secure Route"
 	if int(profile.get("pressure_guard_bonus", 0)) <= 0:
 		match String(site.get("family", "")):
+			"mine":
+				profile["pressure_guard_bonus"] = 1
 			"neutral_dwelling":
 				profile["pressure_guard_bonus"] = 1
 			"faction_outpost":
 				profile["pressure_guard_bonus"] = 2
 			"frontier_shrine":
 				profile["pressure_guard_bonus"] = 1
+			"scouting_structure":
+				profile["pressure_guard_bonus"] = 2
+			"transit_object":
+				profile["pressure_guard_bonus"] = 1
 	if int(profile.get("growth_bonus_percent", 0)) <= 0:
 		match String(site.get("family", "")):
+			"mine":
+				profile["growth_bonus_percent"] = 3
 			"neutral_dwelling":
 				profile["growth_bonus_percent"] = 14
 			"faction_outpost":
 				profile["growth_bonus_percent"] = 4
 			"frontier_shrine":
 				profile["growth_bonus_percent"] = 6
+			"scouting_structure":
+				profile["growth_bonus_percent"] = 3
+			"transit_object":
+				profile["growth_bonus_percent"] = 3
 	if int(profile.get("break_pressure", 0)) <= 0:
 		match String(site.get("family", "")):
+			"mine":
+				profile["break_pressure"] = 1
 			"neutral_dwelling":
 				profile["break_pressure"] = 1
 			"faction_outpost":
 				profile["break_pressure"] = 2
 			"frontier_shrine":
+				profile["break_pressure"] = 1
+			"scouting_structure":
+				profile["break_pressure"] = 2
+			"transit_object":
 				profile["break_pressure"] = 1
 	return profile
 
@@ -2960,6 +3077,9 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 	var claim_summary := _describe_recruit_delta(site.get("claim_recruits", {}))
 	if claim_summary != "":
 		parts.append("Field recruits %s" % claim_summary)
+	var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+	if reward_summary != "":
+		parts.append("Reward %s" % reward_summary)
 	var vision_radius = max(0, int(site.get("vision_radius", 0)))
 	if vision_radius > 0:
 		parts.append("Scout ring %d" % vision_radius)
@@ -2983,6 +3103,29 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 	var spell_id := String(site.get("learn_spell_id", ""))
 	if spell_id != "":
 		parts.append("Teaches %s" % String(ContentService.get_spell(spell_id).get("name", spell_id)))
+	if _resource_site_is_repeatable(site):
+		var service_summary := String(site.get("service_summary", ""))
+		if service_summary != "":
+			parts.append(service_summary)
+		var visit_cost_summary := _describe_resource_delta(_resource_site_visit_cost(site))
+		if visit_cost_summary != "":
+			parts.append("Service cost %s" % visit_cost_summary)
+		if _resource_site_repeat_ready(session, node, site):
+			parts.append("Service ready")
+		elif bool(node.get("collected", false)):
+			parts.append("Next service day %d" % _resource_site_next_visit_day(node, site))
+	var guard_profile = site.get("guard_profile", {})
+	if guard_profile is Dictionary and not guard_profile.is_empty():
+		parts.append("Guard %s | %s" % [
+			String(guard_profile.get("threat", "unknown")),
+			String(guard_profile.get("reward_tone", "reward site")),
+		])
+	var transit_profile = site.get("transit_profile", {})
+	if transit_profile is Dictionary and not transit_profile.is_empty():
+		parts.append("Transit %s | %s" % [
+			String(transit_profile.get("mode", "route")),
+			String(transit_profile.get("route_role", "link")),
+		])
 	var response_state := _resource_site_response_state(session, node, site)
 	var delivery_state := _resource_site_delivery_state(session, node, site)
 	if bool(response_state.get("active", false)):
@@ -4689,6 +4832,10 @@ static func _resource_site_town_support(site: Dictionary) -> Dictionary:
 			support[key] = max(0, int(authored_support.get(key, support[key])))
 		return support
 	match String(site.get("family", "")):
+		"mine":
+			support["growth_bonus_percent"] = 3
+			support["recovery_relief"] = 1
+			support["disruption_pressure"] = 1
 		"neutral_dwelling":
 			support["quality_bonus"] = max(2, int(round(float(_weighted_recruit_value(site.get("weekly_recruits", {}))) / 28.0)))
 			support["growth_bonus_percent"] = 12
@@ -4705,6 +4852,16 @@ static func _resource_site_town_support(site: Dictionary) -> Dictionary:
 			support["growth_bonus_percent"] = 6
 			support["recovery_relief"] = 1
 			support["disruption_pressure"] = 1
+		"scouting_structure":
+			support["readiness_bonus"] = max(1, max(0, int(site.get("vision_radius", 0))))
+			support["pressure_bonus"] = 1
+			support["disruption_pressure"] = 1
+		"transit_object":
+			support["readiness_bonus"] = 1
+			support["recovery_relief"] = 1
+			support["disruption_pressure"] = 1
+		"repeatable_service":
+			support["recovery_relief"] = 1
 	return support
 
 static func _resource_site_under_threat(session: SessionStateStoreScript.SessionData, node: Dictionary, controller_id: String) -> bool:
@@ -5791,6 +5948,25 @@ static func _describe_resource_delta(delta: Variant) -> String:
 		var amount := int(delta.get(key, 0))
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])
+	return ", ".join(parts)
+
+static func _describe_reward_delta(delta: Variant) -> String:
+	if not (delta is Dictionary):
+		return ""
+	var parts := []
+	var resource_summary := _describe_resource_delta(delta)
+	if resource_summary != "":
+		parts.append(resource_summary)
+	var experience := int(delta.get("experience", 0))
+	if experience > 0:
+		parts.append("%d xp" % experience)
+	for key in delta.keys():
+		var resource_key := String(key)
+		if resource_key in ["gold", "wood", "ore", "experience"]:
+			continue
+		var amount := int(delta.get(key, 0))
+		if amount > 0:
+			parts.append("%d %s" % [amount, resource_key])
 	return ", ".join(parts)
 
 static func _summarize_market_actions(actions: Variant, max_steps: int = 2) -> String:

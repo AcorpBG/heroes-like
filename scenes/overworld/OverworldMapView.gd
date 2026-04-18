@@ -23,11 +23,27 @@ const TERRAIN_COLORS := {
 	"grass": Color(0.41, 0.62, 0.31, 1.0),
 	"forest": Color(0.23, 0.43, 0.25, 1.0),
 	"water": Color(0.20, 0.41, 0.66, 1.0),
+	"mire": Color(0.30, 0.38, 0.25, 1.0),
+	"swamp": Color(0.27, 0.35, 0.23, 1.0),
+	"hills": Color(0.48, 0.48, 0.36, 1.0),
+	"ridge": Color(0.48, 0.48, 0.36, 1.0),
+	"badlands": Color(0.53, 0.40, 0.29, 1.0),
+	"ash": Color(0.32, 0.30, 0.31, 1.0),
+	"cavern": Color(0.27, 0.25, 0.34, 1.0),
+	"snow": Color(0.75, 0.81, 0.82, 1.0),
 }
 const TERRAIN_MEMORY_COLORS := {
 	"grass": Color(0.18, 0.24, 0.18, 1.0),
 	"forest": Color(0.13, 0.18, 0.13, 1.0),
 	"water": Color(0.11, 0.17, 0.24, 1.0),
+	"mire": Color(0.13, 0.17, 0.12, 1.0),
+	"swamp": Color(0.12, 0.16, 0.11, 1.0),
+	"hills": Color(0.20, 0.20, 0.15, 1.0),
+	"ridge": Color(0.20, 0.20, 0.15, 1.0),
+	"badlands": Color(0.22, 0.16, 0.12, 1.0),
+	"ash": Color(0.14, 0.13, 0.14, 1.0),
+	"cavern": Color(0.12, 0.11, 0.16, 1.0),
+	"snow": Color(0.25, 0.29, 0.30, 1.0),
 }
 const PLAYER_TOWN_COLOR := Color(0.84, 0.68, 0.30, 1.0)
 const ENEMY_TOWN_COLOR := Color(0.72, 0.28, 0.26, 1.0)
@@ -140,6 +156,12 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 			_draw_forest_pattern(rect, visible)
 		"water":
 			_draw_water_pattern(rect, visible)
+		"mire", "swamp":
+			_draw_mire_pattern(rect, visible)
+		"hills", "ridge":
+			_draw_ridge_pattern(rect, visible)
+		"snow":
+			_draw_snow_pattern(rect, visible)
 		_:
 			_draw_grass_pattern(rect, visible)
 
@@ -175,6 +197,23 @@ func _draw_water_pattern(rect: Rect2, visible: bool) -> void:
 		var end = rect.position + rect.size * Vector2(0.84, row)
 		draw_line(start, end, wave_color, 2.0)
 		draw_line(start + Vector2(rect.size.x * 0.12, -rect.size.y * 0.08), end - Vector2(rect.size.x * 0.12, -rect.size.y * 0.08), wave_color, 2.0)
+
+func _draw_mire_pattern(rect: Rect2, visible: bool) -> void:
+	var reed_color = Color(0.62, 0.71, 0.35, 0.24 if visible else 0.12)
+	for column in [0.25, 0.50, 0.72]:
+		var start = rect.position + rect.size * Vector2(column, 0.68)
+		draw_line(start, start - Vector2(rect.size.x * 0.06, rect.size.y * 0.32), reed_color, 2.0)
+		draw_line(start, start + Vector2(rect.size.x * 0.06, -rect.size.y * 0.26), reed_color, 2.0)
+
+func _draw_ridge_pattern(rect: Rect2, visible: bool) -> void:
+	var ridge_color = Color(0.78, 0.73, 0.55, 0.22 if visible else 0.11)
+	draw_line(rect.position + rect.size * Vector2(0.18, 0.70), rect.position + rect.size * Vector2(0.50, 0.30), ridge_color, 2.0)
+	draw_line(rect.position + rect.size * Vector2(0.50, 0.30), rect.position + rect.size * Vector2(0.82, 0.68), ridge_color, 2.0)
+
+func _draw_snow_pattern(rect: Rect2, visible: bool) -> void:
+	var snow_color = Color(0.96, 0.98, 1.0, 0.28 if visible else 0.12)
+	draw_circle(rect.position + rect.size * Vector2(0.32, 0.36), rect.size.x * 0.045, snow_color)
+	draw_circle(rect.position + rect.size * Vector2(0.63, 0.60), rect.size.x * 0.055, snow_color)
 
 func _draw_route(board_rect: Rect2) -> void:
 	if _path_tiles.size() <= 1:
