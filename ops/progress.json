@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T21:41:29Z",
+  "updatedAt": "2026-04-18T22:22:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-fixed-tactical-framing-10184",
-  "currentSliceTitle": "Fix large-map overworld default framing so 64x64 scenarios do not auto-fit the entire map",
+  "currentSliceId": "overworld-ninefold-refresh-performance-10184",
+  "currentSliceTitle": "Reduce Ninefold Confluence overworld refresh and hover recomputation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow overworld presentation bugfix after AcOrP found that Ninefold Confluence could open zoomed out like a whole-map atlas. Large maps now use hero-centered tactical framing around a bounded visible-tile budget, small River Pass-scale maps still fit fully, and OverworldShell/Ninefold/River Pass smokes guard the viewport metrics.",
+  "currentSliceNotes": "Completed an urgent narrow performance fix for Ninefold Confluence overworld refresh. OverworldShell now reuses per-refresh action/summary state, hover tooltips return before primary-action work on non-selected tiles, and OverworldRules exposes a small normalized read scope plus command-risk surface helper so refresh avoids repeated normalization/forecast recomputation. Requested validation is green; /tmp timing reported refresh avg 1726.7 ms and non-selected hover avg 0.00216 ms.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

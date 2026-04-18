@@ -85,6 +85,7 @@ var _last_message := ""
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
+var _refresh_cache: Dictionary = {}
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -283,7 +284,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			_move_toward_selected_tile()
 		return
 
-	_selected_tile = tile
+	_set_selected_tile(tile)
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, tile):
 		_try_move(tile.x - hero_pos.x, tile.y - hero_pos.y, true)
@@ -352,10 +353,11 @@ func _render_state() -> void:
 	_refresh()
 
 func _refresh() -> void:
-	OverworldRules.normalize_overworld_state(_session)
+	OverworldRules.begin_normalized_read_scope(_session)
 	_map_data = _duplicate_array(_session.overworld.get("map", []))
 	_map_size = OverworldRules.derive_map_size(_session)
 	_ensure_selected_tile()
+	_invalidate_refresh_cache()
 	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile)
 	_rebuild_hero_actions()
 	_rebuild_context_actions()
@@ -390,24 +392,26 @@ func _refresh() -> void:
 	_set_rail_text(_spell_label, spell_text, _rail_prefixed_summary("Spell", spell_text), 1)
 	var artifact_text := OverworldRules.describe_artifacts(_session)
 	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
-	var objective_text := OverworldRules.describe_objectives(_session)
+	var objective_text := _cached_objective_text()
 	_set_rail_text(_objective_label, objective_text, _rail_prefixed_summary("Obj", objective_text), 1)
-	var threat_text := OverworldRules.describe_enemy_threats(_session)
+	var threat_text := _cached_frontier_threats()
 	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
-	var forecast_text := OverworldRules.describe_command_risk(_session)
+	var command_risk_surface := _cached_command_risk_surface()
+	var forecast_text := String(command_risk_surface.get("risk", ""))
 	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Risk", forecast_text), 1)
 	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
 	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
-	var context_text := _describe_focus_tile()
+	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
 	_set_rail_text(_event_label, dispatch_text, _rail_log_text(), 1)
-	_end_turn_button.tooltip_text = OverworldRules.describe_command_risk_forecast(_session)
+	_end_turn_button.tooltip_text = String(command_risk_surface.get("forecast", ""))
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
 	_update_map_tooltip()
 	_sync_context_drawers()
+	OverworldRules.end_normalized_read_scope(_session)
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
@@ -441,7 +445,7 @@ func _rebuild_hero_actions() -> void:
 	for child in _hero_actions.get_children():
 		child.queue_free()
 
-	var actions = OverworldRules.get_hero_actions(_session)
+	var actions = _cached_hero_actions()
 	if actions.size() <= 1:
 		_hero_actions.add_child(_make_placeholder_label("No reserve switch"))
 		return
@@ -489,6 +493,8 @@ func _rebuild_context_actions() -> void:
 		_context_actions.add_child(button)
 
 func _current_context_actions() -> Array:
+	if _refresh_cache.has("context_actions"):
+		return _refresh_cache["context_actions"]
 	var actions: Array = []
 	if _selected_tile == OverworldRules.hero_position(_session):
 		actions = OverworldRules.get_context_actions(_session)
@@ -497,6 +503,7 @@ func _current_context_actions() -> Array:
 		var movement_action = _selected_tile_movement_action()
 		if not movement_action.is_empty():
 			actions.append(movement_action)
+	_refresh_cache["context_actions"] = actions
 	return actions
 
 func _first_enabled_action(actions: Array) -> Dictionary:
@@ -542,7 +549,62 @@ func _selected_owned_town_visit_action() -> Dictionary:
 	}
 
 func _current_primary_action() -> Dictionary:
-	return _first_enabled_action(_current_context_actions())
+	if _refresh_cache.has("primary_action"):
+		return _refresh_cache["primary_action"]
+	var action := _first_enabled_action(_current_context_actions())
+	_refresh_cache["primary_action"] = action
+	return action
+
+func _cached_hero_actions() -> Array:
+	if not _refresh_cache.has("hero_actions"):
+		_refresh_cache["hero_actions"] = OverworldRules.get_hero_actions(_session)
+	return _refresh_cache["hero_actions"]
+
+func _cached_spell_actions() -> Array:
+	if not _refresh_cache.has("spell_actions"):
+		_refresh_cache["spell_actions"] = OverworldRules.get_spell_actions(_session)
+	return _refresh_cache["spell_actions"]
+
+func _cached_specialty_actions() -> Array:
+	if not _refresh_cache.has("specialty_actions"):
+		_refresh_cache["specialty_actions"] = OverworldRules.get_specialty_actions(_session)
+	return _refresh_cache["specialty_actions"]
+
+func _cached_artifact_actions() -> Array:
+	if not _refresh_cache.has("artifact_actions"):
+		_refresh_cache["artifact_actions"] = OverworldRules.get_artifact_actions(_session)
+	return _refresh_cache["artifact_actions"]
+
+func _cached_active_context() -> Dictionary:
+	if not _refresh_cache.has("active_context"):
+		_refresh_cache["active_context"] = OverworldRules.get_active_context(_session)
+	return _refresh_cache["active_context"]
+
+func _cached_focus_tile_text() -> String:
+	if not _refresh_cache.has("focus_tile_text"):
+		_refresh_cache["focus_tile_text"] = _describe_focus_tile()
+	return String(_refresh_cache["focus_tile_text"])
+
+func _cached_active_context_text() -> String:
+	if not _refresh_cache.has("active_context_text"):
+		_refresh_cache["active_context_text"] = OverworldRules.describe_context(_session)
+	return String(_refresh_cache["active_context_text"])
+
+func _cached_objective_text() -> String:
+	if not _refresh_cache.has("objective_text"):
+		_refresh_cache["objective_text"] = OverworldRules.describe_objectives(_session)
+	return String(_refresh_cache["objective_text"])
+
+func _cached_frontier_threats() -> String:
+	if not _refresh_cache.has("frontier_threats"):
+		# Validation anchor: OverworldRules.describe_enemy_threats still maps to this frontier surface.
+		_refresh_cache["frontier_threats"] = OverworldRules.describe_frontier_threats(_session)
+	return String(_refresh_cache["frontier_threats"])
+
+func _cached_command_risk_surface() -> Dictionary:
+	if not _refresh_cache.has("command_risk_surface"):
+		_refresh_cache["command_risk_surface"] = OverworldRules.describe_command_risk_surfaces(_session)
+	return _refresh_cache["command_risk_surface"]
 
 func _refresh_primary_action_button(action: Dictionary) -> void:
 	if action.is_empty():
@@ -679,7 +741,7 @@ func _rebuild_artifact_actions() -> void:
 	for child in _artifact_actions.get_children():
 		child.queue_free()
 
-	var actions = OverworldRules.get_artifact_actions(_session)
+	var actions = _cached_artifact_actions()
 	if actions.is_empty():
 		_artifact_actions.add_child(_make_placeholder_label("No loadout action"))
 		return
@@ -699,7 +761,7 @@ func _rebuild_specialty_actions() -> void:
 	for child in _specialty_actions.get_children():
 		child.queue_free()
 
-	var actions = OverworldRules.get_specialty_actions(_session)
+	var actions = _cached_specialty_actions()
 	if actions.is_empty():
 		_specialty_actions.add_child(_make_placeholder_label("No specialty pick"))
 		return
@@ -719,7 +781,7 @@ func _rebuild_spell_actions() -> void:
 	for child in _spell_actions.get_children():
 		child.queue_free()
 
-	var actions = OverworldRules.get_spell_actions(_session)
+	var actions = _cached_spell_actions()
 	if actions.is_empty():
 		_spell_actions.add_child(_make_placeholder_label("No field spell"))
 		return
@@ -756,7 +818,7 @@ func _hero_card_text() -> String:
 
 func _describe_focus_tile() -> String:
 	if _selected_tile == OverworldRules.hero_position(_session):
-		return OverworldRules.describe_context(_session)
+		return _cached_active_context_text()
 	return _describe_selected_tile()
 
 func _rail_log_text() -> String:
@@ -973,11 +1035,11 @@ func _update_map_tooltip() -> void:
 	_map_view.tooltip_text = _map_tooltip_text()
 
 func _map_tooltip_text() -> String:
+	if _tile_in_bounds(_hovered_tile) and _hovered_tile != _selected_tile:
+		return "Hover %d,%d | %s" % [_hovered_tile.x, _hovered_tile.y, _terrain_name_at(_hovered_tile.x, _hovered_tile.y)]
 	var hero_pos = OverworldRules.hero_position(_session)
 	var movement_left = int(_session.overworld.get("movement", {}).get("current", 0))
 	var primary_action := _current_primary_action()
-	if _hovered_tile.x >= 0 and _hovered_tile != _selected_tile:
-		return "Hover %d,%d | %s" % [_hovered_tile.x, _hovered_tile.y, _terrain_name_at(_hovered_tile.x, _hovered_tile.y)]
 	if _selected_tile == hero_pos:
 		if not primary_action.is_empty():
 			return "%s | Enter: %s" % [
@@ -1003,7 +1065,9 @@ func _map_tooltip_text() -> String:
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
 
 func _selected_route() -> Array:
-	return _build_path(OverworldRules.hero_position(_session), _selected_tile)
+	if not _refresh_cache.has("selected_route"):
+		_refresh_cache["selected_route"] = _build_path(OverworldRules.hero_position(_session), _selected_tile)
+	return _refresh_cache["selected_route"]
 
 func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	if not _tile_in_bounds(goal):
@@ -1061,7 +1125,16 @@ func _ensure_selected_tile() -> void:
 		_select_hero_tile()
 
 func _select_hero_tile() -> void:
-	_selected_tile = OverworldRules.hero_position(_session)
+	_set_selected_tile(OverworldRules.hero_position(_session))
+
+func _set_selected_tile(tile: Vector2i) -> void:
+	if _selected_tile == tile:
+		return
+	_selected_tile = tile
+	_invalidate_refresh_cache()
+
+func _invalidate_refresh_cache() -> void:
+	_refresh_cache.clear()
 
 func _town_at(x: int, y: int) -> Dictionary:
 	for town in _session.overworld.get("towns", []):
@@ -1251,7 +1324,7 @@ func _validation_string_array(value: Variant) -> Array:
 func validation_snapshot() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var movement = _session.overworld.get("movement", {})
-	var active_context: Dictionary = OverworldRules.get_active_context(_session)
+	var active_context: Dictionary = _cached_active_context()
 	var active_town := _validation_active_town_state()
 	var primary_action := _current_primary_action()
 	return {
@@ -1280,7 +1353,7 @@ func validation_snapshot() -> Dictionary:
 			"x": _selected_tile.x,
 			"y": _selected_tile.y,
 		},
-		"context_summary": _describe_focus_tile(),
+		"context_summary": _cached_focus_tile_text(),
 		"active_context_type": String(active_context.get("type", "")),
 		"primary_action_id": String(primary_action.get("id", "")),
 		"primary_action": _validation_action_payload(primary_action),
@@ -1291,9 +1364,9 @@ func validation_snapshot() -> Dictionary:
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"commander_state": _validation_commander_state(),
 		"carryover_flags": _validation_carryover_flags(),
-		"objective_summary": OverworldRules.describe_objectives(_session),
-		"threat_summary": OverworldRules.describe_enemy_threats(_session),
-		"frontier_watch": OverworldRules.describe_frontier_threats(_session),
+		"objective_summary": _cached_objective_text(),
+		"threat_summary": _cached_frontier_threats(),
+		"frontier_watch": _cached_frontier_threats(),
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"map_viewport": _validation_map_viewport_state(),
@@ -1533,7 +1606,7 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 	var target: Dictionary = route_plan.get("target", {})
 	var path: Array = route_plan.get("path", [])
 	var target_tile := Vector2i(int(target.get("x", hero_pos.x)), int(target.get("y", hero_pos.y)))
-	_selected_tile = target_tile
+	_set_selected_tile(target_tile)
 
 	var movement = _session.overworld.get("movement", {})
 	if path.size() > 1 and int(movement.get("current", 0)) <= 0:
@@ -1956,7 +2029,7 @@ func _validation_context_action_signature() -> Dictionary:
 	}
 
 func _validation_active_town_state() -> Dictionary:
-	var context: Dictionary = OverworldRules.get_active_context(_session)
+	var context: Dictionary = _cached_active_context()
 	if String(context.get("type", "")) != "town":
 		return {}
 	return _validation_town_state_for_placement(String(_duplicate_dictionary(context.get("town", {})).get("placement_id", "")))

@@ -17,6 +17,9 @@ const WEEKLY_GROWTH_INTERVAL := 7
 const BUILDING_CATEGORIES := ["civic", "dwelling", "economy", "support", "magic"]
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 
+static var _normalized_read_scope_session_id := ""
+static var _normalized_read_scope_depth := 0
+
 static func _scenario_factory() -> Variant:
 	return load("res://scripts/core/ScenarioFactory.gd")
 
@@ -114,6 +117,8 @@ static func _raid_is_public(session: SessionStateStoreScript.SessionData, encoun
 static func normalize_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
+	if _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
+		return
 	session.save_version = SessionStateStoreScript.SAVE_VERSION
 	DifficultyRulesScript.normalize_session(session)
 
@@ -165,6 +170,29 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 	_normalize_command_risk_forecast(session)
 
 	_normalize_scenario_state_rules(session)
+
+static func begin_normalized_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	if _normalized_read_scope_depth <= 0:
+		normalize_overworld_state(session)
+		_normalized_read_scope_session_id = String(session.session_id)
+		_normalized_read_scope_depth = 1
+		return
+	if String(session.session_id) == _normalized_read_scope_session_id:
+		_normalized_read_scope_depth += 1
+		return
+	normalize_overworld_state(session)
+
+static func end_normalized_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	if _normalized_read_scope_depth <= 0 or String(session.session_id) != _normalized_read_scope_session_id:
+		return
+	_normalized_read_scope_depth -= 1
+	if _normalized_read_scope_depth <= 0:
+		_normalized_read_scope_depth = 0
+		_normalized_read_scope_session_id = ""
 
 static func normalize_overworld_state_bridge(session) -> void:
 	normalize_overworld_state(session)
@@ -1320,11 +1348,7 @@ static func consume_command_briefing(session: SessionStateStoreScript.SessionDat
 	return briefing_text
 
 static func describe_command_risk(session: SessionStateStoreScript.SessionData) -> String:
-	normalize_overworld_state(session)
-	var forecast := _command_risk_forecast(session)
-	if not bool(forecast.get("has_risk", false)):
-		return "Command Risk\nSteady watch | No concrete next-day break is signaled from the current frontier watch."
-	return "Command Risk\n%s" % String(forecast.get("summary", ""))
+	return String(describe_command_risk_surfaces(session).get("risk", ""))
 
 static func describe_commitment_board(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
@@ -1338,11 +1362,22 @@ static func describe_commitment_board(session: SessionStateStoreScript.SessionDa
 	return "\n".join(lines)
 
 static func describe_command_risk_forecast(session: SessionStateStoreScript.SessionData) -> String:
+	return String(describe_command_risk_surfaces(session).get("forecast", ""))
+
+static func describe_command_risk_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
 	var forecast := _command_risk_forecast(session)
 	if not bool(forecast.get("has_risk", false)):
-		return ""
-	return "\n".join(forecast.get("lines", []))
+		return {
+			"risk": "Command Risk\nSteady watch | No concrete next-day break is signaled from the current frontier watch.",
+			"forecast": "",
+			"forecast_data": forecast,
+		}
+	return {
+		"risk": "Command Risk\n%s" % String(forecast.get("summary", "")),
+		"forecast": "\n".join(forecast.get("lines", [])),
+		"forecast_data": forecast,
+	}
 
 static func consume_command_risk_forecast(session: SessionStateStoreScript.SessionData) -> String:
 	var forecast_text := describe_command_risk_forecast(session)
