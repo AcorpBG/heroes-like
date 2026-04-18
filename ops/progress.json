@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T20:43:24Z",
+  "updatedAt": "2026-04-18T21:38:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "neutral-dwelling-breadth-10184",
-  "currentSliceTitle": "Expand neutral dwelling breadth to 25 authored families",
+  "currentSliceId": "six-faction-biome-scenario-breadth-10184",
+  "currentSliceTitle": "Author one 64x64 breadth scenario using the six-faction, biome, dwelling, and overworld-site scaffold",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a neutral dwelling breadth expansion: content/neutral_dwellings.json now has 25 authored neutral dwelling families, with matching neutral units, neutral-scoped resource sites, map objects, guard army groups, and neutral guard encounters. This is honest breadth scaffolding only; the new families are not claimed to be scenario-played or balanced, and current scenarios were preserved.",
+  "currentSliceNotes": "Completed a large authored scenario breadth slice: Ninefold Confluence is a skirmish-only 64x64 scenario that places all six faction scaffolds, all nine authored biomes, all 25 neutral dwelling families, and the newer supported overworld site families. Added narrow Thornwake, Brasshollow, and Veilmourn army/encounter support plus validator and Godot loading smoke coverage. This is content breadth and loading proof only, not tuning or manual-play proof.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -124,6 +124,12 @@
       "difficulty": "high"
     },
     {
+      "id": "six-faction-biome-scenario-breadth",
+      "title": "Author one 64x64 scenario that places the broad faction, biome, dwelling, and site-family scaffold",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -179,9 +185,9 @@
     }
   ],
   "nextActions": [
-    "Add one narrow manually-audited guarded-neutral-dwelling placement from the new 25-family pool only after proving its overworld entry, battle resolution, rewards, and save/resume behavior in the live client.",
-    "Deepen selected neutral dwelling families with scenario placement, encounter tuning, and manual play notes before claiming balance or player-facing readiness.",
-    "Place selected new overworld object families in one narrow scenario slice only after defining truthful encounter, transit, and service behavior for that scenario.",
+    "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
+    "Deepen selected neutral dwelling families in Ninefold Confluence with encounter tuning and manual play notes before claiming balance or player-facing readiness.",
+    "Define truthful paired transit behavior before making Ninefold Confluence ferry or rope-lift placements route-critical.",
     "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",
     "Integrate selected scaffold factions into scenario placements, army groups, encounters, overworld landmarks, AI fronts, and manual play notes.",
     "Capture a short parity-ledger note for River Pass recording AcOrP's passed manual gate so the milestone stays documented beyond chat history.",

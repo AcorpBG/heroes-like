@@ -144,6 +144,10 @@ Implementation note date: 2026-04-18
 
 The neutral dwelling breadth slice expands that family layer to 25 authored neutral dwelling families with matching neutral units, neutral-scoped site definitions, map objects, guard army groups, and neutral encounters. This records content breadth only: the added families are internally linked and validator-enforced, but they are not yet scenario-placed, balanced, or manually play-proven.
 
+Implementation note date: 2026-04-18
+
+The first large scenario breadth placement slice adds `ninefold-confluence` as an explicitly 64x64 skirmish map that places all six faction scaffolds, all nine biome families, all 25 neutral dwelling families, and the newer overworld site families supported by the current scenario schema. This is authored breadth and loading coverage only: it is not a balance pass, a route proof, or a manual-play claim.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

@@ -150,6 +150,8 @@ SUPPORTED_MAP_OBJECT_FAMILIES = {
     "decoration",
     "faction_landmark",
 }
+SIX_FACTION_BIOME_BREADTH_SCENARIO_ID = "ninefold-confluence"
+SIX_FACTION_BIOME_BREADTH_REQUIRED_SITE_FAMILIES = SUPPORTED_RESOURCE_SITE_FAMILIES
 OVERWORLD_FOUNDATION_RESOURCE_SITE_IDS = {
     "site_brightwood_sawmill",
     "site_ridge_quarry",
@@ -4480,6 +4482,139 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing neutral battle token {required_token}")
 
 
+def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
+    payloads = {
+        "scenarios": load_json(CONTENT_DIR / "scenarios.json"),
+        "factions": load_json(CONTENT_DIR / "factions.json"),
+        "towns": load_json(CONTENT_DIR / "towns.json"),
+        "resource_sites": load_json(CONTENT_DIR / "resource_sites.json"),
+        "neutral_dwellings": load_json(NEUTRAL_DWELLINGS_PATH),
+        "biomes": load_json(CONTENT_DIR / "biomes.json"),
+        "army_groups": load_json(CONTENT_DIR / "army_groups.json"),
+        "encounters": load_json(CONTENT_DIR / "encounters.json"),
+    }
+    scenarios = items_index(payloads["scenarios"])
+    factions = items_index(payloads["factions"])
+    towns = items_index(payloads["towns"])
+    resource_sites = items_index(payloads["resource_sites"])
+    neutral_dwellings = items_index(payloads["neutral_dwellings"])
+    biomes = items_index(payloads["biomes"])
+    army_groups = items_index(payloads["army_groups"])
+    encounters = items_index(payloads["encounters"])
+
+    scenario = scenarios.get(SIX_FACTION_BIOME_BREADTH_SCENARIO_ID, {})
+    ensure(bool(scenario), errors, "Ninefold Confluence scenario must stay authored for the six-faction biome breadth slice")
+    if not scenario:
+        return
+
+    game_map = scenario.get("map", [])
+    declared_size = scenario.get("map_size", {})
+    ensure(int(declared_size.get("width", 0)) == 64, errors, "Ninefold Confluence must declare width 64")
+    ensure(int(declared_size.get("height", 0)) == 64, errors, "Ninefold Confluence must declare height 64")
+    ensure(isinstance(game_map, list) and len(game_map) == 64, errors, "Ninefold Confluence must author 64 map rows")
+    if isinstance(game_map, list) and game_map:
+        ensure(all(isinstance(row, list) and len(row) == 64 for row in game_map), errors, "Ninefold Confluence must author 64 columns in every row")
+
+    terrain_to_biome: dict[str, str] = {}
+    for biome_id, biome in biomes.items():
+        for terrain_id in biome.get("map_tile_ids", []):
+            terrain_to_biome[str(terrain_id)] = biome_id
+    authored_biome_ids: set[str] = set()
+    if isinstance(game_map, list):
+        for row in game_map:
+            if not isinstance(row, list):
+                continue
+            for terrain_id in row:
+                biome_id = terrain_to_biome.get(str(terrain_id), "")
+                if biome_id:
+                    authored_biome_ids.add(biome_id)
+    ensure(set(biomes.keys()).issubset(authored_biome_ids), errors, "Ninefold Confluence map must represent every authored biome family")
+
+    scenario_faction_ids = {str(scenario.get("player_faction_id", ""))}
+    for placement in scenario.get("towns", []):
+        if not isinstance(placement, dict):
+            continue
+        town = towns.get(str(placement.get("town_id", "")), {})
+        if town:
+            scenario_faction_ids.add(str(town.get("faction_id", "")))
+    for enemy_faction in scenario.get("enemy_factions", []):
+        if isinstance(enemy_faction, dict):
+            scenario_faction_ids.add(str(enemy_faction.get("faction_id", "")))
+    for node in scenario.get("resource_nodes", []):
+        if isinstance(node, dict) and str(node.get("collected_by_faction_id", "")):
+            scenario_faction_ids.add(str(node.get("collected_by_faction_id", "")))
+    for hook in scenario.get("script_hooks", []):
+        if not isinstance(hook, dict):
+            continue
+        for effect in hook.get("effects", []):
+            if not isinstance(effect, dict):
+                continue
+            if str(effect.get("faction_id", "")):
+                scenario_faction_ids.add(str(effect.get("faction_id", "")))
+            placement = effect.get("placement", {})
+            if isinstance(placement, dict) and str(placement.get("spawned_by_faction_id", "")):
+                scenario_faction_ids.add(str(placement.get("spawned_by_faction_id", "")))
+    ensure(SIX_FACTION_BIBLE_IDS.issubset(scenario_faction_ids), errors, "Ninefold Confluence must give every six-faction scaffold id direct scenario presence")
+    for faction_id in SIX_FACTION_BIBLE_IDS:
+        ensure(faction_id in factions, errors, f"Ninefold Confluence references missing faction {faction_id}")
+
+    required_new_groups = {
+        "army_graftroot_wardens",
+        "army_orevein_exactors",
+        "army_bellwake_privateers",
+    }
+    ensure(required_new_groups.issubset(army_groups.keys()), errors, "Ninefold Confluence must keep narrow army groups for the new scaffold faction fronts")
+    required_new_encounters = {
+        "encounter_graftroot_wardens",
+        "encounter_orevein_exactors",
+        "encounter_bellwake_privateers",
+    }
+    ensure(required_new_encounters.issubset(encounters.keys()), errors, "Ninefold Confluence must keep narrow encounters for the new scaffold faction fronts")
+
+    placed_site_families: set[str] = set()
+    placed_dwelling_family_ids: set[str] = set()
+    mismatched_dwelling_placements: list[str] = []
+    for node in scenario.get("resource_nodes", []):
+        if not isinstance(node, dict):
+            continue
+        site = resource_sites.get(str(node.get("site_id", "")), {})
+        if not site:
+            continue
+        family = str(site.get("family", "one_shot_pickup")) or "one_shot_pickup"
+        placed_site_families.add(family)
+        if family != "neutral_dwelling":
+            continue
+        dwelling_id = str(site.get("neutral_dwelling_family_id", ""))
+        if dwelling_id:
+            placed_dwelling_family_ids.add(dwelling_id)
+        x = int(node.get("x", -1))
+        y = int(node.get("y", -1))
+        terrain_id = ""
+        if isinstance(game_map, list) and 0 <= y < len(game_map) and isinstance(game_map[y], list) and 0 <= x < len(game_map[y]):
+            terrain_id = str(game_map[y][x])
+        biome_id = terrain_to_biome.get(terrain_id, "")
+        dwelling = neutral_dwellings.get(dwelling_id, {})
+        if dwelling and biome_id not in [str(value) for value in dwelling.get("biome_ids", [])]:
+            mismatched_dwelling_placements.append(f"{dwelling_id}@{x},{y}:{biome_id or terrain_id}")
+
+    ensure(
+        SIX_FACTION_BIOME_BREADTH_REQUIRED_SITE_FAMILIES.issubset(placed_site_families),
+        errors,
+        "Ninefold Confluence must place every supported resource-site family including dwellings, mines, scouting, guarded rewards, transit, services, pickups, shrines, and outposts",
+    )
+    ensure(
+        set(neutral_dwellings.keys()).issubset(placed_dwelling_family_ids),
+        errors,
+        "Ninefold Confluence must place all authored neutral dwelling families",
+    )
+    ensure(
+        not mismatched_dwelling_placements,
+        errors,
+        "Ninefold Confluence neutral dwelling placements must stay in one of their authored biome families: "
+        + ", ".join(mismatched_dwelling_placements[:8]),
+    )
+
+
 def validate_town_frontline_reinforcement_delivery(errors: list[str]) -> None:
     required_paths = (SESSION_STATE_PATH, OVERWORLD_RULES_PATH, TOWN_RULES_PATH, ENEMY_ADVENTURE_RULES_PATH, ENEMY_TURN_RULES_PATH)
     for path in required_paths:
@@ -5363,6 +5498,7 @@ def main() -> int:
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
     validate_neutral_dwelling_unit_slice(errors)
+    validate_six_faction_biome_scenario_breadth(errors)
     validate_town_frontline_reinforcement_delivery(errors)
     validate_convoy_interception_clash_slice(errors)
     validate_hostile_empire_personality(errors)
@@ -5424,6 +5560,7 @@ def main() -> int:
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
     print("- overworld biomes and map-object families now have authored content domains, validation, and runtime family hooks")
+    print("- Ninefold Confluence keeps a 64x64 six-faction, nine-biome, all-neutral-dwelling breadth scenario under validation")
     print("- hostile empires now keep faction-specific build, raid, reinforcement, and priority-front personalities across authored scenarios")
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")
     print("- capital and stronghold fronts now drive fortress-lane, reserve-wave, battery-nest, and wall-pressure battles across finale encounters")

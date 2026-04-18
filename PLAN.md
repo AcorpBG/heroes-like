@@ -110,6 +110,27 @@ Limits:
 - None of the new 23 families are placed in current scenarios yet.
 - Guard encounters and recruit sources are internally coherent content records, but they are not claimed to be manually scenario-played or tuned.
 
+## Current Implementation Slice: Six-Faction Biome Scenario Breadth
+Status: completed on 2026-04-18 as a large authored scenario breadth slice.
+
+Purpose:
+- Add one explicitly 64x64 authored scenario that exercises the breadth now present in content rather than leaving the new scaffold only in isolated JSON domains.
+- Keep the slice honest: this is scenario placement and loading coverage, not tuning, balance, route proof, or manual-play proof.
+
+Implemented:
+- Added `ninefold-confluence` / `Ninefold Confluence` to `content/scenarios.json` as a skirmish-only 64x64 map.
+- Represented all six faction ids through the player start, six faction towns, hostile pressure fronts, controlled logistics nodes, and script pressure hooks.
+- Represented all nine authored biome families in the actual scenario map layout.
+- Placed all 25 neutral dwelling families as resource-site placements, with validation checking each dwelling remains in one of its authored biome families.
+- Placed newer overworld site families beyond dwellings: pickups, mines, scouting structures, guarded reward sites, transit objects, repeatable services, faction outposts, and frontier shrines.
+- Added narrow supporting army groups and encounters for Thornwake, Brasshollow, and Veilmourn so their scenario fronts can spawn faction-specific pressure instead of borrowing legacy armies.
+- Added a focused repo validator and Godot smoke for the new scenario's 64x64 loading/overworld snapshot.
+
+Limits:
+- This is not a tuning pass and not a manual-play pass.
+- Transit objects are placed as authored route-control content, but paired transit traversal is still not proven as route-critical gameplay.
+- Blocker and faction-landmark map objects remain content-vocabulary records; the current scenario schema still places gameplay through resource sites, towns, artifacts, and encounters rather than raw map-object placements.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

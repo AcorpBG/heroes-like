@@ -768,6 +768,36 @@
           "count": 4
         }
       ]
+    },
+    {
+      "id": "army_graftroot_wardens",
+      "name": "Graftroot Wardens",
+      "faction_id": "faction_thornwake",
+      "stacks": [
+        {"unit_id": "unit_thornwake_seedcutters", "count": 8},
+        {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 5},
+        {"unit_id": "unit_thornwake_sporeglass_menders", "count": 2}
+      ]
+    },
+    {
+      "id": "army_orevein_exactors",
+      "name": "Orevein Exactors",
+      "faction_id": "faction_brasshollow",
+      "stacks": [
+        {"unit_id": "unit_brasshollow_scrip_haulers", "count": 7},
+        {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5},
+        {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 2}
+      ]
+    },
+    {
+      "id": "army_bellwake_privateers",
+      "name": "Bellwake Privateers",
+      "faction_id": "faction_veilmourn",
+      "stacks": [
+        {"unit_id": "unit_veilmourn_bellwake_oars", "count": 8},
+        {"unit_id": "unit_veilmourn_mourning_lanterns", "count": 4},
+        {"unit_id": "unit_veilmourn_maskglass_corsairs", "count": 2}
+      ]
     }
   ]
 }

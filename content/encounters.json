@@ -1884,6 +1884,87 @@
         "ore": 1,
         "experience": 150
       }
+    },
+    {
+      "id": "encounter_graftroot_wardens",
+      "name": "Graftroot Wardens",
+      "enemy_group_id": "army_graftroot_wardens",
+      "terrain": "forest",
+      "battlefield_tags": ["ambush_cover", "fortified_line"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Briar Marshal",
+        "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["ambusher", "linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "graftroot_bramble_gate",
+          "type": "cover_line",
+          "label": "Bramble Gate",
+          "summary": "Root screens make the lane hard to read until the gate line is forced open.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 3,
+          "pressure_tags": ["cohesion", "urgency"]
+        }
+      ],
+      "rewards": {"gold": 160, "wood": 1, "experience": 150}
+    },
+    {
+      "id": "encounter_orevein_exactors",
+      "name": "Orevein Exactors",
+      "enemy_group_id": "army_orevein_exactors",
+      "terrain": "hills",
+      "battlefield_tags": ["chokepoint", "fortress_lane"],
+      "max_rounds": 14,
+      "enemy_commander": {
+        "name": "Debt Marshal",
+        "command": {"attack": 1, "defense": 2, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["linekeeper"]
+      },
+      "field_objectives": [
+        {
+          "id": "orevein_tally_post",
+          "type": "supply_post",
+          "label": "Tally Post",
+          "summary": "Contract ledgers keep the foundry line supplied until the post is seized.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["reinforcement", "cohesion"]
+        }
+      ],
+      "rewards": {"gold": 180, "ore": 1, "experience": 150}
+    },
+    {
+      "id": "encounter_bellwake_privateers",
+      "name": "Bellwake Privateers",
+      "enemy_group_id": "army_bellwake_privateers",
+      "terrain": "road",
+      "battlefield_tags": ["fog_bank", "open_lane"],
+      "max_rounds": 13,
+      "enemy_commander": {
+        "name": "Bellwake Corsair",
+        "command": {"attack": 2, "defense": 1, "power": 0, "knowledge": 0},
+        "starting_spell_ids": [],
+        "battle_traits": ["vanguard"]
+      },
+      "field_objectives": [
+        {
+          "id": "bellwake_fog_bell",
+          "type": "signal_beacon",
+          "label": "Fog Bell",
+          "summary": "The harbor bell hides privateer movement until the signal frame is claimed.",
+          "starting_side": "enemy",
+          "capture_threshold": 2,
+          "urgency_round": 2,
+          "pressure_tags": ["initiative", "momentum"]
+        }
+      ],
+      "rewards": {"gold": 170, "wood": 1, "experience": 150}
     }
   ]
 }
