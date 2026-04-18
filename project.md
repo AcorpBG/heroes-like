@@ -16,7 +16,8 @@ The current state is not that product. A manual play audit showed that the game 
 - The live client does not yet prove that a real player can start, understand, play, win, lose, save, resume, and finish a scenario without developer knowledge.
 - Several docs previously implied completion, release-facing polish, or broad content readiness. Those claims are no longer accepted unless verified by manual play in the live client.
 - HoMM2-class breadth and HoMM3-class breadth are future product horizons, not current milestones.
-- The immediate product milestone is one manually completable scenario, not a full campaign package.
+- The first product milestone was one manually completable scenario rather than a full campaign package, and AcOrP reported that River Pass manual gate passed on 2026-04-18.
+- The next staged target is a playable alpha baseline with two fully realized factions, not an immediate jump to six fully implemented factions at once.
 
 ## Delivery Strategy
 The project now advances through explicit proof gates:
@@ -119,7 +120,12 @@ The authored content boundary remains split into JSON domains under `content/`:
 - `scenarios.json`
 - `campaigns.json`
 
-Near-term content work should focus on making River Pass coherent and completable before adding breadth.
+Near-term content work now shifts from proving River Pass completion to using that passed gate responsibly: select two factions from the content bible, implement them deeply, and avoid pretending six-faction breadth exists before the alpha layers are real.
+
+## Content Direction Note
+Decision date: 2026-04-18
+
+The target broad faction set is six original, asymmetric factions defined first in `docs/factions-content-bible.md`. That bible is a design source, not current implementation evidence. Future faction JSON work must preserve the no-commons and no-shared-template constraints: factions need distinct fantasy, mechanics, town identity, hero identity, economy, map pressure, battle style, and unit ladder feel. With River Pass manually gated by AcOrP, the next staged expansion is a two-faction alpha implementation from that bible, not an immediate six-faction rollout.
 
 ## Repository Structure
 - `content/`: authored gameplay domains.

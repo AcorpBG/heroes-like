@@ -24,7 +24,28 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Treat JSON-authored content as the scalable boundary for factions, heroes, units, spells, artifacts, towns, map objects, scenarios, encounters, and campaigns.
 - Keep scenic and play surfaces primary. Do not solve missing usability by stacking text panels over the game.
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
-- Do not expand broad campaign or faction count until River Pass proves the basic player loop.
+- River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
+
+## Current Content-Design Slice: Six-Faction Content Bible
+Status: design baseline drafted; River Pass manual gating is reported passed by AcOrP, so two-faction alpha implementation is now unblocked.
+
+Purpose:
+- Establish the target six-faction content direction before broad JSON expansion.
+- Preserve useful existing identities only where they pass the uniqueness test.
+- Make future faction work implementation-ready without claiming current playability.
+
+Design source:
+- `docs/factions-content-bible.md`
+
+Hard constraints:
+- No commons: no generic fantasy filler units, names, or town identities as the foundation of a faction.
+- No shared faction template skeletons: each faction needs a distinct fantasy, economy, map pressure, battle plan, hero roster identity, town silhouette, and unit ladder feel.
+- The current live content remains partial. Embercourt, Mireclaw, and Sunvault are prototype implementations until migrated through complete vertical slices.
+
+Acceptance criteria for this design slice:
+- Six total factions are defined.
+- Each faction has a theme pillar, mechanical identity, town/building identity, economy style, map pressure style, battle style, seven-tier unit ladder, at least ten hero concepts split across might and magic, and signature buildings.
+- The plan and progress tracker identify this as design-first work, not completed gameplay breadth.
 
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
@@ -54,7 +75,7 @@ Acceptance criteria:
 - Valid architecture decisions remain visible and usable.
 
 ## Phase 1: River Pass Manually Completable End-To-End
-Status: immediate active milestone.
+Status: accepted as passed from AcOrP's manual play report on 2026-04-18; keep parity notes and cleanup follow-ups, but this gate is no longer the blocker for alpha content work.
 
 Purpose:
 - Make one scenario, River Pass, honestly playable from start to finish in the live client.
@@ -208,6 +229,7 @@ Purpose:
 
 Scope:
 - 2 fully realized factions with distinct identity.
+- Alpha faction selection should use `docs/factions-content-bible.md` as the design pool, then freeze exactly two factions for implementation.
 - Usable town, battle, and overworld UX.
 - Deeper units, spells, artifacts, map objects, hero growth, neutral encounters, and scenario scripting.
 - A small set of manually playable scenarios, not a broad campaign promise.
@@ -302,7 +324,7 @@ Purpose:
 - Reach a broad, original fantasy strategy game package comparable in systemic breadth to the Heroes II era while remaining legally distinct.
 
 Scope targets:
-- Multiple original factions beyond the alpha two.
+- Multiple original factions beyond the alpha two, with the six-faction bible as the target breadth source.
 - A meaningful roster of heroes, units, towns, spells, artifacts, neutral creatures, map objects, and handcrafted maps.
 - Campaign framework with several completable chapters.
 - Skirmish setup with meaningful map and faction choice.

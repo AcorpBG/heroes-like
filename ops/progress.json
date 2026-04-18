@@ -1,16 +1,16 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T18:03:26Z",
+  "updatedAt": "2026-04-18T18:52:00Z",
   "status": "in_progress",
-  "currentPhase": "phase-1-river-pass-manual-completion",
-  "currentSliceId": "overworld-declutter-popouts-10184",
-  "currentSliceTitle": "Declutter overworld permanent chrome into contextual popouts",
+  "currentPhase": "phase-2-playable-alpha-baseline",
+  "currentSliceId": "faction-bible-design-10184",
+  "currentSliceTitle": "Draft six-faction content bible",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed AcOrP overworld declutter iteration: Order/commitment is hidden by default and surfaced through current-action feedback/tooltips, Tile details are contextual instead of a permanent right-rail panel, Command and Frontier are compact buttons that open hidden drawers, Frontier keeps only a tiny collapsed indicator, and the footer no longer carries permanent movement hint text or march direction buttons. Save, end-turn, menu, resources, status/date, and primary selected-site action remain accessible. Focused overworld visual smoke guards against permanent drawer, map hint, and footer march-control regressions; shell heraldry smoke and repo validation are green. No manual visual proof is claimed.",
+  "currentSliceNotes": "Completed a design-only six-faction content bible in docs/factions-content-bible.md. It defines Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn with distinct fantasy, economy, map pressure, battle style, seven-tier unit ladders, ten hero concepts each, and signature buildings. AcOrP then reported River Pass manual gate passed on 2026-04-18, so this bible now acts as the source for selecting and implementing the two alpha factions rather than waiting on the old gate. Verification: python3 tests/validate_repo.py and git diff --check passed.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
-    "manualPlayAudit": "not_honestly_playable_yet",
+    "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
     "parityClaimAllowed": false,
     "releaseReadinessClaimAllowed": false,
     "notes": "Existing systems and validation harnesses remain useful foundations, but do not count as product completion until proven through live-client manual play."
@@ -25,14 +25,14 @@
     {
       "id": "phase-1-river-pass-manual-completion",
       "title": "Make River Pass manually completable end-to-end",
-      "status": "in_progress",
-      "focus": "Live-client manual completion with overworld, town, battle, save/resume, victory, defeat, and outcome routing."
+      "status": "completed",
+      "focus": "AcOrP reported River Pass manual completion gate passed on 2026-04-18, covering the live-client overworld, town, battle, save/resume, victory, defeat, and outcome-routing gate."
     },
     {
       "id": "phase-2-playable-alpha-baseline",
       "title": "Playable alpha baseline with 2 fully realized factions",
-      "status": "pending",
-      "focus": "Usable town/battle/overworld UX plus deeper units, spells, artifacts, map objects, and multiple completable scenarios."
+      "status": "in_progress",
+      "focus": "Use the faction bible to select and deeply implement two alpha factions while keeping town/battle/overworld UX coherent enough for repeated manual play."
     },
     {
       "id": "phase-3-production-alpha-layer",
@@ -56,7 +56,7 @@
   "activeMilestone": {
     "id": "river-pass-manual-completion",
     "scenario": "River Pass",
-    "status": "in_progress",
+    "status": "completed",
     "goal": "A real player can complete River Pass from the shipped live client without editor-only steps or developer-only knowledge.",
     "acceptanceCriteria": [
       "River Pass launches from the live menu path chosen for the milestone.",
@@ -84,6 +84,12 @@
     {
       "id": "docs-reality-reset",
       "title": "Reset project and plan docs to the prototype/pre-alpha reality",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "faction-bible-design",
+      "title": "Draft a six-faction content bible with no commons or shared faction skeletons",
       "status": "completed",
       "difficulty": "medium"
     },
@@ -143,11 +149,11 @@
     }
   ],
   "nextActions": [
-    "Use the next live/manual River Pass overworld pass to verify the decluttered right shell, Command/Frontier drawers, selected-tile context behavior, and click-to-move flow under real player navigation.",
-    "Continue battle blocker search from live/manual River Pass evidence beyond the confirmed Ghoul Grove ranged shot path, green movement overlap fixes, occupied enemy hex overlap fix, invalid-spell/invalid-order closing-guidance fixes, town-defense withdrawal surface truth fix, same-round commander spell cooldown truth fix, invalid friendly board-click dispatch feedback fix, opening-briefing dispatch override fix, empty non-green hex blocked Move feedback fix, empty non-green hover/click alignment fix, enemy-turn active-stack tooltip truth fix, enemy-turn empty-hex input-lock wording fix, enemy-turn board-footer input-lock wording fix, enemy-turn hover-footer movement lock fix, enemy-turn fallback-tooltip lock fix, enemy-turn attack-highlight lock fix, enemy-turn target-cycle tooltip lock fix, enemy-turn spell-action lock fix, enemy-turn timing-guidance lock fix, enemy-turn withdrawal pressure lock fix, enemy-turn primary command-surface lock fix, and enemy-turn Risk board retarget-lock fix.",
-    "Continue looking for battle interaction gaps that are supported by code/test or live-client evidence before broadening into new battle UI surfaces.",
-    "Continue remaining River Pass outcome proof beyond the routed resolved-flow pass, including manual verification notes where the live client exposes new friction.",
-    "Fill the River Pass parity ledger with live-client evidence, including the routed victory and save/resume artifacts."
+    "Pick the two alpha factions from docs/factions-content-bible.md and freeze their implementation order.",
+    "Translate the selected alpha factions into implementation bundles across factions, heroes, units, towns, buildings, abilities/spells, AI tuning, and validation.",
+    "Capture a short parity-ledger note for River Pass recording AcOrP's passed manual gate so the milestone stays documented beyond chat history.",
+    "Keep fixing battle, town, and overworld friction that appears during repeated manual play instead of treating the passed gate as a polish-free finish line.",
+    "Avoid pretending six-faction breadth exists until at least two factions are deeply implemented and repeatedly playable."
   ],
   "blocked": false
 }
