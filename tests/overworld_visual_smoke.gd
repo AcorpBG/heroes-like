@@ -27,6 +27,8 @@ func _run() -> void:
 		return
 	if not _assert_marker_readability_contract(shell):
 		return
+	if not _assert_overworld_art_contract(shell):
+		return
 	if not await _assert_diagonal_movement_contract(shell, map_node):
 		return
 
@@ -286,6 +288,11 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		return false
 	if not _assert_marker_style(presentation, "town", true):
 		return false
+	var remembered_timber_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
+	if bool(remembered_timber_presentation.get("visible", true)) or not _assert_art_sprite(remembered_timber_presentation, "lumber_wagon", true):
+		push_error("Overworld smoke: remembered mapped pickup did not keep a ghosted sprite treatment. presentation=%s" % remembered_timber_presentation)
+		get_tree().quit(1)
+		return false
 	var visit_result: Dictionary = shell.call("validation_perform_primary_action")
 	if String(session.game_state) != "town" or not bool(visit_result.get("ok", false)):
 		push_error("Overworld smoke: remembered owned town primary action did not route into town management. result=%s state=%s" % [visit_result, session.game_state])
@@ -409,6 +416,53 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: visible %s marker contrast is too weak. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
+	return true
+
+func _assert_overworld_art_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_tile_presentation"):
+		push_error("Overworld smoke: shell is missing art-presentation validation hooks.")
+		get_tree().quit(1)
+		return false
+	var grass_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
+	var grass_terrain: Dictionary = grass_presentation.get("terrain_presentation", {})
+	if not bool(grass_terrain.get("texture_loaded", false)) or String(grass_terrain.get("texture_asset_id", "")) != "grasslands":
+		push_error("Overworld smoke: prepared grasslands terrain texture is not active on the overworld map. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if String(grass_terrain.get("rendering_mode", "")) != "texture_sampled_tile":
+		push_error("Overworld smoke: prepared terrain art is not using the sampled texture rendering path. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+
+	var timber_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
+	if not _assert_art_sprite(timber_presentation, "lumber_wagon", false):
+		return false
+	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 0)
+	if not _assert_art_sprite(artifact_presentation, "adventurers_bundle", false):
+		return false
+	var fallback_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
+	var fallback_art: Dictionary = fallback_presentation.get("art_presentation", {})
+	if bool(fallback_art.get("uses_asset_sprite", true)) or not bool(fallback_art.get("fallback_procedural_marker", false)):
+		push_error("Overworld smoke: unmapped faction outpost did not preserve procedural marker fallback. presentation=%s" % fallback_presentation)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, remembered: bool) -> bool:
+	var art: Dictionary = presentation.get("art_presentation", {})
+	var asset_ids: Array = art.get("sprite_asset_ids", [])
+	if not bool(art.get("uses_asset_sprite", false)) or expected_asset_id not in asset_ids:
+		push_error("Overworld smoke: expected overworld sprite %s was not used. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(art.get("fallback_procedural_marker", true)):
+		push_error("Overworld smoke: mapped overworld sprite %s still reported procedural fallback. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_memory_plate":
+		push_error("Overworld smoke: remembered sprite %s did not report ghosted memory treatment. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
 	return true
 
 func _first_player_town(session) -> Dictionary:

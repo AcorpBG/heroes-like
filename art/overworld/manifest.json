@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "source": {
+    "task_id": 10184,
+    "processed_manifest": "res://art/overworld/source/manifest/generated-overworld-assets-20260419.json",
+    "note": "Generated asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks."
+  },
+  "remembered_object_rendering": "ghosted_sprite_with_memory_plate",
+  "unmapped_object_fallback": "procedural_marker",
+  "terrain_textures": {
+    "grass": {
+      "asset_id": "grasslands",
+      "path": "res://art/overworld/runtime/terrain/grasslands.png"
+    },
+    "plains": {
+      "asset_id": "grasslands",
+      "path": "res://art/overworld/runtime/terrain/grasslands.png"
+    },
+    "forest": {
+      "asset_id": "forest",
+      "path": "res://art/overworld/runtime/terrain/forest.png"
+    },
+    "mire": {
+      "asset_id": "mire",
+      "path": "res://art/overworld/runtime/terrain/mire.png"
+    },
+    "swamp": {
+      "asset_id": "mire",
+      "path": "res://art/overworld/runtime/terrain/mire.png"
+    },
+    "hills": {
+      "asset_id": "highland",
+      "path": "res://art/overworld/runtime/terrain/highland.png"
+    },
+    "ridge": {
+      "asset_id": "highland",
+      "path": "res://art/overworld/runtime/terrain/highland.png"
+    },
+    "highland": {
+      "asset_id": "highland",
+      "path": "res://art/overworld/runtime/terrain/highland.png"
+    }
+  },
+  "object_assets": {
+    "ruined_obelisk": {
+      "path": "res://art/overworld/runtime/objects/pickups/ruined_obelisk.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/pickups/ruined_obelisk-trimmed.png"
+    },
+    "lumber_wagon": {
+      "path": "res://art/overworld/runtime/objects/pickups/lumber_wagon.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/pickups/lumber_wagon-trimmed.png"
+    },
+    "ore_crates": {
+      "path": "res://art/overworld/runtime/objects/pickups/ore_crates.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/pickups/ore_crates-trimmed.png"
+    },
+    "adventurers_bundle": {
+      "path": "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/pickups/adventurers_bundle-trimmed.png"
+    },
+    "guarded_farmhouse": {
+      "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
+    },
+    "kennel": {
+      "path": "res://art/overworld/runtime/objects/dwellings/kennel.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/kennel-trimmed.png"
+    },
+    "falconers_nest": {
+      "path": "res://art/overworld/runtime/objects/dwellings/falconers_nest.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/falconers_nest-trimmed.png"
+    },
+    "alchemists_hut": {
+      "path": "res://art/overworld/runtime/objects/dwellings/alchemists_hut.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/dwellings/alchemists_hut-trimmed.png"
+    },
+    "shrine": {
+      "path": "res://art/overworld/runtime/objects/landmarks/shrine.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/shrine-trimmed.png"
+    },
+    "watchtower": {
+      "path": "res://art/overworld/runtime/objects/landmarks/watchtower.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/watchtower-trimmed.png"
+    },
+    "sawmill": {
+      "path": "res://art/overworld/runtime/objects/landmarks/sawmill.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/sawmill-trimmed.png"
+    },
+    "stone_quarry": {
+      "path": "res://art/overworld/runtime/objects/landmarks/stone_quarry.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/landmarks/stone_quarry-trimmed.png"
+    }
+  },
+  "resource_site_sprites": {
+    "site_waystone_cache": {
+      "asset_id": "ruined_obelisk",
+      "fit": "Waystone Cache is the closest current landmark-ish pickup for the ruined obelisk asset."
+    },
+    "site_timber_wagon": {
+      "asset_id": "lumber_wagon",
+      "fit": "Direct timber wagon pickup match."
+    },
+    "site_ore_crates": {
+      "asset_id": "ore_crates",
+      "fit": "Direct ore crates pickup match."
+    },
+    "site_free_company_yard": {
+      "asset_id": "guarded_farmhouse",
+      "fit": "Best-effort Roadward Lodge style dwelling match."
+    },
+    "site_riverwatch_free_company_yard": {
+      "asset_id": "guarded_farmhouse",
+      "fit": "Best-effort lodge/yard dwelling match for the River Pass faction-linked site."
+    },
+    "site_orchard_levy": {
+      "asset_id": "guarded_farmhouse",
+      "fit": "Best-effort farm/orchard dwelling match."
+    },
+    "site_fenhound_kennels": {
+      "asset_id": "kennel",
+      "fit": "Direct kennel/fenhound dwelling match."
+    },
+    "site_cliffhawk_roost": {
+      "asset_id": "falconers_nest",
+      "fit": "Best-effort cliffhawk/falconer roost match."
+    },
+    "site_kite_signal_eyrie": {
+      "asset_id": "falconers_nest",
+      "fit": "Best-effort aerial eyrie match."
+    },
+    "site_wayfarer_infirmary": {
+      "asset_id": "alchemists_hut",
+      "fit": "Best-effort repeatable service hut match."
+    },
+    "site_scout_shrine": {
+      "asset_id": "shrine",
+      "fit": "Direct shrine-style pickup match."
+    },
+    "site_roadside_sanctum": {
+      "asset_id": "shrine",
+      "fit": "Frontier shrine/sanctum match."
+    },
+    "site_reedscript_shrine": {
+      "asset_id": "shrine",
+      "fit": "Frontier shrine/sanctum match."
+    },
+    "site_starlens_sanctum": {
+      "asset_id": "shrine",
+      "fit": "Frontier shrine/sanctum match."
+    },
+    "site_watchtower_beacon": {
+      "asset_id": "watchtower",
+      "fit": "Direct watchtower/scouting structure match."
+    },
+    "site_brightwood_sawmill": {
+      "asset_id": "sawmill",
+      "fit": "Direct sawmill/mine economy match."
+    },
+    "site_ridge_quarry": {
+      "asset_id": "stone_quarry",
+      "fit": "Direct quarry/mine economy match."
+    }
+  },
+  "artifact_default_sprite": {
+    "asset_id": "adventurers_bundle",
+    "fit": "Generic artifact/pickup bundle until individual artifact silhouettes exist."
+  }
+}
