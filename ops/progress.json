@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-19T14:32:28Z",
+  "updatedAt": "2026-04-19T20:09:22Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-diagonal-movement-acorp-10184",
-  "currentSliceTitle": "Allow diagonal overworld movement at the same one-point cost as cardinal movement",
+  "currentSliceId": "overworld-art-assets-10184",
+  "currentSliceTitle": "Prepare and wire the newly cut overworld terrain and object assets",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the narrow AcOrP-requested overworld diagonal movement slice. Diagonal directions now participate in path preview/pathing, map click movement, and keyboard movement, with diagonal steps still costing exactly one movement point. The visual smoke parse blocker was fixed by typing the new diagonal fixture locals and choosing an object-free diagonal lane for route coverage. Focused validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/core_systems_regression_smoke.tscn, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed the narrow overworld art integration slice. The generated assets now live under art/overworld with a runtime/source split and a repo-local manifest documenting conservative semantic mappings. OverworldMapView samples prepared terrain textures for grass/plains, forest, mire/swamp, and hills/ridge/highland; mapped resource sites and artifacts use sprites; remembered mapped objects use a ghosted sprite over the existing memory plate; unmapped sites, towns, encounters, and unsupported terrain retain procedural fallbacks. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -160,6 +160,12 @@
       "difficulty": "small"
     },
     {
+      "id": "overworld-art-assets-10184",
+      "title": "Prepare and wire newly cut overworld terrain and object assets",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -215,6 +221,7 @@
     }
   ],
   "nextActions": [
+    "Manually inspect the new overworld art treatment in River Pass and Ninefold Confluence before calling the generated asset set visually polished.",
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
     "Manually inspect Ninefold Confluence's panning and remembered-object readability in the live client at the supported 16:9 runtime resolutions before treating the large-map UX as broadly polished.",
     "Deepen selected neutral dwelling families in Ninefold Confluence with encounter tuning and manual play notes before claiming balance or player-facing readiness.",

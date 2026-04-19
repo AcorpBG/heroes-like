@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import struct
 import sys
 from pathlib import Path
 
@@ -39,6 +40,8 @@ MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
+OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
@@ -176,6 +179,32 @@ LOGISTICS_SITE_IDS = {
     "site_reedscript_shrine",
     "site_starlens_sanctum",
 }
+OVERWORLD_ART_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
+OVERWORLD_ART_REQUIRED_ASSET_IDS = {
+    "ruined_obelisk",
+    "lumber_wagon",
+    "ore_crates",
+    "adventurers_bundle",
+    "guarded_farmhouse",
+    "kennel",
+    "falconers_nest",
+    "alchemists_hut",
+    "shrine",
+    "watchtower",
+    "sawmill",
+    "stone_quarry",
+}
+OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
+    "site_timber_wagon": "lumber_wagon",
+    "site_ore_crates": "ore_crates",
+    "site_waystone_cache": "ruined_obelisk",
+    "site_fenhound_kennels": "kennel",
+    "site_cliffhawk_roost": "falconers_nest",
+    "site_watchtower_beacon": "watchtower",
+    "site_brightwood_sawmill": "sawmill",
+    "site_ridge_quarry": "stone_quarry",
+    "site_roadside_sanctum": "shrine",
+}
 RELEASE_LOGISTICS_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers"}
 STRATEGIC_RESPONSE_SCENARIO_IDS = {"river-pass", "reedbarrow-ferry", "prismhearth-watch", "glassfen-breakers", "lockmarsh-surge"}
 CAPITAL_PROJECT_BUILDING_IDS = {
@@ -298,6 +327,21 @@ ENEMY_STRATEGY_KEYS = {
 def load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def res_path_to_disk(path: str) -> Path:
+    if path.startswith("res://"):
+        return ROOT / path.removeprefix("res://")
+    return Path(path)
+
+
+def png_size(path: Path) -> tuple[int, int]:
+    with path.open("rb") as handle:
+        header = handle.read(24)
+    if len(header) < 24 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        return (0, 0)
+    width, height = struct.unpack(">II", header[16:24])
+    return (int(width), int(height))
 
 
 def items_index(payload: dict) -> dict[str, dict]:
@@ -4345,6 +4389,84 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
     ensure("ContentService.get_biome_for_terrain" in scenario_rules_text, errors, "ScenarioRules.gd must label scenario terrain through authored biomes")
 
 
+def validate_overworld_art_asset_slice(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_ART_MANIFEST_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        ROOT / "art" / "overworld" / "source" / "manifest" / "generated-overworld-assets-20260419.json",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing overworld art slice file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    terrain_textures = manifest.get("terrain_textures", {})
+    object_assets = manifest.get("object_assets", {})
+    site_sprites = manifest.get("resource_site_sprites", {})
+    artifact_default = manifest.get("artifact_default_sprite", {})
+    ensure(isinstance(terrain_textures, dict), errors, "Overworld art manifest must define terrain_textures")
+    ensure(isinstance(object_assets, dict), errors, "Overworld art manifest must define object_assets")
+    ensure(isinstance(site_sprites, dict), errors, "Overworld art manifest must define resource_site_sprites")
+    ensure(isinstance(artifact_default, dict), errors, "Overworld art manifest must define artifact_default_sprite")
+    if not isinstance(terrain_textures, dict) or not isinstance(object_assets, dict) or not isinstance(site_sprites, dict):
+        return
+
+    ensure(OVERWORLD_ART_REQUIRED_TERRAIN_IDS.issubset(set(terrain_textures.keys())), errors, "Overworld art manifest must map prepared terrain textures to current terrain ids")
+    for terrain_id, entry in terrain_textures.items():
+        ensure(isinstance(entry, dict), errors, f"Overworld terrain art mapping {terrain_id} must be a dictionary")
+        if not isinstance(entry, dict):
+            continue
+        disk_path = res_path_to_disk(str(entry.get("path", "")))
+        ensure(disk_path.exists(), errors, f"Overworld terrain art mapping {terrain_id} references missing texture {entry.get('path')}")
+        if disk_path.exists():
+            width, height = png_size(disk_path)
+            ensure(width >= 512 and height >= 512, errors, f"Overworld terrain texture {entry.get('path')} must keep a large runtime source, found {width}x{height}")
+
+    ensure(OVERWORLD_ART_REQUIRED_ASSET_IDS.issubset(set(object_assets.keys())), errors, "Overworld art manifest must preserve all twelve prepared object asset ids")
+    for asset_id, entry in object_assets.items():
+        ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
+        if not isinstance(entry, dict):
+            continue
+        runtime_path = res_path_to_disk(str(entry.get("path", "")))
+        source_trimmed_path = res_path_to_disk(str(entry.get("source_trimmed", "")))
+        ensure(runtime_path.exists(), errors, f"Overworld object art asset {asset_id} references missing runtime texture {entry.get('path')}")
+        ensure(source_trimmed_path.exists(), errors, f"Overworld object art asset {asset_id} references missing trimmed source texture {entry.get('source_trimmed')}")
+        if runtime_path.exists():
+            width, height = png_size(runtime_path)
+            ensure((width, height) == (512, 512), errors, f"Overworld runtime object asset {asset_id} must use the 512 canvas, found {width}x{height}")
+
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    for site_id, expected_asset_id in OVERWORLD_ART_REQUIRED_SITE_MAPPINGS.items():
+        ensure(site_id in resource_sites, errors, f"Overworld art required mapping references missing resource site {site_id}")
+        entry = site_sprites.get(site_id, {})
+        ensure(isinstance(entry, dict), errors, f"Overworld art required mapping {site_id} must be a dictionary")
+        if isinstance(entry, dict):
+            ensure(str(entry.get("asset_id", "")) == expected_asset_id, errors, f"Overworld art mapping {site_id} must use {expected_asset_id}")
+            ensure(str(entry.get("fit", "")) != "", errors, f"Overworld art mapping {site_id} must record its semantic-fit note")
+    for site_id, entry in site_sprites.items():
+        ensure(str(site_id) in resource_sites, errors, f"Overworld art mapping references missing resource site {site_id}")
+        if isinstance(entry, dict):
+            ensure(str(entry.get("asset_id", "")) in object_assets, errors, f"Overworld art mapping {site_id} references missing object asset {entry.get('asset_id')}")
+
+    ensure(str(artifact_default.get("asset_id", "")) == "adventurers_bundle", errors, "Overworld artifact default sprite must use the adventurers_bundle pickup asset")
+    ensure(str(manifest.get("unmapped_object_fallback", "")) == "procedural_marker", errors, "Overworld art manifest must keep procedural marker fallback for unmapped object types")
+    ensure(str(manifest.get("remembered_object_rendering", "")) == "ghosted_sprite_with_memory_plate", errors, "Overworld art manifest must document the remembered-object sprite treatment")
+
+    map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "OVERWORLD_ART_MANIFEST_PATH",
+        "func _load_overworld_art_manifest",
+        "func _draw_terrain_texture",
+        "func _draw_object_sprite",
+        "func _resource_asset_id",
+        '"texture_sampled_tile"',
+        '"fallback_procedural_marker"',
+        "ghosted_sprite_with_memory_plate",
+    ):
+        ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing overworld art token {required_token}")
+
+
 def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
     required_paths = (
         NEUTRAL_DWELLINGS_PATH,
@@ -5498,6 +5620,7 @@ def main() -> int:
     validate_overworld_logistics_sites(errors)
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
+    validate_overworld_art_asset_slice(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_six_faction_biome_scenario_breadth(errors)
     validate_town_frontline_reinforcement_delivery(errors)
@@ -5561,6 +5684,7 @@ def main() -> int:
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
     print("- overworld biomes and map-object families now have authored content domains, validation, and runtime family hooks")
+    print("- overworld terrain and selected object assets now have repo-local runtime/source files, manifest mappings, renderer hooks, and procedural fallbacks")
     print("- Ninefold Confluence keeps a 64x64 six-faction, nine-biome, all-neutral-dwelling breadth scenario under validation")
     print("- hostile empires now keep faction-specific build, raid, reinforcement, and priority-front personalities across authored scenarios")
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")

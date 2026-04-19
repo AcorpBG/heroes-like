@@ -116,6 +116,10 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
 	if not _assert_marker_style(town_presentation, "town", false):
 		return false
+	var terrain_presentation: Dictionary = town_presentation.get("terrain_presentation", {})
+	if not bool(terrain_presentation.get("texture_loaded", false)) or String(terrain_presentation.get("rendering_mode", "")) != "texture_sampled_tile":
+		_fail("Ninefold smoke: large-map starting terrain is not using prepared overworld texture art: %s." % town_presentation)
+		return false
 	var town_readability: Dictionary = town_presentation.get("marker_readability", {})
 	if not bool(town_readability.get("hero_emphasis", false)) or not bool(town_readability.get("selection_emphasis", false)):
 		_fail("Ninefold smoke: active hero/current-selection emphasis is not readable on the large starting town tile: %s." % town_presentation)
@@ -124,6 +128,10 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	var resource_tile := Vector2i(23, 24)
 	var resource_presentation: Dictionary = shell.call("validation_tile_presentation", resource_tile.x, resource_tile.y)
 	if not _assert_marker_style(resource_presentation, "resource", false):
+		return false
+	var art_presentation: Dictionary = resource_presentation.get("art_presentation", {})
+	if bool(art_presentation.get("uses_asset_sprite", true)) or not bool(art_presentation.get("fallback_procedural_marker", false)):
+		_fail("Ninefold smoke: unmapped large-map resource site did not keep procedural marker fallback: %s." % resource_presentation)
 		return false
 	return true
 

@@ -260,6 +260,32 @@ Limits:
 - This is only the diagonal overworld movement slice, not a broader pathfinding, movement-cost, terrain-cost, or camera redesign.
 - Diagonal movement currently uses the existing one-point step economy; any future terrain-weighted or corner-cutting rule should be a separate documented slice.
 
+## Current Implementation Slice: Overworld Art Asset Integration
+Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
+
+Purpose:
+- Move the newly processed overworld terrain and object assets into repo-local art paths that Godot can load directly.
+- Use the art where semantic matches are clear enough, without pretending the generated asset set covers the whole overworld vocabulary.
+- Preserve the existing procedural marker system as the fallback for unmapped or uncertain object families.
+
+Implemented:
+- Added `art/overworld/` with a clear runtime/source split: runtime terrain textures, 512-canvas runtime object sprites, trimmed source object cuts, the generated source manifest, and a repo-local mapping manifest.
+- Wired `OverworldMapView` to load `art/overworld/manifest.json`, sample terrain textures for grass/plains, forest, mire/swamp, and hills/ridge/highland, and fall back to the existing color/pattern rendering for unsupported terrain ids such as water, snow, ash, badlands, and cavern.
+- Wired selected resource-site and artifact sprites through explicit best-effort mappings: timber wagon, ore crates, waystone cache/ruined obelisk, selected neutral dwellings, shrines, watchtower, sawmill, quarry, and a generic artifact bundle.
+- Preserved procedural markers for towns, encounters, unsupported resource sites, and every unmapped object/site family; remembered mapped objects use a ghosted sprite over the existing memory plate treatment.
+- Extended repo validation and overworld smokes to guard asset paths, manifest mappings, texture terrain activation, mapped sprite activation, remembered sprite treatment, and procedural fallback for unmapped sites.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- The generated assets are imperfect and semantically partial; mappings are intentionally conservative and recorded in `art/overworld/manifest.json`.
+- This is not a complete overworld art pass, town art pass, encounter art pass, or object-footprint system.
+- Automated smokes prove runtime loading and presentation metadata, not manual visual polish across every object, biome, and resolution.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

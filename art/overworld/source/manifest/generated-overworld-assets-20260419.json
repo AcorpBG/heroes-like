@@ -1,0 +1,345 @@
+{
+  "textures": [
+    {
+      "name": "grasslands",
+      "file": "processed/terrain/grasslands.png",
+      "size": [
+        1408,
+        768
+      ]
+    },
+    {
+      "name": "forest",
+      "file": "processed/terrain/forest.png",
+      "size": [
+        1408,
+        768
+      ]
+    },
+    {
+      "name": "mire",
+      "file": "processed/terrain/mire.png",
+      "size": [
+        1408,
+        768
+      ]
+    },
+    {
+      "name": "highland",
+      "file": "processed/terrain/highland.png",
+      "size": [
+        1408,
+        768
+      ]
+    }
+  ],
+  "sheets": [
+    {
+      "sheet": "pickups-sheet/001-top-down-painted-fantasy-overworld-asset.png",
+      "preview": "processed/pickups/pickups-quadrant-preview.png",
+      "items": [
+        {
+          "slot": 1,
+          "name": "slot-01",
+          "trimmed": "processed/pickups/ruined_obelisk-trimmed.png",
+          "canvas": "processed/pickups/ruined_obelisk-512.png",
+          "trimmed_size": [
+            494,
+            353
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            56,
+            23,
+            676,
+            376
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "ruined_obelisk",
+          "trimmed_original": "processed/pickups/pickups-slot-01-trimmed.png",
+          "canvas_original": "processed/pickups/pickups-slot-01-512.png"
+        },
+        {
+          "slot": 2,
+          "name": "slot-02",
+          "trimmed": "processed/pickups/lumber_wagon-trimmed.png",
+          "canvas": "processed/pickups/lumber_wagon-512.png",
+          "trimmed_size": [
+            526,
+            352
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            732,
+            23,
+            1352,
+            376
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "lumber_wagon",
+          "trimmed_original": "processed/pickups/pickups-slot-02-trimmed.png",
+          "canvas_original": "processed/pickups/pickups-slot-02-512.png"
+        },
+        {
+          "slot": 3,
+          "name": "slot-03",
+          "trimmed": "processed/pickups/ore_crates-trimmed.png",
+          "canvas": "processed/pickups/ore_crates-512.png",
+          "trimmed_size": [
+            489,
+            312
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            56,
+            392,
+            676,
+            737
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "ore_crates",
+          "trimmed_original": "processed/pickups/pickups-slot-03-trimmed.png",
+          "canvas_original": "processed/pickups/pickups-slot-03-512.png"
+        },
+        {
+          "slot": 4,
+          "name": "slot-04",
+          "trimmed": "processed/pickups/adventurers_bundle-trimmed.png",
+          "canvas": "processed/pickups/adventurers_bundle-512.png",
+          "trimmed_size": [
+            480,
+            314
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            732,
+            392,
+            1352,
+            737
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "adventurers_bundle",
+          "trimmed_original": "processed/pickups/pickups-slot-04-trimmed.png",
+          "canvas_original": "processed/pickups/pickups-slot-04-512.png"
+        }
+      ]
+    },
+    {
+      "sheet": "dwellings-sheet-clean/001-top-down-painted-fantasy-overworld-asset.png",
+      "preview": "processed/dwellings/dwellings-quadrant-preview.png",
+      "items": [
+        {
+          "slot": 1,
+          "name": "slot-01",
+          "trimmed": "processed/dwellings/guarded_farmhouse-trimmed.png",
+          "canvas": "processed/dwellings/guarded_farmhouse-512.png",
+          "trimmed_size": [
+            542,
+            343
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            56,
+            23,
+            676,
+            376
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "guarded_farmhouse",
+          "trimmed_original": "processed/dwellings/dwellings-slot-01-trimmed.png",
+          "canvas_original": "processed/dwellings/dwellings-slot-01-512.png"
+        },
+        {
+          "slot": 2,
+          "name": "slot-02",
+          "trimmed": "processed/dwellings/kennel-trimmed.png",
+          "canvas": "processed/dwellings/kennel-512.png",
+          "trimmed_size": [
+            617,
+            352
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            732,
+            23,
+            1352,
+            376
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "kennel",
+          "trimmed_original": "processed/dwellings/dwellings-slot-02-trimmed.png",
+          "canvas_original": "processed/dwellings/dwellings-slot-02-512.png"
+        },
+        {
+          "slot": 3,
+          "name": "slot-03",
+          "trimmed": "processed/dwellings/falconers_nest-trimmed.png",
+          "canvas": "processed/dwellings/falconers_nest-512.png",
+          "trimmed_size": [
+            552,
+            345
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            56,
+            392,
+            676,
+            737
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "falconers_nest",
+          "trimmed_original": "processed/dwellings/dwellings-slot-03-trimmed.png",
+          "canvas_original": "processed/dwellings/dwellings-slot-03-512.png"
+        },
+        {
+          "slot": 4,
+          "name": "slot-04",
+          "trimmed": "processed/dwellings/alchemists_hut-trimmed.png",
+          "canvas": "processed/dwellings/alchemists_hut-512.png",
+          "trimmed_size": [
+            549,
+            345
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            732,
+            392,
+            1352,
+            737
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "alchemists_hut",
+          "trimmed_original": "processed/dwellings/dwellings-slot-04-trimmed.png",
+          "canvas_original": "processed/dwellings/dwellings-slot-04-512.png"
+        }
+      ]
+    },
+    {
+      "sheet": "landmarks-sheet/001-top-down-painted-fantasy-overworld-asset.png",
+      "preview": "processed/landmarks/landmarks-quadrant-preview.png",
+      "items": [
+        {
+          "slot": 1,
+          "name": "slot-01",
+          "trimmed": "processed/landmarks/shrine-trimmed.png",
+          "canvas": "processed/landmarks/shrine-512.png",
+          "trimmed_size": [
+            581,
+            353
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            56,
+            23,
+            676,
+            376
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "shrine",
+          "trimmed_original": "processed/landmarks/landmarks-slot-01-trimmed.png",
+          "canvas_original": "processed/landmarks/landmarks-slot-01-512.png"
+        },
+        {
+          "slot": 2,
+          "name": "slot-02",
+          "trimmed": "processed/landmarks/watchtower-trimmed.png",
+          "canvas": "processed/landmarks/watchtower-512.png",
+          "trimmed_size": [
+            620,
+            353
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            732,
+            23,
+            1352,
+            376
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "watchtower",
+          "trimmed_original": "processed/landmarks/landmarks-slot-02-trimmed.png",
+          "canvas_original": "processed/landmarks/landmarks-slot-02-512.png"
+        },
+        {
+          "slot": 3,
+          "name": "slot-03",
+          "trimmed": "processed/landmarks/sawmill-trimmed.png",
+          "canvas": "processed/landmarks/sawmill-512.png",
+          "trimmed_size": [
+            620,
+            345
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            56,
+            392,
+            676,
+            737
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "sawmill",
+          "trimmed_original": "processed/landmarks/landmarks-slot-03-trimmed.png",
+          "canvas_original": "processed/landmarks/landmarks-slot-03-512.png"
+        },
+        {
+          "slot": 4,
+          "name": "slot-04",
+          "trimmed": "processed/landmarks/stone_quarry-trimmed.png",
+          "canvas": "processed/landmarks/stone_quarry-512.png",
+          "trimmed_size": [
+            576,
+            345
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "source_quad_px": [
+            732,
+            392,
+            1352,
+            737
+          ],
+          "note": "best-effort semantic rename from visual inspection; verify before game integration",
+          "id": "stone_quarry",
+          "trimmed_original": "processed/landmarks/landmarks-slot-04-trimmed.png",
+          "canvas_original": "processed/landmarks/landmarks-slot-04-512.png"
+        }
+      ]
+    }
+  ],
+  "naming_note": "Semantic filenames are best-effort visual identifications from the generated sheets, not guaranteed lore-accurate IDs."
+}

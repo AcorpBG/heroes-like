@@ -6,6 +6,7 @@ signal tile_hovered(tile: Vector2i)
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 
+const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
 const MAP_PADDING := 22.0
 const TACTICAL_VISIBLE_TILE_SPAN := 12.0
 const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
@@ -50,6 +51,12 @@ const MARKER_RING_VISIBLE := Color(1.0, 0.91, 0.56, 0.50)
 const MARKER_RING_MEMORY := Color(0.82, 0.93, 0.96, 0.80)
 const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
+const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
+const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
+const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 0.96)
+const OBJECT_SPRITE_MEMORY_MODULATE := Color(0.72, 0.82, 0.84, 0.82)
+const TERRAIN_TEXTURE_MODULATE := Color(1.0, 1.0, 1.0, 0.88)
+const TERRAIN_TEXTURE_SAMPLE_EXTENT := 192.0
 const TOWN_MARKER_BODY_WIDTH := 0.64
 const TOWN_MARKER_BODY_HEIGHT := 0.34
 const RESOURCE_MARKER_RADIUS := 0.17
@@ -86,12 +93,23 @@ var _drag_start_position := Vector2.ZERO
 var _drag_last_position := Vector2.ZERO
 var _dragging_camera := false
 var _pending_click_position := Vector2.ZERO
+var _overworld_art_manifest: Dictionary = {}
+var _terrain_texture_paths: Dictionary = {}
+var _terrain_asset_ids: Dictionary = {}
+var _terrain_textures: Dictionary = {}
+var _terrain_texture_missing: Dictionary = {}
+var _object_asset_paths: Dictionary = {}
+var _object_textures: Dictionary = {}
+var _object_texture_missing: Dictionary = {}
+var _resource_site_asset_ids: Dictionary = {}
+var _artifact_default_asset_id := ""
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
 	clip_contents = true
 	custom_minimum_size = Vector2(640, 400)
+	_load_overworld_art_manifest()
 
 func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i) -> void:
 	_session = session
@@ -209,22 +227,37 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 	var terrain = _terrain_at(tile)
 	var base_color: Color = TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"])
 	draw_rect(rect, base_color, true)
-
-	match terrain:
-		"forest":
-			_draw_forest_pattern(rect, true)
-		"water":
-			_draw_water_pattern(rect, true)
-		"mire", "swamp":
-			_draw_mire_pattern(rect, true)
-		"hills", "ridge":
-			_draw_ridge_pattern(rect, true)
-		"snow":
-			_draw_snow_pattern(rect, true)
-		_:
-			_draw_grass_pattern(rect, true)
+	var terrain_texture = _terrain_texture_for(terrain)
+	if terrain_texture is Texture2D:
+		_draw_terrain_texture(tile, rect, terrain_texture)
+	else:
+		match terrain:
+			"forest":
+				_draw_forest_pattern(rect, true)
+			"water":
+				_draw_water_pattern(rect, true)
+			"mire", "swamp":
+				_draw_mire_pattern(rect, true)
+			"hills", "ridge":
+				_draw_ridge_pattern(rect, true)
+			"snow":
+				_draw_snow_pattern(rect, true)
+			_:
+				_draw_grass_pattern(rect, true)
 
 	draw_rect(rect, GRID_COLOR, false, 1.0)
+
+func _draw_terrain_texture(tile: Vector2i, rect: Rect2, texture: Texture2D) -> void:
+	var texture_size := Vector2(float(texture.get_width()), float(texture.get_height()))
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0:
+		return
+	var sample_extent := minf(TERRAIN_TEXTURE_SAMPLE_EXTENT, minf(texture_size.x, texture_size.y))
+	var max_x := maxf(texture_size.x - sample_extent, 0.0)
+	var max_y := maxf(texture_size.y - sample_extent, 0.0)
+	var source_x := 0.0 if max_x <= 0.0 else fposmod(float((tile.x * 97) + (tile.y * 31)), max_x)
+	var source_y := 0.0 if max_y <= 0.0 else fposmod(float((tile.y * 83) + (tile.x * 43)), max_y)
+	var source_rect := Rect2(Vector2(source_x, source_y), Vector2(sample_extent, sample_extent))
+	draw_texture_rect_region(texture, rect, source_rect, TERRAIN_TEXTURE_MODULATE)
 
 func _draw_grass_pattern(rect: Rect2, visible: bool) -> void:
 	var color = Color(0.69, 0.84, 0.43, 0.18 if visible else 0.10)
@@ -313,14 +346,45 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 
 	if _has_town_at(tile):
 		_draw_town_marker(rect, _town_color(tile), remembered)
-	if _has_resource_at(tile):
-		_draw_resource_marker(rect, remembered)
-	if _has_artifact_at(tile):
-		_draw_artifact_marker(rect, remembered)
+	var resource_node := _resource_node_at(tile)
+	if not resource_node.is_empty():
+		if not _draw_resource_sprite(resource_node, rect, remembered):
+			_draw_resource_marker(rect, remembered)
+	var artifact_node := _artifact_node_at(tile)
+	if not artifact_node.is_empty():
+		if not _draw_artifact_sprite(artifact_node, rect, remembered):
+			_draw_artifact_marker(rect, remembered)
 	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
 		_draw_encounter_marker(rect, remembered)
 	if visible and _has_hero_at(tile):
 		_draw_hero_marker(rect, tile)
+
+func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool) -> bool:
+	return _draw_object_sprite(_resource_asset_id(node), rect, remembered)
+
+func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool) -> bool:
+	if node.is_empty():
+		return false
+	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered)
+
+func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool) -> bool:
+	var texture = _object_texture_for_asset(asset_id)
+	if not (texture is Texture2D):
+		return false
+	_draw_marker_plate(rect, remembered, OBJECT_SPRITE_PLATE_RADIUS_FACTOR)
+	var extent := minf(rect.size.x, rect.size.y)
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	draw_circle(
+		rect.get_center(),
+		maxf(7.0, extent * OBJECT_SPRITE_PLATE_RADIUS_FACTOR),
+		outline_color,
+		false,
+		maxf(2.0, extent * 0.034)
+	)
+	var sprite_extent := maxf(12.0, extent * OBJECT_SPRITE_EXTENT_FACTOR)
+	var sprite_rect := Rect2(rect.get_center() - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	return true
 
 func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> void:
 	_draw_marker_plate(rect, remembered, 0.35)
@@ -724,6 +788,7 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"draws_remembered_object": remembered_object,
 		"terrain_presentation": _terrain_visual_payload(tile, explored, visible),
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
+		"art_presentation": _object_art_payload(tile, explored, visible, object_kinds),
 	}
 
 func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:
@@ -737,9 +802,15 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 			"memory_overlay_alpha": 0.0,
 			"pattern_detail": "hidden",
 			"fill_color": _color_payload(UNEXPLORED_COLOR),
+			"texture_loaded": false,
+			"texture_asset_id": "",
+			"texture_path": "",
+			"rendering_mode": "hidden_fog",
 		}
 	var terrain := _terrain_at(tile)
 	var base_color: Color = TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"])
+	var texture = _terrain_texture_for(terrain)
+	var texture_path := _terrain_texture_path_for(terrain)
 	return {
 		"terrain": terrain,
 		"state": "current_scout_net" if visible else "explored_outside_scout_net",
@@ -749,6 +820,38 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"memory_overlay_alpha": 0.0,
 		"pattern_detail": "full",
 		"fill_color": _color_payload(base_color),
+		"texture_loaded": texture is Texture2D,
+		"texture_asset_id": _terrain_asset_id_for(terrain),
+		"texture_path": texture_path,
+		"rendering_mode": "texture_sampled_tile" if texture is Texture2D else "procedural_color_pattern",
+	}
+
+func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array) -> Dictionary:
+	if not explored:
+		return {
+			"uses_asset_sprite": false,
+			"fallback_procedural_marker": false,
+			"sprite_asset_ids": [],
+			"remembered_sprite_treatment": "",
+			"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
+		}
+	var sprite_asset_ids: Array[String] = []
+	var resource_node := _resource_node_at(tile)
+	if not resource_node.is_empty():
+		var resource_asset_id := _resource_asset_id(resource_node)
+		if resource_asset_id != "" and _object_texture_for_asset(resource_asset_id) is Texture2D:
+			sprite_asset_ids.append(resource_asset_id)
+	var artifact_node := _artifact_node_at(tile)
+	if not artifact_node.is_empty() and _artifact_default_asset_id != "":
+		if _object_texture_for_asset(_artifact_default_asset_id) is Texture2D:
+			sprite_asset_ids.append(_artifact_default_asset_id)
+	var uses_asset_sprite := not sprite_asset_ids.is_empty()
+	return {
+		"uses_asset_sprite": uses_asset_sprite,
+		"fallback_procedural_marker": not uses_asset_sprite and not object_kinds.is_empty(),
+		"sprite_asset_ids": sprite_asset_ids,
+		"remembered_sprite_treatment": "ghosted_sprite_with_memory_plate" if uses_asset_sprite and not visible else "",
+		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
 func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array, has_visible_hero: bool) -> Dictionary:
@@ -761,11 +864,20 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var rect := _tile_rect(board_rect, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var min_symbol_fraction := _minimum_symbol_fraction(object_kinds)
+	var art_payload := _object_art_payload(tile, explored, visible, object_kinds)
+	var uses_asset_sprite := bool(art_payload.get("uses_asset_sprite", false))
+	if uses_asset_sprite:
+		min_symbol_fraction = maxf(min_symbol_fraction, OBJECT_SPRITE_EXTENT_FACTOR)
+	var plate_radius_fraction := MARKER_PLATE_RADIUS_FACTOR
+	if uses_asset_sprite:
+		plate_radius_fraction = OBJECT_SPRITE_PLATE_RADIUS_FACTOR
+	elif has_visible_hero and not has_object_marker:
+		plate_radius_fraction = HERO_PLATE_RADIUS_FACTOR
 	return {
 		"object_kinds": object_kinds,
 		"marker_kinds": marker_kinds,
 		"contrast_plate": has_object_marker or has_visible_hero,
-		"plate_radius_fraction": HERO_PLATE_RADIUS_FACTOR if has_visible_hero and not has_object_marker else MARKER_PLATE_RADIUS_FACTOR,
+		"plate_radius_fraction": plate_radius_fraction,
 		"plate_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
 		"ring_alpha": MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a,
 		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
@@ -821,6 +933,132 @@ func _color_payload(color: Color) -> Dictionary:
 		"a": color.a,
 	}
 
+func _load_overworld_art_manifest() -> void:
+	_overworld_art_manifest.clear()
+	_terrain_texture_paths.clear()
+	_terrain_asset_ids.clear()
+	_terrain_textures.clear()
+	_terrain_texture_missing.clear()
+	_object_asset_paths.clear()
+	_object_textures.clear()
+	_object_texture_missing.clear()
+	_resource_site_asset_ids.clear()
+	_artifact_default_asset_id = ""
+
+	if not FileAccess.file_exists(OVERWORLD_ART_MANIFEST_PATH):
+		push_warning("Overworld art manifest is missing; procedural overworld markers remain active.")
+		return
+	var file := FileAccess.open(OVERWORLD_ART_MANIFEST_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("Unable to read overworld art manifest; procedural overworld markers remain active.")
+		return
+	var parser := JSON.new()
+	var error := parser.parse(file.get_as_text())
+	if error != OK or not (parser.data is Dictionary):
+		push_warning("Invalid overworld art manifest; procedural overworld markers remain active.")
+		return
+	_overworld_art_manifest = parser.data
+
+	var terrain_textures = _overworld_art_manifest.get("terrain_textures", {})
+	if terrain_textures is Dictionary:
+		for terrain_id_value in terrain_textures.keys():
+			var entry = terrain_textures.get(terrain_id_value, {})
+			if not (entry is Dictionary):
+				continue
+			var terrain_id := String(terrain_id_value).strip_edges().to_lower()
+			var texture_path := String(entry.get("path", ""))
+			if terrain_id == "" or texture_path == "":
+				continue
+			_terrain_texture_paths[terrain_id] = texture_path
+			_terrain_asset_ids[terrain_id] = String(entry.get("asset_id", terrain_id))
+
+	var object_assets = _overworld_art_manifest.get("object_assets", {})
+	if object_assets is Dictionary:
+		for asset_id_value in object_assets.keys():
+			var entry = object_assets.get(asset_id_value, {})
+			if not (entry is Dictionary):
+				continue
+			var asset_id := String(asset_id_value)
+			var texture_path := String(entry.get("path", ""))
+			if asset_id == "" or texture_path == "":
+				continue
+			_object_asset_paths[asset_id] = texture_path
+
+	var resource_site_sprites = _overworld_art_manifest.get("resource_site_sprites", {})
+	if resource_site_sprites is Dictionary:
+		for site_id_value in resource_site_sprites.keys():
+			var entry = resource_site_sprites.get(site_id_value, {})
+			if not (entry is Dictionary):
+				continue
+			var site_id := String(site_id_value)
+			var asset_id := String(entry.get("asset_id", ""))
+			if site_id != "" and asset_id != "":
+				_resource_site_asset_ids[site_id] = asset_id
+
+	var artifact_default = _overworld_art_manifest.get("artifact_default_sprite", {})
+	if artifact_default is Dictionary:
+		_artifact_default_asset_id = String(artifact_default.get("asset_id", ""))
+
+func _terrain_texture_for(terrain_id: String):
+	var texture_id := _terrain_texture_key(terrain_id)
+	if texture_id == "":
+		return null
+	if _terrain_textures.has(texture_id):
+		return _terrain_textures.get(texture_id)
+	if _terrain_texture_missing.has(texture_id):
+		return null
+	var texture_path := _terrain_texture_path_for(texture_id)
+	if texture_path == "":
+		_terrain_texture_missing[texture_id] = texture_path
+		return null
+	var texture = _texture_from_path(texture_path)
+	if texture is Texture2D:
+		_terrain_textures[texture_id] = texture
+		return texture
+	_terrain_texture_missing[texture_id] = texture_path
+	return null
+
+func _terrain_texture_key(terrain_id: String) -> String:
+	return terrain_id.strip_edges().to_lower()
+
+func _terrain_texture_path_for(terrain_id: String) -> String:
+	return String(_terrain_texture_paths.get(_terrain_texture_key(terrain_id), ""))
+
+func _terrain_asset_id_for(terrain_id: String) -> String:
+	return String(_terrain_asset_ids.get(_terrain_texture_key(terrain_id), ""))
+
+func _object_texture_for_asset(asset_id: String):
+	var normalized_asset_id := asset_id.strip_edges()
+	if normalized_asset_id == "":
+		return null
+	if _object_textures.has(normalized_asset_id):
+		return _object_textures.get(normalized_asset_id)
+	if _object_texture_missing.has(normalized_asset_id):
+		return null
+	var texture_path := String(_object_asset_paths.get(normalized_asset_id, ""))
+	if texture_path == "":
+		_object_texture_missing[normalized_asset_id] = texture_path
+		return null
+	var texture = _texture_from_path(texture_path)
+	if texture is Texture2D:
+		_object_textures[normalized_asset_id] = texture
+		return texture
+	_object_texture_missing[normalized_asset_id] = texture_path
+	return null
+
+func _texture_from_path(texture_path: String):
+	if texture_path == "":
+		return null
+	if ResourceLoader.exists(texture_path):
+		var resource = load(texture_path)
+		if resource is Texture2D:
+			return resource
+	if FileAccess.file_exists(texture_path):
+		var image := Image.new()
+		if image.load(texture_path) == OK:
+			return ImageTexture.create_from_image(image)
+	return null
+
 func _terrain_at(tile: Vector2i) -> String:
 	if tile.y < 0 or tile.y >= _map_data.size():
 		return ""
@@ -849,6 +1087,9 @@ func _town_color(tile: Vector2i) -> Color:
 			return NEUTRAL_TOWN_COLOR
 
 func _has_resource_at(tile: Vector2i) -> bool:
+	return not _resource_node_at(tile).is_empty()
+
+func _resource_node_at(tile: Vector2i) -> Dictionary:
 	for node in _session.overworld.get("resource_nodes", []):
 		if not (node is Dictionary):
 			continue
@@ -856,14 +1097,27 @@ func _has_resource_at(tile: Vector2i) -> bool:
 			continue
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
-			return true
-	return false
+			return node
+	return {}
+
+func _resource_asset_id(node: Dictionary) -> String:
+	if node.is_empty():
+		return ""
+	var site_id := String(node.get("site_id", ""))
+	var site := ContentService.get_resource_site(site_id)
+	var direct_asset_id := String(site.get("overworld_sprite_asset_id", ""))
+	if direct_asset_id != "":
+		return direct_asset_id
+	return String(_resource_site_asset_ids.get(site_id, ""))
 
 func _has_artifact_at(tile: Vector2i) -> bool:
+	return not _artifact_node_at(tile).is_empty()
+
+func _artifact_node_at(tile: Vector2i) -> Dictionary:
 	for node in _session.overworld.get("artifact_nodes", []):
 		if node is Dictionary and not bool(node.get("collected", false)) and int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y:
-			return true
-	return false
+			return node
+	return {}
 
 func _has_encounter_at(tile: Vector2i) -> bool:
 	for encounter in _session.overworld.get("encounters", []):
