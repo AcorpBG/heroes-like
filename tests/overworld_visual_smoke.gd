@@ -54,7 +54,8 @@ func _run() -> void:
 		get_tree().quit(1)
 		return
 
-	get_tree().quit(0)
+	_assert_remembered_owned_town_remote_entry(shell)
+	return
 
 func _assert_wireframe_contract(shell: Node) -> bool:
 	var map_panel: Control = shell.get_node_or_null("%MapPanel")
@@ -170,6 +171,103 @@ func _assert_small_map_fit(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
+	var tree := get_tree()
+	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_perform_primary_action"):
+		push_error("Overworld smoke: shell is missing remote-town validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var town := _first_player_town(session)
+	if town.is_empty():
+		push_error("Overworld smoke: River Pass did not seed an owned town for remote-entry validation.")
+		get_tree().quit(1)
+		return false
+	var town_tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+	var remote_tile := _remote_memory_tile_for_town(session, town_tile)
+	if remote_tile.x < 0:
+		push_error("Overworld smoke: could not find a remote hero tile outside the owned town scout ring.")
+		get_tree().quit(1)
+		return false
+	_set_active_hero_position(session, remote_tile)
+	OverworldRules.refresh_fog_of_war(session)
+	if not OverworldRules.is_tile_explored(session, town_tile.x, town_tile.y):
+		push_error("Overworld smoke: the previously scouted owned town was not preserved as explored memory.")
+		get_tree().quit(1)
+		return false
+	if OverworldRules.is_tile_visible(session, town_tile.x, town_tile.y):
+		push_error("Overworld smoke: remote-entry setup failed; owned town is still in the current scout net.")
+		get_tree().quit(1)
+		return false
+	var selection: Dictionary = shell.call("validation_select_tile", town_tile.x, town_tile.y)
+	if String(selection.get("primary_action_id", "")) != "visit_town":
+		push_error("Overworld smoke: remembered owned town did not expose Visit Town as the primary order. snapshot=%s" % selection)
+		get_tree().quit(1)
+		return false
+	if String(selection.get("context_summary", "")).find("Remembered Town") < 0:
+		push_error("Overworld smoke: remembered owned town selection did not present a remembered-town context. snapshot=%s" % selection)
+		get_tree().quit(1)
+		return false
+	var presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
+	if not bool(presentation.get("draws_remembered_object", false)):
+		push_error("Overworld smoke: remembered owned town would not draw a dimmed object marker. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	var visit_result: Dictionary = shell.call("validation_perform_primary_action")
+	if String(session.game_state) != "town" or not bool(visit_result.get("ok", false)):
+		push_error("Overworld smoke: remembered owned town primary action did not route into town management. result=%s state=%s" % [visit_result, session.game_state])
+		get_tree().quit(1)
+		return false
+	var active_town := TownRules.get_active_town(session)
+	if String(active_town.get("placement_id", "")) != String(town.get("placement_id", "")):
+		push_error("Overworld smoke: remote town route activated the wrong town. active=%s expected=%s" % [active_town, town])
+		get_tree().quit(1)
+		return false
+	tree.quit(0)
+	return true
+
+func _first_player_town(session) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+			return town_value
+	return {}
+
+func _remote_memory_tile_for_town(session, town_tile: Vector2i) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	var scout_radius := HeroCommandRules.scouting_radius_for_hero(session.overworld.get("hero", {}))
+	for y in range(map_size.y - 1, -1, -1):
+		for x in range(map_size.x - 1, -1, -1):
+			var tile := Vector2i(x, y)
+			if abs(tile.x - town_tile.x) + abs(tile.y - town_tile.y) <= scout_radius:
+				continue
+			if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+				continue
+			if not _town_at(session, tile).is_empty():
+				continue
+			return tile
+	return Vector2i(-1, -1)
+
+func _town_at(session, tile: Vector2i) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and int(town_value.get("x", -1)) == tile.x and int(town_value.get("y", -1)) == tile.y:
+			return town_value
+	return {}
+
+func _set_active_hero_position(session, tile: Vector2i) -> void:
+	var position := {"x": tile.x, "y": tile.y}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var active_hero = session.overworld.get("hero", {})
+	if active_hero is Dictionary:
+		active_hero["position"] = position.duplicate(true)
+		session.overworld["hero"] = active_hero
+	var heroes = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		var hero = heroes[index]
+		if hero is Dictionary and String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			hero["position"] = position.duplicate(true)
+			heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
 
 func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, command_spine: Control, action_panel: Control, action_containers: Array) -> bool:
 	if command_spine == null or not (command_spine is VBoxContainer):

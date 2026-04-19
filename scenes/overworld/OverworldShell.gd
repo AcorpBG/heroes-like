@@ -116,20 +116,35 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
+			KEY_HOME:
+				_focus_camera_on_hero()
+				get_viewport().set_input_as_handled()
 			KEY_ENTER, KEY_KP_ENTER, KEY_SPACE:
 				if _activate_primary_action():
 					get_viewport().set_input_as_handled()
 			KEY_UP, KEY_W:
-				_move_north()
+				if event.shift_pressed:
+					_pan_map(Vector2i(0, -3))
+				else:
+					_move_north()
 				get_viewport().set_input_as_handled()
 			KEY_DOWN, KEY_S:
-				_move_south()
+				if event.shift_pressed:
+					_pan_map(Vector2i(0, 3))
+				else:
+					_move_south()
 				get_viewport().set_input_as_handled()
 			KEY_LEFT, KEY_A:
-				_move_west()
+				if event.shift_pressed:
+					_pan_map(Vector2i(-3, 0))
+				else:
+					_move_west()
 				get_viewport().set_input_as_handled()
 			KEY_RIGHT, KEY_D:
-				_move_east()
+				if event.shift_pressed:
+					_pan_map(Vector2i(3, 0))
+				else:
+					_move_east()
 				get_viewport().set_input_as_handled()
 
 func _move_north() -> void:
@@ -143,6 +158,22 @@ func _move_west() -> void:
 
 func _move_east() -> void:
 	_try_move(1, 0)
+
+func _pan_map(delta: Vector2i) -> bool:
+	if _map_view == null or not _map_view.has_method("pan_tiles"):
+		return false
+	var changed := bool(_map_view.call("pan_tiles", delta))
+	if changed:
+		_update_map_tooltip()
+	return changed
+
+func _focus_camera_on_hero() -> bool:
+	if _map_view == null or not _map_view.has_method("focus_on_hero"):
+		return false
+	var changed := bool(_map_view.call("focus_on_hero"))
+	if changed:
+		_update_map_tooltip()
+	return changed
 
 func _on_end_turn_pressed() -> void:
 	# Validation anchor retained while the forecast stays informational instead of gating the turn.
@@ -204,8 +235,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		_start_encounter()
 		return
 	if action_id == "visit_town":
-		_session.flags["last_action"] = "visited_town"
-		AppRouter.go_to_town()
+		_visit_selected_town()
 		return
 
 	var result = OverworldRules.perform_context_action(_session, action_id)
@@ -280,13 +310,14 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if not _tile_in_bounds(tile):
 		return
 	if tile == _selected_tile:
-		if tile == OverworldRules.hero_position(_session):
-			_activate_primary_action()
-		else:
+		if not _activate_primary_action():
 			_move_toward_selected_tile()
 		return
 
 	_set_selected_tile(tile)
+	if _is_selected_owned_town_visit_target():
+		_visit_selected_town()
+		return
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, tile):
 		_try_move(tile.x - hero_pos.x, tile.y - hero_pos.y, true)
@@ -298,6 +329,21 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_hovered_tile = tile
 	_update_map_tooltip()
 	_sync_context_drawers()
+
+func _visit_selected_town() -> bool:
+	if not _is_selected_owned_town_visit_target():
+		_last_message = "Select an owned town to enter it."
+		_refresh()
+		return false
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	var result: Dictionary = OverworldRules.set_active_town_visit(_session, String(town.get("placement_id", "")))
+	_last_message = String(result.get("message", ""))
+	if not bool(result.get("ok", false)):
+		_refresh()
+		return false
+	_session.flags["last_action"] = "visited_town"
+	AppRouter.go_to_town()
+	return true
 
 func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	var result = OverworldRules.try_move(_session, dx, dy)
@@ -521,6 +567,9 @@ func _current_context_actions() -> Array:
 		actions = OverworldRules.get_context_actions(_session)
 		actions = _promote_selected_owned_town_action(actions)
 	else:
+		var town_action := _selected_owned_town_visit_action()
+		if not town_action.is_empty():
+			actions.append(town_action)
 		var movement_action = _selected_tile_movement_action()
 		if not movement_action.is_empty():
 			actions.append(movement_action)
@@ -553,21 +602,29 @@ func _promote_selected_owned_town_action(actions: Array) -> Array:
 	return promoted
 
 func _selected_owned_town_visit_action() -> Dictionary:
-	if not _tile_in_bounds(_selected_tile):
-		return {}
-	if _selected_tile != OverworldRules.hero_position(_session):
+	if not _is_selected_owned_town_visit_target():
 		return {}
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
-	if town.is_empty() or String(town.get("owner", "neutral")) != "player":
-		return {}
 	var town_name := _selected_tile_destination_name()
 	if town_name == "":
 		town_name = "this town"
 	return {
 		"id": "visit_town",
 		"label": "Visit Town",
-		"summary": "Enter %s now to review construction, recruitment, market, and recovery orders." % town_name,
+		"summary": "Enter %s now to review construction, recruitment, market, and recovery orders. The field hero stays at %d,%d." % [
+			town_name,
+			OverworldRules.hero_position(_session).x,
+			OverworldRules.hero_position(_session).y,
+		],
 	}
+
+func _is_selected_owned_town_visit_target() -> bool:
+	if not _tile_in_bounds(_selected_tile):
+		return false
+	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
+		return false
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
 
 func _current_primary_action() -> Dictionary:
 	if _refresh_cache.has("primary_action"):
@@ -740,17 +797,30 @@ func _map_cue_text() -> String:
 	var action := _current_primary_action()
 	if action.is_empty():
 		var movement = _session.overworld.get("movement", {})
-		return "Move %d/%d | Select destination" % [
+		var cue := "Move %d/%d | Select destination" % [
 			int(movement.get("current", 0)),
 			int(movement.get("max", 0)),
 		]
+		if _map_view != null and _map_view.has_method("validation_view_metrics"):
+			var metrics: Dictionary = _map_view.call("validation_view_metrics")
+			if bool(metrics.get("pan_supported", false)):
+				cue = "Move %d/%d | Drag pan | Select" % [
+					int(movement.get("current", 0)),
+					int(movement.get("max", 0)),
+				]
+		return cue
 	return "Action: %s [Enter]" % _short_action_label(String(action.get("label", "Action")), 20)
 
 func _map_cue_tooltip() -> String:
 	var action := _current_primary_action()
+	var pan_hint := ""
+	if _map_view != null and _map_view.has_method("validation_view_metrics"):
+		var metrics: Dictionary = _map_view.call("validation_view_metrics")
+		if bool(metrics.get("pan_supported", false)):
+			pan_hint = " Drag the map, use the mouse wheel, or hold Shift with arrow/WASD keys to pan. Home returns to the active hero."
 	if action.is_empty():
-		return "Click a visible adjacent tile to move now, or select a farther visible tile to set the next route step."
-	return "Press Enter or Space for %s. Click the map to move or change the selected route." % String(action.get("label", "the primary order"))
+		return "Click a visible adjacent tile to move now, or select a farther visible tile to set the next route step.%s" % pan_hint
+	return "Press Enter or Space for %s. Click the map to move or change the selected route.%s" % [String(action.get("label", "the primary order")), pan_hint]
 
 func _short_action_label(label: String, max_chars: int) -> String:
 	var trimmed := label.strip_edges()
@@ -881,6 +951,9 @@ func _rail_tile_text() -> String:
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Tile %s | Unexplored\nScout closer" % coords
 	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+		var remembered_rail := _remembered_tile_rail_text(terrain, coords, action_hint)
+		if remembered_rail != "":
+			return remembered_rail
 		return "Tile %s | Mapped %s\nOut of scout net" % [coords, terrain]
 
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
@@ -945,6 +1018,76 @@ func _rail_action_hint() -> String:
 		return "Locked %s" % label
 	return "Enter %s" % label
 
+func _remembered_tile_rail_text(terrain: String, coords: String, action_hint: String) -> String:
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		var owner := String(town.get("owner", "neutral"))
+		var owner_label := "Own" if owner == "player" else "Mapped"
+		return "Town: %s\n%s | %s%s" % [
+			_selected_tile_destination_name(),
+			"Remembered %s" % owner_label,
+			terrain,
+			"" if action_hint == "" else " | %s" % action_hint,
+		]
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		return "Site: %s\nRemembered | %s | Out of scout net" % [String(site.get("name", "Frontier site")), terrain]
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		return "Artifact: %s\nRemembered | %s | Out of scout net" % [
+			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			terrain,
+		]
+	var encounter := _rememberable_encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		return "Hostile: %s\nRemembered | %s | Scout to confirm" % [
+			OverworldRules.encounter_display_name(encounter),
+			terrain,
+		]
+	return ""
+
+func _remembered_selected_tile_text(terrain: String) -> String:
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		var owner := String(town.get("owner", "neutral"))
+		var owner_text := "Owned town" if owner == "player" else "Mapped town"
+		var order_text := "Enter Visit Town to manage it without moving the field hero." if owner == "player" else "Scout again before committing field orders here."
+		return "Remembered Town\nCoords %d,%d | Terrain %s\n%s | %s\n%s" % [
+			_selected_tile.x,
+			_selected_tile.y,
+			terrain,
+			_selected_tile_destination_name(),
+			owner_text,
+			order_text,
+		]
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		return "Remembered Site\nCoords %d,%d | Terrain %s\n%s\nThis mapped site is outside the current scout net." % [
+			_selected_tile.x,
+			_selected_tile.y,
+			terrain,
+			String(site.get("name", "Frontier site")),
+		]
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		return "Remembered Artifact\nCoords %d,%d | Terrain %s\n%s\nThe cache remains mapped outside the current scout net." % [
+			_selected_tile.x,
+			_selected_tile.y,
+			terrain,
+			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+		]
+	var encounter := _rememberable_encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		return "Remembered Hostile Contact\nCoords %d,%d | Terrain %s\n%s\nA fixed guard was mapped here; scout again before engaging." % [
+			_selected_tile.x,
+			_selected_tile.y,
+			terrain,
+			OverworldRules.encounter_display_name(encounter),
+		]
+	return ""
+
 func _sync_context_drawers() -> void:
 	var show_command := _active_drawer == "command"
 	var show_frontier := _active_drawer == "frontier"
@@ -980,6 +1123,9 @@ func _describe_selected_tile() -> String:
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Unexplored Frontier\nCoords %d,%d | Terrain unknown\nScouts have not charted this ground yet." % [_selected_tile.x, _selected_tile.y]
 	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+		var remembered_text := _remembered_selected_tile_text(terrain)
+		if remembered_text != "":
+			return remembered_text
 		return "Mapped Ground\nCoords %d,%d | Terrain %s\nThis tile is outside the current scout net." % [_selected_tile.x, _selected_tile.y, terrain]
 
 	var town = _town_at(_selected_tile.x, _selected_tile.y)
@@ -1195,6 +1341,17 @@ func _encounter_at(x: int, y: int) -> Dictionary:
 				return encounter
 	return {}
 
+func _rememberable_encounter_at(x: int, y: int) -> Dictionary:
+	for encounter in _session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != "":
+			continue
+		if int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
+			if not OverworldRules.is_encounter_resolved(_session, encounter):
+				return encounter
+	return {}
+
 func _hero_entries_at(x: int, y: int) -> Array:
 	var entries = []
 	for entry in HeroCommandRules.hero_positions(_session):
@@ -1355,6 +1512,7 @@ func validation_snapshot() -> Dictionary:
 	var movement = _session.overworld.get("movement", {})
 	var active_context: Dictionary = _cached_active_context()
 	var active_town := _validation_active_town_state()
+	var selected_town := _validation_selected_town_state()
 	var primary_action := _current_primary_action()
 	return {
 		"scene_path": scene_file_path,
@@ -1390,6 +1548,7 @@ func validation_snapshot() -> Dictionary:
 		"primary_action_button_disabled": _primary_action_button.disabled,
 		"context_action_ids": _validation_context_action_ids(),
 		"active_town": active_town,
+		"selected_town": selected_town,
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"commander_state": _validation_commander_state(),
 		"carryover_flags": _validation_carryover_flags(),
@@ -1437,6 +1596,44 @@ func validation_open_frontier_drawer() -> Dictionary:
 	_refresh_frontier_drawer()
 	_sync_context_drawers()
 	return _validation_chrome_state()
+
+func validation_select_tile(x: int, y: int) -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile is outside the overworld map."}
+	_set_selected_tile(tile)
+	_active_drawer = ""
+	_refresh()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = true
+	return snapshot
+
+func validation_pan_map(dx: int, dy: int) -> Dictionary:
+	var before := _validation_map_viewport_state()
+	var changed := _pan_map(Vector2i(dx, dy))
+	var after := _validation_map_viewport_state()
+	return {
+		"ok": changed,
+		"changed": changed,
+		"before": before,
+		"after": after,
+	}
+
+func validation_focus_map_on_hero() -> Dictionary:
+	var before := _validation_map_viewport_state()
+	var changed := _focus_camera_on_hero()
+	var after := _validation_map_viewport_state()
+	return {
+		"ok": changed or not bool(after.get("manual_camera", false)),
+		"changed": changed,
+		"before": before,
+		"after": after,
+	}
+
+func validation_tile_presentation(x: int, y: int) -> Dictionary:
+	if _map_view == null or not _map_view.has_method("validation_tile_presentation"):
+		return {}
+	return _map_view.call("validation_tile_presentation", Vector2i(x, y))
 
 func validation_town_state_for_placement(placement_id: String) -> Dictionary:
 	return _validation_town_state_for_placement(placement_id)
@@ -2063,6 +2260,12 @@ func _validation_active_town_state() -> Dictionary:
 	if String(context.get("type", "")) != "town":
 		return {}
 	return _validation_town_state_for_placement(String(_duplicate_dictionary(context.get("town", {})).get("placement_id", "")))
+
+func _validation_selected_town_state() -> Dictionary:
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if town.is_empty():
+		return {}
+	return _validation_town_state_for_placement(String(town.get("placement_id", "")))
 
 func _validation_town_state_for_placement(placement_id: String) -> Dictionary:
 	if placement_id == "":

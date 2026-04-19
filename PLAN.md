@@ -169,6 +169,25 @@ Limits:
 - Ninefold Confluence town entry still has a separate visible town-refresh cost: direct town entry measured about 3.6 s in the temporary probe, with town refresh about 0.78 s and the visible command ledger as the largest measured town summary. That is a follow-up diagnosis, not part of this save/frontier fix.
 - Opening the Frontier drawer intentionally pays the cost of building full objective, threat, and next-day risk summaries at the moment the player asks for that detail.
 
+## Current Implementation Slice: Overworld Usability Follow-Up
+Status: completed on 2026-04-19 as a narrow response to AcOrP's overworld usability findings.
+
+Purpose:
+- Make already-scouted overworld information easier to use after it leaves the current scout net.
+- Let large 64x64 maps be inspected beyond the initial hero-centered tactical viewport.
+- Let owned towns be opened from map selection even when the active field hero is not standing on the town tile.
+
+Implemented:
+- Remembered, explored-but-not-visible towns, sites, artifacts, and rememberable encounters now keep dimmed object markers and remembered context text instead of disappearing into generic mapped terrain.
+- Large overworld maps now expose manual camera panning through drag, mouse wheel, Shift+arrow/WASD, validation hooks, and a Home/focus route back to the active hero.
+- Owned town selection can expose and activate Visit Town remotely; town rules now respect a validated active town visit context and clear that context when returning to the overworld.
+- Focused smoke coverage was extended for remembered owned-town readability, remote town routing, and Ninefold Confluence large-map panning/refocus behavior.
+
+Limits:
+- This is a targeted usability patch, not a broad overworld polish pass.
+- Host-side validation passed, but no full manual proof is claimed for Ninefold Confluence or for every supported runtime resolution.
+- Remote town entry is limited to owned, explored towns; hostile or neutral town interactions still require their normal scenario/system rules.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

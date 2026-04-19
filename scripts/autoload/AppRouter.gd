@@ -34,6 +34,7 @@ func go_to_overworld() -> void:
 		go_to_scenario_outcome()
 		return
 	session.game_state = "overworld"
+	OverworldRules.clear_active_town_visit(session)
 	_autosave_active_session(session, false)
 	_change_scene(OVERWORLD_SCENE)
 

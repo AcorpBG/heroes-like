@@ -11,6 +11,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const FOG_KEY := "fog"
 const VISIBLE_TILES_KEY := "visible_tiles"
 const EXPLORED_TILES_KEY := "explored_tiles"
+const ACTIVE_TOWN_PLACEMENT_KEY := "active_town_placement_id"
 const COMMAND_BRIEFING_KEY := "command_briefing"
 const COMMAND_RISK_FORECAST_KEY := "command_risk_forecast"
 const WEEKLY_GROWTH_INTERVAL := 7
@@ -59,6 +60,17 @@ static func _scenario_unit_growth(unit_id: String) -> int:
 
 static func _normalize_scenario_state_rules(session: SessionStateStoreScript.SessionData) -> void:
 	_scenario_rules().normalize_scenario_state(session)
+
+static func _normalize_active_town_visit_context(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var placement_id := String(session.flags.get(ACTIVE_TOWN_PLACEMENT_KEY, ""))
+	if placement_id == "":
+		return
+	var town_result := _find_town_by_placement(session, placement_id)
+	var town: Dictionary = town_result.get("town", {})
+	if int(town_result.get("index", -1)) < 0 or String(town.get("owner", "neutral")) != "player":
+		session.flags.erase(ACTIVE_TOWN_PLACEMENT_KEY)
 
 static func _evaluate_scenario_state(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return _scenario_rules().evaluate_session(session)
@@ -144,6 +156,7 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 		session.overworld["towns"] = _build_scenario_town_states(scenario.get("towns", []))
 	else:
 		session.overworld["towns"] = _normalize_towns(session.overworld.get("towns", []))
+	_normalize_active_town_visit_context(session)
 
 	if not session.overworld.has("resource_nodes") or not (session.overworld.get("resource_nodes") is Array):
 		session.overworld["resource_nodes"] = _build_scenario_resource_states(scenario.get("resource_nodes", []))
@@ -449,6 +462,33 @@ static func perform_context_action(session: SessionStateStoreScript.SessionData,
 	if action_id.begins_with("recruit:"):
 		return recruit_in_active_town(session, action_id.trim_prefix("recruit:"))
 	return {}
+
+static func set_active_town_visit(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
+	normalize_overworld_state(session)
+	if session == null or placement_id == "":
+		return {"ok": false, "message": "No town was selected.", "town": {}}
+	var town_result := _find_town_by_placement(session, placement_id)
+	var town: Dictionary = town_result.get("town", {})
+	if int(town_result.get("index", -1)) < 0 or town.is_empty():
+		clear_active_town_visit(session)
+		return {"ok": false, "message": "The selected town is no longer available.", "town": {}}
+	if String(town.get("owner", "neutral")) != "player":
+		clear_active_town_visit(session)
+		return {"ok": false, "message": "Only owned towns can be managed remotely.", "town": town}
+	session.flags[ACTIVE_TOWN_PLACEMENT_KEY] = placement_id
+	return {
+		"ok": true,
+		"message": "%s opens its gates." % _town_name(town),
+		"town": town,
+	}
+
+static func clear_active_town_visit(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	session.flags.erase(ACTIVE_TOWN_PLACEMENT_KEY)
+
+static func active_town_visit_result(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	return _find_active_town(session)
 
 static func _resolve_post_move_interaction(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var encounter := get_active_encounter(session)
@@ -2140,12 +2180,28 @@ static func _find_resource_node_by_placement(session: SessionStateStoreScript.Se
 	return {"index": -1, "node": {}}
 
 static func _find_active_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var visit_result := _find_active_town_by_visit_context(session)
+	if int(visit_result.get("index", -1)) >= 0:
+		return visit_result
 	var pos := hero_position(session)
 	var towns = session.overworld.get("towns", [])
 	for index in range(towns.size()):
 		var town = towns[index]
 		if town is Dictionary and _position_matches(town, pos):
 			return {"index": index, "town": town}
+	return {"index": -1, "town": {}}
+
+static func _find_active_town_by_visit_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {"index": -1, "town": {}}
+	var placement_id := String(session.flags.get(ACTIVE_TOWN_PLACEMENT_KEY, ""))
+	if placement_id == "":
+		return {"index": -1, "town": {}}
+	var town_result := _find_town_by_placement(session, placement_id)
+	var town: Dictionary = town_result.get("town", {})
+	if int(town_result.get("index", -1)) >= 0 and String(town.get("owner", "neutral")) == "player":
+		return town_result
+	session.flags.erase(ACTIVE_TOWN_PLACEMENT_KEY)
 	return {"index": -1, "town": {}}
 
 static func _find_active_resource_node(session: SessionStateStoreScript.SessionData) -> Dictionary:

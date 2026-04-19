@@ -1142,16 +1142,7 @@ static func _multiply_resource_cost(cost: Variant, multiplier: int) -> Dictionar
 	return scaled
 
 static func _find_active_town_result(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	OverworldRulesScript.normalize_overworld_state(session)
-	var pos: Vector2i = OverworldRulesScript.hero_position(session)
-	var towns = session.overworld.get("towns", [])
-	for index in range(towns.size()):
-		var town = towns[index]
-		if not (town is Dictionary):
-			continue
-		if int(town.get("x", -1)) == pos.x and int(town.get("y", -1)) == pos.y:
-			return {"index": index, "town": town}
-	return {"index": -1, "town": {}}
+	return OverworldRulesScript.active_town_visit_result(session)
 
 static func _available_building_ids(town: Dictionary) -> Array:
 	return OverworldRulesScript.get_town_build_options(town)

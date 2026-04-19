@@ -76,6 +76,28 @@ func _run() -> void:
 	if int(focus_tile.get("x", -1)) != 23 or int(focus_tile.get("y", -1)) != 26:
 		_fail("Ninefold smoke: tactical viewport is not centered on Mira's starting hero tile: %s." % viewport_metrics)
 		return
+	if not shell.has_method("validation_pan_map") or not shell.has_method("validation_focus_map_on_hero"):
+		_fail("Ninefold smoke: OverworldShell did not expose large-map pan validation hooks.")
+		return
+	var pan_result: Dictionary = shell.call("validation_pan_map", 6, 0)
+	if not bool(pan_result.get("ok", false)):
+		_fail("Ninefold smoke: 64x64 overworld map did not pan when requested: %s." % pan_result)
+		return
+	var panned_metrics: Dictionary = pan_result.get("after", {})
+	var panned_focus: Dictionary = panned_metrics.get("camera_focus_tile", {})
+	if not bool(panned_metrics.get("manual_camera", false)) or int(panned_focus.get("x", 0)) <= int(focus_tile.get("x", 0)):
+		_fail("Ninefold smoke: map pan did not move the manual camera east: %s." % pan_result)
+		return
+	var panned_bounds: Dictionary = panned_metrics.get("visible_bounds", {})
+	var original_bounds: Dictionary = viewport_metrics.get("visible_bounds", {})
+	if int(panned_bounds.get("x", 0)) <= int(original_bounds.get("x", 0)):
+		_fail("Ninefold smoke: visible tile bounds did not scroll east after panning: %s." % pan_result)
+		return
+	var focus_result: Dictionary = shell.call("validation_focus_map_on_hero")
+	var refocused_metrics: Dictionary = focus_result.get("after", {})
+	if bool(refocused_metrics.get("manual_camera", true)):
+		_fail("Ninefold smoke: Home/focus validation did not return camera control to the active hero: %s." % focus_result)
+		return
 
 	var progress_result: Dictionary = shell.call("validation_try_progress_action")
 	if not bool(progress_result.get("ok", false)):

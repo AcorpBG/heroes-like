@@ -15,6 +15,8 @@ const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
 const MEMORY_OVERLAY := Color(0.05, 0.07, 0.09, 0.62)
+const MEMORY_OBJECT_COLOR := Color(0.62, 0.68, 0.70, 0.58)
+const MEMORY_OBJECT_OUTLINE := Color(0.82, 0.86, 0.82, 0.32)
 const SELECTION_COLOR := Color(0.98, 0.87, 0.46, 1.0)
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
@@ -54,6 +56,8 @@ const NEUTRAL_TOWN_COLOR := Color(0.56, 0.59, 0.64, 1.0)
 const RESOURCE_COLOR := Color(0.28, 0.83, 0.62, 1.0)
 const ARTIFACT_COLOR := Color(0.95, 0.68, 0.31, 1.0)
 const ENCOUNTER_COLOR := Color(0.90, 0.44, 0.35, 1.0)
+const PAN_DRAG_THRESHOLD := 6.0
+const WHEEL_PAN_TILES := 3
 const DIRECTIONS := [
 	Vector2i.LEFT,
 	Vector2i.RIGHT,
@@ -69,6 +73,13 @@ var _hover_tile := Vector2i(-1, -1)
 var _hero_tile := Vector2i.ZERO
 var _path_tiles: Array = []
 var _movement_left := 0
+var _camera_center_tile := Vector2.ZERO
+var _camera_center_ready := false
+var _manual_camera := false
+var _drag_start_position := Vector2.ZERO
+var _drag_last_position := Vector2.ZERO
+var _dragging_camera := false
+var _pending_click_position := Vector2.ZERO
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -84,12 +95,14 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_movement_left = int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
 	_selected_tile = selected_tile
 	_path_tiles = _build_path(_hero_tile, _selected_tile)
+	_ensure_camera_state()
 	queue_redraw()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
 		queue_redraw()
 	elif what == NOTIFICATION_MOUSE_EXIT:
+		_dragging_camera = false
 		if _hover_tile.x >= 0:
 			_hover_tile = Vector2i(-1, -1)
 			tile_hovered.emit(_hover_tile)
@@ -97,6 +110,14 @@ func _notification(what: int) -> void:
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
+		if (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0 and _can_pan_camera():
+			var drag_delta: Vector2 = event.position - _drag_last_position
+			if _dragging_camera or event.position.distance_to(_drag_start_position) >= PAN_DRAG_THRESHOLD:
+				_dragging_camera = true
+				_pan_camera_pixels(drag_delta)
+				_drag_last_position = event.position
+				accept_event()
+				return
 		var tile = _tile_from_local(event.position)
 		if tile != _hover_tile:
 			_hover_tile = tile
@@ -104,11 +125,38 @@ func _gui_input(event: InputEvent) -> void:
 			queue_redraw()
 		return
 
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		var tile = _tile_from_local(event.position)
-		if tile.x >= 0:
-			tile_pressed.emit(tile)
-			accept_event()
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				_drag_start_position = event.position
+				_drag_last_position = event.position
+				_pending_click_position = event.position
+				_dragging_camera = false
+				accept_event()
+				return
+			if _dragging_camera:
+				_dragging_camera = false
+				accept_event()
+				return
+			var tile = _tile_from_local(_pending_click_position)
+			if tile.x >= 0:
+				tile_pressed.emit(tile)
+				accept_event()
+			return
+		if event.pressed and _can_pan_camera():
+			match event.button_index:
+				MOUSE_BUTTON_WHEEL_UP:
+					pan_tiles(Vector2i(0, -WHEEL_PAN_TILES))
+					accept_event()
+				MOUSE_BUTTON_WHEEL_DOWN:
+					pan_tiles(Vector2i(0, WHEEL_PAN_TILES))
+					accept_event()
+				MOUSE_BUTTON_WHEEL_LEFT:
+					pan_tiles(Vector2i(-WHEEL_PAN_TILES, 0))
+					accept_event()
+				MOUSE_BUTTON_WHEEL_RIGHT:
+					pan_tiles(Vector2i(WHEEL_PAN_TILES, 0))
+					accept_event()
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
@@ -252,60 +300,68 @@ func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 		draw_rect(rect.grow(-7.0), HOVER_COLOR, false, 2.0)
 
 func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y):
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
 		return
+	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var remembered := not visible
 
 	if _has_town_at(tile):
-		_draw_town_marker(rect, _town_color(tile))
+		_draw_town_marker(rect, _town_color(tile), remembered)
 	if _has_resource_at(tile):
-		_draw_resource_marker(rect)
+		_draw_resource_marker(rect, remembered)
 	if _has_artifact_at(tile):
-		_draw_artifact_marker(rect)
-	if _has_encounter_at(tile):
-		_draw_encounter_marker(rect)
-	if _has_hero_at(tile):
+		_draw_artifact_marker(rect, remembered)
+	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
+		_draw_encounter_marker(rect, remembered)
+	if visible and _has_hero_at(tile):
 		_draw_hero_marker(rect, tile)
 
-func _draw_town_marker(rect: Rect2, color: Color) -> void:
+func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> void:
+	var marker_color := _remembered_marker_color(color) if remembered else color
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.08, 0.09, 0.12, 0.8)
 	var body = Rect2(
 		rect.position + rect.size * Vector2(0.24, 0.36),
 		rect.size * Vector2(0.52, 0.30)
 	)
-	draw_rect(body, color, true)
-	draw_rect(body, Color(0.08, 0.09, 0.12, 0.8), false, 2.0)
+	draw_rect(body, marker_color, true)
+	draw_rect(body, outline_color, false, 2.0)
 	for step in [0.26, 0.43, 0.60]:
 		var battlement = Rect2(
 			rect.position + rect.size * Vector2(step, 0.26),
 			rect.size * Vector2(0.10, 0.10)
 		)
-		draw_rect(battlement, color, true)
+		draw_rect(battlement, marker_color, true)
 	var flag_start = rect.position + rect.size * Vector2(0.68, 0.18)
 	var flag_end = rect.position + rect.size * Vector2(0.68, 0.40)
-	draw_line(flag_end, flag_start, Color(0.93, 0.91, 0.82, 0.9), 2.0)
+	draw_line(flag_end, flag_start, Color(0.93, 0.91, 0.82, 0.46 if remembered else 0.9), 2.0)
 	var flag = PackedVector2Array([
 		flag_start,
 		flag_start + rect.size * Vector2(0.13, 0.04),
 		flag_start + rect.size * Vector2(0.00, 0.11),
 	])
-	draw_colored_polygon(flag, Color(0.96, 0.90, 0.67, 0.95))
+	draw_colored_polygon(flag, Color(0.96, 0.90, 0.67, 0.48 if remembered else 0.95))
 
-func _draw_resource_marker(rect: Rect2) -> void:
+func _draw_resource_marker(rect: Rect2, remembered: bool = false) -> void:
 	var center = rect.get_center()
 	var radius = rect.size.x * 0.12
+	var marker_color := MEMORY_OBJECT_COLOR if remembered else RESOURCE_COLOR
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.07, 0.10, 0.12, 0.85)
 	var diamond = PackedVector2Array([
 		center + Vector2(0.0, -radius),
 		center + Vector2(radius, 0.0),
 		center + Vector2(0.0, radius),
 		center + Vector2(-radius, 0.0),
 	])
-	draw_colored_polygon(diamond, RESOURCE_COLOR)
+	draw_colored_polygon(diamond, marker_color)
 	var diamond_outline = PackedVector2Array([diamond[0], diamond[1], diamond[2], diamond[3], diamond[0]])
-	draw_polyline(diamond_outline, Color(0.07, 0.10, 0.12, 0.85), 2.0)
+	draw_polyline(diamond_outline, outline_color, 2.0)
 
-func _draw_artifact_marker(rect: Rect2) -> void:
+func _draw_artifact_marker(rect: Rect2, remembered: bool = false) -> void:
 	var center = rect.get_center()
 	var outer = rect.size.x * 0.13
 	var inner = rect.size.x * 0.05
+	var marker_color := _remembered_marker_color(ARTIFACT_COLOR) if remembered else ARTIFACT_COLOR
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.15, 0.10, 0.05, 0.9)
 	var points = PackedVector2Array([
 		center + Vector2(0.0, -outer),
 		center + Vector2(inner, -inner),
@@ -316,7 +372,7 @@ func _draw_artifact_marker(rect: Rect2) -> void:
 		center + Vector2(-outer, 0.0),
 		center + Vector2(-inner, -inner),
 	])
-	draw_colored_polygon(points, ARTIFACT_COLOR)
+	draw_colored_polygon(points, marker_color)
 	var star_outline = PackedVector2Array([
 		points[0],
 		points[1],
@@ -328,14 +384,15 @@ func _draw_artifact_marker(rect: Rect2) -> void:
 		points[7],
 		points[0],
 	])
-	draw_polyline(star_outline, Color(0.15, 0.10, 0.05, 0.9), 2.0)
+	draw_polyline(star_outline, outline_color, 2.0)
 
-func _draw_encounter_marker(rect: Rect2) -> void:
+func _draw_encounter_marker(rect: Rect2, remembered: bool = false) -> void:
 	var center = rect.get_center()
 	var extent = rect.size.x * 0.16
-	draw_line(center + Vector2(-extent, -extent), center + Vector2(extent, extent), ENCOUNTER_COLOR, 4.0)
-	draw_line(center + Vector2(extent, -extent), center + Vector2(-extent, extent), ENCOUNTER_COLOR, 4.0)
-	draw_circle(center, rect.size.x * 0.05, Color(0.98, 0.94, 0.79, 1.0))
+	var marker_color := _remembered_marker_color(ENCOUNTER_COLOR) if remembered else ENCOUNTER_COLOR
+	draw_line(center + Vector2(-extent, -extent), center + Vector2(extent, extent), marker_color, 4.0)
+	draw_line(center + Vector2(extent, -extent), center + Vector2(-extent, extent), marker_color, 4.0)
+	draw_circle(center, rect.size.x * 0.05, Color(0.98, 0.94, 0.79, 0.45 if remembered else 1.0))
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 	var center = rect.get_center()
@@ -359,6 +416,14 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 	for index in range(min(reserve_count, 3)):
 		var dot_pos = marker_center + Vector2((index - 1) * 5.0, 0.0)
 		draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
+
+func _remembered_marker_color(color: Color) -> Color:
+	return Color(
+		(color.r * 0.55) + (MEMORY_OBJECT_COLOR.r * 0.45),
+		(color.g * 0.55) + (MEMORY_OBJECT_COLOR.g * 0.45),
+		(color.b * 0.55) + (MEMORY_OBJECT_COLOR.b * 0.45),
+		MEMORY_OBJECT_COLOR.a
+	)
 
 func _board_rect() -> Rect2:
 	var viewport_rect := _map_viewport_rect()
@@ -393,8 +458,8 @@ func _should_fit_entire_map() -> bool:
 func _board_position_for_focus(viewport_rect: Rect2, board_size: Vector2, tile_extent: float) -> Vector2:
 	var focus_tile := _camera_focus_tile()
 	var focus_center := Vector2(
-		(float(focus_tile.x) + 0.5) * tile_extent,
-		(float(focus_tile.y) + 0.5) * tile_extent
+		(focus_tile.x + 0.5) * tile_extent,
+		(focus_tile.y + 0.5) * tile_extent
 	)
 	var board_position := viewport_rect.position + (viewport_rect.size * 0.5) - focus_center
 	if board_size.x <= viewport_rect.size.x:
@@ -407,13 +472,82 @@ func _board_position_for_focus(viewport_rect: Rect2, board_size: Vector2, tile_e
 		board_position.y = clamp(board_position.y, viewport_rect.end.y - board_size.y, viewport_rect.position.y)
 	return board_position.floor()
 
-func _camera_focus_tile() -> Vector2i:
+func _camera_focus_tile() -> Vector2:
+	_ensure_camera_state()
+	return _camera_center_tile
+
+func _default_camera_focus_tile() -> Vector2:
 	if _hero_tile.x >= 0 and _hero_tile.y >= 0 and _hero_tile.x < _map_size.x and _hero_tile.y < _map_size.y:
-		return _hero_tile
-	return Vector2i(
-		clampi(int(_map_size.x / 2), 0, max(_map_size.x - 1, 0)),
-		clampi(int(_map_size.y / 2), 0, max(_map_size.y - 1, 0))
+		return Vector2(float(_hero_tile.x), float(_hero_tile.y))
+	return Vector2(
+		float(clampi(int(_map_size.x / 2), 0, max(_map_size.x - 1, 0))),
+		float(clampi(int(_map_size.y / 2), 0, max(_map_size.y - 1, 0)))
 	)
+
+func _ensure_camera_state() -> void:
+	if _should_fit_entire_map():
+		_manual_camera = false
+		_camera_center_tile = _default_camera_focus_tile()
+		_camera_center_ready = true
+		return
+	if not _camera_center_ready or not _manual_camera:
+		_camera_center_tile = _default_camera_focus_tile()
+	_camera_center_tile = _clamped_camera_center(_camera_center_tile)
+	_camera_center_ready = true
+
+func _clamped_camera_center(center: Vector2) -> Vector2:
+	var viewport_rect := _map_viewport_rect()
+	var tile_extent: float = _tile_extent_for_viewport(viewport_rect.size)
+	var visible_columns: float = viewport_rect.size.x / maxf(tile_extent, 1.0)
+	var visible_rows: float = viewport_rect.size.y / maxf(tile_extent, 1.0)
+	var min_x: float = maxf(0.0, (visible_columns * 0.5) - 0.5)
+	var min_y: float = maxf(0.0, (visible_rows * 0.5) - 0.5)
+	var max_x: float = maxf(min_x, float(_map_size.x) - (visible_columns * 0.5) - 0.5)
+	var max_y: float = maxf(min_y, float(_map_size.y) - (visible_rows * 0.5) - 0.5)
+	return Vector2(
+		clampf(center.x, min_x, max_x),
+		clampf(center.y, min_y, max_y)
+	)
+
+func _can_pan_camera() -> bool:
+	if _should_fit_entire_map():
+		return false
+	var viewport_rect := _map_viewport_rect()
+	var tile_extent := _tile_extent_for_viewport(viewport_rect.size)
+	return tile_extent * float(_map_size.x) > viewport_rect.size.x + 0.01 or tile_extent * float(_map_size.y) > viewport_rect.size.y + 0.01
+
+func _pan_camera_pixels(pixel_delta: Vector2) -> bool:
+	if not _can_pan_camera():
+		return false
+	var viewport_rect := _map_viewport_rect()
+	var tile_extent := _tile_extent_for_viewport(viewport_rect.size)
+	return _set_camera_center(_camera_center_tile - (pixel_delta / max(tile_extent, 1.0)), true)
+
+func _set_camera_center(center: Vector2, manual: bool) -> bool:
+	var previous_center := _camera_center_tile
+	_camera_center_tile = _clamped_camera_center(center)
+	_camera_center_ready = true
+	_manual_camera = manual
+	var changed := previous_center.distance_to(_camera_center_tile) > 0.01
+	if changed:
+		queue_redraw()
+	return changed
+
+func pan_tiles(delta: Vector2i) -> bool:
+	if not _can_pan_camera():
+		return false
+	_ensure_camera_state()
+	return _set_camera_center(_camera_center_tile + Vector2(float(delta.x), float(delta.y)), true)
+
+func focus_on_hero() -> bool:
+	var previous_center := _camera_center_tile
+	_manual_camera = false
+	_camera_center_tile = _clamped_camera_center(_default_camera_focus_tile())
+	_camera_center_ready = true
+	var changed := previous_center.distance_to(_camera_center_tile) > 0.01
+	if changed:
+		queue_redraw()
+	return changed
 
 func _tile_rect(board_rect: Rect2, tile: Vector2i) -> Rect2:
 	var cell_size = board_rect.size / Vector2(float(max(_map_size.x, 1)), float(max(_map_size.y, 1)))
@@ -460,6 +594,7 @@ func validation_view_metrics() -> Dictionary:
 	var visible_columns: float = min(float(_map_size.x), viewport_rect.size.x / max(cell_size.x, 1.0))
 	var visible_rows: float = min(float(_map_size.y), viewport_rect.size.y / max(cell_size.y, 1.0))
 	var focus_tile := _camera_focus_tile()
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	return {
 		"map_size": {"x": _map_size.x, "y": _map_size.y},
 		"viewport_rect": _rect_payload(viewport_rect),
@@ -470,7 +605,42 @@ func validation_view_metrics() -> Dictionary:
 		"visible_tile_area": visible_columns * visible_rows,
 		"full_map_visible": board_rect.size.x <= viewport_rect.size.x + 0.01 and board_rect.size.y <= viewport_rect.size.y + 0.01,
 		"fit_entire_map": _should_fit_entire_map(),
-		"camera_focus_tile": {"x": focus_tile.x, "y": focus_tile.y},
+		"pan_supported": _can_pan_camera(),
+		"manual_camera": _manual_camera,
+		"camera_focus_tile": {"x": int(round(focus_tile.x)), "y": int(round(focus_tile.y))},
+		"camera_focus_tile_precise": {"x": focus_tile.x, "y": focus_tile.y},
+		"visible_bounds": {
+			"x": visible_bounds.position.x,
+			"y": visible_bounds.position.y,
+			"width": visible_bounds.size.x,
+			"height": visible_bounds.size.y,
+		},
+	}
+
+func validation_tile_presentation(tile: Vector2i) -> Dictionary:
+	var explored := _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
+	var visible := _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var has_town := explored and _has_town_at(tile)
+	var has_resource := explored and _has_resource_at(tile)
+	var has_artifact := explored and _has_artifact_at(tile)
+	var has_rememberable_encounter := explored and _has_rememberable_encounter_at(tile)
+	var has_visible_encounter := visible and _has_encounter_at(tile)
+	var remembered_object := explored and not visible and (
+		has_town or has_resource or has_artifact or has_rememberable_encounter
+	)
+	return {
+		"x": tile.x,
+		"y": tile.y,
+		"explored": explored,
+		"visible": visible,
+		"remembered": explored and not visible,
+		"has_town": has_town,
+		"has_resource": has_resource,
+		"has_artifact": has_artifact,
+		"has_rememberable_encounter": has_rememberable_encounter,
+		"has_visible_encounter": has_visible_encounter,
+		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_visible_encounter)) or remembered_object,
+		"draws_remembered_object": remembered_object,
 	}
 
 func _rect_payload(rect: Rect2) -> Dictionary:
@@ -530,6 +700,18 @@ func _has_artifact_at(tile: Vector2i) -> bool:
 func _has_encounter_at(tile: Vector2i) -> bool:
 	for encounter in _session.overworld.get("encounters", []):
 		if not (encounter is Dictionary):
+			continue
+		if int(encounter.get("x", -1)) != tile.x or int(encounter.get("y", -1)) != tile.y:
+			continue
+		if not OverworldRulesScript.is_encounter_resolved(_session, encounter):
+			return true
+	return false
+
+func _has_rememberable_encounter_at(tile: Vector2i) -> bool:
+	for encounter in _session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) != "":
 			continue
 		if int(encounter.get("x", -1)) != tile.x or int(encounter.get("y", -1)) != tile.y:
 			continue

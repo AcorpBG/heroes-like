@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-19T08:19:25Z",
+  "updatedAt": "2026-04-19T10:16:55Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "player-visible-latency-investigation-10184",
-  "currentSliceTitle": "Profile remaining player-visible latency after entry-refresh fixes",
+  "currentSliceId": "overworld-usability-acorp-10184",
+  "currentSliceTitle": "Fix AcOrP overworld usability gaps for fog memory, large-map panning, and remote town entry",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow player-visible latency investigation and fix after d2bf14a and 6bc9bc4. Temporary routed probes found two clear bottlenecks on Ninefold Confluence: unchanged large save summaries were being reread/renormalized during scene refreshes, and collapsed overworld Frontier/commitment detail panels were still building full objective, threat, and next-day risk summaries. SaveService now caches slot summaries by file state and seeds exact runtime-save summaries, while OverworldShell defers hidden Frontier/commitment detail work until the Frontier drawer is opened. Focused probes showed populated save-surface refresh down from multi-second waits to roughly 8-13 ms, battle refresh after populated saves down from about 5.2 s to about 23 ms, and Ninefold overworld idle refresh down from about 1.5-1.6 s to about 0.36 s. Remaining diagnosis: Ninefold direct town entry still measured about 3.6 s, with town refresh about 0.78 s and the visible command ledger the largest town summary cost; that was not changed in this slice.",
+  "currentSliceNotes": "Completed a narrow overworld usability follow-up after AcOrP reported three player-facing gaps. The landed patch keeps remembered explored objects readable with dim markers/context when outside the current scout net, adds manual large-map panning plus Home/focus return for the 64x64 tactical viewport, and lets owned explored towns be entered from map selection without moving the field hero onto the town tile. Host-side validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check. This records automated/routed validation only, not broad polish or full manual proof.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -136,6 +136,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-usability-acorp-10184",
+      "title": "Fix remembered-object readability, large-map panning, and remote owned-town entry",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -192,7 +198,7 @@
   ],
   "nextActions": [
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
-    "Manually inspect Ninefold Confluence's tactical framing in the live client at the supported 16:9 runtime resolutions before adding camera pan or zoom controls.",
+    "Manually inspect Ninefold Confluence's panning and remembered-object readability in the live client at the supported 16:9 runtime resolutions before treating the large-map UX as broadly polished.",
     "Deepen selected neutral dwelling families in Ninefold Confluence with encounter tuning and manual play notes before claiming balance or player-facing readiness.",
     "Define truthful paired transit behavior before making Ninefold Confluence ferry or rope-lift placements route-critical.",
     "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",
