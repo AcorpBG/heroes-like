@@ -2701,6 +2701,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
     hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
     for required_token in ("const BASE_SCOUT_RADIUS", "func scouting_radius_for_hero", 'Scout %d | %s'):
         ensure(required_token in hero_command_text, errors, f"HeroCommandRules.gd is missing required fog/scouting token: {required_token}")
+    ensure("const BASE_SCOUT_RADIUS := 3" in hero_command_text, errors, "HeroCommandRules.gd must keep the raised base scout radius at 3")
 
     scenario_factory_text = SCENARIO_FACTORY_PATH.read_text(encoding="utf-8")
     ensure('"fog"' in scenario_factory_text, errors, "ScenarioFactory.gd must seed fog state in new overworld sessions")

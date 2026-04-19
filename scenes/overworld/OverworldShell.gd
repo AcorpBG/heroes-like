@@ -1036,7 +1036,7 @@ func _update_map_tooltip() -> void:
 
 func _map_tooltip_text() -> String:
 	if _tile_in_bounds(_hovered_tile) and _hovered_tile != _selected_tile:
-		return "Hover %d,%d | %s" % [_hovered_tile.x, _hovered_tile.y, _terrain_name_at(_hovered_tile.x, _hovered_tile.y)]
+		return _tile_visibility_tooltip(_hovered_tile, "Hover")
 	var hero_pos = OverworldRules.hero_position(_session)
 	var movement_left = int(_session.overworld.get("movement", {}).get("current", 0))
 	var primary_action := _current_primary_action()
@@ -1046,7 +1046,7 @@ func _map_tooltip_text() -> String:
 				OverworldRules.describe_visibility(_session),
 				_short_action_label(String(primary_action.get("label", "Action")), 22),
 			]
-		return "%s | Select a visible destination on the map." % OverworldRules.describe_visibility(_session)
+		return "%s | Select a mapped destination on the map." % OverworldRules.describe_visibility(_session)
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
 		return "Selected %d,%d | Unexplored ground | Move closer to reveal it." % [_selected_tile.x, _selected_tile.y]
 	if OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y):
@@ -1063,6 +1063,14 @@ func _map_tooltip_text() -> String:
 			_short_action_label(String(primary_action.get("label", "Advance")), 22),
 		]
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
+
+func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
+	if not OverworldRules.is_tile_explored(_session, tile.x, tile.y):
+		return "%s %d,%d | Unexplored ground | Scout closer" % [prefix, tile.x, tile.y]
+	var terrain := _terrain_name_at(tile.x, tile.y)
+	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+		return "%s %d,%d | Mapped %s | Out of scout net" % [prefix, tile.x, tile.y, terrain]
+	return "%s %d,%d | %s" % [prefix, tile.x, tile.y, terrain]
 
 func _selected_route() -> Array:
 	if not _refresh_cache.has("selected_route"):

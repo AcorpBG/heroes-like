@@ -6325,7 +6325,6 @@ static func _town_requires_assault(town: Dictionary) -> bool:
 
 static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) -> void:
 	var map_size := derive_map_size(session)
-	var had_fog_key := session.overworld.has(FOG_KEY)
 	var fog = session.overworld.get(FOG_KEY, {})
 	if not (fog is Dictionary):
 		fog = {}
@@ -6333,7 +6332,7 @@ static func _normalize_fog_of_war(session: SessionStateStoreScript.SessionData) 
 	if fog.has(EXPLORED_TILES_KEY):
 		explored_tiles = _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
 	else:
-		explored_tiles = _blank_visibility_grid(map_size, not had_fog_key)
+		explored_tiles = _blank_visibility_grid(map_size)
 	var visible_tiles := _blank_visibility_grid(map_size)
 	var heroes = session.overworld.get("player_heroes", [])
 	if heroes is Array:

@@ -11,7 +11,7 @@ const HALL_BUILDING_ID := "building_wayfarers_hall"
 const HOLDER_GARRISON := "garrison"
 const HERO_LIMIT := 4
 const DEFAULT_RECRUIT_COST := {"gold": 1200}
-const BASE_SCOUT_RADIUS := 2
+const BASE_SCOUT_RADIUS := 3
 
 static func normalize_session(
 	session: SessionStateStoreScript.SessionData,

@@ -11,6 +11,8 @@ func _run() -> void:
 		return
 	if not await _run_auto_interaction_regressions():
 		return
+	if not _run_overworld_memory_fog_regression():
+		return
 	if not _run_neutral_dwelling_unit_slice_regression():
 		return
 	if not _run_hostile_commander_identity_regression():
@@ -112,6 +114,60 @@ func _run_auto_interaction_regressions() -> bool:
 	if not _run_enemy_town_context_regression():
 		return false
 	if not await _run_overworld_primary_action_regression():
+		return false
+	return true
+
+func _run_overworld_memory_fog_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	var hero = session.overworld.get("hero", {})
+	if HeroCommandRules.scouting_radius_for_hero(hero) != 3:
+		push_error("Core systems smoke: base hero scouting radius did not include the requested +1 increase.")
+		get_tree().quit(1)
+		return false
+
+	var start := OverworldRules.hero_position(session)
+	var radius_edge := Vector2i(start.x + 3, start.y)
+	if not OverworldRules.is_tile_visible(session, radius_edge.x, radius_edge.y):
+		push_error("Core systems smoke: +1 scout radius did not reveal the distance-3 edge tile.")
+		get_tree().quit(1)
+		return false
+
+	var never_seen := Vector2i(4, 0)
+	if OverworldRules.is_tile_explored(session, never_seen.x, never_seen.y) or OverworldRules.is_tile_visible(session, never_seen.x, never_seen.y):
+		push_error("Core systems smoke: initial fog did not hide an unscouted tile.")
+		get_tree().quit(1)
+		return false
+
+	_set_active_hero_position(session, Vector2i(8, 2))
+	OverworldRules.refresh_fog_of_war(session)
+	if OverworldRules.is_tile_visible(session, start.x, start.y):
+		push_error("Core systems smoke: old scout ring stayed currently visible after the hero moved away.")
+		get_tree().quit(1)
+		return false
+	if not OverworldRules.is_tile_explored(session, start.x, start.y):
+		push_error("Core systems smoke: explored start tile was not preserved as mapped memory after moving away.")
+		get_tree().quit(1)
+		return false
+	if OverworldRules.is_tile_explored(session, never_seen.x, never_seen.y) or OverworldRules.is_tile_visible(session, never_seen.x, never_seen.y):
+		push_error("Core systems smoke: unscouted tile became explored without entering a scout ring.")
+		get_tree().quit(1)
+		return false
+
+	var missing_fog_session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	missing_fog_session.overworld.erase("fog")
+	OverworldRules.normalize_overworld_state(missing_fog_session)
+	if OverworldRules.is_tile_explored(missing_fog_session, never_seen.x, never_seen.y):
+		push_error("Core systems smoke: missing fog state normalized to full-map exploration.")
+		get_tree().quit(1)
 		return false
 	return true
 
