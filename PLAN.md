@@ -188,6 +188,30 @@ Limits:
 - Host-side validation passed, but no full manual proof is claimed for Ninefold Confluence or for every supported runtime resolution.
 - Remote town entry is limited to owned, explored towns; hostile or neutral town interactions still require their normal scenario/system rules.
 
+## Current Implementation Slice: Overworld Readability Contrast Pass
+Status: completed on 2026-04-19 as a narrow visual/readability follow-up after AcOrP confirmed panning works but important overworld objects still blend into terrain.
+
+Purpose:
+- Make towns, the active hero/current selection, resource sites, artifacts, and encounters read faster against terrain on both River Pass-scale and large 64x64 maps.
+- Make remembered objects distinguishable from visible objects without reducing them to faint, ambiguous terrain mush.
+- Preserve the map-first presentation: no heavy permanent labels, broad panels, debug overlays, or chrome covering the play surface.
+
+Implemented:
+- Tuned `OverworldMapView` marker shapes, scale, outlines, shadow plates, and focus rings for towns, active hero/current selection, resource sites, artifacts, and encounters.
+- Added a distinct remembered-object treatment with stronger ghost color, visible outline, small contrast plate, and memory echo ticks while keeping the markers non-label, map-first, and compact.
+- Extended focused overworld and Ninefold Confluence smoke coverage through marker-readability validation metadata for visible objects, remembered owned-town markers, active hero/selection emphasis, and large-map resource/town markers.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a full overworld art pass, new camera feature, or shell redesign.
+- Existing remembered-state rendering, panning, and remote owned-town entry behavior from the previous slice must remain intact.
+- Automated smoke coverage guards presentation metadata and route behavior; no broad manual visual proof is claimed.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

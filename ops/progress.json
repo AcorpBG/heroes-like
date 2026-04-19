@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-19T10:16:55Z",
+  "updatedAt": "2026-04-19T14:01:27Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-usability-acorp-10184",
-  "currentSliceTitle": "Fix AcOrP overworld usability gaps for fog memory, large-map panning, and remote town entry",
+  "currentSliceId": "overworld-readability-acorp-10184",
+  "currentSliceTitle": "Improve overworld object and remembered-marker readability without heavy UI chrome",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow overworld usability follow-up after AcOrP reported three player-facing gaps. The landed patch keeps remembered explored objects readable with dim markers/context when outside the current scout net, adds manual large-map panning plus Home/focus return for the 64x64 tactical viewport, and lets owned explored towns be entered from map selection without moving the field hero onto the town tile. Host-side validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check. This records automated/routed validation only, not broad polish or full manual proof.",
+  "currentSliceNotes": "Completed a narrow overworld visual/readability pass after AcOrP confirmed panning works but important objects still blended into terrain. OverworldMapView now gives towns, active hero/current selection, resource sites, artifacts, and encounters stronger symbolic scale, contrast plates, shadows, and outlines; remembered objects now keep a distinct ghost color, visible outline, contrast plate, and echo ticks instead of fading into terrain mush. Existing remembered-state rendering, panning, and remote owned-town entry behavior were preserved. Focused validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check. This is automated/routed smoke coverage, not broad manual visual proof.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -140,6 +140,12 @@
       "title": "Fix remembered-object readability, large-map panning, and remote owned-town entry",
       "status": "completed",
       "difficulty": "high"
+    },
+    {
+      "id": "overworld-readability-acorp-10184",
+      "title": "Improve overworld object marker readability on visible and remembered tiles",
+      "status": "completed",
+      "difficulty": "medium"
     },
     {
       "id": "river-pass-live-audit",

@@ -76,6 +76,8 @@ func _run() -> void:
 	if int(focus_tile.get("x", -1)) != 23 or int(focus_tile.get("y", -1)) != 26:
 		_fail("Ninefold smoke: tactical viewport is not centered on Mira's starting hero tile: %s." % viewport_metrics)
 		return
+	if not _assert_large_map_marker_readability(shell):
+		return
 	if not shell.has_method("validation_pan_map") or not shell.has_method("validation_focus_map_on_hero"):
 		_fail("Ninefold smoke: OverworldShell did not expose large-map pan validation hooks.")
 		return
@@ -105,6 +107,47 @@ func _run() -> void:
 		return
 
 	get_tree().quit(0)
+
+func _assert_large_map_marker_readability(shell: Node) -> bool:
+	if not shell.has_method("validation_tile_presentation"):
+		_fail("Ninefold smoke: OverworldShell did not expose tile marker presentation validation.")
+		return false
+	var town_tile := Vector2i(23, 26)
+	var town_presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
+	if not _assert_marker_style(town_presentation, "town", false):
+		return false
+	var town_readability: Dictionary = town_presentation.get("marker_readability", {})
+	if not bool(town_readability.get("hero_emphasis", false)) or not bool(town_readability.get("selection_emphasis", false)):
+		_fail("Ninefold smoke: active hero/current-selection emphasis is not readable on the large starting town tile: %s." % town_presentation)
+		return false
+
+	var resource_tile := Vector2i(23, 24)
+	var resource_presentation: Dictionary = shell.call("validation_tile_presentation", resource_tile.x, resource_tile.y)
+	if not _assert_marker_style(resource_presentation, "resource", false):
+		return false
+	return true
+
+func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
+	var readability: Dictionary = presentation.get("marker_readability", {})
+	var object_kinds: Array = readability.get("object_kinds", [])
+	if expected_kind not in object_kinds:
+		_fail("Ninefold smoke: expected %s marker kind was missing on the large map: %s." % [expected_kind, presentation])
+		return false
+	if not bool(readability.get("contrast_plate", false)):
+		_fail("Ninefold smoke: large-map %s marker lacks a terrain contrast plate: %s." % [expected_kind, presentation])
+		return false
+	if float(readability.get("min_symbol_extent_fraction", 0.0)) < 0.33:
+		_fail("Ninefold smoke: large-map %s marker is too small for tactical framing: %s." % [expected_kind, presentation])
+		return false
+	if remembered:
+		if not bool(readability.get("memory_echo", false)) or float(readability.get("remembered_marker_alpha", 0.0)) < 0.80:
+			_fail("Ninefold smoke: remembered large-map %s marker is too faint: %s." % [expected_kind, presentation])
+			return false
+	else:
+		if bool(readability.get("memory_echo", false)) or float(readability.get("plate_alpha", 0.0)) < 0.50 or float(readability.get("outline_alpha", 0.0)) < 0.85:
+			_fail("Ninefold smoke: visible large-map %s marker contrast is too weak: %s." % [expected_kind, presentation])
+			return false
+	return true
 
 func _fail(message: String) -> void:
 	push_error(message)

@@ -14,9 +14,9 @@ const GRID_COLOR := Color(0.08, 0.10, 0.12, 0.55)
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
-const MEMORY_OVERLAY := Color(0.05, 0.07, 0.09, 0.62)
-const MEMORY_OBJECT_COLOR := Color(0.62, 0.68, 0.70, 0.58)
-const MEMORY_OBJECT_OUTLINE := Color(0.82, 0.86, 0.82, 0.32)
+const MEMORY_OVERLAY := Color(0.05, 0.07, 0.09, 0.54)
+const MEMORY_OBJECT_COLOR := Color(0.72, 0.80, 0.82, 0.84)
+const MEMORY_OBJECT_OUTLINE := Color(0.92, 0.96, 0.91, 0.76)
 const SELECTION_COLOR := Color(0.98, 0.87, 0.46, 1.0)
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HERO_RING_COLOR := Color(0.98, 0.94, 0.72, 1.0)
@@ -56,6 +56,22 @@ const NEUTRAL_TOWN_COLOR := Color(0.56, 0.59, 0.64, 1.0)
 const RESOURCE_COLOR := Color(0.28, 0.83, 0.62, 1.0)
 const ARTIFACT_COLOR := Color(0.95, 0.68, 0.31, 1.0)
 const ENCOUNTER_COLOR := Color(0.90, 0.44, 0.35, 1.0)
+const MARKER_OUTLINE_COLOR := Color(0.035, 0.045, 0.055, 0.92)
+const MARKER_SHADOW_COLOR := Color(0.01, 0.015, 0.02, 0.70)
+const MARKER_PLATE_VISIBLE := Color(0.03, 0.035, 0.04, 0.58)
+const MARKER_PLATE_MEMORY := Color(0.025, 0.04, 0.05, 0.76)
+const MARKER_RING_VISIBLE := Color(1.0, 0.91, 0.56, 0.50)
+const MARKER_RING_MEMORY := Color(0.82, 0.93, 0.96, 0.80)
+const MARKER_PLATE_RADIUS_FACTOR := 0.31
+const HERO_PLATE_RADIUS_FACTOR := 0.33
+const TOWN_MARKER_BODY_WIDTH := 0.64
+const TOWN_MARKER_BODY_HEIGHT := 0.34
+const RESOURCE_MARKER_RADIUS := 0.17
+const ARTIFACT_MARKER_OUTER_RADIUS := 0.18
+const ARTIFACT_MARKER_INNER_RADIUS := 0.07
+const ENCOUNTER_MARKER_EXTENT := 0.21
+const HERO_MARKER_RADIUS := 0.17
+const FOCUS_RING_WIDTH_FACTOR := 0.045
 const PAN_DRAG_THRESHOLD := 6.0
 const WHEEL_PAN_TILES := 3
 const DIRECTIONS := [
@@ -290,11 +306,16 @@ func _draw_route(board_rect: Rect2) -> void:
 		draw_circle(point, 4.0, line_color)
 
 func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var focus_width := maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR)
 	if tile == _hero_tile:
-		draw_rect(rect.grow(-2.0), HERO_RING_COLOR, false, 3.0)
+		draw_rect(rect.grow(-1.0), Color(0.03, 0.025, 0.015, 0.50), false, focus_width + 2.0)
+		draw_rect(rect.grow(-3.0), HERO_RING_COLOR, false, focus_width)
 
 	if tile == _selected_tile:
-		draw_rect(rect.grow(-4.0), SELECTION_COLOR, false, 3.0)
+		draw_rect(rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
+		draw_rect(rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
+		_draw_selection_corners(rect, SELECTION_COLOR, focus_width)
 
 	if tile == _hover_tile:
 		draw_rect(rect.grow(-7.0), HOVER_COLOR, false, 2.0)
@@ -317,35 +338,41 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 		_draw_hero_marker(rect, tile)
 
 func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> void:
+	_draw_marker_plate(rect, remembered, 0.35)
+	var extent := minf(rect.size.x, rect.size.y)
+	var outline_width := maxf(2.2, extent * 0.036)
 	var marker_color := _remembered_marker_color(color) if remembered else color
-	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.08, 0.09, 0.12, 0.8)
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	var body = Rect2(
-		rect.position + rect.size * Vector2(0.24, 0.36),
-		rect.size * Vector2(0.52, 0.30)
+		rect.position + rect.size * Vector2((1.0 - TOWN_MARKER_BODY_WIDTH) * 0.5, 0.34),
+		rect.size * Vector2(TOWN_MARKER_BODY_WIDTH, TOWN_MARKER_BODY_HEIGHT)
 	)
 	draw_rect(body, marker_color, true)
-	draw_rect(body, outline_color, false, 2.0)
-	for step in [0.26, 0.43, 0.60]:
+	draw_rect(body, outline_color, false, outline_width)
+	for step in [0.22, 0.42, 0.62]:
 		var battlement = Rect2(
-			rect.position + rect.size * Vector2(step, 0.26),
-			rect.size * Vector2(0.10, 0.10)
+			rect.position + rect.size * Vector2(step, 0.23),
+			rect.size * Vector2(0.13, 0.12)
 		)
 		draw_rect(battlement, marker_color, true)
-	var flag_start = rect.position + rect.size * Vector2(0.68, 0.18)
-	var flag_end = rect.position + rect.size * Vector2(0.68, 0.40)
-	draw_line(flag_end, flag_start, Color(0.93, 0.91, 0.82, 0.46 if remembered else 0.9), 2.0)
+		draw_rect(battlement, outline_color, false, maxf(1.4, outline_width * 0.65))
+	var flag_start = rect.position + rect.size * Vector2(0.70, 0.16)
+	var flag_end = rect.position + rect.size * Vector2(0.70, 0.43)
+	draw_line(flag_end, flag_start, Color(0.97, 0.94, 0.82, 0.62 if remembered else 0.96), maxf(2.0, extent * 0.032))
 	var flag = PackedVector2Array([
 		flag_start,
 		flag_start + rect.size * Vector2(0.13, 0.04),
 		flag_start + rect.size * Vector2(0.00, 0.11),
 	])
-	draw_colored_polygon(flag, Color(0.96, 0.90, 0.67, 0.48 if remembered else 0.95))
+	draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
 
 func _draw_resource_marker(rect: Rect2, remembered: bool = false) -> void:
+	_draw_marker_plate(rect, remembered)
+	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
-	var radius = rect.size.x * 0.12
-	var marker_color := MEMORY_OBJECT_COLOR if remembered else RESOURCE_COLOR
-	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.07, 0.10, 0.12, 0.85)
+	var radius = maxf(5.0, extent * RESOURCE_MARKER_RADIUS)
+	var marker_color := _remembered_marker_color(RESOURCE_COLOR) if remembered else RESOURCE_COLOR
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	var diamond = PackedVector2Array([
 		center + Vector2(0.0, -radius),
 		center + Vector2(radius, 0.0),
@@ -354,14 +381,17 @@ func _draw_resource_marker(rect: Rect2, remembered: bool = false) -> void:
 	])
 	draw_colored_polygon(diamond, marker_color)
 	var diamond_outline = PackedVector2Array([diamond[0], diamond[1], diamond[2], diamond[3], diamond[0]])
-	draw_polyline(diamond_outline, outline_color, 2.0)
+	draw_polyline(diamond_outline, outline_color, maxf(2.0, extent * 0.034))
+	draw_circle(center, maxf(1.8, extent * 0.035), Color(0.93, 1.0, 0.86, 0.50 if remembered else 0.78))
 
 func _draw_artifact_marker(rect: Rect2, remembered: bool = false) -> void:
+	_draw_marker_plate(rect, remembered)
+	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
-	var outer = rect.size.x * 0.13
-	var inner = rect.size.x * 0.05
+	var outer = maxf(5.0, extent * ARTIFACT_MARKER_OUTER_RADIUS)
+	var inner = maxf(2.2, extent * ARTIFACT_MARKER_INNER_RADIUS)
 	var marker_color := _remembered_marker_color(ARTIFACT_COLOR) if remembered else ARTIFACT_COLOR
-	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.15, 0.10, 0.05, 0.9)
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	var points = PackedVector2Array([
 		center + Vector2(0.0, -outer),
 		center + Vector2(inner, -inner),
@@ -384,25 +414,35 @@ func _draw_artifact_marker(rect: Rect2, remembered: bool = false) -> void:
 		points[7],
 		points[0],
 	])
-	draw_polyline(star_outline, outline_color, 2.0)
+	draw_polyline(star_outline, outline_color, maxf(2.0, extent * 0.034))
+	draw_circle(center, maxf(1.6, extent * 0.03), Color(1.0, 0.96, 0.72, 0.54 if remembered else 0.86))
 
 func _draw_encounter_marker(rect: Rect2, remembered: bool = false) -> void:
+	_draw_marker_plate(rect, remembered)
+	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
-	var extent = rect.size.x * 0.16
+	var marker_extent = maxf(6.0, extent * ENCOUNTER_MARKER_EXTENT)
 	var marker_color := _remembered_marker_color(ENCOUNTER_COLOR) if remembered else ENCOUNTER_COLOR
-	draw_line(center + Vector2(-extent, -extent), center + Vector2(extent, extent), marker_color, 4.0)
-	draw_line(center + Vector2(extent, -extent), center + Vector2(-extent, extent), marker_color, 4.0)
-	draw_circle(center, rect.size.x * 0.05, Color(0.98, 0.94, 0.79, 0.45 if remembered else 1.0))
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	var wide := maxf(6.0, extent * 0.090)
+	var narrow := maxf(3.8, extent * 0.056)
+	draw_line(center + Vector2(-marker_extent, -marker_extent), center + Vector2(marker_extent, marker_extent), outline_color, wide)
+	draw_line(center + Vector2(marker_extent, -marker_extent), center + Vector2(-marker_extent, marker_extent), outline_color, wide)
+	draw_line(center + Vector2(-marker_extent, -marker_extent), center + Vector2(marker_extent, marker_extent), marker_color, narrow)
+	draw_line(center + Vector2(marker_extent, -marker_extent), center + Vector2(-marker_extent, marker_extent), marker_color, narrow)
+	draw_circle(center, maxf(2.0, extent * 0.055), Color(0.98, 0.94, 0.79, 0.58 if remembered else 1.0))
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
+	_draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR)
+	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
-	var base_radius = rect.size.x * 0.13
+	var base_radius = maxf(5.0, extent * HERO_MARKER_RADIUS)
 	draw_circle(center + Vector2(0.0, rect.size.y * 0.06), base_radius, HERO_FILL_COLOR)
-	draw_circle(center + Vector2(0.0, rect.size.y * 0.06), base_radius, HERO_RING_COLOR, false, 2.5)
-	draw_line(center + Vector2(base_radius, rect.size.y * 0.06), center + Vector2(base_radius, -rect.size.y * 0.20), HERO_RING_COLOR, 2.5)
+	draw_circle(center + Vector2(0.0, rect.size.y * 0.06), base_radius, HERO_RING_COLOR, false, maxf(2.5, extent * 0.036))
+	draw_line(center + Vector2(base_radius, rect.size.y * 0.06), center + Vector2(base_radius, -rect.size.y * 0.22), HERO_RING_COLOR, maxf(2.5, extent * 0.035))
 	var banner = PackedVector2Array([
-		center + Vector2(base_radius, -rect.size.y * 0.20),
-		center + Vector2(base_radius + rect.size.x * 0.16, -rect.size.y * 0.14),
+		center + Vector2(base_radius, -rect.size.y * 0.22),
+		center + Vector2(base_radius + rect.size.x * 0.17, -rect.size.y * 0.15),
 		center + Vector2(base_radius, -rect.size.y * 0.06),
 	])
 	draw_colored_polygon(banner, Color(0.95, 0.73, 0.25, 0.95))
@@ -416,6 +456,51 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 	for index in range(min(reserve_count, 3)):
 		var dot_pos = marker_center + Vector2((index - 1) * 5.0, 0.0)
 		draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
+
+func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var center := rect.get_center()
+	var radius := maxf(7.0, extent * radius_factor)
+	var shadow_offset := Vector2(0.0, maxf(1.5, extent * 0.045))
+	draw_circle(center + shadow_offset, radius * 1.06, MARKER_SHADOW_COLOR)
+	draw_circle(center, radius, MARKER_PLATE_MEMORY if remembered else MARKER_PLATE_VISIBLE)
+	draw_circle(
+		center,
+		radius,
+		MARKER_RING_MEMORY if remembered else MARKER_RING_VISIBLE,
+		false,
+		maxf(1.5, extent * 0.025)
+	)
+	if remembered:
+		_draw_memory_echo_marks(center, radius, extent)
+
+func _draw_memory_echo_marks(center: Vector2, radius: float, extent: float) -> void:
+	var color := Color(0.86, 0.94, 0.96, 0.76)
+	var width := maxf(1.25, extent * 0.018)
+	var inner := radius * 0.62
+	var outer := radius * 0.92
+	var tick := radius * 0.22
+	draw_line(center + Vector2(-inner, -outer), center + Vector2(-inner + tick, -outer), color, width)
+	draw_line(center + Vector2(inner, -outer), center + Vector2(inner - tick, -outer), color, width)
+	draw_line(center + Vector2(-inner, outer), center + Vector2(-inner + tick, outer), color, width)
+	draw_line(center + Vector2(inner, outer), center + Vector2(inner - tick, outer), color, width)
+
+func _draw_selection_corners(rect: Rect2, color: Color, width: float) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var inset := maxf(4.0, extent * 0.075)
+	var length := maxf(8.0, extent * 0.22)
+	var top_left := rect.position + Vector2(inset, inset)
+	var top_right := Vector2(rect.end.x - inset, rect.position.y + inset)
+	var bottom_left := Vector2(rect.position.x + inset, rect.end.y - inset)
+	var bottom_right := rect.end - Vector2(inset, inset)
+	draw_line(top_left, top_left + Vector2(length, 0.0), color, width)
+	draw_line(top_left, top_left + Vector2(0.0, length), color, width)
+	draw_line(top_right, top_right + Vector2(-length, 0.0), color, width)
+	draw_line(top_right, top_right + Vector2(0.0, length), color, width)
+	draw_line(bottom_left, bottom_left + Vector2(length, 0.0), color, width)
+	draw_line(bottom_left, bottom_left + Vector2(0.0, -length), color, width)
+	draw_line(bottom_right, bottom_right + Vector2(-length, 0.0), color, width)
+	draw_line(bottom_right, bottom_right + Vector2(0.0, -length), color, width)
 
 func _remembered_marker_color(color: Color) -> Color:
 	return Color(
@@ -625,6 +710,16 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	var has_artifact := explored and _has_artifact_at(tile)
 	var has_rememberable_encounter := explored and _has_rememberable_encounter_at(tile)
 	var has_visible_encounter := visible and _has_encounter_at(tile)
+	var has_visible_hero := visible and _has_hero_at(tile)
+	var object_kinds := []
+	if has_town:
+		object_kinds.append("town")
+	if has_resource:
+		object_kinds.append("resource")
+	if has_artifact:
+		object_kinds.append("artifact")
+	if has_visible_encounter or has_rememberable_encounter:
+		object_kinds.append("encounter")
 	var remembered_object := explored and not visible and (
 		has_town or has_resource or has_artifact or has_rememberable_encounter
 	)
@@ -639,9 +734,63 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"has_artifact": has_artifact,
 		"has_rememberable_encounter": has_rememberable_encounter,
 		"has_visible_encounter": has_visible_encounter,
+		"has_visible_hero": has_visible_hero,
 		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_visible_encounter)) or remembered_object,
 		"draws_remembered_object": remembered_object,
+		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
 	}
+
+func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array, has_visible_hero: bool) -> Dictionary:
+	var marker_kinds := object_kinds.duplicate()
+	if has_visible_hero:
+		marker_kinds.append("hero")
+	var has_object_marker := not object_kinds.is_empty()
+	var remembered := explored and not visible and has_object_marker
+	var board_rect := _board_rect()
+	var rect := _tile_rect(board_rect, tile)
+	var extent := minf(rect.size.x, rect.size.y)
+	var min_symbol_fraction := _minimum_symbol_fraction(object_kinds)
+	return {
+		"object_kinds": object_kinds,
+		"marker_kinds": marker_kinds,
+		"contrast_plate": has_object_marker or has_visible_hero,
+		"plate_radius_fraction": HERO_PLATE_RADIUS_FACTOR if has_visible_hero and not has_object_marker else MARKER_PLATE_RADIUS_FACTOR,
+		"plate_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
+		"ring_alpha": MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a,
+		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
+		"memory_echo": remembered,
+		"remembered_marker_alpha": MEMORY_OBJECT_COLOR.a if remembered else 0.0,
+		"min_symbol_extent_fraction": min_symbol_fraction,
+		"min_symbol_extent_px": min_symbol_fraction * extent,
+		"hero_emphasis": has_visible_hero and tile == _hero_tile,
+		"hero_symbol_extent_fraction": HERO_MARKER_RADIUS * 2.0 if has_visible_hero else 0.0,
+		"selection_emphasis": tile == _selected_tile,
+		"focus_ring_width_px": maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR),
+		"tile_extent_px": extent,
+	}
+
+func _minimum_symbol_fraction(object_kinds: Array) -> float:
+	var minimum := 0.0
+	for kind_value in object_kinds:
+		var fraction := _symbol_extent_fraction(String(kind_value))
+		if fraction <= 0.0:
+			continue
+		if minimum <= 0.0 or fraction < minimum:
+			minimum = fraction
+	return minimum
+
+func _symbol_extent_fraction(kind: String) -> float:
+	match kind:
+		"town":
+			return minf(TOWN_MARKER_BODY_WIDTH, TOWN_MARKER_BODY_HEIGHT)
+		"resource":
+			return RESOURCE_MARKER_RADIUS * 2.0
+		"artifact":
+			return ARTIFACT_MARKER_OUTER_RADIUS * 2.0
+		"encounter":
+			return ENCOUNTER_MARKER_EXTENT * 2.0
+		_:
+			return 0.0
 
 func _rect_payload(rect: Rect2) -> Dictionary:
 	return {

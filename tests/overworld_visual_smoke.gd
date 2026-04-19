@@ -25,6 +25,8 @@ func _run() -> void:
 		return
 	if not _assert_small_map_fit(shell):
 		return
+	if not _assert_marker_readability_contract(shell):
+		return
 
 	var start = OverworldRules.hero_position(SessionState.ensure_active_session())
 	var map_size = OverworldRules.derive_map_size(SessionState.ensure_active_session())
@@ -214,6 +216,8 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		push_error("Overworld smoke: remembered owned town would not draw a dimmed object marker. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
+	if not _assert_marker_style(presentation, "town", true):
+		return false
 	var visit_result: Dictionary = shell.call("validation_perform_primary_action")
 	if String(session.game_state) != "town" or not bool(visit_result.get("ok", false)):
 		push_error("Overworld smoke: remembered owned town primary action did not route into town management. result=%s state=%s" % [visit_result, session.game_state])
@@ -225,6 +229,81 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	tree.quit(0)
+	return true
+
+func _assert_marker_readability_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_tile_presentation"):
+		push_error("Overworld smoke: shell is missing marker-presentation validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var marker_specs := [
+		{"kind": "town", "tile": _first_visible_town_tile(session)},
+		{"kind": "resource", "tile": _first_visible_resource_tile(session)},
+		{"kind": "artifact", "tile": _first_visible_artifact_tile(session)},
+		{"kind": "encounter", "tile": _first_visible_encounter_tile(session)},
+	]
+	for spec in marker_specs:
+		var kind := String(spec.get("kind", ""))
+		var tile: Vector2i = spec.get("tile", Vector2i(-1, -1))
+		if tile.x < 0:
+			push_error("Overworld smoke: could not find a visible %s marker candidate." % kind)
+			get_tree().quit(1)
+			return false
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		if not _assert_marker_style(presentation, kind, false):
+			return false
+
+	var hero_tile := OverworldRules.hero_position(session)
+	var hero_presentation: Dictionary = shell.call("validation_tile_presentation", hero_tile.x, hero_tile.y)
+	var hero_readability: Dictionary = hero_presentation.get("marker_readability", {})
+	if not bool(hero_presentation.get("has_visible_hero", false)) or not bool(hero_readability.get("hero_emphasis", false)):
+		push_error("Overworld smoke: active hero marker is not emphasized. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
+	if float(hero_readability.get("hero_symbol_extent_fraction", 0.0)) < 0.33:
+		push_error("Overworld smoke: active hero symbol is too small to read against terrain. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(hero_readability.get("selection_emphasis", false)) or float(hero_readability.get("focus_ring_width_px", 0.0)) < 3.0:
+		push_error("Overworld smoke: current selection focus is not readable on the map. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
+	var readability: Dictionary = presentation.get("marker_readability", {})
+	var object_kinds: Array = readability.get("object_kinds", [])
+	if expected_kind not in object_kinds:
+		push_error("Overworld smoke: expected %s marker kind was missing. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("contrast_plate", false)):
+		push_error("Overworld smoke: %s marker lacks the contrast plate needed to stand off terrain. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if float(readability.get("min_symbol_extent_fraction", 0.0)) < 0.33:
+		push_error("Overworld smoke: %s marker symbol is too small for at-a-glance readability. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if remembered:
+		if not bool(readability.get("memory_echo", false)):
+			push_error("Overworld smoke: remembered %s marker lacks a distinguishable memory treatment. presentation=%s" % [expected_kind, presentation])
+			get_tree().quit(1)
+			return false
+		if float(readability.get("remembered_marker_alpha", 0.0)) < 0.80 or float(readability.get("outline_alpha", 0.0)) < 0.70:
+			push_error("Overworld smoke: remembered %s marker is still too faint. presentation=%s" % [expected_kind, presentation])
+			get_tree().quit(1)
+			return false
+	else:
+		if bool(readability.get("memory_echo", false)):
+			push_error("Overworld smoke: visible %s marker was styled like a remembered marker. presentation=%s" % [expected_kind, presentation])
+			get_tree().quit(1)
+			return false
+		if float(readability.get("plate_alpha", 0.0)) < 0.50 or float(readability.get("outline_alpha", 0.0)) < 0.85:
+			push_error("Overworld smoke: visible %s marker contrast is too weak. presentation=%s" % [expected_kind, presentation])
+			get_tree().quit(1)
+			return false
 	return true
 
 func _first_player_town(session) -> Dictionary:
@@ -268,6 +347,48 @@ func _set_active_hero_position(session, tile: Vector2i) -> void:
 			hero["position"] = position.duplicate(true)
 			heroes[index] = hero
 	session.overworld["player_heroes"] = heroes
+
+func _first_visible_town_tile(session) -> Vector2i:
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var tile := Vector2i(int(town_value.get("x", -1)), int(town_value.get("y", -1)))
+		if OverworldRules.is_tile_visible(session, tile.x, tile.y):
+			return tile
+	return Vector2i(-1, -1)
+
+func _first_visible_resource_tile(session) -> Vector2i:
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+		if not OverworldRules.is_tile_visible(session, tile.x, tile.y):
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
+			return tile
+	return Vector2i(-1, -1)
+
+func _first_visible_artifact_tile(session) -> Vector2i:
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+		if not bool(node.get("collected", false)) and OverworldRules.is_tile_visible(session, tile.x, tile.y):
+			return tile
+	return Vector2i(-1, -1)
+
+func _first_visible_encounter_tile(session) -> Vector2i:
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		var tile := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
+		if OverworldRules.is_tile_visible(session, tile.x, tile.y) and not OverworldRules.is_encounter_resolved(session, encounter):
+			return tile
+	return Vector2i(-1, -1)
 
 func _assert_decluttered_right_shell(shell: Node, sidebar_shell: Control, command_spine: Control, action_panel: Control, action_containers: Array) -> bool:
 	if command_spine == null or not (command_spine is VBoxContainer):
