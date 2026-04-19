@@ -149,6 +149,26 @@ Limits:
 - This is a default framing fix, not a full overworld camera feature. Manual panning/zoom controls remain future work if large-map navigation needs them.
 - Ninefold Confluence still needs manual route, balance, and readability passes before it can be treated as a proven playable map.
 
+## Current Implementation Slice: Player-Visible Latency Reduction
+Status: completed on 2026-04-19 as a narrow latency fix after profiling the post-d2bf14a / post-6bc9bc4 hot paths.
+
+Purpose:
+- Reduce remaining perceived waits on large scenarios by measuring end-to-end scene/refresh routes instead of only average refresh numbers.
+- Keep the fix surgical: avoid broad town, battle, or rules rewrites while removing repeat work that was still happening behind mostly collapsed UI.
+
+Implemented:
+- Added SaveService slot-summary caching keyed by slot file state, with runtime saves seeding exact saved-payload summaries so unchanged large save files are not reread and renormalized on every scene refresh.
+- Deferred expensive overworld Frontier/commitment detail summaries while those panels are collapsed; the collapsed frontier indicator stays cheap and full objective/threat/risk text is populated when the Frontier drawer opens.
+
+Measured result:
+- Ninefold Confluence populated save-surface refresh dropped from multi-second waits to roughly 8-13 ms in the focused latency probe.
+- Ninefold Confluence battle refresh after populated saves dropped from about 5.2 s to about 23 ms.
+- Ninefold Confluence overworld idle refresh dropped from about 1.5-1.6 s to about 0.36 s by deferring hidden detail summaries.
+
+Limits:
+- Ninefold Confluence town entry still has a separate visible town-refresh cost: direct town entry measured about 3.6 s in the temporary probe, with town refresh about 0.78 s and the visible command ledger as the largest measured town summary. That is a follow-up diagnosis, not part of this save/frontier fix.
+- Opening the Frontier drawer intentionally pays the cost of building full objective, threat, and next-day risk summaries at the moment the player asks for that detail.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

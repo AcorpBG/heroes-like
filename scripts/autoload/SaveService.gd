@@ -24,6 +24,7 @@ const SAVE_METADATA_SCENARIO_STATUS_KEY := "saved_from_scenario_status"
 const SAVE_METADATA_LAUNCH_MODE_KEY := "saved_from_launch_mode"
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
+var _slot_summary_cache := {}
 
 func save_session(payload: Dictionary, slot: int = 1) -> String:
 	return save_manual_session(payload, slot)
@@ -344,7 +345,12 @@ func _ensure_save_dir() -> bool:
 		return false
 	return true
 
-func _save_payload(payload: Dictionary, file_path: String, slot_type: String = SLOT_TYPE_MANUAL) -> String:
+func _save_payload(
+	payload: Dictionary,
+	file_path: String,
+	slot_type: String = SLOT_TYPE_MANUAL,
+	saved_payload_out: Dictionary = {}
+) -> String:
 	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(payload)
 	normalized["save_version"] = SessionStateStoreScript.SAVE_VERSION
 	normalized[SAVE_METADATA_TIMESTAMP_KEY] = Time.get_unix_time_from_system()
@@ -352,6 +358,9 @@ func _save_payload(payload: Dictionary, file_path: String, slot_type: String = S
 	normalized[SAVE_METADATA_GAME_STATE_KEY] = String(normalized.get("game_state", "overworld"))
 	normalized[SAVE_METADATA_SCENARIO_STATUS_KEY] = String(normalized.get("scenario_status", "in_progress"))
 	normalized[SAVE_METADATA_LAUNCH_MODE_KEY] = String(normalized.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
+	saved_payload_out.clear()
+	for key in normalized.keys():
+		saved_payload_out[key] = normalized[key]
 	return _save_raw_dictionary(normalized, file_path)
 
 func _save_runtime_session(
@@ -378,16 +387,23 @@ func _save_runtime_session(
 
 	var path := ""
 	var summary := {}
+	var cache_slot_id := ""
+	var saved_payload := {}
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
-			path = _save_payload(sanitized_session.to_dict(), _autosave_path(), SLOT_TYPE_AUTOSAVE)
+			path = _save_payload(sanitized_session.to_dict(), _autosave_path(), SLOT_TYPE_AUTOSAVE, saved_payload)
+			cache_slot_id = SLOT_TYPE_AUTOSAVE
+			if path != "":
+				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path)
 			if include_summary:
 				summary = inspect_autosave()
 		_:
 			var normalized_slot := _normalize_manual_slot(slot)
-			path = _save_payload(sanitized_session.to_dict(), _slot_path(normalized_slot), SLOT_TYPE_MANUAL)
+			path = _save_payload(sanitized_session.to_dict(), _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload)
+			cache_slot_id = str(normalized_slot)
 			if path != "":
 				_selected_manual_slot = normalized_slot
+				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path)
 			if include_summary:
 				summary = inspect_manual_slot(normalized_slot)
 
@@ -411,6 +427,7 @@ func _save_raw_dictionary(payload: Dictionary, file_path: String) -> String:
 		return ""
 	file.store_string(JSON.stringify(payload, "\t"))
 	file.close()
+	_invalidate_summary_cache_for_path(file_path)
 	return file_path
 
 func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionary:
@@ -440,16 +457,20 @@ func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionar
 	return payload.duplicate(true) if payload is Dictionary else {}
 
 func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
+	var cached_summary := _cached_slot_summary(slot_type, slot_id, file_path)
+	if not cached_summary.is_empty():
+		return cached_summary
+
 	var summary := _empty_summary(slot_type, slot_id, file_path)
 	if not FileAccess.file_exists(file_path):
-		return _finalize_summary(summary)
+		return _finalize_and_cache_summary(summary)
 
 	summary["modified_timestamp"] = FileAccess.get_modified_time(file_path)
 	var raw_payload := _load_raw_dictionary(file_path, false)
 	if raw_payload.is_empty():
 		summary["validity"] = "corrupt_json"
 		summary["status_text"] = "Corrupt or unreadable save data."
-		return _finalize_summary(summary)
+		return _finalize_and_cache_summary(summary)
 
 	summary = _populate_summary_from_payload(summary, raw_payload)
 	var restore_result := _normalize_restore_result(raw_payload, slot_type)
@@ -459,14 +480,14 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		summary["warnings"] = restore_result.get("warnings", [])
 		summary["resume_target"] = "blocked"
 		summary["loadable"] = false
-		return _finalize_summary(summary)
+		return _finalize_and_cache_summary(summary)
 
 	var session = restore_result.get("session", null)
 	if session == null:
 		summary["validity"] = "invalid_payload"
 		summary["status_text"] = "Save session could not be restored."
 		summary["resume_target"] = "blocked"
-		return _finalize_summary(summary)
+		return _finalize_and_cache_summary(summary)
 
 	summary["payload"] = session.to_dict()
 	summary = _populate_summary_from_payload(summary, _summary_payload(summary))
@@ -476,7 +497,7 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 	summary["resume_target"] = String(restore_result.get("resume_target", _resume_target_for_session(session)))
 	summary["loadable"] = summary["resume_target"] != "blocked"
 	summary["status_text"] = _status_text_for_summary(summary)
-	return _finalize_summary(summary)
+	return _finalize_and_cache_summary(summary)
 
 func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> Dictionary:
 	var source_save_version: int = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
@@ -713,6 +734,79 @@ func _finalize_summary(summary: Dictionary) -> Dictionary:
 	summary["summary"] = describe_slot(summary)
 	summary["detail"] = describe_slot_details(summary)
 	return summary
+
+func _finalize_and_cache_summary(summary: Dictionary) -> Dictionary:
+	var finalized := _finalize_summary(summary)
+	_store_slot_summary_cache(finalized)
+	return finalized
+
+func _cached_slot_summary(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
+	var key := _summary_cache_key(slot_type, slot_id, file_path)
+	if not _slot_summary_cache.has(key):
+		return {}
+	var cached = _slot_summary_cache.get(key, {})
+	if not (cached is Dictionary):
+		return {}
+	var signature := _slot_file_signature(file_path)
+	if bool(cached.get("exists", false)) != bool(signature.get("exists", false)):
+		return {}
+	if int(cached.get("modified_timestamp", 0)) != int(signature.get("modified_timestamp", 0)):
+		return {}
+	var summary = cached.get("summary", {})
+	return summary.duplicate(true) if summary is Dictionary else {}
+
+func _store_slot_summary_cache(summary: Dictionary) -> void:
+	var slot_type := String(summary.get("slot_type", ""))
+	var slot_id := String(summary.get("slot_id", ""))
+	var file_path := String(summary.get("path", ""))
+	if slot_type == "" or slot_id == "" or file_path == "":
+		return
+	var signature := _slot_file_signature(file_path)
+	_slot_summary_cache[_summary_cache_key(slot_type, slot_id, file_path)] = {
+		"exists": bool(signature.get("exists", false)),
+		"file_path": file_path,
+		"modified_timestamp": int(signature.get("modified_timestamp", 0)),
+		"summary": summary.duplicate(true),
+	}
+
+func _store_runtime_summary_cache(
+	payload: Dictionary,
+	slot_type: String,
+	slot_id: String,
+	file_path: String
+) -> void:
+	if payload.is_empty() or slot_type == "" or slot_id == "" or file_path == "":
+		return
+	var summary := _empty_summary(slot_type, slot_id, file_path)
+	summary["modified_timestamp"] = FileAccess.get_modified_time(file_path) if FileAccess.file_exists(file_path) else 0
+	summary = _populate_summary_from_payload(summary, payload)
+	summary["payload"] = payload.duplicate(true)
+	summary["valid"] = true
+	summary["validity"] = "ok"
+	summary["warnings"] = []
+	var session := _session_from_payload(payload)
+	summary["resume_target"] = _resume_target_for_session(session) if session != null else "blocked"
+	summary["loadable"] = summary["resume_target"] != "blocked"
+	summary["status_text"] = _status_text_for_summary(summary)
+	_store_slot_summary_cache(_finalize_summary(summary))
+
+func _invalidate_summary_cache_for_path(file_path: String) -> void:
+	if file_path == "":
+		return
+	for key in _slot_summary_cache.keys().duplicate():
+		var cached = _slot_summary_cache.get(key, {})
+		if cached is Dictionary and String(cached.get("file_path", "")) == file_path:
+			_slot_summary_cache.erase(key)
+
+func _summary_cache_key(slot_type: String, slot_id: String, file_path: String) -> String:
+	return "%s|%s|%s" % [slot_type, slot_id, file_path]
+
+func _slot_file_signature(file_path: String) -> Dictionary:
+	var exists := FileAccess.file_exists(file_path)
+	return {
+		"exists": exists,
+		"modified_timestamp": FileAccess.get_modified_time(file_path) if exists else 0,
+	}
 
 func _summary_payload(summary: Dictionary) -> Dictionary:
 	var payload = summary.get("payload", {})

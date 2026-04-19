@@ -184,6 +184,8 @@ func _on_open_command_pressed() -> void:
 
 func _on_open_frontier_pressed() -> void:
 	_active_drawer = "" if _active_drawer == "frontier" else "frontier"
+	if _active_drawer == "frontier":
+		_refresh_frontier_drawer()
 	_sync_context_drawers()
 
 func _on_close_drawers_pressed() -> void:
@@ -376,10 +378,7 @@ func _refresh() -> void:
 	_resource_label.text = resource_text
 	_map_cue_label.text = _map_cue_text()
 	_map_cue_label.tooltip_text = _map_cue_tooltip()
-	var commitment_text := OverworldRules.describe_commitment_board(_session)
-	_set_rail_text(_commitment_label, commitment_text, _rail_order_text(commitment_text), 2)
-	var visibility_text := OverworldRules.describe_visibility_panel(_session)
-	_set_rail_text(_visibility_label, visibility_text, _rail_prefixed_summary("Sight", visibility_text), 1)
+	_refresh_commitment_panel()
 	var hero_text := _hero_card_text()
 	_set_rail_text(_hero_label, hero_text, hero_text, 2)
 	var army_text := OverworldRules.describe_army(_session)
@@ -392,20 +391,16 @@ func _refresh() -> void:
 	_set_rail_text(_spell_label, spell_text, _rail_prefixed_summary("Spell", spell_text), 1)
 	var artifact_text := OverworldRules.describe_artifacts(_session)
 	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
-	var objective_text := _cached_objective_text()
-	_set_rail_text(_objective_label, objective_text, _rail_prefixed_summary("Obj", objective_text), 1)
-	var threat_text := _cached_frontier_threats()
-	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
-	var command_risk_surface := _cached_command_risk_surface()
-	var forecast_text := String(command_risk_surface.get("risk", ""))
-	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Risk", forecast_text), 1)
-	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
-	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
+	var command_risk_surface := {}
+	if _active_drawer == "frontier":
+		command_risk_surface = _refresh_frontier_drawer()
+	else:
+		_set_collapsed_frontier_indicator()
 	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
 	_set_rail_text(_event_label, dispatch_text, _rail_log_text(), 1)
-	_end_turn_button.tooltip_text = String(command_risk_surface.get("forecast", ""))
+	_end_turn_button.tooltip_text = String(command_risk_surface.get("forecast", "")) if not command_risk_surface.is_empty() else "End the day and resolve hostile pressure."
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
@@ -440,6 +435,32 @@ func _refresh_save_slot_picker() -> void:
 	_save_button.tooltip_text = String(surface.get("save_button_tooltip", "Save the active expedition."))
 	_menu_button.text = "Menu"
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
+
+func _refresh_commitment_panel() -> void:
+	if not _commitment_panel.visible:
+		_commitment_label.text = ""
+		_commitment_label.tooltip_text = ""
+		return
+	var commitment_text := OverworldRules.describe_commitment_board(_session)
+	_set_rail_text(_commitment_label, commitment_text, _rail_order_text(commitment_text), 2)
+
+func _refresh_frontier_drawer() -> Dictionary:
+	var visibility_text := OverworldRules.describe_visibility_panel(_session)
+	_set_rail_text(_visibility_label, visibility_text, _rail_prefixed_summary("Sight", visibility_text), 1)
+	var objective_text := _cached_objective_text()
+	_set_rail_text(_objective_label, objective_text, _rail_prefixed_summary("Obj", objective_text), 1)
+	var threat_text := _cached_frontier_threats()
+	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
+	var command_risk_surface := _cached_command_risk_surface()
+	var forecast_text := String(command_risk_surface.get("risk", ""))
+	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Risk", forecast_text), 1)
+	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
+	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
+	return command_risk_surface
+
+func _set_collapsed_frontier_indicator() -> void:
+	_frontier_indicator_label.text = "Frontier: watch"
+	_frontier_indicator_label.tooltip_text = "Open Frontier for objectives, threat watch, and next-day risk."
 
 func _rebuild_hero_actions() -> void:
 	for child in _hero_actions.get_children():
@@ -1413,6 +1434,7 @@ func validation_open_command_drawer() -> Dictionary:
 
 func validation_open_frontier_drawer() -> Dictionary:
 	_active_drawer = "frontier"
+	_refresh_frontier_drawer()
 	_sync_context_drawers()
 	return _validation_chrome_state()
 

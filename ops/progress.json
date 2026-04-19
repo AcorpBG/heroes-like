@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-19T07:27:55Z",
+  "updatedAt": "2026-04-19T08:19:25Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-memory-fog-scouting-10184",
-  "currentSliceTitle": "Preserve overworld map memory fog and raise hero sight radius",
+  "currentSliceId": "player-visible-latency-investigation-10184",
+  "currentSliceTitle": "Profile remaining player-visible latency after entry-refresh fixes",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow overworld fog-of-war rules/UI slice. OverworldRules already preserved separate visible and explored grids; the landed fix raises the base hero scout radius to 3, normalizes missing fog state to true initial fog instead of full-map exploration, and prevents overworld hover tooltips from revealing terrain for unexplored tiles while still labeling remembered mapped tiles separately from currently visible tiles. Focused core regression now proves initial fog, +1 scout radius, explored-tile memory after moving away, and the missing-fog normalization path. Repo validation, core systems regression smoke, overworld visual smoke, and Ninefold scenario smoke are green.",
+  "currentSliceNotes": "Completed a narrow player-visible latency investigation and fix after d2bf14a and 6bc9bc4. Temporary routed probes found two clear bottlenecks on Ninefold Confluence: unchanged large save summaries were being reread/renormalized during scene refreshes, and collapsed overworld Frontier/commitment detail panels were still building full objective, threat, and next-day risk summaries. SaveService now caches slot summaries by file state and seeds exact runtime-save summaries, while OverworldShell defers hidden Frontier/commitment detail work until the Frontier drawer is opened. Focused probes showed populated save-surface refresh down from multi-second waits to roughly 8-13 ms, battle refresh after populated saves down from about 5.2 s to about 23 ms, and Ninefold overworld idle refresh down from about 1.5-1.6 s to about 0.36 s. Remaining diagnosis: Ninefold direct town entry still measured about 3.6 s, with town refresh about 0.78 s and the visible command ledger the largest town summary cost; that was not changed in this slice.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
