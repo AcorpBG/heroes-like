@@ -235,6 +235,31 @@ Limits:
 - This is only a fog terrain presentation fix, not another marker readability pass or broad overworld UI redesign.
 - Object-specific remembered marker styling still exists; the change is that explored terrain itself no longer darkens into a remembered state.
 
+## Current Implementation Slice: Overworld Diagonal Movement
+Status: completed on 2026-04-19 as a narrow movement follow-up requested by AcOrP.
+
+Purpose:
+- Allow heroes to move diagonally on the overworld through the same normal movement, click-routing, and route-preview surfaces as cardinal movement.
+- Preserve the simple current movement economy where each overworld step, including a diagonal step, costs exactly one movement point.
+- Keep recent fog, panning, and object-readability behavior intact.
+
+Implemented:
+- Added diagonal directions to overworld path building and shell keyboard movement handling, using Q/E/Z/C and numpad diagonals for direct movement while preserving Shift-modified panning behavior.
+- Changed adjacent tile acceptance so map clicks can target any of the eight neighboring tiles when terrain is not blocked.
+- Added focused core and visual smoke coverage for rules-side diagonal movement cost, route preview/advance behavior, and adjacent diagonal map-click movement.
+- Fixed the visual smoke fixture so Godot parses the new typed locals cleanly and chooses an object-free diagonal lane for the route assertion.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/core_systems_regression_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is only the diagonal overworld movement slice, not a broader pathfinding, movement-cost, terrain-cost, or camera redesign.
+- Diagonal movement currently uses the existing one-point step economy; any future terrain-weighted or corner-cutting rule should be a separate documented slice.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 

@@ -27,6 +27,8 @@ func _run() -> void:
 		return
 	if not _assert_marker_readability_contract(shell):
 		return
+	if not await _assert_diagonal_movement_contract(shell, map_node):
+		return
 
 	var start = OverworldRules.hero_position(SessionState.ensure_active_session())
 	var map_size = OverworldRules.derive_map_size(SessionState.ensure_active_session())
@@ -58,6 +60,70 @@ func _run() -> void:
 
 	_assert_remembered_owned_town_remote_entry(shell)
 	return
+
+func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
+	var session = SessionState.ensure_active_session()
+	var start: Vector2i = OverworldRules.hero_position(session)
+	var route_goal: Vector2i = _two_step_diagonal_goal(session, start)
+	if route_goal.x < 0:
+		var route_origin: Vector2i = _two_step_diagonal_origin(session)
+		if route_origin.x >= 0:
+			_set_active_hero_position(session, route_origin)
+			OverworldRules.refresh_fog_of_war(session)
+			shell.call("validation_select_tile", route_origin.x, route_origin.y)
+			start = route_origin
+			route_goal = _two_step_diagonal_goal(session, start)
+	if route_goal.x < 0:
+		push_error("Overworld smoke: could not find a two-step diagonal route for pathing coverage.")
+		get_tree().quit(1)
+		return false
+
+	var route_selection: Dictionary = shell.call("validation_select_tile", route_goal.x, route_goal.y)
+	if String(route_selection.get("primary_action_id", "")) != "advance_route":
+		push_error("Overworld smoke: diagonal route goal did not expose route advancement. snapshot=%s goal=%s." % [route_selection, route_goal])
+		get_tree().quit(1)
+		return false
+	var shell_route: Array = shell.call("_selected_route")
+	var view_route: Array = map_node.call("_build_path", start, route_goal)
+	if shell_route.size() != 3 or view_route.size() != 3:
+		push_error("Overworld smoke: diagonal pathing did not use the expected two one-point steps. shell_route=%s view_route=%s start=%s goal=%s." % [shell_route, view_route, start, route_goal])
+		get_tree().quit(1)
+		return false
+	var route_delta: Vector2i = route_goal - start
+	var expected_first_step: Vector2i = start + Vector2i(1 if route_delta.x > 0 else -1, 1 if route_delta.y > 0 else -1)
+	if shell_route[1] != expected_first_step or view_route[1] != shell_route[1]:
+		push_error("Overworld smoke: diagonal pathing did not choose the diagonal first step. shell_route=%s view_route=%s start=%s goal=%s." % [shell_route, view_route, start, route_goal])
+		get_tree().quit(1)
+		return false
+
+	var movement_before_route := int(session.overworld.get("movement", {}).get("current", 0))
+	var route_result: Dictionary = shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	var route_finish: Vector2i = OverworldRules.hero_position(session)
+	var movement_after_route := int(session.overworld.get("movement", {}).get("current", 0))
+	if not bool(route_result.get("ok", false)) or route_finish != shell_route[1] or movement_after_route != movement_before_route - 1:
+		push_error("Overworld smoke: diagonal route advancement did not move one diagonal step for one point. result=%s route=%s finish=%s before=%d after=%d." % [route_result, shell_route, route_finish, movement_before_route, movement_after_route])
+		get_tree().quit(1)
+		return false
+
+	_set_active_hero_position(session, start)
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("validation_select_tile", start.x, start.y)
+	var click_target: Vector2i = _diagonal_open_tile(session, start)
+	if click_target.x < 0:
+		push_error("Overworld smoke: could not find an adjacent diagonal tile for click movement coverage.")
+		get_tree().quit(1)
+		return false
+	var movement_before_click := int(session.overworld.get("movement", {}).get("current", 0))
+	shell._on_map_tile_pressed(click_target)
+	await get_tree().process_frame
+	var click_finish: Vector2i = OverworldRules.hero_position(session)
+	var movement_after_click := int(session.overworld.get("movement", {}).get("current", 0))
+	if click_finish != click_target or movement_after_click != movement_before_click - 1:
+		push_error("Overworld smoke: diagonal map click did not move to the adjacent diagonal tile for one point. target=%s finish=%s before=%d after=%d." % [click_target, click_finish, movement_before_click, movement_after_click])
+		get_tree().quit(1)
+		return false
+	return true
 
 func _assert_wireframe_contract(shell: Node) -> bool:
 	var map_panel: Control = shell.get_node_or_null("%MapPanel")
@@ -373,6 +439,67 @@ func _first_unexplored_tile(session) -> Vector2i:
 			if not OverworldRules.is_tile_explored(session, x, y):
 				return Vector2i(x, y)
 	return Vector2i(-1, -1)
+
+func _two_step_diagonal_goal(session, start: Vector2i) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for offset in [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
+		var first_step: Vector2i = start + offset
+		var goal: Vector2i = start + (offset * 2)
+		if goal.x < 0 or goal.y < 0 or goal.x >= map_size.x or goal.y >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, first_step.x, first_step.y):
+			continue
+		if OverworldRules.tile_is_blocked(session, goal.x, goal.y):
+			continue
+		if _tile_has_fixture_object(session, first_step) or _tile_has_fixture_object(session, goal):
+			continue
+		if not OverworldRules.is_tile_explored(session, goal.x, goal.y):
+			continue
+		return goal
+	return Vector2i(-1, -1)
+
+func _two_step_diagonal_origin(session) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var origin: Vector2i = Vector2i(x, y)
+			if OverworldRules.tile_is_blocked(session, origin.x, origin.y):
+				continue
+			if _tile_has_fixture_object(session, origin):
+				continue
+			for offset in [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
+				var first_step: Vector2i = origin + offset
+				var goal: Vector2i = origin + (offset * 2)
+				if goal.x < 0 or goal.y < 0 or goal.x >= map_size.x or goal.y >= map_size.y:
+					continue
+				if OverworldRules.tile_is_blocked(session, first_step.x, first_step.y):
+					continue
+				if OverworldRules.tile_is_blocked(session, goal.x, goal.y):
+					continue
+				if _tile_has_fixture_object(session, first_step) or _tile_has_fixture_object(session, goal):
+					continue
+				return origin
+	return Vector2i(-1, -1)
+
+func _diagonal_open_tile(session, start: Vector2i) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for offset in [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
+		var tile: Vector2i = start + offset
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+			continue
+		if _tile_has_fixture_object(session, tile):
+			continue
+		return tile
+	return Vector2i(-1, -1)
+
+func _tile_has_fixture_object(session, tile: Vector2i) -> bool:
+	for collection_name in ["towns", "resource_sites", "artifacts", "encounters"]:
+		for entry in session.overworld.get(collection_name, []):
+			if entry is Dictionary and int(entry.get("x", -1)) == tile.x and int(entry.get("y", -1)) == tile.y:
+				return true
+	return false
 
 func _town_at(session, tile: Vector2i) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):

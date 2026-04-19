@@ -72,6 +72,10 @@ const DIRECTIONS := [
 	Vector2i.DOWN,
 	Vector2i.LEFT,
 	Vector2i.RIGHT,
+	Vector2i(-1, -1),
+	Vector2i(1, -1),
+	Vector2i(-1, 1),
+	Vector2i(1, 1),
 ]
 const RAIL_ACTION_WIDTH := 248.0
 const RAIL_LINE_CHARS := 42
@@ -145,6 +149,30 @@ func _unhandled_input(event: InputEvent) -> void:
 					_pan_map(Vector2i(3, 0))
 				else:
 					_move_east()
+				get_viewport().set_input_as_handled()
+			KEY_Q, KEY_KP_7:
+				if event.shift_pressed:
+					_pan_map(Vector2i(-3, -3))
+				else:
+					_try_move(-1, -1)
+				get_viewport().set_input_as_handled()
+			KEY_E, KEY_KP_9:
+				if event.shift_pressed:
+					_pan_map(Vector2i(3, -3))
+				else:
+					_try_move(1, -1)
+				get_viewport().set_input_as_handled()
+			KEY_Z, KEY_KP_1:
+				if event.shift_pressed:
+					_pan_map(Vector2i(-3, 3))
+				else:
+					_try_move(-1, 1)
+				get_viewport().set_input_as_handled()
+			KEY_C, KEY_KP_3:
+				if event.shift_pressed:
+					_pan_map(Vector2i(3, 3))
+				else:
+					_try_move(1, 1)
 				get_viewport().set_input_as_handled()
 
 func _move_north() -> void:
@@ -1291,7 +1319,7 @@ func _tile_in_bounds(tile: Vector2i) -> bool:
 	return tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y
 
 func _is_adjacent_move_target(hero_pos: Vector2i, tile: Vector2i) -> bool:
-	if abs(hero_pos.x - tile.x) + abs(hero_pos.y - tile.y) != 1:
+	if maxi(abs(hero_pos.x - tile.x), abs(hero_pos.y - tile.y)) != 1:
 		return false
 	return not OverworldRules.tile_is_blocked(_session, tile.x, tile.y)
 

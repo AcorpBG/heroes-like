@@ -13,6 +13,8 @@ func _run() -> void:
 		return
 	if not _run_overworld_memory_fog_regression():
 		return
+	if not _run_overworld_diagonal_movement_regression():
+		return
 	if not _run_neutral_dwelling_unit_slice_regression():
 		return
 	if not _run_hostile_commander_identity_regression():
@@ -167,6 +169,34 @@ func _run_overworld_memory_fog_regression() -> bool:
 	OverworldRules.normalize_overworld_state(missing_fog_session)
 	if OverworldRules.is_tile_explored(missing_fog_session, never_seen.x, never_seen.y):
 		push_error("Core systems smoke: missing fog state normalized to full-map exploration.")
+		get_tree().quit(1)
+		return false
+	return true
+
+func _run_overworld_diagonal_movement_regression() -> bool:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		DIFFICULTY_ID,
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	var start := OverworldRules.hero_position(session)
+	var target := _diagonal_open_tile(session, start)
+	if target.x < 0:
+		push_error("Core systems smoke: could not find an open diagonal tile for overworld movement coverage.")
+		get_tree().quit(1)
+		return false
+	var movement_before := int(session.overworld.get("movement", {}).get("current", 0))
+	var delta := target - start
+	var result := OverworldRules.try_move(session, delta.x, delta.y)
+	var finish := OverworldRules.hero_position(session)
+	var movement_after := int(session.overworld.get("movement", {}).get("current", 0))
+	if not bool(result.get("ok", false)) or finish != target:
+		push_error("Core systems smoke: diagonal overworld movement was rejected or landed on the wrong tile. result=%s start=%s target=%s finish=%s." % [result, start, target, finish])
+		get_tree().quit(1)
+		return false
+	if movement_after != movement_before - 1:
+		push_error("Core systems smoke: diagonal overworld movement did not cost exactly one movement point. before=%d after=%d result=%s." % [movement_before, movement_after, result])
 		get_tree().quit(1)
 		return false
 	return true
@@ -4614,6 +4644,17 @@ func _adjacent_open_tile(session, target: Vector2i) -> Vector2i:
 			continue
 		var map_size: Vector2i = OverworldRules.derive_map_size(session)
 		if tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+			continue
+		return tile
+	return Vector2i(-1, -1)
+
+func _diagonal_open_tile(session, start: Vector2i) -> Vector2i:
+	var map_size: Vector2i = OverworldRules.derive_map_size(session)
+	for offset in [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]:
+		var tile: Vector2i = start + offset
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
 			continue
 		if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
 			continue

@@ -65,6 +65,10 @@ const DIRECTIONS := [
 	Vector2i.RIGHT,
 	Vector2i.UP,
 	Vector2i.DOWN,
+	Vector2i(-1, -1),
+	Vector2i(1, -1),
+	Vector2i(-1, 1),
+	Vector2i(1, 1),
 ]
 
 var _session = null
