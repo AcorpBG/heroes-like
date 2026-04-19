@@ -34,7 +34,7 @@ func go_to_overworld() -> void:
 		go_to_scenario_outcome()
 		return
 	session.game_state = "overworld"
-	_autosave_active_session(session)
+	_autosave_active_session(session, false)
 	_change_scene(OVERWORLD_SCENE)
 
 func go_to_town() -> void:
@@ -52,7 +52,7 @@ func go_to_town() -> void:
 		go_to_scenario_outcome()
 		return
 	session.game_state = "town"
-	_autosave_active_session(session)
+	_autosave_active_session(session, false)
 	_change_scene(TOWN_SCENE)
 
 func go_to_battle() -> void:
@@ -70,7 +70,7 @@ func go_to_battle() -> void:
 		go_to_scenario_outcome()
 		return
 	session.game_state = "battle"
-	_autosave_active_session(session)
+	_autosave_active_session(session, false)
 	_change_scene(BATTLE_SCENE)
 
 func go_to_scenario_outcome() -> void:
@@ -150,7 +150,10 @@ func _change_scene(scene_path: String) -> void:
 	if error != OK:
 		push_error("Failed to change scene to %s (error %d)." % [scene_path, error])
 
-func _autosave_active_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+func _autosave_active_session(
+	session: SessionStateStoreScript.SessionData,
+	include_summary: bool = true
+) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"ok": false, "message": "", "summary": {}}
-	return SaveService.save_runtime_autosave_session(session)
+	return SaveService.save_runtime_autosave_session(session, include_summary)

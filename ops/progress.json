@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-18T22:22:00Z",
+  "updatedAt": "2026-04-19T06:13:11Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-ninefold-refresh-performance-10184",
-  "currentSliceTitle": "Reduce Ninefold Confluence overworld refresh and hover recomputation",
+  "currentSliceId": "town-battle-entry-performance-10184",
+  "currentSliceTitle": "Reduce Ninefold town and battle scene entry time",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed an urgent narrow performance fix for Ninefold Confluence overworld refresh. OverworldShell now reuses per-refresh action/summary state, hover tooltips return before primary-action work on non-selected tiles, and OverworldRules exposes a small normalized read scope plus command-risk surface helper so refresh avoids repeated normalization/forecast recomputation. Requested validation is green; /tmp timing reported refresh avg 1726.7 ms and non-selected hover avg 0.00216 ms.",
+  "currentSliceNotes": "Completed an urgent narrow performance fix for Ninefold Confluence town and battle entry. Before timing showed town route avg 24238.1 ms, town refresh avg 18095.2 ms, battle route avg 2215.5 ms, and battle refresh avg 559.2 ms. After timing with the same route probe showed town route avg 3344.9 ms, town refresh avg 1052.4 ms, battle route avg 1355.9 ms, and battle refresh avg 561.5 ms. TownRules now caches active-town/action read surfaces inside a scoped town refresh, TownShell uses that scope with OverworldRules' normalized read scope, and in-play router scene transitions keep autosave writes but skip discarded save-summary reloads. Requested validation plus focused town/battle and battle-layout smokes are green.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

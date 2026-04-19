@@ -10,6 +10,50 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 static var EnemyAdventureRulesScript: Variant = load("res://scripts/core/EnemyAdventureRules.gd")
 static var ScenarioRulesScript: Variant = load("res://scripts/core/ScenarioRules.gd")
 
+static var _read_scope_session_id := ""
+static var _read_scope_depth := 0
+static var _read_scope_cache := {}
+
+static func begin_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var session_id := String(session.session_id)
+	if _read_scope_depth > 0 and session_id == _read_scope_session_id:
+		_read_scope_depth += 1
+		return
+	_read_scope_session_id = session_id
+	_read_scope_depth = 1
+	_read_scope_cache = {}
+
+static func end_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	if _read_scope_depth <= 0 or String(session.session_id) != _read_scope_session_id:
+		return
+	_read_scope_depth -= 1
+	if _read_scope_depth <= 0:
+		_read_scope_depth = 0
+		_read_scope_session_id = ""
+		_read_scope_cache = {}
+
+static func _read_cache_has(session: SessionStateStoreScript.SessionData, key: String) -> bool:
+	return (
+		session != null
+		and _read_scope_depth > 0
+		and String(session.session_id) == _read_scope_session_id
+		and _read_scope_cache.has(key)
+	)
+
+static func _read_cache_get(session: SessionStateStoreScript.SessionData, key: String):
+	if not _read_cache_has(session, key):
+		return null
+	return _read_scope_cache[key]
+
+static func _read_cache_store(session: SessionStateStoreScript.SessionData, key: String, value: Variant) -> void:
+	if session == null or _read_scope_depth <= 0 or String(session.session_id) != _read_scope_session_id:
+		return
+	_read_scope_cache[key] = value
+
 static func can_visit_active_town(session: SessionStateStoreScript.SessionData) -> bool:
 	var town := get_active_town(session)
 	return not town.is_empty() and String(town.get("owner", "neutral")) == "player"
@@ -18,8 +62,12 @@ static func can_visit_active_town_bridge(session) -> bool:
 	return can_visit_active_town(session)
 
 static func get_active_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if _read_cache_has(session, "active_town"):
+		return _read_cache_get(session, "active_town")
 	var result := _find_active_town_result(session)
-	return result.get("town", {})
+	var town: Dictionary = result.get("town", {})
+	_read_cache_store(session, "active_town", town)
+	return town
 
 static func describe_status(session: SessionStateStoreScript.SessionData) -> String:
 	var pos: Vector2i = OverworldRulesScript.hero_position(session)
@@ -538,9 +586,13 @@ static func describe_responses(session: SessionStateStoreScript.SessionData) -> 
 	return OverworldRulesScript.describe_town_response_panel(session, town)
 
 static func get_build_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "build_actions"):
+		return _read_cache_get(session, "build_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
+		var empty := []
+		_read_cache_store(session, "build_actions", empty)
+		return empty
 
 	var actions := []
 	var resources = session.overworld.get("resources", {})
@@ -584,12 +636,17 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 				"disabled": not direct_affordable,
 			}
 		)
+	_read_cache_store(session, "build_actions", actions)
 	return actions
 
 static func get_recruit_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "recruit_actions"):
+		return _read_cache_get(session, "recruit_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
+		var empty := []
+		_read_cache_store(session, "recruit_actions", empty)
+		return empty
 
 	var actions := []
 	var resources = session.overworld.get("resources", {})
@@ -641,42 +698,77 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 				"disabled": direct_affordable_count <= 0,
 			}
 		)
+	_read_cache_store(session, "recruit_actions", actions)
 	return actions
 
 static func get_market_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "market_actions"):
+		return _read_cache_get(session, "market_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
-	return OverworldRulesScript.get_town_market_actions(session, town)
+		var empty := []
+		_read_cache_store(session, "market_actions", empty)
+		return empty
+	var actions: Array = OverworldRulesScript.get_town_market_actions(session, town)
+	_read_cache_store(session, "market_actions", actions)
+	return actions
 
 static func get_hero_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "hero_actions"):
+		return _read_cache_get(session, "hero_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
-	return HeroCommandRulesScript.get_town_switch_actions(session, town)
+		var empty := []
+		_read_cache_store(session, "hero_actions", empty)
+		return empty
+	var actions: Array = HeroCommandRulesScript.get_town_switch_actions(session, town)
+	_read_cache_store(session, "hero_actions", actions)
+	return actions
 
 static func get_tavern_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "tavern_actions"):
+		return _read_cache_get(session, "tavern_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
-	return HeroCommandRulesScript.get_tavern_actions(session, town)
+		var empty := []
+		_read_cache_store(session, "tavern_actions", empty)
+		return empty
+	var actions: Array = HeroCommandRulesScript.get_tavern_actions(session, town)
+	_read_cache_store(session, "tavern_actions", actions)
+	return actions
 
 static func get_transfer_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "transfer_actions"):
+		return _read_cache_get(session, "transfer_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
-	return HeroCommandRulesScript.get_town_transfer_actions(session, town)
+		var empty := []
+		_read_cache_store(session, "transfer_actions", empty)
+		return empty
+	var actions: Array = HeroCommandRulesScript.get_town_transfer_actions(session, town)
+	_read_cache_store(session, "transfer_actions", actions)
+	return actions
 
 static func get_response_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "response_actions"):
+		return _read_cache_get(session, "response_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
-	return OverworldRulesScript.get_town_response_actions(session, town)
+		var empty := []
+		_read_cache_store(session, "response_actions", empty)
+		return empty
+	var actions: Array = OverworldRulesScript.get_town_response_actions(session, town)
+	_read_cache_store(session, "response_actions", actions)
+	return actions
 
 static func get_spell_learning_actions(session: SessionStateStoreScript.SessionData) -> Array:
+	if _read_cache_has(session, "spell_learning_actions"):
+		return _read_cache_get(session, "spell_learning_actions")
 	var town := get_active_town(session)
 	if town.is_empty():
-		return []
+		var empty := []
+		_read_cache_store(session, "spell_learning_actions", empty)
+		return empty
 
 	var actions := []
 	var hero = session.overworld.get("hero", {})
@@ -697,13 +789,22 @@ static func get_spell_learning_actions(session: SessionStateStoreScript.SessionD
 				"disabled": false,
 			}
 		)
+	_read_cache_store(session, "spell_learning_actions", actions)
 	return actions
 
 static func get_artifact_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	return ArtifactRulesScript.get_management_actions(session.overworld.get("hero", {}))
+	if _read_cache_has(session, "artifact_actions"):
+		return _read_cache_get(session, "artifact_actions")
+	var actions: Array = ArtifactRulesScript.get_management_actions(session.overworld.get("hero", {}))
+	_read_cache_store(session, "artifact_actions", actions)
+	return actions
 
 static func get_specialty_actions(session: SessionStateStoreScript.SessionData) -> Array:
-	return HeroProgressionRulesScript.get_choice_actions(session.overworld.get("hero", {}))
+	if _read_cache_has(session, "specialty_actions"):
+		return _read_cache_get(session, "specialty_actions")
+	var actions: Array = HeroProgressionRulesScript.get_choice_actions(session.overworld.get("hero", {}))
+	_read_cache_store(session, "specialty_actions", actions)
+	return actions
 
 static func build_active_town(session: SessionStateStoreScript.SessionData, building_id: String) -> Dictionary:
 	return OverworldRulesScript.build_in_active_town(session, building_id)

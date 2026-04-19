@@ -34,8 +34,11 @@ func save_runtime_selected_manual_session(session: SessionStateStoreScript.Sessi
 func save_runtime_manual_session(session: SessionStateStoreScript.SessionData, slot: int = 1) -> Dictionary:
 	return _save_runtime_session(session, SLOT_TYPE_MANUAL, slot)
 
-func save_runtime_autosave_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	return _save_runtime_session(session, SLOT_TYPE_AUTOSAVE)
+func save_runtime_autosave_session(
+	session: SessionStateStoreScript.SessionData,
+	include_summary: bool = true
+) -> Dictionary:
+	return _save_runtime_session(session, SLOT_TYPE_AUTOSAVE, 1, include_summary)
 
 func save_manual_session(payload: Dictionary, slot: int = 1) -> String:
 	if payload.is_empty():
@@ -351,7 +354,12 @@ func _save_payload(payload: Dictionary, file_path: String, slot_type: String = S
 	normalized[SAVE_METADATA_LAUNCH_MODE_KEY] = String(normalized.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
 	return _save_raw_dictionary(normalized, file_path)
 
-func _save_runtime_session(session: SessionStateStoreScript.SessionData, slot_type: String, slot: int = 1) -> Dictionary:
+func _save_runtime_session(
+	session: SessionStateStoreScript.SessionData,
+	slot_type: String,
+	slot: int = 1,
+	include_summary: bool = true
+) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"ok": false, "path": "", "summary": {}, "message": "No active expedition is available to save."}
 
@@ -373,13 +381,15 @@ func _save_runtime_session(session: SessionStateStoreScript.SessionData, slot_ty
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
 			path = _save_payload(sanitized_session.to_dict(), _autosave_path(), SLOT_TYPE_AUTOSAVE)
-			summary = inspect_autosave()
+			if include_summary:
+				summary = inspect_autosave()
 		_:
 			var normalized_slot := _normalize_manual_slot(slot)
 			path = _save_payload(sanitized_session.to_dict(), _slot_path(normalized_slot), SLOT_TYPE_MANUAL)
 			if path != "":
 				_selected_manual_slot = normalized_slot
-			summary = inspect_manual_slot(normalized_slot)
+			if include_summary:
+				summary = inspect_manual_slot(normalized_slot)
 
 	if path == "":
 		return {"ok": false, "path": "", "summary": summary, "message": "Save write failed."}
@@ -388,7 +398,7 @@ func _save_runtime_session(session: SessionStateStoreScript.SessionData, slot_ty
 		"ok": true,
 		"path": path,
 		"summary": summary,
-		"message": _runtime_save_message(slot_type, summary),
+		"message": _runtime_save_message(slot_type, summary) if include_summary else "Autosave updated.",
 	}
 
 func _save_raw_dictionary(payload: Dictionary, file_path: String) -> String:

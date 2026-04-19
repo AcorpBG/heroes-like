@@ -185,8 +185,11 @@ func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
 func _refresh() -> void:
-	OverworldRules.normalize_overworld_state(_session)
+	OverworldRules.begin_normalized_read_scope(_session)
+	TownRules.begin_read_scope(_session)
 	if not TownRules.can_visit_active_town(_session):
+		TownRules.end_read_scope(_session)
+		OverworldRules.end_normalized_read_scope(_session)
 		AppRouter.go_to_overworld()
 		return
 
@@ -227,12 +230,13 @@ func _refresh() -> void:
 	_rebuild_study_actions()
 	_rebuild_specialty_actions()
 	_rebuild_artifact_actions()
+	TownRules.end_read_scope(_session)
+	OverworldRules.end_normalized_read_scope(_session)
 
 func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
-	_refresh_save_slot_picker()
 
 func _refresh_save_slot_picker() -> void:
 	if _save_slot_picker.get_item_count() <= 0:

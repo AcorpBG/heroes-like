@@ -440,7 +440,6 @@ func _configure_save_slot_picker() -> void:
 	_save_slot_picker.clear()
 	for slot in SaveService.get_manual_slot_ids():
 		_save_slot_picker.add_item("Manual %d" % int(slot), int(slot))
-	_refresh_save_slot_picker()
 
 func _refresh_save_slot_picker() -> void:
 	if _save_slot_picker.get_item_count() <= 0:
