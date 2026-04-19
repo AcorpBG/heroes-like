@@ -213,8 +213,10 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		return false
 	var presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
 	if not bool(presentation.get("draws_remembered_object", false)):
-		push_error("Overworld smoke: remembered owned town would not draw a dimmed object marker. presentation=%s" % presentation)
+		push_error("Overworld smoke: remembered owned town would not draw a remembered object marker. presentation=%s" % presentation)
 		get_tree().quit(1)
+		return false
+	if not _assert_explored_terrain_presentation(shell, town_tile, presentation):
 		return false
 	if not _assert_marker_style(presentation, "town", true):
 		return false
@@ -229,6 +231,43 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	tree.quit(0)
+	return true
+
+func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2i, remembered_presentation: Dictionary) -> bool:
+	var terrain_presentation: Dictionary = remembered_presentation.get("terrain_presentation", {})
+	if not bool(remembered_presentation.get("explored", false)) or bool(remembered_presentation.get("visible", true)):
+		push_error("Overworld smoke: terrain-memory assertion was not run against an explored tile outside the scout net. presentation=%s" % remembered_presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(terrain_presentation.get("terrain_fully_visible", false)):
+		push_error("Overworld smoke: explored terrain outside the scout net is not staying fully visible at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		get_tree().quit(1)
+		return false
+	if bool(terrain_presentation.get("uses_memory_terrain_dimming", true)) or float(terrain_presentation.get("memory_overlay_alpha", 1.0)) > 0.01:
+		push_error("Overworld smoke: explored terrain outside the scout net is still using memory dimming at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		get_tree().quit(1)
+		return false
+	if String(terrain_presentation.get("pattern_detail", "")) != "full":
+		push_error("Overworld smoke: explored terrain outside the scout net lost full terrain detail at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		get_tree().quit(1)
+		return false
+
+	var session = SessionState.ensure_active_session()
+	var unexplored_tile := _first_unexplored_tile(session)
+	if unexplored_tile.x < 0:
+		push_error("Overworld smoke: could not find an unexplored tile to guard hidden fog presentation.")
+		get_tree().quit(1)
+		return false
+	var unexplored_presentation: Dictionary = shell.call("validation_tile_presentation", unexplored_tile.x, unexplored_tile.y)
+	var unexplored_terrain: Dictionary = unexplored_presentation.get("terrain_presentation", {})
+	if bool(unexplored_presentation.get("explored", true)) or not bool(unexplored_terrain.get("unexplored_hidden", false)):
+		push_error("Overworld smoke: unscouted terrain is not staying hidden at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
+		get_tree().quit(1)
+		return false
+	if bool(unexplored_terrain.get("terrain_fully_visible", true)):
+		push_error("Overworld smoke: unscouted terrain became fully visible instead of remaining hidden at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_marker_readability_contract(shell: Node) -> bool:
@@ -325,6 +364,14 @@ func _remote_memory_tile_for_town(session, town_tile: Vector2i) -> Vector2i:
 			if not _town_at(session, tile).is_empty():
 				continue
 			return tile
+	return Vector2i(-1, -1)
+
+func _first_unexplored_tile(session) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y - 1, -1, -1):
+		for x in range(map_size.x - 1, -1, -1):
+			if not OverworldRules.is_tile_explored(session, x, y):
+				return Vector2i(x, y)
 	return Vector2i(-1, -1)
 
 func _town_at(session, tile: Vector2i) -> Dictionary:

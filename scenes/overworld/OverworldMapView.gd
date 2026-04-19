@@ -14,7 +14,6 @@ const GRID_COLOR := Color(0.08, 0.10, 0.12, 0.55)
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
-const MEMORY_OVERLAY := Color(0.05, 0.07, 0.09, 0.54)
 const MEMORY_OBJECT_COLOR := Color(0.72, 0.80, 0.82, 0.84)
 const MEMORY_OBJECT_OUTLINE := Color(0.92, 0.96, 0.91, 0.76)
 const SELECTION_COLOR := Color(0.98, 0.87, 0.46, 1.0)
@@ -36,19 +35,6 @@ const TERRAIN_COLORS := {
 	"ash": Color(0.32, 0.30, 0.31, 1.0),
 	"cavern": Color(0.27, 0.25, 0.34, 1.0),
 	"snow": Color(0.75, 0.81, 0.82, 1.0),
-}
-const TERRAIN_MEMORY_COLORS := {
-	"grass": Color(0.18, 0.24, 0.18, 1.0),
-	"forest": Color(0.13, 0.18, 0.13, 1.0),
-	"water": Color(0.11, 0.17, 0.24, 1.0),
-	"mire": Color(0.13, 0.17, 0.12, 1.0),
-	"swamp": Color(0.12, 0.16, 0.11, 1.0),
-	"hills": Color(0.20, 0.20, 0.15, 1.0),
-	"ridge": Color(0.20, 0.20, 0.15, 1.0),
-	"badlands": Color(0.22, 0.16, 0.12, 1.0),
-	"ash": Color(0.14, 0.13, 0.14, 1.0),
-	"cavern": Color(0.12, 0.11, 0.16, 1.0),
-	"snow": Color(0.25, 0.29, 0.30, 1.0),
 }
 const PLAYER_TOWN_COLOR := Color(0.84, 0.68, 0.30, 1.0)
 const ENEMY_TOWN_COLOR := Color(0.72, 0.28, 0.26, 1.0)
@@ -216,29 +202,24 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 		draw_rect(rect, GRID_COLOR, false, 1.0)
 		return
 
-	var visible = OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
 	var terrain = _terrain_at(tile)
 	var base_color: Color = TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"])
-	if not visible:
-		base_color = TERRAIN_MEMORY_COLORS.get(terrain, TERRAIN_MEMORY_COLORS["grass"])
 	draw_rect(rect, base_color, true)
 
 	match terrain:
 		"forest":
-			_draw_forest_pattern(rect, visible)
+			_draw_forest_pattern(rect, true)
 		"water":
-			_draw_water_pattern(rect, visible)
+			_draw_water_pattern(rect, true)
 		"mire", "swamp":
-			_draw_mire_pattern(rect, visible)
+			_draw_mire_pattern(rect, true)
 		"hills", "ridge":
-			_draw_ridge_pattern(rect, visible)
+			_draw_ridge_pattern(rect, true)
 		"snow":
-			_draw_snow_pattern(rect, visible)
+			_draw_snow_pattern(rect, true)
 		_:
-			_draw_grass_pattern(rect, visible)
+			_draw_grass_pattern(rect, true)
 
-	if not visible:
-		draw_rect(rect, MEMORY_OVERLAY, true)
 	draw_rect(rect, GRID_COLOR, false, 1.0)
 
 func _draw_grass_pattern(rect: Rect2, visible: bool) -> void:
@@ -737,7 +718,33 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"has_visible_hero": has_visible_hero,
 		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_visible_encounter)) or remembered_object,
 		"draws_remembered_object": remembered_object,
+		"terrain_presentation": _terrain_visual_payload(tile, explored, visible),
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
+	}
+
+func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:
+	if not explored:
+		return {
+			"terrain": "",
+			"state": "unexplored_hidden",
+			"unexplored_hidden": true,
+			"terrain_fully_visible": false,
+			"uses_memory_terrain_dimming": false,
+			"memory_overlay_alpha": 0.0,
+			"pattern_detail": "hidden",
+			"fill_color": _color_payload(UNEXPLORED_COLOR),
+		}
+	var terrain := _terrain_at(tile)
+	var base_color: Color = TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"])
+	return {
+		"terrain": terrain,
+		"state": "current_scout_net" if visible else "explored_outside_scout_net",
+		"unexplored_hidden": false,
+		"terrain_fully_visible": true,
+		"uses_memory_terrain_dimming": false,
+		"memory_overlay_alpha": 0.0,
+		"pattern_detail": "full",
+		"fill_color": _color_payload(base_color),
 	}
 
 func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array, has_visible_hero: bool) -> Dictionary:
@@ -800,6 +807,14 @@ func _rect_payload(rect: Rect2) -> Dictionary:
 		"height": rect.size.y,
 		"end_x": rect.end.x,
 		"end_y": rect.end.y,
+	}
+
+func _color_payload(color: Color) -> Dictionary:
+	return {
+		"r": color.r,
+		"g": color.g,
+		"b": color.b,
+		"a": color.a,
 	}
 
 func _terrain_at(tile: Vector2i) -> String:

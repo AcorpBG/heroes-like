@@ -212,6 +212,29 @@ Limits:
 - Existing remembered-state rendering, panning, and remote owned-town entry behavior from the previous slice must remain intact.
 - Automated smoke coverage guards presentation metadata and route behavior; no broad manual visual proof is claimed.
 
+## Current Implementation Slice: Overworld Explored Terrain Visibility Follow-Up
+Status: completed on 2026-04-19 as a narrow fog-presentation correction after AcOrP clarified the remaining issue.
+
+Purpose:
+- Keep terrain that has already been scouted/explored fully visible even after it leaves the current scout net.
+- Preserve unexplored tiles as dark/hidden.
+- Keep the existing panning, remote town entry, and compact remembered-object marker behavior from the recent overworld usability/readability slices.
+
+Implemented:
+- Removed the explored-but-not-currently-visible terrain dimming path from `OverworldMapView`; remembered terrain now uses the same terrain fill and pattern detail as currently visible explored terrain.
+- Preserved remembered object marker treatment for towns, sites, artifacts, and fixed remembered encounters where that distinction remains useful.
+- Added focused overworld presentation validation metadata and smoke assertions proving explored terrain outside scout range stays fully visible while unscouted terrain stays hidden.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is only a fog terrain presentation fix, not another marker readability pass or broad overworld UI redesign.
+- Object-specific remembered marker styling still exists; the change is that explored terrain itself no longer darkens into a remembered state.
+
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
 
