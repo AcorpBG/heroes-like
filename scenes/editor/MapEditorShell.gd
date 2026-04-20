@@ -16,6 +16,7 @@ const TOOL_PLACE_OBJECT := "place_object"
 const TOOL_REMOVE_OBJECT := "remove_object"
 const TOOL_MOVE_OBJECT := "move_object"
 const TOOL_DUPLICATE_OBJECT := "duplicate_object"
+const TOOL_RETHEME_OBJECT := "retheme_object"
 const OBJECT_FAMILY_TOWN := "town"
 const OBJECT_FAMILY_RESOURCE := "resource"
 const OBJECT_FAMILY_ARTIFACT := "artifact"
@@ -38,6 +39,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _remove_object_tool_button: Button = %RemoveObjectTool
 @onready var _move_object_tool_button: Button = %MoveObjectTool
 @onready var _duplicate_object_tool_button: Button = %DuplicateObjectTool
+@onready var _retheme_object_tool_button: Button = %RethemeObjectTool
 @onready var _tile_info_label: Label = %TileInfo
 @onready var _status_label: Label = %Status
 @onready var _map_view = %Map
@@ -96,6 +98,7 @@ func _connect_ui() -> void:
 	_remove_object_tool_button.pressed.connect(func(): _select_tool(TOOL_REMOVE_OBJECT))
 	_move_object_tool_button.pressed.connect(func(): _select_tool(TOOL_MOVE_OBJECT))
 	_duplicate_object_tool_button.pressed.connect(func(): _select_tool(TOOL_DUPLICATE_OBJECT))
+	_retheme_object_tool_button.pressed.connect(func(): _select_tool(TOOL_RETHEME_OBJECT))
 	_object_family_picker.item_selected.connect(_on_object_family_selected)
 	_object_content_picker.item_selected.connect(_on_object_content_selected)
 	_selected_object_picker.item_selected.connect(_on_selected_property_object_selected)
@@ -620,6 +623,8 @@ func _tool_label(tool: String) -> String:
 			return "Move Object"
 		TOOL_DUPLICATE_OBJECT:
 			return "Duplicate Object"
+		TOOL_RETHEME_OBJECT:
+			return "Retheme Object"
 		_:
 			return "Inspect"
 
@@ -633,6 +638,7 @@ func _select_tool(tool: String) -> void:
 		TOOL_REMOVE_OBJECT,
 		TOOL_MOVE_OBJECT,
 		TOOL_DUPLICATE_OBJECT,
+		TOOL_RETHEME_OBJECT,
 	]
 	_tool = tool if tool in valid_tools else TOOL_INSPECT
 	if _tool != TOOL_MOVE_OBJECT:
@@ -652,6 +658,7 @@ func _sync_tool_buttons() -> void:
 		TOOL_REMOVE_OBJECT: _remove_object_tool_button,
 		TOOL_MOVE_OBJECT: _move_object_tool_button,
 		TOOL_DUPLICATE_OBJECT: _duplicate_object_tool_button,
+		TOOL_RETHEME_OBJECT: _retheme_object_tool_button,
 	}
 	for tool_id in buttons.keys():
 		var button: Button = buttons[tool_id]
@@ -679,7 +686,7 @@ func _on_object_family_selected(index: int) -> void:
 	_selected_object_family = String(_object_family_picker.get_item_metadata(index))
 	_selected_object_content_id = ""
 	_rebuild_object_content_picker()
-	_select_tool(TOOL_PLACE_OBJECT)
+	_select_tool(TOOL_RETHEME_OBJECT if _tool == TOOL_RETHEME_OBJECT else TOOL_PLACE_OBJECT)
 	_last_message = "Object family set to %s." % _object_family_label(_selected_object_family)
 	_refresh_state()
 
@@ -687,7 +694,7 @@ func _on_object_content_selected(index: int) -> void:
 	if index < 0 or index >= _object_content_picker.get_item_count():
 		return
 	_selected_object_content_id = String(_object_content_picker.get_item_metadata(index))
-	_select_tool(TOOL_PLACE_OBJECT)
+	_select_tool(TOOL_RETHEME_OBJECT if _tool == TOOL_RETHEME_OBJECT else TOOL_PLACE_OBJECT)
 	_last_message = "Object palette set to %s." % _selected_object_content_id
 	_refresh_state()
 
@@ -734,6 +741,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			_move_object_tool_click(tile)
 		TOOL_DUPLICATE_OBJECT:
 			_duplicate_object_tool_click(tile)
+		TOOL_RETHEME_OBJECT:
+			_retheme_object(tile)
 		_:
 			_last_message = "Inspected tile %d,%d." % [tile.x, tile.y]
 	_refresh_state()
@@ -1093,6 +1102,95 @@ func _duplicate_object_by_key(property_key: String, destination_tile: Vector2i) 
 			"source_object": placement,
 			"from": {"x": source_tile.x, "y": source_tile.y},
 			"to": {"x": destination_tile.x, "y": destination_tile.y},
+		}
+	return {"ok": false, "changed": false, "message": "No %s placement %s in the working copy." % [_object_family_label(kind), placement_id]}
+
+func _retheme_object(tile: Vector2i) -> bool:
+	if not _tile_in_bounds(tile):
+		return false
+	if _selected_object_family == "" or _selected_object_content_id == "":
+		_last_message = "Choose an object family and replacement content id before retheming."
+		return false
+	if _object_content_lookup(_selected_object_family, _selected_object_content_id).is_empty():
+		_last_message = "Unknown %s content id %s." % [_object_family_label(_selected_object_family), _selected_object_content_id]
+		return false
+	var source_detail := _object_detail_for_family_at(tile, _selected_object_family)
+	if source_detail.is_empty():
+		_last_message = "No %s placement at %d,%d to retheme." % [
+			_object_family_label(_selected_object_family),
+			tile.x,
+			tile.y,
+		]
+		return false
+	var result := _retheme_object_by_key(String(source_detail.get("property_key", "")), _selected_object_content_id)
+	if bool(result.get("ok", false)):
+		_dirty = _dirty or bool(result.get("changed", false))
+		_last_message = String(result.get("message", "Rethemed object placement."))
+	else:
+		_last_message = String(result.get("message", "Could not retheme object placement."))
+	return bool(result.get("ok", false))
+
+func _object_detail_for_family_at(tile: Vector2i, family: String) -> Dictionary:
+	for detail in _property_object_options_at(tile):
+		if detail is Dictionary and String(detail.get("kind", "")) == family:
+			return detail
+	return {}
+
+func _retheme_object_by_key(property_key: String, replacement_content_id: String) -> Dictionary:
+	var detail := _object_detail_by_key(property_key)
+	if detail.is_empty():
+		return {"ok": false, "changed": false, "message": "No rethemeable object %s exists in the working copy." % property_key}
+	var kind := String(detail.get("kind", ""))
+	var placement_id := String(detail.get("placement_id", ""))
+	if _object_content_lookup(kind, replacement_content_id).is_empty():
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Unknown %s content id %s." % [_object_family_label(kind), replacement_content_id],
+		}
+	var content_key := _placement_content_key(kind)
+	var array_key := _placement_array_key(kind)
+	var placements = _session.overworld.get(array_key, [])
+	if content_key == "" or array_key == "" or not (placements is Array):
+		return {"ok": false, "changed": false, "message": "Working copy has no %s array." % _object_family_label(kind)}
+	for index in range(placements.size()):
+		var placement = placements[index]
+		if not (placement is Dictionary):
+			continue
+		if String(placement.get("placement_id", "")) != placement_id:
+			continue
+		var previous_content_id := String(placement.get(content_key, ""))
+		_selected_property_object_key = property_key
+		if previous_content_id == replacement_content_id:
+			return {
+				"ok": true,
+				"changed": false,
+				"message": "%s %s already uses %s." % [
+					_object_family_label(kind),
+					placement_id,
+					replacement_content_id,
+				],
+				"object": _object_detail_for_placement(kind, placement),
+				"previous_content_id": previous_content_id,
+				"content_id": replacement_content_id,
+			}
+		var before: Dictionary = placement.duplicate(true)
+		placement[content_key] = replacement_content_id
+		placements[index] = placement
+		_session.overworld[array_key] = placements
+		return {
+			"ok": true,
+			"changed": before != placement,
+			"message": "Rethemed %s %s from %s to %s." % [
+				_object_family_label(kind),
+				placement_id,
+				previous_content_id,
+				replacement_content_id,
+			],
+			"object": _object_detail_for_placement(kind, placement),
+			"object_before": _object_detail_for_placement(kind, before),
+			"previous_content_id": previous_content_id,
+			"content_id": replacement_content_id,
 		}
 	return {"ok": false, "changed": false, "message": "No %s placement %s in the working copy." % [_object_family_label(kind), placement_id]}
 
@@ -1487,6 +1585,19 @@ func _placement_array_key(family: String) -> String:
 		_:
 			return ""
 
+func _placement_content_key(family: String) -> String:
+	match family:
+		OBJECT_FAMILY_TOWN:
+			return "town_id"
+		OBJECT_FAMILY_RESOURCE:
+			return "site_id"
+		OBJECT_FAMILY_ARTIFACT:
+			return "artifact_id"
+		OBJECT_FAMILY_ENCOUNTER:
+			return "encounter_id"
+		_:
+			return ""
+
 func _object_property_key(kind: String, placement_id: String) -> String:
 	if kind == "" or placement_id == "":
 		return ""
@@ -1687,7 +1798,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _property_apply_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -1926,6 +2037,47 @@ func validation_duplicate_object(from_x: int, from_y: int, to_x: int, to_y: int,
 	snapshot["source_detail_before"] = before_detail
 	snapshot["source_tile_inspection"] = _tile_inspection_payload(source_tile)
 	snapshot["destination_tile_inspection"] = _tile_inspection_payload(destination_tile)
+	snapshot["placement_count_before"] = before_count
+	return snapshot
+
+func validation_retheme_object(x: int, y: int, family: String, replacement_content_id: String) -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile outside map."}
+	var family_selected := _select_object_family_by_id(family)
+	var content_selected := false
+	if family_selected:
+		content_selected = _select_object_content_by_id(replacement_content_id)
+	_selected_tile = tile
+	_tool = TOOL_RETHEME_OBJECT
+	var source_detail := _object_detail_for_family_at(tile, family)
+	if not family_selected or not content_selected or source_detail.is_empty():
+		_refresh_state()
+		var missing_snapshot := validation_snapshot()
+		missing_snapshot["ok"] = false
+		missing_snapshot["family_selected"] = family_selected
+		missing_snapshot["content_selected"] = content_selected
+		missing_snapshot["message"] = "No rethemeable %s object at %d,%d for %s." % [family, x, y, replacement_content_id]
+		return missing_snapshot
+	var before_detail: Dictionary = source_detail.duplicate(true)
+	var before_count := _placement_count()
+	var result := _retheme_object_by_key(String(source_detail.get("property_key", "")), replacement_content_id)
+	if bool(result.get("ok", false)):
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["family_selected"] = family_selected
+	snapshot["content_selected"] = content_selected
+	snapshot["source_detail_before"] = before_detail
+	snapshot["object_before"] = result.get("object_before", before_detail)
+	snapshot["object_after"] = result.get("object", {})
+	snapshot["previous_content_id"] = String(result.get("previous_content_id", ""))
+	snapshot["content_id"] = String(result.get("content_id", ""))
+	snapshot["tile_inspection"] = _tile_inspection_payload(tile)
 	snapshot["placement_count_before"] = before_count
 	return snapshot
 

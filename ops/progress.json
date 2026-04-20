@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T19:47:12Z",
+  "updatedAt": "2026-04-20T20:04:10Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-object-duplicate-10184",
-  "currentSliceTitle": "Duplicate existing overworld object placements in the map editor working copy",
+  "currentSliceId": "map-editor-object-retheme-10184",
+  "currentSliceTitle": "Retheme existing overworld object placements in the map editor working copy",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the next narrow map editor slice: MapEditorShell now has a Duplicate Object tool and validation hook that deep-copy existing in-memory runtime placements for towns, resource nodes, artifact nodes, and encounters onto an empty destination tile. Duplicates preserve content id, owner, difficulty, collected state, collection metadata, combat seed, and other existing placement fields while receiving a fresh unique editor placement id and new x/y. Tile inspection and validation snapshots expose duplicated coordinates and pending duplicate detail, live preview reads duplicated objects naturally, and Play Copy launches the duplicated working-copy state through the normal overworld shell. Authored JSON writeback/export, save-format changes, parallel editor schema work, broad gameplay rewrites, and town 3x2 occupancy/pathing remain out of scope. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the next narrow map editor slice: MapEditorShell now has a Retheme Object tool that reuses the existing authored object family/content pickers to change a selected runtime placement's content id in place. The tool is scoped to towns, resource nodes, artifact nodes, and encounters, mutating only town_id, site_id, artifact_id, or encounter_id while preserving placement id, coordinates, owner, difficulty, collected state, collection metadata, combat seed, and other runtime fields. Tile inspection, validation snapshots, live preview, Play Copy, and editor return expose the reassigned object state. Authored JSON writeback/export, save-format changes, parallel editor schema work, broad gameplay rewrites, and town 3x2 occupancy/pathing remain out of scope. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -322,6 +322,18 @@
       "difficulty": "small"
     },
     {
+      "id": "map-editor-object-duplicate-10184",
+      "title": "Duplicate existing overworld object placements in the map editor working copy",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-object-retheme-10184",
+      "title": "Retheme existing overworld object placements in the map editor working copy",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -377,7 +389,7 @@
     }
   ],
   "nextActions": [
-    "Use the in-game map editor's terrain, road, hero-start, object-placement, object-move, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
+    "Use the in-game map editor's terrain, road, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
     "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
     "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",
