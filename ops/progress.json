@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T21:09:21Z",
+  "updatedAt": "2026-04-20T21:21:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-road-path-10184",
-  "currentSliceTitle": "Paint compact map-editor road paths in the working copy",
+  "currentSliceId": "map-editor-terrain-line-10184",
+  "currentSliceTitle": "Paint compact terrain lines in the map editor working copy",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the thin in-project map editor road-path slice: MapEditorShell now has a compact Road Path tool that sets a start tile, applies a deterministic Manhattan L path to an end tile through the existing terrain-layer road overlay structure, toggles add/remove behavior in the in-memory working copy, exposes explicit path-rule validation output, and keeps authored JSON, save format, projection/layout, pathing/gameplay, and town occupancy/pathing unchanged.",
+  "currentSliceNotes": "Completed the thin in-project map editor terrain-line slice: MapEditorShell now supports a compact Terrain Line tool that sets a start tile, applies a deterministic Manhattan L line to an end tile using the active terrain id, mutates only the in-memory working-copy map array, exposes explicit path-rule validation output, and keeps authored JSON, save format, projection/layout, pathing/gameplay, and town occupancy/pathing unchanged.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -342,6 +342,12 @@
     {
       "id": "map-editor-road-path-10184",
       "title": "Paint compact road paths in the map editor working copy",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-terrain-line-10184",
+      "title": "Paint compact terrain lines in the map editor working copy",
       "status": "completed",
       "difficulty": "small"
     },

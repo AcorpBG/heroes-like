@@ -49,6 +49,8 @@ func _run() -> void:
 		return
 	if not _assert_flood_fill_terrain(shell):
 		return
+	if not _assert_terrain_line_tool(shell):
+		return
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
@@ -188,6 +190,81 @@ func _assert_flood_fill_terrain(shell) -> bool:
 	var noop_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "ash")
 	if not bool(noop_result.get("ok", false)) or bool(noop_result.get("changed", true)) or int(noop_result.get("filled_count", -1)) != 0:
 		_fail("Map editor smoke: terrain flood fill did not no-op cleanly on matching active terrain: %s." % noop_result)
+		return false
+	return true
+
+func _assert_terrain_line_tool(shell) -> bool:
+	if not shell.has_method("validation_set_terrain_line_start") or not shell.has_method("validation_apply_terrain_line"):
+		_fail("Map editor smoke: shell did not expose terrain line validation.")
+		return false
+	var expected_tiles := [
+		Vector2i(16, 16),
+		Vector2i(17, 16),
+		Vector2i(18, 16),
+		Vector2i(19, 16),
+		Vector2i(19, 17),
+		Vector2i(19, 18),
+	]
+	var off_line_tiles := [Vector2i(18, 17), Vector2i(16, 17)]
+	var seeded_tiles := []
+	seeded_tiles.append_array(expected_tiles)
+	seeded_tiles.append_array(off_line_tiles)
+	for tile in seeded_tiles:
+		var seed_result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, "grass")
+		if not bool(seed_result.get("ok", false)):
+			_fail("Map editor smoke: could not seed terrain-line tile %s: %s." % [tile, seed_result])
+			return false
+
+	var start_result: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16, "hills")
+	var pending_start: Dictionary = start_result.get("pending_terrain_line_start", {})
+	if (
+		not bool(start_result.get("ok", false))
+		or int(pending_start.get("x", -1)) != 16
+		or int(pending_start.get("y", -1)) != 16
+		or String(start_result.get("selected_terrain_id", "")) != "hills"
+		or String(start_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
+	):
+		_fail("Map editor smoke: terrain line start did not expose the pending Manhattan L rule state: %s." % start_result)
+		return false
+
+	var line_result: Dictionary = shell.call("validation_apply_terrain_line", 19, 18)
+	var pending_after_line: Dictionary = line_result.get("pending_terrain_line_start", {})
+	if (
+		not bool(line_result.get("ok", false))
+		or not bool(line_result.get("changed", false))
+		or String(line_result.get("active_terrain_id", "")) != "hills"
+		or String(line_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
+		or int(line_result.get("path_count", 0)) != expected_tiles.size()
+		or int(line_result.get("affected_count", 0)) != expected_tiles.size()
+		or not _path_payload_matches(line_result.get("path_tiles", []), expected_tiles)
+		or not pending_after_line.is_empty()
+	):
+		_fail("Map editor smoke: terrain line paint did not report the expected horizontal-first Manhattan L line: %s." % line_result)
+		return false
+	for tile in expected_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "hills":
+			_fail("Map editor smoke: terrain line did not update expected tile %s: %s." % [tile, presentation])
+			return false
+	for off_line_tile in off_line_tiles:
+		var off_line_presentation: Dictionary = shell.call("validation_tile_presentation", off_line_tile.x, off_line_tile.y)
+		if String(off_line_presentation.get("terrain_presentation", {}).get("terrain", "")) != "grass":
+			_fail("Map editor smoke: terrain line leaked onto off-line tile %s: %s." % [off_line_tile, off_line_presentation])
+			return false
+
+	var repeat_start: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16)
+	if not bool(repeat_start.get("ok", false)):
+		_fail("Map editor smoke: could not set terrain line start before no-op repeat: %s." % repeat_start)
+		return false
+	var repeat_result: Dictionary = shell.call("validation_apply_terrain_line", 19, 18)
+	if (
+		not bool(repeat_result.get("ok", false))
+		or bool(repeat_result.get("changed", true))
+		or int(repeat_result.get("affected_count", -1)) != 0
+		or int(repeat_result.get("path_count", 0)) != expected_tiles.size()
+		or not _path_payload_matches(repeat_result.get("path_tiles", []), expected_tiles)
+	):
+		_fail("Map editor smoke: terrain line repeat did not no-op cleanly on matching active terrain: %s." % repeat_result)
 		return false
 	return true
 
