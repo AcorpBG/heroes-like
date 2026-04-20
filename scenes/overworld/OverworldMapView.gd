@@ -57,10 +57,16 @@ const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 0.96)
 const OBJECT_SPRITE_SHADOW_MODULATE := Color(0.02, 0.018, 0.014, 0.30)
 const OBJECT_SPRITE_MEMORY_MODULATE := Color(0.72, 0.82, 0.84, 0.82)
+const OBJECT_PRESENCE_MODEL := "footprint_scaled_world_object"
+const OBJECT_OCCLUSION_MODEL := "foreground_ground_lip"
+const OBJECT_SPRITE_SETTLEMENT_MODEL := "footprint_scaled_sprite_with_ground_lip"
+const OBJECT_PROCEDURAL_FALLBACK_MODEL := "family_specific_procedural_world_object"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
+const MARKER_FOOTPRINT_WIDTH_STEP := 0.28
+const MARKER_FOOTPRINT_HEIGHT_STEP := 0.18
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
@@ -123,6 +129,7 @@ var _object_asset_paths: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
+var _resource_site_object_profiles: Dictionary = {}
 var _artifact_default_asset_id := ""
 
 func _ready() -> void:
@@ -497,7 +504,7 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
 		if not _draw_resource_sprite(resource_node, rect, remembered):
-			_draw_resource_marker(rect, remembered)
+			_draw_resource_marker(resource_node, rect, remembered)
 	var artifact_node := _artifact_node_at(tile)
 	if not artifact_node.is_empty():
 		if not _draw_artifact_sprite(artifact_node, rect, remembered):
@@ -508,46 +515,55 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 		_draw_hero_marker(rect, tile)
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool) -> bool:
-	return _draw_object_sprite(_resource_asset_id(node), rect, remembered)
+	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node))
 
 func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool) -> bool:
 	if node.is_empty():
 		return false
-	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered)
+	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile())
 
-func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool) -> bool:
+func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary) -> bool:
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
-	_draw_marker_plate(rect, remembered, OBJECT_SPRITE_PLATE_RADIUS_FACTOR)
+	var footprint := _object_profile_footprint(profile)
+	var family := String(profile.get("family", "pickup"))
+	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint, OBJECT_SPRITE_PLATE_RADIUS_FACTOR), footprint)
 	var extent := minf(rect.size.x, rect.size.y)
-	var sprite_extent := maxf(12.0, extent * OBJECT_SPRITE_EXTENT_FACTOR)
-	var sprite_rect := Rect2(rect.get_center() - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	var shadow_offset := Vector2(0.0, maxf(1.5, extent * 0.035))
+	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
+	var sprite_extent := maxf(12.0, extent * sprite_fraction)
+	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction(family, footprint))
+	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	var shadow_offset := Vector2(0.0, maxf(2.0, extent * 0.055))
 	draw_texture_rect(texture, Rect2(sprite_rect.position + shadow_offset, sprite_rect.size), false, OBJECT_SPRITE_SHADOW_MODULATE)
 	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_foreground_occlusion_lip(anchor, remembered)
 	return true
 
 func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> void:
-	_draw_marker_plate(rect, remembered, 0.35)
+	var anchor := _draw_marker_plate(rect, remembered, 0.38, Vector2i(2, 2))
 	var extent := minf(rect.size.x, rect.size.y)
 	var outline_width := maxf(2.2, extent * 0.036)
 	var marker_color := _remembered_marker_color(color) if remembered else color
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	var body = Rect2(
-		rect.position + rect.size * Vector2((1.0 - TOWN_MARKER_BODY_WIDTH) * 0.5, 0.34),
-		rect.size * Vector2(TOWN_MARKER_BODY_WIDTH, TOWN_MARKER_BODY_HEIGHT)
+		rect.position + rect.size * Vector2(0.18, 0.43),
+		rect.size * Vector2(0.64, 0.30)
 	)
+	var shadow_body := Rect2(body.position + Vector2(0.0, extent * 0.045), body.size)
+	draw_rect(shadow_body, Color(0.02, 0.018, 0.014, 0.28), true)
 	draw_rect(body, marker_color, true)
 	draw_rect(body, outline_color, false, outline_width)
-	for step in [0.22, 0.42, 0.62]:
+	for step in [0.19, 0.46, 0.70]:
 		var battlement = Rect2(
-			rect.position + rect.size * Vector2(step, 0.23),
-			rect.size * Vector2(0.13, 0.12)
+			rect.position + rect.size * Vector2(step, 0.28),
+			rect.size * Vector2(0.13, 0.18)
 		)
 		draw_rect(battlement, marker_color, true)
 		draw_rect(battlement, outline_color, false, maxf(1.4, outline_width * 0.65))
-	var flag_start = rect.position + rect.size * Vector2(0.70, 0.16)
+	var gate := Rect2(rect.position + rect.size * Vector2(0.44, 0.56), rect.size * Vector2(0.12, 0.17))
+	draw_rect(gate, Color(0.16, 0.10, 0.06, 0.48 if remembered else 0.78), true)
+	var flag_start = rect.position + rect.size * Vector2(0.70, 0.13)
 	var flag_end = rect.position + rect.size * Vector2(0.70, 0.43)
 	draw_line(flag_end, flag_start, Color(0.97, 0.94, 0.82, 0.62 if remembered else 0.96), maxf(2.0, extent * 0.032))
 	var flag = PackedVector2Array([
@@ -556,87 +572,105 @@ func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> v
 		flag_start + rect.size * Vector2(0.00, 0.11),
 	])
 	draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
+	_draw_foreground_occlusion_lip(anchor, remembered)
 
-func _draw_resource_marker(rect: Rect2, remembered: bool = false) -> void:
-	_draw_marker_plate(rect, remembered)
-	var extent := minf(rect.size.x, rect.size.y)
-	var center = rect.get_center()
-	var radius = maxf(5.0, extent * RESOURCE_MARKER_RADIUS)
+func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = false) -> void:
+	var profile := _resource_object_profile(node)
+	var footprint := _object_profile_footprint(profile)
+	var family := String(profile.get("family", "pickup"))
+	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint), footprint)
 	var marker_color := _remembered_marker_color(RESOURCE_COLOR) if remembered else RESOURCE_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	var diamond = PackedVector2Array([
-		center + Vector2(0.0, -radius),
-		center + Vector2(radius, 0.0),
-		center + Vector2(0.0, radius),
-		center + Vector2(-radius, 0.0),
-	])
-	draw_colored_polygon(diamond, marker_color)
-	var diamond_outline = PackedVector2Array([diamond[0], diamond[1], diamond[2], diamond[3], diamond[0]])
-	draw_polyline(diamond_outline, outline_color, maxf(2.0, extent * 0.034))
-	draw_circle(center, maxf(1.8, extent * 0.035), Color(0.93, 1.0, 0.86, 0.50 if remembered else 0.78))
+	match family:
+		"neutral_dwelling", "repeatable_service", "faction_outpost":
+			_draw_dwelling_silhouette(rect, marker_color, outline_color, remembered)
+		"mine":
+			_draw_mine_silhouette(rect, marker_color, outline_color, remembered)
+		"scouting_structure":
+			_draw_tower_silhouette(rect, marker_color, outline_color, remembered)
+		"guarded_reward_site":
+			_draw_ruin_silhouette(rect, marker_color, outline_color, remembered)
+		"transit_object":
+			_draw_transit_silhouette(rect, marker_color, outline_color, remembered)
+		"frontier_shrine":
+			_draw_shrine_silhouette(rect, marker_color, outline_color, remembered)
+		_:
+			_draw_pickup_silhouette(rect, marker_color, outline_color, remembered)
+	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_artifact_marker(rect: Rect2, remembered: bool = false) -> void:
-	_draw_marker_plate(rect, remembered)
+	var anchor := _draw_marker_plate(rect, remembered, MARKER_PLATE_RADIUS_FACTOR, Vector2i(1, 1))
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
-	var outer = maxf(5.0, extent * ARTIFACT_MARKER_OUTER_RADIUS)
-	var inner = maxf(2.2, extent * ARTIFACT_MARKER_INNER_RADIUS)
 	var marker_color := _remembered_marker_color(ARTIFACT_COLOR) if remembered else ARTIFACT_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	var points = PackedVector2Array([
-		center + Vector2(0.0, -outer),
-		center + Vector2(inner, -inner),
-		center + Vector2(outer, 0.0),
-		center + Vector2(inner, inner),
-		center + Vector2(0.0, outer),
-		center + Vector2(-inner, inner),
-		center + Vector2(-outer, 0.0),
-		center + Vector2(-inner, -inner),
+	var pedestal = Rect2(rect.position + rect.size * Vector2(0.37, 0.56), rect.size * Vector2(0.26, 0.15))
+	var lid = Rect2(rect.position + rect.size * Vector2(0.33, 0.48), rect.size * Vector2(0.34, 0.10))
+	draw_rect(pedestal, marker_color, true)
+	draw_rect(pedestal, outline_color, false, maxf(1.8, extent * 0.030))
+	draw_rect(lid, _scaled_color(marker_color, 1.18), true)
+	draw_rect(lid, outline_color, false, maxf(1.6, extent * 0.026))
+	var gleam := PackedVector2Array([
+		center + Vector2(0.0, -extent * 0.22),
+		center + Vector2(extent * 0.05, -extent * 0.08),
+		center + Vector2(extent * 0.18, -extent * 0.03),
+		center + Vector2(extent * 0.05, extent * 0.02),
+		center + Vector2(0.0, extent * 0.16),
+		center + Vector2(-extent * 0.05, extent * 0.02),
+		center + Vector2(-extent * 0.18, -extent * 0.03),
+		center + Vector2(-extent * 0.05, -extent * 0.08),
 	])
-	draw_colored_polygon(points, marker_color)
-	var star_outline = PackedVector2Array([
-		points[0],
-		points[1],
-		points[2],
-		points[3],
-		points[4],
-		points[5],
-		points[6],
-		points[7],
-		points[0],
-	])
-	draw_polyline(star_outline, outline_color, maxf(2.0, extent * 0.034))
-	draw_circle(center, maxf(1.6, extent * 0.03), Color(1.0, 0.96, 0.72, 0.54 if remembered else 0.86))
+	draw_colored_polygon(gleam, Color(1.0, 0.90, 0.46, 0.62 if remembered else 0.95))
+	draw_polyline(PackedVector2Array([gleam[0], gleam[1], gleam[2], gleam[3], gleam[4], gleam[5], gleam[6], gleam[7], gleam[0]]), outline_color, maxf(1.6, extent * 0.026))
+	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_encounter_marker(rect: Rect2, remembered: bool = false) -> void:
-	_draw_marker_plate(rect, remembered)
+	var anchor := _draw_marker_plate(rect, remembered, 0.34, Vector2i(1, 1))
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
-	var marker_extent = maxf(6.0, extent * ENCOUNTER_MARKER_EXTENT)
 	var marker_color := _remembered_marker_color(ENCOUNTER_COLOR) if remembered else ENCOUNTER_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	var wide := maxf(6.0, extent * 0.090)
-	var narrow := maxf(3.8, extent * 0.056)
-	draw_line(center + Vector2(-marker_extent, -marker_extent), center + Vector2(marker_extent, marker_extent), outline_color, wide)
-	draw_line(center + Vector2(marker_extent, -marker_extent), center + Vector2(-marker_extent, marker_extent), outline_color, wide)
-	draw_line(center + Vector2(-marker_extent, -marker_extent), center + Vector2(marker_extent, marker_extent), marker_color, narrow)
-	draw_line(center + Vector2(marker_extent, -marker_extent), center + Vector2(-marker_extent, marker_extent), marker_color, narrow)
-	draw_circle(center, maxf(2.0, extent * 0.055), Color(0.98, 0.94, 0.79, 0.58 if remembered else 1.0))
+	var tent := PackedVector2Array([
+		rect.position + rect.size * Vector2(0.27, 0.66),
+		rect.position + rect.size * Vector2(0.50, 0.33),
+		rect.position + rect.size * Vector2(0.73, 0.66),
+	])
+	draw_colored_polygon(tent, marker_color)
+	draw_polyline(PackedVector2Array([tent[0], tent[1], tent[2], tent[0]]), outline_color, maxf(2.0, extent * 0.034))
+	draw_line(center + Vector2(-extent * 0.17, extent * 0.04), center + Vector2(-extent * 0.17, -extent * 0.26), outline_color, maxf(2.0, extent * 0.030))
+	draw_line(center + Vector2(extent * 0.17, extent * 0.04), center + Vector2(extent * 0.17, -extent * 0.25), outline_color, maxf(2.0, extent * 0.030))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(-extent * 0.17, -extent * 0.26),
+		center + Vector2(-extent * 0.02, -extent * 0.21),
+		center + Vector2(-extent * 0.17, -extent * 0.15),
+	]), Color(0.92, 0.30, 0.24, 0.68 if remembered else 0.96))
+	draw_colored_polygon(PackedVector2Array([
+		center + Vector2(extent * 0.17, -extent * 0.25),
+		center + Vector2(extent * 0.32, -extent * 0.20),
+		center + Vector2(extent * 0.17, -extent * 0.14),
+	]), Color(0.92, 0.30, 0.24, 0.68 if remembered else 0.96))
+	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
-	_draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR)
+	var anchor := _draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR, Vector2i(1, 1))
 	var extent := minf(rect.size.x, rect.size.y)
-	var center = rect.get_center()
-	var base_radius = maxf(5.0, extent * HERO_MARKER_RADIUS)
-	draw_circle(center + Vector2(0.0, rect.size.y * 0.06), base_radius, HERO_FILL_COLOR)
-	draw_circle(center + Vector2(0.0, rect.size.y * 0.06), base_radius, HERO_RING_COLOR, false, maxf(2.5, extent * 0.036))
-	draw_line(center + Vector2(base_radius, rect.size.y * 0.06), center + Vector2(base_radius, -rect.size.y * 0.22), HERO_RING_COLOR, maxf(2.5, extent * 0.035))
+	var center: Vector2 = rect.get_center()
+	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
+	var figure_center: Vector2 = center + Vector2(0.0, -extent * 0.02)
+	draw_line(figure_center + Vector2(-base_radius * 0.42, extent * 0.18), figure_center + Vector2(-base_radius * 0.12, extent * 0.38), HERO_RING_COLOR, maxf(2.0, extent * 0.030))
+	draw_line(figure_center + Vector2(base_radius * 0.36, extent * 0.18), figure_center + Vector2(base_radius * 0.12, extent * 0.38), HERO_RING_COLOR, maxf(2.0, extent * 0.030))
+	draw_rect(Rect2(figure_center + Vector2(-base_radius * 0.42, -base_radius * 0.12), Vector2(base_radius * 0.84, base_radius * 1.00)), HERO_FILL_COLOR, true)
+	draw_rect(Rect2(figure_center + Vector2(-base_radius * 0.42, -base_radius * 0.12), Vector2(base_radius * 0.84, base_radius * 1.00)), HERO_RING_COLOR, false, maxf(2.2, extent * 0.032))
+	draw_circle(figure_center + Vector2(0.0, -base_radius * 0.72), base_radius * 0.48, HERO_FILL_COLOR)
+	draw_circle(figure_center + Vector2(0.0, -base_radius * 0.72), base_radius * 0.48, HERO_RING_COLOR, false, maxf(2.0, extent * 0.030))
+	draw_line(figure_center + Vector2(base_radius * 0.82, extent * 0.20), figure_center + Vector2(base_radius * 0.82, -rect.size.y * 0.27), HERO_RING_COLOR, maxf(2.5, extent * 0.035))
 	var banner = PackedVector2Array([
-		center + Vector2(base_radius, -rect.size.y * 0.22),
-		center + Vector2(base_radius + rect.size.x * 0.17, -rect.size.y * 0.15),
-		center + Vector2(base_radius, -rect.size.y * 0.06),
+		figure_center + Vector2(base_radius * 0.82, -rect.size.y * 0.27),
+		figure_center + Vector2(base_radius * 0.82 + rect.size.x * 0.17, -rect.size.y * 0.20),
+		figure_center + Vector2(base_radius * 0.82, -rect.size.y * 0.11),
 	])
 	draw_colored_polygon(banner, Color(0.95, 0.73, 0.25, 0.95))
+	_draw_foreground_occlusion_lip(anchor, false)
 
 	var reserve_count = _reserve_hero_count(tile)
 	if reserve_count <= 0:
@@ -648,14 +682,105 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 		var dot_pos = marker_center + Vector2((index - 1) * 5.0, 0.0)
 		draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
 
-func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR) -> void:
+func _draw_pickup_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var base := Rect2(rect.position + rect.size * Vector2(0.34, 0.50), rect.size * Vector2(0.32, 0.20))
+	var crate_left := Rect2(rect.position + rect.size * Vector2(0.25, 0.57), rect.size * Vector2(0.21, 0.15))
+	var crate_right := Rect2(rect.position + rect.size * Vector2(0.54, 0.55), rect.size * Vector2(0.21, 0.16))
+	for box in [base, crate_left, crate_right]:
+		draw_rect(box, marker_color, true)
+		draw_rect(box, outline_color, false, maxf(1.6, extent * 0.026))
+	draw_line(base.position + Vector2(0.0, base.size.y * 0.46), base.end - Vector2(0.0, base.size.y * 0.46), _scaled_color(outline_color, 1.0, 0.45 if remembered else 0.68), maxf(1.0, extent * 0.018))
+
+func _draw_dwelling_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var wall := Rect2(rect.position + rect.size * Vector2(0.25, 0.48), rect.size * Vector2(0.50, 0.23))
+	var roof := PackedVector2Array([
+		rect.position + rect.size * Vector2(0.20, 0.50),
+		rect.position + rect.size * Vector2(0.50, 0.30),
+		rect.position + rect.size * Vector2(0.80, 0.50),
+	])
+	draw_colored_polygon(roof, _scaled_color(marker_color, 0.82))
+	draw_polyline(PackedVector2Array([roof[0], roof[1], roof[2]]), outline_color, maxf(2.0, extent * 0.032))
+	draw_rect(wall, marker_color, true)
+	draw_rect(wall, outline_color, false, maxf(1.8, extent * 0.030))
+	draw_rect(Rect2(rect.position + rect.size * Vector2(0.47, 0.58), rect.size * Vector2(0.10, 0.13)), Color(0.13, 0.09, 0.05, 0.48 if remembered else 0.80), true)
+	draw_line(rect.position + rect.size * Vector2(0.28, 0.53), rect.position + rect.size * Vector2(0.28, 0.72), outline_color, maxf(1.4, extent * 0.022))
+	draw_line(rect.position + rect.size * Vector2(0.72, 0.53), rect.position + rect.size * Vector2(0.72, 0.72), outline_color, maxf(1.4, extent * 0.022))
+
+func _draw_mine_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var mound := PackedVector2Array([
+		rect.position + rect.size * Vector2(0.18, 0.70),
+		rect.position + rect.size * Vector2(0.36, 0.42),
+		rect.position + rect.size * Vector2(0.52, 0.54),
+		rect.position + rect.size * Vector2(0.66, 0.35),
+		rect.position + rect.size * Vector2(0.84, 0.70),
+	])
+	draw_colored_polygon(mound, _scaled_color(marker_color, 0.86))
+	draw_polyline(PackedVector2Array([mound[0], mound[1], mound[2], mound[3], mound[4]]), outline_color, maxf(2.0, extent * 0.032))
+	var adit := Rect2(rect.position + rect.size * Vector2(0.43, 0.55), rect.size * Vector2(0.18, 0.16))
+	draw_rect(adit, Color(0.07, 0.06, 0.045, 0.54 if remembered else 0.88), true)
+	draw_rect(adit, outline_color, false, maxf(1.4, extent * 0.024))
+	draw_line(rect.position + rect.size * Vector2(0.25, 0.65), rect.position + rect.size * Vector2(0.77, 0.65), Color(0.96, 0.88, 0.55, 0.28 if remembered else 0.44), maxf(1.2, extent * 0.018))
+
+func _draw_tower_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var shaft := Rect2(rect.position + rect.size * Vector2(0.42, 0.30), rect.size * Vector2(0.16, 0.43))
+	var cap := Rect2(rect.position + rect.size * Vector2(0.34, 0.24), rect.size * Vector2(0.32, 0.11))
+	draw_rect(shaft, marker_color, true)
+	draw_rect(shaft, outline_color, false, maxf(1.7, extent * 0.028))
+	draw_rect(cap, _scaled_color(marker_color, 1.10), true)
+	draw_rect(cap, outline_color, false, maxf(1.7, extent * 0.028))
+	draw_line(rect.position + rect.size * Vector2(0.50, 0.24), rect.position + rect.size * Vector2(0.50, 0.12), outline_color, maxf(1.6, extent * 0.024))
+	draw_colored_polygon(PackedVector2Array([
+		rect.position + rect.size * Vector2(0.50, 0.12),
+		rect.position + rect.size * Vector2(0.64, 0.17),
+		rect.position + rect.size * Vector2(0.50, 0.22),
+	]), Color(0.95, 0.73, 0.28, 0.56 if remembered else 0.92))
+
+func _draw_ruin_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var left := Rect2(rect.position + rect.size * Vector2(0.26, 0.42), rect.size * Vector2(0.13, 0.29))
+	var right := Rect2(rect.position + rect.size * Vector2(0.61, 0.38), rect.size * Vector2(0.13, 0.33))
+	var lintel := Rect2(rect.position + rect.size * Vector2(0.32, 0.38), rect.size * Vector2(0.36, 0.10))
+	for stone in [left, right, lintel]:
+		draw_rect(stone, _scaled_color(marker_color, 0.90), true)
+		draw_rect(stone, outline_color, false, maxf(1.5, extent * 0.024))
+	draw_circle(rect.position + rect.size * Vector2(0.50, 0.60), maxf(2.5, extent * 0.055), Color(1.0, 0.90, 0.50, 0.42 if remembered else 0.70))
+
+func _draw_transit_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var left_base := rect.position + rect.size * Vector2(0.30, 0.70)
+	var right_base := rect.position + rect.size * Vector2(0.70, 0.70)
+	var apex := rect.position + rect.size * Vector2(0.50, 0.35)
+	draw_line(left_base, apex, outline_color, maxf(6.0, extent * 0.090))
+	draw_line(right_base, apex, outline_color, maxf(6.0, extent * 0.090))
+	draw_line(left_base, apex, marker_color, maxf(3.5, extent * 0.055))
+	draw_line(right_base, apex, marker_color, maxf(3.5, extent * 0.055))
+	draw_line(rect.position + rect.size * Vector2(0.34, 0.59), rect.position + rect.size * Vector2(0.66, 0.59), Color(0.96, 0.88, 0.55, 0.36 if remembered else 0.60), maxf(1.6, extent * 0.022))
+
+func _draw_shrine_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var pillar := Rect2(rect.position + rect.size * Vector2(0.43, 0.38), rect.size * Vector2(0.14, 0.30))
+	var cap := Rect2(rect.position + rect.size * Vector2(0.35, 0.32), rect.size * Vector2(0.30, 0.10))
+	draw_rect(pillar, marker_color, true)
+	draw_rect(pillar, outline_color, false, maxf(1.5, extent * 0.024))
+	draw_rect(cap, _scaled_color(marker_color, 1.12), true)
+	draw_rect(cap, outline_color, false, maxf(1.5, extent * 0.024))
+	draw_circle(rect.position + rect.size * Vector2(0.50, 0.25), maxf(2.6, extent * 0.055), Color(0.98, 0.94, 0.72, 0.48 if remembered else 0.78))
+
+func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR, footprint: Vector2i = Vector2i(1, 1)) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
 	var center := rect.get_center() + Vector2(0.0, extent * MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR)
 	var radius := maxf(7.0, extent * radius_factor)
+	var normalized_footprint := _normalized_footprint(footprint)
 	var shadow_offset := Vector2(0.0, maxf(1.5, extent * 0.045))
+	var footprint_width_scale := 1.0 + (float(normalized_footprint.x - 1) * MARKER_FOOTPRINT_WIDTH_STEP)
+	var footprint_height_scale := 1.0 + (float(normalized_footprint.y - 1) * MARKER_FOOTPRINT_HEIGHT_STEP)
 	var radii := Vector2(
-		radius * MARKER_GROUND_ANCHOR_WIDTH_FACTOR,
-		maxf(3.0, radius * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR)
+		radius * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * footprint_width_scale,
+		maxf(3.0, radius * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * footprint_height_scale)
 	)
 	draw_colored_polygon(
 		_ellipse_points(center + shadow_offset, Vector2(radii.x * 1.10, radii.y * 1.24)),
@@ -670,6 +795,31 @@ func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: fl
 	_draw_ground_anchor_tie_marks(center, radii, remembered, extent)
 	if remembered:
 		_draw_memory_echo_marks(center, radius, extent)
+	return {
+		"center": center,
+		"radii": radii,
+		"extent": extent,
+		"footprint": normalized_footprint,
+	}
+
+func _draw_foreground_occlusion_lip(anchor: Dictionary, remembered: bool) -> void:
+	if anchor.is_empty():
+		return
+	var center: Vector2 = anchor.get("center", Vector2.ZERO)
+	var radii: Vector2 = anchor.get("radii", Vector2.ZERO)
+	var extent := float(anchor.get("extent", 0.0))
+	if radii.x <= 0.0 or radii.y <= 0.0:
+		return
+	var lip_color := Color(0.23, 0.18, 0.10, 0.34)
+	var highlight_color := Color(0.75, 0.63, 0.32, 0.18)
+	if remembered:
+		lip_color = Color(0.60, 0.80, 0.84, 0.34)
+		highlight_color = Color(0.90, 0.98, 1.0, 0.22)
+	var left := center + Vector2(-radii.x * 0.72, radii.y * 0.28)
+	var mid := center + Vector2(0.0, radii.y * 0.58)
+	var right := center + Vector2(radii.x * 0.72, radii.y * 0.28)
+	draw_polyline(PackedVector2Array([left, mid, right]), lip_color, maxf(1.4, extent * 0.022))
+	draw_line(center + Vector2(-radii.x * 0.38, radii.y * 0.05), center + Vector2(radii.x * 0.34, radii.y * 0.08), highlight_color, maxf(1.0, extent * 0.012))
 
 func _ellipse_points(center: Vector2, radii: Vector2, segment_count: int = 24, closed: bool = false) -> PackedVector2Array:
 	var points := PackedVector2Array()
@@ -726,6 +876,71 @@ func _remembered_marker_color(color: Color) -> Color:
 		(color.b * 0.55) + (MEMORY_OBJECT_COLOR.b * 0.45),
 		MEMORY_OBJECT_COLOR.a
 	)
+
+func _scaled_color(color: Color, factor: float, alpha: float = -1.0) -> Color:
+	return Color(
+		clampf(color.r * factor, 0.0, 1.0),
+		clampf(color.g * factor, 0.0, 1.0),
+		clampf(color.b * factor, 0.0, 1.0),
+		color.a if alpha < 0.0 else alpha
+	)
+
+func _normalized_footprint(footprint: Vector2i) -> Vector2i:
+	return Vector2i(clampi(footprint.x, 1, 3), clampi(footprint.y, 1, 3))
+
+func _object_profile_footprint(profile: Dictionary) -> Vector2i:
+	var footprint = profile.get("footprint", Vector2i(1, 1))
+	if footprint is Vector2i:
+		return _normalized_footprint(footprint)
+	if footprint is Dictionary:
+		return _normalized_footprint(Vector2i(int(footprint.get("width", 1)), int(footprint.get("height", 1))))
+	return Vector2i(1, 1)
+
+func _presence_radius_factor(family: String, footprint: Vector2i, fallback: float = MARKER_PLATE_RADIUS_FACTOR) -> float:
+	match family:
+		"town":
+			return 0.38
+		"neutral_dwelling", "mine", "repeatable_service", "faction_outpost", "guarded_reward_site":
+			return maxf(fallback, 0.35)
+		"scouting_structure", "transit_object", "frontier_shrine":
+			return maxf(fallback, 0.32)
+		"hero":
+			return HERO_PLATE_RADIUS_FACTOR
+		"encounter":
+			return 0.34
+		"artifact":
+			return maxf(fallback, 0.31)
+		_:
+			if footprint.x > 1 or footprint.y > 1:
+				return maxf(fallback, 0.34)
+	return fallback
+
+func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
+	var family := String(profile.get("family", "pickup"))
+	var base := OBJECT_SPRITE_EXTENT_FACTOR
+	match family:
+		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site":
+			base = 0.96
+		"scouting_structure", "transit_object":
+			base = 0.92
+		_:
+			base = OBJECT_SPRITE_EXTENT_FACTOR
+	base += float(maxi(footprint.x - 1, 0)) * 0.08
+	base += float(maxi(footprint.y - 1, 0)) * 0.04
+	return clampf(base, 0.82, 1.10)
+
+func _object_lift_fraction(family: String, footprint: Vector2i) -> float:
+	var lift := 0.05
+	match family:
+		"neutral_dwelling", "mine", "repeatable_service", "guarded_reward_site":
+			lift = 0.08
+		"scouting_structure", "transit_object":
+			lift = 0.10
+		_:
+			lift = 0.05
+	if footprint.y > 1:
+		lift += 0.02
+	return lift
 
 func _board_rect() -> Rect2:
 	var viewport_rect := _map_viewport_rect()
@@ -1066,26 +1281,38 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		return {
 			"uses_asset_sprite": false,
 			"fallback_procedural_marker": false,
+			"fallback_silhouette_model": "",
 			"sprite_asset_ids": [],
 			"remembered_sprite_treatment": "",
+			"sprite_settlement_model": "",
+			"settled_sprite_occlusion": false,
 			"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 		}
 	var sprite_asset_ids: Array[String] = []
+	var sprite_footprints: Array = []
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
 		var resource_asset_id := _resource_asset_id(resource_node)
 		if resource_asset_id != "" and _object_texture_for_asset(resource_asset_id) is Texture2D:
 			sprite_asset_ids.append(resource_asset_id)
+			var resource_footprint := _object_profile_footprint(_resource_object_profile(resource_node))
+			sprite_footprints.append({"width": resource_footprint.x, "height": resource_footprint.y})
 	var artifact_node := _artifact_node_at(tile)
 	if not artifact_node.is_empty() and _artifact_default_asset_id != "":
 		if _object_texture_for_asset(_artifact_default_asset_id) is Texture2D:
 			sprite_asset_ids.append(_artifact_default_asset_id)
+			var artifact_footprint := _object_profile_footprint(_artifact_object_profile())
+			sprite_footprints.append({"width": artifact_footprint.x, "height": artifact_footprint.y})
 	var uses_asset_sprite := not sprite_asset_ids.is_empty()
 	return {
 		"uses_asset_sprite": uses_asset_sprite,
 		"fallback_procedural_marker": not uses_asset_sprite and not object_kinds.is_empty(),
+		"fallback_silhouette_model": OBJECT_PROCEDURAL_FALLBACK_MODEL if not uses_asset_sprite and not object_kinds.is_empty() else "",
 		"sprite_asset_ids": sprite_asset_ids,
+		"sprite_footprints": sprite_footprints,
 		"remembered_sprite_treatment": "ghosted_sprite_with_ground_anchor" if uses_asset_sprite and not visible else "",
+		"sprite_settlement_model": OBJECT_SPRITE_SETTLEMENT_MODEL if uses_asset_sprite else "",
+		"settled_sprite_occlusion": uses_asset_sprite,
 		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
@@ -1103,17 +1330,34 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var uses_asset_sprite := bool(art_payload.get("uses_asset_sprite", false))
 	if uses_asset_sprite:
 		min_symbol_fraction = maxf(min_symbol_fraction, OBJECT_SPRITE_EXTENT_FACTOR)
+	var dominant_profile := _dominant_object_profile(tile, object_kinds, has_visible_hero)
+	var dominant_footprint := _object_profile_footprint(dominant_profile) if not dominant_profile.is_empty() else Vector2i(1, 1)
+	var dominant_family := String(dominant_profile.get("family", ""))
 	var plate_radius_fraction := MARKER_PLATE_RADIUS_FACTOR
 	if uses_asset_sprite:
-		plate_radius_fraction = OBJECT_SPRITE_PLATE_RADIUS_FACTOR
+		plate_radius_fraction = _presence_radius_factor(dominant_family, dominant_footprint, OBJECT_SPRITE_PLATE_RADIUS_FACTOR)
 	elif has_visible_hero and not has_object_marker:
 		plate_radius_fraction = HERO_PLATE_RADIUS_FACTOR
+	elif not dominant_profile.is_empty():
+		plate_radius_fraction = _presence_radius_factor(dominant_family, dominant_footprint)
+	var anchor_half_width_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * (1.0 + (float(dominant_footprint.x - 1) * MARKER_FOOTPRINT_WIDTH_STEP))
+	var anchor_half_height_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * (1.0 + (float(dominant_footprint.y - 1) * MARKER_FOOTPRINT_HEIGHT_STEP))
 	return {
 		"object_kinds": object_kinds,
 		"marker_kinds": marker_kinds,
 		"contrast_plate": has_object_marker or has_visible_hero,
 		"ground_anchor": has_object_marker or has_visible_hero,
 		"anchor_shape": MARKER_GROUND_ANCHOR_STYLE if has_object_marker or has_visible_hero else "",
+		"presence_model": OBJECT_PRESENCE_MODEL if has_object_marker or has_visible_hero else "",
+		"foreground_occlusion_lip": has_object_marker or has_visible_hero,
+		"occlusion_model": OBJECT_OCCLUSION_MODEL if has_object_marker or has_visible_hero else "",
+		"dominant_object_family": dominant_family,
+		"footprint_width_tiles": dominant_footprint.x if has_object_marker or has_visible_hero else 0,
+		"footprint_height_tiles": dominant_footprint.y if has_object_marker or has_visible_hero else 0,
+		"footprint_anchor_width_fraction": anchor_half_width_fraction * 2.0 if has_object_marker or has_visible_hero else 0.0,
+		"footprint_anchor_height_fraction": anchor_half_height_fraction * 2.0 if has_object_marker or has_visible_hero else 0.0,
+		"procedural_world_silhouette": bool(art_payload.get("fallback_procedural_marker", false)),
+		"mapped_sprite_settlement": uses_asset_sprite,
 		"ui_badge_plate": false,
 		"plate_radius_fraction": plate_radius_fraction,
 		"plate_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
@@ -1482,7 +1726,9 @@ func _load_overworld_art_manifest() -> void:
 	_object_textures.clear()
 	_object_texture_missing.clear()
 	_resource_site_asset_ids.clear()
+	_resource_site_object_profiles.clear()
 	_artifact_default_asset_id = ""
+	_load_map_object_profiles()
 
 	if not FileAccess.file_exists(OVERWORLD_ART_MANIFEST_PATH):
 		push_warning("Overworld art manifest is missing; procedural overworld markers remain active.")
@@ -1525,6 +1771,37 @@ func _load_overworld_art_manifest() -> void:
 	if artifact_default is Dictionary:
 		_artifact_default_asset_id = String(artifact_default.get("asset_id", ""))
 
+func _load_map_object_profiles() -> void:
+	_resource_site_object_profiles.clear()
+	var raw := ContentService.load_json("res://content/map_objects.json")
+	var items = raw.get("items", [])
+	if not (items is Array):
+		return
+	for object_value in items:
+		if not (object_value is Dictionary):
+			continue
+		var site_id := String(object_value.get("resource_site_id", "")).strip_edges()
+		if site_id == "":
+			continue
+		var footprint = object_value.get("footprint", {})
+		var footprint_size := Vector2i(1, 1)
+		if footprint is Dictionary:
+			footprint_size = Vector2i(int(footprint.get("width", 1)), int(footprint.get("height", 1)))
+		var profile := {
+			"id": String(object_value.get("id", "")),
+			"family": String(object_value.get("family", "pickup")),
+			"footprint": _normalized_footprint(footprint_size),
+			"passable": bool(object_value.get("passable", true)),
+			"visitable": bool(object_value.get("visitable", true)),
+			"map_roles": object_value.get("map_roles", []),
+		}
+		if not _resource_site_object_profiles.has(site_id):
+			_resource_site_object_profiles[site_id] = profile
+			continue
+		var current: Dictionary = _resource_site_object_profiles.get(site_id, {})
+		if _footprint_area(_object_profile_footprint(profile)) > _footprint_area(_object_profile_footprint(current)):
+			_resource_site_object_profiles[site_id] = profile
+
 func _object_texture_for_asset(asset_id: String):
 	var normalized_asset_id := asset_id.strip_edges()
 	if normalized_asset_id == "":
@@ -1556,6 +1833,71 @@ func _texture_from_path(texture_path: String):
 		if image.load(texture_path) == OK:
 			return ImageTexture.create_from_image(image)
 	return null
+
+func _resource_object_profile(node: Dictionary) -> Dictionary:
+	if node.is_empty():
+		return _default_object_profile("pickup", Vector2i(1, 1))
+	var site_id := String(node.get("site_id", "")).strip_edges()
+	var profile = _resource_site_object_profiles.get(site_id, {})
+	if profile is Dictionary and not profile.is_empty():
+		return profile
+	var site := ContentService.get_resource_site(site_id)
+	var family := String(site.get("family", "pickup"))
+	if family == "":
+		family = "pickup"
+	return _default_object_profile(family, Vector2i(1, 1))
+
+func _artifact_object_profile() -> Dictionary:
+	return _default_object_profile("artifact", Vector2i(1, 1))
+
+func _town_object_profile() -> Dictionary:
+	return _default_object_profile("town", Vector2i(2, 2))
+
+func _encounter_object_profile() -> Dictionary:
+	return _default_object_profile("encounter", Vector2i(1, 1))
+
+func _hero_object_profile() -> Dictionary:
+	return _default_object_profile("hero", Vector2i(1, 1))
+
+func _default_object_profile(family: String, footprint: Vector2i) -> Dictionary:
+	return {
+		"id": "",
+		"family": family,
+		"footprint": _normalized_footprint(footprint),
+		"passable": true,
+		"visitable": true,
+		"map_roles": [],
+	}
+
+func _dominant_object_profile(tile: Vector2i, object_kinds: Array, has_visible_hero: bool) -> Dictionary:
+	var chosen := {}
+	for kind_value in object_kinds:
+		var profile := _profile_for_kind(tile, String(kind_value))
+		if profile.is_empty():
+			continue
+		if chosen.is_empty() or _footprint_area(_object_profile_footprint(profile)) > _footprint_area(_object_profile_footprint(chosen)):
+			chosen = profile
+	if has_visible_hero and chosen.is_empty():
+		chosen = _hero_object_profile()
+	return chosen
+
+func _profile_for_kind(tile: Vector2i, kind: String) -> Dictionary:
+	match kind:
+		"town":
+			return _town_object_profile()
+		"resource":
+			return _resource_object_profile(_resource_node_at(tile))
+		"artifact":
+			return _artifact_object_profile()
+		"encounter":
+			return _encounter_object_profile()
+		"hero":
+			return _hero_object_profile()
+		_:
+			return {}
+
+func _footprint_area(footprint: Vector2i) -> int:
+	return maxi(footprint.x, 1) * maxi(footprint.y, 1)
 
 func _terrain_at(tile: Vector2i) -> String:
 	if tile.y < 0 or tile.y >= _map_data.size():

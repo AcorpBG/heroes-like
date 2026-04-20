@@ -139,6 +139,9 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if bool(art_presentation.get("uses_asset_sprite", true)) or not bool(art_presentation.get("fallback_procedural_marker", false)):
 		_fail("Ninefold smoke: unmapped large-map resource site did not keep procedural marker fallback: %s." % resource_presentation)
 		return false
+	if String(art_presentation.get("fallback_silhouette_model", "")) != "family_specific_procedural_world_object":
+		_fail("Ninefold smoke: unmapped large-map resource site did not report family-specific procedural world-object fallback: %s." % resource_presentation)
+		return false
 	return true
 
 func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
@@ -149,6 +152,18 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		return false
 	if not bool(readability.get("ground_anchor", false)) or String(readability.get("anchor_shape", "")) != "terrain_ellipse_footprint":
 		_fail("Ninefold smoke: large-map %s marker lacks a terrain-grounded anchor: %s." % [expected_kind, presentation])
+		return false
+	if String(readability.get("presence_model", "")) != "footprint_scaled_world_object" or String(readability.get("occlusion_model", "")) != "foreground_ground_lip":
+		_fail("Ninefold smoke: large-map %s marker no longer reports object-first footprint presence and foreground occlusion: %s." % [expected_kind, presentation])
+		return false
+	if not bool(readability.get("foreground_occlusion_lip", false)):
+		_fail("Ninefold smoke: large-map %s marker lacks a foreground ground lip: %s." % [expected_kind, presentation])
+		return false
+	if int(readability.get("footprint_width_tiles", 0)) <= 0 or int(readability.get("footprint_height_tiles", 0)) <= 0:
+		_fail("Ninefold smoke: large-map %s marker does not expose footprint dimensions: %s." % [expected_kind, presentation])
+		return false
+	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < 0.60 or float(readability.get("footprint_anchor_height_fraction", 0.0)) < 0.20:
+		_fail("Ninefold smoke: large-map %s footprint anchor is too small for object-first tactical framing: %s." % [expected_kind, presentation])
 		return false
 	if bool(readability.get("ui_badge_plate", true)):
 		_fail("Ninefold smoke: large-map %s marker regressed to a UI badge plate: %s." % [expected_kind, presentation])

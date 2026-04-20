@@ -340,6 +340,32 @@ Limits:
 - The fallback procedural silhouettes remain intentionally compact and icon-like where no real object sprite exists; the correction is their terrain grounding and removal of the generic black badge.
 - Manual visual review is still needed before treating overworld presentation as broadly polished.
 
+## Current Implementation Slice: Overworld Object-First Presence
+Status: completed on 2026-04-20 as the next narrow rendering nudge after AcOrP reported the post-c98de5d overworld still read too much like symbols/markers on a board.
+
+Purpose:
+- Push key overworld things toward placed world objects with presence and footprint, while keeping the current quiet terrain, road direction, fog, pathing, panning, tactical framing, and selection clarity intact.
+- Improve procedural fallback object rendering instead of replacing it with a fake-complete art pass.
+- Start using authored map-object footprint metadata as presentation guidance without changing gameplay occupancy or movement rules.
+
+Implemented:
+- `OverworldMapView` now builds resource-site object profiles from `content/map_objects.json`, including authored footprint size, family, passability, visitability, and roles where available.
+- Mapped resource/artifact sprites now use footprint-scaled placement, a slightly lifted world-object draw position, a stronger soft shadow, and a foreground ground lip so they sit into the terrain instead of floating as square sprites on an anchor.
+- Procedural fallback markers now branch into family-specific world silhouettes for dwellings/services/outposts, mines, scouting towers, guarded ruins, transit structures, shrines, pickups, artifacts, encounters, towns, and the active hero.
+- Towns, encounters, artifacts, and the hero now draw as small placed silhouettes with ground-lip occlusion cues instead of only abstract symbols.
+- Validation metadata and smokes now guard the object-first presence model, footprint dimensions, foreground occlusion lip, mapped-sprite settlement model, and family-specific fallback silhouettes.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final town/object art, a complete overworld object atlas, or true multi-tile object occupancy.
+- Footprints currently guide presentation scale and grounding only; movement, blocking, visit targets, and pathing behavior are unchanged.
+- Procedural fallbacks are more object-like, but authored sprites are still needed for important towns, encounters, and many site families before the map can be considered visually mature.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

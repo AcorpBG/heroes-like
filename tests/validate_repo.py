@@ -4577,6 +4577,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure(str(artifact_default.get("asset_id", "")) == "adventurers_bundle", errors, "Overworld artifact default sprite must use the adventurers_bundle pickup asset")
     ensure(str(manifest.get("unmapped_object_fallback", "")) == "procedural_marker", errors, "Overworld art manifest must keep procedural marker fallback for unmapped object types")
     ensure(str(manifest.get("remembered_object_rendering", "")) == "ghosted_sprite_with_ground_anchor", errors, "Overworld art manifest must document the remembered-object sprite treatment")
+    object_rendering = manifest.get("object_rendering", {})
+    ensure(isinstance(object_rendering, dict), errors, "Overworld art manifest must document object-first rendering metadata")
+    if isinstance(object_rendering, dict):
+        ensure(str(object_rendering.get("presence_model", "")) == "footprint_scaled_world_object", errors, "Overworld object rendering must document footprint-scaled object presence")
+        ensure(str(object_rendering.get("mapped_sprite_settlement", "")) == "footprint_scaled_sprite_with_ground_lip", errors, "Overworld object rendering must document settled sprite grounding")
+        ensure(str(object_rendering.get("fallback_silhouette", "")) == "family_specific_procedural_world_object", errors, "Overworld object rendering must document family-specific procedural fallback silhouettes")
 
     map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -4594,6 +4600,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _draw_road_overlay_art",
         "func _draw_object_sprite",
         "func _resource_asset_id",
+        "OBJECT_PRESENCE_MODEL",
+        "OBJECT_OCCLUSION_MODEL",
+        "OBJECT_SPRITE_SETTLEMENT_MODEL",
+        "OBJECT_PROCEDURAL_FALLBACK_MODEL",
+        "func _load_map_object_profiles",
+        "func _draw_foreground_occlusion_lip",
+        '"footprint_scaled_world_object"',
+        '"foreground_ground_lip"',
+        '"family_specific_procedural_world_object"',
         '"authored_autotile_layers"',
         '"original_quiet_tile_bank"',
         '"uses_sampled_texture"',
