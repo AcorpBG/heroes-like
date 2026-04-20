@@ -49,6 +49,33 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: Map Editor Object Retheming
+Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
+
+Purpose:
+- Let the in-game map editor change an existing runtime object's authored content id in place without removing and recreating the placement.
+- Preserve the placement id and existing runtime state while mutating only the relevant content-id field for supported runtime placement arrays.
+- Keep the retheme in memory and avoid authored JSON writeback, save-format changes, editor-only schemas, broad gameplay rewrites, and town multi-tile occupancy/pathing changes.
+
+Implemented:
+- Added a compact Retheme Object tool to `MapEditorShell` that reuses the existing object family and authored content-id pickers as replacement choices.
+- Scoped retheming to the runtime arrays live play already consumes: `towns`, `resource_nodes`, `artifact_nodes`, and `encounters`.
+- Mutated only the existing placement's family-specific content field: `town_id`, `site_id`, `artifact_id`, or `encounter_id`.
+- Preserved placement id, coordinates, owner, difficulty, collected state, collection metadata, combat seed, and other runtime fields already present on the placement.
+- Extended validation hooks and the editor smoke so tile inspection, validation snapshots, live preview, Play Copy, and editor return all expose the reassigned object state.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not an authored JSON exporter/writeback path, a save-format change, or a parallel scenario/editor schema.
+- This does not implement multi-select retheming, object ownership reassignment beyond the existing property editor, or broad object authoring.
+- Town 3x2 occupancy/pathing remains future work; retheming a town still changes only its existing runtime anchor placement.
+
 ## Current Implementation Slice: Map Editor Object Duplication
 Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
 

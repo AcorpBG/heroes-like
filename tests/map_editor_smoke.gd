@@ -91,6 +91,8 @@ func _run() -> void:
 		return
 	if not _assert_object_duplicate_edits(shell):
 		return
+	if not _assert_object_retheme_edits(shell):
+		return
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
 	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
@@ -304,6 +306,49 @@ func _assert_object_duplicate_edits(shell) -> bool:
 		return false
 	return true
 
+func _assert_object_retheme_edits(shell) -> bool:
+	if not _assert_object_retheme(
+		shell,
+		"town",
+		Vector2i(24, 26),
+		"ninefold_embercourt_survey_camp",
+		"town_duskfen",
+		"owner",
+		"neutral"
+	):
+		return false
+	if not _assert_object_retheme(
+		shell,
+		"resource",
+		Vector2i(3, 6),
+		"north_snow_timber",
+		"site_free_company_yard",
+		"collected",
+		true
+	):
+		return false
+	if not _assert_object_retheme(
+		shell,
+		"artifact",
+		Vector2i(10, 45),
+		"confluence_quarry_tally_rod",
+		"artifact_bastion_gorget",
+		"collected",
+		true
+	):
+		return false
+	if not _assert_object_retheme(
+		shell,
+		"encounter",
+		Vector2i(31, 32),
+		"ninefold_reedmaw_host",
+		"encounter_mire_raid",
+		"difficulty",
+		"low"
+	):
+		return false
+	return true
+
 func _assert_object_move(
 	shell,
 	family: String,
@@ -445,6 +490,74 @@ func _assert_object_duplicate(
 				return false
 	return true
 
+func _assert_object_retheme(
+	shell,
+	family: String,
+	tile: Vector2i,
+	placement_id: String,
+	replacement_content_id: String,
+	preserved_key: String,
+	preserved_value: Variant
+) -> bool:
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var before_count := int(before_snapshot.get("placement_count", 0))
+	var retheme_result: Dictionary = shell.call("validation_retheme_object", tile.x, tile.y, family, replacement_content_id)
+	if not bool(retheme_result.get("ok", false)):
+		_fail("Map editor smoke: retheming %s %s at %s to %s failed: %s." % [family, placement_id, tile, replacement_content_id, retheme_result])
+		return false
+	if int(retheme_result.get("placement_count", 0)) != before_count:
+		_fail("Map editor smoke: retheming %s changed placement count: %s." % [family, retheme_result])
+		return false
+	var before_detail: Dictionary = retheme_result.get("source_detail_before", {})
+	var after_detail := _object_detail_for_family(retheme_result.get("tile_inspection", {}), family)
+	if after_detail.is_empty() or String(after_detail.get("placement_id", "")) != placement_id:
+		_fail("Map editor smoke: retheming %s did not preserve the placement id in inspection: %s." % [family, retheme_result])
+		return false
+	if String(after_detail.get("content_id", "")) != replacement_content_id:
+		_fail("Map editor smoke: retheming %s did not expose the replacement content id: %s." % [family, after_detail])
+		return false
+	if String(before_detail.get("content_id", "")) == replacement_content_id:
+		_fail("Map editor smoke: retheme test picked the same content id for %s: %s." % [family, before_detail])
+		return false
+	if int(after_detail.get("x", -1)) != tile.x or int(after_detail.get("y", -1)) != tile.y:
+		_fail("Map editor smoke: retheming %s changed placement coordinates: %s." % [family, after_detail])
+		return false
+	if after_detail.get(preserved_key) != preserved_value:
+		_fail("Map editor smoke: retheming %s did not preserve %s=%s: %s." % [family, preserved_key, preserved_value, after_detail])
+		return false
+	if family == "encounter" and int(after_detail.get("combat_seed", 0)) != int(before_detail.get("combat_seed", 0)):
+		_fail("Map editor smoke: retheming encounter did not preserve combat_seed: before=%s after=%s." % [before_detail, after_detail])
+		return false
+	if family in ["resource", "artifact"] and String(after_detail.get("collected_by_faction_id", "")) != String(before_detail.get("collected_by_faction_id", "")):
+		_fail("Map editor smoke: retheming %s did not preserve collection metadata: before=%s after=%s." % [family, before_detail, after_detail])
+		return false
+	var selected_property: Dictionary = retheme_result.get("selected_property_object", {})
+	if String(selected_property.get("placement_id", "")) != placement_id or String(selected_property.get("content_id", "")) != replacement_content_id:
+		_fail("Map editor smoke: validation snapshot did not select the rethemed %s: %s." % [family, retheme_result])
+		return false
+	var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+	match family:
+		"town":
+			if not bool(presentation.get("has_town", false)) or String(presentation.get("town_presentation", {}).get("town_id", "")) != replacement_content_id:
+				_fail("Map editor smoke: live preview did not use the rethemed town id: %s." % presentation)
+				return false
+			if String(presentation.get("town_presentation", {}).get("owner", "")) != "neutral":
+				_fail("Map editor smoke: rethemed town preview did not preserve owner: %s." % presentation)
+				return false
+		"resource":
+			if not bool(presentation.get("has_resource", false)):
+				_fail("Map editor smoke: live preview did not expose the rethemed persistent resource site: %s." % presentation)
+				return false
+		"artifact":
+			if bool(presentation.get("has_artifact", true)):
+				_fail("Map editor smoke: rethemed collected artifact did not preserve hidden collected presentation: %s." % presentation)
+				return false
+		"encounter":
+			if not bool(presentation.get("has_visible_encounter", false)):
+				_fail("Map editor smoke: live preview did not expose the rethemed encounter marker: %s." % presentation)
+				return false
+	return true
+
 func _assert_play_copy_round_trip(shell) -> bool:
 	var previous_current = get_tree().current_scene
 	var parent = shell.get_parent()
@@ -533,6 +646,9 @@ func _assert_active_session_property_edits(session) -> bool:
 	if _town_owner(session, "ninefold_embercourt_survey_camp") != "neutral":
 		_fail("Map editor smoke: Play Copy did not use the edited town owner.")
 		return false
+	if _placement_content_id(session, "towns", "ninefold_embercourt_survey_camp", "town_id") != "town_duskfen":
+		_fail("Map editor smoke: Play Copy did not use the rethemed town content id.")
+		return false
 	if _placement_position(session, "towns", "ninefold_embercourt_survey_camp") != Vector2i(24, 26):
 		_fail("Map editor smoke: Play Copy did not use the moved town position.")
 		return false
@@ -544,6 +660,9 @@ func _assert_active_session_property_edits(session) -> bool:
 		return false
 	if not _resource_collected(session, "north_snow_timber"):
 		_fail("Map editor smoke: Play Copy did not use the edited resource collected state.")
+		return false
+	if _placement_content_id(session, "resource_nodes", "north_snow_timber", "site_id") != "site_free_company_yard":
+		_fail("Map editor smoke: Play Copy did not use the rethemed resource content id.")
 		return false
 	if _placement_position(session, "resource_nodes", "north_snow_timber") != Vector2i(3, 6):
 		_fail("Map editor smoke: Play Copy did not use the moved resource position.")
@@ -557,6 +676,9 @@ func _assert_active_session_property_edits(session) -> bool:
 	if not _artifact_collected(session, "confluence_quarry_tally_rod"):
 		_fail("Map editor smoke: Play Copy did not use the edited artifact collected state.")
 		return false
+	if _placement_content_id(session, "artifact_nodes", "confluence_quarry_tally_rod", "artifact_id") != "artifact_bastion_gorget":
+		_fail("Map editor smoke: Play Copy did not use the rethemed artifact content id.")
+		return false
 	if _placement_position(session, "artifact_nodes", "confluence_quarry_tally_rod") != Vector2i(10, 45):
 		_fail("Map editor smoke: Play Copy did not use the moved artifact position.")
 		return false
@@ -568,6 +690,9 @@ func _assert_active_session_property_edits(session) -> bool:
 		return false
 	if _encounter_difficulty(session, "ninefold_reedmaw_host") != "low":
 		_fail("Map editor smoke: Play Copy did not use the edited encounter difficulty.")
+		return false
+	if _placement_content_id(session, "encounters", "ninefold_reedmaw_host", "encounter_id") != "encounter_mire_raid":
+		_fail("Map editor smoke: Play Copy did not use the rethemed encounter content id.")
 		return false
 	if _placement_position(session, "encounters", "ninefold_reedmaw_host") != Vector2i(31, 32):
 		_fail("Map editor smoke: Play Copy did not use the moved encounter position.")
@@ -586,8 +711,8 @@ func _assert_active_session_property_edits(session) -> bool:
 func _assert_returned_editor_property_edits(returned_editor) -> bool:
 	var town_result: Dictionary = returned_editor.call("validation_select_tile", 24, 26)
 	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
-	if String(town_detail.get("owner", "")) != "neutral":
-		_fail("Map editor smoke: returned editor lost the edited town owner: %s." % town_result)
+	if String(town_detail.get("owner", "")) != "neutral" or String(town_detail.get("content_id", "")) != "town_duskfen":
+		_fail("Map editor smoke: returned editor lost the edited/rethemed town state: %s." % town_result)
 		return false
 	var duplicate_town_result: Dictionary = returned_editor.call("validation_select_tile", 25, 26)
 	var duplicate_town_detail := _object_detail_for_family(duplicate_town_result.get("tile_inspection", {}), "town")
@@ -596,8 +721,8 @@ func _assert_returned_editor_property_edits(returned_editor) -> bool:
 		return false
 	var resource_result: Dictionary = returned_editor.call("validation_select_tile", 3, 6)
 	var resource_detail := _object_detail_for_family(resource_result.get("tile_inspection", {}), "resource")
-	if not bool(resource_detail.get("collected", false)):
-		_fail("Map editor smoke: returned editor lost the edited resource collected state: %s." % resource_result)
+	if not bool(resource_detail.get("collected", false)) or String(resource_detail.get("content_id", "")) != "site_free_company_yard":
+		_fail("Map editor smoke: returned editor lost the edited/rethemed resource state: %s." % resource_result)
 		return false
 	var duplicate_resource_result: Dictionary = returned_editor.call("validation_select_tile", 4, 6)
 	var duplicate_resource_detail := _object_detail_for_family(duplicate_resource_result.get("tile_inspection", {}), "resource")
@@ -606,8 +731,8 @@ func _assert_returned_editor_property_edits(returned_editor) -> bool:
 		return false
 	var artifact_result: Dictionary = returned_editor.call("validation_select_tile", 10, 45)
 	var artifact_detail := _object_detail_for_family(artifact_result.get("tile_inspection", {}), "artifact")
-	if not bool(artifact_detail.get("collected", false)):
-		_fail("Map editor smoke: returned editor lost the edited artifact collected state: %s." % artifact_result)
+	if not bool(artifact_detail.get("collected", false)) or String(artifact_detail.get("content_id", "")) != "artifact_bastion_gorget":
+		_fail("Map editor smoke: returned editor lost the edited/rethemed artifact state: %s." % artifact_result)
 		return false
 	var duplicate_artifact_result: Dictionary = returned_editor.call("validation_select_tile", 11, 45)
 	var duplicate_artifact_detail := _object_detail_for_family(duplicate_artifact_result.get("tile_inspection", {}), "artifact")
@@ -616,8 +741,8 @@ func _assert_returned_editor_property_edits(returned_editor) -> bool:
 		return false
 	var encounter_result: Dictionary = returned_editor.call("validation_select_tile", 31, 32)
 	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
-	if String(encounter_detail.get("difficulty", "")) != "low":
-		_fail("Map editor smoke: returned editor lost the edited encounter difficulty: %s." % encounter_result)
+	if String(encounter_detail.get("difficulty", "")) != "low" or String(encounter_detail.get("content_id", "")) != "encounter_mire_raid":
+		_fail("Map editor smoke: returned editor lost the edited/rethemed encounter state: %s." % encounter_result)
 		return false
 	var duplicate_encounter_result: Dictionary = returned_editor.call("validation_select_tile", 32, 32)
 	var duplicate_encounter_detail := _object_detail_for_family(duplicate_encounter_result.get("tile_inspection", {}), "encounter")
@@ -657,6 +782,12 @@ func _placement_position(session, array_key: String, placement_id: String) -> Ve
 		if placement is Dictionary and String(placement.get("placement_id", "")) == placement_id:
 			return Vector2i(int(placement.get("x", -999)), int(placement.get("y", -999)))
 	return Vector2i(-999, -999)
+
+func _placement_content_id(session, array_key: String, placement_id: String, content_key: String) -> String:
+	for placement in session.overworld.get(array_key, []):
+		if placement is Dictionary and String(placement.get("placement_id", "")) == placement_id:
+			return String(placement.get(content_key, ""))
+	return ""
 
 func _resource_collected(session, placement_id: String) -> bool:
 	for node in session.overworld.get("resource_nodes", []):
