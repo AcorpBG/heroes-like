@@ -38,7 +38,11 @@
     "fallback_silhouette": "family_specific_procedural_world_object",
     "town_footprint": "town_3x2_footprint_bottom_middle_entry",
     "town_entry_role": "bottom_middle_visit_approach",
-    "town_non_entry_tiles": "blocked_non_entry_footprint"
+    "town_non_entry_tiles": "blocked_non_entry_footprint",
+    "town_grounding": "town_sprite_settled_without_base_ellipse",
+    "town_footprint_cues": "sparse_wall_and_entry_cues_no_underlay",
+    "town_shadow_policy": "no_town_cast_shadow_or_vertical_mass_shadow",
+    "town_base_ellipse": "removed"
   },
   "object_assets": {
     "frontier_town": {
