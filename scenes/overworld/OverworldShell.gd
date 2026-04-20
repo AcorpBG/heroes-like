@@ -1586,6 +1586,7 @@ func validation_snapshot() -> Dictionary:
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"map_viewport": _validation_map_viewport_state(),
+		"town_presentation_profiles": _validation_town_presentation_profiles(),
 		"chrome": _validation_chrome_state(),
 	}
 
@@ -1593,6 +1594,11 @@ func _validation_map_viewport_state() -> Dictionary:
 	if _map_view == null or not _map_view.has_method("validation_view_metrics"):
 		return {}
 	return _map_view.call("validation_view_metrics")
+
+func _validation_town_presentation_profiles() -> Array:
+	if _map_view == null or not _map_view.has_method("validation_town_presentation_profiles"):
+		return []
+	return _map_view.call("validation_town_presentation_profiles")
 
 func _validation_chrome_state() -> Dictionary:
 	return {
@@ -1662,6 +1668,9 @@ func validation_tile_presentation(x: int, y: int) -> Dictionary:
 	if _map_view == null or not _map_view.has_method("validation_tile_presentation"):
 		return {}
 	return _map_view.call("validation_tile_presentation", Vector2i(x, y))
+
+func validation_town_presentation_profiles() -> Array:
+	return _validation_town_presentation_profiles()
 
 func validation_town_state_for_placement(placement_id: String) -> Dictionary:
 	return _validation_town_state_for_placement(placement_id)

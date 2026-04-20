@@ -116,6 +116,8 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
 	if not _assert_marker_style(town_presentation, "town", false):
 		return false
+	if not _assert_town_footprint_profile(shell, town_presentation):
+		return false
 	var terrain_presentation: Dictionary = town_presentation.get("terrain_presentation", {})
 	if String(terrain_presentation.get("rendering_mode", "")) != "original_quiet_tile_bank" or bool(terrain_presentation.get("uses_sampled_texture", true)) or bool(terrain_presentation.get("generated_source_primary", true)) or not bool(terrain_presentation.get("uses_original_tile_bank", false)):
 		_fail("Ninefold smoke: large-map starting terrain is not using the original quiet terrain tile bank: %s." % town_presentation)
@@ -187,6 +189,23 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if int(readability.get("footprint_width_tiles", 0)) <= 0 or int(readability.get("footprint_height_tiles", 0)) <= 0:
 		_fail("Ninefold smoke: large-map %s marker does not expose footprint dimensions: %s." % [expected_kind, presentation])
 		return false
+	if expected_kind == "town":
+		if int(readability.get("footprint_width_tiles", 0)) != 3 or int(readability.get("footprint_height_tiles", 0)) != 2:
+			_fail("Ninefold smoke: large-map town marker must present as a 3x2 footprint: %s." % presentation)
+			return false
+		var town_presentation: Dictionary = presentation.get("town_presentation", {})
+		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "town_3x2_footprint_bottom_middle_entry":
+			_fail("Ninefold smoke: large-map town metadata does not expose the 3x2 presentation model: %s." % presentation)
+			return false
+		if String(town_presentation.get("entry_role", "")) != "bottom_middle_visit_approach" or not bool(town_presentation.get("entry_is_visit_tile", false)):
+			_fail("Ninefold smoke: large-map town does not expose the bottom-middle visit approach tile: %s." % presentation)
+			return false
+		if not bool(town_presentation.get("is_entry_tile", false)) or String(town_presentation.get("tile_role", "")) != "bottom_middle_visit_approach":
+			_fail("Ninefold smoke: large-map starting town tile is not reported as the entry approach: %s." % presentation)
+			return false
+		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or not bool(town_presentation.get("entry_apron_cue", false)) or not bool(town_presentation.get("gate_cue", false)):
+			_fail("Ninefold smoke: large-map town lacks blocked non-entry metadata or entry apron/gate cues: %s." % presentation)
+			return false
 	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < 0.60 or float(readability.get("footprint_anchor_height_fraction", 0.0)) < 0.20:
 		_fail("Ninefold smoke: large-map %s footprint anchor is too small for object-first tactical framing: %s." % [expected_kind, presentation])
 		return false
@@ -204,6 +223,48 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		if bool(readability.get("memory_echo", false)) or float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or float(readability.get("grid_alpha", 1.0)) > 0.42:
 			_fail("Ninefold smoke: visible large-map %s marker grounding or map contrast regressed: %s." % [expected_kind, presentation])
 			return false
+	return true
+
+func _assert_town_footprint_profile(shell: Node, entry_presentation: Dictionary) -> bool:
+	var profiles: Array = shell.call("validation_town_presentation_profiles")
+	var matching_profile := {}
+	for profile_value in profiles:
+		if not (profile_value is Dictionary):
+			continue
+		var profile: Dictionary = profile_value
+		if String(profile.get("town_placement_id", "")) == "ninefold_embercourt_survey_camp":
+			matching_profile = profile
+			break
+	if matching_profile.is_empty():
+		_fail("Ninefold smoke: town presentation profiles did not include the starting survey camp: %s." % profiles)
+		return false
+	if int(matching_profile.get("footprint_width_tiles", 0)) != 3 or int(matching_profile.get("footprint_height_tiles", 0)) != 2:
+		_fail("Ninefold smoke: starting town profile is not a 3x2 footprint: %s." % matching_profile)
+		return false
+	if int(matching_profile.get("blocked_footprint_cell_count", 0)) != 5 or int(matching_profile.get("off_map_footprint_cell_count", 0)) != 0:
+		_fail("Ninefold smoke: in-bounds starting town should expose five blocked non-entry footprint cells: %s." % matching_profile)
+		return false
+	var entry_tile: Dictionary = matching_profile.get("entry_tile", {})
+	if int(entry_tile.get("x", -1)) != 23 or int(entry_tile.get("y", -1)) != 26:
+		_fail("Ninefold smoke: starting town entry tile moved away from the actual visit tile: %s." % matching_profile)
+		return false
+	var blocked_cells: Array = matching_profile.get("blocked_footprint_cells", [])
+	if blocked_cells.is_empty():
+		_fail("Ninefold smoke: starting town profile did not expose blocked non-entry cells: %s." % matching_profile)
+		return false
+	var first_blocked: Dictionary = blocked_cells[0]
+	var blocked_presentation: Dictionary = shell.call("validation_tile_presentation", int(first_blocked.get("x", -1)), int(first_blocked.get("y", -1)))
+	var blocked_town: Dictionary = blocked_presentation.get("town_presentation", {})
+	if not bool(blocked_presentation.get("has_town_non_entry", false)) or bool(blocked_town.get("is_visit_tile", true)):
+		_fail("Ninefold smoke: blocked town footprint tile did not read as non-entry: cell=%s presentation=%s." % [first_blocked, blocked_presentation])
+		return false
+	if not bool(blocked_town.get("presentation_blocked", false)) or String(blocked_town.get("tile_role", "")) != "blocked_non_entry_footprint":
+		_fail("Ninefold smoke: blocked town footprint tile is not presentation-blocked: cell=%s presentation=%s." % [first_blocked, blocked_presentation])
+		return false
+	var entry_town: Dictionary = entry_presentation.get("town_presentation", {})
+	if int(entry_town.get("blocked_footprint_cell_count", 0)) != 5:
+		_fail("Ninefold smoke: entry tile did not expose the complete blocked-cell footprint: %s." % entry_presentation)
+		return false
 	return true
 
 func _assert_upper_mass_backdrop(readability: Dictionary, label: String) -> bool:

@@ -4598,6 +4598,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(object_rendering.get("base_occlusion", "")) == "foreground_base_occlusion_pads", errors, "Overworld object rendering must document foreground base occlusion pads")
         ensure(str(object_rendering.get("mapped_sprite_settlement", "")) == "footprint_scaled_sprite_with_ground_lip", errors, "Overworld object rendering must document settled sprite grounding")
         ensure(str(object_rendering.get("fallback_silhouette", "")) == "family_specific_procedural_world_object", errors, "Overworld object rendering must document family-specific procedural fallback silhouettes")
+        ensure(str(object_rendering.get("town_footprint", "")) == "town_3x2_footprint_bottom_middle_entry", errors, "Overworld object rendering must document the 3x2 town footprint and bottom-middle entry model")
+        ensure(str(object_rendering.get("town_entry_role", "")) == "bottom_middle_visit_approach", errors, "Overworld object rendering must document the town bottom-middle visit approach role")
+        ensure(str(object_rendering.get("town_non_entry_tiles", "")) == "blocked_non_entry_footprint", errors, "Overworld object rendering must document non-entry town footprint cells as blocked")
 
     map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -4615,6 +4618,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _draw_road_overlay_art",
         "func _draw_object_sprite",
         "func _draw_town_sprite",
+        "func _draw_town_entry_approach",
+        "func _draw_town_footprint_underlay",
+        "func validation_town_presentation_profiles",
         "func _draw_encounter_sprite",
         "func _resource_asset_id",
         "town_default_sprite",
@@ -4650,8 +4656,20 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"road_shape_model"',
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_ground_anchor",
+        "TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",
+        "TOWN_ENTRY_OFFSET := Vector2i(1, 1)",
+        "town_3x2_footprint_bottom_middle_entry",
+        "bottom_middle_visit_approach",
+        "blocked_non_entry_footprint",
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing overworld art token {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '"town_presentation_profiles"',
+        "func validation_town_presentation_profiles",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing town-footprint validation token {required_token}")
 
 
 def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:

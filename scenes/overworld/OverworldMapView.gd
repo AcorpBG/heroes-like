@@ -68,6 +68,11 @@ const OBJECT_PLACEMENT_BED_MODEL := "footprint_terrain_quieting_bed"
 const OBJECT_UPPER_BACKDROP_MODEL := "family_scaled_rear_backdrop_wash"
 const OBJECT_VERTICAL_MASS_SHADOW_MODEL := "subtle_vertical_mass_shadow"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
+const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
+const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
+const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
+const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
+const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
@@ -248,6 +253,12 @@ func _draw() -> void:
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			_draw_tile_background(tile, rect)
+
+	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
+		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
+			var tile = Vector2i(x, y)
+			var rect = _tile_rect(board_rect, tile)
+			_draw_town_footprint_underlay(tile, rect)
 
 	_draw_route(board_rect)
 
@@ -518,8 +529,9 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	var remembered := not visible
 
 	if _has_town_at(tile):
-		if not _draw_town_sprite(rect, remembered, tile):
-			_draw_town_marker(rect, _town_color(tile), remembered, tile)
+		var footprint_rect := _town_footprint_rect_for_entry(tile)
+		if not _draw_town_sprite(footprint_rect, rect, remembered, tile):
+			_draw_town_marker(footprint_rect, rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
 		if not _draw_resource_sprite(resource_node, rect, remembered, tile):
@@ -542,10 +554,11 @@ func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 		return false
 	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile(), tile)
 
-func _draw_town_sprite(rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if not _draw_object_sprite(_town_default_asset_id, rect, remembered, _town_object_profile(), tile):
 		return false
 	_draw_town_owner_pennant(rect, _town_color(tile), remembered)
+	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
 	return true
 
 func _draw_encounter_sprite(rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
@@ -586,8 +599,8 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> vo
 	draw_colored_polygon(flag, flag_color)
 	draw_polyline(PackedVector2Array([flag[0], flag[1], flag[2], flag[0]]), outline_color, maxf(1.0, extent * 0.014))
 
-func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
-	var footprint := Vector2i(2, 2)
+func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
+	var footprint := _object_profile_footprint(_town_object_profile())
 	var anchor := _draw_marker_plate(rect, remembered, 0.38, footprint, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var outline_width := maxf(2.2, extent * 0.036)
@@ -620,7 +633,76 @@ func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false, tile
 		flag_start + rect.size * Vector2(0.00, 0.11),
 	])
 	draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
+	_draw_town_entry_approach(entry_rect, color, remembered)
 	_draw_foreground_occlusion_lip(anchor, remembered)
+
+func _draw_town_footprint_underlay(tile: Vector2i, rect: Rect2) -> void:
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		return
+	var profile := _town_presentation_at(tile)
+	if profile.is_empty():
+		return
+	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var remembered := not visible
+	var town: Dictionary = profile.get("town", {})
+	var color := _town_owner_color(town)
+	var extent := minf(rect.size.x, rect.size.y)
+	var role := String(profile.get("tile_role", ""))
+	var base_alpha := 0.16 if role == TOWN_NON_ENTRY_ROLE else 0.10
+	if remembered:
+		base_alpha *= 0.86
+	var base_color := _remembered_marker_color(color) if remembered else color
+	var center := rect.get_center()
+	var radii := Vector2(rect.size.x * 0.46, rect.size.y * 0.34)
+	draw_colored_polygon(
+		_placement_bed_points(tile, center + Vector2(0.0, rect.size.y * 0.12), radii, TOWN_PRESENTATION_FOOTPRINT, 18),
+		Color(base_color.r, base_color.g, base_color.b, base_alpha)
+	)
+	if role != TOWN_NON_ENTRY_ROLE:
+		return
+	var wall_color := Color(0.10, 0.075, 0.045, 0.34 if not remembered else 0.24)
+	var edge_color := Color(base_color.r, base_color.g, base_color.b, 0.44 if not remembered else 0.36)
+	var y_mid := rect.position.y + rect.size.y * 0.58
+	draw_line(
+		Vector2(rect.position.x + rect.size.x * 0.18, y_mid),
+		Vector2(rect.end.x - rect.size.x * 0.18, y_mid),
+		wall_color,
+		maxf(2.0, extent * 0.040)
+	)
+	draw_line(
+		Vector2(rect.position.x + rect.size.x * 0.28, y_mid - rect.size.y * 0.12),
+		Vector2(rect.position.x + rect.size.x * 0.40, y_mid + rect.size.y * 0.10),
+		edge_color,
+		maxf(1.4, extent * 0.022)
+	)
+	draw_line(
+		Vector2(rect.end.x - rect.size.x * 0.28, y_mid - rect.size.y * 0.12),
+		Vector2(rect.end.x - rect.size.x * 0.40, y_mid + rect.size.y * 0.10),
+		edge_color,
+		maxf(1.4, extent * 0.022)
+	)
+
+func _draw_town_entry_approach(rect: Rect2, color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	if extent <= 0.0:
+		return
+	var path_color := Color(0.72, 0.57, 0.33, 0.54 if not remembered else 0.40)
+	var edge_color := Color(0.16, 0.11, 0.06, 0.48 if not remembered else 0.34)
+	var cue_color := _remembered_marker_color(color) if remembered else color
+	var apron := PackedVector2Array([
+		rect.position + rect.size * Vector2(0.39, 0.66),
+		rect.position + rect.size * Vector2(0.61, 0.66),
+		rect.position + rect.size * Vector2(0.76, 0.95),
+		rect.position + rect.size * Vector2(0.24, 0.95),
+	])
+	draw_colored_polygon(apron, path_color)
+	draw_polyline(PackedVector2Array([apron[0], apron[1], apron[2], apron[3], apron[0]]), edge_color, maxf(1.4, extent * 0.020))
+	var gate_left := rect.position + rect.size * Vector2(0.43, 0.61)
+	var gate_right := rect.position + rect.size * Vector2(0.57, 0.61)
+	var gate_bottom := rect.position + rect.size * Vector2(0.50, 0.73)
+	draw_line(gate_left, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.56 if not remembered else 0.44), maxf(1.8, extent * 0.024))
+	draw_line(gate_right, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.56 if not remembered else 0.44), maxf(1.8, extent * 0.024))
+	draw_circle(rect.position + rect.size * Vector2(0.50, 0.70), maxf(1.8, extent * 0.034), Color(0.96, 0.86, 0.52, 0.36 if not remembered else 0.26))
 
 func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var profile := _resource_object_profile(node)
@@ -1389,6 +1471,8 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	var has_rememberable_encounter := explored and _has_rememberable_encounter_at(tile)
 	var has_visible_encounter := visible and _has_encounter_at(tile)
 	var has_visible_hero := visible and _has_hero_at(tile)
+	var town_presentation := _town_presentation_payload(tile, explored, visible)
+	var has_town_footprint := bool(town_presentation.get("has_town_footprint", false))
 	var object_kinds := []
 	if has_town:
 		object_kinds.append("town")
@@ -1399,7 +1483,7 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 	if has_visible_encounter or has_rememberable_encounter:
 		object_kinds.append("encounter")
 	var remembered_object := explored and not visible and (
-		has_town or has_resource or has_artifact or has_rememberable_encounter
+		has_town or has_resource or has_artifact or has_rememberable_encounter or has_town_footprint
 	)
 	return {
 		"x": tile.x,
@@ -1413,12 +1497,120 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"has_rememberable_encounter": has_rememberable_encounter,
 		"has_visible_encounter": has_visible_encounter,
 		"has_visible_hero": has_visible_hero,
-		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_visible_encounter)) or remembered_object,
+		"has_town_footprint": has_town_footprint,
+		"has_town_entry": bool(town_presentation.get("is_entry_tile", false)),
+		"has_town_non_entry": has_town_footprint and not bool(town_presentation.get("is_entry_tile", false)),
+		"draws_discoverable_object": (visible and (has_town or has_resource or has_artifact or has_visible_encounter or has_town_footprint)) or remembered_object,
 		"draws_remembered_object": remembered_object,
 		"terrain_presentation": _terrain_visual_payload(tile, explored, visible),
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
 		"art_presentation": _object_art_payload(tile, explored, visible, object_kinds),
+		"town_presentation": town_presentation,
 	}
+
+func validation_town_presentation_profiles() -> Array:
+	var profiles := []
+	if _session == null:
+		return profiles
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		profiles.append(_town_presentation_payload_for_town(town, true))
+	return profiles
+
+func _town_presentation_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:
+	if not explored:
+		return {
+			"has_town_footprint": false,
+			"presentation_model": "",
+			"tile_role": "",
+			"is_entry_tile": false,
+			"is_visit_tile": false,
+			"presentation_blocked": false,
+			"non_entry_tiles_blocked": false,
+		}
+	var presentation := _town_presentation_at(tile)
+	if presentation.is_empty():
+		return {
+			"has_town_footprint": false,
+			"presentation_model": "",
+			"tile_role": "",
+			"is_entry_tile": false,
+			"is_visit_tile": false,
+			"presentation_blocked": false,
+			"non_entry_tiles_blocked": false,
+		}
+	var town: Dictionary = presentation.get("town", {})
+	var payload := _town_presentation_payload_for_town(town, true)
+	payload["visible"] = visible
+	payload["remembered"] = not visible
+	payload["tile"] = {"x": tile.x, "y": tile.y}
+	var cell_offset: Vector2i = presentation.get("cell_offset", Vector2i.ZERO)
+	payload["cell_offset"] = {"x": cell_offset.x, "y": cell_offset.y}
+	payload["tile_role"] = String(presentation.get("tile_role", ""))
+	payload["is_entry_tile"] = bool(presentation.get("is_entry_tile", false))
+	payload["is_visit_tile"] = bool(presentation.get("is_entry_tile", false))
+	payload["presentation_blocked"] = bool(presentation.get("presentation_blocked", false))
+	payload["entry_apron_cue"] = bool(presentation.get("is_entry_tile", false))
+	payload["gate_cue"] = bool(presentation.get("is_entry_tile", false))
+	return payload
+
+func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) -> Dictionary:
+	var entry := _town_entry_tile(town)
+	var origin := _town_footprint_origin_for_entry(entry)
+	var cells := _town_footprint_cell_payloads(entry) if include_cells else []
+	var blocked_cells := []
+	var off_map_cells := 0
+	for cell_value in cells:
+		if not (cell_value is Dictionary):
+			continue
+		var cell: Dictionary = cell_value
+		if bool(cell.get("is_entry_tile", false)):
+			continue
+		if not bool(cell.get("in_bounds", false)):
+			off_map_cells += 1
+			continue
+		blocked_cells.append(cell)
+	return {
+		"has_town_footprint": true,
+		"presentation_model": TOWN_PRESENTATION_MODEL,
+		"footprint_width_tiles": TOWN_PRESENTATION_FOOTPRINT.x,
+		"footprint_height_tiles": TOWN_PRESENTATION_FOOTPRINT.y,
+		"entry_role": TOWN_ENTRY_ROLE,
+		"entry_offset": {"x": TOWN_ENTRY_OFFSET.x, "y": TOWN_ENTRY_OFFSET.y},
+		"entry_tile": {"x": entry.x, "y": entry.y},
+		"origin_tile": {"x": origin.x, "y": origin.y},
+		"entry_is_visit_tile": true,
+		"non_entry_tiles_blocked": true,
+		"presentation_passability": "entry_only",
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"owner": String(town.get("owner", "neutral")),
+		"footprint_cells": cells,
+		"blocked_footprint_cells": blocked_cells,
+		"blocked_footprint_cell_count": blocked_cells.size(),
+		"off_map_footprint_cell_count": off_map_cells,
+	}
+
+func _town_footprint_cell_payloads(entry: Vector2i) -> Array:
+	var cells := []
+	var origin := _town_footprint_origin_for_entry(entry)
+	for y_offset in range(TOWN_PRESENTATION_FOOTPRINT.y):
+		for x_offset in range(TOWN_PRESENTATION_FOOTPRINT.x):
+			var tile := origin + Vector2i(x_offset, y_offset)
+			var is_entry := tile == entry
+			cells.append({
+				"x": tile.x,
+				"y": tile.y,
+				"offset_x": x_offset,
+				"offset_y": y_offset,
+				"in_bounds": tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y,
+				"is_entry_tile": is_entry,
+				"tile_role": TOWN_ENTRY_ROLE if is_entry else TOWN_NON_ENTRY_ROLE,
+				"presentation_blocked": not is_entry,
+			})
+	return cells
 
 func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:
 	if not explored:
@@ -2163,7 +2355,21 @@ func _artifact_object_profile() -> Dictionary:
 	return _default_object_profile("artifact", Vector2i(1, 1))
 
 func _town_object_profile() -> Dictionary:
-	return _default_object_profile("town", Vector2i(2, 2))
+	return {
+		"id": "default_town_world_object",
+		"family": "town",
+		"footprint": TOWN_PRESENTATION_FOOTPRINT,
+		"presentation_model": TOWN_PRESENTATION_MODEL,
+		"entry_role": TOWN_ENTRY_ROLE,
+		"entry_offset": {"x": TOWN_ENTRY_OFFSET.x, "y": TOWN_ENTRY_OFFSET.y},
+		"entry_is_visit_tile": true,
+		"presentation_passability": "entry_only",
+		"entry_tile_passable": true,
+		"non_entry_tiles_blocked": true,
+		"passable": false,
+		"visitable": true,
+		"map_roles": ["town", "visit_approach", "large_world_object"],
+	}
 
 func _encounter_object_profile() -> Dictionary:
 	return _default_object_profile("encounter", Vector2i(1, 1))
@@ -2230,6 +2436,9 @@ func _town_at(tile: Vector2i) -> Dictionary:
 
 func _town_color(tile: Vector2i) -> Color:
 	var town = _town_at(tile)
+	return _town_owner_color(town)
+
+func _town_owner_color(town: Dictionary) -> Color:
 	match String(town.get("owner", "neutral")):
 		"player":
 			return PLAYER_TOWN_COLOR
@@ -2237,6 +2446,73 @@ func _town_color(tile: Vector2i) -> Color:
 			return ENEMY_TOWN_COLOR
 		_:
 			return NEUTRAL_TOWN_COLOR
+
+func _town_presentation_at(tile: Vector2i) -> Dictionary:
+	if _session == null:
+		return {}
+	for town_value in _session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var entry := _town_entry_tile(town)
+		var origin := _town_footprint_origin_for_entry(entry)
+		var footprint := TOWN_PRESENTATION_FOOTPRINT
+		if tile.x < origin.x or tile.y < origin.y or tile.x >= origin.x + footprint.x or tile.y >= origin.y + footprint.y:
+			continue
+		var is_entry := tile == entry
+		return {
+			"town": town,
+			"entry_tile": entry,
+			"origin_tile": origin,
+			"cell_offset": tile - origin,
+			"is_entry_tile": is_entry,
+			"tile_role": TOWN_ENTRY_ROLE if is_entry else TOWN_NON_ENTRY_ROLE,
+			"presentation_blocked": not is_entry,
+		}
+	return {}
+
+func _town_entry_tile(town: Dictionary) -> Vector2i:
+	return Vector2i(int(town.get("x", -1)), int(town.get("y", -1)))
+
+func _town_footprint_origin_for_entry(entry: Vector2i) -> Vector2i:
+	return entry - TOWN_ENTRY_OFFSET
+
+func _town_footprint_rect_for_entry(entry: Vector2i) -> Rect2:
+	var cells := _town_in_bounds_footprint_cells_for_entry(entry)
+	if cells.is_empty():
+		return _tile_rect(_board_rect(), entry)
+	var min_x := entry.x
+	var min_y := entry.y
+	var max_x := entry.x
+	var max_y := entry.y
+	for cell_value in cells:
+		var cell: Vector2i = cell_value
+		min_x = mini(min_x, cell.x)
+		min_y = mini(min_y, cell.y)
+		max_x = maxi(max_x, cell.x)
+		max_y = maxi(max_y, cell.y)
+	var board_rect := _board_rect()
+	var start_rect := _tile_rect(board_rect, Vector2i(min_x, min_y))
+	var end_rect := _tile_rect(board_rect, Vector2i(max_x, max_y))
+	return Rect2(start_rect.position, end_rect.end - start_rect.position)
+
+func _town_in_bounds_footprint_cells_for_entry(entry: Vector2i) -> Array:
+	var cells := []
+	for cell in _town_footprint_cells_for_entry(entry):
+		if not (cell is Vector2i):
+			continue
+		if cell.x < 0 or cell.y < 0 or cell.x >= _map_size.x or cell.y >= _map_size.y:
+			continue
+		cells.append(cell)
+	return cells
+
+func _town_footprint_cells_for_entry(entry: Vector2i) -> Array:
+	var cells := []
+	var origin := _town_footprint_origin_for_entry(entry)
+	for y_offset in range(TOWN_PRESENTATION_FOOTPRINT.y):
+		for x_offset in range(TOWN_PRESENTATION_FOOTPRINT.x):
+			cells.append(origin + Vector2i(x_offset, y_offset))
+	return cells
 
 func _has_resource_at(tile: Vector2i) -> bool:
 	return not _resource_node_at(tile).is_empty()

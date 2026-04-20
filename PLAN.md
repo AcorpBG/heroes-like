@@ -468,6 +468,33 @@ Limits:
 - The generated candidates are approved as first placeholder source only; manual live-client review is still needed before treating the overworld object art direction as polished.
 - Town and encounter sprites remain presentation only; movement, blocking, visit targets, fog, save data, and battle/object logic are unchanged.
 
+## Current Implementation Slice: Overworld Town Footprint Presentation
+Status: completed on 2026-04-20 as a narrow presentation-first readability slice.
+
+Purpose:
+- Make overworld towns present as the intended larger world object footprint instead of a compact 2x2-ish marker.
+- Keep the existing town coordinate truthful as the actual visit approach tile while exposing the intended 3x2 presentation footprint around it.
+- Avoid pretending the current movement/pathing model supports true multi-tile occupancy.
+
+Implemented:
+- Changed the town presentation profile in `OverworldMapView` from a 2x2 scale hint to a 3x2 world-object profile.
+- Defined the existing town coordinate as the bottom-row middle `bottom_middle_visit_approach` tile for presentation and validation.
+- Added a subtle gate/apron cue on the approach tile, with the town sprite rendered against the larger footprint rect where the footprint is in bounds.
+- Added footprint underlay cues so non-entry town footprint cells read as blocked/non-entry in the presentation model.
+- Exposed town footprint metadata through tile presentation snapshots and `town_presentation_profiles`, including entry tile, origin, footprint cells, blocked non-entry cells, and off-map clipped cells.
+- Extended repo validation plus River Pass and Ninefold smokes to guard the 3x2 town footprint, bottom-middle entry role, blocked non-entry metadata, and large-map in-bounds footprint profile.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a core movement, pathfinding, save-schema, town-entry, or true multi-tile occupancy slice.
+- Non-entry footprint tiles are blocked only in the presentation/validation model. The underlying overworld rules still treat towns as single-tile interactions until a future occupancy/pathing slice is designed.
+- Edge-placed legacy towns can have off-map clipped presentation cells; the validation metadata reports those honestly instead of moving scenario towns inside this slice.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
