@@ -4399,6 +4399,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         TERRAIN_GRAMMAR_PATH,
         TERRAIN_LAYERS_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        ROOT / "tools" / "build_overworld_terrain_tiles.py",
         ROOT / "art" / "overworld" / "source" / "manifest" / "generated-overworld-assets-20260419.json",
     )
     for path in required_paths:
@@ -4422,6 +4423,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("model", "")) == "authored_autotile_layers", errors, "Overworld terrain rendering must use the authored autotile layer model")
         ensure(str(terrain_rendering.get("grammar", "")) == "res://content/terrain_grammar.json", errors, "Overworld terrain rendering must point at content/terrain_grammar.json")
         ensure(str(terrain_rendering.get("terrain_layers", "")) == "res://content/terrain_layers.json", errors, "Overworld terrain rendering must point at content/terrain_layers.json")
+        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the first authored terrain tile-art root")
+        ensure(str(terrain_rendering.get("tile_art_status", "")) == "first_authored_tile_art_slice", errors, "Overworld terrain rendering must record the first authored tile-art slice status")
+        authored_tile_sets = terrain_rendering.get("authored_tile_sets", [])
+        ensure(isinstance(authored_tile_sets, list) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, authored_tile_sets))) and "road_dirt" in set(map(str, authored_tile_sets)), errors, "Overworld terrain rendering must list the first authored terrain and road tile sets")
         ensure(str(terrain_rendering.get("sampled_texture_status", "")) == "deprecated_not_primary", errors, "Overworld sampled terrain textures must be marked deprecated_not_primary")
     if not isinstance(object_assets, dict) or not isinstance(site_sprites, dict):
         return
@@ -4447,6 +4452,31 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(isinstance(supports, list) and "edge_transitions" in supports, errors, f"Terrain grammar {terrain_id} must support edge_transitions")
             if isinstance(supports, list) and "road_overlay" in supports:
                 road_enabled_terrain_ids.add(terrain_id)
+            if terrain_id in TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS:
+                ensure(isinstance(supports, list) and "authored_tile_art" in supports, errors, f"Terrain grammar {terrain_id} must mark authored_tile_art support")
+                tile_art = terrain_class.get("tile_art", {})
+                ensure(isinstance(tile_art, dict), errors, f"Terrain grammar {terrain_id} must define tile_art")
+                if isinstance(tile_art, dict):
+                    base_tiles = tile_art.get("base_tiles", [])
+                    ensure(isinstance(base_tiles, list) and len(base_tiles) >= 3, errors, f"Terrain grammar {terrain_id} must define at least three authored base tile variants")
+                    if isinstance(base_tiles, list):
+                        for entry in base_tiles:
+                            ensure(isinstance(entry, dict), errors, f"Terrain grammar {terrain_id} contains a non-dictionary base tile art entry")
+                            if not isinstance(entry, dict):
+                                continue
+                            ensure(str(entry.get("variant_key", "")) != "", errors, f"Terrain grammar {terrain_id} base tile art must define variant_key")
+                            art_path = res_path_to_disk(str(entry.get("path", "")))
+                            ensure(art_path.exists(), errors, f"Terrain grammar {terrain_id} base tile art references missing texture {entry.get('path')}")
+                            if art_path.exists():
+                                ensure(png_size(art_path) == (64, 64), errors, f"Terrain grammar {terrain_id} base tile art must be 64x64 PNG, found {png_size(art_path)} at {entry.get('path')}")
+                    edge_overlays = tile_art.get("edge_overlays", {})
+                    ensure(isinstance(edge_overlays, dict), errors, f"Terrain grammar {terrain_id} must define edge_overlays")
+                    if isinstance(edge_overlays, dict):
+                        for direction in ("N", "E", "S", "W"):
+                            art_path = res_path_to_disk(str(edge_overlays.get(direction, "")))
+                            ensure(art_path.exists(), errors, f"Terrain grammar {terrain_id} edge overlay {direction} references missing texture {edge_overlays.get(direction)}")
+                            if art_path.exists():
+                                ensure(png_size(art_path) == (64, 64), errors, f"Terrain grammar {terrain_id} edge overlay {direction} must be 64x64 PNG, found {png_size(art_path)}")
     ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(terrain_class_ids), errors, "Terrain grammar must author the first readable terrain slice: grass/plains, forest, mire/swamp, and hills/ridge/highland")
     ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(road_enabled_terrain_ids), errors, "First terrain slice ids must support structural road overlays")
     overlay_ids: set[str] = set()
@@ -4459,6 +4489,24 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             overlay_ids.add(overlay_id)
             ensure(str(overlay.get("layer", "")) == "road", errors, f"Terrain overlay {overlay_id} must use the road layer")
             ensure(float(overlay.get("width_fraction", 0.0)) > 0.0, errors, f"Terrain overlay {overlay_id} must define width_fraction > 0")
+            if overlay_id == "road_dirt":
+                supports = overlay.get("supports", [])
+                ensure(isinstance(supports, list) and "authored_tile_art" in supports, errors, "Terrain overlay road_dirt must mark authored_tile_art support")
+                tile_art = overlay.get("tile_art", {})
+                ensure(isinstance(tile_art, dict), errors, "Terrain overlay road_dirt must define tile_art")
+                if isinstance(tile_art, dict):
+                    center_path = res_path_to_disk(str(tile_art.get("center", "")))
+                    ensure(center_path.exists(), errors, f"Terrain overlay road_dirt center art references missing texture {tile_art.get('center')}")
+                    if center_path.exists():
+                        ensure(png_size(center_path) == (64, 64), errors, "Terrain overlay road_dirt center art must be a 64x64 PNG")
+                    connectors = tile_art.get("connectors", {})
+                    ensure(isinstance(connectors, dict), errors, "Terrain overlay road_dirt must define connector art")
+                    if isinstance(connectors, dict):
+                        for direction in ("N", "E", "S", "W", "NE", "SE", "SW", "NW"):
+                            art_path = res_path_to_disk(str(connectors.get(direction, "")))
+                            ensure(art_path.exists(), errors, f"Terrain overlay road_dirt connector {direction} references missing texture {connectors.get(direction)}")
+                            if art_path.exists():
+                                ensure(png_size(art_path) == (64, 64), errors, f"Terrain overlay road_dirt connector {direction} must be a 64x64 PNG")
     ensure("road_dirt" in overlay_ids, errors, "Terrain grammar must define the road_dirt structural road overlay")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
@@ -4529,16 +4577,23 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "OVERWORLD_ART_MANIFEST_PATH",
         "TERRAIN_GRAMMAR_PATH",
         "TERRAIN_GRAMMAR_RENDERING_MODE",
+        "TERRAIN_TILE_ART_RENDERING_MODE",
         "func _load_terrain_grammar",
+        "func _draw_terrain_tile_art",
         "func _load_overworld_art_manifest",
         "func _draw_authored_terrain_pattern",
         "func _draw_terrain_transitions",
         "func _draw_road_overlay",
+        "func _draw_road_overlay_art",
         "func _draw_object_sprite",
         "func _resource_asset_id",
         '"authored_autotile_layers"',
+        '"authored_tile_art_layers"',
         '"uses_sampled_texture"',
+        '"uses_authored_tile_art"',
+        '"edge_transition_art_loaded"',
         '"road_overlay"',
+        '"road_overlay_art"',
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_memory_plate",
     ):

@@ -152,6 +152,10 @@ Implementation note date: 2026-04-20
 
 The overworld terrain presentation no longer treats generated per-tile sampled painterly textures as the primary terrain model. The first replacement slice adds `content/terrain_grammar.json` and `content/terrain_layers.json` as the authored boundary for readable base terrain, biome/edge transition metadata, and structural road overlays. `OverworldMapView` now renders grammar-driven terrain fills, deterministic strategic detail patterns, edge-transition masks, and road connectors; existing object sprite mappings and procedural object fallbacks remain active. This is an autotile-ready foundation and first readable placeholder presentation, not final terrain art or a movement-cost/pathfinding rewrite.
 
+Implementation note date: 2026-04-20
+
+The first real authored overworld terrain tile-art slice now sits on top of that grammar boundary. `art/overworld/runtime/terrain_tiles/` contains checked-in 64x64 PNG base tile variants for grass/plains, forest, mire/swamp, and hills/ridge/highland, plus directional biome-edge overlays and structural dirt-road connector pieces. `content/terrain_grammar.json` references those assets, and `OverworldMapView` loads and draws the tile-art pieces first while retaining grammar color/pattern and procedural road fallbacks for unsliced terrain or missing assets. This is still a narrow first art slice: water/coast, badlands, ash/lava, snow/frost, cavern/underway, object footprints, and road movement rules remain future work.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
