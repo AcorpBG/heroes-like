@@ -180,6 +180,10 @@ Implementation note date: 2026-04-20
 
 The active-hero overworld presence has been corrected without rolling back the shared object renderer. `OverworldMapView` now draws the visible hero through a hero-specific placed-figure path with compact foot-contact shadow, boot-level occlusion, terrain scuffs, and the existing tile focus/selection ring for clarity, rather than using the shared filled footprint bed, base ellipse, marker ring, or upper-mass backdrop. This is a visual/presentation correction only: hero movement, pathing, fog, save/load, battle routing, town logic, hero rules, and object rendering for non-hero families are unchanged.
 
+Implementation note date: 2026-04-20
+
+The AcOrP-priority base terrain and road correction keeps `original_quiet_tile_bank`, authored autotile layers, runtime 64x64 PNGs, jagged edge overlays, and structural `road_dirt` overlays as the active contract, but rebuilds the covered original terrain bank with deterministic multi-scale ground grain and more visible terrain-specific detail. The road overlay PNGs are now softer rutted dirt beds with muted earth colors, organic center masks, grit, rut lines, and slight connector wobble so road tiles read less like stamped bright UI strokes. This is a presentation/art-pipeline correction for grass/plains, forest, mire/swamp, hills/ridge/highland, and dirt-road overlays only: pathing, fog, save/load, object logic, town/hero/site presentation, road movement costs, and unsliced terrain families are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

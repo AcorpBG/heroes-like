@@ -5,7 +5,7 @@
   "primary_base_model": "original_quiet_tile_bank",
   "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
   "tile_size_reference": 64,
-  "summary": "Author-facing overworld terrain grammar. The covered terrain slice now uses original quiet 64x64 biome base variants, jagged directional biome-edge overlays, and structural dirt-road connector pieces built from local procedural palettes. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
+  "summary": "Author-facing overworld terrain grammar. The covered terrain slice now uses original quiet 64x64 biome base variants with stronger map-scale ground grain, jagged directional biome-edge overlays, and softened rutted dirt-road connector pieces built from local procedural palettes. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
   "transition_rules": {
     "cardinal_edges": true,
     "corner_hints": true,
@@ -413,7 +413,7 @@
       "shadow_color": "#2a2118",
       "center_color": "#d1b777",
       "width_fraction": 0.14,
-      "readability_role": "primary movement lane",
+      "readability_role": "soft rutted movement lane",
       "supports": ["authored_tile_art", "cardinal_connectors", "diagonal_connectors", "autotile_edge_caps"],
       "tile_art": {
         "center": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_center.png",

@@ -5,13 +5,14 @@ The runtime renderer consumes 64x64 base, edge, and road overlay PNGs. This
 builder intentionally does not sample the generated terrain source sheets:
 those proved too painterly and seam-prone as a per-cell base. The assets here
 are local procedural placeholders shaped around the terrain grammar:
-restrained biome palettes, low-noise base variants, jagged transition pieces,
-and structural road connector overlays.
+restrained biome palettes, quiet multi-scale base variants, jagged transition
+pieces, and softened rutted structural road connector overlays.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 import random
 from pathlib import Path
 
@@ -113,6 +114,45 @@ def jitter(color: tuple[int, int, int], amount: int, rng: random.Random) -> tupl
     return tuple(clamp_channel(channel + rng.randint(-amount, amount)) for channel in color)
 
 
+def add_rgb(color: tuple[int, int, int], delta: float) -> tuple[int, int, int]:
+    return tuple(clamp_channel(int(round(channel + delta))) for channel in color)
+
+
+def smoothstep(value: float) -> float:
+    clamped = max(0.0, min(1.0, value))
+    return clamped * clamped * (3.0 - (2.0 * clamped))
+
+
+def tileable_noise(size: int, cells: int, seed: int) -> list[float]:
+    rng = random.Random(seed)
+    grid = [[rng.random() for _x in range(cells)] for _y in range(cells)]
+    values: list[float] = []
+    for y in range(size):
+        fy = (float(y) / float(size)) * float(cells)
+        y0 = int(math.floor(fy)) % cells
+        y1 = (y0 + 1) % cells
+        ty = smoothstep(fy - math.floor(fy))
+        for x in range(size):
+            fx = (float(x) / float(size)) * float(cells)
+            x0 = int(math.floor(fx)) % cells
+            x1 = (x0 + 1) % cells
+            tx = smoothstep(fx - math.floor(fx))
+            top = (grid[y0][x0] * (1.0 - tx)) + (grid[y0][x1] * tx)
+            bottom = (grid[y1][x0] * (1.0 - tx)) + (grid[y1][x1] * tx)
+            values.append((top * (1.0 - ty)) + (bottom * ty))
+    return values
+
+
+def terrain_noise_profile(spec: BaseTileSpec) -> list[float]:
+    wide = tileable_noise(SIZE, 4, spec.seed + 17003)
+    mid = tileable_noise(SIZE, 8, spec.seed + 23009)
+    fine = tileable_noise(SIZE, 16, spec.seed + 31013)
+    values: list[float] = []
+    for index in range(SIZE * SIZE):
+        values.append((wide[index] * 0.58) + (mid[index] * 0.30) + (fine[index] * 0.12))
+    return values
+
+
 def save_rgba(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     image.convert("RGBA").save(path)
@@ -122,25 +162,33 @@ def draw_low_noise_ground(spec: BaseTileSpec) -> Image.Image:
     base = hex_rgb(spec.base)
     secondary = hex_rgb(spec.secondary)
     rng = random.Random(spec.seed)
+    macro = terrain_noise_profile(spec)
     pixels: list[tuple[int, int, int, int]] = []
     for y in range(SIZE):
         for x in range(SIZE):
+            index = (y * SIZE) + x
             local = random.Random((spec.seed * 1000003) + (x * 9176) + (y * 6113))
-            amount = 0.04 + (local.random() * 0.08)
+            value = macro[index]
+            amount = 0.08 + (value * 0.34)
             shade = mix(base, secondary, amount)
-            pixels.append((*jitter(shade, 3, local), 255))
+            if value < 0.34:
+                shade = mix(shade, hex_rgb(spec.detail), (0.34 - value) * 0.24)
+            elif value > 0.68:
+                shade = mix(shade, hex_rgb(spec.accent), (value - 0.68) * 0.22)
+            shade = add_rgb(shade, (value - 0.50) * 13.0)
+            pixels.append((*jitter(shade, 2, local), 255))
     image = Image.new("RGBA", (SIZE, SIZE))
     image.putdata(pixels)
     overlay = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     draw = ImageDraw.Draw(overlay, "RGBA")
 
-    for _index in range(5):
+    for _index in range(7):
         cx = rng.randint(8, 56)
         cy = rng.randint(8, 56)
-        rx = rng.randint(14, 28)
-        ry = rng.randint(9, 20)
+        rx = rng.randint(12, 30)
+        ry = rng.randint(8, 22)
         color = mix(hex_rgb(spec.secondary), base, rng.random() * 0.35)
-        alpha = rng.randint(14, 26)
+        alpha = rng.randint(10, 28)
         draw.ellipse((cx - rx, cy - ry, cx + rx, cy + ry), fill=(*color, alpha))
     image.alpha_composite(overlay)
     return image
@@ -154,7 +202,7 @@ def draw_tufts(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileSpec
         y = rng.randint(7, 57)
         length = rng.randint(4, 9)
         color = mix(detail, accent, rng.random() * 0.35)
-        alpha = rng.randint(26, 48)
+        alpha = rng.randint(36, 64)
         draw.line((x, y, x + rng.randint(2, 6), y - length), fill=(*color, alpha), width=1)
         if rng.random() < 0.42:
             draw.line((x + 1, y, x - rng.randint(2, 4), y - max(2, length - 2)), fill=(*color, alpha - 8), width=1)
@@ -166,12 +214,12 @@ def draw_tree_clusters(draw: ImageDraw.ImageDraw, rng: random.Random, spec: Base
     for _index in range(count):
         x = rng.randint(8, 56)
         y = rng.randint(8, 56)
-        radius = rng.randint(4, 8)
+        radius = rng.randint(4, 9)
         color = mix(detail, accent, rng.random() * 0.20)
-        draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(*color, rng.randint(34, 58)))
+        draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(*color, rng.randint(44, 72)))
         if rng.random() < 0.55:
             highlight = mix(color, accent, 0.32)
-            draw.arc((x - radius, y - radius, x + radius, y + radius), 210, 330, fill=(*highlight, 34), width=1)
+            draw.arc((x - radius, y - radius, x + radius, y + radius), 210, 330, fill=(*highlight, 40), width=1)
 
 
 def draw_reed_pools(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileSpec, count: int) -> None:
@@ -183,13 +231,13 @@ def draw_reed_pools(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTil
         y = rng.randint(10, 54)
         rx = rng.randint(5, 11)
         ry = rng.randint(2, 5)
-        draw.ellipse((x - rx, y - ry, x + rx, y + ry), fill=(*water, rng.randint(28, 48)))
+        draw.ellipse((x - rx, y - ry, x + rx, y + ry), fill=(*water, rng.randint(42, 68)))
     for _index in range(count):
         x = rng.randint(7, 57)
         y = rng.randint(10, 57)
         height = rng.randint(5, 12)
         color = mix(detail, accent, rng.random() * 0.42)
-        draw.line((x, y, x + rng.randint(-2, 2), y - height), fill=(*color, rng.randint(28, 52)), width=1)
+        draw.line((x, y, x + rng.randint(-2, 2), y - height), fill=(*color, rng.randint(38, 62)), width=1)
 
 
 def draw_contours(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileSpec, count: int) -> None:
@@ -202,7 +250,7 @@ def draw_contours(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileS
         for step in range(5):
             points.append((x + step * rng.randint(8, 12), y + rng.randint(-6, 6)))
         color = mix(detail, accent, rng.random() * 0.35)
-        draw.line(points, fill=(*color, rng.randint(30, 52)), width=1)
+        draw.line(points, fill=(*color, rng.randint(42, 66)), width=1)
 
 
 def draw_scree(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileSpec, count: int) -> None:
@@ -213,7 +261,20 @@ def draw_scree(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileSpec
         y = rng.randint(7, 57)
         radius = rng.randint(1, 3)
         color = mix(detail, accent, rng.random() * 0.30)
-        draw.rectangle((x - radius, y - radius, x + radius, y + radius), fill=(*color, rng.randint(22, 42)))
+        draw.rectangle((x - radius, y - radius, x + radius, y + radius), fill=(*color, rng.randint(28, 48)))
+
+
+def draw_worn_ground_streaks(draw: ImageDraw.ImageDraw, rng: random.Random, spec: BaseTileSpec, count: int) -> None:
+    detail = hex_rgb(spec.detail)
+    secondary = hex_rgb(spec.secondary)
+    for _index in range(count):
+        start_x = rng.randint(-8, 36)
+        start_y = rng.randint(12, 58)
+        points = []
+        for step in range(5):
+            points.append((start_x + (step * rng.randint(10, 15)), start_y + rng.randint(-5, 5)))
+        color = mix(detail, secondary, 0.28 + (rng.random() * 0.30))
+        draw.line(points, fill=(*color, rng.randint(26, 46)), width=1)
 
 
 def draw_terrain_details(image: Image.Image, spec: BaseTileSpec) -> Image.Image:
@@ -222,32 +283,37 @@ def draw_terrain_details(image: Image.Image, spec: BaseTileSpec) -> Image.Image:
     draw = ImageDraw.Draw(overlay, "RGBA")
     match spec.pattern:
         case "field_tufts":
-            draw_tufts(draw, rng, spec, 18)
+            draw_tufts(draw, rng, spec, 24)
         case "dry_grass":
-            draw_tufts(draw, rng, spec, 14)
+            draw_tufts(draw, rng, spec, 18)
+            draw_worn_ground_streaks(draw, rng, spec, 2)
         case "worn_field":
-            draw_tufts(draw, rng, spec, 10)
+            draw_tufts(draw, rng, spec, 12)
             draw_contours(draw, rng, spec, 2)
+            draw_worn_ground_streaks(draw, rng, spec, 4)
         case "tree_clusters":
-            draw_tree_clusters(draw, rng, spec, 13)
+            draw_tree_clusters(draw, rng, spec, 16)
         case "tree_edge":
-            draw_tree_clusters(draw, rng, spec, 8)
-            draw_tufts(draw, rng, spec, 8)
+            draw_tree_clusters(draw, rng, spec, 10)
+            draw_tufts(draw, rng, spec, 10)
         case "reed_pools":
-            draw_reed_pools(draw, rng, spec, 16)
+            draw_reed_pools(draw, rng, spec, 19)
         case "mud_reeds":
-            draw_reed_pools(draw, rng, spec, 9)
-            draw_contours(draw, rng, spec, 2)
-        case "deep_swamp":
             draw_reed_pools(draw, rng, spec, 12)
-            draw_tree_clusters(draw, rng, spec, 4)
+            draw_contours(draw, rng, spec, 2)
+            draw_worn_ground_streaks(draw, rng, spec, 2)
+        case "deep_swamp":
+            draw_reed_pools(draw, rng, spec, 15)
+            draw_tree_clusters(draw, rng, spec, 5)
         case "contours" | "scrub_contours" | "ridge_contours" | "worn_contours":
-            draw_contours(draw, rng, spec, 5)
+            draw_contours(draw, rng, spec, 7)
             if "scrub" in spec.pattern or "worn" in spec.pattern:
-                draw_tufts(draw, rng, spec, 7)
+                draw_tufts(draw, rng, spec, 8)
+            if "worn" in spec.pattern:
+                draw_worn_ground_streaks(draw, rng, spec, 3)
         case "scree":
-            draw_scree(draw, rng, spec, 22)
-            draw_contours(draw, rng, spec, 3)
+            draw_scree(draw, rng, spec, 28)
+            draw_contours(draw, rng, spec, 4)
         case _:
             draw_tufts(draw, rng, spec, 10)
     image.alpha_composite(overlay)
@@ -330,13 +396,44 @@ def build_edge_overlays() -> None:
             save_rgba(build_edge_overlay(spec, direction), OUT / "edges" / f"{group}_edge_{direction}.png")
 
 
-def make_mask_line(end: tuple[float, float], width: float, center_radius: float = 0.0, offset_y: float = 0.0) -> Image.Image:
+def line_geometry(end: tuple[float, float], lateral_offset: float = 0.0) -> tuple[tuple[float, float], tuple[float, float]]:
+    start = (32.0, 32.0)
+    dx = end[0] - start[0]
+    dy = end[1] - start[1]
+    length = max(0.001, math.sqrt((dx * dx) + (dy * dy)))
+    normal = (-dy / length, dx / length)
+    return (
+        (start[0] + (normal[0] * lateral_offset), start[1] + (normal[1] * lateral_offset)),
+        (end[0] + (normal[0] * lateral_offset), end[1] + (normal[1] * lateral_offset)),
+    )
+
+
+def jittered_line_points(kind: str, end: tuple[float, float], lateral_offset: float, wobble: float, seed: int) -> list[tuple[float, float]]:
+    start, finish = line_geometry(end, lateral_offset)
+    dx = finish[0] - start[0]
+    dy = finish[1] - start[1]
+    length = max(0.001, math.sqrt((dx * dx) + (dy * dy)))
+    normal = (-dy / length, dx / length)
+    rng = random.Random(seed + sum(ord(char) for char in kind))
+    points: list[tuple[float, float]] = []
+    for step in range(7):
+        t = float(step) / 6.0
+        offset = 0.0 if step in (0, 6) else rng.uniform(-wobble, wobble)
+        points.append((
+            start[0] + (dx * t) + (normal[0] * offset),
+            start[1] + (dy * t) + (normal[1] * offset),
+        ))
+    return points
+
+
+def make_mask_line(kind: str, end: tuple[float, float], width: float, center_radius: float = 0.0, lateral_offset: float = 0.0, wobble: float = 1.2) -> Image.Image:
     mask = Image.new("L", (SIZE * SCALE, SIZE * SCALE), 0)
     draw = ImageDraw.Draw(mask)
-    start = (32.0 * SCALE, (32.0 + offset_y) * SCALE)
-    scaled_end = (end[0] * SCALE, (end[1] + offset_y) * SCALE)
-    draw.line((start, scaled_end), fill=255, width=max(1, int(round(width * SCALE))))
+    points = jittered_line_points(kind, end, lateral_offset, wobble, int(width * 211))
+    scaled_points = [(point[0] * SCALE, point[1] * SCALE) for point in points]
+    draw.line(scaled_points, fill=255, width=max(1, int(round(width * SCALE))), joint="curve")
     if center_radius > 0.0:
+        start = scaled_points[0]
         radius = center_radius * SCALE
         draw.ellipse((start[0] - radius, start[1] - radius, start[0] + radius, start[1] + radius), fill=255)
     return mask.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
@@ -359,6 +456,22 @@ def make_mask_circle(radius: float, offset_y: float = 0.0) -> Image.Image:
     return mask.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
 
 
+def make_organic_center_mask(radius: float, seed: int, offset_y: float = 0.0) -> Image.Image:
+    rng = random.Random(seed)
+    center = (32.0 * SCALE, (32.0 + offset_y) * SCALE)
+    points: list[tuple[float, float]] = []
+    for step in range(24):
+        angle = (math.tau * float(step)) / 24.0
+        local_radius = radius * SCALE * rng.uniform(0.72, 1.16)
+        x = center[0] + (math.cos(angle) * local_radius * rng.uniform(0.88, 1.08))
+        y = center[1] + (math.sin(angle) * local_radius * rng.uniform(0.64, 0.92))
+        points.append((x, y))
+    mask = Image.new("L", (SIZE * SCALE, SIZE * SCALE), 0)
+    draw = ImageDraw.Draw(mask)
+    draw.polygon(points, fill=255)
+    return mask.filter(ImageFilter.GaussianBlur(radius=0.55 * SCALE)).resize((SIZE, SIZE), Image.Resampling.LANCZOS)
+
+
 def scaled_mask(mask: Image.Image, alpha: int) -> Image.Image:
     return mask.point(lambda value: int((value * alpha) / 255))
 
@@ -372,39 +485,51 @@ def composite_color(canvas: Image.Image, color: tuple[int, int, int], mask: Imag
 def sprinkle_road_grit(canvas: Image.Image, mask: Image.Image, seed: int) -> None:
     rng = random.Random(seed)
     draw = ImageDraw.Draw(canvas, "RGBA")
-    for _index in range(18):
+    for _index in range(34):
         x = rng.randint(8, 56)
         y = rng.randint(8, 56)
-        if mask.getpixel((x, y)) < 80:
+        if mask.getpixel((x, y)) < 58:
             continue
-        color = (162, 125, 82) if rng.random() < 0.6 else (92, 67, 43)
-        alpha = rng.randint(34, 72)
+        color = (132, 103, 70) if rng.random() < 0.62 else (70, 51, 34)
+        alpha = rng.randint(26, 58)
         draw.point((x, y), fill=(*color, alpha))
+
+
+def draw_road_ruts(canvas: Image.Image, kind: str, end: tuple[float, float], seed: int) -> None:
+    layer = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(layer, "RGBA")
+    for lateral_offset in (-2.0, 2.0):
+        points = jittered_line_points(kind, end, lateral_offset, 0.55, seed + int(lateral_offset * 97))
+        scaled_points = [(point[0] * SCALE, point[1] * SCALE) for point in points]
+        draw.line(scaled_points, fill=(67, 47, 31, 72), width=max(1, int(round(0.9 * SCALE))))
+    canvas.alpha_composite(layer.resize((SIZE, SIZE), Image.Resampling.LANCZOS))
 
 
 def road_layer(kind: str) -> Image.Image:
     canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     if kind == "center":
-        shadow = make_mask_circle(7.4, 1.1)
-        edge = make_mask_circle(6.1, 0.2)
-        core = make_mask_circle(4.8)
-        highlight = make_mask_circle(1.6, -0.3)
+        shadow = make_organic_center_mask(7.3, 9101, 1.0)
+        edge = make_organic_center_mask(6.2, 9102, 0.2)
+        core = make_organic_center_mask(4.9, 9103, 0.0)
+        highlight = make_organic_center_mask(1.8, 9104, -0.2)
         grit_mask = core
         seed = 910
     else:
         end = ROAD_DIRECTIONS[kind]
-        shadow = make_mask_line(end, 11.2, 4.7, 1.0)
-        edge = make_mask_line(end, 8.7, 3.9, 0.2)
-        core = make_mask_line(end, 6.1, 2.9)
-        highlight = make_mask_line(end, 1.15, 0.9, -0.4)
+        shadow = make_mask_line(kind, end, 11.6, 4.4, 0.8, 1.7)
+        edge = make_mask_line(kind, end, 9.6, 3.6, 0.1, 1.35)
+        core = make_mask_line(kind, end, 7.1, 2.6, 0.0, 1.05)
+        highlight = make_mask_line(kind, end, 1.0, 0.6, -0.8, 0.55)
         grit_mask = core
         seed = 920 + sum(ord(char) for char in kind)
-    composite_color(canvas, (42, 31, 22), shadow, 84)
-    composite_color(canvas, (85, 62, 39), edge, 164)
-    composite_color(canvas, (174, 132, 79), core, 216)
-    composite_color(canvas, (215, 180, 112), highlight, 68)
+    composite_color(canvas, (32, 24, 18), shadow, 68)
+    composite_color(canvas, (75, 55, 36), edge, 122)
+    composite_color(canvas, (139, 104, 63), core, 174)
+    composite_color(canvas, (187, 151, 91), highlight, 42)
+    if kind != "center":
+        draw_road_ruts(canvas, kind, ROAD_DIRECTIONS[kind], seed + 401)
     sprinkle_road_grit(canvas, grit_mask, seed)
-    return canvas.filter(ImageFilter.UnsharpMask(radius=0.35, percent=24, threshold=3))
+    return canvas.filter(ImageFilter.UnsharpMask(radius=0.28, percent=16, threshold=4))
 
 
 def build_road_overlays() -> None:
