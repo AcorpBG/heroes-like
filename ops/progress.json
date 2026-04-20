@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T17:33:28Z",
+  "updatedAt": "2026-04-20T17:53:37Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-town-helper-cue-removal-10184",
-  "currentSliceTitle": "Remove editor-like helper cues from town overworld presentation",
+  "currentSliceId": "overworld-mapped-sprite-grounding-10184",
+  "currentSliceTitle": "Ground mapped resource, artifact, and encounter sprites without shared support stacks",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation-only town cleanup after AcOrP's screenshot feedback. OverworldMapView still reports the 3x2 town presentation model, bottom-middle visit/approach tile, and non-entry footprint metadata, but it no longer renders non-entry footprint helper glyphs, entry aprons/wedges, gate helper marks, helper circles, or similar editor-looking town overlays. The art manifest, repo validator, and River Pass/Ninefold smokes now guard the cue-free town contract. Movement, pathing, visit logic, ownership, roads, hero rendering, mapped sprite grounding, terrain, save/load, and gameplay rules were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow presentation-only mapped sprite grounding correction. Resource-site, artifact, and unresolved encounter asset sprites no longer draw through the shared marker plate/ring, broad terrain quieting bed, upper-mass backdrop wash, vertical mass shadow, duplicate offset sprite shadow, foreground ground lip, or base occlusion pads. They now use mapped-sprite-specific localized contact disturbance and compact contact shadows. Towns stayed on their dedicated no-helper-cue town path, procedural fallbacks stayed on their no-plate fallback grounding path, and hero presence, terrain, roads, movement, pathing, fog, save/load, battle, town, resource-site, artifact, and encounter gameplay logic were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -274,6 +274,12 @@
       "difficulty": "small"
     },
     {
+      "id": "overworld-mapped-sprite-grounding-10184",
+      "title": "Ground mapped resource, artifact, and encounter sprites without shared support stacks",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "overworld-diagonal-road-tiling-10184",
       "title": "Correct diagonal overworld road tile pieces and joins",
       "status": "completed",
@@ -341,6 +347,7 @@
     }
   ],
   "nextActions": [
+    "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
     "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
     "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",
     "Manually inspect unmapped procedural resource-site, artifact, and encounter fallbacks in River Pass and Ninefold Confluence at live-client scale before treating the no-plate fallback grounding as visually polished across supported viewports.",

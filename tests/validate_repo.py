@@ -4608,10 +4608,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure(isinstance(object_rendering, dict), errors, "Overworld art manifest must document object-first rendering metadata")
     if isinstance(object_rendering, dict):
         ensure(str(object_rendering.get("presence_model", "")) == "footprint_scaled_world_object", errors, "Overworld object rendering must document footprint-scaled object presence")
-        ensure(str(object_rendering.get("depth_cues", "")) == "footprint_cast_shadow_with_base_occlusion", errors, "Overworld object rendering must document footprint cast-shadow/base-occlusion depth cues")
-        ensure(str(object_rendering.get("contact_shadow", "")) == "directional_footprint_cast_shadow", errors, "Overworld object rendering must document directional footprint contact shadows")
-        ensure(str(object_rendering.get("base_occlusion", "")) == "foreground_base_occlusion_pads", errors, "Overworld object rendering must document foreground base occlusion pads")
-        ensure(str(object_rendering.get("mapped_sprite_settlement", "")) == "footprint_scaled_sprite_with_ground_lip", errors, "Overworld object rendering must document settled sprite grounding")
+        ensure(str(object_rendering.get("mapped_sprite_settlement", "")) == "mapped_sprite_contact_grounding_no_support_stack", errors, "Overworld object rendering must document mapped sprite no-support-stack grounding")
+        ensure(str(object_rendering.get("mapped_sprite_grounding", "")) == "localized_sprite_contact_scuffs", errors, "Overworld object rendering must document mapped sprite localized contact scuffs")
+        ensure(str(object_rendering.get("mapped_sprite_contact_shadow", "")) == "localized_sprite_contact_shadow", errors, "Overworld object rendering must document mapped sprite localized contact shadows")
+        ensure(str(object_rendering.get("mapped_sprite_contact_disturbance", "")) == "thin_sprite_contact_disturbance", errors, "Overworld object rendering must document mapped sprite thin contact disturbance")
+        ensure(str(object_rendering.get("mapped_sprite_placement_bed", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite placement beds")
+        ensure(str(object_rendering.get("mapped_sprite_upper_mass_backdrop", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite upper-mass backdrops")
+        ensure(str(object_rendering.get("mapped_sprite_vertical_mass_shadow", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite vertical mass shadows")
+        ensure(str(object_rendering.get("mapped_sprite_foreground_lip", "")) == "removed_for_resource_artifact_encounter_mapped_sprites", errors, "Overworld object rendering must document removal of mapped sprite foreground lips")
         ensure(str(object_rendering.get("fallback_silhouette", "")) == "family_specific_procedural_world_object", errors, "Overworld object rendering must document family-specific procedural fallback silhouettes")
         ensure(str(object_rendering.get("town_footprint", "")) == "town_3x2_footprint_bottom_middle_entry", errors, "Overworld object rendering must document the 3x2 town footprint and bottom-middle entry model")
         ensure(str(object_rendering.get("town_entry_role", "")) == "bottom_middle_visit_approach", errors, "Overworld object rendering must document the town bottom-middle visit approach role")
@@ -4650,21 +4654,26 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "town_default_sprite",
         "encounter_default_sprite",
         "OBJECT_PRESENCE_MODEL",
-        "OBJECT_OCCLUSION_MODEL",
         "OBJECT_SPRITE_SETTLEMENT_MODEL",
+        "OBJECT_MAPPED_SPRITE_GROUNDING_MODEL",
+        "OBJECT_MAPPED_SPRITE_ANCHOR_STYLE",
+        "OBJECT_MAPPED_SPRITE_OCCLUSION_MODEL",
+        "OBJECT_MAPPED_SPRITE_DEPTH_CUE_MODEL",
+        "OBJECT_MAPPED_SPRITE_CONTACT_MODEL",
+        "OBJECT_MAPPED_SPRITE_DISTURBANCE_MODEL",
         "OBJECT_PROCEDURAL_FALLBACK_MODEL",
-        "OBJECT_DEPTH_CUE_MODEL",
-        "OBJECT_CONTACT_SHADOW_MODEL",
-        "OBJECT_BASE_OCCLUSION_MODEL",
         "func _load_map_object_profiles",
-        "func _draw_foreground_occlusion_lip",
-        "func _draw_directional_contact_shadow",
-        "func _draw_base_occlusion_pads",
+        "func _draw_mapped_sprite_grounding_anchor",
+        "func _draw_mapped_sprite_contact_disturbance",
+        "func _draw_mapped_sprite_contact_shadow",
+        "func _mapped_sprite_grounding_fraction_metrics",
         '"footprint_scaled_world_object"',
-        '"foreground_ground_lip"',
-        '"footprint_cast_shadow_with_base_occlusion"',
-        '"directional_footprint_cast_shadow"',
-        '"foreground_base_occlusion_pads"',
+        '"mapped_sprite_contact_grounding_no_support_stack"',
+        '"localized_sprite_contact_scuffs"',
+        '"sprite_contact_without_foreground_lip"',
+        '"localized_sprite_contact_shadow_without_backdrop"',
+        '"localized_sprite_contact_shadow"',
+        '"thin_sprite_contact_disturbance"',
         '"family_specific_procedural_world_object"',
         '"authored_autotile_layers"',
         '"original_quiet_tile_bank"',
