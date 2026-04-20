@@ -192,6 +192,10 @@ Implementation note date: 2026-04-20
 
 The AcOrP visible-terrain seam correction removes the explicit per-tile black grid rectangle from explored overworld terrain. `OverworldMapView` now keeps unexplored hidden tiles on their wireframe treatment, but explored terrain only draws a limited fog-boundary hint where it touches unexplored ground; selection/current-tile rings, route lines, roads, and object markers remain the readability layer on mapped ground. This is a presentation-only correction: gameplay, pathing, fog state, save data, object/town/hero/site logic, terrain palettes, and road rules are unchanged.
 
+Implementation note date: 2026-04-20
+
+The procedural fallback path for overworld resource sites, artifacts, and unresolved encounters has been narrowed away from staged marker supports. Fallback objects no longer draw through the shared marker plate, rear upper-mass backdrop, or foreground ground-lip/base-pad path; they now use family-specific material tinting, thin terrain contact disturbance, localized contact shadows, and small contact marks while mapped sprites retain their existing footprint-scaled settlement model. This is a presentation-only correction: terrain, roads, visible seam behavior, towns, hero presence, movement, pathing, fog, save/load, battle, town, resource-site, artifact, and encounter gameplay logic are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
