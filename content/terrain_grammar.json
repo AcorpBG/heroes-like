@@ -1,9 +1,9 @@
 {
   "version": 1,
   "rendering_model": "authored_autotile_layers",
-  "authoring_status": "first_authored_tile_art_slice",
+  "authoring_status": "generated_source_tile_art_replacement",
   "tile_size_reference": 64,
-  "summary": "Author-facing overworld terrain grammar. The first terrain slice uses repo-local authored tile art for grass/plains, forest, mire/swamp, hills/ridge/highland, visible biome edge overlays, and structural dirt-road overlay pieces; non-slice terrain ids keep fallback grammar colors until their art lands.",
+  "summary": "Author-facing overworld terrain grammar. The covered terrain slice uses repo-local 64x64 tile art cut and adapted from generated terrain source images for grass/plains, forest, mire/swamp, hills/ridge/highland, visible biome edge overlays, and structural dirt-road overlay pieces; non-slice terrain ids keep fallback grammar colors until their art lands.",
   "transition_rules": {
     "cardinal_edges": true,
     "corner_hints": true,
@@ -410,7 +410,7 @@
       "edge_color": "#715333",
       "shadow_color": "#2a2118",
       "center_color": "#d1b777",
-      "width_fraction": 0.22,
+      "width_fraction": 0.14,
       "readability_role": "primary movement lane",
       "supports": ["authored_tile_art", "cardinal_connectors", "diagonal_connectors", "autotile_edge_caps"],
       "tile_art": {

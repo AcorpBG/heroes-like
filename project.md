@@ -156,6 +156,10 @@ Implementation note date: 2026-04-20
 
 The first real authored overworld terrain tile-art slice now sits on top of that grammar boundary. `art/overworld/runtime/terrain_tiles/` contains checked-in 64x64 PNG base tile variants for grass/plains, forest, mire/swamp, and hills/ridge/highland, plus directional biome-edge overlays and structural dirt-road connector pieces. `content/terrain_grammar.json` references those assets, and `OverworldMapView` loads and draws the tile-art pieces first while retaining grammar color/pattern and procedural road fallbacks for unsliced terrain or missing assets. This is still a narrow first art slice: water/coast, badlands, ash/lava, snow/frost, cavern/underway, object footprints, and road movement rules remain future work.
 
+Implementation note date: 2026-04-20
+
+The first tile-art slice was corrected to use the previously generated terrain source images as its visual basis instead of synthetic local pixel drawing. `tools/build_overworld_terrain_tiles.py` now cuts and adapts the generated grasslands, forest, mire, and highland source sheets into the same checked-in 64x64 runtime base, edge, and road overlay paths. Road overlays are narrower and source-material based, biome edge overlays are compact feathered source strips, and object sprite mappings/fallbacks were left unchanged. This remains a terrain presentation correction, not a full biome-art expansion beyond the families already in scope.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T08:20:42Z",
+  "updatedAt": "2026-04-20T09:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-authored-terrain-art-10184",
-  "currentSliceTitle": "Use first authored overworld terrain tile art in the renderer",
+  "currentSliceId": "overworld-generated-source-terrain-art-10184",
+  "currentSliceTitle": "Replace terrain tiles with cuts from generated source terrain art",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the first authored overworld terrain tile-art slice. Added repo-local 64x64 PNG terrain tile pieces under art/overworld/runtime/terrain_tiles for grass/plains, forest, mire/swamp, hills/ridge/highland, directional biome edge overlays, and road_dirt center/connectors; wired content/terrain_grammar.json and art/overworld/manifest.json to those assets; updated OverworldMapView to render loaded tile art, edge art, and road art before falling back to grammar/procedural drawing; preserved object sprite mappings and fallbacks. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed a narrow source-derived replacement pass for the first authored terrain tile-art slice. Replaced tools/build_overworld_terrain_tiles.py with a source-driven builder that cuts/adapts the generated 2026-04-19 terrain sheets into the existing 64x64 runtime base, edge, and road overlay paths; rebuilt grass/plains, forest, mire/swamp, hills/ridge/highland, compact feathered biome edge overlays, and thinner road_dirt connectors; reduced road fallback width from 0.22 to 0.14; preserved object sprite mappings and procedural object fallbacks; did not use nanobanana2 menu images because they were not relevant terrain source art. Validation passed with python3 -m py_compile tools/build_overworld_terrain_tiles.py, python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -178,6 +178,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-generated-source-terrain-art-10184",
+      "title": "Replace terrain tile art with generated source terrain cuts",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -233,7 +239,7 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the first authored overworld terrain tile-art treatment in River Pass and Ninefold Confluence before calling the placeholder terrain presentation visually polished.",
+    "Manually inspect the generated-source overworld terrain tile-art treatment in River Pass and Ninefold Confluence before calling the placeholder terrain presentation visually polished.",
     "Add future authored tile-art slices for water/coast, badlands/wastes, ash/lava, snow/frost, and cavern/underway before treating Ninefold Confluence's full terrain surface as art-covered.",
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
     "Manually inspect Ninefold Confluence's panning and remembered-object readability in the live client at the supported 16:9 runtime resolutions before treating the large-map UX as broadly polished.",
