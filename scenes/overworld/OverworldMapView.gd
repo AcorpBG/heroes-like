@@ -124,6 +124,11 @@ const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
 const ROAD_DEFAULT_CENTER_COLOR := Color(0.86, 0.74, 0.48, 0.55)
 const ROAD_DEFAULT_WIDTH_FACTOR := 0.14
+const ROAD_LANE_MODEL := "centered_vertical_edge_riding_horizontal"
+const ROAD_PIECE_SELECTION_MODEL := "same_type_adjacency_homm_piece_composition"
+const ROAD_VERTICAL_LANE := "center"
+const ROAD_HORIZONTAL_LANE := "south_edge"
+const ROAD_HORIZONTAL_EDGE_Y_FACTOR := 0.84
 const TOWN_MARKER_BODY_WIDTH := 0.64
 const TOWN_MARKER_BODY_HEIGHT := 0.34
 const RESOURCE_MARKER_RADIUS := 0.17
@@ -501,11 +506,17 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 	var connector_count := 0
 	for direction in _road_neighbor_directions(tile):
 		connector_count += 1
-		var end := center + Vector2(float(direction.x) * rect.size.x * 0.52, float(direction.y) * rect.size.y * 0.52)
-		draw_line(center, end, shadow_color, width * 1.45)
-		draw_line(center, end, edge_color, width * 1.12)
-		draw_line(center, end, road_color, width)
-		draw_line(center, end, center_color, maxf(1.4, width * 0.22))
+		var start := _road_connector_start(rect, direction)
+		var end := _road_connector_end(rect, direction)
+		draw_line(start, end, shadow_color, width * 1.45)
+		draw_line(start, end, edge_color, width * 1.12)
+		draw_line(start, end, road_color, width)
+		draw_line(start, end, center_color, maxf(1.4, width * 0.22))
+	if _road_needs_joint_cap(_road_neighbor_directions(tile)) and _road_has_horizontal_connections(_road_neighbor_directions(tile)):
+		var edge_center := Vector2(center.x, _road_horizontal_lane_y(rect))
+		draw_line(center, edge_center, shadow_color, width * 1.45)
+		draw_line(center, edge_center, edge_color, width * 1.12)
+		draw_line(center, edge_center, road_color, width)
 	if connector_count == 0:
 		draw_circle(center, width * 0.72, shadow_color)
 		draw_circle(center, width * 0.58, edge_color)
@@ -1976,6 +1987,9 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
 	var road_joint_cap := _road_needs_joint_cap(road_neighbor_directions) if not road_payload.is_empty() else false
 	var road_connection_key := _road_connection_key_from_directions(road_neighbor_directions) if not road_payload.is_empty() else ""
+	var road_has_horizontal := _road_has_horizontal_connections(road_neighbor_directions)
+	var road_has_vertical := _road_has_vertical_connections(road_neighbor_directions)
+	var road_has_diagonal := _road_has_diagonal_connections(road_neighbor_directions)
 	var primary_base_model := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern")
 	return {
 		"terrain": terrain,
@@ -2021,10 +2035,18 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
 		"road_role": String(road_payload.get("role", "")),
 		"road_overlay_art": road_art_loaded,
-		"road_shape_model": "connection_piece_overlay" if road_art_loaded else ("procedural_connector_lines" if not road_payload.is_empty() else ""),
+		"road_shape_model": "homm_adjacency_piece_overlay" if road_art_loaded else ("homm_adjacency_procedural_connectors" if not road_payload.is_empty() else ""),
+		"road_lane_model": ROAD_LANE_MODEL if not road_payload.is_empty() else "",
+		"road_piece_selection_model": String(road_payload.get("piece_selection_model", "")),
+		"road_same_type_adjacency": bool(road_payload.get("same_type_adjacency", false)),
 		"road_connection_key": road_connection_key,
 		"road_connection_count": road_neighbor_directions.size(),
 		"road_connection_source": String(road_payload.get("connection_source", "")),
+		"road_horizontal_edge_riding": road_has_horizontal,
+		"road_horizontal_lane": ROAD_HORIZONTAL_LANE if road_has_horizontal else "",
+		"road_vertical_centered": road_has_vertical,
+		"road_vertical_lane": ROAD_VERTICAL_LANE if road_has_vertical else "",
+		"road_diagonal_connections": road_has_diagonal,
 		"road_diagonal_tile_piece": road_connection_piece_loaded,
 		"road_diagonal_piece_model": "full_diagonal_straight_piece" if road_connection_piece_loaded else "",
 		"road_unordered_adjacency_suppressed": bool(road_payload.get("ordered_connections", false)),
@@ -2597,6 +2619,33 @@ func _road_neighbor_directions(tile: Vector2i) -> Array:
 			neighbor_directions.append(direction)
 	return neighbor_directions
 
+func _road_horizontal_lane_y(rect: Rect2) -> float:
+	return rect.position.y + (rect.size.y * ROAD_HORIZONTAL_EDGE_Y_FACTOR)
+
+func _road_connector_start(rect: Rect2, direction: Vector2i) -> Vector2:
+	if direction == Vector2i.LEFT or direction == Vector2i.RIGHT:
+		return Vector2(rect.get_center().x, _road_horizontal_lane_y(rect))
+	return rect.get_center()
+
+func _road_connector_end(rect: Rect2, direction: Vector2i) -> Vector2:
+	if direction == Vector2i.LEFT:
+		return Vector2(rect.position.x - (rect.size.x * 0.05), _road_horizontal_lane_y(rect))
+	if direction == Vector2i.RIGHT:
+		return Vector2(rect.end.x + (rect.size.x * 0.05), _road_horizontal_lane_y(rect))
+	return rect.get_center() + Vector2(float(direction.x) * rect.size.x * 0.52, float(direction.y) * rect.size.y * 0.52)
+
+func _road_has_horizontal_connections(neighbor_directions: Array) -> bool:
+	return Vector2i.LEFT in neighbor_directions or Vector2i.RIGHT in neighbor_directions
+
+func _road_has_vertical_connections(neighbor_directions: Array) -> bool:
+	return Vector2i.UP in neighbor_directions or Vector2i.DOWN in neighbor_directions
+
+func _road_has_diagonal_connections(neighbor_directions: Array) -> bool:
+	for direction in neighbor_directions:
+		if direction is Vector2i and direction.x != 0 and direction.y != 0:
+			return true
+	return false
+
 func _road_needs_joint_cap(neighbor_directions: Array) -> bool:
 	var count := neighbor_directions.size()
 	if count <= 1:
@@ -2673,23 +2722,14 @@ func _rebuild_road_tiles() -> void:
 		var tiles = road.get("tiles", [])
 		if not (tiles is Array):
 			continue
-		var road_path: Array[Vector2i] = []
 		for tile_value in tiles:
 			if not (tile_value is Dictionary):
 				continue
 			var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
 			if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 				continue
-			road_path.append(tile)
 			_ensure_road_tile_payload(tile, overlay_id, road_id, role)
-		for index in range(max(road_path.size() - 1, 0)):
-			var from_tile: Vector2i = road_path[index]
-			var to_tile: Vector2i = road_path[index + 1]
-			var direction := to_tile - from_tile
-			if direction == Vector2i.ZERO or abs(direction.x) > 1 or abs(direction.y) > 1:
-				continue
-			_add_road_connection(from_tile, direction)
-			_add_road_connection(to_tile, -direction)
+	_rebuild_road_adjacency_connections()
 
 func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String) -> void:
 	var key := _tile_key(tile)
@@ -2698,23 +2738,69 @@ func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: Stri
 		payload = {
 			"overlay_id": overlay_id,
 			"road_id": road_id,
+			"road_ids": [road_id] if road_id != "" else [],
 			"role": role,
+			"tile_x": tile.x,
+			"tile_y": tile.y,
 			"connections": [],
-			"ordered_connections": true,
-			"connection_source": "ordered_terrain_layer_path",
+			"ordered_connections": false,
+			"same_type_adjacency": true,
+			"connection_source": "adjacent_same_type_road_tiles",
+			"piece_selection_model": ROAD_PIECE_SELECTION_MODEL,
 		}
 	else:
 		if not payload.has("connections"):
 			payload["connections"] = []
-		payload["ordered_connections"] = true
-		payload["connection_source"] = "ordered_terrain_layer_path"
+		payload["ordered_connections"] = false
+		payload["same_type_adjacency"] = true
+		payload["connection_source"] = "adjacent_same_type_road_tiles"
+		payload["piece_selection_model"] = ROAD_PIECE_SELECTION_MODEL
+		payload["tile_x"] = tile.x
+		payload["tile_y"] = tile.y
 		if String(payload.get("overlay_id", "")) == "":
 			payload["overlay_id"] = overlay_id
 		if String(payload.get("road_id", "")) == "":
 			payload["road_id"] = road_id
+		var road_ids = payload.get("road_ids", [])
+		if not (road_ids is Array):
+			road_ids = []
+		if road_id != "" and road_id not in road_ids:
+			road_ids.append(road_id)
+		payload["road_ids"] = road_ids
 		if String(payload.get("role", "")) == "":
 			payload["role"] = role
 	_road_tiles[key] = payload
+
+func _rebuild_road_adjacency_connections() -> void:
+	var road_keys := _road_tiles.keys()
+	for key in road_keys:
+		var payload: Dictionary = _road_tiles.get(key, {})
+		if payload.is_empty():
+			continue
+		payload["connections"] = []
+		payload["ordered_connections"] = false
+		payload["same_type_adjacency"] = true
+		payload["connection_source"] = "adjacent_same_type_road_tiles"
+		payload["piece_selection_model"] = ROAD_PIECE_SELECTION_MODEL
+		_road_tiles[key] = payload
+	for key in road_keys:
+		var payload: Dictionary = _road_tiles.get(key, {})
+		if payload.is_empty():
+			continue
+		var tile := Vector2i(int(payload.get("tile_x", -1)), int(payload.get("tile_y", -1)))
+		if tile.x < 0 or tile.y < 0:
+			continue
+		for direction in DIRECTIONS:
+			var neighbor: Vector2i = tile + direction
+			var neighbor_payload: Dictionary = _road_tiles.get(_tile_key(neighbor), {})
+			if _road_payloads_can_connect(payload, neighbor_payload):
+				_add_road_connection(tile, direction)
+
+func _road_payloads_can_connect(payload: Dictionary, neighbor_payload: Dictionary) -> bool:
+	if payload.is_empty() or neighbor_payload.is_empty():
+		return false
+	var overlay_id := String(payload.get("overlay_id", ""))
+	return overlay_id != "" and overlay_id == String(neighbor_payload.get("overlay_id", ""))
 
 func _add_road_connection(tile: Vector2i, direction: Vector2i) -> void:
 	var key := _tile_key(tile)
