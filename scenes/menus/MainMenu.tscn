@@ -936,6 +936,15 @@ anchor_right = 0.975
 anchor_bottom = 0.66
 text = "Settings"
 
+[node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.852
+anchor_top = 0.681
+anchor_right = 0.975
+anchor_bottom = 0.729
+text = "Editor"
+
 [node name="Quit" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -949,6 +958,7 @@ text = "Quit"
 [connection signal="pressed" from="BackdropCommandHotspots/OpenSkirmish" to="." method="_on_open_skirmish_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/OpenSaves" to="." method="_on_open_saves_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/OpenSettings" to="." method="_on_open_settings_pressed"]
+[connection signal="pressed" from="BackdropCommandHotspots/OpenEditor" to="." method="_on_open_editor_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/Quit" to="." method="_on_quit_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox/CampaignList" to="." method="_on_campaign_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]

@@ -212,6 +212,10 @@ Implementation note date: 2026-04-20
 
 The mapped overworld sprite path for resource-site, artifact, and unresolved encounter assets has now been corrected away from the shared support-stack composition. Mapped sprites no longer draw the filled marker plate, broad terrain quieting bed, upper-mass backdrop wash, vertical mass shadow, duplicate offset sprite shadow, foreground ground lip, or base occlusion pads; they use localized contact disturbance and compact contact shadows instead. Towns remain on the dedicated no-helper-cue town path, and procedural fallbacks remain on their existing no-plate fallback grounding. This is presentation-only: movement, pathing, fog, roads, terrain, save/load, battle, town, resource-site, artifact, and encounter gameplay logic are unchanged.
 
+Implementation note date: 2026-04-20
+
+The first in-project map editor slice uses an in-game dev/editor shell rather than a Godot editor plugin. `scenes/editor/MapEditorShell.tscn` loads an authored scenario through the existing `ScenarioFactory` into an in-memory mutable working copy, reveals that copy for editing, and previews it through the same `OverworldMapView` renderer used by live overworld play. The initial tools are deliberately narrow: terrain painting from the authored terrain grammar, dirt-road toggle editing through the existing terrain-layer road structure, hero-start repositioning for quick iteration, and tile/object inspection for towns, resource sites, artifacts, encounters, roads, and terrain. "Play Copy" routes the current working copy into the normal overworld shell through `SessionState` and `AppRouter` without writing authored content. This is a first iteration tool, not a full external map editor, content exporter, or scenario schema redesign.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
