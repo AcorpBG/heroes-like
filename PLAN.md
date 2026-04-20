@@ -49,6 +49,33 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: Map Editor Object Movement
+Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
+
+Purpose:
+- Let the in-game map editor relocate existing runtime object placements from one tile to another.
+- Preserve the moved object's runtime state by mutating only its `x`/`y` coordinates in the existing working-copy placement arrays.
+- Keep the move in memory and avoid authored JSON writeback, save-format changes, editor-only schemas, broad gameplay rewrites, and town multi-tile occupancy/pathing changes.
+
+Implemented:
+- Added a compact Move Object tool to `MapEditorShell`: first click selects a supported object placement, second click moves that same runtime object to the destination tile.
+- Scoped relocation to the runtime arrays live play already consumes: `towns`, `resource_nodes`, `artifact_nodes`, and `encounters`.
+- Reused the existing one-supported-object-per-tile editor rule so moves cannot stack a town/site/artifact/encounter onto another supported placement.
+- Extended tile inspection and validation snapshots with moved-object coordinates and pending move detail so movement is visible and testable.
+- Extended the editor smoke to move one town, resource node, artifact node, and encounter while proving placement ids, owner/difficulty/collection metadata, combat seed, live preview, Play Copy, and editor return snapshot remain intact.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not an authored JSON exporter/writeback path, a save-format change, or a parallel scenario/editor schema.
+- This does not implement undo, drag interaction, multi-select movement, placement ownership reassignment, or broad object authoring.
+- Town 3x2 occupancy/pathing remains future work; moving a town still changes only its current single authored/runtime anchor tile.
+
 ## Current Implementation Slice: Map Editor Play Copy Return
 Status: completed on 2026-04-20 as the previous editor/play-flow slice.
 

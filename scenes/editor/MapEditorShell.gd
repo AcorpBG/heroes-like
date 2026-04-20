@@ -14,6 +14,7 @@ const TOOL_ROAD := "road"
 const TOOL_HERO_START := "hero_start"
 const TOOL_PLACE_OBJECT := "place_object"
 const TOOL_REMOVE_OBJECT := "remove_object"
+const TOOL_MOVE_OBJECT := "move_object"
 const OBJECT_FAMILY_TOWN := "town"
 const OBJECT_FAMILY_RESOURCE := "resource"
 const OBJECT_FAMILY_ARTIFACT := "artifact"
@@ -34,6 +35,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _hero_start_tool_button: Button = %HeroStartTool
 @onready var _place_object_tool_button: Button = %PlaceObjectTool
 @onready var _remove_object_tool_button: Button = %RemoveObjectTool
+@onready var _move_object_tool_button: Button = %MoveObjectTool
 @onready var _tile_info_label: Label = %TileInfo
 @onready var _status_label: Label = %Status
 @onready var _map_view = %Map
@@ -58,6 +60,7 @@ var _selected_terrain_id := DEFAULT_TERRAIN_ID
 var _selected_object_family := DEFAULT_OBJECT_FAMILY
 var _selected_object_content_id := ""
 var _selected_property_object_key := ""
+var _pending_move_object_key := ""
 var _selected_tile := Vector2i.ZERO
 var _hovered_tile := Vector2i(-1, -1)
 var _tool := TOOL_INSPECT
@@ -88,6 +91,7 @@ func _connect_ui() -> void:
 	_hero_start_tool_button.pressed.connect(func(): _select_tool(TOOL_HERO_START))
 	_place_object_tool_button.pressed.connect(func(): _select_tool(TOOL_PLACE_OBJECT))
 	_remove_object_tool_button.pressed.connect(func(): _select_tool(TOOL_REMOVE_OBJECT))
+	_move_object_tool_button.pressed.connect(func(): _select_tool(TOOL_MOVE_OBJECT))
 	_object_family_picker.item_selected.connect(_on_object_family_selected)
 	_object_content_picker.item_selected.connect(_on_object_content_selected)
 	_selected_object_picker.item_selected.connect(_on_selected_property_object_selected)
@@ -275,8 +279,28 @@ func _selected_property_object_detail() -> Dictionary:
 			return detail
 	return {}
 
+func _object_detail_by_key(property_key: String) -> Dictionary:
+	if _session == null or property_key == "":
+		return {}
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var array_key := _placement_array_key(family)
+		var placements = _session.overworld.get(array_key, [])
+		if not (placements is Array):
+			continue
+		for placement in placements:
+			if not (placement is Dictionary):
+				continue
+			var placement_id := String(placement.get("placement_id", ""))
+			if _object_property_key(family, placement_id) != property_key:
+				continue
+			return _object_detail_for_placement(family, placement)
+	return {}
+
 func _selected_property_object_payload() -> Dictionary:
 	var detail := _selected_property_object_detail()
+	return _property_object_payload_from_detail(detail)
+
+func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 	if detail.is_empty():
 		return {}
 	return {
@@ -291,7 +315,12 @@ func _selected_property_object_payload() -> Dictionary:
 		"collected": bool(detail.get("collected", false)),
 		"collected_by_faction_id": String(detail.get("collected_by_faction_id", "")),
 		"collected_day": max(0, int(detail.get("collected_day", 0))),
+		"x": int(detail.get("x", 0)),
+		"y": int(detail.get("y", 0)),
 	}
+
+func _pending_move_object_payload() -> Dictionary:
+	return _property_object_payload_from_detail(_object_detail_by_key(_pending_move_object_key))
 
 func _select_property_object_at_tile(family: String) -> bool:
 	for detail in _property_object_options_at(_selected_tile):
@@ -452,6 +481,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_select_scenario_picker_by_id(scenario_id)
 	_selected_tile = OverworldRules.hero_position(_session)
 	_selected_property_object_key = ""
+	_pending_move_object_key = ""
 	_dirty = false
 	_restored_from_play_copy = false
 	_last_message = "Loaded authored scenario into a mutable editor working copy."
@@ -490,6 +520,7 @@ func _restore_editor_ui_metadata() -> void:
 		if restored_content_id != "":
 			_select_object_content_by_id(restored_content_id)
 	_selected_property_object_key = String(_session.flags.get("editor_selected_property_object_key", ""))
+	_pending_move_object_key = String(_session.flags.get("editor_pending_move_object_key", ""))
 	_dirty = bool(_session.flags.get("editor_dirty", true))
 
 func _make_all_tiles_visible(session) -> void:
@@ -549,6 +580,12 @@ func _refresh_labels() -> void:
 	]
 	if _dirty:
 		state_line = "%s | Unsaved in memory" % state_line
+	if _pending_move_object_key != "":
+		var pending_detail := _object_detail_by_key(_pending_move_object_key)
+		state_line = "%s | Move %s" % [
+			state_line,
+			String(pending_detail.get("placement_id", _pending_move_object_key)),
+		]
 	_set_compact_label(_status_label, "%s\n%s" % [state_line, _last_message], 3)
 	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
 
@@ -564,11 +601,24 @@ func _tool_label(tool: String) -> String:
 			return "Place Object"
 		TOOL_REMOVE_OBJECT:
 			return "Remove Object"
+		TOOL_MOVE_OBJECT:
+			return "Move Object"
 		_:
 			return "Inspect"
 
 func _select_tool(tool: String) -> void:
-	_tool = tool if tool in [TOOL_INSPECT, TOOL_TERRAIN, TOOL_ROAD, TOOL_HERO_START, TOOL_PLACE_OBJECT, TOOL_REMOVE_OBJECT] else TOOL_INSPECT
+	var valid_tools := [
+		TOOL_INSPECT,
+		TOOL_TERRAIN,
+		TOOL_ROAD,
+		TOOL_HERO_START,
+		TOOL_PLACE_OBJECT,
+		TOOL_REMOVE_OBJECT,
+		TOOL_MOVE_OBJECT,
+	]
+	_tool = tool if tool in valid_tools else TOOL_INSPECT
+	if _tool != TOOL_MOVE_OBJECT:
+		_pending_move_object_key = ""
 	_sync_tool_buttons()
 	_refresh_labels()
 
@@ -580,6 +630,7 @@ func _sync_tool_buttons() -> void:
 		TOOL_HERO_START: _hero_start_tool_button,
 		TOOL_PLACE_OBJECT: _place_object_tool_button,
 		TOOL_REMOVE_OBJECT: _remove_object_tool_button,
+		TOOL_MOVE_OBJECT: _move_object_tool_button,
 	}
 	for tool_id in buttons.keys():
 		var button: Button = buttons[tool_id]
@@ -658,6 +709,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			_place_object(tile)
 		TOOL_REMOVE_OBJECT:
 			_remove_object(tile)
+		TOOL_MOVE_OBJECT:
+			_move_object_tool_click(tile)
 		_:
 			_last_message = "Inspected tile %d,%d." % [tile.x, tile.y]
 	_refresh_state()
@@ -837,6 +890,118 @@ func _remove_object(tile: Vector2i) -> bool:
 		", ".join(removed_ids),
 	]
 	return true
+
+func _move_object_tool_click(tile: Vector2i) -> bool:
+	if _pending_move_object_key == "":
+		var detail := _preferred_move_detail_at(tile)
+		if detail.is_empty():
+			_last_message = "Choose a supported town, site, artifact, or encounter to move."
+			return false
+		_pending_move_object_key = String(detail.get("property_key", ""))
+		_selected_property_object_key = _pending_move_object_key
+		_last_message = "Move source selected: %s at %d,%d. Choose a destination tile." % [
+			String(detail.get("placement_id", "")),
+			tile.x,
+			tile.y,
+		]
+		return true
+	var result := _move_object_by_key(_pending_move_object_key, tile)
+	if bool(result.get("ok", false)):
+		_pending_move_object_key = ""
+		_dirty = _dirty or bool(result.get("changed", false))
+		_last_message = String(result.get("message", "Moved object placement."))
+	else:
+		_last_message = String(result.get("message", "Could not move object placement."))
+	return bool(result.get("ok", false))
+
+func _preferred_move_detail_at(tile: Vector2i) -> Dictionary:
+	var options := _property_object_options_at(tile)
+	if options.is_empty():
+		return {}
+	for detail in options:
+		if detail is Dictionary and String(detail.get("property_key", "")) == _selected_property_object_key:
+			return detail
+	for detail in options:
+		if detail is Dictionary:
+			return detail
+	return {}
+
+func _move_object_by_key(property_key: String, destination_tile: Vector2i) -> Dictionary:
+	if not _tile_in_bounds(destination_tile):
+		return {"ok": false, "changed": false, "message": "Destination tile is outside the map."}
+	var detail := _object_detail_by_key(property_key)
+	if detail.is_empty():
+		return {"ok": false, "changed": false, "message": "No movable object %s exists in the working copy." % property_key}
+	var kind := String(detail.get("kind", ""))
+	var placement_id := String(detail.get("placement_id", ""))
+	var blocker := _first_blocking_object_detail_at(destination_tile, property_key)
+	if not blocker.is_empty():
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Destination %d,%d already has %s." % [
+				destination_tile.x,
+				destination_tile.y,
+				String(blocker.get("placement_id", blocker.get("kind", "object"))),
+			],
+		}
+	var source_tile := Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0)))
+	if source_tile == destination_tile:
+		_selected_property_object_key = property_key
+		return {
+			"ok": true,
+			"changed": false,
+			"message": "%s %s is already at %d,%d." % [
+				_object_family_label(kind),
+				placement_id,
+				destination_tile.x,
+				destination_tile.y,
+			],
+			"object": detail,
+			"from": {"x": source_tile.x, "y": source_tile.y},
+			"to": {"x": destination_tile.x, "y": destination_tile.y},
+		}
+	var array_key := _placement_array_key(kind)
+	var placements = _session.overworld.get(array_key, [])
+	if array_key == "" or not (placements is Array):
+		return {"ok": false, "changed": false, "message": "Working copy has no %s array." % _object_family_label(kind)}
+	for index in range(placements.size()):
+		var placement = placements[index]
+		if not (placement is Dictionary):
+			continue
+		if String(placement.get("placement_id", "")) != placement_id:
+			continue
+		var before: Dictionary = placement.duplicate(true)
+		placement["x"] = destination_tile.x
+		placement["y"] = destination_tile.y
+		placements[index] = placement
+		_session.overworld[array_key] = placements
+		_selected_property_object_key = property_key
+		return {
+			"ok": true,
+			"changed": before != placement,
+			"message": "Moved %s %s from %d,%d to %d,%d." % [
+				_object_family_label(kind),
+				placement_id,
+				source_tile.x,
+				source_tile.y,
+				destination_tile.x,
+				destination_tile.y,
+			],
+			"object": placement,
+			"from": {"x": source_tile.x, "y": source_tile.y},
+			"to": {"x": destination_tile.x, "y": destination_tile.y},
+		}
+	return {"ok": false, "changed": false, "message": "No %s placement %s in the working copy." % [_object_family_label(kind), placement_id]}
+
+func _first_blocking_object_detail_at(tile: Vector2i, ignored_property_key: String = "") -> Dictionary:
+	for detail in _object_details_at(tile, false):
+		if not (detail is Dictionary):
+			continue
+		if ignored_property_key != "" and String(detail.get("property_key", "")) == ignored_property_key:
+			continue
+		return detail
+	return {}
 
 func _apply_selected_object_properties(detail: Dictionary) -> Dictionary:
 	var kind := String(detail.get("kind", ""))
@@ -1025,6 +1190,7 @@ func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_selected_object_family"] = _selected_object_family
 	_session.flags["editor_selected_object_content_id"] = _selected_object_content_id
 	_session.flags["editor_selected_property_object_key"] = _selected_property_object_key
+	_session.flags["editor_pending_move_object_key"] = _pending_move_object_key
 	_session.game_state = "overworld"
 	_session.scenario_status = "in_progress"
 	_session.battle = {}
@@ -1111,6 +1277,69 @@ func _object_lines_at(tile: Vector2i) -> Array:
 				])
 	return lines
 
+func _object_detail_for_placement(family: String, placement: Dictionary) -> Dictionary:
+	match family:
+		OBJECT_FAMILY_TOWN:
+			var town := ContentService.get_town(String(placement.get("town_id", "")))
+			return {
+				"kind": OBJECT_FAMILY_TOWN,
+				"placement_id": String(placement.get("placement_id", "")),
+				"content_id": String(placement.get("town_id", "")),
+				"name": String(town.get("name", placement.get("town_id", ""))),
+				"owner": String(placement.get("owner", "neutral")),
+				"property_key": _object_property_key(OBJECT_FAMILY_TOWN, String(placement.get("placement_id", ""))),
+				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_TOWN),
+				"x": int(placement.get("x", 0)),
+				"y": int(placement.get("y", 0)),
+			}
+		OBJECT_FAMILY_RESOURCE:
+			var site := ContentService.get_resource_site(String(placement.get("site_id", "")))
+			return {
+				"kind": OBJECT_FAMILY_RESOURCE,
+				"placement_id": String(placement.get("placement_id", "")),
+				"content_id": String(placement.get("site_id", "")),
+				"name": String(site.get("name", placement.get("site_id", ""))),
+				"family": String(site.get("family", "one_shot_pickup")),
+				"collected": bool(placement.get("collected", false)),
+				"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
+				"collected_day": max(0, int(placement.get("collected_day", 0))),
+				"property_key": _object_property_key(OBJECT_FAMILY_RESOURCE, String(placement.get("placement_id", ""))),
+				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_RESOURCE),
+				"x": int(placement.get("x", 0)),
+				"y": int(placement.get("y", 0)),
+			}
+		OBJECT_FAMILY_ARTIFACT:
+			var artifact := ContentService.get_artifact(String(placement.get("artifact_id", "")))
+			return {
+				"kind": OBJECT_FAMILY_ARTIFACT,
+				"placement_id": String(placement.get("placement_id", "")),
+				"content_id": String(placement.get("artifact_id", "")),
+				"name": String(artifact.get("name", placement.get("artifact_id", ""))),
+				"collected": bool(placement.get("collected", false)),
+				"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
+				"collected_day": max(0, int(placement.get("collected_day", 0))),
+				"property_key": _object_property_key(OBJECT_FAMILY_ARTIFACT, String(placement.get("placement_id", ""))),
+				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_ARTIFACT),
+				"x": int(placement.get("x", 0)),
+				"y": int(placement.get("y", 0)),
+			}
+		OBJECT_FAMILY_ENCOUNTER:
+			var encounter := ContentService.get_encounter(String(placement.get("encounter_id", "")))
+			return {
+				"kind": OBJECT_FAMILY_ENCOUNTER,
+				"placement_id": String(placement.get("placement_id", "")),
+				"content_id": String(placement.get("encounter_id", "")),
+				"name": String(encounter.get("name", placement.get("encounter_id", ""))),
+				"difficulty": String(placement.get("difficulty", "medium")),
+				"combat_seed": int(placement.get("combat_seed", 0)),
+				"property_key": _object_property_key(OBJECT_FAMILY_ENCOUNTER, String(placement.get("placement_id", ""))),
+				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_ENCOUNTER),
+				"x": int(placement.get("x", 0)),
+				"y": int(placement.get("y", 0)),
+			}
+		_:
+			return {}
+
 func _object_details_at(tile: Vector2i, include_hero: bool = true) -> Array:
 	var details := []
 	if OverworldRules.hero_position(_session) == tile:
@@ -1127,74 +1356,16 @@ func _object_details_at(tile: Vector2i, include_hero: bool = true) -> Array:
 			)
 	for town_value in _session.overworld.get("towns", []):
 		if town_value is Dictionary and _placement_at_tile(town_value, tile):
-			var town := ContentService.get_town(String(town_value.get("town_id", "")))
-			details.append(
-				{
-					"kind": OBJECT_FAMILY_TOWN,
-					"placement_id": String(town_value.get("placement_id", "")),
-					"content_id": String(town_value.get("town_id", "")),
-					"name": String(town.get("name", town_value.get("town_id", ""))),
-					"owner": String(town_value.get("owner", "neutral")),
-					"property_key": _object_property_key(OBJECT_FAMILY_TOWN, String(town_value.get("placement_id", ""))),
-					"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_TOWN),
-					"x": int(town_value.get("x", 0)),
-					"y": int(town_value.get("y", 0)),
-				}
-			)
+			details.append(_object_detail_for_placement(OBJECT_FAMILY_TOWN, town_value))
 	for node_value in _session.overworld.get("resource_nodes", []):
 		if node_value is Dictionary and _placement_at_tile(node_value, tile):
-			var site := ContentService.get_resource_site(String(node_value.get("site_id", "")))
-			details.append(
-				{
-					"kind": OBJECT_FAMILY_RESOURCE,
-					"placement_id": String(node_value.get("placement_id", "")),
-					"content_id": String(node_value.get("site_id", "")),
-					"name": String(site.get("name", node_value.get("site_id", ""))),
-					"family": String(site.get("family", "one_shot_pickup")),
-					"collected": bool(node_value.get("collected", false)),
-					"collected_by_faction_id": String(node_value.get("collected_by_faction_id", "")),
-					"collected_day": max(0, int(node_value.get("collected_day", 0))),
-					"property_key": _object_property_key(OBJECT_FAMILY_RESOURCE, String(node_value.get("placement_id", ""))),
-					"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_RESOURCE),
-					"x": int(node_value.get("x", 0)),
-					"y": int(node_value.get("y", 0)),
-				}
-			)
+			details.append(_object_detail_for_placement(OBJECT_FAMILY_RESOURCE, node_value))
 	for artifact_value in _session.overworld.get("artifact_nodes", []):
 		if artifact_value is Dictionary and _placement_at_tile(artifact_value, tile):
-			var artifact := ContentService.get_artifact(String(artifact_value.get("artifact_id", "")))
-			details.append(
-				{
-					"kind": OBJECT_FAMILY_ARTIFACT,
-					"placement_id": String(artifact_value.get("placement_id", "")),
-					"content_id": String(artifact_value.get("artifact_id", "")),
-					"name": String(artifact.get("name", artifact_value.get("artifact_id", ""))),
-					"collected": bool(artifact_value.get("collected", false)),
-					"collected_by_faction_id": String(artifact_value.get("collected_by_faction_id", "")),
-					"collected_day": max(0, int(artifact_value.get("collected_day", 0))),
-					"property_key": _object_property_key(OBJECT_FAMILY_ARTIFACT, String(artifact_value.get("placement_id", ""))),
-					"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_ARTIFACT),
-					"x": int(artifact_value.get("x", 0)),
-					"y": int(artifact_value.get("y", 0)),
-				}
-			)
+			details.append(_object_detail_for_placement(OBJECT_FAMILY_ARTIFACT, artifact_value))
 	for encounter_value in _session.overworld.get("encounters", []):
 		if encounter_value is Dictionary and _placement_at_tile(encounter_value, tile):
-			var encounter := ContentService.get_encounter(String(encounter_value.get("encounter_id", "")))
-			details.append(
-				{
-					"kind": OBJECT_FAMILY_ENCOUNTER,
-					"placement_id": String(encounter_value.get("placement_id", "")),
-					"content_id": String(encounter_value.get("encounter_id", "")),
-					"name": String(encounter.get("name", encounter_value.get("encounter_id", ""))),
-					"difficulty": String(encounter_value.get("difficulty", "medium")),
-					"combat_seed": int(encounter_value.get("combat_seed", 0)),
-					"property_key": _object_property_key(OBJECT_FAMILY_ENCOUNTER, String(encounter_value.get("placement_id", ""))),
-					"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_ENCOUNTER),
-					"x": int(encounter_value.get("x", 0)),
-					"y": int(encounter_value.get("y", 0)),
-				}
-			)
+			details.append(_object_detail_for_placement(OBJECT_FAMILY_ENCOUNTER, encounter_value))
 	return details
 
 func _placement_at_tile(placement: Dictionary, tile: Vector2i) -> bool:
@@ -1399,7 +1570,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _property_apply_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -1438,6 +1609,8 @@ func validation_snapshot() -> Dictionary:
 		"selected_object_content_id": _selected_object_content_id,
 		"selected_property_object_key": _selected_property_object_key,
 		"selected_property_object": _selected_property_object_payload(),
+		"pending_move_object_key": _pending_move_object_key,
+		"pending_move_object": _pending_move_object_payload(),
 		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
 		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
 		"hovered_tile": {"x": _hovered_tile.x, "y": _hovered_tile.y},
@@ -1553,6 +1726,47 @@ func validation_remove_object(x: int, y: int, family: String) -> Dictionary:
 	snapshot["family_selected"] = family_selected
 	return snapshot
 
+func validation_move_object(from_x: int, from_y: int, to_x: int, to_y: int, family: String = "") -> Dictionary:
+	var source_tile := Vector2i(from_x, from_y)
+	var destination_tile := Vector2i(to_x, to_y)
+	if not _tile_in_bounds(source_tile) or not _tile_in_bounds(destination_tile):
+		return {"ok": false, "message": "Source or destination tile outside map."}
+	_selected_tile = source_tile
+	_tool = TOOL_MOVE_OBJECT
+	var source_detail := _preferred_move_detail_at(source_tile)
+	if family != "":
+		source_detail = {}
+		for detail in _property_object_options_at(source_tile):
+			if detail is Dictionary and String(detail.get("kind", "")) == family:
+				source_detail = detail
+				break
+	if source_detail.is_empty():
+		var missing_snapshot := validation_snapshot()
+		missing_snapshot["ok"] = false
+		missing_snapshot["message"] = "No movable %s object at %d,%d." % [family if family != "" else "supported", from_x, from_y]
+		return missing_snapshot
+	var move_key := String(source_detail.get("property_key", ""))
+	_pending_move_object_key = move_key
+	_selected_property_object_key = move_key
+	var before_detail: Dictionary = source_detail.duplicate(true)
+	var result := _move_object_by_key(move_key, destination_tile)
+	if bool(result.get("ok", false)):
+		_pending_move_object_key = ""
+		_dirty = _dirty or bool(result.get("changed", false))
+		_selected_tile = destination_tile
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["from"] = result.get("from", {"x": from_x, "y": from_y})
+	snapshot["to"] = result.get("to", {"x": to_x, "y": to_y})
+	snapshot["source_detail_before"] = before_detail
+	snapshot["source_tile_inspection"] = _tile_inspection_payload(source_tile)
+	snapshot["destination_tile_inspection"] = _tile_inspection_payload(destination_tile)
+	return snapshot
+
 func validation_edit_object_property(x: int, y: int, family: String, property_name: String, value: Variant) -> Dictionary:
 	var tile := Vector2i(x, y)
 	if not _tile_in_bounds(tile):
@@ -1608,6 +1822,7 @@ func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
 		"objects": object_lines,
 		"object_details": _object_details_at(tile, true),
 		"selected_property_object": _selected_property_object_payload(),
+		"pending_move_object": _pending_move_object_payload(),
 		"text": _tile_inspection_text(tile),
 	}
 
