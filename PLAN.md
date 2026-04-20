@@ -26,6 +26,32 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: Map Editor Selected Tile Restore
+Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
+
+Purpose:
+- Let `MapEditorShell` restore the currently selected working-copy tile from the authored scenario baseline without resetting the whole map.
+- Keep authored JSON immutable, save data unchanged, and the editor working copy/runtime preview as the only mutation surface.
+- Preserve unrelated in-memory edits except where the single global hero-start position must return to the authored start when the selected tile is the authored hero-start tile or the moved current hero-start tile.
+
+Implemented:
+- Added a compact Restore Tile command to `MapEditorShell` that reads a fresh authored baseline session through `ScenarioFactory` and copies only selected-tile state back into the active editor working copy.
+- Restores the authored terrain id and selected-tile road presence, removing editor-only road tiles on that coordinate and adding back authored road membership for that coordinate.
+- Restores supported runtime-shaped authored placements on that coordinate for towns, resource sites, artifacts, and encounters, including moved, removed, rethemed, property-edited, or source-blocked authored placements.
+- Removes working-copy-only supported placements currently on the selected tile while leaving unrelated moved/duplicated placements elsewhere intact unless they are the same authored placement id being returned to the selected tile.
+- Keeps Play Copy / return coherent because the restored tile mutates the same in-memory working copy that live preview and Play Copy already consume.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a bulk reset, exporter, authored JSON writeback path, undo stack, save-format change, projection/layout change, gameplay/pathing rewrite, or town 3x2 occupancy/pathing change.
+- Restore is selected-tile scoped; duplicated copies elsewhere remain part of the working copy unless they are physically on the restored tile.
+
 ## Current Implementation Slice: Neighbor-Aware Terrain Transitions
 Status: completed on 2026-04-20 as the next narrow overworld terrain presentation slice.
 
