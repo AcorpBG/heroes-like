@@ -520,6 +520,29 @@ Limits:
 - Other overworld object families still use their shared terrain grounding, placement-bed, contact-shadow, and backdrop cues from earlier slices.
 - Manual visual review is still needed before treating the town presentation as polished across every biome and resolution.
 
+## Current Implementation Slice: Overworld Town Helper Cue Removal
+Status: completed on 2026-04-20 as a narrow AcOrP screenshot-feedback correction.
+
+Purpose:
+- Remove the remaining editor/helper-looking town footprint and entry cues from the overworld presentation path.
+- Preserve the town 3x2 presentation model, bottom-middle entry/visit metadata, and non-entry footprint contract for validation.
+- Keep gameplay untouched: no movement, pathing, visit logic, ownership, roads, hero rendering, mapped sprite grounding, terrain, save/load, or rules changes.
+
+Implemented:
+- Made the town footprint-underlay and entry-approach draw paths render no visible helper marks.
+- Changed town presentation metadata from sparse visible wall/entry cues to a cue-free 3x2 contract.
+- Updated the art manifest, repo validator, and River Pass/Ninefold smoke assertions so they reject visible town helper glyphs, entry aprons/wedges, gate helpers, and helper circles while preserving the bottom-middle entry contract.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final town art, faction-specific town art, true multi-tile occupancy, pathing, movement, save/load, town logic, or ownership logic.
+- The 3x2 town footprint still exists as presentation/validation metadata only; non-entry cells remain a presentation contract rather than gameplay blocking.
+
 ## Current Implementation Slice: Overworld Hero Presence Correction
 Status: completed on 2026-04-20 as a narrow visual correction to the active hero presentation.
 
