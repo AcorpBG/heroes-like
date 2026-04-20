@@ -367,6 +367,10 @@ func _validate_road_overlay_tile_art(overlay: Dictionary, overlay_id: String) ->
 		return
 	for direction in ["N", "E", "S", "W", "NE", "SE", "SW", "NW"]:
 		_validate_art_path(String(connectors.get(direction, "")), "Terrain grammar overlay %s connector %s" % [overlay_id, direction])
+	var connection_pieces = tile_art.get("connection_pieces", {})
+	if connection_pieces is Dictionary:
+		for connection_key in ["NE+SW", "NW+SE"]:
+			_validate_art_path(String(connection_pieces.get(connection_key, "")), "Terrain grammar overlay %s connection piece %s" % [overlay_id, connection_key])
 
 func _validate_art_path(path: String, label: String) -> void:
 	if path == "":

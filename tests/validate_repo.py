@@ -4504,6 +4504,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             if overlay_id == "road_dirt":
                 supports = overlay.get("supports", [])
                 ensure(isinstance(supports, list) and "authored_tile_art" in supports, errors, "Terrain overlay road_dirt must mark authored_tile_art support")
+                ensure(isinstance(supports, list) and "diagonal_straight_pieces" in supports, errors, "Terrain overlay road_dirt must mark diagonal_straight_pieces support")
                 tile_art = overlay.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, "Terrain overlay road_dirt must define tile_art")
                 if isinstance(tile_art, dict):
@@ -4519,6 +4520,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                             ensure(art_path.exists(), errors, f"Terrain overlay road_dirt connector {direction} references missing texture {connectors.get(direction)}")
                             if art_path.exists():
                                 ensure(png_size(art_path) == (64, 64), errors, f"Terrain overlay road_dirt connector {direction} must be a 64x64 PNG")
+                    connection_pieces = tile_art.get("connection_pieces", {})
+                    ensure(isinstance(connection_pieces, dict), errors, "Terrain overlay road_dirt must define diagonal connection-piece art")
+                    if isinstance(connection_pieces, dict):
+                        for connection_key in ("NE+SW", "NW+SE"):
+                            piece_path = res_path_to_disk(str(connection_pieces.get(connection_key, "")))
+                            ensure(piece_path.exists(), errors, f"Terrain overlay road_dirt connection piece {connection_key} references missing texture {connection_pieces.get(connection_key)}")
+                            if piece_path.exists():
+                                ensure(png_size(piece_path) == (64, 64), errors, f"Terrain overlay road_dirt connection piece {connection_key} must be a 64x64 PNG")
     ensure("road_dirt" in overlay_ids, errors, "Terrain grammar must define the road_dirt structural road overlay")
 
     scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))

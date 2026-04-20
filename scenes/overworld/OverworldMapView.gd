@@ -499,10 +499,7 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 	var shadow_color: Color = style.get("shadow_color", ROAD_DEFAULT_SHADOW_COLOR)
 	var center_color: Color = style.get("center_color", ROAD_DEFAULT_CENTER_COLOR)
 	var connector_count := 0
-	for direction in DIRECTIONS:
-		var neighbor: Vector2i = tile + direction
-		if not _road_tiles.has(_tile_key(neighbor)):
-			continue
+	for direction in _road_neighbor_directions(tile):
 		connector_count += 1
 		var end := center + Vector2(float(direction.x) * rect.size.x * 0.52, float(direction.y) * rect.size.y * 0.52)
 		draw_line(center, end, shadow_color, width * 1.45)
@@ -523,6 +520,14 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 		return false
 	var neighbor_directions := _road_neighbor_directions(tile)
 	var drew_any := false
+	var connection_pieces = art.get("connection_pieces", {})
+	if connection_pieces is Dictionary:
+		var connection_piece_texture = _terrain_art_texture(String(connection_pieces.get(_road_connection_key_from_directions(neighbor_directions), "")))
+		if connection_piece_texture is Texture2D:
+			draw_texture_rect(connection_piece_texture, rect, false)
+			drew_any = true
+			if not _road_needs_joint_cap(neighbor_directions):
+				return true
 	var connectors = art.get("connectors", {})
 	if connectors is Dictionary:
 		for direction in neighbor_directions:
@@ -1966,9 +1971,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var tile_art_primary := _terrain_art_can_be_primary(terrain)
 	var tile_art_loaded := tile_art_primary and _terrain_art_texture(tile_art_path) is Texture2D
 	var edge_art_count := _edge_transition_art_count(terrain, transition_mask)
-	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
+	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
+	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
 	var road_joint_cap := _road_needs_joint_cap(road_neighbor_directions) if not road_payload.is_empty() else false
+	var road_connection_key := _road_connection_key_from_directions(road_neighbor_directions) if not road_payload.is_empty() else ""
 	var primary_base_model := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern")
 	return {
 		"terrain": terrain,
@@ -2015,7 +2022,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"road_role": String(road_payload.get("role", "")),
 		"road_overlay_art": road_art_loaded,
 		"road_shape_model": "connection_piece_overlay" if road_art_loaded else ("procedural_connector_lines" if not road_payload.is_empty() else ""),
-		"road_connection_key": _road_connection_key(tile) if not road_payload.is_empty() else "",
+		"road_connection_key": road_connection_key,
+		"road_connection_count": road_neighbor_directions.size(),
+		"road_connection_source": String(road_payload.get("connection_source", "")),
+		"road_diagonal_tile_piece": road_connection_piece_loaded,
+		"road_diagonal_piece_model": "full_diagonal_straight_piece" if road_connection_piece_loaded else "",
+		"road_unordered_adjacency_suppressed": bool(road_payload.get("ordered_connections", false)),
 		"road_joint_cap": road_joint_cap,
 		"road_joint_cap_model": "connection_aware_joint_cap" if not road_payload.is_empty() else "",
 	}
@@ -2041,8 +2053,11 @@ func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 	if art.is_empty():
 		return false
 	var center_loaded := _terrain_art_texture(String(art.get("center", ""))) is Texture2D
-	var connectors = art.get("connectors", {})
 	var neighbor_directions := _road_neighbor_directions(tile)
+	var connection_pieces = art.get("connection_pieces", {})
+	if connection_pieces is Dictionary and _terrain_art_texture(String(connection_pieces.get(_road_connection_key_from_directions(neighbor_directions), ""))) is Texture2D:
+		return true
+	var connectors = art.get("connectors", {})
 	var loaded_connector := false
 	if connectors is Dictionary:
 		for direction in neighbor_directions:
@@ -2051,6 +2066,19 @@ func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 	if not neighbor_directions.is_empty():
 		return loaded_connector and (center_loaded or not _road_needs_joint_cap(neighbor_directions))
 	return center_loaded
+
+func _road_connection_piece_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
+	if road_payload.is_empty():
+		return false
+	var overlay_id := String(road_payload.get("overlay_id", "road_dirt"))
+	if not _road_overlay_art_can_be_primary(overlay_id):
+		return false
+	var art := _road_overlay_art_paths(overlay_id)
+	var connection_pieces = art.get("connection_pieces", {})
+	if not (connection_pieces is Dictionary):
+		return false
+	var connection_key := _road_connection_key(tile)
+	return _terrain_art_texture(String(connection_pieces.get(connection_key, ""))) is Texture2D
 
 func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array) -> Dictionary:
 	if not explored:
@@ -2401,11 +2429,20 @@ func _register_road_overlay_art(overlay_id: String, overlay_class: Dictionary) -
 			var connector_path := String(connectors.get(direction, "")).strip_edges()
 			if connector_path != "":
 				normalized_connectors[direction] = connector_path
+	var connection_pieces = tile_art.get("connection_pieces", {})
+	var normalized_connection_pieces := {}
+	if connection_pieces is Dictionary:
+		for connection_key in ["NE+SW", "NW+SE"]:
+			var piece_path := String(connection_pieces.get(connection_key, "")).strip_edges()
+			if piece_path != "":
+				normalized_connection_pieces[connection_key] = piece_path
 	var normalized := {}
 	if center_path != "":
 		normalized["center"] = center_path
 	if not normalized_connectors.is_empty():
 		normalized["connectors"] = normalized_connectors
+	if not normalized_connection_pieces.is_empty():
+		normalized["connection_pieces"] = normalized_connection_pieces
 	if not normalized.is_empty():
 		_road_overlay_art[overlay_id] = normalized
 
@@ -2544,6 +2581,15 @@ func _road_overlay_style(overlay_id: String) -> Dictionary:
 	}
 
 func _road_neighbor_directions(tile: Vector2i) -> Array:
+	var road := _road_tile_payload(tile)
+	if road.has("connections"):
+		var connections = road.get("connections", [])
+		var connection_directions := []
+		if connections is Array:
+			for direction in DIRECTIONS:
+				if _direction_key(direction) in connections:
+					connection_directions.append(direction)
+		return connection_directions
 	var neighbor_directions := []
 	for direction in DIRECTIONS:
 		var neighbor: Vector2i = tile + direction
@@ -2564,8 +2610,11 @@ func _road_needs_joint_cap(neighbor_directions: Array) -> bool:
 	return (first + second) != Vector2i.ZERO
 
 func _road_connection_key(tile: Vector2i) -> String:
+	return _road_connection_key_from_directions(_road_neighbor_directions(tile))
+
+func _road_connection_key_from_directions(directions: Array) -> String:
 	var keys: Array[String] = []
-	for direction in _road_neighbor_directions(tile):
+	for direction in directions:
 		keys.append(_direction_key(direction))
 	keys.sort()
 	var result := ""
@@ -2624,17 +2673,64 @@ func _rebuild_road_tiles() -> void:
 		var tiles = road.get("tiles", [])
 		if not (tiles is Array):
 			continue
+		var road_path: Array[Vector2i] = []
 		for tile_value in tiles:
 			if not (tile_value is Dictionary):
 				continue
 			var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
 			if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 				continue
-			_road_tiles[_tile_key(tile)] = {
-				"overlay_id": overlay_id,
-				"road_id": road_id,
-				"role": role,
-			}
+			road_path.append(tile)
+			_ensure_road_tile_payload(tile, overlay_id, road_id, role)
+		for index in range(max(road_path.size() - 1, 0)):
+			var from_tile: Vector2i = road_path[index]
+			var to_tile: Vector2i = road_path[index + 1]
+			var direction := to_tile - from_tile
+			if direction == Vector2i.ZERO or abs(direction.x) > 1 or abs(direction.y) > 1:
+				continue
+			_add_road_connection(from_tile, direction)
+			_add_road_connection(to_tile, -direction)
+
+func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: String, role: String) -> void:
+	var key := _tile_key(tile)
+	var payload: Dictionary = _road_tiles.get(key, {})
+	if payload.is_empty():
+		payload = {
+			"overlay_id": overlay_id,
+			"road_id": road_id,
+			"role": role,
+			"connections": [],
+			"ordered_connections": true,
+			"connection_source": "ordered_terrain_layer_path",
+		}
+	else:
+		if not payload.has("connections"):
+			payload["connections"] = []
+		payload["ordered_connections"] = true
+		payload["connection_source"] = "ordered_terrain_layer_path"
+		if String(payload.get("overlay_id", "")) == "":
+			payload["overlay_id"] = overlay_id
+		if String(payload.get("road_id", "")) == "":
+			payload["road_id"] = road_id
+		if String(payload.get("role", "")) == "":
+			payload["role"] = role
+	_road_tiles[key] = payload
+
+func _add_road_connection(tile: Vector2i, direction: Vector2i) -> void:
+	var key := _tile_key(tile)
+	var payload: Dictionary = _road_tiles.get(key, {})
+	if payload.is_empty():
+		return
+	var direction_key := _direction_key(direction)
+	if direction_key == "":
+		return
+	var connections = payload.get("connections", [])
+	if not (connections is Array):
+		connections = []
+	if direction_key not in connections:
+		connections.append(direction_key)
+	payload["connections"] = connections
+	_road_tiles[key] = payload
 
 func _road_tile_payload(tile: Vector2i) -> Dictionary:
 	return _road_tiles.get(_tile_key(tile), {})

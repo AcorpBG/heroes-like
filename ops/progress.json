@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T16:19:28Z",
+  "updatedAt": "2026-04-20T16:50:20Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-procedural-object-grounding-10184",
-  "currentSliceTitle": "Ground procedural fallback resource, artifact, and encounter objects",
+  "currentSliceId": "overworld-diagonal-road-tiling-10184",
+  "currentSliceTitle": "Correct diagonal overworld road tile pieces and joins",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation-only correction for procedural fallback resource-site, artifact, and encounter objects that still routed through the shared marker plate, upper-mass backdrop, and foreground-lip support path. Fallback objects now use family-specific material tinting, thin terrain contact disturbance, localized contact shadow, and small contact marks, with no shared marker plate/ring, upper-mass backdrop, vertical mass shadow, foreground lip, or base occlusion pads. Mapped sprites, town grounding, hero presence, terrain, roads, visible seam behavior, movement, pathing, fog, save/load, battle, town, resource-site gameplay, artifact logic, and encounter logic were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow presentation-only correction for dirt-road diagonal pieces and diagonal/cardinal joins. Road tiles now use ordered terrain-layer path connections instead of raw neighboring-road adjacency, true shared-tile intersections still merge connections, and full-tile NE/SW plus NW/SE diagonal straight road pieces are generated and referenced by the terrain grammar. Ninefold smoke now guards straight diagonal piece use, diagonal-to-cardinal join connection keys, and center-cap suppression on the following cardinal segment. Movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, terrain base palettes, border softening, prior center-cap suppression, and explored seam suppression were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -268,6 +268,12 @@
       "difficulty": "small"
     },
     {
+      "id": "overworld-diagonal-road-tiling-10184",
+      "title": "Correct diagonal overworld road tile pieces and joins",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -323,6 +329,7 @@
     }
   ],
   "nextActions": [
+    "Manually inspect the corrected diagonal road straight pieces and diagonal-to-cardinal joins in Ninefold Confluence at live-client scale before treating diagonal road tiling as broadly polished.",
     "Manually inspect unmapped procedural resource-site, artifact, and encounter fallbacks in River Pass and Ninefold Confluence at live-client scale before treating the no-plate fallback grounding as visually polished across supported viewports.",
     "Manually inspect the visible explored terrain seam correction in River Pass and Ninefold Confluence at live-client scale before treating the black-grid feedback as fully solved across supported viewports.",
     "Manually inspect the corrected cohesive grasslands base, softened edge overlays, and connection-aware road joints in River Pass and Ninefold Confluence at live-client scale before treating the terrain/road immersion issue as fully solved.",

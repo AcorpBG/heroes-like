@@ -16,7 +16,7 @@ func _run() -> void:
 		"hard",
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
-	SessionState.set_active_session(session)
+	session = SessionState.set_active_session(session)
 
 	var map_size := OverworldRules.derive_map_size(session)
 	if map_size != Vector2i(64, 64):
@@ -105,8 +105,74 @@ func _run() -> void:
 	if not bool(progress_result.get("ok", false)):
 		_fail("Ninefold smoke: OverworldShell could not advance one safe step on the 64x64 scenario.")
 		return
+	if not _assert_diagonal_road_tiling(shell, session):
+		return
 
 	get_tree().quit(0)
+
+func _assert_diagonal_road_tiling(shell: Node, session) -> bool:
+	var straight_tile := Vector2i(20, 45)
+	_reveal_validation_tiles(session, [straight_tile])
+	shell.call("validation_select_tile", straight_tile.x, straight_tile.y)
+	var straight_presentation: Dictionary = shell.call("validation_tile_presentation", straight_tile.x, straight_tile.y)
+	var straight_terrain: Dictionary = straight_presentation.get("terrain_presentation", {})
+	if String(straight_terrain.get("road_connection_source", "")) != "ordered_terrain_layer_path" or String(straight_terrain.get("road_connection_key", "")) != "NE+SW":
+		_fail("Ninefold smoke: diagonal road straight did not use ordered NE+SW path connections: %s." % straight_presentation)
+		return false
+	if int(straight_terrain.get("road_connection_count", 0)) != 2 or not bool(straight_terrain.get("road_diagonal_tile_piece", false)) or String(straight_terrain.get("road_diagonal_piece_model", "")) != "full_diagonal_straight_piece":
+		_fail("Ninefold smoke: diagonal road straight is not using the full diagonal tile piece: %s." % straight_presentation)
+		return false
+	if bool(straight_terrain.get("road_joint_cap", true)) or not bool(straight_terrain.get("road_unordered_adjacency_suppressed", false)):
+		_fail("Ninefold smoke: diagonal road straight still reports a center-cap or unordered-adjacency path: %s." % straight_presentation)
+		return false
+
+	var join_tile := Vector2i(17, 48)
+	var vertical_tile := Vector2i(16, 49)
+	_reveal_validation_tiles(session, [join_tile, vertical_tile])
+	shell.call("validation_select_tile", join_tile.x, join_tile.y)
+	var join_presentation: Dictionary = shell.call("validation_tile_presentation", join_tile.x, join_tile.y)
+	var join_terrain: Dictionary = join_presentation.get("terrain_presentation", {})
+	if String(join_terrain.get("road_connection_key", "")) != "NE+W" or int(join_terrain.get("road_connection_count", 0)) != 2:
+		_fail("Ninefold smoke: diagonal-to-cardinal road join picked up an unintended adjacent road connection: %s." % join_presentation)
+		return false
+	if not bool(join_terrain.get("road_joint_cap", false)) or bool(join_terrain.get("road_diagonal_tile_piece", true)):
+		_fail("Ninefold smoke: diagonal-to-cardinal road join did not keep a deliberate joint cap without claiming straight diagonal art: %s." % join_presentation)
+		return false
+
+	var vertical_presentation: Dictionary = shell.call("validation_tile_presentation", vertical_tile.x, vertical_tile.y)
+	var vertical_terrain: Dictionary = vertical_presentation.get("terrain_presentation", {})
+	if String(vertical_terrain.get("road_connection_key", "")) != "N+S" or bool(vertical_terrain.get("road_joint_cap", true)):
+		_fail("Ninefold smoke: cardinal segment after a diagonal join still connected diagonally or stamped a center cap: %s." % vertical_presentation)
+		return false
+	return true
+
+func _reveal_validation_tiles(session, tiles: Array) -> void:
+	var map_size := OverworldRules.derive_map_size(session)
+	var visible_tiles := []
+	var explored_tiles := []
+	for y in range(map_size.y):
+		var visible_row := []
+		var explored_row := []
+		for x in range(map_size.x):
+			visible_row.append(false)
+			explored_row.append(false)
+		visible_tiles.append(visible_row)
+		explored_tiles.append(explored_row)
+	for tile_value in tiles:
+		if not (tile_value is Vector2i):
+			continue
+		var tile: Vector2i = tile_value
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		visible_tiles[tile.y][tile.x] = true
+		explored_tiles[tile.y][tile.x] = true
+	session.overworld["fog"] = {
+		"visible_tiles": visible_tiles,
+		"explored_tiles": explored_tiles,
+		"visible_count": tiles.size(),
+		"explored_count": tiles.size(),
+		"total_tiles": map_size.x * map_size.y,
+	}
 
 func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not shell.has_method("validation_tile_presentation"):

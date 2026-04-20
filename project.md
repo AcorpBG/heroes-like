@@ -196,6 +196,10 @@ Implementation note date: 2026-04-20
 
 The procedural fallback path for overworld resource sites, artifacts, and unresolved encounters has been narrowed away from staged marker supports. Fallback objects no longer draw through the shared marker plate, rear upper-mass backdrop, or foreground ground-lip/base-pad path; they now use family-specific material tinting, thin terrain contact disturbance, localized contact shadows, and small contact marks while mapped sprites retain their existing footprint-scaled settlement model. This is a presentation-only correction: terrain, roads, visible seam behavior, towns, hero presence, movement, pathing, fog, save/load, battle, town, resource-site, artifact, and encounter gameplay logic are unchanged.
 
+Implementation note date: 2026-04-20
+
+Diagonal dirt-road presentation now uses ordered terrain-layer path connections instead of connecting every neighboring road tile by raw adjacency. `OverworldMapView` merges connection directions from the authored road tile order, which suppresses accidental diagonal links beside diagonal-to-cardinal turns, and the road tile builder now emits full-tile NE/SW and NW/SE diagonal straight pieces. This is a presentation-only road tiling correction: movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

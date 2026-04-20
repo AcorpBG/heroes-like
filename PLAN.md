@@ -647,6 +647,31 @@ Limits:
 - Procedural fallback silhouettes remain compact placeholders; this slice only changes how they are grounded into the map surface.
 - No movement, pathing, fog, save/load, battle, town, resource-site, artifact, encounter, terrain, road, or seam behavior changed.
 
+## Current Implementation Slice: Overworld Diagonal Road Tiling
+Status: completed on 2026-04-20 as a narrow road-presentation correction after AcOrP feedback that diagonal roads still read like smeared strokes and joined awkwardly at turns.
+
+Purpose:
+- Make diagonal dirt-road chains read as deliberate tile pieces with clean joins rather than center-crossing connector strokes.
+- Stop diagonal-to-cardinal turns from gaining unintended extra diagonal connections purely because nearby road tiles touch at a corner.
+- Keep the slice visual/presentation-only: no road movement costs, pathing, fog, save/load, battle, town, object, mapped-sprite, or terrain-base behavior changes.
+
+Implemented:
+- Changed `OverworldMapView` road connectivity so each road tile records directions from ordered `content/terrain_layers.json` road paths, merging true shared-tile intersections while suppressing unordered adjacent-road overpaint.
+- Added terrain-grammar support and generated PNG art for full-tile NE/SW and NW/SE diagonal straight road pieces.
+- Updated road validation metadata to expose ordered connection source, connection count, straight diagonal piece use, and center-cap behavior.
+- Extended the Ninefold smoke to guard a straight diagonal road tile, a diagonal-to-cardinal join, and the following cardinal segment.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is still generated placeholder road art, not a final road atlas.
+- The fix relies on authored road paths sharing an actual tile for intersections; adjacent road tiles no longer imply a diagonal join by themselves.
+- Manual visual review is still needed before treating every diagonal-road composition and supported viewport as polished.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
