@@ -738,14 +738,23 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 
-	var forest_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 1)
-	var forest_terrain: Dictionary = forest_presentation.get("terrain_presentation", {})
-	if String(forest_terrain.get("terrain_group", "")) != "forest" or int(forest_terrain.get("edge_transition_count", 0)) <= 0 or not bool(forest_terrain.get("edge_transition_art_loaded", false)) or String(forest_terrain.get("transition_shape_model", "")) != "jagged_directional_overlay":
-		push_error("Overworld smoke: forest edge transition art is missing the jagged directional overlay path. presentation=%s" % forest_presentation)
+	var forest_edge_presentation: Dictionary = shell.call("validation_tile_presentation", 0, 1)
+	var forest_edge_terrain: Dictionary = forest_edge_presentation.get("terrain_presentation", {})
+	if (
+		String(forest_edge_terrain.get("terrain_group", "")) != "grasslands"
+		or not bool(forest_edge_terrain.get("neighbor_aware_transitions", false))
+		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "neighbor_priority_intrusion_8_way"
+		or "forest" not in forest_edge_terrain.get("transition_source_terrain_ids", [])
+		or String(forest_edge_terrain.get("transition_edge_mask", "")) != "E"
+		or int(forest_edge_terrain.get("edge_transition_count", 0)) != 1
+		or not bool(forest_edge_terrain.get("edge_transition_art_loaded", false))
+		or String(forest_edge_terrain.get("transition_shape_model", "")) != "jagged_directional_overlay"
+	):
+		push_error("Overworld smoke: forest transition is not being selected from neighboring terrain relationships. presentation=%s" % forest_edge_presentation)
 		get_tree().quit(1)
 		return false
-	if String(forest_terrain.get("transition_edge_treatment", "")) != "soft_feathered_jagged_overlay":
-		push_error("Overworld smoke: forest edge transition art is not reporting the softened feathered treatment. presentation=%s" % forest_presentation)
+	if String(forest_edge_terrain.get("transition_edge_treatment", "")) != "soft_feathered_jagged_overlay" or String(forest_edge_terrain.get("transition_selection_rule", "")) != "higher_priority_neighbor_intrudes_into_lower_priority_receiver":
+		push_error("Overworld smoke: forest edge transition art is not reporting the softened neighbor-intrusion treatment. presentation=%s" % forest_edge_presentation)
 		get_tree().quit(1)
 		return false
 

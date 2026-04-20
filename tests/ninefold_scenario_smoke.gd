@@ -107,8 +107,38 @@ func _run() -> void:
 		return
 	if not _assert_homm_road_topology(shell, session):
 		return
+	if not _assert_neighbor_terrain_transitions(shell, session):
+		return
 
 	get_tree().quit(0)
+
+func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
+	var receiver_tile := Vector2i(21, 26)
+	var source_tile := Vector2i(20, 26)
+	_reveal_validation_tiles(session, [receiver_tile, source_tile])
+	shell.call("validation_select_tile", receiver_tile.x, receiver_tile.y)
+	var presentation: Dictionary = shell.call("validation_tile_presentation", receiver_tile.x, receiver_tile.y)
+	var terrain: Dictionary = presentation.get("terrain_presentation", {})
+	if (
+		String(terrain.get("terrain", "")) != "grass"
+		or String(terrain.get("terrain_group", "")) != "grasslands"
+		or not bool(terrain.get("neighbor_aware_transitions", false))
+		or String(terrain.get("transition_calculation_model", "")) != "neighbor_priority_intrusion_8_way"
+		or String(terrain.get("transition_edge_model", "")) != "higher_priority_neighbor_intrusion_edges"
+		or String(terrain.get("transition_edge_mask", "")) != "W"
+		or "forest" not in terrain.get("transition_source_terrain_ids", [])
+		or "forest" not in terrain.get("transition_source_groups", [])
+		or int(terrain.get("edge_transition_count", 0)) != 1
+		or int(terrain.get("transition_priority", 0)) != 10
+		or not bool(terrain.get("higher_priority_neighbor_intrusion", false))
+	):
+		_fail("Ninefold smoke: terrain transition was not selected from neighboring terrain relationships at the forest/grass boundary: %s." % presentation)
+		return false
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	if sources.is_empty() or String(sources[0].get("source_terrain", "")) != "forest" or String(sources[0].get("direction", "")) != "W":
+		_fail("Ninefold smoke: terrain transition did not expose its neighboring source terrain and direction: %s." % presentation)
+		return false
+	return true
 
 func _assert_homm_road_topology(shell: Node, session) -> bool:
 	var vertical_tile := Vector2i(23, 30)

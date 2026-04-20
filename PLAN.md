@@ -26,6 +26,32 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: Neighbor-Aware Terrain Transitions
+Status: completed on 2026-04-20 as the next narrow overworld terrain presentation slice.
+
+Purpose:
+- Correct the terrain transition contract toward neighboring-tile-aware terrain relationships rather than isolated per-tile borders.
+- Keep logical map coordinates, pathing, save data, editor schema, and object systems unchanged.
+- Reuse the existing terrain grammar, runtime tile bank, edge overlays, and map-editor live preview path.
+
+Implemented:
+- `OverworldMapView` now builds an explicit 8-neighbor transition payload for each explored tile.
+- Cardinal transition edges are selected from higher-priority neighboring terrain intruding into the lower-priority receiver tile, with same-terrain-group seams suppressed.
+- Diagonal higher-priority neighbors now produce procedural corner hints when no adjacent cardinal source from the same group already covers the relationship.
+- Existing edge-overlay art is reused from the selected source terrain; procedural strips and corner wedges remain fallback treatments when authored art is missing.
+- Validation payloads now expose transition source terrain ids/groups, receiver priority, edge/corner masks, source dictionaries, and the calculation model for both overworld play and the editor preview.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is still not a full rich transition atlas, water/coast art expansion, movement/pathing change, save-format change, or authored JSON exporter.
+- The slice deliberately keeps the existing logical map and editor working-copy schema; it only improves how terrain presentation chooses visible blends from neighbors.
+
 ## Current Content Design Slice: Overworld Content Bible
 Status: design source drafted after the six-faction scaffold slice, with HoMM3 map-editor research used as inspiration rather than a copy target.
 
