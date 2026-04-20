@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T20:29:56Z",
+  "updatedAt": "2026-04-20T20:52:06Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-neighbor-aware-terrain-transitions-10184",
-  "currentSliceTitle": "Strengthen overworld terrain transitions with neighboring terrain relationships",
+  "currentSliceId": "map-editor-restore-selected-tile-10184",
+  "currentSliceTitle": "Restore one selected map-editor tile from the authored scenario baseline",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the next narrow terrain presentation slice: OverworldMapView now calculates explored-tile terrain transitions from explicit 8-neighbor terrain relationships, suppresses same-group seams, applies higher-priority neighboring terrain as intrusion edges onto lower-priority receiver tiles, and adds diagonal corner hints where appropriate. Existing terrain grammar edge art is reused from the selected source terrain with procedural strip/corner fallbacks. Overworld and map editor preview validation now expose transition source terrain ids/groups, edge/corner masks, source dictionaries, receiver priority, and calculation-model metadata. Logical map coordinates, pathing, save data, editor schema, object systems, authored JSON writeback/export, broad gameplay, and town 3x2 occupancy/pathing were left unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the next thin in-project map editor slice: MapEditorShell now has a Restore Tile command and validation hook that reads a fresh authored baseline session through ScenarioFactory, restores only the selected coordinate's authored terrain id, road presence, supported town/resource/artifact/encounter placement state, and relevant hero-start consistency into the in-memory working copy, and removes working-copy-only supported placements on that tile. Authored JSON remains immutable, save format is unchanged, no bulk reset/export path was added, Play Copy/return continues to consume the same restored working copy, unrelated working-copy edits stay intact except for returning the same authored placement id or the single global hero start when required. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
