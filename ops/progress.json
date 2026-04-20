@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T20:56:01Z",
+  "updatedAt": "2026-04-20T21:09:21Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-fill-terrain-10184",
-  "currentSliceTitle": "Flood-fill contiguous map-editor terrain regions in the working copy",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Started the next thin in-project map editor slice: add a compact Fill Terrain command to MapEditorShell that mutates only the in-memory working-copy terrain map, fills the contiguous selected-tile terrain region with the active terrain id, and keeps authored JSON, save format, projection/layout, pathing/gameplay, and town occupancy/pathing unchanged.",
+  "currentSliceId": "map-editor-road-path-10184",
+  "currentSliceTitle": "Paint compact map-editor road paths in the working copy",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed the thin in-project map editor road-path slice: MapEditorShell now has a compact Road Path tool that sets a start tile, applies a deterministic Manhattan L path to an end tile through the existing terrain-layer road overlay structure, toggles add/remove behavior in the in-memory working copy, exposes explicit path-rule validation output, and keeps authored JSON, save format, projection/layout, pathing/gameplay, and town occupancy/pathing unchanged.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -336,7 +336,13 @@
     {
       "id": "map-editor-fill-terrain-10184",
       "title": "Flood-fill selected terrain regions in the map editor working copy",
-      "status": "in_progress",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-road-path-10184",
+      "title": "Paint compact road paths in the map editor working copy",
+      "status": "completed",
       "difficulty": "small"
     },
     {
@@ -402,7 +408,7 @@
   ],
   "nextActions": [
     "Manually inspect neighbor-aware forest/grass, mire/grass, highland/grass, and snow/frost transition boundaries in River Pass, Ninefold Confluence, and the map editor before treating the transition presentation as visually polished.",
-    "Use the in-game map editor's terrain, road, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
+    "Use the in-game map editor's terrain, single-tile road, road-path, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
     "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
     "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",

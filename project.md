@@ -246,6 +246,10 @@ The map editor working-copy contract now includes a compact terrain flood-fill c
 
 Implementation note date: 2026-04-20
 
+The map editor working-copy contract now includes a compact road-path command for faster road layout experiments. `MapEditorShell` can set a road-path start tile and then apply a deterministic Manhattan L path, horizontal first and then vertical, to the chosen end tile. The command uses toggle semantics: all-road paths remove those working-copy road memberships, while mixed/no-road paths add missing tiles to the existing editor dirt-road terrain layer. Authored scenario JSON remains immutable, runtime save format is unchanged, no road schema/export path was added, and projection, gameplay pathing, road movement costs, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
 The overworld terrain transition contract now treats neighboring terrain relationships as the source of visible transitions. `OverworldMapView` builds an explicit 8-neighbor transition payload for each explored tile, suppresses seams inside the same terrain group, applies higher-priority neighboring terrain as cardinal intrusion edges on lower-priority receiver tiles, and adds diagonal corner hints when a higher-priority neighbor only touches by corner. Existing grammar edge art is reused from the selected source terrain, with procedural strips and corner wedges as honest fallbacks. The map editor preview reads the same renderer and validation payloads, so painted terrain immediately exposes neighbor-aware edge and corner transition metadata. This is presentation-only: logical map coordinates, pathing, save data, editor schema, object placement systems, and town footprint/pathing semantics are unchanged.
 
 ## Repository Structure
