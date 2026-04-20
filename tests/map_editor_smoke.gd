@@ -1,6 +1,8 @@
 extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
+const MAP_EDITOR_SCENE_PATH := "res://scenes/editor/MapEditorShell.tscn"
+const OVERWORLD_SCENE_PATH := "res://scenes/overworld/OverworldShell.tscn"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -95,6 +97,8 @@ func _run() -> void:
 		return
 	if not _exercise_object_placement(shell, "encounter", "encounter_mire_raid", Vector2i(7, 4), "has_visible_encounter"):
 		return
+	if not await _assert_play_copy_round_trip(shell):
+		return
 
 	get_tree().quit(0)
 
@@ -153,6 +157,106 @@ func _object_detail_for_family(inspection: Dictionary, family: String) -> Dictio
 		if detail is Dictionary and String(detail.get("kind", "")) == family:
 			return detail
 	return {}
+
+func _assert_play_copy_round_trip(shell) -> bool:
+	var previous_current = get_tree().current_scene
+	var parent = shell.get_parent()
+	if parent != get_tree().root:
+		parent.remove_child(shell)
+		get_tree().root.add_child(shell)
+	get_tree().current_scene = shell
+
+	var launch_result: Dictionary = shell.call("validation_launch_working_copy")
+	if (
+		not bool(launch_result.get("ok", false))
+		or not bool(launch_result.get("editor_working_copy", false))
+		or not bool(launch_result.get("editor_snapshot_available", false))
+		or String(launch_result.get("return_model", "")) != "launch_snapshot"
+	):
+		_fail("Map editor smoke: Play Copy did not stage the editor working-copy snapshot: %s." % launch_result)
+		return false
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var overworld = get_tree().current_scene
+	var overworld_path := String(overworld.scene_file_path) if overworld != null else ""
+	if overworld_path != OVERWORLD_SCENE_PATH or not overworld.has_method("validation_snapshot"):
+		_fail("Map editor smoke: Play Copy did not route to the normal overworld shell; scene=%s." % overworld_path)
+		return false
+	var overworld_snapshot: Dictionary = overworld.call("validation_snapshot")
+	if (
+		not bool(overworld_snapshot.get("editor_working_copy", false))
+		or String(overworld_snapshot.get("editor_return_model", "")) != "launch_snapshot"
+	):
+		_fail("Map editor smoke: overworld shell did not retain editor Play Copy metadata: %s." % overworld_snapshot)
+		return false
+	var play_hero: Dictionary = overworld_snapshot.get("hero_position", {})
+	if int(play_hero.get("x", -1)) != 3 or int(play_hero.get("y", -1)) != 3:
+		_fail("Map editor smoke: Play Copy did not launch from the edited hero start: %s." % overworld_snapshot)
+		return false
+	var play_tile: Dictionary = overworld.call("validation_tile_presentation", 2, 2)
+	var play_terrain: Dictionary = play_tile.get("terrain_presentation", {})
+	if String(play_terrain.get("terrain", "")) != "forest":
+		_fail("Map editor smoke: Play Copy did not use the edited terrain working copy: %s." % play_tile)
+		return false
+
+	_set_active_hero_position(SessionState.ensure_active_session(), Vector2i(4, 3))
+	overworld.call("validation_return_to_menu")
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var returned_editor = get_tree().current_scene
+	var returned_path := String(returned_editor.scene_file_path) if returned_editor != null else ""
+	if returned_path != MAP_EDITOR_SCENE_PATH or not returned_editor.has_method("validation_snapshot"):
+		_fail("Map editor smoke: editor Play Copy return did not route back to MapEditorShell; scene=%s." % returned_path)
+		return false
+	var returned_snapshot: Dictionary = returned_editor.call("validation_snapshot")
+	if (
+		String(returned_snapshot.get("scenario_id", "")) != SCENARIO_ID
+		or not bool(returned_snapshot.get("restored_from_play_copy", false))
+		or String(returned_snapshot.get("return_model", "")) != "launch_snapshot"
+	):
+		_fail("Map editor smoke: returned editor did not restore the in-memory launch snapshot: %s." % returned_snapshot)
+		return false
+	var returned_hero: Dictionary = returned_snapshot.get("hero_position", {})
+	if int(returned_hero.get("x", -1)) != 3 or int(returned_hero.get("y", -1)) != 3:
+		_fail("Map editor smoke: returned editor imported live play mutation instead of the launch snapshot: %s." % returned_snapshot)
+		return false
+	var returned_tile: Dictionary = returned_editor.call("validation_tile_presentation", 2, 2)
+	var returned_terrain: Dictionary = returned_tile.get("terrain_presentation", {})
+	if String(returned_terrain.get("terrain", "")) != "forest":
+		_fail("Map editor smoke: returned editor lost the edited terrain working copy: %s." % returned_tile)
+		return false
+	if SessionState.ensure_active_session().scenario_id != "":
+		_fail("Map editor smoke: returning to the editor should clear the active playable session.")
+		return false
+
+	if previous_current != null and is_instance_valid(previous_current):
+		get_tree().current_scene = previous_current
+	return true
+
+func _set_active_hero_position(session, tile: Vector2i) -> void:
+	var position_payload := {"x": tile.x, "y": tile.y}
+	session.overworld["hero_position"] = position_payload.duplicate(true)
+	var hero = session.overworld.get("hero", {})
+	if hero is Dictionary:
+		hero["position"] = position_payload.duplicate(true)
+		session.overworld["hero"] = hero
+	var heroes = session.overworld.get("player_heroes", [])
+	if heroes is Array:
+		var active_hero_id := String(session.overworld.get("active_hero_id", session.hero_id))
+		for index in range(heroes.size()):
+			var hero_state = heroes[index]
+			if not (hero_state is Dictionary):
+				continue
+			if String(hero_state.get("id", "")) == active_hero_id:
+				hero_state["position"] = position_payload.duplicate(true)
+				heroes[index] = hero_state
+				break
+		session.overworld["player_heroes"] = heroes
 
 func _fail(message: String) -> void:
 	push_error(message)

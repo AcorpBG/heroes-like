@@ -507,8 +507,12 @@ func _refresh_save_slot_picker() -> void:
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save"
 	_save_button.tooltip_text = String(surface.get("save_button_tooltip", "Save the active expedition."))
-	_menu_button.text = "Menu"
-	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
+	if bool(_session.flags.get("editor_working_copy", false)):
+		_menu_button.text = "Editor"
+		_menu_button.tooltip_text = "Return to the map editor and restore the Play Copy launch snapshot."
+	else:
+		_menu_button.text = "Menu"
+		_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func _refresh_commitment_panel() -> void:
 	if not _commitment_panel.visible:
@@ -1551,6 +1555,8 @@ func validation_snapshot() -> Dictionary:
 		"campaign_name": String(_session.flags.get("campaign_name", "")),
 		"campaign_chapter_label": String(_session.flags.get("campaign_chapter_label", "")),
 		"campaign_previous_scenario_id": String(_session.flags.get("campaign_previous_scenario_id", "")),
+		"editor_working_copy": bool(_session.flags.get("editor_working_copy", false)),
+		"editor_return_model": String(_session.flags.get("editor_return_model", "")),
 		"scenario_status": _session.scenario_status,
 		"game_state": _session.game_state,
 		"day": _session.day,

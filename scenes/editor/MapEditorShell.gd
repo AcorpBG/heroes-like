@@ -51,6 +51,7 @@ var _hovered_tile := Vector2i(-1, -1)
 var _tool := TOOL_INSPECT
 var _dirty := false
 var _last_message := ""
+var _restored_from_play_copy := false
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -59,6 +60,9 @@ func _ready() -> void:
 	_rebuild_object_family_picker()
 	_rebuild_scenario_picker()
 	_select_tool(TOOL_INSPECT)
+	var returned_session = SessionState.consume_editor_return_session()
+	if returned_session != null and _resume_working_copy_from_memory(returned_session):
+		return
 	if _selected_scenario_id != "":
 		_load_scenario_working_copy(_selected_scenario_id)
 
@@ -245,11 +249,46 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
 	_selected_scenario_id = scenario_id
+	_select_scenario_picker_by_id(scenario_id)
 	_selected_tile = OverworldRules.hero_position(_session)
 	_dirty = false
+	_restored_from_play_copy = false
 	_last_message = "Loaded authored scenario into a mutable editor working copy."
 	_refresh_state()
 	return true
+
+func _resume_working_copy_from_memory(session) -> bool:
+	if session == null or session.scenario_id == "":
+		return false
+	_session = session
+	OverworldRules.normalize_overworld_state(_session)
+	_make_all_tiles_visible(_session)
+	_selected_scenario_id = _session.scenario_id
+	_select_scenario_picker_by_id(_selected_scenario_id)
+	_restore_editor_ui_metadata()
+	_restored_from_play_copy = true
+	_last_message = "Returned from Play Copy with the editor launch snapshot still in memory."
+	_refresh_state()
+	return true
+
+func _restore_editor_ui_metadata() -> void:
+	var selected_tile_value = _session.flags.get("editor_selected_tile", {})
+	if selected_tile_value is Dictionary:
+		_selected_tile = Vector2i(
+			int(selected_tile_value.get("x", OverworldRules.hero_position(_session).x)),
+			int(selected_tile_value.get("y", OverworldRules.hero_position(_session).y))
+		)
+	else:
+		_selected_tile = OverworldRules.hero_position(_session)
+	if not _tile_in_bounds(_selected_tile):
+		_selected_tile = OverworldRules.hero_position(_session)
+	_selected_terrain_id = String(_session.flags.get("editor_selected_terrain_id", _selected_terrain_id))
+	var restored_family := String(_session.flags.get("editor_selected_object_family", _selected_object_family))
+	if _select_object_family_by_id(restored_family):
+		var restored_content_id := String(_session.flags.get("editor_selected_object_content_id", _selected_object_content_id))
+		if restored_content_id != "":
+			_select_object_content_by_id(restored_content_id)
+	_dirty = bool(_session.flags.get("editor_dirty", true))
 
 func _make_all_tiles_visible(session) -> void:
 	var map_size := OverworldRules.derive_map_size(session)
@@ -640,17 +679,39 @@ func _remove_resolved_encounter_ids(placement_ids: Array) -> void:
 func _on_play_working_copy_pressed() -> void:
 	if _session == null:
 		return
-	_prepare_working_copy_for_play()
-	SessionState.set_active_session(_session)
+	_prepare_working_copy_snapshot_for_return()
+	SessionState.set_editor_working_copy_session(_session)
+	var play_session = SessionState.duplicate_editor_working_copy_session()
+	if play_session == null:
+		_last_message = "Could not stage the editor working copy for play."
+		_refresh_state()
+		return
+	_prepare_working_copy_for_play(play_session)
+	SessionState.set_active_session(play_session)
 	AppRouter.go_to_overworld()
 
-func _prepare_working_copy_for_play() -> void:
+func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_working_copy"] = true
 	_session.flags["editor_source_scenario_id"] = _session.scenario_id
-	_session.flags["editor_started_at"] = Time.get_datetime_string_from_system(true)
+	_session.flags["editor_return_model"] = "launch_snapshot"
+	_session.flags["editor_dirty"] = _dirty
+	_session.flags["editor_selected_tile"] = {"x": _selected_tile.x, "y": _selected_tile.y}
+	_session.flags["editor_selected_terrain_id"] = _selected_terrain_id
+	_session.flags["editor_selected_object_family"] = _selected_object_family
+	_session.flags["editor_selected_object_content_id"] = _selected_object_content_id
 	_session.game_state = "overworld"
 	_session.scenario_status = "in_progress"
-	OverworldRules.refresh_fog_of_war(_session)
+	_session.battle = {}
+
+func _prepare_working_copy_for_play(session) -> void:
+	session.flags["editor_working_copy"] = true
+	session.flags["editor_source_scenario_id"] = session.scenario_id
+	session.flags["editor_return_model"] = "launch_snapshot"
+	session.flags["editor_started_at"] = Time.get_datetime_string_from_system(true)
+	session.game_state = "overworld"
+	session.scenario_status = "in_progress"
+	session.battle = {}
+	OverworldRules.refresh_fog_of_war(session)
 
 func _on_menu_pressed() -> void:
 	AppRouter.go_to_main_menu()
@@ -1007,15 +1068,19 @@ func _panel_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat
 
 func validation_snapshot() -> Dictionary:
 	var map_size := OverworldRules.derive_map_size(_session) if _session != null else Vector2i.ZERO
+	var hero_pos := OverworldRules.hero_position(_session) if _session != null else Vector2i.ZERO
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id if _session != null else "",
 		"working_copy": _session != null,
+		"restored_from_play_copy": _restored_from_play_copy,
+		"return_model": String(_session.flags.get("editor_return_model", "")) if _session != null else "",
 		"dirty": _dirty,
 		"tool": _tool,
 		"selected_terrain_id": _selected_terrain_id,
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
+		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
 		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
 		"hovered_tile": {"x": _hovered_tile.x, "y": _hovered_tile.y},
 		"map_size": {"x": map_size.x, "y": map_size.y},
@@ -1145,6 +1210,8 @@ func validation_launch_working_copy() -> Dictionary:
 		"scenario_id": scenario_id,
 		"active_scenario_id": SessionState.ensure_active_session().scenario_id,
 		"editor_working_copy": bool(SessionState.ensure_active_session().flags.get("editor_working_copy", false)),
+		"editor_snapshot_available": SessionState.has_editor_working_copy_session(),
+		"return_model": String(SessionState.ensure_active_session().flags.get("editor_return_model", "")),
 	}
 
 func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
@@ -1170,6 +1237,13 @@ func _select_object_family_by_id(family: String) -> bool:
 			_selected_object_family = family
 			_selected_object_content_id = ""
 			_rebuild_object_content_picker()
+			return true
+	return false
+
+func _select_scenario_picker_by_id(scenario_id: String) -> bool:
+	for index in range(_scenario_picker.get_item_count()):
+		if String(_scenario_picker.get_item_metadata(index)) == scenario_id:
+			_scenario_picker.select(index)
 			return true
 	return false
 

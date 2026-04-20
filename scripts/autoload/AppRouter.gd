@@ -22,6 +22,10 @@ func go_to_main_menu() -> void:
 	_change_scene(MAIN_MENU_SCENE)
 
 func return_to_main_menu_from_active_play() -> void:
+	if SessionState.request_editor_return_from_active_play():
+		_menu_notice = ""
+		_change_scene(MAP_EDITOR_SCENE)
+		return
 	go_to_main_menu()
 
 func go_to_overworld() -> void:

@@ -220,6 +220,10 @@ Implementation note date: 2026-04-20
 
 The next map editor slice extends that same in-memory working-copy contract to overworld object placements. `MapEditorShell` now has a compact object palette for the current authored placement families that live play already consumes: towns, resource sites, artifacts, and encounters. Placement and removal tools mutate only the runtime working-copy arrays, generate unique editor placement ids, and build town/resource/artifact/encounter records in the existing runtime shapes; authored scenario JSON remains untouched unless a future export/writeback slice is deliberately scoped. This is placement iteration support, not a full object editor, undo system, occupancy/pathing rewrite, owner/difficulty authoring pass, or content-pipeline writer.
 
+Implementation note date: 2026-04-20
+
+The Play Copy loop now preserves the editor working-copy launch snapshot in memory so map testing can return to the editor without rebuilding from authored JSON. `MapEditorShell` stores its mutable runtime scenario copy through `SessionState`, launches the normal overworld shell on a duplicate of that copy, and `AppRouter` routes editor-origin play sessions back into `MapEditorShell` through the existing active-play return path. The return model is explicit: the editor restores the launch snapshot, not the fully mutated live play state from the test run. Authored content remains immutable, runtime save format is unchanged, no editor-only scenario schema was added, and town 3x2 occupancy/pathing remains future work.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
