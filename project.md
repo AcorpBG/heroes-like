@@ -216,6 +216,10 @@ Implementation note date: 2026-04-20
 
 The first in-project map editor slice uses an in-game dev/editor shell rather than a Godot editor plugin. `scenes/editor/MapEditorShell.tscn` loads an authored scenario through the existing `ScenarioFactory` into an in-memory mutable working copy, reveals that copy for editing, and previews it through the same `OverworldMapView` renderer used by live overworld play. The initial tools are deliberately narrow: terrain painting from the authored terrain grammar, dirt-road toggle editing through the existing terrain-layer road structure, hero-start repositioning for quick iteration, and tile/object inspection for towns, resource sites, artifacts, encounters, roads, and terrain. "Play Copy" routes the current working copy into the normal overworld shell through `SessionState` and `AppRouter` without writing authored content. This is a first iteration tool, not a full external map editor, content exporter, or scenario schema redesign.
 
+Implementation note date: 2026-04-20
+
+The next map editor slice extends that same in-memory working-copy contract to overworld object placements. `MapEditorShell` now has a compact object palette for the current authored placement families that live play already consumes: towns, resource sites, artifacts, and encounters. Placement and removal tools mutate only the runtime working-copy arrays, generate unique editor placement ids, and build town/resource/artifact/encounter records in the existing runtime shapes; authored scenario JSON remains untouched unless a future export/writeback slice is deliberately scoped. This is placement iteration support, not a full object editor, undo system, occupancy/pathing rewrite, owner/difficulty authoring pass, or content-pipeline writer.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

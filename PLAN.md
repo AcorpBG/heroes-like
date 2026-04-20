@@ -49,6 +49,25 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: Map Editor Object Placement Editing
+Status: completed on 2026-04-20 as the next narrow editor slice.
+
+Purpose:
+- Let the in-game map editor mutate overworld object placements on the existing scenario working copy instead of only terrain, roads, and hero start.
+- Reuse the same runtime placement arrays that live play already consumes: towns, resource nodes, artifact nodes, and encounters.
+- Keep authored JSON immutable and avoid introducing an exporter, writeback path, or second scenario schema.
+
+Implemented:
+- Added a compact object palette to `MapEditorShell` with family selection for towns, resource sites, artifacts, and encounters plus authored content-id selection from the existing content JSON domains.
+- Added object placement and removal tools that mutate only the in-memory working copy, generating unique editor placement ids and building runtime-shaped town/resource/artifact/encounter records through existing rules/helpers.
+- Improved tile inspection with placement id, content id, family/status, owner, difficulty, and structured validation details so placement edits are immediately visible.
+- Extended static repo validation and the map editor smoke test to place, preview, inspect, and remove one object from each supported family.
+
+Limits:
+- This is still not an exporter, content-pipeline writer, undo stack, occupancy/pathing editor, owner/difficulty editor, or full scenario validation UI.
+- The editor currently blocks stacking supported overworld placements on the same tile; moving or reassigning existing placements can be handled by remove-then-place in this slice.
+- Campaign/skirmish/save gameplay still uses authored content unless the editor's Play Copy route explicitly launches the mutated working copy.
+
 ## Current Implementation Slice: In-Game Map Editor Shell
 Status: first slice implemented on 2026-04-20 as a dev-facing scenario iteration tool.
 
@@ -68,7 +87,7 @@ Implemented:
 Limits:
 - This is not a full production map editor, exporter, undo stack, object palette, terrain-cost editor, map validation UI, or Godot editor plugin.
 - Edits are intentionally in-memory only; authored JSON writeback needs a separate content-pipeline slice.
-- Placement editing beyond hero-start repositioning remains future work.
+- Deeper placement workflows such as move/reassign, owner/difficulty tuning, validation overlays, and authored writeback remain future work.
 
 ## Current Implementation Slice: Overworld Content Foundation
 Status: completed on 2026-04-18 as the first real implementation pass from the overworld bible.

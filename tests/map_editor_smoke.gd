@@ -83,7 +83,76 @@ func _run() -> void:
 		_fail("Map editor smoke: tile inspection did not identify the town object: %s." % inspect_payload)
 		return
 
+	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
+		return
+	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
+		return
+	var artifact_move_seed: Dictionary = shell.call("validation_remove_object", 23, 5, "artifact")
+	if not bool(artifact_move_seed.get("ok", false)):
+		_fail("Map editor smoke: could not remove the authored artifact before exercising artifact relocation: %s." % artifact_move_seed)
+		return
+	if not _exercise_object_placement(shell, "artifact", "artifact_trailsinger_boots", Vector2i(6, 4), "has_artifact"):
+		return
+	if not _exercise_object_placement(shell, "encounter", "encounter_mire_raid", Vector2i(7, 4), "has_visible_encounter"):
+		return
+
 	get_tree().quit(0)
+
+func _exercise_object_placement(shell, family: String, content_id: String, tile: Vector2i, presentation_key: String) -> bool:
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var before_count := int(before_snapshot.get("placement_count", 0))
+	var place_result: Dictionary = shell.call("validation_place_object", tile.x, tile.y, family, content_id)
+	if not bool(place_result.get("ok", false)):
+		_fail("Map editor smoke: placing %s %s failed at %s: %s." % [family, content_id, tile, place_result])
+		return false
+	if String(place_result.get("selected_object_family", "")) != family or String(place_result.get("selected_object_content_id", "")) != content_id:
+		_fail("Map editor smoke: object palette did not track the placed %s %s: %s." % [family, content_id, place_result])
+		return false
+	if int(place_result.get("placement_count", 0)) != before_count + 1:
+		_fail("Map editor smoke: placing %s did not add exactly one placement: %s." % [family, place_result])
+		return false
+
+	var placed_detail := _object_detail_for_family(place_result.get("tile_inspection", {}), family)
+	if placed_detail.is_empty():
+		_fail("Map editor smoke: tile inspection did not expose placed %s detail: %s." % [family, place_result])
+		return false
+	if String(placed_detail.get("content_id", "")) != content_id:
+		_fail("Map editor smoke: placed %s detail used the wrong content id: %s." % [family, placed_detail])
+		return false
+	var placement_id := String(placed_detail.get("placement_id", ""))
+	if not placement_id.begins_with("editor_%s_" % family):
+		_fail("Map editor smoke: placed %s did not receive an editor placement id: %s." % [family, placed_detail])
+		return false
+
+	var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+	if not bool(presentation.get(presentation_key, false)) or not bool(presentation.get("draws_discoverable_object", false)):
+		_fail("Map editor smoke: live preview did not expose placed %s object: %s." % [family, presentation])
+		return false
+
+	var remove_result: Dictionary = shell.call("validation_remove_object", tile.x, tile.y, family)
+	if not bool(remove_result.get("ok", false)):
+		_fail("Map editor smoke: removing %s %s failed at %s: %s." % [family, content_id, tile, remove_result])
+		return false
+	if int(remove_result.get("placement_count", 0)) != before_count:
+		_fail("Map editor smoke: removing %s did not restore the placement count: %s." % [family, remove_result])
+		return false
+	if not _object_detail_for_family(remove_result.get("tile_inspection", {}), family).is_empty():
+		_fail("Map editor smoke: tile inspection still exposed removed %s: %s." % [family, remove_result])
+		return false
+	var after_presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+	if bool(after_presentation.get(presentation_key, false)):
+		_fail("Map editor smoke: live preview still exposed removed %s object: %s." % [family, after_presentation])
+		return false
+	return true
+
+func _object_detail_for_family(inspection: Dictionary, family: String) -> Dictionary:
+	var details = inspection.get("object_details", [])
+	if not (details is Array):
+		return {}
+	for detail in details:
+		if detail is Dictionary and String(detail.get("kind", "")) == family:
+			return detail
+	return {}
 
 func _fail(message: String) -> void:
 	push_error(message)
