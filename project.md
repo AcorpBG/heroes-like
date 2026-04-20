@@ -208,6 +208,10 @@ Implementation note date: 2026-04-20
 
 AcOrP clarified that the deeper target is HoMM3-style adjacency-built road topology rather than ordered centerline strokes. The ordered-path diagonal-road assumption above is superseded for presentation: `OverworldMapView` now rebuilds dirt-road connections from adjacent same-type road tiles, keeps vertical runs on the tile centerline, moves horizontal runs to a lower tile-edge lane, and composes turns/intersections from those neighboring road pieces. The terrain grammar and runtime road PNGs document and support that lane model. This remains a visual/presentation-only correction: movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression are unchanged.
 
+Implementation note date: 2026-04-20
+
+The mapped overworld sprite path for resource-site, artifact, and unresolved encounter assets has now been corrected away from the shared support-stack composition. Mapped sprites no longer draw the filled marker plate, broad terrain quieting bed, upper-mass backdrop wash, vertical mass shadow, duplicate offset sprite shadow, foreground ground lip, or base occlusion pads; they use localized contact disturbance and compact contact shadows instead. Towns remain on the dedicated no-helper-cue town path, and procedural fallbacks remain on their existing no-plate fallback grounding. This is presentation-only: movement, pathing, fog, roads, terrain, save/load, battle, town, resource-site, artifact, and encounter gameplay logic are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

@@ -404,6 +404,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	var object_kinds: Array = readability.get("object_kinds", [])
 	var is_town := expected_kind == "town"
 	var uses_procedural_fallback := bool(readability.get("procedural_world_silhouette", false))
+	var art: Dictionary = presentation.get("art_presentation", {})
+	var uses_mapped_sprite := bool(art.get("uses_asset_sprite", false)) and not is_town
 	if expected_kind not in object_kinds:
 		push_error("Overworld smoke: expected %s marker kind was missing. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -416,7 +418,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		push_error("Overworld smoke: %s marker no longer reports object-first footprint presence. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
-	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else "foreground_ground_lip")
+	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
 	if String(readability.get("occlusion_model", "")) != expected_occlusion:
 		push_error("Overworld smoke: %s marker no longer reports the expected foreground contact model. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -427,41 +429,17 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	elif uses_procedural_fallback:
 		if not _assert_procedural_fallback_grounding(readability, expected_kind, presentation):
 			return false
+	elif uses_mapped_sprite:
+		if not _assert_mapped_sprite_grounding(readability, expected_kind, presentation):
+			return false
 	elif String(readability.get("anchor_shape", "")) != "terrain_ellipse_footprint":
 		push_error("Overworld smoke: %s marker lacks the terrain-grounded anchor needed to read against the map. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
 	else:
-		if not bool(readability.get("terrain_quieting_bed", false)) or String(readability.get("placement_bed_model", "")) != "footprint_terrain_quieting_bed" or String(readability.get("placement_bed_shape", "")) != "organic_footprint_clearing":
-			push_error("Overworld smoke: %s marker lacks the footprint-aware terrain quieting bed. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
-		if bool(readability.get("placement_bed_ui_plate", true)) or not bool(readability.get("placement_bed_terrain_tinted", false)) or float(readability.get("placement_bed_alpha", 0.0)) < 0.28:
-			push_error("Overworld smoke: %s placement bed regressed toward a generic UI plate or became too faint. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
-		if not _assert_upper_mass_backdrop(readability, expected_kind):
-			return false
-		if not bool(readability.get("foreground_occlusion_lip", false)):
-			push_error("Overworld smoke: %s marker lacks the foreground ground lip that seats it into terrain. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
-		if String(readability.get("depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
-			push_error("Overworld smoke: %s marker lacks the footprint cast-shadow/base-occlusion depth model. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
-		if not bool(readability.get("directional_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "directional_footprint_cast_shadow":
-			push_error("Overworld smoke: %s marker lacks a directional contact shadow. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
-		if not bool(readability.get("base_occlusion_pads", false)) or String(readability.get("base_occlusion_model", "")) != "foreground_base_occlusion_pads":
-			push_error("Overworld smoke: %s marker lacks base occlusion pads at the terrain contact edge. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
-		if float(readability.get("contact_shadow_alpha", 0.0)) < 0.28 or float(readability.get("base_occlusion_alpha", 0.0)) < 0.30:
-			push_error("Overworld smoke: %s marker contact-depth cues are too faint to support object-first readability. presentation=%s" % [expected_kind, presentation])
-			get_tree().quit(1)
-			return false
+		push_error("Overworld smoke: %s marker used an unsupported non-town/non-procedural/non-mapped grounding path. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
 	if int(readability.get("footprint_width_tiles", 0)) <= 0 or int(readability.get("footprint_height_tiles", 0)) <= 0:
 		push_error("Overworld smoke: %s marker does not expose authored/default footprint dimensions. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -488,8 +466,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: town presentation must preserve blocked non-entry metadata without visible helper apron/gate/glyph cues. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-	var min_anchor_width := 0.40 if uses_procedural_fallback else 0.60
-	var min_anchor_height := 0.12 if uses_procedural_fallback else 0.20
+	var min_anchor_width := 0.36 if uses_mapped_sprite else (0.40 if uses_procedural_fallback else 0.60)
+	var min_anchor_height := 0.06 if uses_mapped_sprite else (0.12 if uses_procedural_fallback else 0.20)
 	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < min_anchor_width or float(readability.get("footprint_anchor_height_fraction", 0.0)) < min_anchor_height:
 		push_error("Overworld smoke: %s footprint anchor is too small to read as placed ground contact. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -522,7 +500,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			get_tree().quit(1)
 			return false
 		var visible_grid_suppressed := String(readability.get("visible_terrain_grid_mode", "")) == "fog_boundary_only" and float(readability.get("grid_alpha", 1.0)) <= 0.08 and not bool(readability.get("explored_intertile_seams", true))
-		var anchor_floor := 0.16 if uses_procedural_fallback else 0.30
+		var anchor_floor := 0.12 if uses_mapped_sprite else (0.16 if uses_procedural_fallback else 0.30)
 		if not is_town and (float(readability.get("anchor_alpha", 0.0)) < anchor_floor or float(readability.get("outline_alpha", 0.0)) < 0.85 or not visible_grid_suppressed):
 			push_error("Overworld smoke: visible %s marker grounding or map contrast regressed. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
@@ -681,29 +659,33 @@ func _assert_town_non_entry_footprint(shell: Node, entry_presentation: Dictionar
 	get_tree().quit(1)
 	return false
 
-func _assert_upper_mass_backdrop(readability: Dictionary, label: String) -> bool:
-	if not bool(readability.get("upper_mass_backdrop", false)) or String(readability.get("upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash":
-		push_error("Overworld smoke: %s lacks the rear upper-mass backdrop cue needed to separate tall objects from terrain. readability=%s" % [label, readability])
+func _assert_mapped_sprite_grounding(readability: Dictionary, label: String, presentation: Dictionary) -> bool:
+	if String(readability.get("anchor_shape", "")) != "mapped_sprite_local_contact_scuffs" or not bool(readability.get("mapped_sprite_grounding", false)):
+		push_error("Overworld smoke: mapped %s sprite does not report the local contact-scuff anchor. presentation=%s" % [label, presentation])
 		get_tree().quit(1)
 		return false
-	if String(readability.get("upper_mass_backdrop_shape", "")) != "family_scaled_rear_wash" or String(readability.get("upper_mass_backdrop_position", "")) != "behind_upper_body":
-		push_error("Overworld smoke: %s rear backdrop is not reported as a family-scaled behind-body wash. readability=%s" % [label, readability])
+	if String(readability.get("mapped_sprite_grounding_model", "")) != "localized_sprite_contact_scuffs" or not bool(readability.get("mapped_sprite_contact_disturbance", false)):
+		push_error("Overworld smoke: mapped %s sprite lacks localized contact scuffs. presentation=%s" % [label, presentation])
 		get_tree().quit(1)
 		return false
-	if bool(readability.get("upper_mass_backdrop_ui_halo", true)) or bool(readability.get("upper_mass_backdrop_ui_badge", true)):
-		push_error("Overworld smoke: %s rear backdrop regressed into a UI halo or badge treatment. readability=%s" % [label, readability])
+	if String(readability.get("mapped_sprite_contact_disturbance_model", "")) != "thin_sprite_contact_disturbance" or float(readability.get("mapped_sprite_contact_disturbance_alpha", 0.0)) < 0.12:
+		push_error("Overworld smoke: mapped %s sprite contact scuffs are missing or too faint. presentation=%s" % [label, presentation])
 		get_tree().quit(1)
 		return false
-	if float(readability.get("upper_mass_backdrop_alpha", 0.0)) < 0.20 or float(readability.get("upper_mass_backdrop_alpha", 1.0)) > 0.34:
-		push_error("Overworld smoke: %s rear backdrop alpha is outside the subtle terrain-depth cue range. readability=%s" % [label, readability])
+	if bool(readability.get("terrain_quieting_bed", true)) or String(readability.get("placement_bed_model", "")) != "" or float(readability.get("placement_bed_alpha", 1.0)) > 0.01:
+		push_error("Overworld smoke: mapped %s sprite still reports a broad placement bed. presentation=%s" % [label, presentation])
 		get_tree().quit(1)
 		return false
-	if float(readability.get("upper_mass_backdrop_height_fraction", 0.0)) < 0.32 or float(readability.get("upper_mass_backdrop_width_fraction", 0.0)) < 0.24:
-		push_error("Overworld smoke: %s rear backdrop is too small to separate upper mass from busy terrain. readability=%s" % [label, readability])
+	if bool(readability.get("upper_mass_backdrop", true)) or String(readability.get("upper_mass_backdrop_model", "")) != "" or bool(readability.get("vertical_mass_shadow", true)):
+		push_error("Overworld smoke: mapped %s sprite still reports upper-mass backdrop or vertical shadow support. presentation=%s" % [label, presentation])
 		get_tree().quit(1)
 		return false
-	if not bool(readability.get("vertical_mass_shadow", false)) or String(readability.get("vertical_mass_shadow_model", "")) != "subtle_vertical_mass_shadow" or float(readability.get("vertical_mass_shadow_alpha", 0.0)) < 0.14:
-		push_error("Overworld smoke: %s lacks the subtle vertical mass shadow paired with the rear backdrop. readability=%s" % [label, readability])
+	if bool(readability.get("foreground_occlusion_lip", true)) or bool(readability.get("base_occlusion_pads", true)) or bool(readability.get("shared_marker_plate", true)):
+		push_error("Overworld smoke: mapped %s sprite still reports foreground lip/base pads/shared marker plate. presentation=%s" % [label, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("localized_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "localized_sprite_contact_shadow" or float(readability.get("contact_shadow_alpha", 0.0)) < 0.22:
+		push_error("Overworld smoke: mapped %s sprite lacks localized contact-shadow readability. presentation=%s" % [label, presentation])
 		get_tree().quit(1)
 		return false
 	return true
@@ -840,20 +822,32 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 			get_tree().quit(1)
 			return false
 		return true
-	if String(art.get("sprite_settlement_model", "")) != "footprint_scaled_sprite_with_ground_lip" or not bool(art.get("settled_sprite_occlusion", false)):
-		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the footprint-scaled settlement/occlusion treatment. presentation=%s" % [expected_asset_id, presentation])
+	if String(art.get("sprite_settlement_model", "")) != "mapped_sprite_contact_grounding_no_support_stack" or bool(art.get("settled_sprite_occlusion", true)):
+		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the no-support-stack contact grounding. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
-	if not bool(art.get("sprite_depth_contact_cues", false)) or String(art.get("sprite_depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
-		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the deeper footprint/contact depth cues. presentation=%s" % [expected_asset_id, presentation])
+	if not bool(art.get("sprite_depth_contact_cues", false)) or String(art.get("sprite_depth_cue_model", "")) != "localized_sprite_contact_shadow_without_backdrop":
+		push_error("Overworld smoke: mapped overworld sprite %s is not reporting localized contact depth cues. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
-	if not bool(art.get("sprite_placement_bed", false)) or String(art.get("sprite_placement_bed_model", "")) != "footprint_terrain_quieting_bed":
-		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the footprint-aware terrain quieting bed. presentation=%s" % [expected_asset_id, presentation])
+	if bool(art.get("sprite_placement_bed", true)) or String(art.get("sprite_placement_bed_model", "")) != "":
+		push_error("Overworld smoke: mapped overworld sprite %s still reports a placement bed. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
-	if not bool(art.get("sprite_upper_mass_backdrop", false)) or String(art.get("sprite_upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash" or not bool(art.get("sprite_vertical_mass_shadow", false)):
-		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the rear upper-mass backdrop treatment. presentation=%s" % [expected_asset_id, presentation])
+	if bool(art.get("sprite_upper_mass_backdrop", true)) or String(art.get("sprite_upper_mass_backdrop_model", "")) != "" or bool(art.get("sprite_vertical_mass_shadow", true)):
+		push_error("Overworld smoke: mapped overworld sprite %s still reports upper-mass backdrop or vertical shadow support. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(art.get("mapped_sprite_grounding", false)) or String(art.get("mapped_sprite_grounding_model", "")) != "localized_sprite_contact_scuffs":
+		push_error("Overworld smoke: mapped overworld sprite %s does not report localized contact-scuff grounding. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if String(art.get("mapped_sprite_contact_shadow_model", "")) != "localized_sprite_contact_shadow" or not bool(art.get("mapped_sprite_contact_scuffs", false)):
+		push_error("Overworld smoke: mapped overworld sprite %s does not report localized contact shadow/scuffs. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(art.get("mapped_sprite_foreground_lip", true)) or bool(art.get("mapped_sprite_support_stack", true)):
+		push_error("Overworld smoke: mapped overworld sprite %s still reports foreground-lip/support-stack treatment. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
 	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor":

@@ -670,6 +670,30 @@ Limits:
 - Procedural fallback silhouettes remain compact placeholders; this slice only changes how they are grounded into the map surface.
 - No movement, pathing, fog, save/load, battle, town, resource-site, artifact, encounter, terrain, road, or seam behavior changed.
 
+## Current Implementation Slice: Overworld Mapped Sprite Grounding
+Status: completed on 2026-04-20 as a narrow presentation-only correction after mapped resource/artifact/encounter sprites still read like staged support-stack markers.
+
+Purpose:
+- Move mapped resource-site, artifact, and unresolved encounter asset sprites off the shared support-stack composition.
+- Keep towns on their dedicated quiet town path and keep procedural fallbacks on their already-corrected no-plate grounding path.
+- Preserve hero presence, terrain, roads, fog, panning, pathing, save/load, battle, town, resource-site, artifact, and encounter gameplay behavior.
+
+Implemented:
+- Split mapped resource/artifact/encounter sprites in `OverworldMapView` onto a mapped-sprite-specific local contact anchor.
+- Removed the broad terrain quieting bed, filled marker plate/ring, upper-mass backdrop wash, vertical mass shadow, duplicate offset sprite shadow, foreground ground lip, and base occlusion pads from mapped sprite drawing.
+- Added compact terrain contact disturbance and localized contact shadows so mapped sprites stay readable on terrain without visible helper plates.
+- Updated overworld art manifest metadata plus River Pass and Ninefold smoke assertions to guard the no-support-stack mapped sprite contract while preserving the town-specific no-helper-cue path.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final object art, a new sprite atlas, or a broad object renderer rewrite.
+- Mapped sprite footprints remain presentation scale hints only; movement, blocking, visit targets, save data, and scenario rules are unchanged.
+
 ## Current Implementation Slice: Overworld Diagonal Road Tiling
 Status: completed on 2026-04-20 as a narrow road-presentation correction after AcOrP feedback that diagonal roads still read like smeared strokes and joined awkwardly at turns.
 

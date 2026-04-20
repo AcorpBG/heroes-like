@@ -269,6 +269,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	var object_kinds: Array = readability.get("object_kinds", [])
 	var is_town := expected_kind == "town"
 	var uses_procedural_fallback := bool(readability.get("procedural_world_silhouette", false))
+	var art: Dictionary = presentation.get("art_presentation", {})
+	var uses_mapped_sprite := bool(art.get("uses_asset_sprite", false)) and not is_town
 	if expected_kind not in object_kinds:
 		_fail("Ninefold smoke: expected %s marker kind was missing on the large map: %s." % [expected_kind, presentation])
 		return false
@@ -278,7 +280,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if String(readability.get("presence_model", "")) != "footprint_scaled_world_object":
 		_fail("Ninefold smoke: large-map %s marker no longer reports object-first footprint presence: %s." % [expected_kind, presentation])
 		return false
-	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else "foreground_ground_lip")
+	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else ("sprite_contact_without_foreground_lip" if uses_mapped_sprite else ""))
 	if String(readability.get("occlusion_model", "")) != expected_occlusion:
 		_fail("Ninefold smoke: large-map %s marker no longer reports the expected foreground contact model: %s." % [expected_kind, presentation])
 		return false
@@ -288,33 +290,15 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	elif uses_procedural_fallback:
 		if not _assert_procedural_fallback_grounding(readability, expected_kind, presentation):
 			return false
+	elif uses_mapped_sprite:
+		if not _assert_mapped_sprite_grounding(readability, expected_kind, presentation):
+			return false
 	elif String(readability.get("anchor_shape", "")) != "terrain_ellipse_footprint":
 		_fail("Ninefold smoke: large-map %s marker lacks a terrain-grounded anchor: %s." % [expected_kind, presentation])
 		return false
 	else:
-		if not bool(readability.get("terrain_quieting_bed", false)) or String(readability.get("placement_bed_model", "")) != "footprint_terrain_quieting_bed" or String(readability.get("placement_bed_shape", "")) != "organic_footprint_clearing":
-			_fail("Ninefold smoke: large-map %s marker lacks the footprint-aware terrain quieting bed: %s." % [expected_kind, presentation])
-			return false
-		if bool(readability.get("placement_bed_ui_plate", true)) or not bool(readability.get("placement_bed_terrain_tinted", false)) or float(readability.get("placement_bed_alpha", 0.0)) < 0.28:
-			_fail("Ninefold smoke: large-map %s placement bed regressed toward a generic UI plate or became too faint: %s." % [expected_kind, presentation])
-			return false
-		if not _assert_upper_mass_backdrop(readability, expected_kind):
-			return false
-		if not bool(readability.get("foreground_occlusion_lip", false)):
-			_fail("Ninefold smoke: large-map %s marker lacks a foreground ground lip: %s." % [expected_kind, presentation])
-			return false
-		if String(readability.get("depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
-			_fail("Ninefold smoke: large-map %s marker lacks the footprint cast-shadow/base-occlusion depth model: %s." % [expected_kind, presentation])
-			return false
-		if not bool(readability.get("directional_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "directional_footprint_cast_shadow":
-			_fail("Ninefold smoke: large-map %s marker lacks a directional terrain contact shadow: %s." % [expected_kind, presentation])
-			return false
-		if not bool(readability.get("base_occlusion_pads", false)) or String(readability.get("base_occlusion_model", "")) != "foreground_base_occlusion_pads":
-			_fail("Ninefold smoke: large-map %s marker lacks foreground base occlusion pads: %s." % [expected_kind, presentation])
-			return false
-		if float(readability.get("contact_shadow_alpha", 0.0)) < 0.28 or float(readability.get("base_occlusion_alpha", 0.0)) < 0.30:
-			_fail("Ninefold smoke: large-map %s marker contact-depth cues are too faint: %s." % [expected_kind, presentation])
-			return false
+		_fail("Ninefold smoke: large-map %s marker used an unsupported non-town/non-procedural/non-mapped grounding path: %s." % [expected_kind, presentation])
+		return false
 	if int(readability.get("footprint_width_tiles", 0)) <= 0 or int(readability.get("footprint_height_tiles", 0)) <= 0:
 		_fail("Ninefold smoke: large-map %s marker does not expose footprint dimensions: %s." % [expected_kind, presentation])
 		return false
@@ -335,8 +319,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or bool(town_presentation.get("visible_helper_cues", true)) or bool(town_presentation.get("footprint_helper_glyphs", true)) or bool(town_presentation.get("entry_apron_cue", true)) or bool(town_presentation.get("entry_wedge_cue", true)) or bool(town_presentation.get("gate_cue", true)) or bool(town_presentation.get("helper_circle_cue", true)):
 			_fail("Ninefold smoke: large-map town must preserve blocked non-entry metadata without visible helper apron/gate/glyph cues: %s." % presentation)
 			return false
-	var min_anchor_width := 0.40 if uses_procedural_fallback else 0.60
-	var min_anchor_height := 0.12 if uses_procedural_fallback else 0.20
+	var min_anchor_width := 0.36 if uses_mapped_sprite else (0.40 if uses_procedural_fallback else 0.60)
+	var min_anchor_height := 0.06 if uses_mapped_sprite else (0.12 if uses_procedural_fallback else 0.20)
 	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < min_anchor_width or float(readability.get("footprint_anchor_height_fraction", 0.0)) < min_anchor_height:
 		_fail("Ninefold smoke: large-map %s footprint anchor is too small for object-first tactical framing: %s." % [expected_kind, presentation])
 		return false
@@ -356,7 +340,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			return false
 	else:
 		var visible_grid_suppressed := String(readability.get("visible_terrain_grid_mode", "")) == "fog_boundary_only" and float(readability.get("grid_alpha", 1.0)) <= 0.08 and not bool(readability.get("explored_intertile_seams", true))
-		var anchor_floor := 0.16 if uses_procedural_fallback else 0.30
+		var anchor_floor := 0.12 if uses_mapped_sprite else (0.16 if uses_procedural_fallback else 0.30)
 		if bool(readability.get("memory_echo", false)) or (not is_town and (float(readability.get("anchor_alpha", 0.0)) < anchor_floor or float(readability.get("outline_alpha", 0.0)) < 0.85 or not visible_grid_suppressed)):
 			_fail("Ninefold smoke: visible large-map %s marker grounding or map contrast regressed: %s." % [expected_kind, presentation])
 			return false
@@ -501,24 +485,27 @@ func _assert_town_footprint_profile(shell: Node, entry_presentation: Dictionary)
 		return false
 	return true
 
-func _assert_upper_mass_backdrop(readability: Dictionary, label: String) -> bool:
-	if not bool(readability.get("upper_mass_backdrop", false)) or String(readability.get("upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash":
-		_fail("Ninefold smoke: large-map %s lacks the rear upper-mass backdrop cue: %s." % [label, readability])
+func _assert_mapped_sprite_grounding(readability: Dictionary, label: String, presentation: Dictionary) -> bool:
+	if String(readability.get("anchor_shape", "")) != "mapped_sprite_local_contact_scuffs" or not bool(readability.get("mapped_sprite_grounding", false)):
+		_fail("Ninefold smoke: large-map mapped %s sprite does not report the local contact-scuff anchor: %s." % [label, presentation])
 		return false
-	if String(readability.get("upper_mass_backdrop_shape", "")) != "family_scaled_rear_wash" or String(readability.get("upper_mass_backdrop_position", "")) != "behind_upper_body":
-		_fail("Ninefold smoke: large-map %s rear backdrop is not reported as a family-scaled behind-body wash: %s." % [label, readability])
+	if String(readability.get("mapped_sprite_grounding_model", "")) != "localized_sprite_contact_scuffs" or not bool(readability.get("mapped_sprite_contact_disturbance", false)):
+		_fail("Ninefold smoke: large-map mapped %s sprite lacks localized contact scuffs: %s." % [label, presentation])
 		return false
-	if bool(readability.get("upper_mass_backdrop_ui_halo", true)) or bool(readability.get("upper_mass_backdrop_ui_badge", true)):
-		_fail("Ninefold smoke: large-map %s rear backdrop regressed into a UI halo or badge: %s." % [label, readability])
+	if String(readability.get("mapped_sprite_contact_disturbance_model", "")) != "thin_sprite_contact_disturbance" or float(readability.get("mapped_sprite_contact_disturbance_alpha", 0.0)) < 0.12:
+		_fail("Ninefold smoke: large-map mapped %s sprite contact scuffs are missing or too faint: %s." % [label, presentation])
 		return false
-	if float(readability.get("upper_mass_backdrop_alpha", 0.0)) < 0.20 or float(readability.get("upper_mass_backdrop_alpha", 1.0)) > 0.34:
-		_fail("Ninefold smoke: large-map %s rear backdrop alpha is outside the subtle terrain-depth cue range: %s." % [label, readability])
+	if bool(readability.get("terrain_quieting_bed", true)) or String(readability.get("placement_bed_model", "")) != "" or float(readability.get("placement_bed_alpha", 1.0)) > 0.01:
+		_fail("Ninefold smoke: large-map mapped %s sprite still reports a broad placement bed: %s." % [label, presentation])
 		return false
-	if float(readability.get("upper_mass_backdrop_height_fraction", 0.0)) < 0.32 or float(readability.get("upper_mass_backdrop_width_fraction", 0.0)) < 0.24:
-		_fail("Ninefold smoke: large-map %s rear backdrop is too small to separate upper mass from terrain: %s." % [label, readability])
+	if bool(readability.get("upper_mass_backdrop", true)) or String(readability.get("upper_mass_backdrop_model", "")) != "" or bool(readability.get("vertical_mass_shadow", true)):
+		_fail("Ninefold smoke: large-map mapped %s sprite still reports upper-mass backdrop or vertical shadow support: %s." % [label, presentation])
 		return false
-	if not bool(readability.get("vertical_mass_shadow", false)) or String(readability.get("vertical_mass_shadow_model", "")) != "subtle_vertical_mass_shadow" or float(readability.get("vertical_mass_shadow_alpha", 0.0)) < 0.14:
-		_fail("Ninefold smoke: large-map %s lacks the subtle vertical mass shadow paired with the rear backdrop: %s." % [label, readability])
+	if bool(readability.get("foreground_occlusion_lip", true)) or bool(readability.get("base_occlusion_pads", true)) or bool(readability.get("shared_marker_plate", true)):
+		_fail("Ninefold smoke: large-map mapped %s sprite still reports foreground lip/base pads/shared marker plate: %s." % [label, presentation])
+		return false
+	if not bool(readability.get("localized_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "localized_sprite_contact_shadow" or float(readability.get("contact_shadow_alpha", 0.0)) < 0.22:
+		_fail("Ninefold smoke: large-map mapped %s sprite lacks localized contact-shadow readability: %s." % [label, presentation])
 		return false
 	return true
 
