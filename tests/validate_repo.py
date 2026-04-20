@@ -4423,8 +4423,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("model", "")) == "authored_autotile_layers", errors, "Overworld terrain rendering must use the authored autotile layer model")
         ensure(str(terrain_rendering.get("grammar", "")) == "res://content/terrain_grammar.json", errors, "Overworld terrain rendering must point at content/terrain_grammar.json")
         ensure(str(terrain_rendering.get("terrain_layers", "")) == "res://content/terrain_layers.json", errors, "Overworld terrain rendering must point at content/terrain_layers.json")
-        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the first authored terrain tile-art root")
-        ensure(str(terrain_rendering.get("tile_art_status", "")) == "first_authored_tile_art_slice", errors, "Overworld terrain rendering must record the first authored tile-art slice status")
+        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the authored terrain tile-art root")
+        ensure(str(terrain_rendering.get("tile_art_status", "")) == "original_quiet_terrain_correction", errors, "Overworld terrain rendering must record the original quiet terrain correction status")
+        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "original_procedural_reference_informed", errors, "Overworld terrain rendering must use original procedural terrain art as its source basis")
+        ensure(str(terrain_rendering.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Overworld terrain rendering must make the original quiet tile bank the primary base model")
+        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Overworld terrain rendering must document generated terrain sources as deprecated for primary bases")
         authored_tile_sets = terrain_rendering.get("authored_tile_sets", [])
         ensure(isinstance(authored_tile_sets, list) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, authored_tile_sets))) and "road_dirt" in set(map(str, authored_tile_sets)), errors, "Overworld terrain rendering must list the first authored terrain and road tile sets")
         ensure(str(terrain_rendering.get("sampled_texture_status", "")) == "deprecated_not_primary", errors, "Overworld sampled terrain textures must be marked deprecated_not_primary")
@@ -4434,6 +4437,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     terrain_classes = terrain_grammar.get("terrain_classes", [])
     overlay_classes = terrain_grammar.get("overlay_classes", [])
     ensure(str(terrain_grammar.get("rendering_model", "")) == "authored_autotile_layers", errors, "Terrain grammar must declare authored_autotile_layers")
+    ensure(str(terrain_grammar.get("authoring_status", "")) == "original_quiet_terrain_correction", errors, "Terrain grammar must record the original quiet terrain correction status")
+    ensure(str(terrain_grammar.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Terrain grammar must make the original quiet tile bank primary")
+    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Terrain grammar must deprecate generated terrain sheets for primary bases")
     ensure(isinstance(terrain_classes, list) and bool(terrain_classes), errors, "Terrain grammar must define terrain_classes")
     ensure(isinstance(overlay_classes, list) and bool(overlay_classes), errors, "Terrain grammar must define overlay_classes")
     terrain_class_ids: set[str] = set()
@@ -4577,6 +4583,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "OVERWORLD_ART_MANIFEST_PATH",
         "TERRAIN_GRAMMAR_PATH",
         "TERRAIN_GRAMMAR_RENDERING_MODE",
+        "TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE",
         "TERRAIN_TILE_ART_RENDERING_MODE",
         "func _load_terrain_grammar",
         "func _draw_terrain_tile_art",
@@ -4588,12 +4595,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _draw_object_sprite",
         "func _resource_asset_id",
         '"authored_autotile_layers"',
-        '"authored_tile_art_layers"',
+        '"original_quiet_tile_bank"',
         '"uses_sampled_texture"',
         '"uses_authored_tile_art"',
+        '"uses_original_tile_bank"',
+        '"generated_source_primary"',
+        '"primary_base_model"',
         '"edge_transition_art_loaded"',
+        '"transition_shape_model"',
         '"road_overlay"',
         '"road_overlay_art"',
+        '"road_shape_model"',
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_memory_plate",
     ):

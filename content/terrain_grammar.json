@@ -1,9 +1,11 @@
 {
   "version": 1,
   "rendering_model": "authored_autotile_layers",
-  "authoring_status": "generated_source_tile_art_replacement",
+  "authoring_status": "original_quiet_terrain_correction",
+  "primary_base_model": "original_quiet_tile_bank",
+  "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
   "tile_size_reference": 64,
-  "summary": "Author-facing overworld terrain grammar. The covered terrain slice uses repo-local 64x64 tile art cut and adapted from generated terrain source images for grass/plains, forest, mire/swamp, hills/ridge/highland, visible biome edge overlays, and structural dirt-road overlay pieces; non-slice terrain ids keep fallback grammar colors until their art lands.",
+  "summary": "Author-facing overworld terrain grammar. The covered terrain slice now uses original quiet 64x64 biome base variants, jagged directional biome-edge overlays, and structural dirt-road connector pieces built from local procedural palettes. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
   "transition_rules": {
     "cardinal_edges": true,
     "corner_hints": true,

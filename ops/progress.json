@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T09:45:00Z",
+  "updatedAt": "2026-04-20T10:00:37Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-generated-source-terrain-art-10184",
-  "currentSliceTitle": "Replace terrain tiles with cuts from generated source terrain art",
+  "currentSliceId": "overworld-original-terrain-correction-10184",
+  "currentSliceTitle": "Correct overworld terrain away from generated-source tiling",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow source-derived replacement pass for the first authored terrain tile-art slice. Replaced tools/build_overworld_terrain_tiles.py with a source-driven builder that cuts/adapts the generated 2026-04-19 terrain sheets into the existing 64x64 runtime base, edge, and road overlay paths; rebuilt grass/plains, forest, mire/swamp, hills/ridge/highland, compact feathered biome edge overlays, and thinner road_dirt connectors; reduced road fallback width from 0.22 to 0.14; preserved object sprite mappings and procedural object fallbacks; did not use nanobanana2 menu images because they were not relevant terrain source art. Validation passed with python3 -m py_compile tools/build_overworld_terrain_tiles.py, python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed a corrective terrain slice after AcOrP rejected the generated-source tile approach. Kept the terrain grammar boundary and structural road layer, but replaced the source-cropping terrain builder with a local procedural builder for original quiet base variants, jagged directional biome-edge overlays, and structural road connector pieces; rebuilt the checked-in grass/plains, forest, mire/swamp, hills/ridge/highland, edge, and road PNGs; updated terrain grammar, art manifest, renderer validation metadata, repo validation, and visual smokes so generated painterly terrain sheets are deprecated for primary per-cell bases and the original_quiet_tile_bank model is active. Validation passed with python3 -m py_compile tools/build_overworld_terrain_tiles.py, python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -182,6 +182,12 @@
       "title": "Replace terrain tile art with generated source terrain cuts",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "overworld-original-terrain-correction-10184",
+      "title": "Correct overworld terrain away from generated-source tiling",
+      "status": "completed",
+      "difficulty": "high"
     },
     {
       "id": "river-pass-live-audit",

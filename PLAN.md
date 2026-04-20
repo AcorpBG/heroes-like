@@ -287,6 +287,33 @@ Validation:
 Limits:
 - This is not a full overworld art pass for water/coast, badlands, ash/lava, snow/frost, cavern/underway, object footprints, or road movement rules.
 - Visual quality still needs manual live-client review after the checked-in source-derived tiles land.
+- Superseded on 2026-04-20 by the original quiet terrain correction after AcOrP clarified that generated-source per-cell tiling is the wrong primary model.
+
+## Current Implementation Slice: Overworld Original Terrain Correction
+Status: completed on 2026-04-20 as a corrective slice after AcOrP rejected generated-source terrain tiling as the primary approach.
+
+Purpose:
+- Stop treating generated painterly source terrain as the main per-cell tile source.
+- Keep the terrain grammar and structural road layer, but move the art approach toward original quiet biome bases, macro readability, jagged transitions, and connection-aware roads.
+- Use the local HoMM3 reference pack only for rules and taxonomy: quiet terrain at map scale, many specialized pieces, structural roads, and intentional transitions. Do not copy assets.
+
+Implemented:
+- Replaced `tools/build_overworld_terrain_tiles.py` with a local procedural builder that writes original 64x64 base variants, jagged edge overlays, and `road_dirt` connector pieces to the existing runtime paths.
+- Rebuilt the checked-in grass/plains, forest, mire/swamp, hills/ridge/highland, edge, and road PNGs from restrained local palettes instead of source-image crops.
+- Updated `content/terrain_grammar.json` and `art/overworld/manifest.json` to record `original_quiet_tile_bank` as the primary base model and mark generated terrain sheets deprecated for primary bases.
+- Extended `OverworldMapView` validation metadata so smokes can distinguish original quiet tile-bank rendering, generated-source non-primary status, jagged transition overlays, and road connection-piece overlays.
+
+Validation:
+- `python3 -m py_compile tools/build_overworld_terrain_tiles.py`
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is still a first correction over the covered terrain families, not the final shipped terrain atlas.
+- Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, object footprints, and road movement rules remain future slices.
+- Automated smokes can prove the renderer path and metadata; manual visual review is still required before treating the terrain direction as broadly proven.
 
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.

@@ -263,6 +263,10 @@ func _supported_map_object_families() -> Array:
 func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> void:
 	if String(grammar.get("rendering_model", "")) != "authored_autotile_layers":
 		push_warning("Terrain grammar must declare rendering_model authored_autotile_layers.")
+	if String(grammar.get("primary_base_model", "")) != "original_quiet_tile_bank":
+		push_warning("Terrain grammar must declare original_quiet_tile_bank as the primary base model.")
+	if String(grammar.get("generated_source_policy", "")) != "deprecated_for_primary_base_color_reference_or_limited_decal_only":
+		push_warning("Terrain grammar must mark generated terrain sheets deprecated for primary bases.")
 	var classes = grammar.get("terrain_classes", [])
 	if not (classes is Array) or classes.is_empty():
 		push_warning("Terrain grammar must define terrain_classes.")
@@ -329,7 +333,7 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 func _validate_terrain_tile_art(terrain_class: Dictionary, terrain_id: String) -> void:
 	var tile_art = terrain_class.get("tile_art", {})
 	if not (tile_art is Dictionary):
-		push_warning("Terrain grammar %s must define tile_art for the first authored tile-art slice." % terrain_id)
+		push_warning("Terrain grammar %s must define tile_art for the original terrain tile bank." % terrain_id)
 		return
 	var base_tiles = tile_art.get("base_tiles", [])
 	if not (base_tiles is Array) or base_tiles.is_empty():
