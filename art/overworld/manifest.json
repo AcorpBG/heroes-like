@@ -35,7 +35,10 @@
     "contact_shadow": "directional_footprint_cast_shadow",
     "base_occlusion": "foreground_base_occlusion_pads",
     "mapped_sprite_settlement": "footprint_scaled_sprite_with_ground_lip",
-    "fallback_silhouette": "family_specific_procedural_world_object"
+    "fallback_silhouette": "family_specific_procedural_world_object",
+    "town_footprint": "town_3x2_footprint_bottom_middle_entry",
+    "town_entry_role": "bottom_middle_visit_approach",
+    "town_non_entry_tiles": "blocked_non_entry_footprint"
   },
   "object_assets": {
     "frontier_town": {

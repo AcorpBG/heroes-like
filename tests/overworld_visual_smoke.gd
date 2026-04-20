@@ -365,6 +365,8 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
 		if not _assert_marker_style(presentation, kind, false):
 			return false
+		if kind == "town" and not _assert_town_non_entry_footprint(shell, presentation):
+			return false
 
 	var hero_tile := OverworldRules.hero_position(session)
 	var hero_presentation: Dictionary = shell.call("validation_tile_presentation", hero_tile.x, hero_tile.y)
@@ -438,6 +440,28 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		push_error("Overworld smoke: %s marker does not expose authored/default footprint dimensions. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
+	if expected_kind == "town":
+		if int(readability.get("footprint_width_tiles", 0)) != 3 or int(readability.get("footprint_height_tiles", 0)) != 2:
+			push_error("Overworld smoke: town marker must present as a 3x2 footprint. presentation=%s" % presentation)
+			get_tree().quit(1)
+			return false
+		var town_presentation: Dictionary = presentation.get("town_presentation", {})
+		if not bool(town_presentation.get("has_town_footprint", false)) or String(town_presentation.get("presentation_model", "")) != "town_3x2_footprint_bottom_middle_entry":
+			push_error("Overworld smoke: town presentation metadata does not expose the 3x2 model. presentation=%s" % presentation)
+			get_tree().quit(1)
+			return false
+		if String(town_presentation.get("entry_role", "")) != "bottom_middle_visit_approach" or not bool(town_presentation.get("entry_is_visit_tile", false)):
+			push_error("Overworld smoke: town presentation does not report the bottom-middle visit approach tile. presentation=%s" % presentation)
+			get_tree().quit(1)
+			return false
+		if not bool(town_presentation.get("is_entry_tile", false)) or String(town_presentation.get("tile_role", "")) != "bottom_middle_visit_approach":
+			push_error("Overworld smoke: selected town tile is not reported as the entry approach. presentation=%s" % presentation)
+			get_tree().quit(1)
+			return false
+		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or not bool(town_presentation.get("entry_apron_cue", false)) or not bool(town_presentation.get("gate_cue", false)):
+			push_error("Overworld smoke: town presentation lacks blocked non-entry tiles or the entry apron/gate cue. presentation=%s" % presentation)
+			get_tree().quit(1)
+			return false
 	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < 0.60 or float(readability.get("footprint_anchor_height_fraction", 0.0)) < 0.20:
 		push_error("Overworld smoke: %s footprint anchor is too small to read as placed ground contact. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -469,6 +493,32 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			get_tree().quit(1)
 			return false
 	return true
+
+func _assert_town_non_entry_footprint(shell: Node, entry_presentation: Dictionary) -> bool:
+	var town_presentation: Dictionary = entry_presentation.get("town_presentation", {})
+	var blocked_cells: Array = town_presentation.get("blocked_footprint_cells", [])
+	if blocked_cells.is_empty():
+		push_error("Overworld smoke: town 3x2 footprint did not expose any blocked non-entry cells. presentation=%s" % entry_presentation)
+		get_tree().quit(1)
+		return false
+	for cell_value in blocked_cells:
+		if not (cell_value is Dictionary):
+			continue
+		var cell: Dictionary = cell_value
+		var cell_presentation: Dictionary = shell.call("validation_tile_presentation", int(cell.get("x", -1)), int(cell.get("y", -1)))
+		var cell_town: Dictionary = cell_presentation.get("town_presentation", {})
+		if not bool(cell_presentation.get("has_town_non_entry", false)):
+			push_error("Overworld smoke: town footprint cell does not read as a non-entry town tile. cell=%s presentation=%s" % [cell, cell_presentation])
+			get_tree().quit(1)
+			return false
+		if bool(cell_town.get("is_visit_tile", true)) or not bool(cell_town.get("presentation_blocked", false)) or String(cell_town.get("tile_role", "")) != "blocked_non_entry_footprint":
+			push_error("Overworld smoke: town non-entry footprint cell is not presentation-blocked. cell=%s presentation=%s" % [cell, cell_presentation])
+			get_tree().quit(1)
+			return false
+		return true
+	push_error("Overworld smoke: town footprint blocked-cell payload contained no usable in-bounds cells. presentation=%s" % entry_presentation)
+	get_tree().quit(1)
+	return false
 
 func _assert_upper_mass_backdrop(readability: Dictionary, label: String) -> bool:
 	if not bool(readability.get("upper_mass_backdrop", false)) or String(readability.get("upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash":
