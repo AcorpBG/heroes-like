@@ -176,6 +176,10 @@ Implementation note date: 2026-04-20
 
 The town-specific overworld grounding has been corrected after visual feedback that the 3x2 town presentation was reading as an object on a staged base. Towns no longer use the shared filled placement bed, base ellipse, directional cast shadow, base occlusion pads, or upper-mass shadow/backdrop treatment. They still present as 3x2 world objects with the authored town coordinate as the bottom-middle approach/visit tile, using only sparse non-entry footprint cues and a restrained entry approach cue. This is a town presentation correction only: resource sites, artifacts, encounters, hero markers, movement, pathing, town interaction, save data, battle routing, and true occupancy remain unchanged.
 
+Implementation note date: 2026-04-20
+
+The active-hero overworld presence has been corrected without rolling back the shared object renderer. `OverworldMapView` now draws the visible hero through a hero-specific placed-figure path with compact foot-contact shadow, boot-level occlusion, terrain scuffs, and the existing tile focus/selection ring for clarity, rather than using the shared filled footprint bed, base ellipse, marker ring, or upper-mass backdrop. This is a visual/presentation correction only: hero movement, pathing, fog, save/load, battle routing, town logic, hero rules, and object rendering for non-hero families are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
