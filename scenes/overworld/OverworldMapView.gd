@@ -61,12 +61,19 @@ const OBJECT_PRESENCE_MODEL := "footprint_scaled_world_object"
 const OBJECT_OCCLUSION_MODEL := "foreground_ground_lip"
 const OBJECT_SPRITE_SETTLEMENT_MODEL := "footprint_scaled_sprite_with_ground_lip"
 const OBJECT_PROCEDURAL_FALLBACK_MODEL := "family_specific_procedural_world_object"
+const OBJECT_DEPTH_CUE_MODEL := "footprint_cast_shadow_with_base_occlusion"
+const OBJECT_CONTACT_SHADOW_MODEL := "directional_footprint_cast_shadow"
+const OBJECT_BASE_OCCLUSION_MODEL := "foreground_base_occlusion_pads"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
 const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
 const MARKER_FOOTPRINT_WIDTH_STEP := 0.28
 const MARKER_FOOTPRINT_HEIGHT_STEP := 0.18
+const OBJECT_CONTACT_SHADOW_VISIBLE := Color(0.018, 0.014, 0.010, 0.30)
+const OBJECT_CONTACT_SHADOW_MEMORY := Color(0.18, 0.34, 0.36, 0.34)
+const OBJECT_BASE_OCCLUSION_VISIBLE := Color(0.11, 0.075, 0.030, 0.34)
+const OBJECT_BASE_OCCLUSION_MEMORY := Color(0.62, 0.82, 0.86, 0.32)
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
@@ -782,6 +789,7 @@ func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: fl
 		radius * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * footprint_width_scale,
 		maxf(3.0, radius * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * footprint_height_scale)
 	)
+	_draw_directional_contact_shadow(center, radii, remembered, extent, normalized_footprint)
 	draw_colored_polygon(
 		_ellipse_points(center + shadow_offset, Vector2(radii.x * 1.10, radii.y * 1.24)),
 		MARKER_SHADOW_COLOR
@@ -815,11 +823,50 @@ func _draw_foreground_occlusion_lip(anchor: Dictionary, remembered: bool) -> voi
 	if remembered:
 		lip_color = Color(0.60, 0.80, 0.84, 0.34)
 		highlight_color = Color(0.90, 0.98, 1.0, 0.22)
+	_draw_base_occlusion_pads(center, radii, remembered, extent)
 	var left := center + Vector2(-radii.x * 0.72, radii.y * 0.28)
 	var mid := center + Vector2(0.0, radii.y * 0.58)
 	var right := center + Vector2(radii.x * 0.72, radii.y * 0.28)
 	draw_polyline(PackedVector2Array([left, mid, right]), lip_color, maxf(1.4, extent * 0.022))
 	draw_line(center + Vector2(-radii.x * 0.38, radii.y * 0.05), center + Vector2(radii.x * 0.34, radii.y * 0.08), highlight_color, maxf(1.0, extent * 0.012))
+
+func _draw_directional_contact_shadow(center: Vector2, radii: Vector2, remembered: bool, extent: float, footprint: Vector2i) -> void:
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var footprint_width := 1.0 + (float(maxi(footprint.x - 1, 0)) * 0.10)
+	var footprint_depth := 1.0 + (float(maxi(footprint.y - 1, 0)) * 0.14)
+	var sweep := Vector2(radii.x * 0.18, radii.y * 0.54)
+	var color := OBJECT_CONTACT_SHADOW_MEMORY if remembered else OBJECT_CONTACT_SHADOW_VISIBLE
+	var points := PackedVector2Array([
+		center + Vector2(-radii.x * 0.58, -radii.y * 0.10),
+		center + sweep + Vector2(-radii.x * 0.96 * footprint_width, radii.y * 0.02),
+		center + sweep + Vector2(-radii.x * 0.44 * footprint_width, radii.y * 0.78 * footprint_depth),
+		center + sweep + Vector2(radii.x * 0.84 * footprint_width, radii.y * 0.70 * footprint_depth),
+		center + sweep + Vector2(radii.x * 1.02 * footprint_width, -radii.y * 0.04),
+		center + Vector2(radii.x * 0.54, -radii.y * 0.12),
+	])
+	draw_colored_polygon(points, color)
+	draw_line(
+		center + Vector2(-radii.x * 0.46, radii.y * 0.18),
+		center + sweep + Vector2(radii.x * 0.70 * footprint_width, radii.y * 0.26 * footprint_depth),
+		Color(color.r, color.g, color.b, color.a * 0.46),
+		maxf(1.0, extent * 0.012)
+	)
+
+func _draw_base_occlusion_pads(center: Vector2, radii: Vector2, remembered: bool, extent: float) -> void:
+	var color := OBJECT_BASE_OCCLUSION_MEMORY if remembered else OBJECT_BASE_OCCLUSION_VISIBLE
+	var band := PackedVector2Array([
+		center + Vector2(-radii.x * 0.64, radii.y * 0.26),
+		center + Vector2(-radii.x * 0.36, radii.y * 0.66),
+		center + Vector2(radii.x * 0.30, radii.y * 0.70),
+		center + Vector2(radii.x * 0.66, radii.y * 0.30),
+		center + Vector2(radii.x * 0.42, radii.y * 0.48),
+		center + Vector2(-radii.x * 0.42, radii.y * 0.46),
+	])
+	draw_colored_polygon(band, color)
+	var pad_width := maxf(1.0, extent * 0.016)
+	draw_line(center + Vector2(-radii.x * 0.50, radii.y * 0.49), center + Vector2(-radii.x * 0.12, radii.y * 0.68), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
+	draw_line(center + Vector2(radii.x * 0.08, radii.y * 0.68), center + Vector2(radii.x * 0.54, radii.y * 0.49), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
 
 func _ellipse_points(center: Vector2, radii: Vector2, segment_count: int = 24, closed: bool = false) -> PackedVector2Array:
 	var points := PackedVector2Array()
@@ -1286,6 +1333,8 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			"remembered_sprite_treatment": "",
 			"sprite_settlement_model": "",
 			"settled_sprite_occlusion": false,
+			"sprite_depth_contact_cues": false,
+			"sprite_depth_cue_model": "",
 			"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 		}
 	var sprite_asset_ids: Array[String] = []
@@ -1313,6 +1362,8 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		"remembered_sprite_treatment": "ghosted_sprite_with_ground_anchor" if uses_asset_sprite and not visible else "",
 		"sprite_settlement_model": OBJECT_SPRITE_SETTLEMENT_MODEL if uses_asset_sprite else "",
 		"settled_sprite_occlusion": uses_asset_sprite,
+		"sprite_depth_contact_cues": uses_asset_sprite,
+		"sprite_depth_cue_model": OBJECT_DEPTH_CUE_MODEL if uses_asset_sprite else "",
 		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
@@ -1342,20 +1393,28 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		plate_radius_fraction = _presence_radius_factor(dominant_family, dominant_footprint)
 	var anchor_half_width_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * (1.0 + (float(dominant_footprint.x - 1) * MARKER_FOOTPRINT_WIDTH_STEP))
 	var anchor_half_height_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * (1.0 + (float(dominant_footprint.y - 1) * MARKER_FOOTPRINT_HEIGHT_STEP))
+	var has_presence := has_object_marker or has_visible_hero
 	return {
 		"object_kinds": object_kinds,
 		"marker_kinds": marker_kinds,
-		"contrast_plate": has_object_marker or has_visible_hero,
-		"ground_anchor": has_object_marker or has_visible_hero,
-		"anchor_shape": MARKER_GROUND_ANCHOR_STYLE if has_object_marker or has_visible_hero else "",
-		"presence_model": OBJECT_PRESENCE_MODEL if has_object_marker or has_visible_hero else "",
-		"foreground_occlusion_lip": has_object_marker or has_visible_hero,
-		"occlusion_model": OBJECT_OCCLUSION_MODEL if has_object_marker or has_visible_hero else "",
+		"contrast_plate": has_presence,
+		"ground_anchor": has_presence,
+		"anchor_shape": MARKER_GROUND_ANCHOR_STYLE if has_presence else "",
+		"presence_model": OBJECT_PRESENCE_MODEL if has_presence else "",
+		"foreground_occlusion_lip": has_presence,
+		"occlusion_model": OBJECT_OCCLUSION_MODEL if has_presence else "",
+		"depth_cue_model": OBJECT_DEPTH_CUE_MODEL if has_presence else "",
+		"directional_contact_shadow": has_presence,
+		"contact_shadow_model": OBJECT_CONTACT_SHADOW_MODEL if has_presence else "",
+		"contact_shadow_alpha": (OBJECT_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_CONTACT_SHADOW_VISIBLE.a) if has_presence else 0.0,
+		"base_occlusion_pads": has_presence,
+		"base_occlusion_model": OBJECT_BASE_OCCLUSION_MODEL if has_presence else "",
+		"base_occlusion_alpha": (OBJECT_BASE_OCCLUSION_MEMORY.a if remembered else OBJECT_BASE_OCCLUSION_VISIBLE.a) if has_presence else 0.0,
 		"dominant_object_family": dominant_family,
-		"footprint_width_tiles": dominant_footprint.x if has_object_marker or has_visible_hero else 0,
-		"footprint_height_tiles": dominant_footprint.y if has_object_marker or has_visible_hero else 0,
-		"footprint_anchor_width_fraction": anchor_half_width_fraction * 2.0 if has_object_marker or has_visible_hero else 0.0,
-		"footprint_anchor_height_fraction": anchor_half_height_fraction * 2.0 if has_object_marker or has_visible_hero else 0.0,
+		"footprint_width_tiles": dominant_footprint.x if has_presence else 0,
+		"footprint_height_tiles": dominant_footprint.y if has_presence else 0,
+		"footprint_anchor_width_fraction": anchor_half_width_fraction * 2.0 if has_presence else 0.0,
+		"footprint_anchor_height_fraction": anchor_half_height_fraction * 2.0 if has_presence else 0.0,
 		"procedural_world_silhouette": bool(art_payload.get("fallback_procedural_marker", false)),
 		"mapped_sprite_settlement": uses_asset_sprite,
 		"ui_badge_plate": false,

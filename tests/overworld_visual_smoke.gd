@@ -381,6 +381,10 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: current selection focus is not readable on the map. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
 		return false
+	if String(hero_readability.get("depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion" or not bool(hero_readability.get("directional_contact_shadow", false)) or not bool(hero_readability.get("base_occlusion_pads", false)):
+		push_error("Overworld smoke: active hero lacks the terrain-contact depth cues expected for object-first presence. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
@@ -400,6 +404,22 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		return false
 	if not bool(readability.get("foreground_occlusion_lip", false)):
 		push_error("Overworld smoke: %s marker lacks the foreground ground lip that seats it into terrain. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if String(readability.get("depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
+		push_error("Overworld smoke: %s marker lacks the footprint cast-shadow/base-occlusion depth model. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("directional_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "directional_footprint_cast_shadow":
+		push_error("Overworld smoke: %s marker lacks a directional contact shadow. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("base_occlusion_pads", false)) or String(readability.get("base_occlusion_model", "")) != "foreground_base_occlusion_pads":
+		push_error("Overworld smoke: %s marker lacks base occlusion pads at the terrain contact edge. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if float(readability.get("contact_shadow_alpha", 0.0)) < 0.28 or float(readability.get("base_occlusion_alpha", 0.0)) < 0.30:
+		push_error("Overworld smoke: %s marker contact-depth cues are too faint to support object-first readability. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
 	if int(readability.get("footprint_width_tiles", 0)) <= 0 or int(readability.get("footprint_height_tiles", 0)) <= 0:
@@ -504,6 +524,10 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 		return false
 	if String(art.get("sprite_settlement_model", "")) != "footprint_scaled_sprite_with_ground_lip" or not bool(art.get("settled_sprite_occlusion", false)):
 		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the footprint-scaled settlement/occlusion treatment. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(art.get("sprite_depth_contact_cues", false)) or String(art.get("sprite_depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
+		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the deeper footprint/contact depth cues. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
 	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor":

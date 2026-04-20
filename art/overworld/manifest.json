@@ -23,6 +23,9 @@
   "object_rendering": {
     "presence_model": "footprint_scaled_world_object",
     "grounding": "terrain_ellipse_footprint_with_foreground_lip",
+    "depth_cues": "footprint_cast_shadow_with_base_occlusion",
+    "contact_shadow": "directional_footprint_cast_shadow",
+    "base_occlusion": "foreground_base_occlusion_pads",
     "mapped_sprite_settlement": "footprint_scaled_sprite_with_ground_lip",
     "fallback_silhouette": "family_specific_procedural_world_object"
   },

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T12:06:47Z",
+  "updatedAt": "2026-04-20T13:29:35Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-object-presence-10184",
-  "currentSliceTitle": "Push overworld markers toward object-first placed presence",
+  "currentSliceId": "overworld-depth-contact-cues-10184",
+  "currentSliceTitle": "Deepen overworld terrain-contact and depth cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow object-first rendering nudge after AcOrP reported that the post-c98de5d overworld still reads too much like symbols on a board. OverworldMapView now builds resource-site object profiles from content/map_objects.json, uses authored footprints as presentation-scale hints, applies footprint-scaled sprite settlement with foreground ground-lip occlusion, and replaces several procedural symbols with compact family-specific world silhouettes for dwellings/services/outposts, mines, scouting towers, guarded ruins, transit objects, shrines, pickups, artifacts, encounters, towns, and the active hero. Preserved fog, panning, pathing, tactical framing, selection clarity, terrain/road direction, mapped sprite behavior, and procedural fallback coverage. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed a narrow presentation-only renderer slice to deepen overworld terrain-contact and depth cues beyond the existing footprint anchor/ground-lip pass. OverworldMapView now draws footprint-scaled directional contact shadows beneath towns, sites, dwellings, encounters, mapped sprites, and active hero presence, and adds small foreground base-occlusion pads so objects feel more seated into terrain. Updated the overworld art manifest plus focused smoke metadata/assertions for the cast-shadow/base-occlusion depth model while preserving terrain direction, panning, pathing, fog, remembered-object behavior, tactical framing, selection clarity, and existing sprite mappings/fallbacks. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -198,6 +198,12 @@
     {
       "id": "overworld-object-presence-10184",
       "title": "Push overworld markers toward object-first placed presence",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "overworld-depth-contact-cues-10184",
+      "title": "Deepen overworld terrain-contact and depth cues",
       "status": "completed",
       "difficulty": "medium"
     },

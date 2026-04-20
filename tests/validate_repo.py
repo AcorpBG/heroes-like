@@ -4581,6 +4581,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure(isinstance(object_rendering, dict), errors, "Overworld art manifest must document object-first rendering metadata")
     if isinstance(object_rendering, dict):
         ensure(str(object_rendering.get("presence_model", "")) == "footprint_scaled_world_object", errors, "Overworld object rendering must document footprint-scaled object presence")
+        ensure(str(object_rendering.get("depth_cues", "")) == "footprint_cast_shadow_with_base_occlusion", errors, "Overworld object rendering must document footprint cast-shadow/base-occlusion depth cues")
+        ensure(str(object_rendering.get("contact_shadow", "")) == "directional_footprint_cast_shadow", errors, "Overworld object rendering must document directional footprint contact shadows")
+        ensure(str(object_rendering.get("base_occlusion", "")) == "foreground_base_occlusion_pads", errors, "Overworld object rendering must document foreground base occlusion pads")
         ensure(str(object_rendering.get("mapped_sprite_settlement", "")) == "footprint_scaled_sprite_with_ground_lip", errors, "Overworld object rendering must document settled sprite grounding")
         ensure(str(object_rendering.get("fallback_silhouette", "")) == "family_specific_procedural_world_object", errors, "Overworld object rendering must document family-specific procedural fallback silhouettes")
 
@@ -4604,10 +4607,18 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "OBJECT_OCCLUSION_MODEL",
         "OBJECT_SPRITE_SETTLEMENT_MODEL",
         "OBJECT_PROCEDURAL_FALLBACK_MODEL",
+        "OBJECT_DEPTH_CUE_MODEL",
+        "OBJECT_CONTACT_SHADOW_MODEL",
+        "OBJECT_BASE_OCCLUSION_MODEL",
         "func _load_map_object_profiles",
         "func _draw_foreground_occlusion_lip",
+        "func _draw_directional_contact_shadow",
+        "func _draw_base_occlusion_pads",
         '"footprint_scaled_world_object"',
         '"foreground_ground_lip"',
+        '"footprint_cast_shadow_with_base_occlusion"',
+        '"directional_footprint_cast_shadow"',
+        '"foreground_base_occlusion_pads"',
         '"family_specific_procedural_world_object"',
         '"authored_autotile_layers"',
         '"original_quiet_tile_bank"',

@@ -159,6 +159,18 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if not bool(readability.get("foreground_occlusion_lip", false)):
 		_fail("Ninefold smoke: large-map %s marker lacks a foreground ground lip: %s." % [expected_kind, presentation])
 		return false
+	if String(readability.get("depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
+		_fail("Ninefold smoke: large-map %s marker lacks the footprint cast-shadow/base-occlusion depth model: %s." % [expected_kind, presentation])
+		return false
+	if not bool(readability.get("directional_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "directional_footprint_cast_shadow":
+		_fail("Ninefold smoke: large-map %s marker lacks a directional terrain contact shadow: %s." % [expected_kind, presentation])
+		return false
+	if not bool(readability.get("base_occlusion_pads", false)) or String(readability.get("base_occlusion_model", "")) != "foreground_base_occlusion_pads":
+		_fail("Ninefold smoke: large-map %s marker lacks foreground base occlusion pads: %s." % [expected_kind, presentation])
+		return false
+	if float(readability.get("contact_shadow_alpha", 0.0)) < 0.28 or float(readability.get("base_occlusion_alpha", 0.0)) < 0.30:
+		_fail("Ninefold smoke: large-map %s marker contact-depth cues are too faint: %s." % [expected_kind, presentation])
+		return false
 	if int(readability.get("footprint_width_tiles", 0)) <= 0 or int(readability.get("footprint_height_tiles", 0)) <= 0:
 		_fail("Ninefold smoke: large-map %s marker does not expose footprint dimensions: %s." % [expected_kind, presentation])
 		return false

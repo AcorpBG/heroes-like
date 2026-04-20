@@ -366,6 +366,31 @@ Limits:
 - Footprints currently guide presentation scale and grounding only; movement, blocking, visit targets, and pathing behavior are unchanged.
 - Procedural fallbacks are more object-like, but authored sprites are still needed for important towns, encounters, and many site families before the map can be considered visually mature.
 
+## Current Implementation Slice: Overworld Depth Contact Cues
+Status: completed on 2026-04-20 as the next narrow presentation-only renderer slice after the first object-first presence pass.
+
+Purpose:
+- Deepen the terrain contact for towns, sites, dwellings, encounters, mapped sprites, and active hero presence without changing gameplay occupancy, pathing, fog, panning, tactical framing, selection, or sprite mappings.
+- Add a real depth cue beyond the existing footprint anchor and foreground ground lip.
+- Keep the correction presentation-only and smoke-validated rather than claiming final overworld object art.
+
+Implemented:
+- `OverworldMapView` now draws a footprint-scaled directional cast shadow below each object anchor before the terrain ellipse, so placed objects read with a consistent terrain-side shadow instead of only a flat support mark.
+- The existing foreground ground lip now includes small base occlusion pads drawn over object feet/bases, improving the sense that procedural silhouettes, mapped sprites, towns, encounters, and the hero are partially seated into the terrain.
+- Mapped sprite validation now reports the deeper contact cue model alongside the existing footprint-scaled sprite settlement and ground-lip occlusion model.
+- Focused overworld and Ninefold smoke coverage now guards the cast-shadow/base-occlusion depth model for visible objects, large-map objects, mapped sprites, and active hero presence.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a new object atlas, town-art pass, camera change, pathfinding change, or true multi-tile occupancy implementation.
+- The cues are still renderer-level presentation hints; authored object footprints remain presentation scale hints only.
+- Automated validation guards the presentation contract and metadata, but broad visual polish still needs manual review across more maps, biomes, resolutions, and eventual final art.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
