@@ -50,7 +50,7 @@ Acceptance criteria for this design slice:
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
 ## Current Implementation Slice: Map Editor Play Copy Return
-Status: completed on 2026-04-20 as the next narrow editor/play-flow slice.
+Status: completed on 2026-04-20 as the previous editor/play-flow slice.
 
 Purpose:
 - Preserve the in-memory map editor working copy across the Play Copy test loop so scenario iteration does not rebuild from authored JSON after every play probe.
@@ -76,8 +76,34 @@ Limits:
 - The returned editor state is the exact editor launch snapshot kept in memory; gameplay changes made after Play Copy launch are intentionally discarded on return.
 - Town 3x2 occupancy/pathing remains future work.
 
+## Current Implementation Slice: Map Editor Object Property Editing
+Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
+
+Purpose:
+- Let the in-game map editor adjust mutable runtime properties on the currently selected overworld object in the working copy.
+- Keep the edits in memory and in the existing runtime state shape that live preview and Play Copy already consume.
+- Avoid authored JSON writeback, save-format changes, editor-only schemas, and broad gameplay rewrites.
+
+Implemented:
+- Added a compact selected-object property box to `MapEditorShell` for the current supported placement families.
+- Scoped editable fields to existing runtime fields: town `owner`, encounter `difficulty`, and resource/artifact node `collected` state with existing collection metadata.
+- Extended tile inspection and validation snapshots with `selected_property_object`, `property_key`, `editable_properties`, and live owner/difficulty/collection details.
+- Extended the editor smoke to prove property edits update the working copy, affect live preview, launch through Play Copy into the normal overworld shell, and survive the editor return snapshot.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not authored JSON export/writeback, a save-format change, a parallel scenario/editor schema, or a full object authoring panel.
+- The edit surface is dev-facing and only targets currently supported runtime families and fields.
+- Town 3x2 occupancy/pathing remains future work.
+
 ## Current Implementation Slice: Map Editor Object Placement Editing
-Status: completed on 2026-04-20 as the previous narrow editor slice.
+Status: completed on 2026-04-20 as an earlier narrow editor slice.
 
 Purpose:
 - Let the in-game map editor mutate overworld object placements on the existing scenario working copy instead of only terrain, roads, and hero start.

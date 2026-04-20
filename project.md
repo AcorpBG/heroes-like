@@ -224,6 +224,10 @@ Implementation note date: 2026-04-20
 
 The Play Copy loop now preserves the editor working-copy launch snapshot in memory so map testing can return to the editor without rebuilding from authored JSON. `MapEditorShell` stores its mutable runtime scenario copy through `SessionState`, launches the normal overworld shell on a duplicate of that copy, and `AppRouter` routes editor-origin play sessions back into `MapEditorShell` through the existing active-play return path. The return model is explicit: the editor restores the launch snapshot, not the fully mutated live play state from the test run. Authored content remains immutable, runtime save format is unchanged, no editor-only scenario schema was added, and town 3x2 occupancy/pathing remains future work.
 
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now includes a narrow in-memory property editor for selected overworld objects. `MapEditorShell` can mutate only existing runtime fields for the supported object families: town `owner`, encounter `difficulty`, and resource/artifact node `collected` state with the existing collection metadata fields. Tile inspection and validation snapshots expose structured editable-property details, live preview reads the changed working-copy state immediately, and Play Copy launches the normal overworld shell on those edits. Authored scenario JSON remains immutable, runtime save format is unchanged, no editor-only schema was introduced, and town 3x2 occupancy/pathing remains future work.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

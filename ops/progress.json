@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T18:47:46Z",
+  "updatedAt": "2026-04-20T19:24:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-play-copy-return-10184",
-  "currentSliceTitle": "Preserve and resume the map editor working copy across Play Copy",
+  "currentSliceId": "map-editor-object-properties-10184",
+  "currentSliceTitle": "Edit selected overworld object runtime properties in the map editor working copy",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the next narrow map editor slice: MapEditorShell now preserves its in-memory working-copy launch snapshot through SessionState, launches Play Copy through the normal overworld shell on a duplicate of that snapshot, and returns editor-origin play sessions back to MapEditorShell through AppRouter while restoring the launch snapshot instead of importing live mutated play state. Authored JSON writeback/export, save-format changes, parallel editor schema work, broad gameplay rewrites, and town 3x2 occupancy/pathing remain out of scope. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the next narrow map editor slice: MapEditorShell now has a compact selected-object property editor that mutates only existing in-memory working-copy runtime fields for town owner, encounter difficulty, and resource/artifact collected state. Tile inspection and validation snapshots expose structured selected_property_object/property_key/editable_properties details, live preview reads the edited working copy, and Play Copy launches the normal overworld shell with those edits intact before returning to the stored launch snapshot. Authored JSON writeback/export, save-format changes, parallel editor schema work, broad gameplay rewrites, and town 3x2 occupancy/pathing remain out of scope. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -310,6 +310,12 @@
       "difficulty": "small"
     },
     {
+      "id": "map-editor-object-properties-10184",
+      "title": "Edit selected overworld object runtime properties in the map editor working copy",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -365,7 +371,7 @@
     }
   ],
   "nextActions": [
-    "Use the in-game map editor's terrain, road, hero-start, and object-placement tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
+    "Use the in-game map editor's terrain, road, hero-start, object-placement, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
     "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
     "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",
