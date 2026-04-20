@@ -69,6 +69,10 @@ const OBJECT_UPPER_BACKDROP_MODEL := "family_scaled_rear_backdrop_wash"
 const OBJECT_VERTICAL_MASS_SHADOW_MODEL := "subtle_vertical_mass_shadow"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
 const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
+const TOWN_GROUNDING_MODEL := "town_sprite_settled_without_base_ellipse"
+const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
+const TOWN_DEPTH_CUE_MODEL := "town_contact_line_without_cast_shadow"
+const TOWN_FOOTPRINT_CUE_MODEL := "sparse_wall_and_entry_cues_no_underlay"
 const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
@@ -555,9 +559,20 @@ func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile(), tile)
 
 func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	if not _draw_object_sprite(_town_default_asset_id, rect, remembered, _town_object_profile(), tile):
+	var texture = _object_texture_for_asset(_town_default_asset_id)
+	if not (texture is Texture2D):
 		return false
+	var profile := _town_object_profile()
+	var footprint := _object_profile_footprint(profile)
+	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
+	var extent := minf(rect.size.x, rect.size.y)
+	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
+	var sprite_extent := maxf(12.0, extent * sprite_fraction)
+	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction("town", footprint))
+	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_town_owner_pennant(rect, _town_color(tile), remembered)
+	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
 	return true
 
@@ -600,19 +615,15 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> vo
 	draw_polyline(PackedVector2Array([flag[0], flag[1], flag[2], flag[0]]), outline_color, maxf(1.0, extent * 0.014))
 
 func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
-	var footprint := _object_profile_footprint(_town_object_profile())
-	var anchor := _draw_marker_plate(rect, remembered, 0.38, footprint, tile)
+	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var outline_width := maxf(2.2, extent * 0.036)
 	var marker_color := _remembered_marker_color(color) if remembered else color
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	_draw_upper_mass_backdrop(anchor, "town", remembered, footprint)
 	var body = Rect2(
 		rect.position + rect.size * Vector2(0.18, 0.43),
 		rect.size * Vector2(0.64, 0.30)
 	)
-	var shadow_body := Rect2(body.position + Vector2(0.0, extent * 0.045), body.size)
-	draw_rect(shadow_body, Color(0.02, 0.018, 0.014, 0.28), true)
 	draw_rect(body, marker_color, true)
 	draw_rect(body, outline_color, false, outline_width)
 	for step in [0.19, 0.46, 0.70]:
@@ -633,8 +644,8 @@ func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered:
 		flag_start + rect.size * Vector2(0.00, 0.11),
 	])
 	draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
+	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, color, remembered)
-	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_town_footprint_underlay(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
@@ -648,61 +659,92 @@ func _draw_town_footprint_underlay(tile: Vector2i, rect: Rect2) -> void:
 	var color := _town_owner_color(town)
 	var extent := minf(rect.size.x, rect.size.y)
 	var role := String(profile.get("tile_role", ""))
-	var base_alpha := 0.16 if role == TOWN_NON_ENTRY_ROLE else 0.10
-	if remembered:
-		base_alpha *= 0.86
 	var base_color := _remembered_marker_color(color) if remembered else color
-	var center := rect.get_center()
-	var radii := Vector2(rect.size.x * 0.46, rect.size.y * 0.34)
-	draw_colored_polygon(
-		_placement_bed_points(tile, center + Vector2(0.0, rect.size.y * 0.12), radii, TOWN_PRESENTATION_FOOTPRINT, 18),
-		Color(base_color.r, base_color.g, base_color.b, base_alpha)
-	)
 	if role != TOWN_NON_ENTRY_ROLE:
 		return
-	var wall_color := Color(0.10, 0.075, 0.045, 0.34 if not remembered else 0.24)
-	var edge_color := Color(base_color.r, base_color.g, base_color.b, 0.44 if not remembered else 0.36)
+	var wall_color := Color(0.10, 0.075, 0.045, 0.20 if not remembered else 0.14)
+	var edge_color := Color(base_color.r, base_color.g, base_color.b, 0.28 if not remembered else 0.22)
 	var y_mid := rect.position.y + rect.size.y * 0.58
 	draw_line(
-		Vector2(rect.position.x + rect.size.x * 0.18, y_mid),
-		Vector2(rect.end.x - rect.size.x * 0.18, y_mid),
+		Vector2(rect.position.x + rect.size.x * 0.24, y_mid),
+		Vector2(rect.end.x - rect.size.x * 0.24, y_mid),
 		wall_color,
-		maxf(2.0, extent * 0.040)
+		maxf(1.4, extent * 0.024)
 	)
 	draw_line(
-		Vector2(rect.position.x + rect.size.x * 0.28, y_mid - rect.size.y * 0.12),
-		Vector2(rect.position.x + rect.size.x * 0.40, y_mid + rect.size.y * 0.10),
+		Vector2(rect.position.x + rect.size.x * 0.30, y_mid - rect.size.y * 0.10),
+		Vector2(rect.position.x + rect.size.x * 0.38, y_mid + rect.size.y * 0.06),
 		edge_color,
-		maxf(1.4, extent * 0.022)
+		maxf(1.0, extent * 0.014)
 	)
 	draw_line(
-		Vector2(rect.end.x - rect.size.x * 0.28, y_mid - rect.size.y * 0.12),
-		Vector2(rect.end.x - rect.size.x * 0.40, y_mid + rect.size.y * 0.10),
+		Vector2(rect.end.x - rect.size.x * 0.30, y_mid - rect.size.y * 0.10),
+		Vector2(rect.end.x - rect.size.x * 0.38, y_mid + rect.size.y * 0.06),
 		edge_color,
-		maxf(1.4, extent * 0.022)
+		maxf(1.0, extent * 0.014)
 	)
+
+func _draw_town_grounding_anchor(rect: Rect2, remembered: bool, tile: Vector2i) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var center := rect.position + rect.size * Vector2(0.50, 0.76)
+	var radii := Vector2(rect.size.x * 0.30, maxf(2.0, rect.size.y * 0.055))
+	_draw_town_ground_scuffs(tile, center, radii, remembered, extent)
+	return {
+		"center": center,
+		"radii": radii,
+		"extent": extent,
+		"footprint": TOWN_PRESENTATION_FOOTPRINT,
+	}
+
+func _draw_town_ground_scuffs(tile: Vector2i, center: Vector2, radii: Vector2, remembered: bool, extent: float) -> void:
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var terrain := _terrain_at(tile) if tile.x >= 0 and tile.y >= 0 else ""
+	var detail_color: Color = _terrain_color(terrain, "detail_color", Color(0.70, 0.62, 0.38, 1.0))
+	var alpha := 0.18 if not remembered else 0.14
+	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, alpha)
+	var width := maxf(1.0, extent * 0.010)
+	draw_line(center + Vector2(-radii.x * 0.88, -radii.y * 0.18), center + Vector2(-radii.x * 0.46, -radii.y * 0.48), scuff_color, width)
+	draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.18), center + Vector2(radii.x * 0.20, radii.y * 0.04), scuff_color, width)
+	draw_line(center + Vector2(radii.x * 0.44, -radii.y * 0.36), center + Vector2(radii.x * 0.84, -radii.y * 0.12), scuff_color, width)
+
+func _draw_town_front_contact(anchor: Dictionary, remembered: bool) -> void:
+	if anchor.is_empty():
+		return
+	var center: Vector2 = anchor.get("center", Vector2.ZERO)
+	var radii: Vector2 = anchor.get("radii", Vector2.ZERO)
+	var extent := float(anchor.get("extent", 0.0))
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var contact_color := Color(0.20, 0.14, 0.07, 0.20 if not remembered else 0.16)
+	var highlight_color := Color(0.78, 0.66, 0.34, 0.12 if not remembered else 0.10)
+	var left := center + Vector2(-radii.x * 0.66, radii.y * 0.24)
+	var mid := center + Vector2(0.0, radii.y * 0.56)
+	var right := center + Vector2(radii.x * 0.66, radii.y * 0.24)
+	draw_polyline(PackedVector2Array([left, mid, right]), contact_color, maxf(1.0, extent * 0.014))
+	draw_line(center + Vector2(-radii.x * 0.28, radii.y * 0.02), center + Vector2(radii.x * 0.26, radii.y * 0.04), highlight_color, maxf(1.0, extent * 0.010))
 
 func _draw_town_entry_approach(rect: Rect2, color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	if extent <= 0.0:
 		return
-	var path_color := Color(0.72, 0.57, 0.33, 0.54 if not remembered else 0.40)
-	var edge_color := Color(0.16, 0.11, 0.06, 0.48 if not remembered else 0.34)
+	var path_color := Color(0.72, 0.57, 0.33, 0.32 if not remembered else 0.24)
+	var edge_color := Color(0.16, 0.11, 0.06, 0.28 if not remembered else 0.20)
 	var cue_color := _remembered_marker_color(color) if remembered else color
 	var apron := PackedVector2Array([
-		rect.position + rect.size * Vector2(0.39, 0.66),
-		rect.position + rect.size * Vector2(0.61, 0.66),
-		rect.position + rect.size * Vector2(0.76, 0.95),
-		rect.position + rect.size * Vector2(0.24, 0.95),
+		rect.position + rect.size * Vector2(0.43, 0.67),
+		rect.position + rect.size * Vector2(0.57, 0.67),
+		rect.position + rect.size * Vector2(0.68, 0.95),
+		rect.position + rect.size * Vector2(0.32, 0.95),
 	])
 	draw_colored_polygon(apron, path_color)
-	draw_polyline(PackedVector2Array([apron[0], apron[1], apron[2], apron[3], apron[0]]), edge_color, maxf(1.4, extent * 0.020))
+	draw_polyline(PackedVector2Array([apron[0], apron[1], apron[2], apron[3], apron[0]]), edge_color, maxf(1.0, extent * 0.014))
 	var gate_left := rect.position + rect.size * Vector2(0.43, 0.61)
 	var gate_right := rect.position + rect.size * Vector2(0.57, 0.61)
 	var gate_bottom := rect.position + rect.size * Vector2(0.50, 0.73)
-	draw_line(gate_left, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.56 if not remembered else 0.44), maxf(1.8, extent * 0.024))
-	draw_line(gate_right, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.56 if not remembered else 0.44), maxf(1.8, extent * 0.024))
-	draw_circle(rect.position + rect.size * Vector2(0.50, 0.70), maxf(1.8, extent * 0.034), Color(0.96, 0.86, 0.52, 0.36 if not remembered else 0.26))
+	draw_line(gate_left, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.42 if not remembered else 0.32), maxf(1.4, extent * 0.018))
+	draw_line(gate_right, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.42 if not remembered else 0.32), maxf(1.4, extent * 0.018))
+	draw_circle(rect.position + rect.size * Vector2(0.50, 0.70), maxf(1.4, extent * 0.026), Color(0.96, 0.86, 0.52, 0.26 if not remembered else 0.18))
 
 func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var profile := _resource_object_profile(node)
@@ -1577,6 +1619,11 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"presentation_model": TOWN_PRESENTATION_MODEL,
 		"footprint_width_tiles": TOWN_PRESENTATION_FOOTPRINT.x,
 		"footprint_height_tiles": TOWN_PRESENTATION_FOOTPRINT.y,
+		"footprint_cue_model": TOWN_FOOTPRINT_CUE_MODEL,
+		"base_ellipse": false,
+		"filled_underlay": false,
+		"cast_shadow": false,
+		"grounding_model": TOWN_GROUNDING_MODEL,
 		"entry_role": TOWN_ENTRY_ROLE,
 		"entry_offset": {"x": TOWN_ENTRY_OFFSET.x, "y": TOWN_ENTRY_OFFSET.y},
 		"entry_tile": {"x": entry.x, "y": entry.y},
@@ -1759,6 +1806,7 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			var encounter_footprint := _object_profile_footprint(_encounter_object_profile())
 			sprite_footprints.append({"width": encounter_footprint.x, "height": encounter_footprint.y})
 	var uses_asset_sprite := not sprite_asset_ids.is_empty()
+	var uses_town_sprite := "town" in object_kinds and _town_default_asset_id in sprite_asset_ids
 	return {
 		"uses_asset_sprite": uses_asset_sprite,
 		"fallback_procedural_marker": not uses_asset_sprite and not object_kinds.is_empty(),
@@ -1766,15 +1814,21 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		"sprite_asset_ids": sprite_asset_ids,
 		"sprite_footprints": sprite_footprints,
 		"remembered_sprite_treatment": "ghosted_sprite_with_ground_anchor" if uses_asset_sprite and not visible else "",
-		"sprite_settlement_model": OBJECT_SPRITE_SETTLEMENT_MODEL if uses_asset_sprite else "",
+		"sprite_settlement_model": TOWN_GROUNDING_MODEL if uses_town_sprite else (OBJECT_SPRITE_SETTLEMENT_MODEL if uses_asset_sprite else ""),
 		"settled_sprite_occlusion": uses_asset_sprite,
 		"sprite_depth_contact_cues": uses_asset_sprite,
-		"sprite_depth_cue_model": OBJECT_DEPTH_CUE_MODEL if uses_asset_sprite else "",
-		"sprite_placement_bed": uses_asset_sprite,
-		"sprite_placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if uses_asset_sprite else "",
-		"sprite_upper_mass_backdrop": uses_asset_sprite,
-		"sprite_upper_mass_backdrop_model": OBJECT_UPPER_BACKDROP_MODEL if uses_asset_sprite else "",
-		"sprite_vertical_mass_shadow": uses_asset_sprite,
+		"sprite_depth_cue_model": TOWN_DEPTH_CUE_MODEL if uses_town_sprite else (OBJECT_DEPTH_CUE_MODEL if uses_asset_sprite else ""),
+		"sprite_placement_bed": uses_asset_sprite and not uses_town_sprite,
+		"sprite_placement_bed_model": "" if uses_town_sprite else (OBJECT_PLACEMENT_BED_MODEL if uses_asset_sprite else ""),
+		"sprite_upper_mass_backdrop": uses_asset_sprite and not uses_town_sprite,
+		"sprite_upper_mass_backdrop_model": "" if uses_town_sprite else (OBJECT_UPPER_BACKDROP_MODEL if uses_asset_sprite else ""),
+		"sprite_vertical_mass_shadow": uses_asset_sprite and not uses_town_sprite,
+		"town_sprite_grounding_model": TOWN_GROUNDING_MODEL if uses_town_sprite else "",
+		"town_footprint_cue_model": TOWN_FOOTPRINT_CUE_MODEL if uses_town_sprite else "",
+		"town_base_ellipse": false if uses_town_sprite else null,
+		"town_underlay": false if uses_town_sprite else null,
+		"town_cast_shadow": false if uses_town_sprite else null,
+		"town_vertical_mass_shadow": false if uses_town_sprite else null,
 		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
@@ -1805,46 +1859,55 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var anchor_half_width_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * (1.0 + (float(dominant_footprint.x - 1) * MARKER_FOOTPRINT_WIDTH_STEP))
 	var anchor_half_height_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * (1.0 + (float(dominant_footprint.y - 1) * MARKER_FOOTPRINT_HEIGHT_STEP))
 	var has_presence := has_object_marker or has_visible_hero
+	var uses_quiet_town_grounding := has_presence and dominant_family == "town"
+	var uses_shared_grounding := has_presence and not uses_quiet_town_grounding
 	var backdrop_metrics := _upper_mass_backdrop_metrics(
 		dominant_family,
 		dominant_footprint,
 		Vector2(anchor_half_width_fraction * extent, anchor_half_height_fraction * extent),
 		extent
-	) if has_presence else {}
+	) if uses_shared_grounding else {}
 	return {
 		"object_kinds": object_kinds,
 		"marker_kinds": marker_kinds,
-		"contrast_plate": has_presence,
+		"contrast_plate": uses_shared_grounding,
 		"ground_anchor": has_presence,
-		"anchor_shape": MARKER_GROUND_ANCHOR_STYLE if has_presence else "",
+		"anchor_shape": TOWN_ANCHOR_STYLE if uses_quiet_town_grounding else (MARKER_GROUND_ANCHOR_STYLE if has_presence else ""),
 		"presence_model": OBJECT_PRESENCE_MODEL if has_presence else "",
-		"terrain_quieting_bed": has_presence,
-		"placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if has_presence else "",
-		"placement_bed_shape": "organic_footprint_clearing" if has_presence else "",
-		"placement_bed_alpha": _placement_bed_alpha(remembered) if has_presence else 0.0,
-		"placement_bed_terrain_tinted": has_presence,
+		"terrain_quieting_bed": uses_shared_grounding,
+		"placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if uses_shared_grounding else "",
+		"placement_bed_shape": "organic_footprint_clearing" if uses_shared_grounding else "",
+		"placement_bed_alpha": _placement_bed_alpha(remembered) if uses_shared_grounding else 0.0,
+		"placement_bed_terrain_tinted": uses_shared_grounding,
 		"placement_bed_ui_plate": false,
-		"upper_mass_backdrop": has_presence,
-		"upper_mass_backdrop_model": OBJECT_UPPER_BACKDROP_MODEL if has_presence else "",
-		"upper_mass_backdrop_shape": "family_scaled_rear_wash" if has_presence else "",
-		"upper_mass_backdrop_alpha": (OBJECT_UPPER_BACKDROP_MEMORY.a if remembered else OBJECT_UPPER_BACKDROP_VISIBLE.a) if has_presence else 0.0,
-		"upper_mass_backdrop_position": "behind_upper_body" if has_presence else "",
-		"upper_mass_backdrop_height_fraction": (float(backdrop_metrics.get("height", 0.0)) / extent) if has_presence and extent > 0.0 else 0.0,
-		"upper_mass_backdrop_width_fraction": (float(backdrop_metrics.get("width", 0.0)) / extent) if has_presence and extent > 0.0 else 0.0,
+		"upper_mass_backdrop": uses_shared_grounding,
+		"upper_mass_backdrop_model": OBJECT_UPPER_BACKDROP_MODEL if uses_shared_grounding else "",
+		"upper_mass_backdrop_shape": "family_scaled_rear_wash" if uses_shared_grounding else "",
+		"upper_mass_backdrop_alpha": (OBJECT_UPPER_BACKDROP_MEMORY.a if remembered else OBJECT_UPPER_BACKDROP_VISIBLE.a) if uses_shared_grounding else 0.0,
+		"upper_mass_backdrop_position": "behind_upper_body" if uses_shared_grounding else "",
+		"upper_mass_backdrop_height_fraction": (float(backdrop_metrics.get("height", 0.0)) / extent) if uses_shared_grounding and extent > 0.0 else 0.0,
+		"upper_mass_backdrop_width_fraction": (float(backdrop_metrics.get("width", 0.0)) / extent) if uses_shared_grounding and extent > 0.0 else 0.0,
 		"upper_mass_backdrop_ui_halo": false,
 		"upper_mass_backdrop_ui_badge": false,
-		"vertical_mass_shadow": has_presence,
-		"vertical_mass_shadow_model": OBJECT_VERTICAL_MASS_SHADOW_MODEL if has_presence else "",
-		"vertical_mass_shadow_alpha": (OBJECT_VERTICAL_MASS_SHADOW_MEMORY.a if remembered else OBJECT_VERTICAL_MASS_SHADOW_VISIBLE.a) if has_presence else 0.0,
+		"vertical_mass_shadow": uses_shared_grounding,
+		"vertical_mass_shadow_model": OBJECT_VERTICAL_MASS_SHADOW_MODEL if uses_shared_grounding else "",
+		"vertical_mass_shadow_alpha": (OBJECT_VERTICAL_MASS_SHADOW_MEMORY.a if remembered else OBJECT_VERTICAL_MASS_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0,
 		"foreground_occlusion_lip": has_presence,
-		"occlusion_model": OBJECT_OCCLUSION_MODEL if has_presence else "",
-		"depth_cue_model": OBJECT_DEPTH_CUE_MODEL if has_presence else "",
-		"directional_contact_shadow": has_presence,
-		"contact_shadow_model": OBJECT_CONTACT_SHADOW_MODEL if has_presence else "",
-		"contact_shadow_alpha": (OBJECT_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_CONTACT_SHADOW_VISIBLE.a) if has_presence else 0.0,
-		"base_occlusion_pads": has_presence,
-		"base_occlusion_model": OBJECT_BASE_OCCLUSION_MODEL if has_presence else "",
-		"base_occlusion_alpha": (OBJECT_BASE_OCCLUSION_MEMORY.a if remembered else OBJECT_BASE_OCCLUSION_VISIBLE.a) if has_presence else 0.0,
+		"occlusion_model": TOWN_GROUNDING_MODEL if uses_quiet_town_grounding else (OBJECT_OCCLUSION_MODEL if has_presence else ""),
+		"depth_cue_model": TOWN_DEPTH_CUE_MODEL if uses_quiet_town_grounding else (OBJECT_DEPTH_CUE_MODEL if has_presence else ""),
+		"directional_contact_shadow": uses_shared_grounding,
+		"contact_shadow_model": OBJECT_CONTACT_SHADOW_MODEL if uses_shared_grounding else "",
+		"contact_shadow_alpha": (OBJECT_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_CONTACT_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0,
+		"base_occlusion_pads": uses_shared_grounding,
+		"base_occlusion_model": OBJECT_BASE_OCCLUSION_MODEL if uses_shared_grounding else "",
+		"base_occlusion_alpha": (OBJECT_BASE_OCCLUSION_MEMORY.a if remembered else OBJECT_BASE_OCCLUSION_VISIBLE.a) if uses_shared_grounding else 0.0,
+		"town_grounding_model": TOWN_GROUNDING_MODEL if uses_quiet_town_grounding else "",
+		"town_footprint_cue_model": TOWN_FOOTPRINT_CUE_MODEL if uses_quiet_town_grounding else "",
+		"town_base_ellipse": false if uses_quiet_town_grounding else null,
+		"town_underlay": false if uses_quiet_town_grounding else null,
+		"town_cast_shadow": false if uses_quiet_town_grounding else null,
+		"town_contact_cue": uses_quiet_town_grounding,
+		"town_remembered_treatment": "ghosted_sprite_without_echo_plate" if uses_quiet_town_grounding and remembered else "",
 		"dominant_object_family": dominant_family,
 		"footprint_width_tiles": dominant_footprint.x if has_presence else 0,
 		"footprint_height_tiles": dominant_footprint.y if has_presence else 0,
@@ -1854,12 +1917,12 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"mapped_sprite_settlement": uses_asset_sprite,
 		"ui_badge_plate": false,
 		"plate_radius_fraction": plate_radius_fraction,
-		"plate_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
-		"anchor_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
-		"ring_alpha": MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a,
+		"plate_alpha": 0.0 if uses_quiet_town_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
+		"anchor_alpha": 0.0 if uses_quiet_town_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
+		"ring_alpha": 0.0 if uses_quiet_town_grounding else (MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a),
 		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
 		"grid_alpha": GRID_COLOR.a,
-		"memory_echo": remembered,
+		"memory_echo": remembered and not uses_quiet_town_grounding,
 		"remembered_marker_alpha": MEMORY_OBJECT_COLOR.a if remembered else 0.0,
 		"min_symbol_extent_fraction": min_symbol_fraction,
 		"min_symbol_extent_px": min_symbol_fraction * extent,

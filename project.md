@@ -172,6 +172,10 @@ Implementation note date: 2026-04-20
 
 The next overworld object presentation slice moves the renderer from grounded markers toward object-first placement. `OverworldMapView` now uses authored map-object footprints from `content/map_objects.json` as presentation scale hints for resource sites, applies footprint-scaled sprite settlement and foreground ground-lip occlusion cues, and replaces several procedural fallback symbols with compact family-specific world silhouettes for dwellings, mines, scouting structures, guarded ruins, transit objects, shrines, pickups, artifacts, encounters, towns, and the active hero. This is a rendering-direction nudge only: footprints do not yet change movement, blocking, visit targets, or true multi-tile occupancy, and authored object/town art remains future work.
 
+Implementation note date: 2026-04-20
+
+The town-specific overworld grounding has been corrected after visual feedback that the 3x2 town presentation was reading as an object on a staged base. Towns no longer use the shared filled placement bed, base ellipse, directional cast shadow, base occlusion pads, or upper-mass shadow/backdrop treatment. They still present as 3x2 world objects with the authored town coordinate as the bottom-middle approach/visit tile, using only sparse non-entry footprint cues and a restrained entry approach cue. This is a town presentation correction only: resource sites, artifacts, encounters, hero markers, movement, pathing, town interaction, save data, battle routing, and true occupancy remain unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

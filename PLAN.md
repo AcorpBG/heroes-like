@@ -495,6 +495,31 @@ Limits:
 - Non-entry footprint tiles are blocked only in the presentation/validation model. The underlying overworld rules still treat towns as single-tile interactions until a future occupancy/pathing slice is designed.
 - Edge-placed legacy towns can have off-map clipped presentation cells; the validation metadata reports those honestly instead of moving scenario towns inside this slice.
 
+## Current Implementation Slice: Overworld Town Grounding Correction
+Status: completed on 2026-04-20 as a narrow visual correction to the town object presentation.
+
+Purpose:
+- Remove the town-specific base ellipse, filled footprint underlay, directional cast shadow, base occlusion pads, and upper-mass shadow/backdrop that made towns read as staged markers instead of placed world objects.
+- Preserve the useful part of the previous slice: towns still present as 3x2 world objects with the existing town coordinate as the bottom-middle approach/visit tile.
+- Keep gameplay untouched: no movement, pathing, save, battle, town-entry, or true occupancy changes.
+
+Implemented:
+- Split town sprite drawing off the shared mapped-object plate/shadow path in `OverworldMapView`.
+- Replaced the filled town footprint underlay with sparse non-entry wall cues plus a narrower, lower-alpha bottom-middle entry approach cue.
+- Removed town cast-shadow, base-occlusion-pad, placement-bed, and vertical-mass-shadow metadata from validation payloads while leaving the shared treatment intact for other object families.
+- Updated the overworld art manifest, repo validator, and River Pass/Ninefold smokes to guard the town-specific no-ellipse/no-underlay/no-cast-shadow model.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final town art, a sprite replacement, a broad object-renderer rollback, or a gameplay footprint system.
+- Other overworld object families still use their shared terrain grounding, placement-bed, contact-shadow, and backdrop cues from earlier slices.
+- Manual visual review is still needed before treating the town presentation as polished across every biome and resolution.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
