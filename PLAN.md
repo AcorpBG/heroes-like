@@ -545,6 +545,32 @@ Limits:
 - The active hero remains a procedural placeholder silhouette until authored hero overworld sprites are added.
 - Manual visual review is still needed before treating hero presentation as polished across every biome and resolution.
 
+## Current Implementation Slice: Overworld Terrain And Road Tile Correction
+Status: completed on 2026-04-20 as an AcOrP-priority terrain/road correction after feedback that the base tiles and roads were still breaking immersion.
+
+Purpose:
+- Improve the actual original quiet base terrain tile bank and structural dirt-road overlay pieces, not town/hero/site marker polish.
+- Keep the existing authored autotile layer contract: runtime 64x64 PNGs, `original_quiet_tile_bank`, jagged edge overlays, and `road_dirt` structural overlays.
+- Preserve gameplay, pathing, fog, save, object, town, hero, and site logic.
+
+Implemented:
+- Updated `tools/build_overworld_terrain_tiles.py` so base tiles use deterministic multi-scale ground grain instead of near-flat per-pixel noise, with stronger terrain-specific tufts, canopy clusters, reed pools, worn streaks, contours, and scree details.
+- Rebuilt the checked-in grass/plains, forest, mire/swamp, and hills/ridge/highland runtime base PNGs from the revised original builder.
+- Rebuilt `road_dirt` center and connector PNGs as softer rutted dirt beds with muted earth colors, organic center masks, slight connector wobble, grit, and rut lines, reducing the stamped bright center-bead read.
+- Updated terrain grammar and art manifest wording to record the corrected map-scale ground grain and soft rutted structural road connectors while retaining the original quiet tile-bank status.
+
+Validation:
+- `python3 -m py_compile tools/build_overworld_terrain_tiles.py`
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is still a narrow covered-family correction, not a final terrain atlas or artist-authored complete overworld tileset.
+- Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, and road movement-cost/pathfinding behavior remain future slices.
+- Automated validation proves the runtime contract and smoke surfaces; manual visual review is still needed before treating the terrain and road look as broadly solved.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
