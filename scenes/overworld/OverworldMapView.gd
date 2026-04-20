@@ -120,8 +120,13 @@ const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
 const TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS := "generated_overworld_terrain_sources_20260419"
+const TERRAIN_TRANSITION_SELECTION_MODEL := "neighbor_priority_intrusion_8_way"
+const TERRAIN_TRANSITION_EDGE_MODEL := "higher_priority_neighbor_intrusion_edges"
+const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_neighbor_corner_hints"
 const TERRAIN_TRANSITION_ALPHA := 0.42
 const TERRAIN_TRANSITION_WIDTH_FACTOR := 0.16
+const TERRAIN_TRANSITION_CORNER_ALPHA := 0.34
+const TERRAIN_TRANSITION_CORNER_FACTOR := 0.24
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
 const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
@@ -463,24 +468,77 @@ func _draw_tile_variant_marks(tile: Vector2i, rect: Rect2, terrain: String, visi
 		draw_line(second, second + Vector2(rect.size.x * 0.16, -rect.size.y * 0.04), color, 1.4)
 
 func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> void:
-	var edge_mask := _terrain_transition_edge_mask(tile)
-	if edge_mask == "":
-		return
-	var edge_color := _terrain_color(terrain, "edge_color", Color(0.24, 0.26, 0.18, 1.0))
+	var transition_payload := _terrain_transition_payload(tile)
+	var cardinal_sources = transition_payload.get("cardinal_sources", [])
+	if cardinal_sources is Array:
+		for source_value in cardinal_sources:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var direction := String(source.get("direction", ""))
+			var source_terrain := String(source.get("source_terrain", terrain))
+			if not _draw_terrain_edge_art(source_terrain, direction, rect):
+				_draw_terrain_edge_fallback(source_terrain, direction, rect)
+	var corner_sources = transition_payload.get("corner_sources", [])
+	if corner_sources is Array:
+		for source_value in corner_sources:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			_draw_terrain_corner_hint(String(source.get("source_terrain", terrain)), String(source.get("direction", "")), rect)
+
+func _draw_terrain_edge_fallback(source_terrain: String, direction: String, rect: Rect2) -> void:
+	var edge_color := _terrain_color(source_terrain, "edge_color", Color(0.24, 0.26, 0.18, 1.0))
 	var color := Color(edge_color.r, edge_color.g, edge_color.b, TERRAIN_TRANSITION_ALPHA)
 	var width := maxf(3.0, minf(rect.size.x, rect.size.y) * TERRAIN_TRANSITION_WIDTH_FACTOR)
-	if "N" in edge_mask:
-		if not _draw_terrain_edge_art(terrain, "N", rect):
+	match direction:
+		"N":
 			draw_rect(Rect2(rect.position, Vector2(rect.size.x, width)), color, true)
-	if "S" in edge_mask:
-		if not _draw_terrain_edge_art(terrain, "S", rect):
+		"S":
 			draw_rect(Rect2(Vector2(rect.position.x, rect.end.y - width), Vector2(rect.size.x, width)), color, true)
-	if "W" in edge_mask:
-		if not _draw_terrain_edge_art(terrain, "W", rect):
+		"W":
 			draw_rect(Rect2(rect.position, Vector2(width, rect.size.y)), color, true)
-	if "E" in edge_mask:
-		if not _draw_terrain_edge_art(terrain, "E", rect):
+		"E":
 			draw_rect(Rect2(Vector2(rect.end.x - width, rect.position.y), Vector2(width, rect.size.y)), color, true)
+
+func _draw_terrain_corner_hint(source_terrain: String, direction: String, rect: Rect2) -> void:
+	if direction == "":
+		return
+	var edge_color := _terrain_color(source_terrain, "edge_color", Color(0.24, 0.26, 0.18, 1.0))
+	var color := Color(edge_color.r, edge_color.g, edge_color.b, TERRAIN_TRANSITION_CORNER_ALPHA)
+	var detail := _terrain_color(source_terrain, "detail_color", edge_color)
+	var detail_color := Color(detail.r, detail.g, detail.b, TERRAIN_TRANSITION_CORNER_ALPHA * 0.58)
+	var extent := minf(rect.size.x, rect.size.y)
+	var corner := maxf(4.0, extent * TERRAIN_TRANSITION_CORNER_FACTOR)
+	var points := PackedVector2Array()
+	var accent_start := Vector2.ZERO
+	var accent_end := Vector2.ZERO
+	var origin := Vector2.ZERO
+	match direction:
+		"NE":
+			origin = Vector2(rect.end.x, rect.position.y)
+			points = PackedVector2Array([origin, origin + Vector2(-corner, 0.0), origin + Vector2(0.0, corner)])
+			accent_start = origin + Vector2(-corner * 0.76, corner * 0.18)
+			accent_end = origin + Vector2(-corner * 0.20, corner * 0.72)
+		"SE":
+			origin = rect.end
+			points = PackedVector2Array([origin, origin + Vector2(0.0, -corner), origin + Vector2(-corner, 0.0)])
+			accent_start = origin + Vector2(-corner * 0.22, -corner * 0.72)
+			accent_end = origin + Vector2(-corner * 0.78, -corner * 0.18)
+		"SW":
+			origin = Vector2(rect.position.x, rect.end.y)
+			points = PackedVector2Array([origin, origin + Vector2(corner, 0.0), origin + Vector2(0.0, -corner)])
+			accent_start = origin + Vector2(corner * 0.76, -corner * 0.18)
+			accent_end = origin + Vector2(corner * 0.20, -corner * 0.72)
+		"NW":
+			origin = rect.position
+			points = PackedVector2Array([origin, origin + Vector2(0.0, corner), origin + Vector2(corner, 0.0)])
+			accent_start = origin + Vector2(corner * 0.22, corner * 0.72)
+			accent_end = origin + Vector2(corner * 0.78, corner * 0.18)
+		_:
+			return
+	draw_colored_polygon(points, color)
+	draw_line(accent_start, accent_end, detail_color, maxf(1.0, extent * 0.014))
 
 func _draw_terrain_edge_art(terrain: String, direction: String, rect: Rect2) -> bool:
 	if not _terrain_art_can_be_primary(terrain):
@@ -2027,12 +2085,16 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var terrain := _terrain_at(tile)
 	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
 	var road_payload := _road_tile_payload(tile)
-	var transition_mask := _terrain_transition_edge_mask(tile)
+	var transition_payload := _terrain_transition_payload(tile)
+	var transition_mask := String(transition_payload.get("edge_mask", ""))
+	var transition_corner_mask := String(transition_payload.get("corner_mask", ""))
 	var tile_art_entry := _terrain_base_art_entry(terrain, tile)
 	var tile_art_path := String(tile_art_entry.get("path", ""))
 	var tile_art_primary := _terrain_art_can_be_primary(terrain)
 	var tile_art_loaded := tile_art_primary and _terrain_art_texture(tile_art_path) is Texture2D
-	var edge_art_count := _edge_transition_art_count(terrain, transition_mask)
+	var edge_art_count := _transition_edge_art_count(transition_payload)
+	var edge_transition_count := _transition_source_count(transition_payload, "cardinal_sources")
+	var corner_transition_count := _transition_source_count(transition_payload, "corner_sources")
 	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
 	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
@@ -2076,12 +2138,29 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"terrain_noise_profile": "quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback",
 		"terrain_variant_selection": "patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks",
 		"grasslands_base_cohesion": "grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else "",
+		"neighbor_aware_transitions": true,
+		"transition_calculation_model": TERRAIN_TRANSITION_SELECTION_MODEL,
+		"transition_edge_model": TERRAIN_TRANSITION_EDGE_MODEL,
+		"transition_corner_model": TERRAIN_TRANSITION_CORNER_MODEL,
+		"transition_receiver_terrain": terrain,
+		"transition_receiver_group": _terrain_group(terrain),
+		"transition_priority": _terrain_transition_priority(terrain),
 		"transition_edge_mask": transition_mask,
-		"edge_transition_count": transition_mask.length(),
+		"transition_corner_mask": transition_corner_mask,
+		"transition_source_terrain_ids": transition_payload.get("source_terrain_ids", []),
+		"transition_source_groups": transition_payload.get("source_groups", []),
+		"transition_cardinal_sources": transition_payload.get("cardinal_sources", []),
+		"transition_corner_sources": transition_payload.get("corner_sources", []),
+		"transition_relationship_count": edge_transition_count + corner_transition_count,
+		"edge_transition_count": edge_transition_count,
+		"corner_transition_count": corner_transition_count,
 		"edge_transition_art_count": edge_art_count,
-		"edge_transition_art_loaded": edge_art_count > 0 and edge_art_count == transition_mask.length(),
+		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
 		"transition_shape_model": "jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback",
 		"transition_edge_treatment": "soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback",
+		"transition_selection_rule": "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
+		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0,
+		"same_group_transition_suppressed": true,
 		"road_overlay": not road_payload.is_empty(),
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
 		"road_role": String(road_payload.get("role", "")),
@@ -2105,16 +2184,26 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"road_joint_cap_model": "connection_aware_joint_cap" if not road_payload.is_empty() else "",
 	}
 
-func _edge_transition_art_count(terrain: String, transition_mask: String) -> int:
-	if not _terrain_art_can_be_primary(terrain):
-		return 0
+func _transition_edge_art_count(transition_payload: Dictionary) -> int:
 	var count := 0
-	for direction in ["N", "E", "S", "W"]:
-		if not (direction in transition_mask):
+	var cardinal_sources = transition_payload.get("cardinal_sources", [])
+	if not (cardinal_sources is Array):
+		return count
+	for source_value in cardinal_sources:
+		if not (source_value is Dictionary):
 			continue
-		if _terrain_art_texture(_terrain_edge_art_path(terrain, direction)) is Texture2D:
+		var source: Dictionary = source_value
+		var source_terrain := String(source.get("source_terrain", ""))
+		if not _terrain_art_can_be_primary(source_terrain):
+			continue
+		var direction := String(source.get("direction", ""))
+		if _terrain_art_texture(_terrain_edge_art_path(source_terrain, direction)) is Texture2D:
 			count += 1
 	return count
+
+func _transition_source_count(transition_payload: Dictionary, key: String) -> int:
+	var sources = transition_payload.get(key, [])
+	return sources.size() if sources is Array else 0
 
 func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 	if road_payload.is_empty():
@@ -2636,30 +2725,122 @@ func _terrain_transition_priority(terrain_id: String) -> int:
 	return int(style.get("transition_priority", 0))
 
 func _terrain_transition_edge_mask(tile: Vector2i) -> String:
-	if _session == null or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
-		return ""
+	return String(_terrain_transition_payload(tile).get("edge_mask", ""))
+
+func _terrain_transition_payload(tile: Vector2i) -> Dictionary:
 	var terrain := _terrain_at(tile)
-	var group := _terrain_group(terrain)
-	var priority := _terrain_transition_priority(terrain)
-	var mask := ""
-	var checks := {
-		"N": Vector2i(0, -1),
-		"E": Vector2i(1, 0),
-		"S": Vector2i(0, 1),
-		"W": Vector2i(-1, 0),
+	var payload := {
+		"model": TERRAIN_TRANSITION_SELECTION_MODEL,
+		"edge_model": TERRAIN_TRANSITION_EDGE_MODEL,
+		"corner_model": TERRAIN_TRANSITION_CORNER_MODEL,
+		"receiver_terrain": terrain,
+		"receiver_group": _terrain_group(terrain),
+		"receiver_priority": _terrain_transition_priority(terrain),
+		"edge_mask": "",
+		"corner_mask": "",
+		"cardinal_sources": [],
+		"corner_sources": [],
+		"source_terrain_ids": [],
+		"source_groups": [],
 	}
-	for label in checks.keys():
-		var neighbor: Vector2i = tile + checks[label]
-		if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= _map_size.x or neighbor.y >= _map_size.y:
+	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		return payload
+	var cardinal_sources: Array = []
+	var corner_sources: Array = []
+	var edge_mask := ""
+	var corner_mask := ""
+	for check in _terrain_cardinal_transition_checks():
+		var source := _terrain_transition_source_for_neighbor(tile, terrain, check)
+		if source.is_empty():
 			continue
-		if not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+		cardinal_sources.append(source)
+		edge_mask += String(source.get("direction", ""))
+	for check in _terrain_diagonal_transition_checks():
+		var source := _terrain_transition_source_for_neighbor(tile, terrain, check)
+		if source.is_empty():
 			continue
-		var neighbor_terrain := _terrain_at(neighbor)
-		if neighbor_terrain == "" or _terrain_group(neighbor_terrain) == group:
+		var source_group := String(source.get("source_group", ""))
+		var offset: Vector2i = check.get("offset", Vector2i.ZERO)
+		if _tile_has_explored_terrain_group(tile + Vector2i(offset.x, 0), source_group):
 			continue
-		if priority >= _terrain_transition_priority(neighbor_terrain):
-			mask += label
-	return mask
+		if _tile_has_explored_terrain_group(tile + Vector2i(0, offset.y), source_group):
+			continue
+		corner_sources.append(source)
+		corner_mask += String(source.get("direction", ""))
+	payload["edge_mask"] = edge_mask
+	payload["corner_mask"] = corner_mask
+	payload["cardinal_sources"] = cardinal_sources
+	payload["corner_sources"] = corner_sources
+	payload["source_terrain_ids"] = _transition_unique_values(cardinal_sources, corner_sources, "source_terrain")
+	payload["source_groups"] = _transition_unique_values(cardinal_sources, corner_sources, "source_group")
+	return payload
+
+func _terrain_transition_source_for_neighbor(tile: Vector2i, receiver_terrain: String, check: Dictionary) -> Dictionary:
+	var direction := String(check.get("label", ""))
+	var offset: Vector2i = check.get("offset", Vector2i.ZERO)
+	var neighbor := tile + offset
+	if direction == "" or not _tile_in_bounds(neighbor):
+		return {}
+	if not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+		return {}
+	var neighbor_terrain := _terrain_at(neighbor)
+	if neighbor_terrain == "":
+		return {}
+	var receiver_group := _terrain_group(receiver_terrain)
+	var source_group := _terrain_group(neighbor_terrain)
+	if source_group == receiver_group:
+		return {}
+	var receiver_priority := _terrain_transition_priority(receiver_terrain)
+	var source_priority := _terrain_transition_priority(neighbor_terrain)
+	if source_priority <= receiver_priority:
+		return {}
+	return {
+		"direction": direction,
+		"source_terrain": neighbor_terrain,
+		"source_group": source_group,
+		"source_priority": source_priority,
+		"receiver_terrain": receiver_terrain,
+		"receiver_group": receiver_group,
+		"receiver_priority": receiver_priority,
+		"neighbor": {"x": neighbor.x, "y": neighbor.y},
+	}
+
+func _terrain_cardinal_transition_checks() -> Array:
+	return [
+		{"label": "N", "offset": Vector2i(0, -1)},
+		{"label": "E", "offset": Vector2i(1, 0)},
+		{"label": "S", "offset": Vector2i(0, 1)},
+		{"label": "W", "offset": Vector2i(-1, 0)},
+	]
+
+func _terrain_diagonal_transition_checks() -> Array:
+	return [
+		{"label": "NE", "offset": Vector2i(1, -1)},
+		{"label": "SE", "offset": Vector2i(1, 1)},
+		{"label": "SW", "offset": Vector2i(-1, 1)},
+		{"label": "NW", "offset": Vector2i(-1, -1)},
+	]
+
+func _tile_has_explored_terrain_group(tile: Vector2i, terrain_group: String) -> bool:
+	if terrain_group == "" or _session == null or not _tile_in_bounds(tile):
+		return false
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		return false
+	return _terrain_group(_terrain_at(tile)) == terrain_group
+
+func _transition_unique_values(cardinal_sources: Array, corner_sources: Array, key: String) -> Array:
+	var values := []
+	for source_array in [cardinal_sources, corner_sources]:
+		for source_value in source_array:
+			if not (source_value is Dictionary):
+				continue
+			var value := String(source_value.get(key, ""))
+			if value != "" and value not in values:
+				values.append(value)
+	return values
+
+func _tile_in_bounds(tile: Vector2i) -> bool:
+	return tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y
 
 func _road_overlay_style(overlay_id: String) -> Dictionary:
 	if _terrain_overlay_styles.has(overlay_id):

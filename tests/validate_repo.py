@@ -4550,6 +4550,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the authored terrain tile-art root")
         ensure(str(terrain_rendering.get("tile_art_status", "")) == "original_quiet_terrain_correction", errors, "Overworld terrain rendering must record the original quiet terrain correction status")
         ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "original_procedural_reference_informed", errors, "Overworld terrain rendering must use original procedural terrain art as its source basis")
+        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "neighbor_priority_intrusion_8_way", errors, "Overworld terrain rendering must document neighbor-priority terrain transition selection")
+        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "lower_priority_tiles_receive_higher_priority_neighbor_edges_and_corner_hints", errors, "Overworld terrain rendering must document lower-priority receiver transition behavior")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Overworld terrain rendering must make the original quiet tile bank the primary base model")
         ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Overworld terrain rendering must document generated terrain sources as deprecated for primary bases")
         authored_tile_sets = terrain_rendering.get("authored_tile_sets", [])
@@ -4564,6 +4566,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure(str(terrain_grammar.get("authoring_status", "")) == "original_quiet_terrain_correction", errors, "Terrain grammar must record the original quiet terrain correction status")
     ensure(str(terrain_grammar.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Terrain grammar must make the original quiet tile bank primary")
     ensure(str(terrain_grammar.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Terrain grammar must deprecate generated terrain sheets for primary bases")
+    transition_rules = terrain_grammar.get("transition_rules", {})
+    ensure(isinstance(transition_rules, dict), errors, "Terrain grammar must define transition_rules")
+    if isinstance(transition_rules, dict):
+        ensure(str(transition_rules.get("selection_model", "")) == "neighbor_priority_intrusion_8_way", errors, "Terrain grammar must document neighbor-priority transition selection")
+        ensure(str(transition_rules.get("edge_model", "")) == "higher_priority_neighbor_intrusion_edges", errors, "Terrain grammar must document higher-priority neighbor edge intrusion")
+        ensure(str(transition_rules.get("corner_model", "")) == "diagonal_neighbor_corner_hints", errors, "Terrain grammar must document diagonal neighbor corner hints")
+        ensure(str(transition_rules.get("receiver_rule", "")) == "lower_priority_tile_receives_higher_priority_neighbor_transition", errors, "Terrain grammar must document lower-priority receiver transitions")
+        ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_intragroup_edges", errors, "Terrain grammar must suppress same-group transition seams")
+        ensure(bool(transition_rules.get("higher_priority_intrudes", False)), errors, "Terrain grammar must keep higher_priority_intrudes enabled")
     ensure(isinstance(terrain_classes, list) and bool(terrain_classes), errors, "Terrain grammar must define terrain_classes")
     ensure(isinstance(overlay_classes, list) and bool(overlay_classes), errors, "Terrain grammar must define overlay_classes")
     terrain_class_ids: set[str] = set()
@@ -4753,11 +4764,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "TERRAIN_GRAMMAR_RENDERING_MODE",
         "TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE",
         "TERRAIN_TILE_ART_RENDERING_MODE",
+        "TERRAIN_TRANSITION_SELECTION_MODEL",
+        "TERRAIN_TRANSITION_EDGE_MODEL",
+        "TERRAIN_TRANSITION_CORNER_MODEL",
         "func _load_terrain_grammar",
         "func _draw_terrain_tile_art",
         "func _load_overworld_art_manifest",
         "func _draw_authored_terrain_pattern",
         "func _draw_terrain_transitions",
+        "func _terrain_transition_payload",
         "func _draw_road_overlay",
         "func _draw_road_overlay_art",
         "func _draw_object_sprite",
@@ -4801,6 +4816,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"generated_source_primary"',
         '"primary_base_model"',
         '"edge_transition_art_loaded"',
+        '"neighbor_aware_transitions"',
+        '"transition_calculation_model"',
+        '"transition_cardinal_sources"',
+        '"transition_corner_sources"',
+        '"neighbor_priority_intrusion_8_way"',
+        '"higher_priority_neighbor_intrusion_edges"',
+        '"diagonal_neighbor_corner_hints"',
         '"transition_shape_model"',
         '"road_overlay"',
         '"road_overlay_art"',

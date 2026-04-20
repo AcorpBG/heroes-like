@@ -236,6 +236,10 @@ Implementation note date: 2026-04-20
 
 The map editor working-copy contract now supports duplicating existing runtime object placements without rebuilding them from palette defaults. `MapEditorShell` adds a thin Duplicate Object tool and validation hook for towns, resource nodes, artifact nodes, and encounters; duplicates deep-copy the source in-memory runtime placement, preserve content id, owner, difficulty, collected state, collection metadata, combat seed, and other existing placement fields, then assign a fresh unique editor placement id plus the new `x`/`y` destination. Tile inspection, validation snapshots, live preview, and Play Copy all read the duplicated state naturally. Authored scenario JSON remains immutable, runtime save format is unchanged, no parallel editor schema was added, and town 3x2 occupancy/pathing remains future work.
 
+Implementation note date: 2026-04-20
+
+The overworld terrain transition contract now treats neighboring terrain relationships as the source of visible transitions. `OverworldMapView` builds an explicit 8-neighbor transition payload for each explored tile, suppresses seams inside the same terrain group, applies higher-priority neighboring terrain as cardinal intrusion edges on lower-priority receiver tiles, and adds diagonal corner hints when a higher-priority neighbor only touches by corner. Existing grammar edge art is reused from the selected source terrain, with procedural strips and corner wedges as honest fallbacks. The map editor preview reads the same renderer and validation payloads, so painted terrain immediately exposes neighbor-aware edge and corner transition metadata. This is presentation-only: logical map coordinates, pathing, save data, editor schema, object placement systems, and town footprint/pathing semantics are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

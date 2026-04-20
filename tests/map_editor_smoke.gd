@@ -45,6 +45,8 @@ func _run() -> void:
 	if String(terrain_presentation.get("terrain", "")) != "forest":
 		_fail("Map editor smoke: live map preview did not read the painted terrain: %s." % paint_presentation)
 		return
+	if not _assert_editor_neighbor_transition_preview(shell):
+		return
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
@@ -109,6 +111,31 @@ func _run() -> void:
 		return
 
 	get_tree().quit(0)
+
+func _assert_editor_neighbor_transition_preview(shell) -> bool:
+	var edge_receiver: Dictionary = shell.call("validation_tile_presentation", 2, 1)
+	var edge_terrain: Dictionary = edge_receiver.get("terrain_presentation", {})
+	if (
+		not bool(edge_terrain.get("neighbor_aware_transitions", false))
+		or String(edge_terrain.get("transition_calculation_model", "")) != "neighbor_priority_intrusion_8_way"
+		or String(edge_terrain.get("transition_edge_model", "")) != "higher_priority_neighbor_intrusion_edges"
+		or String(edge_terrain.get("transition_edge_mask", "")) != "S"
+		or "forest" not in edge_terrain.get("transition_source_terrain_ids", [])
+		or int(edge_terrain.get("edge_transition_count", 0)) != 1
+	):
+		_fail("Map editor smoke: editor preview did not put the painted forest edge onto its lower-priority neighbor: %s." % edge_receiver)
+		return false
+	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
+	var corner_terrain: Dictionary = corner_receiver.get("terrain_presentation", {})
+	if (
+		String(corner_terrain.get("transition_corner_model", "")) != "diagonal_neighbor_corner_hints"
+		or String(corner_terrain.get("transition_corner_mask", "")) != "SE"
+		or "forest" not in corner_terrain.get("transition_source_terrain_ids", [])
+		or int(corner_terrain.get("corner_transition_count", 0)) != 1
+	):
+		_fail("Map editor smoke: editor preview did not expose a diagonal corner transition from the painted forest tile: %s." % corner_receiver)
+		return false
+	return true
 
 func _exercise_object_placement(shell, family: String, content_id: String, tile: Vector2i, presentation_key: String) -> bool:
 	var before_snapshot: Dictionary = shell.call("validation_snapshot")
