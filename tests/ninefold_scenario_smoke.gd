@@ -156,6 +156,12 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if String(readability.get("presence_model", "")) != "footprint_scaled_world_object" or String(readability.get("occlusion_model", "")) != "foreground_ground_lip":
 		_fail("Ninefold smoke: large-map %s marker no longer reports object-first footprint presence and foreground occlusion: %s." % [expected_kind, presentation])
 		return false
+	if not bool(readability.get("terrain_quieting_bed", false)) or String(readability.get("placement_bed_model", "")) != "footprint_terrain_quieting_bed" or String(readability.get("placement_bed_shape", "")) != "organic_footprint_clearing":
+		_fail("Ninefold smoke: large-map %s marker lacks the footprint-aware terrain quieting bed: %s." % [expected_kind, presentation])
+		return false
+	if bool(readability.get("placement_bed_ui_plate", true)) or not bool(readability.get("placement_bed_terrain_tinted", false)) or float(readability.get("placement_bed_alpha", 0.0)) < 0.28:
+		_fail("Ninefold smoke: large-map %s placement bed regressed toward a generic UI plate or became too faint: %s." % [expected_kind, presentation])
+		return false
 	if not bool(readability.get("foreground_occlusion_lip", false)):
 		_fail("Ninefold smoke: large-map %s marker lacks a foreground ground lip: %s." % [expected_kind, presentation])
 		return false

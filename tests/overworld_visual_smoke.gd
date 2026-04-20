@@ -402,6 +402,14 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		push_error("Overworld smoke: %s marker no longer reports object-first footprint presence and foreground occlusion. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
+	if not bool(readability.get("terrain_quieting_bed", false)) or String(readability.get("placement_bed_model", "")) != "footprint_terrain_quieting_bed" or String(readability.get("placement_bed_shape", "")) != "organic_footprint_clearing":
+		push_error("Overworld smoke: %s marker lacks the footprint-aware terrain quieting bed. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("placement_bed_ui_plate", true)) or not bool(readability.get("placement_bed_terrain_tinted", false)) or float(readability.get("placement_bed_alpha", 0.0)) < 0.28:
+		push_error("Overworld smoke: %s placement bed regressed toward a generic UI plate or became too faint. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
 	if not bool(readability.get("foreground_occlusion_lip", false)):
 		push_error("Overworld smoke: %s marker lacks the foreground ground lip that seats it into terrain. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -528,6 +536,10 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 		return false
 	if not bool(art.get("sprite_depth_contact_cues", false)) or String(art.get("sprite_depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion":
 		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the deeper footprint/contact depth cues. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(art.get("sprite_placement_bed", false)) or String(art.get("sprite_placement_bed_model", "")) != "footprint_terrain_quieting_bed":
+		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the footprint-aware terrain quieting bed. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
 	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor":

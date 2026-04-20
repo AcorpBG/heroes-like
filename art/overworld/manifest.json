@@ -23,6 +23,8 @@
   "object_rendering": {
     "presence_model": "footprint_scaled_world_object",
     "grounding": "terrain_ellipse_footprint_with_foreground_lip",
+    "placement_bed": "footprint_terrain_quieting_bed",
+    "placement_bed_shape": "organic_footprint_clearing",
     "depth_cues": "footprint_cast_shadow_with_base_occlusion",
     "contact_shadow": "directional_footprint_cast_shadow",
     "base_occlusion": "foreground_base_occlusion_pads",
