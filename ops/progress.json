@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-19T20:09:22Z",
+  "updatedAt": "2026-04-20T07:53:18Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-art-assets-10184",
-  "currentSliceTitle": "Prepare and wire the newly cut overworld terrain and object assets",
+  "currentSliceId": "overworld-terrain-foundation-10184",
+  "currentSliceTitle": "Replace sampled terrain textures with an authored terrain grammar foundation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the narrow overworld art integration slice. The generated assets now live under art/overworld with a runtime/source split and a repo-local manifest documenting conservative semantic mappings. OverworldMapView samples prepared terrain textures for grass/plains, forest, mire/swamp, and hills/ridge/highland; mapped resource sites and artifacts use sprites; remembered mapped objects use a ghosted sprite over the existing memory plate; unmapped sites, towns, encounters, and unsupported terrain retain procedural fallbacks. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed the overworld terrain foundation replacement slice. Added content/terrain_grammar.json and content/terrain_layers.json, wired ContentService validation/loading plus ScenarioFactory/OverworldRules session support, replaced OverworldMapView's sampled terrain texture path with grammar-driven terrain fills, deterministic detail patterns, edge-transition masks, and structural road overlays for River Pass and Ninefold Confluence, and kept object sprite mappings/procedural fallbacks active. art/overworld/manifest.json now records sampled overworld terrain textures as deprecated-not-primary. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -166,6 +166,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-terrain-foundation-10184",
+      "title": "Replace sampled terrain textures with an authored terrain grammar foundation",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -221,7 +227,7 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the new overworld art treatment in River Pass and Ninefold Confluence before calling the generated asset set visually polished.",
+    "Manually inspect the new authored overworld terrain grammar and road overlay treatment in River Pass and Ninefold Confluence before calling the placeholder terrain presentation visually polished.",
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
     "Manually inspect Ninefold Confluence's panning and remembered-object readability in the live client at the supported 16:9 runtime resolutions before treating the large-map UX as broadly polished.",
     "Deepen selected neutral dwelling families in Ninefold Confluence with encounter tuning and manual play notes before claiming balance or player-facing readiness.",

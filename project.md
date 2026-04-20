@@ -148,6 +148,10 @@ Implementation note date: 2026-04-18
 
 The first large scenario breadth placement slice adds `ninefold-confluence` as an explicitly 64x64 skirmish map that places all six faction scaffolds, all nine biome families, all 25 neutral dwelling families, and the newer overworld site families supported by the current scenario schema. This is authored breadth and loading coverage only: it is not a balance pass, a route proof, or a manual-play claim.
 
+Implementation note date: 2026-04-20
+
+The overworld terrain presentation no longer treats generated per-tile sampled painterly textures as the primary terrain model. The first replacement slice adds `content/terrain_grammar.json` and `content/terrain_layers.json` as the authored boundary for readable base terrain, biome/edge transition metadata, and structural road overlays. `OverworldMapView` now renders grammar-driven terrain fills, deterministic strategic detail patterns, edge-transition masks, and road connectors; existing object sprite mappings and procedural object fallbacks remain active. This is an autotile-ready foundation and first readable placeholder presentation, not final terrain art or a movement-cost/pathfinding rewrite.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

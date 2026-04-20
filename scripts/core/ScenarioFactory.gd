@@ -37,6 +37,7 @@ static func create_session(
 	var overworld_state := {
 		"map": _duplicate_array(scenario.get("map", [])),
 		"map_size": _duplicate_dict(scenario.get("map_size", {})),
+		"terrain_layers": _duplicate_dict(ContentService.get_terrain_layers_for_scenario(scenario_id)),
 		"active_hero_id": hero_id,
 		"player_heroes": [hero_state],
 		"hero_position": hero_state.get("position", start),

@@ -1,0 +1,155 @@
+{
+  "items": [
+    {
+      "id": "river-pass",
+      "terrain_layer_status": "foundation_authored",
+      "roads": [
+        {
+          "id": "river_pass_main_road",
+          "overlay_id": "road_dirt",
+          "role": "primary_lane",
+          "tiles": [
+            {"x": 0, "y": 2},
+            {"x": 1, "y": 2},
+            {"x": 2, "y": 2},
+            {"x": 3, "y": 2},
+            {"x": 4, "y": 2},
+            {"x": 5, "y": 2},
+            {"x": 6, "y": 2},
+            {"x": 7, "y": 2},
+            {"x": 8, "y": 2}
+          ]
+        },
+        {
+          "id": "river_pass_north_spur",
+          "overlay_id": "road_dirt",
+          "role": "pickup_spur",
+          "tiles": [
+            {"x": 1, "y": 2},
+            {"x": 1, "y": 1},
+            {"x": 1, "y": 0},
+            {"x": 2, "y": 0},
+            {"x": 3, "y": 0},
+            {"x": 4, "y": 0}
+          ]
+        },
+        {
+          "id": "river_pass_south_spur",
+          "overlay_id": "road_dirt",
+          "role": "marsh_spur",
+          "tiles": [
+            {"x": 4, "y": 2},
+            {"x": 5, "y": 2},
+            {"x": 6, "y": 2},
+            {"x": 6, "y": 3},
+            {"x": 6, "y": 4}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ninefold-confluence",
+      "terrain_layer_status": "foundation_authored",
+      "roads": [
+        {
+          "id": "ninefold_central_survey_road",
+          "overlay_id": "road_dirt",
+          "role": "primary_survey_spine",
+          "tiles": [
+            {"x": 23, "y": 24},
+            {"x": 23, "y": 25},
+            {"x": 23, "y": 26},
+            {"x": 23, "y": 27},
+            {"x": 23, "y": 28},
+            {"x": 23, "y": 29},
+            {"x": 23, "y": 30},
+            {"x": 23, "y": 31},
+            {"x": 23, "y": 32},
+            {"x": 23, "y": 33},
+            {"x": 23, "y": 34},
+            {"x": 23, "y": 35},
+            {"x": 23, "y": 36},
+            {"x": 23, "y": 37},
+            {"x": 23, "y": 38},
+            {"x": 23, "y": 39},
+            {"x": 23, "y": 40},
+            {"x": 23, "y": 41},
+            {"x": 23, "y": 42}
+          ]
+        },
+        {
+          "id": "ninefold_duskfen_causeway",
+          "overlay_id": "road_dirt",
+          "role": "marsh_front_lane",
+          "tiles": [
+            {"x": 23, "y": 26},
+            {"x": 24, "y": 26},
+            {"x": 25, "y": 26},
+            {"x": 26, "y": 26},
+            {"x": 27, "y": 26},
+            {"x": 28, "y": 26},
+            {"x": 29, "y": 26},
+            {"x": 30, "y": 26},
+            {"x": 30, "y": 27},
+            {"x": 30, "y": 28},
+            {"x": 30, "y": 29},
+            {"x": 30, "y": 30},
+            {"x": 30, "y": 31},
+            {"x": 30, "y": 32}
+          ]
+        },
+        {
+          "id": "ninefold_badland_trade_road",
+          "overlay_id": "road_dirt",
+          "role": "service_lane",
+          "tiles": [
+            {"x": 23, "y": 42},
+            {"x": 24, "y": 42},
+            {"x": 25, "y": 42},
+            {"x": 26, "y": 42},
+            {"x": 27, "y": 42},
+            {"x": 28, "y": 42},
+            {"x": 29, "y": 42},
+            {"x": 30, "y": 42},
+            {"x": 31, "y": 42},
+            {"x": 32, "y": 42},
+            {"x": 33, "y": 42},
+            {"x": 34, "y": 42},
+            {"x": 35, "y": 42},
+            {"x": 36, "y": 42},
+            {"x": 37, "y": 42},
+            {"x": 37, "y": 43},
+            {"x": 37, "y": 44},
+            {"x": 37, "y": 45},
+            {"x": 37, "y": 46},
+            {"x": 37, "y": 47},
+            {"x": 37, "y": 48},
+            {"x": 37, "y": 49},
+            {"x": 37, "y": 50},
+            {"x": 37, "y": 51},
+            {"x": 37, "y": 52}
+          ]
+        },
+        {
+          "id": "ninefold_graftroot_forest_road",
+          "overlay_id": "road_dirt",
+          "role": "forest_front_lane",
+          "tiles": [
+            {"x": 23, "y": 42},
+            {"x": 22, "y": 43},
+            {"x": 21, "y": 44},
+            {"x": 20, "y": 45},
+            {"x": 19, "y": 46},
+            {"x": 18, "y": 47},
+            {"x": 17, "y": 48},
+            {"x": 16, "y": 48},
+            {"x": 16, "y": 49},
+            {"x": 16, "y": 50},
+            {"x": 16, "y": 51},
+            {"x": 16, "y": 52}
+          ]
+        }
+      ]
+    }
+  ]
+}

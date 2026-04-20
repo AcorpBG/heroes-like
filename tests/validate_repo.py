@@ -42,6 +42,8 @@ OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
+TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
+TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
 TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
@@ -179,7 +181,7 @@ LOGISTICS_SITE_IDS = {
     "site_reedscript_shrine",
     "site_starlens_sanctum",
 }
-OVERWORLD_ART_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
+TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "ruined_obelisk",
     "lumber_wagon",
@@ -719,6 +721,8 @@ def validate_content(errors: list[str]) -> None:
         "buildings",
         "resource_sites",
         "biomes",
+        "terrain_grammar",
+        "terrain_layers",
         "map_objects",
         "neutral_dwellings",
         "artifacts",
@@ -4392,6 +4396,8 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
+        TERRAIN_GRAMMAR_PATH,
+        TERRAIN_LAYERS_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
         ROOT / "art" / "overworld" / "source" / "manifest" / "generated-overworld-assets-20260419.json",
     )
@@ -4401,27 +4407,92 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         return
 
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
-    terrain_textures = manifest.get("terrain_textures", {})
+    terrain_rendering = manifest.get("terrain_rendering", {})
+    terrain_grammar = load_json(TERRAIN_GRAMMAR_PATH)
+    terrain_layers = items_index(load_json(TERRAIN_LAYERS_PATH))
     object_assets = manifest.get("object_assets", {})
     site_sprites = manifest.get("resource_site_sprites", {})
     artifact_default = manifest.get("artifact_default_sprite", {})
-    ensure(isinstance(terrain_textures, dict), errors, "Overworld art manifest must define terrain_textures")
+    ensure(isinstance(terrain_rendering, dict), errors, "Overworld art manifest must define terrain_rendering")
     ensure(isinstance(object_assets, dict), errors, "Overworld art manifest must define object_assets")
     ensure(isinstance(site_sprites, dict), errors, "Overworld art manifest must define resource_site_sprites")
     ensure(isinstance(artifact_default, dict), errors, "Overworld art manifest must define artifact_default_sprite")
-    if not isinstance(terrain_textures, dict) or not isinstance(object_assets, dict) or not isinstance(site_sprites, dict):
+    ensure("terrain_textures" not in manifest, errors, "Overworld art manifest must not keep sampled terrain textures as the active terrain model")
+    if isinstance(terrain_rendering, dict):
+        ensure(str(terrain_rendering.get("model", "")) == "authored_autotile_layers", errors, "Overworld terrain rendering must use the authored autotile layer model")
+        ensure(str(terrain_rendering.get("grammar", "")) == "res://content/terrain_grammar.json", errors, "Overworld terrain rendering must point at content/terrain_grammar.json")
+        ensure(str(terrain_rendering.get("terrain_layers", "")) == "res://content/terrain_layers.json", errors, "Overworld terrain rendering must point at content/terrain_layers.json")
+        ensure(str(terrain_rendering.get("sampled_texture_status", "")) == "deprecated_not_primary", errors, "Overworld sampled terrain textures must be marked deprecated_not_primary")
+    if not isinstance(object_assets, dict) or not isinstance(site_sprites, dict):
         return
 
-    ensure(OVERWORLD_ART_REQUIRED_TERRAIN_IDS.issubset(set(terrain_textures.keys())), errors, "Overworld art manifest must map prepared terrain textures to current terrain ids")
-    for terrain_id, entry in terrain_textures.items():
-        ensure(isinstance(entry, dict), errors, f"Overworld terrain art mapping {terrain_id} must be a dictionary")
-        if not isinstance(entry, dict):
+    terrain_classes = terrain_grammar.get("terrain_classes", [])
+    overlay_classes = terrain_grammar.get("overlay_classes", [])
+    ensure(str(terrain_grammar.get("rendering_model", "")) == "authored_autotile_layers", errors, "Terrain grammar must declare authored_autotile_layers")
+    ensure(isinstance(terrain_classes, list) and bool(terrain_classes), errors, "Terrain grammar must define terrain_classes")
+    ensure(isinstance(overlay_classes, list) and bool(overlay_classes), errors, "Terrain grammar must define overlay_classes")
+    terrain_class_ids: set[str] = set()
+    road_enabled_terrain_ids: set[str] = set()
+    if isinstance(terrain_classes, list):
+        for terrain_class in terrain_classes:
+            ensure(isinstance(terrain_class, dict), errors, "Terrain grammar contains a non-dictionary terrain class")
+            if not isinstance(terrain_class, dict):
+                continue
+            terrain_id = str(terrain_class.get("id", ""))
+            terrain_class_ids.add(terrain_id)
+            for key in ("biome_id", "terrain_group", "autotile_family", "style_id", "base_color", "detail_color", "edge_color", "pattern", "readability_role"):
+                ensure(bool(str(terrain_class.get(key, ""))), errors, f"Terrain grammar {terrain_id} must define {key}")
+            ensure(int(terrain_class.get("transition_priority", -1)) >= 0, errors, f"Terrain grammar {terrain_id} must define transition_priority >= 0")
+            supports = terrain_class.get("supports", [])
+            ensure(isinstance(supports, list) and "edge_transitions" in supports, errors, f"Terrain grammar {terrain_id} must support edge_transitions")
+            if isinstance(supports, list) and "road_overlay" in supports:
+                road_enabled_terrain_ids.add(terrain_id)
+    ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(terrain_class_ids), errors, "Terrain grammar must author the first readable terrain slice: grass/plains, forest, mire/swamp, and hills/ridge/highland")
+    ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(road_enabled_terrain_ids), errors, "First terrain slice ids must support structural road overlays")
+    overlay_ids: set[str] = set()
+    if isinstance(overlay_classes, list):
+        for overlay in overlay_classes:
+            ensure(isinstance(overlay, dict), errors, "Terrain grammar contains a non-dictionary overlay class")
+            if not isinstance(overlay, dict):
+                continue
+            overlay_id = str(overlay.get("id", ""))
+            overlay_ids.add(overlay_id)
+            ensure(str(overlay.get("layer", "")) == "road", errors, f"Terrain overlay {overlay_id} must use the road layer")
+            ensure(float(overlay.get("width_fraction", 0.0)) > 0.0, errors, f"Terrain overlay {overlay_id} must define width_fraction > 0")
+    ensure("road_dirt" in overlay_ids, errors, "Terrain grammar must define the road_dirt structural road overlay")
+
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    ensure({"river-pass", SIX_FACTION_BIOME_BREADTH_SCENARIO_ID}.issubset(terrain_layers.keys()), errors, "Terrain layers must author roads for River Pass and Ninefold Confluence")
+    for scenario_id in ("river-pass", SIX_FACTION_BIOME_BREADTH_SCENARIO_ID):
+        layer = terrain_layers.get(scenario_id, {})
+        roads = layer.get("roads", [])
+        scenario = scenarios.get(scenario_id, {})
+        game_map = scenario.get("map", [])
+        ensure(isinstance(roads, list) and bool(roads), errors, f"Terrain layer {scenario_id} must define non-empty roads")
+        if not isinstance(roads, list):
             continue
-        disk_path = res_path_to_disk(str(entry.get("path", "")))
-        ensure(disk_path.exists(), errors, f"Overworld terrain art mapping {terrain_id} references missing texture {entry.get('path')}")
-        if disk_path.exists():
-            width, height = png_size(disk_path)
-            ensure(width >= 512 and height >= 512, errors, f"Overworld terrain texture {entry.get('path')} must keep a large runtime source, found {width}x{height}")
+        road_tile_count = 0
+        for road in roads:
+            ensure(isinstance(road, dict), errors, f"Terrain layer {scenario_id} contains a non-dictionary road")
+            if not isinstance(road, dict):
+                continue
+            ensure(str(road.get("overlay_id", "")) in overlay_ids, errors, f"Terrain layer {scenario_id} road {road.get('id')} references missing overlay {road.get('overlay_id')}")
+            tiles = road.get("tiles", [])
+            ensure(isinstance(tiles, list) and bool(tiles), errors, f"Terrain layer {scenario_id} road {road.get('id')} must define tiles")
+            if not isinstance(tiles, list):
+                continue
+            road_tile_count += len(tiles)
+            for tile in tiles:
+                ensure(isinstance(tile, dict), errors, f"Terrain layer {scenario_id} road {road.get('id')} contains a non-dictionary tile")
+                if not isinstance(tile, dict):
+                    continue
+                x = int(tile.get("x", -1))
+                y = int(tile.get("y", -1))
+                ensure(0 <= y < len(game_map) and isinstance(game_map[y], list) and 0 <= x < len(game_map[y]), errors, f"Terrain layer {scenario_id} road {road.get('id')} tile {x},{y} is out of bounds")
+                if 0 <= y < len(game_map) and isinstance(game_map[y], list) and 0 <= x < len(game_map[y]):
+                    terrain_id = str(game_map[y][x])
+                    ensure(terrain_id in road_enabled_terrain_ids, errors, f"Terrain layer {scenario_id} road {road.get('id')} tile {x},{y} uses non-road terrain {terrain_id}")
+        ensure(road_tile_count >= 8, errors, f"Terrain layer {scenario_id} must include enough road tiles to prove structural overlays")
 
     ensure(OVERWORLD_ART_REQUIRED_ASSET_IDS.issubset(set(object_assets.keys())), errors, "Overworld art manifest must preserve all twelve prepared object asset ids")
     for asset_id, entry in object_assets.items():
@@ -4456,11 +4527,18 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "OVERWORLD_ART_MANIFEST_PATH",
+        "TERRAIN_GRAMMAR_PATH",
+        "TERRAIN_GRAMMAR_RENDERING_MODE",
+        "func _load_terrain_grammar",
         "func _load_overworld_art_manifest",
-        "func _draw_terrain_texture",
+        "func _draw_authored_terrain_pattern",
+        "func _draw_terrain_transitions",
+        "func _draw_road_overlay",
         "func _draw_object_sprite",
         "func _resource_asset_id",
-        '"texture_sampled_tile"',
+        '"authored_autotile_layers"',
+        '"uses_sampled_texture"',
+        '"road_overlay"',
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_memory_plate",
     ):
@@ -5684,7 +5762,7 @@ def main() -> int:
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
     print("- overworld biomes and map-object families now have authored content domains, validation, and runtime family hooks")
-    print("- overworld terrain and selected object assets now have repo-local runtime/source files, manifest mappings, renderer hooks, and procedural fallbacks")
+    print("- overworld terrain now uses authored autotile-ready grammar, structural road layers, renderer hooks, selected object assets, and procedural object fallbacks")
     print("- Ninefold Confluence keeps a 64x64 six-faction, nine-biome, all-neutral-dwelling breadth scenario under validation")
     print("- hostile empires now keep faction-specific build, raid, reinforcement, and priority-front personalities across authored scenarios")
     print("- capitals and strongholds now surface strategic summaries, power late-game project escalation, and drive hostile pressure/targeting on finale fronts")

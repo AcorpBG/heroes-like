@@ -283,8 +283,35 @@ Validation:
 
 Limits:
 - The generated assets are imperfect and semantically partial; mappings are intentionally conservative and recorded in `art/overworld/manifest.json`.
+- As of the 2026-04-20 terrain-foundation slice, the generated terrain textures are no longer the primary overworld terrain model; they are retained as source history while object sprite mappings remain active.
 - This is not a complete overworld art pass, town art pass, encounter art pass, or object-footprint system.
 - Automated smokes prove runtime loading and presentation metadata, not manual visual polish across every object, biome, and resolution.
+
+## Current Implementation Slice: Overworld Terrain Grammar Foundation
+Status: completed on 2026-04-20 as a terrain-system replacement for the chopped sampled-texture direction.
+
+Purpose:
+- Stop using per-tile sampled painterly terrain PNGs as the main overworld terrain model.
+- Introduce an authored, autotile-ready terrain grammar that can support clear base terrain, biome edges, transition masks, authored variants, and structural road overlays.
+- Make the current overworld read more like a strategic map surface while preserving existing object sprite mappings and procedural object fallbacks.
+
+Implemented:
+- Added `content/terrain_grammar.json` with authored terrain classes for grass/plains, forest, mire/swamp, hills/ridge/highland, plus current supporting terrain ids, transition priority, terrain groups, style ids, pattern roles, road support, and the first `road_dirt` overlay grammar.
+- Added `content/terrain_layers.json` with authored structural road overlays for River Pass and Ninefold Confluence instead of baking road marks into terrain art.
+- Wired ContentService validation/loading, ScenarioFactory session seeding, and OverworldRules legacy normalization for terrain layers without a save-version bump.
+- Replaced `OverworldMapView`'s sampled terrain texture path with deterministic grammar-driven base fills, readable terrain detail patterns, neighbor edge-transition masks, and road overlay connector drawing.
+- Updated `art/overworld/manifest.json` to mark sampled overworld terrain textures as deprecated-not-primary while keeping object sprite mappings and fallback behavior.
+- Updated repo validation and overworld smokes to require authored terrain grammar, non-sampled terrain presentation, edge-transition metadata, and structural road overlay metadata.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+
+Limits:
+- This is a foundation and first readable presentation slice, not final overworld art.
+- Road overlays are presentation/grammar structure only; they do not yet change movement cost or pathfinding.
+- Authored tile variants are represented by deterministic renderer grammar and metadata, not a full external tileset import pipeline yet.
 
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.
