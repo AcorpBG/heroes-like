@@ -96,6 +96,11 @@ ROAD_DIRECTIONS = {
     "nw": (-3.0, -3.0),
 }
 
+ROAD_CONNECTION_PIECES = {
+    "ne_sw": ((-3.0, 67.0), (67.0, -3.0)),
+    "nw_se": ((-3.0, -3.0), (67.0, 67.0)),
+}
+
 
 def hex_rgb(value: str) -> tuple[int, int, int]:
     text = value.strip().lstrip("#")
@@ -421,8 +426,35 @@ def line_geometry(end: tuple[float, float], lateral_offset: float = 0.0) -> tupl
     )
 
 
+def segment_geometry(
+    start: tuple[float, float],
+    end: tuple[float, float],
+    lateral_offset: float = 0.0,
+) -> tuple[tuple[float, float], tuple[float, float]]:
+    dx = end[0] - start[0]
+    dy = end[1] - start[1]
+    length = max(0.001, math.sqrt((dx * dx) + (dy * dy)))
+    normal = (-dy / length, dx / length)
+    return (
+        (start[0] + (normal[0] * lateral_offset), start[1] + (normal[1] * lateral_offset)),
+        (end[0] + (normal[0] * lateral_offset), end[1] + (normal[1] * lateral_offset)),
+    )
+
+
 def jittered_line_points(kind: str, end: tuple[float, float], lateral_offset: float, wobble: float, seed: int) -> list[tuple[float, float]]:
     start, finish = line_geometry(end, lateral_offset)
+    return jittered_segment_points(kind, start, finish, 0.0, wobble, seed)
+
+
+def jittered_segment_points(
+    kind: str,
+    start: tuple[float, float],
+    finish: tuple[float, float],
+    lateral_offset: float,
+    wobble: float,
+    seed: int,
+) -> list[tuple[float, float]]:
+    start, finish = segment_geometry(start, finish, lateral_offset)
     dx = finish[0] - start[0]
     dy = finish[1] - start[1]
     length = max(0.001, math.sqrt((dx * dx) + (dy * dy)))
@@ -449,6 +481,22 @@ def make_mask_line(kind: str, end: tuple[float, float], width: float, center_rad
         start = scaled_points[0]
         radius = center_radius * SCALE
         draw.ellipse((start[0] - radius, start[1] - radius, start[0] + radius, start[1] + radius), fill=255)
+    return mask.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
+
+
+def make_mask_segment(
+    kind: str,
+    start: tuple[float, float],
+    end: tuple[float, float],
+    width: float,
+    lateral_offset: float = 0.0,
+    wobble: float = 0.58,
+) -> Image.Image:
+    mask = Image.new("L", (SIZE * SCALE, SIZE * SCALE), 0)
+    draw = ImageDraw.Draw(mask)
+    points = jittered_segment_points(kind, start, end, lateral_offset, wobble, int(width * 227))
+    scaled_points = [(point[0] * SCALE, point[1] * SCALE) for point in points]
+    draw.line(scaled_points, fill=255, width=max(1, int(round(width * SCALE))), joint="curve")
     return mask.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
 
 
@@ -509,10 +557,21 @@ def sprinkle_road_grit(canvas: Image.Image, mask: Image.Image, seed: int) -> Non
 
 
 def draw_road_ruts(canvas: Image.Image, kind: str, end: tuple[float, float], seed: int) -> None:
+    draw_road_ruts_segment(canvas, kind, (32.0, 32.0), end, seed, 0.55)
+
+
+def draw_road_ruts_segment(
+    canvas: Image.Image,
+    kind: str,
+    start: tuple[float, float],
+    end: tuple[float, float],
+    seed: int,
+    wobble: float = 0.55,
+) -> None:
     layer = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (0, 0, 0, 0))
     draw = ImageDraw.Draw(layer, "RGBA")
     for lateral_offset in (-2.0, 2.0):
-        points = jittered_line_points(kind, end, lateral_offset, 0.55, seed + int(lateral_offset * 97))
+        points = jittered_segment_points(kind, start, end, lateral_offset, wobble, seed + int(lateral_offset * 97))
         scaled_points = [(point[0] * SCALE, point[1] * SCALE) for point in points]
         draw.line(scaled_points, fill=(67, 47, 31, 54), width=max(1, int(round(0.75 * SCALE))))
     canvas.alpha_composite(layer.resize((SIZE, SIZE), Image.Resampling.LANCZOS))
@@ -553,10 +612,29 @@ def road_layer(kind: str) -> Image.Image:
     return canvas.filter(ImageFilter.UnsharpMask(radius=0.28, percent=16, threshold=4))
 
 
+def road_connection_piece_layer(kind: str) -> Image.Image:
+    start, end = ROAD_CONNECTION_PIECES[kind]
+    canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    shadow = make_mask_segment(kind, start, end, 10.2, 0.0, 0.48)
+    edge = make_mask_segment(kind, start, end, 8.1, 0.0, 0.34)
+    core = make_mask_segment(kind, start, end, 5.8, 0.0, 0.22)
+    highlight = make_mask_segment(kind, start, end, 0.75, -0.65, 0.16)
+    seed = 960 + sum(ord(char) for char in kind)
+    composite_color(canvas, (32, 24, 18), shadow, 50)
+    composite_color(canvas, (75, 55, 36), edge, 98)
+    composite_color(canvas, (132, 100, 63), core, 142)
+    composite_color(canvas, (181, 145, 90), highlight, 24)
+    draw_road_ruts_segment(canvas, kind, start, end, seed + 401, 0.42)
+    sprinkle_road_grit(canvas, core, seed)
+    return canvas.filter(ImageFilter.UnsharpMask(radius=0.24, percent=14, threshold=4))
+
+
 def build_road_overlays() -> None:
     save_rgba(road_layer("center"), OUT / "roads" / "road_dirt_center.png")
     for direction in ROAD_DIRECTIONS:
         save_rgba(road_layer(direction), OUT / "roads" / f"road_dirt_{direction}.png")
+    for piece in ROAD_CONNECTION_PIECES:
+        save_rgba(road_connection_piece_layer(piece), OUT / "roads" / f"road_dirt_{piece}.png")
 
 
 def build() -> None:
