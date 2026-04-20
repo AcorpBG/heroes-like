@@ -228,6 +228,44 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="ObjectPropertiesTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+text = "Object Properties"
+
+[node name="SelectedObjectPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PropertySummary" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+autowrap_mode = 3
+text = "Select a tile with an editable object."
+
+[node name="PropertyOwnerPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PropertyDifficultyPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PropertyCollectedFlag" type="CheckBox" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Collected"
+
+[node name="ApplyObjectProperties" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Apply Properties"
+
 [node name="TileTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 layout_mode = 2
 text = "Tile"

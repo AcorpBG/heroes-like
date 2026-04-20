@@ -85,6 +85,8 @@ func _run() -> void:
 		_fail("Map editor smoke: tile inspection did not identify the town object: %s." % inspect_payload)
 		return
 
+	if not _assert_object_property_edits(shell):
+		return
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
 	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
@@ -158,6 +160,60 @@ func _object_detail_for_family(inspection: Dictionary, family: String) -> Dictio
 			return detail
 	return {}
 
+func _assert_object_property_edits(shell) -> bool:
+	var town_result: Dictionary = shell.call("validation_edit_object_property", 23, 26, "town", "owner", "neutral")
+	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
+	if not bool(town_result.get("ok", false)) or String(town_detail.get("owner", "")) != "neutral":
+		_fail("Map editor smoke: town owner property edit did not update working-copy inspection: %s." % town_result)
+		return false
+	var town_property: Dictionary = town_result.get("selected_property_object", {})
+	if String(town_property.get("property_key", "")) != "town:ninefold_embercourt_survey_camp" or "owner" not in town_property.get("editable_properties", []):
+		_fail("Map editor smoke: town property editor did not expose structured owner detail: %s." % town_result)
+		return false
+	var town_presentation: Dictionary = shell.call("validation_tile_presentation", 23, 26)
+	if String(town_presentation.get("town_presentation", {}).get("owner", "")) != "neutral":
+		_fail("Map editor smoke: live preview did not use the edited town owner: %s." % town_presentation)
+		return false
+
+	var resource_result: Dictionary = shell.call("validation_edit_object_property", 2, 6, "resource", "collected", true)
+	var resource_detail := _object_detail_for_family(resource_result.get("tile_inspection", {}), "resource")
+	if (
+		not bool(resource_result.get("ok", false))
+		or not bool(resource_detail.get("collected", false))
+		or String(resource_detail.get("collected_by_faction_id", "")) != "player"
+	):
+		_fail("Map editor smoke: resource collected property edit did not update working-copy inspection: %s." % resource_result)
+		return false
+	var resource_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 6)
+	if bool(resource_presentation.get("has_resource", true)):
+		_fail("Map editor smoke: live preview still exposed a collected resource pickup: %s." % resource_presentation)
+		return false
+
+	var artifact_result: Dictionary = shell.call("validation_edit_object_property", 9, 45, "artifact", "collected", true)
+	var artifact_detail := _object_detail_for_family(artifact_result.get("tile_inspection", {}), "artifact")
+	if (
+		not bool(artifact_result.get("ok", false))
+		or not bool(artifact_detail.get("collected", false))
+		or String(artifact_detail.get("collected_by_faction_id", "")) != "player"
+	):
+		_fail("Map editor smoke: artifact collected property edit did not update working-copy inspection: %s." % artifact_result)
+		return false
+	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 9, 45)
+	if bool(artifact_presentation.get("has_artifact", true)):
+		_fail("Map editor smoke: live preview still exposed a collected artifact node: %s." % artifact_presentation)
+		return false
+
+	var encounter_result: Dictionary = shell.call("validation_edit_object_property", 30, 32, "encounter", "difficulty", "low")
+	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
+	if not bool(encounter_result.get("ok", false)) or String(encounter_detail.get("difficulty", "")) != "low":
+		_fail("Map editor smoke: encounter difficulty property edit did not update working-copy inspection: %s." % encounter_result)
+		return false
+	var encounter_property: Dictionary = encounter_result.get("selected_property_object", {})
+	if "difficulty" not in encounter_property.get("editable_properties", []):
+		_fail("Map editor smoke: encounter property editor did not expose structured difficulty detail: %s." % encounter_result)
+		return false
+	return true
+
 func _assert_play_copy_round_trip(shell) -> bool:
 	var previous_current = get_tree().current_scene
 	var parent = shell.get_parent()
@@ -201,6 +257,8 @@ func _assert_play_copy_round_trip(shell) -> bool:
 	if String(play_terrain.get("terrain", "")) != "forest":
 		_fail("Map editor smoke: Play Copy did not use the edited terrain working copy: %s." % play_tile)
 		return false
+	if not _assert_active_session_property_edits(SessionState.ensure_active_session()):
+		return false
 
 	_set_active_hero_position(SessionState.ensure_active_session(), Vector2i(4, 3))
 	overworld.call("validation_return_to_menu")
@@ -230,12 +288,52 @@ func _assert_play_copy_round_trip(shell) -> bool:
 	if String(returned_terrain.get("terrain", "")) != "forest":
 		_fail("Map editor smoke: returned editor lost the edited terrain working copy: %s." % returned_tile)
 		return false
+	if not _assert_returned_editor_property_edits(returned_editor):
+		return false
 	if SessionState.ensure_active_session().scenario_id != "":
 		_fail("Map editor smoke: returning to the editor should clear the active playable session.")
 		return false
 
 	if previous_current != null and is_instance_valid(previous_current):
 		get_tree().current_scene = previous_current
+	return true
+
+func _assert_active_session_property_edits(session) -> bool:
+	if _town_owner(session, "ninefold_embercourt_survey_camp") != "neutral":
+		_fail("Map editor smoke: Play Copy did not use the edited town owner.")
+		return false
+	if not _resource_collected(session, "north_snow_timber"):
+		_fail("Map editor smoke: Play Copy did not use the edited resource collected state.")
+		return false
+	if not _artifact_collected(session, "confluence_quarry_tally_rod"):
+		_fail("Map editor smoke: Play Copy did not use the edited artifact collected state.")
+		return false
+	if _encounter_difficulty(session, "ninefold_reedmaw_host") != "low":
+		_fail("Map editor smoke: Play Copy did not use the edited encounter difficulty.")
+		return false
+	return true
+
+func _assert_returned_editor_property_edits(returned_editor) -> bool:
+	var town_result: Dictionary = returned_editor.call("validation_select_tile", 23, 26)
+	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
+	if String(town_detail.get("owner", "")) != "neutral":
+		_fail("Map editor smoke: returned editor lost the edited town owner: %s." % town_result)
+		return false
+	var resource_result: Dictionary = returned_editor.call("validation_select_tile", 2, 6)
+	var resource_detail := _object_detail_for_family(resource_result.get("tile_inspection", {}), "resource")
+	if not bool(resource_detail.get("collected", false)):
+		_fail("Map editor smoke: returned editor lost the edited resource collected state: %s." % resource_result)
+		return false
+	var artifact_result: Dictionary = returned_editor.call("validation_select_tile", 9, 45)
+	var artifact_detail := _object_detail_for_family(artifact_result.get("tile_inspection", {}), "artifact")
+	if not bool(artifact_detail.get("collected", false)):
+		_fail("Map editor smoke: returned editor lost the edited artifact collected state: %s." % artifact_result)
+		return false
+	var encounter_result: Dictionary = returned_editor.call("validation_select_tile", 30, 32)
+	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
+	if String(encounter_detail.get("difficulty", "")) != "low":
+		_fail("Map editor smoke: returned editor lost the edited encounter difficulty: %s." % encounter_result)
+		return false
 	return true
 
 func _set_active_hero_position(session, tile: Vector2i) -> void:
@@ -257,6 +355,30 @@ func _set_active_hero_position(session, tile: Vector2i) -> void:
 				heroes[index] = hero_state
 				break
 		session.overworld["player_heroes"] = heroes
+
+func _town_owner(session, placement_id: String) -> String:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("placement_id", "")) == placement_id:
+			return String(town.get("owner", ""))
+	return ""
+
+func _resource_collected(session, placement_id: String) -> bool:
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return bool(node.get("collected", false))
+	return false
+
+func _artifact_collected(session, placement_id: String) -> bool:
+	for node in session.overworld.get("artifact_nodes", []):
+		if node is Dictionary and String(node.get("placement_id", "")) == placement_id:
+			return bool(node.get("collected", false))
+	return false
+
+func _encounter_difficulty(session, placement_id: String) -> String:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return String(encounter.get("difficulty", ""))
+	return ""
 
 func _fail(message: String) -> void:
 	push_error(message)
