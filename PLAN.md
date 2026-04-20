@@ -416,6 +416,31 @@ Limits:
 - Footprints still guide presentation only; movement, blocking, visit targets, fog, save data, and object mappings are unchanged.
 - Manual visual review is still needed before treating the overworld as polished or HoMM3-class.
 
+## Current Implementation Slice: Overworld Upper-Mass Backdrop Cues
+Status: completed on 2026-04-20 as a narrow presentation-only follow-up after the footprint placement-bed slice.
+
+Purpose:
+- Add subtle rear upper-mass separation behind towns, sites, dwellings, encounters, mapped sprites, and active hero presence so taller placed objects read above busy terrain instead of only as grounded markers.
+- Keep the cue as a family-scaled terrain-depth wash and vertical mass shadow, not a UI halo, badge plate, selection marker, or gameplay footprint.
+- Preserve gameplay occupancy, pathing, fog, panning, selection logic, save data, and existing object mappings.
+
+Implemented:
+- `OverworldMapView` now draws a low-alpha, tapered rear backdrop wash behind object upper bodies after footprint placement/contact cues and before silhouettes, mapped sprites, town markers, encounters, artifacts, and hero figures.
+- The backdrop dimensions are keyed by object family and authored/default footprint so broad towns and dwellings get wider mass separation while towers, shrines, transit shapes, artifacts, pickups, encounters, and heroes remain compact.
+- A paired subtle vertical mass shadow gives the upper object body a rear depth cue without adding bright glow halos, badge plates, permanent labels, or UI overlays.
+- Focused overworld and Ninefold smoke coverage now guards the `family_scaled_rear_backdrop_wash` model, behind-body placement, subtle alpha range, vertical mass shadow, and non-UI-halo/non-badge contract for visible, remembered, large-map, mapped-sprite, and hero-present objects.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final object/town art, a new sprite atlas, terrain expansion, camera change, or true multi-tile object implementation.
+- The cue is renderer-level presentation only; movement, blocking, visit targets, fog, save data, and object mappings are unchanged.
+- Manual visual review is still required before claiming the overworld is polished or near HoMM3-class readability.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

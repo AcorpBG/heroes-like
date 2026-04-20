@@ -385,6 +385,8 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: active hero lacks the terrain-contact depth cues expected for object-first presence. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
 		return false
+	if not _assert_upper_mass_backdrop(hero_readability, "active hero"):
+		return false
 	return true
 
 func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
@@ -409,6 +411,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if bool(readability.get("placement_bed_ui_plate", true)) or not bool(readability.get("placement_bed_terrain_tinted", false)) or float(readability.get("placement_bed_alpha", 0.0)) < 0.28:
 		push_error("Overworld smoke: %s placement bed regressed toward a generic UI plate or became too faint. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
+		return false
+	if not _assert_upper_mass_backdrop(readability, expected_kind):
 		return false
 	if not bool(readability.get("foreground_occlusion_lip", false)):
 		push_error("Overworld smoke: %s marker lacks the foreground ground lip that seats it into terrain. presentation=%s" % [expected_kind, presentation])
@@ -464,6 +468,33 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: visible %s marker grounding or map contrast regressed. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
+	return true
+
+func _assert_upper_mass_backdrop(readability: Dictionary, label: String) -> bool:
+	if not bool(readability.get("upper_mass_backdrop", false)) or String(readability.get("upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash":
+		push_error("Overworld smoke: %s lacks the rear upper-mass backdrop cue needed to separate tall objects from terrain. readability=%s" % [label, readability])
+		get_tree().quit(1)
+		return false
+	if String(readability.get("upper_mass_backdrop_shape", "")) != "family_scaled_rear_wash" or String(readability.get("upper_mass_backdrop_position", "")) != "behind_upper_body":
+		push_error("Overworld smoke: %s rear backdrop is not reported as a family-scaled behind-body wash. readability=%s" % [label, readability])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("upper_mass_backdrop_ui_halo", true)) or bool(readability.get("upper_mass_backdrop_ui_badge", true)):
+		push_error("Overworld smoke: %s rear backdrop regressed into a UI halo or badge treatment. readability=%s" % [label, readability])
+		get_tree().quit(1)
+		return false
+	if float(readability.get("upper_mass_backdrop_alpha", 0.0)) < 0.20 or float(readability.get("upper_mass_backdrop_alpha", 1.0)) > 0.34:
+		push_error("Overworld smoke: %s rear backdrop alpha is outside the subtle terrain-depth cue range. readability=%s" % [label, readability])
+		get_tree().quit(1)
+		return false
+	if float(readability.get("upper_mass_backdrop_height_fraction", 0.0)) < 0.32 or float(readability.get("upper_mass_backdrop_width_fraction", 0.0)) < 0.24:
+		push_error("Overworld smoke: %s rear backdrop is too small to separate upper mass from busy terrain. readability=%s" % [label, readability])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("vertical_mass_shadow", false)) or String(readability.get("vertical_mass_shadow_model", "")) != "subtle_vertical_mass_shadow" or float(readability.get("vertical_mass_shadow_alpha", 0.0)) < 0.14:
+		push_error("Overworld smoke: %s lacks the subtle vertical mass shadow paired with the rear backdrop. readability=%s" % [label, readability])
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_overworld_art_contract(shell: Node) -> bool:
@@ -540,6 +571,10 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 		return false
 	if not bool(art.get("sprite_placement_bed", false)) or String(art.get("sprite_placement_bed_model", "")) != "footprint_terrain_quieting_bed":
 		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the footprint-aware terrain quieting bed. presentation=%s" % [expected_asset_id, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(art.get("sprite_upper_mass_backdrop", false)) or String(art.get("sprite_upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash" or not bool(art.get("sprite_vertical_mass_shadow", false)):
+		push_error("Overworld smoke: mapped overworld sprite %s is not reporting the rear upper-mass backdrop treatment. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
 	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor":

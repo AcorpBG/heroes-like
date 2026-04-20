@@ -162,6 +162,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if bool(readability.get("placement_bed_ui_plate", true)) or not bool(readability.get("placement_bed_terrain_tinted", false)) or float(readability.get("placement_bed_alpha", 0.0)) < 0.28:
 		_fail("Ninefold smoke: large-map %s placement bed regressed toward a generic UI plate or became too faint: %s." % [expected_kind, presentation])
 		return false
+	if not _assert_upper_mass_backdrop(readability, expected_kind):
+		return false
 	if not bool(readability.get("foreground_occlusion_lip", false)):
 		_fail("Ninefold smoke: large-map %s marker lacks a foreground ground lip: %s." % [expected_kind, presentation])
 		return false
@@ -197,6 +199,27 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		if bool(readability.get("memory_echo", false)) or float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or float(readability.get("grid_alpha", 1.0)) > 0.42:
 			_fail("Ninefold smoke: visible large-map %s marker grounding or map contrast regressed: %s." % [expected_kind, presentation])
 			return false
+	return true
+
+func _assert_upper_mass_backdrop(readability: Dictionary, label: String) -> bool:
+	if not bool(readability.get("upper_mass_backdrop", false)) or String(readability.get("upper_mass_backdrop_model", "")) != "family_scaled_rear_backdrop_wash":
+		_fail("Ninefold smoke: large-map %s lacks the rear upper-mass backdrop cue: %s." % [label, readability])
+		return false
+	if String(readability.get("upper_mass_backdrop_shape", "")) != "family_scaled_rear_wash" or String(readability.get("upper_mass_backdrop_position", "")) != "behind_upper_body":
+		_fail("Ninefold smoke: large-map %s rear backdrop is not reported as a family-scaled behind-body wash: %s." % [label, readability])
+		return false
+	if bool(readability.get("upper_mass_backdrop_ui_halo", true)) or bool(readability.get("upper_mass_backdrop_ui_badge", true)):
+		_fail("Ninefold smoke: large-map %s rear backdrop regressed into a UI halo or badge: %s." % [label, readability])
+		return false
+	if float(readability.get("upper_mass_backdrop_alpha", 0.0)) < 0.20 or float(readability.get("upper_mass_backdrop_alpha", 1.0)) > 0.34:
+		_fail("Ninefold smoke: large-map %s rear backdrop alpha is outside the subtle terrain-depth cue range: %s." % [label, readability])
+		return false
+	if float(readability.get("upper_mass_backdrop_height_fraction", 0.0)) < 0.32 or float(readability.get("upper_mass_backdrop_width_fraction", 0.0)) < 0.24:
+		_fail("Ninefold smoke: large-map %s rear backdrop is too small to separate upper mass from terrain: %s." % [label, readability])
+		return false
+	if not bool(readability.get("vertical_mass_shadow", false)) or String(readability.get("vertical_mass_shadow_model", "")) != "subtle_vertical_mass_shadow" or float(readability.get("vertical_mass_shadow_alpha", 0.0)) < 0.14:
+		_fail("Ninefold smoke: large-map %s lacks the subtle vertical mass shadow paired with the rear backdrop: %s." % [label, readability])
+		return false
 	return true
 
 func _fail(message: String) -> void:
