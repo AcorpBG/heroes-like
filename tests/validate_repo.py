@@ -4504,7 +4504,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             if overlay_id == "road_dirt":
                 supports = overlay.get("supports", [])
                 ensure(isinstance(supports, list) and "authored_tile_art" in supports, errors, "Terrain overlay road_dirt must mark authored_tile_art support")
+                ensure(isinstance(supports, list) and "same_type_adjacency" in supports, errors, "Terrain overlay road_dirt must mark same_type_adjacency support")
+                ensure(isinstance(supports, list) and "vertical_centerline" in supports, errors, "Terrain overlay road_dirt must mark vertical_centerline support")
+                ensure(isinstance(supports, list) and "horizontal_edge_lanes" in supports, errors, "Terrain overlay road_dirt must mark horizontal_edge_lanes support")
                 ensure(isinstance(supports, list) and "diagonal_straight_pieces" in supports, errors, "Terrain overlay road_dirt must mark diagonal_straight_pieces support")
+                ensure(str(overlay.get("piece_selection_model", "")) == "same_type_adjacency_homm_piece_composition", errors, "Terrain overlay road_dirt must document same-type adjacency piece selection")
+                ensure(str(overlay.get("vertical_lane", "")) == "center", errors, "Terrain overlay road_dirt must document centered vertical road lanes")
+                ensure(str(overlay.get("horizontal_lane", "")) == "south_edge", errors, "Terrain overlay road_dirt must document edge-riding horizontal road lanes")
                 tile_art = overlay.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, "Terrain overlay road_dirt must define tile_art")
                 if isinstance(tile_art, dict):
@@ -4669,6 +4675,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"road_overlay"',
         '"road_overlay_art"',
         '"road_shape_model"',
+        '"road_same_type_adjacency"',
+        '"road_horizontal_edge_riding"',
+        '"road_vertical_centered"',
+        "ROAD_LANE_MODEL",
+        "ROAD_PIECE_SELECTION_MODEL",
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_ground_anchor",
         "TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",

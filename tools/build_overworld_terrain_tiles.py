@@ -6,7 +6,9 @@ builder intentionally does not sample the generated terrain source sheets:
 those proved too painterly and seam-prone as a per-cell base. The assets here
 are local procedural placeholders shaped around the terrain grammar:
 restrained biome palettes, quiet multi-scale base variants, jagged transition
-pieces, and softened rutted structural road connector overlays.
+pieces, and softened rutted structural road connector overlays. Road pieces
+follow the current topology contract: vertical connectors run through the tile
+center while horizontal connectors ride on a lower tile-edge lane.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ import random
 from pathlib import Path
 
 try:
-    from PIL import Image, ImageDraw, ImageFilter
+    from PIL import Image, ImageChops, ImageDraw, ImageFilter
 except ImportError as exc:  # pragma: no cover - tool dependency guard
     raise SystemExit("Pillow is required to rebuild overworld terrain tiles.") from exc
 
@@ -85,11 +87,13 @@ EDGE_SPECS = {
     "highland": EdgeSpec("highland", "#5b543b", "#433d2d", "#8d8059", 11, 78, 801),
 }
 
+ROAD_HORIZONTAL_EDGE_Y = 54.0
+
 ROAD_DIRECTIONS = {
     "n": (32.0, -3.0),
-    "e": (67.0, 32.0),
+    "e": (67.0, ROAD_HORIZONTAL_EDGE_Y),
     "s": (32.0, 67.0),
-    "w": (-3.0, 32.0),
+    "w": (-3.0, ROAD_HORIZONTAL_EDGE_Y),
     "ne": (67.0, -3.0),
     "se": (67.0, 67.0),
     "sw": (-3.0, 67.0),
@@ -414,8 +418,14 @@ def build_edge_overlays() -> None:
             save_rgba(build_edge_overlay(spec, direction), OUT / "edges" / f"{group}_edge_{direction}.png")
 
 
-def line_geometry(end: tuple[float, float], lateral_offset: float = 0.0) -> tuple[tuple[float, float], tuple[float, float]]:
-    start = (32.0, 32.0)
+def road_line_start(kind: str) -> tuple[float, float]:
+    if kind in {"e", "w"}:
+        return (32.0, ROAD_HORIZONTAL_EDGE_Y)
+    return (32.0, 32.0)
+
+
+def line_geometry(kind: str, end: tuple[float, float], lateral_offset: float = 0.0) -> tuple[tuple[float, float], tuple[float, float]]:
+    start = road_line_start(kind)
     dx = end[0] - start[0]
     dy = end[1] - start[1]
     length = max(0.001, math.sqrt((dx * dx) + (dy * dy)))
@@ -442,7 +452,7 @@ def segment_geometry(
 
 
 def jittered_line_points(kind: str, end: tuple[float, float], lateral_offset: float, wobble: float, seed: int) -> list[tuple[float, float]]:
-    start, finish = line_geometry(end, lateral_offset)
+    start, finish = line_geometry(kind, end, lateral_offset)
     return jittered_segment_points(kind, start, finish, 0.0, wobble, seed)
 
 
@@ -543,6 +553,15 @@ def composite_color(canvas: Image.Image, color: tuple[int, int, int], mask: Imag
     canvas.alpha_composite(layer)
 
 
+def merged_masks(*masks: Image.Image) -> Image.Image:
+    if not masks:
+        return Image.new("L", (SIZE, SIZE), 0)
+    merged = masks[0]
+    for mask in masks[1:]:
+        merged = ImageChops.lighter(merged, mask)
+    return merged
+
+
 def sprinkle_road_grit(canvas: Image.Image, mask: Image.Image, seed: int) -> None:
     rng = random.Random(seed)
     draw = ImageDraw.Draw(canvas, "RGBA")
@@ -557,7 +576,7 @@ def sprinkle_road_grit(canvas: Image.Image, mask: Image.Image, seed: int) -> Non
 
 
 def draw_road_ruts(canvas: Image.Image, kind: str, end: tuple[float, float], seed: int) -> None:
-    draw_road_ruts_segment(canvas, kind, (32.0, 32.0), end, seed, 0.55)
+    draw_road_ruts_segment(canvas, kind, road_line_start(kind), end, seed, 0.55)
 
 
 def draw_road_ruts_segment(
@@ -580,10 +599,25 @@ def draw_road_ruts_segment(
 def road_layer(kind: str) -> Image.Image:
     canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     if kind == "center":
-        shadow = make_organic_center_mask(5.8, 9101, 0.7)
-        edge = make_organic_center_mask(4.9, 9102, 0.1)
-        core = make_organic_center_mask(3.7, 9103, 0.0)
-        highlight = make_organic_center_mask(1.1, 9104, -0.1)
+        shadow = merged_masks(
+            make_organic_center_mask(5.8, 9101, 0.7),
+            make_organic_center_mask(5.2, 9105, ROAD_HORIZONTAL_EDGE_Y - 32.0),
+            make_mask_segment("center_joint", (32.0, 32.0), (32.0, ROAD_HORIZONTAL_EDGE_Y), 9.8, 0.0, 0.28),
+        )
+        edge = merged_masks(
+            make_organic_center_mask(4.9, 9102, 0.1),
+            make_organic_center_mask(4.5, 9106, ROAD_HORIZONTAL_EDGE_Y - 32.0),
+            make_mask_segment("center_joint", (32.0, 32.0), (32.0, ROAD_HORIZONTAL_EDGE_Y), 7.6, 0.0, 0.24),
+        )
+        core = merged_masks(
+            make_organic_center_mask(3.7, 9103, 0.0),
+            make_organic_center_mask(3.4, 9107, ROAD_HORIZONTAL_EDGE_Y - 32.0),
+            make_mask_segment("center_joint", (32.0, 32.0), (32.0, ROAD_HORIZONTAL_EDGE_Y), 5.1, 0.0, 0.20),
+        )
+        highlight = merged_masks(
+            make_organic_center_mask(1.1, 9104, -0.1),
+            make_mask_segment("center_joint_highlight", (32.0, 35.0), (32.0, ROAD_HORIZONTAL_EDGE_Y - 1.0), 0.7, -0.6, 0.16),
+        )
         grit_mask = core
         seed = 910
         shadow_alpha = 46

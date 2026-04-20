@@ -105,44 +105,68 @@ func _run() -> void:
 	if not bool(progress_result.get("ok", false)):
 		_fail("Ninefold smoke: OverworldShell could not advance one safe step on the 64x64 scenario.")
 		return
-	if not _assert_diagonal_road_tiling(shell, session):
+	if not _assert_homm_road_topology(shell, session):
 		return
 
 	get_tree().quit(0)
 
-func _assert_diagonal_road_tiling(shell: Node, session) -> bool:
+func _assert_homm_road_topology(shell: Node, session) -> bool:
+	var vertical_tile := Vector2i(23, 30)
+	var horizontal_tile := Vector2i(26, 42)
+	var intersection_tile := Vector2i(23, 42)
 	var straight_tile := Vector2i(20, 45)
-	_reveal_validation_tiles(session, [straight_tile])
+	_reveal_validation_tiles(session, [vertical_tile, horizontal_tile, intersection_tile, straight_tile])
+
+	shell.call("validation_select_tile", vertical_tile.x, vertical_tile.y)
+	var vertical_presentation: Dictionary = shell.call("validation_tile_presentation", vertical_tile.x, vertical_tile.y)
+	var vertical_terrain: Dictionary = vertical_presentation.get("terrain_presentation", {})
+	if String(vertical_terrain.get("road_connection_source", "")) != "adjacent_same_type_road_tiles" or not bool(vertical_terrain.get("road_same_type_adjacency", false)):
+		_fail("Ninefold smoke: vertical road did not rebuild from same-type neighboring road tiles: %s." % vertical_presentation)
+		return false
+	if String(vertical_terrain.get("road_connection_key", "")) != "N+S" or int(vertical_terrain.get("road_connection_count", 0)) != 2:
+		_fail("Ninefold smoke: vertical road run did not expose clean N+S topology: %s." % vertical_presentation)
+		return false
+	if not bool(vertical_terrain.get("road_vertical_centered", false)) or String(vertical_terrain.get("road_vertical_lane", "")) != "center" or bool(vertical_terrain.get("road_horizontal_edge_riding", true)):
+		_fail("Ninefold smoke: vertical road run did not report a centered vertical lane without horizontal edge riding: %s." % vertical_presentation)
+		return false
+	if bool(vertical_terrain.get("road_joint_cap", true)):
+		_fail("Ninefold smoke: vertical road straight still reports a center joint cap: %s." % vertical_presentation)
+		return false
+
+	shell.call("validation_select_tile", horizontal_tile.x, horizontal_tile.y)
+	var horizontal_presentation: Dictionary = shell.call("validation_tile_presentation", horizontal_tile.x, horizontal_tile.y)
+	var horizontal_terrain: Dictionary = horizontal_presentation.get("terrain_presentation", {})
+	if String(horizontal_terrain.get("road_connection_source", "")) != "adjacent_same_type_road_tiles" or String(horizontal_terrain.get("road_connection_key", "")) != "E+W":
+		_fail("Ninefold smoke: horizontal road run did not use same-type E+W topology: %s." % horizontal_presentation)
+		return false
+	if not bool(horizontal_terrain.get("road_horizontal_edge_riding", false)) or String(horizontal_terrain.get("road_horizontal_lane", "")) != "south_edge" or bool(horizontal_terrain.get("road_vertical_centered", true)):
+		_fail("Ninefold smoke: horizontal road run did not report the edge-riding horizontal lane: %s." % horizontal_presentation)
+		return false
+	if bool(horizontal_terrain.get("road_joint_cap", true)):
+		_fail("Ninefold smoke: horizontal road straight still reports a center joint cap: %s." % horizontal_presentation)
+		return false
+
+	shell.call("validation_select_tile", intersection_tile.x, intersection_tile.y)
+	var intersection_presentation: Dictionary = shell.call("validation_tile_presentation", intersection_tile.x, intersection_tile.y)
+	var intersection_terrain: Dictionary = intersection_presentation.get("terrain_presentation", {})
+	if String(intersection_terrain.get("road_connection_key", "")) != "E+N+SW" or int(intersection_terrain.get("road_connection_count", 0)) != 3:
+		_fail("Ninefold smoke: road combination tile did not compose from adjacent same-type neighbors: %s." % intersection_presentation)
+		return false
+	if not bool(intersection_terrain.get("road_joint_cap", false)) or not bool(intersection_terrain.get("road_horizontal_edge_riding", false)) or not bool(intersection_terrain.get("road_vertical_centered", false)):
+		_fail("Ninefold smoke: road combination tile did not keep both edge horizontal and centered vertical composition metadata: %s." % intersection_presentation)
+		return false
+
 	shell.call("validation_select_tile", straight_tile.x, straight_tile.y)
 	var straight_presentation: Dictionary = shell.call("validation_tile_presentation", straight_tile.x, straight_tile.y)
 	var straight_terrain: Dictionary = straight_presentation.get("terrain_presentation", {})
-	if String(straight_terrain.get("road_connection_source", "")) != "ordered_terrain_layer_path" or String(straight_terrain.get("road_connection_key", "")) != "NE+SW":
-		_fail("Ninefold smoke: diagonal road straight did not use ordered NE+SW path connections: %s." % straight_presentation)
+	if String(straight_terrain.get("road_connection_source", "")) != "adjacent_same_type_road_tiles" or String(straight_terrain.get("road_connection_key", "")) != "NE+SW":
+		_fail("Ninefold smoke: diagonal road straight did not use same-type NE+SW adjacency connections: %s." % straight_presentation)
 		return false
 	if int(straight_terrain.get("road_connection_count", 0)) != 2 or not bool(straight_terrain.get("road_diagonal_tile_piece", false)) or String(straight_terrain.get("road_diagonal_piece_model", "")) != "full_diagonal_straight_piece":
 		_fail("Ninefold smoke: diagonal road straight is not using the full diagonal tile piece: %s." % straight_presentation)
 		return false
-	if bool(straight_terrain.get("road_joint_cap", true)) or not bool(straight_terrain.get("road_unordered_adjacency_suppressed", false)):
-		_fail("Ninefold smoke: diagonal road straight still reports a center-cap or unordered-adjacency path: %s." % straight_presentation)
-		return false
-
-	var join_tile := Vector2i(17, 48)
-	var vertical_tile := Vector2i(16, 49)
-	_reveal_validation_tiles(session, [join_tile, vertical_tile])
-	shell.call("validation_select_tile", join_tile.x, join_tile.y)
-	var join_presentation: Dictionary = shell.call("validation_tile_presentation", join_tile.x, join_tile.y)
-	var join_terrain: Dictionary = join_presentation.get("terrain_presentation", {})
-	if String(join_terrain.get("road_connection_key", "")) != "NE+W" or int(join_terrain.get("road_connection_count", 0)) != 2:
-		_fail("Ninefold smoke: diagonal-to-cardinal road join picked up an unintended adjacent road connection: %s." % join_presentation)
-		return false
-	if not bool(join_terrain.get("road_joint_cap", false)) or bool(join_terrain.get("road_diagonal_tile_piece", true)):
-		_fail("Ninefold smoke: diagonal-to-cardinal road join did not keep a deliberate joint cap without claiming straight diagonal art: %s." % join_presentation)
-		return false
-
-	var vertical_presentation: Dictionary = shell.call("validation_tile_presentation", vertical_tile.x, vertical_tile.y)
-	var vertical_terrain: Dictionary = vertical_presentation.get("terrain_presentation", {})
-	if String(vertical_terrain.get("road_connection_key", "")) != "N+S" or bool(vertical_terrain.get("road_joint_cap", true)):
-		_fail("Ninefold smoke: cardinal segment after a diagonal join still connected diagonally or stamped a center cap: %s." % vertical_presentation)
+	if bool(straight_terrain.get("road_joint_cap", true)) or not bool(straight_terrain.get("road_diagonal_connections", false)):
+		_fail("Ninefold smoke: diagonal road straight still reports a center cap or missing diagonal topology metadata: %s." % straight_presentation)
 		return false
 	return true
 
@@ -197,8 +221,11 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if String(terrain_presentation.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(terrain_presentation.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(terrain_presentation.get("explored_intertile_seams", true)):
 		_fail("Ninefold smoke: large-map visible terrain still reports per-cell black grid seams: %s." % town_presentation)
 		return false
-	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "connection_piece_overlay":
+	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "homm_adjacency_piece_overlay":
 		_fail("Ninefold smoke: large-map starting road is not represented as a structural art overlay: %s." % town_presentation)
+		return false
+	if String(terrain_presentation.get("road_connection_source", "")) != "adjacent_same_type_road_tiles" or not bool(terrain_presentation.get("road_same_type_adjacency", false)):
+		_fail("Ninefold smoke: large-map starting road is not using same-type adjacency topology: %s." % town_presentation)
 		return false
 	if String(terrain_presentation.get("road_joint_cap_model", "")) != "connection_aware_joint_cap" or not bool(terrain_presentation.get("road_joint_cap", false)):
 		_fail("Ninefold smoke: large-map starting road intersection does not expose the connection-aware joint cap contract: %s." % town_presentation)

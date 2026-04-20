@@ -735,8 +735,16 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: visible grass terrain still reports per-cell black grid seams. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "connection_piece_overlay":
+	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "homm_adjacency_piece_overlay":
 		push_error("Overworld smoke: authored River Pass road overlay is not using structural road art on the main route. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if String(grass_terrain.get("road_connection_source", "")) != "adjacent_same_type_road_tiles" or not bool(grass_terrain.get("road_same_type_adjacency", false)):
+		push_error("Overworld smoke: River Pass road overlay is not being rebuilt from same-type road adjacency. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(grass_terrain.get("road_horizontal_edge_riding", false)) or String(grass_terrain.get("road_horizontal_lane", "")) != "south_edge" or not bool(grass_terrain.get("road_vertical_centered", false)):
+		push_error("Overworld smoke: River Pass road intersection does not expose edge-riding horizontal plus centered vertical lane metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("road_joint_cap_model", "")) != "connection_aware_joint_cap" or not bool(grass_terrain.get("road_joint_cap", false)):

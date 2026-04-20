@@ -200,6 +200,10 @@ Implementation note date: 2026-04-20
 
 Diagonal dirt-road presentation now uses ordered terrain-layer path connections instead of connecting every neighboring road tile by raw adjacency. `OverworldMapView` merges connection directions from the authored road tile order, which suppresses accidental diagonal links beside diagonal-to-cardinal turns, and the road tile builder now emits full-tile NE/SW and NW/SE diagonal straight pieces. This is a presentation-only road tiling correction: movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression are unchanged.
 
+Implementation note date: 2026-04-20
+
+AcOrP clarified that the deeper target is HoMM3-style adjacency-built road topology rather than ordered centerline strokes. The ordered-path diagonal-road assumption above is superseded for presentation: `OverworldMapView` now rebuilds dirt-road connections from adjacent same-type road tiles, keeps vertical runs on the tile centerline, moves horizontal runs to a lower tile-edge lane, and composes turns/intersections from those neighboring road pieces. The terrain grammar and runtime road PNGs document and support that lane model. This remains a visual/presentation-only correction: movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

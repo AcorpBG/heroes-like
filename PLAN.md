@@ -672,6 +672,33 @@ Limits:
 - The fix relies on authored road paths sharing an actual tile for intersections; adjacent road tiles no longer imply a diagonal join by themselves.
 - Manual visual review is still needed before treating every diagonal-road composition and supported viewport as polished.
 
+## Current Implementation Slice: Overworld HoMM-Style Road Topology
+Status: completed on 2026-04-20 as a narrow road-presentation correction after AcOrP clarified that roads should be built from same-type neighboring road tiles with different vertical and horizontal placement rules.
+
+Purpose:
+- Move road presentation away from treating every segment as a centerline stroke.
+- Rebuild dirt-road tile connections from adjacent same-type road tiles.
+- Make vertical road runs sit through the tile center while horizontal road runs ride on a lower tile-edge lane.
+- Keep the slice visual/presentation-only: no road movement costs, pathing, fog, save/load, battle, town, object, mapped-sprite, or terrain-base behavior changes.
+
+Implemented:
+- Changed `OverworldMapView` road connectivity to collect road tiles first, then derive connection directions from adjacent road tiles with the same overlay id.
+- Added road-lane metadata and validation payload fields for same-type adjacency, centered vertical lanes, edge-riding horizontal lanes, and HoMM-style piece composition.
+- Updated the procedural fallback drawing path and regenerated the primary dirt-road PNGs so E/W road pieces use the lower edge lane while N/S pieces remain centered.
+- Updated terrain grammar and manifest metadata to document the same-type adjacency, centered-vertical, edge-horizontal road topology contract.
+- Replaced the previous diagonal-only smoke assertions with coverage for vertical straight, horizontal straight, mixed intersection, and diagonal-straight road tiles.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is still placeholder road art, not a final road atlas or full HoMM3-equivalent road system.
+- Diagonal-road art remains narrow coverage; the important correction in this slice is the topology/lane model and adjacency-derived piece selection.
+- Manual visual review is still needed before treating every road composition and supported viewport as polished.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

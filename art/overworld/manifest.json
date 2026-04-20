@@ -18,7 +18,7 @@
     "tile_art_root": "res://art/overworld/runtime/terrain_tiles",
     "tile_art_status": "original_quiet_terrain_correction",
     "tile_art_source_basis": "original_procedural_reference_informed",
-    "tile_art_preparation": "locally_built_quiet_base_variants_with_grass_plains_palette_cohesion_low_frequency_variants_feathered_edges_and_connection_aware_rutted_road_joints",
+    "tile_art_preparation": "locally_built_quiet_base_variants_with_grass_plains_palette_cohesion_low_frequency_variants_feathered_edges_and_same_type_adjacency_roads_with_centered_vertical_and_edge_riding_horizontal_lanes",
     "primary_base_model": "original_quiet_tile_bank",
     "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
     "authored_tile_sets": ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland", "road_dirt"],

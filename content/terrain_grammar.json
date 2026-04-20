@@ -5,7 +5,7 @@
   "primary_base_model": "original_quiet_tile_bank",
   "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
   "tile_size_reference": 64,
-  "summary": "Author-facing overworld terrain grammar. The covered terrain slice now uses original quiet 64x64 biome base variants with a more cohesive grass/plains palette, low-frequency patch variant selection, softened feathered biome-edge overlays, and path-aware rutted dirt-road pieces including full diagonal straights built from local procedural palettes. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
+  "summary": "Author-facing overworld terrain grammar. The covered terrain slice now uses original quiet 64x64 biome base variants with a more cohesive grass/plains palette, low-frequency patch variant selection, softened feathered biome-edge overlays, and same-type-adjacency rutted dirt-road pieces. Road presentation now distinguishes centered vertical runs from lower-edge horizontal runs while keeping combination pieces driven by neighboring road topology. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
   "transition_rules": {
     "cardinal_edges": true,
     "corner_hints": true,
@@ -414,7 +414,11 @@
       "center_color": "#d1b777",
       "width_fraction": 0.14,
       "readability_role": "soft rutted movement lane",
-      "supports": ["authored_tile_art", "cardinal_connectors", "diagonal_connectors", "diagonal_straight_pieces", "autotile_edge_caps"],
+      "piece_selection_model": "same_type_adjacency_homm_piece_composition",
+      "vertical_lane": "center",
+      "horizontal_lane": "south_edge",
+      "junction_policy": "compose_neighbor_connectors_with_connection_aware_joint_caps",
+      "supports": ["authored_tile_art", "same_type_adjacency", "vertical_centerline", "horizontal_edge_lanes", "cardinal_connectors", "diagonal_connectors", "diagonal_straight_pieces", "autotile_edge_caps"],
       "tile_art": {
         "center": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_center.png",
         "connectors": {
