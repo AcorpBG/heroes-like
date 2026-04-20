@@ -189,11 +189,41 @@ size_flags_horizontal = 3
 toggle_mode = true
 text = "Hero Start"
 
+[node name="PlaceObjectTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Place Object"
+
+[node name="RemoveObjectTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Remove Object"
+
 [node name="TerrainTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 layout_mode = 2
 text = "Terrain Brush"
 
 [node name="TerrainPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ObjectPaletteTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+text = "Object Palette"
+
+[node name="ObjectFamilyPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ObjectContentPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
