@@ -238,6 +238,10 @@ The map editor working-copy contract now supports duplicating existing runtime o
 
 Implementation note date: 2026-04-20
 
+The map editor working-copy contract now includes selected-tile restoration from the authored scenario baseline. `MapEditorShell` reads a fresh authored baseline session through `ScenarioFactory`, then restores only the selected coordinate's terrain id, road presence, supported town/resource/artifact/encounter placement state, and relevant hero-start consistency into the active in-memory editor working copy. Working-copy-only supported objects on that tile are removed, moved authored placements are returned by placement id, and unrelated working-copy edits remain intact. Authored scenario JSON remains immutable, runtime save format is unchanged, no bulk reset/export path was added, and town 3x2 occupancy/pathing remains future work.
+
+Implementation note date: 2026-04-20
+
 The overworld terrain transition contract now treats neighboring terrain relationships as the source of visible transitions. `OverworldMapView` builds an explicit 8-neighbor transition payload for each explored tile, suppresses seams inside the same terrain group, applies higher-priority neighboring terrain as cardinal intrusion edges on lower-priority receiver tiles, and adds diagonal corner hints when a higher-priority neighbor only touches by corner. Existing grammar edge art is reused from the selected source terrain, with procedural strips and corner wedges as honest fallbacks. The map editor preview reads the same renderer and validation payloads, so painted terrain immediately exposes neighbor-aware edge and corner transition metadata. This is presentation-only: logical map coordinates, pathing, save data, editor schema, object placement systems, and town footprint/pathing semantics are unchanged.
 
 ## Repository Structure
