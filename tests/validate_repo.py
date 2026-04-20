@@ -38,6 +38,9 @@ ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
+MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
+MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
+MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
@@ -2238,6 +2241,91 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure("active_style" not in main_menu_script_text, errors, "MainMenu.gd must not draw an active rounded plaque box")
     ensure('"hover", hover' not in main_menu_script_text, errors, "MainMenu.gd must not draw a hover rounded plaque box")
     ensure('"pressed", pressed' not in main_menu_script_text, errors, "MainMenu.gd must not draw a pressed rounded plaque box")
+
+
+def validate_map_editor_shell_slice(errors: list[str]) -> None:
+    required_paths = (
+        APP_ROUTER_PATH,
+        MAIN_MENU_SCENE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        MAP_EDITOR_SCENE_PATH,
+        MAP_EDITOR_SCRIPT_PATH,
+        MAP_EDITOR_SMOKE_SCENE_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing map-editor shell file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "const MAP_EDITOR_SCENE",
+        "func go_to_map_editor",
+        'res://scenes/editor/MapEditorShell.tscn',
+    ):
+        ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required map-editor route token: {required_token}")
+
+    main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(scene_has_node(main_menu_scene_text, "OpenEditor", "Button"), errors, "MainMenu.tscn must expose a clear dev editor entry button")
+    ensure('method="_on_open_editor_pressed"' in main_menu_scene_text, errors, "MainMenu.tscn must wire the editor entry button")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_open_editor_button",
+        "func _on_open_editor_pressed",
+        "AppRouter.go_to_map_editor()",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required map-editor menu token: {required_token}")
+
+    editor_scene_text = MAP_EDITOR_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(
+        editor_scene_text,
+        errors,
+        "MapEditorShell.tscn",
+        [
+            ("ScenarioPicker", "OptionButton"),
+            ("TerrainPicker", "OptionButton"),
+            ("InspectTool", "Button"),
+            ("TerrainTool", "Button"),
+            ("RoadTool", "Button"),
+            ("HeroStartTool", "Button"),
+            ("TileInfo", "Label"),
+            ("PlayWorkingCopy", "Button"),
+            ("Map", "Control"),
+        ],
+    )
+    ensure("res://scenes/overworld/OverworldMapView.gd" in editor_scene_text, errors, "MapEditorShell.tscn must reuse the live OverworldMapView renderer")
+
+    editor_script_text = MAP_EDITOR_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        editor_script_text,
+        errors,
+        "MapEditorShell.gd",
+        [
+            "_load_scenario_working_copy",
+            "_paint_terrain",
+            "_toggle_road",
+            "_set_hero_start",
+            "_tile_inspection_text",
+            "_prepare_working_copy_for_play",
+            "validation_snapshot",
+            "validation_paint_terrain",
+            "validation_toggle_road",
+            "validation_set_hero_start",
+            "validation_tile_presentation",
+        ],
+    )
+    for required_token in (
+        "ScenarioFactoryScript.create_session",
+        "OverworldRules.normalize_overworld_state",
+        "_make_all_tiles_visible",
+        "set_map_state",
+        "EDITOR_ROAD_LAYER_ID",
+        "SessionState.set_active_session",
+        "AppRouter.go_to_overworld()",
+    ):
+        ensure(required_token in editor_script_text, errors, f"MapEditorShell.gd is missing required map-editor token: {required_token}")
 
 
 def validate_scenario_outcome_shell(errors: list[str]) -> None:
@@ -5850,6 +5938,7 @@ def main() -> int:
     validate_campaign_browser(errors)
     validate_settings_and_onboarding(errors)
     validate_main_menu_first_view(errors)
+    validate_map_editor_shell_slice(errors)
     validate_scenario_outcome_shell(errors)
     validate_difficulty_integration(errors)
     validate_hero_progression(errors)

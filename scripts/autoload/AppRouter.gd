@@ -9,6 +9,7 @@ const SCENARIO_OUTCOME_SCENE := "res://scenes/results/ScenarioOutcomeShell.tscn"
 const OVERWORLD_SCENE := "res://scenes/overworld/OverworldShell.tscn"
 const BATTLE_SCENE := "res://scenes/battle/BattleShell.tscn"
 const TOWN_SCENE := "res://scenes/town/TownShell.tscn"
+const MAP_EDITOR_SCENE := "res://scenes/editor/MapEditorShell.tscn"
 
 var _menu_notice := ""
 
@@ -85,6 +86,9 @@ func go_to_scenario_outcome() -> void:
 	session.game_state = "outcome"
 	SaveService.save_runtime_autosave_session(session)
 	_change_scene(SCENARIO_OUTCOME_SCENE)
+
+func go_to_map_editor() -> void:
+	_change_scene(MAP_EDITOR_SCENE)
 
 func boot() -> void:
 	go_to_main_menu()

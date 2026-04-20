@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T17:53:37Z",
+  "updatedAt": "2026-04-20T18:14:16Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-mapped-sprite-grounding-10184",
-  "currentSliceTitle": "Ground mapped resource, artifact, and encounter sprites without shared support stacks",
+  "currentSliceId": "map-editor-shell-10184",
+  "currentSliceTitle": "Start a thin in-game map editor shell for scenario iteration",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation-only mapped sprite grounding correction. Resource-site, artifact, and unresolved encounter asset sprites no longer draw through the shared marker plate/ring, broad terrain quieting bed, upper-mass backdrop wash, vertical mass shadow, duplicate offset sprite shadow, foreground ground lip, or base occlusion pads. They now use mapped-sprite-specific localized contact disturbance and compact contact shadows. Towns stayed on their dedicated no-helper-cue town path, procedural fallbacks stayed on their no-plate fallback grounding path, and hero presence, terrain, roads, movement, pathing, fog, save/load, battle, town, resource-site, artifact, and encounter gameplay logic were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow dev-facing in-game map editor shell before more overworld polish. The main menu and AppRouter now expose MapEditorShell, which loads authored scenarios through ScenarioFactory into an in-memory mutable working copy, reveals the copy for editing, and previews it through the existing OverworldMapView renderer. The first tool set supports terrain painting from the authored terrain grammar, dirt-road toggling through terrain_layers roads, hero-start repositioning, tile/object inspection, and Play Copy routing into the normal overworld shell without writing authored JSON or changing campaign/skirmish/save semantics. Focused editor smoke coverage was added. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -292,6 +292,12 @@
       "difficulty": "small"
     },
     {
+      "id": "map-editor-shell-10184",
+      "title": "Start a thin in-game map editor shell for live scenario iteration",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -347,6 +353,7 @@
     }
   ],
   "nextActions": [
+    "Use the first in-game map editor shell to inspect and mutate authored scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
     "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
     "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",

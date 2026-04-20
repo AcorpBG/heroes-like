@@ -46,6 +46,7 @@ const TAB_STAGE_COPY := {
 @onready var _open_skirmish_button: Button = %OpenSkirmish
 @onready var _open_saves_button: Button = %OpenSaves
 @onready var _open_settings_button: Button = %OpenSettings
+@onready var _open_editor_button: Button = %OpenEditor
 @onready var _campaign_list: ItemList = %CampaignList
 @onready var _campaign_details_label: Label = %CampaignDetails
 @onready var _campaign_arc_status_label: Label = %CampaignArcStatus
@@ -191,6 +192,9 @@ func _on_open_guide_pressed() -> void:
 
 func _on_open_settings_pressed() -> void:
 	_toggle_stage_dock(TAB_SETTINGS)
+
+func _on_open_editor_pressed() -> void:
+	AppRouter.go_to_map_editor()
 
 func _on_close_stage_dock_pressed() -> void:
 	_hide_stage_dock()
@@ -743,7 +747,7 @@ func validation_snapshot() -> Dictionary:
 
 func _first_view_command_labels() -> Array:
 	var labels := []
-	for button in [_open_campaign_button, _open_skirmish_button, _open_saves_button, _open_settings_button, _quit_button]:
+	for button in [_open_campaign_button, _open_skirmish_button, _open_saves_button, _open_settings_button, _open_editor_button, _quit_button]:
 		if button is Button and button.visible:
 			labels.append(String(button.text))
 	return labels
@@ -950,6 +954,7 @@ func _sync_command_button_styles() -> void:
 			_apply_backdrop_plaque_button(button, is_active, false)
 
 func _sync_system_command_buttons() -> void:
+	_apply_backdrop_plaque_button(_open_editor_button, false, false)
 	_apply_backdrop_plaque_button(_quit_button, false, true)
 
 func _apply_backdrop_plaque_button(button: BaseButton, active: bool, danger: bool) -> void:

@@ -1,0 +1,211 @@
+[gd_scene load_steps=3 format=3 uid="uid://map_editor_shell"]
+
+[ext_resource type="Script" path="res://scenes/editor/MapEditorShell.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/overworld/OverworldMapView.gd" id="2"]
+
+[node name="MapEditorShell" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.0352941, 0.0392157, 0.0392157, 1)
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Shell" type="PanelContainer" parent="RootMargin" groups=["map_editor_panel"]]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ShellPad" type="MarginContainer" parent="RootMargin/Shell"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ShellBox" type="VBoxContainer" parent="RootMargin/Shell/ShellPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="TopPanel" type="PanelContainer" parent="RootMargin/Shell/ShellPad/ShellBox" groups=["map_editor_panel"]]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopPad" type="MarginContainer" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="TopBar" type="HBoxContainer" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Map Editor"
+
+[node name="ScenarioPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayWorkingCopy" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Play Copy"
+
+[node name="Menu" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(110, 0)
+layout_mode = 2
+text = "Menu"
+
+[node name="BodyRow" type="HBoxContainer" parent="RootMargin/Shell/ShellPad/ShellBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="MapPanel" type="PanelContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow" groups=["map_editor_panel"]]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MapPad" type="MarginContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Map" type="Control" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/MapPanel/MapPad"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(820, 560)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2")
+
+[node name="ToolRail" type="PanelContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow" groups=["map_editor_panel"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ToolPad" type="MarginContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ToolScroll" type="ScrollContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ToolBox" type="VBoxContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="StatusTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+text = "Working Copy"
+
+[node name="Status" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 78)
+layout_mode = 2
+autowrap_mode = 3
+text = "Editor status"
+
+[node name="ToolTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+text = "Tools"
+
+[node name="ToolButtons" type="GridContainer" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="InspectTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Inspect"
+
+[node name="TerrainTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Terrain"
+
+[node name="RoadTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Road"
+
+[node name="HeroStartTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Hero Start"
+
+[node name="TerrainTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+text = "Terrain Brush"
+
+[node name="TerrainPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TileTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+layout_mode = 2
+text = "Tile"
+
+[node name="TileInfo" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 270)
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+text = "Tile inspection"

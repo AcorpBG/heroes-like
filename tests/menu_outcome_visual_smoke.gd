@@ -60,11 +60,12 @@ func _run_main_menu_smoke() -> bool:
 	var skirmish_button = shell.get_node_or_null("%OpenSkirmish")
 	var load_button = shell.get_node_or_null("%OpenSaves")
 	var settings_button = shell.get_node_or_null("%OpenSettings")
-	if quit_button == null or campaign_button == null or skirmish_button == null or load_button == null or settings_button == null:
+	var editor_button = shell.get_node_or_null("%OpenEditor")
+	if quit_button == null or campaign_button == null or skirmish_button == null or load_button == null or settings_button == null or editor_button == null:
 		push_error("Main menu smoke: one or more painted-plaque command buttons are missing.")
 		get_tree().quit(1)
 		return false
-	for button in [campaign_button, skirmish_button, load_button, settings_button, quit_button]:
+	for button in [campaign_button, skirmish_button, load_button, settings_button, editor_button, quit_button]:
 		if not (button is Button) or button.get_parent() != hotspot_surface:
 			push_error("Main menu smoke: first-view command is not a direct painted-backdrop hotspot.")
 			get_tree().quit(1)
@@ -77,10 +78,11 @@ func _run_main_menu_smoke() -> bool:
 		String((skirmish_button as Button).text),
 		String((load_button as Button).text),
 		String((settings_button as Button).text),
+		String((editor_button as Button).text),
 		String((quit_button as Button).text),
 	]
-	if first_view_labels != ["Campaign", "Skirmish", "Load", "Settings", "Quit"]:
-		push_error("Main menu smoke: first-view command labels are not the five approved plaque commands: %s." % [first_view_labels])
+	if first_view_labels != ["Campaign", "Skirmish", "Load", "Settings", "Editor", "Quit"]:
+		push_error("Main menu smoke: first-view command labels are not the approved plaque commands: %s." % [first_view_labels])
 		get_tree().quit(1)
 		return false
 	var load_rect := (load_button as Button).get_global_rect()
@@ -92,6 +94,9 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	if not _assert_plaque_anchor(settings_button as Button, "Settings", 0.611, 0.66):
+		get_tree().quit(1)
+		return false
+	if not _assert_plaque_anchor(editor_button as Button, "Editor", 0.681, 0.729):
 		get_tree().quit(1)
 		return false
 	if not _assert_plaque_anchor(quit_button as Button, "Quit", 0.749, 0.798):
@@ -107,7 +112,7 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: validation snapshot still sees generated command spine or status box.")
 		get_tree().quit(1)
 		return false
-	if first_view_snapshot.get("first_view_commands", []) != ["Campaign", "Skirmish", "Load", "Settings", "Quit"]:
+	if first_view_snapshot.get("first_view_commands", []) != ["Campaign", "Skirmish", "Load", "Settings", "Editor", "Quit"]:
 		push_error("Main menu smoke: validation snapshot first-view commands are wrong: %s." % [first_view_snapshot])
 		get_tree().quit(1)
 		return false

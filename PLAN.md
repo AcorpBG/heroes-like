@@ -49,6 +49,27 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: In-Game Map Editor Shell
+Status: first slice implemented on 2026-04-20 as a dev-facing scenario iteration tool.
+
+Purpose:
+- Put a thin map editor inside the running game before further overworld polish so map behavior can be tested interactively.
+- Reuse the live overworld map renderer and scenario bootstrap instead of forking map presentation or building a Godot editor plugin.
+- Keep authored content immutable unless a future export/writeback slice is deliberately scoped.
+
+Implemented:
+- Added `scenes/editor/MapEditorShell.tscn` and `MapEditorShell.gd` as an in-game editor shell reachable from the main menu and `AppRouter`.
+- Loaded authored scenarios through `ScenarioFactory` into an in-memory mutable working copy.
+- Reused `OverworldMapView` for live map preview, including existing terrain art, road overlays, object rendering, panning, and validation metadata.
+- Added first-slice tools for terrain painting, dirt-road toggling through terrain layers, hero-start repositioning, and tile/object inspection.
+- Added a "Play Copy" route that sends the current working copy through the normal overworld shell without changing campaign/skirmish authored semantics or writing content JSON.
+- Added focused validator and Godot smoke coverage for the editor shell.
+
+Limits:
+- This is not a full production map editor, exporter, undo stack, object palette, terrain-cost editor, map validation UI, or Godot editor plugin.
+- Edits are intentionally in-memory only; authored JSON writeback needs a separate content-pipeline slice.
+- Placement editing beyond hero-start repositioning remains future work.
+
 ## Current Implementation Slice: Overworld Content Foundation
 Status: completed on 2026-04-18 as the first real implementation pass from the overworld bible.
 
