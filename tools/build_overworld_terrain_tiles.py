@@ -1,327 +1,331 @@
 #!/usr/bin/env python3
-"""Build the first static overworld terrain tile-art set.
+"""Build checked-in overworld terrain tiles from generated source art.
 
-This intentionally writes small checked-in PNG pieces for the Godot renderer.
-The renderer consumes the generated images as art assets; it does not recreate
-these marks procedurally at runtime.
+The runtime renderer consumes 64x64 base, edge, and road overlay PNGs. This
+builder keeps that contract, but derives the pixels from the generated
+overworld terrain sheets created for task 10184 instead of drawing another
+synthetic local tile style.
 """
 
 from __future__ import annotations
 
-import math
-import random
-import struct
-import zlib
+from dataclasses import dataclass
+import os
 from pathlib import Path
+from typing import Iterable
+
+try:
+    from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
+except ImportError as exc:  # pragma: no cover - tool dependency guard
+    raise SystemExit("Pillow is required to rebuild overworld terrain tiles.") from exc
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SOURCE_ROOT = Path(
+    os.environ.get(
+        "OVERWORLD_TERRAIN_SOURCE_ROOT",
+        "/root/.openclaw/workspace/tasks/10184/artifacts/overworld-assets-20260419/processed/terrain",
+    )
+)
 OUT = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles"
 SIZE = 64
+SOURCE_TILE_SIZE = 64
+
+SOURCE_IMAGES = {
+    "grasslands": SOURCE_ROOT / "grasslands.png",
+    "forest": SOURCE_ROOT / "forest.png",
+    "mire": SOURCE_ROOT / "mire.png",
+    "highland": SOURCE_ROOT / "highland.png",
+}
 
 
-Color = tuple[int, int, int, int]
+@dataclass(frozen=True)
+class Grade:
+    brightness: float = 1.0
+    contrast: float = 1.0
+    saturation: float = 1.0
+    tint: tuple[int, int, int] | None = None
+    tint_strength: float = 0.0
 
 
-def clamp(value: int) -> int:
-    return max(0, min(255, value))
+@dataclass(frozen=True)
+class BaseTileSpec:
+    output: str
+    source: str
+    grid: tuple[int, int]
+    crop_size: int = 92
+    grade: Grade = Grade()
 
 
-def vary(color: Color, amount: int, rng: random.Random) -> Color:
-    return (
-        clamp(color[0] + rng.randint(-amount, amount)),
-        clamp(color[1] + rng.randint(-amount, amount)),
-        clamp(color[2] + rng.randint(-amount, amount)),
-        color[3],
-    )
+BASE_TILE_SPECS = (
+    BaseTileSpec("grass_open", "grasslands", (5, 1), 88, Grade(1.04, 1.04, 1.08, (94, 137, 66), 0.08)),
+    BaseTileSpec("grass_field", "grasslands", (12, 5), 92, Grade(1.03, 1.06, 1.10, (108, 151, 70), 0.08)),
+    BaseTileSpec("grass_worn", "grasslands", (10, 5), 94, Grade(0.99, 1.06, 0.98, (128, 122, 76), 0.10)),
+    BaseTileSpec("plains_open", "grasslands", (16, 4), 72, Grade(1.04, 1.04, 0.92, (138, 140, 77), 0.20)),
+    BaseTileSpec("plains_dry", "grasslands", (14, 10), 72, Grade(1.05, 1.08, 0.84, (161, 144, 79), 0.26)),
+    BaseTileSpec("plains_worn", "grasslands", (15, 6), 72, Grade(1.02, 1.07, 0.82, (145, 127, 80), 0.22)),
+    BaseTileSpec("forest_canopy", "forest", (0, 8), 90, Grade(0.92, 1.10, 1.08, (42, 75, 45), 0.12)),
+    BaseTileSpec("forest_copse", "forest", (15, 8), 92, Grade(0.96, 1.08, 1.06, (50, 87, 51), 0.10)),
+    BaseTileSpec("forest_edge", "forest", (10, 6), 94, Grade(1.00, 1.06, 1.04, (71, 97, 55), 0.12)),
+    BaseTileSpec("mire_reeds", "mire", (17, 5), 92, Grade(0.95, 1.10, 1.02, (69, 83, 55), 0.12)),
+    BaseTileSpec("mire_mud", "mire", (14, 9), 84, Grade(0.92, 1.10, 0.88, (66, 57, 41), 0.16)),
+    BaseTileSpec("mire_pool", "mire", (13, 7), 84, Grade(0.96, 1.08, 1.00, (56, 86, 83), 0.16)),
+    BaseTileSpec("swamp_deep", "mire", (18, 8), 94, Grade(0.82, 1.14, 0.96, (38, 57, 43), 0.22)),
+    BaseTileSpec("swamp_mud", "mire", (15, 9), 92, Grade(0.84, 1.12, 0.88, (48, 49, 36), 0.20)),
+    BaseTileSpec("swamp_pool", "mire", (0, 8), 94, Grade(0.88, 1.12, 0.96, (42, 72, 67), 0.20)),
+    BaseTileSpec("hills_slope", "highland", (6, 4), 94, Grade(1.02, 1.08, 0.96, (118, 104, 73), 0.12)),
+    BaseTileSpec("hills_scrub", "highland", (17, 7), 76, Grade(1.00, 1.08, 0.98, (104, 99, 67), 0.14)),
+    BaseTileSpec("hills_ridgelet", "highland", (19, 10), 76, Grade(0.98, 1.12, 0.92, (104, 93, 69), 0.12)),
+    BaseTileSpec("ridge_ridge", "highland", (10, 1), 98, Grade(0.96, 1.16, 0.86, (95, 88, 78), 0.10)),
+    BaseTileSpec("ridge_scree", "highland", (15, 8), 76, Grade(0.92, 1.16, 0.78, (92, 89, 83), 0.18)),
+    BaseTileSpec("ridge_pass", "highland", (19, 11), 76, Grade(1.00, 1.08, 0.88, (123, 106, 70), 0.14)),
+    BaseTileSpec("highland_plateau", "highland", (18, 9), 76, Grade(1.04, 1.08, 0.94, (128, 112, 72), 0.13)),
+    BaseTileSpec("highland_scrub", "highland", (18, 8), 76, Grade(1.00, 1.10, 0.92, (105, 99, 66), 0.15)),
+    BaseTileSpec("highland_pass", "highland", (15, 11), 76, Grade(1.04, 1.08, 0.88, (136, 116, 74), 0.16)),
+)
+
+EDGE_SPECS = {
+    "grasslands": ("grasslands", (5, 1), Grade(1.03, 1.08, 1.04, (91, 126, 63), 0.12), 92),
+    "forest": ("forest", (0, 8), Grade(0.90, 1.14, 1.08, (32, 65, 39), 0.16), 132),
+    "mire": ("mire", (17, 7), Grade(0.86, 1.14, 0.96, (43, 65, 50), 0.16), 118),
+    "highland": ("highland", (17, 3), Grade(0.98, 1.12, 0.88, (105, 93, 64), 0.14), 106),
+}
+
+ROAD_DIRECTIONS = {
+    "n": (32.0, -2.0),
+    "e": (66.0, 32.0),
+    "s": (32.0, 66.0),
+    "w": (-2.0, 32.0),
+    "ne": (66.0, -2.0),
+    "se": (66.0, 66.0),
+    "sw": (-2.0, 66.0),
+    "nw": (-2.0, -2.0),
+}
 
 
-class Canvas:
-    def __init__(self, width: int = SIZE, height: int = SIZE, bg: Color = (0, 0, 0, 0)) -> None:
-        self.width = width
-        self.height = height
-        self.pixels = [[list(bg) for _x in range(width)] for _y in range(height)]
-
-    def blend(self, x: int, y: int, color: Color) -> None:
-        if x < 0 or y < 0 or x >= self.width or y >= self.height:
-            return
-        src_a = color[3] / 255.0
-        if src_a <= 0.0:
-            return
-        dst = self.pixels[y][x]
-        dst_a = dst[3] / 255.0
-        out_a = src_a + dst_a * (1.0 - src_a)
-        if out_a <= 0.0:
-            self.pixels[y][x] = [0, 0, 0, 0]
-            return
-        for channel in range(3):
-            dst[channel] = clamp(int(((color[channel] * src_a) + (dst[channel] * dst_a * (1.0 - src_a))) / out_a))
-        dst[3] = clamp(int(out_a * 255))
-
-    def fill_noise(self, base: Color, rng: random.Random, amount: int = 5) -> None:
-        for y in range(self.height):
-            for x in range(self.width):
-                self.pixels[y][x] = list(vary(base, amount, rng))
-
-    def rect(self, x0: int, y0: int, x1: int, y1: int, color: Color) -> None:
-        for y in range(max(0, y0), min(self.height, y1)):
-            for x in range(max(0, x0), min(self.width, x1)):
-                self.blend(x, y, color)
-
-    def circle(self, cx: float, cy: float, radius: float, color: Color) -> None:
-        r2 = radius * radius
-        for y in range(max(0, int(cy - radius - 1)), min(self.height, int(cy + radius + 2))):
-            for x in range(max(0, int(cx - radius - 1)), min(self.width, int(cx + radius + 2))):
-                dx = (x + 0.5) - cx
-                dy = (y + 0.5) - cy
-                if dx * dx + dy * dy <= r2:
-                    self.blend(x, y, color)
-
-    def ellipse(self, cx: float, cy: float, rx: float, ry: float, color: Color) -> None:
-        if rx <= 0 or ry <= 0:
-            return
-        for y in range(max(0, int(cy - ry - 1)), min(self.height, int(cy + ry + 2))):
-            for x in range(max(0, int(cx - rx - 1)), min(self.width, int(cx + rx + 2))):
-                dx = ((x + 0.5) - cx) / rx
-                dy = ((y + 0.5) - cy) / ry
-                if dx * dx + dy * dy <= 1.0:
-                    self.blend(x, y, color)
-
-    def line(self, x0: float, y0: float, x1: float, y1: float, color: Color, width: float = 1.0) -> None:
-        min_x = max(0, int(min(x0, x1) - width - 1))
-        max_x = min(self.width, int(max(x0, x1) + width + 2))
-        min_y = max(0, int(min(y0, y1) - width - 1))
-        max_y = min(self.height, int(max(y0, y1) + width + 2))
-        dx = x1 - x0
-        dy = y1 - y0
-        length2 = (dx * dx) + (dy * dy)
-        radius = width * 0.5
-        for y in range(min_y, max_y):
-            for x in range(min_x, max_x):
-                px = x + 0.5
-                py = y + 0.5
-                if length2 <= 0.0:
-                    dist = math.hypot(px - x0, py - y0)
-                else:
-                    t = max(0.0, min(1.0, ((px - x0) * dx + (py - y0) * dy) / length2))
-                    nearest_x = x0 + t * dx
-                    nearest_y = y0 + t * dy
-                    dist = math.hypot(px - nearest_x, py - nearest_y)
-                if dist <= radius:
-                    self.blend(x, y, color)
-
-    def write(self, path: Path) -> None:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        write_png(path, self.width, self.height, self.pixels)
+def load_source(name: str) -> Image.Image:
+    path = SOURCE_IMAGES[name]
+    if not path.exists():
+        raise SystemExit(f"Missing generated terrain source: {path}")
+    return Image.open(path).convert("RGB")
 
 
-def png_chunk(kind: bytes, data: bytes) -> bytes:
-    return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+def wrapped_crop(image: Image.Image, center: tuple[float, float], size: int) -> Image.Image:
+    width, height = image.size
+    left = int(round(center[0] - (size / 2)))
+    top = int(round(center[1] - (size / 2)))
+    tiled = Image.new("RGB", (width * 3, height * 3))
+    for ty in range(3):
+        for tx in range(3):
+            tiled.paste(image, (tx * width, ty * height))
+    return tiled.crop((left + width, top + height, left + width + size, top + height + size))
 
 
-def write_png(path: Path, width: int, height: int, pixels: list[list[list[int]]]) -> None:
-    rows = []
-    for row in pixels:
-        rows.append(b"\x00" + bytes(channel for pixel in row for channel in pixel))
-    raw = b"".join(rows)
-    payload = [
-        b"\x89PNG\r\n\x1a\n",
-        png_chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)),
-        png_chunk(b"IDAT", zlib.compress(raw, 9)),
-        png_chunk(b"IEND", b""),
-    ]
-    path.write_bytes(b"".join(payload))
+def crop_grid_tile(source_name: str, grid: tuple[int, int], crop_size: int) -> Image.Image:
+    source = load_source(source_name)
+    center = ((grid[0] * SOURCE_TILE_SIZE) + (SOURCE_TILE_SIZE / 2), (grid[1] * SOURCE_TILE_SIZE) + (SOURCE_TILE_SIZE / 2))
+    crop = wrapped_crop(source, center, crop_size)
+    return crop.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
 
 
-def tuft(canvas: Canvas, x: float, y: float, color: Color, scale: float = 1.0) -> None:
-    canvas.line(x, y, x - 3.0 * scale, y - 8.0 * scale, color, 1.5 * scale)
-    canvas.line(x, y, x + 2.8 * scale, y - 7.0 * scale, color, 1.4 * scale)
-    canvas.line(x, y, x + 6.0 * scale, y - 3.5 * scale, color, 1.2 * scale)
+def blend_rgb(left: tuple[int, int, int], right: tuple[int, int, int], amount: float) -> tuple[int, int, int]:
+    return tuple(int(round((left[index] * (1.0 - amount)) + (right[index] * amount))) for index in range(3))
 
 
-def pebble(canvas: Canvas, x: float, y: float, color: Color, scale: float = 1.0) -> None:
-    canvas.ellipse(x, y, 2.8 * scale, 1.8 * scale, color)
-    canvas.line(x - 2.0 * scale, y + 1.0 * scale, x + 2.2 * scale, y + 1.0 * scale, (28, 24, 21, 68), 1.0)
+def soften_tile_edges(image: Image.Image, width: int = 8) -> Image.Image:
+    result = image.convert("RGB").copy()
+    pixels = result.load()
+    max_x = result.width - 1
+    max_y = result.height - 1
+    for offset in range(width):
+        amount = ((width - offset) / float(width)) * 0.55
+        for y in range(result.height):
+            left = pixels[offset, y]
+            right = pixels[max_x - offset, y]
+            average = tuple((left[channel] + right[channel]) // 2 for channel in range(3))
+            pixels[offset, y] = blend_rgb(left, average, amount)
+            pixels[max_x - offset, y] = blend_rgb(right, average, amount)
+        for x in range(result.width):
+            top = pixels[x, offset]
+            bottom = pixels[x, max_y - offset]
+            average = tuple((top[channel] + bottom[channel]) // 2 for channel in range(3))
+            pixels[x, offset] = blend_rgb(top, average, amount)
+            pixels[x, max_y - offset] = blend_rgb(bottom, average, amount)
+    return result
 
 
-def make_base_tile(terrain_id: str, variant: str) -> Canvas:
-    rng = random.Random(f"{terrain_id}:{variant}:10184")
-    palettes: dict[str, Color] = {
-        "grass": (98, 139, 69, 255),
-        "plains": (126, 145, 77, 255),
-        "forest": (43, 81, 46, 255),
-        "mire": (63, 78, 58, 255),
-        "swamp": (48, 66, 53, 255),
-        "hills": (113, 104, 75, 255),
-        "ridge": (96, 91, 66, 255),
-        "highland": (113, 103, 72, 255),
-    }
-    canvas = Canvas()
-    canvas.fill_noise(palettes[terrain_id], rng, 7)
-
-    if terrain_id in ("grass", "plains"):
-        highlight = (172, 194, 92, 96) if terrain_id == "grass" else (200, 181, 88, 105)
-        shadow = (54, 95, 46, 82) if terrain_id == "grass" else (93, 99, 52, 78)
-        for _i in range(18):
-            tuft(canvas, rng.randint(5, 59), rng.randint(18, 61), vary(highlight, 12, rng), rng.uniform(0.45, 0.95))
-        if variant == "worn":
-            canvas.line(2, 42 + rng.randint(-3, 3), 62, 25 + rng.randint(-4, 4), (128, 113, 68, 88), 7.0)
-            canvas.line(2, 43, 62, 26, (206, 178, 103, 58), 2.0)
-        elif variant in ("field", "dry"):
-            for y in [18, 32, 47]:
-                canvas.line(0, y + rng.randint(-2, 2), 64, y + rng.randint(-2, 2), shadow, 1.4)
-
-    elif terrain_id == "forest":
-        for _i in range(14):
-            cx = rng.randint(7, 58)
-            cy = rng.randint(11, 54)
-            canvas.circle(cx, cy, rng.uniform(6.0, 10.0), vary((24, 63, 31, 160), 10, rng))
-            canvas.circle(cx - 2, cy - 3, rng.uniform(3.2, 5.5), vary((67, 116, 54, 96), 8, rng))
-        for _i in range(9):
-            canvas.line(rng.randint(6, 58), rng.randint(18, 58), rng.randint(6, 58), rng.randint(18, 58), (57, 38, 23, 94), 2.2)
-        if variant == "edge":
-            canvas.rect(0, 0, 64, 12, (105, 133, 66, 58))
-
-    elif terrain_id in ("mire", "swamp"):
-        water = (45, 89, 88, 126) if terrain_id == "mire" else (32, 74, 75, 145)
-        reed = (139, 154, 75, 120)
-        mud = (53, 45, 34, 94)
-        pool_count = 4 if variant == "pool" else 3
-        for _i in range(pool_count):
-            canvas.ellipse(rng.randint(9, 56), rng.randint(12, 54), rng.uniform(6, 12), rng.uniform(3, 7), water)
-        for _i in range(20):
-            x = rng.randint(4, 60)
-            y = rng.randint(24, 62)
-            canvas.line(x, y, x + rng.uniform(-3, 3), y - rng.uniform(7, 17), vary(reed, 16, rng), rng.uniform(1.0, 1.8))
-        for _i in range(8):
-            canvas.ellipse(rng.randint(8, 58), rng.randint(11, 57), rng.uniform(3, 8), rng.uniform(1.8, 4.2), mud)
-        if variant in ("deep", "mud"):
-            canvas.line(4, 52, 58, 44, (30, 34, 29, 92), 5.0)
-
-    elif terrain_id in ("hills", "ridge", "highland"):
-        contour = (179, 158, 99, 96)
-        shadow = (63, 56, 41, 86)
-        for offset in [8, 22, 37, 51]:
-            canvas.line(-4, offset + rng.randint(-2, 2), 22, offset - 7 + rng.randint(-2, 2), contour, 2.0)
-            canvas.line(22, offset - 7, 68, offset + rng.randint(-2, 3), contour, 2.0)
-        if terrain_id == "ridge" or variant in ("ridgelet", "ridge"):
-            canvas.line(5, 55, 31, 15, shadow, 7.0)
-            canvas.line(31, 15, 61, 50, (170, 152, 101, 104), 4.0)
-            canvas.line(31, 15, 45, 49, (43, 38, 30, 82), 3.0)
-        if variant in ("scrub", "plateau", "slope"):
-            for _i in range(11):
-                tuft(canvas, rng.randint(7, 59), rng.randint(20, 60), (114, 127, 65, 98), rng.uniform(0.35, 0.68))
-        for _i in range(9):
-            pebble(canvas, rng.randint(7, 58), rng.randint(12, 58), (70, 65, 52, 110), rng.uniform(0.65, 1.15))
-
-    canvas.rect(0, 0, 64, 2, (255, 255, 255, 15))
-    canvas.rect(0, 62, 64, 64, (0, 0, 0, 18))
-    return canvas
+def apply_grade(image: Image.Image, grade: Grade) -> Image.Image:
+    result = image.convert("RGB")
+    if grade.saturation != 1.0:
+        result = ImageEnhance.Color(result).enhance(grade.saturation)
+    if grade.contrast != 1.0:
+        result = ImageEnhance.Contrast(result).enhance(grade.contrast)
+    if grade.brightness != 1.0:
+        result = ImageEnhance.Brightness(result).enhance(grade.brightness)
+    if grade.tint is not None and grade.tint_strength > 0.0:
+        tint = Image.new("RGB", result.size, grade.tint)
+        result = Image.blend(result, tint, grade.tint_strength)
+    return result.filter(ImageFilter.UnsharpMask(radius=0.7, percent=55, threshold=3))
 
 
-def make_edge_tile(group: str, direction: str) -> Canvas:
-    rng = random.Random(f"edge:{group}:{direction}:10184")
-    colors = {
-        "grasslands": (73, 103, 52, 150),
-        "forest": (19, 45, 27, 180),
-        "mire": (35, 48, 40, 170),
-        "highland": (73, 68, 51, 165),
-    }
-    detail = {
-        "grasslands": (162, 183, 86, 82),
-        "forest": (51, 95, 42, 92),
-        "mire": (122, 137, 72, 88),
-        "highland": (169, 151, 98, 76),
-    }
-    canvas = Canvas()
-    base = colors[group]
-    horizontal = direction in ("n", "s")
-    for i in range(14):
-        alpha = max(0, base[3] - i * 9)
-        strip_color = (base[0], base[1], base[2], alpha)
-        if direction == "n":
-            canvas.rect(0, i, 64, i + 1, strip_color)
-        elif direction == "s":
-            canvas.rect(0, 63 - i, 64, 64 - i, strip_color)
-        elif direction == "w":
-            canvas.rect(i, 0, i + 1, 64, strip_color)
-        elif direction == "e":
-            canvas.rect(63 - i, 0, 64 - i, 64, strip_color)
-    for _i in range(12):
-        if horizontal:
-            x = rng.randint(0, 63)
-            y = rng.randint(0, 14) if direction == "n" else rng.randint(49, 63)
-        else:
-            x = rng.randint(0, 14) if direction == "w" else rng.randint(49, 63)
-            y = rng.randint(0, 63)
-        if group == "forest":
-            canvas.circle(x, y, rng.uniform(2.0, 4.0), vary(detail[group], 12, rng))
-        elif group == "mire":
-            canvas.line(x, y + 4, x + rng.uniform(-2, 2), y - 5, vary(detail[group], 14, rng), 1.5)
-        elif group == "highland":
-            canvas.line(x - 4, y, x + 4, y + rng.uniform(-2, 2), vary(detail[group], 10, rng), 1.4)
-        else:
-            tuft(canvas, x, y + 4, vary(detail[group], 10, rng), 0.45)
-    return canvas
+def save_rgba(image: Image.Image, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    image.convert("RGBA").save(path)
 
 
-def make_road_piece(kind: str) -> Canvas:
-    canvas = Canvas()
-    shadow = (45, 32, 21, 135)
-    edge = (113, 83, 49, 190)
-    dirt = (180, 149, 88, 210)
-    center = (219, 191, 121, 120)
+def build_base_tiles() -> None:
+    for spec in BASE_TILE_SPECS:
+        tile = crop_grid_tile(spec.source, spec.grid, spec.crop_size)
+        tile = soften_tile_edges(tile)
+        tile = apply_grade(tile, spec.grade)
+        save_rgba(tile, OUT / "base" / f"{spec.output}.png")
 
-    def draw_segment(x0: float, y0: float, x1: float, y1: float) -> None:
-        canvas.line(x0, y0 + 1, x1, y1 + 1, shadow, 17.5)
-        canvas.line(x0, y0, x1, y1, edge, 14.5)
-        canvas.line(x0, y0, x1, y1, dirt, 11.5)
-        canvas.line(x0, y0, x1, y1, center, 2.0)
 
-    if kind == "center":
-        canvas.circle(32, 32, 10.5, shadow)
-        canvas.circle(32, 32, 8.5, edge)
-        canvas.circle(32, 32, 6.8, dirt)
-        canvas.circle(32, 32, 2.2, center)
+def directional_distance(direction: str, x: int, y: int) -> int:
+    if direction == "n":
+        return y
+    if direction == "s":
+        return SIZE - 1 - y
+    if direction == "w":
+        return x
+    if direction == "e":
+        return SIZE - 1 - x
+    raise ValueError(f"Unsupported edge direction: {direction}")
+
+
+def edge_alpha(direction: str, x: int, y: int, max_alpha: int, width: int = 15) -> int:
+    distance = directional_distance(direction, x, y)
+    if distance >= width:
+        return 0
+    falloff = 1.0 - (distance / float(width))
+    secondary = 1.0
+    if direction in ("n", "s"):
+        secondary = 0.88 + (0.12 * ((x * 37 + y * 11) % 7) / 6.0)
     else:
-        endpoints = {
-            "n": (32, -2),
-            "e": (66, 32),
-            "s": (32, 66),
-            "w": (-2, 32),
-            "ne": (66, -2),
-            "se": (66, 66),
-            "sw": (-2, 66),
-            "nw": (-2, -2),
-        }
-        draw_segment(32, 32, endpoints[kind][0], endpoints[kind][1])
-    rng = random.Random(f"road:{kind}:10184")
-    for _i in range(11):
-        canvas.circle(rng.randint(10, 54), rng.randint(10, 54), rng.uniform(0.7, 1.4), (92, 62, 36, 75))
-    return canvas
+        secondary = 0.88 + (0.12 * ((x * 13 + y * 41) % 7) / 6.0)
+    return int(round(max_alpha * (falloff**1.45) * secondary))
+
+
+def build_edge_overlays() -> None:
+    for group, (source_name, grid, grade, max_alpha) in EDGE_SPECS.items():
+        texture = crop_grid_tile(source_name, grid, 92)
+        texture = apply_grade(soften_tile_edges(texture), grade).convert("RGBA")
+        pixels = texture.load()
+        for direction in ("n", "e", "s", "w"):
+            overlay = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+            overlay_pixels = overlay.load()
+            for y in range(SIZE):
+                for x in range(SIZE):
+                    alpha = edge_alpha(direction, x, y, max_alpha)
+                    if alpha <= 0:
+                        continue
+                    r, g, b, _a = pixels[x, y]
+                    overlay_pixels[x, y] = (r, g, b, alpha)
+            save_rgba(overlay, OUT / "edges" / f"{group}_edge_{direction}.png")
+
+
+def make_mask_line(end: tuple[float, float], width: float, center_radius: float = 0.0, offset_y: float = 0.0) -> Image.Image:
+    scale = 4
+    mask = Image.new("L", (SIZE * scale, SIZE * scale), 0)
+    draw = ImageDraw.Draw(mask)
+    start = (32.0 * scale, (32.0 + offset_y) * scale)
+    scaled_end = (end[0] * scale, (end[1] + offset_y) * scale)
+    draw.line((start, scaled_end), fill=255, width=max(1, int(round(width * scale))))
+    if center_radius > 0.0:
+        radius = center_radius * scale
+        draw.ellipse((start[0] - radius, start[1] - radius, start[0] + radius, start[1] + radius), fill=255)
+    return mask.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
+
+
+def make_mask_circle(radius: float, offset_y: float = 0.0) -> Image.Image:
+    scale = 4
+    mask = Image.new("L", (SIZE * scale, SIZE * scale), 0)
+    draw = ImageDraw.Draw(mask)
+    center = (32.0 * scale, (32.0 + offset_y) * scale)
+    scaled_radius = radius * scale
+    draw.ellipse(
+        (
+            center[0] - scaled_radius,
+            center[1] - scaled_radius,
+            center[0] + scaled_radius,
+            center[1] + scaled_radius,
+        ),
+        fill=255,
+    )
+    return mask.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
+
+
+def scaled_mask(mask: Image.Image, alpha: int) -> Image.Image:
+    return mask.point(lambda value: int((value * alpha) / 255))
+
+
+def composite_color(canvas: Image.Image, color: tuple[int, int, int], mask: Image.Image, alpha: int) -> None:
+    layer = Image.new("RGBA", (SIZE, SIZE), (*color, 0))
+    layer.putalpha(scaled_mask(mask, alpha))
+    canvas.alpha_composite(layer)
+
+
+def composite_texture(canvas: Image.Image, texture: Image.Image, mask: Image.Image, alpha: int) -> None:
+    layer = texture.convert("RGBA")
+    layer.putalpha(scaled_mask(mask, alpha))
+    canvas.alpha_composite(layer)
+
+
+def road_material() -> Image.Image:
+    source = load_source("grasslands")
+    road_centers = (
+        (8 * SOURCE_TILE_SIZE + 32, 2 * SOURCE_TILE_SIZE + 32),
+        (18 * SOURCE_TILE_SIZE + 32, 3 * SOURCE_TILE_SIZE + 32),
+        (8 * SOURCE_TILE_SIZE + 32, 8 * SOURCE_TILE_SIZE + 32),
+        (19 * SOURCE_TILE_SIZE + 32, 8 * SOURCE_TILE_SIZE + 32),
+    )
+    swatches = [wrapped_crop(source, center, 80).resize((SIZE, SIZE), Image.Resampling.LANCZOS) for center in road_centers]
+    material = Image.blend(swatches[0], swatches[1], 0.35)
+    material = Image.blend(material, swatches[2], 0.25)
+    material = Image.blend(material, swatches[3], 0.20)
+    material = apply_grade(material, Grade(1.06, 1.12, 0.72, (154, 118, 77), 0.36))
+    return soften_tile_edges(material, 6)
+
+
+def road_layer(kind: str, material: Image.Image) -> Image.Image:
+    canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+    if kind == "center":
+        shadow = make_mask_circle(6.8, 1.0)
+        edge = make_mask_circle(5.6)
+        core = make_mask_circle(4.4)
+        highlight = make_mask_circle(1.4)
+    else:
+        end = ROAD_DIRECTIONS[kind]
+        shadow = make_mask_line(end, 10.5, 4.5, 0.9)
+        edge = make_mask_line(end, 8.2, 3.8)
+        core = make_mask_line(end, 5.9, 2.9)
+        highlight = make_mask_line(end, 1.25, 0.8)
+    composite_color(canvas, (46, 34, 24), shadow, 82)
+    composite_color(canvas, (89, 64, 42), edge, 156)
+    composite_texture(canvas, material, core, 202)
+    composite_color(canvas, (218, 185, 122), highlight, 64)
+    return canvas.filter(ImageFilter.UnsharpMask(radius=0.45, percent=35, threshold=2))
+
+
+def build_road_overlays() -> None:
+    material = road_material()
+    save_rgba(road_layer("center", material), OUT / "roads" / "road_dirt_center.png")
+    for kind in ROAD_DIRECTIONS:
+        save_rgba(road_layer(kind, material), OUT / "roads" / f"road_dirt_{kind}.png")
+
+
+def assert_sources_exist(paths: Iterable[Path]) -> None:
+    missing = [path for path in paths if not path.exists()]
+    if missing:
+        formatted = "\n".join(str(path) for path in missing)
+        raise SystemExit(f"Missing generated terrain source art:\n{formatted}")
 
 
 def build() -> None:
-    base_variants = {
-        "grass": ["open", "field", "worn"],
-        "plains": ["open", "dry", "worn"],
-        "forest": ["canopy", "copse", "edge"],
-        "mire": ["reeds", "mud", "pool"],
-        "swamp": ["deep", "mud", "pool"],
-        "hills": ["slope", "scrub", "ridgelet"],
-        "ridge": ["ridge", "scree", "pass"],
-        "highland": ["plateau", "scrub", "pass"],
-    }
-    for terrain_id, variants in base_variants.items():
-        for variant in variants:
-            make_base_tile(terrain_id, variant).write(OUT / "base" / f"{terrain_id}_{variant}.png")
-
-    for group in ["grasslands", "forest", "mire", "highland"]:
-        for direction in ["n", "e", "s", "w"]:
-            make_edge_tile(group, direction).write(OUT / "edges" / f"{group}_edge_{direction}.png")
-
-    for kind in ["center", "n", "e", "s", "w", "ne", "se", "sw", "nw"]:
-        make_road_piece(kind).write(OUT / "roads" / f"road_dirt_{kind}.png")
+    assert_sources_exist(SOURCE_IMAGES.values())
+    build_base_tiles()
+    build_edge_overlays()
+    build_road_overlays()
 
 
 if __name__ == "__main__":

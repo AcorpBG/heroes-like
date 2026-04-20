@@ -260,6 +260,34 @@ Limits:
 - This is only the diagonal overworld movement slice, not a broader pathfinding, movement-cost, terrain-cost, or camera redesign.
 - Diagonal movement currently uses the existing one-point step economy; any future terrain-weighted or corner-cutting rule should be a separate documented slice.
 
+## Current Implementation Slice: Generated Source Terrain Art Replacement
+Status: completed on 2026-04-20 as a narrow visual correction after AcOrP rejected the synthetic local tile style.
+
+Purpose:
+- Replace the bad-looking synthetic terrain tile pieces with checked-in runtime PNGs cut and adapted from the previously generated overworld source terrain images.
+- Preserve the existing authored terrain grammar and `OverworldMapView` renderer contract: 64x64 base variants, directional biome-edge overlays, and structural `road_dirt` overlay pieces.
+- Keep scope to the terrain families already covered by the first art slice: grass/plains, forest, mire/swamp, hills/ridge/highland, road overlays, and edge transitions.
+
+Implemented:
+- Replaced `tools/build_overworld_terrain_tiles.py` with a source-driven builder that cuts, grades, edge-softens, and writes the renderer's existing 64x64 runtime tile paths from the generated terrain source sheets.
+- Rebuilt the checked-in base tiles for grass/plains, forest, mire/swamp, and hills/ridge/highland from generated source patches while avoiding the source sheets' oversized painted road strokes in base terrain.
+- Rebuilt directional biome-edge overlays as compact feathered source-art strips instead of synthetic bands.
+- Rebuilt `road_dirt` center and connector overlays from generated road material with much narrower masks, and reduced the renderer/grammar fallback road width from 0.22 to 0.14.
+- Updated the overworld art manifest and terrain grammar summary to record that the active runtime tile pieces are cut/adapted from generated terrain source art.
+- Left object sprite mappings and procedural object fallbacks unchanged.
+- Did not use `/root/.openclaw/workspace/tmp/nanobanana2-menu-try/`; inspection showed menu images, not relevant terrain source art.
+
+Validation:
+- `python3 -m py_compile tools/build_overworld_terrain_tiles.py`
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a full overworld art pass for water/coast, badlands, ash/lava, snow/frost, cavern/underway, object footprints, or road movement rules.
+- Visual quality still needs manual live-client review after the checked-in source-derived tiles land.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
