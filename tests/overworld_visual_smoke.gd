@@ -403,6 +403,7 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	var readability: Dictionary = presentation.get("marker_readability", {})
 	var object_kinds: Array = readability.get("object_kinds", [])
 	var is_town := expected_kind == "town"
+	var uses_procedural_fallback := bool(readability.get("procedural_world_silhouette", false))
 	if expected_kind not in object_kinds:
 		push_error("Overworld smoke: expected %s marker kind was missing. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
@@ -415,13 +416,16 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		push_error("Overworld smoke: %s marker no longer reports object-first footprint presence. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
-	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else "foreground_ground_lip"
+	var expected_occlusion := "town_sprite_settled_without_base_ellipse" if is_town else ("ground_contact_without_foreground_lip" if uses_procedural_fallback else "foreground_ground_lip")
 	if String(readability.get("occlusion_model", "")) != expected_occlusion:
 		push_error("Overworld smoke: %s marker no longer reports the expected foreground contact model. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
 	if is_town:
 		if not _assert_town_grounding_correction(readability, presentation):
+			return false
+	elif uses_procedural_fallback:
+		if not _assert_procedural_fallback_grounding(readability, expected_kind, presentation):
 			return false
 	elif String(readability.get("anchor_shape", "")) != "terrain_ellipse_footprint":
 		push_error("Overworld smoke: %s marker lacks the terrain-grounded anchor needed to read against the map. presentation=%s" % [expected_kind, presentation])
@@ -484,7 +488,9 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: town presentation lacks blocked non-entry tiles or the entry apron/gate cue. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < 0.60 or float(readability.get("footprint_anchor_height_fraction", 0.0)) < 0.20:
+	var min_anchor_width := 0.40 if uses_procedural_fallback else 0.60
+	var min_anchor_height := 0.12 if uses_procedural_fallback else 0.20
+	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < min_anchor_width or float(readability.get("footprint_anchor_height_fraction", 0.0)) < min_anchor_height:
 		push_error("Overworld smoke: %s footprint anchor is too small to read as placed ground contact. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
@@ -516,10 +522,58 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			get_tree().quit(1)
 			return false
 		var visible_grid_suppressed := String(readability.get("visible_terrain_grid_mode", "")) == "fog_boundary_only" and float(readability.get("grid_alpha", 1.0)) <= 0.08 and not bool(readability.get("explored_intertile_seams", true))
-		if not is_town and (float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or not visible_grid_suppressed):
+		var anchor_floor := 0.16 if uses_procedural_fallback else 0.30
+		if not is_town and (float(readability.get("anchor_alpha", 0.0)) < anchor_floor or float(readability.get("outline_alpha", 0.0)) < 0.85 or not visible_grid_suppressed):
 			push_error("Overworld smoke: visible %s marker grounding or map contrast regressed. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
+	return true
+
+func _assert_procedural_fallback_grounding(readability: Dictionary, expected_kind: String, presentation: Dictionary) -> bool:
+	if String(readability.get("anchor_shape", "")) != "family_terrain_contact_scuffs":
+		push_error("Overworld smoke: procedural %s fallback still reports the old terrain-ellipse marker anchor. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("procedural_fallback_grounding", false)) or String(readability.get("procedural_grounding_model", "")) != "family_specific_contact_scuffs_no_marker_plate":
+		push_error("Overworld smoke: procedural %s fallback does not expose the family-specific contact-scuff grounding model. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("contrast_plate", true)) or bool(readability.get("shared_marker_plate", true)) or float(readability.get("plate_alpha", 1.0)) > 0.01 or float(readability.get("ring_alpha", 1.0)) > 0.01:
+		push_error("Overworld smoke: procedural %s fallback still exposes the shared marker plate or ring. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("terrain_quieting_bed", true)) or String(readability.get("placement_bed_model", "")) != "" or float(readability.get("placement_bed_alpha", 1.0)) > 0.01:
+		push_error("Overworld smoke: procedural %s fallback still reports the broad terrain quieting bed. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("procedural_contact_disturbance", false)) or String(readability.get("procedural_contact_disturbance_model", "")) != "thin_terrain_contact_disturbance":
+		push_error("Overworld smoke: procedural %s fallback lacks the thin terrain contact disturbance. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if float(readability.get("procedural_contact_disturbance_alpha", 0.0)) < 0.16 or float(readability.get("procedural_contact_disturbance_alpha", 1.0)) > 0.24:
+		push_error("Overworld smoke: procedural %s fallback contact disturbance alpha is outside the grounded-object range. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("upper_mass_backdrop", true)) or String(readability.get("upper_mass_backdrop_model", "")) != "" or bool(readability.get("vertical_mass_shadow", true)):
+		push_error("Overworld smoke: procedural %s fallback still reports upper-mass backdrop/shadow support. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("foreground_occlusion_lip", true)) or not bool(readability.get("procedural_contact_marks", false)):
+		push_error("Overworld smoke: procedural %s fallback still reports the foreground lip instead of contact marks. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if String(readability.get("depth_cue_model", "")) != "localized_contact_shadow_without_backdrop":
+		push_error("Overworld smoke: procedural %s fallback does not report localized contact-shadow depth. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("directional_contact_shadow", true)) or not bool(readability.get("localized_contact_shadow", false)) or String(readability.get("contact_shadow_model", "")) != "localized_object_contact_shadow":
+		push_error("Overworld smoke: procedural %s fallback still reports the shared directional cast shadow. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if float(readability.get("contact_shadow_alpha", 0.0)) < 0.24 or bool(readability.get("base_occlusion_pads", true)) or float(readability.get("base_occlusion_alpha", 1.0)) > 0.01:
+		push_error("Overworld smoke: procedural %s fallback lacks localized contact shadow or still reports base occlusion pads. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_town_grounding_correction(readability: Dictionary, presentation: Dictionary) -> bool:
@@ -732,6 +786,14 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	if String(fallback_art.get("fallback_silhouette_model", "")) != "family_specific_procedural_world_object":
 		push_error("Overworld smoke: procedural fallback object did not report the family-specific world silhouette model. presentation=%s" % fallback_presentation)
+		get_tree().quit(1)
+		return false
+	if String(fallback_art.get("fallback_grounding_model", "")) != "family_specific_contact_scuffs_no_marker_plate" or bool(fallback_art.get("fallback_shared_marker_plate", true)) or bool(fallback_art.get("fallback_upper_mass_backdrop", true)) or bool(fallback_art.get("fallback_foreground_lip", true)):
+		push_error("Overworld smoke: procedural fallback object did not report the no-plate/no-backdrop/no-lip grounding correction. presentation=%s" % fallback_presentation)
+		get_tree().quit(1)
+		return false
+	if String(fallback_art.get("fallback_contact_shadow_model", "")) != "localized_object_contact_shadow":
+		push_error("Overworld smoke: procedural fallback object did not report localized contact shadow grounding. presentation=%s" % fallback_presentation)
 		get_tree().quit(1)
 		return false
 	return true

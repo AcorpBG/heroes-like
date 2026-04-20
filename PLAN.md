@@ -622,6 +622,31 @@ Limits:
 - This is not a terrain palette, road art, fog-of-war, pathing, save, object, town, hero, or site behavior change.
 - Manual visual review is still needed before treating all supported viewports and biomes as polished.
 
+## Current Implementation Slice: Overworld Procedural Object Grounding
+Status: completed on 2026-04-20 as a narrow presentation-only correction after resource/artifact/encounter fallbacks still read like staged marker medallions.
+
+Purpose:
+- Move unmapped procedural resource-site, artifact, and unresolved encounter objects off the shared marker-plate, rear-backdrop, and foreground-lip path.
+- Keep mapped overworld sprites, town grounding, hero presence, terrain, roads, fog, panning, pathing, and gameplay behavior unchanged.
+- Prefer family-specific grounding and material color cues over a broad renderer rollback.
+
+Implemented:
+- Added a fallback-only grounding path in `OverworldMapView` with thin terrain contact disturbance, localized contact shadows, small contact marks, and family-specific resource material tinting.
+- Removed the shared marker plate/ring, upper-mass backdrop, vertical mass shadow, foreground ground lip, and base occlusion pads from procedural resource, artifact, and encounter fallback drawing.
+- Kept mapped object sprites on the existing footprint-scaled sprite settlement path and kept town/hero no-ellipse corrections intact.
+- Updated overworld art manifest metadata and River Pass/Ninefold smoke presentation assertions to distinguish mapped sprites from no-plate procedural fallbacks.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final object art or a new sprite atlas.
+- Procedural fallback silhouettes remain compact placeholders; this slice only changes how they are grounded into the map surface.
+- No movement, pathing, fog, save/load, battle, town, resource-site, artifact, encounter, terrain, road, or seam behavior changed.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

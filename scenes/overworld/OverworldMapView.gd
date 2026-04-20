@@ -65,6 +65,12 @@ const OBJECT_PRESENCE_MODEL := "footprint_scaled_world_object"
 const OBJECT_OCCLUSION_MODEL := "foreground_ground_lip"
 const OBJECT_SPRITE_SETTLEMENT_MODEL := "footprint_scaled_sprite_with_ground_lip"
 const OBJECT_PROCEDURAL_FALLBACK_MODEL := "family_specific_procedural_world_object"
+const OBJECT_PROCEDURAL_GROUNDING_MODEL := "family_specific_contact_scuffs_no_marker_plate"
+const OBJECT_PROCEDURAL_ANCHOR_STYLE := "family_terrain_contact_scuffs"
+const OBJECT_PROCEDURAL_OCCLUSION_MODEL := "ground_contact_without_foreground_lip"
+const OBJECT_PROCEDURAL_DEPTH_CUE_MODEL := "localized_contact_shadow_without_backdrop"
+const OBJECT_PROCEDURAL_CONTACT_MODEL := "localized_object_contact_shadow"
+const OBJECT_PROCEDURAL_DISTURBANCE_MODEL := "thin_terrain_contact_disturbance"
 const OBJECT_DEPTH_CUE_MODEL := "footprint_cast_shadow_with_base_occlusion"
 const OBJECT_CONTACT_SHADOW_MODEL := "directional_footprint_cast_shadow"
 const OBJECT_BASE_OCCLUSION_MODEL := "foreground_base_occlusion_pads"
@@ -100,6 +106,10 @@ const OBJECT_UPPER_BACKDROP_VISIBLE := Color(0.018, 0.022, 0.015, 0.26)
 const OBJECT_UPPER_BACKDROP_MEMORY := Color(0.20, 0.36, 0.38, 0.26)
 const OBJECT_VERTICAL_MASS_SHADOW_VISIBLE := Color(0.010, 0.012, 0.008, 0.18)
 const OBJECT_VERTICAL_MASS_SHADOW_MEMORY := Color(0.22, 0.40, 0.42, 0.18)
+const OBJECT_PROCEDURAL_CONTACT_SHADOW_VISIBLE := Color(0.016, 0.013, 0.009, 0.27)
+const OBJECT_PROCEDURAL_CONTACT_SHADOW_MEMORY := Color(0.20, 0.36, 0.38, 0.30)
+const OBJECT_PROCEDURAL_DISTURBANCE_VISIBLE_ALPHA := 0.18
+const OBJECT_PROCEDURAL_DISTURBANCE_MEMORY_ALPHA := 0.22
 const HERO_CONTACT_SHADOW_VISIBLE := Color(0.018, 0.014, 0.010, 0.34)
 const HERO_BOOT_OCCLUSION_VISIBLE := Color(0.18, 0.115, 0.045, 0.38)
 const HERO_GROUND_HIGHLIGHT_VISIBLE := Color(0.78, 0.66, 0.34, 0.20)
@@ -785,10 +795,9 @@ func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = fal
 	var profile := _resource_object_profile(node)
 	var footprint := _object_profile_footprint(profile)
 	var family := String(profile.get("family", "pickup"))
-	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint), footprint, tile)
-	var marker_color := _remembered_marker_color(RESOURCE_COLOR) if remembered else RESOURCE_COLOR
+	var anchor := _draw_procedural_object_grounding(rect, tile, family, footprint, remembered)
+	var marker_color := _procedural_resource_marker_color(family, remembered)
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	_draw_upper_mass_backdrop(anchor, family, remembered, footprint)
 	match family:
 		"neutral_dwelling", "repeatable_service", "faction_outpost":
 			_draw_dwelling_silhouette(rect, marker_color, outline_color, remembered)
@@ -804,16 +813,15 @@ func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = fal
 			_draw_shrine_silhouette(rect, marker_color, outline_color, remembered)
 		_:
 			_draw_pickup_silhouette(rect, marker_color, outline_color, remembered)
-	_draw_foreground_occlusion_lip(anchor, remembered)
+	_draw_procedural_contact_marks(anchor, family, remembered)
 
 func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var footprint := Vector2i(1, 1)
-	var anchor := _draw_marker_plate(rect, remembered, MARKER_PLATE_RADIUS_FACTOR, footprint, tile)
+	var anchor := _draw_procedural_object_grounding(rect, tile, "artifact", footprint, remembered)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
 	var marker_color := _remembered_marker_color(ARTIFACT_COLOR) if remembered else ARTIFACT_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	_draw_upper_mass_backdrop(anchor, "artifact", remembered, footprint)
 	var pedestal = Rect2(rect.position + rect.size * Vector2(0.37, 0.56), rect.size * Vector2(0.26, 0.15))
 	var lid = Rect2(rect.position + rect.size * Vector2(0.33, 0.48), rect.size * Vector2(0.34, 0.10))
 	draw_rect(pedestal, marker_color, true)
@@ -832,16 +840,15 @@ func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i
 	])
 	draw_colored_polygon(gleam, Color(1.0, 0.90, 0.46, 0.62 if remembered else 0.95))
 	draw_polyline(PackedVector2Array([gleam[0], gleam[1], gleam[2], gleam[3], gleam[4], gleam[5], gleam[6], gleam[7], gleam[0]]), outline_color, maxf(1.6, extent * 0.026))
-	_draw_foreground_occlusion_lip(anchor, remembered)
+	_draw_procedural_contact_marks(anchor, "artifact", remembered)
 
 func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var footprint := Vector2i(1, 1)
-	var anchor := _draw_marker_plate(rect, remembered, 0.34, footprint, tile)
+	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", footprint, remembered)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
 	var marker_color := _remembered_marker_color(ENCOUNTER_COLOR) if remembered else ENCOUNTER_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	_draw_upper_mass_backdrop(anchor, "encounter", remembered, footprint)
 	var tent := PackedVector2Array([
 		rect.position + rect.size * Vector2(0.27, 0.66),
 		rect.position + rect.size * Vector2(0.50, 0.33),
@@ -861,7 +868,7 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 		center + Vector2(extent * 0.32, -extent * 0.20),
 		center + Vector2(extent * 0.17, -extent * 0.14),
 	]), Color(0.92, 0.30, 0.24, 0.68 if remembered else 0.96))
-	_draw_foreground_occlusion_lip(anchor, remembered)
+	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 	var anchor := _draw_hero_grounding_anchor(rect, tile)
@@ -1070,6 +1077,91 @@ func _draw_shrine_silhouette(rect: Rect2, marker_color: Color, outline_color: Co
 	draw_rect(cap, _scaled_color(marker_color, 1.12), true)
 	draw_rect(cap, outline_color, false, maxf(1.5, extent * 0.024))
 	draw_circle(rect.position + rect.size * Vector2(0.50, 0.25), maxf(2.6, extent * 0.055), Color(0.98, 0.94, 0.72, 0.48 if remembered else 0.78))
+
+func _draw_procedural_object_grounding(rect: Rect2, tile: Vector2i, family: String, footprint: Vector2i, remembered: bool) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var normalized_footprint := _normalized_footprint(footprint)
+	var fraction_metrics := _procedural_grounding_fraction_metrics(family, normalized_footprint)
+	var center := rect.position + rect.size * Vector2(0.50, _procedural_ground_center_y_factor(family))
+	var radii := Vector2(
+		maxf(4.0, extent * float(fraction_metrics.get("half_width", 0.28))),
+		maxf(2.0, extent * float(fraction_metrics.get("half_height", 0.06)))
+	)
+	_draw_procedural_ground_disturbance(tile, center, radii, family, normalized_footprint, remembered, extent)
+	_draw_procedural_contact_shadow(center, radii, family, normalized_footprint, remembered, extent)
+	if remembered:
+		_draw_memory_echo_marks(center, minf(radii.x * 0.82, extent * 0.30), extent)
+	return {
+		"center": center,
+		"radii": radii,
+		"extent": extent,
+		"footprint": normalized_footprint,
+		"family": family,
+	}
+
+func _draw_procedural_ground_disturbance(tile: Vector2i, center: Vector2, radii: Vector2, family: String, footprint: Vector2i, remembered: bool, extent: float) -> void:
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var terrain := _terrain_at(tile) if tile.x >= 0 and tile.y >= 0 else ""
+	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
+	var detail_color: Color = _terrain_color(terrain, "detail_color", Color(0.70, 0.62, 0.38, 1.0))
+	var alpha := OBJECT_PROCEDURAL_DISTURBANCE_MEMORY_ALPHA if remembered else OBJECT_PROCEDURAL_DISTURBANCE_VISIBLE_ALPHA
+	var bed_color := _placement_bed_color(base_color, detail_color, remembered, alpha)
+	var segment_count := 14 if family in ["artifact", "pickup"] else 18
+	draw_colored_polygon(
+		_placement_bed_points(tile + Vector2i(7, 11), center + Vector2(0.0, radii.y * 0.10), Vector2(radii.x * 1.04, radii.y * 1.28), footprint, segment_count),
+		bed_color
+	)
+	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, 0.24 if remembered else 0.20)
+	var width := maxf(1.0, extent * 0.010)
+	draw_line(center + Vector2(-radii.x * 0.74, radii.y * 0.02), center + Vector2(-radii.x * 0.36, radii.y * 0.28), scuff_color, width)
+	draw_line(center + Vector2(-radii.x * 0.08, radii.y * 0.38), center + Vector2(radii.x * 0.30, radii.y * 0.32), scuff_color, width)
+	draw_line(center + Vector2(radii.x * 0.42, -radii.y * 0.10), center + Vector2(radii.x * 0.78, radii.y * 0.08), scuff_color, width)
+
+func _draw_procedural_contact_shadow(center: Vector2, radii: Vector2, family: String, footprint: Vector2i, remembered: bool, extent: float) -> void:
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var footprint_width := 1.0 + (float(maxi(footprint.x - 1, 0)) * 0.08)
+	var footprint_depth := 1.0 + (float(maxi(footprint.y - 1, 0)) * 0.10)
+	var color := OBJECT_PROCEDURAL_CONTACT_SHADOW_MEMORY if remembered else OBJECT_PROCEDURAL_CONTACT_SHADOW_VISIBLE
+	var points := PackedVector2Array([
+		center + Vector2(-radii.x * 0.64 * footprint_width, -radii.y * 0.12),
+		center + Vector2(-radii.x * 0.44 * footprint_width, radii.y * 0.68 * footprint_depth),
+		center + Vector2(radii.x * 0.20 * footprint_width, radii.y * 0.84 * footprint_depth),
+		center + Vector2(radii.x * 0.72 * footprint_width, radii.y * 0.20),
+		center + Vector2(radii.x * 0.36 * footprint_width, -radii.y * 0.36),
+		center + Vector2(-radii.x * 0.28 * footprint_width, -radii.y * 0.32),
+	])
+	draw_colored_polygon(points, color)
+	if family in ["mine", "guarded_reward_site", "neutral_dwelling", "repeatable_service", "faction_outpost"]:
+		draw_line(center + Vector2(-radii.x * 0.58, radii.y * 0.34), center + Vector2(radii.x * 0.54, radii.y * 0.30), Color(color.r, color.g, color.b, color.a * 0.72), maxf(1.0, extent * 0.012))
+
+func _draw_procedural_contact_marks(anchor: Dictionary, family: String, remembered: bool) -> void:
+	if anchor.is_empty():
+		return
+	var center: Vector2 = anchor.get("center", Vector2.ZERO)
+	var radii: Vector2 = anchor.get("radii", Vector2.ZERO)
+	var extent := float(anchor.get("extent", 0.0))
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var contact_color := Color(0.23, 0.17, 0.09, 0.28)
+	var highlight_color := Color(0.76, 0.64, 0.34, 0.16)
+	if remembered:
+		contact_color = Color(0.64, 0.82, 0.86, 0.32)
+		highlight_color = Color(0.90, 0.98, 1.0, 0.20)
+	var width := maxf(1.0, extent * 0.014)
+	match family:
+		"artifact":
+			draw_line(center + Vector2(-radii.x * 0.52, radii.y * 0.22), center + Vector2(-radii.x * 0.10, radii.y * 0.44), contact_color, width)
+			draw_line(center + Vector2(radii.x * 0.10, radii.y * 0.44), center + Vector2(radii.x * 0.52, radii.y * 0.20), contact_color, width)
+		"encounter":
+			draw_line(center + Vector2(-radii.x * 0.72, radii.y * 0.12), center + Vector2(-radii.x * 0.28, radii.y * 0.48), contact_color, width)
+			draw_line(center + Vector2(radii.x * 0.24, radii.y * 0.48), center + Vector2(radii.x * 0.74, radii.y * 0.10), contact_color, width)
+			draw_line(center + Vector2(-radii.x * 0.12, radii.y * 0.20), center + Vector2(radii.x * 0.18, radii.y * 0.20), highlight_color, maxf(1.0, extent * 0.010))
+		_:
+			draw_line(center + Vector2(-radii.x * 0.64, radii.y * 0.20), center + Vector2(-radii.x * 0.20, radii.y * 0.48), contact_color, width)
+			draw_line(center + Vector2(radii.x * 0.16, radii.y * 0.50), center + Vector2(radii.x * 0.66, radii.y * 0.18), contact_color, width)
+			draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.04), center + Vector2(radii.x * 0.22, radii.y * 0.06), highlight_color, maxf(1.0, extent * 0.010))
 
 func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR, footprint: Vector2i = Vector2i(1, 1), tile: Vector2i = Vector2i(-1, -1)) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1406,6 +1498,68 @@ func _presence_radius_factor(family: String, footprint: Vector2i, fallback: floa
 			if footprint.x > 1 or footprint.y > 1:
 				return maxf(fallback, 0.34)
 	return fallback
+
+func _procedural_ground_center_y_factor(family: String) -> float:
+	match family:
+		"artifact":
+			return 0.70
+		"encounter":
+			return 0.72
+		"scouting_structure", "transit_object", "frontier_shrine":
+			return 0.74
+		"neutral_dwelling", "repeatable_service", "faction_outpost", "mine", "guarded_reward_site":
+			return 0.75
+		_:
+			return 0.72
+
+func _procedural_grounding_fraction_metrics(family: String, footprint: Vector2i) -> Dictionary:
+	var normalized_footprint := _normalized_footprint(footprint)
+	var half_width := 0.28
+	var half_height := 0.055
+	match family:
+		"artifact":
+			half_width = 0.22
+			half_height = 0.046
+		"encounter":
+			half_width = 0.34
+			half_height = 0.070
+		"mine", "guarded_reward_site":
+			half_width = 0.40
+			half_height = 0.072
+		"neutral_dwelling", "repeatable_service", "faction_outpost":
+			half_width = 0.42
+			half_height = 0.070
+		"scouting_structure", "transit_object", "frontier_shrine":
+			half_width = 0.32
+			half_height = 0.060
+		_:
+			half_width = 0.28
+			half_height = 0.055
+	half_width *= 1.0 + (float(normalized_footprint.x - 1) * 0.14)
+	half_height *= 1.0 + (float(normalized_footprint.y - 1) * 0.12)
+	return {
+		"half_width": half_width,
+		"half_height": half_height,
+	}
+
+func _procedural_resource_marker_color(family: String, remembered: bool) -> Color:
+	var color := RESOURCE_COLOR
+	match family:
+		"neutral_dwelling", "repeatable_service", "faction_outpost":
+			color = Color(0.58, 0.43, 0.24, 1.0)
+		"mine":
+			color = Color(0.58, 0.51, 0.38, 1.0)
+		"scouting_structure":
+			color = Color(0.55, 0.60, 0.55, 1.0)
+		"guarded_reward_site":
+			color = Color(0.54, 0.50, 0.42, 1.0)
+		"transit_object":
+			color = Color(0.57, 0.44, 0.27, 1.0)
+		"frontier_shrine":
+			color = Color(0.62, 0.58, 0.42, 1.0)
+		_:
+			color = Color(0.36, 0.70, 0.48, 1.0)
+	return _remembered_marker_color(color) if remembered else color
 
 func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 	var family := String(profile.get("family", "pickup"))
@@ -1915,6 +2069,11 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			"sprite_upper_mass_backdrop": false,
 			"sprite_upper_mass_backdrop_model": "",
 			"sprite_vertical_mass_shadow": false,
+			"fallback_grounding_model": "",
+			"fallback_shared_marker_plate": false,
+			"fallback_upper_mass_backdrop": false,
+			"fallback_foreground_lip": false,
+			"fallback_contact_shadow_model": "",
 			"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 		}
 	var sprite_asset_ids: Array[String] = []
@@ -1944,10 +2103,11 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			sprite_footprints.append({"width": encounter_footprint.x, "height": encounter_footprint.y})
 	var uses_asset_sprite := not sprite_asset_ids.is_empty()
 	var uses_town_sprite := "town" in object_kinds and _town_default_asset_id in sprite_asset_ids
+	var uses_fallback := not uses_asset_sprite and not object_kinds.is_empty()
 	return {
 		"uses_asset_sprite": uses_asset_sprite,
-		"fallback_procedural_marker": not uses_asset_sprite and not object_kinds.is_empty(),
-		"fallback_silhouette_model": OBJECT_PROCEDURAL_FALLBACK_MODEL if not uses_asset_sprite and not object_kinds.is_empty() else "",
+		"fallback_procedural_marker": uses_fallback,
+		"fallback_silhouette_model": OBJECT_PROCEDURAL_FALLBACK_MODEL if uses_fallback else "",
 		"sprite_asset_ids": sprite_asset_ids,
 		"sprite_footprints": sprite_footprints,
 		"remembered_sprite_treatment": "ghosted_sprite_with_ground_anchor" if uses_asset_sprite and not visible else "",
@@ -1960,6 +2120,11 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		"sprite_upper_mass_backdrop": uses_asset_sprite and not uses_town_sprite,
 		"sprite_upper_mass_backdrop_model": "" if uses_town_sprite else (OBJECT_UPPER_BACKDROP_MODEL if uses_asset_sprite else ""),
 		"sprite_vertical_mass_shadow": uses_asset_sprite and not uses_town_sprite,
+		"fallback_grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL if uses_fallback else "",
+		"fallback_shared_marker_plate": false if uses_fallback else null,
+		"fallback_upper_mass_backdrop": false if uses_fallback else null,
+		"fallback_foreground_lip": false if uses_fallback else null,
+		"fallback_contact_shadow_model": OBJECT_PROCEDURAL_CONTACT_MODEL if uses_fallback else "",
 		"town_sprite_grounding_model": TOWN_GROUNDING_MODEL if uses_town_sprite else "",
 		"town_footprint_cue_model": TOWN_FOOTPRINT_CUE_MODEL if uses_town_sprite else "",
 		"town_base_ellipse": false if uses_town_sprite else null,
@@ -1981,6 +2146,7 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var min_symbol_fraction := _minimum_symbol_fraction(object_kinds)
 	var art_payload := _object_art_payload(tile, explored, visible, object_kinds)
 	var uses_asset_sprite := bool(art_payload.get("uses_asset_sprite", false))
+	var uses_procedural_fallback := bool(art_payload.get("fallback_procedural_marker", false))
 	if uses_asset_sprite:
 		min_symbol_fraction = maxf(min_symbol_fraction, OBJECT_SPRITE_EXTENT_FACTOR)
 	var dominant_profile := _dominant_object_profile(tile, object_kinds, has_visible_hero)
@@ -1998,12 +2164,17 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var has_presence := has_object_marker or has_visible_hero
 	var uses_hero_grounding := has_visible_hero and dominant_family == "hero" and not has_object_marker
 	var uses_quiet_town_grounding := has_presence and dominant_family == "town"
-	var uses_shared_grounding := has_presence and not uses_quiet_town_grounding and not uses_hero_grounding
+	var uses_procedural_grounding := has_presence and uses_procedural_fallback and not uses_quiet_town_grounding and not uses_hero_grounding
+	var uses_shared_grounding := has_presence and not uses_quiet_town_grounding and not uses_hero_grounding and not uses_procedural_grounding
 	var hero_anchor_half_width_fraction := 0.28
 	var hero_anchor_half_height_fraction := 0.075
 	if uses_hero_grounding:
 		anchor_half_width_fraction = hero_anchor_half_width_fraction
 		anchor_half_height_fraction = hero_anchor_half_height_fraction
+	if uses_procedural_grounding:
+		var procedural_metrics := _procedural_grounding_fraction_metrics(dominant_family, dominant_footprint)
+		anchor_half_width_fraction = float(procedural_metrics.get("half_width", anchor_half_width_fraction))
+		anchor_half_height_fraction = float(procedural_metrics.get("half_height", anchor_half_height_fraction))
 	var backdrop_metrics := _upper_mass_backdrop_metrics(
 		dominant_family,
 		dominant_footprint,
@@ -2015,7 +2186,7 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"marker_kinds": marker_kinds,
 		"contrast_plate": uses_shared_grounding,
 		"ground_anchor": has_presence,
-		"anchor_shape": TOWN_ANCHOR_STYLE if uses_quiet_town_grounding else (HERO_ANCHOR_STYLE if uses_hero_grounding else (MARKER_GROUND_ANCHOR_STYLE if has_presence else "")),
+		"anchor_shape": TOWN_ANCHOR_STYLE if uses_quiet_town_grounding else (HERO_ANCHOR_STYLE if uses_hero_grounding else (OBJECT_PROCEDURAL_ANCHOR_STYLE if uses_procedural_grounding else (MARKER_GROUND_ANCHOR_STYLE if has_presence else ""))),
 		"presence_model": HERO_PRESENCE_MODEL if uses_hero_grounding else (OBJECT_PRESENCE_MODEL if has_presence else ""),
 		"terrain_quieting_bed": uses_shared_grounding,
 		"placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if uses_shared_grounding else "",
@@ -2023,6 +2194,12 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"placement_bed_alpha": _placement_bed_alpha(remembered) if uses_shared_grounding else 0.0,
 		"placement_bed_terrain_tinted": uses_shared_grounding,
 		"placement_bed_ui_plate": false,
+		"procedural_fallback_grounding": uses_procedural_grounding,
+		"procedural_grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL if uses_procedural_grounding else "",
+		"procedural_contact_disturbance": uses_procedural_grounding,
+		"procedural_contact_disturbance_model": OBJECT_PROCEDURAL_DISTURBANCE_MODEL if uses_procedural_grounding else "",
+		"procedural_contact_disturbance_alpha": (OBJECT_PROCEDURAL_DISTURBANCE_MEMORY_ALPHA if remembered else OBJECT_PROCEDURAL_DISTURBANCE_VISIBLE_ALPHA) if uses_procedural_grounding else 0.0,
+		"shared_marker_plate": uses_shared_grounding,
 		"upper_mass_backdrop": uses_shared_grounding,
 		"upper_mass_backdrop_model": OBJECT_UPPER_BACKDROP_MODEL if uses_shared_grounding else "",
 		"upper_mass_backdrop_shape": "family_scaled_rear_wash" if uses_shared_grounding else "",
@@ -2035,12 +2212,14 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"vertical_mass_shadow": uses_shared_grounding,
 		"vertical_mass_shadow_model": OBJECT_VERTICAL_MASS_SHADOW_MODEL if uses_shared_grounding else "",
 		"vertical_mass_shadow_alpha": (OBJECT_VERTICAL_MASS_SHADOW_MEMORY.a if remembered else OBJECT_VERTICAL_MASS_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0,
-		"foreground_occlusion_lip": has_presence,
-		"occlusion_model": TOWN_GROUNDING_MODEL if uses_quiet_town_grounding else (HERO_GROUNDING_MODEL if uses_hero_grounding else (OBJECT_OCCLUSION_MODEL if has_presence else "")),
-		"depth_cue_model": TOWN_DEPTH_CUE_MODEL if uses_quiet_town_grounding else (HERO_DEPTH_CUE_MODEL if uses_hero_grounding else (OBJECT_DEPTH_CUE_MODEL if has_presence else "")),
+		"foreground_occlusion_lip": uses_shared_grounding,
+		"procedural_contact_marks": uses_procedural_grounding,
+		"occlusion_model": TOWN_GROUNDING_MODEL if uses_quiet_town_grounding else (HERO_GROUNDING_MODEL if uses_hero_grounding else (OBJECT_PROCEDURAL_OCCLUSION_MODEL if uses_procedural_grounding else (OBJECT_OCCLUSION_MODEL if has_presence else ""))),
+		"depth_cue_model": TOWN_DEPTH_CUE_MODEL if uses_quiet_town_grounding else (HERO_DEPTH_CUE_MODEL if uses_hero_grounding else (OBJECT_PROCEDURAL_DEPTH_CUE_MODEL if uses_procedural_grounding else (OBJECT_DEPTH_CUE_MODEL if has_presence else ""))),
 		"directional_contact_shadow": uses_shared_grounding,
-		"contact_shadow_model": OBJECT_CONTACT_SHADOW_MODEL if uses_shared_grounding else "",
-		"contact_shadow_alpha": (OBJECT_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_CONTACT_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0,
+		"localized_contact_shadow": uses_procedural_grounding,
+		"contact_shadow_model": OBJECT_PROCEDURAL_CONTACT_MODEL if uses_procedural_grounding else (OBJECT_CONTACT_SHADOW_MODEL if uses_shared_grounding else ""),
+		"contact_shadow_alpha": (OBJECT_PROCEDURAL_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_PROCEDURAL_CONTACT_SHADOW_VISIBLE.a) if uses_procedural_grounding else ((OBJECT_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_CONTACT_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0),
 		"base_occlusion_pads": uses_shared_grounding,
 		"base_occlusion_model": OBJECT_BASE_OCCLUSION_MODEL if uses_shared_grounding else "",
 		"base_occlusion_alpha": (OBJECT_BASE_OCCLUSION_MEMORY.a if remembered else OBJECT_BASE_OCCLUSION_VISIBLE.a) if uses_shared_grounding else 0.0,
@@ -2059,10 +2238,10 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"procedural_world_silhouette": bool(art_payload.get("fallback_procedural_marker", false)),
 		"mapped_sprite_settlement": uses_asset_sprite,
 		"ui_badge_plate": false,
-		"plate_radius_fraction": plate_radius_fraction,
-		"plate_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
-		"anchor_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
-		"ring_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a),
+		"plate_radius_fraction": 0.0 if uses_procedural_grounding else plate_radius_fraction,
+		"plate_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding or uses_procedural_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
+		"anchor_alpha": (OBJECT_PROCEDURAL_DISTURBANCE_MEMORY_ALPHA if remembered else OBJECT_PROCEDURAL_DISTURBANCE_VISIBLE_ALPHA) if uses_procedural_grounding else (0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a)),
+		"ring_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding or uses_procedural_grounding else (MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a),
 		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
 		"grid_alpha": EXPLORED_TERRAIN_GRID_ALPHA,
 		"visible_terrain_grid_alpha": EXPLORED_TERRAIN_GRID_ALPHA,
