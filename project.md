@@ -164,6 +164,10 @@ Implementation note date: 2026-04-20
 
 AcOrP rejected the generated-source terrain tiling direction as the wrong primary model. That source-derived pass is superseded: overworld terrain now treats `original_quiet_tile_bank` as the primary base model. The terrain grammar and structural road layer remain, but `tools/build_overworld_terrain_tiles.py` builds original low-noise biome base variants, jagged directional transition overlays, and connection-aware dirt-road pieces from local procedural palettes instead of cropping generated painterly sheets. Generated terrain imagery may inform color or macro mood only; it is deprecated as literal per-cell base art. This is a production-direction correction for grass/plains, forest, mire/swamp, hills/ridge/highland, and dirt-road overlays, not a full final terrain atlas.
 
+Implementation note date: 2026-04-20
+
+The first grounded overworld marker correction replaces generic dark circular contrast plates as the primary marker support. `OverworldMapView` now draws towns, sites, artifacts, encounters, mapped object sprites, and the active hero over terrain-tinted oval footprint anchors with contact shadows and small ground tie marks; mapped sprites use a soft offset sprite shadow instead of a circular badge outline. The contract remains that selection/focus, remembered objects, roads, fog, tactical framing, panning, pathing, and object sprite mappings/fallbacks must stay readable and stable. This is a marker presentation correction, not final object/town art.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

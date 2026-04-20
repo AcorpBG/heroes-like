@@ -390,8 +390,12 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		push_error("Overworld smoke: expected %s marker kind was missing. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
-	if not bool(readability.get("contrast_plate", false)):
-		push_error("Overworld smoke: %s marker lacks the contrast plate needed to stand off terrain. presentation=%s" % [expected_kind, presentation])
+	if not bool(readability.get("ground_anchor", false)) or String(readability.get("anchor_shape", "")) != "terrain_ellipse_footprint":
+		push_error("Overworld smoke: %s marker lacks the terrain-grounded anchor needed to read against the map. presentation=%s" % [expected_kind, presentation])
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("ui_badge_plate", true)):
+		push_error("Overworld smoke: %s marker regressed to a UI badge plate instead of a terrain footprint. presentation=%s" % [expected_kind, presentation])
 		get_tree().quit(1)
 		return false
 	if float(readability.get("min_symbol_extent_fraction", 0.0)) < 0.33:
@@ -412,8 +416,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: visible %s marker was styled like a remembered marker. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
-		if float(readability.get("plate_alpha", 0.0)) < 0.50 or float(readability.get("outline_alpha", 0.0)) < 0.85:
-			push_error("Overworld smoke: visible %s marker contrast is too weak. presentation=%s" % [expected_kind, presentation])
+		if float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or float(readability.get("grid_alpha", 1.0)) > 0.42:
+			push_error("Overworld smoke: visible %s marker grounding or map contrast regressed. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
 	return true
@@ -478,7 +482,7 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 		push_error("Overworld smoke: mapped overworld sprite %s still reported procedural fallback. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
-	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_memory_plate":
+	if remembered and String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor":
 		push_error("Overworld smoke: remembered sprite %s did not report ghosted memory treatment. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
 		return false
