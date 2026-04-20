@@ -72,6 +72,9 @@ func _run() -> void:
 		_fail("Map editor smoke: hero-start tool did not move the working-copy hero: %s." % hero_result)
 		return
 
+	if not _assert_selected_tile_restore(shell):
+		return
+
 	var inspect_result: Dictionary = shell.call("validation_select_tile", 23, 26)
 	var inspect_payload: Dictionary = inspect_result.get("tile_inspection", {})
 	if int(inspect_payload.get("object_count", 0)) <= 0:
@@ -134,6 +137,151 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		or int(corner_terrain.get("corner_transition_count", 0)) != 1
 	):
 		_fail("Map editor smoke: editor preview did not expose a diagonal corner transition from the painted forest tile: %s." % corner_receiver)
+		return false
+	return true
+
+func _assert_selected_tile_restore(shell) -> bool:
+	if not shell.has_method("validation_restore_selected_tile"):
+		_fail("Map editor smoke: shell did not expose selected-tile restore validation.")
+		return false
+
+	var edited_empty_tile: Dictionary = shell.call("validation_paint_terrain", 6, 6, "grass")
+	if not bool(edited_empty_tile.get("ok", false)):
+		_fail("Map editor smoke: could not edit the empty restore seed tile: %s." % edited_empty_tile)
+		return false
+	var added_empty_road: Dictionary = shell.call("validation_toggle_road", 6, 6)
+	if not bool(added_empty_road.get("ok", false)):
+		_fail("Map editor smoke: could not add a working-copy road before restore: %s." % added_empty_road)
+		return false
+	var placed_empty_object: Dictionary = shell.call("validation_place_object", 6, 6, "encounter", "encounter_mire_raid")
+	if not bool(placed_empty_object.get("ok", false)):
+		_fail("Map editor smoke: could not place a working-copy-only object before restore: %s." % placed_empty_object)
+		return false
+	var empty_restore: Dictionary = shell.call("validation_restore_selected_tile", 6, 6)
+	var empty_inspection: Dictionary = empty_restore.get("tile_inspection", {})
+	if (
+		not bool(empty_restore.get("ok", false))
+		or String(empty_inspection.get("terrain_id", "")) != "frost"
+		or bool(empty_inspection.get("road", true))
+		or not _object_detail_for_family(empty_inspection, "encounter").is_empty()
+	):
+		_fail("Map editor smoke: restore did not return an empty tile to authored terrain/no-road/no-object state: %s." % empty_restore)
+		return false
+
+	var removed_authored_road: Dictionary = shell.call("validation_toggle_road", 23, 24)
+	if not bool(removed_authored_road.get("ok", false)) or bool(removed_authored_road.get("tile_inspection", {}).get("road", true)):
+		_fail("Map editor smoke: could not remove an authored road before restore: %s." % removed_authored_road)
+		return false
+	var road_restore: Dictionary = shell.call("validation_restore_selected_tile", 23, 24)
+	var road_inspection: Dictionary = road_restore.get("tile_inspection", {})
+	var restored_road_layers: Array = road_inspection.get("road_layers", [])
+	if (
+		not bool(road_restore.get("ok", false))
+		or not bool(road_inspection.get("road", false))
+		or "ninefold_central_survey_road" not in restored_road_layers
+	):
+		_fail("Map editor smoke: restore did not return authored road presence on the selected tile: %s." % road_restore)
+		return false
+
+	var authored_hero_restore: Dictionary = shell.call("validation_restore_selected_tile", 23, 26)
+	var authored_hero_position: Dictionary = authored_hero_restore.get("hero_position", {})
+	if int(authored_hero_position.get("x", -1)) != 23 or int(authored_hero_position.get("y", -1)) != 26:
+		_fail("Map editor smoke: restore on the authored hero-start tile did not return the hero start: %s." % authored_hero_restore)
+		return false
+	var moved_again: Dictionary = shell.call("validation_set_hero_start", 3, 3)
+	if not bool(moved_again.get("ok", false)):
+		_fail("Map editor smoke: could not move the hero again for moved-start restore coverage: %s." % moved_again)
+		return false
+	var moved_hero_restore: Dictionary = shell.call("validation_restore_selected_tile", 3, 3)
+	var moved_hero_position: Dictionary = moved_hero_restore.get("hero_position", {})
+	if int(moved_hero_position.get("x", -1)) != 23 or int(moved_hero_position.get("y", -1)) != 26:
+		_fail("Map editor smoke: restore on the moved hero-start tile did not return to authored start: %s." % moved_hero_restore)
+		return false
+	var play_copy_hero_seed: Dictionary = shell.call("validation_set_hero_start", 3, 3)
+	if not bool(play_copy_hero_seed.get("ok", false)):
+		_fail("Map editor smoke: could not restore the edited hero start expected by Play Copy: %s." % play_copy_hero_seed)
+		return false
+
+	var town_owner_edit: Dictionary = shell.call("validation_edit_object_property", 30, 26, "town", "owner", "neutral")
+	if not bool(town_owner_edit.get("ok", false)):
+		_fail("Map editor smoke: could not edit secondary town before restore: %s." % town_owner_edit)
+		return false
+	var town_retheme: Dictionary = shell.call("validation_retheme_object", 30, 26, "town", "town_riverwatch")
+	if not bool(town_retheme.get("ok", false)):
+		_fail("Map editor smoke: could not retheme secondary town before restore: %s." % town_retheme)
+		return false
+	var town_restore: Dictionary = shell.call("validation_restore_selected_tile", 30, 26)
+	var restored_town := _object_detail_for_family(town_restore.get("tile_inspection", {}), "town")
+	if (
+		String(restored_town.get("placement_id", "")) != "ninefold_duskfen_gate"
+		or String(restored_town.get("content_id", "")) != "town_duskfen"
+		or String(restored_town.get("owner", "")) != "enemy"
+	):
+		_fail("Map editor smoke: restore did not return the authored town placement state: %s." % town_restore)
+		return false
+
+	var resource_move: Dictionary = shell.call("validation_move_object", 23, 8, 24, 8, "resource")
+	if not bool(resource_move.get("ok", false)):
+		_fail("Map editor smoke: could not move authored resource before restore: %s." % resource_move)
+		return false
+	var source_blocker: Dictionary = shell.call("validation_place_object", 23, 8, "resource", "site_timber_wagon")
+	if not bool(source_blocker.get("ok", false)):
+		_fail("Map editor smoke: could not place a source-tile blocker before restore: %s." % source_blocker)
+		return false
+	var resource_restore: Dictionary = shell.call("validation_restore_selected_tile", 23, 8)
+	var restored_resource := _object_detail_for_family(resource_restore.get("tile_inspection", {}), "resource")
+	if (
+		String(restored_resource.get("placement_id", "")) != "dwelling_roadward_lodge"
+		or String(restored_resource.get("content_id", "")) != "site_free_company_yard"
+		or bool(restored_resource.get("collected", true))
+	):
+		_fail("Map editor smoke: restore did not return the moved authored resource and clear source edits: %s." % resource_restore)
+		return false
+	var moved_resource_tile: Dictionary = shell.call("validation_select_tile", 24, 8)
+	if not _object_detail_for_family(moved_resource_tile.get("tile_inspection", {}), "resource").is_empty():
+		_fail("Map editor smoke: restore left the moved authored resource behind on its working-copy destination: %s." % moved_resource_tile)
+		return false
+
+	var artifact_edit: Dictionary = shell.call("validation_edit_object_property", 23, 5, "artifact", "collected", true)
+	if not bool(artifact_edit.get("ok", false)):
+		_fail("Map editor smoke: could not edit artifact before restore: %s." % artifact_edit)
+		return false
+	var artifact_retheme: Dictionary = shell.call("validation_retheme_object", 23, 5, "artifact", "artifact_bastion_gorget")
+	if not bool(artifact_retheme.get("ok", false)):
+		_fail("Map editor smoke: could not retheme artifact before restore: %s." % artifact_retheme)
+		return false
+	var artifact_restore: Dictionary = shell.call("validation_restore_selected_tile", 23, 5)
+	var restored_artifact := _object_detail_for_family(artifact_restore.get("tile_inspection", {}), "artifact")
+	if (
+		String(restored_artifact.get("placement_id", "")) != "confluence_trailsinger_boots"
+		or String(restored_artifact.get("content_id", "")) != "artifact_trailsinger_boots"
+		or bool(restored_artifact.get("collected", true))
+	):
+		_fail("Map editor smoke: restore did not return authored artifact state: %s." % artifact_restore)
+		return false
+
+	var encounter_edit: Dictionary = shell.call("validation_edit_object_property", 23, 38, "encounter", "difficulty", "low")
+	if not bool(encounter_edit.get("ok", false)):
+		_fail("Map editor smoke: could not edit encounter before restore: %s." % encounter_edit)
+		return false
+	var encounter_retheme: Dictionary = shell.call("validation_retheme_object", 23, 38, "encounter", "encounter_mire_raid")
+	if not bool(encounter_retheme.get("ok", false)):
+		_fail("Map editor smoke: could not retheme encounter before restore: %s." % encounter_retheme)
+		return false
+	var encounter_restore: Dictionary = shell.call("validation_restore_selected_tile", 23, 38)
+	var restored_encounter := _object_detail_for_family(encounter_restore.get("tile_inspection", {}), "encounter")
+	if (
+		String(restored_encounter.get("placement_id", "")) != "ninefold_prism_matrix"
+		or String(restored_encounter.get("content_id", "")) != "encounter_daybreak_matrix"
+		or String(restored_encounter.get("difficulty", "")) != "high"
+		or int(restored_encounter.get("combat_seed", 0)) != 16402
+	):
+		_fail("Map editor smoke: restore did not return authored encounter state: %s." % encounter_restore)
+		return false
+
+	var edited_terrain_check: Dictionary = shell.call("validation_tile_presentation", 2, 2)
+	if String(edited_terrain_check.get("terrain_presentation", {}).get("terrain", "")) != "forest":
+		_fail("Map editor smoke: selected-tile restore leaked into an unrelated painted tile: %s." % edited_terrain_check)
 		return false
 	return true
 

@@ -40,6 +40,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _move_object_tool_button: Button = %MoveObjectTool
 @onready var _duplicate_object_tool_button: Button = %DuplicateObjectTool
 @onready var _retheme_object_tool_button: Button = %RethemeObjectTool
+@onready var _restore_tile_button: Button = %RestoreSelectedTile
 @onready var _tile_info_label: Label = %TileInfo
 @onready var _status_label: Label = %Status
 @onready var _map_view = %Map
@@ -99,6 +100,7 @@ func _connect_ui() -> void:
 	_move_object_tool_button.pressed.connect(func(): _select_tool(TOOL_MOVE_OBJECT))
 	_duplicate_object_tool_button.pressed.connect(func(): _select_tool(TOOL_DUPLICATE_OBJECT))
 	_retheme_object_tool_button.pressed.connect(func(): _select_tool(TOOL_RETHEME_OBJECT))
+	_restore_tile_button.pressed.connect(_on_restore_selected_tile_pressed)
 	_object_family_picker.item_selected.connect(_on_object_family_selected)
 	_object_content_picker.item_selected.connect(_on_object_content_selected)
 	_selected_object_picker.item_selected.connect(_on_selected_property_object_selected)
@@ -719,6 +721,13 @@ func _on_apply_object_properties_pressed() -> void:
 		_last_message = String(result.get("message", "Could not update selected object properties."))
 	_refresh_state()
 
+func _on_restore_selected_tile_pressed() -> void:
+	var result := _restore_selected_tile_from_authored()
+	if bool(result.get("ok", false)):
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", "Could not restore selected tile."))
+	_refresh_state()
+
 func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_hovered_tile = tile
 
@@ -823,6 +832,13 @@ func _editor_road_layer_index(roads: Array) -> int:
 	return -1
 
 func _set_hero_start(tile: Vector2i) -> bool:
+	if not _set_hero_position(tile):
+		return false
+	_dirty = true
+	_last_message = "Moved the working-copy hero start to %d,%d." % [tile.x, tile.y]
+	return true
+
+func _set_hero_position(tile: Vector2i) -> bool:
 	if not _tile_in_bounds(tile):
 		return false
 	var position_payload := {"x": tile.x, "y": tile.y}
@@ -842,8 +858,6 @@ func _set_hero_start(tile: Vector2i) -> bool:
 				heroes[index] = hero_state
 				break
 		_session.overworld["player_heroes"] = heroes
-	_dirty = true
-	_last_message = "Moved the working-copy hero start to %d,%d." % [tile.x, tile.y]
 	return true
 
 func _place_object(tile: Vector2i) -> bool:
@@ -1365,6 +1379,297 @@ func _remove_resolved_encounter_ids(placement_ids: Array) -> void:
 			continue
 		updated.append(value)
 	_session.overworld["resolved_encounters"] = updated
+
+func _restore_selected_tile_from_authored() -> Dictionary:
+	if _session == null:
+		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
+	var tile := _selected_tile
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "changed": false, "message": "Selected tile is outside the map."}
+	var baseline = _authored_baseline_session()
+	if baseline == null or baseline.scenario_id == "":
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Could not read authored baseline for %s." % _session.scenario_id,
+		}
+
+	var before_overworld: Dictionary = _session.overworld.duplicate(true)
+	var before_inspection := _tile_inspection_payload(tile)
+	var terrain_result := _restore_tile_terrain_from_baseline(tile, baseline)
+	if not bool(terrain_result.get("ok", false)):
+		return terrain_result
+	var road_result := _restore_tile_roads_from_baseline(tile, baseline)
+	var hero_result := _restore_tile_hero_start_from_baseline(tile, baseline)
+	var object_result := _restore_tile_objects_from_baseline(tile, baseline)
+	_remove_stale_editor_object_keys()
+
+	var changed: bool = before_overworld != _session.overworld
+	var message: String = "Restored tile %d,%d from authored baseline." % [tile.x, tile.y]
+	if not changed:
+		message = "Tile %d,%d already matches the authored baseline." % [tile.x, tile.y]
+	return {
+		"ok": true,
+		"changed": changed,
+		"message": message,
+		"tile": {"x": tile.x, "y": tile.y},
+		"before_tile_inspection": before_inspection,
+		"terrain_restore": terrain_result,
+		"road_restore": road_result,
+		"hero_restore": hero_result,
+		"object_restore": object_result,
+	}
+
+func _authored_baseline_session():
+	if _session == null or _session.scenario_id == "":
+		return null
+	var baseline = ScenarioFactoryScript.create_session(
+		_session.scenario_id,
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	if baseline == null or baseline.scenario_id == "":
+		return null
+	OverworldRules.normalize_overworld_state(baseline)
+	return baseline
+
+func _restore_tile_terrain_from_baseline(tile: Vector2i, baseline) -> Dictionary:
+	var authored_terrain := _terrain_at_in_overworld(baseline.overworld, tile)
+	if authored_terrain == "":
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Authored baseline has no terrain at %d,%d." % [tile.x, tile.y],
+		}
+	var previous_terrain := _terrain_at(tile)
+	if previous_terrain != authored_terrain:
+		_set_tile_terrain(tile, authored_terrain)
+	return {
+		"ok": true,
+		"changed": previous_terrain != authored_terrain,
+		"previous_terrain_id": previous_terrain,
+		"authored_terrain_id": authored_terrain,
+	}
+
+func _restore_tile_roads_from_baseline(tile: Vector2i, baseline) -> Dictionary:
+	var authored_road_layers := _road_layers_at_in_overworld(baseline.overworld, tile)
+	var authored_by_id := {}
+	for road in authored_road_layers:
+		if not (road is Dictionary):
+			continue
+		authored_by_id[String(road.get("id", ""))] = road
+
+	var terrain_layers := _terrain_layers()
+	var roads = terrain_layers.get("roads", [])
+	if not (roads is Array):
+		roads = []
+
+	var restored_layer_ids := []
+	var removed_layer_ids := []
+	var found_authored_ids := {}
+	for index in range(roads.size()):
+		var road = roads[index]
+		if not (road is Dictionary):
+			continue
+		var road_id := String(road.get("id", ""))
+		var should_keep_tile := authored_by_id.has(road_id)
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array):
+			tiles = []
+		var updated_tiles := []
+		var kept_tile := false
+		for tile_value in tiles:
+			if _tile_payload_matches(tile_value, tile):
+				if should_keep_tile and not kept_tile:
+					updated_tiles.append(_authored_road_tile_payload(authored_by_id[road_id], tile))
+					kept_tile = true
+				else:
+					removed_layer_ids.append(road_id)
+				continue
+			updated_tiles.append(tile_value)
+		if should_keep_tile:
+			found_authored_ids[road_id] = true
+			if not kept_tile:
+				updated_tiles.append(_authored_road_tile_payload(authored_by_id[road_id], tile))
+				restored_layer_ids.append(road_id)
+		road["tiles"] = updated_tiles
+		roads[index] = road
+
+	for road in authored_road_layers:
+		if not (road is Dictionary):
+			continue
+		var road_id := String(road.get("id", ""))
+		if found_authored_ids.has(road_id):
+			continue
+		var restored_road: Dictionary = road.duplicate(true)
+		restored_road["tiles"] = [_authored_road_tile_payload(road, tile)]
+		roads.append(restored_road)
+		restored_layer_ids.append(road_id)
+
+	terrain_layers["roads"] = roads
+	_session.overworld["terrain_layers"] = terrain_layers
+	return {
+		"ok": true,
+		"changed": not restored_layer_ids.is_empty() or not removed_layer_ids.is_empty(),
+		"authored_road_layers": authored_by_id.keys(),
+		"restored_road_layers": restored_layer_ids,
+		"removed_road_layers": removed_layer_ids,
+	}
+
+func _restore_tile_hero_start_from_baseline(tile: Vector2i, baseline) -> Dictionary:
+	var authored_start := OverworldRules.hero_position(baseline)
+	var current_start := OverworldRules.hero_position(_session)
+	var applies := tile == authored_start or tile == current_start
+	if not applies:
+		return {
+			"applied": false,
+			"changed": false,
+			"authored_start": {"x": authored_start.x, "y": authored_start.y},
+			"previous_start": {"x": current_start.x, "y": current_start.y},
+		}
+	if current_start != authored_start:
+		_set_hero_position(authored_start)
+	return {
+		"applied": true,
+		"changed": current_start != authored_start,
+		"authored_start": {"x": authored_start.x, "y": authored_start.y},
+		"previous_start": {"x": current_start.x, "y": current_start.y},
+	}
+
+func _restore_tile_objects_from_baseline(tile: Vector2i, baseline) -> Dictionary:
+	var restored_ids := []
+	var removed_ids := []
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var baseline_placements := _placements_for_family_at_in_session(baseline, family, tile)
+		var baseline_by_id := {}
+		for baseline_placement in baseline_placements:
+			if baseline_placement is Dictionary:
+				baseline_by_id[String(baseline_placement.get("placement_id", ""))] = baseline_placement
+		var array_key := _placement_array_key(family)
+		var placements = _session.overworld.get(array_key, [])
+		if not (placements is Array):
+			placements = []
+		var updated := []
+		var restored_for_family := []
+		var removed_for_family := []
+		for placement in placements:
+			if not (placement is Dictionary):
+				updated.append(placement)
+				continue
+			var placement_id := String(placement.get("placement_id", ""))
+			if baseline_by_id.has(placement_id):
+				if placement_id not in restored_for_family:
+					var restored_placement: Dictionary = baseline_by_id[placement_id].duplicate(true)
+					updated.append(restored_placement)
+					restored_for_family.append(placement_id)
+				else:
+					removed_for_family.append(placement_id)
+				continue
+			if _placement_at_tile(placement, tile):
+				removed_for_family.append(placement_id)
+				continue
+			updated.append(placement)
+		for baseline_placement in baseline_placements:
+			if not (baseline_placement is Dictionary):
+				continue
+			var placement_id := String(baseline_placement.get("placement_id", ""))
+			if placement_id in restored_for_family:
+				continue
+			updated.append(baseline_placement.duplicate(true))
+			restored_for_family.append(placement_id)
+		_session.overworld[array_key] = updated
+		restored_ids.append_array(restored_for_family)
+		removed_ids.append_array(removed_for_family)
+		if family == OBJECT_FAMILY_ENCOUNTER:
+			var encounter_ids_to_unresolve := []
+			encounter_ids_to_unresolve.append_array(restored_for_family)
+			encounter_ids_to_unresolve.append_array(removed_for_family)
+			_remove_resolved_encounter_ids(encounter_ids_to_unresolve)
+	return {
+		"ok": true,
+		"restored_ids": restored_ids,
+		"removed_ids": removed_ids,
+	}
+
+func _placements_for_family_at_in_session(session, family: String, tile: Vector2i) -> Array:
+	var placements_at_tile := []
+	if session == null:
+		return placements_at_tile
+	var array_key := _placement_array_key(family)
+	var placements = session.overworld.get(array_key, [])
+	if not (placements is Array):
+		return placements_at_tile
+	for placement in placements:
+		if placement is Dictionary and _placement_at_tile(placement, tile):
+			placements_at_tile.append(placement.duplicate(true))
+	return placements_at_tile
+
+func _road_layers_at_in_overworld(overworld: Dictionary, tile: Vector2i) -> Array:
+	var matching_roads := []
+	var terrain_layers = overworld.get("terrain_layers", {})
+	if not (terrain_layers is Dictionary):
+		return matching_roads
+	var roads = terrain_layers.get("roads", [])
+	if not (roads is Array):
+		return matching_roads
+	for road in roads:
+		if not (road is Dictionary):
+			continue
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array):
+			continue
+		for tile_value in tiles:
+			if _tile_payload_matches(tile_value, tile):
+				matching_roads.append(road.duplicate(true))
+				break
+	return matching_roads
+
+func _authored_road_tile_payload(road: Dictionary, tile: Vector2i) -> Dictionary:
+	var tiles = road.get("tiles", [])
+	if tiles is Array:
+		for tile_value in tiles:
+			if _tile_payload_matches(tile_value, tile):
+				return _tile_payload_for_restore(tile_value, tile)
+	return {"x": tile.x, "y": tile.y}
+
+func _tile_payload_for_restore(value: Variant, tile: Vector2i) -> Dictionary:
+	if value is Dictionary:
+		return value.duplicate(true)
+	return {"x": tile.x, "y": tile.y}
+
+func _tile_payload_matches(value: Variant, tile: Vector2i) -> bool:
+	return value is Dictionary and int(value.get("x", -999)) == tile.x and int(value.get("y", -999)) == tile.y
+
+func _terrain_at_in_overworld(overworld: Dictionary, tile: Vector2i) -> String:
+	var map_data = overworld.get("map", [])
+	if not (map_data is Array) or tile.y < 0 or tile.y >= map_data.size():
+		return ""
+	var row = map_data[tile.y]
+	if not (row is Array) or tile.x < 0 or tile.x >= row.size():
+		return ""
+	return String(row[tile.x])
+
+func _set_tile_terrain(tile: Vector2i, terrain_id: String) -> bool:
+	if not _tile_in_bounds(tile) or terrain_id == "":
+		return false
+	var map_data = _session.overworld.get("map", [])
+	if not (map_data is Array) or tile.y >= map_data.size():
+		return false
+	var row = map_data[tile.y]
+	if not (row is Array) or tile.x >= row.size():
+		return false
+	row[tile.x] = terrain_id
+	map_data[tile.y] = row
+	_session.overworld["map"] = map_data
+	return true
+
+func _remove_stale_editor_object_keys() -> void:
+	if _selected_property_object_key != "" and _object_detail_by_key(_selected_property_object_key).is_empty():
+		_selected_property_object_key = ""
+	if _pending_move_object_key != "" and _object_detail_by_key(_pending_move_object_key).is_empty():
+		_pending_move_object_key = ""
+	if _pending_duplicate_object_key != "" and _object_detail_by_key(_pending_duplicate_object_key).is_empty():
+		_pending_duplicate_object_key = ""
 
 func _on_play_working_copy_pressed() -> void:
 	if _session == null:
@@ -2101,6 +2406,25 @@ func validation_edit_object_property(x: int, y: int, family: String, property_na
 	snapshot["ok"] = bool(result.get("ok", false))
 	snapshot["changed"] = bool(result.get("changed", false))
 	snapshot["message"] = String(result.get("message", ""))
+	return snapshot
+
+func validation_restore_selected_tile(x: int = -999, y: int = -999) -> Dictionary:
+	if x != -999 and y != -999:
+		var tile := Vector2i(x, y)
+		if not _tile_in_bounds(tile):
+			return {"ok": false, "message": "Tile outside map."}
+		_selected_tile = tile
+	var result := _restore_selected_tile_from_authored()
+	if bool(result.get("ok", false)):
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["restore_result"] = result
+	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
 	return snapshot
 
 func validation_tile_presentation(x: int, y: int) -> Dictionary:
