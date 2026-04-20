@@ -183,6 +183,8 @@ LOGISTICS_SITE_IDS = {
 }
 TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
+    "frontier_town",
+    "hostile_camp",
     "ruined_obelisk",
     "lumber_wagon",
     "ore_crates",
@@ -4414,10 +4416,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     object_assets = manifest.get("object_assets", {})
     site_sprites = manifest.get("resource_site_sprites", {})
     artifact_default = manifest.get("artifact_default_sprite", {})
+    town_default = manifest.get("town_default_sprite", {})
+    encounter_default = manifest.get("encounter_default_sprite", {})
     ensure(isinstance(terrain_rendering, dict), errors, "Overworld art manifest must define terrain_rendering")
     ensure(isinstance(object_assets, dict), errors, "Overworld art manifest must define object_assets")
     ensure(isinstance(site_sprites, dict), errors, "Overworld art manifest must define resource_site_sprites")
     ensure(isinstance(artifact_default, dict), errors, "Overworld art manifest must define artifact_default_sprite")
+    ensure(isinstance(town_default, dict), errors, "Overworld art manifest must define town_default_sprite")
+    ensure(isinstance(encounter_default, dict), errors, "Overworld art manifest must define encounter_default_sprite")
     ensure("terrain_textures" not in manifest, errors, "Overworld art manifest must not keep sampled terrain textures as the active terrain model")
     if isinstance(terrain_rendering, dict):
         ensure(str(terrain_rendering.get("model", "")) == "authored_autotile_layers", errors, "Overworld terrain rendering must use the authored autotile layer model")
@@ -4548,7 +4554,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     ensure(terrain_id in road_enabled_terrain_ids, errors, f"Terrain layer {scenario_id} road {road.get('id')} tile {x},{y} uses non-road terrain {terrain_id}")
         ensure(road_tile_count >= 8, errors, f"Terrain layer {scenario_id} must include enough road tiles to prove structural overlays")
 
-    ensure(OVERWORLD_ART_REQUIRED_ASSET_IDS.issubset(set(object_assets.keys())), errors, "Overworld art manifest must preserve all twelve prepared object asset ids")
+    ensure(OVERWORLD_ART_REQUIRED_ASSET_IDS.issubset(set(object_assets.keys())), errors, "Overworld art manifest must preserve all required prepared object asset ids")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -4575,6 +4581,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(str(entry.get("asset_id", "")) in object_assets, errors, f"Overworld art mapping {site_id} references missing object asset {entry.get('asset_id')}")
 
     ensure(str(artifact_default.get("asset_id", "")) == "adventurers_bundle", errors, "Overworld artifact default sprite must use the adventurers_bundle pickup asset")
+    if isinstance(town_default, dict):
+        ensure(str(town_default.get("asset_id", "")) == "frontier_town", errors, "Overworld town default sprite must use the approved frontier_town placeholder asset")
+        ensure(str(town_default.get("fit", "")) != "", errors, "Overworld town default sprite must record its semantic-fit note")
+    if isinstance(encounter_default, dict):
+        ensure(str(encounter_default.get("asset_id", "")) == "hostile_camp", errors, "Overworld encounter default sprite must use the approved hostile_camp placeholder asset")
+        ensure(str(encounter_default.get("fit", "")) != "", errors, "Overworld encounter default sprite must record its semantic-fit note")
     ensure(str(manifest.get("unmapped_object_fallback", "")) == "procedural_marker", errors, "Overworld art manifest must keep procedural marker fallback for unmapped object types")
     ensure(str(manifest.get("remembered_object_rendering", "")) == "ghosted_sprite_with_ground_anchor", errors, "Overworld art manifest must document the remembered-object sprite treatment")
     object_rendering = manifest.get("object_rendering", {})
@@ -4602,7 +4614,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "func _draw_road_overlay",
         "func _draw_road_overlay_art",
         "func _draw_object_sprite",
+        "func _draw_town_sprite",
+        "func _draw_encounter_sprite",
         "func _resource_asset_id",
+        "town_default_sprite",
+        "encounter_default_sprite",
         "OBJECT_PRESENCE_MODEL",
         "OBJECT_OCCLUSION_MODEL",
         "OBJECT_SPRITE_SETTLEMENT_MODEL",

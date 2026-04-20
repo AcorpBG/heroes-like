@@ -130,6 +130,11 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not bool(town_readability.get("hero_emphasis", false)) or not bool(town_readability.get("selection_emphasis", false)):
 		_fail("Ninefold smoke: active hero/current-selection emphasis is not readable on the large starting town tile: %s." % town_presentation)
 		return false
+	var town_art: Dictionary = town_presentation.get("art_presentation", {})
+	var town_asset_ids: Array = town_art.get("sprite_asset_ids", [])
+	if not bool(town_art.get("uses_asset_sprite", false)) or "frontier_town" not in town_asset_ids or bool(town_art.get("fallback_procedural_marker", true)):
+		_fail("Ninefold smoke: large-map starting town is not using the default frontier town sprite: %s." % town_presentation)
+		return false
 
 	var resource_tile := Vector2i(23, 24)
 	var resource_presentation: Dictionary = shell.call("validation_tile_presentation", resource_tile.x, resource_tile.y)

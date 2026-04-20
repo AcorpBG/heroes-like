@@ -441,6 +441,33 @@ Limits:
 - The cue is renderer-level presentation only; movement, blocking, visit targets, fog, save data, and object mappings are unchanged.
 - Manual visual review is still required before claiming the overworld is polished or near HoMM3-class readability.
 
+## Current Implementation Slice: Overworld Town And Encounter Placeholder Assets
+Status: completed on 2026-04-20 as a narrow asset-readability slice using the newly approved generated candidates.
+
+Purpose:
+- Replace the most player-facing remaining procedural silhouettes for towns and unresolved encounters with the first credible repo-local placeholder sprites.
+- Keep the slice deliberately narrow: one default town sprite and one default hostile-camp encounter sprite, not a broad object-family atlas.
+- Preserve the existing object grounding, footprint placement beds, contact shadows, upper-mass backdrop cues, fog, pathing, panning, selection, save data, and gameplay object logic.
+
+Implemented:
+- Adapted the selected 2026-04-20 town candidate into `frontier_town` runtime/source overworld asset paths.
+- Adapted the selected 2026-04-20 encounter-camp candidate into `hostile_camp` runtime/source overworld asset paths.
+- Added manifest-backed default town and encounter sprite ids, with procedural town/encounter silhouettes retained as renderer fallbacks if the assets fail to load.
+- Wired `OverworldMapView` so towns and unresolved rememberable encounters use the same footprint-scaled sprite settlement, placement-bed, contact-depth, upper-mass backdrop, remembered-sprite, and foreground-lip treatment already used by mapped overworld sprites.
+- Kept owner readability for town sprites through a compact renderer pennant instead of reverting to colored procedural town bodies.
+- Extended repo validation plus River Pass and Ninefold Confluence smokes to guard the new default town and encounter sprite path.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final town art, final encounter art, faction-specific town variants, encounter-family variants, or a complete object atlas.
+- The generated candidates are approved as first placeholder source only; manual live-client review is still needed before treating the overworld object art direction as polished.
+- Town and encounter sprites remain presentation only; movement, blocking, visit targets, fog, save data, and battle/object logic are unchanged.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

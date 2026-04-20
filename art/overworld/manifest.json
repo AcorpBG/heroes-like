@@ -3,6 +3,12 @@
   "source": {
     "task_id": 10184,
     "processed_manifest": "res://art/overworld/source/manifest/generated-overworld-assets-20260419.json",
+    "approved_placeholder_source": {
+      "task_id": 10184,
+      "artifact_batch": "asset-gen-20260420",
+      "town_candidate_file": "towns/001-fantasy-strategy-game-overworld-map-obje.png",
+      "encounter_candidate_file": "encounters/001-fantasy-strategy-game-overworld-map-obje.png"
+    },
     "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets are deprecated for primary per-cell terrain and may be used only as color or macro inspiration, not as literal tile-source art."
   },
   "terrain_rendering": {
@@ -32,6 +38,14 @@
     "fallback_silhouette": "family_specific_procedural_world_object"
   },
   "object_assets": {
+    "frontier_town": {
+      "path": "res://art/overworld/runtime/objects/towns/frontier_town.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/frontier_town-trimmed.png"
+    },
+    "hostile_camp": {
+      "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
+    },
     "ruined_obelisk": {
       "path": "res://art/overworld/runtime/objects/pickups/ruined_obelisk.png",
       "source_trimmed": "res://art/overworld/source/trimmed/pickups/ruined_obelisk-trimmed.png"
@@ -154,5 +168,13 @@
   "artifact_default_sprite": {
     "asset_id": "adventurers_bundle",
     "fit": "Generic artifact/pickup bundle until individual artifact silhouettes exist."
+  },
+  "town_default_sprite": {
+    "asset_id": "frontier_town",
+    "fit": "First approved generated town placeholder for the default overworld town draw path; owner state remains indicated by a compact renderer pennant."
+  },
+  "encounter_default_sprite": {
+    "asset_id": "hostile_camp",
+    "fit": "First approved generated hostile camp placeholder for unresolved overworld encounters until encounter-family-specific sprites exist."
   }
 }

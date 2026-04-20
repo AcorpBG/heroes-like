@@ -532,6 +532,23 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 
+	var session = SessionState.ensure_active_session()
+	var town_tile := _first_visible_town_tile(session)
+	if town_tile.x < 0:
+		push_error("Overworld smoke: could not find a visible town for default town sprite validation.")
+		get_tree().quit(1)
+		return false
+	var town_presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
+	if not _assert_art_sprite(town_presentation, "frontier_town", false):
+		return false
+	var encounter_tile := _first_visible_encounter_tile(session)
+	if encounter_tile.x < 0:
+		push_error("Overworld smoke: could not find a visible encounter for default encounter sprite validation.")
+		get_tree().quit(1)
+		return false
+	var encounter_presentation: Dictionary = shell.call("validation_tile_presentation", encounter_tile.x, encounter_tile.y)
+	if not _assert_art_sprite(encounter_presentation, "hostile_camp", false):
+		return false
 	var timber_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
 	if not _assert_art_sprite(timber_presentation, "lumber_wagon", false):
 		return false

@@ -147,6 +147,8 @@ var _object_texture_missing: Dictionary = {}
 var _resource_site_asset_ids: Dictionary = {}
 var _resource_site_object_profiles: Dictionary = {}
 var _artifact_default_asset_id := ""
+var _town_default_asset_id := ""
+var _encounter_default_asset_id := ""
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -516,7 +518,8 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	var remembered := not visible
 
 	if _has_town_at(tile):
-		_draw_town_marker(rect, _town_color(tile), remembered, tile)
+		if not _draw_town_sprite(rect, remembered, tile):
+			_draw_town_marker(rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
 		if not _draw_resource_sprite(resource_node, rect, remembered, tile):
@@ -526,7 +529,8 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 		if not _draw_artifact_sprite(artifact_node, rect, remembered, tile):
 			_draw_artifact_marker(rect, remembered, tile)
 	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
-		_draw_encounter_marker(rect, remembered, tile)
+		if not _draw_encounter_sprite(rect, remembered, tile):
+			_draw_encounter_marker(rect, remembered, tile)
 	if visible and _has_hero_at(tile):
 		_draw_hero_marker(rect, tile)
 
@@ -537,6 +541,15 @@ func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 	if node.is_empty():
 		return false
 	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile(), tile)
+
+func _draw_town_sprite(rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if not _draw_object_sprite(_town_default_asset_id, rect, remembered, _town_object_profile(), tile):
+		return false
+	_draw_town_owner_pennant(rect, _town_color(tile), remembered)
+	return true
+
+func _draw_encounter_sprite(rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	return _draw_object_sprite(_encounter_default_asset_id, rect, remembered, _encounter_object_profile(), tile)
 
 func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> bool:
 	var texture = _object_texture_for_asset(asset_id)
@@ -556,6 +569,22 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_foreground_occlusion_lip(anchor, remembered)
 	return true
+
+func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> void:
+	var extent := minf(rect.size.x, rect.size.y)
+	var pole_top := rect.position + rect.size * Vector2(0.74, 0.18)
+	var pole_bottom := rect.position + rect.size * Vector2(0.74, 0.42)
+	var pole_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.97, 0.94, 0.82, 0.90)
+	var flag_color := _remembered_marker_color(color) if remembered else color
+	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	draw_line(pole_bottom, pole_top, pole_color, maxf(1.6, extent * 0.024))
+	var flag := PackedVector2Array([
+		pole_top,
+		pole_top + Vector2(extent * 0.16, extent * 0.045),
+		pole_top + Vector2(extent * 0.02, extent * 0.12),
+	])
+	draw_colored_polygon(flag, flag_color)
+	draw_polyline(PackedVector2Array([flag[0], flag[1], flag[2], flag[0]]), outline_color, maxf(1.0, extent * 0.014))
 
 func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var footprint := Vector2i(2, 2)
@@ -1514,6 +1543,11 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		}
 	var sprite_asset_ids: Array[String] = []
 	var sprite_footprints: Array = []
+	if "town" in object_kinds and _town_default_asset_id != "":
+		if _object_texture_for_asset(_town_default_asset_id) is Texture2D:
+			sprite_asset_ids.append(_town_default_asset_id)
+			var town_footprint := _object_profile_footprint(_town_object_profile())
+			sprite_footprints.append({"width": town_footprint.x, "height": town_footprint.y})
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
 		var resource_asset_id := _resource_asset_id(resource_node)
@@ -1527,6 +1561,11 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			sprite_asset_ids.append(_artifact_default_asset_id)
 			var artifact_footprint := _object_profile_footprint(_artifact_object_profile())
 			sprite_footprints.append({"width": artifact_footprint.x, "height": artifact_footprint.y})
+	if "encounter" in object_kinds and _encounter_default_asset_id != "":
+		if _object_texture_for_asset(_encounter_default_asset_id) is Texture2D:
+			sprite_asset_ids.append(_encounter_default_asset_id)
+			var encounter_footprint := _object_profile_footprint(_encounter_object_profile())
+			sprite_footprints.append({"width": encounter_footprint.x, "height": encounter_footprint.y})
 	var uses_asset_sprite := not sprite_asset_ids.is_empty()
 	return {
 		"uses_asset_sprite": uses_asset_sprite,
@@ -1991,6 +2030,8 @@ func _load_overworld_art_manifest() -> void:
 	_resource_site_asset_ids.clear()
 	_resource_site_object_profiles.clear()
 	_artifact_default_asset_id = ""
+	_town_default_asset_id = ""
+	_encounter_default_asset_id = ""
 	_load_map_object_profiles()
 
 	if not FileAccess.file_exists(OVERWORLD_ART_MANIFEST_PATH):
@@ -2033,6 +2074,14 @@ func _load_overworld_art_manifest() -> void:
 	var artifact_default = _overworld_art_manifest.get("artifact_default_sprite", {})
 	if artifact_default is Dictionary:
 		_artifact_default_asset_id = String(artifact_default.get("asset_id", ""))
+
+	var town_default = _overworld_art_manifest.get("town_default_sprite", {})
+	if town_default is Dictionary:
+		_town_default_asset_id = String(town_default.get("asset_id", ""))
+
+	var encounter_default = _overworld_art_manifest.get("encounter_default_sprite", {})
+	if encounter_default is Dictionary:
+		_encounter_default_asset_id = String(encounter_default.get("asset_id", ""))
 
 func _load_map_object_profiles() -> void:
 	_resource_site_object_profiles.clear()

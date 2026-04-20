@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T13:56:19Z",
+  "updatedAt": "2026-04-20T14:39:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-upper-mass-backdrop-10184",
-  "currentSliceTitle": "Add upper-mass overworld backdrop cues",
+  "currentSliceId": "overworld-town-encounter-assets-10184",
+  "currentSliceTitle": "Integrate first town and encounter overworld placeholder assets",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation-only renderer slice to add subtle family-scaled rear upper-mass backdrop washes and paired vertical mass shadows behind towns, sites, dwellings, encounters, mapped sprites, and active hero presence. OverworldMapView now separates object upper bodies from busy terrain after the footprint placement-bed treatment without adding UI halos, badge plates, labels, gameplay occupancy, pathing, fog, panning, selection, save, or object-mapping changes.",
+  "currentSliceNotes": "Completed a narrow asset-readability slice adapting one approved generated town candidate into the frontier_town sprite and one approved generated encounter-camp candidate into the hostile_camp sprite. OverworldMapView now uses manifest-backed default sprites for towns and unresolved encounters through the existing footprint-scaled sprite settlement, placement-bed, contact-depth, upper-mass backdrop, remembered-sprite, and foreground-lip path, with procedural silhouettes retained as fallbacks and no gameplay occupancy, pathing, fog, panning, selection, save, battle, or object-logic changes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -220,6 +220,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-town-encounter-assets-10184",
+      "title": "Integrate first town and encounter overworld placeholder assets",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -275,8 +281,8 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the footprint-scaled upper-mass object presentation in River Pass and Ninefold Confluence before calling the overworld object treatment visually polished.",
-    "Add authored town, encounter, and high-priority site sprites so the new object-first renderer is not carrying important player-facing objects through procedural silhouettes.",
+    "Manually inspect the new frontier_town and hostile_camp overworld placeholders in River Pass and Ninefold Confluence before calling the object-art direction visually polished.",
+    "Add future authored faction-specific town variants, encounter-family variants, and high-priority site sprites so the object-first renderer is not carrying important player-facing breadth through generic placeholders or procedural silhouettes.",
     "Add future authored town/object footprint or sprite slices so unmapped procedural silhouettes can be replaced where player-facing objects need richer presence.",
     "Add future authored tile-art slices for water/coast, badlands/wastes, ash/lava, snow/frost, and cavern/underway before treating Ninefold Confluence's full terrain surface as art-covered.",
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
