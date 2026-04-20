@@ -49,8 +49,35 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: Map Editor Play Copy Return
+Status: completed on 2026-04-20 as the next narrow editor/play-flow slice.
+
+Purpose:
+- Preserve the in-memory map editor working copy across the Play Copy test loop so scenario iteration does not rebuild from authored JSON after every play probe.
+- Keep Play Copy using the normal overworld shell and runtime session structures rather than an editor-only play surface.
+- Keep the slice honest: returning from Play Copy restores the editor working-copy launch snapshot, not the fully mutated live play state.
+
+Implemented:
+- `MapEditorShell` now stores the current editor working-copy snapshot in `SessionState` before Play Copy, then launches the normal overworld shell on a duplicate of that snapshot.
+- Editor-launched play sessions carry explicit `editor_working_copy` and `editor_return_model: launch_snapshot` metadata.
+- `AppRouter.return_to_main_menu_from_active_play()` now detects editor Play Copy sessions and routes back to `MapEditorShell` instead of the main menu, while normal campaign/skirmish menu routing remains unchanged.
+- Returning to the editor consumes the in-memory launch snapshot, restores the mutable scenario state, reveals the map for editing again, and clears the active playable session.
+- The editor smoke now validates the round trip by proving edited terrain and hero-start state reach the overworld, then proving a later live play mutation is not imported back into the editor.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not authored JSON writeback/export, a save-format change, a parallel editor scenario schema, or a live-play-state import system.
+- The returned editor state is the exact editor launch snapshot kept in memory; gameplay changes made after Play Copy launch are intentionally discarded on return.
+- Town 3x2 occupancy/pathing remains future work.
+
 ## Current Implementation Slice: Map Editor Object Placement Editing
-Status: completed on 2026-04-20 as the next narrow editor slice.
+Status: completed on 2026-04-20 as the previous narrow editor slice.
 
 Purpose:
 - Let the in-game map editor mutate overworld object placements on the existing scenario working copy instead of only terrain, roads, and hero start.

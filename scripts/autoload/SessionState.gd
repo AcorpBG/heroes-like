@@ -10,6 +10,8 @@ const LAUNCH_MODE_SKIRMISH := "skirmish"
 const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH]
 
 var active_session: SessionStateStoreScript.SessionData = null
+var editor_working_copy_session: SessionStateStoreScript.SessionData = null
+var _editor_return_pending := false
 
 static func normalize_payload(value: Variant) -> Dictionary:
 	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(value)
@@ -86,6 +88,43 @@ func set_active_session(session: SessionStateStoreScript.SessionData) -> Session
 		return active_session
 	active_session = _normalized_session_copy(session.to_dict())
 	return active_session
+
+func set_editor_working_copy_session(session: SessionStateStoreScript.SessionData) -> SessionStateStoreScript.SessionData:
+	if session == null or session.scenario_id == "":
+		editor_working_copy_session = null
+		_editor_return_pending = false
+		return null
+	editor_working_copy_session = _normalized_session_copy(session.to_dict())
+	return editor_working_copy_session
+
+func has_editor_working_copy_session() -> bool:
+	return editor_working_copy_session != null and editor_working_copy_session.scenario_id != ""
+
+func duplicate_editor_working_copy_session() -> SessionStateStoreScript.SessionData:
+	if not has_editor_working_copy_session():
+		return null
+	return _normalized_session_copy(editor_working_copy_session.to_dict())
+
+func request_editor_return_from_active_play() -> bool:
+	if not has_playable_session():
+		return false
+	var session := ensure_active_session()
+	if not bool(session.flags.get("editor_working_copy", false)):
+		return false
+	if not has_editor_working_copy_session():
+		return false
+	_editor_return_pending = true
+	reset_session()
+	return true
+
+func consume_editor_return_session() -> SessionStateStoreScript.SessionData:
+	if not _editor_return_pending:
+		return null
+	_editor_return_pending = false
+	return duplicate_editor_working_copy_session()
+
+func editor_return_pending() -> bool:
+	return _editor_return_pending
 
 func restore_session(payload: Variant) -> SessionStateStoreScript.SessionData:
 	active_session = _normalized_session_copy(payload)
