@@ -65,6 +65,8 @@ const OBJECT_DEPTH_CUE_MODEL := "footprint_cast_shadow_with_base_occlusion"
 const OBJECT_CONTACT_SHADOW_MODEL := "directional_footprint_cast_shadow"
 const OBJECT_BASE_OCCLUSION_MODEL := "foreground_base_occlusion_pads"
 const OBJECT_PLACEMENT_BED_MODEL := "footprint_terrain_quieting_bed"
+const OBJECT_UPPER_BACKDROP_MODEL := "family_scaled_rear_backdrop_wash"
+const OBJECT_VERTICAL_MASS_SHADOW_MODEL := "subtle_vertical_mass_shadow"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
@@ -77,6 +79,10 @@ const OBJECT_BASE_OCCLUSION_VISIBLE := Color(0.11, 0.075, 0.030, 0.34)
 const OBJECT_BASE_OCCLUSION_MEMORY := Color(0.62, 0.82, 0.86, 0.32)
 const OBJECT_PLACEMENT_BED_VISIBLE_ALPHA := 0.34
 const OBJECT_PLACEMENT_BED_MEMORY_ALPHA := 0.30
+const OBJECT_UPPER_BACKDROP_VISIBLE := Color(0.018, 0.022, 0.015, 0.26)
+const OBJECT_UPPER_BACKDROP_MEMORY := Color(0.20, 0.36, 0.38, 0.26)
+const OBJECT_VERTICAL_MASS_SHADOW_VISIBLE := Color(0.010, 0.012, 0.008, 0.18)
+const OBJECT_VERTICAL_MASS_SHADOW_MEMORY := Color(0.22, 0.40, 0.42, 0.18)
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
@@ -545,17 +551,20 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction(family, footprint))
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
 	var shadow_offset := Vector2(0.0, maxf(2.0, extent * 0.055))
+	_draw_upper_mass_backdrop(anchor, family, remembered, footprint)
 	draw_texture_rect(texture, Rect2(sprite_rect.position + shadow_offset, sprite_rect.size), false, OBJECT_SPRITE_SHADOW_MODULATE)
 	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_foreground_occlusion_lip(anchor, remembered)
 	return true
 
 func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
-	var anchor := _draw_marker_plate(rect, remembered, 0.38, Vector2i(2, 2), tile)
+	var footprint := Vector2i(2, 2)
+	var anchor := _draw_marker_plate(rect, remembered, 0.38, footprint, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var outline_width := maxf(2.2, extent * 0.036)
 	var marker_color := _remembered_marker_color(color) if remembered else color
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	_draw_upper_mass_backdrop(anchor, "town", remembered, footprint)
 	var body = Rect2(
 		rect.position + rect.size * Vector2(0.18, 0.43),
 		rect.size * Vector2(0.64, 0.30)
@@ -591,6 +600,7 @@ func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = fal
 	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint), footprint, tile)
 	var marker_color := _remembered_marker_color(RESOURCE_COLOR) if remembered else RESOURCE_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	_draw_upper_mass_backdrop(anchor, family, remembered, footprint)
 	match family:
 		"neutral_dwelling", "repeatable_service", "faction_outpost":
 			_draw_dwelling_silhouette(rect, marker_color, outline_color, remembered)
@@ -609,11 +619,13 @@ func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = fal
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
-	var anchor := _draw_marker_plate(rect, remembered, MARKER_PLATE_RADIUS_FACTOR, Vector2i(1, 1), tile)
+	var footprint := Vector2i(1, 1)
+	var anchor := _draw_marker_plate(rect, remembered, MARKER_PLATE_RADIUS_FACTOR, footprint, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
 	var marker_color := _remembered_marker_color(ARTIFACT_COLOR) if remembered else ARTIFACT_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	_draw_upper_mass_backdrop(anchor, "artifact", remembered, footprint)
 	var pedestal = Rect2(rect.position + rect.size * Vector2(0.37, 0.56), rect.size * Vector2(0.26, 0.15))
 	var lid = Rect2(rect.position + rect.size * Vector2(0.33, 0.48), rect.size * Vector2(0.34, 0.10))
 	draw_rect(pedestal, marker_color, true)
@@ -635,11 +647,13 @@ func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
-	var anchor := _draw_marker_plate(rect, remembered, 0.34, Vector2i(1, 1), tile)
+	var footprint := Vector2i(1, 1)
+	var anchor := _draw_marker_plate(rect, remembered, 0.34, footprint, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
 	var marker_color := _remembered_marker_color(ENCOUNTER_COLOR) if remembered else ENCOUNTER_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
+	_draw_upper_mass_backdrop(anchor, "encounter", remembered, footprint)
 	var tent := PackedVector2Array([
 		rect.position + rect.size * Vector2(0.27, 0.66),
 		rect.position + rect.size * Vector2(0.50, 0.33),
@@ -662,11 +676,13 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
-	var anchor := _draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR, Vector2i(1, 1), tile)
+	var footprint := Vector2i(1, 1)
+	var anchor := _draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR, footprint, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center: Vector2 = rect.get_center()
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
 	var figure_center: Vector2 = center + Vector2(0.0, -extent * 0.02)
+	_draw_upper_mass_backdrop(anchor, "hero", false, footprint)
 	draw_line(figure_center + Vector2(-base_radius * 0.42, extent * 0.18), figure_center + Vector2(-base_radius * 0.12, extent * 0.38), HERO_RING_COLOR, maxf(2.0, extent * 0.030))
 	draw_line(figure_center + Vector2(base_radius * 0.36, extent * 0.18), figure_center + Vector2(base_radius * 0.12, extent * 0.38), HERO_RING_COLOR, maxf(2.0, extent * 0.030))
 	draw_rect(Rect2(figure_center + Vector2(-base_radius * 0.42, -base_radius * 0.12), Vector2(base_radius * 0.84, base_radius * 1.00)), HERO_FILL_COLOR, true)
@@ -888,6 +904,102 @@ func _draw_base_occlusion_pads(center: Vector2, radii: Vector2, remembered: bool
 	var pad_width := maxf(1.0, extent * 0.016)
 	draw_line(center + Vector2(-radii.x * 0.50, radii.y * 0.49), center + Vector2(-radii.x * 0.12, radii.y * 0.68), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
 	draw_line(center + Vector2(radii.x * 0.08, radii.y * 0.68), center + Vector2(radii.x * 0.54, radii.y * 0.49), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
+
+func _draw_upper_mass_backdrop(anchor: Dictionary, family: String, remembered: bool, footprint: Vector2i) -> void:
+	if anchor.is_empty():
+		return
+	var center: Vector2 = anchor.get("center", Vector2.ZERO)
+	var radii: Vector2 = anchor.get("radii", Vector2.ZERO)
+	var extent := float(anchor.get("extent", 0.0))
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var metrics := _upper_mass_backdrop_metrics(family, footprint, radii, extent)
+	var width := float(metrics.get("width", 0.0))
+	var height := float(metrics.get("height", 0.0))
+	var top_width := float(metrics.get("top_width", 0.0))
+	if width <= 0.0 or height <= 0.0 or top_width <= 0.0:
+		return
+
+	var wash_color := OBJECT_UPPER_BACKDROP_MEMORY if remembered else OBJECT_UPPER_BACKDROP_VISIBLE
+	var mass_shadow_color := OBJECT_VERTICAL_MASS_SHADOW_MEMORY if remembered else OBJECT_VERTICAL_MASS_SHADOW_VISIBLE
+	var points := PackedVector2Array([
+		center + Vector2(-width * 0.50, radii.y * 0.30),
+		center + Vector2(-width * 0.46, -height * 0.30),
+		center + Vector2(-top_width * 0.58, -height * 0.88),
+		center + Vector2(0.0, -height),
+		center + Vector2(top_width * 0.62, -height * 0.84),
+		center + Vector2(width * 0.44, -height * 0.28),
+		center + Vector2(width * 0.52, radii.y * 0.28),
+	])
+	draw_colored_polygon(points, wash_color)
+
+	var mass_points := PackedVector2Array([
+		center + Vector2(-top_width * 0.20, -height * 0.78),
+		center + Vector2(top_width * 0.26, -height * 0.72),
+		center + Vector2(width * 0.22, -height * 0.16),
+		center + Vector2(width * 0.18, radii.y * 0.25),
+		center + Vector2(-width * 0.20, radii.y * 0.26),
+		center + Vector2(-width * 0.24, -height * 0.18),
+	])
+	draw_colored_polygon(mass_points, mass_shadow_color)
+	draw_line(
+		center + Vector2(-width * 0.32, -height * 0.18),
+		center + Vector2(-top_width * 0.38, -height * 0.72),
+		Color(wash_color.r, wash_color.g, wash_color.b, wash_color.a * 0.54),
+		maxf(1.0, extent * 0.012)
+	)
+
+func _upper_mass_backdrop_metrics(family: String, footprint: Vector2i, radii: Vector2, extent: float) -> Dictionary:
+	var normalized_footprint := _normalized_footprint(footprint)
+	var footprint_width := 1.0 + (float(maxi(normalized_footprint.x - 1, 0)) * 0.16)
+	var footprint_height := 1.0 + (float(maxi(normalized_footprint.y - 1, 0)) * 0.08)
+	var width_scale := 0.84
+	var height_fraction := 0.38
+	var top_width_scale := 0.28
+	match family:
+		"town":
+			width_scale = 1.48
+			height_fraction = 0.62
+			top_width_scale = 0.42
+		"neutral_dwelling", "repeatable_service", "faction_outpost":
+			width_scale = 1.26
+			height_fraction = 0.50
+			top_width_scale = 0.34
+		"mine", "guarded_reward_site":
+			width_scale = 1.18
+			height_fraction = 0.48
+			top_width_scale = 0.28
+		"scouting_structure":
+			width_scale = 0.92
+			height_fraction = 0.70
+			top_width_scale = 0.18
+		"transit_object":
+			width_scale = 1.04
+			height_fraction = 0.62
+			top_width_scale = 0.18
+		"frontier_shrine":
+			width_scale = 0.92
+			height_fraction = 0.56
+			top_width_scale = 0.22
+		"encounter":
+			width_scale = 0.98
+			height_fraction = 0.44
+			top_width_scale = 0.24
+		"artifact":
+			width_scale = 0.76
+			height_fraction = 0.38
+			top_width_scale = 0.18
+		"hero":
+			width_scale = 0.72
+			height_fraction = 0.52
+			top_width_scale = 0.20
+	var width := maxf(6.0, radii.x * width_scale * footprint_width)
+	var height := maxf(6.0, extent * height_fraction * footprint_height)
+	return {
+		"width": width,
+		"height": minf(height, extent * 0.82),
+		"top_width": maxf(width * top_width_scale, extent * 0.06),
+	}
 
 func _placement_bed_alpha(remembered: bool) -> float:
 	return OBJECT_PLACEMENT_BED_MEMORY_ALPHA if remembered else OBJECT_PLACEMENT_BED_VISIBLE_ALPHA
@@ -1395,6 +1507,9 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			"sprite_depth_cue_model": "",
 			"sprite_placement_bed": false,
 			"sprite_placement_bed_model": "",
+			"sprite_upper_mass_backdrop": false,
+			"sprite_upper_mass_backdrop_model": "",
+			"sprite_vertical_mass_shadow": false,
 			"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 		}
 	var sprite_asset_ids: Array[String] = []
@@ -1426,6 +1541,9 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		"sprite_depth_cue_model": OBJECT_DEPTH_CUE_MODEL if uses_asset_sprite else "",
 		"sprite_placement_bed": uses_asset_sprite,
 		"sprite_placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if uses_asset_sprite else "",
+		"sprite_upper_mass_backdrop": uses_asset_sprite,
+		"sprite_upper_mass_backdrop_model": OBJECT_UPPER_BACKDROP_MODEL if uses_asset_sprite else "",
+		"sprite_vertical_mass_shadow": uses_asset_sprite,
 		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
@@ -1456,6 +1574,12 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var anchor_half_width_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * (1.0 + (float(dominant_footprint.x - 1) * MARKER_FOOTPRINT_WIDTH_STEP))
 	var anchor_half_height_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * (1.0 + (float(dominant_footprint.y - 1) * MARKER_FOOTPRINT_HEIGHT_STEP))
 	var has_presence := has_object_marker or has_visible_hero
+	var backdrop_metrics := _upper_mass_backdrop_metrics(
+		dominant_family,
+		dominant_footprint,
+		Vector2(anchor_half_width_fraction * extent, anchor_half_height_fraction * extent),
+		extent
+	) if has_presence else {}
 	return {
 		"object_kinds": object_kinds,
 		"marker_kinds": marker_kinds,
@@ -1469,6 +1593,18 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"placement_bed_alpha": _placement_bed_alpha(remembered) if has_presence else 0.0,
 		"placement_bed_terrain_tinted": has_presence,
 		"placement_bed_ui_plate": false,
+		"upper_mass_backdrop": has_presence,
+		"upper_mass_backdrop_model": OBJECT_UPPER_BACKDROP_MODEL if has_presence else "",
+		"upper_mass_backdrop_shape": "family_scaled_rear_wash" if has_presence else "",
+		"upper_mass_backdrop_alpha": (OBJECT_UPPER_BACKDROP_MEMORY.a if remembered else OBJECT_UPPER_BACKDROP_VISIBLE.a) if has_presence else 0.0,
+		"upper_mass_backdrop_position": "behind_upper_body" if has_presence else "",
+		"upper_mass_backdrop_height_fraction": (float(backdrop_metrics.get("height", 0.0)) / extent) if has_presence and extent > 0.0 else 0.0,
+		"upper_mass_backdrop_width_fraction": (float(backdrop_metrics.get("width", 0.0)) / extent) if has_presence and extent > 0.0 else 0.0,
+		"upper_mass_backdrop_ui_halo": false,
+		"upper_mass_backdrop_ui_badge": false,
+		"vertical_mass_shadow": has_presence,
+		"vertical_mass_shadow_model": OBJECT_VERTICAL_MASS_SHADOW_MODEL if has_presence else "",
+		"vertical_mass_shadow_alpha": (OBJECT_VERTICAL_MASS_SHADOW_MEMORY.a if remembered else OBJECT_VERTICAL_MASS_SHADOW_VISIBLE.a) if has_presence else 0.0,
 		"foreground_occlusion_lip": has_presence,
 		"occlusion_model": OBJECT_OCCLUSION_MODEL if has_presence else "",
 		"depth_cue_model": OBJECT_DEPTH_CUE_MODEL if has_presence else "",
