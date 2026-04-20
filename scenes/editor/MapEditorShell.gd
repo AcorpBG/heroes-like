@@ -8,10 +8,13 @@ const DEFAULT_SCENARIO_ID := "ninefold-confluence"
 const DEFAULT_TERRAIN_ID := "grass"
 const EDITOR_ROAD_LAYER_ID := "editor_working_road"
 const EDITOR_ROAD_OVERLAY_ID := "road_dirt"
+const TERRAIN_LINE_RULE_ID := "manhattan_l_horizontal_then_vertical"
+const TERRAIN_LINE_RULE_LABEL := "Manhattan L line, horizontal first, then vertical"
 const ROAD_PATH_RULE_ID := "manhattan_l_horizontal_then_vertical"
 const ROAD_PATH_RULE_LABEL := "Manhattan L path, horizontal first, then vertical"
 const TOOL_INSPECT := "inspect"
 const TOOL_TERRAIN := "terrain"
+const TOOL_TERRAIN_LINE := "terrain_line"
 const TOOL_ROAD := "road"
 const TOOL_ROAD_PATH := "road_path"
 const TOOL_HERO_START := "hero_start"
@@ -36,6 +39,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _terrain_picker: OptionButton = %TerrainPicker
 @onready var _inspect_tool_button: Button = %InspectTool
 @onready var _terrain_tool_button: Button = %TerrainTool
+@onready var _terrain_line_tool_button: Button = %TerrainLineTool
 @onready var _road_tool_button: Button = %RoadTool
 @onready var _road_path_tool_button: Button = %RoadPathTool
 @onready var _hero_start_tool_button: Button = %HeroStartTool
@@ -72,6 +76,7 @@ var _selected_object_content_id := ""
 var _selected_property_object_key := ""
 var _pending_move_object_key := ""
 var _pending_duplicate_object_key := ""
+var _pending_terrain_line_start := Vector2i(-1, -1)
 var _pending_road_path_start := Vector2i(-1, -1)
 var _selected_tile := Vector2i.ZERO
 var _hovered_tile := Vector2i(-1, -1)
@@ -99,6 +104,7 @@ func _connect_ui() -> void:
 	_terrain_picker.item_selected.connect(_on_terrain_selected)
 	_inspect_tool_button.pressed.connect(func(): _select_tool(TOOL_INSPECT))
 	_terrain_tool_button.pressed.connect(func(): _select_tool(TOOL_TERRAIN))
+	_terrain_line_tool_button.pressed.connect(func(): _select_tool(TOOL_TERRAIN_LINE))
 	_road_tool_button.pressed.connect(func(): _select_tool(TOOL_ROAD))
 	_road_path_tool_button.pressed.connect(func(): _select_tool(TOOL_ROAD_PATH))
 	_hero_start_tool_button.pressed.connect(func(): _select_tool(TOOL_HERO_START))
@@ -503,6 +509,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_selected_property_object_key = ""
 	_pending_move_object_key = ""
 	_pending_duplicate_object_key = ""
+	_pending_terrain_line_start = Vector2i(-1, -1)
 	_pending_road_path_start = Vector2i(-1, -1)
 	_dirty = false
 	_restored_from_play_copy = false
@@ -544,6 +551,16 @@ func _restore_editor_ui_metadata() -> void:
 	_selected_property_object_key = String(_session.flags.get("editor_selected_property_object_key", ""))
 	_pending_move_object_key = String(_session.flags.get("editor_pending_move_object_key", ""))
 	_pending_duplicate_object_key = String(_session.flags.get("editor_pending_duplicate_object_key", ""))
+	var pending_terrain_line_value = _session.flags.get("editor_pending_terrain_line_start", {})
+	if pending_terrain_line_value is Dictionary:
+		_pending_terrain_line_start = Vector2i(
+			int(pending_terrain_line_value.get("x", -1)),
+			int(pending_terrain_line_value.get("y", -1))
+		)
+	else:
+		_pending_terrain_line_start = Vector2i(-1, -1)
+	if not _tile_in_bounds(_pending_terrain_line_start):
+		_pending_terrain_line_start = Vector2i(-1, -1)
 	var pending_road_path_value = _session.flags.get("editor_pending_road_path_start", {})
 	if pending_road_path_value is Dictionary:
 		_pending_road_path_start = Vector2i(
@@ -625,6 +642,12 @@ func _refresh_labels() -> void:
 			state_line,
 			String(pending_duplicate_detail.get("placement_id", _pending_duplicate_object_key)),
 		]
+	if _has_pending_terrain_line_start():
+		state_line = "%s | Terrain line start %d,%d" % [
+			state_line,
+			_pending_terrain_line_start.x,
+			_pending_terrain_line_start.y,
+		]
 	if _has_pending_road_path_start():
 		state_line = "%s | Road path start %d,%d" % [
 			state_line,
@@ -638,6 +661,8 @@ func _tool_label(tool: String) -> String:
 	match tool:
 		TOOL_TERRAIN:
 			return "Terrain"
+		TOOL_TERRAIN_LINE:
+			return "Terrain Line"
 		TOOL_ROAD:
 			return "Road"
 		TOOL_ROAD_PATH:
@@ -661,6 +686,7 @@ func _select_tool(tool: String) -> void:
 	var valid_tools := [
 		TOOL_INSPECT,
 		TOOL_TERRAIN,
+		TOOL_TERRAIN_LINE,
 		TOOL_ROAD,
 		TOOL_ROAD_PATH,
 		TOOL_HERO_START,
@@ -675,6 +701,8 @@ func _select_tool(tool: String) -> void:
 		_pending_move_object_key = ""
 	if _tool != TOOL_DUPLICATE_OBJECT:
 		_pending_duplicate_object_key = ""
+	if _tool != TOOL_TERRAIN_LINE:
+		_pending_terrain_line_start = Vector2i(-1, -1)
 	if _tool != TOOL_ROAD_PATH:
 		_pending_road_path_start = Vector2i(-1, -1)
 	_sync_tool_buttons()
@@ -684,6 +712,7 @@ func _sync_tool_buttons() -> void:
 	var buttons := {
 		TOOL_INSPECT: _inspect_tool_button,
 		TOOL_TERRAIN: _terrain_tool_button,
+		TOOL_TERRAIN_LINE: _terrain_line_tool_button,
 		TOOL_ROAD: _road_tool_button,
 		TOOL_ROAD_PATH: _road_path_tool_button,
 		TOOL_HERO_START: _hero_start_tool_button,
@@ -709,7 +738,7 @@ func _on_terrain_selected(index: int) -> void:
 	if index < 0 or index >= _terrain_picker.get_item_count():
 		return
 	_selected_terrain_id = String(_terrain_picker.get_item_metadata(index))
-	_select_tool(TOOL_TERRAIN)
+	_select_tool(TOOL_TERRAIN_LINE if _tool == TOOL_TERRAIN_LINE else TOOL_TERRAIN)
 	_last_message = "Terrain brush set to %s." % _selected_terrain_id
 	_refresh_state()
 
@@ -776,6 +805,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 	match _tool:
 		TOOL_TERRAIN:
 			_paint_terrain(tile, _selected_terrain_id)
+		TOOL_TERRAIN_LINE:
+			_terrain_line_tool_click(tile)
 		TOOL_ROAD:
 			_toggle_road(tile)
 		TOOL_ROAD_PATH:
@@ -818,6 +849,101 @@ func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
 
 func _fill_terrain_from_selected_tile() -> Dictionary:
 	return _fill_terrain_region(_selected_tile, _selected_terrain_id)
+
+func _terrain_line_tool_click(tile: Vector2i) -> bool:
+	if not _tile_in_bounds(tile):
+		return false
+	if not _has_pending_terrain_line_start():
+		_pending_terrain_line_start = tile
+		_last_message = "Terrain line start set at %d,%d. Next click paints %s with %s." % [
+			tile.x,
+			tile.y,
+			TERRAIN_LINE_RULE_LABEL,
+			_selected_terrain_id,
+		]
+		return true
+	var result := _apply_terrain_line(_pending_terrain_line_start, tile, _selected_terrain_id)
+	if bool(result.get("ok", false)):
+		_pending_terrain_line_start = Vector2i(-1, -1)
+		_dirty = _dirty or bool(result.get("changed", false))
+		_last_message = String(result.get("message", "Applied terrain line."))
+	else:
+		_last_message = String(result.get("message", "Could not apply terrain line."))
+	return bool(result.get("ok", false))
+
+func _apply_terrain_line(start_tile: Vector2i, end_tile: Vector2i, terrain_id: String) -> Dictionary:
+	if _session == null:
+		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
+	if not _tile_in_bounds(start_tile) or not _tile_in_bounds(end_tile):
+		return {"ok": false, "changed": false, "message": "Terrain line start or end is outside the map."}
+	if terrain_id == "":
+		return {"ok": false, "changed": false, "message": "Choose an active terrain id before painting a terrain line."}
+	if not _terrain_id_in_grammar(terrain_id):
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Terrain id %s is not in the authored terrain grammar." % terrain_id,
+			"path_rule": TERRAIN_LINE_RULE_ID,
+			"path_rule_label": TERRAIN_LINE_RULE_LABEL,
+		}
+	var map_data = _session.overworld.get("map", [])
+	if not (map_data is Array):
+		return {"ok": false, "changed": false, "message": "Working copy has no terrain map array."}
+	var path_tiles := _terrain_line_tiles(start_tile, end_tile)
+	var changed_tiles: Array[Vector2i] = []
+	var previous_terrain_by_tile := {}
+	for tile in path_tiles:
+		if not _tile_in_bounds(tile):
+			continue
+		var row = map_data[tile.y]
+		if not (row is Array) or tile.x < 0 or tile.x >= row.size():
+			continue
+		var previous := String(row[tile.x])
+		previous_terrain_by_tile[_tile_key(tile)] = previous
+		if previous == terrain_id:
+			continue
+		row[tile.x] = terrain_id
+		map_data[tile.y] = row
+		changed_tiles.append(tile)
+	_session.overworld["map"] = map_data
+	var changed := not changed_tiles.is_empty()
+	var message := "Painted %d terrain line tile%s with %s on %s from %d,%d to %d,%d." % [
+		changed_tiles.size(),
+		"" if changed_tiles.size() == 1 else "s",
+		terrain_id,
+		TERRAIN_LINE_RULE_LABEL,
+		start_tile.x,
+		start_tile.y,
+		end_tile.x,
+		end_tile.y,
+	]
+	if not changed:
+		message = "Terrain line made no working-copy changes with %s on %s from %d,%d to %d,%d." % [
+			terrain_id,
+			TERRAIN_LINE_RULE_LABEL,
+			start_tile.x,
+			start_tile.y,
+			end_tile.x,
+			end_tile.y,
+		]
+	return {
+		"ok": true,
+		"changed": changed,
+		"message": message,
+		"active_terrain_id": terrain_id,
+		"path_rule": TERRAIN_LINE_RULE_ID,
+		"path_rule_label": TERRAIN_LINE_RULE_LABEL,
+		"start_tile": {"x": start_tile.x, "y": start_tile.y},
+		"end_tile": {"x": end_tile.x, "y": end_tile.y},
+		"path_tiles": _tile_array_payload(path_tiles),
+		"changed_tiles": _tile_array_payload(changed_tiles),
+		"previous_terrain_by_tile": previous_terrain_by_tile,
+		"path_count": path_tiles.size(),
+		"affected_count": changed_tiles.size(),
+	}
+
+func _terrain_line_tiles(start_tile: Vector2i, end_tile: Vector2i) -> Array[Vector2i]:
+	return _manhattan_l_path_tiles(start_tile, end_tile)
 
 func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionary:
 	if _session == null:
@@ -1027,6 +1153,9 @@ func _apply_road_path(start_tile: Vector2i, end_tile: Vector2i, requested_action
 	}
 
 func _road_path_tiles(start_tile: Vector2i, end_tile: Vector2i) -> Array[Vector2i]:
+	return _manhattan_l_path_tiles(start_tile, end_tile)
+
+func _manhattan_l_path_tiles(start_tile: Vector2i, end_tile: Vector2i) -> Array[Vector2i]:
 	var tiles: Array[Vector2i] = []
 	var cursor := start_tile
 	tiles.append(cursor)
@@ -1136,6 +1265,14 @@ func _road_tile_keys_from_layers(roads: Array) -> Dictionary:
 			if tile_value is Dictionary:
 				keys["%d,%d" % [int(tile_value.get("x", -1)), int(tile_value.get("y", -1))]] = true
 	return keys
+
+func _has_pending_terrain_line_start() -> bool:
+	return _pending_terrain_line_start.x >= 0 and _pending_terrain_line_start.y >= 0 and _tile_in_bounds(_pending_terrain_line_start)
+
+func _pending_terrain_line_start_payload() -> Dictionary:
+	if not _has_pending_terrain_line_start():
+		return {}
+	return {"x": _pending_terrain_line_start.x, "y": _pending_terrain_line_start.y}
 
 func _has_pending_road_path_start() -> bool:
 	return _pending_road_path_start.x >= 0 and _pending_road_path_start.y >= 0 and _tile_in_bounds(_pending_road_path_start)
@@ -2024,6 +2161,7 @@ func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_selected_property_object_key"] = _selected_property_object_key
 	_session.flags["editor_pending_move_object_key"] = _pending_move_object_key
 	_session.flags["editor_pending_duplicate_object_key"] = _pending_duplicate_object_key
+	_session.flags["editor_pending_terrain_line_start"] = _pending_terrain_line_start_payload()
 	_session.flags["editor_pending_road_path_start"] = _pending_road_path_start_payload()
 	_session.game_state = "overworld"
 	_session.scenario_status = "in_progress"
@@ -2442,7 +2580,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _terrain_line_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -2485,6 +2623,9 @@ func validation_snapshot() -> Dictionary:
 		"pending_move_object": _pending_move_object_payload(),
 		"pending_duplicate_object_key": _pending_duplicate_object_key,
 		"pending_duplicate_object": _pending_duplicate_object_payload(),
+		"pending_terrain_line_start": _pending_terrain_line_start_payload(),
+		"terrain_line_rule": TERRAIN_LINE_RULE_ID,
+		"terrain_line_rule_label": TERRAIN_LINE_RULE_LABEL,
 		"pending_road_path_start": _pending_road_path_start_payload(),
 		"road_path_rule": ROAD_PATH_RULE_ID,
 		"road_path_rule_label": ROAD_PATH_RULE_LABEL,
@@ -2535,7 +2676,7 @@ func validation_select_object_content(content_id: String) -> Dictionary:
 
 func validation_select_terrain(terrain_id: String) -> Dictionary:
 	if _select_terrain_by_id(terrain_id):
-		_select_tool(TOOL_TERRAIN)
+		_select_tool(TOOL_TERRAIN_LINE if _tool == TOOL_TERRAIN_LINE else TOOL_TERRAIN)
 		var snapshot := validation_snapshot()
 		snapshot["ok"] = true
 		return snapshot
@@ -2581,6 +2722,83 @@ func validation_fill_terrain(x: int, y: int, terrain_id: String = "") -> Diction
 	snapshot["filled_count"] = int(result.get("filled_count", 0))
 	snapshot["source_terrain_id"] = String(result.get("source_terrain_id", ""))
 	snapshot["active_terrain_id"] = String(result.get("active_terrain_id", _selected_terrain_id))
+	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
+	return snapshot
+
+func validation_set_terrain_line_start(x: int, y: int, terrain_id: String = "") -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile outside map.", "path_rule": TERRAIN_LINE_RULE_ID}
+	var terrain_selected := true
+	if terrain_id != "":
+		terrain_selected = _select_terrain_by_id(terrain_id)
+	_selected_tile = tile
+	_tool = TOOL_TERRAIN_LINE
+	_pending_terrain_line_start = tile
+	_last_message = "Terrain line start set at %d,%d. Apply uses %s with %s." % [
+		x,
+		y,
+		TERRAIN_LINE_RULE_LABEL,
+		_selected_terrain_id,
+	]
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = terrain_selected
+	snapshot["terrain_selected"] = terrain_selected
+	snapshot["path_rule"] = TERRAIN_LINE_RULE_ID
+	snapshot["path_rule_label"] = TERRAIN_LINE_RULE_LABEL
+	return snapshot
+
+func validation_apply_terrain_line(x: int, y: int, terrain_id: String = "") -> Dictionary:
+	var end_tile := Vector2i(x, y)
+	if not _tile_in_bounds(end_tile):
+		return {"ok": false, "message": "Tile outside map.", "path_rule": TERRAIN_LINE_RULE_ID}
+	var terrain_selected := true
+	if terrain_id != "":
+		terrain_selected = _select_terrain_by_id(terrain_id)
+	if not _has_pending_terrain_line_start():
+		var missing_snapshot := validation_snapshot()
+		missing_snapshot["ok"] = false
+		missing_snapshot["terrain_selected"] = terrain_selected
+		missing_snapshot["message"] = "Set a terrain line start tile before applying the line."
+		missing_snapshot["path_rule"] = TERRAIN_LINE_RULE_ID
+		missing_snapshot["path_rule_label"] = TERRAIN_LINE_RULE_LABEL
+		return missing_snapshot
+	var start_tile := _pending_terrain_line_start
+	_selected_tile = end_tile
+	_tool = TOOL_TERRAIN_LINE
+	var result := {}
+	if terrain_selected:
+		result = _apply_terrain_line(start_tile, end_tile, _selected_terrain_id)
+	else:
+		result = {
+			"ok": false,
+			"changed": false,
+			"message": "Terrain id %s is not in the authored terrain grammar." % terrain_id,
+			"path_rule": TERRAIN_LINE_RULE_ID,
+			"path_rule_label": TERRAIN_LINE_RULE_LABEL,
+		}
+	if bool(result.get("ok", false)):
+		_pending_terrain_line_start = Vector2i(-1, -1)
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["terrain_selected"] = terrain_selected
+	snapshot["terrain_line_result"] = result
+	snapshot["active_terrain_id"] = String(result.get("active_terrain_id", _selected_terrain_id))
+	snapshot["path_rule"] = String(result.get("path_rule", TERRAIN_LINE_RULE_ID))
+	snapshot["path_rule_label"] = String(result.get("path_rule_label", TERRAIN_LINE_RULE_LABEL))
+	snapshot["path_tiles"] = result.get("path_tiles", [])
+	snapshot["changed_tiles"] = result.get("changed_tiles", [])
+	snapshot["previous_terrain_by_tile"] = result.get("previous_terrain_by_tile", {})
+	snapshot["path_count"] = int(result.get("path_count", 0))
+	snapshot["affected_count"] = int(result.get("affected_count", 0))
+	snapshot["start_tile"] = result.get("start_tile", {"x": start_tile.x, "y": start_tile.y})
+	snapshot["end_tile"] = result.get("end_tile", {"x": end_tile.x, "y": end_tile.y})
 	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
 	return snapshot
 
