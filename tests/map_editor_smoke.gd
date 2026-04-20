@@ -89,6 +89,8 @@ func _run() -> void:
 		return
 	if not _assert_object_move_edits(shell):
 		return
+	if not _assert_object_duplicate_edits(shell):
+		return
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
 	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
@@ -259,6 +261,49 @@ func _assert_object_move_edits(shell) -> bool:
 		return false
 	return true
 
+func _assert_object_duplicate_edits(shell) -> bool:
+	if not _assert_object_duplicate(
+		shell,
+		"town",
+		Vector2i(24, 26),
+		Vector2i(25, 26),
+		"ninefold_embercourt_survey_camp",
+		"owner",
+		"neutral"
+	):
+		return false
+	if not _assert_object_duplicate(
+		shell,
+		"resource",
+		Vector2i(3, 6),
+		Vector2i(4, 6),
+		"north_snow_timber",
+		"collected",
+		true
+	):
+		return false
+	if not _assert_object_duplicate(
+		shell,
+		"artifact",
+		Vector2i(10, 45),
+		Vector2i(11, 45),
+		"confluence_quarry_tally_rod",
+		"collected",
+		true
+	):
+		return false
+	if not _assert_object_duplicate(
+		shell,
+		"encounter",
+		Vector2i(31, 32),
+		Vector2i(32, 32),
+		"ninefold_reedmaw_host",
+		"difficulty",
+		"low"
+	):
+		return false
+	return true
+
 func _assert_object_move(
 	shell,
 	family: String,
@@ -323,6 +368,80 @@ func _assert_object_move(
 		"encounter":
 			if bool(source_presentation.get("has_visible_encounter", false)) or not bool(destination_presentation.get("has_visible_encounter", false)):
 				_fail("Map editor smoke: live preview did not move the encounter marker: source=%s destination=%s." % [source_presentation, destination_presentation])
+				return false
+	return true
+
+func _assert_object_duplicate(
+	shell,
+	family: String,
+	source: Vector2i,
+	destination: Vector2i,
+	source_placement_id: String,
+	preserved_key: String,
+	preserved_value: Variant
+) -> bool:
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var before_count := int(before_snapshot.get("placement_count", 0))
+	var duplicate_result: Dictionary = shell.call("validation_duplicate_object", source.x, source.y, destination.x, destination.y, family)
+	if not bool(duplicate_result.get("ok", false)):
+		_fail("Map editor smoke: duplicating %s %s from %s to %s failed: %s." % [family, source_placement_id, source, destination, duplicate_result])
+		return false
+	if int(duplicate_result.get("placement_count", 0)) != before_count + 1:
+		_fail("Map editor smoke: duplicating %s did not add exactly one placement: %s." % [family, duplicate_result])
+		return false
+	var before_detail: Dictionary = duplicate_result.get("source_detail_before", {})
+	var source_after := _object_detail_for_family(duplicate_result.get("source_tile_inspection", {}), family)
+	if source_after.is_empty() or String(source_after.get("placement_id", "")) != source_placement_id:
+		_fail("Map editor smoke: duplicating %s did not preserve the source placement: %s." % [family, duplicate_result])
+		return false
+	var duplicate_detail := _object_detail_for_family(duplicate_result.get("destination_tile_inspection", {}), family)
+	if duplicate_detail.is_empty():
+		_fail("Map editor smoke: duplicating %s did not expose the duplicate at its destination: %s." % [family, duplicate_result])
+		return false
+	var duplicate_placement_id := String(duplicate_detail.get("placement_id", ""))
+	if duplicate_placement_id == source_placement_id or not duplicate_placement_id.begins_with("editor_duplicate_%s_" % family):
+		_fail("Map editor smoke: duplicated %s did not receive a fresh editor duplicate placement id: %s." % [family, duplicate_detail])
+		return false
+	if int(duplicate_detail.get("x", -1)) != destination.x or int(duplicate_detail.get("y", -1)) != destination.y:
+		_fail("Map editor smoke: duplicated %s inspection did not report destination coordinates: %s." % [family, duplicate_detail])
+		return false
+	if String(duplicate_detail.get("content_id", "")) != String(before_detail.get("content_id", "")):
+		_fail("Map editor smoke: duplicating %s did not preserve content id: before=%s after=%s." % [family, before_detail, duplicate_detail])
+		return false
+	if duplicate_detail.get(preserved_key) != preserved_value:
+		_fail("Map editor smoke: duplicating %s did not preserve %s=%s: %s." % [family, preserved_key, preserved_value, duplicate_detail])
+		return false
+	if family == "encounter" and int(duplicate_detail.get("combat_seed", 0)) != int(before_detail.get("combat_seed", 0)):
+		_fail("Map editor smoke: duplicating encounter did not preserve combat_seed: before=%s after=%s." % [before_detail, duplicate_detail])
+		return false
+	if family in ["resource", "artifact"] and String(duplicate_detail.get("collected_by_faction_id", "")) != String(before_detail.get("collected_by_faction_id", "")):
+		_fail("Map editor smoke: duplicating %s did not preserve collection metadata: before=%s after=%s." % [family, before_detail, duplicate_detail])
+		return false
+	var selected_property: Dictionary = duplicate_result.get("selected_property_object", {})
+	if String(selected_property.get("placement_id", "")) != duplicate_placement_id or int(selected_property.get("x", -1)) != destination.x or int(selected_property.get("y", -1)) != destination.y:
+		_fail("Map editor smoke: validation snapshot did not select the duplicated %s at its destination: %s." % [family, duplicate_result])
+		return false
+	var source_presentation: Dictionary = shell.call("validation_tile_presentation", source.x, source.y)
+	var destination_presentation: Dictionary = shell.call("validation_tile_presentation", destination.x, destination.y)
+	match family:
+		"town":
+			if not bool(source_presentation.get("has_town", false)) or not bool(destination_presentation.get("has_town", false)):
+				_fail("Map editor smoke: live preview did not expose both source and duplicated town markers: source=%s destination=%s." % [source_presentation, destination_presentation])
+				return false
+			if String(destination_presentation.get("town_presentation", {}).get("owner", "")) != "neutral":
+				_fail("Map editor smoke: duplicated town preview did not preserve owner: %s." % destination_presentation)
+				return false
+		"resource":
+			if bool(source_presentation.get("has_resource", true)) or bool(destination_presentation.get("has_resource", true)):
+				_fail("Map editor smoke: collected duplicated resource did not stay hidden in live preview: source=%s destination=%s." % [source_presentation, destination_presentation])
+				return false
+		"artifact":
+			if bool(source_presentation.get("has_artifact", true)) or bool(destination_presentation.get("has_artifact", true)):
+				_fail("Map editor smoke: collected duplicated artifact did not stay hidden in live preview: source=%s destination=%s." % [source_presentation, destination_presentation])
+				return false
+		"encounter":
+			if not bool(source_presentation.get("has_visible_encounter", false)) or not bool(destination_presentation.get("has_visible_encounter", false)):
+				_fail("Map editor smoke: live preview did not expose both source and duplicated encounter markers: source=%s destination=%s." % [source_presentation, destination_presentation])
 				return false
 	return true
 
@@ -417,11 +536,23 @@ func _assert_active_session_property_edits(session) -> bool:
 	if _placement_position(session, "towns", "ninefold_embercourt_survey_camp") != Vector2i(24, 26):
 		_fail("Map editor smoke: Play Copy did not use the moved town position.")
 		return false
+	if _town_owner(session, "editor_duplicate_town_ninefold_embercourt_survey_camp_25_26") != "neutral":
+		_fail("Map editor smoke: Play Copy did not preserve the duplicated town owner.")
+		return false
+	if _placement_position(session, "towns", "editor_duplicate_town_ninefold_embercourt_survey_camp_25_26") != Vector2i(25, 26):
+		_fail("Map editor smoke: Play Copy did not use the duplicated town position.")
+		return false
 	if not _resource_collected(session, "north_snow_timber"):
 		_fail("Map editor smoke: Play Copy did not use the edited resource collected state.")
 		return false
 	if _placement_position(session, "resource_nodes", "north_snow_timber") != Vector2i(3, 6):
 		_fail("Map editor smoke: Play Copy did not use the moved resource position.")
+		return false
+	if not _resource_collected(session, "editor_duplicate_resource_north_snow_timber_4_6"):
+		_fail("Map editor smoke: Play Copy did not preserve the duplicated resource collected state.")
+		return false
+	if _placement_position(session, "resource_nodes", "editor_duplicate_resource_north_snow_timber_4_6") != Vector2i(4, 6):
+		_fail("Map editor smoke: Play Copy did not use the duplicated resource position.")
 		return false
 	if not _artifact_collected(session, "confluence_quarry_tally_rod"):
 		_fail("Map editor smoke: Play Copy did not use the edited artifact collected state.")
@@ -429,11 +560,26 @@ func _assert_active_session_property_edits(session) -> bool:
 	if _placement_position(session, "artifact_nodes", "confluence_quarry_tally_rod") != Vector2i(10, 45):
 		_fail("Map editor smoke: Play Copy did not use the moved artifact position.")
 		return false
+	if not _artifact_collected(session, "editor_duplicate_artifact_confluence_quarry_tally_rod_11_45"):
+		_fail("Map editor smoke: Play Copy did not preserve the duplicated artifact collected state.")
+		return false
+	if _placement_position(session, "artifact_nodes", "editor_duplicate_artifact_confluence_quarry_tally_rod_11_45") != Vector2i(11, 45):
+		_fail("Map editor smoke: Play Copy did not use the duplicated artifact position.")
+		return false
 	if _encounter_difficulty(session, "ninefold_reedmaw_host") != "low":
 		_fail("Map editor smoke: Play Copy did not use the edited encounter difficulty.")
 		return false
 	if _placement_position(session, "encounters", "ninefold_reedmaw_host") != Vector2i(31, 32):
 		_fail("Map editor smoke: Play Copy did not use the moved encounter position.")
+		return false
+	if _encounter_difficulty(session, "editor_duplicate_encounter_ninefold_reedmaw_host_32_32") != "low":
+		_fail("Map editor smoke: Play Copy did not preserve the duplicated encounter difficulty.")
+		return false
+	if _placement_position(session, "encounters", "editor_duplicate_encounter_ninefold_reedmaw_host_32_32") != Vector2i(32, 32):
+		_fail("Map editor smoke: Play Copy did not use the duplicated encounter position.")
+		return false
+	if _encounter_seed(session, "editor_duplicate_encounter_ninefold_reedmaw_host_32_32") != _encounter_seed(session, "ninefold_reedmaw_host"):
+		_fail("Map editor smoke: Play Copy did not preserve the duplicated encounter combat seed.")
 		return false
 	return true
 
@@ -443,20 +589,40 @@ func _assert_returned_editor_property_edits(returned_editor) -> bool:
 	if String(town_detail.get("owner", "")) != "neutral":
 		_fail("Map editor smoke: returned editor lost the edited town owner: %s." % town_result)
 		return false
+	var duplicate_town_result: Dictionary = returned_editor.call("validation_select_tile", 25, 26)
+	var duplicate_town_detail := _object_detail_for_family(duplicate_town_result.get("tile_inspection", {}), "town")
+	if String(duplicate_town_detail.get("placement_id", "")) != "editor_duplicate_town_ninefold_embercourt_survey_camp_25_26" or String(duplicate_town_detail.get("owner", "")) != "neutral":
+		_fail("Map editor smoke: returned editor lost the duplicated town state: %s." % duplicate_town_result)
+		return false
 	var resource_result: Dictionary = returned_editor.call("validation_select_tile", 3, 6)
 	var resource_detail := _object_detail_for_family(resource_result.get("tile_inspection", {}), "resource")
 	if not bool(resource_detail.get("collected", false)):
 		_fail("Map editor smoke: returned editor lost the edited resource collected state: %s." % resource_result)
+		return false
+	var duplicate_resource_result: Dictionary = returned_editor.call("validation_select_tile", 4, 6)
+	var duplicate_resource_detail := _object_detail_for_family(duplicate_resource_result.get("tile_inspection", {}), "resource")
+	if String(duplicate_resource_detail.get("placement_id", "")) != "editor_duplicate_resource_north_snow_timber_4_6" or not bool(duplicate_resource_detail.get("collected", false)):
+		_fail("Map editor smoke: returned editor lost the duplicated resource state: %s." % duplicate_resource_result)
 		return false
 	var artifact_result: Dictionary = returned_editor.call("validation_select_tile", 10, 45)
 	var artifact_detail := _object_detail_for_family(artifact_result.get("tile_inspection", {}), "artifact")
 	if not bool(artifact_detail.get("collected", false)):
 		_fail("Map editor smoke: returned editor lost the edited artifact collected state: %s." % artifact_result)
 		return false
+	var duplicate_artifact_result: Dictionary = returned_editor.call("validation_select_tile", 11, 45)
+	var duplicate_artifact_detail := _object_detail_for_family(duplicate_artifact_result.get("tile_inspection", {}), "artifact")
+	if String(duplicate_artifact_detail.get("placement_id", "")) != "editor_duplicate_artifact_confluence_quarry_tally_rod_11_45" or not bool(duplicate_artifact_detail.get("collected", false)):
+		_fail("Map editor smoke: returned editor lost the duplicated artifact state: %s." % duplicate_artifact_result)
+		return false
 	var encounter_result: Dictionary = returned_editor.call("validation_select_tile", 31, 32)
 	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
 	if String(encounter_detail.get("difficulty", "")) != "low":
 		_fail("Map editor smoke: returned editor lost the edited encounter difficulty: %s." % encounter_result)
+		return false
+	var duplicate_encounter_result: Dictionary = returned_editor.call("validation_select_tile", 32, 32)
+	var duplicate_encounter_detail := _object_detail_for_family(duplicate_encounter_result.get("tile_inspection", {}), "encounter")
+	if String(duplicate_encounter_detail.get("placement_id", "")) != "editor_duplicate_encounter_ninefold_reedmaw_host_32_32" or String(duplicate_encounter_detail.get("difficulty", "")) != "low" or int(duplicate_encounter_detail.get("combat_seed", 0)) != int(encounter_detail.get("combat_seed", -1)):
+		_fail("Map editor smoke: returned editor lost the duplicated encounter state: %s." % duplicate_encounter_result)
 		return false
 	return true
 
@@ -509,6 +675,12 @@ func _encounter_difficulty(session, placement_id: String) -> String:
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return String(encounter.get("difficulty", ""))
 	return ""
+
+func _encounter_seed(session, placement_id: String) -> int:
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return int(encounter.get("combat_seed", 0))
+	return 0
 
 func _fail(message: String) -> void:
 	push_error(message)

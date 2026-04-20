@@ -49,6 +49,34 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
+## Current Implementation Slice: Map Editor Object Duplication
+Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
+
+Purpose:
+- Let the in-game map editor duplicate an existing runtime object placement from one tile onto a new empty destination tile.
+- Preserve the source object's runtime state by deep-copying the existing working-copy placement and changing only its `placement_id`, `x`, and `y`.
+- Keep duplication in memory and avoid authored JSON writeback, save-format changes, editor-only schemas, broad gameplay rewrites, and town multi-tile occupancy/pathing changes.
+
+Implemented:
+- Added a compact Duplicate Object tool to `MapEditorShell`: first click selects a supported object placement, second click duplicates it to the destination tile.
+- Scoped duplication to the runtime arrays live play already consumes: `towns`, `resource_nodes`, `artifact_nodes`, and `encounters`.
+- Reused the one-supported-object-per-tile editor rule so duplicates cannot be placed onto another town/site/artifact/encounter.
+- Generated fresh unique editor duplicate placement ids while preserving content id, owner, difficulty, collected state, collection metadata, combat seed, and any other existing placement fields from the source runtime dictionary.
+- Extended tile inspection and validation snapshots with duplicated-object coordinates and pending duplicate detail so duplication is visible and testable.
+- Extended the editor smoke to duplicate one town, resource node, artifact node, and encounter while proving source preservation, fresh placement ids, preserved state, live preview, Play Copy, and editor return snapshot behavior.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not an authored JSON exporter/writeback path, a save-format change, or a parallel scenario/editor schema.
+- This does not implement undo, drag duplication, multi-select duplication, object ownership reassignment, or broad object authoring.
+- Town 3x2 occupancy/pathing remains future work; duplicating a town still creates another runtime town anchor on one empty editor tile.
+
 ## Current Implementation Slice: Map Editor Object Movement
 Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
 
