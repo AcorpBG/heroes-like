@@ -232,6 +232,10 @@ Implementation note date: 2026-04-20
 
 The map editor working-copy contract now supports relocating existing runtime object placements without rebuilding them. `MapEditorShell` adds a thin Move Object tool and validation hook for towns, resource nodes, artifact nodes, and encounters; moves mutate only the existing in-memory runtime array item `x`/`y` fields while preserving placement id, content id, owner, difficulty, collected state, collection metadata, combat seed, and other runtime fields. Tile inspection, validation snapshots, live preview, and Play Copy all read the moved placement state naturally. Authored scenario JSON remains immutable, runtime save format is unchanged, no parallel editor schema was added, and town 3x2 occupancy/pathing remains future work.
 
+Implementation note date: 2026-04-20
+
+The map editor working-copy contract now supports duplicating existing runtime object placements without rebuilding them from palette defaults. `MapEditorShell` adds a thin Duplicate Object tool and validation hook for towns, resource nodes, artifact nodes, and encounters; duplicates deep-copy the source in-memory runtime placement, preserve content id, owner, difficulty, collected state, collection metadata, combat seed, and other existing placement fields, then assign a fresh unique editor placement id plus the new `x`/`y` destination. Tile inspection, validation snapshots, live preview, and Play Copy all read the duplicated state naturally. Authored scenario JSON remains immutable, runtime save format is unchanged, no parallel editor schema was added, and town 3x2 occupancy/pathing remains future work.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

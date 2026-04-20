@@ -15,6 +15,7 @@ const TOOL_HERO_START := "hero_start"
 const TOOL_PLACE_OBJECT := "place_object"
 const TOOL_REMOVE_OBJECT := "remove_object"
 const TOOL_MOVE_OBJECT := "move_object"
+const TOOL_DUPLICATE_OBJECT := "duplicate_object"
 const OBJECT_FAMILY_TOWN := "town"
 const OBJECT_FAMILY_RESOURCE := "resource"
 const OBJECT_FAMILY_ARTIFACT := "artifact"
@@ -36,6 +37,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _place_object_tool_button: Button = %PlaceObjectTool
 @onready var _remove_object_tool_button: Button = %RemoveObjectTool
 @onready var _move_object_tool_button: Button = %MoveObjectTool
+@onready var _duplicate_object_tool_button: Button = %DuplicateObjectTool
 @onready var _tile_info_label: Label = %TileInfo
 @onready var _status_label: Label = %Status
 @onready var _map_view = %Map
@@ -61,6 +63,7 @@ var _selected_object_family := DEFAULT_OBJECT_FAMILY
 var _selected_object_content_id := ""
 var _selected_property_object_key := ""
 var _pending_move_object_key := ""
+var _pending_duplicate_object_key := ""
 var _selected_tile := Vector2i.ZERO
 var _hovered_tile := Vector2i(-1, -1)
 var _tool := TOOL_INSPECT
@@ -92,6 +95,7 @@ func _connect_ui() -> void:
 	_place_object_tool_button.pressed.connect(func(): _select_tool(TOOL_PLACE_OBJECT))
 	_remove_object_tool_button.pressed.connect(func(): _select_tool(TOOL_REMOVE_OBJECT))
 	_move_object_tool_button.pressed.connect(func(): _select_tool(TOOL_MOVE_OBJECT))
+	_duplicate_object_tool_button.pressed.connect(func(): _select_tool(TOOL_DUPLICATE_OBJECT))
 	_object_family_picker.item_selected.connect(_on_object_family_selected)
 	_object_content_picker.item_selected.connect(_on_object_content_selected)
 	_selected_object_picker.item_selected.connect(_on_selected_property_object_selected)
@@ -322,6 +326,9 @@ func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 func _pending_move_object_payload() -> Dictionary:
 	return _property_object_payload_from_detail(_object_detail_by_key(_pending_move_object_key))
 
+func _pending_duplicate_object_payload() -> Dictionary:
+	return _property_object_payload_from_detail(_object_detail_by_key(_pending_duplicate_object_key))
+
 func _select_property_object_at_tile(family: String) -> bool:
 	for detail in _property_object_options_at(_selected_tile):
 		if not (detail is Dictionary):
@@ -482,6 +489,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_selected_tile = OverworldRules.hero_position(_session)
 	_selected_property_object_key = ""
 	_pending_move_object_key = ""
+	_pending_duplicate_object_key = ""
 	_dirty = false
 	_restored_from_play_copy = false
 	_last_message = "Loaded authored scenario into a mutable editor working copy."
@@ -521,6 +529,7 @@ func _restore_editor_ui_metadata() -> void:
 			_select_object_content_by_id(restored_content_id)
 	_selected_property_object_key = String(_session.flags.get("editor_selected_property_object_key", ""))
 	_pending_move_object_key = String(_session.flags.get("editor_pending_move_object_key", ""))
+	_pending_duplicate_object_key = String(_session.flags.get("editor_pending_duplicate_object_key", ""))
 	_dirty = bool(_session.flags.get("editor_dirty", true))
 
 func _make_all_tiles_visible(session) -> void:
@@ -586,6 +595,12 @@ func _refresh_labels() -> void:
 			state_line,
 			String(pending_detail.get("placement_id", _pending_move_object_key)),
 		]
+	if _pending_duplicate_object_key != "":
+		var pending_duplicate_detail := _object_detail_by_key(_pending_duplicate_object_key)
+		state_line = "%s | Duplicate %s" % [
+			state_line,
+			String(pending_duplicate_detail.get("placement_id", _pending_duplicate_object_key)),
+		]
 	_set_compact_label(_status_label, "%s\n%s" % [state_line, _last_message], 3)
 	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
 
@@ -603,6 +618,8 @@ func _tool_label(tool: String) -> String:
 			return "Remove Object"
 		TOOL_MOVE_OBJECT:
 			return "Move Object"
+		TOOL_DUPLICATE_OBJECT:
+			return "Duplicate Object"
 		_:
 			return "Inspect"
 
@@ -615,10 +632,13 @@ func _select_tool(tool: String) -> void:
 		TOOL_PLACE_OBJECT,
 		TOOL_REMOVE_OBJECT,
 		TOOL_MOVE_OBJECT,
+		TOOL_DUPLICATE_OBJECT,
 	]
 	_tool = tool if tool in valid_tools else TOOL_INSPECT
 	if _tool != TOOL_MOVE_OBJECT:
 		_pending_move_object_key = ""
+	if _tool != TOOL_DUPLICATE_OBJECT:
+		_pending_duplicate_object_key = ""
 	_sync_tool_buttons()
 	_refresh_labels()
 
@@ -631,6 +651,7 @@ func _sync_tool_buttons() -> void:
 		TOOL_PLACE_OBJECT: _place_object_tool_button,
 		TOOL_REMOVE_OBJECT: _remove_object_tool_button,
 		TOOL_MOVE_OBJECT: _move_object_tool_button,
+		TOOL_DUPLICATE_OBJECT: _duplicate_object_tool_button,
 	}
 	for tool_id in buttons.keys():
 		var button: Button = buttons[tool_id]
@@ -711,6 +732,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			_remove_object(tile)
 		TOOL_MOVE_OBJECT:
 			_move_object_tool_click(tile)
+		TOOL_DUPLICATE_OBJECT:
+			_duplicate_object_tool_click(tile)
 		_:
 			_last_message = "Inspected tile %d,%d." % [tile.x, tile.y]
 	_refresh_state()
@@ -994,6 +1017,85 @@ func _move_object_by_key(property_key: String, destination_tile: Vector2i) -> Di
 		}
 	return {"ok": false, "changed": false, "message": "No %s placement %s in the working copy." % [_object_family_label(kind), placement_id]}
 
+func _duplicate_object_tool_click(tile: Vector2i) -> bool:
+	if _pending_duplicate_object_key == "":
+		var detail := _preferred_move_detail_at(tile)
+		if detail.is_empty():
+			_last_message = "Choose a supported town, site, artifact, or encounter to duplicate."
+			return false
+		_pending_duplicate_object_key = String(detail.get("property_key", ""))
+		_selected_property_object_key = _pending_duplicate_object_key
+		_last_message = "Duplicate source selected: %s at %d,%d. Choose an empty destination tile." % [
+			String(detail.get("placement_id", "")),
+			tile.x,
+			tile.y,
+		]
+		return true
+	var result := _duplicate_object_by_key(_pending_duplicate_object_key, tile)
+	if bool(result.get("ok", false)):
+		_pending_duplicate_object_key = ""
+		_dirty = _dirty or bool(result.get("changed", false))
+		_last_message = String(result.get("message", "Duplicated object placement."))
+	else:
+		_last_message = String(result.get("message", "Could not duplicate object placement."))
+	return bool(result.get("ok", false))
+
+func _duplicate_object_by_key(property_key: String, destination_tile: Vector2i) -> Dictionary:
+	if not _tile_in_bounds(destination_tile):
+		return {"ok": false, "changed": false, "message": "Destination tile is outside the map."}
+	var detail := _object_detail_by_key(property_key)
+	if detail.is_empty():
+		return {"ok": false, "changed": false, "message": "No duplicable object %s exists in the working copy." % property_key}
+	var blocker := _first_blocking_object_detail_at(destination_tile)
+	if not blocker.is_empty():
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Destination %d,%d already has %s." % [
+				destination_tile.x,
+				destination_tile.y,
+				String(blocker.get("placement_id", blocker.get("kind", "object"))),
+			],
+		}
+	var kind := String(detail.get("kind", ""))
+	var placement_id := String(detail.get("placement_id", ""))
+	var array_key := _placement_array_key(kind)
+	var placements = _session.overworld.get(array_key, [])
+	if array_key == "" or not (placements is Array):
+		return {"ok": false, "changed": false, "message": "Working copy has no %s array." % _object_family_label(kind)}
+	for placement in placements:
+		if not (placement is Dictionary):
+			continue
+		if String(placement.get("placement_id", "")) != placement_id:
+			continue
+		var source_tile := Vector2i(int(placement.get("x", 0)), int(placement.get("y", 0)))
+		var duplicated_placement: Dictionary = placement.duplicate(true)
+		var duplicated_placement_id := _generate_duplicate_placement_id(kind, placement_id, destination_tile)
+		duplicated_placement["placement_id"] = duplicated_placement_id
+		duplicated_placement["x"] = destination_tile.x
+		duplicated_placement["y"] = destination_tile.y
+		placements.append(duplicated_placement)
+		_session.overworld[array_key] = placements
+		_selected_property_object_key = _object_property_key(kind, duplicated_placement_id)
+		return {
+			"ok": true,
+			"changed": true,
+			"message": "Duplicated %s %s from %d,%d to %d,%d as %s." % [
+				_object_family_label(kind),
+				placement_id,
+				source_tile.x,
+				source_tile.y,
+				destination_tile.x,
+				destination_tile.y,
+				duplicated_placement_id,
+			],
+			"object": duplicated_placement,
+			"source_object": placement,
+			"from": {"x": source_tile.x, "y": source_tile.y},
+			"to": {"x": destination_tile.x, "y": destination_tile.y},
+		}
+	return {"ok": false, "changed": false, "message": "No %s placement %s in the working copy." % [_object_family_label(kind), placement_id]}
+
 func _first_blocking_object_detail_at(tile: Vector2i, ignored_property_key: String = "") -> Dictionary:
 	for detail in _object_details_at(tile, false):
 		if not (detail is Dictionary):
@@ -1191,6 +1293,7 @@ func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_selected_object_content_id"] = _selected_object_content_id
 	_session.flags["editor_selected_property_object_key"] = _selected_property_object_key
 	_session.flags["editor_pending_move_object_key"] = _pending_move_object_key
+	_session.flags["editor_pending_duplicate_object_key"] = _pending_duplicate_object_key
 	_session.game_state = "overworld"
 	_session.scenario_status = "in_progress"
 	_session.battle = {}
@@ -1442,6 +1545,20 @@ func _generate_editor_placement_id(family: String, content_id: String, tile: Vec
 		suffix += 1
 	return candidate
 
+func _generate_duplicate_placement_id(family: String, source_placement_id: String, tile: Vector2i) -> String:
+	var base_id := "editor_duplicate_%s_%s_%d_%d" % [
+		_safe_id_segment(family),
+		_safe_id_segment(source_placement_id),
+		tile.x,
+		tile.y,
+	]
+	var candidate := base_id
+	var suffix := 2
+	while _placement_id_exists(candidate):
+		candidate = "%s_%d" % [base_id, suffix]
+		suffix += 1
+	return candidate
+
 func _safe_id_segment(value: String) -> String:
 	var normalized := ""
 	var allowed := "abcdefghijklmnopqrstuvwxyz0123456789_"
@@ -1570,7 +1687,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _property_apply_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -1611,6 +1728,8 @@ func validation_snapshot() -> Dictionary:
 		"selected_property_object": _selected_property_object_payload(),
 		"pending_move_object_key": _pending_move_object_key,
 		"pending_move_object": _pending_move_object_payload(),
+		"pending_duplicate_object_key": _pending_duplicate_object_key,
+		"pending_duplicate_object": _pending_duplicate_object_payload(),
 		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
 		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
 		"hovered_tile": {"x": _hovered_tile.x, "y": _hovered_tile.y},
@@ -1767,6 +1886,49 @@ func validation_move_object(from_x: int, from_y: int, to_x: int, to_y: int, fami
 	snapshot["destination_tile_inspection"] = _tile_inspection_payload(destination_tile)
 	return snapshot
 
+func validation_duplicate_object(from_x: int, from_y: int, to_x: int, to_y: int, family: String = "") -> Dictionary:
+	var source_tile := Vector2i(from_x, from_y)
+	var destination_tile := Vector2i(to_x, to_y)
+	if not _tile_in_bounds(source_tile) or not _tile_in_bounds(destination_tile):
+		return {"ok": false, "message": "Source or destination tile outside map."}
+	_selected_tile = source_tile
+	_tool = TOOL_DUPLICATE_OBJECT
+	var source_detail := _preferred_move_detail_at(source_tile)
+	if family != "":
+		source_detail = {}
+		for detail in _property_object_options_at(source_tile):
+			if detail is Dictionary and String(detail.get("kind", "")) == family:
+				source_detail = detail
+				break
+	if source_detail.is_empty():
+		var missing_snapshot := validation_snapshot()
+		missing_snapshot["ok"] = false
+		missing_snapshot["message"] = "No duplicable %s object at %d,%d." % [family if family != "" else "supported", from_x, from_y]
+		return missing_snapshot
+	var duplicate_key := String(source_detail.get("property_key", ""))
+	_pending_duplicate_object_key = duplicate_key
+	_selected_property_object_key = duplicate_key
+	var before_detail: Dictionary = source_detail.duplicate(true)
+	var before_count := _placement_count()
+	var result := _duplicate_object_by_key(duplicate_key, destination_tile)
+	if bool(result.get("ok", false)):
+		_pending_duplicate_object_key = ""
+		_dirty = _dirty or bool(result.get("changed", false))
+		_selected_tile = destination_tile
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["from"] = result.get("from", {"x": from_x, "y": from_y})
+	snapshot["to"] = result.get("to", {"x": to_x, "y": to_y})
+	snapshot["source_detail_before"] = before_detail
+	snapshot["source_tile_inspection"] = _tile_inspection_payload(source_tile)
+	snapshot["destination_tile_inspection"] = _tile_inspection_payload(destination_tile)
+	snapshot["placement_count_before"] = before_count
+	return snapshot
+
 func validation_edit_object_property(x: int, y: int, family: String, property_name: String, value: Variant) -> Dictionary:
 	var tile := Vector2i(x, y)
 	if not _tile_in_bounds(tile):
@@ -1823,6 +1985,7 @@ func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
 		"object_details": _object_details_at(tile, true),
 		"selected_property_object": _selected_property_object_payload(),
 		"pending_move_object": _pending_move_object_payload(),
+		"pending_duplicate_object": _pending_duplicate_object_payload(),
 		"text": _tile_inspection_text(tile),
 	}
 
