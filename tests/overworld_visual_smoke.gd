@@ -425,27 +425,31 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	var grass_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
 	var grass_terrain: Dictionary = grass_presentation.get("terrain_presentation", {})
-	if String(grass_terrain.get("rendering_mode", "")) != "authored_tile_art_layers":
-		push_error("Overworld smoke: authored terrain tile art is not active on the overworld map. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("rendering_mode", "")) != "original_quiet_tile_bank":
+		push_error("Overworld smoke: original quiet terrain tile bank is not active on the overworld map. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if bool(grass_terrain.get("uses_sampled_texture", true)) or not bool(grass_terrain.get("uses_authored_tile_art", false)) or not bool(grass_terrain.get("texture_loaded", false)):
-		push_error("Overworld smoke: overworld terrain is not reporting loaded authored tile art. presentation=%s" % grass_presentation)
+	if bool(grass_terrain.get("uses_sampled_texture", true)) or bool(grass_terrain.get("generated_source_primary", true)) or not bool(grass_terrain.get("uses_original_tile_bank", false)) or not bool(grass_terrain.get("texture_loaded", false)):
+		push_error("Overworld smoke: overworld terrain is not reporting the original non-generated tile bank. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if String(grass_terrain.get("primary_base_model", "")) != "original_quiet_tile_bank" or String(grass_terrain.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable":
+		push_error("Overworld smoke: overworld terrain does not expose the quiet macro-readable base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("terrain_group", "")) != "grasslands" or String(grass_terrain.get("style_id", "")) == "":
 		push_error("Overworld smoke: grass terrain does not expose grammar group/style metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)):
+	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "connection_piece_overlay":
 		push_error("Overworld smoke: authored River Pass road overlay is not using structural road art on the main route. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 
 	var forest_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var forest_terrain: Dictionary = forest_presentation.get("terrain_presentation", {})
-	if String(forest_terrain.get("terrain_group", "")) != "forest" or int(forest_terrain.get("edge_transition_count", 0)) <= 0 or not bool(forest_terrain.get("edge_transition_art_loaded", false)):
-		push_error("Overworld smoke: forest edge transition art is missing on the authored terrain path. presentation=%s" % forest_presentation)
+	if String(forest_terrain.get("terrain_group", "")) != "forest" or int(forest_terrain.get("edge_transition_count", 0)) <= 0 or not bool(forest_terrain.get("edge_transition_art_loaded", false)) or String(forest_terrain.get("transition_shape_model", "")) != "jagged_directional_overlay":
+		push_error("Overworld smoke: forest edge transition art is missing the jagged directional overlay path. presentation=%s" % forest_presentation)
 		get_tree().quit(1)
 		return false
 

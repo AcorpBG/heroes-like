@@ -160,6 +160,10 @@ Implementation note date: 2026-04-20
 
 The first tile-art slice was corrected to use the previously generated terrain source images as its visual basis instead of synthetic local pixel drawing. `tools/build_overworld_terrain_tiles.py` now cuts and adapts the generated grasslands, forest, mire, and highland source sheets into the same checked-in 64x64 runtime base, edge, and road overlay paths. Road overlays are narrower and source-material based, biome edge overlays are compact feathered source strips, and object sprite mappings/fallbacks were left unchanged. This remains a terrain presentation correction, not a full biome-art expansion beyond the families already in scope.
 
+Implementation note date: 2026-04-20
+
+AcOrP rejected the generated-source terrain tiling direction as the wrong primary model. That source-derived pass is superseded: overworld terrain now treats `original_quiet_tile_bank` as the primary base model. The terrain grammar and structural road layer remain, but `tools/build_overworld_terrain_tiles.py` builds original low-noise biome base variants, jagged directional transition overlays, and connection-aware dirt-road pieces from local procedural palettes instead of cropping generated painterly sheets. Generated terrain imagery may inform color or macro mood only; it is deprecated as literal per-cell base art. This is a production-direction correction for grass/plains, forest, mire/swamp, hills/ridge/highland, and dirt-road overlays, not a full final terrain atlas.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

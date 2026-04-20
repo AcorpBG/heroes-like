@@ -3,16 +3,18 @@
   "source": {
     "task_id": 10184,
     "processed_manifest": "res://art/overworld/source/manifest/generated-overworld-assets-20260419.json",
-    "note": "Generated asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets are the visual source for the checked-in runtime tile pieces; the renderer still consumes authored tile assets instead of sampling whole sheets at runtime."
+    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets are deprecated for primary per-cell terrain and may be used only as color or macro inspiration, not as literal tile-source art."
   },
   "terrain_rendering": {
     "model": "authored_autotile_layers",
     "grammar": "res://content/terrain_grammar.json",
     "terrain_layers": "res://content/terrain_layers.json",
     "tile_art_root": "res://art/overworld/runtime/terrain_tiles",
-    "tile_art_status": "first_authored_tile_art_slice",
-    "tile_art_source_basis": "generated_overworld_terrain_sources_20260419",
-    "tile_art_preparation": "cut_adapted_source_tiles_edges_and_thin_road_overlays",
+    "tile_art_status": "original_quiet_terrain_correction",
+    "tile_art_source_basis": "original_procedural_reference_informed",
+    "tile_art_preparation": "locally_built_quiet_base_variants_jagged_edges_and_structural_road_connectors",
+    "primary_base_model": "original_quiet_tile_bank",
+    "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
     "authored_tile_sets": ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland", "road_dirt"],
     "sampled_texture_status": "deprecated_not_primary"
   },

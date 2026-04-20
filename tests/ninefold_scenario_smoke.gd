@@ -117,10 +117,13 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not _assert_marker_style(town_presentation, "town", false):
 		return false
 	var terrain_presentation: Dictionary = town_presentation.get("terrain_presentation", {})
-	if String(terrain_presentation.get("rendering_mode", "")) != "authored_tile_art_layers" or bool(terrain_presentation.get("uses_sampled_texture", true)) or not bool(terrain_presentation.get("uses_authored_tile_art", false)):
-		_fail("Ninefold smoke: large-map starting terrain is not using authored terrain tile-art layers: %s." % town_presentation)
+	if String(terrain_presentation.get("rendering_mode", "")) != "original_quiet_tile_bank" or bool(terrain_presentation.get("uses_sampled_texture", true)) or bool(terrain_presentation.get("generated_source_primary", true)) or not bool(terrain_presentation.get("uses_original_tile_bank", false)):
+		_fail("Ninefold smoke: large-map starting terrain is not using the original quiet terrain tile bank: %s." % town_presentation)
 		return false
-	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)):
+	if String(terrain_presentation.get("primary_base_model", "")) != "original_quiet_tile_bank" or String(terrain_presentation.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable":
+		_fail("Ninefold smoke: large-map starting terrain does not expose the quiet macro-readable base model: %s." % town_presentation)
+		return false
+	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "connection_piece_overlay":
 		_fail("Ninefold smoke: large-map starting road is not represented as a structural art overlay: %s." % town_presentation)
 		return false
 	var town_readability: Dictionary = town_presentation.get("marker_readability", {})
