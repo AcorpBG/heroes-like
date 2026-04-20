@@ -4576,7 +4576,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 
     ensure(str(artifact_default.get("asset_id", "")) == "adventurers_bundle", errors, "Overworld artifact default sprite must use the adventurers_bundle pickup asset")
     ensure(str(manifest.get("unmapped_object_fallback", "")) == "procedural_marker", errors, "Overworld art manifest must keep procedural marker fallback for unmapped object types")
-    ensure(str(manifest.get("remembered_object_rendering", "")) == "ghosted_sprite_with_memory_plate", errors, "Overworld art manifest must document the remembered-object sprite treatment")
+    ensure(str(manifest.get("remembered_object_rendering", "")) == "ghosted_sprite_with_ground_anchor", errors, "Overworld art manifest must document the remembered-object sprite treatment")
 
     map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -4607,7 +4607,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"road_overlay_art"',
         '"road_shape_model"',
         '"fallback_procedural_marker"',
-        "ghosted_sprite_with_memory_plate",
+        "ghosted_sprite_with_ground_anchor",
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing overworld art token {required_token}")
 

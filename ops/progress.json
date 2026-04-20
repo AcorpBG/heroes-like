@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T10:00:37Z",
+  "updatedAt": "2026-04-20T11:42:25Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-original-terrain-correction-10184",
-  "currentSliceTitle": "Correct overworld terrain away from generated-source tiling",
+  "currentSliceId": "overworld-grounded-markers-10184",
+  "currentSliceTitle": "Ground overworld markers into terrain instead of UI plates",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a corrective terrain slice after AcOrP rejected the generated-source tile approach. Kept the terrain grammar boundary and structural road layer, but replaced the source-cropping terrain builder with a local procedural builder for original quiet base variants, jagged directional biome-edge overlays, and structural road connector pieces; rebuilt the checked-in grass/plains, forest, mire/swamp, hills/ridge/highland, edge, and road PNGs; updated terrain grammar, art manifest, renderer validation metadata, repo validation, and visual smokes so generated painterly terrain sheets are deprecated for primary per-cell bases and the original_quiet_tile_bank model is active. Validation passed with python3 -m py_compile tools/build_overworld_terrain_tiles.py, python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed a narrow presentation correction after AcOrP flagged the post-a827e04 overworld as still reading like a board with pasted-on UI markers. Replaced generic dark circular marker plates in OverworldMapView with terrain-tinted oval footprint anchors, softer contact shadows, and small ground tie marks; removed the circular badge outline from mapped object sprites in favor of a soft offset sprite shadow; slightly reduced grid alpha; updated marker validation metadata, visual smokes, manifest wording, PLAN.md, and project.md. Preserved original quiet terrain, structural roads, fog behavior, tactical framing, panning, pathing, object sprite mappings/fallbacks, and selection/focus clarity. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -190,6 +190,12 @@
       "difficulty": "high"
     },
     {
+      "id": "overworld-grounded-markers-10184",
+      "title": "Ground overworld markers into terrain instead of UI plates",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -245,7 +251,8 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the generated-source overworld terrain tile-art treatment in River Pass and Ninefold Confluence before calling the placeholder terrain presentation visually polished.",
+    "Manually inspect the grounded marker presentation in River Pass and Ninefold Confluence before calling the overworld marker treatment visually polished.",
+    "Add future authored town/object footprint or sprite slices so unmapped procedural silhouettes can be replaced where player-facing objects need richer presence.",
     "Add future authored tile-art slices for water/coast, badlands/wastes, ash/lava, snow/frost, and cavern/underway before treating Ninefold Confluence's full terrain surface as art-covered.",
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
     "Manually inspect Ninefold Confluence's panning and remembered-object readability in the live client at the supported 16:9 runtime resolutions before treating the large-map UX as broadly polished.",

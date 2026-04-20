@@ -12,7 +12,7 @@ const MAP_PADDING := 22.0
 const TACTICAL_VISIBLE_TILE_SPAN := 12.0
 const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
 const MIN_TILE_EXTENT := 24.0
-const GRID_COLOR := Color(0.08, 0.10, 0.12, 0.55)
+const GRID_COLOR := Color(0.08, 0.10, 0.12, 0.34)
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
@@ -44,18 +44,23 @@ const NEUTRAL_TOWN_COLOR := Color(0.56, 0.59, 0.64, 1.0)
 const RESOURCE_COLOR := Color(0.28, 0.83, 0.62, 1.0)
 const ARTIFACT_COLOR := Color(0.95, 0.68, 0.31, 1.0)
 const ENCOUNTER_COLOR := Color(0.90, 0.44, 0.35, 1.0)
-const MARKER_OUTLINE_COLOR := Color(0.035, 0.045, 0.055, 0.92)
-const MARKER_SHADOW_COLOR := Color(0.01, 0.015, 0.02, 0.70)
-const MARKER_PLATE_VISIBLE := Color(0.03, 0.035, 0.04, 0.58)
-const MARKER_PLATE_MEMORY := Color(0.025, 0.04, 0.05, 0.76)
-const MARKER_RING_VISIBLE := Color(1.0, 0.91, 0.56, 0.50)
+const MARKER_OUTLINE_COLOR := Color(0.035, 0.045, 0.038, 0.90)
+const MARKER_SHADOW_COLOR := Color(0.01, 0.012, 0.009, 0.42)
+const MARKER_PLATE_VISIBLE := Color(0.22, 0.17, 0.09, 0.34)
+const MARKER_PLATE_MEMORY := Color(0.08, 0.15, 0.16, 0.52)
+const MARKER_RING_VISIBLE := Color(0.82, 0.69, 0.36, 0.45)
 const MARKER_RING_MEMORY := Color(0.82, 0.93, 0.96, 0.80)
 const MARKER_PLATE_RADIUS_FACTOR := 0.31
 const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 0.96)
+const OBJECT_SPRITE_SHADOW_MODULATE := Color(0.02, 0.018, 0.014, 0.30)
 const OBJECT_SPRITE_MEMORY_MODULATE := Color(0.72, 0.82, 0.84, 0.82)
+const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
+const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
+const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
+const MARKER_GROUND_ANCHOR_WIDTH_FACTOR := 1.16
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
@@ -516,16 +521,10 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool) -> boo
 		return false
 	_draw_marker_plate(rect, remembered, OBJECT_SPRITE_PLATE_RADIUS_FACTOR)
 	var extent := minf(rect.size.x, rect.size.y)
-	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	draw_circle(
-		rect.get_center(),
-		maxf(7.0, extent * OBJECT_SPRITE_PLATE_RADIUS_FACTOR),
-		outline_color,
-		false,
-		maxf(2.0, extent * 0.034)
-	)
 	var sprite_extent := maxf(12.0, extent * OBJECT_SPRITE_EXTENT_FACTOR)
 	var sprite_rect := Rect2(rect.get_center() - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	var shadow_offset := Vector2(0.0, maxf(1.5, extent * 0.035))
+	draw_texture_rect(texture, Rect2(sprite_rect.position + shadow_offset, sprite_rect.size), false, OBJECT_SPRITE_SHADOW_MODULATE)
 	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	return true
 
@@ -651,20 +650,46 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 
 func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
-	var center := rect.get_center()
+	var center := rect.get_center() + Vector2(0.0, extent * MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR)
 	var radius := maxf(7.0, extent * radius_factor)
 	var shadow_offset := Vector2(0.0, maxf(1.5, extent * 0.045))
-	draw_circle(center + shadow_offset, radius * 1.06, MARKER_SHADOW_COLOR)
-	draw_circle(center, radius, MARKER_PLATE_MEMORY if remembered else MARKER_PLATE_VISIBLE)
-	draw_circle(
-		center,
-		radius,
+	var radii := Vector2(
+		radius * MARKER_GROUND_ANCHOR_WIDTH_FACTOR,
+		maxf(3.0, radius * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR)
+	)
+	draw_colored_polygon(
+		_ellipse_points(center + shadow_offset, Vector2(radii.x * 1.10, radii.y * 1.24)),
+		MARKER_SHADOW_COLOR
+	)
+	draw_colored_polygon(_ellipse_points(center, radii), MARKER_PLATE_MEMORY if remembered else MARKER_PLATE_VISIBLE)
+	draw_polyline(
+		_ellipse_points(center, radii, 24, true),
 		MARKER_RING_MEMORY if remembered else MARKER_RING_VISIBLE,
-		false,
 		maxf(1.5, extent * 0.025)
 	)
+	_draw_ground_anchor_tie_marks(center, radii, remembered, extent)
 	if remembered:
 		_draw_memory_echo_marks(center, radius, extent)
+
+func _ellipse_points(center: Vector2, radii: Vector2, segment_count: int = 24, closed: bool = false) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	var safe_segment_count := maxi(8, segment_count)
+	for index in range(safe_segment_count):
+		var angle := (TAU * float(index)) / float(safe_segment_count)
+		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y))
+	if closed and not points.is_empty():
+		points.append(points[0])
+	return points
+
+func _draw_ground_anchor_tie_marks(center: Vector2, radii: Vector2, remembered: bool, extent: float) -> void:
+	var color := Color(0.42, 0.34, 0.17, 0.34)
+	if remembered:
+		color = Color(0.74, 0.90, 0.94, 0.48)
+	var width := maxf(1.0, extent * 0.014)
+	draw_line(center + Vector2(-radii.x * 0.82, radii.y * 0.30), center + Vector2(-radii.x * 0.56, radii.y * 0.58), color, width)
+	draw_line(center + Vector2(-radii.x * 0.24, radii.y * 0.52), center + Vector2(-radii.x * 0.04, radii.y * 0.72), color, width)
+	draw_line(center + Vector2(radii.x * 0.22, radii.y * 0.52), center + Vector2(radii.x * 0.45, radii.y * 0.70), color, width)
+	draw_line(center + Vector2(radii.x * 0.62, radii.y * 0.26), center + Vector2(radii.x * 0.86, radii.y * 0.48), color, width)
 
 func _draw_memory_echo_marks(center: Vector2, radius: float, extent: float) -> void:
 	var color := Color(0.86, 0.94, 0.96, 0.76)
@@ -1060,7 +1085,7 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		"uses_asset_sprite": uses_asset_sprite,
 		"fallback_procedural_marker": not uses_asset_sprite and not object_kinds.is_empty(),
 		"sprite_asset_ids": sprite_asset_ids,
-		"remembered_sprite_treatment": "ghosted_sprite_with_memory_plate" if uses_asset_sprite and not visible else "",
+		"remembered_sprite_treatment": "ghosted_sprite_with_ground_anchor" if uses_asset_sprite and not visible else "",
 		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
@@ -1087,10 +1112,15 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"object_kinds": object_kinds,
 		"marker_kinds": marker_kinds,
 		"contrast_plate": has_object_marker or has_visible_hero,
+		"ground_anchor": has_object_marker or has_visible_hero,
+		"anchor_shape": MARKER_GROUND_ANCHOR_STYLE if has_object_marker or has_visible_hero else "",
+		"ui_badge_plate": false,
 		"plate_radius_fraction": plate_radius_fraction,
 		"plate_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
+		"anchor_alpha": MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a,
 		"ring_alpha": MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a,
 		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
+		"grid_alpha": GRID_COLOR.a,
 		"memory_echo": remembered,
 		"remembered_marker_alpha": MEMORY_OBJECT_COLOR.a if remembered else 0.0,
 		"min_symbol_extent_fraction": min_symbol_fraction,

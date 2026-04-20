@@ -315,6 +315,31 @@ Limits:
 - Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, object footprints, and road movement rules remain future slices.
 - Automated smokes can prove the renderer path and metadata; manual visual review is still required before treating the terrain direction as broadly proven.
 
+## Current Implementation Slice: Overworld Grounded Marker Presentation
+Status: completed on 2026-04-20 as a narrow corrective slice after AcOrP reported the post-a827e04 overworld still read like a board with pasted-on UI markers.
+
+Purpose:
+- Make towns, resource sites, artifacts, encounters, mapped object sprites, and the active hero feel seated on the terrain instead of floating on generic dark badges.
+- Reduce boardgame/UI-badge read while preserving strong visible/remembered object clarity and current selection/focus clarity.
+- Keep the new original quiet terrain direction, structural roads, fog behavior, tactical framing, panning, pathing, and object sprite mappings/fallbacks unchanged.
+
+Implemented:
+- Replaced the filled circular marker plate drawing path in `OverworldMapView` with terrain-tinted oval footprint anchors, lower contact shadows, and small ground tie marks.
+- Removed the extra circular badge outline from mapped overworld object sprites and added a soft offset sprite shadow so mapped objects still separate from terrain without reading as UI medallions.
+- Reduced overworld grid alpha enough to quiet the board read while keeping movement/path readability and route overlays intact.
+- Updated validation metadata, smokes, and the overworld art manifest to describe `ghosted_sprite_with_ground_anchor` and guard against a return to UI badge plates.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a full object-art pass, town-sprite pass, camera redesign, or movement/pathfinding change.
+- The fallback procedural silhouettes remain intentionally compact and icon-like where no real object sprite exists; the correction is their terrain grounding and removal of the generic black badge.
+- Manual visual review is still needed before treating overworld presentation as broadly polished.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

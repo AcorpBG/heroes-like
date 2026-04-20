@@ -18,7 +18,7 @@
     "authored_tile_sets": ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland", "road_dirt"],
     "sampled_texture_status": "deprecated_not_primary"
   },
-  "remembered_object_rendering": "ghosted_sprite_with_memory_plate",
+  "remembered_object_rendering": "ghosted_sprite_with_ground_anchor",
   "unmapped_object_fallback": "procedural_marker",
   "object_assets": {
     "ruined_obelisk": {

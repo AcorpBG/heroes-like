@@ -147,8 +147,11 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 	if expected_kind not in object_kinds:
 		_fail("Ninefold smoke: expected %s marker kind was missing on the large map: %s." % [expected_kind, presentation])
 		return false
-	if not bool(readability.get("contrast_plate", false)):
-		_fail("Ninefold smoke: large-map %s marker lacks a terrain contrast plate: %s." % [expected_kind, presentation])
+	if not bool(readability.get("ground_anchor", false)) or String(readability.get("anchor_shape", "")) != "terrain_ellipse_footprint":
+		_fail("Ninefold smoke: large-map %s marker lacks a terrain-grounded anchor: %s." % [expected_kind, presentation])
+		return false
+	if bool(readability.get("ui_badge_plate", true)):
+		_fail("Ninefold smoke: large-map %s marker regressed to a UI badge plate: %s." % [expected_kind, presentation])
 		return false
 	if float(readability.get("min_symbol_extent_fraction", 0.0)) < 0.33:
 		_fail("Ninefold smoke: large-map %s marker is too small for tactical framing: %s." % [expected_kind, presentation])
@@ -158,8 +161,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			_fail("Ninefold smoke: remembered large-map %s marker is too faint: %s." % [expected_kind, presentation])
 			return false
 	else:
-		if bool(readability.get("memory_echo", false)) or float(readability.get("plate_alpha", 0.0)) < 0.50 or float(readability.get("outline_alpha", 0.0)) < 0.85:
-			_fail("Ninefold smoke: visible large-map %s marker contrast is too weak: %s." % [expected_kind, presentation])
+		if bool(readability.get("memory_echo", false)) or float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or float(readability.get("grid_alpha", 1.0)) > 0.42:
+			_fail("Ninefold smoke: visible large-map %s marker grounding or map contrast regressed: %s." % [expected_kind, presentation])
 			return false
 	return true
 
