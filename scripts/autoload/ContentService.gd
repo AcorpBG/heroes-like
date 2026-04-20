@@ -293,6 +293,8 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 		var supports = terrain_class.get("supports", [])
 		if not (supports is Array) or "edge_transitions" not in supports:
 			push_warning("Terrain grammar %s must support edge_transitions." % terrain_id)
+		if terrain_id in ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"]:
+			_validate_terrain_tile_art(terrain_class, terrain_id)
 
 	for required_id in ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"]:
 		if required_id not in terrain_ids:
@@ -319,8 +321,58 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 				push_warning("Terrain grammar overlay %s must define %s as a hex color." % [overlay_id, color_key])
 		if float(overlay.get("width_fraction", 0.0)) <= 0.0:
 			push_warning("Terrain grammar overlay %s must define width_fraction > 0." % overlay_id)
+		if overlay_id == "road_dirt":
+			_validate_road_overlay_tile_art(overlay, overlay_id)
 	if "road_dirt" not in overlay_ids:
 		push_warning("Terrain grammar must define the road_dirt overlay.")
+
+func _validate_terrain_tile_art(terrain_class: Dictionary, terrain_id: String) -> void:
+	var tile_art = terrain_class.get("tile_art", {})
+	if not (tile_art is Dictionary):
+		push_warning("Terrain grammar %s must define tile_art for the first authored tile-art slice." % terrain_id)
+		return
+	var base_tiles = tile_art.get("base_tiles", [])
+	if not (base_tiles is Array) or base_tiles.is_empty():
+		push_warning("Terrain grammar %s tile_art must define base_tiles." % terrain_id)
+	else:
+		for entry in base_tiles:
+			if not (entry is Dictionary):
+				push_warning("Terrain grammar %s tile_art contains a non-dictionary base tile." % terrain_id)
+				continue
+			var path := String(entry.get("path", ""))
+			if String(entry.get("variant_key", "")) == "":
+				push_warning("Terrain grammar %s base tile %s must define variant_key." % [terrain_id, path])
+			_validate_art_path(path, "Terrain grammar %s base tile" % terrain_id)
+	var edge_overlays = tile_art.get("edge_overlays", {})
+	if not (edge_overlays is Dictionary):
+		push_warning("Terrain grammar %s tile_art must define edge_overlays." % terrain_id)
+		return
+	for direction in ["N", "E", "S", "W"]:
+		var path := String(edge_overlays.get(direction, ""))
+		_validate_art_path(path, "Terrain grammar %s edge overlay %s" % [terrain_id, direction])
+
+func _validate_road_overlay_tile_art(overlay: Dictionary, overlay_id: String) -> void:
+	var tile_art = overlay.get("tile_art", {})
+	if not (tile_art is Dictionary):
+		push_warning("Terrain grammar overlay %s must define tile_art." % overlay_id)
+		return
+	_validate_art_path(String(tile_art.get("center", "")), "Terrain grammar overlay %s center tile" % overlay_id)
+	var connectors = tile_art.get("connectors", {})
+	if not (connectors is Dictionary):
+		push_warning("Terrain grammar overlay %s tile_art must define connectors." % overlay_id)
+		return
+	for direction in ["N", "E", "S", "W", "NE", "SE", "SW", "NW"]:
+		_validate_art_path(String(connectors.get(direction, "")), "Terrain grammar overlay %s connector %s" % [overlay_id, direction])
+
+func _validate_art_path(path: String, label: String) -> void:
+	if path == "":
+		push_warning("%s must define a runtime art path." % label)
+		return
+	if not path.begins_with("res://"):
+		push_warning("%s path %s must be a res:// path." % [label, path])
+		return
+	if not FileAccess.file_exists(path):
+		push_warning("%s path %s does not exist." % [label, path])
 
 func _validate_terrain_layer(layer: Dictionary, scenario_index: Dictionary, grammar: Dictionary) -> void:
 	var scenario_id := String(layer.get("id", ""))

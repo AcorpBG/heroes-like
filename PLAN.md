@@ -311,7 +311,33 @@ Validation:
 Limits:
 - This is a foundation and first readable presentation slice, not final overworld art.
 - Road overlays are presentation/grammar structure only; they do not yet change movement cost or pathfinding.
-- Authored tile variants are represented by deterministic renderer grammar and metadata, not a full external tileset import pipeline yet.
+- This slice was superseded visually by the first authored terrain tile-art slice; the grammar remains the content boundary for that art.
+
+## Current Implementation Slice: Overworld Authored Terrain Tile Art
+Status: completed on 2026-04-20 as the first narrow real overworld terrain tile-art slice after the grammar foundation.
+
+Purpose:
+- Replace the procedural-looking grammar fills for the first terrain families with repo-local static tile art used directly by `OverworldMapView`.
+- Keep the slice narrow and honest: cover grass/plains, forest, mire/swamp, hills/ridge/highland, dirt roads, and biome edge overlays without claiming full-world terrain art completeness.
+- Preserve existing overworld object sprite mappings and procedural fallbacks for unmapped sites, towns, encounters, and unsliced terrain ids.
+
+Implemented:
+- Added `tools/build_overworld_terrain_tiles.py` as a deterministic source builder for the first 64x64 authored PNG tile pieces.
+- Added `art/overworld/runtime/terrain_tiles/` with base terrain variants for grass/plains, forest, mire/swamp, hills/ridge/highland; directional edge overlays for grasslands, forest, mire, and highland groups; and structural `road_dirt` center/connector pieces.
+- Extended `content/terrain_grammar.json` so the first terrain classes and the `road_dirt` overlay reference actual tile-art paths, while non-sliced terrain ids continue to use grammar color/pattern fallback.
+- Wired `OverworldMapView` to render loaded terrain tile textures, edge overlay textures, and road connector textures first, with the previous grammar patterns and procedural road drawing retained as fallbacks.
+- Extended ContentService warnings, repo validation, and overworld smokes to prove authored tile art, edge-transition art, and road overlay art are present and used.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a complete overworld tileset. Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, towns, encounters, and most map-object families still need future art slices or existing fallbacks.
+- Road overlays remain visual/structural presentation only; movement cost and pathfinding still do not treat roads specially.
+- The source builder gives repeatable checked-in PNGs for this slice; a broader artist-facing atlas/import workflow remains future work.
 
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
 Status: active reset now becomes the baseline for future work.

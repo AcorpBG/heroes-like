@@ -9,6 +9,9 @@
     "model": "authored_autotile_layers",
     "grammar": "res://content/terrain_grammar.json",
     "terrain_layers": "res://content/terrain_layers.json",
+    "tile_art_root": "res://art/overworld/runtime/terrain_tiles",
+    "tile_art_status": "first_authored_tile_art_slice",
+    "authored_tile_sets": ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland", "road_dirt"],
     "sampled_texture_status": "deprecated_not_primary"
   },
   "remembered_object_rendering": "ghosted_sprite_with_memory_plate",

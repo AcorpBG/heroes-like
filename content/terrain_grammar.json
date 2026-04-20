@@ -1,9 +1,9 @@
 {
   "version": 1,
   "rendering_model": "authored_autotile_layers",
-  "authoring_status": "foundation_placeholder",
+  "authoring_status": "first_authored_tile_art_slice",
   "tile_size_reference": 64,
-  "summary": "Author-facing overworld terrain grammar. Base terrain ids choose readable strategic tile styles; transitions and road overlays are separate layers rather than sampled painterly texture crops.",
+  "summary": "Author-facing overworld terrain grammar. The first terrain slice uses repo-local authored tile art for grass/plains, forest, mire/swamp, hills/ridge/highland, visible biome edge overlays, and structural dirt-road overlay pieces; non-slice terrain ids keep fallback grammar colors until their art lands.",
   "transition_rules": {
     "cardinal_edges": true,
     "corner_hints": true,
@@ -23,8 +23,21 @@
       "transition_priority": 10,
       "pattern": "field_tufts",
       "readability_role": "open strategic ground",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["open", "field", "worn"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["open", "field", "worn"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "open", "path": "res://art/overworld/runtime/terrain_tiles/base/grass_open.png"},
+          {"variant_key": "field", "path": "res://art/overworld/runtime/terrain_tiles/base/grass_field.png"},
+          {"variant_key": "worn", "path": "res://art/overworld/runtime/terrain_tiles/base/grass_worn.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_w.png"
+        }
+      }
     },
     {
       "id": "plains",
@@ -38,8 +51,21 @@
       "transition_priority": 10,
       "pattern": "field_tufts",
       "readability_role": "dry open lane",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["open", "dry", "worn"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["open", "dry", "worn"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "open", "path": "res://art/overworld/runtime/terrain_tiles/base/plains_open.png"},
+          {"variant_key": "dry", "path": "res://art/overworld/runtime/terrain_tiles/base/plains_dry.png"},
+          {"variant_key": "worn", "path": "res://art/overworld/runtime/terrain_tiles/base/plains_worn.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/grasslands_edge_w.png"
+        }
+      }
     },
     {
       "id": "forest",
@@ -53,8 +79,21 @@
       "transition_priority": 60,
       "pattern": "tree_clusters",
       "readability_role": "dense cover and ambush terrain",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["canopy", "copse", "edge"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["canopy", "copse", "edge"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "canopy", "path": "res://art/overworld/runtime/terrain_tiles/base/forest_canopy.png"},
+          {"variant_key": "copse", "path": "res://art/overworld/runtime/terrain_tiles/base/forest_copse.png"},
+          {"variant_key": "edge", "path": "res://art/overworld/runtime/terrain_tiles/base/forest_edge.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/forest_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/forest_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/forest_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/forest_edge_w.png"
+        }
+      }
     },
     {
       "id": "mire",
@@ -68,8 +107,21 @@
       "transition_priority": 55,
       "pattern": "reed_pools",
       "readability_role": "slow wet lane",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["reeds", "mud", "pool"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["reeds", "mud", "pool"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "reeds", "path": "res://art/overworld/runtime/terrain_tiles/base/mire_reeds.png"},
+          {"variant_key": "mud", "path": "res://art/overworld/runtime/terrain_tiles/base/mire_mud.png"},
+          {"variant_key": "pool", "path": "res://art/overworld/runtime/terrain_tiles/base/mire_pool.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_w.png"
+        }
+      }
     },
     {
       "id": "swamp",
@@ -83,8 +135,21 @@
       "transition_priority": 58,
       "pattern": "reed_pools",
       "readability_role": "deeper wet lane",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["deep", "mud", "pool"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["deep", "mud", "pool"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "deep", "path": "res://art/overworld/runtime/terrain_tiles/base/swamp_deep.png"},
+          {"variant_key": "mud", "path": "res://art/overworld/runtime/terrain_tiles/base/swamp_mud.png"},
+          {"variant_key": "pool", "path": "res://art/overworld/runtime/terrain_tiles/base/swamp_pool.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_w.png"
+        }
+      }
     },
     {
       "id": "hills",
@@ -98,8 +163,21 @@
       "transition_priority": 50,
       "pattern": "contours",
       "readability_role": "elevated approach",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["slope", "scrub", "ridgelet"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["slope", "scrub", "ridgelet"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "slope", "path": "res://art/overworld/runtime/terrain_tiles/base/hills_slope.png"},
+          {"variant_key": "scrub", "path": "res://art/overworld/runtime/terrain_tiles/base/hills_scrub.png"},
+          {"variant_key": "ridgelet", "path": "res://art/overworld/runtime/terrain_tiles/base/hills_ridgelet.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
+        }
+      }
     },
     {
       "id": "ridge",
@@ -113,8 +191,21 @@
       "transition_priority": 52,
       "pattern": "contours",
       "readability_role": "ridge lane and choke",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["ridge", "scree", "pass"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["ridge", "scree", "pass"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "ridge", "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_ridge.png"},
+          {"variant_key": "scree", "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_scree.png"},
+          {"variant_key": "pass", "path": "res://art/overworld/runtime/terrain_tiles/base/ridge_pass.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
+        }
+      }
     },
     {
       "id": "highland",
@@ -128,8 +219,21 @@
       "transition_priority": 50,
       "pattern": "contours",
       "readability_role": "open high ground",
-      "supports": ["authored_variants", "edge_transitions", "road_overlay"],
-      "variant_keys": ["plateau", "scrub", "pass"]
+      "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
+      "variant_keys": ["plateau", "scrub", "pass"],
+      "tile_art": {
+        "base_tiles": [
+          {"variant_key": "plateau", "path": "res://art/overworld/runtime/terrain_tiles/base/highland_plateau.png"},
+          {"variant_key": "scrub", "path": "res://art/overworld/runtime/terrain_tiles/base/highland_scrub.png"},
+          {"variant_key": "pass", "path": "res://art/overworld/runtime/terrain_tiles/base/highland_pass.png"}
+        ],
+        "edge_overlays": {
+          "N": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
+        }
+      }
     },
     {
       "id": "water",
@@ -308,7 +412,20 @@
       "center_color": "#d1b777",
       "width_fraction": 0.22,
       "readability_role": "primary movement lane",
-      "supports": ["cardinal_connectors", "diagonal_connectors", "autotile_edge_caps"]
+      "supports": ["authored_tile_art", "cardinal_connectors", "diagonal_connectors", "autotile_edge_caps"],
+      "tile_art": {
+        "center": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_center.png",
+        "connectors": {
+          "N": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_n.png",
+          "E": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_e.png",
+          "S": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_s.png",
+          "W": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_w.png",
+          "NE": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_ne.png",
+          "SE": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_se.png",
+          "SW": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_sw.png",
+          "NW": "res://art/overworld/runtime/terrain_tiles/roads/road_dirt_nw.png"
+        }
+      }
     }
   ]
 }

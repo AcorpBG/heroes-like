@@ -57,6 +57,7 @@ const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const OBJECT_SPRITE_VISIBLE_MODULATE := Color(1.0, 1.0, 1.0, 0.96)
 const OBJECT_SPRITE_MEMORY_MODULATE := Color(0.72, 0.82, 0.84, 0.82)
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
+const TERRAIN_TILE_ART_RENDERING_MODE := "authored_tile_art_layers"
 const TERRAIN_TRANSITION_ALPHA := 0.42
 const TERRAIN_TRANSITION_WIDTH_FACTOR := 0.16
 const ROAD_DEFAULT_COLOR := Color(0.72, 0.58, 0.34, 0.92)
@@ -105,6 +106,11 @@ var _pending_click_position := Vector2.ZERO
 var _terrain_grammar: Dictionary = {}
 var _terrain_styles: Dictionary = {}
 var _terrain_overlay_styles: Dictionary = {}
+var _terrain_base_art: Dictionary = {}
+var _terrain_edge_art: Dictionary = {}
+var _terrain_art_textures: Dictionary = {}
+var _terrain_art_missing: Dictionary = {}
+var _road_overlay_art: Dictionary = {}
 var _overworld_art_manifest: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
 var _object_textures: Dictionary = {}
@@ -236,13 +242,23 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 		return
 
 	var terrain = _terrain_at(tile)
-	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
-	draw_rect(rect, base_color, true)
-	_draw_authored_terrain_pattern(tile, rect, terrain, true)
+	if not _draw_terrain_tile_art(tile, rect, terrain):
+		var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
+		draw_rect(rect, base_color, true)
+		_draw_authored_terrain_pattern(tile, rect, terrain, true)
 	_draw_terrain_transitions(tile, rect, terrain)
 	_draw_road_overlay(tile, rect)
 
 	draw_rect(rect, GRID_COLOR, false, 1.0)
+
+func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> bool:
+	var entry := _terrain_base_art_entry(terrain, tile)
+	var texture_path := String(entry.get("path", ""))
+	var texture = _terrain_art_texture(texture_path)
+	if not (texture is Texture2D):
+		return false
+	draw_texture_rect(texture, rect, false)
+	return true
 
 func _draw_authored_terrain_pattern(tile: Vector2i, rect: Rect2, terrain: String, visible: bool) -> void:
 	var pattern := _terrain_pattern(terrain)
@@ -351,17 +367,31 @@ func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> 
 	var color := Color(edge_color.r, edge_color.g, edge_color.b, TERRAIN_TRANSITION_ALPHA)
 	var width := maxf(3.0, minf(rect.size.x, rect.size.y) * TERRAIN_TRANSITION_WIDTH_FACTOR)
 	if "N" in edge_mask:
-		draw_rect(Rect2(rect.position, Vector2(rect.size.x, width)), color, true)
+		if not _draw_terrain_edge_art(terrain, "N", rect):
+			draw_rect(Rect2(rect.position, Vector2(rect.size.x, width)), color, true)
 	if "S" in edge_mask:
-		draw_rect(Rect2(Vector2(rect.position.x, rect.end.y - width), Vector2(rect.size.x, width)), color, true)
+		if not _draw_terrain_edge_art(terrain, "S", rect):
+			draw_rect(Rect2(Vector2(rect.position.x, rect.end.y - width), Vector2(rect.size.x, width)), color, true)
 	if "W" in edge_mask:
-		draw_rect(Rect2(rect.position, Vector2(width, rect.size.y)), color, true)
+		if not _draw_terrain_edge_art(terrain, "W", rect):
+			draw_rect(Rect2(rect.position, Vector2(width, rect.size.y)), color, true)
 	if "E" in edge_mask:
-		draw_rect(Rect2(Vector2(rect.end.x - width, rect.position.y), Vector2(width, rect.size.y)), color, true)
+		if not _draw_terrain_edge_art(terrain, "E", rect):
+			draw_rect(Rect2(Vector2(rect.end.x - width, rect.position.y), Vector2(width, rect.size.y)), color, true)
+
+func _draw_terrain_edge_art(terrain: String, direction: String, rect: Rect2) -> bool:
+	var texture_path := _terrain_edge_art_path(terrain, direction)
+	var texture = _terrain_art_texture(texture_path)
+	if not (texture is Texture2D):
+		return false
+	draw_texture_rect(texture, rect, false)
+	return true
 
 func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 	var road := _road_tile_payload(tile)
 	if road.is_empty():
+		return
+	if _draw_road_overlay_art(tile, rect, road):
 		return
 	var style := _road_overlay_style(String(road.get("overlay_id", "road_dirt")))
 	var extent := minf(rect.size.x, rect.size.y)
@@ -386,6 +416,29 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 		draw_circle(center, width * 0.72, shadow_color)
 		draw_circle(center, width * 0.58, edge_color)
 		draw_circle(center, width * 0.46, road_color)
+
+func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bool:
+	var overlay_id := String(road.get("overlay_id", "road_dirt"))
+	var art := _road_overlay_art_paths(overlay_id)
+	if art.is_empty():
+		return false
+	var drew_any := false
+	var center_texture = _terrain_art_texture(String(art.get("center", "")))
+	if center_texture is Texture2D:
+		draw_texture_rect(center_texture, rect, false)
+		drew_any = true
+	var connectors = art.get("connectors", {})
+	if connectors is Dictionary:
+		for direction in DIRECTIONS:
+			var neighbor: Vector2i = tile + direction
+			if not _road_tiles.has(_tile_key(neighbor)):
+				continue
+			var direction_key := _direction_key(direction)
+			var connector_texture = _terrain_art_texture(String(connectors.get(direction_key, "")))
+			if connector_texture is Texture2D:
+				draw_texture_rect(connector_texture, rect, false)
+				drew_any = true
+	return drew_any
 
 func _draw_route(board_rect: Rect2) -> void:
 	if _path_tiles.size() <= 1:
@@ -893,6 +946,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
 	var road_payload := _road_tile_payload(tile)
 	var transition_mask := _terrain_transition_edge_mask(tile)
+	var tile_art_entry := _terrain_base_art_entry(terrain, tile)
+	var tile_art_path := String(tile_art_entry.get("path", ""))
+	var tile_art_loaded := _terrain_art_texture(tile_art_path) is Texture2D
+	var edge_art_count := _edge_transition_art_count(terrain, transition_mask)
+	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	return {
 		"terrain": terrain,
 		"state": "current_scout_net" if visible else "explored_outside_scout_net",
@@ -902,22 +960,58 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"memory_overlay_alpha": 0.0,
 		"pattern_detail": "full",
 		"fill_color": _color_payload(base_color),
-		"texture_loaded": false,
-		"texture_asset_id": "",
-		"texture_path": "",
+		"texture_loaded": tile_art_loaded,
+		"texture_asset_id": String(tile_art_entry.get("variant_key", "")),
+		"texture_path": tile_art_path,
 		"uses_sampled_texture": false,
+		"uses_authored_tile_art": tile_art_loaded,
+		"fallback_pattern_rendering": not tile_art_loaded,
 		"terrain_model": String(_terrain_grammar.get("rendering_model", TERRAIN_GRAMMAR_RENDERING_MODE)),
-		"rendering_mode": TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern",
+		"rendering_mode": TERRAIN_TILE_ART_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"),
 		"autotile_ready": not _terrain_style(terrain).is_empty(),
 		"terrain_group": _terrain_group(terrain),
 		"style_id": _terrain_style_id(terrain),
 		"pattern": _terrain_pattern(terrain),
 		"transition_edge_mask": transition_mask,
 		"edge_transition_count": transition_mask.length(),
+		"edge_transition_art_count": edge_art_count,
+		"edge_transition_art_loaded": edge_art_count > 0 and edge_art_count == transition_mask.length(),
 		"road_overlay": not road_payload.is_empty(),
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
 		"road_role": String(road_payload.get("role", "")),
+		"road_overlay_art": road_art_loaded,
 	}
+
+func _edge_transition_art_count(terrain: String, transition_mask: String) -> int:
+	var count := 0
+	for direction in ["N", "E", "S", "W"]:
+		if not (direction in transition_mask):
+			continue
+		if _terrain_art_texture(_terrain_edge_art_path(terrain, direction)) is Texture2D:
+			count += 1
+	return count
+
+func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
+	if road_payload.is_empty():
+		return false
+	var art := _road_overlay_art_paths(String(road_payload.get("overlay_id", "road_dirt")))
+	if art.is_empty():
+		return false
+	var center_loaded := _terrain_art_texture(String(art.get("center", ""))) is Texture2D
+	var connectors = art.get("connectors", {})
+	var has_neighbor := false
+	var loaded_connector := false
+	if connectors is Dictionary:
+		for direction in DIRECTIONS:
+			var neighbor: Vector2i = tile + direction
+			if not _road_tiles.has(_tile_key(neighbor)):
+				continue
+			has_neighbor = true
+			if _terrain_art_texture(String(connectors.get(_direction_key(direction), ""))) is Texture2D:
+				loaded_connector = true
+	if has_neighbor:
+		return center_loaded and loaded_connector
+	return center_loaded
 
 func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array) -> Dictionary:
 	if not explored:
@@ -1030,6 +1124,11 @@ func _load_terrain_grammar() -> void:
 	_terrain_grammar.clear()
 	_terrain_styles.clear()
 	_terrain_overlay_styles.clear()
+	_terrain_base_art.clear()
+	_terrain_edge_art.clear()
+	_terrain_art_textures.clear()
+	_terrain_art_missing.clear()
+	_road_overlay_art.clear()
 	var grammar := ContentService.get_terrain_grammar()
 	if grammar.is_empty() and FileAccess.file_exists(TERRAIN_GRAMMAR_PATH):
 		var file := FileAccess.open(TERRAIN_GRAMMAR_PATH, FileAccess.READ)
@@ -1049,6 +1148,7 @@ func _load_terrain_grammar() -> void:
 			var terrain_id := String(terrain_class.get("id", "")).strip_edges().to_lower()
 			if terrain_id != "":
 				_terrain_styles[terrain_id] = terrain_class
+				_register_terrain_art(terrain_id, terrain_class)
 	var overlay_classes = grammar.get("overlay_classes", [])
 	if overlay_classes is Array:
 		for overlay_class in overlay_classes:
@@ -1061,6 +1161,56 @@ func _load_terrain_grammar() -> void:
 			for color_key in ["color", "edge_color", "shadow_color", "center_color"]:
 				normalized[color_key] = _color_from_hex(String(overlay_class.get(color_key, "")), _road_default_color(color_key))
 			_terrain_overlay_styles[overlay_id] = normalized
+			_register_road_overlay_art(overlay_id, overlay_class)
+
+func _register_terrain_art(terrain_id: String, terrain_class: Dictionary) -> void:
+	var tile_art = terrain_class.get("tile_art", {})
+	if not (tile_art is Dictionary):
+		return
+	var base_tiles = tile_art.get("base_tiles", [])
+	var normalized_base_tiles: Array = []
+	if base_tiles is Array:
+		for entry in base_tiles:
+			if not (entry is Dictionary):
+				continue
+			var texture_path := String(entry.get("path", "")).strip_edges()
+			if texture_path == "":
+				continue
+			normalized_base_tiles.append({
+				"variant_key": String(entry.get("variant_key", "")),
+				"path": texture_path,
+			})
+	if not normalized_base_tiles.is_empty():
+		_terrain_base_art[terrain_id] = normalized_base_tiles
+	var edge_overlays = tile_art.get("edge_overlays", {})
+	var normalized_edges := {}
+	if edge_overlays is Dictionary:
+		for direction in ["N", "E", "S", "W"]:
+			var edge_path := String(edge_overlays.get(direction, "")).strip_edges()
+			if edge_path != "":
+				normalized_edges[direction] = edge_path
+	if not normalized_edges.is_empty():
+		_terrain_edge_art[terrain_id] = normalized_edges
+
+func _register_road_overlay_art(overlay_id: String, overlay_class: Dictionary) -> void:
+	var tile_art = overlay_class.get("tile_art", {})
+	if not (tile_art is Dictionary):
+		return
+	var center_path := String(tile_art.get("center", "")).strip_edges()
+	var connectors = tile_art.get("connectors", {})
+	var normalized_connectors := {}
+	if connectors is Dictionary:
+		for direction in ["N", "E", "S", "W", "NE", "SE", "SW", "NW"]:
+			var connector_path := String(connectors.get(direction, "")).strip_edges()
+			if connector_path != "":
+				normalized_connectors[direction] = connector_path
+	var normalized := {}
+	if center_path != "":
+		normalized["center"] = center_path
+	if not normalized_connectors.is_empty():
+		normalized["connectors"] = normalized_connectors
+	if not normalized.is_empty():
+		_road_overlay_art[overlay_id] = normalized
 
 func _terrain_style(terrain_id: String) -> Dictionary:
 	return _terrain_styles.get(terrain_id.strip_edges().to_lower(), {})
@@ -1080,6 +1230,45 @@ func _terrain_group(terrain_id: String) -> String:
 func _terrain_style_id(terrain_id: String) -> String:
 	var style := _terrain_style(terrain_id)
 	return String(style.get("style_id", terrain_id))
+
+func _terrain_base_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
+	var entries = _terrain_base_art.get(terrain_id.strip_edges().to_lower(), [])
+	if not (entries is Array) or entries.is_empty():
+		return {}
+	var index := _deterministic_art_index(tile, terrain_id, entries.size())
+	var entry = entries[index]
+	return entry if entry is Dictionary else {}
+
+func _deterministic_art_index(tile: Vector2i, terrain_id: String, count: int) -> int:
+	if count <= 0:
+		return 0
+	var seed: int = abs((tile.x * 37) + (tile.y * 53) + (terrain_id.length() * 19))
+	return seed % count
+
+func _terrain_edge_art_path(terrain_id: String, direction: String) -> String:
+	var edge_paths = _terrain_edge_art.get(terrain_id.strip_edges().to_lower(), {})
+	if not (edge_paths is Dictionary):
+		return ""
+	return String(edge_paths.get(direction, ""))
+
+func _road_overlay_art_paths(overlay_id: String) -> Dictionary:
+	var art = _road_overlay_art.get(overlay_id, {})
+	return art if art is Dictionary else {}
+
+func _terrain_art_texture(texture_path: String):
+	var normalized_path := texture_path.strip_edges()
+	if normalized_path == "":
+		return null
+	if _terrain_art_textures.has(normalized_path):
+		return _terrain_art_textures.get(normalized_path)
+	if _terrain_art_missing.has(normalized_path):
+		return null
+	var texture = _texture_from_path(normalized_path)
+	if texture is Texture2D:
+		_terrain_art_textures[normalized_path] = texture
+		return texture
+	_terrain_art_missing[normalized_path] = true
+	return null
 
 func _terrain_transition_priority(terrain_id: String) -> int:
 	var style := _terrain_style(terrain_id)
@@ -1121,6 +1310,25 @@ func _road_overlay_style(overlay_id: String) -> Dictionary:
 		"center_color": ROAD_DEFAULT_CENTER_COLOR,
 		"width_fraction": ROAD_DEFAULT_WIDTH_FACTOR,
 	}
+
+func _direction_key(direction: Vector2i) -> String:
+	if direction == Vector2i(0, -1):
+		return "N"
+	if direction == Vector2i(1, -1):
+		return "NE"
+	if direction == Vector2i(1, 0):
+		return "E"
+	if direction == Vector2i(1, 1):
+		return "SE"
+	if direction == Vector2i(0, 1):
+		return "S"
+	if direction == Vector2i(-1, 1):
+		return "SW"
+	if direction == Vector2i(-1, 0):
+		return "W"
+	if direction == Vector2i(-1, -1):
+		return "NW"
+	return ""
 
 func _road_default_color(key: String) -> Color:
 	match key:
