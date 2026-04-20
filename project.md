@@ -168,6 +168,10 @@ Implementation note date: 2026-04-20
 
 The first grounded overworld marker correction replaces generic dark circular contrast plates as the primary marker support. `OverworldMapView` now draws towns, sites, artifacts, encounters, mapped object sprites, and the active hero over terrain-tinted oval footprint anchors with contact shadows and small ground tie marks; mapped sprites use a soft offset sprite shadow instead of a circular badge outline. The contract remains that selection/focus, remembered objects, roads, fog, tactical framing, panning, pathing, and object sprite mappings/fallbacks must stay readable and stable. This is a marker presentation correction, not final object/town art.
 
+Implementation note date: 2026-04-20
+
+The next overworld object presentation slice moves the renderer from grounded markers toward object-first placement. `OverworldMapView` now uses authored map-object footprints from `content/map_objects.json` as presentation scale hints for resource sites, applies footprint-scaled sprite settlement and foreground ground-lip occlusion cues, and replaces several procedural fallback symbols with compact family-specific world silhouettes for dwellings, mines, scouting structures, guarded ruins, transit objects, shrines, pickups, artifacts, encounters, towns, and the active hero. This is a rendering-direction nudge only: footprints do not yet change movement, blocking, visit targets, or true multi-tile occupancy, and authored object/town art remains future work.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

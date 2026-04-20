@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T11:42:25Z",
+  "updatedAt": "2026-04-20T12:06:47Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-grounded-markers-10184",
-  "currentSliceTitle": "Ground overworld markers into terrain instead of UI plates",
+  "currentSliceId": "overworld-object-presence-10184",
+  "currentSliceTitle": "Push overworld markers toward object-first placed presence",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation correction after AcOrP flagged the post-a827e04 overworld as still reading like a board with pasted-on UI markers. Replaced generic dark circular marker plates in OverworldMapView with terrain-tinted oval footprint anchors, softer contact shadows, and small ground tie marks; removed the circular badge outline from mapped object sprites in favor of a soft offset sprite shadow; slightly reduced grid alpha; updated marker validation metadata, visual smokes, manifest wording, PLAN.md, and project.md. Preserved original quiet terrain, structural roads, fog behavior, tactical framing, panning, pathing, object sprite mappings/fallbacks, and selection/focus clarity. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed a narrow object-first rendering nudge after AcOrP reported that the post-c98de5d overworld still reads too much like symbols on a board. OverworldMapView now builds resource-site object profiles from content/map_objects.json, uses authored footprints as presentation-scale hints, applies footprint-scaled sprite settlement with foreground ground-lip occlusion, and replaces several procedural symbols with compact family-specific world silhouettes for dwellings/services/outposts, mines, scouting towers, guarded ruins, transit objects, shrines, pickups, artifacts, encounters, towns, and the active hero. Preserved fog, panning, pathing, tactical framing, selection clarity, terrain/road direction, mapped sprite behavior, and procedural fallback coverage. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -196,6 +196,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-object-presence-10184",
+      "title": "Push overworld markers toward object-first placed presence",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -251,7 +257,8 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the grounded marker presentation in River Pass and Ninefold Confluence before calling the overworld marker treatment visually polished.",
+    "Manually inspect the footprint-scaled object presentation in River Pass and Ninefold Confluence before calling the overworld object treatment visually polished.",
+    "Add authored town, encounter, and high-priority site sprites so the new object-first renderer is not carrying important player-facing objects through procedural silhouettes.",
     "Add future authored town/object footprint or sprite slices so unmapped procedural silhouettes can be replaced where player-facing objects need richer presence.",
     "Add future authored tile-art slices for water/coast, badlands/wastes, ash/lava, snow/frost, and cavern/underway before treating Ninefold Confluence's full terrain surface as art-covered.",
     "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
