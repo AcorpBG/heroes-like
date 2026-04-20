@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T15:33:51Z",
+  "updatedAt": "2026-04-20T15:53:16Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-terrain-road-correction-10184",
-  "currentSliceTitle": "Correct base terrain and structural road tile readability",
+  "currentSliceId": "overworld-terrain-road-feedback-correction-10184",
+  "currentSliceTitle": "Correct terrain consistency, terrain transitions, and road intersections",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed an AcOrP-priority terrain/road correction slice focused on the original quiet terrain tile bank and structural dirt-road pieces. Rebuilt the covered base PNGs with deterministic multi-scale ground grain and stronger terrain-specific detail, rebuilt road_dirt center/connectors as softer muted rutted dirt beds with organic center masks, grit, rut lines, and connector wobble, and updated terrain grammar/manifest/docs. Town, hero, site marker polish, pathing, fog, save/load, object logic, and road movement costs were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check. Additional builder compile check passed: python3 -m py_compile tools/build_overworld_terrain_tiles.py.",
+  "currentSliceNotes": "Completed a narrow terrain/road-only visual correction in response to AcOrP feedback. Grass/plains now use a closer shared grasslands palette, lower-contrast generated texture, and patch-cohesive low-frequency tile variant selection; terrain edge overlays are rebuilt as softer feathered jagged intrusions; road connector art and rendering now use connection-aware center caps so straight road segments no longer stamp a center blob on every tile while true bends/intersections still receive a single joint cap. Gameplay/pathing/fog/save/object/town/hero/site logic and road movement costs were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check. Additional builder compile check passed: python3 -m py_compile tools/build_overworld_terrain_tiles.py.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -250,6 +250,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-terrain-road-feedback-correction-10184",
+      "title": "Correct grass/plains consistency, terrain transitions, and road intersections after AcOrP feedback",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -305,7 +311,7 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the corrected base terrain and rutted road overlays in River Pass and Ninefold Confluence at live-client scale before treating the terrain/road immersion issue as fully solved.",
+    "Manually inspect the corrected cohesive grasslands base, softened edge overlays, and connection-aware road joints in River Pass and Ninefold Confluence at live-client scale before treating the terrain/road immersion issue as fully solved.",
     "Manually inspect the corrected active-hero placed-figure presentation in River Pass and Ninefold Confluence before treating hero presence as polished across every biome and supported resolution.",
     "Plan a future explicit multi-tile town occupancy/pathing slice before making non-entry town footprint cells affect movement, blocking, save schema, or visit resolution.",
     "Manually inspect the corrected no-base-ellipse town presentation plus the hostile_camp overworld placeholder in River Pass and Ninefold Confluence before calling the object-art direction visually polished.",

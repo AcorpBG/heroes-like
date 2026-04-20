@@ -482,22 +482,21 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 	var art := _road_overlay_art_paths(overlay_id)
 	if art.is_empty():
 		return false
+	var neighbor_directions := _road_neighbor_directions(tile)
 	var drew_any := false
-	var center_texture = _terrain_art_texture(String(art.get("center", "")))
-	if center_texture is Texture2D:
-		draw_texture_rect(center_texture, rect, false)
-		drew_any = true
 	var connectors = art.get("connectors", {})
 	if connectors is Dictionary:
-		for direction in DIRECTIONS:
-			var neighbor: Vector2i = tile + direction
-			if not _road_tiles.has(_tile_key(neighbor)):
-				continue
+		for direction in neighbor_directions:
 			var direction_key := _direction_key(direction)
 			var connector_texture = _terrain_art_texture(String(connectors.get(direction_key, "")))
 			if connector_texture is Texture2D:
 				draw_texture_rect(connector_texture, rect, false)
 				drew_any = true
+	if _road_needs_joint_cap(neighbor_directions):
+		var center_texture = _terrain_art_texture(String(art.get("center", "")))
+		if center_texture is Texture2D:
+			draw_texture_rect(center_texture, rect, false)
+			drew_any = true
 	return drew_any
 
 func _draw_route(board_rect: Rect2) -> void:
@@ -1779,6 +1778,8 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var tile_art_loaded := tile_art_primary and _terrain_art_texture(tile_art_path) is Texture2D
 	var edge_art_count := _edge_transition_art_count(terrain, transition_mask)
 	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
+	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
+	var road_joint_cap := _road_needs_joint_cap(road_neighbor_directions) if not road_payload.is_empty() else false
 	var primary_base_model := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern")
 	return {
 		"terrain": terrain,
@@ -1806,17 +1807,22 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"style_id": _terrain_style_id(terrain),
 		"pattern": _terrain_pattern(terrain),
 		"terrain_noise_profile": "quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback",
+		"terrain_variant_selection": "patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks",
+		"grasslands_base_cohesion": "grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else "",
 		"transition_edge_mask": transition_mask,
 		"edge_transition_count": transition_mask.length(),
 		"edge_transition_art_count": edge_art_count,
 		"edge_transition_art_loaded": edge_art_count > 0 and edge_art_count == transition_mask.length(),
 		"transition_shape_model": "jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback",
+		"transition_edge_treatment": "soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback",
 		"road_overlay": not road_payload.is_empty(),
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
 		"road_role": String(road_payload.get("role", "")),
 		"road_overlay_art": road_art_loaded,
 		"road_shape_model": "connection_piece_overlay" if road_art_loaded else ("procedural_connector_lines" if not road_payload.is_empty() else ""),
 		"road_connection_key": _road_connection_key(tile) if not road_payload.is_empty() else "",
+		"road_joint_cap": road_joint_cap,
+		"road_joint_cap_model": "connection_aware_joint_cap" if not road_payload.is_empty() else "",
 	}
 
 func _edge_transition_art_count(terrain: String, transition_mask: String) -> int:
@@ -1841,18 +1847,14 @@ func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 		return false
 	var center_loaded := _terrain_art_texture(String(art.get("center", ""))) is Texture2D
 	var connectors = art.get("connectors", {})
-	var has_neighbor := false
+	var neighbor_directions := _road_neighbor_directions(tile)
 	var loaded_connector := false
 	if connectors is Dictionary:
-		for direction in DIRECTIONS:
-			var neighbor: Vector2i = tile + direction
-			if not _road_tiles.has(_tile_key(neighbor)):
-				continue
-			has_neighbor = true
+		for direction in neighbor_directions:
 			if _terrain_art_texture(String(connectors.get(_direction_key(direction), ""))) is Texture2D:
 				loaded_connector = true
-	if has_neighbor:
-		return center_loaded and loaded_connector
+	if not neighbor_directions.is_empty():
+		return loaded_connector and (center_loaded or not _road_needs_joint_cap(neighbor_directions))
 	return center_loaded
 
 func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_kinds: Array) -> Dictionary:
@@ -2247,7 +2249,8 @@ func _terrain_base_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
 func _deterministic_art_index(tile: Vector2i, terrain_id: String, count: int) -> int:
 	if count <= 0:
 		return 0
-	var seed: int = abs((tile.x * 37) + (tile.y * 53) + (terrain_id.length() * 19))
+	var patch := Vector2i(floori(float(tile.x) / 3.0), floori(float(tile.y) / 3.0))
+	var seed: int = abs((patch.x * 73) + (patch.y * 151) + (terrain_id.hash() * 19))
 	return seed % count
 
 func _terrain_edge_art_path(terrain_id: String, direction: String) -> String:
@@ -2316,12 +2319,30 @@ func _road_overlay_style(overlay_id: String) -> Dictionary:
 		"width_fraction": ROAD_DEFAULT_WIDTH_FACTOR,
 	}
 
-func _road_connection_key(tile: Vector2i) -> String:
-	var keys: Array[String] = []
+func _road_neighbor_directions(tile: Vector2i) -> Array:
+	var neighbor_directions := []
 	for direction in DIRECTIONS:
 		var neighbor: Vector2i = tile + direction
 		if _road_tiles.has(_tile_key(neighbor)):
-			keys.append(_direction_key(direction))
+			neighbor_directions.append(direction)
+	return neighbor_directions
+
+func _road_needs_joint_cap(neighbor_directions: Array) -> bool:
+	var count := neighbor_directions.size()
+	if count <= 1:
+		return true
+	if count >= 3:
+		return true
+	if count != 2:
+		return false
+	var first: Vector2i = neighbor_directions[0]
+	var second: Vector2i = neighbor_directions[1]
+	return (first + second) != Vector2i.ZERO
+
+func _road_connection_key(tile: Vector2i) -> String:
+	var keys: Array[String] = []
+	for direction in _road_neighbor_directions(tile):
+		keys.append(_direction_key(direction))
 	keys.sort()
 	var result := ""
 	for key in keys:

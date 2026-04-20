@@ -571,6 +571,33 @@ Limits:
 - Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, and road movement-cost/pathfinding behavior remain future slices.
 - Automated validation proves the runtime contract and smoke surfaces; manual visual review is still needed before treating the terrain and road look as broadly solved.
 
+## Current Implementation Slice: Overworld Terrain Feedback Correction
+Status: completed on 2026-04-20 as a narrow terrain/road-only correction after AcOrP feedback on checkerboard grass/plains, artificial borders, and road center overlap.
+
+Purpose:
+- Make grass/plains read as one consistent grasslands family instead of alternating high-contrast cells.
+- Make terrain edge overlays softer and less like stamped borders while keeping the authored terrain grammar and transition priorities.
+- Fix road center/intersection stamping without changing road movement, pathing, fog, save data, or object presentation.
+
+Implemented:
+- Tuned the terrain builder so grass and plains share a closer palette, lower contrast ground grain, fewer sharp grass marks, and patch-cohesive low-frequency tile variant selection in `OverworldMapView`.
+- Rebuilt grass/plains runtime base PNGs plus all covered directional edge overlays and `road_dirt` pieces from the deterministic builder.
+- Changed edge overlay generation from hard dark strips to feathered jagged intrusion masks with reduced line/highlight alpha.
+- Changed road art rendering so connector pieces draw first and the center cap is only stamped on endpoints, bends, isolated tiles, and true junctions, instead of every straight road tile.
+- Extended smoke-test presentation metadata for cohesive grasslands variants, softened edge treatment, and connection-aware road joint caps.
+
+Validation:
+- `python3 -m py_compile tools/build_overworld_terrain_tiles.py`
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is a correction to the current procedural tile bank and renderer contract, not a final terrain atlas or broad art pass.
+- Unsliced terrain families still use grammar fallback colors/patterns until their own authored tile art lands.
+- Road overlays remain visual presentation only; movement cost and pathfinding still do not treat roads specially.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

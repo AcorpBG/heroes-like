@@ -660,6 +660,10 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: overworld terrain does not expose the quiet macro-readable base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
+	if String(grass_terrain.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency" or String(grass_terrain.get("grasslands_base_cohesion", "")) != "grass_plains_shared_palette":
+		push_error("Overworld smoke: grass/plains terrain does not expose the cohesive low-frequency variant contract. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
 	if String(grass_terrain.get("terrain_group", "")) != "grasslands" or String(grass_terrain.get("style_id", "")) == "":
 		push_error("Overworld smoke: grass terrain does not expose grammar group/style metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
@@ -668,11 +672,19 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: authored River Pass road overlay is not using structural road art on the main route. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
+	if String(grass_terrain.get("road_joint_cap_model", "")) != "connection_aware_joint_cap" or not bool(grass_terrain.get("road_joint_cap", false)):
+		push_error("Overworld smoke: River Pass road intersection does not expose the connection-aware joint cap contract. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
 
 	var forest_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var forest_terrain: Dictionary = forest_presentation.get("terrain_presentation", {})
 	if String(forest_terrain.get("terrain_group", "")) != "forest" or int(forest_terrain.get("edge_transition_count", 0)) <= 0 or not bool(forest_terrain.get("edge_transition_art_loaded", false)) or String(forest_terrain.get("transition_shape_model", "")) != "jagged_directional_overlay":
 		push_error("Overworld smoke: forest edge transition art is missing the jagged directional overlay path. presentation=%s" % forest_presentation)
+		get_tree().quit(1)
+		return false
+	if String(forest_terrain.get("transition_edge_treatment", "")) != "soft_feathered_jagged_overlay":
+		push_error("Overworld smoke: forest edge transition art is not reporting the softened feathered treatment. presentation=%s" % forest_presentation)
 		get_tree().quit(1)
 		return false
 
