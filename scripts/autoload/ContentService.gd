@@ -12,6 +12,8 @@ const TOWNS_PATH := "%s/towns.json" % CONTENT_DIR
 const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
 const RESOURCE_SITES_PATH := "%s/resource_sites.json" % CONTENT_DIR
 const BIOMES_PATH := "%s/biomes.json" % CONTENT_DIR
+const TERRAIN_GRAMMAR_PATH := "%s/terrain_grammar.json" % CONTENT_DIR
+const TERRAIN_LAYERS_PATH := "%s/terrain_layers.json" % CONTENT_DIR
 const MAP_OBJECTS_PATH := "%s/map_objects.json" % CONTENT_DIR
 const NEUTRAL_DWELLINGS_PATH := "%s/neutral_dwellings.json" % CONTENT_DIR
 const ARTIFACTS_PATH := "%s/artifacts.json" % CONTENT_DIR
@@ -99,6 +101,13 @@ func get_resource_site(id: String) -> Dictionary:
 func get_biome(id: String) -> Dictionary:
 	return get_content_by_id(BIOMES_PATH, id)
 
+func get_terrain_grammar() -> Dictionary:
+	return load_json(TERRAIN_GRAMMAR_PATH)
+
+func get_terrain_layers_for_scenario(scenario_id: String) -> Dictionary:
+	var layers := get_content_by_id(TERRAIN_LAYERS_PATH, scenario_id)
+	return layers.duplicate(true) if not layers.is_empty() else {}
+
 func get_biome_for_terrain(terrain_id: String) -> Dictionary:
 	var normalized_terrain := String(terrain_id)
 	if normalized_terrain == "":
@@ -160,6 +169,8 @@ func _validate_content() -> void:
 	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
 	var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
 	var biome_index := _index_items(_items_from_raw(load_json(BIOMES_PATH)))
+	var terrain_grammar := load_json(TERRAIN_GRAMMAR_PATH)
+	var terrain_layer_index := _index_items(_items_from_raw(load_json(TERRAIN_LAYERS_PATH)))
 	var map_object_index := _index_items(_items_from_raw(load_json(MAP_OBJECTS_PATH)))
 	var neutral_dwelling_index := _index_items(_items_from_raw(load_json(NEUTRAL_DWELLINGS_PATH)))
 	var artifact_index := _index_items(_items_from_raw(load_json(ARTIFACTS_PATH)))
@@ -168,6 +179,9 @@ func _validate_content() -> void:
 	var encounter_index := _index_items(_items_from_raw(load_json(ENCOUNTERS_PATH)))
 	var scenario_index := _index_items(_items_from_raw(load_json(SCENARIOS_PATH)))
 
+	_validate_terrain_grammar(terrain_grammar, biome_index)
+	for terrain_layer in terrain_layer_index.values():
+		_validate_terrain_layer(terrain_layer, scenario_index, terrain_grammar)
 	for biome in biome_index.values():
 		_validate_biome(biome)
 	for resource_site in resource_site_index.values():
@@ -245,6 +259,149 @@ func _supported_map_object_families() -> Array:
 		"decoration",
 		"faction_landmark",
 	]
+
+func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> void:
+	if String(grammar.get("rendering_model", "")) != "authored_autotile_layers":
+		push_warning("Terrain grammar must declare rendering_model authored_autotile_layers.")
+	var classes = grammar.get("terrain_classes", [])
+	if not (classes is Array) or classes.is_empty():
+		push_warning("Terrain grammar must define terrain_classes.")
+		return
+	var terrain_ids: Array[String] = []
+	for terrain_class in classes:
+		if not (terrain_class is Dictionary):
+			push_warning("Terrain grammar contains a non-dictionary terrain class.")
+			continue
+		var terrain_id := String(terrain_class.get("id", ""))
+		if terrain_id == "":
+			push_warning("Terrain grammar terrain classes must define id.")
+			continue
+		if terrain_id in terrain_ids:
+			push_warning("Terrain grammar repeats terrain id %s." % terrain_id)
+		terrain_ids.append(terrain_id)
+		var biome_id := String(terrain_class.get("biome_id", ""))
+		if biome_id == "" or not biome_index.has(biome_id):
+			push_warning("Terrain grammar %s references missing biome %s." % [terrain_id, biome_id])
+		for key in ["terrain_group", "autotile_family", "style_id", "pattern", "readability_role"]:
+			if String(terrain_class.get(key, "")) == "":
+				push_warning("Terrain grammar %s must define %s." % [terrain_id, key])
+		for color_key in ["base_color", "detail_color", "edge_color"]:
+			if not _looks_like_hex_color(String(terrain_class.get(color_key, ""))):
+				push_warning("Terrain grammar %s must define %s as a hex color." % [terrain_id, color_key])
+		if int(terrain_class.get("transition_priority", -1)) < 0:
+			push_warning("Terrain grammar %s must define transition_priority >= 0." % terrain_id)
+		var supports = terrain_class.get("supports", [])
+		if not (supports is Array) or "edge_transitions" not in supports:
+			push_warning("Terrain grammar %s must support edge_transitions." % terrain_id)
+
+	for required_id in ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"]:
+		if required_id not in terrain_ids:
+			push_warning("Terrain grammar must define authored terrain class %s." % required_id)
+
+	var overlay_ids: Array[String] = []
+	var overlays = grammar.get("overlay_classes", [])
+	if not (overlays is Array) or overlays.is_empty():
+		push_warning("Terrain grammar must define overlay_classes.")
+		return
+	for overlay in overlays:
+		if not (overlay is Dictionary):
+			push_warning("Terrain grammar contains a non-dictionary overlay class.")
+			continue
+		var overlay_id := String(overlay.get("id", ""))
+		if overlay_id == "":
+			push_warning("Terrain grammar overlay classes must define id.")
+			continue
+		overlay_ids.append(overlay_id)
+		if String(overlay.get("layer", "")) != "road":
+			push_warning("Terrain grammar overlay %s must currently use layer road." % overlay_id)
+		for color_key in ["color", "edge_color", "shadow_color", "center_color"]:
+			if not _looks_like_hex_color(String(overlay.get(color_key, ""))):
+				push_warning("Terrain grammar overlay %s must define %s as a hex color." % [overlay_id, color_key])
+		if float(overlay.get("width_fraction", 0.0)) <= 0.0:
+			push_warning("Terrain grammar overlay %s must define width_fraction > 0." % overlay_id)
+	if "road_dirt" not in overlay_ids:
+		push_warning("Terrain grammar must define the road_dirt overlay.")
+
+func _validate_terrain_layer(layer: Dictionary, scenario_index: Dictionary, grammar: Dictionary) -> void:
+	var scenario_id := String(layer.get("id", ""))
+	var scenario = scenario_index.get(scenario_id, {})
+	if scenario_id == "" or scenario.is_empty():
+		push_warning("Terrain layer references missing scenario %s." % scenario_id)
+		return
+	var map_data = scenario.get("map", [])
+	var map_size = scenario.get("map_size", {})
+	var width := int(map_size.get("width", 0)) if map_size is Dictionary else 0
+	var height := int(map_size.get("height", 0)) if map_size is Dictionary else 0
+	if width <= 0 and map_data is Array and not map_data.is_empty() and map_data[0] is Array:
+		width = map_data[0].size()
+	if height <= 0 and map_data is Array:
+		height = map_data.size()
+	var supported_terrain := _terrain_ids_supporting_roads(grammar)
+	var overlay_ids := _terrain_overlay_ids(grammar)
+	var roads = layer.get("roads", [])
+	if not (roads is Array) or roads.is_empty():
+		push_warning("Terrain layer %s must define at least one road overlay." % scenario_id)
+		return
+	for road in roads:
+		if not (road is Dictionary):
+			push_warning("Terrain layer %s contains a non-dictionary road." % scenario_id)
+			continue
+		var road_id := String(road.get("id", ""))
+		if road_id == "":
+			push_warning("Terrain layer %s road entries must define id." % scenario_id)
+		var overlay_id := String(road.get("overlay_id", "road_dirt"))
+		if overlay_id not in overlay_ids:
+			push_warning("Terrain layer %s road %s references missing overlay %s." % [scenario_id, road_id, overlay_id])
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array) or tiles.is_empty():
+			push_warning("Terrain layer %s road %s must define tiles." % [scenario_id, road_id])
+			continue
+		for tile in tiles:
+			if not (tile is Dictionary):
+				push_warning("Terrain layer %s road %s contains a non-dictionary tile." % [scenario_id, road_id])
+				continue
+			var x := int(tile.get("x", -1))
+			var y := int(tile.get("y", -1))
+			if x < 0 or y < 0 or x >= width or y >= height:
+				push_warning("Terrain layer %s road %s tile %d,%d is out of bounds." % [scenario_id, road_id, x, y])
+				continue
+			var terrain_id := _terrain_id_from_map(map_data, x, y)
+			if terrain_id != "" and terrain_id not in supported_terrain:
+				push_warning("Terrain layer %s road %s tile %d,%d uses terrain %s without road_overlay support." % [scenario_id, road_id, x, y, terrain_id])
+
+func _terrain_ids_supporting_roads(grammar: Dictionary) -> Array[String]:
+	var ids: Array[String] = []
+	var classes = grammar.get("terrain_classes", [])
+	if not (classes is Array):
+		return ids
+	for terrain_class in classes:
+		if not (terrain_class is Dictionary):
+			continue
+		var supports = terrain_class.get("supports", [])
+		if supports is Array and "road_overlay" in supports:
+			ids.append(String(terrain_class.get("id", "")))
+	return ids
+
+func _terrain_overlay_ids(grammar: Dictionary) -> Array[String]:
+	var ids: Array[String] = []
+	var overlays = grammar.get("overlay_classes", [])
+	if not (overlays is Array):
+		return ids
+	for overlay in overlays:
+		if overlay is Dictionary:
+			ids.append(String(overlay.get("id", "")))
+	return ids
+
+func _terrain_id_from_map(map_data: Variant, x: int, y: int) -> String:
+	if not (map_data is Array) or y < 0 or y >= map_data.size():
+		return ""
+	var row = map_data[y]
+	if not (row is Array) or x < 0 or x >= row.size():
+		return ""
+	return String(row[x])
+
+func _looks_like_hex_color(value: String) -> bool:
+	return value.begins_with("#") and value.length() in [7, 9]
 
 func _validate_biome(biome: Dictionary) -> void:
 	var biome_id := String(biome.get("id", ""))

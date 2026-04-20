@@ -3,44 +3,16 @@
   "source": {
     "task_id": 10184,
     "processed_manifest": "res://art/overworld/source/manifest/generated-overworld-assets-20260419.json",
-    "note": "Generated asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks."
+    "note": "Generated asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. The generated terrain texture set is retained in source history but is no longer the primary terrain model."
+  },
+  "terrain_rendering": {
+    "model": "authored_autotile_layers",
+    "grammar": "res://content/terrain_grammar.json",
+    "terrain_layers": "res://content/terrain_layers.json",
+    "sampled_texture_status": "deprecated_not_primary"
   },
   "remembered_object_rendering": "ghosted_sprite_with_memory_plate",
   "unmapped_object_fallback": "procedural_marker",
-  "terrain_textures": {
-    "grass": {
-      "asset_id": "grasslands",
-      "path": "res://art/overworld/runtime/terrain/grasslands.png"
-    },
-    "plains": {
-      "asset_id": "grasslands",
-      "path": "res://art/overworld/runtime/terrain/grasslands.png"
-    },
-    "forest": {
-      "asset_id": "forest",
-      "path": "res://art/overworld/runtime/terrain/forest.png"
-    },
-    "mire": {
-      "asset_id": "mire",
-      "path": "res://art/overworld/runtime/terrain/mire.png"
-    },
-    "swamp": {
-      "asset_id": "mire",
-      "path": "res://art/overworld/runtime/terrain/mire.png"
-    },
-    "hills": {
-      "asset_id": "highland",
-      "path": "res://art/overworld/runtime/terrain/highland.png"
-    },
-    "ridge": {
-      "asset_id": "highland",
-      "path": "res://art/overworld/runtime/terrain/highland.png"
-    },
-    "highland": {
-      "asset_id": "highland",
-      "path": "res://art/overworld/runtime/terrain/highland.png"
-    }
-  },
   "object_assets": {
     "ruined_obelisk": {
       "path": "res://art/overworld/runtime/objects/pickups/ruined_obelisk.png",

@@ -176,6 +176,8 @@ static func normalize_overworld_state(session: SessionStateStoreScript.SessionDa
 		session.overworld["map"] = scenario.get("map", [])
 	if not session.overworld.has("map_size") or not (session.overworld.get("map_size") is Dictionary):
 		session.overworld["map_size"] = scenario.get("map_size", {})
+	if not session.overworld.has("terrain_layers") or not (session.overworld.get("terrain_layers") is Dictionary) or session.overworld.get("terrain_layers", {}).is_empty():
+		session.overworld["terrain_layers"] = ContentService.get_terrain_layers_for_scenario(session.scenario_id)
 	if not session.overworld.has("hero_position") or not (session.overworld.get("hero_position") is Dictionary):
 		session.overworld["hero_position"] = scenario.get("start", {"x": 0, "y": 0})
 	_normalize_fog_of_war(session)
