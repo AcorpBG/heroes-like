@@ -520,6 +520,31 @@ Limits:
 - Other overworld object families still use their shared terrain grounding, placement-bed, contact-shadow, and backdrop cues from earlier slices.
 - Manual visual review is still needed before treating the town presentation as polished across every biome and resolution.
 
+## Current Implementation Slice: Overworld Hero Presence Correction
+Status: completed on 2026-04-20 as a narrow visual correction to the active hero presentation.
+
+Purpose:
+- Make the active hero read more like a placed world figure and less like a staged badge/marker.
+- Preserve active-hero clarity, current selection readability, and the existing tile focus ring.
+- Keep the correction hero-specific instead of rolling back the shared object renderer or touching gameplay rules.
+
+Implemented:
+- Split active-hero drawing in `OverworldMapView` away from `_draw_marker_plate`.
+- Replaced the hero's filled footprint bed, base ellipse, marker ring, and upper-mass backdrop with compact foot-contact shadow, terrain scuffs, boot-level foreground occlusion, and a larger outlined standing figure/banner silhouette.
+- Added hero-specific validation metadata for the placed world-figure model, no-base-ellipse/no-shared-marker support, foot-contact depth cues, and tile-focus selection source.
+- Extended River Pass and Ninefold Confluence visual smokes to guard the hero-specific presence correction while leaving town no-ellipse validation and non-hero object grounding intact.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final hero art, animation, movement, pathing, fog, save/load, battle routing, town logic, or hero-rule work.
+- The active hero remains a procedural placeholder silhouette until authored hero overworld sprites are added.
+- Manual visual review is still needed before treating hero presentation as polished across every biome and resolution.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 

@@ -383,16 +383,11 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: current selection focus is not readable on the map. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
 		return false
+	if not _assert_hero_presence_correction(hero_readability, hero_presentation):
+		return false
 	var hero_object_kinds: Array = hero_readability.get("object_kinds", [])
 	if "town" in hero_object_kinds:
 		if not _assert_town_grounding_correction(hero_readability, hero_presentation):
-			return false
-	else:
-		if String(hero_readability.get("depth_cue_model", "")) != "footprint_cast_shadow_with_base_occlusion" or not bool(hero_readability.get("directional_contact_shadow", false)) or not bool(hero_readability.get("base_occlusion_pads", false)):
-			push_error("Overworld smoke: active hero lacks the terrain-contact depth cues expected for object-first presence. presentation=%s" % hero_presentation)
-			get_tree().quit(1)
-			return false
-		if not _assert_upper_mass_backdrop(hero_readability, "active hero"):
 			return false
 	return true
 
@@ -554,6 +549,41 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		return false
 	if String(town_presentation.get("footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
 		push_error("Overworld smoke: town footprint cue metadata does not describe sparse non-entry/approach cues. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_hero_presence_correction(readability: Dictionary, presentation: Dictionary) -> bool:
+	if String(readability.get("hero_presence_model", "")) != "placed_world_hero_figure":
+		push_error("Overworld smoke: active hero does not report the placed world-figure presence model. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if String(readability.get("hero_anchor_shape", "")) != "hero_foot_contact_shadow" or String(readability.get("hero_grounding_model", "")) != "hero_foot_contact_without_base_ellipse":
+		push_error("Overworld smoke: active hero still lacks the hero-specific foot-contact grounding model. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if String(readability.get("hero_depth_cue_model", "")) != "hero_foot_contact_shadow_with_boot_occlusion":
+		push_error("Overworld smoke: active hero does not report boot-level depth/occlusion contact. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if bool(readability.get("hero_badge_plate", true)) or bool(readability.get("hero_base_ellipse", true)) or bool(readability.get("hero_terrain_quieting_bed", true)) or bool(readability.get("hero_upper_mass_backdrop", true)) or bool(readability.get("hero_shared_marker_plate", true)):
+		push_error("Overworld smoke: active hero regressed toward the staged badge/ellipse support. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(readability.get("hero_world_figure", false)) or not bool(readability.get("hero_foot_contact_shadow", false)) or not bool(readability.get("hero_boot_occlusion", false)):
+		push_error("Overworld smoke: active hero lacks world-figure, foot-shadow, or boot-occlusion cues. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if float(readability.get("hero_contact_shadow_alpha", 0.0)) < 0.30 or float(readability.get("hero_boot_occlusion_alpha", 0.0)) < 0.34:
+		push_error("Overworld smoke: active hero foot-contact depth cues are too faint. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if float(readability.get("hero_foot_anchor_width_fraction", 0.0)) < 0.50 or float(readability.get("hero_foot_anchor_height_fraction", 0.0)) < 0.12:
+		push_error("Overworld smoke: active hero foot-contact anchor is too small to read as placed on terrain. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if String(readability.get("hero_selection_ring_source", "")) != "tile_focus":
+		push_error("Overworld smoke: active hero selection readability is no longer tied to the tile focus ring. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
 	return true

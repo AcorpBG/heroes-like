@@ -68,6 +68,10 @@ const OBJECT_PLACEMENT_BED_MODEL := "footprint_terrain_quieting_bed"
 const OBJECT_UPPER_BACKDROP_MODEL := "family_scaled_rear_backdrop_wash"
 const OBJECT_VERTICAL_MASS_SHADOW_MODEL := "subtle_vertical_mass_shadow"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
+const HERO_PRESENCE_MODEL := "placed_world_hero_figure"
+const HERO_GROUNDING_MODEL := "hero_foot_contact_without_base_ellipse"
+const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
+const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
 const TOWN_GROUNDING_MODEL := "town_sprite_settled_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
@@ -92,6 +96,9 @@ const OBJECT_UPPER_BACKDROP_VISIBLE := Color(0.018, 0.022, 0.015, 0.26)
 const OBJECT_UPPER_BACKDROP_MEMORY := Color(0.20, 0.36, 0.38, 0.26)
 const OBJECT_VERTICAL_MASS_SHADOW_VISIBLE := Color(0.010, 0.012, 0.008, 0.18)
 const OBJECT_VERTICAL_MASS_SHADOW_MEMORY := Color(0.22, 0.40, 0.42, 0.18)
+const HERO_CONTACT_SHADOW_VISIBLE := Color(0.018, 0.014, 0.010, 0.34)
+const HERO_BOOT_OCCLUSION_VISIBLE := Color(0.18, 0.115, 0.045, 0.38)
+const HERO_GROUND_HIGHLIGHT_VISIBLE := Color(0.78, 0.66, 0.34, 0.20)
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
@@ -109,7 +116,7 @@ const RESOURCE_MARKER_RADIUS := 0.17
 const ARTIFACT_MARKER_OUTER_RADIUS := 0.18
 const ARTIFACT_MARKER_INNER_RADIUS := 0.07
 const ENCOUNTER_MARKER_EXTENT := 0.21
-const HERO_MARKER_RADIUS := 0.17
+const HERO_MARKER_RADIUS := 0.20
 const FOCUS_RING_WIDTH_FACTOR := 0.045
 const PAN_DRAG_THRESHOLD := 6.0
 const WHEEL_PAN_TILES := 3
@@ -829,27 +836,51 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
-	var footprint := Vector2i(1, 1)
-	var anchor := _draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR, footprint, tile)
+	var anchor := _draw_hero_grounding_anchor(rect, tile)
 	var extent := minf(rect.size.x, rect.size.y)
-	var center: Vector2 = rect.get_center()
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
-	var figure_center: Vector2 = center + Vector2(0.0, -extent * 0.02)
-	_draw_upper_mass_backdrop(anchor, "hero", false, footprint)
-	draw_line(figure_center + Vector2(-base_radius * 0.42, extent * 0.18), figure_center + Vector2(-base_radius * 0.12, extent * 0.38), HERO_RING_COLOR, maxf(2.0, extent * 0.030))
-	draw_line(figure_center + Vector2(base_radius * 0.36, extent * 0.18), figure_center + Vector2(base_radius * 0.12, extent * 0.38), HERO_RING_COLOR, maxf(2.0, extent * 0.030))
-	draw_rect(Rect2(figure_center + Vector2(-base_radius * 0.42, -base_radius * 0.12), Vector2(base_radius * 0.84, base_radius * 1.00)), HERO_FILL_COLOR, true)
-	draw_rect(Rect2(figure_center + Vector2(-base_radius * 0.42, -base_radius * 0.12), Vector2(base_radius * 0.84, base_radius * 1.00)), HERO_RING_COLOR, false, maxf(2.2, extent * 0.032))
-	draw_circle(figure_center + Vector2(0.0, -base_radius * 0.72), base_radius * 0.48, HERO_FILL_COLOR)
-	draw_circle(figure_center + Vector2(0.0, -base_radius * 0.72), base_radius * 0.48, HERO_RING_COLOR, false, maxf(2.0, extent * 0.030))
-	draw_line(figure_center + Vector2(base_radius * 0.82, extent * 0.20), figure_center + Vector2(base_radius * 0.82, -rect.size.y * 0.27), HERO_RING_COLOR, maxf(2.5, extent * 0.035))
+	var ground_center: Vector2 = anchor.get("center", rect.get_center())
+	var figure_center := ground_center + Vector2(0.0, -extent * 0.17)
+	var outline_width := maxf(2.2, extent * 0.034)
+	var leg_width := maxf(2.2, extent * 0.030)
+	var foot_left := ground_center + Vector2(-base_radius * 0.42, -extent * 0.015)
+	var foot_right := ground_center + Vector2(base_radius * 0.42, -extent * 0.010)
+	var hip_left := figure_center + Vector2(-base_radius * 0.22, base_radius * 0.48)
+	var hip_right := figure_center + Vector2(base_radius * 0.22, base_radius * 0.48)
+	var cloak := PackedVector2Array([
+		figure_center + Vector2(-base_radius * 0.62, -base_radius * 0.30),
+		figure_center + Vector2(base_radius * 0.58, -base_radius * 0.26),
+		figure_center + Vector2(base_radius * 0.42, base_radius * 0.86),
+		figure_center + Vector2(base_radius * 0.08, base_radius * 1.10),
+		figure_center + Vector2(-base_radius * 0.50, base_radius * 0.92),
+	])
+	var chest := PackedVector2Array([
+		figure_center + Vector2(-base_radius * 0.40, -base_radius * 0.24),
+		figure_center + Vector2(base_radius * 0.36, -base_radius * 0.18),
+		figure_center + Vector2(base_radius * 0.24, base_radius * 0.58),
+		figure_center + Vector2(-base_radius * 0.28, base_radius * 0.62),
+	])
+	draw_line(hip_left, foot_left, MARKER_OUTLINE_COLOR, leg_width + 1.4)
+	draw_line(hip_right, foot_right, MARKER_OUTLINE_COLOR, leg_width + 1.4)
+	draw_line(hip_left, foot_left, HERO_RING_COLOR, leg_width)
+	draw_line(hip_right, foot_right, HERO_RING_COLOR, leg_width)
+	draw_colored_polygon(cloak, HERO_FILL_COLOR)
+	draw_polyline(PackedVector2Array([cloak[0], cloak[1], cloak[2], cloak[3], cloak[4], cloak[0]]), MARKER_OUTLINE_COLOR, outline_width)
+	draw_colored_polygon(chest, _scaled_color(HERO_FILL_COLOR, 1.18))
+	draw_polyline(PackedVector2Array([chest[0], chest[1], chest[2], chest[3], chest[0]]), HERO_RING_COLOR, maxf(1.6, extent * 0.024))
+	var head_center := figure_center + Vector2(0.0, -base_radius * 0.74)
+	draw_circle(head_center, base_radius * 0.48, MARKER_OUTLINE_COLOR)
+	draw_circle(head_center, base_radius * 0.38, _scaled_color(HERO_FILL_COLOR, 1.12))
+	draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), MARKER_OUTLINE_COLOR, maxf(3.0, extent * 0.040))
+	draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), HERO_RING_COLOR, maxf(1.9, extent * 0.026))
 	var banner = PackedVector2Array([
-		figure_center + Vector2(base_radius * 0.82, -rect.size.y * 0.27),
-		figure_center + Vector2(base_radius * 0.82 + rect.size.x * 0.17, -rect.size.y * 0.20),
-		figure_center + Vector2(base_radius * 0.82, -rect.size.y * 0.11),
+		figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36),
+		figure_center + Vector2(base_radius * 0.78 + rect.size.x * 0.16, -rect.size.y * 0.30),
+		figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.20),
 	])
 	draw_colored_polygon(banner, Color(0.95, 0.73, 0.25, 0.95))
-	_draw_foreground_occlusion_lip(anchor, false)
+	draw_polyline(PackedVector2Array([banner[0], banner[1], banner[2], banner[0]]), MARKER_OUTLINE_COLOR, maxf(1.4, extent * 0.020))
+	_draw_hero_foreground_contact(anchor)
 
 	var reserve_count = _reserve_hero_count(tile)
 	if reserve_count <= 0:
@@ -860,6 +891,69 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 	for index in range(min(reserve_count, 3)):
 		var dot_pos = marker_center + Vector2((index - 1) * 5.0, 0.0)
 		draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
+
+func _draw_hero_grounding_anchor(rect: Rect2, tile: Vector2i) -> Dictionary:
+	var extent := minf(rect.size.x, rect.size.y)
+	var center := rect.position + rect.size * Vector2(0.50, 0.72)
+	var radii := Vector2(maxf(6.0, extent * 0.28), maxf(2.5, extent * 0.075))
+	_draw_hero_foot_shadow(tile, center, radii, extent)
+	return {
+		"center": center,
+		"radii": radii,
+		"extent": extent,
+		"footprint": Vector2i(1, 1),
+	}
+
+func _draw_hero_foot_shadow(tile: Vector2i, center: Vector2, radii: Vector2, extent: float) -> void:
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var terrain := _terrain_at(tile) if tile.x >= 0 and tile.y >= 0 else ""
+	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
+	var detail_color: Color = _terrain_color(terrain, "detail_color", Color(0.70, 0.62, 0.38, 1.0))
+	var ground_color := Color(
+		(base_color.r * 0.62) + (detail_color.r * 0.22) + 0.05,
+		(base_color.g * 0.62) + (detail_color.g * 0.22) + 0.035,
+		(base_color.b * 0.62) + (detail_color.b * 0.22) + 0.018,
+		0.18
+	)
+	draw_colored_polygon(_placement_bed_points(tile, center + Vector2(0.0, radii.y * 0.10), Vector2(radii.x * 0.92, radii.y * 1.18), Vector2i(1, 1), 14), ground_color)
+	var shadow := PackedVector2Array([
+		center + Vector2(-radii.x * 0.68, -radii.y * 0.05),
+		center + Vector2(-radii.x * 0.34, radii.y * 0.72),
+		center + Vector2(radii.x * 0.28, radii.y * 0.88),
+		center + Vector2(radii.x * 0.74, radii.y * 0.18),
+		center + Vector2(radii.x * 0.34, -radii.y * 0.38),
+		center + Vector2(-radii.x * 0.32, -radii.y * 0.34),
+	])
+	draw_colored_polygon(shadow, HERO_CONTACT_SHADOW_VISIBLE)
+	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, 0.24)
+	var width := maxf(1.0, extent * 0.012)
+	draw_line(center + Vector2(-radii.x * 0.84, radii.y * 0.24), center + Vector2(-radii.x * 0.42, radii.y * 0.46), scuff_color, width)
+	draw_line(center + Vector2(-radii.x * 0.10, radii.y * 0.60), center + Vector2(radii.x * 0.34, radii.y * 0.54), scuff_color, width)
+	draw_line(center + Vector2(radii.x * 0.42, radii.y * 0.08), center + Vector2(radii.x * 0.82, radii.y * 0.24), scuff_color, width)
+
+func _draw_hero_foreground_contact(anchor: Dictionary) -> void:
+	if anchor.is_empty():
+		return
+	var center: Vector2 = anchor.get("center", Vector2.ZERO)
+	var radii: Vector2 = anchor.get("radii", Vector2.ZERO)
+	var extent := float(anchor.get("extent", 0.0))
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var pad := PackedVector2Array([
+		center + Vector2(-radii.x * 0.56, radii.y * 0.10),
+		center + Vector2(-radii.x * 0.26, radii.y * 0.72),
+		center + Vector2(radii.x * 0.22, radii.y * 0.74),
+		center + Vector2(radii.x * 0.58, radii.y * 0.14),
+		center + Vector2(radii.x * 0.30, radii.y * 0.36),
+		center + Vector2(-radii.x * 0.34, radii.y * 0.34),
+	])
+	draw_colored_polygon(pad, HERO_BOOT_OCCLUSION_VISIBLE)
+	var left := center + Vector2(-radii.x * 0.58, radii.y * 0.24)
+	var mid := center + Vector2(0.0, radii.y * 0.58)
+	var right := center + Vector2(radii.x * 0.58, radii.y * 0.20)
+	draw_polyline(PackedVector2Array([left, mid, right]), HERO_BOOT_OCCLUSION_VISIBLE, maxf(1.4, extent * 0.020))
+	draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.02), center + Vector2(radii.x * 0.24, radii.y * 0.02), HERO_GROUND_HIGHLIGHT_VISIBLE, maxf(1.0, extent * 0.012))
 
 func _draw_pickup_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1859,8 +1953,14 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 	var anchor_half_width_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * (1.0 + (float(dominant_footprint.x - 1) * MARKER_FOOTPRINT_WIDTH_STEP))
 	var anchor_half_height_fraction := plate_radius_fraction * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * (1.0 + (float(dominant_footprint.y - 1) * MARKER_FOOTPRINT_HEIGHT_STEP))
 	var has_presence := has_object_marker or has_visible_hero
+	var uses_hero_grounding := has_visible_hero and dominant_family == "hero" and not has_object_marker
 	var uses_quiet_town_grounding := has_presence and dominant_family == "town"
-	var uses_shared_grounding := has_presence and not uses_quiet_town_grounding
+	var uses_shared_grounding := has_presence and not uses_quiet_town_grounding and not uses_hero_grounding
+	var hero_anchor_half_width_fraction := 0.28
+	var hero_anchor_half_height_fraction := 0.075
+	if uses_hero_grounding:
+		anchor_half_width_fraction = hero_anchor_half_width_fraction
+		anchor_half_height_fraction = hero_anchor_half_height_fraction
 	var backdrop_metrics := _upper_mass_backdrop_metrics(
 		dominant_family,
 		dominant_footprint,
@@ -1872,8 +1972,8 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"marker_kinds": marker_kinds,
 		"contrast_plate": uses_shared_grounding,
 		"ground_anchor": has_presence,
-		"anchor_shape": TOWN_ANCHOR_STYLE if uses_quiet_town_grounding else (MARKER_GROUND_ANCHOR_STYLE if has_presence else ""),
-		"presence_model": OBJECT_PRESENCE_MODEL if has_presence else "",
+		"anchor_shape": TOWN_ANCHOR_STYLE if uses_quiet_town_grounding else (HERO_ANCHOR_STYLE if uses_hero_grounding else (MARKER_GROUND_ANCHOR_STYLE if has_presence else "")),
+		"presence_model": HERO_PRESENCE_MODEL if uses_hero_grounding else (OBJECT_PRESENCE_MODEL if has_presence else ""),
 		"terrain_quieting_bed": uses_shared_grounding,
 		"placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if uses_shared_grounding else "",
 		"placement_bed_shape": "organic_footprint_clearing" if uses_shared_grounding else "",
@@ -1893,8 +1993,8 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"vertical_mass_shadow_model": OBJECT_VERTICAL_MASS_SHADOW_MODEL if uses_shared_grounding else "",
 		"vertical_mass_shadow_alpha": (OBJECT_VERTICAL_MASS_SHADOW_MEMORY.a if remembered else OBJECT_VERTICAL_MASS_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0,
 		"foreground_occlusion_lip": has_presence,
-		"occlusion_model": TOWN_GROUNDING_MODEL if uses_quiet_town_grounding else (OBJECT_OCCLUSION_MODEL if has_presence else ""),
-		"depth_cue_model": TOWN_DEPTH_CUE_MODEL if uses_quiet_town_grounding else (OBJECT_DEPTH_CUE_MODEL if has_presence else ""),
+		"occlusion_model": TOWN_GROUNDING_MODEL if uses_quiet_town_grounding else (HERO_GROUNDING_MODEL if uses_hero_grounding else (OBJECT_OCCLUSION_MODEL if has_presence else "")),
+		"depth_cue_model": TOWN_DEPTH_CUE_MODEL if uses_quiet_town_grounding else (HERO_DEPTH_CUE_MODEL if uses_hero_grounding else (OBJECT_DEPTH_CUE_MODEL if has_presence else "")),
 		"directional_contact_shadow": uses_shared_grounding,
 		"contact_shadow_model": OBJECT_CONTACT_SHADOW_MODEL if uses_shared_grounding else "",
 		"contact_shadow_alpha": (OBJECT_CONTACT_SHADOW_MEMORY.a if remembered else OBJECT_CONTACT_SHADOW_VISIBLE.a) if uses_shared_grounding else 0.0,
@@ -1917,17 +2017,34 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"mapped_sprite_settlement": uses_asset_sprite,
 		"ui_badge_plate": false,
 		"plate_radius_fraction": plate_radius_fraction,
-		"plate_alpha": 0.0 if uses_quiet_town_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
-		"anchor_alpha": 0.0 if uses_quiet_town_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
-		"ring_alpha": 0.0 if uses_quiet_town_grounding else (MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a),
+		"plate_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
+		"anchor_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
+		"ring_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a),
 		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
 		"grid_alpha": GRID_COLOR.a,
-		"memory_echo": remembered and not uses_quiet_town_grounding,
+		"memory_echo": remembered and not uses_quiet_town_grounding and not uses_hero_grounding,
 		"remembered_marker_alpha": MEMORY_OBJECT_COLOR.a if remembered else 0.0,
 		"min_symbol_extent_fraction": min_symbol_fraction,
 		"min_symbol_extent_px": min_symbol_fraction * extent,
 		"hero_emphasis": has_visible_hero and tile == _hero_tile,
 		"hero_symbol_extent_fraction": HERO_MARKER_RADIUS * 2.0 if has_visible_hero else 0.0,
+		"hero_presence_model": HERO_PRESENCE_MODEL if has_visible_hero else "",
+		"hero_anchor_shape": HERO_ANCHOR_STYLE if has_visible_hero else "",
+		"hero_grounding_model": HERO_GROUNDING_MODEL if has_visible_hero else "",
+		"hero_depth_cue_model": HERO_DEPTH_CUE_MODEL if has_visible_hero else "",
+		"hero_world_figure": has_visible_hero,
+		"hero_badge_plate": false if has_visible_hero else null,
+		"hero_base_ellipse": false if has_visible_hero else null,
+		"hero_terrain_quieting_bed": false if has_visible_hero else null,
+		"hero_upper_mass_backdrop": false if has_visible_hero else null,
+		"hero_shared_marker_plate": false if has_visible_hero else null,
+		"hero_foot_contact_shadow": has_visible_hero,
+		"hero_boot_occlusion": has_visible_hero,
+		"hero_contact_shadow_alpha": HERO_CONTACT_SHADOW_VISIBLE.a if has_visible_hero else 0.0,
+		"hero_boot_occlusion_alpha": HERO_BOOT_OCCLUSION_VISIBLE.a if has_visible_hero else 0.0,
+		"hero_foot_anchor_width_fraction": hero_anchor_half_width_fraction * 2.0 if has_visible_hero else 0.0,
+		"hero_foot_anchor_height_fraction": hero_anchor_half_height_fraction * 2.0 if has_visible_hero else 0.0,
+		"hero_selection_ring_source": "tile_focus" if has_visible_hero else "",
 		"selection_emphasis": tile == _selected_tile,
 		"focus_ring_width_px": maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR),
 		"tile_extent_px": extent,

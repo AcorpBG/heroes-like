@@ -132,6 +132,8 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not bool(town_readability.get("hero_emphasis", false)) or not bool(town_readability.get("selection_emphasis", false)):
 		_fail("Ninefold smoke: active hero/current-selection emphasis is not readable on the large starting town tile: %s." % town_presentation)
 		return false
+	if not _assert_hero_presence_correction(town_readability, town_presentation):
+		return false
 	var town_art: Dictionary = town_presentation.get("art_presentation", {})
 	var town_asset_ids: Array = town_art.get("sprite_asset_ids", [])
 	if not bool(town_art.get("uses_asset_sprite", false)) or "frontier_town" not in town_asset_ids or bool(town_art.get("fallback_procedural_marker", true)):
@@ -272,6 +274,33 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		return false
 	if String(town_presentation.get("footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
 		_fail("Ninefold smoke: large-map town footprint cue metadata does not describe sparse non-entry/approach cues: %s." % presentation)
+		return false
+	return true
+
+func _assert_hero_presence_correction(readability: Dictionary, presentation: Dictionary) -> bool:
+	if String(readability.get("hero_presence_model", "")) != "placed_world_hero_figure":
+		_fail("Ninefold smoke: active hero does not report the placed world-figure presence model: %s." % presentation)
+		return false
+	if String(readability.get("hero_anchor_shape", "")) != "hero_foot_contact_shadow" or String(readability.get("hero_grounding_model", "")) != "hero_foot_contact_without_base_ellipse":
+		_fail("Ninefold smoke: active hero still lacks the hero-specific foot-contact grounding model: %s." % presentation)
+		return false
+	if String(readability.get("hero_depth_cue_model", "")) != "hero_foot_contact_shadow_with_boot_occlusion":
+		_fail("Ninefold smoke: active hero does not report boot-level depth/occlusion contact: %s." % presentation)
+		return false
+	if bool(readability.get("hero_badge_plate", true)) or bool(readability.get("hero_base_ellipse", true)) or bool(readability.get("hero_terrain_quieting_bed", true)) or bool(readability.get("hero_upper_mass_backdrop", true)) or bool(readability.get("hero_shared_marker_plate", true)):
+		_fail("Ninefold smoke: active hero regressed toward the staged badge/ellipse support: %s." % presentation)
+		return false
+	if not bool(readability.get("hero_world_figure", false)) or not bool(readability.get("hero_foot_contact_shadow", false)) or not bool(readability.get("hero_boot_occlusion", false)):
+		_fail("Ninefold smoke: active hero lacks world-figure, foot-shadow, or boot-occlusion cues: %s." % presentation)
+		return false
+	if float(readability.get("hero_contact_shadow_alpha", 0.0)) < 0.30 or float(readability.get("hero_boot_occlusion_alpha", 0.0)) < 0.34:
+		_fail("Ninefold smoke: active hero foot-contact depth cues are too faint: %s." % presentation)
+		return false
+	if float(readability.get("hero_foot_anchor_width_fraction", 0.0)) < 0.50 or float(readability.get("hero_foot_anchor_height_fraction", 0.0)) < 0.12:
+		_fail("Ninefold smoke: active hero foot-contact anchor is too small for the large-map tactical view: %s." % presentation)
+		return false
+	if String(readability.get("hero_selection_ring_source", "")) != "tile_focus":
+		_fail("Ninefold smoke: active hero selection readability is no longer tied to the tile focus ring: %s." % presentation)
 		return false
 	return true
 
