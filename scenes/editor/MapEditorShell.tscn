@@ -181,6 +181,14 @@ size_flags_horizontal = 3
 toggle_mode = true
 text = "Terrain Line"
 
+[node name="TerrainRectangleTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Terrain Rect"
+
 [node name="RoadTool" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 42)

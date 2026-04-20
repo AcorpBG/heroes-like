@@ -51,6 +51,8 @@ func _run() -> void:
 		return
 	if not _assert_terrain_line_tool(shell):
 		return
+	if not _assert_terrain_rectangle_tool(shell):
+		return
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
@@ -265,6 +267,91 @@ func _assert_terrain_line_tool(shell) -> bool:
 		or not _path_payload_matches(repeat_result.get("path_tiles", []), expected_tiles)
 	):
 		_fail("Map editor smoke: terrain line repeat did not no-op cleanly on matching active terrain: %s." % repeat_result)
+		return false
+	return true
+
+func _assert_terrain_rectangle_tool(shell) -> bool:
+	if not shell.has_method("validation_set_terrain_rectangle_corner") or not shell.has_method("validation_apply_terrain_rectangle"):
+		_fail("Map editor smoke: shell did not expose terrain rectangle validation.")
+		return false
+	var expected_tiles := [
+		Vector2i(20, 16),
+		Vector2i(21, 16),
+		Vector2i(22, 16),
+		Vector2i(20, 17),
+		Vector2i(21, 17),
+		Vector2i(22, 17),
+		Vector2i(20, 18),
+		Vector2i(21, 18),
+		Vector2i(22, 18),
+	]
+	var outside_tiles := [Vector2i(19, 16), Vector2i(23, 17), Vector2i(21, 19)]
+	var seeded_tiles := []
+	seeded_tiles.append_array(expected_tiles)
+	seeded_tiles.append_array(outside_tiles)
+	for tile in seeded_tiles:
+		var seed_result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, "grass")
+		if not bool(seed_result.get("ok", false)):
+			_fail("Map editor smoke: could not seed terrain-rectangle tile %s: %s." % [tile, seed_result])
+			return false
+
+	var start_result: Dictionary = shell.call("validation_set_terrain_rectangle_corner", 22, 18, "frost")
+	var pending_corner: Dictionary = start_result.get("pending_terrain_rectangle_corner", {})
+	if (
+		not bool(start_result.get("ok", false))
+		or int(pending_corner.get("x", -1)) != 22
+		or int(pending_corner.get("y", -1)) != 18
+		or String(start_result.get("selected_terrain_id", "")) != "frost"
+		or String(start_result.get("rectangle_rule", "")) != "inclusive_axis_aligned_corners"
+		or String(start_result.get("tile_order", "")) != "row_major_top_left_to_bottom_right"
+	):
+		_fail("Map editor smoke: terrain rectangle start did not expose the pending rectangle rule state: %s." % start_result)
+		return false
+
+	var rect_result: Dictionary = shell.call("validation_apply_terrain_rectangle", 20, 16)
+	var pending_after_rect: Dictionary = rect_result.get("pending_terrain_rectangle_corner", {})
+	var bounds: Dictionary = rect_result.get("bounds", {})
+	if (
+		not bool(rect_result.get("ok", false))
+		or not bool(rect_result.get("changed", false))
+		or String(rect_result.get("active_terrain_id", "")) != "frost"
+		or String(rect_result.get("rectangle_rule", "")) != "inclusive_axis_aligned_corners"
+		or String(rect_result.get("tile_order", "")) != "row_major_top_left_to_bottom_right"
+		or int(rect_result.get("rectangle_count", 0)) != expected_tiles.size()
+		or int(rect_result.get("affected_count", 0)) != expected_tiles.size()
+		or int(bounds.get("min_x", -1)) != 20
+		or int(bounds.get("min_y", -1)) != 16
+		or int(bounds.get("max_x", -1)) != 22
+		or int(bounds.get("max_y", -1)) != 18
+		or not _path_payload_matches(rect_result.get("rectangle_tiles", []), expected_tiles)
+		or not pending_after_rect.is_empty()
+	):
+		_fail("Map editor smoke: terrain rectangle paint did not report the expected inclusive area: %s." % rect_result)
+		return false
+	for tile in expected_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "frost":
+			_fail("Map editor smoke: terrain rectangle did not update expected tile %s: %s." % [tile, presentation])
+			return false
+	for outside_tile in outside_tiles:
+		var outside_presentation: Dictionary = shell.call("validation_tile_presentation", outside_tile.x, outside_tile.y)
+		if String(outside_presentation.get("terrain_presentation", {}).get("terrain", "")) != "grass":
+			_fail("Map editor smoke: terrain rectangle leaked onto outside tile %s: %s." % [outside_tile, outside_presentation])
+			return false
+
+	var repeat_start: Dictionary = shell.call("validation_set_terrain_rectangle_corner", 22, 18)
+	if not bool(repeat_start.get("ok", false)):
+		_fail("Map editor smoke: could not set terrain rectangle corner before no-op repeat: %s." % repeat_start)
+		return false
+	var repeat_result: Dictionary = shell.call("validation_apply_terrain_rectangle", 20, 16)
+	if (
+		not bool(repeat_result.get("ok", false))
+		or bool(repeat_result.get("changed", true))
+		or int(repeat_result.get("affected_count", -1)) != 0
+		or int(repeat_result.get("rectangle_count", 0)) != expected_tiles.size()
+		or not _path_payload_matches(repeat_result.get("rectangle_tiles", []), expected_tiles)
+	):
+		_fail("Map editor smoke: terrain rectangle repeat did not no-op cleanly on matching active terrain: %s." % repeat_result)
 		return false
 	return true
 

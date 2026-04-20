@@ -250,6 +250,10 @@ The map editor working-copy contract now includes a compact terrain-line command
 
 Implementation note date: 2026-04-20
 
+The map editor working-copy contract now includes a compact terrain-rectangle command for faster biome blockouts. `MapEditorShell` can set one terrain-rectangle corner tile and then paint the inclusive axis-aligned rectangle to the chosen opposite corner using the active terrain id from the existing terrain grammar picker. The command mutates only the in-memory runtime map array, and the same `OverworldMapView` preview path immediately reads the painted terrain and neighbor-aware transitions. Authored scenario JSON remains immutable, runtime save format is unchanged, no terrain schema/export path was added, and projection, pathing/gameplay, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
 The map editor working-copy contract now includes a compact road-path command for faster road layout experiments. `MapEditorShell` can set a road-path start tile and then apply a deterministic Manhattan L path, horizontal first and then vertical, to the chosen end tile. The command uses toggle semantics: all-road paths remove those working-copy road memberships, while mixed/no-road paths add missing tiles to the existing editor dirt-road terrain layer. Authored scenario JSON remains immutable, runtime save format is unchanged, no road schema/export path was added, and projection, gameplay pathing, road movement costs, and town 3x2 occupancy/pathing remain unchanged.
 
 Implementation note date: 2026-04-20

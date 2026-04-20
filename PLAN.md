@@ -26,6 +26,33 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: Map Editor Terrain Rectangle Painting
+Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
+
+Purpose:
+- Let `MapEditorShell` paint a compact terrain rectangle between two selected corner tiles using the active terrain id.
+- Keep authored JSON immutable, save data unchanged, and the existing editor working copy/runtime preview as the only mutation surface.
+- Preserve existing single-tile terrain paint, terrain line paint, road path, and terrain flood fill while making broad biome blockouts faster.
+
+Implemented:
+- Added a compact Terrain Rect tool beside the existing editor terrain tools.
+- First terrain-rectangle click sets a pending corner tile; the second paints the inclusive axis-aligned rectangle to the clicked opposite corner.
+- The rectangle rule is explicit and deterministic: inclusive axis-aligned rectangle between corner tiles, reported in row-major top-left to bottom-right tile order for validation.
+- Terrain rectangle painting mutates only the in-memory working-copy map array with the active terrain id from the existing terrain grammar picker.
+- Validation hooks expose the rectangle rule, bounds, tile order, rectangle tiles, changed tiles, previous terrain ids, and live tile inspection/preview state.
+- Editor smoke coverage proves the intended rectangular area changes, nearby outside tiles remain unchanged, the real `OverworldMapView` preview reads the painted terrain, and a repeat paint no-ops cleanly.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not an authored JSON exporter/writeback path, save-format change, terrain schema change, projection/layout change, pathing/gameplay rewrite, or town 3x2 occupancy/pathing change.
+- Terrain rectangles mutate only the in-memory working-copy map array that the existing editor preview and Play Copy path already consume.
+
 ## Current Implementation Slice: Map Editor Terrain Line Painting
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 
