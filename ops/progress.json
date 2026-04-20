@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T13:29:35Z",
+  "updatedAt": "2026-04-20T13:46:33Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-depth-contact-cues-10184",
-  "currentSliceTitle": "Deepen overworld terrain-contact and depth cues",
+  "currentSliceId": "overworld-placement-bed-10184",
+  "currentSliceTitle": "Add footprint-aware overworld placement beds",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation-only renderer slice to deepen overworld terrain-contact and depth cues beyond the existing footprint anchor/ground-lip pass. OverworldMapView now draws footprint-scaled directional contact shadows beneath towns, sites, dwellings, encounters, mapped sprites, and active hero presence, and adds small foreground base-occlusion pads so objects feel more seated into terrain. Updated the overworld art manifest plus focused smoke metadata/assertions for the cast-shadow/base-occlusion depth model while preserving terrain direction, panning, pathing, fog, remembered-object behavior, tactical framing, selection clarity, and existing sprite mappings/fallbacks. Validation passed with python3 tests/validate_repo.py, godot4 --headless --path . res://tests/overworld_visual_smoke.tscn, godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn, and git diff --check.",
+  "currentSliceNotes": "Completed a narrow presentation-only renderer slice to add subtle footprint-aware terrain quieting beds under towns, sites, dwellings, encounters, mapped sprites, and active hero presence so placed world objects separate from busy terrain without becoming UI badge plates. OverworldMapView now passes tile context into the existing footprint anchor path, derives muted placement clearing colors from the local terrain, and exposes focused validation metadata for the footprint_terrain_quieting_bed model while preserving gameplay occupancy, pathing, fog, panning, selection logic, save data, and existing object mappings.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -204,6 +204,12 @@
     {
       "id": "overworld-depth-contact-cues-10184",
       "title": "Deepen overworld terrain-contact and depth cues",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
+      "id": "overworld-placement-bed-10184",
+      "title": "Add footprint-aware overworld placement beds",
       "status": "completed",
       "difficulty": "medium"
     },

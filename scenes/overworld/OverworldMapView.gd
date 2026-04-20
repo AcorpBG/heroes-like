@@ -64,6 +64,7 @@ const OBJECT_PROCEDURAL_FALLBACK_MODEL := "family_specific_procedural_world_obje
 const OBJECT_DEPTH_CUE_MODEL := "footprint_cast_shadow_with_base_occlusion"
 const OBJECT_CONTACT_SHADOW_MODEL := "directional_footprint_cast_shadow"
 const OBJECT_BASE_OCCLUSION_MODEL := "foreground_base_occlusion_pads"
+const OBJECT_PLACEMENT_BED_MODEL := "footprint_terrain_quieting_bed"
 const MARKER_GROUND_ANCHOR_STYLE := "terrain_ellipse_footprint"
 const MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR := 0.18
 const MARKER_GROUND_ANCHOR_HEIGHT_FACTOR := 0.34
@@ -74,6 +75,8 @@ const OBJECT_CONTACT_SHADOW_VISIBLE := Color(0.018, 0.014, 0.010, 0.30)
 const OBJECT_CONTACT_SHADOW_MEMORY := Color(0.18, 0.34, 0.36, 0.34)
 const OBJECT_BASE_OCCLUSION_VISIBLE := Color(0.11, 0.075, 0.030, 0.34)
 const OBJECT_BASE_OCCLUSION_MEMORY := Color(0.62, 0.82, 0.86, 0.32)
+const OBJECT_PLACEMENT_BED_VISIBLE_ALPHA := 0.34
+const OBJECT_PLACEMENT_BED_MEMORY_ALPHA := 0.30
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
@@ -507,35 +510,35 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	var remembered := not visible
 
 	if _has_town_at(tile):
-		_draw_town_marker(rect, _town_color(tile), remembered)
+		_draw_town_marker(rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
 	if not resource_node.is_empty():
-		if not _draw_resource_sprite(resource_node, rect, remembered):
-			_draw_resource_marker(resource_node, rect, remembered)
+		if not _draw_resource_sprite(resource_node, rect, remembered, tile):
+			_draw_resource_marker(resource_node, rect, remembered, tile)
 	var artifact_node := _artifact_node_at(tile)
 	if not artifact_node.is_empty():
-		if not _draw_artifact_sprite(artifact_node, rect, remembered):
-			_draw_artifact_marker(rect, remembered)
+		if not _draw_artifact_sprite(artifact_node, rect, remembered, tile):
+			_draw_artifact_marker(rect, remembered, tile)
 	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
-		_draw_encounter_marker(rect, remembered)
+		_draw_encounter_marker(rect, remembered, tile)
 	if visible and _has_hero_at(tile):
 		_draw_hero_marker(rect, tile)
 
-func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool) -> bool:
-	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node))
+func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
 
-func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool) -> bool:
+func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if node.is_empty():
 		return false
-	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile())
+	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile(), tile)
 
-func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary) -> bool:
+func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profile: Dictionary, tile: Vector2i) -> bool:
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var footprint := _object_profile_footprint(profile)
 	var family := String(profile.get("family", "pickup"))
-	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint, OBJECT_SPRITE_PLATE_RADIUS_FACTOR), footprint)
+	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint, OBJECT_SPRITE_PLATE_RADIUS_FACTOR), footprint, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
 	var sprite_extent := maxf(12.0, extent * sprite_fraction)
@@ -547,8 +550,8 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	_draw_foreground_occlusion_lip(anchor, remembered)
 	return true
 
-func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> void:
-	var anchor := _draw_marker_plate(rect, remembered, 0.38, Vector2i(2, 2))
+func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
+	var anchor := _draw_marker_plate(rect, remembered, 0.38, Vector2i(2, 2), tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var outline_width := maxf(2.2, extent * 0.036)
 	var marker_color := _remembered_marker_color(color) if remembered else color
@@ -581,11 +584,11 @@ func _draw_town_marker(rect: Rect2, color: Color, remembered: bool = false) -> v
 	draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
-func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = false) -> void:
+func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var profile := _resource_object_profile(node)
 	var footprint := _object_profile_footprint(profile)
 	var family := String(profile.get("family", "pickup"))
-	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint), footprint)
+	var anchor := _draw_marker_plate(rect, remembered, _presence_radius_factor(family, footprint), footprint, tile)
 	var marker_color := _remembered_marker_color(RESOURCE_COLOR) if remembered else RESOURCE_COLOR
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	match family:
@@ -605,8 +608,8 @@ func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = fal
 			_draw_pickup_silhouette(rect, marker_color, outline_color, remembered)
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
-func _draw_artifact_marker(rect: Rect2, remembered: bool = false) -> void:
-	var anchor := _draw_marker_plate(rect, remembered, MARKER_PLATE_RADIUS_FACTOR, Vector2i(1, 1))
+func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
+	var anchor := _draw_marker_plate(rect, remembered, MARKER_PLATE_RADIUS_FACTOR, Vector2i(1, 1), tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
 	var marker_color := _remembered_marker_color(ARTIFACT_COLOR) if remembered else ARTIFACT_COLOR
@@ -631,8 +634,8 @@ func _draw_artifact_marker(rect: Rect2, remembered: bool = false) -> void:
 	draw_polyline(PackedVector2Array([gleam[0], gleam[1], gleam[2], gleam[3], gleam[4], gleam[5], gleam[6], gleam[7], gleam[0]]), outline_color, maxf(1.6, extent * 0.026))
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
-func _draw_encounter_marker(rect: Rect2, remembered: bool = false) -> void:
-	var anchor := _draw_marker_plate(rect, remembered, 0.34, Vector2i(1, 1))
+func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
+	var anchor := _draw_marker_plate(rect, remembered, 0.34, Vector2i(1, 1), tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center = rect.get_center()
 	var marker_color := _remembered_marker_color(ENCOUNTER_COLOR) if remembered else ENCOUNTER_COLOR
@@ -659,7 +662,7 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false) -> void:
 	_draw_foreground_occlusion_lip(anchor, remembered)
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
-	var anchor := _draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR, Vector2i(1, 1))
+	var anchor := _draw_marker_plate(rect, false, HERO_PLATE_RADIUS_FACTOR, Vector2i(1, 1), tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var center: Vector2 = rect.get_center()
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
@@ -777,7 +780,7 @@ func _draw_shrine_silhouette(rect: Rect2, marker_color: Color, outline_color: Co
 	draw_rect(cap, outline_color, false, maxf(1.5, extent * 0.024))
 	draw_circle(rect.position + rect.size * Vector2(0.50, 0.25), maxf(2.6, extent * 0.055), Color(0.98, 0.94, 0.72, 0.48 if remembered else 0.78))
 
-func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR, footprint: Vector2i = Vector2i(1, 1)) -> Dictionary:
+func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR, footprint: Vector2i = Vector2i(1, 1), tile: Vector2i = Vector2i(-1, -1)) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
 	var center := rect.get_center() + Vector2(0.0, extent * MARKER_GROUND_ANCHOR_Y_OFFSET_FACTOR)
 	var radius := maxf(7.0, extent * radius_factor)
@@ -789,6 +792,7 @@ func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: fl
 		radius * MARKER_GROUND_ANCHOR_WIDTH_FACTOR * footprint_width_scale,
 		maxf(3.0, radius * MARKER_GROUND_ANCHOR_HEIGHT_FACTOR * footprint_height_scale)
 	)
+	_draw_placement_bed(tile, center, radii, remembered, extent, normalized_footprint)
 	_draw_directional_contact_shadow(center, radii, remembered, extent, normalized_footprint)
 	draw_colored_polygon(
 		_ellipse_points(center + shadow_offset, Vector2(radii.x * 1.10, radii.y * 1.24)),
@@ -809,6 +813,23 @@ func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: fl
 		"extent": extent,
 		"footprint": normalized_footprint,
 	}
+
+func _draw_placement_bed(tile: Vector2i, center: Vector2, radii: Vector2, remembered: bool, extent: float, footprint: Vector2i) -> void:
+	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
+		return
+	var terrain := _terrain_at(tile) if tile.x >= 0 and tile.y >= 0 else ""
+	var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
+	var detail_color: Color = _terrain_color(terrain, "detail_color", Color(0.70, 0.62, 0.38, 1.0))
+	var alpha := _placement_bed_alpha(remembered)
+	var bed_center := center + Vector2(0.0, radii.y * 0.04)
+	var bed_radii := Vector2(radii.x * 1.24, radii.y * 1.52)
+	var bed_color := _placement_bed_color(base_color, detail_color, remembered, alpha)
+	draw_colored_polygon(_placement_bed_points(tile, bed_center, bed_radii, footprint), bed_color)
+	draw_colored_polygon(
+		_placement_bed_points(tile + Vector2i(3, 5), bed_center + Vector2(0.0, radii.y * 0.03), Vector2(radii.x * 0.94, radii.y * 1.06), footprint),
+		Color(bed_color.r, bed_color.g, bed_color.b, bed_color.a * 0.36)
+	)
+	_draw_placement_bed_scuffs(bed_center, bed_radii, detail_color, remembered, extent)
 
 func _draw_foreground_occlusion_lip(anchor: Dictionary, remembered: bool) -> void:
 	if anchor.is_empty():
@@ -867,6 +888,43 @@ func _draw_base_occlusion_pads(center: Vector2, radii: Vector2, remembered: bool
 	var pad_width := maxf(1.0, extent * 0.016)
 	draw_line(center + Vector2(-radii.x * 0.50, radii.y * 0.49), center + Vector2(-radii.x * 0.12, radii.y * 0.68), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
 	draw_line(center + Vector2(radii.x * 0.08, radii.y * 0.68), center + Vector2(radii.x * 0.54, radii.y * 0.49), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
+
+func _placement_bed_alpha(remembered: bool) -> float:
+	return OBJECT_PLACEMENT_BED_MEMORY_ALPHA if remembered else OBJECT_PLACEMENT_BED_VISIBLE_ALPHA
+
+func _placement_bed_color(base_color: Color, detail_color: Color, remembered: bool, alpha: float) -> Color:
+	var ground_tone := Color(0.38, 0.32, 0.20, 1.0)
+	var r := (base_color.r * 0.56) + (ground_tone.r * 0.32) + (detail_color.r * 0.12)
+	var g := (base_color.g * 0.56) + (ground_tone.g * 0.32) + (detail_color.g * 0.12)
+	var b := (base_color.b * 0.56) + (ground_tone.b * 0.32) + (detail_color.b * 0.12)
+	if remembered:
+		var memory_tone := Color(0.42, 0.58, 0.60, 1.0)
+		r = (r * 0.62) + (memory_tone.r * 0.38)
+		g = (g * 0.62) + (memory_tone.g * 0.38)
+		b = (b * 0.62) + (memory_tone.b * 0.38)
+	return Color(clampf(r, 0.0, 1.0), clampf(g, 0.0, 1.0), clampf(b, 0.0, 1.0), alpha)
+
+func _placement_bed_points(tile: Vector2i, center: Vector2, radii: Vector2, footprint: Vector2i, segment_count: int = 22, closed: bool = false) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	var safe_segment_count := maxi(10, segment_count)
+	for index in range(safe_segment_count):
+		var angle := (TAU * float(index)) / float(safe_segment_count)
+		var seed: int = abs((tile.x * 73) + (tile.y * 97) + (index * 31) + (footprint.x * 13) + (footprint.y * 17))
+		var jitter_x := 0.94 + (float(seed % 17) / 100.0)
+		var jitter_y := 0.94 + (float(int(seed / 5) % 15) / 100.0)
+		points.append(center + Vector2(cos(angle) * radii.x * jitter_x, sin(angle) * radii.y * jitter_y))
+	if closed and not points.is_empty():
+		points.append(points[0])
+	return points
+
+func _draw_placement_bed_scuffs(center: Vector2, radii: Vector2, detail_color: Color, remembered: bool, extent: float) -> void:
+	var alpha := 0.22 if remembered else 0.18
+	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, alpha)
+	var width := maxf(1.0, extent * 0.010)
+	draw_line(center + Vector2(-radii.x * 0.72, -radii.y * 0.08), center + Vector2(-radii.x * 0.38, -radii.y * 0.18), scuff_color, width)
+	draw_line(center + Vector2(-radii.x * 0.68, radii.y * 0.34), center + Vector2(-radii.x * 0.42, radii.y * 0.52), scuff_color, width)
+	draw_line(center + Vector2(-radii.x * 0.10, radii.y * 0.66), center + Vector2(radii.x * 0.26, radii.y * 0.62), scuff_color, width)
+	draw_line(center + Vector2(radii.x * 0.42, -radii.y * 0.12), center + Vector2(radii.x * 0.70, radii.y * 0.03), scuff_color, width)
 
 func _ellipse_points(center: Vector2, radii: Vector2, segment_count: int = 24, closed: bool = false) -> PackedVector2Array:
 	var points := PackedVector2Array()
@@ -1335,6 +1393,8 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			"settled_sprite_occlusion": false,
 			"sprite_depth_contact_cues": false,
 			"sprite_depth_cue_model": "",
+			"sprite_placement_bed": false,
+			"sprite_placement_bed_model": "",
 			"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 		}
 	var sprite_asset_ids: Array[String] = []
@@ -1364,6 +1424,8 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 		"settled_sprite_occlusion": uses_asset_sprite,
 		"sprite_depth_contact_cues": uses_asset_sprite,
 		"sprite_depth_cue_model": OBJECT_DEPTH_CUE_MODEL if uses_asset_sprite else "",
+		"sprite_placement_bed": uses_asset_sprite,
+		"sprite_placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if uses_asset_sprite else "",
 		"unmapped_object_fallback": String(_overworld_art_manifest.get("unmapped_object_fallback", "procedural_marker")),
 	}
 
@@ -1401,6 +1463,12 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"ground_anchor": has_presence,
 		"anchor_shape": MARKER_GROUND_ANCHOR_STYLE if has_presence else "",
 		"presence_model": OBJECT_PRESENCE_MODEL if has_presence else "",
+		"terrain_quieting_bed": has_presence,
+		"placement_bed_model": OBJECT_PLACEMENT_BED_MODEL if has_presence else "",
+		"placement_bed_shape": "organic_footprint_clearing" if has_presence else "",
+		"placement_bed_alpha": _placement_bed_alpha(remembered) if has_presence else 0.0,
+		"placement_bed_terrain_tinted": has_presence,
+		"placement_bed_ui_plate": false,
 		"foreground_occlusion_lip": has_presence,
 		"occlusion_model": OBJECT_OCCLUSION_MODEL if has_presence else "",
 		"depth_cue_model": OBJECT_DEPTH_CUE_MODEL if has_presence else "",

@@ -391,6 +391,31 @@ Limits:
 - The cues are still renderer-level presentation hints; authored object footprints remain presentation scale hints only.
 - Automated validation guards the presentation contract and metadata, but broad visual polish still needs manual review across more maps, biomes, resolutions, and eventual final art.
 
+## Current Implementation Slice: Overworld Footprint Placement Beds
+Status: completed on 2026-04-20 as a narrow presentation-only follow-up after the contact-depth cue slice.
+
+Purpose:
+- Add local terrain quieting directly under towns, sites, dwellings, encounters, mapped sprites, and active hero presence so placed world objects read faster against busy terrain.
+- Keep the treatment as subtle footprint-aware ground presentation, not generic UI plates or loud markers.
+- Preserve gameplay occupancy, pathing, fog, panning, selection logic, save data, and existing object mappings.
+
+Implemented:
+- `OverworldMapView` now passes tile context into the existing marker/anchor draw path and renders a terrain-tinted organic footprint clearing beneath each object anchor before contact shadows, anchors, silhouettes, sprites, and foreground base occlusion are drawn.
+- Placement beds scale from the same authored/default object footprints already used for presentation, including towns, resource-site families, mapped sprites, artifacts, encounters, and the active hero.
+- The bed color is derived from the local terrain base/detail colors and uses muted alpha plus broken edge scuffs so it suppresses terrain texture noise without becoming a badge plate.
+- Updated overworld art manifest metadata and focused smoke validation payloads/assertions for `footprint_terrain_quieting_bed` on visible, remembered, large-map, procedural fallback, mapped-sprite, and hero-present objects.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not final overworld object art, a town sprite pass, a terrain atlas expansion, a camera change, or a gameplay footprint/occupancy system.
+- Footprints still guide presentation only; movement, blocking, visit targets, fog, save data, and object mappings are unchanged.
+- Manual visual review is still needed before treating the overworld as polished or HoMM3-class.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
