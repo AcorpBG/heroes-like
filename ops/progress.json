@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T20:52:06Z",
+  "updatedAt": "2026-04-20T20:56:01Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-restore-selected-tile-10184",
-  "currentSliceTitle": "Restore one selected map-editor tile from the authored scenario baseline",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the next thin in-project map editor slice: MapEditorShell now has a Restore Tile command and validation hook that reads a fresh authored baseline session through ScenarioFactory, restores only the selected coordinate's authored terrain id, road presence, supported town/resource/artifact/encounter placement state, and relevant hero-start consistency into the in-memory working copy, and removes working-copy-only supported placements on that tile. Authored JSON remains immutable, save format is unchanged, no bulk reset/export path was added, Play Copy/return continues to consume the same restored working copy, unrelated working-copy edits stay intact except for returning the same authored placement id or the single global hero start when required. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceId": "map-editor-fill-terrain-10184",
+  "currentSliceTitle": "Flood-fill contiguous map-editor terrain regions in the working copy",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Started the next thin in-project map editor slice: add a compact Fill Terrain command to MapEditorShell that mutates only the in-memory working-copy terrain map, fills the contiguous selected-tile terrain region with the active terrain id, and keeps authored JSON, save format, projection/layout, pathing/gameplay, and town occupancy/pathing unchanged.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -331,6 +331,12 @@
       "id": "map-editor-object-retheme-10184",
       "title": "Retheme existing overworld object placements in the map editor working copy",
       "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-fill-terrain-10184",
+      "title": "Flood-fill selected terrain regions in the map editor working copy",
+      "status": "in_progress",
       "difficulty": "small"
     },
     {

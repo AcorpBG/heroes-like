@@ -26,6 +26,32 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: Map Editor Terrain Flood Fill
+Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
+
+Purpose:
+- Let `MapEditorShell` fill a contiguous selected-tile terrain region with the active terrain id.
+- Keep authored JSON immutable, save data unchanged, and the existing editor working copy/runtime preview as the only mutation surface.
+- Preserve the existing single-tile terrain brush while making terrain and transition experiments faster.
+
+Implemented:
+- Added a compact Fill Terrain command beside the other map-editor working-copy commands.
+- Flood fill reads the selected tile's current terrain id as the source region and replaces only cardinally contiguous matching tiles with the active terrain id.
+- Differing terrain ids bound the fill; non-matching boundary tiles are left unchanged.
+- Matching active terrain on the selected tile returns a clean no-op result instead of touching the map.
+- Added validation hooks and editor smoke coverage proving a bounded multi-tile fill, non-leakage into adjacent non-source terrain, live preview updates, and clean no-op behavior.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not an authored JSON exporter/writeback path, save-format change, undo stack, terrain schema change, projection/layout change, pathing/gameplay rewrite, or town 3x2 occupancy/pathing change.
+- Fill is cardinally contiguous by terrain id and mutates only the in-memory working-copy map array that the existing editor preview and Play Copy path already consume.
+
 ## Current Implementation Slice: Map Editor Selected Tile Restore
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 

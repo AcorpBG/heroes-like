@@ -242,6 +242,10 @@ The map editor working-copy contract now includes selected-tile restoration from
 
 Implementation note date: 2026-04-20
 
+The map editor working-copy contract now includes a compact terrain flood-fill command. `MapEditorShell` fills only the in-memory runtime map array by taking the selected tile's current terrain id as the source region and replacing the cardinally contiguous matching region with the active terrain id from the existing terrain grammar picker. Differing terrain ids bound the fill, matching active terrain produces a clean no-op, and the same `OverworldMapView` preview path immediately shows the edited terrain and neighbor-aware transitions. Authored scenario JSON remains immutable, runtime save format is unchanged, no terrain schema/export path was added, and projection, pathing/gameplay, and town 3x2 occupancy/pathing remain unchanged.
+
+Implementation note date: 2026-04-20
+
 The overworld terrain transition contract now treats neighboring terrain relationships as the source of visible transitions. `OverworldMapView` builds an explicit 8-neighbor transition payload for each explored tile, suppresses seams inside the same terrain group, applies higher-priority neighboring terrain as cardinal intrusion edges on lower-priority receiver tiles, and adds diagonal corner hints when a higher-priority neighbor only touches by corner. Existing grammar edge art is reused from the selected source terrain, with procedural strips and corner wedges as honest fallbacks. The map editor preview reads the same renderer and validation payloads, so painted terrain immediately exposes neighbor-aware edge and corner transition metadata. This is presentation-only: logical map coordinates, pathing, save data, editor schema, object placement systems, and town footprint/pathing semantics are unchanged.
 
 ## Repository Structure

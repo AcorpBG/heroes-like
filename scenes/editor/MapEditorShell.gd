@@ -40,6 +40,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _move_object_tool_button: Button = %MoveObjectTool
 @onready var _duplicate_object_tool_button: Button = %DuplicateObjectTool
 @onready var _retheme_object_tool_button: Button = %RethemeObjectTool
+@onready var _fill_terrain_button: Button = %FillTerrain
 @onready var _restore_tile_button: Button = %RestoreSelectedTile
 @onready var _tile_info_label: Label = %TileInfo
 @onready var _status_label: Label = %Status
@@ -100,6 +101,7 @@ func _connect_ui() -> void:
 	_move_object_tool_button.pressed.connect(func(): _select_tool(TOOL_MOVE_OBJECT))
 	_duplicate_object_tool_button.pressed.connect(func(): _select_tool(TOOL_DUPLICATE_OBJECT))
 	_retheme_object_tool_button.pressed.connect(func(): _select_tool(TOOL_RETHEME_OBJECT))
+	_fill_terrain_button.pressed.connect(_on_fill_terrain_pressed)
 	_restore_tile_button.pressed.connect(_on_restore_selected_tile_pressed)
 	_object_family_picker.item_selected.connect(_on_object_family_selected)
 	_object_content_picker.item_selected.connect(_on_object_content_selected)
@@ -721,6 +723,13 @@ func _on_apply_object_properties_pressed() -> void:
 		_last_message = String(result.get("message", "Could not update selected object properties."))
 	_refresh_state()
 
+func _on_fill_terrain_pressed() -> void:
+	var result := _fill_terrain_from_selected_tile()
+	if bool(result.get("ok", false)):
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", "Could not fill selected terrain region."))
+	_refresh_state()
+
 func _on_restore_selected_tile_pressed() -> void:
 	var result := _restore_selected_tile_from_authored()
 	if bool(result.get("ok", false)):
@@ -775,6 +784,86 @@ func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
 	_dirty = true
 	_last_message = "Painted %d,%d from %s to %s." % [tile.x, tile.y, previous, terrain_id]
 	return true
+
+func _fill_terrain_from_selected_tile() -> Dictionary:
+	return _fill_terrain_region(_selected_tile, _selected_terrain_id)
+
+func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionary:
+	if _session == null:
+		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
+	if not _tile_in_bounds(start_tile):
+		return {"ok": false, "changed": false, "message": "Selected tile is outside the map."}
+	if terrain_id == "":
+		return {"ok": false, "changed": false, "message": "Choose an active terrain id before filling."}
+	if not _terrain_id_in_grammar(terrain_id):
+		return {"ok": false, "changed": false, "message": "Terrain id %s is not in the authored terrain grammar." % terrain_id}
+	var source_terrain := _terrain_at(start_tile)
+	if source_terrain == "":
+		return {"ok": false, "changed": false, "message": "Selected tile has no terrain to fill."}
+	if source_terrain == terrain_id:
+		return {
+			"ok": true,
+			"changed": false,
+			"message": "Tile %d,%d already uses %s; fill skipped." % [start_tile.x, start_tile.y, terrain_id],
+			"start_tile": {"x": start_tile.x, "y": start_tile.y},
+			"source_terrain_id": source_terrain,
+			"active_terrain_id": terrain_id,
+			"filled_count": 0,
+			"contiguity": "cardinal",
+		}
+
+	var map_data = _session.overworld.get("map", [])
+	if not (map_data is Array):
+		return {"ok": false, "changed": false, "message": "Working copy has no terrain map array."}
+	var visited := {}
+	var frontier: Array[Vector2i] = [start_tile]
+	var filled_tiles: Array[Vector2i] = []
+	var directions := [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	while not frontier.is_empty():
+		var tile: Vector2i = frontier.pop_back()
+		if not _tile_in_bounds(tile):
+			continue
+		var tile_key := _tile_key(tile)
+		if visited.has(tile_key):
+			continue
+		visited[tile_key] = true
+		if _terrain_at(tile) != source_terrain:
+			continue
+		filled_tiles.append(tile)
+		for direction_value in directions:
+			var direction: Vector2i = direction_value
+			var neighbor: Vector2i = tile + direction
+			if not _tile_in_bounds(neighbor):
+				continue
+			var neighbor_key := _tile_key(neighbor)
+			if visited.has(neighbor_key):
+				continue
+			if _terrain_at(neighbor) == source_terrain:
+				frontier.append(neighbor)
+
+	for tile in filled_tiles:
+		var row = map_data[tile.y]
+		if row is Array and tile.x >= 0 and tile.x < row.size():
+			row[tile.x] = terrain_id
+			map_data[tile.y] = row
+	_session.overworld["map"] = map_data
+	return {
+		"ok": true,
+		"changed": not filled_tiles.is_empty(),
+		"message": "Filled %d contiguous %s tile%s from %d,%d with %s." % [
+			filled_tiles.size(),
+			source_terrain,
+			"" if filled_tiles.size() == 1 else "s",
+			start_tile.x,
+			start_tile.y,
+			terrain_id,
+		],
+		"start_tile": {"x": start_tile.x, "y": start_tile.y},
+		"source_terrain_id": source_terrain,
+		"active_terrain_id": terrain_id,
+		"filled_count": filled_tiles.size(),
+		"contiguity": "cardinal",
+	}
 
 func _toggle_road(tile: Vector2i) -> bool:
 	if not _tile_in_bounds(tile):
@@ -2083,11 +2172,22 @@ func _terrain_at(tile: Vector2i) -> String:
 		return ""
 	return String(row[tile.x])
 
+func _terrain_id_in_grammar(terrain_id: String) -> bool:
+	if terrain_id == "":
+		return false
+	for terrain in _terrain_entries:
+		if terrain is Dictionary and String(terrain.get("id", "")) == terrain_id:
+			return true
+	return false
+
 func _tile_in_bounds(tile: Vector2i) -> bool:
 	if _session == null:
 		return false
 	var map_size := OverworldRules.derive_map_size(_session)
 	return tile.x >= 0 and tile.y >= 0 and tile.x < map_size.x and tile.y < map_size.y
+
+func _tile_key(tile: Vector2i) -> String:
+	return "%d,%d" % [tile.x, tile.y]
 
 func _set_compact_label(label: Label, text: String, max_lines: int) -> void:
 	label.text = text
@@ -2103,7 +2203,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -2192,14 +2292,11 @@ func validation_select_object_content(content_id: String) -> Dictionary:
 	return snapshot
 
 func validation_select_terrain(terrain_id: String) -> Dictionary:
-	for index in range(_terrain_picker.get_item_count()):
-		if String(_terrain_picker.get_item_metadata(index)) == terrain_id:
-			_terrain_picker.select(index)
-			_selected_terrain_id = terrain_id
-			_select_tool(TOOL_TERRAIN)
-			var snapshot := validation_snapshot()
-			snapshot["ok"] = true
-			return snapshot
+	if _select_terrain_by_id(terrain_id):
+		_select_tool(TOOL_TERRAIN)
+		var snapshot := validation_snapshot()
+		snapshot["ok"] = true
+		return snapshot
 	return {"ok": false, "message": "Terrain id is not in the authored terrain grammar."}
 
 func validation_paint_terrain(x: int, y: int, terrain_id: String) -> Dictionary:
@@ -2210,6 +2307,39 @@ func validation_paint_terrain(x: int, y: int, terrain_id: String) -> Dictionary:
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = changed
+	return snapshot
+
+func validation_fill_terrain(x: int, y: int, terrain_id: String = "") -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile outside map."}
+	var terrain_selected := true
+	if terrain_id != "":
+		terrain_selected = _select_terrain_by_id(terrain_id)
+	_selected_tile = tile
+	var result := {}
+	if terrain_selected:
+		result = _fill_terrain_region(_selected_tile, _selected_terrain_id)
+	else:
+		result = {
+			"ok": false,
+			"changed": false,
+			"message": "Terrain id %s is not in the authored terrain grammar." % terrain_id,
+		}
+	if bool(result.get("ok", false)):
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["terrain_selected"] = terrain_selected
+	snapshot["fill_result"] = result
+	snapshot["filled_count"] = int(result.get("filled_count", 0))
+	snapshot["source_terrain_id"] = String(result.get("source_terrain_id", ""))
+	snapshot["active_terrain_id"] = String(result.get("active_terrain_id", _selected_terrain_id))
+	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
 	return snapshot
 
 func validation_toggle_road(x: int, y: int) -> Dictionary:
@@ -2472,6 +2602,14 @@ func _select_object_family_by_id(family: String) -> bool:
 			_selected_object_family = family
 			_selected_object_content_id = ""
 			_rebuild_object_content_picker()
+			return true
+	return false
+
+func _select_terrain_by_id(terrain_id: String) -> bool:
+	for index in range(_terrain_picker.get_item_count()):
+		if String(_terrain_picker.get_item_metadata(index)) == terrain_id:
+			_terrain_picker.select(index)
+			_selected_terrain_id = terrain_id
 			return true
 	return false
 
