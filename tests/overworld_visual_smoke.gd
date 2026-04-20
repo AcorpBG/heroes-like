@@ -324,6 +324,10 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		push_error("Overworld smoke: explored terrain outside the scout net lost full terrain detail at %s. presentation=%s" % [remembered_tile, remembered_presentation])
 		get_tree().quit(1)
 		return false
+	if String(terrain_presentation.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(terrain_presentation.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(terrain_presentation.get("explored_intertile_seams", true)):
+		push_error("Overworld smoke: explored terrain still reports a visible per-tile grid/seam treatment at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		get_tree().quit(1)
+		return false
 
 	var session = SessionState.ensure_active_session()
 	var unexplored_tile := _first_unexplored_tile(session)
@@ -339,6 +343,10 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		return false
 	if bool(unexplored_terrain.get("terrain_fully_visible", true)):
 		push_error("Overworld smoke: unscouted terrain became fully visible instead of remaining hidden at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
+		get_tree().quit(1)
+		return false
+	if not bool(unexplored_terrain.get("unexplored_wireframe", false)) or float(unexplored_terrain.get("unexplored_wireframe_alpha", 0.0)) < 0.30:
+		push_error("Overworld smoke: unexplored terrain lost its necessary hidden-ground wireframe treatment at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
 		get_tree().quit(1)
 		return false
 	return true
@@ -507,7 +515,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: visible %s marker was styled like a remembered marker. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
-		if not is_town and (float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or float(readability.get("grid_alpha", 1.0)) > 0.42):
+		var visible_grid_suppressed := String(readability.get("visible_terrain_grid_mode", "")) == "fog_boundary_only" and float(readability.get("grid_alpha", 1.0)) <= 0.08 and not bool(readability.get("explored_intertile_seams", true))
+		if not is_town and (float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or not visible_grid_suppressed):
 			push_error("Overworld smoke: visible %s marker grounding or map contrast regressed. presentation=%s" % [expected_kind, presentation])
 			get_tree().quit(1)
 			return false
@@ -666,6 +675,10 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	if String(grass_terrain.get("terrain_group", "")) != "grasslands" or String(grass_terrain.get("style_id", "")) == "":
 		push_error("Overworld smoke: grass terrain does not expose grammar group/style metadata. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if String(grass_terrain.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(grass_terrain.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(grass_terrain.get("explored_intertile_seams", true)):
+		push_error("Overworld smoke: visible grass terrain still reports per-cell black grid seams. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "connection_piece_overlay":

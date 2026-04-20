@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T15:53:16Z",
+  "updatedAt": "2026-04-20T16:04:30Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-terrain-road-feedback-correction-10184",
-  "currentSliceTitle": "Correct terrain consistency, terrain transitions, and road intersections",
+  "currentSliceId": "overworld-visible-terrain-seam-correction-10184",
+  "currentSliceTitle": "Suppress visible explored terrain grid seams",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow terrain/road-only visual correction in response to AcOrP feedback. Grass/plains now use a closer shared grasslands palette, lower-contrast generated texture, and patch-cohesive low-frequency tile variant selection; terrain edge overlays are rebuilt as softer feathered jagged intrusions; road connector art and rendering now use connection-aware center caps so straight road segments no longer stamp a center blob on every tile while true bends/intersections still receive a single joint cap. Gameplay/pathing/fog/save/object/town/hero/site logic and road movement costs were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check. Additional builder compile check passed: python3 -m py_compile tools/build_overworld_terrain_tiles.py.",
+  "currentSliceNotes": "Completed a narrow presentation-only correction for AcOrP feedback that black lines remained between visible explored overworld tiles. OverworldMapView no longer draws explicit per-tile black grid rectangles over explored terrain; explored terrain now reports and uses a fog-boundary-only seam model while unexplored hidden terrain keeps its wireframe treatment. Smoke metadata/assertions now guard the lack of inter-explored tile seams and the preserved unexplored wireframe. Gameplay, pathing, fog, save, object, town, hero, site logic, terrain palettes, and road rules were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -256,6 +256,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-visible-terrain-seam-correction-10184",
+      "title": "Suppress black seams between visible explored overworld terrain tiles",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -311,6 +317,7 @@
     }
   ],
   "nextActions": [
+    "Manually inspect the visible explored terrain seam correction in River Pass and Ninefold Confluence at live-client scale before treating the black-grid feedback as fully solved across supported viewports.",
     "Manually inspect the corrected cohesive grasslands base, softened edge overlays, and connection-aware road joints in River Pass and Ninefold Confluence at live-client scale before treating the terrain/road immersion issue as fully solved.",
     "Manually inspect the corrected active-hero placed-figure presentation in River Pass and Ninefold Confluence before treating hero presence as polished across every biome and supported resolution.",
     "Plan a future explicit multi-tile town occupancy/pathing slice before making non-entry town footprint cells affect movement, blocking, save schema, or visit resolution.",

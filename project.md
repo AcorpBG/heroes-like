@@ -188,6 +188,10 @@ Implementation note date: 2026-04-20
 
 The follow-up AcOrP terrain feedback correction keeps the same authored terrain grammar and structural road system, but narrows the covered tile bank and renderer behavior where the previous pass still read poorly. Grass and plains now use a closer shared grasslands palette with lower-contrast generated texture and low-frequency patch variant selection, edge overlays are rebuilt as softer feathered jagged intrusions instead of hard border strips, and road center caps are connection-aware so straight segments no longer stamp a center blob on every road tile while real bends and intersections still get a single joint cap. This remains a terrain/road presentation correction only: gameplay/pathing/fog/save/object/town/hero/site logic and road movement rules are unchanged.
 
+Implementation note date: 2026-04-20
+
+The AcOrP visible-terrain seam correction removes the explicit per-tile black grid rectangle from explored overworld terrain. `OverworldMapView` now keeps unexplored hidden tiles on their wireframe treatment, but explored terrain only draws a limited fog-boundary hint where it touches unexplored ground; selection/current-tile rings, route lines, roads, and object markers remain the readability layer on mapped ground. This is a presentation-only correction: gameplay, pathing, fog state, save data, object/town/hero/site logic, terrain palettes, and road rules are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

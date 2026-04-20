@@ -598,6 +598,30 @@ Limits:
 - Unsliced terrain families still use grammar fallback colors/patterns until their own authored tile art lands.
 - Road overlays remain visual presentation only; movement cost and pathfinding still do not treat roads specially.
 
+## Current Implementation Slice: Overworld Visible Terrain Seam Correction
+Status: completed on 2026-04-20 as a narrow presentation-only correction after AcOrP feedback that black grid lines still showed between visible explored tiles.
+
+Purpose:
+- Remove the explicit per-tile black rectangle grid over explored overworld terrain.
+- Preserve map readability through terrain art, roads, route lines, selection/current-tile rings, and a limited fog-boundary hint.
+- Keep the unexplored hidden-ground wireframe treatment intact.
+
+Implemented:
+- Removed the explicit per-tile black grid rectangle from explored terrain rendering in `OverworldMapView`.
+- Added a limited explored-terrain fog-boundary hint only where mapped terrain touches unexplored ground.
+- Kept unexplored hidden tiles on the existing wireframe treatment.
+- Extended smoke metadata/assertions so explored terrain reports `fog_boundary_only` grid behavior with no inter-explored tile seams, while unexplored terrain still reports its wireframe.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a terrain palette, road art, fog-of-war, pathing, save, object, town, hero, or site behavior change.
+- Manual visual review is still needed before treating all supported viewports and biomes as polished.
+
 ## Current Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
