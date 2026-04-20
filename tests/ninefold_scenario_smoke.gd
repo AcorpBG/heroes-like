@@ -128,6 +128,9 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if String(terrain_presentation.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency" or String(terrain_presentation.get("grasslands_base_cohesion", "")) != "grass_plains_shared_palette":
 		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the cohesive low-frequency variant contract: %s." % town_presentation)
 		return false
+	if String(terrain_presentation.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(terrain_presentation.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(terrain_presentation.get("explored_intertile_seams", true)):
+		_fail("Ninefold smoke: large-map visible terrain still reports per-cell black grid seams: %s." % town_presentation)
+		return false
 	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "connection_piece_overlay":
 		_fail("Ninefold smoke: large-map starting road is not represented as a structural art overlay: %s." % town_presentation)
 		return false
@@ -247,7 +250,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			_fail("Ninefold smoke: remembered large-map %s marker is too faint: %s." % [expected_kind, presentation])
 			return false
 	else:
-		if bool(readability.get("memory_echo", false)) or (not is_town and (float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or float(readability.get("grid_alpha", 1.0)) > 0.42)):
+		var visible_grid_suppressed := String(readability.get("visible_terrain_grid_mode", "")) == "fog_boundary_only" and float(readability.get("grid_alpha", 1.0)) <= 0.08 and not bool(readability.get("explored_intertile_seams", true))
+		if bool(readability.get("memory_echo", false)) or (not is_town and (float(readability.get("anchor_alpha", 0.0)) < 0.30 or float(readability.get("outline_alpha", 0.0)) < 0.85 or not visible_grid_suppressed)):
 			_fail("Ninefold smoke: visible large-map %s marker grounding or map contrast regressed: %s." % [expected_kind, presentation])
 			return false
 	return true

@@ -12,7 +12,11 @@ const MAP_PADDING := 22.0
 const TACTICAL_VISIBLE_TILE_SPAN := 12.0
 const TACTICAL_VISIBLE_TILE_AREA := TACTICAL_VISIBLE_TILE_SPAN * TACTICAL_VISIBLE_TILE_SPAN
 const MIN_TILE_EXTENT := 24.0
-const GRID_COLOR := Color(0.08, 0.10, 0.12, 0.34)
+const UNEXPLORED_GRID_COLOR := Color(0.08, 0.10, 0.12, 0.34)
+const EXPLORED_TERRAIN_GRID_ALPHA := 0.0
+const EXPLORED_TERRAIN_GRID_MODE := "fog_boundary_only"
+const EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR := Color(0.08, 0.10, 0.12, 0.24)
+const EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH := 1.0
 const FRAME_COLOR := Color(0.73, 0.63, 0.42, 0.9)
 const FRAME_FILL := Color(0.07, 0.10, 0.11, 1.0)
 const UNEXPLORED_COLOR := Color(0.04, 0.05, 0.06, 1.0)
@@ -292,7 +296,7 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 			Color(0.19, 0.20, 0.22, 0.45),
 			2.0
 		)
-		draw_rect(rect, GRID_COLOR, false, 1.0)
+		draw_rect(rect, UNEXPLORED_GRID_COLOR, false, 1.0)
 		return
 
 	var terrain = _terrain_at(tile)
@@ -303,7 +307,7 @@ func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
 	_draw_terrain_transitions(tile, rect, terrain)
 	_draw_road_overlay(tile, rect)
 
-	draw_rect(rect, GRID_COLOR, false, 1.0)
+	_draw_explored_terrain_boundary(tile, rect)
 
 func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> bool:
 	if not _terrain_art_can_be_primary(terrain):
@@ -315,6 +319,31 @@ func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> boo
 		return false
 	draw_texture_rect(texture, rect, false)
 	return true
+
+func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
+	if _session == null:
+		return
+	var checks := {
+		"N": Vector2i(0, -1),
+		"E": Vector2i(1, 0),
+		"S": Vector2i(0, 1),
+		"W": Vector2i(-1, 0),
+	}
+	for direction in checks.keys():
+		var neighbor: Vector2i = tile + checks[direction]
+		if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= _map_size.x or neighbor.y >= _map_size.y:
+			continue
+		if OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+			continue
+		match direction:
+			"N":
+				draw_line(rect.position, Vector2(rect.end.x, rect.position.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+			"S":
+				draw_line(Vector2(rect.position.x, rect.end.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+			"W":
+				draw_line(rect.position, Vector2(rect.position.x, rect.end.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+			"E":
+				draw_line(Vector2(rect.end.x, rect.position.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
 
 func _draw_authored_terrain_pattern(tile: Vector2i, rect: Rect2, terrain: String, visible: bool) -> void:
 	var pattern := _terrain_pattern(terrain)
@@ -1766,6 +1795,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 			"texture_loaded": false,
 			"texture_asset_id": "",
 			"texture_path": "",
+			"visible_terrain_grid_mode": "hidden_fog_wireframe",
+			"visible_terrain_grid_alpha": 0.0,
+			"explored_intertile_seams": false,
+			"unexplored_wireframe": true,
+			"unexplored_wireframe_alpha": UNEXPLORED_GRID_COLOR.a,
+			"fog_boundary_alpha": 0.0,
 			"rendering_mode": "hidden_fog",
 		}
 	var terrain := _terrain_at(tile)
@@ -1793,6 +1828,12 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"texture_loaded": tile_art_loaded,
 		"texture_asset_id": String(tile_art_entry.get("variant_key", "")),
 		"texture_path": tile_art_path,
+		"visible_terrain_grid_mode": EXPLORED_TERRAIN_GRID_MODE,
+		"visible_terrain_grid_alpha": EXPLORED_TERRAIN_GRID_ALPHA,
+		"explored_intertile_seams": false,
+		"unexplored_wireframe": false,
+		"unexplored_wireframe_alpha": UNEXPLORED_GRID_COLOR.a,
+		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
 		"uses_original_tile_bank": tile_art_loaded,
@@ -2023,7 +2064,11 @@ func _marker_readability_payload(tile: Vector2i, explored: bool, visible: bool, 
 		"anchor_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_PLATE_MEMORY.a if remembered else MARKER_PLATE_VISIBLE.a),
 		"ring_alpha": 0.0 if uses_quiet_town_grounding or uses_hero_grounding else (MARKER_RING_MEMORY.a if remembered else MARKER_RING_VISIBLE.a),
 		"outline_alpha": MEMORY_OBJECT_OUTLINE.a if remembered else MARKER_OUTLINE_COLOR.a,
-		"grid_alpha": GRID_COLOR.a,
+		"grid_alpha": EXPLORED_TERRAIN_GRID_ALPHA,
+		"visible_terrain_grid_alpha": EXPLORED_TERRAIN_GRID_ALPHA,
+		"visible_terrain_grid_mode": EXPLORED_TERRAIN_GRID_MODE,
+		"explored_intertile_seams": false,
+		"unexplored_wireframe_alpha": UNEXPLORED_GRID_COLOR.a,
 		"memory_echo": remembered and not uses_quiet_town_grounding and not uses_hero_grounding,
 		"remembered_marker_alpha": MEMORY_OBJECT_COLOR.a if remembered else 0.0,
 		"min_symbol_extent_fraction": min_symbol_fraction,
