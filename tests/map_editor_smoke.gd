@@ -47,6 +47,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_neighbor_transition_preview(shell):
 		return
+	if not _assert_flood_fill_terrain(shell):
+		return
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
@@ -137,6 +139,53 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		or int(corner_terrain.get("corner_transition_count", 0)) != 1
 	):
 		_fail("Map editor smoke: editor preview did not expose a diagonal corner transition from the painted forest tile: %s." % corner_receiver)
+		return false
+	return true
+
+func _assert_flood_fill_terrain(shell) -> bool:
+	if not shell.has_method("validation_fill_terrain"):
+		_fail("Map editor smoke: shell did not expose terrain flood-fill validation.")
+		return false
+
+	var region_tiles := [Vector2i(12, 12), Vector2i(13, 12), Vector2i(12, 13)]
+	for tile in region_tiles:
+		var seed_result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, "mire")
+		if not bool(seed_result.get("ok", false)):
+			_fail("Map editor smoke: could not seed flood-fill terrain at %s: %s." % [tile, seed_result])
+			return false
+	var boundary_seed: Dictionary = shell.call("validation_paint_terrain", 13, 13, "grass")
+	if not bool(boundary_seed.get("ok", false)):
+		_fail("Map editor smoke: could not seed flood-fill boundary terrain: %s." % boundary_seed)
+		return false
+
+	var fill_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "ash")
+	if (
+		not bool(fill_result.get("ok", false))
+		or not bool(fill_result.get("changed", false))
+		or int(fill_result.get("filled_count", 0)) != 3
+		or String(fill_result.get("source_terrain_id", "")) != "mire"
+		or String(fill_result.get("active_terrain_id", "")) != "ash"
+		or String(fill_result.get("fill_result", {}).get("contiguity", "")) != "cardinal"
+	):
+		_fail("Map editor smoke: terrain flood fill did not report the expected bounded region: %s." % fill_result)
+		return false
+	for tile in region_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "ash":
+			_fail("Map editor smoke: terrain flood fill did not update expected tile %s: %s." % [tile, presentation])
+			return false
+	var boundary_presentation: Dictionary = shell.call("validation_tile_presentation", 13, 13)
+	if String(boundary_presentation.get("terrain_presentation", {}).get("terrain", "")) != "grass":
+		_fail("Map editor smoke: terrain flood fill leaked through a non-matching boundary tile: %s." % boundary_presentation)
+		return false
+	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", 11, 12)
+	if String(outside_presentation.get("terrain_presentation", {}).get("terrain", "")) == "ash":
+		_fail("Map editor smoke: terrain flood fill leaked into adjacent non-source terrain: %s." % outside_presentation)
+		return false
+
+	var noop_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "ash")
+	if not bool(noop_result.get("ok", false)) or bool(noop_result.get("changed", true)) or int(noop_result.get("filled_count", -1)) != 0:
+		_fail("Map editor smoke: terrain flood fill did not no-op cleanly on matching active terrain: %s." % noop_result)
 		return false
 	return true
 
