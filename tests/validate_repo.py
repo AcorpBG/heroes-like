@@ -4617,7 +4617,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(object_rendering.get("town_entry_role", "")) == "bottom_middle_visit_approach", errors, "Overworld object rendering must document the town bottom-middle visit approach role")
         ensure(str(object_rendering.get("town_non_entry_tiles", "")) == "blocked_non_entry_footprint", errors, "Overworld object rendering must document non-entry town footprint cells as blocked")
         ensure(str(object_rendering.get("town_grounding", "")) == "town_sprite_settled_without_base_ellipse", errors, "Overworld object rendering must document the town-specific no-ellipse grounding model")
-        ensure(str(object_rendering.get("town_footprint_cues", "")) == "sparse_wall_and_entry_cues_no_underlay", errors, "Overworld object rendering must document sparse town footprint cues without a filled underlay")
+        ensure(str(object_rendering.get("town_footprint_cues", "")) == "no_visible_helper_cues_3x2_contract", errors, "Overworld object rendering must document that town footprint/helper cues are not visible")
+        ensure(str(object_rendering.get("town_entry_apron", "")) == "removed", errors, "Overworld object rendering must document that town entry aprons are removed")
+        ensure(str(object_rendering.get("town_gate_helper", "")) == "removed", errors, "Overworld object rendering must document that town gate helper cues are removed")
+        ensure(str(object_rendering.get("town_helper_glyphs", "")) == "removed", errors, "Overworld object rendering must document that town helper glyphs are removed")
         ensure(str(object_rendering.get("town_shadow_policy", "")) == "no_town_cast_shadow_or_vertical_mass_shadow", errors, "Overworld object rendering must document that town cast shadows and vertical mass shadows are removed")
         ensure(str(object_rendering.get("town_base_ellipse", "")) == "removed", errors, "Overworld object rendering must document that town base ellipses are removed")
 
@@ -4694,7 +4697,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "town_sprite_settled_without_base_ellipse",
         "town_contact_cues_no_base_ellipse",
         "town_contact_line_without_cast_shadow",
-        "sparse_wall_and_entry_cues_no_underlay",
+        "no_visible_helper_cues_3x2_contract",
         "ghosted_sprite_without_echo_plate",
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing overworld art token {required_token}")

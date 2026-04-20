@@ -332,8 +332,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 		if not bool(town_presentation.get("is_entry_tile", false)) or String(town_presentation.get("tile_role", "")) != "bottom_middle_visit_approach":
 			_fail("Ninefold smoke: large-map starting town tile is not reported as the entry approach: %s." % presentation)
 			return false
-		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or not bool(town_presentation.get("entry_apron_cue", false)) or not bool(town_presentation.get("gate_cue", false)):
-			_fail("Ninefold smoke: large-map town lacks blocked non-entry metadata or entry apron/gate cues: %s." % presentation)
+		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or bool(town_presentation.get("visible_helper_cues", true)) or bool(town_presentation.get("footprint_helper_glyphs", true)) or bool(town_presentation.get("entry_apron_cue", true)) or bool(town_presentation.get("entry_wedge_cue", true)) or bool(town_presentation.get("gate_cue", true)) or bool(town_presentation.get("helper_circle_cue", true)):
+			_fail("Ninefold smoke: large-map town must preserve blocked non-entry metadata without visible helper apron/gate/glyph cues: %s." % presentation)
 			return false
 	var min_anchor_width := 0.40 if uses_procedural_fallback else 0.60
 	var min_anchor_height := 0.12 if uses_procedural_fallback else 0.20
@@ -414,7 +414,7 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 	if bool(readability.get("base_occlusion_pads", true)) or float(readability.get("base_occlusion_alpha", 1.0)) > 0.01:
 		_fail("Ninefold smoke: large-map town still reports foreground base occlusion pads: %s." % presentation)
 		return false
-	if String(readability.get("town_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
+	if String(readability.get("town_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 		_fail("Ninefold smoke: large-map town grounding metadata does not describe the no-ellipse presentation: %s." % presentation)
 		return false
 	if bool(readability.get("town_base_ellipse", true)) or bool(readability.get("town_underlay", true)) or bool(readability.get("town_cast_shadow", true)) or not bool(readability.get("town_contact_cue", false)):
@@ -424,8 +424,11 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 	if bool(town_presentation.get("base_ellipse", true)) or bool(town_presentation.get("filled_underlay", true)) or bool(town_presentation.get("cast_shadow", true)):
 		_fail("Ninefold smoke: large-map town presentation payload still exposes the removed ellipse/underlay/shadow treatment: %s." % presentation)
 		return false
-	if String(town_presentation.get("footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
-		_fail("Ninefold smoke: large-map town footprint cue metadata does not describe sparse non-entry/approach cues: %s." % presentation)
+	if String(town_presentation.get("footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+		_fail("Ninefold smoke: large-map town footprint cue metadata does not describe the cue-free 3x2 contract: %s." % presentation)
+		return false
+	if bool(town_presentation.get("visible_helper_cues", true)) or bool(town_presentation.get("footprint_helper_glyphs", true)) or bool(town_presentation.get("entry_apron_cue", true)) or bool(town_presentation.get("entry_wedge_cue", true)) or bool(town_presentation.get("gate_cue", true)) or bool(town_presentation.get("helper_circle_cue", true)):
+		_fail("Ninefold smoke: large-map town presentation payload still exposes visible helper footprint/entry cues: %s." % presentation)
 		return false
 	return true
 

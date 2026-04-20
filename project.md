@@ -178,6 +178,10 @@ The town-specific overworld grounding has been corrected after visual feedback t
 
 Implementation note date: 2026-04-20
 
+AcOrP's follow-up screenshot feedback supersedes the sparse town footprint/entry cue model above for visible rendering. Towns still keep the 3x2 presentation model and the authored bottom-middle approach/visit tile in metadata, but `OverworldMapView` no longer renders non-entry footprint helper glyphs, entry aprons/wedges, gate cue marks, helper circles, or similar editor-looking overlays around towns. This is a presentation-only correction: movement, pathing, save/load, town visit logic, town ownership, roads, hero rendering, mapped sprite grounding, terrain, and gameplay rules are unchanged.
+
+Implementation note date: 2026-04-20
+
 The active-hero overworld presence has been corrected without rolling back the shared object renderer. `OverworldMapView` now draws the visible hero through a hero-specific placed-figure path with compact foot-contact shadow, boot-level occlusion, terrain scuffs, and the existing tile focus/selection ring for clarity, rather than using the shared filled footprint bed, base ellipse, marker ring, or upper-mass backdrop. This is a visual/presentation correction only: hero movement, pathing, fog, save/load, battle routing, town logic, hero rules, and object rendering for non-hero families are unchanged.
 
 Implementation note date: 2026-04-20

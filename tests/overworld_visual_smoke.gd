@@ -484,8 +484,8 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			push_error("Overworld smoke: selected town tile is not reported as the entry approach. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or not bool(town_presentation.get("entry_apron_cue", false)) or not bool(town_presentation.get("gate_cue", false)):
-			push_error("Overworld smoke: town presentation lacks blocked non-entry tiles or the entry apron/gate cue. presentation=%s" % presentation)
+		if not bool(town_presentation.get("non_entry_tiles_blocked", false)) or bool(town_presentation.get("visible_helper_cues", true)) or bool(town_presentation.get("footprint_helper_glyphs", true)) or bool(town_presentation.get("entry_apron_cue", true)) or bool(town_presentation.get("entry_wedge_cue", true)) or bool(town_presentation.get("gate_cue", true)) or bool(town_presentation.get("helper_circle_cue", true)):
+			push_error("Overworld smoke: town presentation must preserve blocked non-entry metadata without visible helper apron/gate/glyph cues. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
 	var min_anchor_width := 0.40 if uses_procedural_fallback else 0.60
@@ -597,7 +597,7 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		push_error("Overworld smoke: town still reports foreground base occlusion pads. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
-	if String(readability.get("town_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
+	if String(readability.get("town_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(readability.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 		push_error("Overworld smoke: town grounding metadata does not describe the no-ellipse presentation. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
@@ -610,8 +610,12 @@ func _assert_town_grounding_correction(readability: Dictionary, presentation: Di
 		push_error("Overworld smoke: town presentation payload still exposes the removed ellipse/underlay/shadow treatment. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
-	if String(town_presentation.get("footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
-		push_error("Overworld smoke: town footprint cue metadata does not describe sparse non-entry/approach cues. presentation=%s" % presentation)
+	if String(town_presentation.get("footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
+		push_error("Overworld smoke: town footprint cue metadata does not describe the cue-free 3x2 contract. presentation=%s" % presentation)
+		get_tree().quit(1)
+		return false
+	if bool(town_presentation.get("visible_helper_cues", true)) or bool(town_presentation.get("footprint_helper_glyphs", true)) or bool(town_presentation.get("entry_apron_cue", true)) or bool(town_presentation.get("entry_wedge_cue", true)) or bool(town_presentation.get("gate_cue", true)) or bool(town_presentation.get("helper_circle_cue", true)):
+		push_error("Overworld smoke: town presentation payload still exposes visible helper footprint/entry cues. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
 	return true
@@ -827,7 +831,7 @@ func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, rem
 			push_error("Overworld smoke: town sprite still reports placement bed or shadow/backdrop treatment. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
-		if String(art.get("town_sprite_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(art.get("town_footprint_cue_model", "")) != "sparse_wall_and_entry_cues_no_underlay":
+		if String(art.get("town_sprite_grounding_model", "")) != "town_sprite_settled_without_base_ellipse" or String(art.get("town_footprint_cue_model", "")) != "no_visible_helper_cues_3x2_contract":
 			push_error("Overworld smoke: town art metadata does not expose the corrected footprint grounding model. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false

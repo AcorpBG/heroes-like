@@ -86,7 +86,7 @@ const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
 const TOWN_GROUNDING_MODEL := "town_sprite_settled_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
 const TOWN_DEPTH_CUE_MODEL := "town_contact_line_without_cast_shadow"
-const TOWN_FOOTPRINT_CUE_MODEL := "sparse_wall_and_entry_cues_no_underlay"
+const TOWN_FOOTPRINT_CUE_MODEL := "no_visible_helper_cues_3x2_contract"
 const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
 const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
@@ -708,42 +708,8 @@ func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered:
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, color, remembered)
 
-func _draw_town_footprint_underlay(tile: Vector2i, rect: Rect2) -> void:
-	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
-		return
-	var profile := _town_presentation_at(tile)
-	if profile.is_empty():
-		return
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
-	var remembered := not visible
-	var town: Dictionary = profile.get("town", {})
-	var color := _town_owner_color(town)
-	var extent := minf(rect.size.x, rect.size.y)
-	var role := String(profile.get("tile_role", ""))
-	var base_color := _remembered_marker_color(color) if remembered else color
-	if role != TOWN_NON_ENTRY_ROLE:
-		return
-	var wall_color := Color(0.10, 0.075, 0.045, 0.20 if not remembered else 0.14)
-	var edge_color := Color(base_color.r, base_color.g, base_color.b, 0.28 if not remembered else 0.22)
-	var y_mid := rect.position.y + rect.size.y * 0.58
-	draw_line(
-		Vector2(rect.position.x + rect.size.x * 0.24, y_mid),
-		Vector2(rect.end.x - rect.size.x * 0.24, y_mid),
-		wall_color,
-		maxf(1.4, extent * 0.024)
-	)
-	draw_line(
-		Vector2(rect.position.x + rect.size.x * 0.30, y_mid - rect.size.y * 0.10),
-		Vector2(rect.position.x + rect.size.x * 0.38, y_mid + rect.size.y * 0.06),
-		edge_color,
-		maxf(1.0, extent * 0.014)
-	)
-	draw_line(
-		Vector2(rect.end.x - rect.size.x * 0.30, y_mid - rect.size.y * 0.10),
-		Vector2(rect.end.x - rect.size.x * 0.38, y_mid + rect.size.y * 0.06),
-		edge_color,
-		maxf(1.0, extent * 0.014)
-	)
+func _draw_town_footprint_underlay(_tile: Vector2i, _rect: Rect2) -> void:
+	return
 
 func _draw_town_grounding_anchor(rect: Rect2, remembered: bool, tile: Vector2i) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -785,27 +751,8 @@ func _draw_town_front_contact(anchor: Dictionary, remembered: bool) -> void:
 	draw_polyline(PackedVector2Array([left, mid, right]), contact_color, maxf(1.0, extent * 0.014))
 	draw_line(center + Vector2(-radii.x * 0.28, radii.y * 0.02), center + Vector2(radii.x * 0.26, radii.y * 0.04), highlight_color, maxf(1.0, extent * 0.010))
 
-func _draw_town_entry_approach(rect: Rect2, color: Color, remembered: bool) -> void:
-	var extent := minf(rect.size.x, rect.size.y)
-	if extent <= 0.0:
-		return
-	var path_color := Color(0.72, 0.57, 0.33, 0.32 if not remembered else 0.24)
-	var edge_color := Color(0.16, 0.11, 0.06, 0.28 if not remembered else 0.20)
-	var cue_color := _remembered_marker_color(color) if remembered else color
-	var apron := PackedVector2Array([
-		rect.position + rect.size * Vector2(0.43, 0.67),
-		rect.position + rect.size * Vector2(0.57, 0.67),
-		rect.position + rect.size * Vector2(0.68, 0.95),
-		rect.position + rect.size * Vector2(0.32, 0.95),
-	])
-	draw_colored_polygon(apron, path_color)
-	draw_polyline(PackedVector2Array([apron[0], apron[1], apron[2], apron[3], apron[0]]), edge_color, maxf(1.0, extent * 0.014))
-	var gate_left := rect.position + rect.size * Vector2(0.43, 0.61)
-	var gate_right := rect.position + rect.size * Vector2(0.57, 0.61)
-	var gate_bottom := rect.position + rect.size * Vector2(0.50, 0.73)
-	draw_line(gate_left, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.42 if not remembered else 0.32), maxf(1.4, extent * 0.018))
-	draw_line(gate_right, gate_bottom, Color(cue_color.r, cue_color.g, cue_color.b, 0.42 if not remembered else 0.32), maxf(1.4, extent * 0.018))
-	draw_circle(rect.position + rect.size * Vector2(0.50, 0.70), maxf(1.4, extent * 0.026), Color(0.96, 0.86, 0.52, 0.26 if not remembered else 0.18))
+func _draw_town_entry_approach(_rect: Rect2, _color: Color, _remembered: bool) -> void:
+	return
 
 func _draw_resource_marker(node: Dictionary, rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var profile := _resource_object_profile(node)
@@ -1886,8 +1833,12 @@ func _town_presentation_payload(tile: Vector2i, explored: bool, visible: bool) -
 	payload["is_entry_tile"] = bool(presentation.get("is_entry_tile", false))
 	payload["is_visit_tile"] = bool(presentation.get("is_entry_tile", false))
 	payload["presentation_blocked"] = bool(presentation.get("presentation_blocked", false))
-	payload["entry_apron_cue"] = bool(presentation.get("is_entry_tile", false))
-	payload["gate_cue"] = bool(presentation.get("is_entry_tile", false))
+	payload["visible_helper_cues"] = false
+	payload["footprint_helper_glyphs"] = false
+	payload["entry_apron_cue"] = false
+	payload["entry_wedge_cue"] = false
+	payload["gate_cue"] = false
+	payload["helper_circle_cue"] = false
 	return payload
 
 func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) -> Dictionary:
@@ -1915,6 +1866,12 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"base_ellipse": false,
 		"filled_underlay": false,
 		"cast_shadow": false,
+		"visible_helper_cues": false,
+		"footprint_helper_glyphs": false,
+		"entry_apron_cue": false,
+		"entry_wedge_cue": false,
+		"gate_cue": false,
+		"helper_circle_cue": false,
 		"grounding_model": TOWN_GROUNDING_MODEL,
 		"entry_role": TOWN_ENTRY_ROLE,
 		"entry_offset": {"x": TOWN_ENTRY_OFFSET.x, "y": TOWN_ENTRY_OFFSET.y},

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T17:25:00Z",
+  "updatedAt": "2026-04-20T17:33:28Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-homm-road-topology-10184",
-  "currentSliceTitle": "Move overworld road rendering toward HoMM-style adjacency-built pieces",
+  "currentSliceId": "overworld-town-helper-cue-removal-10184",
+  "currentSliceTitle": "Remove editor-like helper cues from town overworld presentation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow presentation-only road topology correction focused on rebuilding/rendering roads from adjacent same-type road tiles. OverworldMapView now derives road connections from neighboring tiles with the same overlay id, exposes centered vertical and south-edge horizontal lane metadata, and composes turns/intersections from those connections. The terrain grammar, manifest, road tile builder, and runtime road PNGs were updated so E/W dirt-road pieces ride the lower tile edge while N/S pieces remain centered. Ninefold smoke now guards vertical straight, horizontal straight, mixed intersection, and diagonal-straight road topology. Movement/pathing costs, fog, save/load, battle, town logic, object logic, mapped sprite grounding, base terrain palettes, border softening, center-cap suppression, and explored seam suppression were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow presentation-only town cleanup after AcOrP's screenshot feedback. OverworldMapView still reports the 3x2 town presentation model, bottom-middle visit/approach tile, and non-entry footprint metadata, but it no longer renders non-entry footprint helper glyphs, entry aprons/wedges, gate helper marks, helper circles, or similar editor-looking town overlays. The art manifest, repo validator, and River Pass/Ninefold smokes now guard the cue-free town contract. Movement, pathing, visit logic, ownership, roads, hero rendering, mapped sprite grounding, terrain, save/load, and gameplay rules were unchanged. Required validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -238,6 +238,12 @@
       "difficulty": "small"
     },
     {
+      "id": "overworld-town-helper-cue-removal-10184",
+      "title": "Remove editor-like helper cues from town overworld presentation",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "overworld-hero-presence-correction-10184",
       "title": "Present the active hero as a placed overworld presence instead of a staged badge",
       "status": "completed",
@@ -335,6 +341,7 @@
     }
   ],
   "nextActions": [
+    "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
     "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",
     "Manually inspect unmapped procedural resource-site, artifact, and encounter fallbacks in River Pass and Ninefold Confluence at live-client scale before treating the no-plate fallback grounding as visually polished across supported viewports.",
     "Manually inspect the visible explored terrain seam correction in River Pass and Ninefold Confluence at live-client scale before treating the black-grid feedback as fully solved across supported viewports.",

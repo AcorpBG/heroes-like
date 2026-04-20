@@ -45,7 +45,10 @@
     "town_entry_role": "bottom_middle_visit_approach",
     "town_non_entry_tiles": "blocked_non_entry_footprint",
     "town_grounding": "town_sprite_settled_without_base_ellipse",
-    "town_footprint_cues": "sparse_wall_and_entry_cues_no_underlay",
+    "town_footprint_cues": "no_visible_helper_cues_3x2_contract",
+    "town_entry_apron": "removed",
+    "town_gate_helper": "removed",
+    "town_helper_glyphs": "removed",
     "town_shadow_policy": "no_town_cast_shadow_or_vertical_mass_shadow",
     "town_base_ellipse": "removed"
   },
