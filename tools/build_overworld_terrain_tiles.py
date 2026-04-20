@@ -52,12 +52,12 @@ class EdgeSpec:
 
 
 BASE_TILE_SPECS = (
-    BaseTileSpec("grass_open", "grasslands", "field_tufts", "#6d8a47", "#789650", "#58713c", "#a7b765", 101),
-    BaseTileSpec("grass_field", "grasslands", "field_tufts", "#748d4a", "#819b52", "#5d7440", "#bec06c", 102),
-    BaseTileSpec("grass_worn", "grasslands", "worn_field", "#76854a", "#8a8956", "#665f3d", "#b6a568", 103),
-    BaseTileSpec("plains_open", "grasslands", "dry_grass", "#7f914f", "#929758", "#686d3d", "#c7b76b", 111),
-    BaseTileSpec("plains_dry", "grasslands", "dry_grass", "#8c8f55", "#a0905c", "#736846", "#d1b06d", 112),
-    BaseTileSpec("plains_worn", "grasslands", "worn_field", "#837f4e", "#9a8655", "#695d43", "#c4a56a", 113),
+    BaseTileSpec("grass_open", "grasslands", "field_tufts", "#71884a", "#7c9251", "#5c7040", "#a2ad63", 101),
+    BaseTileSpec("grass_field", "grasslands", "field_tufts", "#74894c", "#7f9252", "#5e7242", "#aab065", 102),
+    BaseTileSpec("grass_worn", "grasslands", "worn_field", "#77814b", "#858858", "#625f42", "#aaa060", 103),
+    BaseTileSpec("plains_open", "grasslands", "dry_grass", "#798b50", "#879159", "#656c42", "#aaa763", 111),
+    BaseTileSpec("plains_dry", "grasslands", "dry_grass", "#7e8952", "#908d5b", "#6b6446", "#b1a266", 112),
+    BaseTileSpec("plains_worn", "grasslands", "worn_field", "#7c8050", "#8b8458", "#665f45", "#aa9b63", 113),
     BaseTileSpec("forest_canopy", "forest", "tree_clusters", "#2f5734", "#38653d", "#19341f", "#5c7944", 201),
     BaseTileSpec("forest_copse", "forest", "tree_clusters", "#345f39", "#3f6c43", "#1f3a24", "#67834e", 202),
     BaseTileSpec("forest_edge", "forest", "tree_edge", "#3e653d", "#507147", "#263e27", "#7a8a54", 203),
@@ -79,10 +79,10 @@ BASE_TILE_SPECS = (
 )
 
 EDGE_SPECS = {
-    "grasslands": EdgeSpec("grasslands", "#526d39", "#354b2a", "#91a75a", 15, 124, 501),
-    "forest": EdgeSpec("forest", "#1d3a23", "#102218", "#4d6942", 18, 158, 601),
-    "mire": EdgeSpec("mire", "#28392e", "#182720", "#657449", 17, 146, 701),
-    "highland": EdgeSpec("highland", "#514a35", "#342f24", "#8f8055", 16, 136, 801),
+    "grasslands": EdgeSpec("grasslands", "#5a713f", "#43542e", "#8a9b58", 10, 64, 501),
+    "forest": EdgeSpec("forest", "#263e28", "#152619", "#536a44", 12, 88, 601),
+    "mire": EdgeSpec("mire", "#314334", "#213128", "#66734c", 12, 84, 701),
+    "highland": EdgeSpec("highland", "#5b543b", "#433d2d", "#8d8059", 11, 78, 801),
 }
 
 ROAD_DIRECTIONS = {
@@ -163,20 +163,21 @@ def draw_low_noise_ground(spec: BaseTileSpec) -> Image.Image:
     secondary = hex_rgb(spec.secondary)
     rng = random.Random(spec.seed)
     macro = terrain_noise_profile(spec)
+    quiet_family = spec.terrain_family == "grasslands"
     pixels: list[tuple[int, int, int, int]] = []
     for y in range(SIZE):
         for x in range(SIZE):
             index = (y * SIZE) + x
             local = random.Random((spec.seed * 1000003) + (x * 9176) + (y * 6113))
             value = macro[index]
-            amount = 0.08 + (value * 0.34)
+            amount = (0.10 if quiet_family else 0.08) + (value * (0.23 if quiet_family else 0.34))
             shade = mix(base, secondary, amount)
             if value < 0.34:
-                shade = mix(shade, hex_rgb(spec.detail), (0.34 - value) * 0.24)
+                shade = mix(shade, hex_rgb(spec.detail), (0.34 - value) * (0.15 if quiet_family else 0.24))
             elif value > 0.68:
-                shade = mix(shade, hex_rgb(spec.accent), (value - 0.68) * 0.22)
-            shade = add_rgb(shade, (value - 0.50) * 13.0)
-            pixels.append((*jitter(shade, 2, local), 255))
+                shade = mix(shade, hex_rgb(spec.accent), (value - 0.68) * (0.12 if quiet_family else 0.22))
+            shade = add_rgb(shade, (value - 0.50) * (7.0 if quiet_family else 13.0))
+            pixels.append((*jitter(shade, 1 if quiet_family else 2, local), 255))
     image = Image.new("RGBA", (SIZE, SIZE))
     image.putdata(pixels)
     overlay = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
@@ -188,7 +189,7 @@ def draw_low_noise_ground(spec: BaseTileSpec) -> Image.Image:
         rx = rng.randint(12, 30)
         ry = rng.randint(8, 22)
         color = mix(hex_rgb(spec.secondary), base, rng.random() * 0.35)
-        alpha = rng.randint(10, 28)
+        alpha = rng.randint(8, 18) if quiet_family else rng.randint(10, 28)
         draw.ellipse((cx - rx, cy - ry, cx + rx, cy + ry), fill=(*color, alpha))
     image.alpha_composite(overlay)
     return image
@@ -283,12 +284,12 @@ def draw_terrain_details(image: Image.Image, spec: BaseTileSpec) -> Image.Image:
     draw = ImageDraw.Draw(overlay, "RGBA")
     match spec.pattern:
         case "field_tufts":
-            draw_tufts(draw, rng, spec, 24)
+            draw_tufts(draw, rng, spec, 18 if spec.terrain_family == "grasslands" else 24)
         case "dry_grass":
-            draw_tufts(draw, rng, spec, 18)
+            draw_tufts(draw, rng, spec, 14 if spec.terrain_family == "grasslands" else 18)
             draw_worn_ground_streaks(draw, rng, spec, 2)
         case "worn_field":
-            draw_tufts(draw, rng, spec, 12)
+            draw_tufts(draw, rng, spec, 9 if spec.terrain_family == "grasslands" else 12)
             draw_contours(draw, rng, spec, 2)
             draw_worn_ground_streaks(draw, rng, spec, 4)
         case "tree_clusters":
@@ -317,6 +318,8 @@ def draw_terrain_details(image: Image.Image, spec: BaseTileSpec) -> Image.Image:
         case _:
             draw_tufts(draw, rng, spec, 10)
     image.alpha_composite(overlay)
+    if spec.terrain_family == "grasslands":
+        return image.filter(ImageFilter.GaussianBlur(radius=0.10)).filter(ImageFilter.UnsharpMask(radius=0.25, percent=8, threshold=5))
     return image.filter(ImageFilter.UnsharpMask(radius=0.35, percent=18, threshold=4))
 
 
@@ -371,9 +374,19 @@ def build_edge_overlay(spec: EdgeSpec, direction: str) -> Image.Image:
     rng = random.Random(spec.seed + sum(ord(char) for char in direction))
     profile = jagged_profile(SIZE, spec.width, rng)
     canvas = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (0, 0, 0, 0))
+    mask = Image.new("L", (SIZE * SCALE, SIZE * SCALE), 0)
+    mask_draw = ImageDraw.Draw(mask)
+    mask_draw.polygon(edge_polygon(direction, profile), fill=255)
+    mask = mask.filter(ImageFilter.GaussianBlur(radius=1.15 * SCALE))
+    fill_layer = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (*hex_rgb(spec.fill), 0))
+    fill_layer.putalpha(mask.point(lambda value: int((value * spec.alpha) / 255)))
+    canvas.alpha_composite(fill_layer)
+
+    line_layer = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (0, 0, 0, 0))
+    line_draw = ImageDraw.Draw(line_layer, "RGBA")
+    line_draw.line(profile_line(direction, profile), fill=(*hex_rgb(spec.dark), max(18, spec.alpha - 58)), width=max(1, SCALE))
+    canvas.alpha_composite(line_layer.filter(ImageFilter.GaussianBlur(radius=0.42 * SCALE)))
     draw = ImageDraw.Draw(canvas, "RGBA")
-    draw.polygon(edge_polygon(direction, profile), fill=(*hex_rgb(spec.fill), spec.alpha))
-    draw.line(profile_line(direction, profile), fill=(*hex_rgb(spec.dark), max(80, spec.alpha - 34)), width=2 * SCALE)
     for _index in range(12):
         x = rng.randint(4, 60) * SCALE
         y = rng.randint(4, 60) * SCALE
@@ -386,7 +399,7 @@ def build_edge_overlay(spec: EdgeSpec, direction: str) -> Image.Image:
         if direction == "e" and x < (SIZE - spec.width - 5) * SCALE:
             continue
         radius = rng.randint(1, 2) * SCALE
-        draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(*hex_rgb(spec.light), rng.randint(22, 42)))
+        draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(*hex_rgb(spec.light), rng.randint(8, 18)))
     return canvas.resize((SIZE, SIZE), Image.Resampling.LANCZOS)
 
 
@@ -501,31 +514,39 @@ def draw_road_ruts(canvas: Image.Image, kind: str, end: tuple[float, float], see
     for lateral_offset in (-2.0, 2.0):
         points = jittered_line_points(kind, end, lateral_offset, 0.55, seed + int(lateral_offset * 97))
         scaled_points = [(point[0] * SCALE, point[1] * SCALE) for point in points]
-        draw.line(scaled_points, fill=(67, 47, 31, 72), width=max(1, int(round(0.9 * SCALE))))
+        draw.line(scaled_points, fill=(67, 47, 31, 54), width=max(1, int(round(0.75 * SCALE))))
     canvas.alpha_composite(layer.resize((SIZE, SIZE), Image.Resampling.LANCZOS))
 
 
 def road_layer(kind: str) -> Image.Image:
     canvas = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     if kind == "center":
-        shadow = make_organic_center_mask(7.3, 9101, 1.0)
-        edge = make_organic_center_mask(6.2, 9102, 0.2)
-        core = make_organic_center_mask(4.9, 9103, 0.0)
-        highlight = make_organic_center_mask(1.8, 9104, -0.2)
+        shadow = make_organic_center_mask(5.8, 9101, 0.7)
+        edge = make_organic_center_mask(4.9, 9102, 0.1)
+        core = make_organic_center_mask(3.7, 9103, 0.0)
+        highlight = make_organic_center_mask(1.1, 9104, -0.1)
         grit_mask = core
         seed = 910
+        shadow_alpha = 46
+        edge_alpha = 82
+        core_alpha = 118
+        highlight_alpha = 22
     else:
         end = ROAD_DIRECTIONS[kind]
-        shadow = make_mask_line(kind, end, 11.6, 4.4, 0.8, 1.7)
-        edge = make_mask_line(kind, end, 9.6, 3.6, 0.1, 1.35)
-        core = make_mask_line(kind, end, 7.1, 2.6, 0.0, 1.05)
-        highlight = make_mask_line(kind, end, 1.0, 0.6, -0.8, 0.55)
+        shadow = make_mask_line(kind, end, 10.6, 0.0, 0.6, 1.45)
+        edge = make_mask_line(kind, end, 8.6, 0.0, 0.1, 1.15)
+        core = make_mask_line(kind, end, 6.4, 0.0, 0.0, 0.90)
+        highlight = make_mask_line(kind, end, 0.8, 0.0, -0.7, 0.45)
         grit_mask = core
         seed = 920 + sum(ord(char) for char in kind)
-    composite_color(canvas, (32, 24, 18), shadow, 68)
-    composite_color(canvas, (75, 55, 36), edge, 122)
-    composite_color(canvas, (139, 104, 63), core, 174)
-    composite_color(canvas, (187, 151, 91), highlight, 42)
+        shadow_alpha = 56
+        edge_alpha = 104
+        core_alpha = 150
+        highlight_alpha = 28
+    composite_color(canvas, (32, 24, 18), shadow, shadow_alpha)
+    composite_color(canvas, (75, 55, 36), edge, edge_alpha)
+    composite_color(canvas, (132, 100, 63), core, core_alpha)
+    composite_color(canvas, (181, 145, 90), highlight, highlight_alpha)
     if kind != "center":
         draw_road_ruts(canvas, kind, ROAD_DIRECTIONS[kind], seed + 401)
     sprinkle_road_grit(canvas, grit_mask, seed)

@@ -184,6 +184,10 @@ Implementation note date: 2026-04-20
 
 The AcOrP-priority base terrain and road correction keeps `original_quiet_tile_bank`, authored autotile layers, runtime 64x64 PNGs, jagged edge overlays, and structural `road_dirt` overlays as the active contract, but rebuilds the covered original terrain bank with deterministic multi-scale ground grain and more visible terrain-specific detail. The road overlay PNGs are now softer rutted dirt beds with muted earth colors, organic center masks, grit, rut lines, and slight connector wobble so road tiles read less like stamped bright UI strokes. This is a presentation/art-pipeline correction for grass/plains, forest, mire/swamp, hills/ridge/highland, and dirt-road overlays only: pathing, fog, save/load, object logic, town/hero/site presentation, road movement costs, and unsliced terrain families are unchanged.
 
+Implementation note date: 2026-04-20
+
+The follow-up AcOrP terrain feedback correction keeps the same authored terrain grammar and structural road system, but narrows the covered tile bank and renderer behavior where the previous pass still read poorly. Grass and plains now use a closer shared grasslands palette with lower-contrast generated texture and low-frequency patch variant selection, edge overlays are rebuilt as softer feathered jagged intrusions instead of hard border strips, and road center caps are connection-aware so straight segments no longer stamp a center blob on every road tile while real bends and intersections still get a single joint cap. This remains a terrain/road presentation correction only: gameplay/pathing/fog/save/object/town/hero/site logic and road movement rules are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

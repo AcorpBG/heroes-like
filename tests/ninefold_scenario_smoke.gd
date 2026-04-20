@@ -125,8 +125,14 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if String(terrain_presentation.get("primary_base_model", "")) != "original_quiet_tile_bank" or String(terrain_presentation.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable":
 		_fail("Ninefold smoke: large-map starting terrain does not expose the quiet macro-readable base model: %s." % town_presentation)
 		return false
+	if String(terrain_presentation.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency" or String(terrain_presentation.get("grasslands_base_cohesion", "")) != "grass_plains_shared_palette":
+		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the cohesive low-frequency variant contract: %s." % town_presentation)
+		return false
 	if not bool(terrain_presentation.get("road_overlay", false)) or String(terrain_presentation.get("road_overlay_id", "")) != "road_dirt" or not bool(terrain_presentation.get("road_overlay_art", false)) or String(terrain_presentation.get("road_shape_model", "")) != "connection_piece_overlay":
 		_fail("Ninefold smoke: large-map starting road is not represented as a structural art overlay: %s." % town_presentation)
+		return false
+	if String(terrain_presentation.get("road_joint_cap_model", "")) != "connection_aware_joint_cap" or not bool(terrain_presentation.get("road_joint_cap", false)):
+		_fail("Ninefold smoke: large-map starting road intersection does not expose the connection-aware joint cap contract: %s." % town_presentation)
 		return false
 	var town_readability: Dictionary = town_presentation.get("marker_readability", {})
 	if not bool(town_readability.get("hero_emphasis", false)) or not bool(town_readability.get("selection_emphasis", false)):
