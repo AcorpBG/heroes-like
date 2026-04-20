@@ -8,9 +8,12 @@ const DEFAULT_SCENARIO_ID := "ninefold-confluence"
 const DEFAULT_TERRAIN_ID := "grass"
 const EDITOR_ROAD_LAYER_ID := "editor_working_road"
 const EDITOR_ROAD_OVERLAY_ID := "road_dirt"
+const ROAD_PATH_RULE_ID := "manhattan_l_horizontal_then_vertical"
+const ROAD_PATH_RULE_LABEL := "Manhattan L path, horizontal first, then vertical"
 const TOOL_INSPECT := "inspect"
 const TOOL_TERRAIN := "terrain"
 const TOOL_ROAD := "road"
+const TOOL_ROAD_PATH := "road_path"
 const TOOL_HERO_START := "hero_start"
 const TOOL_PLACE_OBJECT := "place_object"
 const TOOL_REMOVE_OBJECT := "remove_object"
@@ -34,6 +37,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _inspect_tool_button: Button = %InspectTool
 @onready var _terrain_tool_button: Button = %TerrainTool
 @onready var _road_tool_button: Button = %RoadTool
+@onready var _road_path_tool_button: Button = %RoadPathTool
 @onready var _hero_start_tool_button: Button = %HeroStartTool
 @onready var _place_object_tool_button: Button = %PlaceObjectTool
 @onready var _remove_object_tool_button: Button = %RemoveObjectTool
@@ -68,6 +72,7 @@ var _selected_object_content_id := ""
 var _selected_property_object_key := ""
 var _pending_move_object_key := ""
 var _pending_duplicate_object_key := ""
+var _pending_road_path_start := Vector2i(-1, -1)
 var _selected_tile := Vector2i.ZERO
 var _hovered_tile := Vector2i(-1, -1)
 var _tool := TOOL_INSPECT
@@ -95,6 +100,7 @@ func _connect_ui() -> void:
 	_inspect_tool_button.pressed.connect(func(): _select_tool(TOOL_INSPECT))
 	_terrain_tool_button.pressed.connect(func(): _select_tool(TOOL_TERRAIN))
 	_road_tool_button.pressed.connect(func(): _select_tool(TOOL_ROAD))
+	_road_path_tool_button.pressed.connect(func(): _select_tool(TOOL_ROAD_PATH))
 	_hero_start_tool_button.pressed.connect(func(): _select_tool(TOOL_HERO_START))
 	_place_object_tool_button.pressed.connect(func(): _select_tool(TOOL_PLACE_OBJECT))
 	_remove_object_tool_button.pressed.connect(func(): _select_tool(TOOL_REMOVE_OBJECT))
@@ -497,6 +503,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_selected_property_object_key = ""
 	_pending_move_object_key = ""
 	_pending_duplicate_object_key = ""
+	_pending_road_path_start = Vector2i(-1, -1)
 	_dirty = false
 	_restored_from_play_copy = false
 	_last_message = "Loaded authored scenario into a mutable editor working copy."
@@ -537,6 +544,16 @@ func _restore_editor_ui_metadata() -> void:
 	_selected_property_object_key = String(_session.flags.get("editor_selected_property_object_key", ""))
 	_pending_move_object_key = String(_session.flags.get("editor_pending_move_object_key", ""))
 	_pending_duplicate_object_key = String(_session.flags.get("editor_pending_duplicate_object_key", ""))
+	var pending_road_path_value = _session.flags.get("editor_pending_road_path_start", {})
+	if pending_road_path_value is Dictionary:
+		_pending_road_path_start = Vector2i(
+			int(pending_road_path_value.get("x", -1)),
+			int(pending_road_path_value.get("y", -1))
+		)
+	else:
+		_pending_road_path_start = Vector2i(-1, -1)
+	if not _tile_in_bounds(_pending_road_path_start):
+		_pending_road_path_start = Vector2i(-1, -1)
 	_dirty = bool(_session.flags.get("editor_dirty", true))
 
 func _make_all_tiles_visible(session) -> void:
@@ -608,6 +625,12 @@ func _refresh_labels() -> void:
 			state_line,
 			String(pending_duplicate_detail.get("placement_id", _pending_duplicate_object_key)),
 		]
+	if _has_pending_road_path_start():
+		state_line = "%s | Road path start %d,%d" % [
+			state_line,
+			_pending_road_path_start.x,
+			_pending_road_path_start.y,
+		]
 	_set_compact_label(_status_label, "%s\n%s" % [state_line, _last_message], 3)
 	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
 
@@ -617,6 +640,8 @@ func _tool_label(tool: String) -> String:
 			return "Terrain"
 		TOOL_ROAD:
 			return "Road"
+		TOOL_ROAD_PATH:
+			return "Road Path"
 		TOOL_HERO_START:
 			return "Hero Start"
 		TOOL_PLACE_OBJECT:
@@ -637,6 +662,7 @@ func _select_tool(tool: String) -> void:
 		TOOL_INSPECT,
 		TOOL_TERRAIN,
 		TOOL_ROAD,
+		TOOL_ROAD_PATH,
 		TOOL_HERO_START,
 		TOOL_PLACE_OBJECT,
 		TOOL_REMOVE_OBJECT,
@@ -649,6 +675,8 @@ func _select_tool(tool: String) -> void:
 		_pending_move_object_key = ""
 	if _tool != TOOL_DUPLICATE_OBJECT:
 		_pending_duplicate_object_key = ""
+	if _tool != TOOL_ROAD_PATH:
+		_pending_road_path_start = Vector2i(-1, -1)
 	_sync_tool_buttons()
 	_refresh_labels()
 
@@ -657,6 +685,7 @@ func _sync_tool_buttons() -> void:
 		TOOL_INSPECT: _inspect_tool_button,
 		TOOL_TERRAIN: _terrain_tool_button,
 		TOOL_ROAD: _road_tool_button,
+		TOOL_ROAD_PATH: _road_path_tool_button,
 		TOOL_HERO_START: _hero_start_tool_button,
 		TOOL_PLACE_OBJECT: _place_object_tool_button,
 		TOOL_REMOVE_OBJECT: _remove_object_tool_button,
@@ -749,6 +778,8 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			_paint_terrain(tile, _selected_terrain_id)
 		TOOL_ROAD:
 			_toggle_road(tile)
+		TOOL_ROAD_PATH:
+			_road_path_tool_click(tile)
 		TOOL_HERO_START:
 			_set_hero_start(tile)
 		TOOL_PLACE_OBJECT:
@@ -912,6 +943,213 @@ func _toggle_road(tile: Vector2i) -> bool:
 	_dirty = true
 	_last_message = "%s road at %d,%d." % ["Removed" if had_road else "Added", tile.x, tile.y]
 	return true
+
+func _road_path_tool_click(tile: Vector2i) -> bool:
+	if not _tile_in_bounds(tile):
+		return false
+	if not _has_pending_road_path_start():
+		_pending_road_path_start = tile
+		_last_message = "Road path start set at %d,%d. Next click applies %s." % [
+			tile.x,
+			tile.y,
+			ROAD_PATH_RULE_LABEL,
+		]
+		return true
+	var result := _apply_road_path(_pending_road_path_start, tile, "toggle")
+	if bool(result.get("ok", false)):
+		_pending_road_path_start = Vector2i(-1, -1)
+		_dirty = _dirty or bool(result.get("changed", false))
+		_last_message = String(result.get("message", "Applied road path."))
+	else:
+		_last_message = String(result.get("message", "Could not apply road path."))
+	return bool(result.get("ok", false))
+
+func _apply_road_path(start_tile: Vector2i, end_tile: Vector2i, requested_action: String = "toggle") -> Dictionary:
+	if _session == null:
+		return {"ok": false, "changed": false, "message": "No editor working copy is loaded."}
+	if not _tile_in_bounds(start_tile) or not _tile_in_bounds(end_tile):
+		return {"ok": false, "changed": false, "message": "Road path start or end is outside the map."}
+	var action := requested_action if requested_action != "" else "toggle"
+	if action not in ["toggle", "add", "remove"]:
+		return {
+			"ok": false,
+			"changed": false,
+			"message": "Road path action must be toggle, add, or remove.",
+			"requested_action": requested_action,
+			"path_rule": ROAD_PATH_RULE_ID,
+			"path_rule_label": ROAD_PATH_RULE_LABEL,
+		}
+	var path_tiles := _road_path_tiles(start_tile, end_tile)
+	var resolved_action := action
+	if action == "toggle":
+		resolved_action = "remove" if _all_road_path_tiles_have_roads(path_tiles) else "add"
+	var changed_tiles: Array[Vector2i] = []
+	if resolved_action == "remove":
+		changed_tiles = _remove_road_tiles(path_tiles)
+	else:
+		changed_tiles = _add_road_tiles(path_tiles)
+	var changed := not changed_tiles.is_empty()
+	var verb := "Added"
+	if resolved_action == "remove":
+		verb = "Removed"
+	var message := "%s %d road tile%s on %s from %d,%d to %d,%d." % [
+		verb,
+		changed_tiles.size(),
+		"" if changed_tiles.size() == 1 else "s",
+		ROAD_PATH_RULE_LABEL,
+		start_tile.x,
+		start_tile.y,
+		end_tile.x,
+		end_tile.y,
+	]
+	if not changed:
+		message = "Road path made no working-copy changes on %s from %d,%d to %d,%d." % [
+			ROAD_PATH_RULE_LABEL,
+			start_tile.x,
+			start_tile.y,
+			end_tile.x,
+			end_tile.y,
+		]
+	return {
+		"ok": true,
+		"changed": changed,
+		"message": message,
+		"requested_action": action,
+		"road_path_action": resolved_action,
+		"path_rule": ROAD_PATH_RULE_ID,
+		"path_rule_label": ROAD_PATH_RULE_LABEL,
+		"start_tile": {"x": start_tile.x, "y": start_tile.y},
+		"end_tile": {"x": end_tile.x, "y": end_tile.y},
+		"path_tiles": _tile_array_payload(path_tiles),
+		"changed_tiles": _tile_array_payload(changed_tiles),
+		"path_count": path_tiles.size(),
+		"affected_count": changed_tiles.size(),
+	}
+
+func _road_path_tiles(start_tile: Vector2i, end_tile: Vector2i) -> Array[Vector2i]:
+	var tiles: Array[Vector2i] = []
+	var cursor := start_tile
+	tiles.append(cursor)
+	while cursor.x != end_tile.x:
+		cursor.x += 1 if end_tile.x > cursor.x else -1
+		tiles.append(cursor)
+	while cursor.y != end_tile.y:
+		cursor.y += 1 if end_tile.y > cursor.y else -1
+		tiles.append(cursor)
+	return tiles
+
+func _all_road_path_tiles_have_roads(path_tiles: Array[Vector2i]) -> bool:
+	if path_tiles.is_empty():
+		return false
+	for tile in path_tiles:
+		if not _has_road_at(tile):
+			return false
+	return true
+
+func _add_road_tiles(path_tiles: Array[Vector2i]) -> Array[Vector2i]:
+	var terrain_layers := _terrain_layers()
+	var roads = terrain_layers.get("roads", [])
+	if not (roads is Array):
+		roads = []
+	var existing_keys := _road_tile_keys_from_layers(roads)
+	var tiles_to_add: Array[Vector2i] = []
+	for tile in path_tiles:
+		var key := _tile_key(tile)
+		if existing_keys.has(key):
+			continue
+		existing_keys[key] = true
+		tiles_to_add.append(tile)
+	if tiles_to_add.is_empty():
+		return []
+	var editor_layer_index := _editor_road_layer_index(roads)
+	if editor_layer_index < 0:
+		roads.append(
+			{
+				"id": EDITOR_ROAD_LAYER_ID,
+				"overlay_id": EDITOR_ROAD_OVERLAY_ID,
+				"role": "editor_working_copy",
+				"tiles": [],
+			}
+		)
+		editor_layer_index = roads.size() - 1
+	var editor_layer: Dictionary = roads[editor_layer_index]
+	var editor_tiles = editor_layer.get("tiles", [])
+	if not (editor_tiles is Array):
+		editor_tiles = []
+	for tile in tiles_to_add:
+		editor_tiles.append({"x": tile.x, "y": tile.y})
+	editor_layer["tiles"] = editor_tiles
+	roads[editor_layer_index] = editor_layer
+	terrain_layers["roads"] = roads
+	_session.overworld["terrain_layers"] = terrain_layers
+	return tiles_to_add
+
+func _remove_road_tiles(path_tiles: Array[Vector2i]) -> Array[Vector2i]:
+	var terrain_layers := _terrain_layers()
+	var roads = terrain_layers.get("roads", [])
+	if not (roads is Array):
+		return []
+	var path_keys := {}
+	for tile in path_tiles:
+		path_keys[_tile_key(tile)] = true
+	var removed_keys := {}
+	for index in range(roads.size()):
+		var road = roads[index]
+		if not (road is Dictionary):
+			continue
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array):
+			continue
+		var updated_tiles := []
+		for tile_value in tiles:
+			if not (tile_value is Dictionary):
+				updated_tiles.append(tile_value)
+				continue
+			var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
+			var key := _tile_key(tile)
+			if path_keys.has(key):
+				removed_keys[key] = tile
+				continue
+			updated_tiles.append(tile_value)
+		road["tiles"] = updated_tiles
+		roads[index] = road
+	if removed_keys.is_empty():
+		return []
+	terrain_layers["roads"] = roads
+	_session.overworld["terrain_layers"] = terrain_layers
+	var removed_tiles: Array[Vector2i] = []
+	for tile in path_tiles:
+		var key := _tile_key(tile)
+		if removed_keys.has(key):
+			removed_tiles.append(tile)
+	return removed_tiles
+
+func _road_tile_keys_from_layers(roads: Array) -> Dictionary:
+	var keys := {}
+	for road in roads:
+		if not (road is Dictionary):
+			continue
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array):
+			continue
+		for tile_value in tiles:
+			if tile_value is Dictionary:
+				keys["%d,%d" % [int(tile_value.get("x", -1)), int(tile_value.get("y", -1))]] = true
+	return keys
+
+func _has_pending_road_path_start() -> bool:
+	return _pending_road_path_start.x >= 0 and _pending_road_path_start.y >= 0 and _tile_in_bounds(_pending_road_path_start)
+
+func _pending_road_path_start_payload() -> Dictionary:
+	if not _has_pending_road_path_start():
+		return {}
+	return {"x": _pending_road_path_start.x, "y": _pending_road_path_start.y}
+
+func _tile_array_payload(tiles: Array[Vector2i]) -> Array:
+	var payload := []
+	for tile in tiles:
+		payload.append({"x": tile.x, "y": tile.y})
+	return payload
 
 func _editor_road_layer_index(roads: Array) -> int:
 	for index in range(roads.size()):
@@ -1786,6 +2024,7 @@ func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_selected_property_object_key"] = _selected_property_object_key
 	_session.flags["editor_pending_move_object_key"] = _pending_move_object_key
 	_session.flags["editor_pending_duplicate_object_key"] = _pending_duplicate_object_key
+	_session.flags["editor_pending_road_path_start"] = _pending_road_path_start_payload()
 	_session.game_state = "overworld"
 	_session.scenario_status = "in_progress"
 	_session.battle = {}
@@ -2203,7 +2442,7 @@ func _apply_visual_theme() -> void:
 			panel.add_theme_stylebox_override("panel", panel_style.duplicate())
 	var button_style := _panel_style(Color(0.16, 0.14, 0.10, 0.86), Color(0.62, 0.52, 0.30, 0.72), 1)
 	var button_hover := _panel_style(Color(0.24, 0.20, 0.13, 0.92), Color(0.82, 0.66, 0.34, 0.90), 1)
-	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _play_button, _menu_button]:
+	for button in [_inspect_tool_button, _terrain_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _play_button, _menu_button]:
 		if button == null:
 			continue
 		button.focus_mode = Control.FOCUS_NONE
@@ -2246,6 +2485,9 @@ func validation_snapshot() -> Dictionary:
 		"pending_move_object": _pending_move_object_payload(),
 		"pending_duplicate_object_key": _pending_duplicate_object_key,
 		"pending_duplicate_object": _pending_duplicate_object_payload(),
+		"pending_road_path_start": _pending_road_path_start_payload(),
+		"road_path_rule": ROAD_PATH_RULE_ID,
+		"road_path_rule_label": ROAD_PATH_RULE_LABEL,
 		"hero_position": {"x": hero_pos.x, "y": hero_pos.y},
 		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
 		"hovered_tile": {"x": _hovered_tile.x, "y": _hovered_tile.y},
@@ -2349,6 +2591,59 @@ func validation_toggle_road(x: int, y: int) -> Dictionary:
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = changed
+	return snapshot
+
+func validation_set_road_path_start(x: int, y: int) -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile outside map.", "path_rule": ROAD_PATH_RULE_ID}
+	_selected_tile = tile
+	_tool = TOOL_ROAD_PATH
+	_pending_road_path_start = tile
+	_last_message = "Road path start set at %d,%d. Apply uses %s." % [x, y, ROAD_PATH_RULE_LABEL]
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = true
+	snapshot["path_rule"] = ROAD_PATH_RULE_ID
+	snapshot["path_rule_label"] = ROAD_PATH_RULE_LABEL
+	return snapshot
+
+func validation_apply_road_path(x: int, y: int, action: String = "toggle") -> Dictionary:
+	var end_tile := Vector2i(x, y)
+	if not _tile_in_bounds(end_tile):
+		return {"ok": false, "message": "Tile outside map.", "path_rule": ROAD_PATH_RULE_ID}
+	if not _has_pending_road_path_start():
+		var missing_snapshot := validation_snapshot()
+		missing_snapshot["ok"] = false
+		missing_snapshot["message"] = "Set a road path start tile before applying the path."
+		missing_snapshot["path_rule"] = ROAD_PATH_RULE_ID
+		missing_snapshot["path_rule_label"] = ROAD_PATH_RULE_LABEL
+		return missing_snapshot
+	var start_tile := _pending_road_path_start
+	_selected_tile = end_tile
+	_tool = TOOL_ROAD_PATH
+	var result := _apply_road_path(start_tile, end_tile, action)
+	if bool(result.get("ok", false)):
+		_pending_road_path_start = Vector2i(-1, -1)
+		_dirty = _dirty or bool(result.get("changed", false))
+	_last_message = String(result.get("message", ""))
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = bool(result.get("ok", false))
+	snapshot["changed"] = bool(result.get("changed", false))
+	snapshot["message"] = String(result.get("message", ""))
+	snapshot["road_path_result"] = result
+	snapshot["road_path_action"] = String(result.get("road_path_action", ""))
+	snapshot["requested_action"] = String(result.get("requested_action", action))
+	snapshot["path_rule"] = String(result.get("path_rule", ROAD_PATH_RULE_ID))
+	snapshot["path_rule_label"] = String(result.get("path_rule_label", ROAD_PATH_RULE_LABEL))
+	snapshot["path_tiles"] = result.get("path_tiles", [])
+	snapshot["changed_tiles"] = result.get("changed_tiles", [])
+	snapshot["path_count"] = int(result.get("path_count", 0))
+	snapshot["affected_count"] = int(result.get("affected_count", 0))
+	snapshot["start_tile"] = result.get("start_tile", {"x": start_tile.x, "y": start_tile.y})
+	snapshot["end_tile"] = result.get("end_tile", {"x": end_tile.x, "y": end_tile.y})
+	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
 	return snapshot
 
 func validation_set_hero_start(x: int, y: int) -> Dictionary:

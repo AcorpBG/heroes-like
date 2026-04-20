@@ -67,6 +67,8 @@ func _run() -> void:
 	if not bool(remove_road_result.get("ok", false)) or bool(remove_road_inspection.get("road", true)):
 		_fail("Map editor smoke: second road toggle did not remove the road from the working copy: %s." % remove_road_result)
 		return
+	if not _assert_road_path_tool(shell):
+		return
 
 	var hero_result: Dictionary = shell.call("validation_set_hero_start", 3, 3)
 	var hero_position: Dictionary = hero_result.get("hero_position", {})
@@ -187,6 +189,101 @@ func _assert_flood_fill_terrain(shell) -> bool:
 	if not bool(noop_result.get("ok", false)) or bool(noop_result.get("changed", true)) or int(noop_result.get("filled_count", -1)) != 0:
 		_fail("Map editor smoke: terrain flood fill did not no-op cleanly on matching active terrain: %s." % noop_result)
 		return false
+	return true
+
+func _assert_road_path_tool(shell) -> bool:
+	if not shell.has_method("validation_set_road_path_start") or not shell.has_method("validation_apply_road_path"):
+		_fail("Map editor smoke: shell did not expose road path validation.")
+		return false
+	var expected_tiles := [
+		Vector2i(8, 8),
+		Vector2i(9, 8),
+		Vector2i(10, 8),
+		Vector2i(11, 8),
+		Vector2i(11, 9),
+		Vector2i(11, 10),
+	]
+	for tile in expected_tiles:
+		var preflight: Dictionary = shell.call("validation_select_tile", tile.x, tile.y)
+		if bool(preflight.get("tile_inspection", {}).get("road", false)):
+			_fail("Map editor smoke: road path test expected a no-road seed tile at %s: %s." % [tile, preflight])
+			return false
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var before_count := int(before_snapshot.get("road_tile_count", 0))
+
+	var start_result: Dictionary = shell.call("validation_set_road_path_start", 8, 8)
+	var pending_start: Dictionary = start_result.get("pending_road_path_start", {})
+	if (
+		not bool(start_result.get("ok", false))
+		or int(pending_start.get("x", -1)) != 8
+		or int(pending_start.get("y", -1)) != 8
+		or String(start_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
+	):
+		_fail("Map editor smoke: road path start did not expose the pending Manhattan L rule state: %s." % start_result)
+		return false
+
+	var add_result: Dictionary = shell.call("validation_apply_road_path", 11, 10)
+	if (
+		not bool(add_result.get("ok", false))
+		or not bool(add_result.get("changed", false))
+		or String(add_result.get("road_path_action", "")) != "add"
+		or String(add_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
+		or int(add_result.get("path_count", 0)) != expected_tiles.size()
+		or int(add_result.get("affected_count", 0)) != expected_tiles.size()
+		or int(add_result.get("road_tile_count", 0)) != before_count + expected_tiles.size()
+		or not _path_payload_matches(add_result.get("path_tiles", []), expected_tiles)
+	):
+		_fail("Map editor smoke: road path add did not report the expected horizontal-first Manhattan L path: %s." % add_result)
+		return false
+	for tile in expected_tiles:
+		var inspection_result: Dictionary = shell.call("validation_select_tile", tile.x, tile.y)
+		var inspection: Dictionary = inspection_result.get("tile_inspection", {})
+		if not bool(inspection.get("road", false)) or "editor_working_road" not in inspection.get("road_layers", []):
+			_fail("Map editor smoke: road path add did not affect expected tile %s: %s." % [tile, inspection_result])
+			return false
+	var elbow_presentation: Dictionary = shell.call("validation_tile_presentation", 11, 8)
+	var elbow_terrain: Dictionary = elbow_presentation.get("terrain_presentation", {})
+	if not bool(elbow_terrain.get("road_overlay", false)) or String(elbow_terrain.get("road_overlay_id", "")) != "road_dirt":
+		_fail("Map editor smoke: road path did not update the live preview road overlay: %s." % elbow_presentation)
+		return false
+	for outside_tile in [Vector2i(10, 9), Vector2i(8, 9)]:
+		var outside: Dictionary = shell.call("validation_select_tile", outside_tile.x, outside_tile.y)
+		if bool(outside.get("tile_inspection", {}).get("road", false)):
+			_fail("Map editor smoke: road path leaked onto off-path tile %s: %s." % [outside_tile, outside])
+			return false
+
+	var remove_start: Dictionary = shell.call("validation_set_road_path_start", 8, 8)
+	if not bool(remove_start.get("ok", false)):
+		_fail("Map editor smoke: could not set road path start before remove toggle: %s." % remove_start)
+		return false
+	var remove_result: Dictionary = shell.call("validation_apply_road_path", 11, 10)
+	if (
+		not bool(remove_result.get("ok", false))
+		or not bool(remove_result.get("changed", false))
+		or String(remove_result.get("road_path_action", "")) != "remove"
+		or int(remove_result.get("affected_count", 0)) != expected_tiles.size()
+		or int(remove_result.get("road_tile_count", 0)) != before_count
+		or not _path_payload_matches(remove_result.get("path_tiles", []), expected_tiles)
+	):
+		_fail("Map editor smoke: road path toggle did not remove the same Manhattan L path: %s." % remove_result)
+		return false
+	for tile in expected_tiles:
+		var removed_tile: Dictionary = shell.call("validation_select_tile", tile.x, tile.y)
+		if bool(removed_tile.get("tile_inspection", {}).get("road", true)):
+			_fail("Map editor smoke: road path remove left a path tile with road state %s: %s." % [tile, removed_tile])
+			return false
+	return true
+
+func _path_payload_matches(payload: Array, expected_tiles: Array) -> bool:
+	if payload.size() != expected_tiles.size():
+		return false
+	for index in range(expected_tiles.size()):
+		var expected: Vector2i = expected_tiles[index]
+		var value = payload[index]
+		if not (value is Dictionary):
+			return false
+		if int(value.get("x", -999)) != expected.x or int(value.get("y", -999)) != expected.y:
+			return false
 	return true
 
 func _assert_selected_tile_restore(shell) -> bool:
