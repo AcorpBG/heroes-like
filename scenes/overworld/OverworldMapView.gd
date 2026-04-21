@@ -126,6 +126,7 @@ const TERRAIN_TRANSITION_EDGE_MODEL := "bridge_or_shoreline_atlas_frame_lookup"
 const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_context_in_atlas_lookup"
 const TERRAIN_HOMM3_SOURCE_BASIS := "homm3_extracted_local_reference_prototype"
 const TERRAIN_HOMM3_UNSUPPORTED_POLICY := "explicit_grammar_fallback"
+const TERRAIN_HOMM3_INTERIOR_SELECTION_MODEL := "single_stable_base_frame"
 const TERRAIN_TRANSITION_ALPHA := 0.42
 const TERRAIN_TRANSITION_WIDTH_FACTOR := 0.16
 const TERRAIN_TRANSITION_CORNER_ALPHA := 0.34
@@ -196,6 +197,7 @@ var _road_overlay_art: Dictionary = {}
 var _homm3_prototype: Dictionary = {}
 var _homm3_terrain_id_map: Dictionary = {}
 var _homm3_terrain_families: Dictionary = {}
+var _homm3_direct_bridge_pairs: Dictionary = {}
 var _homm3_road_overlays: Dictionary = {}
 var _overworld_art_manifest: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
@@ -2160,7 +2162,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"style_id": _terrain_style_id(terrain),
 		"pattern": _terrain_pattern(terrain),
 		"terrain_noise_profile": "homm3_extracted_atlas_frame" if tile_art_loaded and not homm3_selection.is_empty() else ("quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback"),
-		"terrain_variant_selection": "table_driven_neighbor_mask_with_interior_variants" if tile_art_loaded and not homm3_selection.is_empty() else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
+		"terrain_variant_selection": "table_driven_neighbor_mask_with_stable_interior_base" if tile_art_loaded and not homm3_selection.is_empty() else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
 		"grasslands_base_cohesion": "homm3_grass_atlas_family" if _terrain_group(terrain) == "grasslands" and tile_art_loaded and not homm3_selection.is_empty() else ("grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else ""),
 		"homm3_local_reference_only": bool(homm3_selection.get("local_reference_only", false)),
 		"homm3_terrain_lookup_model": String(homm3_selection.get("terrain_lookup_model", "")),
@@ -2170,7 +2172,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_selection_kind": String(homm3_selection.get("selection_kind", "")),
 		"homm3_mask_key": String(homm3_selection.get("mask_key", "")),
 		"homm3_bridge_family": String(homm3_selection.get("bridge_family", "")),
+		"homm3_bridge_resolution_model": String(homm3_selection.get("bridge_resolution_model", "")),
 		"homm3_shoreline_specific": bool(homm3_selection.get("shoreline_specific", false)),
+		"homm3_interior_frame_selection": String(homm3_selection.get("interior_frame_selection", "")),
+		"homm3_interior_frame_count": int(homm3_selection.get("interior_frame_count", 0)),
+		"homm3_uses_interior_variant_cycle": bool(homm3_selection.get("uses_interior_variant_cycle", false)),
 		"homm3_unsupported_policy": String(homm3_selection.get("unsupported_policy", "")),
 		"homm3_fallback_reason": String(homm3_selection.get("fallback_reason", "")),
 		"homm3_logical_degrade_note": String(homm3_selection.get("logical_degrade_note", "")),
@@ -2194,7 +2200,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
 		"transition_shape_model": "homm3_base_atlas_frame" if not homm3_selection.is_empty() else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
 		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if not homm3_selection.is_empty() else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
-		"transition_selection_rule": "resolve_incompatible_land_through_dirt_or_sand_bridge_tables_and_water_through_shoreline_tables" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
+		"transition_selection_rule": "resolve_direct_family_pairs_before_dirt_or_sand_bridge_tables_and_water_through_shoreline_tables" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
 		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0,
 		"same_group_transition_suppressed": true,
 		"road_overlay": not road_payload.is_empty(),
@@ -2582,6 +2588,7 @@ func _load_terrain_grammar() -> void:
 	_homm3_prototype.clear()
 	_homm3_terrain_id_map.clear()
 	_homm3_terrain_families.clear()
+	_homm3_direct_bridge_pairs.clear()
 	_homm3_road_overlays.clear()
 	var grammar := ContentService.get_terrain_grammar()
 	if grammar.is_empty() and FileAccess.file_exists(TERRAIN_GRAMMAR_PATH):
@@ -2635,6 +2642,21 @@ func _load_homm3_prototype(grammar: Dictionary) -> void:
 			var family = terrain_families.get(family_id, {})
 			if family is Dictionary:
 				_homm3_terrain_families[String(family_id)] = family
+	var direct_bridge_pairs = prototype.get("direct_bridge_pairs", [])
+	if direct_bridge_pairs is Array:
+		for pair_value in direct_bridge_pairs:
+			if not (pair_value is Dictionary):
+				continue
+			var pair: Dictionary = pair_value
+			var families = pair.get("families", [])
+			if not (families is Array) or families.size() != 2:
+				continue
+			var first_family := String(families[0]).strip_edges()
+			var second_family := String(families[1]).strip_edges()
+			if first_family == "" or second_family == "":
+				continue
+			_homm3_direct_bridge_pairs["%s|%s" % [first_family, second_family]] = pair
+			_homm3_direct_bridge_pairs["%s|%s" % [second_family, first_family]] = pair
 	var road_overlays = prototype.get("road_overlays", {})
 	if road_overlays is Dictionary:
 		for overlay_id in road_overlays.keys():
@@ -2865,8 +2887,12 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		"frame_id": frame_id,
 		"selection_kind": selection_kind,
 		"mask_key": mask_key,
-		"bridge_family": String(config.get("bridge_family", family.get("bridge_family", ""))),
+		"bridge_family": String(relation.get("bridge_family", config.get("bridge_family", family.get("bridge_family", "")))),
+		"bridge_resolution_model": String(relation.get("bridge_resolution_model", "receiver_bridge_family_default")),
 		"shoreline_specific": bool(family.get("shoreline_specific", false)),
+		"interior_frame_selection": _homm3_interior_frame_selection_model(),
+		"interior_frame_count": _homm3_interior_frame_count(family),
+		"uses_interior_variant_cycle": false,
 		"fallback_reason": fallback_reason,
 		"logical_degrade_note": String(config.get("logical_degrade_note", "")),
 		"relation": relation,
@@ -2879,12 +2905,23 @@ func _homm3_lookup_frame(lookup, mask_key: String) -> String:
 		return String(lookup.get(mask_key, "")).strip_edges()
 	return ""
 
-func _homm3_interior_frame(family: Dictionary, tile: Vector2i, terrain_id: String) -> String:
+func _homm3_interior_frame_selection_model() -> String:
+	return String(_homm3_prototype.get("interior_frame_selection_model", TERRAIN_HOMM3_INTERIOR_SELECTION_MODEL)).strip_edges()
+
+func _homm3_interior_frame_count(family: Dictionary) -> int:
+	var interior_frames = family.get("interior_frames", [])
+	if not (interior_frames is Array) or interior_frames.is_empty():
+		return 0
+	return interior_frames.size()
+
+func _homm3_interior_frame(family: Dictionary, _tile: Vector2i, _terrain_id: String) -> String:
+	var primary_frame := String(family.get("primary_interior_frame", "")).strip_edges()
+	if primary_frame != "":
+		return primary_frame
 	var interior_frames = family.get("interior_frames", [])
 	if not (interior_frames is Array) or interior_frames.is_empty():
 		return ""
-	var index := _deterministic_art_index(tile, terrain_id, interior_frames.size())
-	return String(interior_frames[index]).strip_edges()
+	return String(interior_frames[0]).strip_edges()
 
 func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dictionary:
 	var config := _homm3_terrain_config(terrain_id)
@@ -2917,6 +2954,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 			continue
 		corner_sources.append(source)
 		corner_keys.append(String(source.get("direction", "")))
+	var resolved_bridge_family := _homm3_bridge_family_from_sources(cardinal_sources, corner_sources, bridge_family)
 	if bool(family.get("shoreline_specific", false)):
 		if not cardinal_keys.is_empty() or not corner_keys.is_empty():
 			selection_kind = "water_shoreline"
@@ -2928,10 +2966,49 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 		"mask_key": mask_key,
 		"edge_mask": _homm3_compact_mask_from_keys(cardinal_keys),
 		"corner_mask": _homm3_compact_mask_from_keys(corner_keys),
-		"bridge_family": bridge_family,
+		"bridge_family": resolved_bridge_family,
+		"bridge_resolution_model": _homm3_bridge_resolution_model_from_sources(cardinal_sources, corner_sources),
 		"cardinal_sources": cardinal_sources,
 		"corner_sources": corner_sources,
 	}
+
+func _homm3_bridge_family_from_sources(cardinal_sources: Array, corner_sources: Array, fallback_bridge_family: String) -> String:
+	for source_array in [cardinal_sources, corner_sources]:
+		for source_value in source_array:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			if bool(source.get("uses_direct_bridge_pair", false)):
+				var direct_family := String(source.get("resolved_bridge_family", "")).strip_edges()
+				if direct_family != "":
+					return direct_family
+	for source_array in [cardinal_sources, corner_sources]:
+		for source_value in source_array:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var resolved_family := String(source.get("resolved_bridge_family", "")).strip_edges()
+			if resolved_family != "":
+				return resolved_family
+	return fallback_bridge_family
+
+func _homm3_bridge_resolution_model_from_sources(cardinal_sources: Array, corner_sources: Array) -> String:
+	for source_array in [cardinal_sources, corner_sources]:
+		for source_value in source_array:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			if bool(source.get("uses_direct_bridge_pair", false)):
+				return String(source.get("bridge_resolution_model", "direct_family_pair_lookup"))
+	for source_array in [cardinal_sources, corner_sources]:
+		for source_value in source_array:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var model := String(source.get("bridge_resolution_model", "")).strip_edges()
+			if model != "":
+				return model
+	return "receiver_bridge_family_default"
 
 func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: String, check: Dictionary) -> Dictionary:
 	var direction := String(check.get("label", ""))
@@ -2959,6 +3036,15 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 	if not receiver_is_water and neighbor_is_water:
 		return {}
 	var relation_kind := "shoreline_land_neighbor" if receiver_is_water else "bridge_base_resolution"
+	var default_bridge_family := String(receiver_config.get("bridge_family", receiver_family_config.get("bridge_family", ""))).strip_edges()
+	var direct_bridge_pair := _homm3_direct_bridge_pair(receiver_family, neighbor_family)
+	var resolved_bridge_family := "" if receiver_is_water else default_bridge_family
+	var bridge_resolution_model := "shoreline_specific_lookup" if receiver_is_water else "receiver_bridge_family_default"
+	if not receiver_is_water and not direct_bridge_pair.is_empty():
+		var pair_bridge_family := String(direct_bridge_pair.get("bridge_family", "")).strip_edges()
+		if pair_bridge_family != "":
+			resolved_bridge_family = pair_bridge_family
+			bridge_resolution_model = String(direct_bridge_pair.get("selection_model", "direct_family_pair_lookup"))
 	return {
 		"direction": direction,
 		"source_terrain": neighbor_terrain,
@@ -2967,10 +3053,17 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 		"receiver_terrain": receiver_terrain,
 		"receiver_group": _terrain_group(receiver_terrain),
 		"receiver_family": receiver_family,
-		"resolved_bridge_family": "" if receiver_is_water else String(receiver_config.get("bridge_family", receiver_family_config.get("bridge_family", ""))),
+		"resolved_bridge_family": resolved_bridge_family,
+		"bridge_resolution_model": bridge_resolution_model,
+		"uses_direct_bridge_pair": not receiver_is_water and not direct_bridge_pair.is_empty(),
 		"relation_kind": relation_kind,
 		"neighbor": {"x": neighbor.x, "y": neighbor.y},
 	}
+
+func _homm3_direct_bridge_pair(receiver_family: String, neighbor_family: String) -> Dictionary:
+	var key := "%s|%s" % [receiver_family.strip_edges(), neighbor_family.strip_edges()]
+	var pair = _homm3_direct_bridge_pairs.get(key, {})
+	return pair if pair is Dictionary else {}
 
 func _homm3_mask_key_from_keys(keys: Array[String]) -> String:
 	var ordered := []

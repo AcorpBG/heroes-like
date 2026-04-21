@@ -26,6 +26,36 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Terrain Base Selection Tightening
+Status: completed on 2026-04-21 as a narrow corrective terrain pass.
+
+Purpose:
+- Address AcOrP's feedback that the HoMM3 local terrain prototype still reads as a fake repeated interior tile quilt.
+- Keep direct dirt/swamp transition resolution on the direct dirt bridge-pair path instead of allowing the generic sand bridge path.
+- Keep the map editor preview and live overworld rendering on the same `OverworldMapView` validation surface.
+
+Scope:
+- Stop HoMM3 interior frame selection from using the old deterministic 3x3 patch variant cycle.
+- Add an explicit direct dirt/swamp bridge-pair override before the generic dirt/sand bridge fallback.
+- Extend repo, overworld, map-editor, and ninefold smoke coverage for the stable interior base and direct dirt/swamp transition path.
+
+Implemented:
+- `OverworldMapView` now selects a single stable HoMM3 interior base frame rather than cycling interior frames by 3x3 patch hash.
+- `content/terrain_grammar.json` declares a direct dirt/swamp bridge-pair override, and the renderer resolves that direct pair before falling back to the generic receiver bridge family.
+- Live and map-editor validation payloads now report the stable interior selection model, no interior variant cycling, and the direct bridge-pair resolution model.
+- Map-editor smoke covers controlled dirt->swamp and swamp->dirt preview transitions; ninefold smoke covers a natural swamp/dirt transition; overworld/ninefold smoke cover stable interior base reporting; repo validation covers the grammar/manifest contract.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not a terrain architecture rewrite, gameplay/pathing/save/editor schema change, object/town/UI pass, or shippable asset change.
+- Existing editor base terrain option narrowing remains intact.
+
 ## Current Implementation Slice: HoMM3 Base Terrain Picker Options
 Status: completed on 2026-04-21 as a narrow map editor option-surface correction.
 

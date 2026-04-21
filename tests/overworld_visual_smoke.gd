@@ -709,8 +709,12 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: overworld terrain does not expose the HoMM3 extracted-atlas base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_interior_variants" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
-		push_error("Overworld smoke: grass terrain does not expose the table-driven HoMM3 neighbor-mask lookup contract. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_stable_interior_base" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
+		push_error("Overworld smoke: grass terrain does not expose the table-driven HoMM3 stable-base lookup contract. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if String(grass_terrain.get("homm3_interior_frame_selection", "")) != "single_stable_base_frame" or bool(grass_terrain.get("homm3_uses_interior_variant_cycle", true)):
+		push_error("Overworld smoke: HoMM3 terrain interior frames still report patch-hash variant cycling. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if not bool(grass_terrain.get("homm3_local_reference_only", false)) or String(grass_terrain.get("tile_art_source_basis", "")) != "homm3_extracted_local_reference_prototype":

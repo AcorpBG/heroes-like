@@ -153,7 +153,29 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	if String(shoreline.get("homm3_selection_kind", "")) != "water_shoreline" or not bool(shoreline.get("homm3_shoreline_specific", false)) or String(shoreline.get("homm3_terrain_atlas", "")) != "watrtl":
 		_fail("Ninefold smoke: water/coast terrain did not use shoreline-specific HoMM3 lookup beside land: %s." % shoreline_presentation)
 		return false
+	if not _assert_direct_dirt_swamp_transition(shell, session):
+		return false
 	if not _assert_horizontal_transition_orientation(shell, session):
+		return false
+	return true
+
+func _assert_direct_dirt_swamp_transition(shell: Node, session) -> bool:
+	var swamp_receiver := Vector2i(28, 13)
+	var dirt_source := Vector2i(27, 13)
+	_reveal_validation_tiles(session, [swamp_receiver, dirt_source])
+	var swamp_presentation: Dictionary = shell.call("validation_tile_presentation", swamp_receiver.x, swamp_receiver.y)
+	var swamp_terrain: Dictionary = swamp_presentation.get("terrain_presentation", {})
+	if (
+		String(swamp_terrain.get("terrain", "")) != "swamp"
+		or String(swamp_terrain.get("homm3_terrain_family", "")) != "swamp"
+		or String(swamp_terrain.get("homm3_terrain_atlas", "")) != "swmptl"
+		or String(swamp_terrain.get("transition_edge_mask", "")) != "W"
+		or String(swamp_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(swamp_terrain.get("homm3_bridge_family", "")) != "dirt"
+		or String(swamp_terrain.get("homm3_bridge_resolution_model", "")) != "direct_family_pair_lookup"
+		or not _transition_sources_include_bridge(swamp_terrain, "W", "plains", "dirt", "direct_family_pair_lookup")
+	):
+		_fail("Ninefold smoke: direct swamp/dirt transition routed away from the direct dirt bridge pair: %s." % swamp_presentation)
 		return false
 	return true
 
@@ -196,6 +218,22 @@ func _transition_sources_include(terrain: Dictionary, direction: String, source_
 			continue
 		var source: Dictionary = source_value
 		if String(source.get("direction", "")) == direction and String(source.get("source_terrain", "")) == source_terrain:
+			return true
+	return false
+
+func _transition_sources_include_bridge(terrain: Dictionary, direction: String, source_terrain: String, bridge_family: String, bridge_model: String) -> bool:
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		if (
+			String(source.get("direction", "")) == direction
+			and String(source.get("source_terrain", "")) == source_terrain
+			and String(source.get("resolved_bridge_family", "")) == bridge_family
+			and String(source.get("bridge_resolution_model", "")) == bridge_model
+			and bool(source.get("uses_direct_bridge_pair", false))
+		):
 			return true
 	return false
 
@@ -304,8 +342,11 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if String(terrain_presentation.get("primary_base_model", "")) != "homm3_local_reference_prototype" or String(terrain_presentation.get("terrain_noise_profile", "")) != "homm3_extracted_atlas_frame":
 		_fail("Ninefold smoke: large-map starting terrain does not expose the HoMM3 extracted-atlas base model: %s." % town_presentation)
 		return false
-	if String(terrain_presentation.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_interior_variants" or String(terrain_presentation.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
-		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the table-driven HoMM3 lookup contract: %s." % town_presentation)
+	if String(terrain_presentation.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_stable_interior_base" or String(terrain_presentation.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
+		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the table-driven HoMM3 stable-base lookup contract: %s." % town_presentation)
+		return false
+	if String(terrain_presentation.get("homm3_interior_frame_selection", "")) != "single_stable_base_frame" or bool(terrain_presentation.get("homm3_uses_interior_variant_cycle", true)):
+		_fail("Ninefold smoke: large-map starting terrain still reports HoMM3 interior patch-variant cycling: %s." % town_presentation)
 		return false
 	if String(terrain_presentation.get("visible_terrain_grid_mode", "")) != "fog_boundary_only" or float(terrain_presentation.get("visible_terrain_grid_alpha", 1.0)) > 0.01 or bool(terrain_presentation.get("explored_intertile_seams", true)):
 		_fail("Ninefold smoke: large-map visible terrain still reports per-cell black grid seams: %s." % town_presentation)
