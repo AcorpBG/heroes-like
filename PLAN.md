@@ -26,6 +26,73 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Terrain Renderer Data Contract Groundwork
+Status: completed on 2026-04-21 as a renderer/data-contract groundwork pass.
+
+Purpose:
+- Start the HoMM3 terrain renderer rewrite from the reconstruction plan by making atlas roles, bridge classes, frame blocks, special systems, and provisional unknowns explicit in the local prototype data contract.
+- Keep live overworld and `MapEditorShell` preview parity through the shared `OverworldMapView` validation path while avoiding gameplay/pathing, save-format, editor-schema, and asset-pipeline changes.
+
+Implemented:
+- `content/terrain_grammar.json` now declares `homm3_renderer_data_contract.v1`, atlas-role metadata, bridge-class metadata, source-level frame blocks, direct bridge pairs, routed bridge rules, and provisional/unresolved fallback policies.
+- `sandtl`, `watrtl`, and `rocktl` are no longer treated as generic land edge-mask sources. Sand is base/decor bridge material, water stays on the shoreline system, and rock stays on the rock/void special-system path.
+- Grass/sand metadata now names the `grastl` native-to-sand block directly instead of implying a separate extracted `tgrs` source.
+- `OverworldMapView` now loads routed bridge rules, separates receiver-family payload metadata from frame lookup, reports atlas role/source-level/bridge-source/special-system fields in validation payloads, and keeps the existing local prototype lookup path alive.
+- Map-editor and live-overworld smoke coverage now asserts the new metadata contract for sand base context, grass/sand propagation, water shoreline metadata, and rock special-system metadata.
+- Fixed malformed indentation from the first rewrite attempt in `OverworldMapView.gd` and `tests/overworld_visual_smoke.gd` so Godot can load the scripts and the smoke scenes no longer cascade.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not the full stamp/restamp rewrite, exact original lookup-table recovery, gameplay/pathing change, save-format change, editor-schema change, or shippable terrain-art replacement.
+- Receiver-centered transition shortcuts still exist for currently covered land masks until later slices replace them with data-driven stamp tables.
+- Exact land stamp offsets, mixed junction topology, water inlet topology, rock topology/passability, `subbtl` preferred bridge class, and original variant-selection policies remain unresolved and must stay data-driven.
+
+## Current Implementation Slice: HoMM3 Terrain Renderer Rewrite Plan
+Status: completed on 2026-04-21 as a planning/specification pass.
+
+Purpose:
+- Turn the mature HoMM3 terrain reconstruction evidence into a concrete renderer rewrite sequence without changing renderer code, tests, runtime assets, terrain grammar behavior, gameplay/pathing, save data, or editor schema in this pass.
+- Preserve the live overworld and `MapEditorShell` preview parity contract by requiring both surfaces to keep using the same `OverworldMapView` validation path in future implementation slices.
+
+Implemented:
+- Added `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-renderer-rewrite-plan.md` as the source-driven rewrite plan.
+- The plan explicitly separates land receiver-family lookup, bridge material selection, special `watrtl` water shoreline handling, special `rocktl` rock/void handling, stamp footprint/repaint-order behavior, road overlay preservation, and data-driven provisional unknowns.
+- The future slice order starts with data contract audit and receiver-family interior lookup before bridge material routing, full land stamp lookup, editor restamp behavior, water, rock, dirt/sand tightening, road regression, and original-art replacement planning.
+- The plan records current prototype mismatches to correct later, including receiver-centered mask shortcuts, stale grass-sand extraction wording, normal-family treatment of rock, and provisional `subbtl` bridge-class assumptions.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json`
+- Passed `git diff --check`
+
+Limits:
+- This is not a renderer rewrite, terrain grammar runtime change, runtime asset change, gameplay/pathing/save/editor-schema change, test change, or claim that the original HoMM3 executable's hidden lookup tables have been recovered.
+- Exact land stamp offsets, terrain priority ordering, mixed junction topology, water inlet ownership, rock topology/passability, `subbtl` preferred class, and original variant-selection policies remain unresolved and must stay data-driven.
+
+## Current Implementation Slice: HoMM3 Terrain Reconstruction Lookup Spec
+Status: completed on 2026-04-21 as an evidence/specification pass.
+
+Purpose:
+- Convert the gathered HoMM3 terrain frame labels, transform-equivalence audit, analysis sheets, and AcOrP editor observations into a reconstruction-ready lookup specification for a later renderer rewrite.
+- Keep the work out of renderer code, terrain grammar behavior, runtime art staging, and smoke-test expectations.
+
+Implemented:
+- Added `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-reconstruction-spec.json` with explicit fact, editor-observation, inference, provisional, and unresolved source levels.
+- Covered terrain family classes, bridge classes, atlas roles, grass receiving dirt/sand as shared behavior, grass/swamp routed through dirt bridge logic, anchored directional paint-stamp behavior, road topology transforms, shoreline topology transforms, unresolved offset tables, and renderer rewrite order.
+- Added a small cross-reference in `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-system-reconstruction.md`.
+
+Validation:
+- Passed `python3 -m json.tool /root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-reconstruction-spec.json`
+
+Limits:
+- This is not a renderer change, terrain grammar change, runtime asset change, gameplay/pathing/save/editor-schema change, or claim that the original HoMM3 executable's exact hidden lookup table has been recovered.
+- Exact land-transition offset tables, multi-family priority ordering, grass/swamp bridge composition, rock/void topology, water inlet topology, and original variant-selection policies remain unresolved.
+
 ## Current Implementation Slice: HoMM3 Terrain Evidence Labeling
 Status: completed on 2026-04-21 as a documentation/evidence pass.
 
@@ -37,7 +104,7 @@ Implemented:
 - Replaced the speculative terrain reconstruction artifact in `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-system-reconstruction.md` with source-driven frame-block labels.
 - Added `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-frame-labels.json` as a machine-readable reference for later renderer work.
 - Generated local enlarged contact sheets under `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/analysis-sheets/` to support frame-block inspection.
-- Corrected prior assumptions: `rougtl` is a real 79-frame terrain DEF; `sandtl` reads as sand interiors/decor, not a generic edge-mask atlas; no extracted `tgrs` DEF/JSON exists in the artifact tree; `rocktl` needs separate rock/void treatment.
+- Corrected prior assumptions: `rougtl` is a real 79-frame terrain DEF; `sandtl` reads as sand interiors/decor, not a generic edge-mask atlas; no separate extracted grass-sand DEF/JSON exists in the artifact tree; `rocktl` needs separate rock/void treatment.
 
 Validation:
 - Passed `python3 -m json.tool /root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-frame-labels.json`
@@ -52,12 +119,12 @@ Status: completed on 2026-04-21 as a narrow corrective terrain pass.
 Purpose:
 - Retarget AcOrP's single-sand-in-grass repro after the prior one-ring-only assumption was corrected.
 - Keep the map editor preview and live overworld renderer on the same `OverworldMapView` HoMM3 local-reference selection path.
-- Ground the change in the extracted local HoMM3 evidence already present in the task artifacts, especially the `tgrs` grass-sand transition block that maps to `grastl` frames `00_20` through `00_39`.
+- Ground the change in the extracted local HoMM3 evidence already present in the task artifacts, especially the `grastl` native-to-sand transition block at frames `00_20` through `00_39`.
 
 Implemented:
 - Removed the fake one-ring cap and the discarded self-contained sand receiver policy from the local HoMM3 prototype contract.
-- Added an explicit grass/sand direct bridge-pair route and a sand-specific grass edge lookup so direct grass receivers use the extracted `tgrs` frames instead of generic dirt bridge frames.
-- Added a compact 5x4 grass-sand propagated stamp grid with axis flips, so diagonal/corner receivers and farther stamp-covered receivers can select rotated `tgrs` frames where the lookup provides them.
+- Added an explicit grass/sand direct bridge-pair route and a sand-specific grass edge lookup so direct grass receivers use `grastl` native-to-sand frames instead of generic dirt bridge frames.
+- Added a compact 5x4 grass-sand propagated stamp grid with axis flips, so diagonal/corner receivers and farther stamp-covered receivers can select rotated `grastl` native-to-sand frames where the lookup provides them.
 - Extended `OverworldMapView` validation payloads to expose propagated transition sources, source offsets, source distance, second-ring use, and frame flips for both editor preview and live overworld tests.
 - Replaced the previous one-ring smoke assertions with editor/live coverage for center sand transition lookup, grass-sand edge frames, rotated diagonal stamp frames, second-ring propagation, and no propagation outside the explicit stamp lookup.
 
