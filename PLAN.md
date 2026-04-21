@@ -26,7 +26,23 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: HoMM3 Full Land Receiver Stamp Lookup
+## Current Implementation Slice: HoMM3 Editor Restamp Behavior Model
+Status: in progress on 2026-04-21 as the next narrow renderer rewrite slice.
+
+Purpose:
+- Make map-editor terrain paint/restamp behavior explicit and testable after the full land receiver stamp lookup slice.
+- Keep editor preview and live overworld terrain metadata coherent through the shared `OverworldMapView` validation path.
+- Preserve bridge material resolution, full receiver stamp table lookup, water/rock special systems, roads, gameplay/pathing, fog, panning, selection, save data, object logic, and reserved mixed-junction handling.
+
+Planned scope:
+- Declare the editor restamp behavior model in `content/terrain_grammar.json` with source-level metadata and known single-paint receiver offsets.
+- Expose paint/restamp metadata from the shared map view validation payload rather than adding an editor-only renderer path.
+- Add map-editor smoke fixtures for ordered paint behavior and restamped receiver payloads.
+
+Limits:
+- This is not a gameplay/pathing rewrite, save-format change, object/town logic change, exact original executable lookup recovery, water/rock rewrite, dirt/sand tightening pass, or original-art replacement plan.
+
+## Completed Implementation Slice: HoMM3 Full Land Receiver Stamp Lookup
 Status: completed on 2026-04-21 as the next narrow renderer rewrite slice.
 
 Purpose:

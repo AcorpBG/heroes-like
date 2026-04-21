@@ -127,6 +127,8 @@ const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_context_in_atlas_lookup"
 const TERRAIN_HOMM3_SOURCE_BASIS := "homm3_extracted_local_reference_prototype"
 const TERRAIN_HOMM3_UNSUPPORTED_POLICY := "explicit_grammar_fallback"
 const TERRAIN_HOMM3_INTERIOR_SELECTION_MODEL := "single_stable_base_frame"
+const TERRAIN_EDITOR_RESTAMP_MODEL := "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1"
+const TERRAIN_EDITOR_RESTAMP_SCOPE := "map_editor_preview_metadata_only"
 const TERRAIN_TRANSITION_ALPHA := 0.42
 const TERRAIN_TRANSITION_WIDTH_FACTOR := 0.16
 const TERRAIN_TRANSITION_CORNER_ALPHA := 0.34
@@ -1969,6 +1971,9 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"town_presentation": town_presentation,
 	}
 
+func validation_editor_restamp_payload(tile: Vector2i) -> Dictionary:
+	return _homm3_editor_restamp_payload(tile)
+
 func validation_town_presentation_profiles() -> Array:
 	var profiles := []
 	if _session == null:
@@ -2224,6 +2229,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_stamp_mixed_junction_reserved": bool(homm3_selection.get("stamp_mixed_junction_reserved", false)),
 		"homm3_stamp_mixed_junction_policy": String(homm3_selection.get("stamp_mixed_junction_policy", "")),
 		"homm3_stamp_reserved_mixed_junction_frame_ranges": homm3_selection.get("stamp_reserved_mixed_junction_frame_ranges", []),
+		"homm3_editor_restamp_model": _homm3_editor_restamp_model(),
+		"homm3_editor_restamp_scope": _homm3_editor_restamp_scope(),
+		"homm3_editor_restamp_source_level": _homm3_editor_restamp_source_level(),
+		"homm3_editor_restamp_renderer_evaluation_model": _homm3_editor_restamp_renderer_evaluation_model(),
+		"homm3_editor_restamp_logical_map_write_model": _homm3_editor_restamp_logical_map_write_model(),
 		"homm3_direct_bridge_material_contact": bool(homm3_selection.get("direct_bridge_material_contact", false)),
 		"homm3_preferred_bridge_class_used": bool(homm3_selection.get("preferred_bridge_class_used", false)),
 		"homm3_shoreline_specific": bool(homm3_selection.get("shoreline_specific", false)),
@@ -3208,6 +3218,154 @@ func _homm3_land_receiver_stamp_table(bridge_family: String) -> Dictionary:
 		return {}
 	var table = tables.get(bridge_family.strip_edges(), {})
 	return table if table is Dictionary else {}
+
+func _homm3_editor_restamp_behavior() -> Dictionary:
+	var behavior = _homm3_land_receiver_stamp_lookup.get("editor_restamp_behavior", {})
+	return behavior if behavior is Dictionary else {}
+
+func _homm3_editor_restamp_model() -> String:
+	var behavior := _homm3_editor_restamp_behavior()
+	var model := String(behavior.get("model", "")).strip_edges()
+	return model if model != "" else TERRAIN_EDITOR_RESTAMP_MODEL
+
+func _homm3_editor_restamp_scope() -> String:
+	var behavior := _homm3_editor_restamp_behavior()
+	var scope := String(behavior.get("scope", "")).strip_edges()
+	return scope if scope != "" else TERRAIN_EDITOR_RESTAMP_SCOPE
+
+func _homm3_editor_restamp_source_level() -> String:
+	var behavior := _homm3_editor_restamp_behavior()
+	return String(behavior.get("source_level", "")).strip_edges()
+
+func _homm3_editor_restamp_renderer_evaluation_model() -> String:
+	var behavior := _homm3_editor_restamp_behavior()
+	return String(behavior.get("renderer_evaluation_model", "")).strip_edges()
+
+func _homm3_editor_restamp_logical_map_write_model() -> String:
+	var behavior := _homm3_editor_restamp_behavior()
+	return String(behavior.get("logical_map_write_model", "")).strip_edges()
+
+func _homm3_editor_restamp_offset_entries() -> Array:
+	var behavior := _homm3_editor_restamp_behavior()
+	var raw_offsets = behavior.get("known_receiver_offsets_from_single_paint", [])
+	if not (raw_offsets is Array) or raw_offsets.is_empty():
+		raw_offsets = _homm3_land_receiver_stamp_lookup.get("known_changed_offsets_from_single_paint", [])
+	var entries := []
+	if not (raw_offsets is Array):
+		return entries
+	for offset_value in raw_offsets:
+		if not (offset_value is Dictionary):
+			continue
+		var offset_dict = offset_value.get("offset_from_painted_tile", {})
+		if not (offset_dict is Dictionary):
+			continue
+		var offset := Vector2i(int(offset_dict.get("x", 0)), int(offset_dict.get("y", 0)))
+		var direction := String(offset_value.get("direction", "")).strip_edges()
+		if direction == "":
+			direction = _homm3_direction_from_offset(offset)
+		if direction == "":
+			continue
+		entries.append({
+			"direction": direction,
+			"role": String(offset_value.get("role", "known_receiver_restamped_by_single_paint")),
+			"offset": offset,
+		})
+	return entries
+
+func _homm3_editor_restamp_payload(painted_tile: Vector2i) -> Dictionary:
+	var behavior := _homm3_editor_restamp_behavior()
+	var offset_entries := _homm3_editor_restamp_offset_entries()
+	var restamp_tiles := []
+	restamp_tiles.append(_homm3_editor_restamp_tile_payload(painted_tile, Vector2i.ZERO, "SELF", "painted_source_tile", 0))
+	var known_receiver_offsets := []
+	var order_index := 1
+	var in_bounds_receiver_count := 0
+	for entry_value in offset_entries:
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var offset: Vector2i = entry.get("offset", Vector2i.ZERO)
+		var direction := String(entry.get("direction", ""))
+		var receiver_payload := _homm3_editor_restamp_tile_payload(
+			painted_tile,
+			offset,
+			direction,
+			String(entry.get("role", "known_receiver_restamped_by_single_paint")),
+			order_index
+		)
+		restamp_tiles.append(receiver_payload)
+		known_receiver_offsets.append({
+			"direction": direction,
+			"offset_from_painted_tile": _vector2i_payload(offset),
+			"receiver_tile": receiver_payload.get("tile", {}),
+			"source_offset_from_receiver": receiver_payload.get("expected_stamp_source_offset", {}),
+		})
+		if bool(receiver_payload.get("in_bounds", false)):
+			in_bounds_receiver_count += 1
+		order_index += 1
+	return {
+		"enabled": not behavior.is_empty(),
+		"model": _homm3_editor_restamp_model(),
+		"source_level": _homm3_editor_restamp_source_level(),
+		"paint_order_source_level": String(behavior.get("paint_order_source_level", "")),
+		"scope": _homm3_editor_restamp_scope(),
+		"logical_map_write_model": _homm3_editor_restamp_logical_map_write_model(),
+		"renderer_evaluation_model": _homm3_editor_restamp_renderer_evaluation_model(),
+		"restamp_anchor": String(behavior.get("restamp_anchor", "painted_source_tile")),
+		"known_receiver_offsets_source_level": String(behavior.get("known_receiver_offsets_source_level", _homm3_land_receiver_stamp_lookup.get("known_changed_offsets_source_level", ""))),
+		"unknown_offsets_policy": String(behavior.get("unknown_offsets_policy", "")),
+		"restamp_payload_model": String(behavior.get("restamp_payload_model", "")),
+		"paint_history_model": String(_homm3_land_receiver_stamp_lookup.get("array_reconstruction_mode", "")),
+		"painted_tile": _vector2i_payload(painted_tile),
+		"known_receiver_offsets": known_receiver_offsets,
+		"known_receiver_count": known_receiver_offsets.size(),
+		"in_bounds_receiver_count": in_bounds_receiver_count,
+		"affected_tile_count": restamp_tiles.size(),
+		"affected_tiles": restamp_tiles,
+		"mixed_junction_policy": String(_homm3_land_receiver_stamp_lookup.get("mixed_junction_policy", "")),
+		"reserved_mixed_junction_frame_ranges": _homm3_land_receiver_stamp_lookup.get("reserved_mixed_junction_frame_ranges", []),
+		"uses_shared_overworld_map_view": true,
+		"gameplay_pathing_unchanged": true,
+		"save_schema_unchanged": true,
+		"object_logic_unchanged": true,
+	}
+
+func _homm3_editor_restamp_tile_payload(
+	painted_tile: Vector2i,
+	offset_from_painted_tile: Vector2i,
+	direction_from_painted_tile: String,
+	role: String,
+	order_index: int
+) -> Dictionary:
+	var tile := painted_tile + offset_from_painted_tile
+	var in_bounds := _tile_in_bounds(tile)
+	var explored := in_bounds and _session != null and OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y)
+	var visible := in_bounds and _session != null and OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
+	var terrain_payload := _terrain_visual_payload(tile, explored, visible) if in_bounds else {}
+	var expected_source_offset := painted_tile - tile
+	return {
+		"role": role,
+		"restamp_order_index": order_index,
+		"direction_from_painted_tile": direction_from_painted_tile,
+		"offset_from_painted_tile": _vector2i_payload(offset_from_painted_tile),
+		"tile": _vector2i_payload(tile),
+		"in_bounds": in_bounds,
+		"explored": explored,
+		"visible": visible,
+		"expected_stamp_source_offset": _vector2i_payload(expected_source_offset),
+		"expected_stamp_source_direction": _homm3_direction_from_offset(expected_source_offset),
+		"stamp_source_matches_painted_tile": role != "painted_source_tile" and _homm3_stamp_source_matches_offset(terrain_payload, expected_source_offset),
+		"terrain_presentation": terrain_payload,
+	}
+
+func _homm3_stamp_source_matches_offset(terrain_payload: Dictionary, expected_source_offset: Vector2i) -> bool:
+	var source_offset = terrain_payload.get("homm3_stamp_source_offset", {})
+	if not (source_offset is Dictionary):
+		return false
+	return int(source_offset.get("x", 999999)) == expected_source_offset.x and int(source_offset.get("y", 999999)) == expected_source_offset.y
+
+func _vector2i_payload(value: Vector2i) -> Dictionary:
+	return {"x": value.x, "y": value.y}
 
 func _homm3_stamp_entry_from_table(table: Dictionary, source_offset: Vector2i) -> Dictionary:
 	if table.is_empty():

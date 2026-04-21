@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T14:44:08Z",
+  "updatedAt": "2026-04-21T15:05:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-full-land-receiver-stamp-lookup-10184",
-  "currentSliceTitle": "Implement HoMM3 full land receiver stamp lookup",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the Full Land Receiver Stamp Lookup rewrite slice. Full receiver land families now use shared source-anchored dirt/sand stamp tables with truthful payload metadata for table id, source direction/offset, selected frame, transform/flip, source levels, and reserved mixed junctions. Bridge material resolver behavior, water/rock special systems, dirt/sand boundaries, road overlays, gameplay/pathing/fog/panning/selection/save/object logic, and live/editor shared resolver parity were preserved and validated.",
+  "currentSliceId": "homm3-editor-restamp-behavior-10184",
+  "currentSliceTitle": "Make HoMM3 editor terrain restamp behavior explicit",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Started the next narrow renderer rewrite slice after full receiver stamp lookup. Scope is editor paint/restamp behavior metadata and validation through the shared OverworldMapView presentation path, preserving bridge material resolution, full receiver stamp lookup, gameplay/pathing/save/object logic, and reserved mixed-junction handling.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -404,6 +404,12 @@
       "title": "Implement HoMM3 full land receiver stamp lookup",
       "status": "completed",
       "difficulty": "high"
+    },
+    {
+      "id": "homm3-editor-restamp-behavior-10184",
+      "title": "Make HoMM3 editor terrain restamp behavior explicit",
+      "status": "in_progress",
+      "difficulty": "medium"
     },
     {
       "id": "river-pass-live-audit",
