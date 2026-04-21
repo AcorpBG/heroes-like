@@ -828,12 +828,16 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 	var center_presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
 	var center_terrain: Dictionary = center_presentation.get("terrain_presentation", {})
 	if (
-		String(center_terrain.get("terrain", "")) != "wastes"
-		or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
-		or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
-		or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
-		or int(center_terrain.get("edge_transition_count", -1)) != 4
+			String(center_terrain.get("terrain", "")) != "wastes"
+			or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
+			or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_material_base_context"
+			or String(center_terrain.get("homm3_atlas_role", "")) != "base_decor_bridge_material"
+			or bool(center_terrain.get("homm3_allows_generic_land_edge_masks", true))
+			or String(center_terrain.get("homm3_selected_frame_block", "")) != "base_context_provisional"
+			or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
+			or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
+			or String(center_terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
+			or int(center_terrain.get("edge_transition_count", -1)) != 4
 		or int(center_terrain.get("corner_transition_count", -1)) != 4
 		or "grass" not in center_terrain.get("transition_source_terrain_ids", [])
 	):
@@ -856,15 +860,17 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 			or String(terrain.get("transition_edge_mask", "")) != String(entry.get("edge", ""))
 			or String(terrain.get("transition_corner_mask", "")) != ""
-			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
-			or String(terrain.get("homm3_bridge_family", "")) != "sand"
-			or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_tgrs_lookup"
-			or int(terrain.get("edge_transition_count", 0)) != 1
+				or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
+				or String(terrain.get("homm3_bridge_family", "")) != "sand"
+				or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_native_to_sand_lookup"
+				or String(terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
+				or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
+				or int(terrain.get("edge_transition_count", 0)) != 1
 			or int(terrain.get("corner_transition_count", -1)) != 0
 			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
 		):
 			_restore_single_sand_fixture(shell, session, original_map, original_fog)
-			push_error("Overworld smoke: live renderer did not select the expected tgrs grass-sand edge frame at %s. presentation=%s" % [tile, presentation])
+			push_error("Overworld smoke: live renderer did not select the expected grastl native-to-sand edge frame at %s. presentation=%s" % [tile, presentation])
 			get_tree().quit(1)
 			return false
 
@@ -884,7 +890,8 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
 			or String(terrain.get("homm3_terrain_frame", "")) != "00_20"
 			or not bool(terrain.get("homm3_propagated_transition", false))
-			or String(terrain.get("homm3_transition_propagation_model", "")) != "extracted_tgrs_4x5_stamp_with_axis_flips"
+				or String(terrain.get("homm3_transition_propagation_model", "")) != "grastl_native_to_sand_4x5_stamp_with_axis_flips"
+				or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
 			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
 			or int(terrain.get("edge_transition_count", -1)) != 0
 			or int(terrain.get("corner_transition_count", -1)) != 1
@@ -893,7 +900,7 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
 		):
 			_restore_single_sand_fixture(shell, session, original_map, original_fog)
-			push_error("Overworld smoke: live renderer did not select the expected rotated tgrs stamp frame at %s. presentation=%s" % [tile, presentation])
+			push_error("Overworld smoke: live renderer did not select the expected rotated grastl native-to-sand stamp frame at %s. presentation=%s" % [tile, presentation])
 			get_tree().quit(1)
 			return false
 
@@ -916,16 +923,24 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
 		):
 			_restore_single_sand_fixture(shell, session, original_map, original_fog)
-			push_error("Overworld smoke: live renderer did not propagate the single sand through the extracted tgrs stamp at %s. presentation=%s" % [tile, presentation])
+			push_error("Overworld smoke: live renderer did not propagate the single sand through the grastl native-to-sand stamp at %s. presentation=%s" % [tile, presentation])
 			get_tree().quit(1)
 			return false
 
 	var outside_tile := center + Vector2i(4, 0)
 	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", outside_tile.x, outside_tile.y)
 	var outside_terrain: Dictionary = outside_presentation.get("terrain_presentation", {})
-	if String(outside_terrain.get("homm3_selection_kind", "")) != "interior" or bool(outside_terrain.get("homm3_propagated_transition", false)):
+	if (
+		String(outside_terrain.get("homm3_selection_kind", "")) != "interior"
+		or bool(outside_terrain.get("homm3_propagated_transition", false))
+		or String(outside_terrain.get("homm3_logical_terrain_id", "")) != "grass"
+		or String(outside_terrain.get("homm3_renderer_family", "")) != "grass"
+		or String(outside_terrain.get("homm3_atlas_role", "")) != "full_receiver_land"
+		or String(outside_terrain.get("homm3_selected_frame_block", "")) != "native_interiors"
+		or String(outside_terrain.get("homm3_selected_frame_block_source_level", "")) != "fact"
+	):
 		_restore_single_sand_fixture(shell, session, original_map, original_fog)
-		push_error("Overworld smoke: live renderer propagated outside the explicit tgrs stamp lookup at %s. presentation=%s" % [outside_tile, outside_presentation])
+		push_error("Overworld smoke: live renderer propagated outside the explicit grastl native-to-sand stamp lookup at %s. presentation=%s" % [outside_tile, outside_presentation])
 		get_tree().quit(1)
 		return false
 

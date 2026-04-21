@@ -5,7 +5,7 @@
   "primary_base_model": "homm3_local_reference_prototype",
   "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering uses a stable base frame for terrain interiors, resolves explicit direct land-family pairs before falling back to dirt or sand bridge/base families, resolves grass-sand through the extracted tgrs/grastl transition block including stamp-style propagation beyond immediate neighbors where that lookup provides frames, resolves water through shoreline-specific lookup, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering uses a stable base frame for terrain interiors, reports logical terrain id, renderer family, atlas role, source level, special-system, bridge-class, and fallback metadata, resolves explicit direct land-family pairs before falling back to data-driven bridge classes, resolves grass-sand through the grastl native-to-sand transition block 00_20 through 00_39, resolves water through shoreline-specific watrtl lookup, keeps rock on a rocktl-specific system, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
     {
       "id": "water",
@@ -65,7 +65,7 @@
     "corner_hints": true,
     "bridge_base_model": "direct_pair_overrides_dirt_or_sand_bridge_base",
     "propagation_model": "explicit_family_transition_stamps_may_extend_beyond_immediate_neighbors",
-    "single_sand_model": "grass_sand_uses_extracted_tgrs_stamp_lookup_without_one_ring_cap",
+    "single_sand_model": "grass_sand_uses_grastl_native_to_sand_stamp_lookup_without_one_ring_cap",
     "water_model": "shoreline_specific_lookup",
     "receiver_rule": "current_tile_selects_family_atlas_frame_from_neighbor_mask",
     "same_group_policy": "suppress_same_homm3_family_edges",
@@ -767,11 +767,69 @@
     "local_reference_only": true,
     "asset_root": "res://art/overworld/runtime/homm3_local_prototype",
     "source_artifact": "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/defs",
+    "data_contract_version": "homm3_renderer_data_contract.v1",
     "terrain_lookup_model": "table_driven_bridge_base_8_neighbor",
     "road_lookup_model": "table_driven_4_neighbor_overlay",
     "interior_frame_selection_model": "single_stable_base_frame",
     "unsupported_policy": "explicit_grammar_fallback",
     "note": "Local prototype only. These extracted original HoMM3 frames are not shippable or redistributable game assets.",
+    "atlas_role_contract": {
+      "full_receiver_land": {
+        "source_level": "fact",
+        "atlases": [
+          "grastl",
+          "rougtl",
+          "snowtl",
+          "swmptl",
+          "lavatl",
+          "subbtl"
+        ],
+        "allows_generic_land_edge_masks": true
+      },
+      "reduced_bridge_receiver": {
+        "source_level": "fact",
+        "atlases": [
+          "dirttl"
+        ],
+        "allows_generic_land_edge_masks": true
+      },
+      "base_decor_bridge_material": {
+        "source_level": "fact",
+        "atlases": [
+          "sandtl"
+        ],
+        "allows_generic_land_edge_masks": false
+      },
+      "shoreline_system": {
+        "source_level": "mixed",
+        "atlases": [
+          "watrtl"
+        ],
+        "allows_generic_land_edge_masks": false
+      },
+      "special_rock_void": {
+        "source_level": "mixed",
+        "atlases": [
+          "rocktl"
+        ],
+        "allows_generic_land_edge_masks": false
+      }
+    },
+    "bridge_classes": {
+      "dirt_earth_bridge": {
+        "renderer_bridge_family": "dirt",
+        "source_level": "editor_observation"
+      },
+      "sand_bridge": {
+        "renderer_bridge_family": "sand",
+        "source_level": "editor_observation"
+      },
+      "subterranean_preferred_class_unresolved": {
+        "renderer_bridge_family": "dirt",
+        "source_level": "provisional",
+        "note": "Subterranean/subbtl has both dirt and sand receiver blocks; the preferred editor transition class is unresolved, so the current dirt-family fallback is explicitly provisional."
+      }
+    },
     "direct_bridge_pairs": [
       {
         "families": [
@@ -779,6 +837,9 @@
           "swamp"
         ],
         "bridge_family": "dirt",
+        "bridge_class": "dirt_earth_bridge",
+        "bridge_source_kind": "direct_bridge_material",
+        "source_level": "inference",
         "selection_model": "direct_family_pair_lookup",
         "note": "Dirt and swamp have a direct local HoMM3 transition path; do not route this pair through the sand bridge family."
       },
@@ -788,14 +849,62 @@
           "sand"
         ],
         "bridge_family": "sand",
-        "selection_model": "direct_grass_sand_tgrs_lookup",
-        "note": "The extracted local reference names grass-sand transition cells as tgrs and places them in grastl frames 00_20 through 00_39, so grass receivers near sand must not use the generic dirt bridge frames."
+        "bridge_class": "sand_bridge",
+        "bridge_source_kind": "direct_bridge_material",
+        "source_level": "fact",
+        "selection_model": "direct_grass_sand_native_to_sand_lookup",
+        "note": "Grass receivers near direct sand use grastl native-to-sand frames 00_20 through 00_39, not a separate extracted grass-sand DEF or JSON source and not the generic dirt bridge frames."
+      }
+    ],
+    "routed_bridge_rules": [
+      {
+        "families": [
+          "grass",
+          "swamp"
+        ],
+        "bridge_family": "dirt",
+        "bridge_class": "dirt_earth_bridge",
+        "bridge_source_kind": "routed_bridge",
+        "selection_model": "grass_swamp_via_dirt_bridge",
+        "source_level": "inference",
+        "note": "Grass/swamp contact is routed through dirt/earth bridge behavior rather than modeled as direct all-to-all native blending."
       }
     ],
     "terrain_families": {
       "grass": {
+        "renderer_family": "grass",
         "atlas": "grastl",
+        "atlas_role": "full_receiver_land",
+        "atlas_role_source_level": "fact",
+        "preferred_bridge_class": "dirt_earth_bridge",
+        "preferred_bridge_family": "dirt",
+        "preferred_bridge_source_level": "editor_observation",
+        "special_system": "",
+        "uses_generic_land_edge_masks": true,
+        "interior_frame_block": "native_interiors",
         "bridge_family": "dirt",
+        "frame_blocks": {
+          "native_to_dirt_transition": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "receiver native-to-dirt transition stamps"
+          },
+          "native_to_sand_transition": {
+            "range": "00_20-00_39",
+            "source_level": "fact",
+            "role": "receiver native-to-sand transition stamps"
+          },
+          "mixed_junction_reserved": {
+            "range": "00_40-00_48,00_77-00_78",
+            "source_level": "unresolved",
+            "role": "reserved mixed bridge junctions"
+          },
+          "native_interiors": {
+            "range": "00_49-00_72",
+            "source_level": "fact",
+            "role": "same-family interiors"
+          }
+        },
         "interior_frames": [
           "00_49",
           "00_50",
@@ -847,9 +956,11 @@
         "propagated_transition_stamps": {
           "sand": {
             "source_family": "sand",
-            "selection_model": "extracted_tgrs_4x5_stamp_with_axis_flips",
-            "source_artifact_prefix": "tgrs",
-            "source_artifact_mapping": "tgrs000..tgrs043 map exactly to grastl frames 00_20..00_39 in the local extracted reference",
+            "bridge_source_kind": "direct_bridge_material",
+            "selection_model": "grastl_native_to_sand_4x5_stamp_with_axis_flips",
+            "source_atlas": "grastl",
+            "source_frame_block": "native_to_sand_transition",
+            "source_artifact_mapping": "grastl frames 00_20 through 00_39 form the native-to-sand transition block in the local extracted reference",
             "source_offset_model": "receiver_minus_source; no flip means sand source lies northwest of the receiver, horizontal/vertical flips rotate that stamp into the other quadrants",
             "frame_grid": [
               [
@@ -887,8 +998,35 @@
         }
       },
       "dirt": {
+        "renderer_family": "dirt",
         "atlas": "dirttl",
+        "atlas_role": "reduced_bridge_receiver",
+        "atlas_role_source_level": "fact",
+        "bridge_material_class": "dirt_earth_bridge",
+        "preferred_bridge_class": "",
+        "preferred_bridge_family": "dirt",
+        "preferred_bridge_source_level": "not_applicable_bridge_material",
+        "special_system": "",
+        "uses_generic_land_edge_masks": true,
+        "interior_frame_block": "dirt_base_interiors",
         "bridge_family": "dirt",
+        "frame_blocks": {
+          "dirt_to_sand_transition": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "dirt receiver transition against sand"
+          },
+          "dirt_receiver_transition": {
+            "range": "00_00-00_19",
+            "source_level": "provisional",
+            "role": "current direct-pair dirt receiver fallback until reduced receiver routing is tightened"
+          },
+          "dirt_base_interiors": {
+            "range": "00_20-00_44",
+            "source_level": "fact",
+            "role": "dirt base/interior candidates"
+          }
+        },
         "interior_frames": [
           "00_21",
           "00_22",
@@ -935,8 +1073,35 @@
         }
       },
       "rock": {
+        "renderer_family": "rock",
         "atlas": "rocktl",
-        "bridge_family": "dirt",
+        "atlas_role": "special_rock_void",
+        "atlas_role_source_level": "mixed",
+        "preferred_bridge_class": "sand_bridge",
+        "preferred_bridge_family": "sand",
+        "preferred_bridge_source_level": "editor_observation",
+        "special_system": "rock_void_cliff",
+        "uses_generic_land_edge_masks": false,
+        "interior_frame_block": "rock_void_interiors",
+        "bridge_family": "sand",
+        "frame_blocks": {
+          "rock_black_void": {
+            "range": "00_00-00_07,00_24-00_31,00_40-00_47",
+            "source_level": "fact",
+            "role": "black/void rock frames"
+          },
+          "rock_light_ground_context": {
+            "range": "00_08-00_23,00_32-00_39",
+            "source_level": "mixed",
+            "role": "rock/cliff against light or pale ground; exact topology unresolved"
+          },
+          "rock_void_interiors": {
+            "range": "00_24-00_44",
+            "source_level": "provisional",
+            "role": "current stable rock/void interior fallback"
+          }
+        },
+        "provisional_fallback_policy": "rocktl topology and passability semantics are unresolved; current lookup remains rock-system-specific and does not use generic land edge masks",
         "interior_frames": [
           "00_24",
           "00_25",
@@ -961,7 +1126,7 @@
           "00_44"
         ],
         "shoreline_specific": false,
-        "bridge_mask_lookup": {
+        "rock_system_lookup": {
           "N": "00_08",
           "E": "00_15",
           "S": "00_12",
@@ -980,8 +1145,36 @@
         }
       },
       "sand": {
+        "renderer_family": "sand",
         "atlas": "sandtl",
+        "atlas_role": "base_decor_bridge_material",
+        "atlas_role_source_level": "fact",
+        "bridge_material_class": "sand_bridge",
+        "preferred_bridge_class": "",
+        "preferred_bridge_family": "sand",
+        "preferred_bridge_source_level": "not_applicable_bridge_material",
+        "special_system": "",
+        "uses_generic_land_edge_masks": false,
+        "interior_frame_block": "sand_base_interiors",
         "bridge_family": "sand",
+        "frame_blocks": {
+          "sand_base_interiors": {
+            "range": "00_00-00_16",
+            "source_level": "fact",
+            "role": "sand base/interior candidates"
+          },
+          "sand_decor": {
+            "range": "00_17-00_23",
+            "source_level": "fact",
+            "role": "sand decor/detail frames"
+          },
+          "base_context_provisional": {
+            "range": "00_00-00_23",
+            "source_level": "provisional",
+            "role": "current base-context fallback; sandtl is not a generic land edge-mask source"
+          }
+        },
+        "provisional_fallback_policy": "sandtl remains base/decor material; current neighbor-context selection is provisional and must not be treated as a recovered land edge-mask table",
         "interior_frames": [
           "00_00",
           "00_01",
@@ -1002,7 +1195,7 @@
           "00_16"
         ],
         "shoreline_specific": false,
-        "bridge_mask_lookup": {
+        "base_context_lookup": {
           "N": "00_08",
           "E": "00_15",
           "S": "00_12",
@@ -1021,8 +1214,39 @@
         }
       },
       "snow": {
+        "renderer_family": "snow",
         "atlas": "snowtl",
+        "atlas_role": "full_receiver_land",
+        "atlas_role_source_level": "fact",
+        "preferred_bridge_class": "dirt_earth_bridge",
+        "preferred_bridge_family": "dirt",
+        "preferred_bridge_source_level": "editor_observation",
+        "special_system": "",
+        "uses_generic_land_edge_masks": true,
+        "interior_frame_block": "native_interiors",
         "bridge_family": "dirt",
+        "frame_blocks": {
+          "native_to_dirt_transition": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "receiver native-to-dirt transition stamps"
+          },
+          "native_to_sand_transition": {
+            "range": "00_20-00_39",
+            "source_level": "fact",
+            "role": "receiver native-to-sand transition stamps"
+          },
+          "mixed_junction_reserved": {
+            "range": "00_40-00_48,00_77-00_78",
+            "source_level": "unresolved",
+            "role": "reserved mixed bridge junctions"
+          },
+          "native_interiors": {
+            "range": "00_49-00_72",
+            "source_level": "fact",
+            "role": "same-family interiors"
+          }
+        },
         "interior_frames": [
           "00_49",
           "00_50",
@@ -1065,8 +1289,39 @@
         }
       },
       "swamp": {
+        "renderer_family": "swamp",
         "atlas": "swmptl",
+        "atlas_role": "full_receiver_land",
+        "atlas_role_source_level": "fact",
+        "preferred_bridge_class": "dirt_earth_bridge",
+        "preferred_bridge_family": "dirt",
+        "preferred_bridge_source_level": "editor_observation",
+        "special_system": "",
+        "uses_generic_land_edge_masks": true,
+        "interior_frame_block": "native_interiors",
         "bridge_family": "dirt",
+        "frame_blocks": {
+          "native_to_dirt_transition": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "receiver native-to-dirt transition stamps"
+          },
+          "native_to_sand_transition": {
+            "range": "00_20-00_39",
+            "source_level": "fact",
+            "role": "receiver native-to-sand transition stamps"
+          },
+          "mixed_junction_reserved": {
+            "range": "00_40-00_48,00_77-00_78",
+            "source_level": "unresolved",
+            "role": "reserved mixed bridge junctions"
+          },
+          "native_interiors": {
+            "range": "00_49-00_72",
+            "source_level": "fact",
+            "role": "same-family interiors"
+          }
+        },
         "interior_frames": [
           "00_49",
           "00_50",
@@ -1109,8 +1364,39 @@
         }
       },
       "lava": {
+        "renderer_family": "lava",
         "atlas": "lavatl",
+        "atlas_role": "full_receiver_land",
+        "atlas_role_source_level": "fact",
+        "preferred_bridge_class": "dirt_earth_bridge",
+        "preferred_bridge_family": "dirt",
+        "preferred_bridge_source_level": "editor_observation",
+        "special_system": "",
+        "uses_generic_land_edge_masks": true,
+        "interior_frame_block": "native_interiors",
         "bridge_family": "dirt",
+        "frame_blocks": {
+          "native_to_dirt_transition": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "receiver native-to-dirt transition stamps"
+          },
+          "native_to_sand_transition": {
+            "range": "00_20-00_39",
+            "source_level": "fact",
+            "role": "receiver native-to-sand transition stamps"
+          },
+          "mixed_junction_reserved": {
+            "range": "00_40-00_48,00_77-00_78",
+            "source_level": "unresolved",
+            "role": "reserved mixed bridge junctions"
+          },
+          "native_interiors": {
+            "range": "00_49-00_72",
+            "source_level": "fact",
+            "role": "same-family interiors"
+          }
+        },
         "interior_frames": [
           "00_49",
           "00_50",
@@ -1153,8 +1439,40 @@
         }
       },
       "subterranean": {
+        "renderer_family": "subterranean",
         "atlas": "subbtl",
+        "atlas_role": "full_receiver_land",
+        "atlas_role_source_level": "fact",
+        "preferred_bridge_class": "unresolved",
+        "preferred_bridge_family": "dirt",
+        "preferred_bridge_source_level": "provisional",
+        "special_system": "",
+        "uses_generic_land_edge_masks": true,
+        "interior_frame_block": "native_interiors",
         "bridge_family": "dirt",
+        "frame_blocks": {
+          "native_to_dirt_transition": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "receiver native-to-dirt transition stamps"
+          },
+          "native_to_sand_transition": {
+            "range": "00_20-00_39",
+            "source_level": "fact",
+            "role": "receiver native-to-sand transition stamps"
+          },
+          "mixed_junction_reserved": {
+            "range": "00_40-00_48,00_77-00_78",
+            "source_level": "unresolved",
+            "role": "reserved mixed bridge junctions"
+          },
+          "native_interiors": {
+            "range": "00_49-00_72",
+            "source_level": "fact",
+            "role": "same-family interiors"
+          }
+        },
+        "provisional_fallback_policy": "subbtl preferred bridge class is unresolved; current dirt-family fallback is data-driven and provisional",
         "interior_frames": [
           "00_49",
           "00_50",
@@ -1197,8 +1515,30 @@
         }
       },
       "water": {
+        "renderer_family": "water",
         "atlas": "watrtl",
+        "atlas_role": "shoreline_system",
+        "atlas_role_source_level": "mixed",
+        "preferred_bridge_class": "sand_bridge",
+        "preferred_bridge_family": "sand",
+        "preferred_bridge_source_level": "editor_observation",
+        "special_system": "water_shoreline",
+        "uses_generic_land_edge_masks": false,
+        "interior_frame_block": "open_water_interiors",
         "bridge_family": "sand",
+        "frame_blocks": {
+          "shoreline_frames": {
+            "range": "00_00-00_19",
+            "source_level": "fact",
+            "role": "watrtl shoreline frames owned by water tiles"
+          },
+          "open_water_interiors": {
+            "range": "00_20-00_32",
+            "source_level": "fact",
+            "role": "open-water interiors"
+          }
+        },
+        "unresolved_fallback_policy": "water-through-sand is a preferred bridge-class input before watrtl shoreline lookup; sandtl does not own shoreline pixels in current evidence",
         "interior_frames": [
           "00_20",
           "00_21",
@@ -1258,15 +1598,18 @@
       },
       "hills": {
         "family": "rock",
-        "bridge_family": "dirt"
+        "bridge_family": "sand",
+        "bridge_family_source_level": "editor_observation"
       },
       "ridge": {
         "family": "rock",
-        "bridge_family": "dirt"
+        "bridge_family": "sand",
+        "bridge_family_source_level": "editor_observation"
       },
       "highland": {
         "family": "rock",
-        "bridge_family": "dirt"
+        "bridge_family": "sand",
+        "bridge_family_source_level": "editor_observation"
       },
       "water": {
         "family": "water",
@@ -1298,11 +1641,15 @@
       },
       "cavern": {
         "family": "subterranean",
-        "bridge_family": "dirt"
+        "bridge_family": "dirt",
+        "bridge_family_source_level": "provisional",
+        "provisional_fallback_policy": "subterranean preferred bridge class is unresolved"
       },
       "underway": {
         "family": "subterranean",
-        "bridge_family": "dirt"
+        "bridge_family": "dirt",
+        "bridge_family_source_level": "provisional",
+        "provisional_fallback_policy": "subterranean preferred bridge class is unresolved"
       },
       "snow": {
         "family": "snow",
