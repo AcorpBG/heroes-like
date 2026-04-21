@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T14:01:00Z",
+  "updatedAt": "2026-04-21T14:44:08Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-bridge-material-resolver-10184",
-  "currentSliceTitle": "Implement HoMM3 bridge material resolver",
+  "currentSliceId": "homm3-full-land-receiver-stamp-lookup-10184",
+  "currentSliceTitle": "Implement HoMM3 full land receiver stamp lookup",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the Bridge Material Resolver rewrite slice. content/terrain_grammar.json now declares a data_driven_bridge_material_resolver.v1 contract with source-ordered direct material contacts, preferred bridge-class routes, grass/swamp routed-through-dirt behavior, and an explicitly provisional subterranean unresolved fallback. OverworldMapView loads bridge classes and resolver rules, resolves bridge material metadata before frame-block selection, and reports bridge class, source kind, source level, rule id, target frame block, resolver model, and provisional status through the shared live/editor validation surface. Map-editor and live-overworld fixtures validate direct dirt/sand contacts, dirt receiving sand through dirttl, preferred class routing, grass/swamp via dirt, and the subterranean provisional policy through payload metadata. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the Full Land Receiver Stamp Lookup rewrite slice. Full receiver land families now use shared source-anchored dirt/sand stamp tables with truthful payload metadata for table id, source direction/offset, selected frame, transform/flip, source levels, and reserved mixed junctions. Bridge material resolver behavior, water/rock special systems, dirt/sand boundaries, road overlays, gameplay/pathing/fog/panning/selection/save/object logic, and live/editor shared resolver parity were preserved and validated.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -400,6 +400,12 @@
       "difficulty": "high"
     },
     {
+      "id": "homm3-full-land-receiver-stamp-lookup-10184",
+      "title": "Implement HoMM3 full land receiver stamp lookup",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
       "status": "in_progress",
@@ -463,7 +469,7 @@
     "Manually inspect the 4-neighbor HoMM3 dirt-road overlay topology in River Pass and Ninefold Confluence at live-client scale, especially straights, corners, T-junctions, crosses, and diagonal-neighbor suppression, before treating road presentation as broadly polished.",
     "Manually inspect unmapped procedural resource-site, artifact, and encounter fallbacks in River Pass and Ninefold Confluence at live-client scale before treating the no-plate fallback grounding as visually polished across supported viewports.",
     "Manually inspect the visible explored terrain seam correction in River Pass and Ninefold Confluence at live-client scale before treating the black-grid feedback as fully solved across supported viewports.",
-    "Implement the HoMM3 terrain renderer rewrite in the documented slices, starting with a data contract audit and receiver-family interior resolver before bridge material routing, stamp/restamp behavior, water, rock, and original-art replacement planning.",
+    "Continue the HoMM3 terrain renderer rewrite in documented slices, with editor restamp behavior, water shoreline topology, rock/void topology, dirt/sand tightening, road regression checks, and original-art replacement planning still unresolved.",
     "Manually inspect the corrected active-hero placed-figure presentation in River Pass and Ninefold Confluence before treating hero presence as polished across every biome and supported resolution.",
     "Plan a future explicit multi-tile town occupancy/pathing slice before making non-entry town footprint cells affect movement, blocking, save schema, or visit resolution.",
     "Manually inspect the corrected no-base-ellipse town presentation plus the hostile_camp overworld placeholder in River Pass and Ninefold Confluence before calling the object-art direction visually polished.",

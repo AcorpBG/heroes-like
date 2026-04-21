@@ -209,7 +209,8 @@ EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS = {
     "underway",
     "frost",
 }
-HOMM3_LOCAL_PROTOTYPE_FAMILIES = {"grass", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water"}
+HOMM3_LOCAL_PROTOTYPE_FAMILIES = {"grass", "rough", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water"}
+HOMM3_FULL_RECEIVER_LAND_FAMILIES = {"grass", "rough", "snow", "swamp", "lava", "subterranean"}
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "frontier_town",
     "hostile_camp",
@@ -4590,8 +4591,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/homm3_local_prototype", errors, "Overworld terrain rendering must point at the HoMM3 local prototype tile-art root")
         ensure(str(terrain_rendering.get("tile_art_status", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 local-reference prototype status")
         ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "homm3_extracted_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 extracted local-reference source basis")
-        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "homm3_table_driven_bridge_base_lookup", errors, "Overworld terrain rendering must document HoMM3 table-driven terrain transition selection")
-        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask_with_direct_pair_then_dirt_or_sand_bridge_resolution_and_water_shoreline_lookup", errors, "Overworld terrain rendering must document direct-pair bridge/base and shoreline lookup behavior")
+        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "homm3_data_driven_full_receiver_stamp_lookup", errors, "Overworld terrain rendering must document HoMM3 full-receiver stamp-table transition selection")
+        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "resolve_bridge_material_then_full_receiver_stamp_table_or_special_system_lookup", errors, "Overworld terrain rendering must document bridge material resolution before full receiver stamp or special-system lookup")
         ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "single_stable_base_frame", errors, "Overworld terrain rendering must document stable HoMM3 base-frame interior selection")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
         ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Overworld terrain rendering must document generated terrain sources as unused by the HoMM3 local prototype")
@@ -4612,15 +4613,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     transition_rules = terrain_grammar.get("transition_rules", {})
     ensure(isinstance(transition_rules, dict), errors, "Terrain grammar must define transition_rules")
     if isinstance(transition_rules, dict):
-        ensure(str(transition_rules.get("selection_model", "")) == "homm3_table_driven_bridge_base_lookup", errors, "Terrain grammar must document HoMM3 table-driven transition selection")
+        ensure(str(transition_rules.get("selection_model", "")) == "homm3_data_driven_full_receiver_stamp_lookup", errors, "Terrain grammar must document HoMM3 data-driven full receiver stamp lookup")
         ensure(str(transition_rules.get("edge_model", "")) == "bridge_or_shoreline_atlas_frame_lookup", errors, "Terrain grammar must document bridge/shoreline atlas-frame lookup")
         ensure(str(transition_rules.get("corner_model", "")) == "diagonal_context_in_atlas_lookup", errors, "Terrain grammar must document diagonal context in atlas lookup")
-        ensure(str(transition_rules.get("receiver_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask", errors, "Terrain grammar must document current-tile atlas frame selection")
+        ensure(str(transition_rules.get("receiver_rule", "")) == "full_receiver_land_selects_source_anchored_stamp_tables", errors, "Terrain grammar must document full receiver source-anchored stamp table selection")
         ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_same_homm3_family_edges", errors, "Terrain grammar must suppress same HoMM3-family transition seams")
         ensure(str(transition_rules.get("bridge_base_model", "")) == "direct_pair_overrides_dirt_or_sand_bridge_base", errors, "Terrain grammar must document direct-pair overrides before generic dirt/sand bridge-base resolution")
         ensure(str(transition_rules.get("propagation_model", "")) == "explicit_family_transition_stamps_may_extend_beyond_immediate_neighbors", errors, "Terrain grammar must document that HoMM3 terrain stamps may propagate beyond immediate neighbors")
         ensure(str(transition_rules.get("single_sand_model", "")) == "grass_sand_uses_grastl_native_to_sand_stamp_lookup_without_one_ring_cap", errors, "Terrain grammar must document the corrected grass-sand propagation model without a fake one-ring cap")
-        ensure(str(transition_rules.get("diagonal_policy", "")) == "diagonal_sources_can_select_rotated_family_stamp_frames", errors, "Terrain grammar must document diagonal sources through rotated family stamp frames")
+        ensure(str(transition_rules.get("diagonal_policy", "")) == "diagonal_sources_can_select_provisional_source_anchored_stamp_frames", errors, "Terrain grammar must document diagonal sources through provisional source-anchored stamp frames")
         ensure("neighbor_radius" not in transition_rules, errors, "Terrain grammar must not hard-cap HoMM3 terrain propagation with a fake neighbor_radius")
         ensure(str(transition_rules.get("water_model", "")) == "shoreline_specific_lookup", errors, "Terrain grammar must document shoreline-specific water lookup")
         ensure(str(transition_rules.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "Terrain grammar must document explicit unsupported-case fallback")
@@ -4629,7 +4630,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     if isinstance(homm3_prototype, dict):
         ensure(bool(homm3_prototype.get("enabled", False)), errors, "HoMM3 local prototype must be enabled")
         ensure(bool(homm3_prototype.get("local_reference_only", False)), errors, "HoMM3 local prototype must be marked local_reference_only")
-        ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "table_driven_bridge_base_8_neighbor", errors, "HoMM3 local prototype must use table-driven bridge/base terrain lookup")
+        ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "data_driven_full_receiver_stamp_lookup", errors, "HoMM3 local prototype must use data-driven full receiver stamp lookup")
         ensure(str(homm3_prototype.get("road_lookup_model", "")) == "table_driven_4_neighbor_overlay", errors, "HoMM3 local prototype must use table-driven 4-neighbor road lookup")
         ensure(str(homm3_prototype.get("interior_frame_selection_model", "")) == "single_stable_base_frame", errors, "HoMM3 local prototype must avoid patch-hash cycling for interior terrain frames")
         ensure(str(homm3_prototype.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "HoMM3 local prototype must use explicit fallback for unsupported cases")
@@ -4638,12 +4639,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         terrain_families = homm3_prototype.get("terrain_families", {})
         terrain_id_map = homm3_prototype.get("terrain_id_map", {})
         bridge_material_resolver = homm3_prototype.get("bridge_material_resolver", {})
+        land_receiver_stamp_lookup = homm3_prototype.get("land_receiver_stamp_lookup", {})
         direct_bridge_pairs = homm3_prototype.get("direct_bridge_pairs", [])
         routed_bridge_rules = homm3_prototype.get("routed_bridge_rules", [])
         road_overlays = homm3_prototype.get("road_overlays", {})
         ensure(isinstance(terrain_families, dict) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, terrain_families.keys()))), errors, "HoMM3 local prototype must define the extracted terrain family tables")
         ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the existing authored logical terrain ids")
         ensure(isinstance(bridge_material_resolver, dict), errors, "HoMM3 local prototype must define a bridge_material_resolver contract")
+        ensure(isinstance(land_receiver_stamp_lookup, dict), errors, "HoMM3 local prototype must define a full receiver land stamp lookup contract")
         if isinstance(bridge_material_resolver, dict):
             ensure(str(bridge_material_resolver.get("resolver_model", "")) == "data_driven_bridge_material_resolver.v1", errors, "HoMM3 bridge material resolver must expose the data-driven resolver model")
             ensure(bridge_material_resolver.get("rule_order", []) == ["explicit_direct_bridge_pairs", "direct_bridge_material_contacts", "routed_bridge_rules", "unresolved_fallbacks", "preferred_bridge_class_routes"], errors, "HoMM3 bridge material resolver must preserve the source-driven rule order")
@@ -4703,6 +4706,44 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     found_grass_swamp_route = True
                     break
             ensure(found_grass_swamp_route, errors, "HoMM3 local prototype must route grass/swamp through dirt bridge behavior, not a direct all-to-all blend")
+        if isinstance(land_receiver_stamp_lookup, dict):
+            ensure(str(land_receiver_stamp_lookup.get("resolver_model", "")) == "data_driven_full_receiver_land_stamp_lookup.v1", errors, "HoMM3 full receiver stamp lookup must expose the data-driven resolver model")
+            ensure(str(land_receiver_stamp_lookup.get("applies_to_atlas_role", "")) == "full_receiver_land", errors, "HoMM3 full receiver stamp lookup must apply only to full receiver land atlases")
+            ensure(str(land_receiver_stamp_lookup.get("mapping_source_level", "")) == "provisional", errors, "HoMM3 full receiver stamp offset/frame mapping must remain explicitly provisional")
+            ensure(str(land_receiver_stamp_lookup.get("mixed_junction_policy", "")) == "reserved_unresolved_do_not_select_for_full_receiver_stamp_lookup", errors, "HoMM3 full receiver stamp lookup must keep mixed junction blocks reserved")
+            reserved_ranges = set(map(str, land_receiver_stamp_lookup.get("reserved_mixed_junction_frame_ranges", [])))
+            ensure({"00_40-00_48", "00_77-00_78"}.issubset(reserved_ranges), errors, "HoMM3 full receiver stamp lookup must reserve the source-visible mixed junction frame ranges")
+            stamp_tables = land_receiver_stamp_lookup.get("stamp_tables", {})
+            ensure(isinstance(stamp_tables, dict), errors, "HoMM3 full receiver stamp lookup must define stamp_tables")
+            if isinstance(stamp_tables, dict):
+                expected_stamp_ranges = {
+                    "dirt": ("full_receiver_native_to_dirt_5x4_provisional_stamp_table", "native_to_dirt_transition", [f"00_{index:02d}" for index in range(0, 20)]),
+                    "sand": ("full_receiver_native_to_sand_5x4_provisional_stamp_table", "native_to_sand_transition", [f"00_{index:02d}" for index in range(20, 40)]),
+                }
+                for bridge_family, expected in expected_stamp_ranges.items():
+                    table = stamp_tables.get(bridge_family, {})
+                    ensure(isinstance(table, dict), errors, f"HoMM3 full receiver stamp lookup must define the {bridge_family} stamp table")
+                    if not isinstance(table, dict):
+                        continue
+                    expected_id, expected_block, expected_frames = expected
+                    ensure(str(table.get("id", "")) == expected_id, errors, f"HoMM3 {bridge_family} stamp table id must be stable and explicit")
+                    ensure(str(table.get("target_frame_block", "")) == expected_block, errors, f"HoMM3 {bridge_family} stamp table must target the expected full receiver frame block")
+                    ensure(str(table.get("frame_range_source_level", "")) == "fact", errors, f"HoMM3 {bridge_family} stamp table frame range must be fact-level")
+                    ensure(str(table.get("source_level", "")) == "provisional", errors, f"HoMM3 {bridge_family} stamp table mapping must remain provisional")
+                    cardinal_entries = table.get("cardinal_entries", {})
+                    ensure(isinstance(cardinal_entries, dict) and {"N", "E", "S", "W"}.issubset(set(map(str, cardinal_entries.keys()))), errors, f"HoMM3 {bridge_family} stamp table must define source-direction cardinal entries")
+                    frame_grid = table.get("frame_grid", [])
+                    ensure(isinstance(frame_grid, list) and len(frame_grid) == 5 and all(isinstance(row, list) and len(row) == 4 for row in frame_grid), errors, f"HoMM3 {bridge_family} stamp table must expose a provisional 5x4 source-visible frame grid")
+                    if isinstance(frame_grid, list):
+                        flattened = [str(frame) for row in frame_grid if isinstance(row, list) for frame in row]
+                        ensure(flattened == expected_frames, errors, f"HoMM3 {bridge_family} stamp table must map exactly to its source-visible 20-frame range")
+                        forbidden_mixed = {f"00_{index:02d}" for index in range(40, 49)} | {"00_77", "00_78"}
+                        ensure(not bool(forbidden_mixed.intersection(flattened)), errors, f"HoMM3 {bridge_family} stamp table must not select reserved mixed junction frames")
+                        for family_id in HOMM3_FULL_RECEIVER_LAND_FAMILIES:
+                            atlas = str(terrain_families.get(family_id, {}).get("atlas", ""))
+                            for frame_id in flattened[:1] + flattened[-1:]:
+                                frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
+                                ensure(frame_path.exists(), errors, f"HoMM3 full receiver stamp table {bridge_family} references missing {family_id} frame {frame_path}")
         if isinstance(terrain_id_map, dict):
             forest_mapping = terrain_id_map.get("forest", {})
             ensure(isinstance(forest_mapping, dict) and str(forest_mapping.get("logical_degrade_note", "")) != "", errors, "HoMM3 local prototype must explicitly document the logical forest terrain atlas limitation")
@@ -4736,11 +4777,21 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 elif family_id == "sand":
                     ensure(atlas_role == "base_decor_bridge_material", errors, "HoMM3 sand must be base/decor bridge material, not a receiver edge-mask atlas")
                     lookup_key = "base_context_lookup"
+                elif family_id in HOMM3_FULL_RECEIVER_LAND_FAMILIES:
+                    ensure(atlas_role == "full_receiver_land", errors, f"HoMM3 full receiver family {family_id} must keep the full_receiver_land atlas role")
+                    ensure(not uses_generic_land_edges, errors, f"HoMM3 full receiver family {family_id} must not use receiver-centered bridge_mask_lookup shortcuts")
+                    ensure(bool(family.get("uses_land_receiver_stamp_tables", False)), errors, f"HoMM3 full receiver family {family_id} must opt into the shared land receiver stamp tables")
+                    ensure("bridge_mask_lookup" not in family, errors, f"HoMM3 full receiver family {family_id} must not define receiver-centered bridge_mask_lookup")
+                    ensure("bridge_family_mask_lookups" not in family, errors, f"HoMM3 full receiver family {family_id} must not define bridge-family mask override shortcuts")
+                    ensure("propagated_transition_stamps" not in family, errors, f"HoMM3 full receiver family {family_id} must use the shared stamp lookup rather than per-family propagated stamp shortcuts")
+                    lookup_key = ""
                 else:
-                    ensure(uses_generic_land_edges, errors, f"HoMM3 land receiver family {family_id} must explicitly allow generic land edge masks")
+                    ensure(family_id == "dirt" and atlas_role == "reduced_bridge_receiver", errors, f"HoMM3 non-special receiver family {family_id} must be the reduced dirt bridge receiver")
+                    ensure(uses_generic_land_edges, errors, f"HoMM3 reduced receiver family {family_id} must explicitly keep its dirt/sand bridge mask lookup")
                     lookup_key = "bridge_mask_lookup"
-                lookup = family.get(lookup_key, {})
-                ensure(isinstance(lookup, dict) and "N" in lookup and "N+E+S+W" in lookup, errors, f"HoMM3 local prototype family {family_id} must define {lookup_key} masks")
+                lookup = family.get(lookup_key, {}) if lookup_key else {}
+                if lookup_key:
+                    ensure(isinstance(lookup, dict) and "N" in lookup and "N+E+S+W" in lookup, errors, f"HoMM3 local prototype family {family_id} must define {lookup_key} masks")
                 if lookup_key == "bridge_mask_lookup" and isinstance(lookup, dict):
                     ensure(str(lookup.get("E", "")) == "00_15", errors, f"HoMM3 local prototype family {family_id} east bridge mask must use the right-side source frame")
                     ensure(str(lookup.get("W", "")) == "00_04", errors, f"HoMM3 local prototype family {family_id} west bridge mask must use the left-side source frame")
@@ -4750,31 +4801,6 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 if family_id == "subterranean":
                     ensure(str(family.get("preferred_bridge_class", "")) == "unresolved", errors, "HoMM3 subbtl preferred bridge class must remain unresolved")
                     ensure(str(family.get("preferred_bridge_source_level", "")) == "provisional", errors, "HoMM3 subbtl bridge-family fallback must remain explicitly provisional")
-                if family_id == "grass":
-                    family_lookups = family.get("bridge_family_mask_lookups", {})
-                    sand_lookup = family_lookups.get("sand", {}) if isinstance(family_lookups, dict) else {}
-                    ensure(isinstance(sand_lookup, dict), errors, "HoMM3 grass family must define a sand-specific bridge mask lookup")
-                    if isinstance(sand_lookup, dict):
-                        expected_sand_edges = {"N": "00_28", "E": "00_35", "S": "00_32", "W": "00_24"}
-                        for mask_key, frame_id in expected_sand_edges.items():
-                            ensure(str(sand_lookup.get(mask_key, "")) == frame_id, errors, f"HoMM3 grass-sand edge mask {mask_key} must use grastl native-to-sand frame {frame_id}")
-                            frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
-                            ensure(frame_path.exists(), errors, f"HoMM3 grass-sand edge lookup {mask_key} references missing frame {frame_path}")
-                    stamps = family.get("propagated_transition_stamps", {})
-                    sand_stamp = stamps.get("sand", {}) if isinstance(stamps, dict) else {}
-                    ensure(isinstance(sand_stamp, dict), errors, "HoMM3 grass family must define the grass-sand propagated grastl native-to-sand stamp")
-                    if isinstance(sand_stamp, dict):
-                        ensure(str(sand_stamp.get("selection_model", "")) == "grastl_native_to_sand_4x5_stamp_with_axis_flips", errors, "HoMM3 grass-sand stamp must use the grastl native-to-sand 4x5 axis-flip model")
-                        ensure(str(sand_stamp.get("source_atlas", "")) == "grastl", errors, "HoMM3 grass-sand stamp must document grastl as the source atlas")
-                        ensure("source_artifact_prefix" not in sand_stamp, errors, "HoMM3 grass-sand stamp must not imply a separate extracted grass-sand artifact")
-                        frame_grid = sand_stamp.get("frame_grid", [])
-                        ensure(isinstance(frame_grid, list) and len(frame_grid) == 5 and all(isinstance(row, list) and len(row) == 4 for row in frame_grid), errors, "HoMM3 grass-sand stamp must expose the 5x4 grastl native-to-sand frame grid")
-                        if isinstance(frame_grid, list):
-                            flattened = [str(frame) for row in frame_grid if isinstance(row, list) for frame in row]
-                            ensure(flattened == [f"00_{index:02d}" for index in range(20, 40)], errors, "HoMM3 grass-sand stamp must map to grastl frames 00_20..00_39 in order")
-                            for frame_id in flattened:
-                                frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
-                                ensure(frame_path.exists(), errors, f"HoMM3 grass-sand propagated stamp references missing frame {frame_path}")
                 sample_frames = []
                 if isinstance(interior_frames, list):
                     sample_frames.extend(map(str, interior_frames[:2]))
@@ -5022,6 +5048,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "func _load_homm3_prototype",
 	        "func _homm3_bridge_material_resolution",
 	        "func _homm3_bridge_material_rule_for",
+	        "func _homm3_land_receiver_stamp_lookup_model",
+	        "func _homm3_stamp_entry_from_table",
 	        "func _homm3_terrain_selection_payload",
 	        "func _homm3_terrain_relation_payload",
 	        "func _homm3_road_art_path",
@@ -5078,7 +5106,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"transition_calculation_model"',
 	        '"transition_cardinal_sources"',
 	        '"transition_corner_sources"',
-	        '"homm3_table_driven_bridge_base_lookup"',
+	        '"homm3_data_driven_full_receiver_stamp_lookup"',
 	        '"bridge_or_shoreline_atlas_frame_lookup"',
 	        '"diagonal_context_in_atlas_lookup"',
 	        '"homm3_terrain_lookup_model"',
@@ -5088,6 +5116,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"homm3_bridge_resolver_model"',
 	        '"homm3_bridge_rule_id"',
 	        '"homm3_bridge_target_frame_block"',
+	        '"homm3_stamp_table_id"',
+	        '"homm3_stamp_source_direction"',
+	        '"homm3_stamp_selected_frame"',
 	        '"homm3_interior_frame_selection"',
 	        '"homm3_uses_interior_variant_cycle"',
 	        '"homm3_shoreline_specific"',

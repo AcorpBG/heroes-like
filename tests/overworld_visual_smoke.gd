@@ -709,8 +709,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: overworld terrain does not expose the HoMM3 extracted-atlas base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_stable_interior_base" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
-		push_error("Overworld smoke: grass terrain does not expose the table-driven HoMM3 stable-base lookup contract. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("terrain_variant_selection", "")) != "data_driven_receiver_stamp_lookup_with_stable_interior_base" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "data_driven_full_receiver_stamp_lookup":
+		push_error("Overworld smoke: grass terrain does not expose the data-driven HoMM3 full-receiver stamp lookup contract. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("homm3_interior_frame_selection", "")) != "single_stable_base_frame" or bool(grass_terrain.get("homm3_uses_interior_variant_cycle", true)):
@@ -751,7 +751,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if (
 		String(forest_edge_terrain.get("terrain_group", "")) != "forest"
 		or not bool(forest_edge_terrain.get("neighbor_aware_transitions", false))
-		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "homm3_table_driven_bridge_base_lookup"
+		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "homm3_data_driven_full_receiver_stamp_lookup"
 		or String(forest_edge_terrain.get("homm3_terrain_family", "")) != "grass"
 		or String(forest_edge_terrain.get("homm3_logical_degrade_note", "")) == ""
 		or String(forest_edge_terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
@@ -856,6 +856,7 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 			"block": "native_to_dirt_transition",
 			"source_level": "fact",
 			"model": "direct_bridge_material_contact_lookup",
+			"stamp": {"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table", "direction": "E", "frame": "00_15", "offset": {"x": 1, "y": 0}, "bridge_family": "dirt", "target_block": "native_to_dirt_transition", "source_kind": "cardinal_source"},
 		},
 		{
 			"tile": Vector2i(4, 1),
@@ -878,6 +879,7 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 			"block": "native_to_dirt_transition",
 			"source_level": "inference",
 			"model": "grass_swamp_via_dirt_bridge",
+			"stamp": {"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table", "direction": "E", "frame": "00_15", "offset": {"x": 1, "y": 0}, "bridge_family": "dirt", "target_block": "native_to_dirt_transition", "source_kind": "cardinal_source"},
 		},
 		{
 			"tile": Vector2i(6, 3),
@@ -889,6 +891,7 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 			"block": "native_to_dirt_transition",
 			"source_level": "editor_observation",
 			"model": "receiver_preferred_bridge_class_lookup",
+			"stamp": {"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table", "direction": "E", "frame": "00_15", "offset": {"x": 1, "y": 0}, "bridge_family": "dirt", "target_block": "native_to_dirt_transition", "source_kind": "cardinal_source", "mixed_reserved": true},
 		},
 		{
 			"tile": Vector2i(7, 1),
@@ -901,6 +904,7 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 			"source_level": "provisional",
 			"model": "provisional_subterranean_dirt_bridge_fallback",
 			"provisional": true,
+			"stamp": {"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table", "direction": "E", "frame": "00_15", "offset": {"x": 1, "y": 0}, "bridge_family": "dirt", "target_block": "native_to_dirt_transition", "source_kind": "cardinal_source", "mixed_reserved": true},
 		},
 	]
 	for case in cases:
@@ -938,6 +942,10 @@ func _assert_live_bridge_resolver_case(terrain: Dictionary, expected: Dictionary
 		return false
 	if bool(terrain.get("homm3_bridge_policy_provisional", false)) != bool(expected.get("provisional", false)):
 		return false
+	var stamp_expected = expected.get("stamp", {})
+	if stamp_expected is Dictionary and not stamp_expected.is_empty():
+		if not _assert_full_receiver_stamp_payload(terrain, stamp_expected):
+			return false
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
 	for source_value in sources:
 		if not (source_value is Dictionary):
@@ -954,6 +962,69 @@ func _assert_live_bridge_resolver_case(terrain: Dictionary, expected: Dictionary
 		):
 			return true
 	return false
+
+func _assert_full_receiver_stamp_payload(terrain: Dictionary, expected: Dictionary) -> bool:
+	if not bool(terrain.get("homm3_uses_land_receiver_stamp_tables", false)):
+		return false
+	if bool(terrain.get("homm3_allows_generic_land_edge_masks", true)):
+		return false
+	if String(terrain.get("homm3_stamp_lookup_model", "")) != "data_driven_full_receiver_land_stamp_lookup.v1":
+		return false
+	if String(terrain.get("homm3_stamp_selection_model", "")) != "source_anchored_stamp_table_with_array_reconstruction_fallback":
+		return false
+	if String(terrain.get("homm3_stamp_table_id", "")) != String(expected.get("table", "")):
+		return false
+	if String(terrain.get("homm3_stamp_anchor", "")) != "source_tile_anchored_directional_stamp":
+		return false
+	if String(terrain.get("homm3_stamp_source_kind", "")) != String(expected.get("source_kind", "")):
+		return false
+	if String(terrain.get("homm3_stamp_source_direction", "")) != String(expected.get("direction", "")):
+		return false
+	if String(terrain.get("homm3_stamp_selected_frame", "")) != String(expected.get("frame", "")):
+		return false
+	if String(terrain.get("homm3_terrain_frame", "")) != String(expected.get("frame", "")):
+		return false
+	if String(terrain.get("homm3_stamp_target_frame_block", "")) != String(expected.get("target_block", "")):
+		return false
+	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("target_block", "")):
+		return false
+	if String(terrain.get("homm3_stamp_bridge_family", "")) != String(expected.get("bridge_family", "")):
+		return false
+	if String(terrain.get("homm3_stamp_source_level", "")) != "provisional":
+		return false
+	if String(terrain.get("homm3_stamp_mapping_source_level", "")) != "provisional":
+		return false
+	if String(terrain.get("homm3_stamp_frame_range_source_level", "")) != "fact":
+		return false
+	if String(terrain.get("homm3_stamp_array_reconstruction_mode", "")) != "array_reconstruction_fallback_without_paint_history":
+		return false
+	if String(terrain.get("homm3_stamp_source_offset_model", "")).find("source_tile_minus_receiver_tile") < 0:
+		return false
+	var expected_offset: Dictionary = expected.get("offset", {})
+	var source_offset: Dictionary = terrain.get("homm3_stamp_source_offset", {})
+	if int(source_offset.get("x", 9999)) != int(expected_offset.get("x", 9998)):
+		return false
+	if int(source_offset.get("y", 9999)) != int(expected_offset.get("y", 9998)):
+		return false
+	var expected_flip := String(expected.get("flip", ""))
+	if String(terrain.get("homm3_stamp_transform", "")) != expected_flip:
+		return false
+	if String(terrain.get("homm3_terrain_flip", "")) != expected_flip:
+		return false
+	if bool(terrain.get("homm3_stamp_flip_h", false)) != bool(expected.get("flip_h", false)):
+		return false
+	if bool(terrain.get("homm3_stamp_flip_v", false)) != bool(expected.get("flip_v", false)):
+		return false
+	var expect_reserved := bool(expected.get("mixed_reserved", false))
+	if bool(terrain.get("homm3_stamp_mixed_junction_reserved", false)) != expect_reserved:
+		return false
+	if expect_reserved:
+		var reserved_ranges: Array = terrain.get("homm3_stamp_reserved_mixed_junction_frame_ranges", [])
+		if "00_40-00_48" not in reserved_ranges or "00_77-00_78" not in reserved_ranges:
+			return false
+		if String(terrain.get("homm3_stamp_mixed_junction_policy", "")) != "reserved_unresolved_do_not_select_for_full_receiver_stamp_lookup":
+			return false
+	return true
 
 func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 	var center := Vector2i(4, 2)
@@ -979,16 +1050,16 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 	var center_presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
 	var center_terrain: Dictionary = center_presentation.get("terrain_presentation", {})
 	if (
-			String(center_terrain.get("terrain", "")) != "wastes"
-			or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
-			or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_material_base_context"
-			or String(center_terrain.get("homm3_atlas_role", "")) != "base_decor_bridge_material"
-			or bool(center_terrain.get("homm3_allows_generic_land_edge_masks", true))
-			or String(center_terrain.get("homm3_selected_frame_block", "")) != "base_context_provisional"
-			or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
-			or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
-			or String(center_terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
-			or int(center_terrain.get("edge_transition_count", -1)) != 4
+		String(center_terrain.get("terrain", "")) != "wastes"
+		or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
+		or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_material_base_context"
+		or String(center_terrain.get("homm3_atlas_role", "")) != "base_decor_bridge_material"
+		or bool(center_terrain.get("homm3_allows_generic_land_edge_masks", true))
+		or String(center_terrain.get("homm3_selected_frame_block", "")) != "base_context_provisional"
+		or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
+		or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
+		or String(center_terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
+		or int(center_terrain.get("edge_transition_count", -1)) != 4
 		or int(center_terrain.get("corner_transition_count", -1)) != 4
 		or "grass" not in center_terrain.get("transition_source_terrain_ids", [])
 	):
@@ -998,10 +1069,10 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 		return false
 
 	var edge_cases := [
-		{"tile": center + Vector2i(0, -1), "edge": "S", "frame": "00_32"},
-		{"tile": center + Vector2i(1, 0), "edge": "W", "frame": "00_24"},
-		{"tile": center + Vector2i(0, 1), "edge": "N", "frame": "00_28"},
-		{"tile": center + Vector2i(-1, 0), "edge": "E", "frame": "00_35"},
+		{"tile": center + Vector2i(0, -1), "edge": "S", "frame": "00_32", "offset": {"x": 0, "y": 1}},
+		{"tile": center + Vector2i(1, 0), "edge": "W", "frame": "00_24", "offset": {"x": -1, "y": 0}},
+		{"tile": center + Vector2i(0, 1), "edge": "N", "frame": "00_28", "offset": {"x": 0, "y": -1}},
+		{"tile": center + Vector2i(-1, 0), "edge": "E", "frame": "00_35", "offset": {"x": 1, "y": 0}},
 	]
 	for entry in edge_cases:
 		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
@@ -1011,12 +1082,12 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 			or String(terrain.get("transition_edge_mask", "")) != String(entry.get("edge", ""))
 			or String(terrain.get("transition_corner_mask", "")) != ""
-				or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
-				or String(terrain.get("homm3_bridge_family", "")) != "sand"
-				or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_native_to_sand_lookup"
-				or String(terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
-				or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
-				or int(terrain.get("edge_transition_count", 0)) != 1
+			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
+			or String(terrain.get("homm3_bridge_family", "")) != "sand"
+			or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_native_to_sand_lookup"
+			or String(terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
+			or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
+			or int(terrain.get("edge_transition_count", 0)) != 1
 			or int(terrain.get("corner_transition_count", -1)) != 0
 			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
 		):
@@ -1024,12 +1095,25 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			push_error("Overworld smoke: live renderer did not select the expected grastl native-to-sand edge frame at %s. presentation=%s" % [tile, presentation])
 			get_tree().quit(1)
 			return false
+		if not _assert_full_receiver_stamp_payload(terrain, {
+			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+			"direction": String(entry.get("edge", "")),
+			"frame": String(entry.get("frame", "")),
+			"offset": entry.get("offset", {}),
+			"bridge_family": "sand",
+			"target_block": "native_to_sand_transition",
+			"source_kind": "cardinal_source",
+		}):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: live sand edge receiver did not expose source-anchored stamp metadata at %s. presentation=%s" % [tile, presentation])
+			get_tree().quit(1)
+			return false
 
 	var corner_cases := [
-		{"tile": center + Vector2i(-1, -1), "direction": "SE", "flip": "HV"},
-		{"tile": center + Vector2i(1, -1), "direction": "SW", "flip": "V"},
-		{"tile": center + Vector2i(-1, 1), "direction": "NE", "flip": "H"},
-		{"tile": center + Vector2i(1, 1), "direction": "NW", "flip": ""},
+		{"tile": center + Vector2i(-1, -1), "direction": "SE", "offset": {"x": 1, "y": 1}, "flip": "HV", "flip_h": true, "flip_v": true},
+		{"tile": center + Vector2i(1, -1), "direction": "SW", "offset": {"x": -1, "y": 1}, "flip": "V", "flip_h": false, "flip_v": true},
+		{"tile": center + Vector2i(-1, 1), "direction": "NE", "offset": {"x": 1, "y": -1}, "flip": "H", "flip_h": true, "flip_v": false},
+		{"tile": center + Vector2i(1, 1), "direction": "NW", "offset": {"x": -1, "y": -1}, "flip": "", "flip_h": false, "flip_v": false},
 	]
 	for entry in corner_cases:
 		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
@@ -1041,8 +1125,8 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
 			or String(terrain.get("homm3_terrain_frame", "")) != "00_20"
 			or not bool(terrain.get("homm3_propagated_transition", false))
-				or String(terrain.get("homm3_transition_propagation_model", "")) != "grastl_native_to_sand_4x5_stamp_with_axis_flips"
-				or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
+			or String(terrain.get("homm3_transition_propagation_model", "")) != "data_driven_full_receiver_land_stamp_lookup.v1"
+			or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
 			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
 			or int(terrain.get("edge_transition_count", -1)) != 0
 			or int(terrain.get("corner_transition_count", -1)) != 1
@@ -1054,10 +1138,26 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 			push_error("Overworld smoke: live renderer did not select the expected rotated grastl native-to-sand stamp frame at %s. presentation=%s" % [tile, presentation])
 			get_tree().quit(1)
 			return false
+		if not _assert_full_receiver_stamp_payload(terrain, {
+			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+			"direction": String(entry.get("direction", "")),
+			"frame": "00_20",
+			"offset": entry.get("offset", {}),
+			"bridge_family": "sand",
+			"target_block": "native_to_sand_transition",
+			"source_kind": "propagated_source",
+			"flip": String(entry.get("flip", "")),
+			"flip_h": bool(entry.get("flip_h", false)),
+			"flip_v": bool(entry.get("flip_v", false)),
+		}):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: live sand diagonal receiver did not expose source-anchored stamp metadata at %s. presentation=%s" % [tile, presentation])
+			get_tree().quit(1)
+			return false
 
 	var second_ring_cases := [
-		{"tile": center + Vector2i(2, 2), "direction": "NW", "frame": "00_25", "flip": "", "distance": 2},
-		{"tile": center + Vector2i(-2, -2), "direction": "SE", "frame": "00_25", "flip": "HV", "distance": 2},
+		{"tile": center + Vector2i(2, 2), "direction": "NW", "frame": "00_25", "offset": {"x": -2, "y": -2}, "flip": "", "flip_h": false, "flip_v": false, "distance": 2},
+		{"tile": center + Vector2i(-2, -2), "direction": "SE", "frame": "00_25", "offset": {"x": 2, "y": 2}, "flip": "HV", "flip_h": true, "flip_v": true, "distance": 2},
 	]
 	for entry in second_ring_cases:
 		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
@@ -1075,6 +1175,22 @@ func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 		):
 			_restore_single_sand_fixture(shell, session, original_map, original_fog)
 			push_error("Overworld smoke: live renderer did not propagate the single sand through the grastl native-to-sand stamp at %s. presentation=%s" % [tile, presentation])
+			get_tree().quit(1)
+			return false
+		if not _assert_full_receiver_stamp_payload(terrain, {
+			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+			"direction": String(entry.get("direction", "")),
+			"frame": String(entry.get("frame", "")),
+			"offset": entry.get("offset", {}),
+			"bridge_family": "sand",
+			"target_block": "native_to_sand_transition",
+			"source_kind": "propagated_source",
+			"flip": String(entry.get("flip", "")),
+			"flip_h": bool(entry.get("flip_h", false)),
+			"flip_v": bool(entry.get("flip_v", false)),
+		}):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: live sand second-ring receiver did not expose source-anchored stamp metadata at %s. presentation=%s" % [tile, presentation])
 			get_tree().quit(1)
 			return false
 
