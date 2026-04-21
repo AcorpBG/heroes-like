@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T09:13:55Z",
+  "updatedAt": "2026-04-21T09:54:19Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-homm3-local-terrain-prototype-10184",
-  "currentSliceTitle": "Prototype HoMM3-style neighbor-aware terrain and road rendering locally",
+  "currentSliceId": "overworld-homm3-transition-orientation-10184",
+  "currentSliceTitle": "Fix HoMM3 local terrain transition horizontal orientation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the continuation pass for the local-only HoMM3 terrain prototype. The dirty diff is scoped to the terrain/road renderer prototype, map-editor preview validation, local ignored frame staging, docs, and validators. The Rubberduck/original quiet feel-test path is superseded locally by ignored staged HoMM3 runtime PNGs, grammar-authored terrain-family and road mask lookup tables, dirt/sand bridge-base terrain resolution, shoreline-specific water lookup, and 4-neighbor dirt-road overlay topology. The logical square-grid map, current editor data model, gameplay/pathing, save format, object/town rendering, and town occupancy/pathing were left unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow visual regression fix for AcOrP's screenshot finding that some HoMM3 local terrain bridge transitions read horizontally reversed. The local HoMM3 bridge-mask lookup now maps east-side bridge transitions to a right-side source frame and west-side bridge transitions to a left-side source frame. Added validator coverage plus live-overworld and map-editor preview smoke assertions for east/west grass-plains transition orientation. Gameplay/pathing/save/editor data model/object/town systems and 4-neighbor road overlay behavior were unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

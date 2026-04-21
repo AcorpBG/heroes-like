@@ -161,11 +161,109 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	):
 		_fail("Map editor smoke: editor preview did not expose diagonal context for the painted mire tile: %s." % corner_receiver)
 		return false
+	if not _assert_editor_horizontal_transition_orientation(shell):
+		return false
 	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	if not bool(restore_forest.get("ok", false)):
 		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 bridge-table preview: %s." % restore_forest)
 		return false
 	return true
+
+func _assert_editor_horizontal_transition_orientation(shell) -> bool:
+	var original_terrains := []
+	var controlled_tiles := [
+		Vector2i(39, 39),
+		Vector2i(40, 39),
+		Vector2i(41, 39),
+		Vector2i(39, 40),
+		Vector2i(40, 40),
+		Vector2i(41, 40),
+		Vector2i(40, 41),
+		Vector2i(43, 39),
+		Vector2i(44, 39),
+		Vector2i(45, 39),
+		Vector2i(43, 40),
+		Vector2i(44, 40),
+		Vector2i(45, 40),
+		Vector2i(44, 41),
+	]
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+	var paint_plan := [
+		{"tile": Vector2i(40, 40), "terrain": "grass"},
+		{"tile": Vector2i(41, 40), "terrain": "plains"},
+		{"tile": Vector2i(39, 40), "terrain": "grass"},
+		{"tile": Vector2i(40, 39), "terrain": "grass"},
+		{"tile": Vector2i(40, 41), "terrain": "grass"},
+		{"tile": Vector2i(44, 40), "terrain": "grass"},
+		{"tile": Vector2i(43, 40), "terrain": "plains"},
+		{"tile": Vector2i(45, 40), "terrain": "grass"},
+		{"tile": Vector2i(44, 39), "terrain": "grass"},
+		{"tile": Vector2i(44, 41), "terrain": "grass"},
+	]
+	for entry in paint_plan:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		if not _paint_editor_terrain_for_orientation(shell, tile, String(entry.get("terrain", ""))):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed controlled HoMM3 horizontal transition tile %s." % entry)
+			return false
+
+	var east_receiver: Dictionary = shell.call("validation_tile_presentation", 40, 40)
+	var east_terrain: Dictionary = east_receiver.get("terrain_presentation", {})
+	if (
+		String(east_terrain.get("transition_edge_mask", "")) != "E"
+		or String(east_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(east_terrain.get("homm3_terrain_frame", "")) != "00_15"
+		or not _transition_sources_include(east_terrain, "E", "plains")
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: HoMM3 east-side bridge transition did not keep dirt on the visual right in preview: %s." % east_receiver)
+		return false
+
+	var west_receiver: Dictionary = shell.call("validation_tile_presentation", 44, 40)
+	var west_terrain: Dictionary = west_receiver.get("terrain_presentation", {})
+	if (
+		String(west_terrain.get("transition_edge_mask", "")) != "W"
+		or String(west_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(west_terrain.get("homm3_terrain_frame", "")) != "00_04"
+		or not _transition_sources_include(west_terrain, "W", "plains")
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: HoMM3 west-side bridge transition did not keep dirt on the visual left in preview: %s." % west_receiver)
+		return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _paint_editor_terrain_for_orientation(shell, tile: Vector2i, terrain_id: String) -> bool:
+	var result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, terrain_id)
+	if bool(result.get("ok", false)):
+		return true
+	var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+	return String(presentation.get("terrain_presentation", {}).get("terrain", "")) == terrain_id
+
+func _restore_editor_terrain_tiles(shell, original_terrains: Array) -> void:
+	for entry in original_terrains:
+		if not (entry is Dictionary):
+			continue
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var terrain_id := String(entry.get("terrain", ""))
+		if terrain_id != "":
+			shell.call("validation_paint_terrain", tile.x, tile.y, terrain_id)
+
+func _transition_sources_include(terrain: Dictionary, direction: String, source_terrain: String) -> bool:
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		if String(source.get("direction", "")) == direction and String(source.get("source_terrain", "")) == source_terrain:
+			return true
+	return false
 
 func _assert_flood_fill_terrain(shell) -> bool:
 	if not shell.has_method("validation_fill_terrain"):

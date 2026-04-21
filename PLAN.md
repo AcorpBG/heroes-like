@@ -26,6 +26,31 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Transition Orientation Correction
+Status: completed on 2026-04-21 as a narrow visual regression fix.
+
+Purpose:
+- Correct AcOrP's screenshot finding that some local HoMM3 terrain transition tiles read horizontally reversed.
+- Keep the fix inside the table-driven HoMM3 terrain lookup and smoke validation, with editor preview continuing to use the same `OverworldMapView` path as live overworld play.
+- Preserve square-grid gameplay/pathing/save/editor data, object/town rendering, and the existing 4-neighbor road overlay behavior.
+
+Scope:
+- Correct only the horizontal bridge-mask frame mapping for the local-reference HoMM3 terrain prototype.
+- Add smoke coverage for east-side and west-side grass/plains transitions in both live overworld and map-editor preview validation.
+- Do not add or track original HoMM3 assets; the existing ignored local prototype asset root remains local-reference only.
+
+Implemented:
+- Corrected the local HoMM3 bridge-mask lookup so east-side bridge transitions use a right-side source frame and west-side bridge transitions use a left-side source frame.
+- Added validator coverage to keep the horizontal bridge-mask table from regressing.
+- Added live-overworld and map-editor preview smoke coverage for east-side and west-side grass/plains transition orientation.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
 ## Current Implementation Slice: HoMM3 Local Terrain Prototype
 Status: completed on 2026-04-21 as a local-only renderer prototype.
 

@@ -153,7 +153,51 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	if String(shoreline.get("homm3_selection_kind", "")) != "water_shoreline" or not bool(shoreline.get("homm3_shoreline_specific", false)) or String(shoreline.get("homm3_terrain_atlas", "")) != "watrtl":
 		_fail("Ninefold smoke: water/coast terrain did not use shoreline-specific HoMM3 lookup beside land: %s." % shoreline_presentation)
 		return false
+	if not _assert_horizontal_transition_orientation(shell, session):
+		return false
 	return true
+
+func _assert_horizontal_transition_orientation(shell: Node, session) -> bool:
+	var east_receiver := Vector2i(26, 63)
+	var east_source := Vector2i(27, 63)
+	_reveal_validation_tiles(session, [east_receiver, east_source])
+	var east_presentation: Dictionary = shell.call("validation_tile_presentation", east_receiver.x, east_receiver.y)
+	var east_terrain: Dictionary = east_presentation.get("terrain_presentation", {})
+	if (
+		String(east_terrain.get("terrain", "")) != "grass"
+		or String(east_terrain.get("transition_edge_mask", "")) != "E"
+		or String(east_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(east_terrain.get("homm3_terrain_frame", "")) != "00_15"
+		or not _transition_sources_include(east_terrain, "E", "plains")
+	):
+		_fail("Ninefold smoke: HoMM3 east-side grass/plains transition is horizontally reversed or missing its right-side dirt frame: %s." % east_presentation)
+		return false
+
+	var west_receiver := Vector2i(26, 0)
+	var west_source := Vector2i(25, 0)
+	_reveal_validation_tiles(session, [west_receiver, west_source])
+	var west_presentation: Dictionary = shell.call("validation_tile_presentation", west_receiver.x, west_receiver.y)
+	var west_terrain: Dictionary = west_presentation.get("terrain_presentation", {})
+	if (
+		String(west_terrain.get("terrain", "")) != "grass"
+		or String(west_terrain.get("transition_edge_mask", "")) != "W"
+		or String(west_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(west_terrain.get("homm3_terrain_frame", "")) != "00_04"
+		or not _transition_sources_include(west_terrain, "W", "plains")
+	):
+		_fail("Ninefold smoke: HoMM3 west-side grass/plains transition is horizontally reversed or missing its left-side dirt frame: %s." % west_presentation)
+		return false
+	return true
+
+func _transition_sources_include(terrain: Dictionary, direction: String, source_terrain: String) -> bool:
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		if String(source.get("direction", "")) == direction and String(source.get("source_terrain", "")) == source_terrain:
+			return true
+	return false
 
 func _assert_homm_road_topology(shell: Node, session) -> bool:
 	var vertical_tile := Vector2i(23, 30)
