@@ -185,6 +185,30 @@ LOGISTICS_SITE_IDS = {
     "site_starlens_sanctum",
 }
 TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
+EDITOR_BASE_TERRAIN_OPTIONS = [
+    ("water", "Water", "water", "watrtl"),
+    ("snow", "Snow", "snow", "snowtl"),
+    ("grass", "Grass", "grass", "grastl"),
+    ("wastes", "Sand", "sand", "sandtl"),
+    ("badlands", "Dirt", "dirt", "dirttl"),
+    ("lava", "Lava", "lava", "lavatl"),
+    ("swamp", "Swamp", "swamp", "swmptl"),
+    ("highland", "Rock/None", "rock", "rocktl"),
+]
+EDITOR_BASE_TERRAIN_OPTION_IDS = {option[0] for option in EDITOR_BASE_TERRAIN_OPTIONS}
+EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS = {
+    "plains",
+    "forest",
+    "mire",
+    "hills",
+    "ridge",
+    "coast",
+    "shore",
+    "ash",
+    "cavern",
+    "underway",
+    "frost",
+}
 HOMM3_LOCAL_PROTOTYPE_FAMILIES = {"grass", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water"}
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "frontier_town",
@@ -4609,7 +4633,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         terrain_id_map = homm3_prototype.get("terrain_id_map", {})
         road_overlays = homm3_prototype.get("road_overlays", {})
         ensure(isinstance(terrain_families, dict) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, terrain_families.keys()))), errors, "HoMM3 local prototype must define the extracted terrain family tables")
-        ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the current visible terrain ids")
+        ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the existing authored logical terrain ids")
         if isinstance(terrain_id_map, dict):
             forest_mapping = terrain_id_map.get("forest", {})
             ensure(isinstance(forest_mapping, dict) and str(forest_mapping.get("logical_degrade_note", "")) != "", errors, "HoMM3 local prototype must explicitly document the logical forest terrain atlas limitation")
@@ -4697,6 +4721,32 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                                 ensure(png_size(art_path) == (64, 64), errors, f"Terrain grammar {terrain_id} edge overlay {direction} must be 64x64 PNG, found {png_size(art_path)}")
     ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(terrain_class_ids), errors, "Terrain grammar must author the first readable terrain slice: grass/plains, forest, mire/swamp, and hills/ridge/highland")
     ensure(TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(road_enabled_terrain_ids), errors, "First terrain slice ids must support structural road overlays")
+    editor_options = terrain_grammar.get("editor_base_terrain_options", [])
+    ensure(isinstance(editor_options, list), errors, "Terrain grammar must define editor_base_terrain_options for the map editor base terrain picker")
+    if isinstance(editor_options, list):
+        actual_options = [
+            (
+                str(option.get("id", "")),
+                str(option.get("label", "")),
+                str(option.get("homm3_family", "")),
+                str(option.get("homm3_atlas", "")),
+            )
+            for option in editor_options
+            if isinstance(option, dict)
+        ]
+        ensure(actual_options == EDITOR_BASE_TERRAIN_OPTIONS, errors, "Editor base terrain options must be the HoMM3-style family set in order: Water, Snow, Grass, Sand, Dirt, Lava, Swamp, Rock/None")
+        option_ids = {option[0] for option in actual_options}
+        ensure(option_ids == EDITOR_BASE_TERRAIN_OPTION_IDS, errors, "Editor base terrain option ids must be the curated HoMM3-style representatives")
+        ensure(option_ids.issubset(terrain_class_ids), errors, "Editor base terrain options must reference existing authored terrain ids")
+        ensure(EDITOR_HIDDEN_LOGICAL_TERRAIN_IDS.isdisjoint(option_ids), errors, "Editor base terrain options must not expose hidden logical terrain variants such as forest, mire, hills, ridge, ash, frost, coast, or shore")
+        terrain_id_map = homm3_prototype.get("terrain_id_map", {}) if isinstance(homm3_prototype, dict) else {}
+        terrain_families = homm3_prototype.get("terrain_families", {}) if isinstance(homm3_prototype, dict) else {}
+        if isinstance(terrain_id_map, dict) and isinstance(terrain_families, dict):
+            for terrain_id, _label, expected_family, expected_atlas in EDITOR_BASE_TERRAIN_OPTIONS:
+                mapping = terrain_id_map.get(terrain_id, {})
+                ensure(isinstance(mapping, dict) and str(mapping.get("family", "")) == expected_family, errors, f"Editor base terrain option {terrain_id} must map to HoMM3 family {expected_family}")
+                family = terrain_families.get(expected_family, {})
+                ensure(isinstance(family, dict) and str(family.get("atlas", "")) == expected_atlas, errors, f"Editor base terrain option {terrain_id} must resolve to HoMM3 atlas {expected_atlas}")
     overlay_ids: set[str] = set()
     if isinstance(overlay_classes, list):
         for overlay in overlay_classes:

@@ -31,6 +31,8 @@ func _run() -> void:
 	if snapshot.get("map_viewport", {}).is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose viewport metrics.")
 		return
+	if not _assert_editor_terrain_option_contract(shell, snapshot):
+		return
 
 	var paint_result: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	if not bool(paint_result.get("ok", false)):
@@ -122,6 +124,54 @@ func _run() -> void:
 		return
 
 	get_tree().quit(0)
+
+func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool:
+	var expected_options := [
+		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
+		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
+		{"id": "grass", "label": "Grass", "family": "grass", "atlas": "grastl"},
+		{"id": "wastes", "label": "Sand", "family": "sand", "atlas": "sandtl"},
+		{"id": "badlands", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
+		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
+		{"id": "swamp", "label": "Swamp", "family": "swamp", "atlas": "swmptl"},
+		{"id": "highland", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
+	]
+	if String(snapshot.get("terrain_option_contract", "")) != "homm3_base_family_picker" or String(snapshot.get("terrain_option_source", "")) != "editor_base_terrain_options":
+		_fail("Map editor smoke: terrain picker did not expose the HoMM3 base-family option contract: %s." % snapshot)
+		return false
+	var options: Array = snapshot.get("terrain_options", [])
+	if options.size() != expected_options.size():
+		_fail("Map editor smoke: terrain picker exposed the wrong number of base terrain options: %s." % options)
+		return false
+	for index in range(expected_options.size()):
+		var expected: Dictionary = expected_options[index]
+		var option: Dictionary = options[index]
+		if (
+			String(option.get("id", "")) != String(expected.get("id", ""))
+			or String(option.get("label", "")) != String(expected.get("label", ""))
+			or String(option.get("homm3_family", "")) != String(expected.get("family", ""))
+			or String(option.get("homm3_atlas", "")) != String(expected.get("atlas", ""))
+		):
+			_fail("Map editor smoke: terrain picker option %d did not match the HoMM3-style contract: %s." % [index, options])
+			return false
+	var option_ids: Array = snapshot.get("terrain_option_ids", [])
+	for hidden_id in ["plains", "forest", "mire", "hills", "ridge", "coast", "shore", "ash", "cavern", "underway", "frost"]:
+		if hidden_id in option_ids:
+			_fail("Map editor smoke: terrain picker still exposed hidden logical terrain id %s: %s." % [hidden_id, option_ids])
+			return false
+	var hidden_select: Dictionary = shell.call("validation_select_terrain", "forest")
+	if bool(hidden_select.get("ok", true)):
+		_fail("Map editor smoke: hidden logical terrain id forest was still selectable through the picker validation surface: %s." % hidden_select)
+		return false
+	var visible_select: Dictionary = shell.call("validation_select_terrain", "wastes")
+	if not bool(visible_select.get("ok", false)) or String(visible_select.get("selected_terrain_label", "")) != "Sand":
+		_fail("Map editor smoke: visible Sand terrain option did not select through the picker validation surface: %s." % visible_select)
+		return false
+	var restore_select: Dictionary = shell.call("validation_select_terrain", "grass")
+	if not bool(restore_select.get("ok", false)):
+		_fail("Map editor smoke: could not restore Grass terrain after option-contract validation: %s." % restore_select)
+		return false
+	return true
 
 func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	var forest_tile: Dictionary = shell.call("validation_tile_presentation", 2, 2)
@@ -281,20 +331,20 @@ func _assert_flood_fill_terrain(shell) -> bool:
 		_fail("Map editor smoke: could not seed flood-fill boundary terrain: %s." % boundary_seed)
 		return false
 
-	var fill_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "ash")
+	var fill_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "lava")
 	if (
 		not bool(fill_result.get("ok", false))
 		or not bool(fill_result.get("changed", false))
 		or int(fill_result.get("filled_count", 0)) != 3
 		or String(fill_result.get("source_terrain_id", "")) != "mire"
-		or String(fill_result.get("active_terrain_id", "")) != "ash"
+		or String(fill_result.get("active_terrain_id", "")) != "lava"
 		or String(fill_result.get("fill_result", {}).get("contiguity", "")) != "cardinal"
 	):
 		_fail("Map editor smoke: terrain flood fill did not report the expected bounded region: %s." % fill_result)
 		return false
 	for tile in region_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "ash":
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "lava":
 			_fail("Map editor smoke: terrain flood fill did not update expected tile %s: %s." % [tile, presentation])
 			return false
 	var boundary_presentation: Dictionary = shell.call("validation_tile_presentation", 13, 13)
@@ -302,11 +352,11 @@ func _assert_flood_fill_terrain(shell) -> bool:
 		_fail("Map editor smoke: terrain flood fill leaked through a non-matching boundary tile: %s." % boundary_presentation)
 		return false
 	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", 11, 12)
-	if String(outside_presentation.get("terrain_presentation", {}).get("terrain", "")) == "ash":
+	if String(outside_presentation.get("terrain_presentation", {}).get("terrain", "")) == "lava":
 		_fail("Map editor smoke: terrain flood fill leaked into adjacent non-source terrain: %s." % outside_presentation)
 		return false
 
-	var noop_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "ash")
+	var noop_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "lava")
 	if not bool(noop_result.get("ok", false)) or bool(noop_result.get("changed", true)) or int(noop_result.get("filled_count", -1)) != 0:
 		_fail("Map editor smoke: terrain flood fill did not no-op cleanly on matching active terrain: %s." % noop_result)
 		return false
@@ -334,13 +384,14 @@ func _assert_terrain_line_tool(shell) -> bool:
 			_fail("Map editor smoke: could not seed terrain-line tile %s: %s." % [tile, seed_result])
 			return false
 
-	var start_result: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16, "hills")
+	var start_result: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16, "highland")
 	var pending_start: Dictionary = start_result.get("pending_terrain_line_start", {})
 	if (
 		not bool(start_result.get("ok", false))
 		or int(pending_start.get("x", -1)) != 16
 		or int(pending_start.get("y", -1)) != 16
-		or String(start_result.get("selected_terrain_id", "")) != "hills"
+		or String(start_result.get("selected_terrain_id", "")) != "highland"
+		or String(start_result.get("selected_terrain_label", "")) != "Rock/None"
 		or String(start_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
 	):
 		_fail("Map editor smoke: terrain line start did not expose the pending Manhattan L rule state: %s." % start_result)
@@ -351,7 +402,7 @@ func _assert_terrain_line_tool(shell) -> bool:
 	if (
 		not bool(line_result.get("ok", false))
 		or not bool(line_result.get("changed", false))
-		or String(line_result.get("active_terrain_id", "")) != "hills"
+		or String(line_result.get("active_terrain_id", "")) != "highland"
 		or String(line_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
 		or int(line_result.get("path_count", 0)) != expected_tiles.size()
 		or int(line_result.get("affected_count", 0)) != expected_tiles.size()
@@ -362,7 +413,7 @@ func _assert_terrain_line_tool(shell) -> bool:
 		return false
 	for tile in expected_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "hills":
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "highland":
 			_fail("Map editor smoke: terrain line did not update expected tile %s: %s." % [tile, presentation])
 			return false
 	for off_line_tile in off_line_tiles:
@@ -412,13 +463,14 @@ func _assert_terrain_rectangle_tool(shell) -> bool:
 			_fail("Map editor smoke: could not seed terrain-rectangle tile %s: %s." % [tile, seed_result])
 			return false
 
-	var start_result: Dictionary = shell.call("validation_set_terrain_rectangle_corner", 22, 18, "frost")
+	var start_result: Dictionary = shell.call("validation_set_terrain_rectangle_corner", 22, 18, "snow")
 	var pending_corner: Dictionary = start_result.get("pending_terrain_rectangle_corner", {})
 	if (
 		not bool(start_result.get("ok", false))
 		or int(pending_corner.get("x", -1)) != 22
 		or int(pending_corner.get("y", -1)) != 18
-		or String(start_result.get("selected_terrain_id", "")) != "frost"
+		or String(start_result.get("selected_terrain_id", "")) != "snow"
+		or String(start_result.get("selected_terrain_label", "")) != "Snow"
 		or String(start_result.get("rectangle_rule", "")) != "inclusive_axis_aligned_corners"
 		or String(start_result.get("tile_order", "")) != "row_major_top_left_to_bottom_right"
 	):
@@ -431,7 +483,7 @@ func _assert_terrain_rectangle_tool(shell) -> bool:
 	if (
 		not bool(rect_result.get("ok", false))
 		or not bool(rect_result.get("changed", false))
-		or String(rect_result.get("active_terrain_id", "")) != "frost"
+		or String(rect_result.get("active_terrain_id", "")) != "snow"
 		or String(rect_result.get("rectangle_rule", "")) != "inclusive_axis_aligned_corners"
 		or String(rect_result.get("tile_order", "")) != "row_major_top_left_to_bottom_right"
 		or int(rect_result.get("rectangle_count", 0)) != expected_tiles.size()
@@ -447,7 +499,7 @@ func _assert_terrain_rectangle_tool(shell) -> bool:
 		return false
 	for tile in expected_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "frost":
+		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "snow":
 			_fail("Map editor smoke: terrain rectangle did not update expected tile %s: %s." % [tile, presentation])
 			return false
 	for outside_tile in outside_tiles:

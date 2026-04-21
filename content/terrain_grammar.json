@@ -5,7 +5,58 @@
   "primary_base_model": "homm3_local_reference_prototype",
   "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering resolves land transitions through dirt or sand bridge/base families, water through shoreline-specific lookup, and roads through 4-neighbor overlay masks.",
+  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering resolves land transitions through dirt or sand bridge/base families, water through shoreline-specific lookup, and roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "editor_base_terrain_options": [
+    {
+      "id": "water",
+      "label": "Water",
+      "homm3_family": "water",
+      "homm3_atlas": "watrtl"
+    },
+    {
+      "id": "snow",
+      "label": "Snow",
+      "homm3_family": "snow",
+      "homm3_atlas": "snowtl"
+    },
+    {
+      "id": "grass",
+      "label": "Grass",
+      "homm3_family": "grass",
+      "homm3_atlas": "grastl"
+    },
+    {
+      "id": "wastes",
+      "label": "Sand",
+      "homm3_family": "sand",
+      "homm3_atlas": "sandtl"
+    },
+    {
+      "id": "badlands",
+      "label": "Dirt",
+      "homm3_family": "dirt",
+      "homm3_atlas": "dirttl"
+    },
+    {
+      "id": "lava",
+      "label": "Lava",
+      "homm3_family": "lava",
+      "homm3_atlas": "lavatl"
+    },
+    {
+      "id": "swamp",
+      "label": "Swamp",
+      "homm3_family": "swamp",
+      "homm3_atlas": "swmptl"
+    },
+    {
+      "id": "highland",
+      "label": "Rock/None",
+      "homm3_family": "rock",
+      "homm3_atlas": "rocktl",
+      "note": "Uses the existing highland logical terrain id so the editor exposes the rocktl-aligned Rock/None family without adding a fake terrain id."
+    }
+  ],
   "transition_rules": {
     "selection_model": "homm3_table_driven_bridge_base_lookup",
     "edge_model": "bridge_or_shoreline_atlas_frame_lookup",

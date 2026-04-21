@@ -26,6 +26,31 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Base Terrain Picker Options
+Status: completed on 2026-04-21 as a narrow map editor option-surface correction.
+
+Purpose:
+- Stop the map editor terrain picker from exposing the full authored logical terrain grammar as base terrain choices.
+- Align the visible/editable base terrain family surface with the active HoMM3 local terrain prototype: Water, Snow, Grass, Sand, Dirt, Lava, Swamp, and Rock/None.
+- Preserve existing authored logical terrain ids in scenarios, tests, renderer lookup, save/runtime data, and direct compatibility validation paths.
+
+Implemented:
+- `content/terrain_grammar.json` now declares `editor_base_terrain_options` as the curated map-editor base terrain picker contract.
+- `MapEditorShell` builds the terrain picker from that curated contract and exposes validation payloads for the option ids, labels, HoMM3 families, atlases, and hidden authored terrain ids.
+- Hidden logical terrain ids such as `forest`, `mire`, `hills`, `ridge`, `ash`, `frost`, `coast`, and `shore` are no longer selectable through the picker validation surface, while direct authored-map compatibility remains intact.
+- The curated Sand, Dirt, and Rock/None options reuse existing logical terrain representatives mapped to `sandtl`, `dirttl`, and `rocktl` rather than adding fake terrain ids.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is not a terrain schema migration, map rewrite, save-format change, gameplay/pathing change, or removal of richer logical terrain ids.
+- Existing scenario content can still contain the broader logical ids and the HoMM3 renderer mapping remains responsible for presenting them through the local prototype families.
+
 ## Current Implementation Slice: HoMM3 Transition Orientation Correction
 Status: completed on 2026-04-21 as a narrow visual regression fix.
 

@@ -268,6 +268,10 @@ Implementation note date: 2026-04-20
 
 The overworld terrain transition contract now treats neighboring terrain relationships as the source of visible transitions. `OverworldMapView` builds an explicit 8-neighbor transition payload for each explored tile, suppresses seams inside the same terrain group, applies higher-priority neighboring terrain as cardinal intrusion edges on lower-priority receiver tiles, and adds diagonal corner hints when a higher-priority neighbor only touches by corner. Existing grammar edge art is reused from the selected source terrain, with procedural strips and corner wedges as honest fallbacks. The map editor preview reads the same renderer and validation payloads, so painted terrain immediately exposes neighbor-aware edge and corner transition metadata. This is presentation-only: logical map coordinates, pathing, save data, editor schema, object placement systems, and town footprint/pathing semantics are unchanged.
 
+Implementation note date: 2026-04-21
+
+The map editor base-terrain picker now uses a curated HoMM3-style family option contract instead of exposing the full authored terrain grammar. `content/terrain_grammar.json` declares `editor_base_terrain_options` for Water, Snow, Grass, Sand, Dirt, Lava, Swamp, and Rock/None, and `MapEditorShell` builds its picker from that list while validation exposes the option ids, labels, HoMM3 families, atlases, and hidden authored logical ids. Existing scenario data and renderer compatibility keep the richer logical ids such as forest, mire, hills, ridge, ash, frost, coast, and shore; they are hidden from the base picker and continue to render through the active HoMM3 local prototype family mapping. This is an editor option-surface correction only, not a terrain migration, map rewrite, save-format change, gameplay/pathing change, or removal of internal logical terrain ids.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
