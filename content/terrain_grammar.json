@@ -5,7 +5,7 @@
   "primary_base_model": "homm3_local_reference_prototype",
   "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering uses a stable base frame for terrain interiors, resolves explicit direct land-family pairs before falling back to dirt or sand bridge/base families, resolves water through shoreline-specific lookup, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering uses a stable base frame for terrain interiors, resolves explicit direct land-family pairs before falling back to dirt or sand bridge/base families, resolves grass-sand through the extracted tgrs/grastl transition block including stamp-style propagation beyond immediate neighbors where that lookup provides frames, resolves water through shoreline-specific lookup, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
     {
       "id": "water",
@@ -64,9 +64,12 @@
     "cardinal_edges": true,
     "corner_hints": true,
     "bridge_base_model": "direct_pair_overrides_dirt_or_sand_bridge_base",
+    "propagation_model": "explicit_family_transition_stamps_may_extend_beyond_immediate_neighbors",
+    "single_sand_model": "grass_sand_uses_extracted_tgrs_stamp_lookup_without_one_ring_cap",
     "water_model": "shoreline_specific_lookup",
     "receiver_rule": "current_tile_selects_family_atlas_frame_from_neighbor_mask",
     "same_group_policy": "suppress_same_homm3_family_edges",
+    "diagonal_policy": "diagonal_sources_can_select_rotated_family_stamp_frames",
     "unsupported_policy": "explicit_grammar_fallback",
     "fallback_edge_color": "#504a34"
   },
@@ -778,6 +781,15 @@
         "bridge_family": "dirt",
         "selection_model": "direct_family_pair_lookup",
         "note": "Dirt and swamp have a direct local HoMM3 transition path; do not route this pair through the sand bridge family."
+      },
+      {
+        "families": [
+          "grass",
+          "sand"
+        ],
+        "bridge_family": "sand",
+        "selection_model": "direct_grass_sand_tgrs_lookup",
+        "note": "The extracted local reference names grass-sand transition cells as tgrs and places them in grastl frames 00_20 through 00_39, so grass receivers near sand must not use the generic dirt bridge frames."
       }
     ],
     "terrain_families": {
@@ -823,6 +835,55 @@
           "N+S+W": "00_46",
           "E+S+W": "00_47",
           "N+E+S+W": "00_48"
+        },
+        "bridge_family_mask_lookups": {
+          "sand": {
+            "N": "00_28",
+            "E": "00_35",
+            "S": "00_32",
+            "W": "00_24"
+          }
+        },
+        "propagated_transition_stamps": {
+          "sand": {
+            "source_family": "sand",
+            "selection_model": "extracted_tgrs_4x5_stamp_with_axis_flips",
+            "source_artifact_prefix": "tgrs",
+            "source_artifact_mapping": "tgrs000..tgrs043 map exactly to grastl frames 00_20..00_39 in the local extracted reference",
+            "source_offset_model": "receiver_minus_source; no flip means sand source lies northwest of the receiver, horizontal/vertical flips rotate that stamp into the other quadrants",
+            "frame_grid": [
+              [
+                "00_20",
+                "00_21",
+                "00_22",
+                "00_23"
+              ],
+              [
+                "00_24",
+                "00_25",
+                "00_26",
+                "00_27"
+              ],
+              [
+                "00_28",
+                "00_29",
+                "00_30",
+                "00_31"
+              ],
+              [
+                "00_32",
+                "00_33",
+                "00_34",
+                "00_35"
+              ],
+              [
+                "00_36",
+                "00_37",
+                "00_38",
+                "00_39"
+              ]
+            ]
+          }
         }
       },
       "dirt": {

@@ -760,6 +760,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var session = SessionState.ensure_active_session()
+	if not _assert_single_sand_homm3_propagation(shell, session):
+		return false
 	var town_tile := _first_visible_town_tile(session)
 	if town_tile.x < 0:
 		push_error("Overworld smoke: could not find a visible town for default town sprite validation.")
@@ -801,6 +803,167 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
+	var center := Vector2i(4, 2)
+	var original_map = session.overworld.get("map", []).duplicate(true)
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var map_size := OverworldRules.derive_map_size(session)
+	var controlled_tiles := []
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			controlled_tiles.append(tile)
+	var working_map := []
+	for y in range(map_size.y):
+		var row := []
+		for x in range(map_size.x):
+			row.append("grass")
+		working_map.append(row)
+	working_map[center.y][center.x] = "wastes"
+	session.overworld["map"] = working_map
+	_reveal_validation_tiles(session, controlled_tiles)
+	shell.call("_refresh")
+
+	var center_presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
+	var center_terrain: Dictionary = center_presentation.get("terrain_presentation", {})
+	if (
+		String(center_terrain.get("terrain", "")) != "wastes"
+		or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
+		or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
+		or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
+		or int(center_terrain.get("edge_transition_count", -1)) != 4
+		or int(center_terrain.get("corner_transition_count", -1)) != 4
+		or "grass" not in center_terrain.get("transition_source_terrain_ids", [])
+	):
+		_restore_single_sand_fixture(shell, session, original_map, original_fog)
+		push_error("Overworld smoke: live renderer did not use the HoMM3 sand receiver transition lookup for the inserted sand center. presentation=%s" % center_presentation)
+		get_tree().quit(1)
+		return false
+
+	var edge_cases := [
+		{"tile": center + Vector2i(0, -1), "edge": "S", "frame": "00_32"},
+		{"tile": center + Vector2i(1, 0), "edge": "W", "frame": "00_24"},
+		{"tile": center + Vector2i(0, 1), "edge": "N", "frame": "00_28"},
+		{"tile": center + Vector2i(-1, 0), "edge": "E", "frame": "00_35"},
+	]
+	for entry in edge_cases:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+			or String(terrain.get("transition_edge_mask", "")) != String(entry.get("edge", ""))
+			or String(terrain.get("transition_corner_mask", "")) != ""
+			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
+			or String(terrain.get("homm3_bridge_family", "")) != "sand"
+			or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_tgrs_lookup"
+			or int(terrain.get("edge_transition_count", 0)) != 1
+			or int(terrain.get("corner_transition_count", -1)) != 0
+			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: live renderer did not select the expected tgrs grass-sand edge frame at %s. presentation=%s" % [tile, presentation])
+			get_tree().quit(1)
+			return false
+
+	var corner_cases := [
+		{"tile": center + Vector2i(-1, -1), "direction": "SE", "flip": "HV"},
+		{"tile": center + Vector2i(1, -1), "direction": "SW", "flip": "V"},
+		{"tile": center + Vector2i(-1, 1), "direction": "NE", "flip": "H"},
+		{"tile": center + Vector2i(1, 1), "direction": "NW", "flip": ""},
+	]
+	for entry in corner_cases:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("homm3_selection_kind", "")) != "propagated_transition"
+			or String(terrain.get("transition_edge_mask", "")) != ""
+			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
+			or String(terrain.get("homm3_terrain_frame", "")) != "00_20"
+			or not bool(terrain.get("homm3_propagated_transition", false))
+			or String(terrain.get("homm3_transition_propagation_model", "")) != "extracted_tgrs_4x5_stamp_with_axis_flips"
+			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
+			or int(terrain.get("edge_transition_count", -1)) != 0
+			or int(terrain.get("corner_transition_count", -1)) != 1
+			or int(terrain.get("propagated_transition_count", 0)) != 1
+			or bool(terrain.get("transition_uses_second_ring", true))
+			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: live renderer did not select the expected rotated tgrs stamp frame at %s. presentation=%s" % [tile, presentation])
+			get_tree().quit(1)
+			return false
+
+	var second_ring_cases := [
+		{"tile": center + Vector2i(2, 2), "direction": "NW", "frame": "00_25", "flip": "", "distance": 2},
+		{"tile": center + Vector2i(-2, -2), "direction": "SE", "frame": "00_25", "flip": "HV", "distance": 2},
+	]
+	for entry in second_ring_cases:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("homm3_selection_kind", "")) != "propagated_transition"
+			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
+			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
+			or int(terrain.get("homm3_transition_source_distance", 0)) != int(entry.get("distance", 0))
+			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
+			or not bool(terrain.get("transition_uses_second_ring", false))
+			or int(terrain.get("propagated_transition_count", 0)) != 1
+			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: live renderer did not propagate the single sand through the extracted tgrs stamp at %s. presentation=%s" % [tile, presentation])
+			get_tree().quit(1)
+			return false
+
+	var outside_tile := center + Vector2i(4, 0)
+	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", outside_tile.x, outside_tile.y)
+	var outside_terrain: Dictionary = outside_presentation.get("terrain_presentation", {})
+	if String(outside_terrain.get("homm3_selection_kind", "")) != "interior" or bool(outside_terrain.get("homm3_propagated_transition", false)):
+		_restore_single_sand_fixture(shell, session, original_map, original_fog)
+		push_error("Overworld smoke: live renderer propagated outside the explicit tgrs stamp lookup at %s. presentation=%s" % [outside_tile, outside_presentation])
+		get_tree().quit(1)
+		return false
+
+	_restore_single_sand_fixture(shell, session, original_map, original_fog)
+	return true
+
+func _restore_single_sand_fixture(shell: Node, session, original_map, original_fog) -> void:
+	session.overworld["map"] = original_map.duplicate(true) if original_map is Array else []
+	session.overworld["fog"] = original_fog.duplicate(true) if original_fog is Dictionary else {}
+	shell.call("_refresh")
+
+func _reveal_validation_tiles(session, tiles: Array) -> void:
+	var map_size := OverworldRules.derive_map_size(session)
+	var visible_tiles := []
+	var explored_tiles := []
+	for y in range(map_size.y):
+		var visible_row := []
+		var explored_row := []
+		for x in range(map_size.x):
+			visible_row.append(false)
+			explored_row.append(false)
+		visible_tiles.append(visible_row)
+		explored_tiles.append(explored_row)
+	for tile_value in tiles:
+		if not (tile_value is Vector2i):
+			continue
+		var tile: Vector2i = tile_value
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		visible_tiles[tile.y][tile.x] = true
+		explored_tiles[tile.y][tile.x] = true
+	session.overworld["fog"] = {
+		"visible_tiles": visible_tiles,
+		"explored_tiles": explored_tiles,
+		"visible_count": tiles.size(),
+		"explored_count": tiles.size(),
+		"total_tiles": map_size.x * map_size.y,
+	}
 
 func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, remembered: bool) -> bool:
 	var art: Dictionary = presentation.get("art_presentation", {})

@@ -192,6 +192,7 @@ var _terrain_overlay_styles: Dictionary = {}
 var _terrain_base_art: Dictionary = {}
 var _terrain_edge_art: Dictionary = {}
 var _terrain_art_textures: Dictionary = {}
+var _terrain_art_transformed_textures: Dictionary = {}
 var _terrain_art_missing: Dictionary = {}
 var _road_overlay_art: Dictionary = {}
 var _homm3_prototype: Dictionary = {}
@@ -352,8 +353,7 @@ func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> boo
 	if not _terrain_art_can_be_primary(terrain):
 		return false
 	var entry := _terrain_base_art_entry(terrain, tile)
-	var texture_path := String(entry.get("path", ""))
-	var texture = _terrain_art_texture(texture_path)
+	var texture = _terrain_art_texture_for_entry(entry)
 	if not (texture is Texture2D):
 		return false
 	draw_texture_rect(texture, rect, false)
@@ -2120,6 +2120,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var edge_art_count := _transition_edge_art_count(transition_payload)
 	var edge_transition_count := _transition_source_count(transition_payload, "cardinal_sources")
 	var corner_transition_count := _transition_source_count(transition_payload, "corner_sources")
+	var propagated_transition_count := _transition_source_count(transition_payload, "propagated_sources")
 	var road_neighbor_directions := _road_neighbor_directions(tile) if not road_payload.is_empty() else []
 	var road_art_loaded := _road_overlay_art_loaded(road_payload, tile)
 	var road_connection_piece_loaded := _road_connection_piece_loaded(road_payload, tile)
@@ -2174,6 +2175,17 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_bridge_family": String(homm3_selection.get("bridge_family", "")),
 		"homm3_bridge_resolution_model": String(homm3_selection.get("bridge_resolution_model", "")),
 		"homm3_shoreline_specific": bool(homm3_selection.get("shoreline_specific", false)),
+		"homm3_receiver_transition_policy": String(homm3_selection.get("receiver_transition_policy", "")),
+		"homm3_corner_lookup": bool(homm3_selection.get("corner_lookup", false)),
+		"homm3_corner_lookup_model": String(homm3_selection.get("corner_lookup_model", "")),
+		"homm3_terrain_flip": String(homm3_selection.get("flip", "")),
+		"homm3_terrain_flip_h": bool(homm3_selection.get("flip_h", false)),
+		"homm3_terrain_flip_v": bool(homm3_selection.get("flip_v", false)),
+		"homm3_propagated_transition": bool(homm3_selection.get("propagated_transition", false)),
+		"homm3_transition_propagation_model": String(homm3_selection.get("transition_propagation_model", "")),
+		"homm3_transition_source_distance": int(homm3_selection.get("transition_source_distance", 0)),
+		"homm3_transition_source_offset": homm3_selection.get("transition_source_offset", {}),
+		"homm3_transition_source_direction": String(homm3_selection.get("transition_source_direction", "")),
 		"homm3_interior_frame_selection": String(homm3_selection.get("interior_frame_selection", "")),
 		"homm3_interior_frame_count": int(homm3_selection.get("interior_frame_count", 0)),
 		"homm3_uses_interior_variant_cycle": bool(homm3_selection.get("uses_interior_variant_cycle", false)),
@@ -2193,15 +2205,19 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"transition_source_groups": transition_payload.get("source_groups", []),
 		"transition_cardinal_sources": transition_payload.get("cardinal_sources", []),
 		"transition_corner_sources": transition_payload.get("corner_sources", []),
-		"transition_relationship_count": edge_transition_count + corner_transition_count,
+		"transition_propagated_sources": transition_payload.get("propagated_sources", []),
+		"transition_relationship_count": edge_transition_count + corner_transition_count + propagated_transition_count,
 		"edge_transition_count": edge_transition_count,
 		"corner_transition_count": corner_transition_count,
+		"propagated_transition_count": propagated_transition_count,
+		"transition_uses_second_ring": bool(homm3_selection.get("uses_second_ring", false)) if not homm3_selection.is_empty() else false,
+		"transition_diagonal_policy": String(homm3_selection.get("diagonal_policy", "")),
 		"edge_transition_art_count": edge_art_count,
 		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
 		"transition_shape_model": "homm3_base_atlas_frame" if not homm3_selection.is_empty() else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
 		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if not homm3_selection.is_empty() else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
 		"transition_selection_rule": "resolve_direct_family_pairs_before_dirt_or_sand_bridge_tables_and_water_through_shoreline_tables" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
-		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0,
+		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0 or propagated_transition_count > 0,
 		"same_group_transition_suppressed": true,
 		"road_overlay": not road_payload.is_empty(),
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
@@ -2583,6 +2599,7 @@ func _load_terrain_grammar() -> void:
 	_terrain_base_art.clear()
 	_terrain_edge_art.clear()
 	_terrain_art_textures.clear()
+	_terrain_art_transformed_textures.clear()
 	_terrain_art_missing.clear()
 	_road_overlay_art.clear()
 	_homm3_prototype.clear()
@@ -2850,6 +2867,8 @@ func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
 		"path": path,
 		"source_basis": TERRAIN_HOMM3_SOURCE_BASIS,
 		"homm3_selection": selection,
+		"flip_h": bool(selection.get("flip_h", false)),
+		"flip_v": bool(selection.get("flip_v", false)),
 	}
 
 func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dictionary:
@@ -2864,16 +2883,42 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 	var relation := _homm3_terrain_relation_payload(tile, terrain_id)
 	var selection_kind := String(relation.get("selection_kind", "interior"))
 	var mask_key := String(relation.get("mask_key", ""))
+	var corner_mask := String(relation.get("corner_mask", ""))
 	var frame_id := ""
 	var fallback_reason := ""
+	var corner_lookup := false
+	var corner_lookup_model := ""
+	var flip_h := false
+	var flip_v := false
 	if selection_kind == "water_shoreline":
-		frame_id = _homm3_lookup_frame(family.get("shoreline_lookup", {}), mask_key)
+		var shoreline_entry := _homm3_lookup_entry(family.get("shoreline_lookup", {}), mask_key)
+		frame_id = String(shoreline_entry.get("frame", "")).strip_edges()
 		if frame_id == "":
 			fallback_reason = "missing_shoreline_mask_lookup"
 	elif selection_kind == "bridge_transition":
-		frame_id = _homm3_lookup_frame(family.get("bridge_mask_lookup", {}), mask_key)
+		var bridge_lookup := _homm3_bridge_mask_lookup(family, String(relation.get("bridge_family", "")))
+		var bridge_entry := _homm3_lookup_entry(bridge_lookup, mask_key)
+		frame_id = String(bridge_entry.get("frame", "")).strip_edges()
+		flip_h = bool(bridge_entry.get("flip_h", false))
+		flip_v = bool(bridge_entry.get("flip_v", false))
 		if frame_id == "":
 			fallback_reason = "missing_bridge_mask_lookup"
+	elif selection_kind == "corner_transition":
+		var corner_entry := _homm3_lookup_entry(family.get("corner_mask_lookup", {}), corner_mask)
+		frame_id = String(corner_entry.get("frame", "")).strip_edges()
+		corner_lookup = not corner_entry.is_empty()
+		corner_lookup_model = String(corner_entry.get("lookup_model", "single_frame_with_axis_flips"))
+		flip_h = bool(corner_entry.get("flip_h", false))
+		flip_v = bool(corner_entry.get("flip_v", false))
+		if frame_id == "":
+			fallback_reason = "missing_corner_mask_lookup"
+	elif selection_kind == "propagated_transition":
+		var propagated_entry: Dictionary = relation.get("propagated_transition_entry", {})
+		frame_id = String(propagated_entry.get("frame", "")).strip_edges()
+		flip_h = bool(propagated_entry.get("flip_h", false))
+		flip_v = bool(propagated_entry.get("flip_v", false))
+		if frame_id == "":
+			fallback_reason = "missing_propagated_transition_frame"
 	if frame_id == "":
 		frame_id = _homm3_interior_frame(family, tile, terrain_id)
 	return {
@@ -2890,19 +2935,59 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		"bridge_family": String(relation.get("bridge_family", config.get("bridge_family", family.get("bridge_family", "")))),
 		"bridge_resolution_model": String(relation.get("bridge_resolution_model", "receiver_bridge_family_default")),
 		"shoreline_specific": bool(family.get("shoreline_specific", false)),
+		"receiver_transition_policy": String(relation.get("receiver_transition_policy", family.get("receiver_transition_policy", ""))),
+		"corner_lookup": corner_lookup,
+		"corner_lookup_model": corner_lookup_model,
+		"flip": _homm3_flip_key(flip_h, flip_v),
+		"flip_h": flip_h,
+		"flip_v": flip_v,
 		"interior_frame_selection": _homm3_interior_frame_selection_model(),
 		"interior_frame_count": _homm3_interior_frame_count(family),
 		"uses_interior_variant_cycle": false,
+		"propagated_transition": bool(relation.get("propagated_transition", false)),
+		"transition_propagation_model": String(relation.get("transition_propagation_model", "")),
+		"transition_source_distance": int(relation.get("transition_source_distance", 0)),
+		"transition_source_offset": relation.get("transition_source_offset", {}),
+		"transition_source_direction": String(relation.get("transition_source_direction", "")),
+		"uses_second_ring": bool(relation.get("uses_second_ring", false)),
+		"diagonal_policy": "family_stamp_lookup_with_axis_flips" if bool(relation.get("propagated_transition", false)) else "diagonal_context_in_atlas_lookup",
 		"fallback_reason": fallback_reason,
 		"logical_degrade_note": String(config.get("logical_degrade_note", "")),
 		"relation": relation,
 	}
 
-func _homm3_lookup_frame(lookup, mask_key: String) -> String:
-	if not (lookup is Dictionary):
-		return ""
-	if lookup.has(mask_key):
-		return String(lookup.get(mask_key, "")).strip_edges()
+func _homm3_bridge_mask_lookup(family: Dictionary, bridge_family: String) -> Dictionary:
+	var fallback = family.get("bridge_mask_lookup", {})
+	var result: Dictionary = fallback.duplicate(true) if fallback is Dictionary else {}
+	var lookups = family.get("bridge_family_mask_lookups", {})
+	if lookups is Dictionary and lookups.has(bridge_family):
+		var family_lookup = lookups.get(bridge_family, {})
+		if family_lookup is Dictionary:
+			for key in family_lookup.keys():
+				result[key] = family_lookup.get(key)
+	return result
+
+func _homm3_lookup_entry(lookup, mask_key: String) -> Dictionary:
+	if not (lookup is Dictionary) or not lookup.has(mask_key):
+		return {}
+	var value = lookup.get(mask_key)
+	if value is Dictionary:
+		var entry: Dictionary = value
+		return {
+			"frame": String(entry.get("frame", "")).strip_edges(),
+			"flip_h": bool(entry.get("flip_h", false)),
+			"flip_v": bool(entry.get("flip_v", false)),
+			"lookup_model": String(entry.get("lookup_model", "single_frame_with_axis_flips")),
+		}
+	return {"frame": String(value).strip_edges()}
+
+func _homm3_flip_key(flip_h: bool, flip_v: bool) -> String:
+	if flip_h and flip_v:
+		return "HV"
+	if flip_h:
+		return "H"
+	if flip_v:
+		return "V"
 	return ""
 
 func _homm3_interior_frame_selection_model() -> String:
@@ -2954,10 +3039,22 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 			continue
 		corner_sources.append(source)
 		corner_keys.append(String(source.get("direction", "")))
-	var resolved_bridge_family := _homm3_bridge_family_from_sources(cardinal_sources, corner_sources, bridge_family)
+	var propagated_source := _homm3_propagated_transition_source(tile, terrain_id, family) if cardinal_sources.is_empty() else {}
+	var propagated_sources: Array = []
+	var bridge_sources_for_resolution := corner_sources.duplicate()
+	if not propagated_source.is_empty():
+		propagated_sources.append(propagated_source)
+		bridge_sources_for_resolution.append(propagated_source)
+	if not cardinal_sources.is_empty():
+		bridge_sources_for_resolution.clear()
+	var resolved_bridge_family := _homm3_bridge_family_from_sources(cardinal_sources, bridge_sources_for_resolution, bridge_family)
 	if bool(family.get("shoreline_specific", false)):
 		if not cardinal_keys.is_empty() or not corner_keys.is_empty():
 			selection_kind = "water_shoreline"
+	elif cardinal_keys.is_empty() and not propagated_source.is_empty():
+		selection_kind = "propagated_transition"
+	elif cardinal_keys.is_empty() and not corner_keys.is_empty():
+		selection_kind = "corner_transition"
 	elif not cardinal_keys.is_empty() or not corner_keys.is_empty():
 		selection_kind = "bridge_transition"
 	var mask_key := _homm3_mask_key_from_keys(cardinal_keys)
@@ -2967,10 +3064,124 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 		"edge_mask": _homm3_compact_mask_from_keys(cardinal_keys),
 		"corner_mask": _homm3_compact_mask_from_keys(corner_keys),
 		"bridge_family": resolved_bridge_family,
-		"bridge_resolution_model": _homm3_bridge_resolution_model_from_sources(cardinal_sources, corner_sources),
+		"bridge_resolution_model": _homm3_bridge_resolution_model_from_sources(cardinal_sources, bridge_sources_for_resolution),
 		"cardinal_sources": cardinal_sources,
 		"corner_sources": corner_sources,
+		"propagated_sources": propagated_sources,
+		"propagated_transition": not propagated_source.is_empty() and selection_kind == "propagated_transition",
+		"propagated_transition_entry": propagated_source.get("propagated_transition_entry", {}) if not propagated_source.is_empty() else {},
+		"transition_propagation_model": String(propagated_source.get("transition_propagation_model", "")) if not propagated_source.is_empty() else "",
+		"transition_source_distance": int(propagated_source.get("source_distance", 0)) if not propagated_source.is_empty() else 0,
+		"transition_source_offset": propagated_source.get("source_offset", {}) if not propagated_source.is_empty() else {},
+		"transition_source_direction": String(propagated_source.get("direction", "")) if not propagated_source.is_empty() else "",
+		"uses_second_ring": bool(propagated_source.get("uses_second_ring", false)) if not propagated_source.is_empty() else false,
 	}
+
+func _homm3_propagated_transition_source(tile: Vector2i, receiver_terrain: String, family: Dictionary) -> Dictionary:
+	var stamps = family.get("propagated_transition_stamps", {})
+	if not (stamps is Dictionary):
+		return {}
+	var receiver_config := _homm3_terrain_config(receiver_terrain)
+	var receiver_family := String(receiver_config.get("family", "")).strip_edges()
+	var best_source: Dictionary = {}
+	var best_distance := 999999
+	var best_axis_sum := 999999
+	for source_family_key in stamps.keys():
+		var stamp = stamps.get(source_family_key, {})
+		if not (stamp is Dictionary):
+			continue
+		var source_family := String(stamp.get("source_family", source_family_key)).strip_edges()
+		if source_family == "" or source_family == receiver_family:
+			continue
+		var frame_grid: Array = stamp.get("frame_grid", [])
+		if not (frame_grid is Array) or frame_grid.is_empty():
+			continue
+		var height: int = frame_grid.size()
+		var width: int = 0
+		for row_value in frame_grid:
+			if row_value is Array:
+				width = maxi(width, row_value.size())
+		if width <= 0 or height <= 0:
+			continue
+		for dy in range(-height, height + 1):
+			for dx in range(-width, width + 1):
+				if dx == 0 or dy == 0:
+					continue
+				var row := absi(dy) - 1
+				var column := absi(dx) - 1
+				if row < 0 or column < 0 or row >= height:
+					continue
+				var frame_row = frame_grid[row]
+				if not (frame_row is Array) or column >= frame_row.size():
+					continue
+				var source_tile := tile - Vector2i(dx, dy)
+				if not _tile_in_bounds(source_tile):
+					continue
+				if _session == null or not OverworldRulesScript.is_tile_explored(_session, source_tile.x, source_tile.y):
+					continue
+				var source_terrain := _terrain_at(source_tile)
+				if source_terrain == "":
+					continue
+				var source_config := _homm3_terrain_config(source_terrain)
+				if source_config.is_empty() or String(source_config.get("family", "")).strip_edges() != source_family:
+					continue
+				var frame_id := String(frame_row[column]).strip_edges()
+				if frame_id == "":
+					continue
+				var distance := maxi(absi(dx), absi(dy))
+				var axis_sum := absi(dx) + absi(dy)
+				if best_source.is_empty() or distance < best_distance or (distance == best_distance and axis_sum < best_axis_sum):
+					var direct_bridge_pair := _homm3_direct_bridge_pair(receiver_family, source_family)
+					var resolved_bridge_family := String(stamp.get("bridge_family", source_family)).strip_edges()
+					var bridge_resolution_model := String(stamp.get("selection_model", "propagated_family_transition_stamp"))
+					if not direct_bridge_pair.is_empty():
+						var pair_bridge_family := String(direct_bridge_pair.get("bridge_family", "")).strip_edges()
+						if pair_bridge_family != "":
+							resolved_bridge_family = pair_bridge_family
+							bridge_resolution_model = String(direct_bridge_pair.get("selection_model", bridge_resolution_model))
+					best_distance = distance
+					best_axis_sum = axis_sum
+					best_source = {
+						"direction": _homm3_direction_from_offset(Vector2i(-dx, -dy)),
+						"source_terrain": source_terrain,
+						"source_group": _terrain_group(source_terrain),
+						"source_family": source_family,
+						"receiver_terrain": receiver_terrain,
+						"receiver_group": _terrain_group(receiver_terrain),
+						"receiver_family": receiver_family,
+						"resolved_bridge_family": resolved_bridge_family,
+						"bridge_resolution_model": bridge_resolution_model,
+						"uses_direct_bridge_pair": not direct_bridge_pair.is_empty(),
+						"relation_kind": "propagated_family_transition_stamp",
+						"neighbor": {"x": source_tile.x, "y": source_tile.y},
+						"source_offset": {"x": dx, "y": dy},
+						"source_distance": distance,
+						"uses_second_ring": distance > 1,
+						"transition_propagation_model": String(stamp.get("selection_model", "propagated_family_transition_stamp")),
+						"propagated_transition_entry": {
+							"frame": frame_id,
+							"flip_h": dx < 0,
+							"flip_v": dy < 0,
+							"lookup_model": String(stamp.get("selection_model", "propagated_family_transition_stamp")),
+							"source_artifact_prefix": String(stamp.get("source_artifact_prefix", "")),
+							"grid_column": column,
+							"grid_row": row,
+						},
+					}
+	return best_source
+
+func _homm3_direction_from_offset(offset: Vector2i) -> String:
+	var vertical := ""
+	var horizontal := ""
+	if offset.y < 0:
+		vertical = "N"
+	elif offset.y > 0:
+		vertical = "S"
+	if offset.x < 0:
+		horizontal = "W"
+	elif offset.x > 0:
+		horizontal = "E"
+	return vertical + horizontal
 
 func _homm3_bridge_family_from_sources(cardinal_sources: Array, corner_sources: Array, fallback_bridge_family: String) -> String:
 	for source_array in [cardinal_sources, corner_sources]:
@@ -3094,6 +3305,29 @@ func _terrain_art_texture(texture_path: String):
 	_terrain_art_missing[normalized_path] = true
 	return null
 
+func _terrain_art_texture_for_entry(entry: Dictionary):
+	var texture_path := String(entry.get("path", ""))
+	var texture = _terrain_art_texture(texture_path)
+	if not (texture is Texture2D):
+		return null
+	var flip_h := bool(entry.get("flip_h", false))
+	var flip_v := bool(entry.get("flip_v", false))
+	if not flip_h and not flip_v:
+		return texture
+	var cache_key := "%s|%s|%s" % [texture_path.strip_edges(), "h" if flip_h else "", "v" if flip_v else ""]
+	if _terrain_art_transformed_textures.has(cache_key):
+		return _terrain_art_transformed_textures.get(cache_key)
+	var image = texture.get_image()
+	if image == null:
+		return texture
+	if flip_h:
+		image.flip_x()
+	if flip_v:
+		image.flip_y()
+	var flipped_texture := ImageTexture.create_from_image(image)
+	_terrain_art_transformed_textures[cache_key] = flipped_texture
+	return flipped_texture
+
 func _terrain_transition_priority(terrain_id: String) -> int:
 	var style := _terrain_style(terrain_id)
 	return int(style.get("transition_priority", 0))
@@ -3108,6 +3342,9 @@ func _terrain_transition_payload(tile: Vector2i) -> Dictionary:
 		var relation: Dictionary = homm3_selection.get("relation", {})
 		var cardinal_sources: Array = relation.get("cardinal_sources", [])
 		var corner_sources: Array = relation.get("corner_sources", [])
+		var propagated_sources: Array = relation.get("propagated_sources", [])
+		var corner_and_propagated := corner_sources.duplicate()
+		corner_and_propagated.append_array(propagated_sources)
 		return {
 			"model": TERRAIN_TRANSITION_SELECTION_MODEL,
 			"edge_model": TERRAIN_TRANSITION_EDGE_MODEL,
@@ -3119,8 +3356,9 @@ func _terrain_transition_payload(tile: Vector2i) -> Dictionary:
 			"corner_mask": String(relation.get("corner_mask", "")),
 			"cardinal_sources": cardinal_sources,
 			"corner_sources": corner_sources,
-			"source_terrain_ids": _transition_unique_values(cardinal_sources, corner_sources, "source_terrain"),
-			"source_groups": _transition_unique_values(cardinal_sources, corner_sources, "source_group"),
+			"propagated_sources": propagated_sources,
+			"source_terrain_ids": _transition_unique_values(cardinal_sources, corner_and_propagated, "source_terrain"),
+			"source_groups": _transition_unique_values(cardinal_sources, corner_and_propagated, "source_group"),
 			"homm3_selection": homm3_selection,
 			"homm3_mask_key": String(homm3_selection.get("mask_key", "")),
 			"homm3_bridge_family": String(homm3_selection.get("bridge_family", "")),
@@ -3138,6 +3376,7 @@ func _terrain_transition_payload(tile: Vector2i) -> Dictionary:
 		"corner_mask": "",
 		"cardinal_sources": [],
 		"corner_sources": [],
+		"propagated_sources": [],
 		"source_terrain_ids": [],
 		"source_groups": [],
 	}

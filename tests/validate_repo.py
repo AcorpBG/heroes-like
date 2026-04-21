@@ -4618,6 +4618,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(transition_rules.get("receiver_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask", errors, "Terrain grammar must document current-tile atlas frame selection")
         ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_same_homm3_family_edges", errors, "Terrain grammar must suppress same HoMM3-family transition seams")
         ensure(str(transition_rules.get("bridge_base_model", "")) == "direct_pair_overrides_dirt_or_sand_bridge_base", errors, "Terrain grammar must document direct-pair overrides before generic dirt/sand bridge-base resolution")
+        ensure(str(transition_rules.get("propagation_model", "")) == "explicit_family_transition_stamps_may_extend_beyond_immediate_neighbors", errors, "Terrain grammar must document that HoMM3 terrain stamps may propagate beyond immediate neighbors")
+        ensure(str(transition_rules.get("single_sand_model", "")) == "grass_sand_uses_extracted_tgrs_stamp_lookup_without_one_ring_cap", errors, "Terrain grammar must document the corrected grass-sand propagation model without a fake one-ring cap")
+        ensure(str(transition_rules.get("diagonal_policy", "")) == "diagonal_sources_can_select_rotated_family_stamp_frames", errors, "Terrain grammar must document diagonal sources through rotated family stamp frames")
+        ensure("neighbor_radius" not in transition_rules, errors, "Terrain grammar must not hard-cap HoMM3 terrain propagation with a fake neighbor_radius")
         ensure(str(transition_rules.get("water_model", "")) == "shoreline_specific_lookup", errors, "Terrain grammar must document shoreline-specific water lookup")
         ensure(str(transition_rules.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "Terrain grammar must document explicit unsupported-case fallback")
     homm3_prototype = terrain_grammar.get("homm3_local_prototype", {})
@@ -4648,6 +4652,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     found_dirt_swamp_pair = True
                     break
             ensure(found_dirt_swamp_pair, errors, "HoMM3 local prototype must keep dirt<->swamp on a direct dirt bridge-pair lookup instead of sand")
+            found_grass_sand_pair = False
+            for pair in direct_bridge_pairs:
+                if not isinstance(pair, dict):
+                    continue
+                families = pair.get("families", [])
+                if isinstance(families, list) and set(map(str, families)) == {"grass", "sand"} and str(pair.get("bridge_family", "")) == "sand" and str(pair.get("selection_model", "")) == "direct_grass_sand_tgrs_lookup":
+                    found_grass_sand_pair = True
+                    break
+            ensure(found_grass_sand_pair, errors, "HoMM3 local prototype must route grass<->sand through the extracted tgrs/grastl transition lookup")
         if isinstance(terrain_id_map, dict):
             forest_mapping = terrain_id_map.get("forest", {})
             ensure(isinstance(forest_mapping, dict) and str(forest_mapping.get("logical_degrade_note", "")) != "", errors, "HoMM3 local prototype must explicitly document the logical forest terrain atlas limitation")
@@ -4667,6 +4680,32 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 if lookup_key == "bridge_mask_lookup" and isinstance(lookup, dict):
                     ensure(str(lookup.get("E", "")) == "00_15", errors, f"HoMM3 local prototype family {family_id} east bridge mask must use the right-side source frame")
                     ensure(str(lookup.get("W", "")) == "00_04", errors, f"HoMM3 local prototype family {family_id} west bridge mask must use the left-side source frame")
+                if family_id == "sand":
+                    ensure("receiver_transition_policy" not in family, errors, "HoMM3 sand family must not carry the discarded self-contained one-ring receiver policy")
+                if family_id == "grass":
+                    family_lookups = family.get("bridge_family_mask_lookups", {})
+                    sand_lookup = family_lookups.get("sand", {}) if isinstance(family_lookups, dict) else {}
+                    ensure(isinstance(sand_lookup, dict), errors, "HoMM3 grass family must define a sand-specific bridge mask lookup")
+                    if isinstance(sand_lookup, dict):
+                        expected_sand_edges = {"N": "00_28", "E": "00_35", "S": "00_32", "W": "00_24"}
+                        for mask_key, frame_id in expected_sand_edges.items():
+                            ensure(str(sand_lookup.get(mask_key, "")) == frame_id, errors, f"HoMM3 grass-sand edge mask {mask_key} must use extracted tgrs frame {frame_id}")
+                            frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
+                            ensure(frame_path.exists(), errors, f"HoMM3 grass-sand edge lookup {mask_key} references missing frame {frame_path}")
+                    stamps = family.get("propagated_transition_stamps", {})
+                    sand_stamp = stamps.get("sand", {}) if isinstance(stamps, dict) else {}
+                    ensure(isinstance(sand_stamp, dict), errors, "HoMM3 grass family must define the grass-sand propagated tgrs stamp")
+                    if isinstance(sand_stamp, dict):
+                        ensure(str(sand_stamp.get("selection_model", "")) == "extracted_tgrs_4x5_stamp_with_axis_flips", errors, "HoMM3 grass-sand stamp must use the extracted tgrs 4x5 axis-flip model")
+                        ensure(str(sand_stamp.get("source_artifact_prefix", "")) == "tgrs", errors, "HoMM3 grass-sand stamp must document the tgrs local reference prefix")
+                        frame_grid = sand_stamp.get("frame_grid", [])
+                        ensure(isinstance(frame_grid, list) and len(frame_grid) == 5 and all(isinstance(row, list) and len(row) == 4 for row in frame_grid), errors, "HoMM3 grass-sand stamp must expose the 5x4 tgrs frame grid")
+                        if isinstance(frame_grid, list):
+                            flattened = [str(frame) for row in frame_grid if isinstance(row, list) for frame in row]
+                            ensure(flattened == [f"00_{index:02d}" for index in range(20, 40)], errors, "HoMM3 grass-sand stamp must map tgrs000..tgrs043 to grastl frames 00_20..00_39 in order")
+                            for frame_id in flattened:
+                                frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
+                                ensure(frame_path.exists(), errors, f"HoMM3 grass-sand propagated stamp references missing frame {frame_path}")
                 sample_frames = []
                 if isinstance(interior_frames, list):
                     sample_frames.extend(map(str, interior_frames[:2]))
