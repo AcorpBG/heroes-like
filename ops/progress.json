@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-20T21:36:00Z",
+  "updatedAt": "2026-04-21T07:15:59Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-terrain-rectangle-10184",
-  "currentSliceTitle": "Paint compact terrain rectangles in the map editor working copy",
+  "currentSliceId": "overworld-rubberduck-terrain-feel-test-10184",
+  "currentSliceTitle": "Run a narrow Rubberduck terrain-surface feel test through the existing tile bank",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the thin in-project map editor terrain-rectangle slice: MapEditorShell now supports a compact Terrain Rect tool that sets one corner tile, paints the inclusive axis-aligned rectangle to an opposite corner using the active terrain id, mutates only the in-memory working-copy map array, exposes explicit rectangle-rule validation output, and keeps authored JSON, save format, projection/layout, pathing/gameplay, and town occupancy/pathing unchanged.",
+  "currentSliceNotes": "Completed a narrow terrain-only feel-test pass using the locally downloaded Rubberduck OpenGameArt terrain pack. Selected grass/plains/forest 128x64 isometric diamond cells are unwrapped into the existing 64x64 runtime tile-bank paths, matching grasslands/forest edge overlays use adapted source material, and mire/swamp, hills/ridge/highland, road topology/art, projection, pathing, save data, editor schema, object art, and town occupancy/pathing are unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -358,6 +358,12 @@
       "difficulty": "small"
     },
     {
+      "id": "overworld-rubberduck-terrain-feel-test-10184",
+      "title": "Run a narrow Rubberduck terrain-surface feel test through the existing tile bank",
+      "status": "completed",
+      "difficulty": "medium"
+    },
+    {
       "id": "overworld-neighbor-aware-terrain-transitions-10184",
       "title": "Select overworld terrain transitions from neighboring terrain relationships",
       "status": "completed",
@@ -419,6 +425,7 @@
     }
   ],
   "nextActions": [
+    "Manually inspect the Rubberduck-adapted grass, plains, forest, and matching grasslands/forest edge overlays in River Pass, Ninefold Confluence, and the map editor before deciding whether to keep this pack direction beyond the feel test.",
     "Manually inspect neighbor-aware forest/grass, mire/grass, highland/grass, and snow/frost transition boundaries in River Pass, Ninefold Confluence, and the map editor before treating the transition presentation as visually polished.",
     "Use the in-game map editor's terrain, terrain-rectangle, single-tile road, road-path, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",

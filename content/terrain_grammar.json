@@ -1,11 +1,11 @@
 {
   "version": 1,
   "rendering_model": "authored_autotile_layers",
-  "authoring_status": "original_quiet_terrain_correction",
+  "authoring_status": "rubberduck_surface_feel_test",
   "primary_base_model": "original_quiet_tile_bank",
   "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
   "tile_size_reference": 64,
-  "summary": "Author-facing overworld terrain grammar. The covered terrain slice now uses original quiet 64x64 biome base variants with a more cohesive grass/plains palette, low-frequency patch variant selection, neighbor-priority terrain intrusion transitions with corner hints, and same-type-adjacency rutted dirt-road pieces. Road presentation now distinguishes centered vertical runs from lower-edge horizontal runs while keeping combination pieces driven by neighboring road topology. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
+  "summary": "Author-facing overworld terrain grammar. The current narrow feel-test keeps the original quiet tile-bank contract and runtime paths, but grass/plains/forest base surfaces plus matching grasslands/forest edge overlays are adapted from the locally supplied Rubberduck OpenGameArt isometric terrain pack by unwrapping selected 128x64 diamond cells into 64x64 runtime tiles. Mire/swamp, hills/ridge/highland, and dirt roads remain on the prior original quiet procedural tile bank because the pack does not cleanly cover those families. Generated painterly terrain sheets are no longer the primary per-cell tiling model; non-slice terrain ids keep fallback grammar colors until their original art lands.",
   "transition_rules": {
     "selection_model": "neighbor_priority_intrusion_8_way",
     "edge_model": "higher_priority_neighbor_intrusion_edges",
@@ -33,6 +33,7 @@
       "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
       "variant_keys": ["open", "field", "worn"],
       "tile_art": {
+        "source_basis": "rubberduck_opengameart_surface_feel_test",
         "base_tiles": [
           {"variant_key": "open", "path": "res://art/overworld/runtime/terrain_tiles/base/grass_open.png"},
           {"variant_key": "field", "path": "res://art/overworld/runtime/terrain_tiles/base/grass_field.png"},
@@ -61,6 +62,7 @@
       "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
       "variant_keys": ["open", "dry", "worn"],
       "tile_art": {
+        "source_basis": "rubberduck_opengameart_surface_feel_test",
         "base_tiles": [
           {"variant_key": "open", "path": "res://art/overworld/runtime/terrain_tiles/base/plains_open.png"},
           {"variant_key": "dry", "path": "res://art/overworld/runtime/terrain_tiles/base/plains_dry.png"},
@@ -89,6 +91,7 @@
       "supports": ["authored_variants", "authored_tile_art", "edge_transitions", "road_overlay"],
       "variant_keys": ["canopy", "copse", "edge"],
       "tile_art": {
+        "source_basis": "rubberduck_opengameart_surface_feel_test",
         "base_tiles": [
           {"variant_key": "canopy", "path": "res://art/overworld/runtime/terrain_tiles/base/forest_canopy.png"},
           {"variant_key": "copse", "path": "res://art/overworld/runtime/terrain_tiles/base/forest_copse.png"},

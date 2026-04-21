@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Build original, quiet overworld terrain tiles.
+"""Build overworld terrain tiles for the current terrain feel test.
 
 The runtime renderer consumes 64x64 base, edge, and road overlay PNGs. This
-builder intentionally does not sample the generated terrain source sheets:
-those proved too painterly and seam-prone as a per-cell base. The assets here
-are local procedural placeholders shaped around the terrain grammar:
-restrained biome palettes, quiet multi-scale base variants, jagged transition
-pieces, and softened rutted structural road connector overlays. Road pieces
-follow the current topology contract: vertical connectors run through the tile
-center while horizontal connectors ride on a lower tile-edge lane.
+builder still keeps the original quiet procedural fallback for unsupported
+families, but the narrow 2026-04-21 feel-test pass adapts the local Rubberduck
+OpenGameArt terrain pack for the most visible surfaces. The source pack is
+isometric 128x64 diamond art, so selected cells are unwrapped into the existing
+64x64 square tile contract instead of changing projection, map layout, terrain
+grammar paths, or runtime renderer behavior.
+
+Road pieces remain on the current same-type-adjacency topology contract:
+vertical connectors run through the tile center while horizontal connectors ride
+on a lower tile-edge lane.
 """
 
 from __future__ import annotations
@@ -26,8 +29,32 @@ except ImportError as exc:  # pragma: no cover - tool dependency guard
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "art" / "overworld" / "runtime" / "terrain_tiles"
+RUBBERDUCK_PACK = Path("/root/.openclaw/workspace/tasks/10184/artifacts/terrain-pack-rubberduck/extracted")
 SIZE = 64
 SCALE = 4
+RUBBERDUCK_CELL_WIDTH = 128
+RUBBERDUCK_CELL_HEIGHT = 64
+RUBBERDUCK_COLUMNS = 8
+
+RUBBERDUCK_BASE_SOURCES = {
+    "grass_open": ("grass_medium_128x64.png", 0),
+    "grass_field": ("grass_green_128x64.png", 4),
+    "grass_worn": ("grass_medium_128x64.png", 10),
+    "plains_open": ("grass_dry_128x64.png", 0),
+    "plains_dry": ("grass_dry_128x64.png", 5),
+    "plains_worn": ("grass_dry_128x64.png", 10),
+    "forest_canopy": ("forest_ground_128x64.png", 0),
+    "forest_copse": ("forest_ground_128x64.png", 5),
+    "forest_edge": ("forest_ground_128x64.png", 10),
+}
+
+RUBBERDUCK_EDGE_SOURCES = {
+    "grasslands": ("grass_medium_128x64.png", 1),
+    "forest": ("forest_ground_128x64.png", 1),
+}
+
+_rubberduck_sheet_cache: dict[str, Image.Image] = {}
+_rubberduck_cell_cache: dict[tuple[str, int], Image.Image] = {}
 
 
 @dataclass(frozen=True)
@@ -130,6 +157,120 @@ def add_rgb(color: tuple[int, int, int], delta: float) -> tuple[int, int, int]:
 def smoothstep(value: float) -> float:
     clamped = max(0.0, min(1.0, value))
     return clamped * clamped * (3.0 - (2.0 * clamped))
+
+
+def rubberduck_sheet(source_file: str) -> Image.Image | None:
+    if source_file in _rubberduck_sheet_cache:
+        return _rubberduck_sheet_cache[source_file]
+    source_path = RUBBERDUCK_PACK / source_file
+    if not source_path.exists():
+        return None
+    sheet = Image.open(source_path).convert("RGBA")
+    _rubberduck_sheet_cache[source_file] = sheet
+    return sheet
+
+
+def rubberduck_cell(source_file: str, cell_index: int) -> Image.Image | None:
+    cache_key = (source_file, cell_index)
+    if cache_key in _rubberduck_cell_cache:
+        return _rubberduck_cell_cache[cache_key].copy()
+    sheet = rubberduck_sheet(source_file)
+    if sheet is None:
+        return None
+    column = cell_index % RUBBERDUCK_COLUMNS
+    row = cell_index // RUBBERDUCK_COLUMNS
+    left = column * RUBBERDUCK_CELL_WIDTH
+    top = row * RUBBERDUCK_CELL_HEIGHT
+    if left + RUBBERDUCK_CELL_WIDTH > sheet.width or top + RUBBERDUCK_CELL_HEIGHT > sheet.height:
+        return None
+    cell = sheet.crop((left, top, left + RUBBERDUCK_CELL_WIDTH, top + RUBBERDUCK_CELL_HEIGHT))
+    _rubberduck_cell_cache[cache_key] = cell
+    return cell.copy()
+
+
+def bilinear_rgba(image: Image.Image, x: float, y: float) -> tuple[int, int, int, int]:
+    clamped_x = max(0.0, min(float(image.width - 1), x))
+    clamped_y = max(0.0, min(float(image.height - 1), y))
+    x0 = int(math.floor(clamped_x))
+    y0 = int(math.floor(clamped_y))
+    x1 = min(image.width - 1, x0 + 1)
+    y1 = min(image.height - 1, y0 + 1)
+    tx = clamped_x - float(x0)
+    ty = clamped_y - float(y0)
+    p00 = image.getpixel((x0, y0))
+    p10 = image.getpixel((x1, y0))
+    p01 = image.getpixel((x0, y1))
+    p11 = image.getpixel((x1, y1))
+    channels: list[int] = []
+    for index in range(4):
+        top = (float(p00[index]) * (1.0 - tx)) + (float(p10[index]) * tx)
+        bottom = (float(p01[index]) * (1.0 - tx)) + (float(p11[index]) * tx)
+        channels.append(clamp_channel(int(round((top * (1.0 - ty)) + (bottom * ty)))))
+    return channels[0], channels[1], channels[2], channels[3]
+
+
+def unwrap_rubberduck_iso_cell(cell: Image.Image) -> Image.Image:
+    output = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 255))
+    for y in range(SIZE):
+        v = float(y) / float(SIZE - 1)
+        for x in range(SIZE):
+            u = float(x) / float(SIZE - 1)
+            sample_x = 64.0 + ((u - v) * 63.5)
+            sample_y = (u + v) * 31.5
+            red, green, blue, alpha = bilinear_rgba(cell, sample_x, sample_y)
+            if alpha < 18:
+                inner_u = 0.5 + ((u - 0.5) * 0.96)
+                inner_v = 0.5 + ((v - 0.5) * 0.96)
+                sample_x = 64.0 + ((inner_u - inner_v) * 63.0)
+                sample_y = (inner_u + inner_v) * 31.25
+                red, green, blue, alpha = bilinear_rgba(cell, sample_x, sample_y)
+            output.putpixel((x, y), (red, green, blue, 255))
+    return output
+
+
+def palette_wash(image: Image.Image, color: tuple[int, int, int], strength: float) -> Image.Image:
+    if strength <= 0.0:
+        return image
+    wash = Image.new("RGBA", image.size, (*color, 255))
+    return Image.blend(image.convert("RGBA"), wash, max(0.0, min(1.0, strength)))
+
+
+def rubberduck_base_tile(spec: BaseTileSpec) -> Image.Image | None:
+    source = RUBBERDUCK_BASE_SOURCES.get(spec.output)
+    if source is None:
+        return None
+    source_file, cell_index = source
+    cell = rubberduck_cell(source_file, cell_index)
+    if cell is None:
+        return None
+    image = unwrap_rubberduck_iso_cell(cell)
+    palette = mix(hex_rgb(spec.base), hex_rgb(spec.secondary), 0.36)
+    wash_strength = 0.08 if spec.terrain_family == "grasslands" else 0.12
+    image = palette_wash(image, palette, wash_strength)
+    if spec.terrain_family == "forest":
+        shadow = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
+        draw = ImageDraw.Draw(shadow, "RGBA")
+        rng = random.Random(spec.seed + 19019)
+        for _index in range(5):
+            x = rng.randint(10, 54)
+            y = rng.randint(10, 54)
+            radius = rng.randint(5, 9)
+            draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=(16, 31, 19, rng.randint(18, 32)))
+        image.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(radius=0.35)))
+    return image.filter(ImageFilter.GaussianBlur(radius=0.08)).filter(ImageFilter.UnsharpMask(radius=0.28, percent=16, threshold=4))
+
+
+def rubberduck_edge_material(spec: EdgeSpec) -> Image.Image | None:
+    source = RUBBERDUCK_EDGE_SOURCES.get(spec.output)
+    if source is None:
+        return None
+    source_file, cell_index = source
+    cell = rubberduck_cell(source_file, cell_index)
+    if cell is None:
+        return None
+    image = unwrap_rubberduck_iso_cell(cell)
+    image = palette_wash(image, hex_rgb(spec.fill), 0.16)
+    return image.filter(ImageFilter.GaussianBlur(radius=0.12)).filter(ImageFilter.UnsharpMask(radius=0.25, percent=12, threshold=4))
 
 
 def tileable_noise(size: int, cells: int, seed: int) -> list[float]:
@@ -334,8 +475,10 @@ def draw_terrain_details(image: Image.Image, spec: BaseTileSpec) -> Image.Image:
 
 def build_base_tiles() -> None:
     for spec in BASE_TILE_SPECS:
-        image = draw_low_noise_ground(spec)
-        image = draw_terrain_details(image, spec)
+        image = rubberduck_base_tile(spec)
+        if image is None:
+            image = draw_low_noise_ground(spec)
+            image = draw_terrain_details(image, spec)
         save_rgba(image, OUT / "base" / f"{spec.output}.png")
 
 
@@ -387,7 +530,11 @@ def build_edge_overlay(spec: EdgeSpec, direction: str) -> Image.Image:
     mask_draw = ImageDraw.Draw(mask)
     mask_draw.polygon(edge_polygon(direction, profile), fill=255)
     mask = mask.filter(ImageFilter.GaussianBlur(radius=1.15 * SCALE))
-    fill_layer = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (*hex_rgb(spec.fill), 0))
+    source_material = rubberduck_edge_material(spec)
+    if source_material is None:
+        fill_layer = Image.new("RGBA", (SIZE * SCALE, SIZE * SCALE), (*hex_rgb(spec.fill), 0))
+    else:
+        fill_layer = source_material.resize((SIZE * SCALE, SIZE * SCALE), Image.Resampling.BICUBIC)
     fill_layer.putalpha(mask.point(lambda value: int((value * spec.alpha) / 255)))
     canvas.alpha_composite(fill_layer)
 
