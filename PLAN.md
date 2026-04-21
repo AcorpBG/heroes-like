@@ -26,6 +26,34 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: Rubberduck Grassland Cohesion Correction
+Status: completed on 2026-04-21 as a narrow corrective terrain-art pass.
+
+Purpose:
+- Correct AcOrP's live-view finding that same-family grassland areas read as visible square color patches after the Rubberduck feel test.
+- Keep the Rubberduck terrain direction under evaluation, but make grass/plains base variants read as one coherent grasslands family.
+- Preserve the existing 64x64 runtime tile-bank contract, renderer behavior, 3x3 patch-cohesive variant selection, projection/layout, gameplay/pathing, save format, map editor schema, road topology, object/town art, and town occupancy/pathing.
+
+Scope:
+- Tighten the generated Rubberduck-adapted grass/plains base tile palette/value range so variant patches stop reading like different terrain classes.
+- Leave forest on the Rubberduck feel-test path if it continues to read well.
+- Leave mire/swamp, hills/ridge/highland, roads, terrain grammar schema, gameplay, pathing, save/load, editor data, object rendering, and town occupancy/pathing unchanged.
+
+Implemented:
+- `tools/build_overworld_terrain_tiles.py` now normalizes only Rubberduck-derived grass/plains base variants to a tight shared grasslands palette/value range while preserving subdued source texture.
+- Rebuilt only the six grass/plains runtime base PNGs; forest, mire/swamp, hills/ridge/highland, edge overlays, roads, renderer behavior, terrain grammar schema, map data, gameplay/pathing, save data, editor schema, object/town rendering, and town occupancy/pathing were left unchanged.
+- The six grass/plains variants now sit in a narrow luma band around 88-90, so existing patch-cohesive selection no longer presents loud square color blocks across same-family grassland.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is a visual cohesion correction only, not a rollback of the Rubberduck feel test, a terrain schema change, a renderer/projection change, a movement/pathing change, a save-format change, an object/town art pass, or a town 3x2 occupancy/pathing slice.
+
 ## Current Implementation Slice: Rubberduck Terrain Surface Feel Test
 Status: completed on 2026-04-21 as a narrow overworld terrain-art feel test.
 

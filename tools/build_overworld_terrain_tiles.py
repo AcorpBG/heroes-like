@@ -53,6 +53,16 @@ RUBBERDUCK_EDGE_SOURCES = {
     "forest": ("forest_ground_128x64.png", 1),
 }
 
+GRASSLAND_COHESION_TARGETS = {
+    "grass_open": (82, 94, 52),
+    "grass_field": (82, 95, 51),
+    "grass_worn": (83, 93, 52),
+    "plains_open": (84, 95, 53),
+    "plains_dry": (85, 95, 54),
+    "plains_worn": (84, 94, 53),
+}
+GRASSLAND_COHESION_CONTRAST = 0.42
+
 _rubberduck_sheet_cache: dict[str, Image.Image] = {}
 _rubberduck_cell_cache: dict[tuple[str, int], Image.Image] = {}
 
@@ -235,6 +245,33 @@ def palette_wash(image: Image.Image, color: tuple[int, int, int], strength: floa
     return Image.blend(image.convert("RGBA"), wash, max(0.0, min(1.0, strength)))
 
 
+def rgb_mean(image: Image.Image) -> tuple[float, float, float]:
+    pixels = list(image.convert("RGBA").getdata())
+    count = max(1, len(pixels))
+    red = sum(pixel[0] for pixel in pixels) / count
+    green = sum(pixel[1] for pixel in pixels) / count
+    blue = sum(pixel[2] for pixel in pixels) / count
+    return red, green, blue
+
+
+def harmonize_grassland_surface(image: Image.Image, spec: BaseTileSpec) -> Image.Image:
+    target = GRASSLAND_COHESION_TARGETS.get(spec.output)
+    if target is None:
+        return image
+    mean = rgb_mean(image)
+    pixels: list[tuple[int, int, int, int]] = []
+    for red, green, blue, alpha in image.convert("RGBA").getdata():
+        pixels.append((
+            clamp_channel(int(round(target[0] + ((red - mean[0]) * GRASSLAND_COHESION_CONTRAST)))),
+            clamp_channel(int(round(target[1] + ((green - mean[1]) * GRASSLAND_COHESION_CONTRAST)))),
+            clamp_channel(int(round(target[2] + ((blue - mean[2]) * GRASSLAND_COHESION_CONTRAST)))),
+            alpha,
+        ))
+    output = Image.new("RGBA", image.size)
+    output.putdata(pixels)
+    return output.filter(ImageFilter.GaussianBlur(radius=0.10)).filter(ImageFilter.UnsharpMask(radius=0.22, percent=8, threshold=5))
+
+
 def rubberduck_base_tile(spec: BaseTileSpec) -> Image.Image | None:
     source = RUBBERDUCK_BASE_SOURCES.get(spec.output)
     if source is None:
@@ -247,6 +284,8 @@ def rubberduck_base_tile(spec: BaseTileSpec) -> Image.Image | None:
     palette = mix(hex_rgb(spec.base), hex_rgb(spec.secondary), 0.36)
     wash_strength = 0.08 if spec.terrain_family == "grasslands" else 0.12
     image = palette_wash(image, palette, wash_strength)
+    if spec.terrain_family == "grasslands":
+        image = harmonize_grassland_surface(image, spec)
     if spec.terrain_family == "forest":
         shadow = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
         draw = ImageDraw.Draw(shadow, "RGBA")
