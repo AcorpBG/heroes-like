@@ -3703,6 +3703,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	var family := _homm3_terrain_family_config(family_id)
 	var bridge_family := _homm3_receiver_bridge_family(config, family)
 	var atlas_role := _homm3_family_atlas_role(family)
+	var uses_land_receiver_stamp_tables := _homm3_uses_land_receiver_stamp_tables(family)
 	var cardinal_sources: Array = []
 	var corner_sources: Array = []
 	var cardinal_keys: Array[String] = []
@@ -3729,6 +3730,9 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 			continue
 		corner_sources.append(source)
 		corner_keys.append(String(source.get("direction", "")))
+	if uses_land_receiver_stamp_tables and cardinal_sources.is_empty():
+		corner_sources.clear()
+		corner_keys.clear()
 	for source_value in cardinal_sources:
 		if source_value is Dictionary:
 			var source: Dictionary = source_value
@@ -3739,7 +3743,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 			var source: Dictionary = source_value
 			source["cardinal_source_count"] = cardinal_sources.size()
 			source["corner_source_count"] = corner_sources.size()
-	var propagated_source := _homm3_propagated_transition_source(tile, terrain_id, family) if cardinal_sources.is_empty() else {}
+	var propagated_source := {} if uses_land_receiver_stamp_tables else (_homm3_propagated_transition_source(tile, terrain_id, family) if cardinal_sources.is_empty() else {})
 	var propagated_sources: Array = []
 	var bridge_sources_for_resolution := corner_sources.duplicate()
 	if not propagated_source.is_empty():
@@ -3751,7 +3755,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	var resolved_bridge_family := _homm3_bridge_family_from_sources(cardinal_sources, bridge_sources_for_resolution, bridge_family)
 	var bridge_source_kind := _homm3_bridge_source_kind_from_sources(cardinal_sources, bridge_sources_for_resolution, family)
 	var receiver_stamp_payload: Dictionary = {}
-	if _homm3_uses_land_receiver_stamp_tables(family):
+	if uses_land_receiver_stamp_tables:
 		if not cardinal_sources.is_empty() and not primary_bridge_source.is_empty():
 			receiver_stamp_payload = _homm3_receiver_stamp_payload_from_source(tile, family, primary_bridge_source, "cardinal_source")
 		elif not propagated_source.is_empty():
@@ -3768,6 +3772,9 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	elif atlas_role == "base_decor_bridge_material":
 		if not cardinal_keys.is_empty():
 			selection_kind = "bridge_material_base_context"
+	elif uses_land_receiver_stamp_tables:
+		if not cardinal_keys.is_empty():
+			selection_kind = "bridge_transition"
 	elif cardinal_keys.is_empty() and not propagated_source.is_empty():
 		selection_kind = "propagated_transition"
 	elif cardinal_keys.is_empty() and not corner_keys.is_empty():
