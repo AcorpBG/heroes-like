@@ -4626,6 +4626,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 lookup_key = "shoreline_lookup" if bool(family.get("shoreline_specific", False)) else "bridge_mask_lookup"
                 lookup = family.get(lookup_key, {})
                 ensure(isinstance(lookup, dict) and "N" in lookup and "N+E+S+W" in lookup, errors, f"HoMM3 local prototype family {family_id} must define {lookup_key} masks")
+                if lookup_key == "bridge_mask_lookup" and isinstance(lookup, dict):
+                    ensure(str(lookup.get("E", "")) == "00_15", errors, f"HoMM3 local prototype family {family_id} east bridge mask must use the right-side source frame")
+                    ensure(str(lookup.get("W", "")) == "00_04", errors, f"HoMM3 local prototype family {family_id} west bridge mask must use the left-side source frame")
                 sample_frames = []
                 if isinstance(interior_frames, list):
                     sample_frames.extend(map(str, interior_frames[:2]))
