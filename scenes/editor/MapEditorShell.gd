@@ -13,6 +13,8 @@ const TERRAIN_LINE_RULE_LABEL := "Manhattan L line, horizontal first, then verti
 const TERRAIN_RECTANGLE_RULE_ID := "inclusive_axis_aligned_corners"
 const TERRAIN_RECTANGLE_RULE_LABEL := "Inclusive axis-aligned rectangle between corner tiles"
 const TERRAIN_RECTANGLE_TILE_ORDER := "row_major_top_left_to_bottom_right"
+const TERRAIN_OPTION_CONTRACT := "homm3_base_family_picker"
+const TERRAIN_OPTION_SOURCE := "editor_base_terrain_options"
 const ROAD_PATH_RULE_ID := "manhattan_l_horizontal_then_vertical"
 const ROAD_PATH_RULE_LABEL := "Manhattan L path, horizontal first, then vertical"
 const TOOL_INSPECT := "inspect"
@@ -434,6 +436,27 @@ func _scenario_items() -> Array:
 
 func _terrain_items() -> Array:
 	var grammar := ContentService.get_terrain_grammar()
+	var class_index := _terrain_class_index(grammar)
+	var curated_options = grammar.get(TERRAIN_OPTION_SOURCE, [])
+	var curated_items := []
+	if curated_options is Array:
+		for option in curated_options:
+			if not (option is Dictionary):
+				continue
+			var option_id := String(option.get("id", ""))
+			if option_id == "" or not class_index.has(option_id):
+				continue
+			var terrain_class: Dictionary = class_index.get(option_id, {})
+			curated_items.append(
+				{
+					"id": option_id,
+					"label": String(option.get("label", terrain_class.get("label", option_id.capitalize()))),
+					"homm3_family": String(option.get("homm3_family", "")),
+					"homm3_atlas": String(option.get("homm3_atlas", "")),
+				}
+			)
+	if not curated_items.is_empty():
+		return curated_items
 	var classes = grammar.get("terrain_classes", [])
 	var items := []
 	if not (classes is Array):
@@ -451,6 +474,71 @@ func _terrain_items() -> Array:
 			}
 		)
 	return items
+
+func _terrain_class_index(grammar: Dictionary) -> Dictionary:
+	var classes = grammar.get("terrain_classes", [])
+	var index := {}
+	if not (classes is Array):
+		return index
+	for terrain_class in classes:
+		if not (terrain_class is Dictionary):
+			continue
+		var terrain_id := String(terrain_class.get("id", ""))
+		if terrain_id != "":
+			index[terrain_id] = terrain_class
+	return index
+
+func _terrain_label_for_id(terrain_id: String) -> String:
+	for entry in _terrain_entries:
+		if not (entry is Dictionary):
+			continue
+		if String(entry.get("id", "")) == terrain_id:
+			return String(entry.get("label", terrain_id.capitalize()))
+	return terrain_id.capitalize()
+
+func _terrain_option_payload() -> Array:
+	var options := []
+	for entry in _terrain_entries:
+		if not (entry is Dictionary):
+			continue
+		options.append(
+			{
+				"id": String(entry.get("id", "")),
+				"label": String(entry.get("label", "")),
+				"homm3_family": String(entry.get("homm3_family", "")),
+				"homm3_atlas": String(entry.get("homm3_atlas", "")),
+			}
+		)
+	return options
+
+func _terrain_option_ids() -> Array:
+	var ids := []
+	for entry in _terrain_entries:
+		if entry is Dictionary:
+			ids.append(String(entry.get("id", "")))
+	return ids
+
+func _authored_terrain_ids() -> Array:
+	var grammar := ContentService.get_terrain_grammar()
+	var classes = grammar.get("terrain_classes", [])
+	var ids := []
+	if not (classes is Array):
+		return ids
+	for terrain_class in classes:
+		if not (terrain_class is Dictionary):
+			continue
+		var terrain_id := String(terrain_class.get("id", ""))
+		if terrain_id != "":
+			ids.append(terrain_id)
+	return ids
+
+func _hidden_terrain_ids() -> Array:
+	var option_ids := _terrain_option_ids()
+	var hidden := []
+	for terrain_id in _authored_terrain_ids():
+		if terrain_id not in option_ids:
+			hidden.append(terrain_id)
+	return hidden
 
 func _object_content_items(family: String) -> Array:
 	var path := _object_content_path(family)
@@ -549,7 +637,9 @@ func _restore_editor_ui_metadata() -> void:
 		_selected_tile = OverworldRules.hero_position(_session)
 	if not _tile_in_bounds(_selected_tile):
 		_selected_tile = OverworldRules.hero_position(_session)
-	_selected_terrain_id = String(_session.flags.get("editor_selected_terrain_id", _selected_terrain_id))
+	var restored_terrain_id := String(_session.flags.get("editor_selected_terrain_id", _selected_terrain_id))
+	if not _select_terrain_by_id(restored_terrain_id):
+		_select_terrain_by_id(DEFAULT_TERRAIN_ID)
 	var restored_family := String(_session.flags.get("editor_selected_object_family", _selected_object_family))
 	if _select_object_family_by_id(restored_family):
 		var restored_content_id := String(_session.flags.get("editor_selected_object_content_id", _selected_object_content_id))
@@ -636,7 +726,7 @@ func _refresh_labels() -> void:
 		map_size.x,
 		map_size.y,
 		_tool_label(_tool),
-		_selected_terrain_id,
+		_terrain_label_for_id(_selected_terrain_id),
 		_road_tile_count(),
 	]
 	state_line = "%s | Objects %d | Palette %s:%s" % [
@@ -769,7 +859,7 @@ func _on_terrain_selected(index: int) -> void:
 	_selected_terrain_id = String(_terrain_picker.get_item_metadata(index))
 	var terrain_tool := _tool if _tool in [TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE] else TOOL_TERRAIN
 	_select_tool(terrain_tool)
-	_last_message = "Terrain brush set to %s." % _selected_terrain_id
+	_last_message = "Terrain brush set to %s." % _terrain_label_for_id(_selected_terrain_id)
 	_refresh_state()
 
 func _on_object_family_selected(index: int) -> void:
@@ -870,13 +960,18 @@ func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
 		return false
 	var previous := String(row[tile.x])
 	if previous == terrain_id:
-		_last_message = "Tile %d,%d already uses %s." % [tile.x, tile.y, terrain_id]
+		_last_message = "Tile %d,%d already uses %s." % [tile.x, tile.y, _terrain_label_for_id(terrain_id)]
 		return true
 	row[tile.x] = terrain_id
 	map_data[tile.y] = row
 	_session.overworld["map"] = map_data
 	_dirty = true
-	_last_message = "Painted %d,%d from %s to %s." % [tile.x, tile.y, previous, terrain_id]
+	_last_message = "Painted %d,%d from %s to %s." % [
+		tile.x,
+		tile.y,
+		_terrain_label_for_id(previous),
+		_terrain_label_for_id(terrain_id),
+	]
 	return true
 
 func _fill_terrain_from_selected_tile() -> Dictionary:
@@ -891,7 +986,7 @@ func _terrain_line_tool_click(tile: Vector2i) -> bool:
 			tile.x,
 			tile.y,
 			TERRAIN_LINE_RULE_LABEL,
-			_selected_terrain_id,
+			_terrain_label_for_id(_selected_terrain_id),
 		]
 		return true
 	var result := _apply_terrain_line(_pending_terrain_line_start, tile, _selected_terrain_id)
@@ -939,10 +1034,11 @@ func _apply_terrain_line(start_tile: Vector2i, end_tile: Vector2i, terrain_id: S
 		changed_tiles.append(tile)
 	_session.overworld["map"] = map_data
 	var changed := not changed_tiles.is_empty()
+	var active_label := _terrain_label_for_id(terrain_id)
 	var message := "Painted %d terrain line tile%s with %s on %s from %d,%d to %d,%d." % [
 		changed_tiles.size(),
 		"" if changed_tiles.size() == 1 else "s",
-		terrain_id,
+		active_label,
 		TERRAIN_LINE_RULE_LABEL,
 		start_tile.x,
 		start_tile.y,
@@ -951,7 +1047,7 @@ func _apply_terrain_line(start_tile: Vector2i, end_tile: Vector2i, terrain_id: S
 	]
 	if not changed:
 		message = "Terrain line made no working-copy changes with %s on %s from %d,%d to %d,%d." % [
-			terrain_id,
+			active_label,
 			TERRAIN_LINE_RULE_LABEL,
 			start_tile.x,
 			start_tile.y,
@@ -986,7 +1082,7 @@ func _terrain_rectangle_tool_click(tile: Vector2i) -> bool:
 			tile.x,
 			tile.y,
 			TERRAIN_RECTANGLE_RULE_LABEL,
-			_selected_terrain_id,
+			_terrain_label_for_id(_selected_terrain_id),
 		]
 		return true
 	var result := _apply_terrain_rectangle(_pending_terrain_rectangle_corner, tile, _selected_terrain_id)
@@ -1035,10 +1131,11 @@ func _apply_terrain_rectangle(corner_tile: Vector2i, opposite_tile: Vector2i, te
 		changed_tiles.append(tile)
 	_session.overworld["map"] = map_data
 	var changed := not changed_tiles.is_empty()
+	var active_label := _terrain_label_for_id(terrain_id)
 	var message := "Painted %d terrain rectangle tile%s with %s on %s from %d,%d to %d,%d." % [
 		changed_tiles.size(),
 		"" if changed_tiles.size() == 1 else "s",
-		terrain_id,
+		active_label,
 		TERRAIN_RECTANGLE_RULE_LABEL,
 		corner_tile.x,
 		corner_tile.y,
@@ -1047,7 +1144,7 @@ func _apply_terrain_rectangle(corner_tile: Vector2i, opposite_tile: Vector2i, te
 	]
 	if not changed:
 		message = "Terrain rectangle made no working-copy changes with %s on %s from %d,%d to %d,%d." % [
-			terrain_id,
+			active_label,
 			TERRAIN_RECTANGLE_RULE_LABEL,
 			corner_tile.x,
 			corner_tile.y,
@@ -1104,7 +1201,7 @@ func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionar
 		return {
 			"ok": true,
 			"changed": false,
-			"message": "Tile %d,%d already uses %s; fill skipped." % [start_tile.x, start_tile.y, terrain_id],
+			"message": "Tile %d,%d already uses %s; fill skipped." % [start_tile.x, start_tile.y, _terrain_label_for_id(terrain_id)],
 			"start_tile": {"x": start_tile.x, "y": start_tile.y},
 			"source_terrain_id": source_terrain,
 			"active_terrain_id": terrain_id,
@@ -1152,11 +1249,11 @@ func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionar
 		"changed": not filled_tiles.is_empty(),
 		"message": "Filled %d contiguous %s tile%s from %d,%d with %s." % [
 			filled_tiles.size(),
-			source_terrain,
+			_terrain_label_for_id(source_terrain),
 			"" if filled_tiles.size() == 1 else "s",
 			start_tile.x,
 			start_tile.y,
-			terrain_id,
+			_terrain_label_for_id(terrain_id),
 		],
 		"start_tile": {"x": start_tile.x, "y": start_tile.y},
 		"source_terrain_id": source_terrain,
@@ -2704,8 +2801,8 @@ func _terrain_at(tile: Vector2i) -> String:
 func _terrain_id_in_grammar(terrain_id: String) -> bool:
 	if terrain_id == "":
 		return false
-	for terrain in _terrain_entries:
-		if terrain is Dictionary and String(terrain.get("id", "")) == terrain_id:
+	for authored_terrain_id in _authored_terrain_ids():
+		if String(authored_terrain_id) == terrain_id:
 			return true
 	return false
 
@@ -2767,6 +2864,13 @@ func validation_snapshot() -> Dictionary:
 		"dirty": _dirty,
 		"tool": _tool,
 		"selected_terrain_id": _selected_terrain_id,
+		"selected_terrain_label": _terrain_label_for_id(_selected_terrain_id),
+		"terrain_option_contract": TERRAIN_OPTION_CONTRACT,
+		"terrain_option_source": TERRAIN_OPTION_SOURCE,
+		"terrain_options": _terrain_option_payload(),
+		"terrain_option_ids": _terrain_option_ids(),
+		"authored_terrain_ids": _authored_terrain_ids(),
+		"hidden_terrain_ids": _hidden_terrain_ids(),
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
 		"selected_property_object_key": _selected_property_object_key,
@@ -2837,11 +2941,16 @@ func validation_select_terrain(terrain_id: String) -> Dictionary:
 		var snapshot := validation_snapshot()
 		snapshot["ok"] = true
 		return snapshot
-	return {"ok": false, "message": "Terrain id is not in the authored terrain grammar."}
+	return {"ok": false, "message": "Terrain id is not in the editor base terrain options."}
 
 func validation_paint_terrain(x: int, y: int, terrain_id: String) -> Dictionary:
+	if not _terrain_id_in_grammar(terrain_id):
+		var invalid_snapshot := validation_snapshot()
+		invalid_snapshot["ok"] = false
+		invalid_snapshot["message"] = "Terrain id %s is not in the authored terrain grammar." % terrain_id
+		return invalid_snapshot
 	_selected_tile = Vector2i(x, y)
-	_selected_terrain_id = terrain_id
+	_select_terrain_by_id(terrain_id)
 	_tool = TOOL_TERRAIN
 	var changed := _paint_terrain(_selected_tile, terrain_id)
 	_refresh_state()
@@ -2864,7 +2973,7 @@ func validation_fill_terrain(x: int, y: int, terrain_id: String = "") -> Diction
 		result = {
 			"ok": false,
 			"changed": false,
-			"message": "Terrain id %s is not in the authored terrain grammar." % terrain_id,
+			"message": "Terrain id %s is not in the editor base terrain options." % terrain_id,
 		}
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
@@ -2931,7 +3040,7 @@ func validation_apply_terrain_line(x: int, y: int, terrain_id: String = "") -> D
 		result = {
 			"ok": false,
 			"changed": false,
-			"message": "Terrain id %s is not in the authored terrain grammar." % terrain_id,
+			"message": "Terrain id %s is not in the editor base terrain options." % terrain_id,
 			"path_rule": TERRAIN_LINE_RULE_ID,
 			"path_rule_label": TERRAIN_LINE_RULE_LABEL,
 		}
@@ -3010,7 +3119,7 @@ func validation_apply_terrain_rectangle(x: int, y: int, terrain_id: String = "")
 		result = {
 			"ok": false,
 			"changed": false,
-			"message": "Terrain id %s is not in the authored terrain grammar." % terrain_id,
+			"message": "Terrain id %s is not in the editor base terrain options." % terrain_id,
 			"rectangle_rule": TERRAIN_RECTANGLE_RULE_ID,
 			"rectangle_rule_label": TERRAIN_RECTANGLE_RULE_LABEL,
 			"tile_order": TERRAIN_RECTANGLE_TILE_ORDER,

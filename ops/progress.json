@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T09:54:19Z",
+  "updatedAt": "2026-04-21T10:32:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-homm3-transition-orientation-10184",
-  "currentSliceTitle": "Fix HoMM3 local terrain transition horizontal orientation",
+  "currentSliceId": "map-editor-homm3-base-terrain-options-10184",
+  "currentSliceTitle": "Narrow HoMM3-style map editor base terrain options",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow visual regression fix for AcOrP's screenshot finding that some HoMM3 local terrain bridge transitions read horizontally reversed. The local HoMM3 bridge-mask lookup now maps east-side bridge transitions to a right-side source frame and west-side bridge transitions to a left-side source frame. Added validator coverage plus live-overworld and map-editor preview smoke assertions for east/west grass-plains transition orientation. Gameplay/pathing/save/editor data model/object/town systems and 4-neighbor road overlay behavior were unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow editor/content validation slice to stop the map editor terrain picker from exposing the full authored logical terrain grammar. The terrain grammar now declares curated HoMM3-style editor base options for Water, Snow, Grass, Sand, Dirt, Lava, Swamp, and Rock/None; the map editor picker and validation snapshot read that contract; hidden logical terrain ids such as forest, mire, hills, ridge, ash, frost, coast, and shore are no longer selectable through the picker validation surface. Existing scenario data, direct authored-map compatibility, save/runtime terrain ids, and HoMM3 renderer family mapping were preserved. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -380,6 +380,12 @@
       "title": "Select overworld terrain transitions from neighboring terrain relationships",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "map-editor-homm3-base-terrain-options-10184",
+      "title": "Narrow map editor base terrain options to HoMM3-style terrain families",
+      "status": "completed",
+      "difficulty": "small"
     },
     {
       "id": "river-pass-live-audit",

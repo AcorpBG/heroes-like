@@ -303,6 +303,7 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 	for required_id in ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"]:
 		if required_id not in terrain_ids:
 			push_warning("Terrain grammar must define authored terrain class %s." % required_id)
+	_validate_editor_base_terrain_options(grammar, terrain_ids)
 
 	var overlay_ids: Array[String] = []
 	var overlays = grammar.get("overlay_classes", [])
@@ -329,6 +330,49 @@ func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> 
 			_validate_road_overlay_tile_art(overlay, overlay_id)
 	if "road_dirt" not in overlay_ids:
 		push_warning("Terrain grammar must define the road_dirt overlay.")
+
+func _validate_editor_base_terrain_options(grammar: Dictionary, terrain_ids: Array[String]) -> void:
+	var expected_options := [
+		{"id": "water", "label": "Water", "family": "water", "atlas": "watrtl"},
+		{"id": "snow", "label": "Snow", "family": "snow", "atlas": "snowtl"},
+		{"id": "grass", "label": "Grass", "family": "grass", "atlas": "grastl"},
+		{"id": "wastes", "label": "Sand", "family": "sand", "atlas": "sandtl"},
+		{"id": "badlands", "label": "Dirt", "family": "dirt", "atlas": "dirttl"},
+		{"id": "lava", "label": "Lava", "family": "lava", "atlas": "lavatl"},
+		{"id": "swamp", "label": "Swamp", "family": "swamp", "atlas": "swmptl"},
+		{"id": "highland", "label": "Rock/None", "family": "rock", "atlas": "rocktl"},
+	]
+	var options = grammar.get("editor_base_terrain_options", [])
+	if not (options is Array):
+		push_warning("Terrain grammar must define editor_base_terrain_options for the map editor picker.")
+		return
+	if options.size() != expected_options.size():
+		push_warning("Terrain grammar editor_base_terrain_options must expose the HoMM3-style base terrain family set.")
+	var homm3 = grammar.get("homm3_local_prototype", {})
+	var terrain_id_map = homm3.get("terrain_id_map", {}) if homm3 is Dictionary else {}
+	var terrain_families = homm3.get("terrain_families", {}) if homm3 is Dictionary else {}
+	for index in range(min(options.size(), expected_options.size())):
+		var option = options[index]
+		if not (option is Dictionary):
+			push_warning("Terrain grammar editor_base_terrain_options contains a non-dictionary option.")
+			continue
+		var expected: Dictionary = expected_options[index]
+		var terrain_id := String(option.get("id", ""))
+		var label := String(option.get("label", ""))
+		var family_id := String(option.get("homm3_family", ""))
+		var atlas_id := String(option.get("homm3_atlas", ""))
+		if terrain_id != String(expected.get("id", "")) or label != String(expected.get("label", "")):
+			push_warning("Terrain grammar editor base terrain option %d must be %s labeled %s." % [index, String(expected.get("id", "")), String(expected.get("label", ""))])
+		if terrain_id not in terrain_ids:
+			push_warning("Terrain grammar editor base terrain option %s must reference an authored terrain id." % terrain_id)
+		if family_id != String(expected.get("family", "")) or atlas_id != String(expected.get("atlas", "")):
+			push_warning("Terrain grammar editor base terrain option %s must map to HoMM3 family %s / atlas %s." % [terrain_id, String(expected.get("family", "")), String(expected.get("atlas", ""))])
+		var mapping = terrain_id_map.get(terrain_id, {}) if terrain_id_map is Dictionary else {}
+		if mapping is Dictionary and String(mapping.get("family", "")) != family_id:
+			push_warning("Terrain grammar editor base terrain option %s must agree with its HoMM3 terrain_id_map family." % terrain_id)
+		var family = terrain_families.get(family_id, {}) if terrain_families is Dictionary else {}
+		if family is Dictionary and String(family.get("atlas", "")) != atlas_id:
+			push_warning("Terrain grammar editor base terrain option %s must agree with its HoMM3 family atlas." % terrain_id)
 
 func _validate_terrain_tile_art(terrain_class: Dictionary, terrain_id: String) -> void:
 	var tile_art = terrain_class.get("tile_art", {})
