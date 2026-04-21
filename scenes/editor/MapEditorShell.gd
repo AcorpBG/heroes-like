@@ -92,6 +92,7 @@ var _tool := TOOL_INSPECT
 var _dirty := false
 var _last_message := ""
 var _restored_from_play_copy := false
+var _terrain_paint_order := 0
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -606,6 +607,7 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 	_pending_duplicate_object_key = ""
 	_pending_terrain_line_start = Vector2i(-1, -1)
 	_pending_road_path_start = Vector2i(-1, -1)
+	_terrain_paint_order = 0
 	_dirty = false
 	_restored_from_play_copy = false
 	_last_message = "Loaded authored scenario into a mutable editor working copy."
@@ -679,6 +681,7 @@ func _restore_editor_ui_metadata() -> void:
 	if not _tile_in_bounds(_pending_road_path_start):
 		_pending_road_path_start = Vector2i(-1, -1)
 	_dirty = bool(_session.flags.get("editor_dirty", true))
+	_terrain_paint_order = 0
 
 func _make_all_tiles_visible(session) -> void:
 	var map_size := OverworldRules.derive_map_size(session)
@@ -965,6 +968,7 @@ func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
 	row[tile.x] = terrain_id
 	map_data[tile.y] = row
 	_session.overworld["map"] = map_data
+	_terrain_paint_order += 1
 	_dirty = true
 	_last_message = "Painted %d,%d from %s to %s." % [
 		tile.x,
@@ -2871,6 +2875,8 @@ func validation_snapshot() -> Dictionary:
 		"terrain_option_ids": _terrain_option_ids(),
 		"authored_terrain_ids": _authored_terrain_ids(),
 		"hidden_terrain_ids": _hidden_terrain_ids(),
+		"terrain_paint_order": _terrain_paint_order,
+		"editor_restamp": _editor_restamp_payload_for_tile(_selected_tile),
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
 		"selected_property_object_key": _selected_property_object_key,
@@ -2950,12 +2956,19 @@ func validation_paint_terrain(x: int, y: int, terrain_id: String) -> Dictionary:
 		invalid_snapshot["message"] = "Terrain id %s is not in the authored terrain grammar." % terrain_id
 		return invalid_snapshot
 	_selected_tile = Vector2i(x, y)
+	var previous_terrain := _terrain_at(_selected_tile)
 	_select_terrain_by_id(terrain_id)
 	_tool = TOOL_TERRAIN
 	var changed := _paint_terrain(_selected_tile, terrain_id)
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = changed
+	snapshot["painted_tile"] = {"x": _selected_tile.x, "y": _selected_tile.y}
+	snapshot["paint_previous_terrain_id"] = previous_terrain
+	snapshot["paint_new_terrain_id"] = terrain_id
+	snapshot["paint_changed"] = previous_terrain != terrain_id and changed
+	snapshot["terrain_paint_order"] = _terrain_paint_order
+	snapshot["editor_restamp"] = _editor_restamp_payload_for_tile(_selected_tile)
 	return snapshot
 
 func validation_fill_terrain(x: int, y: int, terrain_id: String = "") -> Dictionary:
@@ -3422,6 +3435,14 @@ func validation_tile_presentation(x: int, y: int) -> Dictionary:
 	if _map_view == null or not _map_view.has_method("validation_tile_presentation"):
 		return {}
 	return _map_view.call("validation_tile_presentation", Vector2i(x, y))
+
+func validation_editor_restamp_payload(x: int, y: int) -> Dictionary:
+	return _editor_restamp_payload_for_tile(Vector2i(x, y))
+
+func _editor_restamp_payload_for_tile(tile: Vector2i) -> Dictionary:
+	if _map_view == null or not _map_view.has_method("validation_editor_restamp_payload"):
+		return {}
+	return _map_view.call("validation_editor_restamp_payload", tile)
 
 func validation_launch_working_copy() -> Dictionary:
 	if _session == null:

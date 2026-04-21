@@ -232,6 +232,8 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		return false
 	if not _assert_editor_bridge_material_resolver(shell):
 		return false
+	if not _assert_editor_restamp_behavior_model(shell):
+		return false
 	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	if not bool(restore_forest.get("ok", false)):
 		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 full-receiver stamp preview: %s." % restore_forest)
@@ -823,6 +825,212 @@ func _assert_editor_single_sand_homm3_propagation(shell) -> bool:
 
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
+
+func _assert_editor_restamp_behavior_model(shell) -> bool:
+	var painted := Vector2i(30, 50)
+	var original_terrains := []
+	var controlled_tiles := []
+	for y in range(painted.y - 2, painted.y + 3):
+		for x in range(painted.x - 2, painted.x + 3):
+			controlled_tiles.append(Vector2i(x, y))
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed grass for editor restamp behavior test at %s." % tile)
+			return false
+
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var before_order := int(before_snapshot.get("terrain_paint_order", 0))
+	var sand_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "wastes")
+	var sand_order := int(sand_result.get("terrain_paint_order", 0))
+	if (
+		not bool(sand_result.get("ok", false))
+		or not bool(sand_result.get("paint_changed", false))
+		or sand_order <= before_order
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: ordered sand paint did not expose a changed terrain paint operation: %s." % sand_result)
+		return false
+	var sand_restamp: Dictionary = sand_result.get("editor_restamp", {})
+	if not _assert_editor_restamp_contract(sand_restamp):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: sand paint did not expose the editor restamp behavior contract: %s." % sand_result)
+		return false
+	var sand_source := _restamp_tile_by_direction(sand_restamp, "SELF")
+	var sand_source_terrain: Dictionary = sand_source.get("terrain_presentation", {})
+	if (
+		String(sand_source.get("role", "")) != "painted_source_tile"
+		or int(sand_source.get("restamp_order_index", -1)) != 0
+		or String(sand_source_terrain.get("terrain", "")) != "wastes"
+		or String(sand_source_terrain.get("homm3_terrain_family", "")) != "sand"
+		or String(sand_source_terrain.get("homm3_selection_kind", "")) != "bridge_material_base_context"
+		or String(sand_source_terrain.get("homm3_editor_restamp_model", "")) != "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1"
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: painted source tile did not report sand through the shared restamp payload: %s." % sand_source)
+		return false
+	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "N"), 1, {
+		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+		"direction": "S",
+		"frame": "00_32",
+		"offset": {"x": 0, "y": 1},
+		"bridge_family": "sand",
+		"target_block": "native_to_sand_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: north restamp receiver did not project the sand source through OverworldMapView: %s." % sand_restamp)
+		return false
+	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "NW"), 2, {
+		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+		"direction": "SE",
+		"frame": "00_20",
+		"offset": {"x": 1, "y": 1},
+		"bridge_family": "sand",
+		"target_block": "native_to_sand_transition",
+		"source_kind": "propagated_source",
+		"flip": "HV",
+		"flip_h": true,
+		"flip_v": true,
+	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: northwest restamp receiver did not project the sand source as a propagated stamp: %s." % sand_restamp)
+		return false
+	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "W"), 3, {
+		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+		"direction": "E",
+		"frame": "00_35",
+		"offset": {"x": 1, "y": 0},
+		"bridge_family": "sand",
+		"target_block": "native_to_sand_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: west restamp receiver did not project the sand source through OverworldMapView: %s." % sand_restamp)
+		return false
+
+	var dirt_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "badlands")
+	var dirt_order := int(dirt_result.get("terrain_paint_order", 0))
+	if (
+		not bool(dirt_result.get("ok", false))
+		or not bool(dirt_result.get("paint_changed", false))
+		or dirt_order <= sand_order
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: ordered dirt repaint did not advance the editor paint order: %s." % dirt_result)
+		return false
+	var dirt_restamp: Dictionary = dirt_result.get("editor_restamp", {})
+	if not _assert_editor_restamp_contract(dirt_restamp):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: dirt repaint did not keep the editor restamp contract: %s." % dirt_result)
+		return false
+	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "N"), 1, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "S",
+		"frame": "00_12",
+		"offset": {"x": 0, "y": 1},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: north restamp receiver did not switch from sand to dirt after repaint: %s." % dirt_restamp)
+		return false
+	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "NW"), 2, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "SE",
+		"frame": "00_00",
+		"offset": {"x": 1, "y": 1},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "propagated_source",
+		"flip": "HV",
+		"flip_h": true,
+		"flip_v": true,
+	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: northwest restamp receiver did not switch to dirt propagated stamp after repaint: %s." % dirt_restamp)
+		return false
+	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "W"), 3, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "E",
+		"frame": "00_15",
+		"offset": {"x": 1, "y": 0},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: west restamp receiver did not switch from sand to dirt after repaint: %s." % dirt_restamp)
+		return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _assert_editor_restamp_contract(restamp: Dictionary) -> bool:
+	if not bool(restamp.get("enabled", false)):
+		return false
+	if String(restamp.get("model", "")) != "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1":
+		return false
+	if String(restamp.get("scope", "")) != "map_editor_preview_metadata_only":
+		return false
+	if String(restamp.get("logical_map_write_model", "")) != "painted_tile_only":
+		return false
+	if String(restamp.get("renderer_evaluation_model", "")) != "shared_overworld_map_view_final_state_reprojection":
+		return false
+	if String(restamp.get("known_receiver_offsets_source_level", "")) != "editor_observation":
+		return false
+	if String(restamp.get("paint_history_model", "")) != "array_reconstruction_fallback_without_paint_history":
+		return false
+	if int(restamp.get("known_receiver_count", 0)) != 3 or int(restamp.get("in_bounds_receiver_count", 0)) != 3 or int(restamp.get("affected_tile_count", 0)) != 4:
+		return false
+	if not bool(restamp.get("uses_shared_overworld_map_view", false)) or not bool(restamp.get("gameplay_pathing_unchanged", false)) or not bool(restamp.get("save_schema_unchanged", false)) or not bool(restamp.get("object_logic_unchanged", false)):
+		return false
+	if String(restamp.get("mixed_junction_policy", "")) != "reserved_unresolved_do_not_select_for_full_receiver_stamp_lookup":
+		return false
+	var reserved_ranges: Array = restamp.get("reserved_mixed_junction_frame_ranges", [])
+	if "00_40-00_48" not in reserved_ranges or "00_77-00_78" not in reserved_ranges:
+		return false
+	var expected_directions := ["N", "NW", "W"]
+	var offsets: Array = restamp.get("known_receiver_offsets", [])
+	if offsets.size() != expected_directions.size():
+		return false
+	for index in range(expected_directions.size()):
+		var offset: Dictionary = offsets[index]
+		if String(offset.get("direction", "")) != String(expected_directions[index]):
+			return false
+	return true
+
+func _restamp_tile_by_direction(restamp: Dictionary, direction: String) -> Dictionary:
+	var affected_tiles: Array = restamp.get("affected_tiles", [])
+	for value in affected_tiles:
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value
+		if String(entry.get("direction_from_painted_tile", "")) == direction:
+			return entry
+	return {}
+
+func _assert_restamped_receiver_payload(entry: Dictionary, expected_order_index: int, expected_stamp: Dictionary) -> bool:
+	if entry.is_empty():
+		return false
+	if int(entry.get("restamp_order_index", -1)) != expected_order_index:
+		return false
+	if not bool(entry.get("in_bounds", false)) or not bool(entry.get("stamp_source_matches_painted_tile", false)):
+		return false
+	var expected_offset: Dictionary = expected_stamp.get("offset", {})
+	var source_offset: Dictionary = entry.get("expected_stamp_source_offset", {})
+	if int(source_offset.get("x", 9999)) != int(expected_offset.get("x", 9998)):
+		return false
+	if int(source_offset.get("y", 9999)) != int(expected_offset.get("y", 9998)):
+		return false
+	var terrain: Dictionary = entry.get("terrain_presentation", {})
+	return _assert_full_receiver_stamp_payload(terrain, expected_stamp)
 
 func _paint_editor_terrain_for_orientation(shell, tile: Vector2i, terrain_id: String) -> bool:
 	var result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, terrain_id)
