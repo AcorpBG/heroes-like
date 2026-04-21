@@ -26,6 +26,26 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Terrain Evidence Labeling
+Status: completed on 2026-04-21 as a documentation/evidence pass.
+
+Purpose:
+- Follow AcOrP's corrected order: label extracted HoMM3 terrain assets from source evidence first, account for rotations/variations second, and reconstruct the terrain-system narrative before any further renderer work.
+- Keep this pass out of `OverworldMapView`, terrain grammar behavior, runtime art staging, and smoke-test expectations.
+
+Implemented:
+- Replaced the speculative terrain reconstruction artifact in `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-system-reconstruction.md` with source-driven frame-block labels.
+- Added `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-frame-labels.json` as a machine-readable reference for later renderer work.
+- Generated local enlarged contact sheets under `/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/analysis-sheets/` to support frame-block inspection.
+- Corrected prior assumptions: `rougtl` is a real 79-frame terrain DEF; `sandtl` reads as sand interiors/decor, not a generic edge-mask atlas; no extracted `tgrs` DEF/JSON exists in the artifact tree; `rocktl` needs separate rock/void treatment.
+
+Validation:
+- Passed `python3 -m json.tool /root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/terrain-frame-labels.json`
+
+Limits:
+- This is not a renderer change, terrain grammar change, runtime asset change, gameplay/pathing/save/editor-schema change, or claim that the original executable lookup table has been recovered.
+- Exact terrain priority, transition offset tables, and some rock/junction cases remain unknown.
+
 ## Current Implementation Slice: HoMM3 Sand Transition Propagation
 Status: completed on 2026-04-21 as a narrow corrective terrain pass.
 
