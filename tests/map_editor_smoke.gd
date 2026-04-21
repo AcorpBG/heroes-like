@@ -215,18 +215,20 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var corner_terrain: Dictionary = corner_receiver.get("terrain_presentation", {})
 	if (
-		String(corner_terrain.get("transition_corner_model", "")) != "diagonal_context_in_atlas_lookup"
-		or String(corner_terrain.get("transition_corner_mask", "")) != "SE"
-		or "mire" not in corner_terrain.get("transition_source_terrain_ids", [])
-		or int(corner_terrain.get("corner_transition_count", 0)) != 1
+		String(corner_terrain.get("homm3_selection_kind", "")) != "interior"
+		or String(corner_terrain.get("transition_corner_mask", "")) != ""
+		or int(corner_terrain.get("corner_transition_count", -1)) != 0
+		or bool(corner_terrain.get("homm3_propagated_transition", false))
+		or String(corner_terrain.get("homm3_selected_frame_block", "")) != "native_interiors"
+		or "mire" in corner_terrain.get("transition_source_terrain_ids", [])
 	):
-		_fail("Map editor smoke: editor preview did not expose diagonal context for the painted mire tile: %s." % corner_receiver)
+		_fail("Map editor smoke: diagonal-only full-receiver context contaminated an interior tile: %s." % corner_receiver)
 		return false
 	if not _assert_editor_direct_dirt_swamp_transition(shell):
 		return false
 	if not _assert_editor_horizontal_transition_orientation(shell):
 		return false
-	if not _assert_editor_single_sand_homm3_propagation(shell):
+	if not _assert_editor_solid_region_interior_stability(shell):
 		return false
 	if not _assert_editor_special_system_groundwork(shell):
 		return false
@@ -639,12 +641,17 @@ func _assert_editor_bridge_material_resolver(shell) -> bool:
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 
-func _assert_editor_single_sand_homm3_propagation(shell) -> bool:
-	var center := Vector2i(52, 52)
+func _assert_editor_solid_region_interior_stability(shell) -> bool:
+	return (
+		_assert_editor_solid_region_for_receiver(shell, Vector2i(52, 52), "grass")
+		and _assert_editor_solid_region_for_receiver(shell, Vector2i(52, 43), "snow")
+	)
+
+func _assert_editor_solid_region_for_receiver(shell, center: Vector2i, receiver_terrain: String) -> bool:
 	var original_terrains := []
 	var controlled_tiles := []
-	for y in range(center.y - 10, center.y + 12):
-		for x in range(center.x - 10, center.x + 10):
+	for y in range(center.y - 4, center.y + 5):
+		for x in range(center.x - 4, center.x + 5):
 			controlled_tiles.append(Vector2i(x, y))
 	for tile in controlled_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
@@ -652,178 +659,76 @@ func _assert_editor_single_sand_homm3_propagation(shell) -> bool:
 			"tile": tile,
 			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
 		})
-		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+		if not _paint_editor_terrain_for_orientation(shell, tile, "badlands"):
 			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: could not seed grass for single-sand HoMM3 propagation test at %s." % tile)
+			_fail("Map editor smoke: could not seed dirt around %s region at %s." % [receiver_terrain, tile])
 			return false
-	if not _paint_editor_terrain_for_orientation(shell, center, "wastes"):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: could not seed the center sand tile for the HoMM3 propagation test.")
-		return false
+	for y in range(center.y - 2, center.y + 3):
+		for x in range(center.x - 2, center.x + 3):
+			var tile := Vector2i(x, y)
+			if not _paint_editor_terrain_for_orientation(shell, tile, receiver_terrain):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not seed %s block tile at %s." % [receiver_terrain, tile])
+				return false
 
-	var center_presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
-	var center_terrain: Dictionary = center_presentation.get("terrain_presentation", {})
+	var north_edge := center + Vector2i(0, -2)
+	var edge_presentation: Dictionary = shell.call("validation_tile_presentation", north_edge.x, north_edge.y)
+	var edge_terrain: Dictionary = edge_presentation.get("terrain_presentation", {})
 	if (
-		String(center_terrain.get("terrain", "")) != "wastes"
-		or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
-		or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_material_base_context"
-		or String(center_terrain.get("homm3_atlas_role", "")) != "base_decor_bridge_material"
-		or bool(center_terrain.get("homm3_allows_generic_land_edge_masks", true))
-		or String(center_terrain.get("homm3_selected_frame_block", "")) != "base_context_provisional"
-		or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
-		or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
-		or String(center_terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
-		or int(center_terrain.get("edge_transition_count", -1)) != 4
-		or int(center_terrain.get("corner_transition_count", -1)) != 4
-		or "grass" not in center_terrain.get("transition_source_terrain_ids", [])
+		String(edge_terrain.get("terrain", "")) != receiver_terrain
+		or String(edge_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(edge_terrain.get("transition_edge_mask", "")) != "N"
+		or String(edge_terrain.get("homm3_bridge_family", "")) != "dirt"
+		or String(edge_terrain.get("homm3_selected_frame_block", "")) != "native_to_dirt_transition"
+		or int(edge_terrain.get("edge_transition_count", 0)) != 1
+		or int(edge_terrain.get("propagated_transition_count", -1)) != 0
+		or "badlands" not in edge_terrain.get("transition_source_terrain_ids", [])
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: inserted sand center did not use the HoMM3 sand receiver transition lookup: %s." % center_presentation)
+		_fail("Map editor smoke: %s block outer edge did not keep the dirt transition frame: %s." % [receiver_terrain, edge_presentation])
 		return false
-
-	var edge_cases := [
-		{"tile": center + Vector2i(0, -1), "edge": "S", "frame": "00_32", "offset": {"x": 0, "y": 1}},
-		{"tile": center + Vector2i(1, 0), "edge": "W", "frame": "00_24", "offset": {"x": -1, "y": 0}},
-		{"tile": center + Vector2i(0, 1), "edge": "N", "frame": "00_28", "offset": {"x": 0, "y": -1}},
-		{"tile": center + Vector2i(-1, 0), "edge": "E", "frame": "00_35", "offset": {"x": 1, "y": 0}},
-	]
-	for entry in edge_cases:
-		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
-		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		var terrain: Dictionary = presentation.get("terrain_presentation", {})
-		if (
-			String(terrain.get("terrain", "")) != "grass"
-			or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-			or String(terrain.get("transition_edge_mask", "")) != String(entry.get("edge", ""))
-			or String(terrain.get("transition_corner_mask", "")) != ""
-			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
-			or String(terrain.get("homm3_bridge_family", "")) != "sand"
-			or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_native_to_sand_lookup"
-			or String(terrain.get("homm3_bridge_source_kind", "")) != "direct_bridge_material"
-			or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
-			or int(terrain.get("edge_transition_count", 0)) != 1
-			or int(terrain.get("corner_transition_count", -1)) != 0
-			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
-		):
-			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: single sand edge receiver did not use the expected grastl native-to-sand frame at %s: %s." % [tile, presentation])
-			return false
-		if not _assert_full_receiver_stamp_payload(terrain, {
-			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
-			"direction": String(entry.get("edge", "")),
-			"frame": String(entry.get("frame", "")),
-			"offset": entry.get("offset", {}),
-			"bridge_family": "sand",
-			"target_block": "native_to_sand_transition",
-			"source_kind": "cardinal_source",
-		}):
-			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: single sand edge receiver did not expose source-anchored stamp metadata at %s: %s." % [tile, presentation])
-			return false
-
-	var corner_cases := [
-		{"tile": center + Vector2i(-1, -1), "direction": "SE", "offset": {"x": 1, "y": 1}, "flip": "HV", "flip_h": true, "flip_v": true},
-		{"tile": center + Vector2i(1, -1), "direction": "SW", "offset": {"x": -1, "y": 1}, "flip": "V", "flip_h": false, "flip_v": true},
-		{"tile": center + Vector2i(-1, 1), "direction": "NE", "offset": {"x": 1, "y": -1}, "flip": "H", "flip_h": true, "flip_v": false},
-		{"tile": center + Vector2i(1, 1), "direction": "NW", "offset": {"x": -1, "y": -1}, "flip": "", "flip_h": false, "flip_v": false},
-	]
-	for entry in corner_cases:
-		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
-		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		var terrain: Dictionary = presentation.get("terrain_presentation", {})
-		if (
-			String(terrain.get("terrain", "")) != "grass"
-			or String(terrain.get("homm3_selection_kind", "")) != "propagated_transition"
-			or String(terrain.get("transition_edge_mask", "")) != ""
-			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
-			or String(terrain.get("homm3_terrain_frame", "")) != "00_20"
-			or not bool(terrain.get("homm3_propagated_transition", false))
-			or String(terrain.get("homm3_transition_propagation_model", "")) != "data_driven_full_receiver_land_stamp_lookup.v1"
-			or String(terrain.get("homm3_selected_frame_block", "")) != "native_to_sand_transition"
-			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
-			or bool(terrain.get("homm3_terrain_flip_h", false)) != bool(entry.get("flip_h", false))
-			or bool(terrain.get("homm3_terrain_flip_v", false)) != bool(entry.get("flip_v", false))
-			or int(terrain.get("edge_transition_count", -1)) != 0
-			or int(terrain.get("corner_transition_count", -1)) != 1
-			or int(terrain.get("propagated_transition_count", 0)) != 1
-			or bool(terrain.get("transition_uses_second_ring", true))
-			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
-		):
-			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: single sand diagonal receiver did not use the expected rotated grastl native-to-sand stamp frame at %s: %s." % [tile, presentation])
-			return false
-		if not _assert_full_receiver_stamp_payload(terrain, {
-			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
-			"direction": String(entry.get("direction", "")),
-			"frame": "00_20",
-			"offset": entry.get("offset", {}),
-			"bridge_family": "sand",
-			"target_block": "native_to_sand_transition",
-			"source_kind": "propagated_source",
-			"flip": String(entry.get("flip", "")),
-			"flip_h": bool(entry.get("flip_h", false)),
-			"flip_v": bool(entry.get("flip_v", false)),
-		}):
-			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: single sand diagonal receiver did not expose source-anchored stamp metadata at %s: %s." % [tile, presentation])
-			return false
-
-	var second_ring_cases := [
-		{"tile": center + Vector2i(2, 2), "direction": "NW", "frame": "00_25", "offset": {"x": -2, "y": -2}, "flip": "", "flip_h": false, "flip_v": false, "distance": 2},
-		{"tile": center + Vector2i(-2, -2), "direction": "SE", "frame": "00_25", "offset": {"x": 2, "y": 2}, "flip": "HV", "flip_h": true, "flip_v": true, "distance": 2},
-		{"tile": center + Vector2i(4, 5), "direction": "NW", "frame": "00_39", "offset": {"x": -4, "y": -5}, "flip": "", "flip_h": false, "flip_v": false, "distance": 5},
-	]
-	for entry in second_ring_cases:
-		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
-		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
-		var terrain: Dictionary = presentation.get("terrain_presentation", {})
-		if (
-			String(terrain.get("terrain", "")) != "grass"
-			or String(terrain.get("homm3_selection_kind", "")) != "propagated_transition"
-			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
-			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
-			or int(terrain.get("homm3_transition_source_distance", 0)) != int(entry.get("distance", 0))
-			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
-			or not bool(terrain.get("transition_uses_second_ring", false))
-			or int(terrain.get("propagated_transition_count", 0)) != 1
-			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
-		):
-			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: single sand transition did not propagate through the grastl native-to-sand stamp at %s: %s." % [tile, presentation])
-			return false
-		if not _assert_full_receiver_stamp_payload(terrain, {
-			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
-			"direction": String(entry.get("direction", "")),
-			"frame": String(entry.get("frame", "")),
-			"offset": entry.get("offset", {}),
-			"bridge_family": "sand",
-			"target_block": "native_to_sand_transition",
-			"source_kind": "propagated_source",
-			"flip": String(entry.get("flip", "")),
-			"flip_h": bool(entry.get("flip_h", false)),
-			"flip_v": bool(entry.get("flip_v", false)),
-		}):
-			_restore_editor_terrain_tiles(shell, original_terrains)
-			_fail("Map editor smoke: single sand second-ring receiver did not expose source-anchored stamp metadata at %s: %s." % [tile, presentation])
-			return false
-
-	var outside_tile := center + Vector2i(5, 6)
-	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", outside_tile.x, outside_tile.y)
-	var outside_terrain: Dictionary = outside_presentation.get("terrain_presentation", {})
-	if (
-		String(outside_terrain.get("homm3_selection_kind", "")) != "interior"
-		or bool(outside_terrain.get("homm3_propagated_transition", false))
-		or String(outside_terrain.get("homm3_logical_terrain_id", "")) != "grass"
-		or String(outside_terrain.get("homm3_renderer_family", "")) != "grass"
-		or String(outside_terrain.get("homm3_atlas_role", "")) != "full_receiver_land"
-		or String(outside_terrain.get("homm3_selected_frame_block", "")) != "native_interiors"
-		or String(outside_terrain.get("homm3_selected_frame_block_source_level", "")) != "fact"
-	):
+	if not _assert_full_receiver_stamp_payload(edge_terrain, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "N",
+		"frame": "00_08",
+		"offset": {"x": 0, "y": -1},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+		"mixed_reserved": true,
+	}):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: single sand transition extended outside the explicit grastl native-to-sand stamp lookup at %s: %s." % [outside_tile, outside_presentation])
+		_fail("Map editor smoke: %s block outer edge did not expose source-anchored dirt stamp metadata: %s." % [receiver_terrain, edge_presentation])
 		return false
+
+	for interior_tile in [center, center + Vector2i(-1, -1), center + Vector2i(1, 1)]:
+		var interior_presentation: Dictionary = shell.call("validation_tile_presentation", interior_tile.x, interior_tile.y)
+		var interior_terrain: Dictionary = interior_presentation.get("terrain_presentation", {})
+		if not _assert_solid_region_interior_payload(interior_terrain, receiver_terrain):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: %s block interior selected a dirt/sand transition stamp at %s: %s." % [receiver_terrain, interior_tile, interior_presentation])
+			return false
 
 	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _assert_solid_region_interior_payload(terrain: Dictionary, expected_terrain: String) -> bool:
+	if String(terrain.get("terrain", "")) != expected_terrain:
+		return false
+	if String(terrain.get("homm3_selection_kind", "")) != "interior":
+		return false
+	if bool(terrain.get("homm3_propagated_transition", false)):
+		return false
+	if String(terrain.get("homm3_selected_frame_block", "")) != "native_interiors":
+		return false
+	if String(terrain.get("homm3_stamp_table_id", "")) != "":
+		return false
+	if String(terrain.get("transition_edge_mask", "")) != "" or String(terrain.get("transition_corner_mask", "")) != "":
+		return false
+	if int(terrain.get("edge_transition_count", -1)) != 0 or int(terrain.get("corner_transition_count", -1)) != 0 or int(terrain.get("propagated_transition_count", -1)) != 0:
+		return false
+	if "badlands" in terrain.get("transition_source_terrain_ids", []) or "wastes" in terrain.get("transition_source_terrain_ids", []):
+		return false
 	return true
 
 func _assert_editor_restamp_behavior_model(shell) -> bool:
@@ -886,20 +791,9 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: north restamp receiver did not project the sand source through OverworldMapView: %s." % sand_restamp)
 		return false
-	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "NW"), 2, {
-		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
-		"direction": "SE",
-		"frame": "00_20",
-		"offset": {"x": 1, "y": 1},
-		"bridge_family": "sand",
-		"target_block": "native_to_sand_transition",
-		"source_kind": "propagated_source",
-		"flip": "HV",
-		"flip_h": true,
-		"flip_v": true,
-	}):
+	if not _assert_restamped_receiver_interior_payload(_restamp_tile_by_direction(sand_restamp, "NW"), 2, "grass"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: northwest restamp receiver did not project the sand source as a propagated stamp: %s." % sand_restamp)
+		_fail("Map editor smoke: northwest restamp receiver selected a diagonal-only sand stamp instead of staying interior: %s." % sand_restamp)
 		return false
 	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "W"), 3, {
 		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
@@ -941,20 +835,9 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: north restamp receiver did not switch from sand to dirt after repaint: %s." % dirt_restamp)
 		return false
-	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "NW"), 2, {
-		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "SE",
-		"frame": "00_00",
-		"offset": {"x": 1, "y": 1},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
-		"source_kind": "propagated_source",
-		"flip": "HV",
-		"flip_h": true,
-		"flip_v": true,
-	}):
+	if not _assert_restamped_receiver_interior_payload(_restamp_tile_by_direction(dirt_restamp, "NW"), 2, "grass"):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: northwest restamp receiver did not switch to dirt propagated stamp after repaint: %s." % dirt_restamp)
+		_fail("Map editor smoke: northwest restamp receiver selected a diagonal-only dirt stamp instead of staying interior after repaint: %s." % dirt_restamp)
 		return false
 	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "W"), 3, {
 		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
@@ -1031,6 +914,18 @@ func _assert_restamped_receiver_payload(entry: Dictionary, expected_order_index:
 		return false
 	var terrain: Dictionary = entry.get("terrain_presentation", {})
 	return _assert_full_receiver_stamp_payload(terrain, expected_stamp)
+
+func _assert_restamped_receiver_interior_payload(entry: Dictionary, expected_order_index: int, expected_terrain: String) -> bool:
+	if entry.is_empty():
+		return false
+	if int(entry.get("restamp_order_index", -1)) != expected_order_index:
+		return false
+	if not bool(entry.get("in_bounds", false)):
+		return false
+	if bool(entry.get("stamp_source_matches_painted_tile", false)):
+		return false
+	var terrain: Dictionary = entry.get("terrain_presentation", {})
+	return _assert_solid_region_interior_payload(terrain, expected_terrain)
 
 func _paint_editor_terrain_for_orientation(shell, tile: Vector2i, terrain_id: String) -> bool:
 	var result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, terrain_id)

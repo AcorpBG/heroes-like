@@ -26,21 +26,29 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: HoMM3 Editor Restamp Behavior Model
-Status: in progress on 2026-04-21 as the next narrow renderer rewrite slice.
+## Current Implementation Slice: HoMM3 Solid Region Interior Stability
+Status: completed on 2026-04-21 as a narrow renderer bug-fix slice.
 
 Purpose:
-- Make map-editor terrain paint/restamp behavior explicit and testable after the full land receiver stamp lookup slice.
-- Keep editor preview and live overworld terrain metadata coherent through the shared `OverworldMapView` validation path.
-- Preserve bridge material resolution, full receiver stamp table lookup, water/rock special systems, roads, gameplay/pathing, fog, panning, selection, save data, object logic, and reserved mixed-junction handling.
+- Stop full-receiver land interiors inside contiguous same-family snow/grass regions from selecting dirt/sand transition stamp frames through diagonal or second-ring sources.
+- Keep the expected renderer rule simple and testable: solid interiors/base frames inside the region, oriented dirt/sand transition frames only on true outer cardinal boundaries.
+- Preserve true edge transitions, shared live-overworld/map-editor preview validation, bridge material resolution, water/rock special systems, roads, gameplay/pathing, fog, panning, selection, save data, object logic, and town logic.
 
-Planned scope:
-- Declare the editor restamp behavior model in `content/terrain_grammar.json` with source-level metadata and known single-paint receiver offsets.
-- Expose paint/restamp metadata from the shared map view validation payload rather than adding an editor-only renderer path.
-- Add map-editor smoke fixtures for ordered paint behavior and restamped receiver payloads.
+Implemented:
+- `OverworldMapView` full-receiver land selection now keeps diagonal-only and second-ring dirt/sand contacts from selecting transition stamp frames; cardinal contacts still drive transition stamps.
+- `content/terrain_grammar.json` and repo validation now document the cardinal-boundary-only full-receiver rule.
+- Map-editor and live-overworld smoke fixtures now cover grass and snow regions surrounded by dirt: interior tiles stay on solid interior/base frames while outer cardinal edges still select oriented dirt stamp frames.
+- Editor restamp coverage now verifies diagonal-only restamp receivers stay interior instead of projecting dirt/sand propagated stamps.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
 
 Limits:
-- This is not a gameplay/pathing rewrite, save-format change, object/town logic change, exact original executable lookup recovery, water/rock rewrite, dirt/sand tightening pass, or original-art replacement plan.
+- This is not a gameplay/pathing rewrite, save-format change, object/town logic change, exact original executable lookup recovery, water/rock rewrite, terrain art replacement, road change, or editor data-model change.
 
 ## Completed Implementation Slice: HoMM3 Full Land Receiver Stamp Lookup
 Status: completed on 2026-04-21 as the next narrow renderer rewrite slice.
