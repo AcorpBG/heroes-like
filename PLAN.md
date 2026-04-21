@@ -26,6 +26,35 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Local Terrain Prototype
+Status: completed on 2026-04-21 as a local-only renderer prototype.
+
+Purpose:
+- Replace the Rubberduck/original quiet terrain feel-test path with a truthful HoMM3-style terrain and road rendering prototype using locally extracted original HoMM3 DEF frames.
+- Prove the architecture direction for table-driven neighbor-aware terrain lookup, dirt/sand bridge/base resolution, shoreline-specific water selection, and 4-neighbor road overlays.
+- Preserve the logical square-grid map, current map editor working-copy model, gameplay/pathing, save format, object/town rendering, and town occupancy/pathing.
+
+Implemented:
+- `tools/build_overworld_terrain_tiles.py` now stages extracted HoMM3 terrain and road DEF frames into ignored local runtime PNGs under `art/overworld/runtime/homm3_local_prototype/`.
+- `content/terrain_grammar.json` records a local-only HoMM3 prototype section with explicit terrain-family mappings, bridge/shoreline mask lookup tables, and a 4-neighbor road mask lookup.
+- `OverworldMapView` now prefers the HoMM3 prototype lookup table for terrain base-frame selection and road overlay-frame selection, while retaining grammar/procedural fallback paths for unsupported cases.
+- Water/coast terrain uses shoreline-specific lookup when adjacent to land; land-family conflicts resolve through the configured dirt or sand bridge/base family rather than generic all-to-all blending.
+- Dirt roads now rebuild presentation connections from orthogonal same-type neighbors only; diagonal neighboring road tiles no longer create diagonal road links.
+- The logical `forest` terrain limitation is explicit: HoMM3 forest is primarily object-layer art, so the local terrain prototype maps this logical terrain id to the grass atlas and reports that degradation in validation payloads.
+- The map editor preview uses the same renderer and validation payloads as live overworld play.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is local prototype/reference work only. The extracted HoMM3 frames are not shippable or redistributable game assets.
+- This is not a gameplay/pathing, save-format, map-editor data-model, object/town rendering, or town occupancy/pathing change.
+- The frame-index tables are explicit and defensible prototype lookup tables, not a claim that the original HoMM3 executable's exact hidden lookup table has been recovered.
+
 ## Current Implementation Slice: Rubberduck Grassland Cohesion Correction
 Status: completed on 2026-04-21 as a narrow corrective terrain-art pass.
 

@@ -263,10 +263,10 @@ func _supported_map_object_families() -> Array:
 func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> void:
 	if String(grammar.get("rendering_model", "")) != "authored_autotile_layers":
 		push_warning("Terrain grammar must declare rendering_model authored_autotile_layers.")
-	if String(grammar.get("primary_base_model", "")) != "original_quiet_tile_bank":
-		push_warning("Terrain grammar must declare original_quiet_tile_bank as the primary base model.")
-	if String(grammar.get("generated_source_policy", "")) != "deprecated_for_primary_base_color_reference_or_limited_decal_only":
-		push_warning("Terrain grammar must mark generated terrain sheets deprecated for primary bases.")
+	if String(grammar.get("primary_base_model", "")) != "homm3_local_reference_prototype":
+		push_warning("Terrain grammar must declare homm3_local_reference_prototype as the active local prototype base model.")
+	if String(grammar.get("generated_source_policy", "")) != "deprecated_not_used_by_homm3_local_prototype":
+		push_warning("Terrain grammar must mark generated terrain sheets deprecated and unused by the HoMM3 local prototype.")
 	var classes = grammar.get("terrain_classes", [])
 	if not (classes is Array) or classes.is_empty():
 		push_warning("Terrain grammar must define terrain_classes.")
