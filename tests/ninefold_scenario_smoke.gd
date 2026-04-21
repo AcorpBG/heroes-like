@@ -123,17 +123,29 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		String(terrain.get("terrain", "")) != "grass"
 		or String(terrain.get("terrain_group", "")) != "grasslands"
 		or not bool(terrain.get("neighbor_aware_transitions", false))
-			or String(terrain.get("transition_calculation_model", "")) != "homm3_table_driven_bridge_base_lookup"
-			or String(terrain.get("transition_edge_model", "")) != "bridge_or_shoreline_atlas_frame_lookup"
-			or String(terrain.get("transition_edge_mask", "")) != "NW"
-			or "plains" not in terrain.get("transition_source_terrain_ids", [])
-			or "grasslands" not in terrain.get("transition_source_groups", [])
-			or int(terrain.get("edge_transition_count", 0)) != 2
-			or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-			or String(terrain.get("homm3_bridge_family", "")) != "dirt"
-			or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
+		or String(terrain.get("transition_calculation_model", "")) != "homm3_data_driven_full_receiver_stamp_lookup"
+		or String(terrain.get("transition_edge_model", "")) != "bridge_or_shoreline_atlas_frame_lookup"
+		or String(terrain.get("transition_edge_mask", "")) != "NW"
+		or "plains" not in terrain.get("transition_source_terrain_ids", [])
+		or "grasslands" not in terrain.get("transition_source_groups", [])
+		or int(terrain.get("edge_transition_count", 0)) != 2
+		or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(terrain.get("homm3_bridge_family", "")) != "dirt"
+		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
 	):
-		_fail("Ninefold smoke: terrain transition was not selected from the HoMM3 bridge-table lookup at the grass/plains boundary: %s." % presentation)
+		_fail("Ninefold smoke: terrain transition was not selected from the HoMM3 full-receiver stamp lookup at the grass/plains boundary: %s." % presentation)
+		return false
+	if not _assert_full_receiver_stamp_payload(terrain, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "N",
+		"frame": "00_08",
+		"offset": {"x": 0, "y": -1},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+		"mixed_reserved": true,
+	}):
+		_fail("Ninefold smoke: two-edge grass/plains boundary did not expose reserved mixed-junction stamp metadata: %s." % presentation)
 		return false
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
 	var found_west_plains := false
@@ -177,6 +189,17 @@ func _assert_direct_dirt_swamp_transition(shell: Node, session) -> bool:
 	):
 		_fail("Ninefold smoke: direct swamp/dirt transition routed away from the direct dirt bridge pair: %s." % swamp_presentation)
 		return false
+	if not _assert_full_receiver_stamp_payload(swamp_terrain, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "W",
+		"frame": "00_04",
+		"offset": {"x": -1, "y": 0},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_fail("Ninefold smoke: direct swamp/dirt transition did not expose full-receiver stamp metadata: %s." % swamp_presentation)
+		return false
 	return true
 
 func _assert_horizontal_transition_orientation(shell: Node, session) -> bool:
@@ -194,6 +217,17 @@ func _assert_horizontal_transition_orientation(shell: Node, session) -> bool:
 	):
 		_fail("Ninefold smoke: HoMM3 east-side grass/plains transition is horizontally reversed or missing its right-side dirt frame: %s." % east_presentation)
 		return false
+	if not _assert_full_receiver_stamp_payload(east_terrain, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "E",
+		"frame": "00_15",
+		"offset": {"x": 1, "y": 0},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_fail("Ninefold smoke: east-side grass/plains transition did not expose full-receiver stamp metadata: %s." % east_presentation)
+		return false
 
 	var west_receiver := Vector2i(26, 0)
 	var west_source := Vector2i(25, 0)
@@ -208,6 +242,17 @@ func _assert_horizontal_transition_orientation(shell: Node, session) -> bool:
 		or not _transition_sources_include(west_terrain, "W", "plains")
 	):
 		_fail("Ninefold smoke: HoMM3 west-side grass/plains transition is horizontally reversed or missing its left-side dirt frame: %s." % west_presentation)
+		return false
+	if not _assert_full_receiver_stamp_payload(west_terrain, {
+		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
+		"direction": "W",
+		"frame": "00_04",
+		"offset": {"x": -1, "y": 0},
+		"bridge_family": "dirt",
+		"target_block": "native_to_dirt_transition",
+		"source_kind": "cardinal_source",
+	}):
+		_fail("Ninefold smoke: west-side grass/plains transition did not expose full-receiver stamp metadata: %s." % west_presentation)
 		return false
 	return true
 
@@ -236,6 +281,63 @@ func _transition_sources_include_bridge(terrain: Dictionary, direction: String, 
 		):
 			return true
 	return false
+
+func _assert_full_receiver_stamp_payload(terrain: Dictionary, expected: Dictionary) -> bool:
+	if not bool(terrain.get("homm3_uses_land_receiver_stamp_tables", false)):
+		return false
+	if bool(terrain.get("homm3_allows_generic_land_edge_masks", true)):
+		return false
+	if String(terrain.get("homm3_stamp_lookup_model", "")) != "data_driven_full_receiver_land_stamp_lookup.v1":
+		return false
+	if String(terrain.get("homm3_stamp_selection_model", "")) != "source_anchored_stamp_table_with_array_reconstruction_fallback":
+		return false
+	if String(terrain.get("homm3_stamp_table_id", "")) != String(expected.get("table", "")):
+		return false
+	if String(terrain.get("homm3_stamp_anchor", "")) != "source_tile_anchored_directional_stamp":
+		return false
+	if String(terrain.get("homm3_stamp_source_kind", "")) != String(expected.get("source_kind", "")):
+		return false
+	if String(terrain.get("homm3_stamp_source_direction", "")) != String(expected.get("direction", "")):
+		return false
+	if String(terrain.get("homm3_stamp_selected_frame", "")) != String(expected.get("frame", "")):
+		return false
+	if String(terrain.get("homm3_terrain_frame", "")) != String(expected.get("frame", "")):
+		return false
+	if String(terrain.get("homm3_stamp_target_frame_block", "")) != String(expected.get("target_block", "")):
+		return false
+	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("target_block", "")):
+		return false
+	if String(terrain.get("homm3_stamp_bridge_family", "")) != String(expected.get("bridge_family", "")):
+		return false
+	if String(terrain.get("homm3_stamp_source_level", "")) != "provisional":
+		return false
+	if String(terrain.get("homm3_stamp_mapping_source_level", "")) != "provisional":
+		return false
+	if String(terrain.get("homm3_stamp_frame_range_source_level", "")) != "fact":
+		return false
+	if String(terrain.get("homm3_stamp_array_reconstruction_mode", "")) != "array_reconstruction_fallback_without_paint_history":
+		return false
+	var expected_offset: Dictionary = expected.get("offset", {})
+	var source_offset: Dictionary = terrain.get("homm3_stamp_source_offset", {})
+	if int(source_offset.get("x", 9999)) != int(expected_offset.get("x", 9998)):
+		return false
+	if int(source_offset.get("y", 9999)) != int(expected_offset.get("y", 9998)):
+		return false
+	var expected_flip := String(expected.get("flip", ""))
+	if String(terrain.get("homm3_stamp_transform", "")) != expected_flip:
+		return false
+	if String(terrain.get("homm3_terrain_flip", "")) != expected_flip:
+		return false
+	var expect_reserved := bool(expected.get("mixed_reserved", false))
+	if bool(terrain.get("homm3_stamp_mixed_junction_reserved", false)) != expect_reserved:
+		return false
+	if expect_reserved:
+		var reserved_ranges: Array = terrain.get("homm3_stamp_reserved_mixed_junction_frame_ranges", [])
+		if "00_40-00_48" not in reserved_ranges or "00_77-00_78" not in reserved_ranges:
+			return false
+		if String(terrain.get("homm3_stamp_mixed_junction_policy", "")) != "reserved_unresolved_do_not_select_for_full_receiver_stamp_lookup":
+			return false
+	return true
 
 func _assert_homm_road_topology(shell: Node, session) -> bool:
 	var vertical_tile := Vector2i(23, 30)
@@ -342,8 +444,8 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if String(terrain_presentation.get("primary_base_model", "")) != "homm3_local_reference_prototype" or String(terrain_presentation.get("terrain_noise_profile", "")) != "homm3_extracted_atlas_frame":
 		_fail("Ninefold smoke: large-map starting terrain does not expose the HoMM3 extracted-atlas base model: %s." % town_presentation)
 		return false
-	if String(terrain_presentation.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_stable_interior_base" or String(terrain_presentation.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
-		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the table-driven HoMM3 stable-base lookup contract: %s." % town_presentation)
+	if String(terrain_presentation.get("terrain_variant_selection", "")) != "data_driven_receiver_stamp_lookup_with_stable_interior_base" or String(terrain_presentation.get("homm3_terrain_lookup_model", "")) != "data_driven_full_receiver_stamp_lookup":
+		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the data-driven HoMM3 full-receiver stamp lookup contract: %s." % town_presentation)
 		return false
 	if String(terrain_presentation.get("homm3_interior_frame_selection", "")) != "single_stable_base_frame" or bool(terrain_presentation.get("homm3_uses_interior_variant_cycle", true)):
 		_fail("Ninefold smoke: large-map starting terrain still reports HoMM3 interior patch-variant cycling: %s." % town_presentation)

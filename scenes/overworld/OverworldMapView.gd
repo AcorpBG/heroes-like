@@ -121,7 +121,7 @@ const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
 const TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE := "homm3_local_reference_prototype"
 const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE
 const TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS := "generated_overworld_terrain_sources_20260419"
-const TERRAIN_TRANSITION_SELECTION_MODEL := "homm3_table_driven_bridge_base_lookup"
+const TERRAIN_TRANSITION_SELECTION_MODEL := "homm3_data_driven_full_receiver_stamp_lookup"
 const TERRAIN_TRANSITION_EDGE_MODEL := "bridge_or_shoreline_atlas_frame_lookup"
 const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_context_in_atlas_lookup"
 const TERRAIN_HOMM3_SOURCE_BASIS := "homm3_extracted_local_reference_prototype"
@@ -200,6 +200,7 @@ var _homm3_terrain_id_map: Dictionary = {}
 var _homm3_terrain_families: Dictionary = {}
 var _homm3_bridge_classes: Dictionary = {}
 var _homm3_bridge_material_resolver: Dictionary = {}
+var _homm3_land_receiver_stamp_lookup: Dictionary = {}
 var _homm3_direct_bridge_pairs: Dictionary = {}
 var _homm3_routed_bridge_rules: Dictionary = {}
 var _homm3_road_overlays: Dictionary = {}
@@ -2166,7 +2167,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"style_id": _terrain_style_id(terrain),
 		"pattern": _terrain_pattern(terrain),
 		"terrain_noise_profile": "homm3_extracted_atlas_frame" if tile_art_loaded and not homm3_selection.is_empty() else ("quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback"),
-		"terrain_variant_selection": "table_driven_neighbor_mask_with_stable_interior_base" if tile_art_loaded and not homm3_selection.is_empty() else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
+		"terrain_variant_selection": "data_driven_receiver_stamp_lookup_with_stable_interior_base" if tile_art_loaded and not homm3_selection.is_empty() else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
 		"grasslands_base_cohesion": "homm3_grass_atlas_family" if _terrain_group(terrain) == "grasslands" and tile_art_loaded and not homm3_selection.is_empty() else ("grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else ""),
 		"homm3_local_reference_only": bool(homm3_selection.get("local_reference_only", false)),
 		"homm3_terrain_lookup_model": String(homm3_selection.get("terrain_lookup_model", "")),
@@ -2179,6 +2180,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_special_system": String(homm3_selection.get("special_system", "")),
 		"homm3_special_system_flag": bool(homm3_selection.get("special_system_flag", false)),
 		"homm3_allows_generic_land_edge_masks": bool(homm3_selection.get("allows_generic_land_edge_masks", false)),
+		"homm3_uses_land_receiver_stamp_tables": bool(homm3_selection.get("uses_land_receiver_stamp_tables", false)),
 		"homm3_terrain_frame": String(homm3_selection.get("frame_id", "")),
 		"homm3_selected_frame_block": String(homm3_selection.get("selected_frame_block", "")),
 		"homm3_selected_frame_block_range": String(homm3_selection.get("selected_frame_block_range", "")),
@@ -2199,6 +2201,29 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_bridge_rule_id": String(homm3_selection.get("bridge_rule_id", "")),
 		"homm3_bridge_target_frame_block": String(homm3_selection.get("bridge_target_frame_block", "")),
 		"homm3_bridge_policy_provisional": bool(homm3_selection.get("bridge_policy_provisional", false)),
+		"homm3_stamp_lookup_model": String(homm3_selection.get("stamp_lookup_model", "")),
+		"homm3_stamp_selection_model": String(homm3_selection.get("stamp_selection_model", "")),
+		"homm3_stamp_table_id": String(homm3_selection.get("stamp_table_id", "")),
+		"homm3_stamp_anchor": String(homm3_selection.get("stamp_anchor", "")),
+		"homm3_stamp_source_kind": String(homm3_selection.get("stamp_source_kind", "")),
+		"homm3_stamp_source_direction": String(homm3_selection.get("stamp_source_direction", "")),
+		"homm3_stamp_source_offset": homm3_selection.get("stamp_source_offset", {}),
+		"homm3_stamp_selected_frame": String(homm3_selection.get("stamp_selected_frame", "")),
+		"homm3_stamp_transform": String(homm3_selection.get("stamp_transform", "")),
+		"homm3_stamp_flip_h": bool(homm3_selection.get("stamp_flip_h", false)),
+		"homm3_stamp_flip_v": bool(homm3_selection.get("stamp_flip_v", false)),
+		"homm3_stamp_source_level": String(homm3_selection.get("stamp_source_level", "")),
+		"homm3_stamp_mapping_source_level": String(homm3_selection.get("stamp_mapping_source_level", "")),
+		"homm3_stamp_frame_range_source_level": String(homm3_selection.get("stamp_frame_range_source_level", "")),
+		"homm3_stamp_frame_range": String(homm3_selection.get("stamp_frame_range", "")),
+		"homm3_stamp_target_frame_block": String(homm3_selection.get("stamp_target_frame_block", "")),
+		"homm3_stamp_bridge_family": String(homm3_selection.get("stamp_bridge_family", "")),
+		"homm3_stamp_bridge_class": String(homm3_selection.get("stamp_bridge_class", "")),
+		"homm3_stamp_source_offset_model": String(homm3_selection.get("stamp_source_offset_model", "")),
+		"homm3_stamp_array_reconstruction_mode": String(homm3_selection.get("stamp_array_reconstruction_mode", "")),
+		"homm3_stamp_mixed_junction_reserved": bool(homm3_selection.get("stamp_mixed_junction_reserved", false)),
+		"homm3_stamp_mixed_junction_policy": String(homm3_selection.get("stamp_mixed_junction_policy", "")),
+		"homm3_stamp_reserved_mixed_junction_frame_ranges": homm3_selection.get("stamp_reserved_mixed_junction_frame_ranges", []),
 		"homm3_direct_bridge_material_contact": bool(homm3_selection.get("direct_bridge_material_contact", false)),
 		"homm3_preferred_bridge_class_used": bool(homm3_selection.get("preferred_bridge_class_used", false)),
 		"homm3_shoreline_specific": bool(homm3_selection.get("shoreline_specific", false)),
@@ -2248,7 +2273,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
 		"transition_shape_model": "homm3_base_atlas_frame" if not homm3_selection.is_empty() else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
 		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if not homm3_selection.is_empty() else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
-		"transition_selection_rule": "resolve_direct_family_pairs_before_dirt_or_sand_bridge_tables_and_water_through_shoreline_tables" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
+		"transition_selection_rule": "resolve_bridge_material_then_full_receiver_stamp_table_or_special_system_lookup" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
 		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0 or propagated_transition_count > 0,
 		"same_group_transition_suppressed": true,
 		"road_overlay": not road_payload.is_empty(),
@@ -2639,6 +2664,7 @@ func _load_terrain_grammar() -> void:
 	_homm3_terrain_families.clear()
 	_homm3_bridge_classes.clear()
 	_homm3_bridge_material_resolver.clear()
+	_homm3_land_receiver_stamp_lookup.clear()
 	_homm3_direct_bridge_pairs.clear()
 	_homm3_routed_bridge_rules.clear()
 	_homm3_road_overlays.clear()
@@ -2703,6 +2729,9 @@ func _load_homm3_prototype(grammar: Dictionary) -> void:
 	var bridge_material_resolver = prototype.get("bridge_material_resolver", {})
 	if bridge_material_resolver is Dictionary:
 		_homm3_bridge_material_resolver = bridge_material_resolver
+	var land_receiver_stamp_lookup = prototype.get("land_receiver_stamp_lookup", {})
+	if land_receiver_stamp_lookup is Dictionary:
+		_homm3_land_receiver_stamp_lookup = land_receiver_stamp_lookup
 	var direct_bridge_pairs = prototype.get("direct_bridge_pairs", [])
 	if direct_bridge_pairs is Array:
 		for pair_value in direct_bridge_pairs:
@@ -2953,6 +2982,11 @@ func _homm3_is_water_system(family: Dictionary) -> bool:
 func _homm3_is_rock_system(family: Dictionary) -> bool:
 	return _homm3_family_special_system(family) == "rock_void_cliff"
 
+func _homm3_uses_land_receiver_stamp_tables(family: Dictionary) -> bool:
+	if family.has("uses_land_receiver_stamp_tables"):
+		return bool(family.get("uses_land_receiver_stamp_tables", false))
+	return _homm3_family_atlas_role(family) == "full_receiver_land"
+
 func _homm3_receiver_bridge_family(config: Dictionary, family: Dictionary) -> String:
 	var config_family := String(config.get("bridge_family", "")).strip_edges()
 	if config_family != "":
@@ -3138,6 +3172,9 @@ func _homm3_selected_frame_block_id(selection_kind: String, relation: Dictionary
 	var resolver_target_block := String(relation.get("bridge_target_frame_block", "")).strip_edges()
 	if resolver_target_block != "":
 		return resolver_target_block
+	var stamp_target_block := String(relation.get("stamp_target_frame_block", "")).strip_edges()
+	if stamp_target_block != "":
+		return stamp_target_block
 	match selection_kind:
 		"water_shoreline":
 			return "shoreline_frames"
@@ -3160,6 +3197,111 @@ func _homm3_selected_frame_block_id(selection_kind: String, relation: Dictionary
 		"corner_transition":
 			return "mixed_junction_reserved"
 	return String(family.get("interior_frame_block", "native_interiors")).strip_edges()
+
+func _homm3_land_receiver_stamp_lookup_model() -> String:
+	var model := String(_homm3_land_receiver_stamp_lookup.get("resolver_model", "")).strip_edges()
+	return model if model != "" else "no_full_receiver_stamp_lookup"
+
+func _homm3_land_receiver_stamp_table(bridge_family: String) -> Dictionary:
+	var tables = _homm3_land_receiver_stamp_lookup.get("stamp_tables", {})
+	if not (tables is Dictionary):
+		return {}
+	var table = tables.get(bridge_family.strip_edges(), {})
+	return table if table is Dictionary else {}
+
+func _homm3_stamp_entry_from_table(table: Dictionary, source_offset: Vector2i) -> Dictionary:
+	if table.is_empty():
+		return {}
+	var source_direction := _homm3_direction_from_offset(source_offset)
+	if source_direction == "":
+		return {}
+	var entry: Dictionary = {}
+	if (absi(source_offset.x) + absi(source_offset.y)) == 1:
+		var cardinal_entries = table.get("cardinal_entries", {})
+		if cardinal_entries is Dictionary:
+			var cardinal_entry = cardinal_entries.get(source_direction, {})
+			if cardinal_entry is Dictionary:
+				entry = cardinal_entry.duplicate(true)
+	if entry.is_empty() and source_offset.x != 0 and source_offset.y != 0:
+		var frame_grid = table.get("frame_grid", [])
+		if frame_grid is Array:
+			var row := absi(source_offset.y) - 1
+			var column := absi(source_offset.x) - 1
+			if row >= 0 and row < frame_grid.size():
+				var frame_row = frame_grid[row]
+				if frame_row is Array and column >= 0 and column < frame_row.size():
+					var frame_id := String(frame_row[column]).strip_edges()
+					if frame_id != "":
+						entry = {
+							"frame": frame_id,
+							"flip_h": source_offset.x > 0,
+							"flip_v": source_offset.y > 0,
+							"transform": _homm3_flip_key(source_offset.x > 0, source_offset.y > 0),
+							"grid_column": column,
+							"grid_row": row,
+						}
+	if entry.is_empty():
+		return {}
+	var flip_h := bool(entry.get("flip_h", false))
+	var flip_v := bool(entry.get("flip_v", false))
+	var transform := String(entry.get("transform", "")).strip_edges()
+	if transform == "":
+		transform = _homm3_flip_key(flip_h, flip_v)
+	entry["frame"] = String(entry.get("frame", "")).strip_edges()
+	entry["flip_h"] = flip_h
+	entry["flip_v"] = flip_v
+	entry["transform"] = transform
+	entry["source_direction"] = source_direction
+	entry["source_offset"] = {"x": source_offset.x, "y": source_offset.y}
+	return entry
+
+func _homm3_receiver_stamp_payload_from_source(tile: Vector2i, family: Dictionary, source: Dictionary, source_kind: String) -> Dictionary:
+	if source.is_empty():
+		return {}
+	var bridge_family := String(source.get("resolved_bridge_family", source.get("bridge_family", ""))).strip_edges()
+	var table := _homm3_land_receiver_stamp_table(bridge_family)
+	if table.is_empty():
+		return {}
+	var neighbor = source.get("neighbor", {})
+	if not (neighbor is Dictionary):
+		return {}
+	var source_tile := Vector2i(int(neighbor.get("x", tile.x)), int(neighbor.get("y", tile.y)))
+	var source_offset := source_tile - tile
+	var entry := _homm3_stamp_entry_from_table(table, source_offset)
+	if entry.is_empty():
+		return {}
+	var frame_id := String(entry.get("frame", "")).strip_edges()
+	if frame_id == "":
+		return {}
+	var cardinal_count := int(source.get("cardinal_source_count", 0))
+	var corner_count := int(source.get("corner_source_count", 0))
+	var mixed_junction_reserved := cardinal_count > 1 or (cardinal_count > 0 and corner_count > 0)
+	return {
+		"stamp_lookup_model": _homm3_land_receiver_stamp_lookup_model(),
+		"stamp_selection_model": String(_homm3_land_receiver_stamp_lookup.get("selection_model", "source_anchored_stamp_table_with_array_reconstruction_fallback")),
+		"stamp_table_id": String(table.get("id", "")).strip_edges(),
+		"stamp_anchor": String(_homm3_land_receiver_stamp_lookup.get("anchor_model", "source_tile_anchored_directional_stamp")),
+		"stamp_source_kind": source_kind,
+		"stamp_source_direction": String(entry.get("source_direction", "")),
+		"stamp_source_offset": entry.get("source_offset", {}),
+		"stamp_selected_frame": frame_id,
+		"stamp_transform": String(entry.get("transform", "")),
+		"stamp_flip_h": bool(entry.get("flip_h", false)),
+		"stamp_flip_v": bool(entry.get("flip_v", false)),
+		"stamp_source_level": String(table.get("source_level", _homm3_land_receiver_stamp_lookup.get("source_level", ""))).strip_edges(),
+		"stamp_mapping_source_level": String(table.get("mapping_source_level", _homm3_land_receiver_stamp_lookup.get("mapping_source_level", ""))).strip_edges(),
+		"stamp_frame_range_source_level": String(table.get("frame_range_source_level", "")).strip_edges(),
+		"stamp_frame_range": String(table.get("frame_range", "")).strip_edges(),
+		"stamp_target_frame_block": String(table.get("target_frame_block", "")).strip_edges(),
+		"stamp_bridge_family": bridge_family,
+		"stamp_bridge_class": String(table.get("bridge_class", source.get("bridge_class", ""))).strip_edges(),
+		"stamp_source_offset_model": String(table.get("source_offset_model", "")).strip_edges(),
+		"stamp_array_reconstruction_mode": String(_homm3_land_receiver_stamp_lookup.get("array_reconstruction_mode", "")),
+		"stamp_mixed_junction_reserved": mixed_junction_reserved,
+		"stamp_mixed_junction_policy": String(_homm3_land_receiver_stamp_lookup.get("mixed_junction_policy", "")) if mixed_junction_reserved else "",
+		"stamp_reserved_mixed_junction_frame_ranges": _homm3_land_receiver_stamp_lookup.get("reserved_mixed_junction_frame_ranges", []) if mixed_junction_reserved else [],
+		"receiver_stamp_entry": entry,
+	}
 
 func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
 	var selection := _homm3_terrain_selection_payload(tile, terrain_id)
@@ -3188,6 +3330,7 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 	var atlas_id := String(family.get("atlas", "")).strip_edges()
 	var receiver_payload := _homm3_receiver_family_payload(terrain_id, config, family_id, family)
 	var relation := _homm3_terrain_relation_payload(tile, terrain_id)
+	var receiver_stamp_payload: Dictionary = relation.get("receiver_stamp_payload", {})
 	var selection_kind := String(relation.get("selection_kind", "interior"))
 	var mask_key := String(relation.get("mask_key", ""))
 	var corner_mask := String(relation.get("corner_mask", ""))
@@ -3217,7 +3360,14 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		if frame_id == "":
 			fallback_reason = "missing_bridge_material_base_context_lookup"
 	elif selection_kind == "bridge_transition":
-		if _homm3_family_uses_generic_land_edge_masks(family):
+		if _homm3_uses_land_receiver_stamp_tables(family):
+			var stamp_entry: Dictionary = receiver_stamp_payload.get("receiver_stamp_entry", {})
+			frame_id = String(stamp_entry.get("frame", "")).strip_edges()
+			flip_h = bool(stamp_entry.get("flip_h", false))
+			flip_v = bool(stamp_entry.get("flip_v", false))
+			if frame_id == "":
+				fallback_reason = "missing_land_receiver_stamp_lookup"
+		elif _homm3_family_uses_generic_land_edge_masks(family):
 			var bridge_lookup := _homm3_bridge_mask_lookup(family, String(relation.get("bridge_family", "")))
 			var bridge_entry := _homm3_lookup_entry(bridge_lookup, mask_key)
 			frame_id = String(bridge_entry.get("frame", "")).strip_edges()
@@ -3250,7 +3400,7 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 	return {
 		"enabled": true,
 		"local_reference_only": bool(_homm3_prototype.get("local_reference_only", true)),
-		"terrain_lookup_model": String(_homm3_prototype.get("terrain_lookup_model", "table_driven_bridge_base_8_neighbor")),
+		"terrain_lookup_model": String(_homm3_prototype.get("terrain_lookup_model", "data_driven_full_receiver_stamp_lookup")),
 		"unsupported_policy": String(_homm3_prototype.get("unsupported_policy", TERRAIN_HOMM3_UNSUPPORTED_POLICY)),
 		"terrain": terrain_id,
 		"logical_terrain_id": String(receiver_payload.get("logical_terrain_id", terrain_id)),
@@ -3262,6 +3412,7 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		"special_system": String(receiver_payload.get("special_system", "")),
 		"special_system_flag": bool(receiver_payload.get("special_system_flag", false)),
 		"allows_generic_land_edge_masks": bool(receiver_payload.get("allows_generic_land_edge_masks", false)),
+		"uses_land_receiver_stamp_tables": _homm3_uses_land_receiver_stamp_tables(family),
 		"preferred_bridge_class": String(receiver_payload.get("preferred_bridge_class", "")),
 		"preferred_bridge_family": String(receiver_payload.get("preferred_bridge_family", "")),
 		"preferred_bridge_source_level": String(receiver_payload.get("preferred_bridge_source_level", "")),
@@ -3282,6 +3433,29 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		"bridge_rule_id": String(relation.get("bridge_rule_id", "")),
 		"bridge_target_frame_block": String(relation.get("bridge_target_frame_block", "")),
 		"bridge_policy_provisional": bool(relation.get("bridge_policy_provisional", false)),
+		"stamp_lookup_model": String(receiver_stamp_payload.get("stamp_lookup_model", "")),
+		"stamp_selection_model": String(receiver_stamp_payload.get("stamp_selection_model", "")),
+		"stamp_table_id": String(receiver_stamp_payload.get("stamp_table_id", "")),
+		"stamp_anchor": String(receiver_stamp_payload.get("stamp_anchor", "")),
+		"stamp_source_kind": String(receiver_stamp_payload.get("stamp_source_kind", "")),
+		"stamp_source_direction": String(receiver_stamp_payload.get("stamp_source_direction", "")),
+		"stamp_source_offset": receiver_stamp_payload.get("stamp_source_offset", {}),
+		"stamp_selected_frame": String(receiver_stamp_payload.get("stamp_selected_frame", "")),
+		"stamp_transform": String(receiver_stamp_payload.get("stamp_transform", "")),
+		"stamp_flip_h": bool(receiver_stamp_payload.get("stamp_flip_h", false)),
+		"stamp_flip_v": bool(receiver_stamp_payload.get("stamp_flip_v", false)),
+		"stamp_source_level": String(receiver_stamp_payload.get("stamp_source_level", "")),
+		"stamp_mapping_source_level": String(receiver_stamp_payload.get("stamp_mapping_source_level", "")),
+		"stamp_frame_range_source_level": String(receiver_stamp_payload.get("stamp_frame_range_source_level", "")),
+		"stamp_frame_range": String(receiver_stamp_payload.get("stamp_frame_range", "")),
+		"stamp_target_frame_block": String(receiver_stamp_payload.get("stamp_target_frame_block", "")),
+		"stamp_bridge_family": String(receiver_stamp_payload.get("stamp_bridge_family", "")),
+		"stamp_bridge_class": String(receiver_stamp_payload.get("stamp_bridge_class", "")),
+		"stamp_source_offset_model": String(receiver_stamp_payload.get("stamp_source_offset_model", "")),
+		"stamp_array_reconstruction_mode": String(receiver_stamp_payload.get("stamp_array_reconstruction_mode", "")),
+		"stamp_mixed_junction_reserved": bool(receiver_stamp_payload.get("stamp_mixed_junction_reserved", false)),
+		"stamp_mixed_junction_policy": String(receiver_stamp_payload.get("stamp_mixed_junction_policy", "")),
+		"stamp_reserved_mixed_junction_frame_ranges": receiver_stamp_payload.get("stamp_reserved_mixed_junction_frame_ranges", []),
 		"direct_bridge_material_contact": bool(relation.get("direct_bridge_material_contact", false)),
 		"preferred_bridge_class_used": bool(relation.get("preferred_bridge_class_used", false)),
 		"shoreline_specific": bool(family.get("shoreline_specific", false)),
@@ -3397,6 +3571,16 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 			continue
 		corner_sources.append(source)
 		corner_keys.append(String(source.get("direction", "")))
+	for source_value in cardinal_sources:
+		if source_value is Dictionary:
+			var source: Dictionary = source_value
+			source["cardinal_source_count"] = cardinal_sources.size()
+			source["corner_source_count"] = corner_sources.size()
+	for source_value in corner_sources:
+		if source_value is Dictionary:
+			var source: Dictionary = source_value
+			source["cardinal_source_count"] = cardinal_sources.size()
+			source["corner_source_count"] = corner_sources.size()
 	var propagated_source := _homm3_propagated_transition_source(tile, terrain_id, family) if cardinal_sources.is_empty() else {}
 	var propagated_sources: Array = []
 	var bridge_sources_for_resolution := corner_sources.duplicate()
@@ -3408,6 +3592,15 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	var primary_bridge_source := _homm3_primary_bridge_source(cardinal_sources, bridge_sources_for_resolution)
 	var resolved_bridge_family := _homm3_bridge_family_from_sources(cardinal_sources, bridge_sources_for_resolution, bridge_family)
 	var bridge_source_kind := _homm3_bridge_source_kind_from_sources(cardinal_sources, bridge_sources_for_resolution, family)
+	var receiver_stamp_payload: Dictionary = {}
+	if _homm3_uses_land_receiver_stamp_tables(family):
+		if not cardinal_sources.is_empty() and not primary_bridge_source.is_empty():
+			receiver_stamp_payload = _homm3_receiver_stamp_payload_from_source(tile, family, primary_bridge_source, "cardinal_source")
+		elif not propagated_source.is_empty():
+			receiver_stamp_payload = propagated_source.get("receiver_stamp_payload", {})
+	var bridge_target_frame_block := String(primary_bridge_source.get("bridge_target_frame_block", ""))
+	if bridge_target_frame_block == "" and not receiver_stamp_payload.is_empty():
+		bridge_target_frame_block = String(receiver_stamp_payload.get("stamp_target_frame_block", ""))
 	if _homm3_is_water_system(family):
 		if not cardinal_keys.is_empty() or not corner_keys.is_empty():
 			selection_kind = "water_shoreline"
@@ -3432,12 +3625,14 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 		"bridge_family": resolved_bridge_family,
 		"bridge_resolution_model": _homm3_bridge_resolution_model_from_sources(cardinal_sources, bridge_sources_for_resolution),
 		"bridge_resolver_model": _homm3_bridge_material_resolver_model(),
-		"bridge_class": String(primary_bridge_source.get("bridge_class", _homm3_bridge_class_for_family(resolved_bridge_family, family))),
+		"bridge_class": String(primary_bridge_source.get("bridge_class", receiver_stamp_payload.get("stamp_bridge_class", _homm3_bridge_class_for_family(resolved_bridge_family, family)))),
 		"bridge_source_level": String(primary_bridge_source.get("bridge_source_level", family.get("preferred_bridge_source_level", ""))),
 		"bridge_rule_id": String(primary_bridge_source.get("bridge_rule_id", "")),
-		"bridge_target_frame_block": String(primary_bridge_source.get("bridge_target_frame_block", "")),
+		"bridge_target_frame_block": bridge_target_frame_block,
 		"bridge_policy_provisional": bool(primary_bridge_source.get("bridge_policy_provisional", false)),
 		"bridge_source_kind": bridge_source_kind,
+		"receiver_stamp_payload": receiver_stamp_payload,
+		"stamp_target_frame_block": String(receiver_stamp_payload.get("stamp_target_frame_block", "")),
 		"direct_bridge_material_contact": bridge_source_kind == "direct_bridge_material",
 		"preferred_bridge_class_used": bridge_source_kind == "preferred_bridge_class",
 		"rock_ground_context": "preferred_light_ground" if _homm3_is_rock_system(family) and bridge_source_kind == "preferred_bridge_class" else "",
@@ -3448,108 +3643,106 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 		"propagated_transition_entry": propagated_source.get("propagated_transition_entry", {}) if not propagated_source.is_empty() else {},
 		"transition_propagation_model": String(propagated_source.get("transition_propagation_model", "")) if not propagated_source.is_empty() else "",
 		"transition_source_distance": int(propagated_source.get("source_distance", 0)) if not propagated_source.is_empty() else 0,
-		"transition_source_offset": propagated_source.get("source_offset", {}) if not propagated_source.is_empty() else {},
-		"transition_source_direction": String(propagated_source.get("direction", "")) if not propagated_source.is_empty() else "",
+		"transition_source_offset": receiver_stamp_payload.get("stamp_source_offset", propagated_source.get("source_offset", {})) if not receiver_stamp_payload.is_empty() or not propagated_source.is_empty() else {},
+		"transition_source_direction": String(receiver_stamp_payload.get("stamp_source_direction", propagated_source.get("direction", ""))) if not receiver_stamp_payload.is_empty() or not propagated_source.is_empty() else "",
 		"uses_second_ring": bool(propagated_source.get("uses_second_ring", false)) if not propagated_source.is_empty() else false,
 	}
 
 func _homm3_propagated_transition_source(tile: Vector2i, receiver_terrain: String, family: Dictionary) -> Dictionary:
-	var stamps = family.get("propagated_transition_stamps", {})
-	if not (stamps is Dictionary):
+	if not _homm3_uses_land_receiver_stamp_tables(family):
 		return {}
 	var receiver_config := _homm3_terrain_config(receiver_terrain)
 	var receiver_family := String(receiver_config.get("family", "")).strip_edges()
+	var stamp_tables = _homm3_land_receiver_stamp_lookup.get("stamp_tables", {})
+	if not (stamp_tables is Dictionary) or stamp_tables.is_empty():
+		return {}
+	var max_width := 0
+	var max_height := 0
+	for table_value in stamp_tables.values():
+		if not (table_value is Dictionary):
+			continue
+		var table: Dictionary = table_value
+		var frame_grid = table.get("frame_grid", [])
+		if not (frame_grid is Array):
+			continue
+		max_height = maxi(max_height, frame_grid.size())
+		for row_value in frame_grid:
+			if row_value is Array:
+				max_width = maxi(max_width, row_value.size())
+	if max_width <= 0 or max_height <= 0:
+		return {}
 	var best_source: Dictionary = {}
 	var best_distance := 999999
 	var best_axis_sum := 999999
-	for source_family_key in stamps.keys():
-		var stamp = stamps.get(source_family_key, {})
-		if not (stamp is Dictionary):
-			continue
-		var source_family := String(stamp.get("source_family", source_family_key)).strip_edges()
-		if source_family == "" or source_family == receiver_family:
-			continue
-		var frame_grid: Array = stamp.get("frame_grid", [])
-		if not (frame_grid is Array) or frame_grid.is_empty():
-			continue
-		var height: int = frame_grid.size()
-		var width: int = 0
-		for row_value in frame_grid:
-			if row_value is Array:
-				width = maxi(width, row_value.size())
-		if width <= 0 or height <= 0:
-			continue
-		for dy in range(-height, height + 1):
-			for dx in range(-width, width + 1):
-				if dx == 0 or dy == 0:
-					continue
-				var row := absi(dy) - 1
-				var column := absi(dx) - 1
-				if row < 0 or column < 0 or row >= height:
-					continue
-				var frame_row = frame_grid[row]
-				if not (frame_row is Array) or column >= frame_row.size():
-					continue
-				var source_tile := tile - Vector2i(dx, dy)
-				if not _tile_in_bounds(source_tile):
-					continue
-				if _session == null or not OverworldRulesScript.is_tile_explored(_session, source_tile.x, source_tile.y):
-					continue
-				var source_terrain := _terrain_at(source_tile)
-				if source_terrain == "":
-					continue
-				var source_config := _homm3_terrain_config(source_terrain)
-				if source_config.is_empty() or String(source_config.get("family", "")).strip_edges() != source_family:
-					continue
-				var frame_id := String(frame_row[column]).strip_edges()
-				if frame_id == "":
-					continue
-				var distance := maxi(absi(dx), absi(dy))
-				var axis_sum := absi(dx) + absi(dy)
-				if best_source.is_empty() or distance < best_distance or (distance == best_distance and axis_sum < best_axis_sum):
-					var source_family_config := _homm3_terrain_family_config(source_family)
-					var bridge_resolution := _homm3_bridge_material_resolution(receiver_config, family, receiver_family, source_family_config, source_family)
-					var resolved_bridge_family := String(bridge_resolution.get("bridge_family", stamp.get("bridge_family", source_family))).strip_edges()
-					var bridge_resolution_model := String(bridge_resolution.get("bridge_resolution_model", stamp.get("selection_model", "propagated_family_transition_stamp")))
-					var bridge_source_kind := String(bridge_resolution.get("bridge_source_kind", stamp.get("bridge_source_kind", "preferred_bridge_class")))
-					best_distance = distance
-					best_axis_sum = axis_sum
-					best_source = {
-						"direction": _homm3_direction_from_offset(Vector2i(-dx, -dy)),
-						"source_terrain": source_terrain,
-						"source_group": _terrain_group(source_terrain),
-						"source_family": source_family,
-						"receiver_terrain": receiver_terrain,
-						"receiver_group": _terrain_group(receiver_terrain),
-						"receiver_family": receiver_family,
-						"resolved_bridge_family": resolved_bridge_family,
-						"bridge_class": String(bridge_resolution.get("bridge_class", "")),
-						"bridge_resolution_model": bridge_resolution_model,
-						"bridge_resolver_model": String(bridge_resolution.get("bridge_resolver_model", "")),
-						"bridge_source_kind": bridge_source_kind,
-						"bridge_source_level": String(bridge_resolution.get("bridge_source_level", "")),
-						"bridge_rule_id": String(bridge_resolution.get("bridge_rule_id", "")),
-						"bridge_target_frame_block": String(bridge_resolution.get("bridge_target_frame_block", "")),
-						"bridge_policy_provisional": bool(bridge_resolution.get("bridge_policy_provisional", false)),
-						"uses_direct_bridge_pair": bool(bridge_resolution.get("uses_direct_bridge_pair", false)),
-						"uses_direct_bridge_material_contact": bool(bridge_resolution.get("uses_direct_bridge_material_contact", false)),
-						"uses_routed_bridge_rule": bool(bridge_resolution.get("uses_routed_bridge_rule", false)),
-						"relation_kind": "propagated_family_transition_stamp",
-						"neighbor": {"x": source_tile.x, "y": source_tile.y},
-						"source_offset": {"x": dx, "y": dy},
-						"source_distance": distance,
-						"uses_second_ring": distance > 1,
-						"transition_propagation_model": String(stamp.get("selection_model", "propagated_family_transition_stamp")),
-						"propagated_transition_entry": {
-							"frame": frame_id,
-							"flip_h": dx < 0,
-							"flip_v": dy < 0,
-							"lookup_model": String(stamp.get("selection_model", "propagated_family_transition_stamp")),
-							"source_artifact_prefix": String(stamp.get("source_artifact_prefix", "")),
-							"grid_column": column,
-							"grid_row": row,
-						},
-					}
+	for dy in range(-max_height, max_height + 1):
+		for dx in range(-max_width, max_width + 1):
+			if dx == 0 or dy == 0:
+				continue
+			var source_offset := Vector2i(dx, dy)
+			var source_tile := tile + source_offset
+			if not _tile_in_bounds(source_tile):
+				continue
+			if _session == null or not OverworldRulesScript.is_tile_explored(_session, source_tile.x, source_tile.y):
+				continue
+			var source_terrain := _terrain_at(source_tile)
+			if source_terrain == "":
+				continue
+			var source_config := _homm3_terrain_config(source_terrain)
+			if source_config.is_empty():
+				continue
+			var source_family := String(source_config.get("family", "")).strip_edges()
+			if source_family == "" or source_family == receiver_family:
+				continue
+			var source_family_config := _homm3_terrain_family_config(source_family)
+			if _homm3_is_water_system(source_family_config):
+				continue
+			var bridge_resolution := _homm3_bridge_material_resolution(receiver_config, family, receiver_family, source_family_config, source_family)
+			var resolved_bridge_family := String(bridge_resolution.get("bridge_family", "")).strip_edges()
+			var table := _homm3_land_receiver_stamp_table(resolved_bridge_family)
+			if table.is_empty():
+				continue
+			var stamp_entry := _homm3_stamp_entry_from_table(table, source_offset)
+			if stamp_entry.is_empty():
+				continue
+			var distance := maxi(absi(dx), absi(dy))
+			var axis_sum := absi(dx) + absi(dy)
+			if not best_source.is_empty() and (distance > best_distance or (distance == best_distance and axis_sum >= best_axis_sum)):
+				continue
+			var bridge_resolution_model := String(bridge_resolution.get("bridge_resolution_model", _homm3_land_receiver_stamp_lookup.get("selection_model", "source_anchored_stamp_table_with_array_reconstruction_fallback")))
+			var bridge_source_kind := String(bridge_resolution.get("bridge_source_kind", "preferred_bridge_class"))
+			best_distance = distance
+			best_axis_sum = axis_sum
+			best_source = {
+				"direction": _homm3_direction_from_offset(source_offset),
+				"source_terrain": source_terrain,
+				"source_group": _terrain_group(source_terrain),
+				"source_family": source_family,
+				"receiver_terrain": receiver_terrain,
+				"receiver_group": _terrain_group(receiver_terrain),
+				"receiver_family": receiver_family,
+				"resolved_bridge_family": resolved_bridge_family,
+				"bridge_class": String(bridge_resolution.get("bridge_class", "")),
+				"bridge_resolution_model": bridge_resolution_model,
+				"bridge_resolver_model": String(bridge_resolution.get("bridge_resolver_model", "")),
+				"bridge_source_kind": bridge_source_kind,
+				"bridge_source_level": String(bridge_resolution.get("bridge_source_level", "")),
+				"bridge_rule_id": String(bridge_resolution.get("bridge_rule_id", "")),
+				"bridge_target_frame_block": String(bridge_resolution.get("bridge_target_frame_block", table.get("target_frame_block", ""))),
+				"bridge_policy_provisional": bool(bridge_resolution.get("bridge_policy_provisional", false)),
+				"uses_direct_bridge_pair": bool(bridge_resolution.get("uses_direct_bridge_pair", false)),
+				"uses_direct_bridge_material_contact": bool(bridge_resolution.get("uses_direct_bridge_material_contact", false)),
+				"uses_routed_bridge_rule": bool(bridge_resolution.get("uses_routed_bridge_rule", false)),
+				"relation_kind": "propagated_family_transition_stamp",
+				"neighbor": {"x": source_tile.x, "y": source_tile.y},
+				"source_offset": {"x": source_offset.x, "y": source_offset.y},
+				"source_distance": distance,
+				"uses_second_ring": distance > 1,
+				"transition_propagation_model": _homm3_land_receiver_stamp_lookup_model(),
+				"propagated_transition_entry": stamp_entry,
+			}
+			var receiver_stamp_payload := _homm3_receiver_stamp_payload_from_source(tile, family, best_source, "propagated_source")
+			best_source["receiver_stamp_payload"] = receiver_stamp_payload
+			best_source["propagated_transition_entry"] = receiver_stamp_payload.get("receiver_stamp_entry", stamp_entry)
 	return best_source
 
 func _homm3_direction_from_offset(offset: Vector2i) -> String:
@@ -3710,6 +3903,7 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 		"uses_routed_bridge_rule": bool(bridge_resolution.get("uses_routed_bridge_rule", false)),
 		"relation_kind": relation_kind,
 		"neighbor": {"x": neighbor.x, "y": neighbor.y},
+		"source_offset": {"x": offset.x, "y": offset.y},
 	}
 
 func _homm3_direct_bridge_pair(receiver_family: String, neighbor_family: String) -> Dictionary:

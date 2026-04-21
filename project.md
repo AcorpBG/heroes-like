@@ -284,6 +284,10 @@ Implementation note date: 2026-04-21
 
 The map editor base-terrain picker now uses a curated HoMM3-style family option contract instead of exposing the full authored terrain grammar. `content/terrain_grammar.json` declares `editor_base_terrain_options` for Water, Snow, Grass, Sand, Dirt, Lava, Swamp, and Rock/None, and `MapEditorShell` builds its picker from that list while validation exposes the option ids, labels, HoMM3 families, atlases, and hidden authored logical ids. Existing scenario data and renderer compatibility keep the richer logical ids such as forest, mire, hills, ridge, ash, frost, coast, and shore; they are hidden from the base picker and continue to render through the active HoMM3 local prototype family mapping. This is an editor option-surface correction only, not a terrain migration, map rewrite, save-format change, gameplay/pathing change, or removal of internal logical terrain ids.
 
+Implementation note date: 2026-04-21
+
+The HoMM3 local terrain prototype now routes full receiver land-family transitions through a shared, data-driven stamp-table contract instead of per-family receiver-centered mask shortcuts. `content/terrain_grammar.json` declares provisional source-anchored dirt and sand stamp tables for full receiver atlases, keeps the source-visible mixed-junction frame ranges `00_40..00_48` and `00_77..00_78` reserved/unresolved, and includes the `rougtl` rough terrain family in the local staging contract. `OverworldMapView` resolves bridge material first, then selects full receiver land frames from the stamp table while exposing table id, source direction/offset, selected frame, transform/flip status, source levels, and mixed-junction reservation metadata through the shared live/editor validation payload. Water shoreline handling, rock/void handling, dirt/sand reduced receiver behavior, roads, gameplay/pathing, fog, panning, selection, save data, and object logic remain outside this renderer slice.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

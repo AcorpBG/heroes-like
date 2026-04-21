@@ -33,6 +33,7 @@ SIZE = 64
 
 TERRAIN_ATLASES = (
     "grastl",
+    "rougtl",
     "dirttl",
     "rocktl",
     "sandtl",

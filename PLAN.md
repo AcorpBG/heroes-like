@@ -26,6 +26,33 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Full Land Receiver Stamp Lookup
+Status: completed on 2026-04-21 as the next narrow renderer rewrite slice.
+
+Purpose:
+- Replace the remaining receiver-centered mask shortcuts for full receiver land families with source-visible, data-driven stamp-table behavior.
+- Keep mixed junction ranges `00_40..00_48` and `00_77..00_78` reserved/unresolved while exposing truthful metadata when a fixture enters those shapes.
+- Preserve the already validated bridge material resolver, water shoreline system, rock/void system, dirt/sand boundary behavior, roads, gameplay/pathing, fog, panning, selection, save data, and object logic.
+
+Implemented:
+- `content/terrain_grammar.json` now declares `land_receiver_stamp_lookup` with provisional source-anchored dirt and sand stamp tables, frame ranges, source offsets, source levels, array-reconstruction fallback metadata, and reserved mixed-junction ranges.
+- Full receiver land families now opt into the shared stamp-table path and no longer carry per-family receiver-centered `bridge_mask_lookup`, bridge-family override, or propagated-stamp shortcut tables.
+- The local prototype now includes the source-backed `rougtl` rough full receiver family in grammar, asset staging, and validation coverage.
+- `OverworldMapView` resolves bridge material first, selects full receiver land transition frames from the stamp table, and reports stamp table id, source direction/offset, selected frame, transform/flip state, source levels, and mixed-junction reservation metadata through the shared live/editor validation payload.
+- Map-editor, live-overworld, Ninefold, and repository validation coverage now assert full receiver stamp payloads for direct dirt contact, routed swamp/dirt behavior, preferred full-receiver dirt routing, subterranean provisional fallback, and sand propagation.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is still a local HoMM3 reference prototype and does not make the pushed game visibly HoMM3-complete or shippable.
+- Exact original paint-history offsets, reserved mixed-junction table semantics, water inlet topology, rock topology/passability, `subbtl` bridge class, and original variant-selection policies remain unresolved.
+- This is not an editor restamp model, original-art replacement, gameplay/pathing change, save-format change, or editor-schema change.
+
 ## Current Implementation Slice: HoMM3 Bridge Material Resolver
 Status: completed on 2026-04-21 as the next narrow renderer rewrite slice.
 
