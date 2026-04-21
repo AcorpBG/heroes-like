@@ -5,7 +5,7 @@
   "primary_base_model": "homm3_local_reference_prototype",
   "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering resolves land transitions through dirt or sand bridge/base families, water through shoreline-specific lookup, and roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering uses a stable base frame for terrain interiors, resolves explicit direct land-family pairs before falling back to dirt or sand bridge/base families, resolves water through shoreline-specific lookup, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
     {
       "id": "water",
@@ -63,7 +63,7 @@
     "corner_model": "diagonal_context_in_atlas_lookup",
     "cardinal_edges": true,
     "corner_hints": true,
-    "bridge_base_model": "dirt_or_sand_bridge_base",
+    "bridge_base_model": "direct_pair_overrides_dirt_or_sand_bridge_base",
     "water_model": "shoreline_specific_lookup",
     "receiver_rule": "current_tile_selects_family_atlas_frame_from_neighbor_mask",
     "same_group_policy": "suppress_same_homm3_family_edges",
@@ -766,8 +766,20 @@
     "source_artifact": "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/defs",
     "terrain_lookup_model": "table_driven_bridge_base_8_neighbor",
     "road_lookup_model": "table_driven_4_neighbor_overlay",
+    "interior_frame_selection_model": "single_stable_base_frame",
     "unsupported_policy": "explicit_grammar_fallback",
     "note": "Local prototype only. These extracted original HoMM3 frames are not shippable or redistributable game assets.",
+    "direct_bridge_pairs": [
+      {
+        "families": [
+          "dirt",
+          "swamp"
+        ],
+        "bridge_family": "dirt",
+        "selection_model": "direct_family_pair_lookup",
+        "note": "Dirt and swamp have a direct local HoMM3 transition path; do not route this pair through the sand bridge family."
+      }
+    ],
     "terrain_families": {
       "grass": {
         "atlas": "grastl",

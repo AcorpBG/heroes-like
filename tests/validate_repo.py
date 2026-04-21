@@ -4591,7 +4591,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("tile_art_status", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 local-reference prototype status")
         ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "homm3_extracted_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 extracted local-reference source basis")
         ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "homm3_table_driven_bridge_base_lookup", errors, "Overworld terrain rendering must document HoMM3 table-driven terrain transition selection")
-        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask_with_dirt_or_sand_bridge_resolution_and_water_shoreline_lookup", errors, "Overworld terrain rendering must document bridge/base and shoreline lookup behavior")
+        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask_with_direct_pair_then_dirt_or_sand_bridge_resolution_and_water_shoreline_lookup", errors, "Overworld terrain rendering must document direct-pair bridge/base and shoreline lookup behavior")
+        ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "single_stable_base_frame", errors, "Overworld terrain rendering must document stable HoMM3 base-frame interior selection")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
         ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Overworld terrain rendering must document generated terrain sources as unused by the HoMM3 local prototype")
         ensure(bool(terrain_rendering.get("local_reference_only", False)), errors, "Overworld terrain rendering must mark HoMM3 extracted assets as local_reference_only")
@@ -4616,7 +4617,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(transition_rules.get("corner_model", "")) == "diagonal_context_in_atlas_lookup", errors, "Terrain grammar must document diagonal context in atlas lookup")
         ensure(str(transition_rules.get("receiver_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask", errors, "Terrain grammar must document current-tile atlas frame selection")
         ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_same_homm3_family_edges", errors, "Terrain grammar must suppress same HoMM3-family transition seams")
-        ensure(str(transition_rules.get("bridge_base_model", "")) == "dirt_or_sand_bridge_base", errors, "Terrain grammar must document dirt/sand bridge-base resolution")
+        ensure(str(transition_rules.get("bridge_base_model", "")) == "direct_pair_overrides_dirt_or_sand_bridge_base", errors, "Terrain grammar must document direct-pair overrides before generic dirt/sand bridge-base resolution")
         ensure(str(transition_rules.get("water_model", "")) == "shoreline_specific_lookup", errors, "Terrain grammar must document shoreline-specific water lookup")
         ensure(str(transition_rules.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "Terrain grammar must document explicit unsupported-case fallback")
     homm3_prototype = terrain_grammar.get("homm3_local_prototype", {})
@@ -4626,14 +4627,27 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(bool(homm3_prototype.get("local_reference_only", False)), errors, "HoMM3 local prototype must be marked local_reference_only")
         ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "table_driven_bridge_base_8_neighbor", errors, "HoMM3 local prototype must use table-driven bridge/base terrain lookup")
         ensure(str(homm3_prototype.get("road_lookup_model", "")) == "table_driven_4_neighbor_overlay", errors, "HoMM3 local prototype must use table-driven 4-neighbor road lookup")
+        ensure(str(homm3_prototype.get("interior_frame_selection_model", "")) == "single_stable_base_frame", errors, "HoMM3 local prototype must avoid patch-hash cycling for interior terrain frames")
         ensure(str(homm3_prototype.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "HoMM3 local prototype must use explicit fallback for unsupported cases")
         asset_root = res_path_to_disk(str(homm3_prototype.get("asset_root", "")))
         ensure(asset_root.exists(), errors, f"HoMM3 local prototype asset root is missing: {homm3_prototype.get('asset_root')}")
         terrain_families = homm3_prototype.get("terrain_families", {})
         terrain_id_map = homm3_prototype.get("terrain_id_map", {})
+        direct_bridge_pairs = homm3_prototype.get("direct_bridge_pairs", [])
         road_overlays = homm3_prototype.get("road_overlays", {})
         ensure(isinstance(terrain_families, dict) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, terrain_families.keys()))), errors, "HoMM3 local prototype must define the extracted terrain family tables")
         ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the existing authored logical terrain ids")
+        ensure(isinstance(direct_bridge_pairs, list), errors, "HoMM3 local prototype must define direct bridge-pair overrides")
+        if isinstance(direct_bridge_pairs, list):
+            found_dirt_swamp_pair = False
+            for pair in direct_bridge_pairs:
+                if not isinstance(pair, dict):
+                    continue
+                families = pair.get("families", [])
+                if isinstance(families, list) and set(map(str, families)) == {"dirt", "swamp"} and str(pair.get("bridge_family", "")) == "dirt" and str(pair.get("selection_model", "")) == "direct_family_pair_lookup":
+                    found_dirt_swamp_pair = True
+                    break
+            ensure(found_dirt_swamp_pair, errors, "HoMM3 local prototype must keep dirt<->swamp on a direct dirt bridge-pair lookup instead of sand")
         if isinstance(terrain_id_map, dict):
             forest_mapping = terrain_id_map.get("forest", {})
             ensure(isinstance(forest_mapping, dict) and str(forest_mapping.get("logical_degrade_note", "")) != "", errors, "HoMM3 local prototype must explicitly document the logical forest terrain atlas limitation")
@@ -4959,6 +4973,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"diagonal_context_in_atlas_lookup"',
 	        '"homm3_terrain_lookup_model"',
 	        '"homm3_bridge_family"',
+	        '"homm3_bridge_resolution_model"',
+	        '"homm3_interior_frame_selection"',
+	        '"homm3_uses_interior_variant_cycle"',
 	        '"homm3_shoreline_specific"',
 	        '"transition_shape_model"',
 	        '"road_overlay"',

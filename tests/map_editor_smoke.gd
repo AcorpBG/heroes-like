@@ -211,12 +211,84 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	):
 		_fail("Map editor smoke: editor preview did not expose diagonal context for the painted mire tile: %s." % corner_receiver)
 		return false
+	if not _assert_editor_direct_dirt_swamp_transition(shell):
+		return false
 	if not _assert_editor_horizontal_transition_orientation(shell):
 		return false
 	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	if not bool(restore_forest.get("ok", false)):
 		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 bridge-table preview: %s." % restore_forest)
 		return false
+	return true
+
+func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
+	var original_terrains := []
+	var controlled_tiles := [
+		Vector2i(46, 40),
+		Vector2i(47, 39),
+		Vector2i(47, 40),
+		Vector2i(47, 41),
+		Vector2i(48, 39),
+		Vector2i(48, 40),
+		Vector2i(48, 41),
+		Vector2i(49, 40),
+	]
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+	var paint_plan := [
+		{"tile": Vector2i(46, 40), "terrain": "badlands"},
+		{"tile": Vector2i(47, 39), "terrain": "badlands"},
+		{"tile": Vector2i(47, 40), "terrain": "badlands"},
+		{"tile": Vector2i(47, 41), "terrain": "badlands"},
+		{"tile": Vector2i(48, 39), "terrain": "swamp"},
+		{"tile": Vector2i(48, 40), "terrain": "swamp"},
+		{"tile": Vector2i(48, 41), "terrain": "swamp"},
+		{"tile": Vector2i(49, 40), "terrain": "swamp"},
+	]
+	for entry in paint_plan:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		if not _paint_editor_terrain_for_orientation(shell, tile, String(entry.get("terrain", ""))):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed controlled dirt/swamp transition tile %s." % entry)
+			return false
+
+	var dirt_receiver: Dictionary = shell.call("validation_tile_presentation", 47, 40)
+	var dirt_terrain: Dictionary = dirt_receiver.get("terrain_presentation", {})
+	if (
+		String(dirt_terrain.get("terrain", "")) != "badlands"
+		or String(dirt_terrain.get("homm3_terrain_family", "")) != "dirt"
+		or String(dirt_terrain.get("homm3_terrain_atlas", "")) != "dirttl"
+		or String(dirt_terrain.get("transition_edge_mask", "")) != "E"
+		or String(dirt_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(dirt_terrain.get("homm3_bridge_family", "")) != "dirt"
+		or String(dirt_terrain.get("homm3_bridge_resolution_model", "")) != "direct_family_pair_lookup"
+		or not _transition_sources_include_bridge(dirt_terrain, "E", "swamp", "dirt", "direct_family_pair_lookup")
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: direct dirt->swamp preview transition incorrectly routed away from the dirt bridge pair: %s." % dirt_receiver)
+		return false
+
+	var swamp_receiver: Dictionary = shell.call("validation_tile_presentation", 48, 40)
+	var swamp_terrain: Dictionary = swamp_receiver.get("terrain_presentation", {})
+	if (
+		String(swamp_terrain.get("terrain", "")) != "swamp"
+		or String(swamp_terrain.get("homm3_terrain_family", "")) != "swamp"
+		or String(swamp_terrain.get("homm3_terrain_atlas", "")) != "swmptl"
+		or String(swamp_terrain.get("transition_edge_mask", "")) != "W"
+		or String(swamp_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(swamp_terrain.get("homm3_bridge_family", "")) != "dirt"
+		or String(swamp_terrain.get("homm3_bridge_resolution_model", "")) != "direct_family_pair_lookup"
+		or not _transition_sources_include_bridge(swamp_terrain, "W", "badlands", "dirt", "direct_family_pair_lookup")
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: direct swamp->dirt preview transition incorrectly routed through sand: %s." % swamp_receiver)
+		return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 
 func _assert_editor_horizontal_transition_orientation(shell) -> bool:
@@ -312,6 +384,22 @@ func _transition_sources_include(terrain: Dictionary, direction: String, source_
 			continue
 		var source: Dictionary = source_value
 		if String(source.get("direction", "")) == direction and String(source.get("source_terrain", "")) == source_terrain:
+			return true
+	return false
+
+func _transition_sources_include_bridge(terrain: Dictionary, direction: String, source_terrain: String, bridge_family: String, bridge_model: String) -> bool:
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		if (
+			String(source.get("direction", "")) == direction
+			and String(source.get("source_terrain", "")) == source_terrain
+			and String(source.get("resolved_bridge_family", "")) == bridge_family
+			and String(source.get("bridge_resolution_model", "")) == bridge_model
+			and bool(source.get("uses_direct_bridge_pair", false))
+		):
 			return true
 	return false
 
