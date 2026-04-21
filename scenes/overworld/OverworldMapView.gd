@@ -118,11 +118,14 @@ const HERO_BOOT_OCCLUSION_VISIBLE := Color(0.18, 0.115, 0.045, 0.38)
 const HERO_GROUND_HIGHLIGHT_VISIBLE := Color(0.78, 0.66, 0.34, 0.20)
 const TERRAIN_GRAMMAR_RENDERING_MODE := "authored_autotile_layers"
 const TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE := "original_quiet_tile_bank"
-const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
+const TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE := "homm3_local_reference_prototype"
+const TERRAIN_TILE_ART_RENDERING_MODE := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE
 const TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS := "generated_overworld_terrain_sources_20260419"
-const TERRAIN_TRANSITION_SELECTION_MODEL := "neighbor_priority_intrusion_8_way"
-const TERRAIN_TRANSITION_EDGE_MODEL := "higher_priority_neighbor_intrusion_edges"
-const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_neighbor_corner_hints"
+const TERRAIN_TRANSITION_SELECTION_MODEL := "homm3_table_driven_bridge_base_lookup"
+const TERRAIN_TRANSITION_EDGE_MODEL := "bridge_or_shoreline_atlas_frame_lookup"
+const TERRAIN_TRANSITION_CORNER_MODEL := "diagonal_context_in_atlas_lookup"
+const TERRAIN_HOMM3_SOURCE_BASIS := "homm3_extracted_local_reference_prototype"
+const TERRAIN_HOMM3_UNSUPPORTED_POLICY := "explicit_grammar_fallback"
 const TERRAIN_TRANSITION_ALPHA := 0.42
 const TERRAIN_TRANSITION_WIDTH_FACTOR := 0.16
 const TERRAIN_TRANSITION_CORNER_ALPHA := 0.34
@@ -132,11 +135,18 @@ const ROAD_DEFAULT_EDGE_COLOR := Color(0.35, 0.24, 0.15, 0.78)
 const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
 const ROAD_DEFAULT_CENTER_COLOR := Color(0.86, 0.74, 0.48, 0.55)
 const ROAD_DEFAULT_WIDTH_FACTOR := 0.14
-const ROAD_LANE_MODEL := "centered_vertical_edge_riding_horizontal"
-const ROAD_PIECE_SELECTION_MODEL := "same_type_adjacency_homm_piece_composition"
-const ROAD_VERTICAL_LANE := "center"
-const ROAD_HORIZONTAL_LANE := "south_edge"
-const ROAD_HORIZONTAL_EDGE_Y_FACTOR := 0.84
+const ROAD_LANE_MODEL := "homm3_orthogonal_overlay_mask"
+const ROAD_PIECE_SELECTION_MODEL := "homm3_4_neighbor_mask_lookup"
+const ROAD_VERTICAL_LANE := "orthogonal_mask_frame"
+const ROAD_HORIZONTAL_LANE := "orthogonal_mask_frame"
+const ROAD_HORIZONTAL_EDGE_Y_FACTOR := 0.50
+const ROAD_CONNECTION_SOURCE := "orthogonal_same_type_road_tiles"
+const ROAD_CARDINAL_DIRECTIONS := [
+	Vector2i.LEFT,
+	Vector2i.RIGHT,
+	Vector2i.UP,
+	Vector2i.DOWN,
+]
 const TOWN_MARKER_BODY_WIDTH := 0.64
 const TOWN_MARKER_BODY_HEIGHT := 0.34
 const RESOURCE_MARKER_RADIUS := 0.17
@@ -183,6 +193,10 @@ var _terrain_edge_art: Dictionary = {}
 var _terrain_art_textures: Dictionary = {}
 var _terrain_art_missing: Dictionary = {}
 var _road_overlay_art: Dictionary = {}
+var _homm3_prototype: Dictionary = {}
+var _homm3_terrain_id_map: Dictionary = {}
+var _homm3_terrain_families: Dictionary = {}
+var _homm3_road_overlays: Dictionary = {}
 var _overworld_art_manifest: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
 var _object_textures: Dictionary = {}
@@ -468,6 +482,8 @@ func _draw_tile_variant_marks(tile: Vector2i, rect: Rect2, terrain: String, visi
 		draw_line(second, second + Vector2(rect.size.x * 0.16, -rect.size.y * 0.04), color, 1.4)
 
 func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> void:
+	if not _homm3_terrain_config(terrain).is_empty():
+		return
 	var transition_payload := _terrain_transition_payload(tile)
 	var cardinal_sources = transition_payload.get("cardinal_sources", [])
 	if cardinal_sources is Array:
@@ -585,6 +601,12 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 
 func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bool:
 	var overlay_id := String(road.get("overlay_id", "road_dirt"))
+	var homm3_path := _homm3_road_art_path(overlay_id, tile)
+	if homm3_path != "":
+		var homm3_texture = _terrain_art_texture(homm3_path)
+		if homm3_texture is Texture2D:
+			draw_texture_rect(homm3_texture, rect, false)
+			return true
 	if not _road_overlay_art_can_be_primary(overlay_id):
 		return false
 	var art := _road_overlay_art_paths(overlay_id)
@@ -2090,6 +2112,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var transition_corner_mask := String(transition_payload.get("corner_mask", ""))
 	var tile_art_entry := _terrain_base_art_entry(terrain, tile)
 	var tile_art_path := String(tile_art_entry.get("path", ""))
+	var homm3_selection: Dictionary = tile_art_entry.get("homm3_selection", {})
 	var tile_art_primary := _terrain_art_can_be_primary(terrain)
 	var tile_art_loaded := tile_art_primary and _terrain_art_texture(tile_art_path) is Texture2D
 	var edge_art_count := _transition_edge_art_count(transition_payload)
@@ -2103,7 +2126,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var road_has_horizontal := _road_has_horizontal_connections(road_neighbor_directions)
 	var road_has_vertical := _road_has_vertical_connections(road_neighbor_directions)
 	var road_has_diagonal := _road_has_diagonal_connections(road_neighbor_directions)
-	var primary_base_model := TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern")
+	var primary_base_model := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE if tile_art_loaded and not homm3_selection.is_empty() else (TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"))
 	return {
 		"terrain": terrain,
 		"state": "current_scout_net" if visible else "explored_outside_scout_net",
@@ -2124,7 +2147,8 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
-		"uses_original_tile_bank": tile_art_loaded,
+		"uses_original_tile_bank": tile_art_loaded and homm3_selection.is_empty(),
+		"uses_homm3_local_prototype": tile_art_loaded and not homm3_selection.is_empty(),
 		"generated_source_primary": false,
 		"tile_art_source_basis": _terrain_tile_art_source_basis(terrain),
 		"primary_base_model": primary_base_model,
@@ -2135,9 +2159,21 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"terrain_group": _terrain_group(terrain),
 		"style_id": _terrain_style_id(terrain),
 		"pattern": _terrain_pattern(terrain),
-		"terrain_noise_profile": "quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback",
-		"terrain_variant_selection": "patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks",
-		"grasslands_base_cohesion": "grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else "",
+		"terrain_noise_profile": "homm3_extracted_atlas_frame" if tile_art_loaded and not homm3_selection.is_empty() else ("quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback"),
+		"terrain_variant_selection": "table_driven_neighbor_mask_with_interior_variants" if tile_art_loaded and not homm3_selection.is_empty() else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
+		"grasslands_base_cohesion": "homm3_grass_atlas_family" if _terrain_group(terrain) == "grasslands" and tile_art_loaded and not homm3_selection.is_empty() else ("grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else ""),
+		"homm3_local_reference_only": bool(homm3_selection.get("local_reference_only", false)),
+		"homm3_terrain_lookup_model": String(homm3_selection.get("terrain_lookup_model", "")),
+		"homm3_terrain_family": String(homm3_selection.get("family", "")),
+		"homm3_terrain_atlas": String(homm3_selection.get("atlas_id", "")),
+		"homm3_terrain_frame": String(homm3_selection.get("frame_id", "")),
+		"homm3_selection_kind": String(homm3_selection.get("selection_kind", "")),
+		"homm3_mask_key": String(homm3_selection.get("mask_key", "")),
+		"homm3_bridge_family": String(homm3_selection.get("bridge_family", "")),
+		"homm3_shoreline_specific": bool(homm3_selection.get("shoreline_specific", false)),
+		"homm3_unsupported_policy": String(homm3_selection.get("unsupported_policy", "")),
+		"homm3_fallback_reason": String(homm3_selection.get("fallback_reason", "")),
+		"homm3_logical_degrade_note": String(homm3_selection.get("logical_degrade_note", "")),
 		"neighbor_aware_transitions": true,
 		"transition_calculation_model": TERRAIN_TRANSITION_SELECTION_MODEL,
 		"transition_edge_model": TERRAIN_TRANSITION_EDGE_MODEL,
@@ -2156,29 +2192,32 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"corner_transition_count": corner_transition_count,
 		"edge_transition_art_count": edge_art_count,
 		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
-		"transition_shape_model": "jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback",
-		"transition_edge_treatment": "soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback",
-		"transition_selection_rule": "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
+		"transition_shape_model": "homm3_base_atlas_frame" if not homm3_selection.is_empty() else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
+		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if not homm3_selection.is_empty() else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
+		"transition_selection_rule": "resolve_incompatible_land_through_dirt_or_sand_bridge_tables_and_water_through_shoreline_tables" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
 		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0,
 		"same_group_transition_suppressed": true,
 		"road_overlay": not road_payload.is_empty(),
 		"road_overlay_id": String(road_payload.get("overlay_id", "")),
 		"road_role": String(road_payload.get("role", "")),
 		"road_overlay_art": road_art_loaded,
-		"road_shape_model": "homm_adjacency_piece_overlay" if road_art_loaded else ("homm_adjacency_procedural_connectors" if not road_payload.is_empty() else ""),
+		"road_shape_model": "homm3_4_neighbor_overlay_lookup" if road_art_loaded else ("homm3_4_neighbor_procedural_connectors" if not road_payload.is_empty() else ""),
 		"road_lane_model": ROAD_LANE_MODEL if not road_payload.is_empty() else "",
 		"road_piece_selection_model": String(road_payload.get("piece_selection_model", "")),
 		"road_same_type_adjacency": bool(road_payload.get("same_type_adjacency", false)),
 		"road_connection_key": road_connection_key,
 		"road_connection_count": road_neighbor_directions.size(),
 		"road_connection_source": String(road_payload.get("connection_source", "")),
-		"road_horizontal_edge_riding": road_has_horizontal,
+		"road_horizontal_edge_riding": false,
 		"road_horizontal_lane": ROAD_HORIZONTAL_LANE if road_has_horizontal else "",
 		"road_vertical_centered": road_has_vertical,
 		"road_vertical_lane": ROAD_VERTICAL_LANE if road_has_vertical else "",
 		"road_diagonal_connections": road_has_diagonal,
-		"road_diagonal_tile_piece": road_connection_piece_loaded,
-		"road_diagonal_piece_model": "full_diagonal_straight_piece" if road_connection_piece_loaded else "",
+		"road_orthogonal_mask_only": not road_payload.is_empty(),
+		"road_orthogonal_lookup_table": String(_homm3_road_overlays.get(String(road_payload.get("overlay_id", "road_dirt")), {}).get("lookup_table", "")) if not road_payload.is_empty() else "",
+		"road_diagonal_tile_piece": false,
+		"road_diagonal_piece_model": "",
+		"road_straight_tile_piece": road_connection_piece_loaded,
 		"road_unordered_adjacency_suppressed": bool(road_payload.get("ordered_connections", false)),
 		"road_joint_cap": road_joint_cap,
 		"road_joint_cap_model": "connection_aware_joint_cap" if not road_payload.is_empty() else "",
@@ -2209,6 +2248,9 @@ func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 	if road_payload.is_empty():
 		return false
 	var overlay_id := String(road_payload.get("overlay_id", "road_dirt"))
+	var homm3_path := _homm3_road_art_path(overlay_id, tile)
+	if homm3_path != "":
+		return _terrain_art_texture(homm3_path) is Texture2D
 	if not _road_overlay_art_can_be_primary(overlay_id):
 		return false
 	var art := _road_overlay_art_paths(overlay_id)
@@ -2232,6 +2274,8 @@ func _road_overlay_art_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 func _road_connection_piece_loaded(road_payload: Dictionary, tile: Vector2i) -> bool:
 	if road_payload.is_empty():
 		return false
+	if _homm3_road_overlays.has(String(road_payload.get("overlay_id", "road_dirt"))):
+		return _road_connection_key(tile) in ["N+S", "E+W"]
 	var overlay_id := String(road_payload.get("overlay_id", "road_dirt"))
 	if not _road_overlay_art_can_be_primary(overlay_id):
 		return false
@@ -2535,6 +2579,10 @@ func _load_terrain_grammar() -> void:
 	_terrain_art_textures.clear()
 	_terrain_art_missing.clear()
 	_road_overlay_art.clear()
+	_homm3_prototype.clear()
+	_homm3_terrain_id_map.clear()
+	_homm3_terrain_families.clear()
+	_homm3_road_overlays.clear()
 	var grammar := ContentService.get_terrain_grammar()
 	if grammar.is_empty() and FileAccess.file_exists(TERRAIN_GRAMMAR_PATH):
 		var file := FileAccess.open(TERRAIN_GRAMMAR_PATH, FileAccess.READ)
@@ -2546,6 +2594,7 @@ func _load_terrain_grammar() -> void:
 		push_warning("Terrain grammar is missing; overworld terrain will use procedural fallback colors.")
 		return
 	_terrain_grammar = grammar
+	_load_homm3_prototype(grammar)
 	var terrain_classes = grammar.get("terrain_classes", [])
 	if terrain_classes is Array:
 		for terrain_class in terrain_classes:
@@ -2568,6 +2617,30 @@ func _load_terrain_grammar() -> void:
 				normalized[color_key] = _color_from_hex(String(overlay_class.get(color_key, "")), _road_default_color(color_key))
 			_terrain_overlay_styles[overlay_id] = normalized
 			_register_road_overlay_art(overlay_id, overlay_class)
+
+func _load_homm3_prototype(grammar: Dictionary) -> void:
+	var prototype = grammar.get("homm3_local_prototype", {})
+	if not (prototype is Dictionary):
+		return
+	_homm3_prototype = prototype
+	var terrain_id_map = prototype.get("terrain_id_map", {})
+	if terrain_id_map is Dictionary:
+		for terrain_id in terrain_id_map.keys():
+			var config = terrain_id_map.get(terrain_id, {})
+			if config is Dictionary:
+				_homm3_terrain_id_map[String(terrain_id).strip_edges().to_lower()] = config
+	var terrain_families = prototype.get("terrain_families", {})
+	if terrain_families is Dictionary:
+		for family_id in terrain_families.keys():
+			var family = terrain_families.get(family_id, {})
+			if family is Dictionary:
+				_homm3_terrain_families[String(family_id)] = family
+	var road_overlays = prototype.get("road_overlays", {})
+	if road_overlays is Dictionary:
+		for overlay_id in road_overlays.keys():
+			var overlay = road_overlays.get(overlay_id, {})
+			if overlay is Dictionary:
+				_homm3_road_overlays[String(overlay_id)] = overlay
 
 func _register_terrain_art(terrain_id: String, terrain_class: Dictionary) -> void:
 	var tile_art = terrain_class.get("tile_art", {})
@@ -2647,6 +2720,8 @@ func _terrain_style_id(terrain_id: String) -> String:
 	return String(style.get("style_id", terrain_id))
 
 func _terrain_tile_art_source_basis(terrain_id: String) -> String:
+	if not _homm3_terrain_config(terrain_id).is_empty():
+		return TERRAIN_HOMM3_SOURCE_BASIS
 	var style := _terrain_style(terrain_id)
 	var tile_art = style.get("tile_art", {})
 	if tile_art is Dictionary and String(tile_art.get("source_basis", "")).strip_edges() != "":
@@ -2657,6 +2732,8 @@ func _terrain_tile_art_source_basis(terrain_id: String) -> String:
 	return grammar_basis
 
 func _terrain_art_can_be_primary(terrain_id: String) -> bool:
+	if not _homm3_terrain_config(terrain_id).is_empty():
+		return true
 	var source_basis := _terrain_tile_art_source_basis(terrain_id)
 	if source_basis == "" or source_basis == TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS:
 		return false
@@ -2665,6 +2742,8 @@ func _terrain_art_can_be_primary(terrain_id: String) -> bool:
 	return source_basis.find("original") >= 0 or String(_terrain_grammar.get("primary_base_model", "")) == TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
 
 func _road_overlay_art_source_basis(overlay_id: String) -> String:
+	if _homm3_road_overlays.has(overlay_id):
+		return TERRAIN_HOMM3_SOURCE_BASIS
 	var style := _road_overlay_style(overlay_id)
 	var tile_art = style.get("tile_art", {})
 	if tile_art is Dictionary and String(tile_art.get("source_basis", "")).strip_edges() != "":
@@ -2677,10 +2756,15 @@ func _road_overlay_art_source_basis(overlay_id: String) -> String:
 	return "original_procedural_reference_informed"
 
 func _road_overlay_art_can_be_primary(overlay_id: String) -> bool:
+	if _homm3_road_overlays.has(overlay_id):
+		return true
 	var source_basis := _road_overlay_art_source_basis(overlay_id)
 	return source_basis != "" and source_basis != TERRAIN_DEPRECATED_GENERATED_SOURCE_BASIS and source_basis.find("generated") < 0
 
 func _terrain_base_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
+	var homm3_entry := _homm3_terrain_art_entry(terrain_id, tile)
+	if not homm3_entry.is_empty():
+		return homm3_entry
 	var entries = _terrain_base_art.get(terrain_id.strip_edges().to_lower(), [])
 	if not (entries is Array) or entries.is_empty():
 		return {}
@@ -2704,6 +2788,203 @@ func _terrain_edge_art_path(terrain_id: String, direction: String) -> String:
 func _road_overlay_art_paths(overlay_id: String) -> Dictionary:
 	var art = _road_overlay_art.get(overlay_id, {})
 	return art if art is Dictionary else {}
+
+func _homm3_road_art_path(overlay_id: String, tile: Vector2i) -> String:
+	var overlay = _homm3_road_overlays.get(overlay_id, {})
+	if not (overlay is Dictionary):
+		return ""
+	var atlas_id := String(overlay.get("atlas", "")).strip_edges()
+	if atlas_id == "":
+		return ""
+	var lookup = overlay.get("mask_lookup", {})
+	if not (lookup is Dictionary):
+		return ""
+	var mask_key := _road_connection_key(tile)
+	var frame_id := String(lookup.get(mask_key, "")).strip_edges()
+	if frame_id == "":
+		return ""
+	return "%s/roads/%s/%s.png" % [_homm3_asset_root(), atlas_id, frame_id]
+
+func _homm3_asset_root() -> String:
+	return String(_homm3_prototype.get("asset_root", "res://art/overworld/runtime/homm3_local_prototype")).strip_edges()
+
+func _homm3_terrain_config(terrain_id: String) -> Dictionary:
+	var config = _homm3_terrain_id_map.get(terrain_id.strip_edges().to_lower(), {})
+	return config if config is Dictionary else {}
+
+func _homm3_terrain_family_config(family_id: String) -> Dictionary:
+	var family = _homm3_terrain_families.get(family_id, {})
+	return family if family is Dictionary else {}
+
+func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
+	var selection := _homm3_terrain_selection_payload(tile, terrain_id)
+	var frame_id := String(selection.get("frame_id", "")).strip_edges()
+	var atlas_id := String(selection.get("atlas_id", "")).strip_edges()
+	if atlas_id == "" or frame_id == "":
+		return {}
+	var path := "%s/terrain/%s/%s.png" % [_homm3_asset_root(), atlas_id, frame_id]
+	return {
+		"variant_key": "homm3_%s_%s" % [atlas_id, frame_id],
+		"path": path,
+		"source_basis": TERRAIN_HOMM3_SOURCE_BASIS,
+		"homm3_selection": selection,
+	}
+
+func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dictionary:
+	var config := _homm3_terrain_config(terrain_id)
+	if config.is_empty():
+		return {}
+	var family_id := String(config.get("family", "")).strip_edges()
+	var family := _homm3_terrain_family_config(family_id)
+	if family.is_empty():
+		return {}
+	var atlas_id := String(family.get("atlas", "")).strip_edges()
+	var relation := _homm3_terrain_relation_payload(tile, terrain_id)
+	var selection_kind := String(relation.get("selection_kind", "interior"))
+	var mask_key := String(relation.get("mask_key", ""))
+	var frame_id := ""
+	var fallback_reason := ""
+	if selection_kind == "water_shoreline":
+		frame_id = _homm3_lookup_frame(family.get("shoreline_lookup", {}), mask_key)
+		if frame_id == "":
+			fallback_reason = "missing_shoreline_mask_lookup"
+	elif selection_kind == "bridge_transition":
+		frame_id = _homm3_lookup_frame(family.get("bridge_mask_lookup", {}), mask_key)
+		if frame_id == "":
+			fallback_reason = "missing_bridge_mask_lookup"
+	if frame_id == "":
+		frame_id = _homm3_interior_frame(family, tile, terrain_id)
+	return {
+		"enabled": true,
+		"local_reference_only": bool(_homm3_prototype.get("local_reference_only", true)),
+		"terrain_lookup_model": String(_homm3_prototype.get("terrain_lookup_model", "table_driven_bridge_base_8_neighbor")),
+		"unsupported_policy": String(_homm3_prototype.get("unsupported_policy", TERRAIN_HOMM3_UNSUPPORTED_POLICY)),
+		"terrain": terrain_id,
+		"family": family_id,
+		"atlas_id": atlas_id,
+		"frame_id": frame_id,
+		"selection_kind": selection_kind,
+		"mask_key": mask_key,
+		"bridge_family": String(config.get("bridge_family", family.get("bridge_family", ""))),
+		"shoreline_specific": bool(family.get("shoreline_specific", false)),
+		"fallback_reason": fallback_reason,
+		"logical_degrade_note": String(config.get("logical_degrade_note", "")),
+		"relation": relation,
+	}
+
+func _homm3_lookup_frame(lookup, mask_key: String) -> String:
+	if not (lookup is Dictionary):
+		return ""
+	if lookup.has(mask_key):
+		return String(lookup.get(mask_key, "")).strip_edges()
+	return ""
+
+func _homm3_interior_frame(family: Dictionary, tile: Vector2i, terrain_id: String) -> String:
+	var interior_frames = family.get("interior_frames", [])
+	if not (interior_frames is Array) or interior_frames.is_empty():
+		return ""
+	var index := _deterministic_art_index(tile, terrain_id, interior_frames.size())
+	return String(interior_frames[index]).strip_edges()
+
+func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dictionary:
+	var config := _homm3_terrain_config(terrain_id)
+	var family_id := String(config.get("family", "")).strip_edges()
+	var family := _homm3_terrain_family_config(family_id)
+	var bridge_family := String(config.get("bridge_family", family.get("bridge_family", ""))).strip_edges()
+	var cardinal_sources: Array = []
+	var corner_sources: Array = []
+	var cardinal_keys: Array[String] = []
+	var corner_keys: Array[String] = []
+	var selection_kind := "interior"
+	if _session == null or not _tile_in_bounds(tile) or not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		return {
+			"selection_kind": selection_kind,
+			"mask_key": "",
+			"edge_mask": "",
+			"corner_mask": "",
+			"cardinal_sources": cardinal_sources,
+			"corner_sources": corner_sources,
+		}
+	for check in _terrain_cardinal_transition_checks():
+		var source := _homm3_relation_source_for_neighbor(tile, terrain_id, check)
+		if source.is_empty():
+			continue
+		cardinal_sources.append(source)
+		cardinal_keys.append(String(source.get("direction", "")))
+	for check in _terrain_diagonal_transition_checks():
+		var source := _homm3_relation_source_for_neighbor(tile, terrain_id, check)
+		if source.is_empty():
+			continue
+		corner_sources.append(source)
+		corner_keys.append(String(source.get("direction", "")))
+	if bool(family.get("shoreline_specific", false)):
+		if not cardinal_keys.is_empty() or not corner_keys.is_empty():
+			selection_kind = "water_shoreline"
+	elif not cardinal_keys.is_empty() or not corner_keys.is_empty():
+		selection_kind = "bridge_transition"
+	var mask_key := _homm3_mask_key_from_keys(cardinal_keys)
+	return {
+		"selection_kind": selection_kind,
+		"mask_key": mask_key,
+		"edge_mask": _homm3_compact_mask_from_keys(cardinal_keys),
+		"corner_mask": _homm3_compact_mask_from_keys(corner_keys),
+		"bridge_family": bridge_family,
+		"cardinal_sources": cardinal_sources,
+		"corner_sources": corner_sources,
+	}
+
+func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: String, check: Dictionary) -> Dictionary:
+	var direction := String(check.get("label", ""))
+	var offset: Vector2i = check.get("offset", Vector2i.ZERO)
+	var neighbor := tile + offset
+	if direction == "" or not _tile_in_bounds(neighbor):
+		return {}
+	if _session == null or not OverworldRulesScript.is_tile_explored(_session, neighbor.x, neighbor.y):
+		return {}
+	var neighbor_terrain := _terrain_at(neighbor)
+	if neighbor_terrain == "":
+		return {}
+	var receiver_config := _homm3_terrain_config(receiver_terrain)
+	var neighbor_config := _homm3_terrain_config(neighbor_terrain)
+	if receiver_config.is_empty() or neighbor_config.is_empty():
+		return {}
+	var receiver_family := String(receiver_config.get("family", ""))
+	var neighbor_family := String(neighbor_config.get("family", ""))
+	if receiver_family == neighbor_family:
+		return {}
+	var receiver_family_config := _homm3_terrain_family_config(receiver_family)
+	var neighbor_family_config := _homm3_terrain_family_config(neighbor_family)
+	var receiver_is_water := bool(receiver_family_config.get("shoreline_specific", false))
+	var neighbor_is_water := bool(neighbor_family_config.get("shoreline_specific", false))
+	if not receiver_is_water and neighbor_is_water:
+		return {}
+	var relation_kind := "shoreline_land_neighbor" if receiver_is_water else "bridge_base_resolution"
+	return {
+		"direction": direction,
+		"source_terrain": neighbor_terrain,
+		"source_group": _terrain_group(neighbor_terrain),
+		"source_family": neighbor_family,
+		"receiver_terrain": receiver_terrain,
+		"receiver_group": _terrain_group(receiver_terrain),
+		"receiver_family": receiver_family,
+		"resolved_bridge_family": "" if receiver_is_water else String(receiver_config.get("bridge_family", receiver_family_config.get("bridge_family", ""))),
+		"relation_kind": relation_kind,
+		"neighbor": {"x": neighbor.x, "y": neighbor.y},
+	}
+
+func _homm3_mask_key_from_keys(keys: Array[String]) -> String:
+	var ordered := []
+	for key in ["N", "E", "S", "W"]:
+		if key in keys:
+			ordered.append(key)
+	return "+".join(ordered)
+
+func _homm3_compact_mask_from_keys(keys: Array[String]) -> String:
+	var result := ""
+	for key in ["N", "E", "S", "W", "NE", "SE", "SW", "NW"]:
+		if key in keys:
+			result += key
+	return result
 
 func _terrain_art_texture(texture_path: String):
 	var normalized_path := texture_path.strip_edges()
@@ -2729,6 +3010,30 @@ func _terrain_transition_edge_mask(tile: Vector2i) -> String:
 
 func _terrain_transition_payload(tile: Vector2i) -> Dictionary:
 	var terrain := _terrain_at(tile)
+	var homm3_selection := _homm3_terrain_selection_payload(tile, terrain)
+	if not homm3_selection.is_empty():
+		var relation: Dictionary = homm3_selection.get("relation", {})
+		var cardinal_sources: Array = relation.get("cardinal_sources", [])
+		var corner_sources: Array = relation.get("corner_sources", [])
+		return {
+			"model": TERRAIN_TRANSITION_SELECTION_MODEL,
+			"edge_model": TERRAIN_TRANSITION_EDGE_MODEL,
+			"corner_model": TERRAIN_TRANSITION_CORNER_MODEL,
+			"receiver_terrain": terrain,
+			"receiver_group": _terrain_group(terrain),
+			"receiver_priority": _terrain_transition_priority(terrain),
+			"edge_mask": String(relation.get("edge_mask", "")),
+			"corner_mask": String(relation.get("corner_mask", "")),
+			"cardinal_sources": cardinal_sources,
+			"corner_sources": corner_sources,
+			"source_terrain_ids": _transition_unique_values(cardinal_sources, corner_sources, "source_terrain"),
+			"source_groups": _transition_unique_values(cardinal_sources, corner_sources, "source_group"),
+			"homm3_selection": homm3_selection,
+			"homm3_mask_key": String(homm3_selection.get("mask_key", "")),
+			"homm3_bridge_family": String(homm3_selection.get("bridge_family", "")),
+			"homm3_selection_kind": String(homm3_selection.get("selection_kind", "")),
+			"homm3_frame_id": String(homm3_selection.get("frame_id", "")),
+		}
 	var payload := {
 		"model": TERRAIN_TRANSITION_SELECTION_MODEL,
 		"edge_model": TERRAIN_TRANSITION_EDGE_MODEL,
@@ -2859,12 +3164,12 @@ func _road_neighbor_directions(tile: Vector2i) -> Array:
 		var connections = road.get("connections", [])
 		var connection_directions := []
 		if connections is Array:
-			for direction in DIRECTIONS:
+			for direction in ROAD_CARDINAL_DIRECTIONS:
 				if _direction_key(direction) in connections:
 					connection_directions.append(direction)
 		return connection_directions
 	var neighbor_directions := []
-	for direction in DIRECTIONS:
+	for direction in ROAD_CARDINAL_DIRECTIONS:
 		var neighbor: Vector2i = tile + direction
 		if _road_tiles.has(_tile_key(neighbor)):
 			neighbor_directions.append(direction)
@@ -2913,10 +3218,15 @@ func _road_connection_key(tile: Vector2i) -> String:
 	return _road_connection_key_from_directions(_road_neighbor_directions(tile))
 
 func _road_connection_key_from_directions(directions: Array) -> String:
-	var keys: Array[String] = []
+	var source_keys: Array[String] = []
 	for direction in directions:
-		keys.append(_direction_key(direction))
-	keys.sort()
+		var direction_key := _direction_key(direction)
+		if direction_key != "":
+			source_keys.append(direction_key)
+	var keys: Array[String] = []
+	for canonical_key in ["N", "E", "S", "W"]:
+		if canonical_key in source_keys:
+			keys.append(canonical_key)
 	var result := ""
 	for key in keys:
 		if result != "":
@@ -2996,7 +3306,7 @@ func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: Stri
 			"connections": [],
 			"ordered_connections": false,
 			"same_type_adjacency": true,
-			"connection_source": "adjacent_same_type_road_tiles",
+			"connection_source": ROAD_CONNECTION_SOURCE,
 			"piece_selection_model": ROAD_PIECE_SELECTION_MODEL,
 		}
 	else:
@@ -3004,7 +3314,7 @@ func _ensure_road_tile_payload(tile: Vector2i, overlay_id: String, road_id: Stri
 			payload["connections"] = []
 		payload["ordered_connections"] = false
 		payload["same_type_adjacency"] = true
-		payload["connection_source"] = "adjacent_same_type_road_tiles"
+		payload["connection_source"] = ROAD_CONNECTION_SOURCE
 		payload["piece_selection_model"] = ROAD_PIECE_SELECTION_MODEL
 		payload["tile_x"] = tile.x
 		payload["tile_y"] = tile.y
@@ -3031,7 +3341,7 @@ func _rebuild_road_adjacency_connections() -> void:
 		payload["connections"] = []
 		payload["ordered_connections"] = false
 		payload["same_type_adjacency"] = true
-		payload["connection_source"] = "adjacent_same_type_road_tiles"
+		payload["connection_source"] = ROAD_CONNECTION_SOURCE
 		payload["piece_selection_model"] = ROAD_PIECE_SELECTION_MODEL
 		_road_tiles[key] = payload
 	for key in road_keys:
@@ -3041,7 +3351,7 @@ func _rebuild_road_adjacency_connections() -> void:
 		var tile := Vector2i(int(payload.get("tile_x", -1)), int(payload.get("tile_y", -1)))
 		if tile.x < 0 or tile.y < 0:
 			continue
-		for direction in DIRECTIONS:
+		for direction in ROAD_CARDINAL_DIRECTIONS:
 			var neighbor: Vector2i = tile + direction
 			var neighbor_payload: Dictionary = _road_tiles.get(_tile_key(neighbor), {})
 			if _road_payloads_can_connect(payload, neighbor_payload):

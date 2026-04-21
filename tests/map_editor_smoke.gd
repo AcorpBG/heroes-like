@@ -124,27 +124,46 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _assert_editor_neighbor_transition_preview(shell) -> bool:
+	var forest_tile: Dictionary = shell.call("validation_tile_presentation", 2, 2)
+	var forest_terrain: Dictionary = forest_tile.get("terrain_presentation", {})
+	if (
+		String(forest_terrain.get("terrain", "")) != "forest"
+		or String(forest_terrain.get("homm3_terrain_family", "")) != "grass"
+		or String(forest_terrain.get("homm3_logical_degrade_note", "")) == ""
+	):
+		_fail("Map editor smoke: logical forest terrain did not expose its explicit HoMM3 local-prototype atlas limitation: %s." % forest_tile)
+		return false
+	var mire_seed: Dictionary = shell.call("validation_paint_terrain", 2, 2, "mire")
+	if not bool(mire_seed.get("ok", false)):
+		_fail("Map editor smoke: could not seed mire terrain for HoMM3 bridge-table preview: %s." % mire_seed)
+		return false
 	var edge_receiver: Dictionary = shell.call("validation_tile_presentation", 2, 1)
 	var edge_terrain: Dictionary = edge_receiver.get("terrain_presentation", {})
 	if (
 		not bool(edge_terrain.get("neighbor_aware_transitions", false))
-		or String(edge_terrain.get("transition_calculation_model", "")) != "neighbor_priority_intrusion_8_way"
-		or String(edge_terrain.get("transition_edge_model", "")) != "higher_priority_neighbor_intrusion_edges"
+		or String(edge_terrain.get("transition_calculation_model", "")) != "homm3_table_driven_bridge_base_lookup"
+		or String(edge_terrain.get("transition_edge_model", "")) != "bridge_or_shoreline_atlas_frame_lookup"
 		or String(edge_terrain.get("transition_edge_mask", "")) != "S"
-		or "forest" not in edge_terrain.get("transition_source_terrain_ids", [])
+		or "mire" not in edge_terrain.get("transition_source_terrain_ids", [])
+		or String(edge_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(edge_terrain.get("homm3_bridge_family", "")) != "dirt"
 		or int(edge_terrain.get("edge_transition_count", 0)) != 1
 	):
-		_fail("Map editor smoke: editor preview did not put the painted forest edge onto its lower-priority neighbor: %s." % edge_receiver)
+		_fail("Map editor smoke: editor preview did not use the HoMM3 bridge-table terrain lookup at the painted mire edge: %s." % edge_receiver)
 		return false
 	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var corner_terrain: Dictionary = corner_receiver.get("terrain_presentation", {})
 	if (
-		String(corner_terrain.get("transition_corner_model", "")) != "diagonal_neighbor_corner_hints"
+		String(corner_terrain.get("transition_corner_model", "")) != "diagonal_context_in_atlas_lookup"
 		or String(corner_terrain.get("transition_corner_mask", "")) != "SE"
-		or "forest" not in corner_terrain.get("transition_source_terrain_ids", [])
+		or "mire" not in corner_terrain.get("transition_source_terrain_ids", [])
 		or int(corner_terrain.get("corner_transition_count", 0)) != 1
 	):
-		_fail("Map editor smoke: editor preview did not expose a diagonal corner transition from the painted forest tile: %s." % corner_receiver)
+		_fail("Map editor smoke: editor preview did not expose diagonal context for the painted mire tile: %s." % corner_receiver)
+		return false
+	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
+	if not bool(restore_forest.get("ok", false)):
+		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 bridge-table preview: %s." % restore_forest)
 		return false
 	return true
 

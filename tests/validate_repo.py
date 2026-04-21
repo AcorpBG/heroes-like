@@ -185,7 +185,7 @@ LOGISTICS_SITE_IDS = {
     "site_starlens_sanctum",
 }
 TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
-RUBBERDUCK_TERRAIN_FEEL_TEST_IDS = {"grass", "plains", "forest"}
+HOMM3_LOCAL_PROTOTYPE_FAMILIES = {"grass", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water"}
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "frontier_town",
     "hostile_camp",
@@ -4563,15 +4563,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("model", "")) == "authored_autotile_layers", errors, "Overworld terrain rendering must use the authored autotile layer model")
         ensure(str(terrain_rendering.get("grammar", "")) == "res://content/terrain_grammar.json", errors, "Overworld terrain rendering must point at content/terrain_grammar.json")
         ensure(str(terrain_rendering.get("terrain_layers", "")) == "res://content/terrain_layers.json", errors, "Overworld terrain rendering must point at content/terrain_layers.json")
-        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the authored terrain tile-art root")
-        ensure(str(terrain_rendering.get("tile_art_status", "")) == "rubberduck_surface_feel_test", errors, "Overworld terrain rendering must record the Rubberduck terrain feel-test status")
-        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "mixed_rubberduck_opengameart_and_original_procedural", errors, "Overworld terrain rendering must record the mixed Rubberduck/original procedural terrain source basis")
-        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "neighbor_priority_intrusion_8_way", errors, "Overworld terrain rendering must document neighbor-priority terrain transition selection")
-        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "lower_priority_tiles_receive_higher_priority_neighbor_edges_and_corner_hints", errors, "Overworld terrain rendering must document lower-priority receiver transition behavior")
-        ensure(str(terrain_rendering.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Overworld terrain rendering must make the original quiet tile bank the primary base model")
-        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Overworld terrain rendering must document generated terrain sources as deprecated for primary bases")
+        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/homm3_local_prototype", errors, "Overworld terrain rendering must point at the HoMM3 local prototype tile-art root")
+        ensure(str(terrain_rendering.get("tile_art_status", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 local-reference prototype status")
+        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "homm3_extracted_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 extracted local-reference source basis")
+        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "homm3_table_driven_bridge_base_lookup", errors, "Overworld terrain rendering must document HoMM3 table-driven terrain transition selection")
+        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask_with_dirt_or_sand_bridge_resolution_and_water_shoreline_lookup", errors, "Overworld terrain rendering must document bridge/base and shoreline lookup behavior")
+        ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
+        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Overworld terrain rendering must document generated terrain sources as unused by the HoMM3 local prototype")
+        ensure(bool(terrain_rendering.get("local_reference_only", False)), errors, "Overworld terrain rendering must mark HoMM3 extracted assets as local_reference_only")
+        ensure(str(terrain_rendering.get("prototype_asset_policy", "")) == "not_shippable_or_redistributable", errors, "Overworld terrain rendering must mark HoMM3 extracted assets as not shippable or redistributable")
         authored_tile_sets = terrain_rendering.get("authored_tile_sets", [])
-        ensure(isinstance(authored_tile_sets, list) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, authored_tile_sets))) and "road_dirt" in set(map(str, authored_tile_sets)), errors, "Overworld terrain rendering must list the first authored terrain and road tile sets")
+        ensure(isinstance(authored_tile_sets, list) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, authored_tile_sets))) and "road_dirt" in set(map(str, authored_tile_sets)), errors, "Overworld terrain rendering must list the HoMM3 local prototype terrain families and road tile set")
         ensure(str(terrain_rendering.get("sampled_texture_status", "")) == "deprecated_not_primary", errors, "Overworld sampled terrain textures must be marked deprecated_not_primary")
     if not isinstance(object_assets, dict) or not isinstance(site_sprites, dict):
         return
@@ -4579,18 +4581,73 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     terrain_classes = terrain_grammar.get("terrain_classes", [])
     overlay_classes = terrain_grammar.get("overlay_classes", [])
     ensure(str(terrain_grammar.get("rendering_model", "")) == "authored_autotile_layers", errors, "Terrain grammar must declare authored_autotile_layers")
-    ensure(str(terrain_grammar.get("authoring_status", "")) == "rubberduck_surface_feel_test", errors, "Terrain grammar must record the Rubberduck terrain feel-test status")
-    ensure(str(terrain_grammar.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Terrain grammar must make the original quiet tile bank primary")
-    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Terrain grammar must deprecate generated terrain sheets for primary bases")
+    ensure(str(terrain_grammar.get("authoring_status", "")) == "homm3_local_reference_prototype", errors, "Terrain grammar must record the HoMM3 local-reference prototype status")
+    ensure(str(terrain_grammar.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Terrain grammar must make the HoMM3 local prototype primary")
+    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Terrain grammar must deprecate generated terrain sheets for this local prototype")
     transition_rules = terrain_grammar.get("transition_rules", {})
     ensure(isinstance(transition_rules, dict), errors, "Terrain grammar must define transition_rules")
     if isinstance(transition_rules, dict):
-        ensure(str(transition_rules.get("selection_model", "")) == "neighbor_priority_intrusion_8_way", errors, "Terrain grammar must document neighbor-priority transition selection")
-        ensure(str(transition_rules.get("edge_model", "")) == "higher_priority_neighbor_intrusion_edges", errors, "Terrain grammar must document higher-priority neighbor edge intrusion")
-        ensure(str(transition_rules.get("corner_model", "")) == "diagonal_neighbor_corner_hints", errors, "Terrain grammar must document diagonal neighbor corner hints")
-        ensure(str(transition_rules.get("receiver_rule", "")) == "lower_priority_tile_receives_higher_priority_neighbor_transition", errors, "Terrain grammar must document lower-priority receiver transitions")
-        ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_intragroup_edges", errors, "Terrain grammar must suppress same-group transition seams")
-        ensure(bool(transition_rules.get("higher_priority_intrudes", False)), errors, "Terrain grammar must keep higher_priority_intrudes enabled")
+        ensure(str(transition_rules.get("selection_model", "")) == "homm3_table_driven_bridge_base_lookup", errors, "Terrain grammar must document HoMM3 table-driven transition selection")
+        ensure(str(transition_rules.get("edge_model", "")) == "bridge_or_shoreline_atlas_frame_lookup", errors, "Terrain grammar must document bridge/shoreline atlas-frame lookup")
+        ensure(str(transition_rules.get("corner_model", "")) == "diagonal_context_in_atlas_lookup", errors, "Terrain grammar must document diagonal context in atlas lookup")
+        ensure(str(transition_rules.get("receiver_rule", "")) == "current_tile_selects_family_atlas_frame_from_neighbor_mask", errors, "Terrain grammar must document current-tile atlas frame selection")
+        ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_same_homm3_family_edges", errors, "Terrain grammar must suppress same HoMM3-family transition seams")
+        ensure(str(transition_rules.get("bridge_base_model", "")) == "dirt_or_sand_bridge_base", errors, "Terrain grammar must document dirt/sand bridge-base resolution")
+        ensure(str(transition_rules.get("water_model", "")) == "shoreline_specific_lookup", errors, "Terrain grammar must document shoreline-specific water lookup")
+        ensure(str(transition_rules.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "Terrain grammar must document explicit unsupported-case fallback")
+    homm3_prototype = terrain_grammar.get("homm3_local_prototype", {})
+    ensure(isinstance(homm3_prototype, dict), errors, "Terrain grammar must define homm3_local_prototype")
+    if isinstance(homm3_prototype, dict):
+        ensure(bool(homm3_prototype.get("enabled", False)), errors, "HoMM3 local prototype must be enabled")
+        ensure(bool(homm3_prototype.get("local_reference_only", False)), errors, "HoMM3 local prototype must be marked local_reference_only")
+        ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "table_driven_bridge_base_8_neighbor", errors, "HoMM3 local prototype must use table-driven bridge/base terrain lookup")
+        ensure(str(homm3_prototype.get("road_lookup_model", "")) == "table_driven_4_neighbor_overlay", errors, "HoMM3 local prototype must use table-driven 4-neighbor road lookup")
+        ensure(str(homm3_prototype.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "HoMM3 local prototype must use explicit fallback for unsupported cases")
+        asset_root = res_path_to_disk(str(homm3_prototype.get("asset_root", "")))
+        ensure(asset_root.exists(), errors, f"HoMM3 local prototype asset root is missing: {homm3_prototype.get('asset_root')}")
+        terrain_families = homm3_prototype.get("terrain_families", {})
+        terrain_id_map = homm3_prototype.get("terrain_id_map", {})
+        road_overlays = homm3_prototype.get("road_overlays", {})
+        ensure(isinstance(terrain_families, dict) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, terrain_families.keys()))), errors, "HoMM3 local prototype must define the extracted terrain family tables")
+        ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the current visible terrain ids")
+        if isinstance(terrain_id_map, dict):
+            forest_mapping = terrain_id_map.get("forest", {})
+            ensure(isinstance(forest_mapping, dict) and str(forest_mapping.get("logical_degrade_note", "")) != "", errors, "HoMM3 local prototype must explicitly document the logical forest terrain atlas limitation")
+        if isinstance(terrain_families, dict):
+            for family_id in HOMM3_LOCAL_PROTOTYPE_FAMILIES:
+                family = terrain_families.get(family_id, {})
+                ensure(isinstance(family, dict), errors, f"HoMM3 local prototype family {family_id} must be a dictionary")
+                if not isinstance(family, dict):
+                    continue
+                atlas = str(family.get("atlas", ""))
+                ensure(atlas != "", errors, f"HoMM3 local prototype family {family_id} must define atlas")
+                interior_frames = family.get("interior_frames", [])
+                ensure(isinstance(interior_frames, list) and bool(interior_frames), errors, f"HoMM3 local prototype family {family_id} must define interior frames")
+                lookup_key = "shoreline_lookup" if bool(family.get("shoreline_specific", False)) else "bridge_mask_lookup"
+                lookup = family.get(lookup_key, {})
+                ensure(isinstance(lookup, dict) and "N" in lookup and "N+E+S+W" in lookup, errors, f"HoMM3 local prototype family {family_id} must define {lookup_key} masks")
+                sample_frames = []
+                if isinstance(interior_frames, list):
+                    sample_frames.extend(map(str, interior_frames[:2]))
+                if isinstance(lookup, dict):
+                    sample_frames.extend(str(value) for value in list(lookup.values())[:4])
+                for frame_id in sample_frames:
+                    frame_path = asset_root / "terrain" / atlas / f"{frame_id}.png"
+                    ensure(frame_path.exists(), errors, f"HoMM3 local prototype family {family_id} references missing frame {frame_path}")
+                    if frame_path.exists():
+                        ensure(png_size(frame_path) == (64, 64), errors, f"HoMM3 local prototype frame {frame_path} must be 64x64 PNG")
+        ensure(isinstance(road_overlays, dict) and "road_dirt" in road_overlays, errors, "HoMM3 local prototype must define road_dirt road overlay lookup")
+        if isinstance(road_overlays, dict):
+            road_dirt = road_overlays.get("road_dirt", {})
+            mask_lookup = road_dirt.get("mask_lookup", {}) if isinstance(road_dirt, dict) else {}
+            ensure(isinstance(road_dirt, dict) and str(road_dirt.get("atlas", "")) == "dirtrd", errors, "HoMM3 road_dirt prototype must use the dirtrd atlas")
+            ensure(isinstance(mask_lookup, dict) and {"", "N", "E+W", "N+E+S+W"}.issubset(set(map(str, mask_lookup.keys()))), errors, "HoMM3 road_dirt prototype must define 4-neighbor road masks")
+            if isinstance(mask_lookup, dict) and asset_root.exists():
+                for frame_id in {str(mask_lookup.get(key, "")) for key in ["", "N", "E+W", "N+E+S+W"]}:
+                    frame_path = asset_root / "roads" / "dirtrd" / f"{frame_id}.png"
+                    ensure(frame_path.exists(), errors, f"HoMM3 road_dirt prototype references missing frame {frame_path}")
+                    if frame_path.exists():
+                        ensure(png_size(frame_path) == (64, 64), errors, f"HoMM3 road_dirt frame {frame_path} must be 64x64 PNG")
     ensure(isinstance(terrain_classes, list) and bool(terrain_classes), errors, "Terrain grammar must define terrain_classes")
     ensure(isinstance(overlay_classes, list) and bool(overlay_classes), errors, "Terrain grammar must define overlay_classes")
     terrain_class_ids: set[str] = set()
@@ -4614,8 +4671,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 tile_art = terrain_class.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, f"Terrain grammar {terrain_id} must define tile_art")
                 if isinstance(tile_art, dict):
-                    if terrain_id in RUBBERDUCK_TERRAIN_FEEL_TEST_IDS:
-                        ensure(str(tile_art.get("source_basis", "")) == "rubberduck_opengameart_surface_feel_test", errors, f"Terrain grammar {terrain_id} must identify the Rubberduck terrain feel-test source basis")
+                    ensure(str(tile_art.get("source_basis", "")).startswith("homm3_local_reference_prototype"), errors, f"Terrain grammar {terrain_id} must identify that fallback tile_art paths are superseded by the HoMM3 local prototype")
                     base_tiles = tile_art.get("base_tiles", [])
                     ensure(isinstance(base_tiles, list) and len(base_tiles) >= 3, errors, f"Terrain grammar {terrain_id} must define at least three authored base tile variants")
                     if isinstance(base_tiles, list):
@@ -4652,12 +4708,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 supports = overlay.get("supports", [])
                 ensure(isinstance(supports, list) and "authored_tile_art" in supports, errors, "Terrain overlay road_dirt must mark authored_tile_art support")
                 ensure(isinstance(supports, list) and "same_type_adjacency" in supports, errors, "Terrain overlay road_dirt must mark same_type_adjacency support")
-                ensure(isinstance(supports, list) and "vertical_centerline" in supports, errors, "Terrain overlay road_dirt must mark vertical_centerline support")
-                ensure(isinstance(supports, list) and "horizontal_edge_lanes" in supports, errors, "Terrain overlay road_dirt must mark horizontal_edge_lanes support")
-                ensure(isinstance(supports, list) and "diagonal_straight_pieces" in supports, errors, "Terrain overlay road_dirt must mark diagonal_straight_pieces support")
-                ensure(str(overlay.get("piece_selection_model", "")) == "same_type_adjacency_homm_piece_composition", errors, "Terrain overlay road_dirt must document same-type adjacency piece selection")
-                ensure(str(overlay.get("vertical_lane", "")) == "center", errors, "Terrain overlay road_dirt must document centered vertical road lanes")
-                ensure(str(overlay.get("horizontal_lane", "")) == "south_edge", errors, "Terrain overlay road_dirt must document edge-riding horizontal road lanes")
+                ensure(isinstance(supports, list) and "orthogonal_4_neighbor_masks" in supports, errors, "Terrain overlay road_dirt must mark orthogonal_4_neighbor_masks support")
+                ensure(isinstance(supports, list) and "transparent_overlay_frames" in supports, errors, "Terrain overlay road_dirt must mark transparent_overlay_frames support")
+                ensure(isinstance(supports, list) and "no_diagonal_connectors" in supports, errors, "Terrain overlay road_dirt must mark no_diagonal_connectors support")
+                ensure(str(overlay.get("piece_selection_model", "")) == "homm3_4_neighbor_mask_lookup", errors, "Terrain overlay road_dirt must document HoMM3 4-neighbor mask lookup")
+                ensure(str(overlay.get("vertical_lane", "")) == "orthogonal_mask_frame", errors, "Terrain overlay road_dirt must document orthogonal vertical road mask frames")
+                ensure(str(overlay.get("horizontal_lane", "")) == "orthogonal_mask_frame", errors, "Terrain overlay road_dirt must document orthogonal horizontal road mask frames")
                 tile_art = overlay.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, "Terrain overlay road_dirt must define tile_art")
                 if isinstance(tile_art, dict):
@@ -4779,14 +4835,20 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     for required_token in (
         "OVERWORLD_ART_MANIFEST_PATH",
         "TERRAIN_GRAMMAR_PATH",
-        "TERRAIN_GRAMMAR_RENDERING_MODE",
-        "TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE",
-        "TERRAIN_TILE_ART_RENDERING_MODE",
-        "TERRAIN_TRANSITION_SELECTION_MODEL",
-        "TERRAIN_TRANSITION_EDGE_MODEL",
-        "TERRAIN_TRANSITION_CORNER_MODEL",
-        "func _load_terrain_grammar",
-        "func _draw_terrain_tile_art",
+	        "TERRAIN_GRAMMAR_RENDERING_MODE",
+	        "TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE",
+	        "TERRAIN_TILE_ART_RENDERING_MODE",
+	        "TERRAIN_HOMM3_SOURCE_BASIS",
+	        "TERRAIN_HOMM3_UNSUPPORTED_POLICY",
+	        "TERRAIN_TRANSITION_SELECTION_MODEL",
+	        "TERRAIN_TRANSITION_EDGE_MODEL",
+	        "TERRAIN_TRANSITION_CORNER_MODEL",
+	        "func _load_terrain_grammar",
+	        "func _load_homm3_prototype",
+	        "func _homm3_terrain_selection_payload",
+	        "func _homm3_terrain_relation_payload",
+	        "func _homm3_road_art_path",
+	        "func _draw_terrain_tile_art",
         "func _load_overworld_art_manifest",
         "func _draw_authored_terrain_pattern",
         "func _draw_terrain_transitions",
@@ -4825,31 +4887,36 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"localized_sprite_contact_shadow_without_backdrop"',
         '"localized_sprite_contact_shadow"',
         '"thin_sprite_contact_disturbance"',
-        '"family_specific_procedural_world_object"',
-        '"authored_autotile_layers"',
-        '"original_quiet_tile_bank"',
-        '"uses_sampled_texture"',
-        '"uses_authored_tile_art"',
-        '"uses_original_tile_bank"',
-        '"generated_source_primary"',
-        '"primary_base_model"',
-        '"edge_transition_art_loaded"',
-        '"neighbor_aware_transitions"',
-        '"transition_calculation_model"',
-        '"transition_cardinal_sources"',
-        '"transition_corner_sources"',
-        '"neighbor_priority_intrusion_8_way"',
-        '"higher_priority_neighbor_intrusion_edges"',
-        '"diagonal_neighbor_corner_hints"',
-        '"transition_shape_model"',
-        '"road_overlay"',
-        '"road_overlay_art"',
-        '"road_shape_model"',
-        '"road_same_type_adjacency"',
-        '"road_horizontal_edge_riding"',
-        '"road_vertical_centered"',
-        "ROAD_LANE_MODEL",
-        "ROAD_PIECE_SELECTION_MODEL",
+	        '"family_specific_procedural_world_object"',
+	        '"authored_autotile_layers"',
+	        '"homm3_local_reference_prototype"',
+	        '"homm3_extracted_local_reference_prototype"',
+	        '"uses_sampled_texture"',
+	        '"uses_authored_tile_art"',
+	        '"uses_homm3_local_prototype"',
+	        '"generated_source_primary"',
+	        '"primary_base_model"',
+	        '"edge_transition_art_loaded"',
+	        '"neighbor_aware_transitions"',
+	        '"transition_calculation_model"',
+	        '"transition_cardinal_sources"',
+	        '"transition_corner_sources"',
+	        '"homm3_table_driven_bridge_base_lookup"',
+	        '"bridge_or_shoreline_atlas_frame_lookup"',
+	        '"diagonal_context_in_atlas_lookup"',
+	        '"homm3_terrain_lookup_model"',
+	        '"homm3_bridge_family"',
+	        '"homm3_shoreline_specific"',
+	        '"transition_shape_model"',
+	        '"road_overlay"',
+	        '"road_overlay_art"',
+	        '"road_shape_model"',
+	        '"road_same_type_adjacency"',
+	        '"road_orthogonal_mask_only"',
+	        '"orthogonal_same_type_road_tiles"',
+	        "ROAD_LANE_MODEL",
+	        "ROAD_PIECE_SELECTION_MODEL",
+	        "ROAD_CARDINAL_DIRECTIONS",
         '"fallback_procedural_marker"',
         "ghosted_sprite_with_ground_anchor",
         "TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)",

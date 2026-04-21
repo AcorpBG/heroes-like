@@ -697,20 +697,24 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	var grass_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
 	var grass_terrain: Dictionary = grass_presentation.get("terrain_presentation", {})
-	if String(grass_terrain.get("rendering_mode", "")) != "original_quiet_tile_bank":
-		push_error("Overworld smoke: original quiet terrain tile bank is not active on the overworld map. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("rendering_mode", "")) != "homm3_local_reference_prototype":
+		push_error("Overworld smoke: HoMM3 local prototype terrain atlas is not active on the overworld map. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if bool(grass_terrain.get("uses_sampled_texture", true)) or bool(grass_terrain.get("generated_source_primary", true)) or not bool(grass_terrain.get("uses_original_tile_bank", false)) or not bool(grass_terrain.get("texture_loaded", false)):
-		push_error("Overworld smoke: overworld terrain is not reporting the original non-generated tile bank. presentation=%s" % grass_presentation)
+	if bool(grass_terrain.get("uses_sampled_texture", true)) or bool(grass_terrain.get("generated_source_primary", true)) or not bool(grass_terrain.get("uses_homm3_local_prototype", false)) or not bool(grass_terrain.get("texture_loaded", false)):
+		push_error("Overworld smoke: overworld terrain is not reporting the HoMM3 local prototype tile bank. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("primary_base_model", "")) != "original_quiet_tile_bank" or String(grass_terrain.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable":
-		push_error("Overworld smoke: overworld terrain does not expose the quiet macro-readable base model. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("primary_base_model", "")) != "homm3_local_reference_prototype" or String(grass_terrain.get("terrain_noise_profile", "")) != "homm3_extracted_atlas_frame":
+		push_error("Overworld smoke: overworld terrain does not expose the HoMM3 extracted-atlas base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency" or String(grass_terrain.get("grasslands_base_cohesion", "")) != "grass_plains_shared_palette":
-		push_error("Overworld smoke: grass/plains terrain does not expose the cohesive low-frequency variant contract. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("terrain_variant_selection", "")) != "table_driven_neighbor_mask_with_interior_variants" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "table_driven_bridge_base_8_neighbor":
+		push_error("Overworld smoke: grass terrain does not expose the table-driven HoMM3 neighbor-mask lookup contract. presentation=%s" % grass_presentation)
+		get_tree().quit(1)
+		return false
+	if not bool(grass_terrain.get("homm3_local_reference_only", false)) or String(grass_terrain.get("tile_art_source_basis", "")) != "homm3_extracted_local_reference_prototype":
+		push_error("Overworld smoke: HoMM3 prototype terrain did not report its local-reference source basis. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("terrain_group", "")) != "grasslands" or String(grass_terrain.get("style_id", "")) == "":
@@ -721,16 +725,16 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: visible grass terrain still reports per-cell black grid seams. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "homm_adjacency_piece_overlay":
-		push_error("Overworld smoke: authored River Pass road overlay is not using structural road art on the main route. presentation=%s" % grass_presentation)
+	if not bool(grass_terrain.get("road_overlay", false)) or String(grass_terrain.get("road_overlay_id", "")) != "road_dirt" or not bool(grass_terrain.get("road_overlay_art", false)) or String(grass_terrain.get("road_shape_model", "")) != "homm3_4_neighbor_overlay_lookup":
+		push_error("Overworld smoke: authored River Pass road overlay is not using HoMM3 4-neighbor road art. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("road_connection_source", "")) != "adjacent_same_type_road_tiles" or not bool(grass_terrain.get("road_same_type_adjacency", false)):
-		push_error("Overworld smoke: River Pass road overlay is not being rebuilt from same-type road adjacency. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("road_connection_source", "")) != "orthogonal_same_type_road_tiles" or not bool(grass_terrain.get("road_same_type_adjacency", false)) or not bool(grass_terrain.get("road_orthogonal_mask_only", false)):
+		push_error("Overworld smoke: River Pass road overlay is not being rebuilt from 4-neighbor same-type road adjacency. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not bool(grass_terrain.get("road_horizontal_edge_riding", false)) or String(grass_terrain.get("road_horizontal_lane", "")) != "south_edge" or not bool(grass_terrain.get("road_vertical_centered", false)):
-		push_error("Overworld smoke: River Pass road intersection does not expose edge-riding horizontal plus centered vertical lane metadata. presentation=%s" % grass_presentation)
+	if bool(grass_terrain.get("road_horizontal_edge_riding", true)) or bool(grass_terrain.get("road_diagonal_connections", true)) or String(grass_terrain.get("road_piece_selection_model", "")) != "homm3_4_neighbor_mask_lookup":
+		push_error("Overworld smoke: River Pass road still reports old lane or diagonal-road topology. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("road_joint_cap_model", "")) != "connection_aware_joint_cap" or not bool(grass_terrain.get("road_joint_cap", false)):
@@ -738,26 +742,19 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 
-	var forest_edge_presentation: Dictionary = shell.call("validation_tile_presentation", 0, 1)
+	var forest_edge_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var forest_edge_terrain: Dictionary = forest_edge_presentation.get("terrain_presentation", {})
 	if (
-		String(forest_edge_terrain.get("terrain_group", "")) != "grasslands"
+		String(forest_edge_terrain.get("terrain_group", "")) != "forest"
 		or not bool(forest_edge_terrain.get("neighbor_aware_transitions", false))
-		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "neighbor_priority_intrusion_8_way"
-		or "forest" not in forest_edge_terrain.get("transition_source_terrain_ids", [])
-		or String(forest_edge_terrain.get("transition_edge_mask", "")) != "E"
-		or int(forest_edge_terrain.get("edge_transition_count", 0)) != 1
-		or not bool(forest_edge_terrain.get("edge_transition_art_loaded", false))
-		or String(forest_edge_terrain.get("transition_shape_model", "")) != "jagged_directional_overlay"
+		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "homm3_table_driven_bridge_base_lookup"
+		or String(forest_edge_terrain.get("homm3_terrain_family", "")) != "grass"
+		or String(forest_edge_terrain.get("homm3_logical_degrade_note", "")) == ""
+		or String(forest_edge_terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
 	):
-		push_error("Overworld smoke: forest transition is not being selected from neighboring terrain relationships. presentation=%s" % forest_edge_presentation)
+		push_error("Overworld smoke: logical forest terrain did not report its explicit HoMM3 grass-atlas prototype degradation. presentation=%s" % forest_edge_presentation)
 		get_tree().quit(1)
 		return false
-	if String(forest_edge_terrain.get("transition_edge_treatment", "")) != "soft_feathered_jagged_overlay" or String(forest_edge_terrain.get("transition_selection_rule", "")) != "higher_priority_neighbor_intrudes_into_lower_priority_receiver":
-		push_error("Overworld smoke: forest edge transition art is not reporting the softened neighbor-intrusion treatment. presentation=%s" % forest_edge_presentation)
-		get_tree().quit(1)
-		return false
-
 	var session = SessionState.ensure_active_session()
 	var town_tile := _first_visible_town_tile(session)
 	if town_tile.x < 0:

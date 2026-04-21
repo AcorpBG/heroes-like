@@ -9,21 +9,23 @@
       "town_candidate_file": "towns/001-fantasy-strategy-game-overworld-map-obje.png",
       "encounter_candidate_file": "encounters/001-fantasy-strategy-game-overworld-map-obje.png"
     },
-    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets are deprecated for primary per-cell terrain and may be used only as color or macro inspiration, not as literal tile-source art. The 2026-04-21 terrain feel test adapts only selected grass/plains/forest surfaces from the local Rubberduck OpenGameArt pack at /root/.openclaw/workspace/tasks/10184/artifacts/terrain-pack-rubberduck/extracted/."
+    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets and the Rubberduck terrain feel-test are superseded for the active local prototype. The 2026-04-21 terrain prototype stages extracted HoMM3 DEF terrain and road frames from /root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/defs for local renderer study only; those frames are not shippable or redistributable game assets."
   },
   "terrain_rendering": {
     "model": "authored_autotile_layers",
     "grammar": "res://content/terrain_grammar.json",
     "terrain_layers": "res://content/terrain_layers.json",
-    "tile_art_root": "res://art/overworld/runtime/terrain_tiles",
-    "tile_art_status": "rubberduck_surface_feel_test",
-    "tile_art_source_basis": "mixed_rubberduck_opengameart_and_original_procedural",
-    "tile_art_preparation": "locally_built_64x64_tile_bank_with_rubberduck_opengameart_isometric_diamond_unwraps_for_grass_plains_forest_surfaces_and_matching_grasslands_forest_edges_while_mire_highland_and_same_type_adjacency_roads_remain_original_quiet_procedural",
-    "terrain_transition_selection": "neighbor_priority_intrusion_8_way",
-    "terrain_transition_rule": "lower_priority_tiles_receive_higher_priority_neighbor_edges_and_corner_hints",
-    "primary_base_model": "original_quiet_tile_bank",
-    "generated_source_policy": "deprecated_for_primary_base_color_reference_or_limited_decal_only",
-    "authored_tile_sets": ["grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland", "road_dirt"],
+    "tile_art_root": "res://art/overworld/runtime/homm3_local_prototype",
+    "tile_art_status": "homm3_local_reference_prototype",
+    "tile_art_source_basis": "homm3_extracted_local_reference_prototype",
+    "tile_art_preparation": "local_only_nearest_neighbor_64x64_staging_from_extracted_homm3_def_frames_via_tools_build_overworld_terrain_tiles_py",
+    "terrain_transition_selection": "homm3_table_driven_bridge_base_lookup",
+    "terrain_transition_rule": "current_tile_selects_family_atlas_frame_from_neighbor_mask_with_dirt_or_sand_bridge_resolution_and_water_shoreline_lookup",
+    "primary_base_model": "homm3_local_reference_prototype",
+    "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
+    "authored_tile_sets": ["grass", "dirt", "rock", "sand", "snow", "swamp", "lava", "subterranean", "water", "road_dirt"],
+    "local_reference_only": true,
+    "prototype_asset_policy": "not_shippable_or_redistributable",
     "sampled_texture_status": "deprecated_not_primary"
   },
   "remembered_object_rendering": "ghosted_sprite_with_ground_anchor",

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T07:38:39Z",
+  "updatedAt": "2026-04-21T09:13:55Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-grassland-cohesion-correction-10184",
-  "currentSliceTitle": "Correct Rubberduck grassland base-tile cohesion",
+  "currentSliceId": "overworld-homm3-local-terrain-prototype-10184",
+  "currentSliceTitle": "Prototype HoMM3-style neighbor-aware terrain and road rendering locally",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow corrective pass after live feedback that same-family grassland areas read as square color patches. Rubberduck-adapted grass/plains base variants are normalized to a tight shared grasslands palette/value range while preserving subdued source texture and the existing 64x64 tile-bank contract plus 3x3 patch-cohesive selection. Forest, mire/swamp, hills/ridge/highland, edge overlays, roads, projection/layout, pathing/gameplay, save data, map editor schema, object/town art, and town occupancy/pathing are unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the continuation pass for the local-only HoMM3 terrain prototype. The dirty diff is scoped to the terrain/road renderer prototype, map-editor preview validation, local ignored frame staging, docs, and validators. The Rubberduck/original quiet feel-test path is superseded locally by ignored staged HoMM3 runtime PNGs, grammar-authored terrain-family and road mask lookup tables, dirt/sand bridge-base terrain resolution, shoreline-specific water lookup, and 4-neighbor dirt-road overlay topology. The logical square-grid map, current editor data model, gameplay/pathing, save format, object/town rendering, and town occupancy/pathing were left unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -370,6 +370,12 @@
       "difficulty": "small"
     },
     {
+      "id": "overworld-homm3-local-terrain-prototype-10184",
+      "title": "Prototype HoMM3-style neighbor-aware terrain and road rendering locally",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
       "id": "overworld-neighbor-aware-terrain-transitions-10184",
       "title": "Select overworld terrain transitions from neighboring terrain relationships",
       "status": "completed",
@@ -431,15 +437,15 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the corrected Rubberduck-adapted grass/plains cohesion, forest, and matching grasslands/forest edge overlays in River Pass, Ninefold Confluence, and the map editor before deciding whether to keep this pack direction beyond the feel test.",
-    "Manually inspect neighbor-aware forest/grass, mire/grass, highland/grass, and snow/frost transition boundaries in River Pass, Ninefold Confluence, and the map editor before treating the transition presentation as visually polished.",
+    "Manually inspect the HoMM3 local terrain prototype in River Pass, Ninefold Confluence, and the map editor before deciding which parts should inform original shippable terrain art and tooling.",
+    "Manually inspect grass/dirt, swamp/grass, rock/grass, snow/frost, and water shoreline lookup boundaries in River Pass, Ninefold Confluence, and the map editor before treating the terrain table presentation as visually polished.",
     "Use the in-game map editor's terrain, terrain-rectangle, single-tile road, road-path, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
     "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
-    "Manually inspect the same-type adjacency road topology in River Pass and Ninefold Confluence at live-client scale, especially centered vertical runs, lower-edge horizontal runs, intersections, and diagonal chains, before treating road presentation as broadly polished.",
+    "Manually inspect the 4-neighbor HoMM3 dirt-road overlay topology in River Pass and Ninefold Confluence at live-client scale, especially straights, corners, T-junctions, crosses, and diagonal-neighbor suppression, before treating road presentation as broadly polished.",
     "Manually inspect unmapped procedural resource-site, artifact, and encounter fallbacks in River Pass and Ninefold Confluence at live-client scale before treating the no-plate fallback grounding as visually polished across supported viewports.",
     "Manually inspect the visible explored terrain seam correction in River Pass and Ninefold Confluence at live-client scale before treating the black-grid feedback as fully solved across supported viewports.",
-    "Manually inspect the corrected cohesive grasslands base, softened edge overlays, and connection-aware road joints in River Pass and Ninefold Confluence at live-client scale before treating the terrain/road immersion issue as fully solved.",
+    "Plan the follow-up original-art terrain pipeline that can replace the local HoMM3 reference frames with shippable terrain atlases while preserving the table-driven bridge, shoreline, and road topology contracts.",
     "Manually inspect the corrected active-hero placed-figure presentation in River Pass and Ninefold Confluence before treating hero presence as polished across every biome and supported resolution.",
     "Plan a future explicit multi-tile town occupancy/pathing slice before making non-entry town footprint cells affect movement, blocking, save schema, or visit resolution.",
     "Manually inspect the corrected no-base-ellipse town presentation plus the hostile_camp overworld placeholder in River Pass and Ninefold Confluence before calling the object-art direction visually polished.",
