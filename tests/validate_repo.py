@@ -4637,10 +4637,41 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(asset_root.exists(), errors, f"HoMM3 local prototype asset root is missing: {homm3_prototype.get('asset_root')}")
         terrain_families = homm3_prototype.get("terrain_families", {})
         terrain_id_map = homm3_prototype.get("terrain_id_map", {})
+        bridge_material_resolver = homm3_prototype.get("bridge_material_resolver", {})
         direct_bridge_pairs = homm3_prototype.get("direct_bridge_pairs", [])
+        routed_bridge_rules = homm3_prototype.get("routed_bridge_rules", [])
         road_overlays = homm3_prototype.get("road_overlays", {})
         ensure(isinstance(terrain_families, dict) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, terrain_families.keys()))), errors, "HoMM3 local prototype must define the extracted terrain family tables")
         ensure(isinstance(terrain_id_map, dict) and TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS.issubset(set(map(str, terrain_id_map.keys()))), errors, "HoMM3 local prototype must map the existing authored logical terrain ids")
+        ensure(isinstance(bridge_material_resolver, dict), errors, "HoMM3 local prototype must define a bridge_material_resolver contract")
+        if isinstance(bridge_material_resolver, dict):
+            ensure(str(bridge_material_resolver.get("resolver_model", "")) == "data_driven_bridge_material_resolver.v1", errors, "HoMM3 bridge material resolver must expose the data-driven resolver model")
+            ensure(bridge_material_resolver.get("rule_order", []) == ["explicit_direct_bridge_pairs", "direct_bridge_material_contacts", "routed_bridge_rules", "unresolved_fallbacks", "preferred_bridge_class_routes"], errors, "HoMM3 bridge material resolver must preserve the source-driven rule order")
+            direct_contact_rules = bridge_material_resolver.get("direct_bridge_material_contacts", [])
+            preferred_rules = bridge_material_resolver.get("preferred_bridge_class_routes", [])
+            unresolved_rules = bridge_material_resolver.get("unresolved_fallbacks", [])
+            ensure(isinstance(direct_contact_rules, list), errors, "HoMM3 bridge material resolver must define direct material-contact rules")
+            if isinstance(direct_contact_rules, list):
+                direct_by_id = {str(rule.get("id", "")): rule for rule in direct_contact_rules if isinstance(rule, dict)}
+                ensure({"full_receiver_direct_dirt_contact", "full_receiver_direct_sand_contact", "dirt_receiver_direct_sand_contact"}.issubset(direct_by_id.keys()), errors, "HoMM3 bridge material resolver must explicitly cover direct full-receiver dirt/sand contacts and dirt receiving sand")
+                dirt_contact = direct_by_id.get("full_receiver_direct_dirt_contact", {})
+                ensure(str(dirt_contact.get("bridge_source_kind", "")) == "direct_bridge_material" and str(dirt_contact.get("target_frame_block", "")) == "native_to_dirt_transition", errors, "Direct dirt bridge material contact must target the receiver native-to-dirt block")
+                sand_contact = direct_by_id.get("full_receiver_direct_sand_contact", {})
+                ensure(str(sand_contact.get("bridge_source_kind", "")) == "direct_bridge_material" and str(sand_contact.get("target_frame_block", "")) == "native_to_sand_transition", errors, "Direct sand bridge material contact must target the receiver native-to-sand block")
+                dirt_sand_contact = direct_by_id.get("dirt_receiver_direct_sand_contact", {})
+                ensure(str(dirt_sand_contact.get("bridge_family", "")) == "sand" and str(dirt_sand_contact.get("target_frame_block", "")) == "dirt_to_sand_transition", errors, "Direct dirt/sand contact must keep dirt receivers on dirttl dirt-to-sand frames")
+            ensure(isinstance(preferred_rules, list), errors, "HoMM3 bridge material resolver must define preferred bridge-class routes")
+            if isinstance(preferred_rules, list):
+                preferred_by_id = {str(rule.get("id", "")): rule for rule in preferred_rules if isinstance(rule, dict)}
+                ensure({"water_prefers_sand_bridge_class", "rock_prefers_sand_bridge_class", "full_receiver_prefers_dirt_bridge_class"}.issubset(preferred_by_id.keys()), errors, "HoMM3 bridge material resolver must define water/rock sand preference and full-receiver dirt preference")
+                ensure(str(preferred_by_id.get("water_prefers_sand_bridge_class", {}).get("bridge_family", "")) == "sand", errors, "Water preferred bridge-class route must resolve to sand before shoreline lookup")
+                ensure(str(preferred_by_id.get("rock_prefers_sand_bridge_class", {}).get("bridge_family", "")) == "sand", errors, "Rock preferred bridge-class route must resolve to sand before rock-system lookup")
+                ensure(str(preferred_by_id.get("full_receiver_prefers_dirt_bridge_class", {}).get("bridge_family", "")) == "dirt", errors, "Full receiver preferred bridge-class route must resolve to dirt/earth")
+            ensure(isinstance(unresolved_rules, list), errors, "HoMM3 bridge material resolver must define unresolved fallback routes")
+            if isinstance(unresolved_rules, list):
+                unresolved_by_id = {str(rule.get("id", "")): rule for rule in unresolved_rules if isinstance(rule, dict)}
+                subterranean_rule = unresolved_by_id.get("subterranean_preferred_bridge_class_provisional", {})
+                ensure(str(subterranean_rule.get("bridge_source_kind", "")) == "unresolved_fallback" and str(subterranean_rule.get("source_level", "")) == "provisional" and bool(subterranean_rule.get("provisional", False)), errors, "Subterranean bridge policy must remain an explicit provisional unresolved fallback")
         ensure(isinstance(direct_bridge_pairs, list), errors, "HoMM3 local prototype must define direct bridge-pair overrides")
         if isinstance(direct_bridge_pairs, list):
             found_dirt_swamp_pair = False
@@ -4661,6 +4692,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                     found_grass_sand_pair = True
                     break
             ensure(found_grass_sand_pair, errors, "HoMM3 local prototype must route grass<->sand through the grastl native-to-sand transition lookup")
+        ensure(isinstance(routed_bridge_rules, list), errors, "HoMM3 local prototype must define routed bridge rules")
+        if isinstance(routed_bridge_rules, list):
+            found_grass_swamp_route = False
+            for rule in routed_bridge_rules:
+                if not isinstance(rule, dict):
+                    continue
+                families = rule.get("families", [])
+                if isinstance(families, list) and set(map(str, families)) == {"grass", "swamp"} and str(rule.get("bridge_family", "")) == "dirt" and str(rule.get("bridge_source_kind", "")) == "routed_bridge" and str(rule.get("target_frame_block", "")) == "native_to_dirt_transition":
+                    found_grass_swamp_route = True
+                    break
+            ensure(found_grass_swamp_route, errors, "HoMM3 local prototype must route grass/swamp through dirt bridge behavior, not a direct all-to-all blend")
         if isinstance(terrain_id_map, dict):
             forest_mapping = terrain_id_map.get("forest", {})
             ensure(isinstance(forest_mapping, dict) and str(forest_mapping.get("logical_degrade_note", "")) != "", errors, "HoMM3 local prototype must explicitly document the logical forest terrain atlas limitation")
@@ -4978,6 +5020,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "TERRAIN_TRANSITION_CORNER_MODEL",
 	        "func _load_terrain_grammar",
 	        "func _load_homm3_prototype",
+	        "func _homm3_bridge_material_resolution",
+	        "func _homm3_bridge_material_rule_for",
 	        "func _homm3_terrain_selection_payload",
 	        "func _homm3_terrain_relation_payload",
 	        "func _homm3_road_art_path",
@@ -5039,7 +5083,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"diagonal_context_in_atlas_lookup"',
 	        '"homm3_terrain_lookup_model"',
 	        '"homm3_bridge_family"',
+	        '"homm3_bridge_class"',
 	        '"homm3_bridge_resolution_model"',
+	        '"homm3_bridge_resolver_model"',
+	        '"homm3_bridge_rule_id"',
+	        '"homm3_bridge_target_frame_block"',
 	        '"homm3_interior_frame_selection"',
 	        '"homm3_uses_interior_variant_cycle"',
 	        '"homm3_shoreline_specific"',

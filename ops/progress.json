@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T14:35:00Z",
+  "updatedAt": "2026-04-21T14:01:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-terrain-renderer-data-contract-groundwork-10184",
-  "currentSliceTitle": "Harden HoMM3 terrain renderer data-contract groundwork",
+  "currentSliceId": "homm3-bridge-material-resolver-10184",
+  "currentSliceTitle": "Implement HoMM3 bridge material resolver",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the first HoMM3 terrain renderer rewrite groundwork pass and fixed the malformed GDScript indentation that blocked Godot smoke validation. content/terrain_grammar.json now exposes the homm3_renderer_data_contract.v1 metadata boundary with atlas roles, source-level frame blocks, bridge classes, direct/routed bridge rules, special water shoreline and rock/void systems, base/decor sand handling, and provisional fallback policies. OverworldMapView loads the routed bridge metadata and reports atlas-role, bridge-source, selected-frame-block, water, rock, and fallback metadata through the shared live/editor validation surface. Map-editor and live-overworld smoke coverage asserts sand base context, grastl native-to-sand propagation, water shoreline metadata, and rock special-system metadata. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the Bridge Material Resolver rewrite slice. content/terrain_grammar.json now declares a data_driven_bridge_material_resolver.v1 contract with source-ordered direct material contacts, preferred bridge-class routes, grass/swamp routed-through-dirt behavior, and an explicitly provisional subterranean unresolved fallback. OverworldMapView loads bridge classes and resolver rules, resolves bridge material metadata before frame-block selection, and reports bridge class, source kind, source level, rule id, target frame block, resolver model, and provisional status through the shared live/editor validation surface. Map-editor and live-overworld fixtures validate direct dirt/sand contacts, dirt receiving sand through dirttl, preferred class routing, grass/swamp via dirt, and the subterranean provisional policy through payload metadata. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

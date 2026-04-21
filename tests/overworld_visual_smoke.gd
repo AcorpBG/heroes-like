@@ -760,6 +760,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var session = SessionState.ensure_active_session()
+	if not _assert_bridge_material_resolver_payloads(shell, session):
+		return false
 	if not _assert_single_sand_homm3_propagation(shell, session):
 		return false
 	var town_tile := _first_visible_town_tile(session)
@@ -803,6 +805,155 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
+	var original_map = session.overworld.get("map", []).duplicate(true)
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var map_size := OverworldRules.derive_map_size(session)
+	if map_size.x < 9 or map_size.y < 5:
+		push_error("Overworld smoke: bridge resolver fixture requires at least a 9x5 map, got %s." % map_size)
+		get_tree().quit(1)
+		return false
+	var working_map := []
+	for y in range(map_size.y):
+		var row := []
+		for x in range(map_size.x):
+			row.append("grass")
+		working_map.append(row)
+	var paint_plan := [
+		{"tile": Vector2i(2, 1), "terrain": "badlands"},
+		{"tile": Vector2i(4, 1), "terrain": "badlands"},
+		{"tile": Vector2i(4, 0), "terrain": "badlands"},
+		{"tile": Vector2i(4, 2), "terrain": "badlands"},
+		{"tile": Vector2i(3, 1), "terrain": "badlands"},
+		{"tile": Vector2i(5, 1), "terrain": "wastes"},
+		{"tile": Vector2i(2, 3), "terrain": "swamp"},
+		{"tile": Vector2i(7, 3), "terrain": "snow"},
+		{"tile": Vector2i(7, 1), "terrain": "cavern"},
+		{"tile": Vector2i(7, 0), "terrain": "cavern"},
+		{"tile": Vector2i(7, 2), "terrain": "cavern"},
+		{"tile": Vector2i(6, 1), "terrain": "cavern"},
+		{"tile": Vector2i(8, 1), "terrain": "grass"},
+	]
+	for entry in paint_plan:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		working_map[tile.y][tile.x] = String(entry.get("terrain", "grass"))
+	session.overworld["map"] = working_map
+	var controlled_tiles := []
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			controlled_tiles.append(Vector2i(x, y))
+	_reveal_validation_tiles(session, controlled_tiles)
+	shell.call("_refresh")
+	var cases := [
+		{
+			"tile": Vector2i(1, 1),
+			"source": "badlands",
+			"kind": "direct_bridge_material",
+			"rule": "full_receiver_direct_dirt_contact",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "fact",
+			"model": "direct_bridge_material_contact_lookup",
+		},
+		{
+			"tile": Vector2i(4, 1),
+			"source": "wastes",
+			"kind": "direct_bridge_material",
+			"rule": "dirt_receiver_direct_sand_contact",
+			"class": "sand_bridge",
+			"family": "sand",
+			"block": "dirt_to_sand_transition",
+			"source_level": "fact",
+			"model": "direct_dirt_sand_receiver_lookup",
+		},
+		{
+			"tile": Vector2i(1, 3),
+			"source": "swamp",
+			"kind": "routed_bridge",
+			"rule": "grass_swamp_via_dirt_bridge",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "inference",
+			"model": "grass_swamp_via_dirt_bridge",
+		},
+		{
+			"tile": Vector2i(6, 3),
+			"source": "snow",
+			"kind": "preferred_bridge_class",
+			"rule": "full_receiver_prefers_dirt_bridge_class",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "editor_observation",
+			"model": "receiver_preferred_bridge_class_lookup",
+		},
+		{
+			"tile": Vector2i(7, 1),
+			"source": "grass",
+			"kind": "unresolved_fallback",
+			"rule": "subterranean_preferred_bridge_class_provisional",
+			"class": "subterranean_preferred_class_unresolved",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "provisional",
+			"model": "provisional_subterranean_dirt_bridge_fallback",
+			"provisional": true,
+		},
+	]
+	for case in cases:
+		var tile: Vector2i = case.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if not _assert_live_bridge_resolver_case(terrain, case):
+			_restore_single_sand_fixture(shell, session, original_map, original_fog)
+			push_error("Overworld smoke: bridge material resolver metadata did not match case %s. presentation=%s" % [case, presentation])
+			get_tree().quit(1)
+			return false
+	_restore_single_sand_fixture(shell, session, original_map, original_fog)
+	return true
+
+func _assert_live_bridge_resolver_case(terrain: Dictionary, expected: Dictionary) -> bool:
+	if String(terrain.get("homm3_selection_kind", "")) != "bridge_transition":
+		return false
+	if String(terrain.get("homm3_bridge_resolver_model", "")) != "data_driven_bridge_material_resolver.v1":
+		return false
+	if String(terrain.get("homm3_bridge_source_kind", "")) != String(expected.get("kind", "")):
+		return false
+	if String(terrain.get("homm3_bridge_rule_id", "")) != String(expected.get("rule", "")):
+		return false
+	if String(terrain.get("homm3_bridge_class", "")) != String(expected.get("class", "")):
+		return false
+	if String(terrain.get("homm3_bridge_family", "")) != String(expected.get("family", "")):
+		return false
+	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("block", "")):
+		return false
+	if String(terrain.get("homm3_bridge_target_frame_block", "")) != String(expected.get("block", "")):
+		return false
+	if String(terrain.get("homm3_bridge_source_level", "")) != String(expected.get("source_level", "")):
+		return false
+	if String(terrain.get("homm3_bridge_resolution_model", "")) != String(expected.get("model", "")):
+		return false
+	if bool(terrain.get("homm3_bridge_policy_provisional", false)) != bool(expected.get("provisional", false)):
+		return false
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		if (
+			String(source.get("source_terrain", "")) == String(expected.get("source", ""))
+			and String(source.get("bridge_source_kind", "")) == String(expected.get("kind", ""))
+			and String(source.get("bridge_rule_id", "")) == String(expected.get("rule", ""))
+			and String(source.get("bridge_class", "")) == String(expected.get("class", ""))
+			and String(source.get("resolved_bridge_family", "")) == String(expected.get("family", ""))
+			and String(source.get("bridge_target_frame_block", "")) == String(expected.get("block", ""))
+			and String(source.get("bridge_source_level", "")) == String(expected.get("source_level", ""))
+		):
+			return true
+	return false
 
 func _assert_single_sand_homm3_propagation(shell: Node, session) -> bool:
 	var center := Vector2i(4, 2)

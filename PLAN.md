@@ -26,6 +26,32 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Bridge Material Resolver
+Status: completed on 2026-04-21 as the next narrow renderer rewrite slice.
+
+Purpose:
+- Split bridge material selection into an explicit data-driven resolver before frame lookup, while keeping the existing HoMM3 local prototype path intact.
+- Prove direct dirt/sand material contacts, preferred bridge-class routing, grass/swamp routed through dirt behavior, and the provisional subterranean fallback through live/editor validation payloads rather than screenshot claims.
+- Preserve gameplay/pathing/fog/panning/selection/save-version/object logic and the existing road overlay behavior.
+
+Implemented:
+- `content/terrain_grammar.json` now declares `bridge_material_resolver.data_driven_bridge_material_resolver.v1` with rule order, direct material contacts, preferred class routes, and the subterranean unresolved fallback.
+- `OverworldMapView` loads bridge classes and resolver rules, resolves bridge material metadata before frame-block selection, and reports bridge class, rule id, source level, target frame block, resolver model, and provisional status through the shared validation payload.
+- Direct full-receiver dirt/sand contacts, dirt receiving sand through `dirttl`, water/rock preferred sand routing, full receiver dirt preference, grass/swamp via dirt routing, and subterranean unresolved fallback are all data-driven.
+- Map-editor and live-overworld smoke fixtures now validate each bridge-source kind through payload metadata while continuing to use the same renderer path.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not the full land stamp lookup rewrite, editor restamp model, water shoreline rewrite, rock/void rewrite, original-art replacement plan, gameplay/pathing change, save-format change, or editor-schema change.
+- Existing receiver-centered frame tables remain in place until the later full land receiver stamp lookup slice.
+- The subterranean bridge policy remains explicitly provisional and data-driven.
+
 ## Current Implementation Slice: HoMM3 Terrain Renderer Data Contract Groundwork
 Status: completed on 2026-04-21 as a renderer/data-contract groundwork pass.
 
