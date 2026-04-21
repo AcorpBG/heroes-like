@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T07:15:59Z",
+  "updatedAt": "2026-04-21T07:38:39Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-rubberduck-terrain-feel-test-10184",
-  "currentSliceTitle": "Run a narrow Rubberduck terrain-surface feel test through the existing tile bank",
+  "currentSliceId": "overworld-grassland-cohesion-correction-10184",
+  "currentSliceTitle": "Correct Rubberduck grassland base-tile cohesion",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow terrain-only feel-test pass using the locally downloaded Rubberduck OpenGameArt terrain pack. Selected grass/plains/forest 128x64 isometric diamond cells are unwrapped into the existing 64x64 runtime tile-bank paths, matching grasslands/forest edge overlays use adapted source material, and mire/swamp, hills/ridge/highland, road topology/art, projection, pathing, save data, editor schema, object art, and town occupancy/pathing are unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed a narrow corrective pass after live feedback that same-family grassland areas read as square color patches. Rubberduck-adapted grass/plains base variants are normalized to a tight shared grasslands palette/value range while preserving subdued source texture and the existing 64x64 tile-bank contract plus 3x3 patch-cohesive selection. Forest, mire/swamp, hills/ridge/highland, edge overlays, roads, projection/layout, pathing/gameplay, save data, map editor schema, object/town art, and town occupancy/pathing are unchanged. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -364,6 +364,12 @@
       "difficulty": "medium"
     },
     {
+      "id": "overworld-grassland-cohesion-correction-10184",
+      "title": "Correct Rubberduck grassland base-tile cohesion",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
       "id": "overworld-neighbor-aware-terrain-transitions-10184",
       "title": "Select overworld terrain transitions from neighboring terrain relationships",
       "status": "completed",
@@ -425,7 +431,7 @@
     }
   ],
   "nextActions": [
-    "Manually inspect the Rubberduck-adapted grass, plains, forest, and matching grasslands/forest edge overlays in River Pass, Ninefold Confluence, and the map editor before deciding whether to keep this pack direction beyond the feel test.",
+    "Manually inspect the corrected Rubberduck-adapted grass/plains cohesion, forest, and matching grasslands/forest edge overlays in River Pass, Ninefold Confluence, and the map editor before deciding whether to keep this pack direction beyond the feel test.",
     "Manually inspect neighbor-aware forest/grass, mire/grass, highland/grass, and snow/frost transition boundaries in River Pass, Ninefold Confluence, and the map editor before treating the transition presentation as visually polished.",
     "Use the in-game map editor's terrain, terrain-rectangle, single-tile road, road-path, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
     "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
