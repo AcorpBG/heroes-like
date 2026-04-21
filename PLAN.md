@@ -26,6 +26,35 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: Rubberduck Terrain Surface Feel Test
+Status: completed on 2026-04-21 as a narrow overworld terrain-art feel test.
+
+Purpose:
+- Let AcOrP judge whether the adventure map reads better when the most visible terrain surfaces use the locally downloaded Rubberduck OpenGameArt terrain pack.
+- Keep this as a reversible terrain-surface pass through the existing 64x64 runtime tile bank rather than a projection, renderer, grammar, editor, save, pathing, object, town, or road rewrite.
+- Prioritize grass/plains/forest surfaces, and leave terrain families unsupported by the pack on the current original quiet tile bank.
+
+Scope:
+- `tools/build_overworld_terrain_tiles.py` unwraps selected Rubberduck 128x64 isometric diamond cells into the existing 64x64 square runtime base-tile contract for grass, plains, and forest.
+- Matching grasslands and forest edge overlays may use the same adapted source material so neighbor-aware transitions do not feel detached from the new surfaces.
+- Mire/swamp, hills/ridge/highland, dirt-road topology/art, object sprites, town rendering, projection/layout, gameplay pathing, save format, map editor schema, and town 3x2 occupancy/pathing stay unchanged.
+
+Implemented:
+- Rebuilt only the existing runtime PNG paths for grass, plains, forest, and their grasslands/forest transition overlays from the local Rubberduck pack.
+- Kept the primary renderer contract as `original_quiet_tile_bank` so existing validation, patch-cohesive variant selection, transition selection, and road overlay behavior continue to work.
+- Recorded the mixed Rubberduck/original procedural source basis in the terrain grammar, art manifest, and repo validator.
+- Left mire/swamp, hills/ridge/highland, and all road overlay art on the previous original quiet procedural output because the pack does not cleanly support those terrain families.
+
+Validation:
+- `python3 tests/validate_repo.py`
+- `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- `git diff --check`
+
+Limits:
+- This is a visual feel test, not final terrain art, a legal/source-pack ingestion policy, a projection/layout change, a save-format change, a gameplay/pathing change, a map-editor schema change, an object/town asset pass, or a town 3x2 occupancy/pathing slice.
+
 ## Current Implementation Slice: Map Editor Terrain Rectangle Painting
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 

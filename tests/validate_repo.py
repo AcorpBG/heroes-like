@@ -185,6 +185,7 @@ LOGISTICS_SITE_IDS = {
     "site_starlens_sanctum",
 }
 TERRAIN_GRAMMAR_REQUIRED_TERRAIN_IDS = {"grass", "plains", "forest", "mire", "swamp", "hills", "ridge", "highland"}
+RUBBERDUCK_TERRAIN_FEEL_TEST_IDS = {"grass", "plains", "forest"}
 OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "frontier_town",
     "hostile_camp",
@@ -4563,8 +4564,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("grammar", "")) == "res://content/terrain_grammar.json", errors, "Overworld terrain rendering must point at content/terrain_grammar.json")
         ensure(str(terrain_rendering.get("terrain_layers", "")) == "res://content/terrain_layers.json", errors, "Overworld terrain rendering must point at content/terrain_layers.json")
         ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the authored terrain tile-art root")
-        ensure(str(terrain_rendering.get("tile_art_status", "")) == "original_quiet_terrain_correction", errors, "Overworld terrain rendering must record the original quiet terrain correction status")
-        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "original_procedural_reference_informed", errors, "Overworld terrain rendering must use original procedural terrain art as its source basis")
+        ensure(str(terrain_rendering.get("tile_art_status", "")) == "rubberduck_surface_feel_test", errors, "Overworld terrain rendering must record the Rubberduck terrain feel-test status")
+        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "mixed_rubberduck_opengameart_and_original_procedural", errors, "Overworld terrain rendering must record the mixed Rubberduck/original procedural terrain source basis")
         ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "neighbor_priority_intrusion_8_way", errors, "Overworld terrain rendering must document neighbor-priority terrain transition selection")
         ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "lower_priority_tiles_receive_higher_priority_neighbor_edges_and_corner_hints", errors, "Overworld terrain rendering must document lower-priority receiver transition behavior")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Overworld terrain rendering must make the original quiet tile bank the primary base model")
@@ -4578,7 +4579,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     terrain_classes = terrain_grammar.get("terrain_classes", [])
     overlay_classes = terrain_grammar.get("overlay_classes", [])
     ensure(str(terrain_grammar.get("rendering_model", "")) == "authored_autotile_layers", errors, "Terrain grammar must declare authored_autotile_layers")
-    ensure(str(terrain_grammar.get("authoring_status", "")) == "original_quiet_terrain_correction", errors, "Terrain grammar must record the original quiet terrain correction status")
+    ensure(str(terrain_grammar.get("authoring_status", "")) == "rubberduck_surface_feel_test", errors, "Terrain grammar must record the Rubberduck terrain feel-test status")
     ensure(str(terrain_grammar.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Terrain grammar must make the original quiet tile bank primary")
     ensure(str(terrain_grammar.get("generated_source_policy", "")) == "deprecated_for_primary_base_color_reference_or_limited_decal_only", errors, "Terrain grammar must deprecate generated terrain sheets for primary bases")
     transition_rules = terrain_grammar.get("transition_rules", {})
@@ -4613,6 +4614,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 tile_art = terrain_class.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, f"Terrain grammar {terrain_id} must define tile_art")
                 if isinstance(tile_art, dict):
+                    if terrain_id in RUBBERDUCK_TERRAIN_FEEL_TEST_IDS:
+                        ensure(str(tile_art.get("source_basis", "")) == "rubberduck_opengameart_surface_feel_test", errors, f"Terrain grammar {terrain_id} must identify the Rubberduck terrain feel-test source basis")
                     base_tiles = tile_art.get("base_tiles", [])
                     ensure(isinstance(base_tiles, list) and len(base_tiles) >= 3, errors, f"Terrain grammar {terrain_id} must define at least three authored base tile variants")
                     if isinstance(base_tiles, list):

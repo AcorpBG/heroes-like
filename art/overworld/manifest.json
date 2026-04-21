@@ -9,16 +9,16 @@
       "town_candidate_file": "towns/001-fantasy-strategy-game-overworld-map-obje.png",
       "encounter_candidate_file": "encounters/001-fantasy-strategy-game-overworld-map-obje.png"
     },
-    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets are deprecated for primary per-cell terrain and may be used only as color or macro inspiration, not as literal tile-source art."
+    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Generated terrain sheets are deprecated for primary per-cell terrain and may be used only as color or macro inspiration, not as literal tile-source art. The 2026-04-21 terrain feel test adapts only selected grass/plains/forest surfaces from the local Rubberduck OpenGameArt pack at /root/.openclaw/workspace/tasks/10184/artifacts/terrain-pack-rubberduck/extracted/."
   },
   "terrain_rendering": {
     "model": "authored_autotile_layers",
     "grammar": "res://content/terrain_grammar.json",
     "terrain_layers": "res://content/terrain_layers.json",
     "tile_art_root": "res://art/overworld/runtime/terrain_tiles",
-    "tile_art_status": "original_quiet_terrain_correction",
-    "tile_art_source_basis": "original_procedural_reference_informed",
-    "tile_art_preparation": "locally_built_quiet_base_variants_with_grass_plains_palette_cohesion_low_frequency_variants_feathered_edges_and_same_type_adjacency_roads_with_centered_vertical_and_edge_riding_horizontal_lanes",
+    "tile_art_status": "rubberduck_surface_feel_test",
+    "tile_art_source_basis": "mixed_rubberduck_opengameart_and_original_procedural",
+    "tile_art_preparation": "locally_built_64x64_tile_bank_with_rubberduck_opengameart_isometric_diamond_unwraps_for_grass_plains_forest_surfaces_and_matching_grasslands_forest_edges_while_mire_highland_and_same_type_adjacency_roads_remain_original_quiet_procedural",
     "terrain_transition_selection": "neighbor_priority_intrusion_8_way",
     "terrain_transition_rule": "lower_priority_tiles_receive_higher_priority_neighbor_edges_and_corner_hints",
     "primary_base_model": "original_quiet_tile_bank",
