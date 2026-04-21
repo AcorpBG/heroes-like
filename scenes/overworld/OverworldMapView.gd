@@ -198,6 +198,8 @@ var _road_overlay_art: Dictionary = {}
 var _homm3_prototype: Dictionary = {}
 var _homm3_terrain_id_map: Dictionary = {}
 var _homm3_terrain_families: Dictionary = {}
+var _homm3_bridge_classes: Dictionary = {}
+var _homm3_bridge_material_resolver: Dictionary = {}
 var _homm3_direct_bridge_pairs: Dictionary = {}
 var _homm3_routed_bridge_rules: Dictionary = {}
 var _homm3_road_overlays: Dictionary = {}
@@ -2189,8 +2191,14 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"homm3_preferred_bridge_source_level": String(homm3_selection.get("preferred_bridge_source_level", "")),
 		"homm3_bridge_material_class": String(homm3_selection.get("bridge_material_class", "")),
 		"homm3_bridge_family": String(homm3_selection.get("bridge_family", "")),
+		"homm3_bridge_class": String(homm3_selection.get("bridge_class", "")),
 		"homm3_bridge_resolution_model": String(homm3_selection.get("bridge_resolution_model", "")),
+		"homm3_bridge_resolver_model": String(homm3_selection.get("bridge_resolver_model", "")),
 		"homm3_bridge_source_kind": String(homm3_selection.get("bridge_source_kind", "")),
+		"homm3_bridge_source_level": String(homm3_selection.get("bridge_source_level", "")),
+		"homm3_bridge_rule_id": String(homm3_selection.get("bridge_rule_id", "")),
+		"homm3_bridge_target_frame_block": String(homm3_selection.get("bridge_target_frame_block", "")),
+		"homm3_bridge_policy_provisional": bool(homm3_selection.get("bridge_policy_provisional", false)),
 		"homm3_direct_bridge_material_contact": bool(homm3_selection.get("direct_bridge_material_contact", false)),
 		"homm3_preferred_bridge_class_used": bool(homm3_selection.get("preferred_bridge_class_used", false)),
 		"homm3_shoreline_specific": bool(homm3_selection.get("shoreline_specific", false)),
@@ -2629,6 +2637,8 @@ func _load_terrain_grammar() -> void:
 	_homm3_prototype.clear()
 	_homm3_terrain_id_map.clear()
 	_homm3_terrain_families.clear()
+	_homm3_bridge_classes.clear()
+	_homm3_bridge_material_resolver.clear()
 	_homm3_direct_bridge_pairs.clear()
 	_homm3_routed_bridge_rules.clear()
 	_homm3_road_overlays.clear()
@@ -2684,6 +2694,15 @@ func _load_homm3_prototype(grammar: Dictionary) -> void:
 			var family = terrain_families.get(family_id, {})
 			if family is Dictionary:
 				_homm3_terrain_families[String(family_id)] = family
+	var bridge_classes = prototype.get("bridge_classes", {})
+	if bridge_classes is Dictionary:
+		for class_id in bridge_classes.keys():
+			var bridge_class = bridge_classes.get(class_id, {})
+			if bridge_class is Dictionary:
+				_homm3_bridge_classes[String(class_id)] = bridge_class
+	var bridge_material_resolver = prototype.get("bridge_material_resolver", {})
+	if bridge_material_resolver is Dictionary:
+		_homm3_bridge_material_resolver = bridge_material_resolver
 	var direct_bridge_pairs = prototype.get("direct_bridge_pairs", [])
 	if direct_bridge_pairs is Array:
 		for pair_value in direct_bridge_pairs:
@@ -2943,6 +2962,169 @@ func _homm3_receiver_bridge_family(config: Dictionary, family: Dictionary) -> St
 		return preferred_family
 	return String(family.get("bridge_family", "")).strip_edges()
 
+func _homm3_bridge_material_resolver_model() -> String:
+	var model := String(_homm3_bridge_material_resolver.get("resolver_model", "")).strip_edges()
+	return model if model != "" else "legacy_inline_bridge_resolution"
+
+func _homm3_bridge_class_for_family(bridge_family: String, receiver_family_config: Dictionary) -> String:
+	var normalized_family := bridge_family.strip_edges()
+	for class_id in _homm3_bridge_classes.keys():
+		var bridge_class = _homm3_bridge_classes.get(class_id, {})
+		if not (bridge_class is Dictionary):
+			continue
+		if String(bridge_class.get("renderer_bridge_family", "")).strip_edges() == normalized_family:
+			return String(class_id).strip_edges()
+	return String(receiver_family_config.get("preferred_bridge_class", "")).strip_edges()
+
+func _homm3_bridge_material_rules(rule_key: String) -> Array:
+	var rules = _homm3_bridge_material_resolver.get(rule_key, [])
+	return rules if rules is Array else []
+
+func _homm3_bridge_material_rule_for(
+	rule_key: String,
+	receiver_family: String,
+	receiver_atlas_role: String,
+	source_family: String,
+	source_atlas_role: String
+) -> Dictionary:
+	for rule_value in _homm3_bridge_material_rules(rule_key):
+		if not (rule_value is Dictionary):
+			continue
+		var rule: Dictionary = rule_value
+		if _homm3_bridge_material_rule_matches(rule, receiver_family, receiver_atlas_role, source_family, source_atlas_role):
+			return rule
+	return {}
+
+func _homm3_bridge_material_rule_matches(
+	rule: Dictionary,
+	receiver_family: String,
+	receiver_atlas_role: String,
+	source_family: String,
+	source_atlas_role: String
+) -> bool:
+	var excluded_receiver_families = rule.get("exclude_receiver_families", [])
+	if excluded_receiver_families is Array and receiver_family in excluded_receiver_families:
+		return false
+	var excluded_source_families = rule.get("exclude_source_families", [])
+	if excluded_source_families is Array and source_family in excluded_source_families:
+		return false
+	var exact_receiver_family := String(rule.get("receiver_family", "")).strip_edges()
+	if exact_receiver_family != "" and exact_receiver_family != receiver_family:
+		return false
+	var exact_source_family := String(rule.get("source_family", "")).strip_edges()
+	if exact_source_family != "" and exact_source_family != source_family:
+		return false
+	var receiver_families = rule.get("receiver_families", [])
+	if receiver_families is Array and not receiver_families.is_empty() and not receiver_families.has(receiver_family):
+		return false
+	var source_families = rule.get("source_families", [])
+	if source_families is Array and not source_families.is_empty() and not source_families.has(source_family):
+		return false
+	var exact_receiver_role := String(rule.get("receiver_atlas_role", "")).strip_edges()
+	if exact_receiver_role != "" and exact_receiver_role != receiver_atlas_role:
+		return false
+	var exact_source_role := String(rule.get("source_atlas_role", "")).strip_edges()
+	if exact_source_role != "" and exact_source_role != source_atlas_role:
+		return false
+	return true
+
+func _homm3_bridge_resolution_from_rule(
+	rule: Dictionary,
+	receiver_family_config: Dictionary,
+	default_bridge_family: String,
+	default_bridge_source_kind: String,
+	default_bridge_resolution_model: String,
+	default_bridge_source_level: String
+) -> Dictionary:
+	var bridge_family := String(rule.get("bridge_family", default_bridge_family)).strip_edges()
+	if bridge_family == "":
+		bridge_family = default_bridge_family
+	var bridge_class := String(rule.get("bridge_class", "")).strip_edges()
+	if bridge_class == "":
+		bridge_class = _homm3_bridge_class_for_family(bridge_family, receiver_family_config)
+	var bridge_source_level := String(rule.get("source_level", default_bridge_source_level)).strip_edges()
+	return {
+		"bridge_family": bridge_family,
+		"bridge_class": bridge_class,
+		"bridge_resolution_model": String(rule.get("selection_model", default_bridge_resolution_model)).strip_edges(),
+		"bridge_resolver_model": _homm3_bridge_material_resolver_model(),
+		"bridge_source_kind": String(rule.get("bridge_source_kind", default_bridge_source_kind)).strip_edges(),
+		"bridge_source_level": bridge_source_level,
+		"bridge_rule_id": String(rule.get("id", "")).strip_edges(),
+		"bridge_target_frame_block": String(rule.get("target_frame_block", "")).strip_edges(),
+		"bridge_policy_provisional": bool(rule.get("provisional", false)) or bridge_source_level == "provisional",
+	}
+
+func _homm3_bridge_material_resolution(
+	receiver_config: Dictionary,
+	receiver_family_config: Dictionary,
+	receiver_family: String,
+	neighbor_family_config: Dictionary,
+	neighbor_family: String
+) -> Dictionary:
+	var receiver_atlas_role := _homm3_family_atlas_role(receiver_family_config)
+	var neighbor_atlas_role := _homm3_family_atlas_role(neighbor_family_config)
+	var receiver_is_water := _homm3_is_water_system(receiver_family_config)
+	var default_bridge_family := _homm3_receiver_bridge_family(receiver_config, receiver_family_config)
+	var default_bridge_class := _homm3_bridge_class_for_family(default_bridge_family, receiver_family_config)
+	var default_source_level := String(receiver_family_config.get("preferred_bridge_source_level", receiver_config.get("bridge_family_source_level", ""))).strip_edges()
+	var default_source_kind := "unresolved_fallback" if String(receiver_family_config.get("preferred_bridge_class", "")).strip_edges() == "unresolved" or default_source_level == "provisional" else "preferred_bridge_class"
+	var default_model := "receiver_bridge_family_default"
+	if not receiver_is_water:
+		var direct_bridge_pair := _homm3_direct_bridge_pair(receiver_family, neighbor_family)
+		if not direct_bridge_pair.is_empty():
+			var direct_resolution := _homm3_bridge_resolution_from_rule(
+				direct_bridge_pair,
+				receiver_family_config,
+				default_bridge_family,
+				"direct_bridge_material",
+				"direct_family_pair_lookup",
+				default_source_level
+			)
+			direct_resolution["uses_direct_bridge_pair"] = true
+			return direct_resolution
+		var direct_contact := _homm3_bridge_material_rule_for("direct_bridge_material_contacts", receiver_family, receiver_atlas_role, neighbor_family, neighbor_atlas_role)
+		if not direct_contact.is_empty():
+			var contact_resolution := _homm3_bridge_resolution_from_rule(
+				direct_contact,
+				receiver_family_config,
+				default_bridge_family,
+				"direct_bridge_material",
+				"direct_bridge_material_contact_lookup",
+				default_source_level
+			)
+			contact_resolution["uses_direct_bridge_material_contact"] = true
+			return contact_resolution
+		var routed_bridge_rule := _homm3_routed_bridge_rule(receiver_family, neighbor_family)
+		if not routed_bridge_rule.is_empty():
+			var routed_resolution := _homm3_bridge_resolution_from_rule(
+				routed_bridge_rule,
+				receiver_family_config,
+				default_bridge_family,
+				"routed_bridge",
+				"routed_bridge_lookup",
+				default_source_level
+			)
+			routed_resolution["uses_routed_bridge_rule"] = true
+			return routed_resolution
+	var unresolved_fallback := _homm3_bridge_material_rule_for("unresolved_fallbacks", receiver_family, receiver_atlas_role, neighbor_family, neighbor_atlas_role)
+	if not unresolved_fallback.is_empty():
+		return _homm3_bridge_resolution_from_rule(unresolved_fallback, receiver_family_config, default_bridge_family, "unresolved_fallback", "unresolved_bridge_class_fallback", default_source_level)
+	var preferred_route := _homm3_bridge_material_rule_for("preferred_bridge_class_routes", receiver_family, receiver_atlas_role, neighbor_family, neighbor_atlas_role)
+	if not preferred_route.is_empty():
+		return _homm3_bridge_resolution_from_rule(preferred_route, receiver_family_config, default_bridge_family, "preferred_bridge_class", "receiver_preferred_bridge_class_lookup", default_source_level)
+	return {
+		"bridge_family": default_bridge_family,
+		"bridge_class": default_bridge_class,
+		"bridge_resolution_model": default_model,
+		"bridge_resolver_model": _homm3_bridge_material_resolver_model(),
+		"bridge_source_kind": default_source_kind,
+		"bridge_source_level": default_source_level,
+		"bridge_rule_id": "",
+		"bridge_target_frame_block": "",
+		"bridge_policy_provisional": default_source_level == "provisional" or default_source_kind == "unresolved_fallback",
+	}
+
 func _homm3_frame_block_payload(family: Dictionary, block_id: String) -> Dictionary:
 	var blocks = family.get("frame_blocks", {})
 	if not (blocks is Dictionary) or block_id == "":
@@ -2953,6 +3135,9 @@ func _homm3_frame_block_payload(family: Dictionary, block_id: String) -> Diction
 	return block
 
 func _homm3_selected_frame_block_id(selection_kind: String, relation: Dictionary, family: Dictionary) -> String:
+	var resolver_target_block := String(relation.get("bridge_target_frame_block", "")).strip_edges()
+	if resolver_target_block != "":
+		return resolver_target_block
 	match selection_kind:
 		"water_shoreline":
 			return "shoreline_frames"
@@ -3089,8 +3274,14 @@ func _homm3_terrain_selection_payload(tile: Vector2i, terrain_id: String) -> Dic
 		"selection_kind": selection_kind,
 		"mask_key": mask_key,
 		"bridge_family": String(relation.get("bridge_family", config.get("bridge_family", family.get("bridge_family", "")))),
+		"bridge_class": String(relation.get("bridge_class", "")),
 		"bridge_resolution_model": String(relation.get("bridge_resolution_model", "receiver_bridge_family_default")),
+		"bridge_resolver_model": String(relation.get("bridge_resolver_model", "")),
 		"bridge_source_kind": String(relation.get("bridge_source_kind", "")),
+		"bridge_source_level": String(relation.get("bridge_source_level", "")),
+		"bridge_rule_id": String(relation.get("bridge_rule_id", "")),
+		"bridge_target_frame_block": String(relation.get("bridge_target_frame_block", "")),
+		"bridge_policy_provisional": bool(relation.get("bridge_policy_provisional", false)),
 		"direct_bridge_material_contact": bool(relation.get("direct_bridge_material_contact", false)),
 		"preferred_bridge_class_used": bool(relation.get("preferred_bridge_class_used", false)),
 		"shoreline_specific": bool(family.get("shoreline_specific", false)),
@@ -3214,6 +3405,7 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 		bridge_sources_for_resolution.append(propagated_source)
 	if not cardinal_sources.is_empty():
 		bridge_sources_for_resolution.clear()
+	var primary_bridge_source := _homm3_primary_bridge_source(cardinal_sources, bridge_sources_for_resolution)
 	var resolved_bridge_family := _homm3_bridge_family_from_sources(cardinal_sources, bridge_sources_for_resolution, bridge_family)
 	var bridge_source_kind := _homm3_bridge_source_kind_from_sources(cardinal_sources, bridge_sources_for_resolution, family)
 	if _homm3_is_water_system(family):
@@ -3239,6 +3431,12 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 		"corner_mask": _homm3_compact_mask_from_keys(corner_keys),
 		"bridge_family": resolved_bridge_family,
 		"bridge_resolution_model": _homm3_bridge_resolution_model_from_sources(cardinal_sources, bridge_sources_for_resolution),
+		"bridge_resolver_model": _homm3_bridge_material_resolver_model(),
+		"bridge_class": String(primary_bridge_source.get("bridge_class", _homm3_bridge_class_for_family(resolved_bridge_family, family))),
+		"bridge_source_level": String(primary_bridge_source.get("bridge_source_level", family.get("preferred_bridge_source_level", ""))),
+		"bridge_rule_id": String(primary_bridge_source.get("bridge_rule_id", "")),
+		"bridge_target_frame_block": String(primary_bridge_source.get("bridge_target_frame_block", "")),
+		"bridge_policy_provisional": bool(primary_bridge_source.get("bridge_policy_provisional", false)),
 		"bridge_source_kind": bridge_source_kind,
 		"direct_bridge_material_contact": bridge_source_kind == "direct_bridge_material",
 		"preferred_bridge_class_used": bridge_source_kind == "preferred_bridge_class",
@@ -3309,16 +3507,11 @@ func _homm3_propagated_transition_source(tile: Vector2i, receiver_terrain: Strin
 				var distance := maxi(absi(dx), absi(dy))
 				var axis_sum := absi(dx) + absi(dy)
 				if best_source.is_empty() or distance < best_distance or (distance == best_distance and axis_sum < best_axis_sum):
-					var direct_bridge_pair := _homm3_direct_bridge_pair(receiver_family, source_family)
-					var resolved_bridge_family := String(stamp.get("bridge_family", source_family)).strip_edges()
-					var bridge_resolution_model := String(stamp.get("selection_model", "propagated_family_transition_stamp"))
-					var bridge_source_kind := String(stamp.get("bridge_source_kind", "preferred_bridge_class"))
-					if not direct_bridge_pair.is_empty():
-						var pair_bridge_family := String(direct_bridge_pair.get("bridge_family", "")).strip_edges()
-						if pair_bridge_family != "":
-							resolved_bridge_family = pair_bridge_family
-							bridge_resolution_model = String(direct_bridge_pair.get("selection_model", bridge_resolution_model))
-							bridge_source_kind = String(direct_bridge_pair.get("bridge_source_kind", "direct_bridge_material"))
+					var source_family_config := _homm3_terrain_family_config(source_family)
+					var bridge_resolution := _homm3_bridge_material_resolution(receiver_config, family, receiver_family, source_family_config, source_family)
+					var resolved_bridge_family := String(bridge_resolution.get("bridge_family", stamp.get("bridge_family", source_family))).strip_edges()
+					var bridge_resolution_model := String(bridge_resolution.get("bridge_resolution_model", stamp.get("selection_model", "propagated_family_transition_stamp")))
+					var bridge_source_kind := String(bridge_resolution.get("bridge_source_kind", stamp.get("bridge_source_kind", "preferred_bridge_class")))
 					best_distance = distance
 					best_axis_sum = axis_sum
 					best_source = {
@@ -3330,9 +3523,17 @@ func _homm3_propagated_transition_source(tile: Vector2i, receiver_terrain: Strin
 						"receiver_group": _terrain_group(receiver_terrain),
 						"receiver_family": receiver_family,
 						"resolved_bridge_family": resolved_bridge_family,
+						"bridge_class": String(bridge_resolution.get("bridge_class", "")),
 						"bridge_resolution_model": bridge_resolution_model,
+						"bridge_resolver_model": String(bridge_resolution.get("bridge_resolver_model", "")),
 						"bridge_source_kind": bridge_source_kind,
-						"uses_direct_bridge_pair": not direct_bridge_pair.is_empty(),
+						"bridge_source_level": String(bridge_resolution.get("bridge_source_level", "")),
+						"bridge_rule_id": String(bridge_resolution.get("bridge_rule_id", "")),
+						"bridge_target_frame_block": String(bridge_resolution.get("bridge_target_frame_block", "")),
+						"bridge_policy_provisional": bool(bridge_resolution.get("bridge_policy_provisional", false)),
+						"uses_direct_bridge_pair": bool(bridge_resolution.get("uses_direct_bridge_pair", false)),
+						"uses_direct_bridge_material_contact": bool(bridge_resolution.get("uses_direct_bridge_material_contact", false)),
+						"uses_routed_bridge_rule": bool(bridge_resolution.get("uses_routed_bridge_rule", false)),
 						"relation_kind": "propagated_family_transition_stamp",
 						"neighbor": {"x": source_tile.x, "y": source_tile.y},
 						"source_offset": {"x": dx, "y": dy},
@@ -3364,7 +3565,27 @@ func _homm3_direction_from_offset(offset: Vector2i) -> String:
 		horizontal = "E"
 	return vertical + horizontal
 
+func _homm3_primary_bridge_source(cardinal_sources: Array, corner_sources: Array) -> Dictionary:
+	for source_array in [cardinal_sources, corner_sources]:
+		for source_value in source_array:
+			if source_value is Dictionary and bool(source_value.get("uses_direct_bridge_pair", false)):
+				return source_value
+	for source_kind in ["direct_bridge_material", "routed_bridge", "preferred_bridge_class", "unresolved_fallback"]:
+		for source_array in [cardinal_sources, corner_sources]:
+			for source_value in source_array:
+				if not (source_value is Dictionary):
+					continue
+				var source: Dictionary = source_value
+				if String(source.get("bridge_source_kind", "")).strip_edges() == source_kind:
+					return source
+	return {}
+
 func _homm3_bridge_family_from_sources(cardinal_sources: Array, corner_sources: Array, fallback_bridge_family: String) -> String:
+	var primary_bridge_source := _homm3_primary_bridge_source(cardinal_sources, corner_sources)
+	if not primary_bridge_source.is_empty():
+		var primary_family := String(primary_bridge_source.get("resolved_bridge_family", "")).strip_edges()
+		if primary_family != "":
+			return primary_family
 	for source_array in [cardinal_sources, corner_sources]:
 		for source_value in source_array:
 			if not (source_value is Dictionary):
@@ -3385,6 +3606,11 @@ func _homm3_bridge_family_from_sources(cardinal_sources: Array, corner_sources: 
 	return fallback_bridge_family
 
 func _homm3_bridge_resolution_model_from_sources(cardinal_sources: Array, corner_sources: Array) -> String:
+	var primary_bridge_source := _homm3_primary_bridge_source(cardinal_sources, corner_sources)
+	if not primary_bridge_source.is_empty():
+		var primary_model := String(primary_bridge_source.get("bridge_resolution_model", "")).strip_edges()
+		if primary_model != "":
+			return primary_model
 	for source_array in [cardinal_sources, corner_sources]:
 		for source_value in source_array:
 			if not (source_value is Dictionary):
@@ -3403,6 +3629,11 @@ func _homm3_bridge_resolution_model_from_sources(cardinal_sources: Array, corner
 	return "receiver_bridge_family_default"
 
 func _homm3_bridge_source_kind_from_sources(cardinal_sources: Array, corner_sources: Array, family: Dictionary) -> String:
+	var primary_bridge_source := _homm3_primary_bridge_source(cardinal_sources, corner_sources)
+	if not primary_bridge_source.is_empty():
+		var primary_kind := String(primary_bridge_source.get("bridge_source_kind", "")).strip_edges()
+		if primary_kind != "":
+			return primary_kind
 	for source_array in [cardinal_sources, corner_sources]:
 		for source_value in source_array:
 			if not (source_value is Dictionary):
@@ -3411,6 +3642,9 @@ func _homm3_bridge_source_kind_from_sources(cardinal_sources: Array, corner_sour
 			var source_kind := String(source.get("bridge_source_kind", "")).strip_edges()
 			if source_kind != "":
 				return source_kind
+	var preferred_source_level := String(family.get("preferred_bridge_source_level", "")).strip_edges()
+	if String(family.get("preferred_bridge_class", "")).strip_edges() == "unresolved" or preferred_source_level == "provisional":
+		return "unresolved_fallback"
 	if _homm3_is_water_system(family) or _homm3_is_rock_system(family):
 		return "preferred_bridge_class"
 	if String(family.get("preferred_bridge_class", "")).strip_edges() != "":
@@ -3446,24 +3680,12 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 	var receiver_atlas_role := _homm3_family_atlas_role(receiver_family_config)
 	var relation_kind := "shoreline_land_neighbor" if receiver_is_water else ("rock_system_neighbor" if receiver_is_rock else ("bridge_material_base_context" if receiver_atlas_role == "base_decor_bridge_material" else "bridge_base_resolution"))
 	var default_bridge_family := _homm3_receiver_bridge_family(receiver_config, receiver_family_config)
-	var direct_bridge_pair := _homm3_direct_bridge_pair(receiver_family, neighbor_family)
-	var routed_bridge_rule := _homm3_routed_bridge_rule(receiver_family, neighbor_family)
-	var resolved_bridge_family := default_bridge_family
+	var bridge_resolution := _homm3_bridge_material_resolution(receiver_config, receiver_family_config, receiver_family, neighbor_family_config, neighbor_family)
+	var resolved_bridge_family := String(bridge_resolution.get("bridge_family", default_bridge_family)).strip_edges()
 	var bridge_resolution_model := "shoreline_specific_lookup" if receiver_is_water else ("rock_system_lookup" if receiver_is_rock else ("bridge_material_base_context_lookup" if receiver_atlas_role == "base_decor_bridge_material" else "receiver_bridge_family_default"))
-	var receiver_is_bridge_material := receiver_atlas_role in ["base_decor_bridge_material", "reduced_bridge_receiver"]
-	var bridge_source_kind := "preferred_bridge_class" if receiver_is_water or receiver_is_rock else ("direct_bridge_material" if receiver_is_bridge_material else "preferred_bridge_class")
-	if not receiver_is_water and not direct_bridge_pair.is_empty():
-		var pair_bridge_family := String(direct_bridge_pair.get("bridge_family", "")).strip_edges()
-		if pair_bridge_family != "":
-			resolved_bridge_family = pair_bridge_family
-			bridge_resolution_model = String(direct_bridge_pair.get("selection_model", "direct_family_pair_lookup"))
-			bridge_source_kind = String(direct_bridge_pair.get("bridge_source_kind", "direct_bridge_material"))
-	elif not receiver_is_water and not routed_bridge_rule.is_empty():
-		var routed_bridge_family := String(routed_bridge_rule.get("bridge_family", "")).strip_edges()
-		if routed_bridge_family != "":
-			resolved_bridge_family = routed_bridge_family
-			bridge_resolution_model = String(routed_bridge_rule.get("selection_model", "routed_bridge_lookup"))
-			bridge_source_kind = String(routed_bridge_rule.get("bridge_source_kind", "routed_bridge"))
+	if String(bridge_resolution.get("bridge_resolution_model", "")).strip_edges() != "":
+		bridge_resolution_model = String(bridge_resolution.get("bridge_resolution_model", ""))
+	var bridge_source_kind := String(bridge_resolution.get("bridge_source_kind", "preferred_bridge_class")).strip_edges()
 	return {
 		"direction": direction,
 		"source_terrain": neighbor_terrain,
@@ -3475,10 +3697,17 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 		"receiver_family": receiver_family,
 		"receiver_atlas_role": receiver_atlas_role,
 		"resolved_bridge_family": resolved_bridge_family,
+		"bridge_class": String(bridge_resolution.get("bridge_class", "")),
 		"bridge_resolution_model": bridge_resolution_model,
+		"bridge_resolver_model": String(bridge_resolution.get("bridge_resolver_model", "")),
 		"bridge_source_kind": bridge_source_kind,
-		"uses_direct_bridge_pair": not receiver_is_water and not direct_bridge_pair.is_empty(),
-		"uses_routed_bridge_rule": not receiver_is_water and direct_bridge_pair.is_empty() and not routed_bridge_rule.is_empty(),
+		"bridge_source_level": String(bridge_resolution.get("bridge_source_level", "")),
+		"bridge_rule_id": String(bridge_resolution.get("bridge_rule_id", "")),
+		"bridge_target_frame_block": String(bridge_resolution.get("bridge_target_frame_block", "")),
+		"bridge_policy_provisional": bool(bridge_resolution.get("bridge_policy_provisional", false)),
+		"uses_direct_bridge_pair": bool(bridge_resolution.get("uses_direct_bridge_pair", false)),
+		"uses_direct_bridge_material_contact": bool(bridge_resolution.get("uses_direct_bridge_material_contact", false)),
+		"uses_routed_bridge_rule": bool(bridge_resolution.get("uses_routed_bridge_rule", false)),
 		"relation_kind": relation_kind,
 		"neighbor": {"x": neighbor.x, "y": neighbor.y},
 	}

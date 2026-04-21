@@ -219,6 +219,8 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		return false
 	if not _assert_editor_special_system_groundwork(shell):
 		return false
+	if not _assert_editor_bridge_material_resolver(shell):
+		return false
 	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	if not bool(restore_forest.get("ok", false)):
 		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 bridge-table preview: %s." % restore_forest)
@@ -428,6 +430,149 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 
+func _assert_editor_bridge_material_resolver(shell) -> bool:
+	var controlled_tiles := []
+	for y in range(31, 34):
+		for x in range(31, 58):
+			controlled_tiles.append(Vector2i(x, y))
+	var original_terrains := []
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed bridge resolver grass baseline at %s." % tile)
+			return false
+	var fixture_plan := [
+		{"tile": Vector2i(32, 32), "terrain": "grass"},
+		{"tile": Vector2i(33, 32), "terrain": "badlands"},
+		{"tile": Vector2i(36, 32), "terrain": "badlands"},
+		{"tile": Vector2i(36, 31), "terrain": "badlands"},
+		{"tile": Vector2i(36, 33), "terrain": "badlands"},
+		{"tile": Vector2i(35, 32), "terrain": "badlands"},
+		{"tile": Vector2i(37, 32), "terrain": "wastes"},
+		{"tile": Vector2i(40, 32), "terrain": "grass"},
+		{"tile": Vector2i(41, 32), "terrain": "swamp"},
+		{"tile": Vector2i(44, 32), "terrain": "grass"},
+		{"tile": Vector2i(45, 32), "terrain": "snow"},
+		{"tile": Vector2i(48, 32), "terrain": "cavern"},
+		{"tile": Vector2i(48, 31), "terrain": "cavern"},
+		{"tile": Vector2i(48, 33), "terrain": "cavern"},
+		{"tile": Vector2i(47, 32), "terrain": "cavern"},
+		{"tile": Vector2i(49, 32), "terrain": "grass"},
+		{"tile": Vector2i(52, 32), "terrain": "water"},
+		{"tile": Vector2i(52, 31), "terrain": "water"},
+		{"tile": Vector2i(52, 33), "terrain": "water"},
+		{"tile": Vector2i(51, 32), "terrain": "water"},
+		{"tile": Vector2i(53, 32), "terrain": "grass"},
+		{"tile": Vector2i(56, 32), "terrain": "highland"},
+		{"tile": Vector2i(56, 31), "terrain": "highland"},
+		{"tile": Vector2i(56, 33), "terrain": "highland"},
+		{"tile": Vector2i(55, 32), "terrain": "highland"},
+		{"tile": Vector2i(57, 32), "terrain": "grass"},
+	]
+	for entry in fixture_plan:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		if not _paint_editor_terrain_for_orientation(shell, tile, String(entry.get("terrain", ""))):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed bridge material resolver fixture tile %s." % entry)
+			return false
+	var cases := [
+		{
+			"tile": Vector2i(32, 32),
+			"source": "badlands",
+			"kind": "direct_bridge_material",
+			"rule": "full_receiver_direct_dirt_contact",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "fact",
+			"model": "direct_bridge_material_contact_lookup",
+		},
+		{
+			"tile": Vector2i(36, 32),
+			"source": "wastes",
+			"kind": "direct_bridge_material",
+			"rule": "dirt_receiver_direct_sand_contact",
+			"class": "sand_bridge",
+			"family": "sand",
+			"block": "dirt_to_sand_transition",
+			"source_level": "fact",
+			"model": "direct_dirt_sand_receiver_lookup",
+		},
+		{
+			"tile": Vector2i(40, 32),
+			"source": "swamp",
+			"kind": "routed_bridge",
+			"rule": "grass_swamp_via_dirt_bridge",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "inference",
+			"model": "grass_swamp_via_dirt_bridge",
+		},
+		{
+			"tile": Vector2i(44, 32),
+			"source": "snow",
+			"kind": "preferred_bridge_class",
+			"rule": "full_receiver_prefers_dirt_bridge_class",
+			"class": "dirt_earth_bridge",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "editor_observation",
+			"model": "receiver_preferred_bridge_class_lookup",
+		},
+		{
+			"tile": Vector2i(48, 32),
+			"source": "grass",
+			"kind": "unresolved_fallback",
+			"rule": "subterranean_preferred_bridge_class_provisional",
+			"class": "subterranean_preferred_class_unresolved",
+			"family": "dirt",
+			"block": "native_to_dirt_transition",
+			"source_level": "provisional",
+			"model": "provisional_subterranean_dirt_bridge_fallback",
+			"provisional": true,
+		},
+		{
+			"tile": Vector2i(52, 32),
+			"source": "grass",
+			"kind": "preferred_bridge_class",
+			"rule": "water_prefers_sand_bridge_class",
+			"class": "sand_bridge",
+			"family": "sand",
+			"block": "shoreline_frames",
+			"source_level": "editor_observation",
+			"model": "preferred_bridge_class_before_water_shoreline_lookup",
+			"selection": "water_shoreline",
+		},
+		{
+			"tile": Vector2i(56, 32),
+			"source": "grass",
+			"kind": "preferred_bridge_class",
+			"rule": "rock_prefers_sand_bridge_class",
+			"class": "sand_bridge",
+			"family": "sand",
+			"block": "rock_light_ground_context",
+			"source_level": "editor_observation",
+			"model": "preferred_bridge_class_before_rock_system_lookup",
+			"selection": "rock_system",
+		},
+	]
+	for case in cases:
+		var tile: Vector2i = case.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if not _assert_bridge_resolver_case(terrain, case):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: bridge material resolver metadata did not match case %s: %s." % [case, presentation])
+			return false
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
 func _assert_editor_single_sand_homm3_propagation(shell) -> bool:
 	var center := Vector2i(52, 52)
 	var original_terrains := []
@@ -614,6 +759,50 @@ func _transition_sources_include_bridge(terrain: Dictionary, direction: String, 
 		):
 			return true
 	return false
+
+func _assert_bridge_resolver_case(terrain: Dictionary, expected: Dictionary) -> bool:
+	var expected_selection := String(expected.get("selection", "bridge_transition"))
+	if String(terrain.get("homm3_selection_kind", "")) != expected_selection:
+		return false
+	if String(terrain.get("homm3_bridge_resolver_model", "")) != "data_driven_bridge_material_resolver.v1":
+		return false
+	if String(terrain.get("homm3_bridge_source_kind", "")) != String(expected.get("kind", "")):
+		return false
+	if String(terrain.get("homm3_bridge_rule_id", "")) != String(expected.get("rule", "")):
+		return false
+	if String(terrain.get("homm3_bridge_class", "")) != String(expected.get("class", "")):
+		return false
+	if String(terrain.get("homm3_bridge_family", "")) != String(expected.get("family", "")):
+		return false
+	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("block", "")):
+		return false
+	if String(terrain.get("homm3_bridge_target_frame_block", "")) != String(expected.get("block", "")):
+		return false
+	if String(terrain.get("homm3_bridge_source_level", "")) != String(expected.get("source_level", "")):
+		return false
+	if String(terrain.get("homm3_bridge_resolution_model", "")) != String(expected.get("model", "")):
+		return false
+	if bool(terrain.get("homm3_bridge_policy_provisional", false)) != bool(expected.get("provisional", false)):
+		return false
+	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	var expected_source := String(expected.get("source", ""))
+	var found_source := false
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		var source: Dictionary = source_value
+		if (
+			String(source.get("source_terrain", "")) == expected_source
+			and String(source.get("bridge_source_kind", "")) == String(expected.get("kind", ""))
+			and String(source.get("bridge_rule_id", "")) == String(expected.get("rule", ""))
+			and String(source.get("bridge_class", "")) == String(expected.get("class", ""))
+			and String(source.get("resolved_bridge_family", "")) == String(expected.get("family", ""))
+			and String(source.get("bridge_target_frame_block", "")) == String(expected.get("block", ""))
+			and String(source.get("bridge_source_level", "")) == String(expected.get("source_level", ""))
+		):
+			found_source = true
+			break
+	return found_source
 
 func _assert_flood_fill_terrain(shell) -> bool:
 	if not shell.has_method("validation_fill_terrain"):
