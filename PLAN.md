@@ -26,6 +26,32 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Sand Transition Propagation
+Status: completed on 2026-04-21 as a narrow corrective terrain pass.
+
+Purpose:
+- Retarget AcOrP's single-sand-in-grass repro after the prior one-ring-only assumption was corrected.
+- Keep the map editor preview and live overworld renderer on the same `OverworldMapView` HoMM3 local-reference selection path.
+- Ground the change in the extracted local HoMM3 evidence already present in the task artifacts, especially the `tgrs` grass-sand transition block that maps to `grastl` frames `00_20` through `00_39`.
+
+Implemented:
+- Removed the fake one-ring cap and the discarded self-contained sand receiver policy from the local HoMM3 prototype contract.
+- Added an explicit grass/sand direct bridge-pair route and a sand-specific grass edge lookup so direct grass receivers use the extracted `tgrs` frames instead of generic dirt bridge frames.
+- Added a compact 5x4 grass-sand propagated stamp grid with axis flips, so diagonal/corner receivers and farther stamp-covered receivers can select rotated `tgrs` frames where the lookup provides them.
+- Extended `OverworldMapView` validation payloads to expose propagated transition sources, source offsets, source distance, second-ring use, and frame flips for both editor preview and live overworld tests.
+- Replaced the previous one-ring smoke assertions with editor/live coverage for center sand transition lookup, grass-sand edge frames, rotated diagonal stamp frames, second-ring propagation, and no propagation outside the explicit stamp lookup.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+
+Limits:
+- This remains local reference/prototype work using ignored extracted HoMM3 frames, not shippable terrain art.
+- This is not a gameplay/pathing, save-format, map-editor data-model, object/town rendering, or terrain-family rewrite.
+- The stamp table is an explicit prototype interpretation of the extracted local frames, not a claim that the original executable's hidden terrain editor logic has been fully recovered.
+
 ## Current Implementation Slice: HoMM3 Terrain Base Selection Tightening
 Status: completed on 2026-04-21 as a narrow corrective terrain pass.
 

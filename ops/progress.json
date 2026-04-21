@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-21T10:33:23Z",
+  "updatedAt": "2026-04-21T11:46:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-terrain-base-selection-tightening-10184",
-  "currentSliceTitle": "Tighten HoMM3 terrain base selection",
+  "currentSliceId": "homm3-single-sand-propagation-10184",
+  "currentSliceTitle": "Fix HoMM3 single sand propagation",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed a narrow corrective terrain pass for AcOrP feedback. HoMM3 local terrain interiors now use a stable base frame instead of deterministic 3x3 patch variant cycling; dirt/swamp transitions now resolve through an explicit direct dirt bridge-pair override before the generic dirt/sand bridge fallback; map-editor preview and live overworld validation expose the same OverworldMapView metadata. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Completed the retargeted corrective terrain pass after AcOrP's one-ring correction. The single-sand-in-grass repro now uses the local HoMM3 grass-sand transition evidence: grass receivers route through the extracted tgrs/grastl frames, diagonal/corner receivers use rotated stamp frames, and stamp-covered second-ring receivers can propagate beyond immediate neighbors without a fake hard cap. Map editor preview and live overworld renderer share the OverworldMapView path. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

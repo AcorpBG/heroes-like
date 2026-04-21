@@ -215,6 +215,8 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		return false
 	if not _assert_editor_horizontal_transition_orientation(shell):
 		return false
+	if not _assert_editor_single_sand_homm3_propagation(shell):
+		return false
 	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	if not bool(restore_forest.get("ok", false)):
 		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 bridge-table preview: %s." % restore_forest)
@@ -356,6 +358,136 @@ func _assert_editor_horizontal_transition_orientation(shell) -> bool:
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: HoMM3 west-side bridge transition did not keep dirt on the visual left in preview: %s." % west_receiver)
+		return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _assert_editor_single_sand_homm3_propagation(shell) -> bool:
+	var center := Vector2i(52, 52)
+	var original_terrains := []
+	var controlled_tiles := []
+	for y in range(center.y - 7, center.y + 8):
+		for x in range(center.x - 6, center.x + 7):
+			controlled_tiles.append(Vector2i(x, y))
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed grass for single-sand HoMM3 propagation test at %s." % tile)
+			return false
+	if not _paint_editor_terrain_for_orientation(shell, center, "wastes"):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: could not seed the center sand tile for the HoMM3 propagation test.")
+		return false
+
+	var center_presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
+	var center_terrain: Dictionary = center_presentation.get("terrain_presentation", {})
+	if (
+		String(center_terrain.get("terrain", "")) != "wastes"
+		or String(center_terrain.get("homm3_terrain_family", "")) != "sand"
+		or String(center_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or String(center_terrain.get("homm3_terrain_frame", "")) != "00_23"
+		or String(center_terrain.get("homm3_bridge_family", "")) != "sand"
+		or int(center_terrain.get("edge_transition_count", -1)) != 4
+		or int(center_terrain.get("corner_transition_count", -1)) != 4
+		or "grass" not in center_terrain.get("transition_source_terrain_ids", [])
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: inserted sand center did not use the HoMM3 sand receiver transition lookup: %s." % center_presentation)
+		return false
+
+	var edge_cases := [
+		{"tile": center + Vector2i(0, -1), "edge": "S", "frame": "00_32"},
+		{"tile": center + Vector2i(1, 0), "edge": "W", "frame": "00_24"},
+		{"tile": center + Vector2i(0, 1), "edge": "N", "frame": "00_28"},
+		{"tile": center + Vector2i(-1, 0), "edge": "E", "frame": "00_35"},
+	]
+	for entry in edge_cases:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("terrain", "")) != "grass"
+			or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+			or String(terrain.get("transition_edge_mask", "")) != String(entry.get("edge", ""))
+			or String(terrain.get("transition_corner_mask", "")) != ""
+			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
+			or String(terrain.get("homm3_bridge_family", "")) != "sand"
+			or String(terrain.get("homm3_bridge_resolution_model", "")) != "direct_grass_sand_tgrs_lookup"
+			or int(terrain.get("edge_transition_count", 0)) != 1
+			or int(terrain.get("corner_transition_count", -1)) != 0
+			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: single sand edge receiver did not use the expected tgrs grass-sand frame at %s: %s." % [tile, presentation])
+			return false
+
+	var corner_cases := [
+		{"tile": center + Vector2i(-1, -1), "direction": "SE", "flip": "HV", "flip_h": true, "flip_v": true},
+		{"tile": center + Vector2i(1, -1), "direction": "SW", "flip": "V", "flip_h": false, "flip_v": true},
+		{"tile": center + Vector2i(-1, 1), "direction": "NE", "flip": "H", "flip_h": true, "flip_v": false},
+		{"tile": center + Vector2i(1, 1), "direction": "NW", "flip": "", "flip_h": false, "flip_v": false},
+	]
+	for entry in corner_cases:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("terrain", "")) != "grass"
+			or String(terrain.get("homm3_selection_kind", "")) != "propagated_transition"
+			or String(terrain.get("transition_edge_mask", "")) != ""
+			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
+			or String(terrain.get("homm3_terrain_frame", "")) != "00_20"
+			or not bool(terrain.get("homm3_propagated_transition", false))
+			or String(terrain.get("homm3_transition_propagation_model", "")) != "extracted_tgrs_4x5_stamp_with_axis_flips"
+			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
+			or bool(terrain.get("homm3_terrain_flip_h", false)) != bool(entry.get("flip_h", false))
+			or bool(terrain.get("homm3_terrain_flip_v", false)) != bool(entry.get("flip_v", false))
+			or int(terrain.get("edge_transition_count", -1)) != 0
+			or int(terrain.get("corner_transition_count", -1)) != 1
+			or int(terrain.get("propagated_transition_count", 0)) != 1
+			or bool(terrain.get("transition_uses_second_ring", true))
+			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: single sand diagonal receiver did not use the expected rotated tgrs stamp frame at %s: %s." % [tile, presentation])
+			return false
+
+	var second_ring_cases := [
+		{"tile": center + Vector2i(2, 2), "direction": "NW", "frame": "00_25", "flip": "", "distance": 2},
+		{"tile": center + Vector2i(-2, -2), "direction": "SE", "frame": "00_25", "flip": "HV", "distance": 2},
+		{"tile": center + Vector2i(4, 5), "direction": "NW", "frame": "00_39", "flip": "", "distance": 5},
+	]
+	for entry in second_ring_cases:
+		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("terrain", "")) != "grass"
+			or String(terrain.get("homm3_selection_kind", "")) != "propagated_transition"
+			or String(terrain.get("homm3_terrain_frame", "")) != String(entry.get("frame", ""))
+			or String(terrain.get("homm3_terrain_flip", "")) != String(entry.get("flip", ""))
+			or int(terrain.get("homm3_transition_source_distance", 0)) != int(entry.get("distance", 0))
+			or String(terrain.get("homm3_transition_source_direction", "")) != String(entry.get("direction", ""))
+			or not bool(terrain.get("transition_uses_second_ring", false))
+			or int(terrain.get("propagated_transition_count", 0)) != 1
+			or "wastes" not in terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: single sand transition did not propagate through the extracted tgrs stamp at %s: %s." % [tile, presentation])
+			return false
+
+	var outside_tile := center + Vector2i(5, 6)
+	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", outside_tile.x, outside_tile.y)
+	var outside_terrain: Dictionary = outside_presentation.get("terrain_presentation", {})
+	if String(outside_terrain.get("homm3_selection_kind", "")) != "interior" or bool(outside_terrain.get("homm3_propagated_transition", false)):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: single sand transition extended outside the explicit tgrs stamp lookup at %s: %s." % [outside_tile, outside_presentation])
 		return false
 
 	_restore_editor_terrain_tiles(shell, original_terrains)
