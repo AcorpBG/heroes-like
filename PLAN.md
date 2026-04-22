@@ -26,18 +26,19 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: Map Editor Zoom-Out Override
+## Current Implementation Slice: Map Editor Zoom Compromise
 Status: completed on 2026-04-22 as a narrow editor-only view-framing correction.
 
 Purpose:
-- Zoom the Godot map editor out by a factor of 4 so large scenario editing exposes substantially more of the authored map.
+- Correct the 48-tile editor preview zoom-out after AcOrP reported it made the in-project map editor laggy and unusable.
+- Keep the editor zoomed out beyond gameplay, but only to a moderate 24-tile span so large scenario editing stays practical.
 - Preserve normal overworld gameplay framing and large-map tactical zoom.
-- Keep the shared `OverworldMapView` renderer path intact by adding an explicit opt-in visible-tile-span override for editor scenes instead of changing global gameplay constants.
+- Keep the shared `OverworldMapView` renderer path intact by preserving the explicit opt-in visible-tile-span override for editor scenes instead of changing global gameplay constants.
 
 Implemented:
-- Added an exported large-map visible-tile-span override to `OverworldMapView`.
-- Set the editor scene to a 48-tile span, four times the gameplay tactical default of 12.
-- Added focused smoke coverage proving the editor override is active and gameplay Ninefold framing is still on the default span.
+- Preserved the exported large-map visible-tile-span override on `OverworldMapView`.
+- Reduced the editor scene override from a 48-tile span to a 24-tile span, two times the gameplay tactical default of 12.
+- Updated focused smoke coverage to prove the editor override is active at the moderate span while gameplay Ninefold framing stays on the default span.
 
 Validation:
 - Passed `python3 tests/validate_repo.py`

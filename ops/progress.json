@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-22T15:30:30Z",
+  "updatedAt": "2026-04-22T15:47:25Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "map-editor-zoom-out-10184",
-  "currentSliceTitle": "Zoom the map editor preview out without changing gameplay overworld framing",
+  "currentSliceId": "map-editor-zoom-compromise-10184",
+  "currentSliceTitle": "Reduce the map editor preview zoom-out override to a practical span",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Added an explicit OverworldMapView large-map visible-tile-span override and set only MapEditorShell to a 48-tile span, four times the normal gameplay tactical span of 12. Focused smoke coverage now asserts the editor override is active and Ninefold gameplay still uses the default span. Full requested validation passed: repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
+  "currentSliceNotes": "AcOrP reported the 48-tile editor override made the in-project map editor laggy and unusable. This correction keeps the editor-only OverworldMapView override architecture, restores gameplay overworld framing unchanged, and reduces the editor override to a moderate 24-tile span with focused smoke assertions. Full requested validation passed: repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -450,6 +450,12 @@
     {
       "id": "homm3-mixed-corner-class-reason-payload-parity-10184",
       "title": "Restore accepted HoMM3 mixed-corner class reason payloads",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-zoom-compromise-10184",
+      "title": "Reduce the map editor preview zoom-out override to a practical span",
       "status": "completed",
       "difficulty": "small"
     },
