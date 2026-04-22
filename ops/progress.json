@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-22T14:39:36Z",
+  "updatedAt": "2026-04-22T15:30:30Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-mixed-corner-class-reason-payload-parity-10184",
-  "currentSliceTitle": "Restore accepted HoMM3 mixed-corner class reason payloads",
+  "currentSliceId": "map-editor-zoom-out-10184",
+  "currentSliceTitle": "Zoom the map editor preview out without changing gameplay overworld framing",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Corrected active terrain validation payloads so relation classes 17 and 18 expose the accepted web prototype's mixed-corner class_reason text through both live/editor class payload fields. Full validation passed for repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
+  "currentSliceNotes": "Added an explicit OverworldMapView large-map visible-tile-span override and set only MapEditorShell to a 48-tile span, four times the normal gameplay tactical span of 12. Focused smoke coverage now asserts the editor override is active and Ninefold gameplay still uses the default span. Full requested validation passed: repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

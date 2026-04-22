@@ -172,6 +172,8 @@ const DIRECTIONS := [
 	Vector2i(1, 1),
 ]
 
+@export var large_map_visible_tile_span_override := 0.0
+
 var _session = null
 var _map_data: Array = []
 var _map_size := Vector2i.ONE
@@ -1750,6 +1752,7 @@ func _map_viewport_rect() -> Rect2:
 	return Rect2(viewport_position, viewport_size)
 
 func _tile_extent_for_viewport(viewport_size: Vector2) -> float:
+	var minimum_tile_extent := _active_minimum_tile_extent()
 	if _should_fit_entire_map():
 		var fit_extent: float = floor(
 			min(
@@ -1757,12 +1760,25 @@ func _tile_extent_for_viewport(viewport_size: Vector2) -> float:
 				viewport_size.y / float(max(_map_size.y, 1))
 			)
 		)
-		return max(fit_extent, MIN_TILE_EXTENT)
-	var tactical_extent: float = floor(sqrt(max(viewport_size.x * viewport_size.y, 1.0) / TACTICAL_VISIBLE_TILE_AREA))
-	return max(tactical_extent, MIN_TILE_EXTENT)
+		return max(fit_extent, minimum_tile_extent)
+	var visible_tile_span := _active_visible_tile_span()
+	var visible_tile_area := visible_tile_span * visible_tile_span
+	var tactical_extent: float = floor(sqrt(max(viewport_size.x * viewport_size.y, 1.0) / maxf(visible_tile_area, 1.0)))
+	return max(tactical_extent, minimum_tile_extent)
 
 func _should_fit_entire_map() -> bool:
-	return _map_size.x <= int(TACTICAL_VISIBLE_TILE_SPAN) and _map_size.y <= int(TACTICAL_VISIBLE_TILE_SPAN)
+	var visible_tile_span := int(floor(_active_visible_tile_span()))
+	return _map_size.x <= visible_tile_span and _map_size.y <= visible_tile_span
+
+func _active_visible_tile_span() -> float:
+	if large_map_visible_tile_span_override > 0.0:
+		return maxf(1.0, large_map_visible_tile_span_override)
+	return TACTICAL_VISIBLE_TILE_SPAN
+
+func _active_minimum_tile_extent() -> float:
+	if large_map_visible_tile_span_override <= 0.0:
+		return MIN_TILE_EXTENT
+	return maxf(1.0, MIN_TILE_EXTENT * (TACTICAL_VISIBLE_TILE_SPAN / _active_visible_tile_span()))
 
 func _board_position_for_focus(viewport_rect: Rect2, board_size: Vector2, tile_extent: float) -> Vector2:
 	var focus_tile := _camera_focus_tile()
@@ -1904,11 +1920,18 @@ func validation_view_metrics() -> Dictionary:
 	var visible_rows: float = min(float(_map_size.y), viewport_rect.size.y / max(cell_size.y, 1.0))
 	var focus_tile := _camera_focus_tile()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	var active_visible_tile_span := _active_visible_tile_span()
 	return {
 		"map_size": {"x": _map_size.x, "y": _map_size.y},
 		"viewport_rect": _rect_payload(viewport_rect),
 		"board_rect": _rect_payload(board_rect),
 		"tile_extent": cell_size.x,
+		"default_visible_tile_span": TACTICAL_VISIBLE_TILE_SPAN,
+		"active_visible_tile_span": active_visible_tile_span,
+		"visible_tile_span_override": large_map_visible_tile_span_override,
+		"visible_tile_span_override_active": large_map_visible_tile_span_override > 0.0,
+		"visible_tile_span_zoom_out_factor": active_visible_tile_span / TACTICAL_VISIBLE_TILE_SPAN,
+		"minimum_tile_extent": _active_minimum_tile_extent(),
 		"visible_tile_columns": visible_columns,
 		"visible_tile_rows": visible_rows,
 		"visible_tile_area": visible_columns * visible_rows,

@@ -63,6 +63,12 @@ func _run() -> void:
 	if bool(viewport_metrics.get("fit_entire_map", true)):
 		_fail("Ninefold smoke: 64x64 overworld map was treated as a fit-entire-map case.")
 		return
+	if bool(viewport_metrics.get("visible_tile_span_override_active", false)):
+		_fail("Ninefold smoke: gameplay overworld unexpectedly used the editor zoom-out override: %s." % viewport_metrics)
+		return
+	if not is_equal_approx(float(viewport_metrics.get("active_visible_tile_span", 0.0)), 12.0):
+		_fail("Ninefold smoke: gameplay tactical visible span changed from the normal overworld default: %s." % viewport_metrics)
+		return
 	var visible_columns := float(viewport_metrics.get("visible_tile_columns", 0.0))
 	var visible_rows := float(viewport_metrics.get("visible_tile_rows", 0.0))
 	var visible_area := float(viewport_metrics.get("visible_tile_area", 0.0))
