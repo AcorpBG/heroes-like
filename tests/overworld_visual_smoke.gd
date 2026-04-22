@@ -709,12 +709,12 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: overworld terrain does not expose the HoMM3 extracted-atlas base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("terrain_variant_selection", "")) != "data_driven_receiver_stamp_lookup_with_stable_interior_base" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "data_driven_full_receiver_stamp_lookup":
-		push_error("Overworld smoke: grass terrain does not expose the data-driven HoMM3 full-receiver stamp lookup contract. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("terrain_variant_selection", "")) != "accepted_web_relation_class_row_lookup" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "accepted_web_prototype_relation_class_row_lookup":
+		push_error("Overworld smoke: grass terrain does not expose the accepted web relation-class terrain lookup contract. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("homm3_interior_frame_selection", "")) != "single_stable_base_frame" or bool(grass_terrain.get("homm3_uses_interior_variant_cycle", true)):
-		push_error("Overworld smoke: HoMM3 terrain interior frames still report patch-hash variant cycling. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("homm3_interior_frame_selection", "")) != "accepted_web_full_row_bucket_selection" or bool(grass_terrain.get("homm3_uses_interior_variant_cycle", true)):
+		push_error("Overworld smoke: HoMM3 terrain interior frames still report the retired patch-hash variant cycling contract. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if not bool(grass_terrain.get("homm3_local_reference_only", false)) or String(grass_terrain.get("tile_art_source_basis", "")) != "homm3_extracted_local_reference_prototype":
@@ -751,7 +751,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if (
 		String(forest_edge_terrain.get("terrain_group", "")) != "forest"
 		or not bool(forest_edge_terrain.get("neighbor_aware_transitions", false))
-		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "homm3_data_driven_full_receiver_stamp_lookup"
+		or String(forest_edge_terrain.get("transition_calculation_model", "")) != "accepted_web_prototype_relation_class_row_lookup"
 		or String(forest_edge_terrain.get("homm3_terrain_family", "")) != "grass"
 		or String(forest_edge_terrain.get("homm3_logical_degrade_note", "")) == ""
 		or String(forest_edge_terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
@@ -920,45 +920,31 @@ func _assert_bridge_material_resolver_payloads(shell: Node, session) -> bool:
 	return true
 
 func _assert_live_bridge_resolver_case(terrain: Dictionary, expected: Dictionary) -> bool:
-	if String(terrain.get("homm3_selection_kind", "")) != "bridge_transition":
+	var expected_selection := String(expected.get("selection", "bridge_transition"))
+	if expected.has("selection") and String(terrain.get("homm3_selection_kind", "")) != expected_selection:
 		return false
-	if String(terrain.get("homm3_bridge_resolver_model", "")) != "data_driven_bridge_material_resolver.v1":
+	if String(terrain.get("homm3_visual_selection_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1":
 		return false
-	if String(terrain.get("homm3_bridge_source_kind", "")) != String(expected.get("kind", "")):
-		return false
-	if String(terrain.get("homm3_bridge_rule_id", "")) != String(expected.get("rule", "")):
-		return false
-	if String(terrain.get("homm3_bridge_class", "")) != String(expected.get("class", "")):
-		return false
-	if String(terrain.get("homm3_bridge_family", "")) != String(expected.get("family", "")):
-		return false
-	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("block", "")):
-		return false
-	if String(terrain.get("homm3_bridge_target_frame_block", "")) != String(expected.get("block", "")):
-		return false
-	if String(terrain.get("homm3_bridge_source_level", "")) != String(expected.get("source_level", "")):
-		return false
-	if String(terrain.get("homm3_bridge_resolution_model", "")) != String(expected.get("model", "")):
-		return false
-	if bool(terrain.get("homm3_bridge_policy_provisional", false)) != bool(expected.get("provisional", false)):
+	if String(terrain.get("homm3_bridge_resolver_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1":
 		return false
 	var stamp_expected = expected.get("stamp", {})
 	if stamp_expected is Dictionary and not stamp_expected.is_empty():
 		if not _assert_full_receiver_stamp_payload(terrain, stamp_expected):
 			return false
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
+	var expected_source := String(expected.get("source", ""))
 	for source_value in sources:
 		if not (source_value is Dictionary):
 			continue
 		var source: Dictionary = source_value
 		if (
-			String(source.get("source_terrain", "")) == String(expected.get("source", ""))
+			String(source.get("source_terrain", "")) == expected_source
 			and String(source.get("bridge_source_kind", "")) == String(expected.get("kind", ""))
 			and String(source.get("bridge_rule_id", "")) == String(expected.get("rule", ""))
 			and String(source.get("bridge_class", "")) == String(expected.get("class", ""))
 			and String(source.get("resolved_bridge_family", "")) == String(expected.get("family", ""))
-			and String(source.get("bridge_target_frame_block", "")) == String(expected.get("block", ""))
 			and String(source.get("bridge_source_level", "")) == String(expected.get("source_level", ""))
+			and String(source.get("bridge_resolution_model", "")) == String(expected.get("model", ""))
 		):
 			return true
 	return false
@@ -968,62 +954,37 @@ func _assert_full_receiver_stamp_payload(terrain: Dictionary, expected: Dictiona
 		return false
 	if bool(terrain.get("homm3_allows_generic_land_edge_masks", true)):
 		return false
-	if String(terrain.get("homm3_stamp_lookup_model", "")) != "data_driven_full_receiver_land_stamp_lookup.v1":
+	if String(terrain.get("homm3_visual_selection_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1":
 		return false
-	if String(terrain.get("homm3_stamp_selection_model", "")) != "source_anchored_stamp_table_with_array_reconstruction_fallback":
+	if String(terrain.get("homm3_final_normalization_model", "")) != "final_normalization_4bbfcc_reclassifies_settled_owner_map":
 		return false
-	if String(terrain.get("homm3_stamp_table_id", "")) != String(expected.get("table", "")):
+	if String(terrain.get("homm3_stamp_selection_model", "")) != "":
 		return false
-	if String(terrain.get("homm3_stamp_anchor", "")) != "source_tile_anchored_directional_stamp":
+	if String(terrain.get("homm3_stamp_selected_frame", "")) != "":
 		return false
-	if String(terrain.get("homm3_stamp_source_kind", "")) != String(expected.get("source_kind", "")):
+	if int(terrain.get("homm3_shape_class", 0)) <= 0:
 		return false
-	if String(terrain.get("homm3_stamp_source_direction", "")) != String(expected.get("direction", "")):
+	if String(terrain.get("homm3_relation_grid", "")) == "":
 		return false
-	if String(terrain.get("homm3_stamp_selected_frame", "")) != String(expected.get("frame", "")):
+	if String(expected.get("bridge_family", "")) != "" and String(terrain.get("homm3_bridge_family", "")) != String(expected.get("bridge_family", "")):
 		return false
-	if String(terrain.get("homm3_terrain_frame", "")) != String(expected.get("frame", "")):
+	if String(expected.get("target_block", "")) != "" and String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("target_block", "")):
 		return false
-	if String(terrain.get("homm3_stamp_target_frame_block", "")) != String(expected.get("target_block", "")):
+	if expected.has("shape_class") and int(terrain.get("homm3_shape_class", 0)) != int(expected.get("shape_class", -1)):
 		return false
-	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("target_block", "")):
+	if expected.has("row_group") and String(terrain.get("homm3_row_group", "")) != String(expected.get("row_group", "")):
 		return false
-	if String(terrain.get("homm3_stamp_bridge_family", "")) != String(expected.get("bridge_family", "")):
+	if expected.has("frame") and expected.has("shape_class") and String(terrain.get("homm3_terrain_frame", "")) != String(expected.get("frame", "")):
 		return false
-	if String(terrain.get("homm3_stamp_source_level", "")) != "provisional":
-		return false
-	if String(terrain.get("homm3_stamp_mapping_source_level", "")) != "provisional":
-		return false
-	if String(terrain.get("homm3_stamp_frame_range_source_level", "")) != "fact":
-		return false
-	if String(terrain.get("homm3_stamp_array_reconstruction_mode", "")) != "array_reconstruction_fallback_without_paint_history":
-		return false
-	if String(terrain.get("homm3_stamp_source_offset_model", "")).find("source_tile_minus_receiver_tile") < 0:
-		return false
-	var expected_offset: Dictionary = expected.get("offset", {})
-	var source_offset: Dictionary = terrain.get("homm3_stamp_source_offset", {})
-	if int(source_offset.get("x", 9999)) != int(expected_offset.get("x", 9998)):
-		return false
-	if int(source_offset.get("y", 9999)) != int(expected_offset.get("y", 9998)):
-		return false
-	var expected_flip := String(expected.get("flip", ""))
-	if String(terrain.get("homm3_stamp_transform", "")) != expected_flip:
-		return false
+	var expected_flip := String(expected.get("flip", String(terrain.get("homm3_terrain_flip", ""))))
 	if String(terrain.get("homm3_terrain_flip", "")) != expected_flip:
 		return false
-	if bool(terrain.get("homm3_stamp_flip_h", false)) != bool(expected.get("flip_h", false)):
+	if expected.has("flip_h") and bool(terrain.get("homm3_terrain_flip_h", false)) != bool(expected.get("flip_h", false)):
 		return false
-	if bool(terrain.get("homm3_stamp_flip_v", false)) != bool(expected.get("flip_v", false)):
+	if expected.has("flip_v") and bool(terrain.get("homm3_terrain_flip_v", false)) != bool(expected.get("flip_v", false)):
 		return false
-	var expect_reserved := bool(expected.get("mixed_reserved", false))
-	if bool(terrain.get("homm3_stamp_mixed_junction_reserved", false)) != expect_reserved:
+	if String(terrain.get("homm3_web_prototype_selection_model", "")) != String(terrain.get("homm3_visual_selection_model", "")):
 		return false
-	if expect_reserved:
-		var reserved_ranges: Array = terrain.get("homm3_stamp_reserved_mixed_junction_frame_ranges", [])
-		if "00_40-00_48" not in reserved_ranges or "00_77-00_78" not in reserved_ranges:
-			return false
-		if String(terrain.get("homm3_stamp_mixed_junction_policy", "")) != "reserved_unresolved_do_not_select_for_full_receiver_stamp_lookup":
-			return false
 	return true
 
 func _assert_solid_region_interior_stability(shell: Node, session) -> bool:

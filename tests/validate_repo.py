@@ -4597,12 +4597,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/homm3_local_prototype", errors, "Overworld terrain rendering must point at the HoMM3 local prototype tile-art root")
         ensure(str(terrain_rendering.get("tile_art_status", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 local-reference prototype status")
         ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "homm3_extracted_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 extracted local-reference source basis")
-        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "homm3_data_driven_full_receiver_stamp_lookup", errors, "Overworld terrain rendering must document HoMM3 full-receiver stamp-table transition selection")
-        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "resolve_bridge_material_then_full_receiver_stamp_table_or_special_system_lookup", errors, "Overworld terrain rendering must document bridge material resolution before full receiver stamp or special-system lookup")
+        ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "accepted_web_prototype_relation_class_row_lookup", errors, "Overworld terrain rendering must document HoMM3 accepted web-prototype relation-class terrain selection")
+        ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "settled_owner_relation_classes_select_recovered_row_buckets", errors, "Overworld terrain rendering must document settled-owner relation-class row selection")
         ensure(str(terrain_rendering.get("editor_terrain_placement_model", "")) == "homm3_owner_queue_rewrite_final_normalization.v1", errors, "Overworld terrain rendering must document the HoMM3 editor terrain placement model")
         ensure(str(terrain_rendering.get("editor_restamp_model", "")) == "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1", errors, "Overworld terrain rendering must document the editor restamp behavior model")
         ensure(str(terrain_rendering.get("editor_restamp_scope", "")) == "map_editor_terrain_paint_update_and_shared_preview", errors, "Overworld terrain rendering must keep editor restamp scope tied to terrain paint update and shared preview")
-        ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "single_stable_base_frame", errors, "Overworld terrain rendering must document stable HoMM3 base-frame interior selection")
+        ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "accepted_web_full_row_bucket_selection", errors, "Overworld terrain rendering must document accepted web-prototype full-row interior selection")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
         ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Overworld terrain rendering must document generated terrain sources as unused by the HoMM3 local prototype")
         ensure(bool(terrain_rendering.get("local_reference_only", False)), errors, "Overworld terrain rendering must mark HoMM3 extracted assets as local_reference_only")
@@ -4622,10 +4622,10 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     transition_rules = terrain_grammar.get("transition_rules", {})
     ensure(isinstance(transition_rules, dict), errors, "Terrain grammar must define transition_rules")
     if isinstance(transition_rules, dict):
-        ensure(str(transition_rules.get("selection_model", "")) == "homm3_data_driven_full_receiver_stamp_lookup", errors, "Terrain grammar must document HoMM3 data-driven full receiver stamp lookup")
+        ensure(str(transition_rules.get("selection_model", "")) == "accepted_web_prototype_relation_class_row_lookup", errors, "Terrain grammar must document HoMM3 accepted web-prototype relation-class terrain selection")
         ensure(str(transition_rules.get("edge_model", "")) == "bridge_or_shoreline_atlas_frame_lookup", errors, "Terrain grammar must document bridge/shoreline atlas-frame lookup")
         ensure(str(transition_rules.get("corner_model", "")) == "diagonal_context_in_atlas_lookup", errors, "Terrain grammar must document diagonal context in atlas lookup")
-        ensure(str(transition_rules.get("receiver_rule", "")) == "full_receiver_land_selects_source_anchored_stamp_tables_for_cardinal_edges", errors, "Terrain grammar must document full receiver source-anchored stamp table selection for cardinal edges")
+        ensure(str(transition_rules.get("receiver_rule", "")) == "settled_owner_relation_classes_select_recovered_row_buckets", errors, "Terrain grammar must document settled-owner relation-class row selection")
         ensure(str(transition_rules.get("editor_restamp_model", "")) == "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1", errors, "Terrain grammar must document the editor restamp behavior model")
         ensure(str(transition_rules.get("editor_terrain_placement_model", "")) == "homm3_owner_queue_rewrite_final_normalization.v1", errors, "Terrain grammar must document the HoMM3 editor terrain placement model")
         ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_same_homm3_family_edges", errors, "Terrain grammar must suppress same HoMM3-family transition seams")
@@ -4641,9 +4641,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     if isinstance(homm3_prototype, dict):
         ensure(bool(homm3_prototype.get("enabled", False)), errors, "HoMM3 local prototype must be enabled")
         ensure(bool(homm3_prototype.get("local_reference_only", False)), errors, "HoMM3 local prototype must be marked local_reference_only")
-        ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "data_driven_full_receiver_stamp_lookup", errors, "HoMM3 local prototype must use data-driven full receiver stamp lookup")
+        ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "accepted_web_prototype_relation_class_row_lookup", errors, "HoMM3 local prototype must use accepted web-prototype relation-class row lookup")
         ensure(str(homm3_prototype.get("road_lookup_model", "")) == "table_driven_4_neighbor_overlay", errors, "HoMM3 local prototype must use table-driven 4-neighbor road lookup")
-        ensure(str(homm3_prototype.get("interior_frame_selection_model", "")) == "single_stable_base_frame", errors, "HoMM3 local prototype must avoid patch-hash cycling for interior terrain frames")
+        ensure(str(homm3_prototype.get("interior_frame_selection_model", "")) == "accepted_web_full_row_bucket_selection", errors, "HoMM3 local prototype must use accepted web-prototype full-row interior selection")
         ensure(str(homm3_prototype.get("unsupported_policy", "")) == "explicit_grammar_fallback", errors, "HoMM3 local prototype must use explicit fallback for unsupported cases")
         asset_root = res_path_to_disk(str(homm3_prototype.get("asset_root", "")))
         ensure(asset_root.exists(), errors, f"HoMM3 local prototype asset root is missing: {homm3_prototype.get('asset_root')}")
@@ -5068,10 +5068,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "func _load_homm3_prototype",
 	        "func _homm3_bridge_material_resolution",
 	        "func _homm3_bridge_material_rule_for",
-	        "func _homm3_land_receiver_stamp_lookup_model",
 	        "func _homm3_editor_restamp_payload",
 	        "func validation_editor_restamp_payload",
-	        "func _homm3_stamp_entry_from_table",
+	        "func _homm3_selection_kind_from_visual_selection",
 	        "func _homm3_terrain_selection_payload",
 	        "func _homm3_terrain_relation_payload",
 	        "func _homm3_road_art_path",
@@ -5128,7 +5127,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        '"transition_calculation_model"',
 	        '"transition_cardinal_sources"',
 	        '"transition_corner_sources"',
-	        '"homm3_data_driven_full_receiver_stamp_lookup"',
+	        '"accepted_web_prototype_relation_class_row_lookup"',
 	        '"bridge_or_shoreline_atlas_frame_lookup"',
 	        '"diagonal_context_in_atlas_lookup"',
 	        '"homm3_terrain_lookup_model"',

@@ -5,7 +5,7 @@
   "primary_base_model": "homm3_local_reference_prototype",
   "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and save/pathing data remain unchanged, while the Godot map editor now routes terrain paint operations through the recovered HoMM3 owner queue/rewrite and final-normalization placement model before shared preview reprojection. Rendering uses a stable base frame for terrain interiors, reports logical terrain id, renderer family, atlas role, source level, special-system, bridge-class, stamp-table, editor restamp, and fallback metadata, resolves explicit direct land-family pairs before falling back to data-driven bridge classes, resolves full receiver land transitions from true cardinal boundary contacts through provisional source-anchored stamp tables backed by source-visible frame ranges, keeps diagonal-only and second-ring full-receiver contacts as solid interiors, resolves water through shoreline-specific watrtl lookup, keeps rock on a rocktl-specific system, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and save/pathing data remain unchanged, while the Godot map editor routes terrain paint operations through the recovered HoMM3 owner queue/rewrite and final-normalization placement model before shared preview reprojection. Active HoMM3 terrain visual selection now uses the accepted web prototype's settled-owner relation-class row lookup for normal terrain, water, and rock frames instead of the older source-offset stamp/corner heuristics. Rendering reports logical terrain id, renderer family, atlas role, relation ring, recovered shape class, row group, frame, transform flags, final-normalization metadata, and fallback metadata. Roads remain resolved through the existing 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
     {
       "id": "water",
@@ -58,7 +58,7 @@
     }
   ],
   "transition_rules": {
-    "selection_model": "homm3_data_driven_full_receiver_stamp_lookup",
+    "selection_model": "accepted_web_prototype_relation_class_row_lookup",
     "edge_model": "bridge_or_shoreline_atlas_frame_lookup",
     "corner_model": "diagonal_context_in_atlas_lookup",
     "cardinal_edges": true,
@@ -67,7 +67,8 @@
     "propagation_model": "full_receiver_land_transitions_are_cardinal_boundary_only",
     "single_sand_model": "grass_sand_diagonal_and_second_ring_sources_remain_solid_interiors",
     "water_model": "shoreline_specific_lookup",
-    "receiver_rule": "full_receiver_land_selects_source_anchored_stamp_tables_for_cardinal_edges",
+    "receiver_rule": "settled_owner_relation_classes_select_recovered_row_buckets",
+    "web_prototype_parity_rule": "active_homm3_visual_selection_uses_accepted_web_relation_class_row_lookup",
     "editor_restamp_model": "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1",
     "editor_terrain_placement_model": "homm3_owner_queue_rewrite_final_normalization.v1",
     "same_group_policy": "suppress_same_homm3_family_edges",
@@ -770,9 +771,9 @@
     "asset_root": "res://art/overworld/runtime/homm3_local_prototype",
     "source_artifact": "/root/.openclaw/workspace/tasks/10184/artifacts/homm3-lod-extract/output/h3sprite/defs",
     "data_contract_version": "homm3_renderer_data_contract.v1",
-    "terrain_lookup_model": "data_driven_full_receiver_stamp_lookup",
+    "terrain_lookup_model": "accepted_web_prototype_relation_class_row_lookup",
     "road_lookup_model": "table_driven_4_neighbor_overlay",
-    "interior_frame_selection_model": "single_stable_base_frame",
+    "interior_frame_selection_model": "accepted_web_full_row_bucket_selection",
     "unsupported_policy": "explicit_grammar_fallback",
     "note": "Local prototype only. These extracted original HoMM3 frames are not shippable or redistributable game assets.",
     "atlas_role_contract": {
@@ -995,7 +996,9 @@
       "resolver_model": "data_driven_full_receiver_land_stamp_lookup.v1",
       "source_level": "mixed",
       "applies_to_atlas_role": "full_receiver_land",
-      "selection_model": "source_anchored_stamp_table_with_array_reconstruction_fallback",
+      "selection_model": "bypassed_by_accepted_web_prototype_relation_class_row_lookup",
+      "active_selection_model": "accepted_web_prototype_relation_class_row_lookup.v1",
+      "legacy_status": "reference_only_not_active_for_homm3_visual_frame_selection",
       "anchor_model": "source_tile_anchored_directional_stamp",
       "array_reconstruction_mode": "array_reconstruction_fallback_without_paint_history",
       "mapping_status": "provisional",
@@ -1200,55 +1203,16 @@
               "transform": ""
             }
           },
-          "cardinal_corner_entries": {
-            "N+E": {
-              "source_offset": {
-                "x": 1,
-                "y": -1
-              },
-              "corner_direction": "NE",
-              "frame": "00_20",
-              "transform": "H",
-              "flip_h": true,
-              "flip_v": false,
-              "role": "sand_heavy_corner_1_native_3_sand"
-            },
-            "E+S": {
-              "source_offset": {
-                "x": 1,
-                "y": 1
-              },
-              "corner_direction": "SE",
-              "frame": "00_20",
-              "transform": "HV",
-              "flip_h": true,
-              "flip_v": true,
-              "role": "sand_heavy_corner_1_native_3_sand"
-            },
-            "S+W": {
-              "source_offset": {
-                "x": -1,
-                "y": 1
-              },
-              "corner_direction": "SW",
-              "frame": "00_20",
-              "transform": "V",
-              "flip_h": false,
-              "flip_v": true,
-              "role": "sand_heavy_corner_1_native_3_sand"
-            },
-            "N+W": {
-              "source_offset": {
-                "x": -1,
-                "y": -1
-              },
-              "corner_direction": "NW",
-              "frame": "00_20",
-              "transform": "",
-              "flip_h": false,
-              "flip_v": false,
-              "role": "sand_heavy_corner_1_native_3_sand"
-            }
+          "accepted_web_prototype_parity": {
+            "selection_model": "accepted_web_prototype_relation_class_row_lookup",
+            "applies_to": "two_adjacent_cardinal_sand_contacts_on_full_receiver_land",
+            "shape_class": 12,
+            "class_topology": "relation-2 corrected elbow",
+            "row_group": "36-37",
+            "target_frame_block": "native_to_sand_transition",
+            "frame_selection": "chooseFrame(rows, x, y, `${ownerId}:class:${shapeClass}`) from accepted web prototype",
+            "anchor_model": "settled_owner_relation_ring_not_source_tile_corner_heuristic",
+            "note": "Do not force 00_20 for sand-heavy corners here. The accepted web prototype classifies the same settled owner topology through relation class 12 and hashes within rows 36-37 with orientation flags."
           },
           "frame_grid": [
             [
