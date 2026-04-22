@@ -1200,6 +1200,56 @@
               "transform": ""
             }
           },
+          "cardinal_corner_entries": {
+            "N+E": {
+              "source_offset": {
+                "x": 1,
+                "y": -1
+              },
+              "corner_direction": "NE",
+              "frame": "00_20",
+              "transform": "H",
+              "flip_h": true,
+              "flip_v": false,
+              "role": "sand_heavy_corner_1_native_3_sand"
+            },
+            "E+S": {
+              "source_offset": {
+                "x": 1,
+                "y": 1
+              },
+              "corner_direction": "SE",
+              "frame": "00_20",
+              "transform": "HV",
+              "flip_h": true,
+              "flip_v": true,
+              "role": "sand_heavy_corner_1_native_3_sand"
+            },
+            "S+W": {
+              "source_offset": {
+                "x": -1,
+                "y": 1
+              },
+              "corner_direction": "SW",
+              "frame": "00_20",
+              "transform": "V",
+              "flip_h": false,
+              "flip_v": true,
+              "role": "sand_heavy_corner_1_native_3_sand"
+            },
+            "N+W": {
+              "source_offset": {
+                "x": -1,
+                "y": -1
+              },
+              "corner_direction": "NW",
+              "frame": "00_20",
+              "transform": "",
+              "flip_h": false,
+              "flip_v": false,
+              "role": "sand_heavy_corner_1_native_3_sand"
+            }
+          },
           "frame_grid": [
             [
               "00_20",

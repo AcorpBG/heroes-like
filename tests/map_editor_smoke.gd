@@ -53,6 +53,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_placement_source_lower_edge(shell):
 		return
+	if not _assert_editor_sand_heavy_corner_ownership(shell):
+		return
 	if not _assert_flood_fill_terrain(shell):
 		return
 	if not _assert_terrain_line_tool(shell):
@@ -909,6 +911,78 @@ func _assert_editor_placement_source_lower_edge(shell) -> bool:
 		):
 			_restore_editor_terrain_tiles(shell, original_terrains)
 			_fail("Map editor smoke: full-receiver neighbor did not retain the terrain transition around lower-edge source tiles for %s: %s." % [terrain_id, receiver_presentation])
+			return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _assert_editor_sand_heavy_corner_ownership(shell) -> bool:
+	var center := Vector2i(30, 50)
+	var original_terrains := []
+	var controlled_tiles := []
+	for y in range(center.y - 3, center.y + 4):
+		for x in range(center.x - 3, center.x + 4):
+			controlled_tiles.append(Vector2i(x, y))
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed grass for sand-heavy corner ownership regression at %s." % tile)
+			return false
+
+	var cases := [
+		{"label": "NW", "sand_offsets": [Vector2i(0, -1), Vector2i(-1, 0), Vector2i(-1, -1)], "edge": "NW", "corner": "NW", "mask": "N+W", "direction": "NW", "offset": {"x": -1, "y": -1}, "flip": "", "flip_h": false, "flip_v": false},
+		{"label": "NE", "sand_offsets": [Vector2i(0, -1), Vector2i(1, 0), Vector2i(1, -1)], "edge": "NE", "corner": "NE", "mask": "N+E", "direction": "NE", "offset": {"x": 1, "y": -1}, "flip": "H", "flip_h": true, "flip_v": false},
+		{"label": "SE", "sand_offsets": [Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)], "edge": "ES", "corner": "SE", "mask": "E+S", "direction": "SE", "offset": {"x": 1, "y": 1}, "flip": "HV", "flip_h": true, "flip_v": true},
+		{"label": "SW", "sand_offsets": [Vector2i(0, 1), Vector2i(-1, 0), Vector2i(-1, 1)], "edge": "SW", "corner": "SW", "mask": "S+W", "direction": "SW", "offset": {"x": -1, "y": 1}, "flip": "V", "flip_h": false, "flip_v": true},
+	]
+	for case in cases:
+		for tile in controlled_tiles:
+			if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not reset grass before sand-heavy corner case %s at %s." % [case, tile])
+				return false
+		for offset_value in case.get("sand_offsets", []):
+			var offset: Vector2i = offset_value
+			var sand_tile: Vector2i = center + offset
+			if not _paint_editor_terrain_for_orientation(shell, sand_tile, "wastes"):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not seed sand-heavy corner source for case %s at %s." % [case, sand_tile])
+				return false
+		var presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("terrain", "")) != "grass"
+			or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+			or String(terrain.get("transition_edge_mask", "")) != String(case.get("edge", ""))
+			or String(terrain.get("transition_corner_mask", "")) != String(case.get("corner", ""))
+			or String(terrain.get("homm3_mask_key", "")) != String(case.get("mask", ""))
+			or String(terrain.get("homm3_bridge_family", "")) != "sand"
+			or int(terrain.get("edge_transition_count", 0)) != 2
+			or int(terrain.get("corner_transition_count", 0)) != 1
+			or bool(terrain.get("homm3_stamp_mixed_junction_reserved", false))
+		):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: sand-heavy %s corner did not keep 1 grass / 3 sand ownership metadata: %s." % [String(case.get("label", "")), presentation])
+			return false
+		if not _assert_full_receiver_stamp_payload(terrain, {
+			"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
+			"direction": String(case.get("direction", "")),
+			"frame": "00_20",
+			"offset": case.get("offset", {}),
+			"bridge_family": "sand",
+			"target_block": "native_to_sand_transition",
+			"source_kind": "cardinal_corner_sources",
+			"flip": String(case.get("flip", "")),
+			"flip_h": bool(case.get("flip_h", false)),
+			"flip_v": bool(case.get("flip_v", false)),
+		}):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: sand-heavy %s corner selected a grass-heavy edge frame instead of the sand-heavy corner stamp: %s." % [String(case.get("label", "")), presentation])
 			return false
 
 	_restore_editor_terrain_tiles(shell, original_terrains)

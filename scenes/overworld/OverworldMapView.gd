@@ -3461,6 +3461,93 @@ func _homm3_receiver_stamp_payload_from_source(tile: Vector2i, family: Dictionar
 		"receiver_stamp_entry": entry,
 	}
 
+func _homm3_receiver_stamp_payload_from_cardinal_corner(tile: Vector2i, _family: Dictionary, cardinal_sources: Array, corner_sources: Array) -> Dictionary:
+	if cardinal_sources.size() != 2:
+		return {}
+	var bridge_family := ""
+	var cardinal_keys: Array[String] = []
+	for source_value in cardinal_sources:
+		if not (source_value is Dictionary):
+			return {}
+		var source: Dictionary = source_value
+		var resolved_family := String(source.get("resolved_bridge_family", "")).strip_edges()
+		if resolved_family == "":
+			return {}
+		if bridge_family == "":
+			bridge_family = resolved_family
+		elif bridge_family != resolved_family:
+			return {}
+		cardinal_keys.append(String(source.get("direction", "")).strip_edges())
+	var table := _homm3_land_receiver_stamp_table(bridge_family)
+	if table.is_empty():
+		return {}
+	var corner_entries = table.get("cardinal_corner_entries", {})
+	if not (corner_entries is Dictionary):
+		return {}
+	var mask_key := _homm3_mask_key_from_keys(cardinal_keys)
+	var entry_value = corner_entries.get(mask_key, {})
+	if not (entry_value is Dictionary):
+		return {}
+	var entry: Dictionary = entry_value.duplicate(true)
+	var required_corner := String(entry.get("corner_direction", "")).strip_edges()
+	if required_corner != "":
+		var found_corner := false
+		for corner_value in corner_sources:
+			if not (corner_value is Dictionary):
+				continue
+			var corner: Dictionary = corner_value
+			if String(corner.get("direction", "")).strip_edges() == required_corner and String(corner.get("resolved_bridge_family", "")).strip_edges() == bridge_family:
+				found_corner = true
+				break
+		if not found_corner:
+			return {}
+	var frame_id := String(entry.get("frame", "")).strip_edges()
+	if frame_id == "":
+		return {}
+	var source_offset_dict = entry.get("source_offset", {})
+	if not (source_offset_dict is Dictionary):
+		return {}
+	var source_offset := Vector2i(int(source_offset_dict.get("x", 0)), int(source_offset_dict.get("y", 0)))
+	if source_offset == Vector2i.ZERO:
+		return {}
+	var flip_h := bool(entry.get("flip_h", false))
+	var flip_v := bool(entry.get("flip_v", false))
+	var transform := String(entry.get("transform", "")).strip_edges()
+	if transform == "":
+		transform = _homm3_flip_key(flip_h, flip_v)
+	entry["frame"] = frame_id
+	entry["flip_h"] = flip_h
+	entry["flip_v"] = flip_v
+	entry["transform"] = transform
+	entry["source_direction"] = _homm3_direction_from_offset(source_offset)
+	entry["source_offset"] = {"x": source_offset.x, "y": source_offset.y}
+	return {
+		"stamp_lookup_model": _homm3_land_receiver_stamp_lookup_model(),
+		"stamp_selection_model": String(_homm3_land_receiver_stamp_lookup.get("selection_model", "source_anchored_stamp_table_with_array_reconstruction_fallback")),
+		"stamp_table_id": String(table.get("id", "")).strip_edges(),
+		"stamp_anchor": String(_homm3_land_receiver_stamp_lookup.get("anchor_model", "source_tile_anchored_directional_stamp")),
+		"stamp_source_kind": "cardinal_corner_sources",
+		"stamp_source_direction": String(entry.get("source_direction", "")),
+		"stamp_source_offset": entry.get("source_offset", {}),
+		"stamp_selected_frame": frame_id,
+		"stamp_transform": transform,
+		"stamp_flip_h": flip_h,
+		"stamp_flip_v": flip_v,
+		"stamp_source_level": String(table.get("source_level", _homm3_land_receiver_stamp_lookup.get("source_level", ""))).strip_edges(),
+		"stamp_mapping_source_level": String(table.get("mapping_source_level", _homm3_land_receiver_stamp_lookup.get("mapping_source_level", ""))).strip_edges(),
+		"stamp_frame_range_source_level": String(table.get("frame_range_source_level", "")).strip_edges(),
+		"stamp_frame_range": String(table.get("frame_range", "")).strip_edges(),
+		"stamp_target_frame_block": String(table.get("target_frame_block", "")).strip_edges(),
+		"stamp_bridge_family": bridge_family,
+		"stamp_bridge_class": String(table.get("bridge_class", "")).strip_edges(),
+		"stamp_source_offset_model": String(table.get("source_offset_model", "")).strip_edges(),
+		"stamp_array_reconstruction_mode": String(_homm3_land_receiver_stamp_lookup.get("array_reconstruction_mode", "")),
+		"stamp_mixed_junction_reserved": bool(entry.get("mixed_junction_reserved", false)),
+		"stamp_mixed_junction_policy": String(_homm3_land_receiver_stamp_lookup.get("mixed_junction_policy", "")) if bool(entry.get("mixed_junction_reserved", false)) else "",
+		"stamp_reserved_mixed_junction_frame_ranges": _homm3_land_receiver_stamp_lookup.get("reserved_mixed_junction_frame_ranges", []) if bool(entry.get("mixed_junction_reserved", false)) else [],
+		"receiver_stamp_entry": entry,
+	}
+
 func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
 	var selection := _homm3_terrain_selection_payload(tile, terrain_id)
 	var frame_id := String(selection.get("frame_id", "")).strip_edges()
@@ -3756,10 +3843,12 @@ func _homm3_terrain_relation_payload(tile: Vector2i, terrain_id: String) -> Dict
 	var bridge_source_kind := _homm3_bridge_source_kind_from_sources(cardinal_sources, bridge_sources_for_resolution, family)
 	var receiver_stamp_payload: Dictionary = {}
 	if uses_land_receiver_stamp_tables:
-		if not cardinal_sources.is_empty() and not primary_bridge_source.is_empty():
-			receiver_stamp_payload = _homm3_receiver_stamp_payload_from_source(tile, family, primary_bridge_source, "cardinal_source")
-		elif not propagated_source.is_empty():
-			receiver_stamp_payload = propagated_source.get("receiver_stamp_payload", {})
+		receiver_stamp_payload = _homm3_receiver_stamp_payload_from_cardinal_corner(tile, family, cardinal_sources, corner_sources)
+		if receiver_stamp_payload.is_empty():
+			if not cardinal_sources.is_empty() and not primary_bridge_source.is_empty():
+				receiver_stamp_payload = _homm3_receiver_stamp_payload_from_source(tile, family, primary_bridge_source, "cardinal_source")
+			elif not propagated_source.is_empty():
+				receiver_stamp_payload = propagated_source.get("receiver_stamp_payload", {})
 	var bridge_target_frame_block := String(primary_bridge_source.get("bridge_target_frame_block", ""))
 	if bridge_target_frame_block == "" and not receiver_stamp_payload.is_empty():
 		bridge_target_frame_block = String(receiver_stamp_payload.get("stamp_target_frame_block", ""))
