@@ -49,6 +49,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_neighbor_transition_preview(shell):
 		return
+	if not _assert_editor_true_terrain_placement(shell):
+		return
 	if not _assert_flood_fill_terrain(shell):
 		return
 	if not _assert_terrain_line_tool(shell):
@@ -183,9 +185,35 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	):
 		_fail("Map editor smoke: logical forest terrain did not expose its explicit HoMM3 local-prototype atlas limitation: %s." % forest_tile)
 		return false
-	var mire_seed: Dictionary = shell.call("validation_paint_terrain", 2, 2, "mire")
-	if not bool(mire_seed.get("ok", false)):
-		_fail("Map editor smoke: could not seed mire terrain for HoMM3 bridge-table preview: %s." % mire_seed)
+	var original_terrains := []
+	var controlled_tiles := [
+		Vector2i(0, 0),
+		Vector2i(1, 0),
+		Vector2i(2, 0),
+		Vector2i(3, 0),
+		Vector2i(0, 1),
+		Vector2i(1, 1),
+		Vector2i(2, 1),
+		Vector2i(3, 1),
+		Vector2i(0, 2),
+		Vector2i(1, 2),
+		Vector2i(2, 2),
+		Vector2i(3, 2),
+	]
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "forest"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed forest baseline for HoMM3 bridge-table preview at %s." % tile)
+			return false
+	var mire_seed_ok := _paint_editor_terrain_for_orientation(shell, Vector2i(2, 2), "mire")
+	if not mire_seed_ok:
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: could not seed mire terrain for HoMM3 bridge-table preview.")
 		return false
 	var edge_receiver: Dictionary = shell.call("validation_tile_presentation", 2, 1)
 	var edge_terrain: Dictionary = edge_receiver.get("terrain_presentation", {})
@@ -199,6 +227,7 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		or String(edge_terrain.get("homm3_bridge_family", "")) != "dirt"
 		or int(edge_terrain.get("edge_transition_count", 0)) != 1
 	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: editor preview did not use the HoMM3 full-receiver stamp lookup at the painted mire edge: %s." % edge_receiver)
 		return false
 	if not _assert_full_receiver_stamp_payload(edge_terrain, {
@@ -210,6 +239,7 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		"target_block": "native_to_dirt_transition",
 		"source_kind": "cardinal_source",
 	}):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: painted mire edge did not expose full-receiver stamp metadata: %s." % edge_receiver)
 		return false
 	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
@@ -222,24 +252,28 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		or String(corner_terrain.get("homm3_selected_frame_block", "")) != "native_interiors"
 		or "mire" in corner_terrain.get("transition_source_terrain_ids", [])
 	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: diagonal-only full-receiver context contaminated an interior tile: %s." % corner_receiver)
 		return false
 	if not _assert_editor_direct_dirt_swamp_transition(shell):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
 	if not _assert_editor_horizontal_transition_orientation(shell):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
 	if not _assert_editor_solid_region_interior_stability(shell):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
 	if not _assert_editor_special_system_groundwork(shell):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
 	if not _assert_editor_bridge_material_resolver(shell):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
 	if not _assert_editor_restamp_behavior_model(shell):
+		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	var restore_forest: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
-	if not bool(restore_forest.get("ok", false)):
-		_fail("Map editor smoke: could not restore the initial forest terrain after HoMM3 full-receiver stamp preview: %s." % restore_forest)
-		return false
+	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 
 func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
@@ -731,6 +765,85 @@ func _assert_solid_region_interior_payload(terrain: Dictionary, expected_terrain
 		return false
 	return true
 
+func _assert_editor_true_terrain_placement(shell) -> bool:
+	var center := Vector2i(34, 50)
+	var original_terrains := []
+	var controlled_tiles := []
+	for y in range(center.y - 3, center.y + 4):
+		for x in range(center.x - 3, center.x + 4):
+			controlled_tiles.append(Vector2i(x, y))
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed grass for true terrain placement test at %s." % tile)
+			return false
+
+	var paint_result: Dictionary = shell.call("validation_paint_terrain", center.x, center.y, "wastes")
+	if not bool(paint_result.get("ok", false)) or not bool(paint_result.get("paint_changed", false)):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: true terrain placement paint did not report a changed operation: %s." % paint_result)
+		return false
+	if not _assert_true_terrain_placement_result(paint_result, "wastes"):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: true terrain placement did not expose queue rewrite and final normalization: %s." % paint_result)
+		return false
+	var owner_changed_tiles: Array = paint_result.get("owner_changed_tiles", [])
+	var found_rewritten_neighbor := false
+	for tile_value in owner_changed_tiles:
+		if not (tile_value is Dictionary):
+			continue
+		var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
+		if tile == center:
+			continue
+		if abs(tile.x - center.x) + abs(tile.y - center.y) == 1:
+			var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+			if String(presentation.get("terrain_presentation", {}).get("terrain", "")) == "wastes":
+				found_rewritten_neighbor = true
+				break
+	if not found_rewritten_neighbor:
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: HoMM3 owner queue did not rewrite a cardinal neighbor for an isolated sand paint: %s." % paint_result)
+		return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _assert_true_terrain_placement_result(result: Dictionary, expected_terrain_id: String) -> bool:
+	var placement: Dictionary = result.get("terrain_placement", {})
+	if placement.is_empty():
+		return false
+	if String(placement.get("placement_model", "")) != "homm3_owner_queue_rewrite_final_normalization.v1":
+		return false
+	if String(placement.get("queue_model", "")) != "rewrite_to_current_brush_4bb74b_then_drain_queues_4bc5f0":
+		return false
+	if String(placement.get("final_normalization_model", "")) != "final_normalization_4bbfcc_reclassifies_settled_owner_map":
+		return false
+	if String(placement.get("brush_terrain_id", "")) != expected_terrain_id:
+		return false
+	if int(placement.get("owner_changed_count", 0)) <= 1:
+		return false
+	if int(placement.get("changed_count", 0)) < int(placement.get("owner_changed_count", 0)):
+		return false
+	if bool(placement.get("queue_guard_exhausted", true)):
+		return false
+	var final_normalization: Dictionary = placement.get("final_normalization", {})
+	if String(final_normalization.get("model", "")) != "final_normalization_4bbfcc_reclassifies_settled_owner_map":
+		return false
+	if String(final_normalization.get("owner_map_source", "")) != "settled_after_4bc5f0_queue_drain":
+		return false
+	if String(final_normalization.get("stale_transition_clear_model", "")) != "zero_boundary_cells_use_pick_full_branch_and_clear_flags":
+		return false
+	if int(final_normalization.get("visited_count", 0)) <= 0:
+		return false
+	if int(final_normalization.get("missing_bucket_count", 0)) != 0:
+		return false
+	return true
+
 func _assert_editor_restamp_behavior_model(shell) -> bool:
 	var painted := Vector2i(30, 50)
 	var original_terrains := []
@@ -761,6 +874,10 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: ordered sand paint did not expose a changed terrain paint operation: %s." % sand_result)
 		return false
+	if not _assert_true_terrain_placement_result(sand_result, "wastes"):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: sand paint did not use the HoMM3 owner queue and final-normalization path: %s." % sand_result)
+		return false
 	var sand_restamp: Dictionary = sand_result.get("editor_restamp", {})
 	if not _assert_editor_restamp_contract(sand_restamp):
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -779,34 +896,6 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: painted source tile did not report sand through the shared restamp payload: %s." % sand_source)
 		return false
-	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "N"), 1, {
-		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
-		"direction": "S",
-		"frame": "00_32",
-		"offset": {"x": 0, "y": 1},
-		"bridge_family": "sand",
-		"target_block": "native_to_sand_transition",
-		"source_kind": "cardinal_source",
-	}):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: north restamp receiver did not project the sand source through OverworldMapView: %s." % sand_restamp)
-		return false
-	if not _assert_restamped_receiver_interior_payload(_restamp_tile_by_direction(sand_restamp, "NW"), 2, "grass"):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: northwest restamp receiver selected a diagonal-only sand stamp instead of staying interior: %s." % sand_restamp)
-		return false
-	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(sand_restamp, "W"), 3, {
-		"table": "full_receiver_native_to_sand_5x4_provisional_stamp_table",
-		"direction": "E",
-		"frame": "00_35",
-		"offset": {"x": 1, "y": 0},
-		"bridge_family": "sand",
-		"target_block": "native_to_sand_transition",
-		"source_kind": "cardinal_source",
-	}):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: west restamp receiver did not project the sand source through OverworldMapView: %s." % sand_restamp)
-		return false
 
 	var dirt_result: Dictionary = shell.call("validation_paint_terrain", painted.x, painted.y, "badlands")
 	var dirt_order := int(dirt_result.get("terrain_paint_order", 0))
@@ -818,38 +907,14 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: ordered dirt repaint did not advance the editor paint order: %s." % dirt_result)
 		return false
+	if not _assert_true_terrain_placement_result(dirt_result, "badlands"):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: dirt repaint did not use the HoMM3 owner queue and final-normalization path: %s." % dirt_result)
+		return false
 	var dirt_restamp: Dictionary = dirt_result.get("editor_restamp", {})
 	if not _assert_editor_restamp_contract(dirt_restamp):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: dirt repaint did not keep the editor restamp contract: %s." % dirt_result)
-		return false
-	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "N"), 1, {
-		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "S",
-		"frame": "00_12",
-		"offset": {"x": 0, "y": 1},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
-		"source_kind": "cardinal_source",
-	}):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: north restamp receiver did not switch from sand to dirt after repaint: %s." % dirt_restamp)
-		return false
-	if not _assert_restamped_receiver_interior_payload(_restamp_tile_by_direction(dirt_restamp, "NW"), 2, "grass"):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: northwest restamp receiver selected a diagonal-only dirt stamp instead of staying interior after repaint: %s." % dirt_restamp)
-		return false
-	if not _assert_restamped_receiver_payload(_restamp_tile_by_direction(dirt_restamp, "W"), 3, {
-		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
-		"direction": "E",
-		"frame": "00_15",
-		"offset": {"x": 1, "y": 0},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
-		"source_kind": "cardinal_source",
-	}):
-		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: west restamp receiver did not switch from sand to dirt after repaint: %s." % dirt_restamp)
 		return false
 
 	_restore_editor_terrain_tiles(shell, original_terrains)
@@ -860,9 +925,9 @@ func _assert_editor_restamp_contract(restamp: Dictionary) -> bool:
 		return false
 	if String(restamp.get("model", "")) != "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1":
 		return false
-	if String(restamp.get("scope", "")) != "map_editor_preview_metadata_only":
+	if String(restamp.get("scope", "")) != "map_editor_terrain_paint_update_and_shared_preview":
 		return false
-	if String(restamp.get("logical_map_write_model", "")) != "painted_tile_only":
+	if String(restamp.get("logical_map_write_model", "")) != "homm3_owner_queue_rewrite_final_normalization.v1":
 		return false
 	if String(restamp.get("renderer_evaluation_model", "")) != "shared_overworld_map_view_final_state_reprojection":
 		return false
@@ -928,7 +993,7 @@ func _assert_restamped_receiver_interior_payload(entry: Dictionary, expected_ord
 	return _assert_solid_region_interior_payload(terrain, expected_terrain)
 
 func _paint_editor_terrain_for_orientation(shell, tile: Vector2i, terrain_id: String) -> bool:
-	var result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, terrain_id)
+	var result: Dictionary = shell.call("validation_seed_terrain_direct", tile.x, tile.y, terrain_id)
 	if bool(result.get("ok", false)):
 		return true
 	var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
@@ -941,7 +1006,7 @@ func _restore_editor_terrain_tiles(shell, original_terrains: Array) -> void:
 		var tile: Vector2i = entry.get("tile", Vector2i.ZERO)
 		var terrain_id := String(entry.get("terrain", ""))
 		if terrain_id != "":
-			shell.call("validation_paint_terrain", tile.x, tile.y, terrain_id)
+			shell.call("validation_seed_terrain_direct", tile.x, tile.y, terrain_id)
 
 func _transition_sources_include(terrain: Dictionary, direction: String, source_terrain: String) -> bool:
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
@@ -1087,13 +1152,11 @@ func _assert_flood_fill_terrain(shell) -> bool:
 
 	var region_tiles := [Vector2i(12, 12), Vector2i(13, 12), Vector2i(12, 13)]
 	for tile in region_tiles:
-		var seed_result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, "mire")
-		if not bool(seed_result.get("ok", false)):
-			_fail("Map editor smoke: could not seed flood-fill terrain at %s: %s." % [tile, seed_result])
+		if not _paint_editor_terrain_for_orientation(shell, tile, "mire"):
+			_fail("Map editor smoke: could not seed flood-fill terrain at %s." % tile)
 			return false
-	var boundary_seed: Dictionary = shell.call("validation_paint_terrain", 13, 13, "grass")
-	if not bool(boundary_seed.get("ok", false)):
-		_fail("Map editor smoke: could not seed flood-fill boundary terrain: %s." % boundary_seed)
+	if not _paint_editor_terrain_for_orientation(shell, Vector2i(13, 13), "grass"):
+		_fail("Map editor smoke: could not seed flood-fill boundary terrain.")
 		return false
 
 	var fill_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "lava")
@@ -1101,26 +1164,21 @@ func _assert_flood_fill_terrain(shell) -> bool:
 		not bool(fill_result.get("ok", false))
 		or not bool(fill_result.get("changed", false))
 		or int(fill_result.get("filled_count", 0)) != 3
+		or int(fill_result.get("affected_count", 0)) < 3
 		or String(fill_result.get("source_terrain_id", "")) != "mire"
 		or String(fill_result.get("active_terrain_id", "")) != "lava"
 		or String(fill_result.get("fill_result", {}).get("contiguity", "")) != "cardinal"
 	):
 		_fail("Map editor smoke: terrain flood fill did not report the expected bounded region: %s." % fill_result)
 		return false
+	if not _assert_true_terrain_placement_result(fill_result, "lava"):
+		_fail("Map editor smoke: terrain flood fill did not route through HoMM3 placement: %s." % fill_result)
+		return false
 	for tile in region_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
 		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "lava":
 			_fail("Map editor smoke: terrain flood fill did not update expected tile %s: %s." % [tile, presentation])
 			return false
-	var boundary_presentation: Dictionary = shell.call("validation_tile_presentation", 13, 13)
-	if String(boundary_presentation.get("terrain_presentation", {}).get("terrain", "")) != "grass":
-		_fail("Map editor smoke: terrain flood fill leaked through a non-matching boundary tile: %s." % boundary_presentation)
-		return false
-	var outside_presentation: Dictionary = shell.call("validation_tile_presentation", 11, 12)
-	if String(outside_presentation.get("terrain_presentation", {}).get("terrain", "")) == "lava":
-		_fail("Map editor smoke: terrain flood fill leaked into adjacent non-source terrain: %s." % outside_presentation)
-		return false
-
 	var noop_result: Dictionary = shell.call("validation_fill_terrain", 12, 12, "lava")
 	if not bool(noop_result.get("ok", false)) or bool(noop_result.get("changed", true)) or int(noop_result.get("filled_count", -1)) != 0:
 		_fail("Map editor smoke: terrain flood fill did not no-op cleanly on matching active terrain: %s." % noop_result)
@@ -1144,9 +1202,8 @@ func _assert_terrain_line_tool(shell) -> bool:
 	seeded_tiles.append_array(expected_tiles)
 	seeded_tiles.append_array(off_line_tiles)
 	for tile in seeded_tiles:
-		var seed_result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, "grass")
-		if not bool(seed_result.get("ok", false)):
-			_fail("Map editor smoke: could not seed terrain-line tile %s: %s." % [tile, seed_result])
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_fail("Map editor smoke: could not seed terrain-line tile %s." % tile)
 			return false
 
 	var start_result: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16, "highland")
@@ -1170,21 +1227,19 @@ func _assert_terrain_line_tool(shell) -> bool:
 		or String(line_result.get("active_terrain_id", "")) != "highland"
 		or String(line_result.get("path_rule", "")) != "manhattan_l_horizontal_then_vertical"
 		or int(line_result.get("path_count", 0)) != expected_tiles.size()
-		or int(line_result.get("affected_count", 0)) != expected_tiles.size()
+		or int(line_result.get("affected_count", 0)) < expected_tiles.size()
 		or not _path_payload_matches(line_result.get("path_tiles", []), expected_tiles)
 		or not pending_after_line.is_empty()
 	):
 		_fail("Map editor smoke: terrain line paint did not report the expected horizontal-first Manhattan L line: %s." % line_result)
 		return false
+	if not _assert_true_terrain_placement_result(line_result, "highland"):
+		_fail("Map editor smoke: terrain line did not route through HoMM3 placement: %s." % line_result)
+		return false
 	for tile in expected_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
 		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "highland":
 			_fail("Map editor smoke: terrain line did not update expected tile %s: %s." % [tile, presentation])
-			return false
-	for off_line_tile in off_line_tiles:
-		var off_line_presentation: Dictionary = shell.call("validation_tile_presentation", off_line_tile.x, off_line_tile.y)
-		if String(off_line_presentation.get("terrain_presentation", {}).get("terrain", "")) != "grass":
-			_fail("Map editor smoke: terrain line leaked onto off-line tile %s: %s." % [off_line_tile, off_line_presentation])
 			return false
 
 	var repeat_start: Dictionary = shell.call("validation_set_terrain_line_start", 16, 16)
@@ -1223,9 +1278,8 @@ func _assert_terrain_rectangle_tool(shell) -> bool:
 	seeded_tiles.append_array(expected_tiles)
 	seeded_tiles.append_array(outside_tiles)
 	for tile in seeded_tiles:
-		var seed_result: Dictionary = shell.call("validation_paint_terrain", tile.x, tile.y, "grass")
-		if not bool(seed_result.get("ok", false)):
-			_fail("Map editor smoke: could not seed terrain-rectangle tile %s: %s." % [tile, seed_result])
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_fail("Map editor smoke: could not seed terrain-rectangle tile %s." % tile)
 			return false
 
 	var start_result: Dictionary = shell.call("validation_set_terrain_rectangle_corner", 22, 18, "snow")
@@ -1252,7 +1306,7 @@ func _assert_terrain_rectangle_tool(shell) -> bool:
 		or String(rect_result.get("rectangle_rule", "")) != "inclusive_axis_aligned_corners"
 		or String(rect_result.get("tile_order", "")) != "row_major_top_left_to_bottom_right"
 		or int(rect_result.get("rectangle_count", 0)) != expected_tiles.size()
-		or int(rect_result.get("affected_count", 0)) != expected_tiles.size()
+		or int(rect_result.get("affected_count", 0)) < expected_tiles.size()
 		or int(bounds.get("min_x", -1)) != 20
 		or int(bounds.get("min_y", -1)) != 16
 		or int(bounds.get("max_x", -1)) != 22
@@ -1262,15 +1316,13 @@ func _assert_terrain_rectangle_tool(shell) -> bool:
 	):
 		_fail("Map editor smoke: terrain rectangle paint did not report the expected inclusive area: %s." % rect_result)
 		return false
+	if not _assert_true_terrain_placement_result(rect_result, "snow"):
+		_fail("Map editor smoke: terrain rectangle did not route through HoMM3 placement: %s." % rect_result)
+		return false
 	for tile in expected_tiles:
 		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
 		if String(presentation.get("terrain_presentation", {}).get("terrain", "")) != "snow":
 			_fail("Map editor smoke: terrain rectangle did not update expected tile %s: %s." % [tile, presentation])
-			return false
-	for outside_tile in outside_tiles:
-		var outside_presentation: Dictionary = shell.call("validation_tile_presentation", outside_tile.x, outside_tile.y)
-		if String(outside_presentation.get("terrain_presentation", {}).get("terrain", "")) != "grass":
-			_fail("Map editor smoke: terrain rectangle leaked onto outside tile %s: %s." % [outside_tile, outside_presentation])
 			return false
 
 	var repeat_start: Dictionary = shell.call("validation_set_terrain_rectangle_corner", 22, 18)

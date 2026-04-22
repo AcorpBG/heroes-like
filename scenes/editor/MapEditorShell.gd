@@ -3,6 +3,7 @@ extends Control
 
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 
 const DEFAULT_SCENARIO_ID := "ninefold-confluence"
 const DEFAULT_TERRAIN_ID := "grass"
@@ -15,6 +16,7 @@ const TERRAIN_RECTANGLE_RULE_LABEL := "Inclusive axis-aligned rectangle between 
 const TERRAIN_RECTANGLE_TILE_ORDER := "row_major_top_left_to_bottom_right"
 const TERRAIN_OPTION_CONTRACT := "homm3_base_family_picker"
 const TERRAIN_OPTION_SOURCE := "editor_base_terrain_options"
+const TERRAIN_PLACEMENT_MODEL := "homm3_owner_queue_rewrite_final_normalization.v1"
 const ROAD_PATH_RULE_ID := "manhattan_l_horizontal_then_vertical"
 const ROAD_PATH_RULE_LABEL := "Manhattan L path, horizontal first, then vertical"
 const TOOL_INSPECT := "inspect"
@@ -93,6 +95,7 @@ var _dirty := false
 var _last_message := ""
 var _restored_from_play_copy := false
 var _terrain_paint_order := 0
+var _last_terrain_placement_result := {}
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -955,28 +958,53 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
 	if not _tile_in_bounds(tile) or terrain_id == "":
 		return false
-	var map_data = _session.overworld.get("map", [])
-	if not (map_data is Array) or tile.y >= map_data.size():
+	var previous := _terrain_at(tile)
+	var result := _apply_terrain_placement([tile], terrain_id)
+	if not bool(result.get("ok", false)):
+		_last_message = String(result.get("message", "Could not paint terrain."))
 		return false
-	var row = map_data[tile.y]
-	if not (row is Array) or tile.x >= row.size():
-		return false
-	var previous := String(row[tile.x])
-	if previous == terrain_id:
+	if not bool(result.get("changed", false)):
 		_last_message = "Tile %d,%d already uses %s." % [tile.x, tile.y, _terrain_label_for_id(terrain_id)]
 		return true
-	row[tile.x] = terrain_id
-	map_data[tile.y] = row
-	_session.overworld["map"] = map_data
-	_terrain_paint_order += 1
-	_dirty = true
-	_last_message = "Painted %d,%d from %s to %s." % [
+	_last_message = "Painted %d,%d from %s to %s; HoMM3 owner writes %d." % [
 		tile.x,
 		tile.y,
 		_terrain_label_for_id(previous),
 		_terrain_label_for_id(terrain_id),
+		int(result.get("owner_changed_count", 0)),
 	]
 	return true
+
+func _apply_terrain_placement(paint_tiles: Array, terrain_id: String) -> Dictionary:
+	if _session == null:
+		_last_terrain_placement_result = {
+			"ok": false,
+			"changed": false,
+			"message": "No editor working copy is loaded.",
+		}
+		return _last_terrain_placement_result
+	var map_data = _session.overworld.get("map", [])
+	if not (map_data is Array):
+		_last_terrain_placement_result = {
+			"ok": false,
+			"changed": false,
+			"message": "Working copy has no terrain map array.",
+		}
+		return _last_terrain_placement_result
+	var result: Dictionary = TerrainPlacementRulesScript.apply_paint(
+		map_data,
+		OverworldRules.derive_map_size(_session),
+		terrain_id,
+		paint_tiles,
+		ContentService.get_terrain_grammar()
+	)
+	_last_terrain_placement_result = result
+	if bool(result.get("ok", false)):
+		_session.overworld["map"] = map_data
+		if bool(result.get("changed", false)):
+			_terrain_paint_order += 1
+			_dirty = true
+	return result
 
 func _fill_terrain_from_selected_tile() -> Dictionary:
 	return _fill_terrain_region(_selected_tile, _selected_terrain_id)
@@ -1021,33 +1049,28 @@ func _apply_terrain_line(start_tile: Vector2i, end_tile: Vector2i, terrain_id: S
 	if not (map_data is Array):
 		return {"ok": false, "changed": false, "message": "Working copy has no terrain map array."}
 	var path_tiles := _terrain_line_tiles(start_tile, end_tile)
-	var changed_tiles: Array[Vector2i] = []
 	var previous_terrain_by_tile := {}
 	for tile in path_tiles:
 		if not _tile_in_bounds(tile):
 			continue
-		var row = map_data[tile.y]
-		if not (row is Array) or tile.x < 0 or tile.x >= row.size():
-			continue
-		var previous := String(row[tile.x])
-		previous_terrain_by_tile[_tile_key(tile)] = previous
-		if previous == terrain_id:
-			continue
-		row[tile.x] = terrain_id
-		map_data[tile.y] = row
-		changed_tiles.append(tile)
-	_session.overworld["map"] = map_data
-	var changed := not changed_tiles.is_empty()
+		previous_terrain_by_tile[_tile_key(tile)] = _terrain_at(tile)
+	var placement_result := _apply_terrain_placement(path_tiles, terrain_id)
+	if not bool(placement_result.get("ok", false)):
+		return placement_result
+	var changed := bool(placement_result.get("changed", false))
 	var active_label := _terrain_label_for_id(terrain_id)
-	var message := "Painted %d terrain line tile%s with %s on %s from %d,%d to %d,%d." % [
-		changed_tiles.size(),
-		"" if changed_tiles.size() == 1 else "s",
+	var affected_count := int(placement_result.get("changed_count", 0))
+	var owner_write_count := int(placement_result.get("owner_changed_count", 0))
+	var message := "Painted %d terrain line tile%s with %s on %s from %d,%d to %d,%d; HoMM3 owner writes %d." % [
+		affected_count,
+		"" if affected_count == 1 else "s",
 		active_label,
 		TERRAIN_LINE_RULE_LABEL,
 		start_tile.x,
 		start_tile.y,
 		end_tile.x,
 		end_tile.y,
+		owner_write_count,
 	]
 	if not changed:
 		message = "Terrain line made no working-copy changes with %s on %s from %d,%d to %d,%d." % [
@@ -1068,10 +1091,13 @@ func _apply_terrain_line(start_tile: Vector2i, end_tile: Vector2i, terrain_id: S
 		"start_tile": {"x": start_tile.x, "y": start_tile.y},
 		"end_tile": {"x": end_tile.x, "y": end_tile.y},
 		"path_tiles": _tile_array_payload(path_tiles),
-		"changed_tiles": _tile_array_payload(changed_tiles),
+		"changed_tiles": placement_result.get("changed_tiles", []),
+		"owner_changed_tiles": placement_result.get("owner_changed_tiles", []),
 		"previous_terrain_by_tile": previous_terrain_by_tile,
 		"path_count": path_tiles.size(),
-		"affected_count": changed_tiles.size(),
+		"affected_count": affected_count,
+		"owner_changed_count": owner_write_count,
+		"terrain_placement": placement_result,
 	}
 
 func _terrain_line_tiles(start_tile: Vector2i, end_tile: Vector2i) -> Array[Vector2i]:
@@ -1118,33 +1144,28 @@ func _apply_terrain_rectangle(corner_tile: Vector2i, opposite_tile: Vector2i, te
 	if not (map_data is Array):
 		return {"ok": false, "changed": false, "message": "Working copy has no terrain map array."}
 	var rectangle_tiles := _terrain_rectangle_tiles(corner_tile, opposite_tile)
-	var changed_tiles: Array[Vector2i] = []
 	var previous_terrain_by_tile := {}
 	for tile in rectangle_tiles:
 		if not _tile_in_bounds(tile):
 			continue
-		var row = map_data[tile.y]
-		if not (row is Array) or tile.x < 0 or tile.x >= row.size():
-			continue
-		var previous := String(row[tile.x])
-		previous_terrain_by_tile[_tile_key(tile)] = previous
-		if previous == terrain_id:
-			continue
-		row[tile.x] = terrain_id
-		map_data[tile.y] = row
-		changed_tiles.append(tile)
-	_session.overworld["map"] = map_data
-	var changed := not changed_tiles.is_empty()
+		previous_terrain_by_tile[_tile_key(tile)] = _terrain_at(tile)
+	var placement_result := _apply_terrain_placement(rectangle_tiles, terrain_id)
+	if not bool(placement_result.get("ok", false)):
+		return placement_result
+	var changed := bool(placement_result.get("changed", false))
 	var active_label := _terrain_label_for_id(terrain_id)
-	var message := "Painted %d terrain rectangle tile%s with %s on %s from %d,%d to %d,%d." % [
-		changed_tiles.size(),
-		"" if changed_tiles.size() == 1 else "s",
+	var affected_count := int(placement_result.get("changed_count", 0))
+	var owner_write_count := int(placement_result.get("owner_changed_count", 0))
+	var message := "Painted %d terrain rectangle tile%s with %s on %s from %d,%d to %d,%d; HoMM3 owner writes %d." % [
+		affected_count,
+		"" if affected_count == 1 else "s",
 		active_label,
 		TERRAIN_RECTANGLE_RULE_LABEL,
 		corner_tile.x,
 		corner_tile.y,
 		opposite_tile.x,
 		opposite_tile.y,
+		owner_write_count,
 	]
 	if not changed:
 		message = "Terrain rectangle made no working-copy changes with %s on %s from %d,%d to %d,%d." % [
@@ -1167,10 +1188,13 @@ func _apply_terrain_rectangle(corner_tile: Vector2i, opposite_tile: Vector2i, te
 		"opposite_tile": {"x": opposite_tile.x, "y": opposite_tile.y},
 		"bounds": _terrain_rectangle_bounds(corner_tile, opposite_tile),
 		"rectangle_tiles": _tile_array_payload(rectangle_tiles),
-		"changed_tiles": _tile_array_payload(changed_tiles),
+		"changed_tiles": placement_result.get("changed_tiles", []),
+		"owner_changed_tiles": placement_result.get("owner_changed_tiles", []),
 		"previous_terrain_by_tile": previous_terrain_by_tile,
 		"rectangle_count": rectangle_tiles.size(),
-		"affected_count": changed_tiles.size(),
+		"affected_count": affected_count,
+		"owner_changed_count": owner_write_count,
+		"terrain_placement": placement_result,
 	}
 
 func _terrain_rectangle_tiles(corner_tile: Vector2i, opposite_tile: Vector2i) -> Array[Vector2i]:
@@ -1242,28 +1266,35 @@ func _fill_terrain_region(start_tile: Vector2i, terrain_id: String) -> Dictionar
 			if _terrain_at(neighbor) == source_terrain:
 				frontier.append(neighbor)
 
-	for tile in filled_tiles:
-		var row = map_data[tile.y]
-		if row is Array and tile.x >= 0 and tile.x < row.size():
-			row[tile.x] = terrain_id
-			map_data[tile.y] = row
-	_session.overworld["map"] = map_data
+	var placement_result := _apply_terrain_placement(filled_tiles, terrain_id)
+	if not bool(placement_result.get("ok", false)):
+		return placement_result
+	var affected_count := int(placement_result.get("changed_count", 0))
+	var owner_write_count := int(placement_result.get("owner_changed_count", 0))
 	return {
 		"ok": true,
-		"changed": not filled_tiles.is_empty(),
-		"message": "Filled %d contiguous %s tile%s from %d,%d with %s." % [
+		"changed": bool(placement_result.get("changed", false)),
+		"message": "Filled %d contiguous %s tile%s from %d,%d with %s; HoMM3 owner writes %d and affected %d tile%s." % [
 			filled_tiles.size(),
 			_terrain_label_for_id(source_terrain),
 			"" if filled_tiles.size() == 1 else "s",
 			start_tile.x,
 			start_tile.y,
 			_terrain_label_for_id(terrain_id),
+			owner_write_count,
+			affected_count,
+			"" if affected_count == 1 else "s",
 		],
 		"start_tile": {"x": start_tile.x, "y": start_tile.y},
 		"source_terrain_id": source_terrain,
 		"active_terrain_id": terrain_id,
 		"filled_count": filled_tiles.size(),
+		"changed_tiles": placement_result.get("changed_tiles", []),
+		"owner_changed_tiles": placement_result.get("owner_changed_tiles", []),
+		"affected_count": affected_count,
+		"owner_changed_count": owner_write_count,
 		"contiguity": "cardinal",
+		"terrain_placement": placement_result,
 	}
 
 func _toggle_road(tile: Vector2i) -> bool:
@@ -2876,6 +2907,7 @@ func validation_snapshot() -> Dictionary:
 		"authored_terrain_ids": _authored_terrain_ids(),
 		"hidden_terrain_ids": _hidden_terrain_ids(),
 		"terrain_paint_order": _terrain_paint_order,
+		"terrain_placement": _last_terrain_placement_result,
 		"editor_restamp": _editor_restamp_payload_for_tile(_selected_tile),
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
@@ -2968,7 +3000,44 @@ func validation_paint_terrain(x: int, y: int, terrain_id: String) -> Dictionary:
 	snapshot["paint_new_terrain_id"] = terrain_id
 	snapshot["paint_changed"] = previous_terrain != terrain_id and changed
 	snapshot["terrain_paint_order"] = _terrain_paint_order
+	snapshot["terrain_placement"] = _last_terrain_placement_result
+	snapshot["owner_changed_count"] = int(_last_terrain_placement_result.get("owner_changed_count", 0))
+	snapshot["changed_tiles"] = _last_terrain_placement_result.get("changed_tiles", [])
+	snapshot["owner_changed_tiles"] = _last_terrain_placement_result.get("owner_changed_tiles", [])
+	snapshot["final_normalization"] = _last_terrain_placement_result.get("final_normalization", {})
 	snapshot["editor_restamp"] = _editor_restamp_payload_for_tile(_selected_tile)
+	return snapshot
+
+func validation_seed_terrain_direct(x: int, y: int, terrain_id: String) -> Dictionary:
+	var tile := Vector2i(x, y)
+	if not _tile_in_bounds(tile):
+		return {"ok": false, "message": "Tile outside map."}
+	if not _terrain_id_in_grammar(terrain_id):
+		return {"ok": false, "message": "Terrain id %s is not in the authored terrain grammar." % terrain_id}
+	_selected_tile = tile
+	var previous_terrain := _terrain_at(tile)
+	var changed := previous_terrain != terrain_id and _set_tile_terrain(tile, terrain_id)
+	if changed:
+		_dirty = true
+	var previous_terrain_by_tile := {}
+	previous_terrain_by_tile[_tile_key(tile)] = previous_terrain
+	_last_terrain_placement_result = {
+		"ok": true,
+		"changed": changed,
+		"placement_model": "direct_validation_seed_no_homm3_queue",
+		"brush_terrain_id": terrain_id,
+		"requested_tiles": [{"x": tile.x, "y": tile.y}],
+		"changed_tiles": [{"x": tile.x, "y": tile.y}] if changed else [],
+		"owner_changed_tiles": [],
+		"owner_changed_count": 0,
+		"previous_terrain_by_tile": previous_terrain_by_tile,
+	}
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = true
+	snapshot["changed"] = changed
+	snapshot["seed_previous_terrain_id"] = previous_terrain
+	snapshot["seed_new_terrain_id"] = terrain_id
 	return snapshot
 
 func validation_fill_terrain(x: int, y: int, terrain_id: String = "") -> Dictionary:
@@ -2999,6 +3068,11 @@ func validation_fill_terrain(x: int, y: int, terrain_id: String = "") -> Diction
 	snapshot["terrain_selected"] = terrain_selected
 	snapshot["fill_result"] = result
 	snapshot["filled_count"] = int(result.get("filled_count", 0))
+	snapshot["affected_count"] = int(result.get("affected_count", 0))
+	snapshot["owner_changed_count"] = int(result.get("owner_changed_count", 0))
+	snapshot["changed_tiles"] = result.get("changed_tiles", [])
+	snapshot["owner_changed_tiles"] = result.get("owner_changed_tiles", [])
+	snapshot["terrain_placement"] = result.get("terrain_placement", _last_terrain_placement_result)
 	snapshot["source_terrain_id"] = String(result.get("source_terrain_id", ""))
 	snapshot["active_terrain_id"] = String(result.get("active_terrain_id", _selected_terrain_id))
 	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
@@ -3076,6 +3150,9 @@ func validation_apply_terrain_line(x: int, y: int, terrain_id: String = "") -> D
 	snapshot["previous_terrain_by_tile"] = result.get("previous_terrain_by_tile", {})
 	snapshot["path_count"] = int(result.get("path_count", 0))
 	snapshot["affected_count"] = int(result.get("affected_count", 0))
+	snapshot["owner_changed_count"] = int(result.get("owner_changed_count", 0))
+	snapshot["owner_changed_tiles"] = result.get("owner_changed_tiles", [])
+	snapshot["terrain_placement"] = result.get("terrain_placement", _last_terrain_placement_result)
 	snapshot["start_tile"] = result.get("start_tile", {"x": start_tile.x, "y": start_tile.y})
 	snapshot["end_tile"] = result.get("end_tile", {"x": end_tile.x, "y": end_tile.y})
 	snapshot["tile_inspection"] = _tile_inspection_payload(_selected_tile)
@@ -3157,6 +3234,9 @@ func validation_apply_terrain_rectangle(x: int, y: int, terrain_id: String = "")
 	snapshot["previous_terrain_by_tile"] = result.get("previous_terrain_by_tile", {})
 	snapshot["rectangle_count"] = int(result.get("rectangle_count", 0))
 	snapshot["affected_count"] = int(result.get("affected_count", 0))
+	snapshot["owner_changed_count"] = int(result.get("owner_changed_count", 0))
+	snapshot["owner_changed_tiles"] = result.get("owner_changed_tiles", [])
+	snapshot["terrain_placement"] = result.get("terrain_placement", _last_terrain_placement_result)
 	snapshot["corner_tile"] = result.get("corner_tile", {"x": corner_tile.x, "y": corner_tile.y})
 	snapshot["opposite_tile"] = result.get("opposite_tile", {"x": opposite_tile.x, "y": opposite_tile.y})
 	snapshot["bounds"] = result.get("bounds", _terrain_rectangle_bounds(corner_tile, opposite_tile))
