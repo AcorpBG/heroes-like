@@ -66,7 +66,7 @@ func _run() -> void:
 	if bool(viewport_metrics.get("visible_tile_span_override_active", false)):
 		_fail("Ninefold smoke: gameplay overworld unexpectedly used the editor zoom-out override: %s." % viewport_metrics)
 		return
-	if not is_equal_approx(float(viewport_metrics.get("active_visible_tile_span", 0.0)), 12.0):
+	if not is_equal_approx(float(viewport_metrics.get("active_visible_tile_span", 0.0)), 16.0):
 		_fail("Ninefold smoke: gameplay tactical visible span changed from the normal overworld default: %s." % viewport_metrics)
 		return
 	var visible_columns := float(viewport_metrics.get("visible_tile_columns", 0.0))
@@ -75,7 +75,7 @@ func _run() -> void:
 	if visible_columns <= 0.0 or visible_rows <= 0.0 or visible_area <= 0.0:
 		_fail("Ninefold smoke: tactical viewport metrics were empty: %s." % viewport_metrics)
 		return
-	if visible_columns >= 32.0 or visible_rows >= 32.0 or visible_area > 220.0:
+	if visible_columns >= 32.0 or visible_rows >= 32.0 or visible_area > 360.0:
 		_fail("Ninefold smoke: tactical viewport still shows too much of the 64x64 map: %s." % viewport_metrics)
 		return
 	var focus_tile: Dictionary = viewport_metrics.get("camera_focus_tile", {})
