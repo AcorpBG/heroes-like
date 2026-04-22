@@ -969,9 +969,9 @@ static func _classify_relations(relations: Array) -> Dictionary:
 		var flag_b := flag_word.y
 		if _relation_at(relations, flag_a, flag_b, 2) == 1 and _relation_at(relations, flag_a, flag_b, 4) == 1:
 			if _relation_at(relations, flag_a, flag_b, 5) == 2:
-				return _class_result(17, flag_a, flag_b, "E=1,S=1,SW=2")
+				return _class_result(17, flag_a, flag_b, "E=1,S=1,SW=2; mixed corner block")
 			if _relation_at(relations, flag_a, flag_b, 1) == 2:
-				return _class_result(18, flag_a, flag_b, "E=1,S=1,NE=2")
+				return _class_result(18, flag_a, flag_b, "E=1,S=1,NE=2; mixed corner block")
 	for flags in FLAG_WORDS:
 		var flag_word: Vector2i = flags
 		var flag_a := flag_word.x

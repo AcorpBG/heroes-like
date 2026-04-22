@@ -26,6 +26,29 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Mixed-Corner Class Reason Payload Parity
+Status: completed on 2026-04-22 as a narrow active validation/inspector payload correction.
+
+Purpose:
+- Make the live/editor `class_reason` payload for accepted relation classes 17 and 18 match the web prototype's mixed-corner trigger text.
+- Preserve relation-class selection, selected frame ids, flip flags, selected frame blocks, terrain ownership, roads, objects, pathing, save data, editor tools, and asset staging.
+- Avoid treating this as a broader HoMM3 terrain parity claim.
+
+Implemented:
+- `TerrainPlacementRules._classify_relations` now reports `E=1,S=1,SW=2; mixed corner block` for class 17 and `E=1,S=1,NE=2; mixed corner block` for class 18, matching the accepted web prototype.
+- Map-editor smoke coverage now seeds exact class-17 and class-18 relation rings through the shared editor/live preview payload and asserts both `homm3_class_reason` and `homm3_web_prototype_class_reason`.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not whole HoMM3 terrain parity, a rendered frame choice change, visual old-frame retention modeling, water shoreline topology, rock/void topology, terrain art replacement, gameplay/pathing change, save-format change, or exact original executable lookup recovery.
+- The next visually meaningful parity gap still requires fresh live/editor visual evidence rather than inferring from dead metadata alone.
+
 ## Current Implementation Slice: HoMM3 Selected Frame Block Payload Truth
 Status: completed on 2026-04-22 as a narrow active validation-payload correction.
 

@@ -49,6 +49,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_neighbor_transition_preview(shell):
 		return
+	if not _assert_editor_mixed_corner_class_reason_payload(shell):
+		return
 	if not _assert_editor_true_terrain_placement(shell):
 		return
 	if not _assert_editor_placement_source_lower_edge(shell):
@@ -601,6 +603,74 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: direct water/rock rock cell did not expose the accepted unresolved fallback truth signal: %s." % direct_rock_presentation)
 		return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
+func _assert_editor_mixed_corner_class_reason_payload(shell) -> bool:
+	var center := Vector2i(53, 40)
+	var controlled_tiles := []
+	var original_terrains := []
+	for y in range(center.y - 1, center.y + 2):
+		for x in range(center.x - 1, center.x + 2):
+			var tile := Vector2i(x, y)
+			controlled_tiles.append(tile)
+			var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+			original_terrains.append({
+				"tile": tile,
+				"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+			})
+			if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not seed grass baseline for HoMM3 mixed-corner class reason test at %s." % tile)
+				return false
+
+	var cases := [
+		{
+			"label": "class-17",
+			"shape_class": 17,
+			"reason": "E=1,S=1,SW=2; mixed corner block",
+			"sources": [
+				{"offset": Vector2i(1, 0), "terrain": "badlands"},
+				{"offset": Vector2i(0, 1), "terrain": "badlands"},
+				{"offset": Vector2i(-1, 1), "terrain": "wastes"},
+			],
+		},
+		{
+			"label": "class-18",
+			"shape_class": 18,
+			"reason": "E=1,S=1,NE=2; mixed corner block",
+			"sources": [
+				{"offset": Vector2i(1, 0), "terrain": "badlands"},
+				{"offset": Vector2i(0, 1), "terrain": "badlands"},
+				{"offset": Vector2i(1, -1), "terrain": "wastes"},
+			],
+		},
+	]
+	for case in cases:
+		for tile in controlled_tiles:
+			if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not reset grass before HoMM3 mixed-corner class reason case %s at %s." % [case, tile])
+				return false
+		for source_value in case.get("sources", []):
+			var source: Dictionary = source_value
+			var source_tile: Vector2i = center + source.get("offset", Vector2i.ZERO)
+			if not _paint_editor_terrain_for_orientation(shell, source_tile, String(source.get("terrain", ""))):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not seed HoMM3 mixed-corner source for case %s at %s." % [case, source_tile])
+				return false
+		var presentation: Dictionary = shell.call("validation_tile_presentation", center.x, center.y)
+		var terrain: Dictionary = presentation.get("terrain_presentation", {})
+		if (
+			String(terrain.get("terrain", "")) != "grass"
+			or int(terrain.get("homm3_shape_class", 0)) != int(case.get("shape_class", -1))
+			or String(terrain.get("homm3_class_reason", "")) != String(case.get("reason", ""))
+			or String(terrain.get("homm3_web_prototype_class_reason", "")) != String(case.get("reason", ""))
+		):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: HoMM3 mixed-corner class reason did not match the accepted web prototype for %s: %s." % [String(case.get("label", "")), presentation])
+			return false
 
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
