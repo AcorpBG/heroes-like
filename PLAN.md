@@ -26,7 +26,31 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: HoMM3 Editor Terrain Placement Lower-Edge Regression
+## Current Implementation Slice: HoMM3 Sand-Heavy Corner Ownership Regression
+Status: completed on 2026-04-22 as a narrow renderer/validation correction.
+
+Purpose:
+- Fix the reported Godot terrain-rendering regression where sand/grass corner transition tiles chose grass-heavy quadrant ownership, rendering as 3 grass + 1 sand instead of the expected 1 grass + 3 sand.
+- Preserve the HoMM3 owner queue, rewrite, and final-normalization terrain placement path while correcting shared `OverworldMapView` frame selection for the specific sand-heavy two-cardinal-plus-corner topology.
+- Keep roads, towns, objects, pathing, save schema, content schema shape, and unrelated renderer systems unchanged.
+
+Implemented:
+- Added data-driven sand `cardinal_corner_entries` to the full-receiver native-to-sand stamp table for the four N+E, E+S, S+W, and N+W sand-heavy corner orientations.
+- `OverworldMapView` now detects a full-receiver land tile with two same-bridge cardinal sand sources plus the matching diagonal sand source and selects the sand-heavy corner stamp with the proper flip, instead of falling back to the first single-edge cardinal stamp.
+- Added focused map-editor smoke coverage for all four sand-heavy corner orientations, asserting the selected `grastl` native-to-sand frame, source offset/direction, transform, and non-reserved sand-heavy ownership metadata.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not a broader terrain rewrite, road change, water/rock rewrite, terrain asset replacement, gameplay/pathing change, save-format change, town/object editing change, or exact original executable lookup recovery.
+- Existing simple cardinal sand edge entries, dirt bridge entries, lower/source-cell suppression, water shoreline handling, rock handling, and editor owner queue placement remain intact.
+
+## Completed Implementation Slice: HoMM3 Editor Terrain Placement Lower-Edge Regression
 Status: completed on 2026-04-22 as a narrow renderer/validation correction.
 
 Purpose:
