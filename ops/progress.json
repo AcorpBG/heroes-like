@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-22T14:03:58Z",
+  "updatedAt": "2026-04-22T14:18:50Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-web-prototype-quadrant-reprojection-parity-10184",
-  "currentSliceTitle": "Expose accepted web prototype quadrant reprojection through Godot validation",
+  "currentSliceId": "homm3-selected-frame-block-payload-truth-10184",
+  "currentSliceTitle": "Correct HoMM3 selected frame block payload truth",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Added the accepted web prototype's cardinal quadrant reprojection to the shared Godot terrain selection payload and exposed it through live/editor validation. Direct water/rock validation now asserts material, normalized, and display quadrant outputs on both receiver sides while preserving relation-class frame selection. Full validation passed for repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
+  "currentSliceNotes": "Corrected active terrain validation payloads so selected_frame_block follows the atlas block of the frame actually chosen by the relation-class selector, including missing-bucket fallback rows, rock black-void fallback rows, and the grammar's open_water_interiors block id. Full validation passed for repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -438,6 +438,12 @@
     {
       "id": "homm3-web-prototype-quadrant-reprojection-parity-10184",
       "title": "Expose accepted web prototype quadrant reprojection through Godot validation",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "homm3-selected-frame-block-payload-truth-10184",
+      "title": "Correct HoMM3 selected frame block payload truth",
       "status": "completed",
       "difficulty": "small"
     },

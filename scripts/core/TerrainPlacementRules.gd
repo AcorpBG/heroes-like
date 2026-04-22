@@ -414,8 +414,10 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 	var class_code := int(class_info.get("class_code", 0))
 	var selected := _select_visual_frame(owner_id, class_code, int(class_info.get("flag_a", 0)), int(class_info.get("flag_b", 0)), tile)
 	var frame_number := int(selected.get("frame", 0))
+	var selected_fallback := bool(selected.get("fallback", false))
+	var selected_frame_block := _visual_frame_block_for(owner_family, frame_number, 0 if selected_fallback else class_code)
 	var fallback_reasons := []
-	if bool(selected.get("fallback", false)):
+	if selected_fallback:
 		fallback_reasons.append(String(selected.get("fallback_reason", "")))
 	if direct_water_rock_contact:
 		fallback_reasons.append("explicit direct water/rock contact kept unresolved")
@@ -457,7 +459,7 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 		"fallback_reason": "; ".join(fallback_reasons),
 		"direct_water_rock_contact": direct_water_rock_contact,
 		"bridge_family": _bridge_family_from_relations(relation_ring),
-		"selected_frame_block": _visual_frame_block_for(owner_family, frame_number, class_code),
+		"selected_frame_block": selected_frame_block,
 	}
 
 static func terrain_family_for_id(terrain_grammar: Dictionary, terrain_id: String) -> String:
@@ -1236,9 +1238,9 @@ static func _visual_frame_block_for(owner_family: String, frame_number: int, sha
 			"sand":
 				return "sand_base_interiors"
 			"water":
-				return "water_interiors"
+				return "open_water_interiors"
 			"rock":
-				return "rock_void_interiors"
+				return "rock_black_void"
 		return "native_interiors"
 	match owner_family:
 		"dirt":
