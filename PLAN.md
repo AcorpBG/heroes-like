@@ -26,7 +26,30 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: HoMM3 Editor Terrain Placement
+## Current Implementation Slice: HoMM3 Editor Terrain Placement Lower-Edge Regression
+Status: completed on 2026-04-22 as a narrow renderer/validation correction.
+
+Purpose:
+- Fix the reported Godot map-editor terrain placement regression where the lower/source cells in a HoMM3 owner-queue painted dirt/sand cluster resolved as transition receivers against surrounding full-receiver land.
+- Preserve the new HoMM3 owner queue, rewrite, and final-normalization placement path while making the shared preview honor source-cell base/interior ownership.
+- Keep roads, towns, objects, pathing, save schema, content schema, and unrelated renderer systems unchanged.
+
+Implemented:
+- `OverworldMapView` now suppresses full-receiver-land neighbor contacts when the evaluated receiver tile is a sand base/decor material, and suppresses fallback reduced dirt receiver contacts against full-receiver land unless an explicit direct bridge pair owns that relation.
+- Added a focused map-editor smoke regression that paints single sand and dirt source clusters through the HoMM3 owner queue and asserts the lower/source cells stay on interior/base frames while adjacent full-receiver grass still carries the transition.
+- Updated the existing editor restamp expectation so the painted sand source tile reports the sand base interior block rather than a receiver-style base-context transition.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+
+Limits:
+- This is not a broader terrain rewrite, road change, water/rock rewrite, terrain asset replacement, gameplay/pathing change, save-format change, town/object editing change, or exact original executable lookup recovery.
+- The existing direct dirt/swamp and dirt/sand bridge resolver cases remain intact; this only prevents source dirt/sand cells from acting like full-receiver transition tiles against ordinary full-receiver land.
+
+## Completed Implementation Slice: HoMM3 Editor Terrain Placement
 Status: completed on 2026-04-22 as a narrow editor-path behavior port.
 
 Purpose:
