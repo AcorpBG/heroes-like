@@ -4039,6 +4039,8 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 	var relation_kind := "shoreline_land_neighbor" if receiver_is_water else ("rock_system_neighbor" if receiver_is_rock else ("bridge_material_base_context" if receiver_atlas_role == "base_decor_bridge_material" else "bridge_base_resolution"))
 	var default_bridge_family := _homm3_receiver_bridge_family(receiver_config, receiver_family_config)
 	var bridge_resolution := _homm3_bridge_material_resolution(receiver_config, receiver_family_config, receiver_family, neighbor_family_config, neighbor_family)
+	if _homm3_receiver_suppresses_full_land_neighbor(receiver_family_config, neighbor_family_config, bridge_resolution):
+		return {}
 	var resolved_bridge_family := String(bridge_resolution.get("bridge_family", default_bridge_family)).strip_edges()
 	var bridge_resolution_model := "shoreline_specific_lookup" if receiver_is_water else ("rock_system_lookup" if receiver_is_rock else ("bridge_material_base_context_lookup" if receiver_atlas_role == "base_decor_bridge_material" else "receiver_bridge_family_default"))
 	if String(bridge_resolution.get("bridge_resolution_model", "")).strip_edges() != "":
@@ -4070,6 +4072,17 @@ func _homm3_relation_source_for_neighbor(tile: Vector2i, receiver_terrain: Strin
 		"neighbor": {"x": neighbor.x, "y": neighbor.y},
 		"source_offset": {"x": offset.x, "y": offset.y},
 	}
+
+func _homm3_receiver_suppresses_full_land_neighbor(receiver_family_config: Dictionary, neighbor_family_config: Dictionary, bridge_resolution: Dictionary) -> bool:
+	var receiver_role := _homm3_family_atlas_role(receiver_family_config)
+	var neighbor_role := _homm3_family_atlas_role(neighbor_family_config)
+	if neighbor_role != "full_receiver_land":
+		return false
+	if receiver_role == "base_decor_bridge_material":
+		return true
+	if receiver_role == "reduced_bridge_receiver":
+		return not bool(bridge_resolution.get("uses_direct_bridge_pair", false))
+	return false
 
 func _homm3_direct_bridge_pair(receiver_family: String, neighbor_family: String) -> Dictionary:
 	var key := "%s|%s" % [receiver_family.strip_edges(), neighbor_family.strip_edges()]

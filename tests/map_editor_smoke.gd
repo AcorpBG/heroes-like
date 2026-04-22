@@ -51,6 +51,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_true_terrain_placement(shell):
 		return
+	if not _assert_editor_placement_source_lower_edge(shell):
+		return
 	if not _assert_flood_fill_terrain(shell):
 		return
 	if not _assert_terrain_line_tool(shell):
@@ -844,6 +846,74 @@ func _assert_true_terrain_placement_result(result: Dictionary, expected_terrain_
 		return false
 	return true
 
+func _assert_editor_placement_source_lower_edge(shell) -> bool:
+	var center := Vector2i(42, 50)
+	var original_terrains := []
+	var controlled_tiles := []
+	for y in range(center.y - 3, center.y + 4):
+		for x in range(center.x - 3, center.x + 4):
+			controlled_tiles.append(Vector2i(x, y))
+	for tile in controlled_tiles:
+		var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
+		original_terrains.append({
+			"tile": tile,
+			"terrain": String(presentation.get("terrain_presentation", {}).get("terrain", "grass")),
+		})
+		if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: could not seed grass for lower-edge placement regression at %s." % tile)
+			return false
+
+	var cases := [
+		{"terrain": "wastes", "family": "sand", "block": "sand_base_interiors"},
+		{"terrain": "badlands", "family": "dirt", "block": "dirt_base_interiors"},
+	]
+	for case in cases:
+		for tile in controlled_tiles:
+			if not _paint_editor_terrain_for_orientation(shell, tile, "grass"):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: could not reset grass before lower-edge placement case %s at %s." % [case, tile])
+				return false
+		var terrain_id := String(case.get("terrain", ""))
+		var paint_result: Dictionary = shell.call("validation_paint_terrain", center.x, center.y, terrain_id)
+		if not bool(paint_result.get("ok", false)) or not bool(paint_result.get("paint_changed", false)):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: lower-edge placement regression paint did not change %s at %s: %s." % [terrain_id, center, paint_result])
+			return false
+		if not _assert_true_terrain_placement_result(paint_result, terrain_id):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: lower-edge placement regression did not use the HoMM3 owner queue for %s: %s." % [terrain_id, paint_result])
+			return false
+		for lower_tile in [center + Vector2i(-1, 0), center]:
+			var lower_presentation: Dictionary = shell.call("validation_tile_presentation", lower_tile.x, lower_tile.y)
+			var lower_terrain: Dictionary = lower_presentation.get("terrain_presentation", {})
+			if (
+				String(lower_terrain.get("terrain", "")) != terrain_id
+				or String(lower_terrain.get("homm3_terrain_family", "")) != String(case.get("family", ""))
+				or String(lower_terrain.get("homm3_selection_kind", "")) != "interior"
+				or String(lower_terrain.get("homm3_selected_frame_block", "")) != String(case.get("block", ""))
+				or String(lower_terrain.get("transition_edge_mask", "")) != ""
+				or int(lower_terrain.get("edge_transition_count", -1)) != 0
+				or not lower_terrain.get("transition_source_terrain_ids", []).is_empty()
+			):
+				_restore_editor_terrain_tiles(shell, original_terrains)
+				_fail("Map editor smoke: lower source edge for %s resolved as a transition instead of an interior/base tile at %s: %s." % [terrain_id, lower_tile, lower_presentation])
+				return false
+		var grass_receiver_tile := center + Vector2i(0, -2)
+		var receiver_presentation: Dictionary = shell.call("validation_tile_presentation", grass_receiver_tile.x, grass_receiver_tile.y)
+		var receiver_terrain: Dictionary = receiver_presentation.get("terrain_presentation", {})
+		if (
+			String(receiver_terrain.get("terrain", "")) != "grass"
+			or String(receiver_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+			or terrain_id not in receiver_terrain.get("transition_source_terrain_ids", [])
+		):
+			_restore_editor_terrain_tiles(shell, original_terrains)
+			_fail("Map editor smoke: full-receiver neighbor did not retain the terrain transition around lower-edge source tiles for %s: %s." % [terrain_id, receiver_presentation])
+			return false
+
+	_restore_editor_terrain_tiles(shell, original_terrains)
+	return true
+
 func _assert_editor_restamp_behavior_model(shell) -> bool:
 	var painted := Vector2i(30, 50)
 	var original_terrains := []
@@ -890,7 +960,9 @@ func _assert_editor_restamp_behavior_model(shell) -> bool:
 		or int(sand_source.get("restamp_order_index", -1)) != 0
 		or String(sand_source_terrain.get("terrain", "")) != "wastes"
 		or String(sand_source_terrain.get("homm3_terrain_family", "")) != "sand"
-		or String(sand_source_terrain.get("homm3_selection_kind", "")) != "bridge_material_base_context"
+		or String(sand_source_terrain.get("homm3_selection_kind", "")) != "interior"
+		or String(sand_source_terrain.get("homm3_selected_frame_block", "")) != "sand_base_interiors"
+		or String(sand_source_terrain.get("transition_edge_mask", "")) != ""
 		or String(sand_source_terrain.get("homm3_editor_restamp_model", "")) != "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1"
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
