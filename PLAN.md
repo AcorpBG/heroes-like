@@ -26,7 +26,30 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: Map Editor Zoom Compromise
+## Current Implementation Slice: Gameplay Overworld Visible Span
+Status: completed on 2026-04-22 as a narrow gameplay framing correction.
+
+Purpose:
+- Increase the default gameplay overworld tactical visible span from 12 tiles to 16 tiles.
+- Preserve the editor-only explicit `OverworldMapView` visible-span override architecture.
+- Keep the map editor at its existing 24-tile override unless validation proves another change is required.
+
+Implemented:
+- `OverworldMapView` now uses a 16-tile default tactical visible span for gameplay scenes without an explicit override.
+- The map editor scene still opts into its separate 24-tile visible span.
+- Focused smoke expectations now assert the gameplay 16-tile default and the editor's 24-tile override relative to that default.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not a map editor zoom redesign, panning rewrite, map data change, save-format change, terrain renderer change, or gameplay rules change.
+
+## Completed Implementation Slice: Map Editor Zoom Compromise
 Status: completed on 2026-04-22 as a narrow editor-only view-framing correction.
 
 Purpose:

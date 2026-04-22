@@ -38,8 +38,8 @@ func _run() -> void:
 	if not is_equal_approx(float(viewport_metrics.get("active_visible_tile_span", 0.0)), 24.0):
 		_fail("Map editor smoke: editor map view did not request a 24-tile visible span: %s." % viewport_metrics)
 		return
-	if not is_equal_approx(float(viewport_metrics.get("visible_tile_span_zoom_out_factor", 0.0)), 2.0):
-		_fail("Map editor smoke: editor map view did not zoom out by a factor of 2 from the gameplay tactical span: %s." % viewport_metrics)
+	if not is_equal_approx(float(viewport_metrics.get("visible_tile_span_zoom_out_factor", 0.0)), 1.5):
+		_fail("Map editor smoke: editor map view did not zoom out by a factor of 1.5 from the gameplay tactical span: %s." % viewport_metrics)
 		return
 	if not _assert_editor_terrain_option_contract(shell, snapshot):
 		return
