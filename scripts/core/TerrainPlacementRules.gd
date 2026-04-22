@@ -6,6 +6,7 @@ const PAINT_ORDER_MODEL := "paint_tiles_in_tool_order_then_drain_set_a_set_b"
 const FINAL_NORMALIZATION_MODEL := "final_normalization_4bbfcc_reclassifies_settled_owner_map"
 const VISUAL_SELECTION_MODEL := "accepted_web_prototype_relation_class_row_lookup.v1"
 const VISUAL_FRAME_SELECTION_SOURCE := "accepted_web_prototype_and_recovered_h3maped_final_normalization"
+const VISUAL_PROJECTION_MODEL := "accepted_web_prototype_cardinal_material_projection.v1"
 
 const TERRAIN_FAMILY_IDS := {
 	"dirt": 0,
@@ -31,6 +32,7 @@ const TERRAIN_FAMILIES_BY_ID := [
 	"water",
 	"rock",
 ]
+const FULL_LAND_FAMILIES := ["grass", "snow", "swamp", "rough", "subterranean", "lava"]
 const TRAIT_FLAG4 := [1, 0, 1, 1, 1, 1, 1, 1, 0, 0]
 const TRAIT_FLAG5 := [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
 const NEIGHBOR_OFFSETS := [
@@ -48,6 +50,12 @@ const CARDINAL_OFFSETS := [
 	Vector2i(0, 1),
 	Vector2i(-1, 0),
 	Vector2i(1, 0),
+]
+const CARDINAL_PROJECTION_EDGES := [
+	{"offset": Vector2i(0, -1), "quadrants": [0, 1]},
+	{"offset": Vector2i(1, 0), "quadrants": [1, 3]},
+	{"offset": Vector2i(0, 1), "quadrants": [2, 3]},
+	{"offset": Vector2i(-1, 0), "quadrants": [0, 2]},
 ]
 const DIAGONAL_OFFSETS := [
 	Vector2i(-1, -1),
@@ -385,6 +393,9 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 	var boundary_count := _boundary_count_for_cell(map_data, map_size, terrain_grammar, tile)
 	var relation_ring := _relation_ring_for_cell(map_data, map_size, terrain_grammar, tile)
 	var direct_water_rock_contact := _has_direct_water_rock_contact(map_data, map_size, terrain_grammar, tile)
+	var owner_projection := _owner_footprint_projection(map_data, map_size, terrain_grammar, tile)
+	var material_projection := _contact_material_projection(map_data, map_size, terrain_grammar, tile)
+	var normalized_projection := _normalized_projection_for_owner(owner_family, material_projection)
 	var class_info := {"class_code": 0, "flag_a": 0, "flag_b": 0, "reason": "no classed relation"}
 	var correction := ""
 	if boundary_count > 0:
@@ -423,6 +434,14 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 		"boundary_count": boundary_count,
 		"relation_ring": relation_ring,
 		"relation_grid": relation_grid_string(relation_ring),
+		"projection_model": VISUAL_PROJECTION_MODEL,
+		"raw_quadrants": owner_projection,
+		"owner_footprint_quadrants": owner_projection,
+		"material_quadrants": material_projection,
+		"count_quadrants": normalized_projection,
+		"normalized_quadrants": normalized_projection,
+		"visual_quadrants": material_projection,
+		"display_quadrants": material_projection,
 		"row_group": String(selected.get("row_group", "")),
 		"row_source": String(selected.get("row_source", "")),
 		"row_table": String(selected.get("row_table", "")),
@@ -851,6 +870,70 @@ static func _has_direct_water_rock_contact(map_data: Array, map_size: Vector2i, 
 		if _owner_id_at(map_data, map_size, terrain_grammar, tile + offset_vector) == contact_id:
 			return true
 	return false
+
+static func _owner_footprint_projection(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> Array:
+	var owner_family := terrain_family_for_id_number(_owner_id_at(map_data, map_size, terrain_grammar, tile))
+	var projection := [owner_family, owner_family, owner_family, owner_family]
+	for edge_value in CARDINAL_PROJECTION_EDGES:
+		var edge: Dictionary = edge_value
+		var offset: Vector2i = edge.get("offset", Vector2i.ZERO)
+		var neighbor_family := terrain_family_for_id_number(_owner_id_at(map_data, map_size, terrain_grammar, tile + offset))
+		if neighbor_family != "" and neighbor_family != owner_family:
+			_apply_edge_projection(projection, edge.get("quadrants", []), owner_family, neighbor_family)
+	return projection
+
+static func _contact_material_projection(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> Array:
+	var owner_family := terrain_family_for_id_number(_owner_id_at(map_data, map_size, terrain_grammar, tile))
+	var owner_id := terrain_owner_id_for_family(owner_family)
+	var projection := [owner_family, owner_family, owner_family, owner_family]
+	for edge_value in CARDINAL_PROJECTION_EDGES:
+		var edge: Dictionary = edge_value
+		var offset: Vector2i = edge.get("offset", Vector2i.ZERO)
+		var neighbor_family := terrain_family_for_id_number(_owner_id_at(map_data, map_size, terrain_grammar, tile + offset))
+		var neighbor_id := terrain_owner_id_for_family(neighbor_family)
+		var material := _contact_material_for_relation(owner_family, neighbor_family, _relation_between_ids(owner_id, neighbor_id))
+		if material != "":
+			_apply_edge_projection(projection, edge.get("quadrants", []), owner_family, material)
+	return projection
+
+static func _contact_material_for_relation(owner_family: String, neighbor_family: String, relation: int) -> String:
+	if relation == 0:
+		return ""
+	if owner_family == "water":
+		return "rock" if neighbor_family == "rock" else "land"
+	if owner_family == "rock":
+		return "water" if neighbor_family == "water" else "sand"
+	if owner_family == "dirt":
+		return "sand"
+	if owner_family in FULL_LAND_FAMILIES:
+		return "dirt" if relation == 1 else "sand"
+	return ""
+
+static func _normalized_projection_for_owner(owner_family: String, projection: Array) -> Array:
+	var normalized := []
+	for token_value in projection:
+		var token := String(token_value)
+		if owner_family == "water":
+			normalized.append("water" if token == "water" else "land")
+		elif owner_family == "rock":
+			normalized.append("rock" if token == "rock" else "sand")
+		elif owner_family in FULL_LAND_FAMILIES:
+			normalized.append("native" if token == owner_family else token)
+		else:
+			normalized.append(token)
+	return normalized
+
+static func _apply_edge_projection(projection: Array, quadrants: Array, owner_family: String, material: String) -> void:
+	for quadrant_value in quadrants:
+		var quadrant := int(quadrant_value)
+		if quadrant < 0 or quadrant >= projection.size():
+			continue
+		projection[quadrant] = _merge_projected_material(owner_family, String(projection[quadrant]), material)
+
+static func _merge_projected_material(owner_family: String, current: String, incoming: String) -> String:
+	if current == owner_family or current == incoming:
+		return incoming
+	return "mixed"
 
 static func _classify_relations(relations: Array) -> Dictionary:
 	for flags in FLAG_WORDS:

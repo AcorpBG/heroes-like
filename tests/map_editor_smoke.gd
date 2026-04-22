@@ -572,6 +572,10 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		or String(direct_water_terrain.get("homm3_fallback_reason", "")).find("direct water/rock contact") < 0
 		or water_ring.size() < 3
 		or int(water_ring[2]) != 2
+		or String(direct_water_terrain.get("homm3_projection_model", "")) != "accepted_web_prototype_cardinal_material_projection.v1"
+		or not _string_array_matches(direct_water_terrain.get("homm3_material_quadrants", []), ["land", "mixed", "land", "mixed"])
+		or not _string_array_matches(direct_water_terrain.get("homm3_normalized_quadrants", []), ["land", "land", "land", "land"])
+		or not _string_array_matches(direct_water_terrain.get("homm3_display_quadrants", []), ["land", "mixed", "land", "mixed"])
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: direct water/rock water cell did not expose the accepted unresolved fallback truth signal: %s." % direct_water_presentation)
@@ -587,6 +591,10 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		or String(direct_rock_terrain.get("homm3_fallback_reason", "")).find("direct water/rock contact") < 0
 		or rock_ring.size() < 7
 		or int(rock_ring[6]) != 2
+		or String(direct_rock_terrain.get("homm3_projection_model", "")) != "accepted_web_prototype_cardinal_material_projection.v1"
+		or not _string_array_matches(direct_rock_terrain.get("homm3_material_quadrants", []), ["mixed", "sand", "mixed", "sand"])
+		or not _string_array_matches(direct_rock_terrain.get("homm3_normalized_quadrants", []), ["sand", "sand", "sand", "sand"])
+		or not _string_array_matches(direct_rock_terrain.get("homm3_display_quadrants", []), ["mixed", "sand", "mixed", "sand"])
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: direct water/rock rock cell did not expose the accepted unresolved fallback truth signal: %s." % direct_rock_presentation)
@@ -1216,6 +1224,17 @@ func _restore_editor_terrain_tiles(shell, original_terrains: Array) -> void:
 		var terrain_id := String(entry.get("terrain", ""))
 		if terrain_id != "":
 			shell.call("validation_seed_terrain_direct", tile.x, tile.y, terrain_id)
+
+func _string_array_matches(value, expected: Array) -> bool:
+	if not (value is Array):
+		return false
+	var array: Array = value
+	if array.size() != expected.size():
+		return false
+	for index in range(expected.size()):
+		if String(array[index]) != String(expected[index]):
+			return false
+	return true
 
 func _transition_sources_include(terrain: Dictionary, direction: String, source_terrain: String) -> bool:
 	var sources: Array = terrain.get("transition_cardinal_sources", [])
