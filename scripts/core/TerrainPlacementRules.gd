@@ -384,6 +384,7 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 		return {}
 	var boundary_count := _boundary_count_for_cell(map_data, map_size, terrain_grammar, tile)
 	var relation_ring := _relation_ring_for_cell(map_data, map_size, terrain_grammar, tile)
+	var direct_water_rock_contact := _has_direct_water_rock_contact(map_data, map_size, terrain_grammar, tile)
 	var class_info := {"class_code": 0, "flag_a": 0, "flag_b": 0, "reason": "no classed relation"}
 	var correction := ""
 	if boundary_count > 0:
@@ -402,6 +403,11 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 	var class_code := int(class_info.get("class_code", 0))
 	var selected := _select_visual_frame(owner_id, class_code, int(class_info.get("flag_a", 0)), int(class_info.get("flag_b", 0)), tile)
 	var frame_number := int(selected.get("frame", 0))
+	var fallback_reasons := []
+	if bool(selected.get("fallback", false)):
+		fallback_reasons.append(String(selected.get("fallback_reason", "")))
+	if direct_water_rock_contact:
+		fallback_reasons.append("explicit direct water/rock contact kept unresolved")
 	return {
 		"ok": true,
 		"selection_model": VISUAL_SELECTION_MODEL,
@@ -428,8 +434,9 @@ static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrai
 		"flag_b": int(selected.get("output_flag_b", 0)),
 		"flip_h": int(selected.get("output_flag_a", 0)) == 1,
 		"flip_v": int(selected.get("output_flag_b", 0)) == 1,
-		"fallback": bool(selected.get("fallback", false)),
-		"fallback_reason": String(selected.get("fallback_reason", "")),
+		"fallback": bool(selected.get("fallback", false)) or direct_water_rock_contact,
+		"fallback_reason": "; ".join(fallback_reasons),
+		"direct_water_rock_contact": direct_water_rock_contact,
 		"bridge_family": _bridge_family_from_relations(relation_ring),
 		"selected_frame_block": _visual_frame_block_for(owner_family, frame_number, class_code),
 	}
@@ -832,6 +839,18 @@ static func _relation_ring_for_cell(map_data: Array, map_size: Vector2i, terrain
 	for offset in NEIGHBOR_OFFSETS:
 		relations.append(_relation_between_ids(center_id, _owner_id_at(map_data, map_size, terrain_grammar, tile + offset)))
 	return relations
+
+static func _has_direct_water_rock_contact(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> bool:
+	var owner_family := terrain_family_for_id_number(_owner_id_at_raw(map_data, terrain_grammar, tile))
+	if owner_family != "water" and owner_family != "rock":
+		return false
+	var contact_family := "rock" if owner_family == "water" else "water"
+	var contact_id := terrain_owner_id_for_family(contact_family)
+	for offset in NEIGHBOR_OFFSETS:
+		var offset_vector: Vector2i = offset
+		if _owner_id_at(map_data, map_size, terrain_grammar, tile + offset_vector) == contact_id:
+			return true
+	return false
 
 static func _classify_relations(relations: Array) -> Dictionary:
 	for flags in FLAG_WORDS:

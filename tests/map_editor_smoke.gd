@@ -556,6 +556,42 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		_fail("Map editor smoke: water terrain did not expose the accepted relation-class fallback for an unmaintained class-24 topology: %s." % water_presentation)
 		return false
 
+	var direct_rock_tile := water_center + Vector2i(1, 0)
+	if not _paint_editor_terrain_for_orientation(shell, direct_rock_tile, "highland"):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: could not seed direct water/rock relation-class contact at %s." % direct_rock_tile)
+		return false
+	var direct_water_presentation: Dictionary = shell.call("validation_tile_presentation", water_center.x, water_center.y)
+	var direct_water_terrain: Dictionary = direct_water_presentation.get("terrain_presentation", {})
+	var water_ring: Array = direct_water_terrain.get("homm3_relation_ring", [])
+	if (
+		String(direct_water_terrain.get("homm3_terrain_family", "")) != "water"
+		or not bool(direct_water_terrain.get("homm3_fallback", false))
+		or not bool(direct_water_terrain.get("homm3_direct_water_rock_contact", false))
+		or not bool(direct_water_terrain.get("homm3_web_prototype_direct_water_rock_contact", false))
+		or String(direct_water_terrain.get("homm3_fallback_reason", "")).find("direct water/rock contact") < 0
+		or water_ring.size() < 3
+		or int(water_ring[2]) != 2
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: direct water/rock water cell did not expose the accepted unresolved fallback truth signal: %s." % direct_water_presentation)
+		return false
+	var direct_rock_presentation: Dictionary = shell.call("validation_tile_presentation", direct_rock_tile.x, direct_rock_tile.y)
+	var direct_rock_terrain: Dictionary = direct_rock_presentation.get("terrain_presentation", {})
+	var rock_ring: Array = direct_rock_terrain.get("homm3_relation_ring", [])
+	if (
+		String(direct_rock_terrain.get("homm3_terrain_family", "")) != "rock"
+		or not bool(direct_rock_terrain.get("homm3_fallback", false))
+		or not bool(direct_rock_terrain.get("homm3_direct_water_rock_contact", false))
+		or not bool(direct_rock_terrain.get("homm3_web_prototype_direct_water_rock_contact", false))
+		or String(direct_rock_terrain.get("homm3_fallback_reason", "")).find("direct water/rock contact") < 0
+		or rock_ring.size() < 7
+		or int(rock_ring[6]) != 2
+	):
+		_restore_editor_terrain_tiles(shell, original_terrains)
+		_fail("Map editor smoke: direct water/rock rock cell did not expose the accepted unresolved fallback truth signal: %s." % direct_rock_presentation)
+		return false
+
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 

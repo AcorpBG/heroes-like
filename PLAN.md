@@ -26,6 +26,30 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
+## Current Implementation Slice: HoMM3 Direct Water/Rock Contact Fallback Parity
+Status: completed on 2026-04-22 as a narrow active selector parity correction.
+
+Purpose:
+- Preserve the accepted web prototype relation-class behavior that marks direct water/rock adjacency as an explicit unresolved fallback while still exposing the selected relation-class placeholder frame.
+- Keep the post-8c96465 relation-class row-bucket selector as the active Godot terrain frame path.
+- Avoid reviving legacy receiver-stamp/corner heuristics or changing roads, objects, pathing, save data, editor object tools, or terrain placement ownership rules.
+
+Implemented:
+- `TerrainPlacementRules.visual_selection_payload` now detects direct water/rock neighbor contact, marks the selected visual payload as fallback, and appends the accepted unresolved fallback reason without hiding the relation ring, class, row group, frame, or flags.
+- `OverworldMapView` now exposes the direct water/rock fallback truth signal through live-overworld and map-editor validation payloads.
+- Map-editor smoke coverage now seeds an actual water/rock adjacency and asserts both sides report the direct-contact fallback while retaining relation-class diagnostics.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not whole HoMM3 terrain parity, a water shoreline topology rewrite, a rock/void topology rewrite, terrain art replacement, gameplay/pathing change, save-format change, or exact original executable lookup recovery.
+- The direct water/rock contact remains explicitly unresolved, matching the accepted web prototype's truth-preserving fallback behavior.
+
 ## Current Implementation Slice: HoMM3 Web Prototype Terrain Selection Parity
 Status: completed on 2026-04-22 as a proper active renderer selection rewrite.
 

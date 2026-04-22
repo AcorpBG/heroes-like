@@ -296,6 +296,10 @@ Implementation note date: 2026-04-22
 
 The active HoMM3 local terrain visual-selection path now uses the accepted web prototype's settled-owner relation-class and recovered row-bucket lookup instead of the older receiver-stamp/corner heuristic branches. `TerrainPlacementRules.gd` owns the relation ring, class correction probes, normal/dirt/sand/water/rock row tables, special full-row selection, deterministic frame hashing, selected flags, and relation-grid diagnostics. `OverworldMapView` consumes that payload for both live overworld and map-editor preview, while legacy full-receiver stamp metadata remains reference-only and cleared from active frame selection. The existing HoMM3 owner queue and final-normalization terrain placement path remains the mutation source; roads, towns, objects, pathing, save schema, editor object tools, and shippable original-art replacement are unchanged.
 
+Implementation note date: 2026-04-22
+
+The accepted web prototype's direct water/rock contact truth signal is now preserved in the active Godot selector path. `TerrainPlacementRules.visual_selection_payload` detects adjacent water and rock cells, marks the relation-class frame result as an explicit unresolved fallback, and keeps the selected placeholder frame, relation ring, class, row group, and flags inspectable. `OverworldMapView` exposes that signal in live and editor validation payloads. This is a narrow diagnostic/parity correction only, not a water shoreline rewrite, rock/void topology rewrite, terrain-art replacement, gameplay/pathing change, save-format change, or claim of whole HoMM3 terrain parity.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.

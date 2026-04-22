@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-22T13:23:02Z",
+  "updatedAt": "2026-04-22T13:47:36Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-web-prototype-godot-selection-parity-10184",
-  "currentSliceTitle": "Fix Godot terrain selection parity drift from accepted web prototype",
+  "currentSliceId": "homm3-direct-water-rock-contact-fallback-parity-10184",
+  "currentSliceTitle": "Preserve accepted direct water/rock fallback truth signal",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Replaced the active Godot HoMM3 terrain visual-selection path with the accepted web prototype settled-owner relation-class and recovered row-bucket selector. Legacy receiver-stamp/corner heuristics are no longer active frame-selection branches; they remain reference/diagnostic metadata only. Full validation passed for repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
+  "currentSliceNotes": "Added the accepted web prototype's direct water/rock contact handling to the active Godot relation-class visual selector. Direct water/rock adjacency now marks the selected frame payload as an explicit unresolved fallback while keeping relation ring, class, row group, frame, and flags inspectable through live/editor validation. Full validation passed for repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -428,6 +428,12 @@
       "title": "Replace Godot HoMM3 terrain visual selection with accepted web relation-class parity",
       "status": "completed",
       "difficulty": "high"
+    },
+    {
+      "id": "homm3-direct-water-rock-contact-fallback-parity-10184",
+      "title": "Preserve accepted direct water/rock fallback truth signal",
+      "status": "completed",
+      "difficulty": "small"
     },
     {
       "id": "river-pass-live-audit",
