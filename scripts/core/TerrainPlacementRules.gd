@@ -4,6 +4,8 @@ extends RefCounted
 const PLACEMENT_MODEL := "homm3_owner_queue_rewrite_final_normalization.v1"
 const PAINT_ORDER_MODEL := "paint_tiles_in_tool_order_then_drain_set_a_set_b"
 const FINAL_NORMALIZATION_MODEL := "final_normalization_4bbfcc_reclassifies_settled_owner_map"
+const VISUAL_SELECTION_MODEL := "accepted_web_prototype_relation_class_row_lookup.v1"
+const VISUAL_FRAME_SELECTION_SOURCE := "accepted_web_prototype_and_recovered_h3maped_final_normalization"
 
 const TERRAIN_FAMILY_IDS := {
 	"dirt": 0,
@@ -94,6 +96,111 @@ const NORMAL_TABLE_CLASS_COVERAGE := {
 	7: [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
 	8: [0, 8, 9, 10, 11, 12, 13, 16],
 	9: [0, 8, 9, 10, 11, 12, 13],
+}
+const SPECIAL_TILE_FREQ := [50, 70, 50, 80, 80, 80, 60, 80, 0, 0]
+const NORMAL_TABLE_BY_OWNER_ID := {
+	0: "dirt",
+	1: "sand",
+	2: "normal79",
+	3: "normal79",
+	4: "normal79",
+	5: "normal79",
+	6: "normal79",
+	7: "normal79",
+	8: "water",
+}
+const NORMAL79_ROWS := {
+	0: {"ordinary": [49, 50, 51, 52, 53, 54, 55, 56], "special": [57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72]},
+	2: [0, 1, 2, 3],
+	3: [4, 5, 6, 7],
+	4: [8, 9, 10, 11],
+	5: [12, 13, 14, 15],
+	6: [16, 17],
+	7: [18, 19],
+	8: [20, 21, 22, 23],
+	9: [24, 25, 26, 27],
+	10: [28, 29, 30, 31],
+	11: [32, 33, 34, 35],
+	12: [36, 37],
+	13: [38, 39],
+	14: [40],
+	15: [41],
+	16: [42],
+	17: [43],
+	18: [44],
+	19: [45],
+	20: [46],
+	21: [47],
+	22: [48],
+	23: [73],
+	24: [74],
+	25: [75],
+	26: [76],
+	27: [78],
+	28: [77],
+}
+const DIRT_ROWS := {
+	0: {"ordinary": [21, 22, 23, 24, 25, 26, 27, 28], "special": [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]},
+	8: [0, 1, 2, 3],
+	9: [4, 5, 6, 7],
+	10: [8, 9, 10, 11],
+	11: [12, 13, 14, 15],
+	12: [16, 17],
+	13: [18, 19],
+	16: [20],
+	24: [45],
+}
+const SAND_ROWS := {
+	0: {"ordinary": [0, 1, 2, 3, 4, 5, 6, 7], "special": [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]},
+}
+const WATER_ROWS := {
+	0: {"ordinary": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32], "special": []},
+	8: [0, 1, 2, 3],
+	9: [4, 5, 6, 7],
+	10: [8, 9, 10, 11],
+	11: [12, 13, 14, 15],
+	12: [16, 17],
+	13: [18, 19],
+	16: [20],
+}
+const ROCK_ROWS := {
+	0: {"0,0": [0, 1, 2, 3, 4, 5, 6, 7]},
+	8: {"0,0": [8, 9], "1,0": [10, 11], "0,1": [12, 13], "1,1": [14, 15]},
+	9: {"0,0": [16, 17], "1,0": [18, 19]},
+	10: {"0,0": [20, 21], "0,1": [22, 23]},
+	11: {"0,0": [24, 25], "1,0": [26, 27], "0,1": [28, 29], "1,1": [30, 31]},
+	12: {"0,0": [32, 33], "1,0": [34, 35], "0,1": [36, 37], "1,1": [38, 39]},
+	13: {"0,0": [40, 41], "1,0": [42, 43], "0,1": [44, 45], "1,1": [46, 47]},
+}
+const CLASS_TOPOLOGY := {
+	0: "full/native",
+	2: "relation-1 orthogonal elbow",
+	3: "relation-1 west/east edge",
+	4: "relation-1 north/south edge",
+	5: "relation-1 single diagonal",
+	6: "relation-1 corrected elbow",
+	7: "relation-1 corrected diagonal",
+	8: "relation-2 orthogonal elbow",
+	9: "relation-2 west/east edge",
+	10: "relation-2 north/south edge",
+	11: "relation-2 single diagonal",
+	12: "relation-2 corrected elbow",
+	13: "relation-2 corrected diagonal",
+	14: "opposite diagonal pair 1/1",
+	15: "opposite diagonal pair 1/2",
+	16: "opposite diagonal pair 2/2",
+	17: "relation-1 cardinal with relation-2 opposite diagonal",
+	18: "relation-1 cardinal with relation-2 opposite diagonal, alternate axis",
+	19: "relation-1 cardinal with relation-2 same-corner diagonal",
+	20: "relation-1 cardinal with relation-2 same-corner diagonal, alternate axis",
+	21: "relation-2 cardinal with relation-1 opposite diagonal",
+	22: "relation-2 cardinal with relation-1 opposite diagonal, alternate axis",
+	23: "relation-1 compound corner",
+	24: "relation-2 compound corner",
+	25: "relation-1 corner with relation-2 opposite diagonal",
+	26: "relation-2 corner with relation-1 opposite diagonal",
+	27: "relation-1 corner with relation-2 same-corner diagonal",
+	28: "relation-1 corner with two relation-2 diagonals",
 }
 
 class OrderedPointSet:
@@ -265,6 +372,66 @@ static func final_normalization_payload(map_data: Array, map_size: Vector2i, ter
 		"missing_buckets": missing_buckets,
 		"stale_transition_clear_model": "zero_boundary_cells_use_pick_full_branch_and_clear_flags",
 		"owner_map_source": "settled_after_4bc5f0_queue_drain",
+	}
+
+static func visual_selection_payload(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> Dictionary:
+	if not (map_data is Array) or map_data.is_empty() or not _in_bounds(tile, map_size):
+		return {}
+	var terrain_id := _terrain_at(map_data, tile)
+	var owner_family := terrain_family_for_id(terrain_grammar, terrain_id)
+	var owner_id := terrain_owner_id_for_family(owner_family)
+	if owner_id < 0:
+		return {}
+	var boundary_count := _boundary_count_for_cell(map_data, map_size, terrain_grammar, tile)
+	var relation_ring := _relation_ring_for_cell(map_data, map_size, terrain_grammar, tile)
+	var class_info := {"class_code": 0, "flag_a": 0, "flag_b": 0, "reason": "no classed relation"}
+	var correction := ""
+	if boundary_count > 0:
+		class_info = _classify_relations(relation_ring)
+		var corrected := _apply_final_corrections(
+			int(class_info.get("class_code", 0)),
+			map_data,
+			map_size,
+			terrain_grammar,
+			tile,
+			int(class_info.get("flag_a", 0)),
+			int(class_info.get("flag_b", 0))
+		)
+		correction = String(corrected.get("correction", ""))
+		class_info["class_code"] = int(corrected.get("class_code", class_info.get("class_code", 0)))
+	var class_code := int(class_info.get("class_code", 0))
+	var selected := _select_visual_frame(owner_id, class_code, int(class_info.get("flag_a", 0)), int(class_info.get("flag_b", 0)), tile)
+	var frame_number := int(selected.get("frame", 0))
+	return {
+		"ok": true,
+		"selection_model": VISUAL_SELECTION_MODEL,
+		"frame_selection_source": VISUAL_FRAME_SELECTION_SOURCE,
+		"final_normalization_model": FINAL_NORMALIZATION_MODEL,
+		"owner_id": owner_id,
+		"owner_family": owner_family,
+		"terrain_id": terrain_id,
+		"shape_class": class_code,
+		"class_topology": String(CLASS_TOPOLOGY.get(class_code, "unlabeled recovered class")),
+		"class_reason": String(class_info.get("reason", "")),
+		"correction": correction,
+		"boundary_count": boundary_count,
+		"relation_ring": relation_ring,
+		"relation_grid": relation_grid_string(relation_ring),
+		"row_group": String(selected.get("row_group", "")),
+		"row_source": String(selected.get("row_source", "")),
+		"row_table": String(selected.get("row_table", "")),
+		"frame_number": frame_number,
+		"frame_id": "00_%02d" % frame_number,
+		"requested_flag_a": int(class_info.get("flag_a", 0)),
+		"requested_flag_b": int(class_info.get("flag_b", 0)),
+		"flag_a": int(selected.get("output_flag_a", 0)),
+		"flag_b": int(selected.get("output_flag_b", 0)),
+		"flip_h": int(selected.get("output_flag_a", 0)) == 1,
+		"flip_v": int(selected.get("output_flag_b", 0)) == 1,
+		"fallback": bool(selected.get("fallback", false)),
+		"fallback_reason": String(selected.get("fallback_reason", "")),
+		"bridge_family": _bridge_family_from_relations(relation_ring),
+		"selected_frame_block": _visual_frame_block_for(owner_family, frame_number, class_code),
 	}
 
 static func terrain_family_for_id(terrain_grammar: Dictionary, terrain_id: String) -> String:
@@ -634,6 +801,18 @@ static func _compute_boundary_counts(map_data: Array, map_size: Vector2i, terrai
 					counts[neighbor.y][neighbor.x] = int(counts[neighbor.y][neighbor.x]) + 1
 	return counts
 
+static func _boundary_count_for_cell(map_data: Array, map_size: Vector2i, terrain_grammar: Dictionary, tile: Vector2i) -> int:
+	if not _in_bounds(tile, map_size):
+		return 0
+	var owner_id := _owner_id_at_raw(map_data, terrain_grammar, tile)
+	var count := 0
+	for offset in NEIGHBOR_OFFSETS:
+		var offset_vector: Vector2i = offset
+		var neighbor := tile + offset_vector
+		if _in_bounds(neighbor, map_size) and _owner_id_at_raw(map_data, terrain_grammar, neighbor) != owner_id:
+			count += 1
+	return count
+
 static func _relation_between_ids(center_id: int, neighbor_id: int) -> int:
 	if center_id < 0 or neighbor_id < 0:
 		return 0
@@ -798,6 +977,214 @@ static func _two_step_probe_same_owner(map_data: Array, map_size: Vector2i, terr
 static func _row_bucket_exists(owner_id: int, class_code: int) -> bool:
 	var coverage = NORMAL_TABLE_CLASS_COVERAGE.get(owner_id, [])
 	return coverage is Array and class_code in coverage
+
+static func _select_visual_frame(owner_id: int, shape_class: int, flag_a: int, flag_b: int, tile: Vector2i) -> Dictionary:
+	if owner_id == int(TERRAIN_FAMILY_IDS.get("rock", 9)):
+		return _select_rock_visual_frame(shape_class, flag_a, flag_b, tile)
+	return _select_normal_visual_frame(owner_id, shape_class, flag_a, flag_b, tile)
+
+static func _select_normal_visual_frame(owner_id: int, shape_class: int, flag_a: int, flag_b: int, tile: Vector2i) -> Dictionary:
+	var table_name := String(NORMAL_TABLE_BY_OWNER_ID.get(owner_id, ""))
+	var row_entry = _normal_row_entry(table_name, shape_class)
+	if _row_entry_empty(row_entry):
+		var fallback_rows := _full_rows_for_normal_table(table_name, owner_id, tile)
+		var fallback_frame := _choose_visual_frame(fallback_rows.get("rows", []), tile.x, tile.y, "%d:missing:%d" % [owner_id, shape_class])
+		return {
+			"frame": fallback_frame,
+			"output_flag_a": 0,
+			"output_flag_b": 0,
+			"row_group": compact_ranges(fallback_rows.get("rows", [])),
+			"row_source": "%s missing class %d; fallback full rows %s" % [table_name, shape_class, compact_ranges(fallback_rows.get("rows", []))],
+			"row_table": table_name,
+			"fallback": true,
+			"fallback_reason": "missing row bucket for terrain %d class %d" % [owner_id, shape_class],
+		}
+	if shape_class == 0:
+		var full := _full_rows_for_normal_table(table_name, owner_id, tile)
+		return {
+			"frame": _choose_visual_frame(full.get("rows", []), tile.x, tile.y, "%d:full:%s" % [owner_id, String(full.get("bucket", ""))]),
+			"output_flag_a": 0,
+			"output_flag_b": 0,
+			"row_group": compact_ranges(full.get("rows", [])),
+			"row_source": "%s class 0 %s rows %s" % [table_name, String(full.get("bucket", "")), compact_ranges(full.get("rows", []))],
+			"row_table": table_name,
+			"fallback": false,
+			"fallback_reason": "",
+		}
+	var rows: Array = row_entry if row_entry is Array else []
+	return {
+		"frame": _choose_visual_frame(rows, tile.x, tile.y, "%d:class:%d" % [owner_id, shape_class]),
+		"output_flag_a": flag_a,
+		"output_flag_b": flag_b,
+		"row_group": compact_ranges(rows),
+		"row_source": "%s class %d rows %s" % [table_name, shape_class, compact_ranges(rows)],
+		"row_table": table_name,
+		"fallback": false,
+		"fallback_reason": "",
+	}
+
+static func _select_rock_visual_frame(shape_class: int, flag_a: int, flag_b: int, tile: Vector2i) -> Dictionary:
+	var by_flags = ROCK_ROWS.get(shape_class, {})
+	var flag_key := "%d,%d" % [flag_a, flag_b]
+	var rows = by_flags.get(flag_key, []) if by_flags is Dictionary else []
+	if not (rows is Array) or rows.is_empty():
+		var fallback_rows: Array = ROCK_ROWS.get(0, {}).get("0,0", [0]) if ROCK_ROWS.get(0, {}) is Dictionary else [0]
+		return {
+			"frame": _choose_visual_frame(fallback_rows, tile.x, tile.y, "rock:missing:%d:%d:%d" % [shape_class, flag_a, flag_b]),
+			"output_flag_a": 0,
+			"output_flag_b": 0,
+			"row_group": compact_ranges(fallback_rows),
+			"row_source": "rock missing class %d flags %d,%d; fallback rows %s" % [shape_class, flag_a, flag_b, compact_ranges(fallback_rows)],
+			"row_table": "rock",
+			"fallback": true,
+			"fallback_reason": "missing rock row bucket for class %d flags %d,%d" % [shape_class, flag_a, flag_b],
+		}
+	return {
+		"frame": _choose_visual_frame(rows, tile.x, tile.y, "rock:%d:%d:%d" % [shape_class, flag_a, flag_b]),
+		"output_flag_a": 0,
+		"output_flag_b": 0,
+		"row_group": compact_ranges(rows),
+		"row_source": "rock class %d requested flags %d,%d rows %s; stored flags cleared" % [shape_class, flag_a, flag_b, compact_ranges(rows)],
+		"row_table": "rock",
+		"fallback": false,
+		"fallback_reason": "",
+	}
+
+static func _normal_row_entry(table_name: String, shape_class: int):
+	match table_name:
+		"normal79":
+			return NORMAL79_ROWS.get(shape_class)
+		"dirt":
+			return DIRT_ROWS.get(shape_class)
+		"sand":
+			return SAND_ROWS.get(shape_class)
+		"water":
+			return WATER_ROWS.get(shape_class)
+	return null
+
+static func _row_entry_empty(row_entry) -> bool:
+	if row_entry == null:
+		return true
+	if row_entry is Array:
+		return row_entry.is_empty()
+	if row_entry is Dictionary:
+		var ordinary = row_entry.get("ordinary", [])
+		var special = row_entry.get("special", [])
+		return (not (ordinary is Array) or ordinary.is_empty()) and (not (special is Array) or special.is_empty())
+	return true
+
+static func _full_rows_for_normal_table(table_name: String, owner_id: int, tile: Vector2i) -> Dictionary:
+	var row_entry = _normal_row_entry(table_name, 0)
+	if not (row_entry is Dictionary):
+		return {"rows": [0], "bucket": "fallback"}
+	var ordinary = row_entry.get("ordinary", [])
+	var special = row_entry.get("special", [])
+	var ordinary_rows: Array = ordinary if ordinary is Array else []
+	var special_rows: Array = special if special is Array else []
+	var frequency := _special_tile_frequency(owner_id)
+	var use_special := not special_rows.is_empty() and _positive_visual_hash("special:%d:%d:%d" % [owner_id, tile.x, tile.y]) % 100 < frequency
+	if use_special:
+		return {"rows": special_rows, "bucket": "special"}
+	return {"rows": ordinary_rows if not ordinary_rows.is_empty() else special_rows, "bucket": "ordinary"}
+
+static func _special_tile_frequency(owner_id: int) -> int:
+	if owner_id >= 0 and owner_id < SPECIAL_TILE_FREQ.size():
+		return int(SPECIAL_TILE_FREQ[owner_id])
+	return 0
+
+static func _choose_visual_frame(rows: Array, x: int, y: int, salt: String) -> int:
+	if rows.is_empty():
+		return 0
+	var index := _positive_visual_hash("%s:%d:%d" % [salt, x, y]) % rows.size()
+	return int(rows[index])
+
+static func _positive_visual_hash(text: String) -> int:
+	return absi(_visual_hash(text))
+
+static func _visual_hash(text: String) -> int:
+	var hash_value := 2166136261
+	for index in range(text.length()):
+		hash_value = hash_value ^ text.unicode_at(index)
+		hash_value = (hash_value * 16777619) & 0xffffffff
+	if hash_value >= 0x80000000:
+		hash_value -= 0x100000000
+	return hash_value
+
+static func _bridge_family_from_relations(relations: Array) -> String:
+	var has_relation_1 := false
+	var has_relation_2 := false
+	for relation in relations:
+		if int(relation) == 1:
+			has_relation_1 = true
+		elif int(relation) == 2:
+			has_relation_2 = true
+	if has_relation_1 and has_relation_2:
+		return "mixed"
+	if has_relation_2:
+		return "sand"
+	if has_relation_1:
+		return "dirt"
+	return ""
+
+static func _visual_frame_block_for(owner_family: String, frame_number: int, shape_class: int) -> String:
+	if shape_class == 0:
+		match owner_family:
+			"dirt":
+				return "dirt_base_interiors"
+			"sand":
+				return "sand_base_interiors"
+			"water":
+				return "water_interiors"
+			"rock":
+				return "rock_void_interiors"
+		return "native_interiors"
+	match owner_family:
+		"dirt":
+			return "dirt_to_sand_transition"
+		"water":
+			return "shoreline_frames"
+		"rock":
+			return "rock_light_ground_context"
+		"sand":
+			return "sand_base_interiors"
+	if frame_number >= 0 and frame_number <= 19:
+		return "native_to_dirt_transition"
+	if frame_number >= 20 and frame_number <= 39:
+		return "native_to_sand_transition"
+	return "mixed_junction_reserved"
+
+static func relation_grid_string(relations: Array) -> String:
+	if relations.size() < 8:
+		return ""
+	return "%d%d%d/%dC%d/%d%d%d" % [
+		int(relations[7]),
+		int(relations[0]),
+		int(relations[1]),
+		int(relations[6]),
+		int(relations[2]),
+		int(relations[5]),
+		int(relations[4]),
+		int(relations[3]),
+	]
+
+static func compact_ranges(indices: Array) -> String:
+	if indices.is_empty():
+		return "-"
+	var sorted := indices.duplicate()
+	sorted.sort()
+	var ranges := []
+	var range_start := int(sorted[0])
+	var previous := int(sorted[0])
+	for value_index in range(1, sorted.size()):
+		var value := int(sorted[value_index])
+		if value == previous + 1:
+			previous = value
+			continue
+		ranges.append(str(range_start) if range_start == previous else "%d-%d" % [range_start, previous])
+		range_start = value
+		previous = value
+	ranges.append(str(range_start) if range_start == previous else "%d-%d" % [range_start, previous])
+	return ",".join(ranges)
 
 static func _trait_flag4(owner_id: int) -> int:
 	if owner_id >= 0 and owner_id < TRAIT_FLAG4.size():

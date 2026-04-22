@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-22T12:39:34Z",
+  "updatedAt": "2026-04-22T13:23:02Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "homm3-sand-heavy-corner-ownership-regression-10184",
-  "currentSliceTitle": "Fix HoMM3 sand-heavy corner ownership regression",
+  "currentSliceId": "homm3-web-prototype-godot-selection-parity-10184",
+  "currentSliceTitle": "Fix Godot terrain selection parity drift from accepted web prototype",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed the narrow sand-heavy corner renderer regression fix. The issue was wrong selected stamp entry for the two-cardinal-plus-corner sand topology: full-receiver grass tiles were falling back to single-edge native-to-sand frames that read as 3 grass + 1 sand. OverworldMapView now reads data-driven sand-heavy cardinal corner entries and selects grastl 00_20 with the correct flips for all four orientations, preserving the HoMM3 owner queue/final-normalization path. Added focused map-editor smoke coverage for all four 1 grass / 3 sand orientations. Roads, towns, objects, pathing, save schema, water/rock systems, and unrelated terrain systems were not changed. Validation passed: python3 tests/validate_repo.py; godot4 --headless --path . res://tests/map_editor_smoke.tscn; godot4 --headless --path . res://tests/overworld_visual_smoke.tscn; godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn; git diff --check.",
+  "currentSliceNotes": "Replaced the active Godot HoMM3 terrain visual-selection path with the accepted web prototype settled-owner relation-class and recovered row-bucket selector. Legacy receiver-stamp/corner heuristics are no longer active frame-selection branches; they remain reference/diagnostic metadata only. Full validation passed for repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -422,6 +422,12 @@
       "title": "Fix sand-heavy corner quadrant ownership regression",
       "status": "completed",
       "difficulty": "medium"
+    },
+    {
+      "id": "homm3-web-prototype-godot-selection-parity-10184",
+      "title": "Replace Godot HoMM3 terrain visual selection with accepted web relation-class parity",
+      "status": "completed",
+      "difficulty": "high"
     },
     {
       "id": "river-pass-live-audit",

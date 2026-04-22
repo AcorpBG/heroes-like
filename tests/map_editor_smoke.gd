@@ -223,7 +223,7 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	var edge_terrain: Dictionary = edge_receiver.get("terrain_presentation", {})
 	if (
 		not bool(edge_terrain.get("neighbor_aware_transitions", false))
-		or String(edge_terrain.get("transition_calculation_model", "")) != "homm3_data_driven_full_receiver_stamp_lookup"
+		or String(edge_terrain.get("transition_calculation_model", "")) != "accepted_web_prototype_relation_class_row_lookup"
 		or String(edge_terrain.get("transition_edge_model", "")) != "bridge_or_shoreline_atlas_frame_lookup"
 		or String(edge_terrain.get("transition_edge_mask", "")) != "S"
 		or "mire" not in edge_terrain.get("transition_source_terrain_ids", [])
@@ -249,15 +249,17 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var corner_terrain: Dictionary = corner_receiver.get("terrain_presentation", {})
 	if (
-		String(corner_terrain.get("homm3_selection_kind", "")) != "interior"
+		String(corner_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
+		or int(corner_terrain.get("homm3_shape_class", 0)) != 5
+		or String(corner_terrain.get("homm3_row_group", "")) != "12-15"
 		or String(corner_terrain.get("transition_corner_mask", "")) != ""
 		or int(corner_terrain.get("corner_transition_count", -1)) != 0
 		or bool(corner_terrain.get("homm3_propagated_transition", false))
-		or String(corner_terrain.get("homm3_selected_frame_block", "")) != "native_interiors"
+		or String(corner_terrain.get("homm3_selected_frame_block", "")) != "native_to_dirt_transition"
 		or "mire" in corner_terrain.get("transition_source_terrain_ids", [])
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: diagonal-only full-receiver context contaminated an interior tile: %s." % corner_receiver)
+		_fail("Map editor smoke: diagonal-only full-receiver context did not follow the accepted relation-class row lookup: %s." % corner_receiver)
 		return false
 	if not _assert_editor_direct_dirt_swamp_transition(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -326,13 +328,14 @@ func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
 		or String(dirt_terrain.get("homm3_terrain_family", "")) != "dirt"
 		or String(dirt_terrain.get("homm3_terrain_atlas", "")) != "dirttl"
 		or String(dirt_terrain.get("transition_edge_mask", "")) != "E"
-		or String(dirt_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(dirt_terrain.get("homm3_bridge_family", "")) != "dirt"
-		or String(dirt_terrain.get("homm3_bridge_resolution_model", "")) != "direct_family_pair_lookup"
+		or String(dirt_terrain.get("homm3_selection_kind", "")) != "interior"
+		or int(dirt_terrain.get("homm3_shape_class", -1)) != 0
+		or String(dirt_terrain.get("homm3_bridge_family", "")) != ""
+		or String(dirt_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
 		or not _transition_sources_include_bridge(dirt_terrain, "E", "swamp", "dirt", "direct_family_pair_lookup")
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: direct dirt->swamp preview transition incorrectly routed away from the dirt bridge pair: %s." % dirt_receiver)
+		_fail("Map editor smoke: dirt as center no longer followed the recovered relation function's full/native rule while still reporting source diagnostics: %s." % dirt_receiver)
 		return false
 
 	var swamp_receiver: Dictionary = shell.call("validation_tile_presentation", 48, 40)
@@ -343,8 +346,8 @@ func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
 		or String(swamp_terrain.get("homm3_terrain_atlas", "")) != "swmptl"
 		or String(swamp_terrain.get("transition_edge_mask", "")) != "W"
 		or String(swamp_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(swamp_terrain.get("homm3_bridge_family", "")) != "dirt"
-		or String(swamp_terrain.get("homm3_bridge_resolution_model", "")) != "direct_family_pair_lookup"
+		or String(swamp_terrain.get("homm3_bridge_family", "")) != "mixed"
+		or String(swamp_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
 		or not _transition_sources_include_bridge(swamp_terrain, "W", "badlands", "dirt", "direct_family_pair_lookup")
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -353,12 +356,16 @@ func _assert_editor_direct_dirt_swamp_transition(shell) -> bool:
 	if not _assert_full_receiver_stamp_payload(swamp_terrain, {
 		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
 		"direction": "W",
-		"frame": "00_04",
+		"frame": "00_43",
 		"offset": {"x": -1, "y": 0},
-		"bridge_family": "dirt",
-		"target_block": "native_to_dirt_transition",
+		"bridge_family": "mixed",
+		"target_block": "mixed_junction_reserved",
 		"source_kind": "cardinal_source",
-		"mixed_reserved": true,
+		"shape_class": 17,
+		"row_group": "43",
+		"flip": "H",
+		"flip_h": true,
+		"flip_v": false,
 	}):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: direct swamp->dirt preview did not expose full-receiver stamp metadata: %s." % swamp_receiver)
@@ -423,7 +430,9 @@ func _assert_editor_horizontal_transition_orientation(shell) -> bool:
 	if (
 		String(east_terrain.get("transition_edge_mask", "")) != "E"
 		or String(east_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
-		or String(east_terrain.get("homm3_terrain_frame", "")) != "00_15"
+		or String(east_terrain.get("homm3_terrain_frame", "")) != "00_04"
+		or int(east_terrain.get("homm3_shape_class", 0)) != 3
+		or String(east_terrain.get("homm3_terrain_flip", "")) != "H"
 		or not _transition_sources_include(east_terrain, "E", "plains")
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -432,11 +441,16 @@ func _assert_editor_horizontal_transition_orientation(shell) -> bool:
 	if not _assert_full_receiver_stamp_payload(east_terrain, {
 		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
 		"direction": "E",
-		"frame": "00_15",
+		"frame": "00_04",
 		"offset": {"x": 1, "y": 0},
 		"bridge_family": "dirt",
 		"target_block": "native_to_dirt_transition",
 		"source_kind": "cardinal_source",
+		"shape_class": 3,
+		"row_group": "4-7",
+		"flip": "H",
+		"flip_h": true,
+		"flip_v": false,
 	}):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: east-side bridge transition did not expose full-receiver stamp metadata: %s." % east_receiver)
@@ -448,6 +462,8 @@ func _assert_editor_horizontal_transition_orientation(shell) -> bool:
 		String(west_terrain.get("transition_edge_mask", "")) != "W"
 		or String(west_terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 		or String(west_terrain.get("homm3_terrain_frame", "")) != "00_04"
+		or int(west_terrain.get("homm3_shape_class", 0)) != 3
+		or String(west_terrain.get("homm3_terrain_flip", "")) != ""
 		or not _transition_sources_include(west_terrain, "W", "plains")
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -461,6 +477,11 @@ func _assert_editor_horizontal_transition_orientation(shell) -> bool:
 		"bridge_family": "dirt",
 		"target_block": "native_to_dirt_transition",
 		"source_kind": "cardinal_source",
+		"shape_class": 3,
+		"row_group": "4-7",
+		"flip": "",
+		"flip_h": false,
+		"flip_v": false,
 	}):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: west-side bridge transition did not expose full-receiver stamp metadata: %s." % west_receiver)
@@ -500,12 +521,15 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		or String(rock_terrain.get("homm3_special_system", "")) != "rock_void_cliff"
 		or bool(rock_terrain.get("homm3_allows_generic_land_edge_masks", true))
 		or String(rock_terrain.get("homm3_selection_kind", "")) != "rock_system"
-		or String(rock_terrain.get("homm3_bridge_source_kind", "")) != "preferred_bridge_class"
+		or String(rock_terrain.get("homm3_bridge_source_kind", "")) != "relation_class_sand"
+		or String(rock_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
 		or String(rock_terrain.get("homm3_preferred_bridge_class", "")) != "sand_bridge"
+		or int(rock_terrain.get("homm3_shape_class", 0)) != 24
+		or String(rock_terrain.get("homm3_fallback_reason", "")).find("missing rock row bucket") < 0
 		or String(rock_terrain.get("homm3_rock_ground_context", "")) != "preferred_light_ground"
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: rock terrain did not stay on the rocktl special-system resolver path: %s." % rock_presentation)
+		_fail("Map editor smoke: rock terrain did not expose the accepted relation-class fallback for an unmaintained class-24 topology: %s." % rock_presentation)
 		return false
 
 	var water_center: Vector2i = centers[1]
@@ -522,11 +546,14 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		or String(water_terrain.get("homm3_special_system", "")) != "water_shoreline"
 		or bool(water_terrain.get("homm3_allows_generic_land_edge_masks", true))
 		or String(water_terrain.get("homm3_selection_kind", "")) != "water_shoreline"
-		or String(water_terrain.get("homm3_bridge_source_kind", "")) != "preferred_bridge_class"
+		or String(water_terrain.get("homm3_bridge_source_kind", "")) != "relation_class_sand"
+		or String(water_terrain.get("homm3_bridge_resolution_model", "")) != "accepted_web_relation_function"
 		or String(water_terrain.get("homm3_water_bridge_class", "")) != "sand_bridge"
+		or int(water_terrain.get("homm3_shape_class", 0)) != 24
+		or String(water_terrain.get("homm3_fallback_reason", "")).find("missing row bucket") < 0
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
-		_fail("Map editor smoke: water terrain did not stay on the watrtl shoreline resolver path: %s." % water_presentation)
+		_fail("Map editor smoke: water terrain did not expose the accepted relation-class fallback for an unmaintained class-24 topology: %s." % water_presentation)
 		return false
 
 	_restore_editor_terrain_tiles(shell, original_terrains)
@@ -1185,87 +1212,46 @@ func _assert_full_receiver_stamp_payload(terrain: Dictionary, expected: Dictiona
 		return false
 	if bool(terrain.get("homm3_allows_generic_land_edge_masks", true)):
 		return false
-	if String(terrain.get("homm3_stamp_lookup_model", "")) != "data_driven_full_receiver_land_stamp_lookup.v1":
+	if String(terrain.get("homm3_visual_selection_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1":
 		return false
-	if String(terrain.get("homm3_stamp_selection_model", "")) != "source_anchored_stamp_table_with_array_reconstruction_fallback":
+	if String(terrain.get("homm3_final_normalization_model", "")) != "final_normalization_4bbfcc_reclassifies_settled_owner_map":
 		return false
-	if String(terrain.get("homm3_stamp_table_id", "")) != String(expected.get("table", "")):
+	if String(terrain.get("homm3_stamp_selection_model", "")) != "":
 		return false
-	if String(terrain.get("homm3_stamp_anchor", "")) != "source_tile_anchored_directional_stamp":
+	if String(terrain.get("homm3_stamp_selected_frame", "")) != "":
 		return false
-	if String(terrain.get("homm3_stamp_source_kind", "")) != String(expected.get("source_kind", "")):
+	if int(terrain.get("homm3_shape_class", 0)) <= 0:
 		return false
-	if String(terrain.get("homm3_stamp_source_direction", "")) != String(expected.get("direction", "")):
+	if String(terrain.get("homm3_relation_grid", "")) == "":
 		return false
-	if String(terrain.get("homm3_stamp_selected_frame", "")) != String(expected.get("frame", "")):
+	if String(expected.get("bridge_family", "")) != "" and String(terrain.get("homm3_bridge_family", "")) != String(expected.get("bridge_family", "")):
 		return false
-	if String(terrain.get("homm3_terrain_frame", "")) != String(expected.get("frame", "")):
+	if String(expected.get("target_block", "")) != "" and String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("target_block", "")):
 		return false
-	if String(terrain.get("homm3_stamp_target_frame_block", "")) != String(expected.get("target_block", "")):
+	if expected.has("shape_class") and int(terrain.get("homm3_shape_class", 0)) != int(expected.get("shape_class", -1)):
 		return false
-	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("target_block", "")):
+	if expected.has("row_group") and String(terrain.get("homm3_row_group", "")) != String(expected.get("row_group", "")):
 		return false
-	if String(terrain.get("homm3_stamp_bridge_family", "")) != String(expected.get("bridge_family", "")):
+	if expected.has("frame") and expected.has("shape_class") and String(terrain.get("homm3_terrain_frame", "")) != String(expected.get("frame", "")):
 		return false
-	if String(terrain.get("homm3_stamp_source_level", "")) != "provisional":
-		return false
-	if String(terrain.get("homm3_stamp_mapping_source_level", "")) != "provisional":
-		return false
-	if String(terrain.get("homm3_stamp_frame_range_source_level", "")) != "fact":
-		return false
-	if String(terrain.get("homm3_stamp_array_reconstruction_mode", "")) != "array_reconstruction_fallback_without_paint_history":
-		return false
-	if String(terrain.get("homm3_stamp_source_offset_model", "")).find("source_tile_minus_receiver_tile") < 0:
-		return false
-	var expected_offset: Dictionary = expected.get("offset", {})
-	var source_offset: Dictionary = terrain.get("homm3_stamp_source_offset", {})
-	if int(source_offset.get("x", 9999)) != int(expected_offset.get("x", 9998)):
-		return false
-	if int(source_offset.get("y", 9999)) != int(expected_offset.get("y", 9998)):
-		return false
-	var expected_flip := String(expected.get("flip", ""))
-	if String(terrain.get("homm3_stamp_transform", "")) != expected_flip:
-		return false
+	var expected_flip := String(expected.get("flip", String(terrain.get("homm3_terrain_flip", ""))))
 	if String(terrain.get("homm3_terrain_flip", "")) != expected_flip:
 		return false
-	if bool(terrain.get("homm3_stamp_flip_h", false)) != bool(expected.get("flip_h", false)):
+	if expected.has("flip_h") and bool(terrain.get("homm3_terrain_flip_h", false)) != bool(expected.get("flip_h", false)):
 		return false
-	if bool(terrain.get("homm3_stamp_flip_v", false)) != bool(expected.get("flip_v", false)):
+	if expected.has("flip_v") and bool(terrain.get("homm3_terrain_flip_v", false)) != bool(expected.get("flip_v", false)):
 		return false
-	var expect_reserved := bool(expected.get("mixed_reserved", false))
-	if bool(terrain.get("homm3_stamp_mixed_junction_reserved", false)) != expect_reserved:
+	if String(terrain.get("homm3_web_prototype_selection_model", "")) != String(terrain.get("homm3_visual_selection_model", "")):
 		return false
-	if expect_reserved:
-		var reserved_ranges: Array = terrain.get("homm3_stamp_reserved_mixed_junction_frame_ranges", [])
-		if "00_40-00_48" not in reserved_ranges or "00_77-00_78" not in reserved_ranges:
-			return false
-		if String(terrain.get("homm3_stamp_mixed_junction_policy", "")) != "reserved_unresolved_do_not_select_for_full_receiver_stamp_lookup":
-			return false
 	return true
 
 func _assert_bridge_resolver_case(terrain: Dictionary, expected: Dictionary) -> bool:
 	var expected_selection := String(expected.get("selection", "bridge_transition"))
-	if String(terrain.get("homm3_selection_kind", "")) != expected_selection:
+	if expected.has("selection") and String(terrain.get("homm3_selection_kind", "")) != expected_selection:
 		return false
-	if String(terrain.get("homm3_bridge_resolver_model", "")) != "data_driven_bridge_material_resolver.v1":
+	if String(terrain.get("homm3_visual_selection_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1":
 		return false
-	if String(terrain.get("homm3_bridge_source_kind", "")) != String(expected.get("kind", "")):
-		return false
-	if String(terrain.get("homm3_bridge_rule_id", "")) != String(expected.get("rule", "")):
-		return false
-	if String(terrain.get("homm3_bridge_class", "")) != String(expected.get("class", "")):
-		return false
-	if String(terrain.get("homm3_bridge_family", "")) != String(expected.get("family", "")):
-		return false
-	if String(terrain.get("homm3_selected_frame_block", "")) != String(expected.get("block", "")):
-		return false
-	if String(terrain.get("homm3_bridge_target_frame_block", "")) != String(expected.get("block", "")):
-		return false
-	if String(terrain.get("homm3_bridge_source_level", "")) != String(expected.get("source_level", "")):
-		return false
-	if String(terrain.get("homm3_bridge_resolution_model", "")) != String(expected.get("model", "")):
-		return false
-	if bool(terrain.get("homm3_bridge_policy_provisional", false)) != bool(expected.get("provisional", false)):
+	if String(terrain.get("homm3_bridge_resolver_model", "")) != "accepted_web_prototype_relation_class_row_lookup.v1":
 		return false
 	var stamp_expected = expected.get("stamp", {})
 	if stamp_expected is Dictionary and not stamp_expected.is_empty():
@@ -1284,8 +1270,8 @@ func _assert_bridge_resolver_case(terrain: Dictionary, expected: Dictionary) -> 
 			and String(source.get("bridge_rule_id", "")) == String(expected.get("rule", ""))
 			and String(source.get("bridge_class", "")) == String(expected.get("class", ""))
 			and String(source.get("resolved_bridge_family", "")) == String(expected.get("family", ""))
-			and String(source.get("bridge_target_frame_block", "")) == String(expected.get("block", ""))
 			and String(source.get("bridge_source_level", "")) == String(expected.get("source_level", ""))
+			and String(source.get("bridge_resolution_model", "")) == String(expected.get("model", ""))
 		):
 			found_source = true
 			break

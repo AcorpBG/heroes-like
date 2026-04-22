@@ -26,7 +26,33 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: HoMM3 Sand-Heavy Corner Ownership Regression
+## Current Implementation Slice: HoMM3 Web Prototype Terrain Selection Parity
+Status: completed on 2026-04-22 as a proper active renderer selection rewrite.
+
+Purpose:
+- Replace the active Godot HoMM3 terrain visual-selection path with the accepted web prototype's settled-owner relation-class and row-bucket selector.
+- Preserve the HoMM3 owner queue, paint-order, and final-normalization placement path while eliminating the renderer drift caused by source-anchored stamp/corner heuristics in active frame selection.
+- Keep roads, towns, objects, pathing, save schema, editor object tools, and unrelated presentation systems unchanged.
+
+Implemented:
+- Added the accepted web prototype/recovered HoMM3 relation classifier, final correction probes, row tables, special/full-row selection, rock row lookup, deterministic frame hashing, and relation-grid diagnostics to `TerrainPlacementRules`.
+- Routed `OverworldMapView` terrain frame selection through that shared relation-class payload for live overworld and map-editor preview, with legacy receiver-stamp fields cleared from the active frame path.
+- Updated terrain grammar and art manifest metadata so full receiver stamp lookup is marked reference-only for the active HoMM3 visual path.
+- Updated map-editor, live-overworld, and Ninefold smoke coverage to assert relation class, row group, selected frame block, deterministic frame, flip flags, and preserved diagnostic source relationships for screenshot-style dirt/sand/swamp/water/rock parity cases.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is still a local HoMM3 reference/prototype renderer path, not shippable terrain art or a license-clean final asset pipeline.
+- Visual frame retention from the web prototype's in-browser old-frame cache is intentionally not modeled because the Godot renderer evaluates from settled map state without that browser paint-cache object.
+- Water/rock special systems now use the same row-bucket selector, but broader terrain art replacement, passability/pathing, road rendering, town/object presentation, and save schema are unchanged.
+
+## Completed Implementation Slice: HoMM3 Sand-Heavy Corner Ownership Regression
 Status: completed on 2026-04-22 as a narrow renderer/validation correction.
 
 Purpose:

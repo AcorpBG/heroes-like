@@ -292,6 +292,10 @@ Implementation note date: 2026-04-22
 
 The in-project map editor now owns terrain writes through a core HoMM3-style placement module instead of treating HoMM3 behavior as preview metadata only. `scripts/core/TerrainPlacementRules.gd` maps authored logical terrain ids to HoMM3 terrain owners, applies the recovered paint-order, owner queue/rewrite, and final-normalization model, and returns validation payloads for changed owner cells and settled owner-map classification. `MapEditorShell` routes single paint, flood fill, terrain line, and terrain rectangle tools through that module before refreshing the same `OverworldMapView` preview used by live overworld scenes. This keeps terrain mutation and rendering parity explicit while leaving roads, gameplay/pathing, save schema, object/town logic, authored scenario JSON, and export/writeback tooling unchanged.
 
+Implementation note date: 2026-04-22
+
+The active HoMM3 local terrain visual-selection path now uses the accepted web prototype's settled-owner relation-class and recovered row-bucket lookup instead of the older receiver-stamp/corner heuristic branches. `TerrainPlacementRules.gd` owns the relation ring, class correction probes, normal/dirt/sand/water/rock row tables, special full-row selection, deterministic frame hashing, selected flags, and relation-grid diagnostics. `OverworldMapView` consumes that payload for both live overworld and map-editor preview, while legacy full-receiver stamp metadata remains reference-only and cleared from active frame selection. The existing HoMM3 owner queue and final-normalization terrain placement path remains the mutation source; roads, towns, objects, pathing, save schema, editor object tools, and shippable original-art replacement are unchanged.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
