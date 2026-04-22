@@ -26,7 +26,33 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: HoMM3 Solid Region Interior Stability
+## Current Implementation Slice: HoMM3 Editor Terrain Placement
+Status: completed on 2026-04-22 as a narrow editor-path behavior port.
+
+Purpose:
+- Move the recovered HoMM3 terrain ownership propagation, queue/rewrite behavior, and final-normalization reporting into the actual Godot map editor terrain paint/update flow.
+- Keep the editor's terrain preview parity with the shared `OverworldMapView` renderer, while making the logical map mutation itself use the accepted placement model instead of a one-tile preview approximation.
+- Preserve roads, gameplay/pathing, save format, object logic, town logic, and authored scenario schema.
+
+Implemented:
+- Added `scripts/core/TerrainPlacementRules.gd` as the shared core owner/queue/final-normalization rules module for map-editor terrain writes.
+- Routed single-tile terrain paint, flood fill, terrain line, and terrain rectangle tools through the HoMM3 owner queue/rewrite path before refreshing the shared editor preview.
+- Exposed terrain placement payloads in map-editor validation snapshots, including changed owner cells, queue guard state, and final-normalization summary.
+- Kept hidden logical terrain ids available for validation/setup while preserving the curated HoMM3-style base terrain picker.
+- Updated terrain grammar, overworld manifest metadata, shared renderer restamp metadata, and validation coverage to document that editor logical writes now use `homm3_owner_queue_rewrite_final_normalization.v1`.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not a road rewrite, gameplay/pathing change, save-format change, object/town editing change, original-art replacement, export/writeback path, water/rock topology rewrite, or full terrain renderer replacement.
+- Final normalization currently reports the settled editor owner-map classification for validation; the renderer remains responsible for visual frame selection through the existing shared `OverworldMapView` path.
+
+## Completed Implementation Slice: HoMM3 Solid Region Interior Stability
 Status: completed on 2026-04-21 as a narrow renderer bug-fix slice.
 
 Purpose:

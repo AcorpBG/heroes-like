@@ -2363,6 +2363,7 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
             "_prepare_working_copy_for_play",
             "validation_snapshot",
             "validation_paint_terrain",
+            "validation_seed_terrain_direct",
             "validation_set_terrain_line_start",
             "validation_apply_terrain_line",
             "validation_toggle_road",
@@ -2378,6 +2379,7 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
     )
     for required_token in (
         "ScenarioFactoryScript.create_session",
+        "TerrainPlacementRulesScript.apply_paint",
         "OverworldRules.normalize_overworld_state",
         "_make_all_tiles_visible",
         "set_map_state",
@@ -2385,6 +2387,7 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
         "EDITOR_ROAD_LAYER_ID",
         "ROAD_PATH_RULE_ID",
         "editor_restamp",
+        "homm3_owner_queue_rewrite_final_normalization.v1",
         "terrain_paint_order",
         "manhattan_l_horizontal_then_vertical",
         "OBJECT_FAMILY_TOWN",
@@ -4596,8 +4599,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "homm3_extracted_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 extracted local-reference source basis")
         ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "homm3_data_driven_full_receiver_stamp_lookup", errors, "Overworld terrain rendering must document HoMM3 full-receiver stamp-table transition selection")
         ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "resolve_bridge_material_then_full_receiver_stamp_table_or_special_system_lookup", errors, "Overworld terrain rendering must document bridge material resolution before full receiver stamp or special-system lookup")
+        ensure(str(terrain_rendering.get("editor_terrain_placement_model", "")) == "homm3_owner_queue_rewrite_final_normalization.v1", errors, "Overworld terrain rendering must document the HoMM3 editor terrain placement model")
         ensure(str(terrain_rendering.get("editor_restamp_model", "")) == "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1", errors, "Overworld terrain rendering must document the editor restamp behavior model")
-        ensure(str(terrain_rendering.get("editor_restamp_scope", "")) == "map_editor_preview_metadata_only", errors, "Overworld terrain rendering must keep editor restamp scope presentation-only")
+        ensure(str(terrain_rendering.get("editor_restamp_scope", "")) == "map_editor_terrain_paint_update_and_shared_preview", errors, "Overworld terrain rendering must keep editor restamp scope tied to terrain paint update and shared preview")
         ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "single_stable_base_frame", errors, "Overworld terrain rendering must document stable HoMM3 base-frame interior selection")
         ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
         ensure(str(terrain_rendering.get("generated_source_policy", "")) == "deprecated_not_used_by_homm3_local_prototype", errors, "Overworld terrain rendering must document generated terrain sources as unused by the HoMM3 local prototype")
@@ -4623,6 +4627,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(transition_rules.get("corner_model", "")) == "diagonal_context_in_atlas_lookup", errors, "Terrain grammar must document diagonal context in atlas lookup")
         ensure(str(transition_rules.get("receiver_rule", "")) == "full_receiver_land_selects_source_anchored_stamp_tables_for_cardinal_edges", errors, "Terrain grammar must document full receiver source-anchored stamp table selection for cardinal edges")
         ensure(str(transition_rules.get("editor_restamp_model", "")) == "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1", errors, "Terrain grammar must document the editor restamp behavior model")
+        ensure(str(transition_rules.get("editor_terrain_placement_model", "")) == "homm3_owner_queue_rewrite_final_normalization.v1", errors, "Terrain grammar must document the HoMM3 editor terrain placement model")
         ensure(str(transition_rules.get("same_group_policy", "")) == "suppress_same_homm3_family_edges", errors, "Terrain grammar must suppress same HoMM3-family transition seams")
         ensure(str(transition_rules.get("bridge_base_model", "")) == "direct_pair_overrides_dirt_or_sand_bridge_base", errors, "Terrain grammar must document direct-pair overrides before generic dirt/sand bridge-base resolution")
         ensure(str(transition_rules.get("propagation_model", "")) == "full_receiver_land_transitions_are_cardinal_boundary_only", errors, "Terrain grammar must document cardinal-boundary-only full receiver land transitions")
@@ -4723,9 +4728,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             ensure(isinstance(restamp_behavior, dict), errors, "HoMM3 full receiver stamp lookup must define editor_restamp_behavior metadata")
             if isinstance(restamp_behavior, dict):
                 ensure(str(restamp_behavior.get("model", "")) == "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1", errors, "HoMM3 editor restamp behavior model id must be stable")
-                ensure(str(restamp_behavior.get("logical_map_write_model", "")) == "painted_tile_only", errors, "HoMM3 editor restamp must not imply extra logical map writes")
+                ensure(str(restamp_behavior.get("logical_map_write_model", "")) == "homm3_owner_queue_rewrite_final_normalization.v1", errors, "HoMM3 editor restamp must identify the owner queue/rewrite logical map write model")
                 ensure(str(restamp_behavior.get("renderer_evaluation_model", "")) == "shared_overworld_map_view_final_state_reprojection", errors, "HoMM3 editor restamp must route through shared OverworldMapView presentation evaluation")
-                ensure(str(restamp_behavior.get("scope", "")) == "map_editor_preview_metadata_only", errors, "HoMM3 editor restamp metadata must remain presentation-only")
+                ensure(str(restamp_behavior.get("scope", "")) == "map_editor_terrain_paint_update_and_shared_preview", errors, "HoMM3 editor restamp metadata must be tied to the terrain paint update and shared preview")
                 offsets = restamp_behavior.get("known_receiver_offsets_from_single_paint", [])
                 ensure(isinstance(offsets, list) and [str(item.get("direction", "")) for item in offsets if isinstance(item, dict)] == ["N", "NW", "W"], errors, "HoMM3 editor restamp behavior must preserve the source-observed N/NW/W receiver offsets")
             stamp_tables = land_receiver_stamp_lookup.get("stamp_tables", {})

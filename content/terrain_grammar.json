@@ -5,7 +5,7 @@
   "primary_base_model": "homm3_local_reference_prototype",
   "generated_source_policy": "deprecated_not_used_by_homm3_local_prototype",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and map/editor/save/pathing data remain unchanged; rendering uses a stable base frame for terrain interiors, reports logical terrain id, renderer family, atlas role, source level, special-system, bridge-class, stamp-table, editor restamp, and fallback metadata, resolves explicit direct land-family pairs before falling back to data-driven bridge classes, resolves full receiver land transitions from true cardinal boundary contacts through provisional source-anchored stamp tables backed by source-visible frame ranges, keeps diagonal-only and second-ring full-receiver contacts as solid interiors, resolves water through shoreline-specific watrtl lookup, keeps rock on a rocktl-specific system, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and save/pathing data remain unchanged, while the Godot map editor now routes terrain paint operations through the recovered HoMM3 owner queue/rewrite and final-normalization placement model before shared preview reprojection. Rendering uses a stable base frame for terrain interiors, reports logical terrain id, renderer family, atlas role, source level, special-system, bridge-class, stamp-table, editor restamp, and fallback metadata, resolves explicit direct land-family pairs before falling back to data-driven bridge classes, resolves full receiver land transitions from true cardinal boundary contacts through provisional source-anchored stamp tables backed by source-visible frame ranges, keeps diagonal-only and second-ring full-receiver contacts as solid interiors, resolves water through shoreline-specific watrtl lookup, keeps rock on a rocktl-specific system, and resolves roads through 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
   "editor_base_terrain_options": [
     {
       "id": "water",
@@ -69,6 +69,7 @@
     "water_model": "shoreline_specific_lookup",
     "receiver_rule": "full_receiver_land_selects_source_anchored_stamp_tables_for_cardinal_edges",
     "editor_restamp_model": "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1",
+    "editor_terrain_placement_model": "homm3_owner_queue_rewrite_final_normalization.v1",
     "same_group_policy": "suppress_same_homm3_family_edges",
     "diagonal_policy": "full_receiver_land_diagonal_only_sources_remain_solid_interiors",
     "unsupported_policy": "explicit_grammar_fallback",
@@ -1028,8 +1029,8 @@
         "model": "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1",
         "source_level": "mixed",
         "paint_order_source_level": "editor_observation",
-        "scope": "map_editor_preview_metadata_only",
-        "logical_map_write_model": "painted_tile_only",
+        "scope": "map_editor_terrain_paint_update_and_shared_preview",
+        "logical_map_write_model": "homm3_owner_queue_rewrite_final_normalization.v1",
         "renderer_evaluation_model": "shared_overworld_map_view_final_state_reprojection",
         "restamp_anchor": "painted_source_tile",
         "known_receiver_offsets_source_level": "editor_observation",
