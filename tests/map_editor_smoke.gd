@@ -28,8 +28,18 @@ func _run() -> void:
 	if SessionState.ensure_active_session().scenario_id != "":
 		_fail("Map editor smoke: opening the editor should not replace the active playable session.")
 		return
-	if snapshot.get("map_viewport", {}).is_empty():
+	var viewport_metrics: Dictionary = snapshot.get("map_viewport", {})
+	if viewport_metrics.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose viewport metrics.")
+		return
+	if not bool(viewport_metrics.get("visible_tile_span_override_active", false)):
+		_fail("Map editor smoke: editor map view did not activate its explicit zoom-out override: %s." % viewport_metrics)
+		return
+	if not is_equal_approx(float(viewport_metrics.get("active_visible_tile_span", 0.0)), 48.0):
+		_fail("Map editor smoke: editor map view did not request a 48-tile visible span: %s." % viewport_metrics)
+		return
+	if not is_equal_approx(float(viewport_metrics.get("visible_tile_span_zoom_out_factor", 0.0)), 4.0):
+		_fail("Map editor smoke: editor map view did not zoom out by a factor of 4 from the gameplay tactical span: %s." % viewport_metrics)
 		return
 	if not _assert_editor_terrain_option_contract(shell, snapshot):
 		return
