@@ -526,6 +526,7 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		or String(rock_terrain.get("homm3_preferred_bridge_class", "")) != "sand_bridge"
 		or int(rock_terrain.get("homm3_shape_class", 0)) != 24
 		or String(rock_terrain.get("homm3_fallback_reason", "")).find("missing rock row bucket") < 0
+		or String(rock_terrain.get("homm3_selected_frame_block", "")) != "rock_black_void"
 		or String(rock_terrain.get("homm3_rock_ground_context", "")) != "preferred_light_ground"
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -551,6 +552,7 @@ func _assert_editor_special_system_groundwork(shell) -> bool:
 		or String(water_terrain.get("homm3_water_bridge_class", "")) != "sand_bridge"
 		or int(water_terrain.get("homm3_shape_class", 0)) != 24
 		or String(water_terrain.get("homm3_fallback_reason", "")).find("missing row bucket") < 0
+		or String(water_terrain.get("homm3_selected_frame_block", "")) != "open_water_interiors"
 	):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: water terrain did not expose the accepted relation-class fallback for an unmaintained class-24 topology: %s." % water_presentation)
