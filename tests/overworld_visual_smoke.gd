@@ -25,6 +25,8 @@ func _run() -> void:
 		return
 	if not _assert_small_map_fit(shell):
 		return
+	if not await _assert_render_cache_split(shell):
+		return
 	if not _assert_marker_readability_contract(shell):
 		return
 	if not _assert_overworld_art_contract(shell):
@@ -62,6 +64,50 @@ func _run() -> void:
 
 	_assert_remembered_owned_town_remote_entry(shell)
 	return
+
+func _assert_render_cache_split(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_select_tile") or not shell.has_method("validation_perform_primary_action"):
+		push_error("Overworld smoke: shell did not expose the validation hooks needed for render-cache assertions.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var hero_pos := OverworldRules.hero_position(session)
+	var target := _first_open_adjacent_tile(session, hero_pos)
+	if target.x < 0:
+		push_error("Overworld smoke: could not find an adjacent open tile for render-cache coverage.")
+		get_tree().quit(1)
+		return false
+	var initial_cache := _render_cache_metrics(shell.call("validation_snapshot"))
+	if initial_cache.is_empty():
+		push_error("Overworld smoke: overworld map view did not expose render-cache metrics.")
+		get_tree().quit(1)
+		return false
+	var selection_result: Dictionary = shell.call("validation_select_tile", target.x, target.y)
+	var selection_cache := _render_cache_metrics(selection_result)
+	if (
+		selection_cache.is_empty()
+		or int(selection_cache.get("session_static_generation", -1)) != int(initial_cache.get("session_static_generation", -1))
+		or int(selection_cache.get("state_generation", -1)) != int(initial_cache.get("state_generation", -1))
+		or int(selection_cache.get("dynamic_generation", -1)) <= int(initial_cache.get("dynamic_generation", -1))
+	):
+		push_error("Overworld smoke: selecting a route target should only redraw the dynamic overworld layer. before=%s after=%s." % [initial_cache, selection_cache])
+		get_tree().quit(1)
+		return false
+	var move_result: Dictionary = shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	var move_cache := _render_cache_metrics(shell.call("validation_snapshot"))
+	if not bool(move_result.get("ok", false)):
+		push_error("Overworld smoke: primary action did not move the hero during render-cache coverage. result=%s." % move_result)
+		get_tree().quit(1)
+		return false
+	if (
+		int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))
+		or int(move_cache.get("dynamic_generation", -1)) <= int(selection_cache.get("dynamic_generation", -1))
+	):
+		push_error("Overworld smoke: hero movement on the fitted small map should not rebuild the session-static terrain cache. select=%s move=%s." % [selection_cache, move_cache])
+		get_tree().quit(1)
+		return false
+	return true
 
 func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
 	var session = SessionState.ensure_active_session()
@@ -1474,6 +1520,60 @@ func _visible_text_lines(text: String) -> Array[String]:
 		if line != "":
 			lines.append(line)
 	return lines
+
+func _first_open_adjacent_tile(session, origin: Vector2i) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	for direction_value in [
+		Vector2i.RIGHT,
+		Vector2i.DOWN,
+		Vector2i.UP,
+		Vector2i.LEFT,
+		Vector2i(1, 1),
+		Vector2i(1, -1),
+		Vector2i(-1, 1),
+		Vector2i(-1, -1),
+	]:
+		var direction: Vector2i = direction_value
+		var tile := origin + direction
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+			continue
+		if not OverworldRules.is_tile_explored(session, tile.x, tile.y):
+			continue
+		if _tile_has_overworld_object(session, tile):
+			continue
+		return tile
+	return Vector2i(-1, -1)
+
+func _tile_has_overworld_object(session, tile: Vector2i) -> bool:
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and int(town.get("x", -1)) == tile.x and int(town.get("y", -1)) == tile.y:
+			return true
+	for node in session.overworld.get("resource_nodes", []):
+		if node is Dictionary and not bool(node.get("collected", false)) and int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y:
+			return true
+	for node in session.overworld.get("artifact_nodes", []):
+		if node is Dictionary and not bool(node.get("collected", false)) and int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y:
+			return true
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and int(encounter.get("x", -1)) == tile.x and int(encounter.get("y", -1)) == tile.y and not OverworldRules.is_encounter_resolved(session, encounter):
+			return true
+	return false
+
+func _render_cache_metrics(snapshot: Dictionary) -> Dictionary:
+	var viewport_metrics: Dictionary = snapshot.get("map_viewport", {})
+	var render_cache: Dictionary = viewport_metrics.get("render_cache", {})
+	if render_cache.is_empty():
+		return {}
+	return {
+		"session_static_generation": int(render_cache.get("session_static_generation", -1)),
+		"state_generation": int(render_cache.get("state_generation", -1)),
+		"dynamic_generation": int(render_cache.get("dynamic_generation", -1)),
+		"session_static_reason": String(render_cache.get("session_static_reason", "")),
+		"state_reason": String(render_cache.get("state_reason", "")),
+		"dynamic_reason": String(render_cache.get("dynamic_reason", "")),
+	}
 
 func _contains_tab_container(node: Node) -> bool:
 	if node is TabContainer:

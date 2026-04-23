@@ -26,7 +26,31 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: Gameplay Overworld Visible Span
+## Current Implementation Slice: Overworld Map Render Cache Split
+Status: completed on 2026-04-23 for a renderer architecture/performance correction.
+
+Purpose:
+- Stop rebuilding the full visible-tile terrain/object canvas on every `OverworldMapView` redraw.
+- Split the shared overworld/editor renderer into explicit session-static, interaction-state, and fully dynamic draw layers so hover/selection/path work does not force terrain recomposition.
+- Preserve the current terrain/object presentation and editor/live map behavior while making cache invalidation explicit and understandable.
+
+Implemented:
+- `OverworldMapView` now creates explicit internal canvas-item layers for session-static terrain/road rendering, mutable state overlays and non-hero objects, fully dynamic hero/selection/hover/route overlays, and the frame mask.
+- Session-static invalidation is now keyed to map/road content changes and actual visible-board layout changes instead of every redraw request.
+- State invalidation is now keyed to fog plus mutable town/resource/artifact/encounter state, with explicit rebuilds when terrain changes alter grounded object presentation dependencies.
+- Hover changes now redraw only the dynamic layer, while shell/editor `set_map_state` refreshes no longer automatically rebuild terrain when only selection or other dynamic overlay state changes.
+- `validation_view_metrics()` now exposes render-cache generation/reason payloads, and focused smoke coverage asserts selection-only redraws stay off the static/state cache while terrain and mutable object-state edits invalidate the correct cache boundary.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not a terrain art replacement, road topology rewrite, gameplay/pathing change, save-format change, editor UX redesign, or low-detail zoom hack.
+
+## Completed Implementation Slice: Gameplay Overworld Visible Span
 Status: completed on 2026-04-22 as a narrow gameplay framing correction.
 
 Purpose:
