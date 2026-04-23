@@ -26,7 +26,29 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
 - River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
 
-## Current Implementation Slice: Overworld Map Render Cache Split
+## Current Implementation Slice: Overworld Renderer Cache Regression Repair
+Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
+
+Purpose:
+- Restore the shared overworld/editor map surface after the render-cache layer split.
+- Keep the cache split architecture intact while fixing the smallest rendering-order mistake.
+- Remove accidental smoke-test debug output from the same pushed slice.
+
+Implemented:
+- `OverworldMapView` now draws the frame/backdrop fill on the bottom session-static layer instead of on the top frame layer.
+- The top frame layer now only masks outside the map viewport and draws the border when a session is active, preventing it from covering terrain, objects, route, hover, and hero layers.
+- Removed accidental `SMOKE:` print spam from `tests/map_editor_smoke.gd`.
+
+Validation:
+- Passed `python3 tests/validate_repo.py`
+- Passed `godot4 --headless --path . res://tests/overworld_visual_smoke.tscn`
+- Passed `godot4 --headless --path . res://tests/map_editor_smoke.tscn`
+- Passed `git diff --check`
+
+Limits:
+- This is not a terrain renderer rewrite, cache architecture revert, gameplay/pathing change, map data change, save-format change, or editor feature change.
+
+## Completed Implementation Slice: Overworld Map Render Cache Split
 Status: completed on 2026-04-23 for a renderer architecture/performance correction.
 
 Purpose:
