@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-22T16:13:57Z",
+  "updatedAt": "2026-04-23T18:11:07Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-gameplay-visible-span-10184",
-  "currentSliceTitle": "Increase gameplay overworld tactical visible span to 16 tiles",
+  "currentSliceId": "overworld-map-render-cache-10184",
+  "currentSliceTitle": "Split overworld map rendering into cached static, state, and dynamic layers",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Moved the gameplay OverworldMapView tactical visible span from 12 tiles to 16 while preserving the editor-only explicit 24-tile override architecture. Focused smoke expectations now assert the gameplay 16-tile default and the editor 24-tile override with the new 1.5x factor. Full requested validation passed: repo validation, map editor smoke, live overworld smoke, Ninefold smoke, and diff whitespace checks.",
+  "currentSliceNotes": "OverworldMapView now uses explicit internal session-static, state, dynamic, and frame canvas-item layers so hover/selection/path overlays no longer rebuild the terrain/road composition by default. Static invalidation now follows map/road or visible-board layout changes, state invalidation follows fog plus mutable town/resource/artifact/encounter changes, and validation now exposes cache generations with targeted smoke coverage. Passed repo validation, map editor smoke, live overworld visual smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",

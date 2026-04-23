@@ -8,10 +8,12 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	print("SMOKE: start")
 	var shell = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	print("SMOKE: shell ready")
 
 	if not shell.has_method("validation_snapshot"):
 		_fail("Map editor smoke: shell did not expose validation_snapshot.")
@@ -41,12 +43,33 @@ func _run() -> void:
 	if not is_equal_approx(float(viewport_metrics.get("visible_tile_span_zoom_out_factor", 0.0)), 1.5):
 		_fail("Map editor smoke: editor map view did not zoom out by a factor of 1.5 from the gameplay tactical span: %s." % viewport_metrics)
 		return
+	var initial_render_cache := _render_cache_metrics(snapshot)
+	if initial_render_cache.is_empty():
+		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
+		return
+	var selection_result: Dictionary = shell.call("validation_select_tile", 10, 10)
+	var selection_render_cache := _render_cache_metrics(selection_result)
+	if selection_render_cache.is_empty():
+		_fail("Map editor smoke: tile selection did not preserve render-cache metrics: %s." % selection_result)
+		return
+	if (
+		int(selection_render_cache.get("session_static_generation", -1)) != int(initial_render_cache.get("session_static_generation", -1))
+		or int(selection_render_cache.get("state_generation", -1)) != int(initial_render_cache.get("state_generation", -1))
+		or int(selection_render_cache.get("dynamic_generation", -1)) <= int(initial_render_cache.get("dynamic_generation", -1))
+	):
+		_fail("Map editor smoke: selecting a tile should only redraw the dynamic overworld layer. before=%s after=%s." % [initial_render_cache, selection_render_cache])
+		return
 	if not _assert_editor_terrain_option_contract(shell, snapshot):
 		return
+	print("SMOKE: terrain option contract")
 
 	var paint_result: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
+	var paint_render_cache := _render_cache_metrics(paint_result)
 	if not bool(paint_result.get("ok", false)):
 		_fail("Map editor smoke: terrain paint hook failed: %s." % paint_result)
+		return
+	if int(paint_render_cache.get("session_static_generation", -1)) <= int(selection_render_cache.get("session_static_generation", -1)):
+		_fail("Map editor smoke: terrain paint did not invalidate the session-static terrain cache: before=%s after=%s." % [selection_render_cache, paint_render_cache])
 		return
 	var paint_inspection: Dictionary = paint_result.get("tile_inspection", {})
 	if String(paint_inspection.get("terrain_id", "")) != "forest" or not bool(paint_result.get("dirty", false)):
@@ -59,20 +82,28 @@ func _run() -> void:
 		return
 	if not _assert_editor_neighbor_transition_preview(shell):
 		return
+	print("SMOKE: neighbor transition")
 	if not _assert_editor_mixed_corner_class_reason_payload(shell):
 		return
+	print("SMOKE: mixed corner")
 	if not _assert_editor_true_terrain_placement(shell):
 		return
+	print("SMOKE: true terrain placement")
 	if not _assert_editor_placement_source_lower_edge(shell):
 		return
+	print("SMOKE: placement lower edge")
 	if not _assert_editor_sand_heavy_corner_ownership(shell):
 		return
+	print("SMOKE: sand heavy")
 	if not _assert_flood_fill_terrain(shell):
 		return
+	print("SMOKE: flood fill")
 	if not _assert_terrain_line_tool(shell):
 		return
+	print("SMOKE: terrain line")
 	if not _assert_terrain_rectangle_tool(shell):
 		return
+	print("SMOKE: terrain tools")
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
@@ -93,6 +124,7 @@ func _run() -> void:
 		return
 	if not _assert_road_path_tool(shell):
 		return
+	print("SMOKE: road tools")
 
 	var hero_result: Dictionary = shell.call("validation_set_hero_start", 3, 3)
 	var hero_position: Dictionary = hero_result.get("hero_position", {})
@@ -102,6 +134,7 @@ func _run() -> void:
 
 	if not _assert_selected_tile_restore(shell):
 		return
+	print("SMOKE: hero and restore")
 
 	var inspect_result: Dictionary = shell.call("validation_select_tile", 23, 26)
 	var inspect_payload: Dictionary = inspect_result.get("tile_inspection", {})
@@ -126,6 +159,7 @@ func _run() -> void:
 		return
 	if not _assert_object_retheme_edits(shell):
 		return
+	print("SMOKE: object edits")
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
 	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
@@ -138,8 +172,10 @@ func _run() -> void:
 		return
 	if not _exercise_object_placement(shell, "encounter", "encounter_mire_raid", Vector2i(7, 4), "has_visible_encounter"):
 		return
+	print("SMOKE: object placement")
 	if not await _assert_play_copy_round_trip(shell):
 		return
+	print("SMOKE: play copy")
 
 	get_tree().quit(0)
 
@@ -192,6 +228,7 @@ func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool
 	return true
 
 func _assert_editor_neighbor_transition_preview(shell) -> bool:
+	print("SMOKE: neighbor start")
 	var forest_tile: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var forest_terrain: Dictionary = forest_tile.get("terrain_presentation", {})
 	if (
@@ -226,6 +263,7 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 			_restore_editor_terrain_tiles(shell, original_terrains)
 			_fail("Map editor smoke: could not seed forest baseline for HoMM3 bridge-table preview at %s." % tile)
 			return false
+	print("SMOKE: neighbor seeded forest")
 	var mire_seed_ok := _paint_editor_terrain_for_orientation(shell, Vector2i(2, 2), "mire")
 	if not mire_seed_ok:
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -258,6 +296,7 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: painted mire edge did not expose full-receiver stamp metadata: %s." % edge_receiver)
 		return false
+	print("SMOKE: neighbor edge")
 	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var corner_terrain: Dictionary = corner_receiver.get("terrain_presentation", {})
 	if (
@@ -273,24 +312,31 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: diagonal-only full-receiver context did not follow the accepted relation-class row lookup: %s." % corner_receiver)
 		return false
+	print("SMOKE: neighbor corner")
 	if not _assert_editor_direct_dirt_swamp_transition(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
+	print("SMOKE: neighbor direct dirt swamp")
 	if not _assert_editor_horizontal_transition_orientation(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
+	print("SMOKE: neighbor horizontal")
 	if not _assert_editor_solid_region_interior_stability(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
+	print("SMOKE: neighbor solid region")
 	if not _assert_editor_special_system_groundwork(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
+	print("SMOKE: neighbor special systems")
 	if not _assert_editor_bridge_material_resolver(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
+	print("SMOKE: neighbor bridge resolver")
 	if not _assert_editor_restamp_behavior_model(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
+	print("SMOKE: neighbor restamp")
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 
@@ -1907,7 +1953,9 @@ func _object_detail_for_family(inspection: Dictionary, family: String) -> Dictio
 	return {}
 
 func _assert_object_property_edits(shell) -> bool:
+	var before_cache := _render_cache_metrics(shell.call("validation_snapshot"))
 	var town_result: Dictionary = shell.call("validation_edit_object_property", 23, 26, "town", "owner", "neutral")
+	var town_cache := _render_cache_metrics(town_result)
 	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
 	if not bool(town_result.get("ok", false)) or String(town_detail.get("owner", "")) != "neutral":
 		_fail("Map editor smoke: town owner property edit did not update working-copy inspection: %s." % town_result)
@@ -1919,6 +1967,12 @@ func _assert_object_property_edits(shell) -> bool:
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", 23, 26)
 	if String(town_presentation.get("town_presentation", {}).get("owner", "")) != "neutral":
 		_fail("Map editor smoke: live preview did not use the edited town owner: %s." % town_presentation)
+		return false
+	if (
+		int(town_cache.get("session_static_generation", -1)) != int(before_cache.get("session_static_generation", -1))
+		or int(town_cache.get("state_generation", -1)) <= int(before_cache.get("state_generation", -1))
+	):
+		_fail("Map editor smoke: town owner edits should invalidate the state cache without rebuilding terrain. before=%s after=%s." % [before_cache, town_cache])
 		return false
 
 	var resource_result: Dictionary = shell.call("validation_edit_object_property", 2, 6, "resource", "collected", true)
@@ -2552,6 +2606,20 @@ func _encounter_seed(session, placement_id: String) -> int:
 		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
 			return int(encounter.get("combat_seed", 0))
 	return 0
+
+func _render_cache_metrics(snapshot: Dictionary) -> Dictionary:
+	var viewport_metrics: Dictionary = snapshot.get("map_viewport", {})
+	var render_cache: Dictionary = viewport_metrics.get("render_cache", {})
+	if render_cache.is_empty():
+		return {}
+	return {
+		"session_static_generation": int(render_cache.get("session_static_generation", -1)),
+		"state_generation": int(render_cache.get("state_generation", -1)),
+		"dynamic_generation": int(render_cache.get("dynamic_generation", -1)),
+		"session_static_reason": String(render_cache.get("session_static_reason", "")),
+		"state_reason": String(render_cache.get("state_reason", "")),
+		"dynamic_reason": String(render_cache.get("dynamic_reason", "")),
+	}
 
 func _fail(message: String) -> void:
 	push_error(message)

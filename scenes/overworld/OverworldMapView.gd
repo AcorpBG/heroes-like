@@ -171,6 +171,8 @@ const DIRECTIONS := [
 	Vector2i(-1, 1),
 	Vector2i(1, 1),
 ]
+const CACHE_SIGNATURE_SEED := 2166136261
+const CACHE_SIGNATURE_MASK := 0x7fffffff
 
 @export var large_map_visible_tile_span_override := 0.0
 
@@ -218,16 +220,39 @@ var _resource_site_object_profiles: Dictionary = {}
 var _artifact_default_asset_id := ""
 var _town_default_asset_id := ""
 var _encounter_default_asset_id := ""
+var _session_static_layer: Control = null
+var _state_layer: Control = null
+var _dynamic_layer: Control = null
+var _frame_layer: Control = null
+var _draw_canvas_item: CanvasItem = null
+var _session_static_cache_signature := 0
+var _state_cache_signature := 0
+var _session_static_cache_generation := 0
+var _state_cache_generation := 0
+var _dynamic_layer_generation := 0
+var _frame_layer_generation := 0
+var _session_static_cache_reason := "uninitialized"
+var _state_cache_reason := "uninitialized"
+var _dynamic_layer_reason := "uninitialized"
+var _frame_layer_reason := "uninitialized"
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	focus_mode = Control.FOCUS_NONE
 	clip_contents = true
 	custom_minimum_size = Vector2(640, 400)
+	_ensure_render_layers()
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
+	_invalidate_frame_layer("ready")
 
 func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i) -> void:
+	_ensure_render_layers()
+	var previous_viewport_layout := _viewport_layout_signature()
+	var previous_board_layout := _board_layout_signature()
+	var previous_session_static_signature := _session_static_cache_signature
+	var previous_state_signature := _state_cache_signature
+	var previous_session_present := _session != null
 	_session = session
 	_map_data = map_data.duplicate(true)
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
@@ -238,17 +263,242 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_selected_tile = selected_tile
 	_path_tiles = _build_path(_hero_tile, _selected_tile)
 	_ensure_camera_state()
-	queue_redraw()
+	var current_viewport_layout := _viewport_layout_signature()
+	var current_board_layout := _board_layout_signature()
+	var session_static_signature := _session_static_signature_for(_map_data, _terrain_layers)
+	var state_signature := _state_cache_signature_for(_session)
+	var session_present := _session != null
+	var visibility_changed := previous_session_present != session_present
+	var viewport_layout_changed := previous_viewport_layout != current_viewport_layout
+	var board_layout_changed := previous_board_layout != current_board_layout
+	var session_static_changed := session_static_signature != previous_session_static_signature
+	var state_changed := state_signature != previous_state_signature
+	_session_static_cache_signature = session_static_signature
+	_state_cache_signature = state_signature
+
+	if visibility_changed or viewport_layout_changed:
+		_invalidate_frame_layer("viewport_layout_changed")
+
+	if visibility_changed or board_layout_changed or session_static_changed:
+		var session_static_reason := "session_static_content_changed"
+		if visibility_changed:
+			session_static_reason = "session_visibility_changed"
+		elif board_layout_changed:
+			session_static_reason = "board_layout_changed"
+		_invalidate_session_static_cache(session_static_reason)
+
+	if visibility_changed or board_layout_changed or state_changed or session_static_changed:
+		var state_reason := "state_content_changed"
+		if visibility_changed:
+			state_reason = "session_visibility_changed"
+		elif board_layout_changed:
+			state_reason = "board_layout_changed"
+		elif session_static_changed:
+			state_reason = "session_static_dependency_changed"
+		_invalidate_state_cache(state_reason)
+
+	_invalidate_dynamic_layer("map_state_updated")
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
-		queue_redraw()
+		_invalidate_frame_layer("resized")
+		_invalidate_session_static_cache("resized")
+		_invalidate_state_cache("resized")
+		_invalidate_dynamic_layer("resized")
 	elif what == NOTIFICATION_MOUSE_EXIT:
 		_dragging_camera = false
 		if _hover_tile.x >= 0:
 			_hover_tile = Vector2i(-1, -1)
 			tile_hovered.emit(_hover_tile)
-			queue_redraw()
+			_invalidate_dynamic_layer("hover_changed")
+
+func _ensure_render_layers() -> void:
+	if _session_static_layer != null and is_instance_valid(_session_static_layer):
+		return
+	_session_static_layer = _create_render_layer("SessionStaticLayer", Callable(self, "_draw_session_static_layer"))
+	_state_layer = _create_render_layer("StateLayer", Callable(self, "_draw_state_layer"))
+	_dynamic_layer = _create_render_layer("DynamicLayer", Callable(self, "_draw_dynamic_layer"))
+	_frame_layer = _create_render_layer("FrameLayer", Callable(self, "_draw_frame_layer"))
+
+func _create_render_layer(layer_name: String, draw_callback: Callable) -> Control:
+	var layer := Control.new()
+	layer.name = layer_name
+	layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.focus_mode = Control.FOCUS_NONE
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.draw.connect(draw_callback)
+	add_child(layer)
+	return layer
+
+func _viewport_layout_signature() -> String:
+	return "%s|%s|%s|%s|%s" % [
+		var_to_str(size),
+		_map_size.x,
+		_map_size.y,
+		large_map_visible_tile_span_override,
+		_active_visible_tile_span(),
+	]
+
+func _board_layout_signature() -> String:
+	var board_rect := _board_rect()
+	var viewport_rect := _map_viewport_rect()
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	return "%s|%s|%s" % [
+		_viewport_layout_signature(),
+		var_to_str(board_rect),
+		var_to_str(visible_bounds),
+	]
+
+func _session_static_signature_for(map_data: Array, terrain_layers: Dictionary) -> int:
+	var roads = terrain_layers.get("roads", []) if terrain_layers is Dictionary else []
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, map_data.size())
+	for row_index in range(map_data.size()):
+		var row = map_data[row_index]
+		if not (row is Array):
+			signature = _combine_cache_signature(signature, hash(typeof(row)))
+			continue
+		signature = _combine_cache_signature(signature, row.size())
+		for tile_value in row:
+			signature = _combine_cache_signature(signature, hash(String(tile_value)))
+	return _combine_cache_signature(signature, _roads_cache_signature(roads))
+
+func _state_cache_signature_for(session) -> int:
+	if session == null:
+		return 0
+	var overworld = session.overworld
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, _fog_cache_signature(overworld.get("fog", {})))
+	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("towns", [])))
+	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("resource_nodes", [])))
+	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("artifact_nodes", [])))
+	signature = _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("encounters", [])))
+	return _combine_cache_signature(signature, _variant_array_cache_signature(overworld.get("resolved_encounters", [])))
+
+func _combine_cache_signature(signature: int, value: int) -> int:
+	return int(((signature * 16777619) + value + 1013904223) & CACHE_SIGNATURE_MASK)
+
+func _roads_cache_signature(roads) -> int:
+	if not (roads is Array):
+		return hash(typeof(roads))
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, roads.size())
+	for road_value in roads:
+		if not (road_value is Dictionary):
+			signature = _combine_cache_signature(signature, hash(var_to_str(road_value)))
+			continue
+		var road: Dictionary = road_value
+		signature = _combine_cache_signature(signature, hash(String(road.get("id", ""))))
+		signature = _combine_cache_signature(signature, hash(String(road.get("overlay_id", ""))))
+		signature = _combine_cache_signature(signature, hash(String(road.get("role", ""))))
+		var tiles = road.get("tiles", [])
+		if not (tiles is Array):
+			signature = _combine_cache_signature(signature, hash(typeof(tiles)))
+			continue
+		signature = _combine_cache_signature(signature, tiles.size())
+		for tile_value in tiles:
+			if tile_value is Dictionary:
+				signature = _combine_cache_signature(signature, int(tile_value.get("x", -1)))
+				signature = _combine_cache_signature(signature, int(tile_value.get("y", -1)))
+			else:
+				signature = _combine_cache_signature(signature, hash(var_to_str(tile_value)))
+	return signature
+
+func _fog_cache_signature(fog) -> int:
+	if not (fog is Dictionary):
+		return hash(typeof(fog))
+	var signature := CACHE_SIGNATURE_SEED
+	signature = _combine_cache_signature(signature, int(fog.get("visible_count", 0)))
+	signature = _combine_cache_signature(signature, int(fog.get("explored_count", 0)))
+	signature = _combine_cache_signature(signature, int(fog.get("total_tiles", 0)))
+	signature = _combine_cache_signature(signature, _bool_grid_cache_signature(fog.get("visible_tiles", [])))
+	return _combine_cache_signature(signature, _bool_grid_cache_signature(fog.get("explored_tiles", [])))
+
+func _bool_grid_cache_signature(grid) -> int:
+	if not (grid is Array):
+		return hash(typeof(grid))
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, grid.size())
+	for row in grid:
+		if not (row is Array):
+			signature = _combine_cache_signature(signature, hash(typeof(row)))
+			continue
+		signature = _combine_cache_signature(signature, row.size())
+		var packed_bits := 0
+		var bit_index := 0
+		for value in row:
+			if bool(value):
+				packed_bits |= 1 << bit_index
+			bit_index += 1
+			if bit_index >= 16:
+				signature = _combine_cache_signature(signature, packed_bits)
+				packed_bits = 0
+				bit_index = 0
+		if bit_index > 0:
+			signature = _combine_cache_signature(signature, packed_bits)
+	return signature
+
+func _variant_array_cache_signature(values) -> int:
+	if not (values is Array):
+		return hash(typeof(values))
+	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, values.size())
+	for value in values:
+		signature = _combine_cache_signature(signature, hash(var_to_str(value)))
+	return signature
+
+func _invalidate_session_static_cache(reason: String) -> void:
+	_session_static_cache_generation += 1
+	_session_static_cache_reason = reason
+	if _session_static_layer != null:
+		_session_static_layer.queue_redraw()
+
+func _invalidate_state_cache(reason: String) -> void:
+	_state_cache_generation += 1
+	_state_cache_reason = reason
+	if _state_layer != null:
+		_state_layer.queue_redraw()
+
+func _invalidate_dynamic_layer(reason: String) -> void:
+	_dynamic_layer_generation += 1
+	_dynamic_layer_reason = reason
+	if _dynamic_layer != null:
+		_dynamic_layer.queue_redraw()
+
+func _invalidate_frame_layer(reason: String) -> void:
+	_frame_layer_generation += 1
+	_frame_layer_reason = reason
+	if _frame_layer != null:
+		_frame_layer.queue_redraw()
+
+func _current_draw_canvas_item() -> CanvasItem:
+	return _draw_canvas_item if _draw_canvas_item != null else self
+
+func _canvas_draw_rect(rect: Rect2, color: Color, filled: bool = true, width: float = -1.0) -> void:
+	_current_draw_canvas_item().draw_rect(rect, color, filled, width)
+
+func _canvas_draw_line(from: Vector2, to: Vector2, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
+	_current_draw_canvas_item().draw_line(from, to, color, width, antialiased)
+
+func _canvas_draw_circle(
+	position: Vector2,
+	radius: float,
+	color: Color,
+	filled: bool = true,
+	width: float = -1.0,
+	antialiased: bool = false
+) -> void:
+	_current_draw_canvas_item().draw_circle(position, radius, color, filled, width, antialiased)
+
+func _canvas_draw_colored_polygon(points: PackedVector2Array, color: Color) -> void:
+	_current_draw_canvas_item().draw_colored_polygon(points, color)
+
+func _canvas_draw_polyline(points: PackedVector2Array, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
+	_current_draw_canvas_item().draw_polyline(points, color, width, antialiased)
+
+func _canvas_draw_texture_rect(
+	texture: Texture2D,
+	rect: Rect2,
+	tile: bool,
+	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
+	transpose: bool = false
+) -> void:
+	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, modulate, transpose)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -264,7 +514,7 @@ func _gui_input(event: InputEvent) -> void:
 		if tile != _hover_tile:
 			_hover_tile = tile
 			tile_hovered.emit(tile)
-			queue_redraw()
+			_invalidate_dynamic_layer("hover_changed")
 		return
 
 	if event is InputEventMouseButton:
@@ -301,61 +551,97 @@ func _gui_input(event: InputEvent) -> void:
 					accept_event()
 
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
+	return
+
+func _draw_frame_layer() -> void:
+	var previous_target = _draw_canvas_item
+	_draw_canvas_item = _frame_layer
+	_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
+	if _session != null:
+		var viewport_rect := _map_viewport_rect()
+		var frame_rect = viewport_rect.grow(12.0)
+		_canvas_draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
+		_canvas_draw_rect(viewport_rect, FRAME_FILL, true)
+		_draw_viewport_mask(viewport_rect)
+		_canvas_draw_rect(frame_rect, FRAME_COLOR, false, 3.0)
+	_draw_canvas_item = previous_target
+
+func _draw_session_static_layer() -> void:
 	if _session == null:
 		return
-
+	var previous_target = _draw_canvas_item
+	_draw_canvas_item = _session_static_layer
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
-	var frame_rect = viewport_rect.grow(12.0)
-	draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
-	draw_rect(viewport_rect, FRAME_FILL, true)
-
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
-			_draw_tile_background(tile, rect)
+			_draw_tile_session_static_background(tile, rect)
+	_draw_canvas_item = previous_target
 
+func _draw_state_layer() -> void:
+	if _session == null:
+		return
+	var previous_target = _draw_canvas_item
+	_draw_canvas_item = _state_layer
+	var viewport_rect := _map_viewport_rect()
+	var board_rect = _board_rect()
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
+			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
+			_draw_tile_state_icon(tile, rect)
+	_draw_canvas_item = previous_target
 
+func _draw_dynamic_layer() -> void:
+	if _session == null:
+		return
+	var previous_target = _draw_canvas_item
+	_draw_canvas_item = _dynamic_layer
+	var viewport_rect := _map_viewport_rect()
+	var board_rect = _board_rect()
+	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	_draw_route(board_rect)
-
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
 			var rect = _tile_rect(board_rect, tile)
 			_draw_tile_focus(tile, rect)
-			_draw_tile_icon(tile, rect)
-	_draw_viewport_mask(viewport_rect)
-	draw_rect(frame_rect, FRAME_COLOR, false, 3.0)
+			_draw_tile_dynamic_icon(tile, rect)
+	_draw_canvas_item = previous_target
 
 func _draw_tile_background(tile: Vector2i, rect: Rect2) -> void:
+	_draw_tile_session_static_background(tile, rect)
+	_draw_tile_state_overlay(tile, rect)
+
+func _draw_tile_session_static_background(tile: Vector2i, rect: Rect2) -> void:
+	var terrain = _terrain_at(tile)
+	if terrain == "":
+		return
+	if not _draw_terrain_tile_art(tile, rect, terrain):
+		var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
+		_canvas_draw_rect(rect, base_color, true)
+		_draw_authored_terrain_pattern(tile, rect, terrain, true)
+	_draw_terrain_transitions(tile, rect, terrain)
+	_draw_road_overlay(tile, rect)
+
+func _draw_tile_state_overlay(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
-		draw_rect(rect, UNEXPLORED_COLOR, true)
-		draw_line(rect.position + Vector2(6.0, 6.0), rect.end - Vector2(6.0, 6.0), Color(0.19, 0.20, 0.22, 0.45), 2.0)
-		draw_line(
+		_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)
+		_canvas_draw_line(rect.position + Vector2(6.0, 6.0), rect.end - Vector2(6.0, 6.0), Color(0.19, 0.20, 0.22, 0.45), 2.0)
+		_canvas_draw_line(
 			Vector2(rect.position.x + rect.size.x - 6.0, rect.position.y + 6.0),
 			Vector2(rect.position.x + 6.0, rect.position.y + rect.size.y - 6.0),
 			Color(0.19, 0.20, 0.22, 0.45),
 			2.0
 		)
-		draw_rect(rect, UNEXPLORED_GRID_COLOR, false, 1.0)
+		_canvas_draw_rect(rect, UNEXPLORED_GRID_COLOR, false, 1.0)
 		return
-
-	var terrain = _terrain_at(tile)
-	if not _draw_terrain_tile_art(tile, rect, terrain):
-		var base_color: Color = _terrain_color(terrain, "base_color", TERRAIN_COLORS.get(terrain, TERRAIN_COLORS["grass"]))
-		draw_rect(rect, base_color, true)
-		_draw_authored_terrain_pattern(tile, rect, terrain, true)
-	_draw_terrain_transitions(tile, rect, terrain)
-	_draw_road_overlay(tile, rect)
-
 	_draw_explored_terrain_boundary(tile, rect)
 
 func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> bool:
@@ -365,7 +651,7 @@ func _draw_terrain_tile_art(tile: Vector2i, rect: Rect2, terrain: String) -> boo
 	var texture = _terrain_art_texture_for_entry(entry)
 	if not (texture is Texture2D):
 		return false
-	draw_texture_rect(texture, rect, false)
+	_canvas_draw_texture_rect(texture, rect, false)
 	return true
 
 func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
@@ -385,13 +671,13 @@ func _draw_explored_terrain_boundary(tile: Vector2i, rect: Rect2) -> void:
 			continue
 		match direction:
 			"N":
-				draw_line(rect.position, Vector2(rect.end.x, rect.position.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+				_canvas_draw_line(rect.position, Vector2(rect.end.x, rect.position.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
 			"S":
-				draw_line(Vector2(rect.position.x, rect.end.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+				_canvas_draw_line(Vector2(rect.position.x, rect.end.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
 			"W":
-				draw_line(rect.position, Vector2(rect.position.x, rect.end.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+				_canvas_draw_line(rect.position, Vector2(rect.position.x, rect.end.y), EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
 			"E":
-				draw_line(Vector2(rect.end.x, rect.position.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
+				_canvas_draw_line(Vector2(rect.end.x, rect.position.y), rect.end, EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR, EXPLORED_TERRAIN_FOG_BOUNDARY_WIDTH)
 
 func _draw_authored_terrain_pattern(tile: Vector2i, rect: Rect2, terrain: String, visible: bool) -> void:
 	var pattern := _terrain_pattern(terrain)
@@ -420,8 +706,8 @@ func _draw_grass_pattern(rect: Rect2, visible: bool) -> void:
 	var color = Color(0.69, 0.84, 0.43, 0.18 if visible else 0.10)
 	var top = rect.position + rect.size * Vector2(0.24, 0.30)
 	var bottom = rect.position + rect.size * Vector2(0.58, 0.66)
-	draw_circle(top, rect.size.x * 0.08, color)
-	draw_circle(bottom, rect.size.x * 0.06, color)
+	_canvas_draw_circle(top, rect.size.x * 0.08, color)
+	_canvas_draw_circle(bottom, rect.size.x * 0.06, color)
 
 func _draw_forest_pattern(rect: Rect2, visible: bool) -> void:
 	var tree_color = Color(0.12, 0.22, 0.13, 0.60 if visible else 0.35)
@@ -434,51 +720,51 @@ func _draw_forest_pattern(rect: Rect2, visible: bool) -> void:
 			center + Vector2(half_width, rect.size.y * 0.02),
 			center + Vector2(-half_width, rect.size.y * 0.02),
 		])
-		draw_colored_polygon(crown, tree_color)
-		draw_rect(Rect2(center + Vector2(-2.0, rect.size.y * 0.02), Vector2(4.0, rect.size.y * 0.12)), trunk_color, true)
+		_canvas_draw_colored_polygon(crown, tree_color)
+		_canvas_draw_rect(Rect2(center + Vector2(-2.0, rect.size.y * 0.02), Vector2(4.0, rect.size.y * 0.12)), trunk_color, true)
 
 func _draw_water_pattern(rect: Rect2, visible: bool) -> void:
 	var wave_color = Color(0.80, 0.90, 1.0, 0.28 if visible else 0.14)
 	for row in [0.34, 0.62]:
 		var start = rect.position + rect.size * Vector2(0.16, row)
 		var end = rect.position + rect.size * Vector2(0.84, row)
-		draw_line(start, end, wave_color, 2.0)
-		draw_line(start + Vector2(rect.size.x * 0.12, -rect.size.y * 0.08), end - Vector2(rect.size.x * 0.12, -rect.size.y * 0.08), wave_color, 2.0)
+		_canvas_draw_line(start, end, wave_color, 2.0)
+		_canvas_draw_line(start + Vector2(rect.size.x * 0.12, -rect.size.y * 0.08), end - Vector2(rect.size.x * 0.12, -rect.size.y * 0.08), wave_color, 2.0)
 
 func _draw_mire_pattern(rect: Rect2, visible: bool) -> void:
 	var reed_color = Color(0.62, 0.71, 0.35, 0.24 if visible else 0.12)
 	for column in [0.25, 0.50, 0.72]:
 		var start = rect.position + rect.size * Vector2(column, 0.68)
-		draw_line(start, start - Vector2(rect.size.x * 0.06, rect.size.y * 0.32), reed_color, 2.0)
-		draw_line(start, start + Vector2(rect.size.x * 0.06, -rect.size.y * 0.26), reed_color, 2.0)
+		_canvas_draw_line(start, start - Vector2(rect.size.x * 0.06, rect.size.y * 0.32), reed_color, 2.0)
+		_canvas_draw_line(start, start + Vector2(rect.size.x * 0.06, -rect.size.y * 0.26), reed_color, 2.0)
 
 func _draw_ridge_pattern(rect: Rect2, visible: bool) -> void:
 	var ridge_color = Color(0.78, 0.73, 0.55, 0.22 if visible else 0.11)
-	draw_line(rect.position + rect.size * Vector2(0.18, 0.70), rect.position + rect.size * Vector2(0.50, 0.30), ridge_color, 2.0)
-	draw_line(rect.position + rect.size * Vector2(0.50, 0.30), rect.position + rect.size * Vector2(0.82, 0.68), ridge_color, 2.0)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.18, 0.70), rect.position + rect.size * Vector2(0.50, 0.30), ridge_color, 2.0)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.50, 0.30), rect.position + rect.size * Vector2(0.82, 0.68), ridge_color, 2.0)
 
 func _draw_snow_pattern(rect: Rect2, visible: bool) -> void:
 	var snow_color = Color(0.96, 0.98, 1.0, 0.28 if visible else 0.12)
-	draw_circle(rect.position + rect.size * Vector2(0.32, 0.36), rect.size.x * 0.045, snow_color)
-	draw_circle(rect.position + rect.size * Vector2(0.63, 0.60), rect.size.x * 0.055, snow_color)
+	_canvas_draw_circle(rect.position + rect.size * Vector2(0.32, 0.36), rect.size.x * 0.045, snow_color)
+	_canvas_draw_circle(rect.position + rect.size * Vector2(0.63, 0.60), rect.size.x * 0.055, snow_color)
 
 func _draw_cracked_ground_pattern(rect: Rect2, visible: bool) -> void:
 	var crack_color := Color(0.33, 0.22, 0.15, 0.25 if visible else 0.12)
-	draw_line(rect.position + rect.size * Vector2(0.18, 0.30), rect.position + rect.size * Vector2(0.42, 0.44), crack_color, 2.0)
-	draw_line(rect.position + rect.size * Vector2(0.42, 0.44), rect.position + rect.size * Vector2(0.34, 0.68), crack_color, 2.0)
-	draw_line(rect.position + rect.size * Vector2(0.62, 0.25), rect.position + rect.size * Vector2(0.78, 0.48), crack_color, 1.6)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.18, 0.30), rect.position + rect.size * Vector2(0.42, 0.44), crack_color, 2.0)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.42, 0.44), rect.position + rect.size * Vector2(0.34, 0.68), crack_color, 2.0)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.62, 0.25), rect.position + rect.size * Vector2(0.78, 0.48), crack_color, 1.6)
 
 func _draw_ash_pattern(rect: Rect2, visible: bool) -> void:
 	var scar_color := Color(0.83, 0.44, 0.28, 0.20 if visible else 0.10)
 	var ash_color := Color(0.20, 0.18, 0.18, 0.23 if visible else 0.11)
-	draw_line(rect.position + rect.size * Vector2(0.18, 0.62), rect.position + rect.size * Vector2(0.82, 0.42), ash_color, 2.0)
-	draw_line(rect.position + rect.size * Vector2(0.28, 0.32), rect.position + rect.size * Vector2(0.66, 0.66), scar_color, 1.8)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.18, 0.62), rect.position + rect.size * Vector2(0.82, 0.42), ash_color, 2.0)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.28, 0.32), rect.position + rect.size * Vector2(0.66, 0.66), scar_color, 1.8)
 
 func _draw_stone_pattern(rect: Rect2, visible: bool) -> void:
 	var facet_color := Color(0.72, 0.68, 0.82, 0.20 if visible else 0.10)
-	draw_line(rect.position + rect.size * Vector2(0.20, 0.36), rect.position + rect.size * Vector2(0.50, 0.22), facet_color, 1.8)
-	draw_line(rect.position + rect.size * Vector2(0.50, 0.22), rect.position + rect.size * Vector2(0.80, 0.44), facet_color, 1.8)
-	draw_line(rect.position + rect.size * Vector2(0.30, 0.72), rect.position + rect.size * Vector2(0.66, 0.58), facet_color, 1.6)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.20, 0.36), rect.position + rect.size * Vector2(0.50, 0.22), facet_color, 1.8)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.50, 0.22), rect.position + rect.size * Vector2(0.80, 0.44), facet_color, 1.8)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.30, 0.72), rect.position + rect.size * Vector2(0.66, 0.58), facet_color, 1.6)
 
 func _draw_tile_variant_marks(tile: Vector2i, rect: Rect2, terrain: String, visible: bool) -> void:
 	var detail := _terrain_color(terrain, "detail_color", Color(0.85, 0.88, 0.62, 1.0))
@@ -487,10 +773,10 @@ func _draw_tile_variant_marks(tile: Vector2i, rect: Rect2, terrain: String, visi
 	var seed: int = abs((tile.x * 37) + (tile.y * 53))
 	var center := rect.position + rect.size * Vector2(0.28 + (float(seed % 41) / 100.0), 0.26 + (float((seed / 7) % 43) / 100.0))
 	var radius := maxf(1.6, minf(rect.size.x, rect.size.y) * (0.025 + (float(seed % 3) * 0.008)))
-	draw_circle(center, radius, color)
+	_canvas_draw_circle(center, radius, color)
 	if seed % 2 == 0:
 		var second := rect.position + rect.size * Vector2(0.22 + (float((seed / 3) % 50) / 100.0), 0.56 + (float((seed / 11) % 28) / 100.0))
-		draw_line(second, second + Vector2(rect.size.x * 0.16, -rect.size.y * 0.04), color, 1.4)
+		_canvas_draw_line(second, second + Vector2(rect.size.x * 0.16, -rect.size.y * 0.04), color, 1.4)
 
 func _draw_terrain_transitions(tile: Vector2i, rect: Rect2, terrain: String) -> void:
 	if not _homm3_terrain_config(terrain).is_empty():
@@ -520,13 +806,13 @@ func _draw_terrain_edge_fallback(source_terrain: String, direction: String, rect
 	var width := maxf(3.0, minf(rect.size.x, rect.size.y) * TERRAIN_TRANSITION_WIDTH_FACTOR)
 	match direction:
 		"N":
-			draw_rect(Rect2(rect.position, Vector2(rect.size.x, width)), color, true)
+			_canvas_draw_rect(Rect2(rect.position, Vector2(rect.size.x, width)), color, true)
 		"S":
-			draw_rect(Rect2(Vector2(rect.position.x, rect.end.y - width), Vector2(rect.size.x, width)), color, true)
+			_canvas_draw_rect(Rect2(Vector2(rect.position.x, rect.end.y - width), Vector2(rect.size.x, width)), color, true)
 		"W":
-			draw_rect(Rect2(rect.position, Vector2(width, rect.size.y)), color, true)
+			_canvas_draw_rect(Rect2(rect.position, Vector2(width, rect.size.y)), color, true)
 		"E":
-			draw_rect(Rect2(Vector2(rect.end.x - width, rect.position.y), Vector2(width, rect.size.y)), color, true)
+			_canvas_draw_rect(Rect2(Vector2(rect.end.x - width, rect.position.y), Vector2(width, rect.size.y)), color, true)
 
 func _draw_terrain_corner_hint(source_terrain: String, direction: String, rect: Rect2) -> void:
 	if direction == "":
@@ -564,8 +850,8 @@ func _draw_terrain_corner_hint(source_terrain: String, direction: String, rect: 
 			accent_end = origin + Vector2(corner * 0.78, corner * 0.18)
 		_:
 			return
-	draw_colored_polygon(points, color)
-	draw_line(accent_start, accent_end, detail_color, maxf(1.0, extent * 0.014))
+	_canvas_draw_colored_polygon(points, color)
+	_canvas_draw_line(accent_start, accent_end, detail_color, maxf(1.0, extent * 0.014))
 
 func _draw_terrain_edge_art(terrain: String, direction: String, rect: Rect2) -> bool:
 	if not _terrain_art_can_be_primary(terrain):
@@ -574,7 +860,7 @@ func _draw_terrain_edge_art(terrain: String, direction: String, rect: Rect2) -> 
 	var texture = _terrain_art_texture(texture_path)
 	if not (texture is Texture2D):
 		return false
-	draw_texture_rect(texture, rect, false)
+	_canvas_draw_texture_rect(texture, rect, false)
 	return true
 
 func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
@@ -596,19 +882,19 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 		connector_count += 1
 		var start := _road_connector_start(rect, direction)
 		var end := _road_connector_end(rect, direction)
-		draw_line(start, end, shadow_color, width * 1.45)
-		draw_line(start, end, edge_color, width * 1.12)
-		draw_line(start, end, road_color, width)
-		draw_line(start, end, center_color, maxf(1.4, width * 0.22))
+		_canvas_draw_line(start, end, shadow_color, width * 1.45)
+		_canvas_draw_line(start, end, edge_color, width * 1.12)
+		_canvas_draw_line(start, end, road_color, width)
+		_canvas_draw_line(start, end, center_color, maxf(1.4, width * 0.22))
 	if _road_needs_joint_cap(_road_neighbor_directions(tile)) and _road_has_horizontal_connections(_road_neighbor_directions(tile)):
 		var edge_center := Vector2(center.x, _road_horizontal_lane_y(rect))
-		draw_line(center, edge_center, shadow_color, width * 1.45)
-		draw_line(center, edge_center, edge_color, width * 1.12)
-		draw_line(center, edge_center, road_color, width)
+		_canvas_draw_line(center, edge_center, shadow_color, width * 1.45)
+		_canvas_draw_line(center, edge_center, edge_color, width * 1.12)
+		_canvas_draw_line(center, edge_center, road_color, width)
 	if connector_count == 0:
-		draw_circle(center, width * 0.72, shadow_color)
-		draw_circle(center, width * 0.58, edge_color)
-		draw_circle(center, width * 0.46, road_color)
+		_canvas_draw_circle(center, width * 0.72, shadow_color)
+		_canvas_draw_circle(center, width * 0.58, edge_color)
+		_canvas_draw_circle(center, width * 0.46, road_color)
 
 func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bool:
 	var overlay_id := String(road.get("overlay_id", "road_dirt"))
@@ -616,7 +902,7 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 	if homm3_path != "":
 		var homm3_texture = _terrain_art_texture(homm3_path)
 		if homm3_texture is Texture2D:
-			draw_texture_rect(homm3_texture, rect, false)
+			_canvas_draw_texture_rect(homm3_texture, rect, false)
 			return true
 	if not _road_overlay_art_can_be_primary(overlay_id):
 		return false
@@ -629,7 +915,7 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 	if connection_pieces is Dictionary:
 		var connection_piece_texture = _terrain_art_texture(String(connection_pieces.get(_road_connection_key_from_directions(neighbor_directions), "")))
 		if connection_piece_texture is Texture2D:
-			draw_texture_rect(connection_piece_texture, rect, false)
+			_canvas_draw_texture_rect(connection_piece_texture, rect, false)
 			drew_any = true
 			if not _road_needs_joint_cap(neighbor_directions):
 				return true
@@ -639,12 +925,12 @@ func _draw_road_overlay_art(tile: Vector2i, rect: Rect2, road: Dictionary) -> bo
 			var direction_key := _direction_key(direction)
 			var connector_texture = _terrain_art_texture(String(connectors.get(direction_key, "")))
 			if connector_texture is Texture2D:
-				draw_texture_rect(connector_texture, rect, false)
+				_canvas_draw_texture_rect(connector_texture, rect, false)
 				drew_any = true
 	if _road_needs_joint_cap(neighbor_directions):
 		var center_texture = _terrain_art_texture(String(art.get("center", "")))
 		if center_texture is Texture2D:
-			draw_texture_rect(center_texture, rect, false)
+			_canvas_draw_texture_rect(center_texture, rect, false)
 			drew_any = true
 	return drew_any
 
@@ -662,26 +948,30 @@ func _draw_route(board_rect: Rect2) -> void:
 		points.append(_tile_rect(board_rect, tile_value).get_center())
 	if points.size() <= 1:
 		return
-	draw_polyline(points, line_color, 5.0)
+	_canvas_draw_polyline(points, line_color, 5.0)
 	for point in points:
-		draw_circle(point, 4.0, line_color)
+		_canvas_draw_circle(point, 4.0, line_color)
 
 func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var focus_width := maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR)
 	if tile == _hero_tile:
-		draw_rect(rect.grow(-1.0), Color(0.03, 0.025, 0.015, 0.50), false, focus_width + 2.0)
-		draw_rect(rect.grow(-3.0), HERO_RING_COLOR, false, focus_width)
+		_canvas_draw_rect(rect.grow(-1.0), Color(0.03, 0.025, 0.015, 0.50), false, focus_width + 2.0)
+		_canvas_draw_rect(rect.grow(-3.0), HERO_RING_COLOR, false, focus_width)
 
 	if tile == _selected_tile:
-		draw_rect(rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
-		draw_rect(rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
+		_canvas_draw_rect(rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
+		_canvas_draw_rect(rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
 		_draw_selection_corners(rect, SELECTION_COLOR, focus_width)
 
 	if tile == _hover_tile:
-		draw_rect(rect.grow(-7.0), HOVER_COLOR, false, 2.0)
+		_canvas_draw_rect(rect.grow(-7.0), HOVER_COLOR, false, 2.0)
 
 func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
+	_draw_tile_state_icon(tile, rect)
+	_draw_tile_dynamic_icon(tile, rect)
+
+func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
 		return
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
@@ -702,6 +992,11 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	if _has_encounter_at(tile) and (visible or _has_rememberable_encounter_at(tile)):
 		if not _draw_encounter_sprite(rect, remembered, tile):
 			_draw_encounter_marker(rect, remembered, tile)
+
+func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
+		return
+	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
 	if visible and _has_hero_at(tile):
 		_draw_hero_marker(rect, tile)
 
@@ -725,7 +1020,7 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	var sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction("town", footprint))
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_town_owner_pennant(rect, _town_color(tile), remembered)
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
@@ -746,7 +1041,7 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var sprite_extent := maxf(12.0, extent * sprite_fraction)
 	var sprite_center := rect.get_center() + Vector2(0.0, -extent * _object_lift_fraction(family, footprint))
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	return true
 
 func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> void:
@@ -756,14 +1051,14 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool) -> vo
 	var pole_color := MEMORY_OBJECT_OUTLINE if remembered else Color(0.97, 0.94, 0.82, 0.90)
 	var flag_color := _remembered_marker_color(color) if remembered else color
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
-	draw_line(pole_bottom, pole_top, pole_color, maxf(1.6, extent * 0.024))
+	_canvas_draw_line(pole_bottom, pole_top, pole_color, maxf(1.6, extent * 0.024))
 	var flag := PackedVector2Array([
 		pole_top,
 		pole_top + Vector2(extent * 0.16, extent * 0.045),
 		pole_top + Vector2(extent * 0.02, extent * 0.12),
 	])
-	draw_colored_polygon(flag, flag_color)
-	draw_polyline(PackedVector2Array([flag[0], flag[1], flag[2], flag[0]]), outline_color, maxf(1.0, extent * 0.014))
+	_canvas_draw_colored_polygon(flag, flag_color)
+	_canvas_draw_polyline(PackedVector2Array([flag[0], flag[1], flag[2], flag[0]]), outline_color, maxf(1.0, extent * 0.014))
 
 func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
 	var anchor := _draw_town_grounding_anchor(rect, remembered, tile)
@@ -775,26 +1070,26 @@ func _draw_town_marker(rect: Rect2, entry_rect: Rect2, color: Color, remembered:
 		rect.position + rect.size * Vector2(0.18, 0.43),
 		rect.size * Vector2(0.64, 0.30)
 	)
-	draw_rect(body, marker_color, true)
-	draw_rect(body, outline_color, false, outline_width)
+	_canvas_draw_rect(body, marker_color, true)
+	_canvas_draw_rect(body, outline_color, false, outline_width)
 	for step in [0.19, 0.46, 0.70]:
 		var battlement = Rect2(
 			rect.position + rect.size * Vector2(step, 0.28),
 			rect.size * Vector2(0.13, 0.18)
 		)
-		draw_rect(battlement, marker_color, true)
-		draw_rect(battlement, outline_color, false, maxf(1.4, outline_width * 0.65))
+		_canvas_draw_rect(battlement, marker_color, true)
+		_canvas_draw_rect(battlement, outline_color, false, maxf(1.4, outline_width * 0.65))
 	var gate := Rect2(rect.position + rect.size * Vector2(0.44, 0.56), rect.size * Vector2(0.12, 0.17))
-	draw_rect(gate, Color(0.16, 0.10, 0.06, 0.48 if remembered else 0.78), true)
+	_canvas_draw_rect(gate, Color(0.16, 0.10, 0.06, 0.48 if remembered else 0.78), true)
 	var flag_start = rect.position + rect.size * Vector2(0.70, 0.13)
 	var flag_end = rect.position + rect.size * Vector2(0.70, 0.43)
-	draw_line(flag_end, flag_start, Color(0.97, 0.94, 0.82, 0.62 if remembered else 0.96), maxf(2.0, extent * 0.032))
+	_canvas_draw_line(flag_end, flag_start, Color(0.97, 0.94, 0.82, 0.62 if remembered else 0.96), maxf(2.0, extent * 0.032))
 	var flag = PackedVector2Array([
 		flag_start,
 		flag_start + rect.size * Vector2(0.13, 0.04),
 		flag_start + rect.size * Vector2(0.00, 0.11),
 	])
-	draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
+	_canvas_draw_colored_polygon(flag, Color(0.98, 0.90, 0.58, 0.62 if remembered else 0.98))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, color, remembered)
 
@@ -821,9 +1116,9 @@ func _draw_town_ground_scuffs(tile: Vector2i, center: Vector2, radii: Vector2, r
 	var alpha := 0.18 if not remembered else 0.14
 	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, alpha)
 	var width := maxf(1.0, extent * 0.010)
-	draw_line(center + Vector2(-radii.x * 0.88, -radii.y * 0.18), center + Vector2(-radii.x * 0.46, -radii.y * 0.48), scuff_color, width)
-	draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.18), center + Vector2(radii.x * 0.20, radii.y * 0.04), scuff_color, width)
-	draw_line(center + Vector2(radii.x * 0.44, -radii.y * 0.36), center + Vector2(radii.x * 0.84, -radii.y * 0.12), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.88, -radii.y * 0.18), center + Vector2(-radii.x * 0.46, -radii.y * 0.48), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.18), center + Vector2(radii.x * 0.20, radii.y * 0.04), scuff_color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.44, -radii.y * 0.36), center + Vector2(radii.x * 0.84, -radii.y * 0.12), scuff_color, width)
 
 func _draw_town_front_contact(anchor: Dictionary, remembered: bool) -> void:
 	if anchor.is_empty():
@@ -838,8 +1133,8 @@ func _draw_town_front_contact(anchor: Dictionary, remembered: bool) -> void:
 	var left := center + Vector2(-radii.x * 0.66, radii.y * 0.24)
 	var mid := center + Vector2(0.0, radii.y * 0.56)
 	var right := center + Vector2(radii.x * 0.66, radii.y * 0.24)
-	draw_polyline(PackedVector2Array([left, mid, right]), contact_color, maxf(1.0, extent * 0.014))
-	draw_line(center + Vector2(-radii.x * 0.28, radii.y * 0.02), center + Vector2(radii.x * 0.26, radii.y * 0.04), highlight_color, maxf(1.0, extent * 0.010))
+	_canvas_draw_polyline(PackedVector2Array([left, mid, right]), contact_color, maxf(1.0, extent * 0.014))
+	_canvas_draw_line(center + Vector2(-radii.x * 0.28, radii.y * 0.02), center + Vector2(radii.x * 0.26, radii.y * 0.04), highlight_color, maxf(1.0, extent * 0.010))
 
 func _draw_town_entry_approach(_rect: Rect2, _color: Color, _remembered: bool) -> void:
 	return
@@ -877,10 +1172,10 @@ func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i
 	var outline_color := MEMORY_OBJECT_OUTLINE if remembered else MARKER_OUTLINE_COLOR
 	var pedestal = Rect2(rect.position + rect.size * Vector2(0.37, 0.56), rect.size * Vector2(0.26, 0.15))
 	var lid = Rect2(rect.position + rect.size * Vector2(0.33, 0.48), rect.size * Vector2(0.34, 0.10))
-	draw_rect(pedestal, marker_color, true)
-	draw_rect(pedestal, outline_color, false, maxf(1.8, extent * 0.030))
-	draw_rect(lid, _scaled_color(marker_color, 1.18), true)
-	draw_rect(lid, outline_color, false, maxf(1.6, extent * 0.026))
+	_canvas_draw_rect(pedestal, marker_color, true)
+	_canvas_draw_rect(pedestal, outline_color, false, maxf(1.8, extent * 0.030))
+	_canvas_draw_rect(lid, _scaled_color(marker_color, 1.18), true)
+	_canvas_draw_rect(lid, outline_color, false, maxf(1.6, extent * 0.026))
 	var gleam := PackedVector2Array([
 		center + Vector2(0.0, -extent * 0.22),
 		center + Vector2(extent * 0.05, -extent * 0.08),
@@ -891,8 +1186,8 @@ func _draw_artifact_marker(rect: Rect2, remembered: bool = false, tile: Vector2i
 		center + Vector2(-extent * 0.18, -extent * 0.03),
 		center + Vector2(-extent * 0.05, -extent * 0.08),
 	])
-	draw_colored_polygon(gleam, Color(1.0, 0.90, 0.46, 0.62 if remembered else 0.95))
-	draw_polyline(PackedVector2Array([gleam[0], gleam[1], gleam[2], gleam[3], gleam[4], gleam[5], gleam[6], gleam[7], gleam[0]]), outline_color, maxf(1.6, extent * 0.026))
+	_canvas_draw_colored_polygon(gleam, Color(1.0, 0.90, 0.46, 0.62 if remembered else 0.95))
+	_canvas_draw_polyline(PackedVector2Array([gleam[0], gleam[1], gleam[2], gleam[3], gleam[4], gleam[5], gleam[6], gleam[7], gleam[0]]), outline_color, maxf(1.6, extent * 0.026))
 	_draw_procedural_contact_marks(anchor, "artifact", remembered)
 
 func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2i = Vector2i(-1, -1)) -> void:
@@ -907,16 +1202,16 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 		rect.position + rect.size * Vector2(0.50, 0.33),
 		rect.position + rect.size * Vector2(0.73, 0.66),
 	])
-	draw_colored_polygon(tent, marker_color)
-	draw_polyline(PackedVector2Array([tent[0], tent[1], tent[2], tent[0]]), outline_color, maxf(2.0, extent * 0.034))
-	draw_line(center + Vector2(-extent * 0.17, extent * 0.04), center + Vector2(-extent * 0.17, -extent * 0.26), outline_color, maxf(2.0, extent * 0.030))
-	draw_line(center + Vector2(extent * 0.17, extent * 0.04), center + Vector2(extent * 0.17, -extent * 0.25), outline_color, maxf(2.0, extent * 0.030))
-	draw_colored_polygon(PackedVector2Array([
+	_canvas_draw_colored_polygon(tent, marker_color)
+	_canvas_draw_polyline(PackedVector2Array([tent[0], tent[1], tent[2], tent[0]]), outline_color, maxf(2.0, extent * 0.034))
+	_canvas_draw_line(center + Vector2(-extent * 0.17, extent * 0.04), center + Vector2(-extent * 0.17, -extent * 0.26), outline_color, maxf(2.0, extent * 0.030))
+	_canvas_draw_line(center + Vector2(extent * 0.17, extent * 0.04), center + Vector2(extent * 0.17, -extent * 0.25), outline_color, maxf(2.0, extent * 0.030))
+	_canvas_draw_colored_polygon(PackedVector2Array([
 		center + Vector2(-extent * 0.17, -extent * 0.26),
 		center + Vector2(-extent * 0.02, -extent * 0.21),
 		center + Vector2(-extent * 0.17, -extent * 0.15),
 	]), Color(0.92, 0.30, 0.24, 0.68 if remembered else 0.96))
-	draw_colored_polygon(PackedVector2Array([
+	_canvas_draw_colored_polygon(PackedVector2Array([
 		center + Vector2(extent * 0.17, -extent * 0.25),
 		center + Vector2(extent * 0.32, -extent * 0.20),
 		center + Vector2(extent * 0.17, -extent * 0.14),
@@ -948,37 +1243,37 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 		figure_center + Vector2(base_radius * 0.24, base_radius * 0.58),
 		figure_center + Vector2(-base_radius * 0.28, base_radius * 0.62),
 	])
-	draw_line(hip_left, foot_left, MARKER_OUTLINE_COLOR, leg_width + 1.4)
-	draw_line(hip_right, foot_right, MARKER_OUTLINE_COLOR, leg_width + 1.4)
-	draw_line(hip_left, foot_left, HERO_RING_COLOR, leg_width)
-	draw_line(hip_right, foot_right, HERO_RING_COLOR, leg_width)
-	draw_colored_polygon(cloak, HERO_FILL_COLOR)
-	draw_polyline(PackedVector2Array([cloak[0], cloak[1], cloak[2], cloak[3], cloak[4], cloak[0]]), MARKER_OUTLINE_COLOR, outline_width)
-	draw_colored_polygon(chest, _scaled_color(HERO_FILL_COLOR, 1.18))
-	draw_polyline(PackedVector2Array([chest[0], chest[1], chest[2], chest[3], chest[0]]), HERO_RING_COLOR, maxf(1.6, extent * 0.024))
+	_canvas_draw_line(hip_left, foot_left, MARKER_OUTLINE_COLOR, leg_width + 1.4)
+	_canvas_draw_line(hip_right, foot_right, MARKER_OUTLINE_COLOR, leg_width + 1.4)
+	_canvas_draw_line(hip_left, foot_left, HERO_RING_COLOR, leg_width)
+	_canvas_draw_line(hip_right, foot_right, HERO_RING_COLOR, leg_width)
+	_canvas_draw_colored_polygon(cloak, HERO_FILL_COLOR)
+	_canvas_draw_polyline(PackedVector2Array([cloak[0], cloak[1], cloak[2], cloak[3], cloak[4], cloak[0]]), MARKER_OUTLINE_COLOR, outline_width)
+	_canvas_draw_colored_polygon(chest, _scaled_color(HERO_FILL_COLOR, 1.18))
+	_canvas_draw_polyline(PackedVector2Array([chest[0], chest[1], chest[2], chest[3], chest[0]]), HERO_RING_COLOR, maxf(1.6, extent * 0.024))
 	var head_center := figure_center + Vector2(0.0, -base_radius * 0.74)
-	draw_circle(head_center, base_radius * 0.48, MARKER_OUTLINE_COLOR)
-	draw_circle(head_center, base_radius * 0.38, _scaled_color(HERO_FILL_COLOR, 1.12))
-	draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), MARKER_OUTLINE_COLOR, maxf(3.0, extent * 0.040))
-	draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), HERO_RING_COLOR, maxf(1.9, extent * 0.026))
+	_canvas_draw_circle(head_center, base_radius * 0.48, MARKER_OUTLINE_COLOR)
+	_canvas_draw_circle(head_center, base_radius * 0.38, _scaled_color(HERO_FILL_COLOR, 1.12))
+	_canvas_draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), MARKER_OUTLINE_COLOR, maxf(3.0, extent * 0.040))
+	_canvas_draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), HERO_RING_COLOR, maxf(1.9, extent * 0.026))
 	var banner = PackedVector2Array([
 		figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36),
 		figure_center + Vector2(base_radius * 0.78 + rect.size.x * 0.16, -rect.size.y * 0.30),
 		figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.20),
 	])
-	draw_colored_polygon(banner, Color(0.95, 0.73, 0.25, 0.95))
-	draw_polyline(PackedVector2Array([banner[0], banner[1], banner[2], banner[0]]), MARKER_OUTLINE_COLOR, maxf(1.4, extent * 0.020))
+	_canvas_draw_colored_polygon(banner, Color(0.95, 0.73, 0.25, 0.95))
+	_canvas_draw_polyline(PackedVector2Array([banner[0], banner[1], banner[2], banner[0]]), MARKER_OUTLINE_COLOR, maxf(1.4, extent * 0.020))
 	_draw_hero_foreground_contact(anchor)
 
 	var reserve_count = _reserve_hero_count(tile)
 	if reserve_count <= 0:
 		return
 	var marker_center = rect.position + rect.size * Vector2(0.78, 0.25)
-	draw_circle(marker_center, rect.size.x * 0.10, RESERVE_HERO_COLOR)
-	draw_circle(marker_center, rect.size.x * 0.10, Color(0.07, 0.10, 0.12, 0.9), false, 2.0)
+	_canvas_draw_circle(marker_center, rect.size.x * 0.10, RESERVE_HERO_COLOR)
+	_canvas_draw_circle(marker_center, rect.size.x * 0.10, Color(0.07, 0.10, 0.12, 0.9), false, 2.0)
 	for index in range(min(reserve_count, 3)):
 		var dot_pos = marker_center + Vector2((index - 1) * 5.0, 0.0)
-		draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
+		_canvas_draw_circle(dot_pos, 1.8, Color(0.12, 0.14, 0.17, 1.0))
 
 func _draw_hero_grounding_anchor(rect: Rect2, tile: Vector2i) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1004,7 +1299,7 @@ func _draw_hero_foot_shadow(tile: Vector2i, center: Vector2, radii: Vector2, ext
 		(base_color.b * 0.62) + (detail_color.b * 0.22) + 0.018,
 		0.18
 	)
-	draw_colored_polygon(_placement_bed_points(tile, center + Vector2(0.0, radii.y * 0.10), Vector2(radii.x * 0.92, radii.y * 1.18), Vector2i(1, 1), 14), ground_color)
+	_canvas_draw_colored_polygon(_placement_bed_points(tile, center + Vector2(0.0, radii.y * 0.10), Vector2(radii.x * 0.92, radii.y * 1.18), Vector2i(1, 1), 14), ground_color)
 	var shadow := PackedVector2Array([
 		center + Vector2(-radii.x * 0.68, -radii.y * 0.05),
 		center + Vector2(-radii.x * 0.34, radii.y * 0.72),
@@ -1013,12 +1308,12 @@ func _draw_hero_foot_shadow(tile: Vector2i, center: Vector2, radii: Vector2, ext
 		center + Vector2(radii.x * 0.34, -radii.y * 0.38),
 		center + Vector2(-radii.x * 0.32, -radii.y * 0.34),
 	])
-	draw_colored_polygon(shadow, HERO_CONTACT_SHADOW_VISIBLE)
+	_canvas_draw_colored_polygon(shadow, HERO_CONTACT_SHADOW_VISIBLE)
 	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, 0.24)
 	var width := maxf(1.0, extent * 0.012)
-	draw_line(center + Vector2(-radii.x * 0.84, radii.y * 0.24), center + Vector2(-radii.x * 0.42, radii.y * 0.46), scuff_color, width)
-	draw_line(center + Vector2(-radii.x * 0.10, radii.y * 0.60), center + Vector2(radii.x * 0.34, radii.y * 0.54), scuff_color, width)
-	draw_line(center + Vector2(radii.x * 0.42, radii.y * 0.08), center + Vector2(radii.x * 0.82, radii.y * 0.24), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.84, radii.y * 0.24), center + Vector2(-radii.x * 0.42, radii.y * 0.46), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.10, radii.y * 0.60), center + Vector2(radii.x * 0.34, radii.y * 0.54), scuff_color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.42, radii.y * 0.08), center + Vector2(radii.x * 0.82, radii.y * 0.24), scuff_color, width)
 
 func _draw_hero_foreground_contact(anchor: Dictionary) -> void:
 	if anchor.is_empty():
@@ -1036,12 +1331,12 @@ func _draw_hero_foreground_contact(anchor: Dictionary) -> void:
 		center + Vector2(radii.x * 0.30, radii.y * 0.36),
 		center + Vector2(-radii.x * 0.34, radii.y * 0.34),
 	])
-	draw_colored_polygon(pad, HERO_BOOT_OCCLUSION_VISIBLE)
+	_canvas_draw_colored_polygon(pad, HERO_BOOT_OCCLUSION_VISIBLE)
 	var left := center + Vector2(-radii.x * 0.58, radii.y * 0.24)
 	var mid := center + Vector2(0.0, radii.y * 0.58)
 	var right := center + Vector2(radii.x * 0.58, radii.y * 0.20)
-	draw_polyline(PackedVector2Array([left, mid, right]), HERO_BOOT_OCCLUSION_VISIBLE, maxf(1.4, extent * 0.020))
-	draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.02), center + Vector2(radii.x * 0.24, radii.y * 0.02), HERO_GROUND_HIGHLIGHT_VISIBLE, maxf(1.0, extent * 0.012))
+	_canvas_draw_polyline(PackedVector2Array([left, mid, right]), HERO_BOOT_OCCLUSION_VISIBLE, maxf(1.4, extent * 0.020))
+	_canvas_draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.02), center + Vector2(radii.x * 0.24, radii.y * 0.02), HERO_GROUND_HIGHLIGHT_VISIBLE, maxf(1.0, extent * 0.012))
 
 func _draw_pickup_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1049,9 +1344,9 @@ func _draw_pickup_silhouette(rect: Rect2, marker_color: Color, outline_color: Co
 	var crate_left := Rect2(rect.position + rect.size * Vector2(0.25, 0.57), rect.size * Vector2(0.21, 0.15))
 	var crate_right := Rect2(rect.position + rect.size * Vector2(0.54, 0.55), rect.size * Vector2(0.21, 0.16))
 	for box in [base, crate_left, crate_right]:
-		draw_rect(box, marker_color, true)
-		draw_rect(box, outline_color, false, maxf(1.6, extent * 0.026))
-	draw_line(base.position + Vector2(0.0, base.size.y * 0.46), base.end - Vector2(0.0, base.size.y * 0.46), _scaled_color(outline_color, 1.0, 0.45 if remembered else 0.68), maxf(1.0, extent * 0.018))
+		_canvas_draw_rect(box, marker_color, true)
+		_canvas_draw_rect(box, outline_color, false, maxf(1.6, extent * 0.026))
+	_canvas_draw_line(base.position + Vector2(0.0, base.size.y * 0.46), base.end - Vector2(0.0, base.size.y * 0.46), _scaled_color(outline_color, 1.0, 0.45 if remembered else 0.68), maxf(1.0, extent * 0.018))
 
 func _draw_dwelling_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1061,13 +1356,13 @@ func _draw_dwelling_silhouette(rect: Rect2, marker_color: Color, outline_color: 
 		rect.position + rect.size * Vector2(0.50, 0.30),
 		rect.position + rect.size * Vector2(0.80, 0.50),
 	])
-	draw_colored_polygon(roof, _scaled_color(marker_color, 0.82))
-	draw_polyline(PackedVector2Array([roof[0], roof[1], roof[2]]), outline_color, maxf(2.0, extent * 0.032))
-	draw_rect(wall, marker_color, true)
-	draw_rect(wall, outline_color, false, maxf(1.8, extent * 0.030))
-	draw_rect(Rect2(rect.position + rect.size * Vector2(0.47, 0.58), rect.size * Vector2(0.10, 0.13)), Color(0.13, 0.09, 0.05, 0.48 if remembered else 0.80), true)
-	draw_line(rect.position + rect.size * Vector2(0.28, 0.53), rect.position + rect.size * Vector2(0.28, 0.72), outline_color, maxf(1.4, extent * 0.022))
-	draw_line(rect.position + rect.size * Vector2(0.72, 0.53), rect.position + rect.size * Vector2(0.72, 0.72), outline_color, maxf(1.4, extent * 0.022))
+	_canvas_draw_colored_polygon(roof, _scaled_color(marker_color, 0.82))
+	_canvas_draw_polyline(PackedVector2Array([roof[0], roof[1], roof[2]]), outline_color, maxf(2.0, extent * 0.032))
+	_canvas_draw_rect(wall, marker_color, true)
+	_canvas_draw_rect(wall, outline_color, false, maxf(1.8, extent * 0.030))
+	_canvas_draw_rect(Rect2(rect.position + rect.size * Vector2(0.47, 0.58), rect.size * Vector2(0.10, 0.13)), Color(0.13, 0.09, 0.05, 0.48 if remembered else 0.80), true)
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.28, 0.53), rect.position + rect.size * Vector2(0.28, 0.72), outline_color, maxf(1.4, extent * 0.022))
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.72, 0.53), rect.position + rect.size * Vector2(0.72, 0.72), outline_color, maxf(1.4, extent * 0.022))
 
 func _draw_mine_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1078,23 +1373,23 @@ func _draw_mine_silhouette(rect: Rect2, marker_color: Color, outline_color: Colo
 		rect.position + rect.size * Vector2(0.66, 0.35),
 		rect.position + rect.size * Vector2(0.84, 0.70),
 	])
-	draw_colored_polygon(mound, _scaled_color(marker_color, 0.86))
-	draw_polyline(PackedVector2Array([mound[0], mound[1], mound[2], mound[3], mound[4]]), outline_color, maxf(2.0, extent * 0.032))
+	_canvas_draw_colored_polygon(mound, _scaled_color(marker_color, 0.86))
+	_canvas_draw_polyline(PackedVector2Array([mound[0], mound[1], mound[2], mound[3], mound[4]]), outline_color, maxf(2.0, extent * 0.032))
 	var adit := Rect2(rect.position + rect.size * Vector2(0.43, 0.55), rect.size * Vector2(0.18, 0.16))
-	draw_rect(adit, Color(0.07, 0.06, 0.045, 0.54 if remembered else 0.88), true)
-	draw_rect(adit, outline_color, false, maxf(1.4, extent * 0.024))
-	draw_line(rect.position + rect.size * Vector2(0.25, 0.65), rect.position + rect.size * Vector2(0.77, 0.65), Color(0.96, 0.88, 0.55, 0.28 if remembered else 0.44), maxf(1.2, extent * 0.018))
+	_canvas_draw_rect(adit, Color(0.07, 0.06, 0.045, 0.54 if remembered else 0.88), true)
+	_canvas_draw_rect(adit, outline_color, false, maxf(1.4, extent * 0.024))
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.25, 0.65), rect.position + rect.size * Vector2(0.77, 0.65), Color(0.96, 0.88, 0.55, 0.28 if remembered else 0.44), maxf(1.2, extent * 0.018))
 
 func _draw_tower_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var shaft := Rect2(rect.position + rect.size * Vector2(0.42, 0.30), rect.size * Vector2(0.16, 0.43))
 	var cap := Rect2(rect.position + rect.size * Vector2(0.34, 0.24), rect.size * Vector2(0.32, 0.11))
-	draw_rect(shaft, marker_color, true)
-	draw_rect(shaft, outline_color, false, maxf(1.7, extent * 0.028))
-	draw_rect(cap, _scaled_color(marker_color, 1.10), true)
-	draw_rect(cap, outline_color, false, maxf(1.7, extent * 0.028))
-	draw_line(rect.position + rect.size * Vector2(0.50, 0.24), rect.position + rect.size * Vector2(0.50, 0.12), outline_color, maxf(1.6, extent * 0.024))
-	draw_colored_polygon(PackedVector2Array([
+	_canvas_draw_rect(shaft, marker_color, true)
+	_canvas_draw_rect(shaft, outline_color, false, maxf(1.7, extent * 0.028))
+	_canvas_draw_rect(cap, _scaled_color(marker_color, 1.10), true)
+	_canvas_draw_rect(cap, outline_color, false, maxf(1.7, extent * 0.028))
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.50, 0.24), rect.position + rect.size * Vector2(0.50, 0.12), outline_color, maxf(1.6, extent * 0.024))
+	_canvas_draw_colored_polygon(PackedVector2Array([
 		rect.position + rect.size * Vector2(0.50, 0.12),
 		rect.position + rect.size * Vector2(0.64, 0.17),
 		rect.position + rect.size * Vector2(0.50, 0.22),
@@ -1106,30 +1401,30 @@ func _draw_ruin_silhouette(rect: Rect2, marker_color: Color, outline_color: Colo
 	var right := Rect2(rect.position + rect.size * Vector2(0.61, 0.38), rect.size * Vector2(0.13, 0.33))
 	var lintel := Rect2(rect.position + rect.size * Vector2(0.32, 0.38), rect.size * Vector2(0.36, 0.10))
 	for stone in [left, right, lintel]:
-		draw_rect(stone, _scaled_color(marker_color, 0.90), true)
-		draw_rect(stone, outline_color, false, maxf(1.5, extent * 0.024))
-	draw_circle(rect.position + rect.size * Vector2(0.50, 0.60), maxf(2.5, extent * 0.055), Color(1.0, 0.90, 0.50, 0.42 if remembered else 0.70))
+		_canvas_draw_rect(stone, _scaled_color(marker_color, 0.90), true)
+		_canvas_draw_rect(stone, outline_color, false, maxf(1.5, extent * 0.024))
+	_canvas_draw_circle(rect.position + rect.size * Vector2(0.50, 0.60), maxf(2.5, extent * 0.055), Color(1.0, 0.90, 0.50, 0.42 if remembered else 0.70))
 
 func _draw_transit_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var left_base := rect.position + rect.size * Vector2(0.30, 0.70)
 	var right_base := rect.position + rect.size * Vector2(0.70, 0.70)
 	var apex := rect.position + rect.size * Vector2(0.50, 0.35)
-	draw_line(left_base, apex, outline_color, maxf(6.0, extent * 0.090))
-	draw_line(right_base, apex, outline_color, maxf(6.0, extent * 0.090))
-	draw_line(left_base, apex, marker_color, maxf(3.5, extent * 0.055))
-	draw_line(right_base, apex, marker_color, maxf(3.5, extent * 0.055))
-	draw_line(rect.position + rect.size * Vector2(0.34, 0.59), rect.position + rect.size * Vector2(0.66, 0.59), Color(0.96, 0.88, 0.55, 0.36 if remembered else 0.60), maxf(1.6, extent * 0.022))
+	_canvas_draw_line(left_base, apex, outline_color, maxf(6.0, extent * 0.090))
+	_canvas_draw_line(right_base, apex, outline_color, maxf(6.0, extent * 0.090))
+	_canvas_draw_line(left_base, apex, marker_color, maxf(3.5, extent * 0.055))
+	_canvas_draw_line(right_base, apex, marker_color, maxf(3.5, extent * 0.055))
+	_canvas_draw_line(rect.position + rect.size * Vector2(0.34, 0.59), rect.position + rect.size * Vector2(0.66, 0.59), Color(0.96, 0.88, 0.55, 0.36 if remembered else 0.60), maxf(1.6, extent * 0.022))
 
 func _draw_shrine_silhouette(rect: Rect2, marker_color: Color, outline_color: Color, remembered: bool) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var pillar := Rect2(rect.position + rect.size * Vector2(0.43, 0.38), rect.size * Vector2(0.14, 0.30))
 	var cap := Rect2(rect.position + rect.size * Vector2(0.35, 0.32), rect.size * Vector2(0.30, 0.10))
-	draw_rect(pillar, marker_color, true)
-	draw_rect(pillar, outline_color, false, maxf(1.5, extent * 0.024))
-	draw_rect(cap, _scaled_color(marker_color, 1.12), true)
-	draw_rect(cap, outline_color, false, maxf(1.5, extent * 0.024))
-	draw_circle(rect.position + rect.size * Vector2(0.50, 0.25), maxf(2.6, extent * 0.055), Color(0.98, 0.94, 0.72, 0.48 if remembered else 0.78))
+	_canvas_draw_rect(pillar, marker_color, true)
+	_canvas_draw_rect(pillar, outline_color, false, maxf(1.5, extent * 0.024))
+	_canvas_draw_rect(cap, _scaled_color(marker_color, 1.12), true)
+	_canvas_draw_rect(cap, outline_color, false, maxf(1.5, extent * 0.024))
+	_canvas_draw_circle(rect.position + rect.size * Vector2(0.50, 0.25), maxf(2.6, extent * 0.055), Color(0.98, 0.94, 0.72, 0.48 if remembered else 0.78))
 
 func _draw_procedural_object_grounding(rect: Rect2, tile: Vector2i, family: String, footprint: Vector2i, remembered: bool) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1182,7 +1477,7 @@ func _draw_mapped_sprite_contact_disturbance(tile: Vector2i, center: Vector2, ra
 	var alpha := OBJECT_MAPPED_SPRITE_DISTURBANCE_MEMORY_ALPHA if remembered else OBJECT_MAPPED_SPRITE_DISTURBANCE_VISIBLE_ALPHA
 	var scuff_fill := _placement_bed_color(base_color, detail_color, remembered, alpha)
 	var segment_count := 12 if family in ["artifact", "pickup"] else 14
-	draw_colored_polygon(
+	_canvas_draw_colored_polygon(
 		_placement_bed_points(tile + Vector2i(11, 17), center + Vector2(0.0, radii.y * 0.12), Vector2(radii.x * 0.78, radii.y * 0.78), footprint, segment_count),
 		scuff_fill
 	)
@@ -1191,11 +1486,11 @@ func _draw_mapped_sprite_contact_disturbance(tile: Vector2i, center: Vector2, ra
 	if remembered:
 		contact_color = Color(0.62, 0.82, 0.86, 0.26)
 	var width := maxf(1.0, extent * 0.010)
-	draw_line(center + Vector2(-radii.x * 0.66, radii.y * 0.02), center + Vector2(-radii.x * 0.28, radii.y * 0.22), scuff_color, width)
-	draw_line(center + Vector2(-radii.x * 0.05, radii.y * 0.30), center + Vector2(radii.x * 0.32, radii.y * 0.22), scuff_color, width)
-	draw_line(center + Vector2(radii.x * 0.38, -radii.y * 0.05), center + Vector2(radii.x * 0.72, radii.y * 0.08), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.66, radii.y * 0.02), center + Vector2(-radii.x * 0.28, radii.y * 0.22), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.05, radii.y * 0.30), center + Vector2(radii.x * 0.32, radii.y * 0.22), scuff_color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.38, -radii.y * 0.05), center + Vector2(radii.x * 0.72, radii.y * 0.08), scuff_color, width)
 	if family in ["encounter", "mine", "neutral_dwelling", "guarded_reward_site", "repeatable_service"]:
-		draw_line(center + Vector2(-radii.x * 0.48, radii.y * 0.22), center + Vector2(radii.x * 0.52, radii.y * 0.18), contact_color, maxf(1.0, extent * 0.012))
+		_canvas_draw_line(center + Vector2(-radii.x * 0.48, radii.y * 0.22), center + Vector2(radii.x * 0.52, radii.y * 0.18), contact_color, maxf(1.0, extent * 0.012))
 
 func _draw_mapped_sprite_contact_shadow(center: Vector2, radii: Vector2, family: String, footprint: Vector2i, remembered: bool, extent: float) -> void:
 	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
@@ -1211,9 +1506,9 @@ func _draw_mapped_sprite_contact_shadow(center: Vector2, radii: Vector2, family:
 		center + Vector2(radii.x * 0.34 * footprint_width, -radii.y * 0.30),
 		center + Vector2(-radii.x * 0.24 * footprint_width, -radii.y * 0.28),
 	])
-	draw_colored_polygon(points, color)
+	_canvas_draw_colored_polygon(points, color)
 	if family in ["scouting_structure", "transit_object", "frontier_shrine"]:
-		draw_line(center + Vector2(-radii.x * 0.30, -radii.y * 0.10), center + Vector2(radii.x * 0.30, radii.y * 0.34), Color(color.r, color.g, color.b, color.a * 0.68), maxf(1.0, extent * 0.010))
+		_canvas_draw_line(center + Vector2(-radii.x * 0.30, -radii.y * 0.10), center + Vector2(radii.x * 0.30, radii.y * 0.34), Color(color.r, color.g, color.b, color.a * 0.68), maxf(1.0, extent * 0.010))
 
 func _draw_procedural_ground_disturbance(tile: Vector2i, center: Vector2, radii: Vector2, family: String, footprint: Vector2i, remembered: bool, extent: float) -> void:
 	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
@@ -1224,15 +1519,15 @@ func _draw_procedural_ground_disturbance(tile: Vector2i, center: Vector2, radii:
 	var alpha := OBJECT_PROCEDURAL_DISTURBANCE_MEMORY_ALPHA if remembered else OBJECT_PROCEDURAL_DISTURBANCE_VISIBLE_ALPHA
 	var bed_color := _placement_bed_color(base_color, detail_color, remembered, alpha)
 	var segment_count := 14 if family in ["artifact", "pickup"] else 18
-	draw_colored_polygon(
+	_canvas_draw_colored_polygon(
 		_placement_bed_points(tile + Vector2i(7, 11), center + Vector2(0.0, radii.y * 0.10), Vector2(radii.x * 1.04, radii.y * 1.28), footprint, segment_count),
 		bed_color
 	)
 	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, 0.24 if remembered else 0.20)
 	var width := maxf(1.0, extent * 0.010)
-	draw_line(center + Vector2(-radii.x * 0.74, radii.y * 0.02), center + Vector2(-radii.x * 0.36, radii.y * 0.28), scuff_color, width)
-	draw_line(center + Vector2(-radii.x * 0.08, radii.y * 0.38), center + Vector2(radii.x * 0.30, radii.y * 0.32), scuff_color, width)
-	draw_line(center + Vector2(radii.x * 0.42, -radii.y * 0.10), center + Vector2(radii.x * 0.78, radii.y * 0.08), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.74, radii.y * 0.02), center + Vector2(-radii.x * 0.36, radii.y * 0.28), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.08, radii.y * 0.38), center + Vector2(radii.x * 0.30, radii.y * 0.32), scuff_color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.42, -radii.y * 0.10), center + Vector2(radii.x * 0.78, radii.y * 0.08), scuff_color, width)
 
 func _draw_procedural_contact_shadow(center: Vector2, radii: Vector2, family: String, footprint: Vector2i, remembered: bool, extent: float) -> void:
 	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
@@ -1248,9 +1543,9 @@ func _draw_procedural_contact_shadow(center: Vector2, radii: Vector2, family: St
 		center + Vector2(radii.x * 0.36 * footprint_width, -radii.y * 0.36),
 		center + Vector2(-radii.x * 0.28 * footprint_width, -radii.y * 0.32),
 	])
-	draw_colored_polygon(points, color)
+	_canvas_draw_colored_polygon(points, color)
 	if family in ["mine", "guarded_reward_site", "neutral_dwelling", "repeatable_service", "faction_outpost"]:
-		draw_line(center + Vector2(-radii.x * 0.58, radii.y * 0.34), center + Vector2(radii.x * 0.54, radii.y * 0.30), Color(color.r, color.g, color.b, color.a * 0.72), maxf(1.0, extent * 0.012))
+		_canvas_draw_line(center + Vector2(-radii.x * 0.58, radii.y * 0.34), center + Vector2(radii.x * 0.54, radii.y * 0.30), Color(color.r, color.g, color.b, color.a * 0.72), maxf(1.0, extent * 0.012))
 
 func _draw_procedural_contact_marks(anchor: Dictionary, family: String, remembered: bool) -> void:
 	if anchor.is_empty():
@@ -1268,16 +1563,16 @@ func _draw_procedural_contact_marks(anchor: Dictionary, family: String, remember
 	var width := maxf(1.0, extent * 0.014)
 	match family:
 		"artifact":
-			draw_line(center + Vector2(-radii.x * 0.52, radii.y * 0.22), center + Vector2(-radii.x * 0.10, radii.y * 0.44), contact_color, width)
-			draw_line(center + Vector2(radii.x * 0.10, radii.y * 0.44), center + Vector2(radii.x * 0.52, radii.y * 0.20), contact_color, width)
+			_canvas_draw_line(center + Vector2(-radii.x * 0.52, radii.y * 0.22), center + Vector2(-radii.x * 0.10, radii.y * 0.44), contact_color, width)
+			_canvas_draw_line(center + Vector2(radii.x * 0.10, radii.y * 0.44), center + Vector2(radii.x * 0.52, radii.y * 0.20), contact_color, width)
 		"encounter":
-			draw_line(center + Vector2(-radii.x * 0.72, radii.y * 0.12), center + Vector2(-radii.x * 0.28, radii.y * 0.48), contact_color, width)
-			draw_line(center + Vector2(radii.x * 0.24, radii.y * 0.48), center + Vector2(radii.x * 0.74, radii.y * 0.10), contact_color, width)
-			draw_line(center + Vector2(-radii.x * 0.12, radii.y * 0.20), center + Vector2(radii.x * 0.18, radii.y * 0.20), highlight_color, maxf(1.0, extent * 0.010))
+			_canvas_draw_line(center + Vector2(-radii.x * 0.72, radii.y * 0.12), center + Vector2(-radii.x * 0.28, radii.y * 0.48), contact_color, width)
+			_canvas_draw_line(center + Vector2(radii.x * 0.24, radii.y * 0.48), center + Vector2(radii.x * 0.74, radii.y * 0.10), contact_color, width)
+			_canvas_draw_line(center + Vector2(-radii.x * 0.12, radii.y * 0.20), center + Vector2(radii.x * 0.18, radii.y * 0.20), highlight_color, maxf(1.0, extent * 0.010))
 		_:
-			draw_line(center + Vector2(-radii.x * 0.64, radii.y * 0.20), center + Vector2(-radii.x * 0.20, radii.y * 0.48), contact_color, width)
-			draw_line(center + Vector2(radii.x * 0.16, radii.y * 0.50), center + Vector2(radii.x * 0.66, radii.y * 0.18), contact_color, width)
-			draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.04), center + Vector2(radii.x * 0.22, radii.y * 0.06), highlight_color, maxf(1.0, extent * 0.010))
+			_canvas_draw_line(center + Vector2(-radii.x * 0.64, radii.y * 0.20), center + Vector2(-radii.x * 0.20, radii.y * 0.48), contact_color, width)
+			_canvas_draw_line(center + Vector2(radii.x * 0.16, radii.y * 0.50), center + Vector2(radii.x * 0.66, radii.y * 0.18), contact_color, width)
+			_canvas_draw_line(center + Vector2(-radii.x * 0.22, radii.y * 0.04), center + Vector2(radii.x * 0.22, radii.y * 0.06), highlight_color, maxf(1.0, extent * 0.010))
 
 func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: float = MARKER_PLATE_RADIUS_FACTOR, footprint: Vector2i = Vector2i(1, 1), tile: Vector2i = Vector2i(-1, -1)) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1293,12 +1588,12 @@ func _draw_marker_plate(rect: Rect2, remembered: bool = false, radius_factor: fl
 	)
 	_draw_placement_bed(tile, center, radii, remembered, extent, normalized_footprint)
 	_draw_directional_contact_shadow(center, radii, remembered, extent, normalized_footprint)
-	draw_colored_polygon(
+	_canvas_draw_colored_polygon(
 		_ellipse_points(center + shadow_offset, Vector2(radii.x * 1.10, radii.y * 1.24)),
 		MARKER_SHADOW_COLOR
 	)
-	draw_colored_polygon(_ellipse_points(center, radii), MARKER_PLATE_MEMORY if remembered else MARKER_PLATE_VISIBLE)
-	draw_polyline(
+	_canvas_draw_colored_polygon(_ellipse_points(center, radii), MARKER_PLATE_MEMORY if remembered else MARKER_PLATE_VISIBLE)
+	_canvas_draw_polyline(
 		_ellipse_points(center, radii, 24, true),
 		MARKER_RING_MEMORY if remembered else MARKER_RING_VISIBLE,
 		maxf(1.5, extent * 0.025)
@@ -1323,8 +1618,8 @@ func _draw_placement_bed(tile: Vector2i, center: Vector2, radii: Vector2, rememb
 	var bed_center := center + Vector2(0.0, radii.y * 0.04)
 	var bed_radii := Vector2(radii.x * 1.24, radii.y * 1.52)
 	var bed_color := _placement_bed_color(base_color, detail_color, remembered, alpha)
-	draw_colored_polygon(_placement_bed_points(tile, bed_center, bed_radii, footprint), bed_color)
-	draw_colored_polygon(
+	_canvas_draw_colored_polygon(_placement_bed_points(tile, bed_center, bed_radii, footprint), bed_color)
+	_canvas_draw_colored_polygon(
 		_placement_bed_points(tile + Vector2i(3, 5), bed_center + Vector2(0.0, radii.y * 0.03), Vector2(radii.x * 0.94, radii.y * 1.06), footprint),
 		Color(bed_color.r, bed_color.g, bed_color.b, bed_color.a * 0.36)
 	)
@@ -1347,8 +1642,8 @@ func _draw_foreground_occlusion_lip(anchor: Dictionary, remembered: bool) -> voi
 	var left := center + Vector2(-radii.x * 0.72, radii.y * 0.28)
 	var mid := center + Vector2(0.0, radii.y * 0.58)
 	var right := center + Vector2(radii.x * 0.72, radii.y * 0.28)
-	draw_polyline(PackedVector2Array([left, mid, right]), lip_color, maxf(1.4, extent * 0.022))
-	draw_line(center + Vector2(-radii.x * 0.38, radii.y * 0.05), center + Vector2(radii.x * 0.34, radii.y * 0.08), highlight_color, maxf(1.0, extent * 0.012))
+	_canvas_draw_polyline(PackedVector2Array([left, mid, right]), lip_color, maxf(1.4, extent * 0.022))
+	_canvas_draw_line(center + Vector2(-radii.x * 0.38, radii.y * 0.05), center + Vector2(radii.x * 0.34, radii.y * 0.08), highlight_color, maxf(1.0, extent * 0.012))
 
 func _draw_directional_contact_shadow(center: Vector2, radii: Vector2, remembered: bool, extent: float, footprint: Vector2i) -> void:
 	if radii.x <= 0.0 or radii.y <= 0.0 or extent <= 0.0:
@@ -1365,8 +1660,8 @@ func _draw_directional_contact_shadow(center: Vector2, radii: Vector2, remembere
 		center + sweep + Vector2(radii.x * 1.02 * footprint_width, -radii.y * 0.04),
 		center + Vector2(radii.x * 0.54, -radii.y * 0.12),
 	])
-	draw_colored_polygon(points, color)
-	draw_line(
+	_canvas_draw_colored_polygon(points, color)
+	_canvas_draw_line(
 		center + Vector2(-radii.x * 0.46, radii.y * 0.18),
 		center + sweep + Vector2(radii.x * 0.70 * footprint_width, radii.y * 0.26 * footprint_depth),
 		Color(color.r, color.g, color.b, color.a * 0.46),
@@ -1383,10 +1678,10 @@ func _draw_base_occlusion_pads(center: Vector2, radii: Vector2, remembered: bool
 		center + Vector2(radii.x * 0.42, radii.y * 0.48),
 		center + Vector2(-radii.x * 0.42, radii.y * 0.46),
 	])
-	draw_colored_polygon(band, color)
+	_canvas_draw_colored_polygon(band, color)
 	var pad_width := maxf(1.0, extent * 0.016)
-	draw_line(center + Vector2(-radii.x * 0.50, radii.y * 0.49), center + Vector2(-radii.x * 0.12, radii.y * 0.68), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
-	draw_line(center + Vector2(radii.x * 0.08, radii.y * 0.68), center + Vector2(radii.x * 0.54, radii.y * 0.49), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.50, radii.y * 0.49), center + Vector2(-radii.x * 0.12, radii.y * 0.68), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.08, radii.y * 0.68), center + Vector2(radii.x * 0.54, radii.y * 0.49), Color(color.r, color.g, color.b, color.a * 0.78), pad_width)
 
 func _draw_upper_mass_backdrop(anchor: Dictionary, family: String, remembered: bool, footprint: Vector2i) -> void:
 	if anchor.is_empty():
@@ -1414,7 +1709,7 @@ func _draw_upper_mass_backdrop(anchor: Dictionary, family: String, remembered: b
 		center + Vector2(width * 0.44, -height * 0.28),
 		center + Vector2(width * 0.52, radii.y * 0.28),
 	])
-	draw_colored_polygon(points, wash_color)
+	_canvas_draw_colored_polygon(points, wash_color)
 
 	var mass_points := PackedVector2Array([
 		center + Vector2(-top_width * 0.20, -height * 0.78),
@@ -1424,8 +1719,8 @@ func _draw_upper_mass_backdrop(anchor: Dictionary, family: String, remembered: b
 		center + Vector2(-width * 0.20, radii.y * 0.26),
 		center + Vector2(-width * 0.24, -height * 0.18),
 	])
-	draw_colored_polygon(mass_points, mass_shadow_color)
-	draw_line(
+	_canvas_draw_colored_polygon(mass_points, mass_shadow_color)
+	_canvas_draw_line(
 		center + Vector2(-width * 0.32, -height * 0.18),
 		center + Vector2(-top_width * 0.38, -height * 0.72),
 		Color(wash_color.r, wash_color.g, wash_color.b, wash_color.a * 0.54),
@@ -1516,10 +1811,10 @@ func _draw_placement_bed_scuffs(center: Vector2, radii: Vector2, detail_color: C
 	var alpha := 0.22 if remembered else 0.18
 	var scuff_color := Color(detail_color.r, detail_color.g, detail_color.b, alpha)
 	var width := maxf(1.0, extent * 0.010)
-	draw_line(center + Vector2(-radii.x * 0.72, -radii.y * 0.08), center + Vector2(-radii.x * 0.38, -radii.y * 0.18), scuff_color, width)
-	draw_line(center + Vector2(-radii.x * 0.68, radii.y * 0.34), center + Vector2(-radii.x * 0.42, radii.y * 0.52), scuff_color, width)
-	draw_line(center + Vector2(-radii.x * 0.10, radii.y * 0.66), center + Vector2(radii.x * 0.26, radii.y * 0.62), scuff_color, width)
-	draw_line(center + Vector2(radii.x * 0.42, -radii.y * 0.12), center + Vector2(radii.x * 0.70, radii.y * 0.03), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.72, -radii.y * 0.08), center + Vector2(-radii.x * 0.38, -radii.y * 0.18), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.68, radii.y * 0.34), center + Vector2(-radii.x * 0.42, radii.y * 0.52), scuff_color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.10, radii.y * 0.66), center + Vector2(radii.x * 0.26, radii.y * 0.62), scuff_color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.42, -radii.y * 0.12), center + Vector2(radii.x * 0.70, radii.y * 0.03), scuff_color, width)
 
 func _ellipse_points(center: Vector2, radii: Vector2, segment_count: int = 24, closed: bool = false) -> PackedVector2Array:
 	var points := PackedVector2Array()
@@ -1536,10 +1831,10 @@ func _draw_ground_anchor_tie_marks(center: Vector2, radii: Vector2, remembered: 
 	if remembered:
 		color = Color(0.74, 0.90, 0.94, 0.48)
 	var width := maxf(1.0, extent * 0.014)
-	draw_line(center + Vector2(-radii.x * 0.82, radii.y * 0.30), center + Vector2(-radii.x * 0.56, radii.y * 0.58), color, width)
-	draw_line(center + Vector2(-radii.x * 0.24, radii.y * 0.52), center + Vector2(-radii.x * 0.04, radii.y * 0.72), color, width)
-	draw_line(center + Vector2(radii.x * 0.22, radii.y * 0.52), center + Vector2(radii.x * 0.45, radii.y * 0.70), color, width)
-	draw_line(center + Vector2(radii.x * 0.62, radii.y * 0.26), center + Vector2(radii.x * 0.86, radii.y * 0.48), color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.82, radii.y * 0.30), center + Vector2(-radii.x * 0.56, radii.y * 0.58), color, width)
+	_canvas_draw_line(center + Vector2(-radii.x * 0.24, radii.y * 0.52), center + Vector2(-radii.x * 0.04, radii.y * 0.72), color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.22, radii.y * 0.52), center + Vector2(radii.x * 0.45, radii.y * 0.70), color, width)
+	_canvas_draw_line(center + Vector2(radii.x * 0.62, radii.y * 0.26), center + Vector2(radii.x * 0.86, radii.y * 0.48), color, width)
 
 func _draw_memory_echo_marks(center: Vector2, radius: float, extent: float) -> void:
 	var color := Color(0.86, 0.94, 0.96, 0.76)
@@ -1547,10 +1842,10 @@ func _draw_memory_echo_marks(center: Vector2, radius: float, extent: float) -> v
 	var inner := radius * 0.62
 	var outer := radius * 0.92
 	var tick := radius * 0.22
-	draw_line(center + Vector2(-inner, -outer), center + Vector2(-inner + tick, -outer), color, width)
-	draw_line(center + Vector2(inner, -outer), center + Vector2(inner - tick, -outer), color, width)
-	draw_line(center + Vector2(-inner, outer), center + Vector2(-inner + tick, outer), color, width)
-	draw_line(center + Vector2(inner, outer), center + Vector2(inner - tick, outer), color, width)
+	_canvas_draw_line(center + Vector2(-inner, -outer), center + Vector2(-inner + tick, -outer), color, width)
+	_canvas_draw_line(center + Vector2(inner, -outer), center + Vector2(inner - tick, -outer), color, width)
+	_canvas_draw_line(center + Vector2(-inner, outer), center + Vector2(-inner + tick, outer), color, width)
+	_canvas_draw_line(center + Vector2(inner, outer), center + Vector2(inner - tick, outer), color, width)
 
 func _draw_selection_corners(rect: Rect2, color: Color, width: float) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -1560,14 +1855,14 @@ func _draw_selection_corners(rect: Rect2, color: Color, width: float) -> void:
 	var top_right := Vector2(rect.end.x - inset, rect.position.y + inset)
 	var bottom_left := Vector2(rect.position.x + inset, rect.end.y - inset)
 	var bottom_right := rect.end - Vector2(inset, inset)
-	draw_line(top_left, top_left + Vector2(length, 0.0), color, width)
-	draw_line(top_left, top_left + Vector2(0.0, length), color, width)
-	draw_line(top_right, top_right + Vector2(-length, 0.0), color, width)
-	draw_line(top_right, top_right + Vector2(0.0, length), color, width)
-	draw_line(bottom_left, bottom_left + Vector2(length, 0.0), color, width)
-	draw_line(bottom_left, bottom_left + Vector2(0.0, -length), color, width)
-	draw_line(bottom_right, bottom_right + Vector2(-length, 0.0), color, width)
-	draw_line(bottom_right, bottom_right + Vector2(0.0, -length), color, width)
+	_canvas_draw_line(top_left, top_left + Vector2(length, 0.0), color, width)
+	_canvas_draw_line(top_left, top_left + Vector2(0.0, length), color, width)
+	_canvas_draw_line(top_right, top_right + Vector2(-length, 0.0), color, width)
+	_canvas_draw_line(top_right, top_right + Vector2(0.0, length), color, width)
+	_canvas_draw_line(bottom_left, bottom_left + Vector2(length, 0.0), color, width)
+	_canvas_draw_line(bottom_left, bottom_left + Vector2(0.0, -length), color, width)
+	_canvas_draw_line(bottom_right, bottom_right + Vector2(-length, 0.0), color, width)
+	_canvas_draw_line(bottom_right, bottom_right + Vector2(0.0, -length), color, width)
 
 func _remembered_marker_color(color: Color) -> Color:
 	return Color(
@@ -1855,7 +2150,9 @@ func _set_camera_center(center: Vector2, manual: bool) -> bool:
 	_manual_camera = manual
 	var changed := previous_center.distance_to(_camera_center_tile) > 0.01
 	if changed:
-		queue_redraw()
+		_invalidate_session_static_cache("camera_pan")
+		_invalidate_state_cache("camera_pan")
+		_invalidate_dynamic_layer("camera_pan")
 	return changed
 
 func pan_tiles(delta: Vector2i) -> bool:
@@ -1871,7 +2168,9 @@ func focus_on_hero() -> bool:
 	_camera_center_ready = true
 	var changed := previous_center.distance_to(_camera_center_tile) > 0.01
 	if changed:
-		queue_redraw()
+		_invalidate_session_static_cache("focus_on_hero")
+		_invalidate_state_cache("focus_on_hero")
+		_invalidate_dynamic_layer("focus_on_hero")
 	return changed
 
 func _tile_rect(board_rect: Rect2, tile: Vector2i) -> Rect2:
@@ -1907,10 +2206,10 @@ func _visible_tile_bounds(board_rect: Rect2, viewport_rect: Rect2) -> Rect2i:
 	)
 
 func _draw_viewport_mask(viewport_rect: Rect2) -> void:
-	draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, viewport_rect.position.y)), FRAME_FILL, true)
-	draw_rect(Rect2(Vector2(0.0, viewport_rect.end.y), Vector2(size.x, max(size.y - viewport_rect.end.y, 0.0))), FRAME_FILL, true)
-	draw_rect(Rect2(Vector2(0.0, 0.0), Vector2(viewport_rect.position.x, size.y)), FRAME_FILL, true)
-	draw_rect(Rect2(Vector2(viewport_rect.end.x, 0.0), Vector2(max(size.x - viewport_rect.end.x, 0.0), size.y)), FRAME_FILL, true)
+	_canvas_draw_rect(Rect2(Vector2.ZERO, Vector2(size.x, viewport_rect.position.y)), FRAME_FILL, true)
+	_canvas_draw_rect(Rect2(Vector2(0.0, viewport_rect.end.y), Vector2(size.x, max(size.y - viewport_rect.end.y, 0.0))), FRAME_FILL, true)
+	_canvas_draw_rect(Rect2(Vector2(0.0, 0.0), Vector2(viewport_rect.position.x, size.y)), FRAME_FILL, true)
+	_canvas_draw_rect(Rect2(Vector2(viewport_rect.end.x, 0.0), Vector2(max(size.x - viewport_rect.end.x, 0.0), size.y)), FRAME_FILL, true)
 
 func validation_view_metrics() -> Dictionary:
 	var viewport_rect := _map_viewport_rect()
@@ -1946,6 +2245,16 @@ func validation_view_metrics() -> Dictionary:
 			"y": visible_bounds.position.y,
 			"width": visible_bounds.size.x,
 			"height": visible_bounds.size.y,
+		},
+		"render_cache": {
+			"session_static_generation": _session_static_cache_generation,
+			"state_generation": _state_cache_generation,
+			"dynamic_generation": _dynamic_layer_generation,
+			"frame_generation": _frame_layer_generation,
+			"session_static_reason": _session_static_cache_reason,
+			"state_reason": _state_cache_reason,
+			"dynamic_reason": _dynamic_layer_reason,
+			"frame_reason": _frame_layer_reason,
 		},
 	}
 
