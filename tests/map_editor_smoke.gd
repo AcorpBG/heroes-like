@@ -8,12 +8,10 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	print("SMOKE: start")
 	var shell = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
 	add_child(shell)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	print("SMOKE: shell ready")
 
 	if not shell.has_method("validation_snapshot"):
 		_fail("Map editor smoke: shell did not expose validation_snapshot.")
@@ -61,7 +59,6 @@ func _run() -> void:
 		return
 	if not _assert_editor_terrain_option_contract(shell, snapshot):
 		return
-	print("SMOKE: terrain option contract")
 
 	var paint_result: Dictionary = shell.call("validation_paint_terrain", 2, 2, "forest")
 	var paint_render_cache := _render_cache_metrics(paint_result)
@@ -82,28 +79,20 @@ func _run() -> void:
 		return
 	if not _assert_editor_neighbor_transition_preview(shell):
 		return
-	print("SMOKE: neighbor transition")
 	if not _assert_editor_mixed_corner_class_reason_payload(shell):
 		return
-	print("SMOKE: mixed corner")
 	if not _assert_editor_true_terrain_placement(shell):
 		return
-	print("SMOKE: true terrain placement")
 	if not _assert_editor_placement_source_lower_edge(shell):
 		return
-	print("SMOKE: placement lower edge")
 	if not _assert_editor_sand_heavy_corner_ownership(shell):
 		return
-	print("SMOKE: sand heavy")
 	if not _assert_flood_fill_terrain(shell):
 		return
-	print("SMOKE: flood fill")
 	if not _assert_terrain_line_tool(shell):
 		return
-	print("SMOKE: terrain line")
 	if not _assert_terrain_rectangle_tool(shell):
 		return
-	print("SMOKE: terrain tools")
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
@@ -124,7 +113,6 @@ func _run() -> void:
 		return
 	if not _assert_road_path_tool(shell):
 		return
-	print("SMOKE: road tools")
 
 	var hero_result: Dictionary = shell.call("validation_set_hero_start", 3, 3)
 	var hero_position: Dictionary = hero_result.get("hero_position", {})
@@ -134,7 +122,6 @@ func _run() -> void:
 
 	if not _assert_selected_tile_restore(shell):
 		return
-	print("SMOKE: hero and restore")
 
 	var inspect_result: Dictionary = shell.call("validation_select_tile", 23, 26)
 	var inspect_payload: Dictionary = inspect_result.get("tile_inspection", {})
@@ -159,7 +146,6 @@ func _run() -> void:
 		return
 	if not _assert_object_retheme_edits(shell):
 		return
-	print("SMOKE: object edits")
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
 	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
@@ -172,10 +158,8 @@ func _run() -> void:
 		return
 	if not _exercise_object_placement(shell, "encounter", "encounter_mire_raid", Vector2i(7, 4), "has_visible_encounter"):
 		return
-	print("SMOKE: object placement")
 	if not await _assert_play_copy_round_trip(shell):
 		return
-	print("SMOKE: play copy")
 
 	get_tree().quit(0)
 
@@ -228,7 +212,6 @@ func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool
 	return true
 
 func _assert_editor_neighbor_transition_preview(shell) -> bool:
-	print("SMOKE: neighbor start")
 	var forest_tile: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var forest_terrain: Dictionary = forest_tile.get("terrain_presentation", {})
 	if (
@@ -263,7 +246,6 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 			_restore_editor_terrain_tiles(shell, original_terrains)
 			_fail("Map editor smoke: could not seed forest baseline for HoMM3 bridge-table preview at %s." % tile)
 			return false
-	print("SMOKE: neighbor seeded forest")
 	var mire_seed_ok := _paint_editor_terrain_for_orientation(shell, Vector2i(2, 2), "mire")
 	if not mire_seed_ok:
 		_restore_editor_terrain_tiles(shell, original_terrains)
@@ -296,7 +278,6 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: painted mire edge did not expose full-receiver stamp metadata: %s." % edge_receiver)
 		return false
-	print("SMOKE: neighbor edge")
 	var corner_receiver: Dictionary = shell.call("validation_tile_presentation", 1, 1)
 	var corner_terrain: Dictionary = corner_receiver.get("terrain_presentation", {})
 	if (
@@ -312,31 +293,24 @@ func _assert_editor_neighbor_transition_preview(shell) -> bool:
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		_fail("Map editor smoke: diagonal-only full-receiver context did not follow the accepted relation-class row lookup: %s." % corner_receiver)
 		return false
-	print("SMOKE: neighbor corner")
 	if not _assert_editor_direct_dirt_swamp_transition(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	print("SMOKE: neighbor direct dirt swamp")
 	if not _assert_editor_horizontal_transition_orientation(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	print("SMOKE: neighbor horizontal")
 	if not _assert_editor_solid_region_interior_stability(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	print("SMOKE: neighbor solid region")
 	if not _assert_editor_special_system_groundwork(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	print("SMOKE: neighbor special systems")
 	if not _assert_editor_bridge_material_resolver(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	print("SMOKE: neighbor bridge resolver")
 	if not _assert_editor_restamp_behavior_model(shell):
 		_restore_editor_terrain_tiles(shell, original_terrains)
 		return false
-	print("SMOKE: neighbor restamp")
 	_restore_editor_terrain_tiles(shell, original_terrains)
 	return true
 

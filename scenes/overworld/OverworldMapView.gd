@@ -556,12 +556,11 @@ func _draw() -> void:
 func _draw_frame_layer() -> void:
 	var previous_target = _draw_canvas_item
 	_draw_canvas_item = _frame_layer
-	_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
-	if _session != null:
+	if _session == null:
+		_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
+	else:
 		var viewport_rect := _map_viewport_rect()
 		var frame_rect = viewport_rect.grow(12.0)
-		_canvas_draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
-		_canvas_draw_rect(viewport_rect, FRAME_FILL, true)
 		_draw_viewport_mask(viewport_rect)
 		_canvas_draw_rect(frame_rect, FRAME_COLOR, false, 3.0)
 	_draw_canvas_item = previous_target
@@ -573,6 +572,10 @@ func _draw_session_static_layer() -> void:
 	_draw_canvas_item = _session_static_layer
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
+	var frame_rect = viewport_rect.grow(12.0)
+	_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
+	_canvas_draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
+	_canvas_draw_rect(viewport_rect, FRAME_FILL, true)
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):

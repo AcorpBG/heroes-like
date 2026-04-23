@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-23T18:11:07Z",
+  "updatedAt": "2026-04-23T19:53:17Z",
   "status": "in_progress",
   "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-map-render-cache-10184",
-  "currentSliceTitle": "Split overworld map rendering into cached static, state, and dynamic layers",
+  "currentSliceId": "overworld-renderer-regression-10184",
+  "currentSliceTitle": "Repair renderer regression after overworld map render cache split",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "OverworldMapView now uses explicit internal session-static, state, dynamic, and frame canvas-item layers so hover/selection/path overlays no longer rebuild the terrain/road composition by default. Static invalidation now follows map/road or visible-board layout changes, state invalidation follows fog plus mutable town/resource/artifact/encounter changes, and validation now exposes cache generations with targeted smoke coverage. Passed repo validation, map editor smoke, live overworld visual smoke, and diff whitespace checks.",
+  "currentSliceNotes": "Restored the shared overworld/editor map surface after 42cfdd6 by moving the opaque frame/backdrop fill back under the map layers and leaving only the viewport mask/border on the top frame layer. Removed accidental SMOKE debug print spam from the map editor smoke test. Passed repo validation, overworld visual smoke, map editor smoke, and diff whitespace checks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
@@ -81,6 +81,12 @@
     ]
   },
   "steps": [
+    {
+      "id": "overworld-renderer-regression-10184",
+      "title": "Repair renderer regression after overworld map render cache split",
+      "status": "completed",
+      "difficulty": "small"
+    },
     {
       "id": "docs-reality-reset",
       "title": "Reset project and plan docs to the prototype/pre-alpha reality",
