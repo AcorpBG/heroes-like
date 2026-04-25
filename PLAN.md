@@ -37,7 +37,7 @@ Purpose:
 Immediate execution order:
 1. World story and worldbuilding: define the richer world premise, tone, geography, conflicts, history, and visual identity.
 2. Faction identity: completed as a world-grounded six-faction identity bible in `docs/factions-content-bible.md`. Future JSON migration should preserve that asymmetry rather than reviving scaffold templates.
-3. Concept art pipeline using image generation: make world mood, faction, faction town, unit, town-building, and hero concept work a required design/art-direction stage before deep implementation or polish.
+3. Concept art pipeline using image generation: completed as a required design/art-direction stage in `docs/concept-art-pipeline.md` before deep implementation or polish.
 4. Economy overhaul: move beyond the current gold + ore + wood baseline into multiple resources, faction resource preferences, resource-site/mine gameplay, economy pressure, town-development costs, collection routes, and capture loops.
 5. Overworld object taxonomy/content expansion: rework objects into clear classes such as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters. Use HoMM3 map-editor/assets/reverse-engineering only as scale/type inspiration. The project still lacks the world-building object density required for the target game.
 6. Magic system expansion: define schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.
@@ -47,7 +47,7 @@ Immediate execution order:
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Define the concept-art pipeline using image generation for world mood, each faction, faction towns, unit silhouettes, town buildings, and hero archetypes before gameplay JSON migration or deep visual polish.
+- Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, resource sites/mines, pressure, town-development costs, collection routes, and capture loops.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -95,6 +95,28 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
+
+## Completed Design Slice: Concept Art Pipeline
+Status: completed on 2026-04-25 as the third deep production foundation design package.
+
+Purpose:
+- Make image generation a required concept-art and art-direction stage before major JSON migration, maps, final town/battle polish, asset implementation, or faction vertical slices.
+- Define prompt templates, negative constraints, curation workflow, review rubric, output organization, and implementation-brief handoff rules grounded in the worldbuilding and faction bibles.
+- Keep generated studies separate from runtime assets and treat them as direction evidence, not final art.
+
+Delivered:
+- Added `docs/concept-art-pipeline.md` covering world mood/feel studies, region studies, all six factions, faction town exteriors, town building language, unit silhouette/tier ladder studies, hero portrait/full-body studies, overworld object families, artifacts/magic visual language, and UI mood references.
+- Included prompt templates constrained by `docs/worldbuilding-foundation.md` and `docs/factions-content-bible.md`, with anti-copying and anti-generic negative constraints.
+- Added a review rubric for game-scale readability, faction silhouette, town/building consistency, unit tier clarity, map-object classification, animation readiness, production feasibility, and non-derivative originality.
+- Sequenced the next logical foundation slice as economy overhaul planning.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not generate images, add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
@@ -2259,7 +2281,7 @@ Acceptance criteria:
 ## Immediate Execution Order
 1. Define the richer world story and worldbuilding foundation: premise, tone, geography, conflicts, history, and visual identity.
 2. Redefine each faction as a unique world-grounded identity with distinct backstory, town feel, hero identity, unit ladder purpose, economy preference, and strategic pressure.
-3. Establish the image-generation concept art pipeline for world mood, factions, faction towns, units, town buildings, and heroes before implementation or deep polish.
+3. Use the image-generation concept art pipeline for world mood, factions, faction towns, units, town buildings, and heroes before implementation or deep polish.
 4. Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, resource sites/mines, pressure, town-development costs, collection routes, and capture loops.
 5. Plan overworld object taxonomy and density: decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters.
 6. Plan magic, artifact, animation, and strategic AI expansion tracks.
@@ -2284,7 +2306,7 @@ No claim should move to "done" unless live-client usability and evidence are fil
 Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- The next slice starts with world story/worldbuilding rather than map or screen polish.
+- The next slice starts with economy overhaul planning rather than map or screen polish.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.
