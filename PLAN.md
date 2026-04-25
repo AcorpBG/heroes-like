@@ -45,12 +45,13 @@ Immediate execution order:
 8. Animation systems: completed as the production motion, VFX, audio cue, UI feedback, state-change clarity, technical architecture, asset pipeline, validation, and migration foundation in `docs/animation-systems-foundation.md`. Future implementation should stage event contracts, cue catalogs, reduced-motion/fast-mode support, and vertical animatics before final town/battle polish.
 9. Strategic AI: completed as the computer hero/town turn, economy, recruiting/building, movement, objective play, pressure, event surfacing, save/schema, validation, and migration foundation in `docs/strategic-ai-foundation.md`. Future implementation should migrate AI profile/schema, planner/executor boundaries, event streams, town governors, real AI heroes, object valuation, spell/artifact planning, and difficulty knobs from that plan instead of extending pressure raids casually.
 10. First actual concept-art generation execution: completed as an external world mood plus six-faction identity batch, recorded in `docs/concept-art-batch-001-review.md`; generated PNGs remain outside the repo and are not runtime/source assets.
-11. First concept-art curation and second-pass brief prep: get AcOrP accept/reject/defer calls, then prepare a focused second-pass generation plan and implementation-brief inputs without copying generated images into the repo.
-12. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+11. First concept-art curation and second-pass prep: completed as a concise second-pass review for world route readability, no-text Veilmourn, and Sunvault anti-paladin silhouette direction, recorded in `docs/concept-art-batch-002-review.md`; generated PNGs remain outside the repo.
+12. Remaining second-pass concept-art expansion: generate and curate Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and overworld object/town studies before implementation-brief prep.
+13. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Curate the first external concept-art batch and prepare second-pass concept-art or implementation-brief inputs from `docs/concept-art-batch-001-review.md`, keeping all generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise.
-- Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
+- Continue second-pass concept-art generation and curation from `docs/concept-art-batch-002-review.md`, focusing on Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and overworld object/town studies.
+- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise, and keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
@@ -255,6 +256,27 @@ Delivered:
 - Added `docs/concept-art-batch-001-review.md` documenting the seven external PNGs under `/root/.openclaw/media/tool-image-generation`.
 - Recorded preliminary curation notes for Aurelion Reach world mood, Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn.
 - Explicitly rejected generated PNGs for repo ingestion in this slice and noted that exact prompt/model metadata remains external/deferred.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, imported generated images, or playability claims.
+
+## Completed Art-Direction Slice: Concept Art Batch 002 Second-Pass Review
+Status: completed on 2026-04-25 as the first second-pass concept-art curation record.
+
+Purpose:
+- Record the second-pass follow-up outputs for cleaner world route readability, a no-text Veilmourn revision, and a Sunvault anti-paladin silhouette study.
+- Keep generated images outside the repo while preserving filenames, source briefs, prompt intent, preliminary curation, risks, deferred notes, and next art-direction steps.
+- Decide whether the available evidence is enough for implementation-brief prep or whether more second-pass generation is still needed.
+
+Delivered:
+- Added `docs/concept-art-batch-002-review.md` documenting the three external PNGs under `/root/.openclaw/media/tool-image-generation`.
+- Recorded preliminary curation notes for Aurelion Reach route readability, Veilmourn no-text identity revision, and Sunvault silhouette direction.
+- Determined that implementation-brief prep is premature because Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and broader object/town studies still need second-pass evidence.
 
 Validation:
 - Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`

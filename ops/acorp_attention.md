@@ -35,7 +35,11 @@ Updated: 2026-04-25
 - Concept-art curation should confirm whether the world mood direction is useful as broad Aurelion Reach infrastructure-fantasy mood, or whether the next pass should move immediately to cleaner region/readability frames.
 - Concept-art curation should confirm whether Embercourt and Mireclaw can move into town/object second-pass briefs, while Sunvault, Thornwake, Brasshollow, and Veilmourn first need stronger anti-generic silhouette passes.
 - Concept-art curation should explicitly reject embedded text, generated labels, pseudo-logos, and tagline copy from any future visual reference. The first Veilmourn sheet contains useful motifs, but its embedded labels/text make it non-approvable as-is.
+- Concept-art curation should review the second-pass outputs recorded in `docs/concept-art-batch-002-review.md`: cleaner world route readability, no-text Veilmourn, and Sunvault silhouette direction.
+- Concept-art curation should confirm whether the no-text Veilmourn revision is acceptable as material/prop direction, while still requiring town exterior and unit-ladder follow-up before implementation briefs.
+- Concept-art curation should confirm whether the Sunvault second pass sufficiently reduces holy paladin drift for object/building language, or whether unit silhouettes need another stricter calibration-worker and relay-engineer pass.
+- Concept-art curation should confirm that the next art slice remains additional second-pass generation for Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and object/town studies rather than implementation-brief prep.
 
 ## Current Follow-Up
 
-- First concept-art generation batch is recorded in `docs/concept-art-batch-001-review.md` and remains external only. Next production slice should collect AcOrP curation calls and prepare a second-pass concept-art or implementation-brief plan; no hard blocker.
+- First and second concept-art review notes are recorded in `docs/concept-art-batch-001-review.md` and `docs/concept-art-batch-002-review.md`; all generated PNGs remain external only. Next production slice should continue second-pass art generation and collect AcOrP curation calls; no hard blocker.
