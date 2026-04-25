@@ -38,7 +38,7 @@ Immediate execution order:
 1. World story and worldbuilding: define the richer world premise, tone, geography, conflicts, history, and visual identity.
 2. Faction identity: completed as a world-grounded six-faction identity bible in `docs/factions-content-bible.md`. Future JSON migration should preserve that asymmetry rather than reviving scaffold templates.
 3. Concept art pipeline using image generation: completed as a required design/art-direction stage in `docs/concept-art-pipeline.md` before deep implementation or polish.
-4. Economy overhaul: move beyond the current gold + ore + wood baseline into multiple resources, faction resource preferences, resource-site/mine gameplay, economy pressure, town-development costs, collection routes, and capture loops.
+4. Economy overhaul: completed as the multi-resource economy foundation in `docs/economy-overhaul-foundation.md`. Future implementation should stage schema, validation, UI, site, market, AI, and save migration from that plan instead of casually adding resource names.
 5. Overworld object taxonomy/content expansion: rework objects into clear classes such as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters. Use HoMM3 map-editor/assets/reverse-engineering only as scale/type inspiration. The project still lacks the world-building object density required for the target game.
 6. Magic system expansion: define schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.
 7. Artifact system expansion: plan many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.
@@ -47,7 +47,7 @@ Immediate execution order:
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, resource sites/mines, pressure, town-development costs, collection routes, and capture loops.
+- Plan overworld object taxonomy and density: decoration/non-interactable objects, interactable buildings/sites, neutral unit encounters, footprints, visit rules, guard expectations, route objects, and biome/faction variants.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -117,6 +117,27 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not generate images, add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
+
+## Completed Design Slice: Economy Overhaul Foundation
+Status: completed on 2026-04-25 as the fourth deep production foundation design package.
+
+Purpose:
+- Define a production-minded economy direction beyond the current gold, wood, and ore baseline.
+- Tie resources to Aurelion Reach geography, faction identity, resource-site control, town development, recruitment, markets, route logistics, scarcity, AI planning, save/schema migration, UI readability, and concept-art stage gates.
+- Keep the economy as a staged foundation for future implementation rather than a casual content JSON expansion.
+
+Delivered:
+- Added `docs/economy-overhaul-foundation.md` covering current baseline/gap, target resource set, resource categories, faction preferences and shortages, mine/resource-site classes, pickups, daily/weekly income, town and recruitment costs, market limits, capture/counter-capture loops, roads/ferries/rails/fog/root/relay logistics, scarcity pressure, AI economy requirements, save/schema implications, UI readability, validation/testing gates, migration sequence, and deep-enough gates for campaign/skirmish maps.
+- Defined faction-by-faction economy behavior for Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn.
+- Sequenced the next logical foundation slice as overworld object taxonomy and density planning.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
