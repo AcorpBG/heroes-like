@@ -39,7 +39,7 @@ Immediate execution order:
 2. Faction identity: completed as a world-grounded six-faction identity bible in `docs/factions-content-bible.md`. Future JSON migration should preserve that asymmetry rather than reviving scaffold templates.
 3. Concept art pipeline using image generation: completed as a required design/art-direction stage in `docs/concept-art-pipeline.md` before deep implementation or polish.
 4. Economy overhaul: completed as the multi-resource economy foundation in `docs/economy-overhaul-foundation.md`. Future implementation should stage schema, validation, UI, site, market, AI, and save migration from that plan instead of casually adding resource names.
-5. Overworld object taxonomy/content expansion: rework objects into clear classes such as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters. Use HoMM3 map-editor/assets/reverse-engineering only as scale/type inspiration. The project still lacks the world-building object density required for the target game.
+5. Overworld object taxonomy/content expansion: completed as the taxonomy and density foundation in `docs/overworld-object-taxonomy-density.md`. Future implementation should migrate object classes, footprints, approach rules, guards, ownership states, density checks, and editor implications from that plan instead of adding random object scatter.
 6. Magic system expansion: define schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.
 7. Artifact system expansion: plan many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.
 8. Animation systems: specify what animation support is needed for units, heroes, towns, map objects, UI feedback, battle readability, and state changes.
@@ -47,7 +47,7 @@ Immediate execution order:
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan overworld object taxonomy and density: decoration/non-interactable objects, interactable buildings/sites, neutral unit encounters, footprints, visit rules, guard expectations, route objects, and biome/faction variants.
+- Plan magic system expansion: schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, adventure-map roles, validation gates, and migration sequence.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -130,6 +130,27 @@ Delivered:
 - Added `docs/economy-overhaul-foundation.md` covering current baseline/gap, target resource set, resource categories, faction preferences and shortages, mine/resource-site classes, pickups, daily/weekly income, town and recruitment costs, market limits, capture/counter-capture loops, roads/ferries/rails/fog/root/relay logistics, scarcity pressure, AI economy requirements, save/schema implications, UI readability, validation/testing gates, migration sequence, and deep-enough gates for campaign/skirmish maps.
 - Defined faction-by-faction economy behavior for Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn.
 - Sequenced the next logical foundation slice as overworld object taxonomy and density planning.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
+
+## Completed Design Slice: Overworld Object Taxonomy And Density Foundation
+Status: completed on 2026-04-25 as the fifth deep production foundation design package.
+
+Purpose:
+- Define a production-minded overworld object taxonomy and density model that can support worldbuilding, route planning, economy pressure, neutral encounters, guarded rewards, faction landmarks, and readable map composition.
+- Address the AcOrP direction to rework object planning around Decoration/non-interactable objects, Interactable buildings/sites, and Overworld neutral unit encounters while using HoMM3 map-editor/object breadth only as scale/type inspiration.
+- Convert the current thin object vocabulary into a deeper future implementation contract without editing content JSON in this slice.
+
+Delivered:
+- Added `docs/overworld-object-taxonomy-density.md` covering current gap, taxonomy classes, object families, footprints, passability, visit/approach rules, guard expectations, reward/risk, density bands, biome and faction variants, ownership/capture states, animation hooks, concept-art stage gates, map editor implications, validation/testing gates, and migration sequence.
+- Included a concrete Aurelion Reach object-family catalog target spanning regional decoration, blockers, pickups, persistent economy sites, transit/route sites, shrines/services, neutral dwellings, neutral encounters, guarded reward sites, and faction landmarks.
+- Sequenced the next logical foundation slice as magic system expansion planning.
 
 Validation:
 - Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`

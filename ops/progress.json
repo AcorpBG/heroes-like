@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T22:35:50Z",
+  "updatedAt": "2026-04-25T22:40:58Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-taxonomy-density-10184",
-  "currentSliceTitle": "Plan overworld object taxonomy and density for decoration, interactable sites/buildings, and neutral encounters",
+  "currentSliceId": "magic-system-expansion-foundation-10184",
+  "currentSliceTitle": "Plan expanded magic schools, categories, faction/unit interactions, economy/artifact hooks, and adventure/tactical roles",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Economy overhaul foundation is documented in docs/economy-overhaul-foundation.md. Next logical slice is overworld object taxonomy and density planning before broad maps or final screen polish.",
+  "currentSliceNotes": "Overworld object taxonomy and density foundation is documented in docs/overworld-object-taxonomy-density.md. Next logical slice is magic system expansion planning before artifact, animation, strategic AI, broad maps, or final screen polish.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -126,7 +126,7 @@
     {
       "id": "overworld-object-taxonomy-density-10184",
       "title": "Plan overworld object taxonomy and density for decoration, interactable sites/buildings, and neutral encounters",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
@@ -611,9 +611,8 @@
     }
   ],
   "nextActions": [
-    "Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, mines/resource sites, pressure, costs, collection routes, and capture/counterplay loops.",
     "Use docs/concept-art-pipeline.md as a required art-direction gate before economy-related resource-site, mine, artifact, faction town, or map-object visuals move into implementation.",
-    "Plan overworld object taxonomy and density around decoration/non-interactable objects, interactable buildings/sites, and neutral unit encounters; use HoMM3 scale/type references only as inspiration.",
+    "Use docs/overworld-object-taxonomy-density.md as the object taxonomy and density source before object JSON migration, broad object placement, map-editor object expansion, or final object art.",
     "Plan magic expansion with schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.",
     "Plan artifact expansion with many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.",
     "Plan animation systems for units, heroes, towns, map objects, UI feedback, battle readability, and state-change clarity.",
