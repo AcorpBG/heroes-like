@@ -46,11 +46,11 @@ Immediate execution order:
 9. Strategic AI: completed as the computer hero/town turn, economy, recruiting/building, movement, objective play, pressure, event surfacing, save/schema, validation, and migration foundation in `docs/strategic-ai-foundation.md`. Future implementation should migrate AI profile/schema, planner/executor boundaries, event streams, town governors, real AI heroes, object valuation, spell/artifact planning, and difficulty knobs from that plan instead of extending pressure raids casually.
 10. First actual concept-art generation execution: completed as an external world mood plus six-faction identity batch, recorded in `docs/concept-art-batch-001-review.md`; generated PNGs remain outside the repo and are not runtime/source assets.
 11. First concept-art curation and second-pass prep: completed as a concise second-pass review for world route readability, no-text Veilmourn, and Sunvault anti-paladin silhouette direction, recorded in `docs/concept-art-batch-002-review.md`; generated PNGs remain outside the repo.
-12. Remaining second-pass concept-art expansion: generate and curate Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and overworld object/town studies before implementation-brief prep.
+12. Remaining second-pass concept-art expansion: partially progressed with Thornwake, Brasshollow, and Embercourt town/object studies recorded in `docs/concept-art-batch-003-review.md`. Continue with Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader object/town studies before implementation-brief prep.
 13. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Continue second-pass concept-art generation and curation from `docs/concept-art-batch-002-review.md`, focusing on Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and overworld object/town studies.
+- Continue second-pass concept-art generation and curation from `docs/concept-art-batch-002-review.md` and `docs/concept-art-batch-003-review.md`, focusing on Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader overworld object/town studies.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise, and keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -277,6 +277,27 @@ Delivered:
 - Added `docs/concept-art-batch-002-review.md` documenting the three external PNGs under `/root/.openclaw/media/tool-image-generation`.
 - Recorded preliminary curation notes for Aurelion Reach route readability, Veilmourn no-text identity revision, and Sunvault silhouette direction.
 - Determined that implementation-brief prep is premature because Thornwake, Brasshollow, Embercourt town/object, Mireclaw town/object, Veilmourn town/unit, Sunvault unit ladder, and broader object/town studies still need second-pass evidence.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, imported generated images, or playability claims.
+
+## Partial Art-Direction Slice: Concept Art Batch 003 Second-Pass Expansion
+Status: partial progress recorded on 2026-04-25 for the remaining second-pass concept-art expansion slice.
+
+Purpose:
+- Record the second-pass expansion outputs for Thornwake silhouette plus town/object direction, Brasshollow silhouette plus town/object direction, and Embercourt town/object readiness.
+- Keep generated images outside the repo while preserving filenames, source briefs, prompt intent, preliminary curation, risks, deferred notes, and next art-direction steps.
+- Keep the active concept-art expansion slice open because Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader object/town studies still need evidence before implementation-brief prep.
+
+Delivered:
+- Added `docs/concept-art-batch-003-review.md` documenting the three external PNGs under `/root/.openclaw/media/tool-image-generation`.
+- Recorded preliminary curation notes for Thornwake root-law town/object direction, Brasshollow furnace-contract object/building vocabulary, and Embercourt river-lock town/object readiness.
+- Determined that Embercourt is closer to town/object implementation-brief readiness after AcOrP review, while Thornwake and Brasshollow still need stricter unit/silhouette calibration and the overall second-pass expansion remains incomplete.
 
 Validation:
 - Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
