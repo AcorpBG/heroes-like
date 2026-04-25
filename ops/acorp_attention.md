@@ -42,8 +42,12 @@ Updated: 2026-04-25
 - Concept-art curation should confirm whether Embercourt town/object direction can move into compact implementation-brief drafting after remaining second-pass coverage is less lopsided.
 - Concept-art curation should confirm whether Thornwake needs a stricter seven-tier unit ladder pass before unit approval, even though the root-gate, graft-nursery, toll-arch, and living-road object language is useful.
 - Concept-art curation should confirm whether Brasshollow needs another anti-steampunk, contract-law silhouette pass focused on debt seals, clause tablets, repair windows, worker courts, and machine maintenance.
-- Concept-art curation should confirm that the next art slice remains additional second-pass generation for Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader object/town studies rather than implementation-brief prep.
+- Concept-art curation should review the second-pass expansion outputs recorded in `docs/concept-art-batch-004-review.md`: Mireclaw town/object, Veilmourn town/unit, and Sunvault seven-tier ladder.
+- Concept-art curation should confirm whether Mireclaw town/object direction is strong enough for compact overworld town and object-family brief drafting, while keeping unit-ladder approval deferred.
+- Concept-art curation should confirm whether Veilmourn harbor/town direction is accepted and whether the unit ladder needs a stricter tier-separation pass before combat briefs.
+- Concept-art curation should confirm whether Sunvault seven-tier direction is sufficient to close the anti-paladin recalibration loop, or whether another black-shape-only unit pass is needed.
+- Concept-art curation should confirm that the next art slice should broaden overworld object/town studies before implementation-brief prep, now that the main named second-pass faction/town/unit gaps are covered.
 
 ## Current Follow-Up
 
-- Concept-art review notes are recorded in `docs/concept-art-batch-001-review.md`, `docs/concept-art-batch-002-review.md`, and `docs/concept-art-batch-003-review.md`; all generated PNGs remain external only. Next production slice should continue second-pass art generation for Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader object/town studies while collecting AcOrP curation calls; no hard blocker.
+- Concept-art review notes are recorded in `docs/concept-art-batch-001-review.md`, `docs/concept-art-batch-002-review.md`, `docs/concept-art-batch-003-review.md`, and `docs/concept-art-batch-004-review.md`; all generated PNGs remain external only. Next production slice should broaden overworld object/town studies while collecting AcOrP curation calls; no hard blocker.

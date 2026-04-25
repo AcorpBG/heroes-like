@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T23:42:41Z",
+  "updatedAt": "2026-04-25T23:51:16Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-second-pass-expansion-10184",
-  "currentSliceTitle": "Generate and curate remaining second-pass concept-art studies",
+  "currentSliceId": "broader-overworld-object-town-studies-10184",
+  "currentSliceTitle": "Generate and curate broader overworld object and town concept studies",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Batch 003 records partial second-pass expansion results for Thornwake silhouette/town/object, Brasshollow silhouette/town/object, and Embercourt town/object readiness in docs/concept-art-batch-003-review.md. Generated PNGs remain outside the repo. The slice remains open for Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader object/town studies before implementation-brief prep.",
+  "currentSliceNotes": "Batch 004 records the remaining named second-pass faction/town/unit gaps for Mireclaw town/object, Veilmourn town/unit, and Sunvault seven-tier ladder in docs/concept-art-batch-004-review.md. Generated PNGs remain outside the repo. The next active slice should broaden object/town evidence across route-law objects, resource sites, faction landmarks, neutral encounters, guarded sites, pickups, footprints, approach sides, and negative-space readability before implementation-brief prep.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -168,6 +168,12 @@
     {
       "id": "concept-art-second-pass-expansion-10184",
       "title": "Generate and curate remaining second-pass concept-art studies for faction, town, unit, and object readiness",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "broader-overworld-object-town-studies-10184",
+      "title": "Generate and curate broader overworld object and town studies before implementation briefs",
       "status": "in_progress",
       "difficulty": "high"
     },
@@ -635,8 +641,8 @@
     "Use docs/artifact-system-expansion-foundation.md as the artifact source before artifact JSON migration, set implementation, artifact reward tables, artifact UI, AI valuation, or spell/economy hook work.",
     "Use docs/animation-systems-foundation.md as the animation source before unit animation, hero motion, town ambience, object state animation, spell/artifact VFX, UI motion, cue catalog, audio cue, or final battle/town polish work.",
     "Use docs/strategic-ai-foundation.md as the strategic AI source before AI profile/schema migration, planner/executor work, AI event surfacing, town governors, real AI heroes, object valuation, spell/artifact planning, difficulty tuning, or broad map reliance on AI.",
-    "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, and docs/concept-art-batch-003-review.md to collect AcOrP accept/reject/defer calls on the external world/faction batch and second-pass follow-ups.",
-    "Continue focused second-pass concept-art generation for Mireclaw town/object, Veilmourn town/unit, Sunvault seven-tier ladder, and broader object/town studies, without moving or copying generated PNGs into the repo.",
+    "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, docs/concept-art-batch-003-review.md, and docs/concept-art-batch-004-review.md to collect AcOrP accept/reject/defer calls on the external world/faction batch and second-pass follow-ups.",
+    "Continue with broader overworld object/town concept studies for route-law objects, resource sites, faction landmarks, neutral encounter presentation, guarded reward sites, pickups, footprints, approach sides, and negative-space readability, without moving or copying generated PNGs into the repo.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
     "Avoid claiming six-faction, HoMM2-class, or HoMM3-class readiness until world, content, systems, AI, save/load, and manual-play evidence support it."
