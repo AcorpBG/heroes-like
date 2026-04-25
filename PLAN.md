@@ -47,7 +47,7 @@ Immediate execution order:
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Create the first foundation design package covering world premise, faction identity standards, concept-art pipeline requirements, and the economy/object/magic/artifact/AI backlog boundaries.
+- Use `docs/worldbuilding-foundation.md` to revise the six faction identities into world-grounded, production-ready design packages before any JSON migration.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -55,6 +55,25 @@ Acceptance:
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
 - The next active implementation choice is tied to deepening world/content/systems foundations, not to fake HoMM2/HoMM3 parity, data volume, or visual surface polish alone.
+
+## Completed Design Slice: Worldbuilding Foundation
+Status: completed on 2026-04-25 as the first deep production foundation design package.
+
+Purpose:
+- Establish an original world premise, tone, geography, history, conflicts, magic logic, economy implications, visual identity, overworld density direction, and faction hooks before further broad maps, gameplay content migration, or screen polish.
+- Give faction, economy, object, magic, artifact, concept-art, and scenario work a shared creative foundation that is legally distinct from genre inspirations.
+
+Delivered:
+- Added `docs/worldbuilding-foundation.md` as the design source for Aurelion Reach, the Charter War, the accordance magic model, major regions, history eras, central conflicts, resource/economy implications, visual identity rules, map-object density implications, and hooks for all six target factions.
+- Sequenced the next logical foundation slice as faction identity refinement against the new world foundation.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and design direction only. It does not add gameplay code, scenes, scripts, tests, content JSON, assets, or claims of playability.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.

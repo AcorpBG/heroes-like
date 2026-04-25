@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T00:00:00Z",
+  "updatedAt": "2026-04-25T12:00:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "world-story-worldbuilding-foundation-10184",
-  "currentSliceTitle": "Define the world story and worldbuilding foundation before further map or screen polish",
+  "currentSliceId": "faction-identity-foundation-10184",
+  "currentSliceTitle": "Redefine each faction as a unique world-grounded identity rather than a scaffold",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "River Pass is passed history and the post-River-Pass polish framing is superseded. The active direction is a deep production-foundation phase: world story, faction identity, image-generation concept art pipeline, economy overhaul, overworld object taxonomy/density, magic, artifacts, animation systems, and strategic AI must be deepened before campaign/skirmish maps or final town/battle/screen polish become the main focus.",
+  "currentSliceNotes": "The world story and worldbuilding foundation is documented in docs/worldbuilding-foundation.md. Next logical slice is faction identity refinement against that world foundation before JSON migration, broad maps, or final screen polish.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -102,7 +102,7 @@
     {
       "id": "world-story-worldbuilding-foundation-10184",
       "title": "Define richer world premise, tone, geography, conflicts, history, and visual identity",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
