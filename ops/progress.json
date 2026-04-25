@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T22:40:58Z",
+  "updatedAt": "2026-04-25T23:18:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "magic-system-expansion-foundation-10184",
-  "currentSliceTitle": "Plan expanded magic schools, categories, faction/unit interactions, economy/artifact hooks, and adventure/tactical roles",
+  "currentSliceId": "artifact-system-expansion-foundation-10184",
+  "currentSliceTitle": "Plan artifact breadth, unique sets, spell interactions, faction-specific interactions, and build implications",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Overworld object taxonomy and density foundation is documented in docs/overworld-object-taxonomy-density.md. Next logical slice is magic system expansion planning before artifact, animation, strategic AI, broad maps, or final screen polish.",
+  "currentSliceNotes": "Magic system expansion foundation is documented in docs/magic-system-expansion-foundation.md. Next logical slice is artifact expansion planning before animation, strategic AI, broad maps, or final screen polish.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -132,7 +132,7 @@
     {
       "id": "magic-system-expansion-foundation-10184",
       "title": "Plan expanded magic schools, categories, faction/unit interactions, economy/artifact hooks, and adventure/tactical roles",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
