@@ -1,26 +1,26 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-23T19:53:17Z",
+  "updatedAt": "2026-04-25T00:00:00Z",
   "status": "in_progress",
-  "currentPhase": "phase-2-playable-alpha-baseline",
-  "currentSliceId": "overworld-renderer-regression-10184",
-  "currentSliceTitle": "Repair renderer regression after overworld map render cache split",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Restored the shared overworld/editor map surface after 42cfdd6 by moving the opaque frame/backdrop fill back under the map layers and leaving only the viewport mask/border on the top frame layer. Removed accidental SMOKE debug print spam from the map editor smoke test. Passed repo validation, overworld visual smoke, map editor smoke, and diff whitespace checks.",
+  "currentPhase": "phase-2-deep-production-foundation",
+  "currentSliceId": "world-story-worldbuilding-foundation-10184",
+  "currentSliceTitle": "Define the world story and worldbuilding foundation before further map or screen polish",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "River Pass is passed history and the post-River-Pass polish framing is superseded. The active direction is a deep production-foundation phase: world story, faction identity, image-generation concept art pipeline, economy overhaul, overworld object taxonomy/density, magic, artifacts, animation systems, and strategic AI must be deepened before campaign/skirmish maps or final town/battle/screen polish become the main focus.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
-    "manualPlayAudit": "river-pass-manual-gate-passed-full-game-still-pre-alpha",
+    "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
     "parityClaimAllowed": false,
     "releaseReadinessClaimAllowed": false,
-    "notes": "Existing systems and validation harnesses remain useful foundations, but do not count as product completion until proven through live-client manual play."
+    "notes": "Existing systems, JSON scaffolds, terrain/editor work, and validation harnesses remain useful foundations, but do not count as production depth or product completion until world/content/systems foundations and live-client manual play prove the loops."
   },
   "phases": [
     {
       "id": "phase-0-honest-reset",
       "title": "Honest reset, parity ledger, and removal of fake-complete language",
       "status": "completed",
-      "focus": "Planning docs now state the prototype/pre-alpha reality and reset the roadmap around manual play evidence."
+      "focus": "Planning docs state the prototype/pre-alpha reality and reset the roadmap around manual play evidence."
     },
     {
       "id": "phase-1-river-pass-manual-completion",
@@ -29,58 +29,148 @@
       "focus": "AcOrP reported River Pass manual completion gate passed on 2026-04-18, covering the live-client overworld, town, battle, save/resume, victory, defeat, and outcome-routing gate."
     },
     {
-      "id": "phase-2-playable-alpha-baseline",
-      "title": "Playable alpha baseline with 2 fully realized factions",
+      "id": "phase-2-deep-production-foundation",
+      "title": "Deep production foundation before broad maps and final polish",
       "status": "in_progress",
-      "focus": "Use the faction bible as the six-faction content scaffold source, then deepen selected alpha factions through scenario, town, battle, AI, save/load, and manual-play slices before claiming playability."
+      "focus": "Build the missing world, faction, concept-art, economy, overworld object, magic, artifact, animation, and strategic AI foundations before treating campaign/skirmish maps or final screen polish as the center of work."
     },
     {
-      "id": "phase-3-production-alpha-layer",
+      "id": "phase-3-playable-alpha-baseline",
+      "title": "Playable alpha baseline with deeply realized factions",
+      "status": "pending",
+      "focus": "After the foundation is deep enough, prove selected factions through scenario, town, battle, AI, save/load, economy, and manual-play slices before claiming playability."
+    },
+    {
+      "id": "phase-4-production-alpha-layer",
       "title": "Production alpha layer for external playtest readiness",
       "status": "pending",
       "focus": "Coherent placeholder art/audio, settings, export/build pipeline, logs, onboarding, and external playtest workflow."
     },
     {
-      "id": "phase-4-homm2-class-breadth",
+      "id": "phase-5-homm2-class-breadth",
       "title": "HoMM2-class breadth",
       "status": "pending",
-      "focus": "Playable broad content package with multiple factions, maps, campaigns, AI, and reliable save/load."
+      "focus": "Playable broad content package with multiple original factions, maps, campaigns, AI, and reliable save/load."
     },
     {
-      "id": "phase-5-homm3-class-breadth",
+      "id": "phase-6-homm3-class-breadth",
       "title": "HoMM3-class breadth",
       "status": "pending",
       "focus": "Later strategic depth expansion after HoMM2-class breadth is stable and playable."
     }
   ],
   "activeMilestone": {
-    "id": "river-pass-manual-completion",
-    "scenario": "River Pass",
-    "status": "completed",
-    "goal": "A real player can complete River Pass from the shipped live client without editor-only steps or developer-only knowledge.",
+    "id": "deep-production-foundation",
+    "status": "in_progress",
+    "goal": "Stop treating current scaffolds as enough and build the deeper world/content/systems foundation required for a shippable fantasy strategy game.",
+    "targetSurfaces": [
+      "World story and worldbuilding bible: premise, tone, geography, conflicts, history, and visual identity",
+      "Faction identity bible: unique original factions with world-fit backstory, economy, town, hero, unit, and strategic identities",
+      "Image-generation concept art pipeline for world mood, factions, towns, units, buildings, and heroes before implementation/deep polish",
+      "Economy overhaul plan covering multiple resources, faction preferences, mines/sites, pressure, costs, collection, and capture loops",
+      "Overworld object taxonomy and density plan covering decoration, interactable sites/buildings, and neutral unit encounters",
+      "Magic, artifact, animation, and strategic AI expansion plans"
+    ],
     "acceptanceCriteria": [
-      "River Pass launches from the live menu path chosen for the milestone.",
-      "The opening UI communicates objective, threat, and a useful first action.",
-      "The overworld map is readable enough for movement, route choice, site interaction, town entry, and encounter entry.",
-      "At least one owned town supports useful recruitment or recovery decisions that affect completion.",
-      "At least one battle is entered through normal overworld play and can be resolved through visible tactical controls.",
-      "Battle state clearly exposes active side, legal actions, target selection, and result.",
-      "Post-battle survivors and losses sync back to overworld state.",
-      "One victory path is reachable by normal play.",
-      "One defeat path is reachable and routes coherently.",
-      "Save/resume works from overworld, town, and battle states used by the scenario.",
-      "Victory and defeat outcomes route through the normal outcome and menu flow.",
-      "The scenario is manually completed at least twice from a clean profile with notes captured."
+      "The project docs make clear that post-River-Pass polish is superseded by deep foundation work.",
+      "World story and faction identity work come before more campaign/skirmish map production.",
+      "Concept art using image generation is documented as a required design/art-direction stage before implementation or deep polish of major content.",
+      "Economy work is framed beyond gold, ore, and wood, including resources, mines/sites, pressure, costs, collection routes, and capture loops.",
+      "Overworld object work is framed around taxonomy and density rather than random flavor placement or generic markers.",
+      "Magic, artifacts, animation systems, and strategic AI are listed as foundation tracks before final maps/screens/game-loop polish.",
+      "Campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI depth, and full-loop polish are explicitly sequenced after these foundations are deep enough."
     ],
     "immediateRisks": [
-      "battle-town-ui-recovery",
-      "overworld-objective-clarity",
-      "scenario-balance-for-first-manual-win",
-      "save-resume-surface-correctness",
-      "outcome-routing-truthfulness"
+      "polishing-scaffolds-instead-of-building-production-depth",
+      "campaign-or-skirmish-map-work-before-world-and-faction-foundations",
+      "six-faction-scaffold-overclaim",
+      "local-reference-terrain-being-mistaken-for-shippable-art",
+      "economy-remaining-gold-ore-wood-barebones",
+      "overworld-object-density-too-thin-for-worldbuilding",
+      "magic-and-artifacts-too-shallow-to-support-strategy",
+      "missing-animation-system-for-battle-and-map-readability",
+      "missing-strategic-ai-for-real-opponent-pressure"
     ]
   },
   "steps": [
+    {
+      "id": "docs-deep-production-foundation-realignment-10184",
+      "title": "Realign project docs and progress tracker around the deep production foundation direction",
+      "status": "completed",
+      "difficulty": "small"
+    },
+    {
+      "id": "world-story-worldbuilding-foundation-10184",
+      "title": "Define richer world premise, tone, geography, conflicts, history, and visual identity",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "faction-identity-foundation-10184",
+      "title": "Redefine each faction as a unique world-grounded identity rather than a scaffold",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "concept-art-pipeline-imagegen-10184",
+      "title": "Establish required image-generation concept art pipeline for world, factions, towns, units, buildings, and heroes",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "economy-overhaul-foundation-10184",
+      "title": "Plan the multi-resource economy, faction preferences, mines/sites, pressure, costs, collection, and capture loops",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "overworld-object-taxonomy-density-10184",
+      "title": "Plan overworld object taxonomy and density for decoration, interactable sites/buildings, and neutral encounters",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "magic-system-expansion-foundation-10184",
+      "title": "Plan expanded magic schools, categories, faction/unit interactions, economy/artifact hooks, and adventure/tactical roles",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "artifact-system-expansion-foundation-10184",
+      "title": "Plan artifact breadth, unique sets, spell interactions, faction-specific interactions, and build implications",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "animation-systems-foundation-10184",
+      "title": "Plan animation systems for units, heroes, towns, map objects, UI feedback, and battle readability",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-foundation-10184",
+      "title": "Plan strategic AI for computer hero/town turns, economy, recruiting/building, movement, and objectives",
+      "status": "pending",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "post-foundation-map-screen-polish-10184",
+      "title": "After foundation depth, return to campaign/skirmish maps, town/battle screen polish, battle AI, and full-loop polish",
+      "status": "pending",
+      "difficulty": "very_high"
+    },
+    {
+      "id": "alpha-content-presentation-polish-planning-10184",
+      "title": "Superseded post-River-Pass alpha content and presentation polish planning",
+      "status": "superseded",
+      "difficulty": "medium"
+    },
+    {
+      "id": "docs-progress-reconciliation-10184",
+      "title": "Reconcile project docs and progress tracker after the post-River-Pass pivot",
+      "status": "completed",
+      "difficulty": "small"
+    },
     {
       "id": "overworld-renderer-regression-10184",
       "title": "Repair renderer regression after overworld map render cache split",
@@ -414,7 +504,7 @@
     {
       "id": "homm3-editor-restamp-behavior-10184",
       "title": "Make HoMM3 editor terrain restamp behavior explicit",
-      "status": "in_progress",
+      "status": "pending",
       "difficulty": "medium"
     },
     {
@@ -468,82 +558,71 @@
     {
       "id": "river-pass-live-audit",
       "title": "Run a live-client manual audit of River Pass and record the first real player blockers",
-      "status": "in_progress",
+      "status": "completed",
       "difficulty": "high"
     },
     {
       "id": "river-pass-parity-ledger",
       "title": "Create the River Pass parity ledger for overworld, town, battle, save/resume, victory, and defeat",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "medium"
     },
     {
       "id": "river-pass-launch-and-objective-recovery",
       "title": "Fix launch, objective, opening guidance, and overworld readability blockers",
-      "status": "in_progress",
+      "status": "completed",
       "difficulty": "high"
     },
     {
       "id": "river-pass-town-ui-recovery",
       "title": "Recover owned-town usability for recruitment, recovery, garrison, and return routing",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
       "id": "river-pass-battle-ui-recovery",
       "title": "Recover battle usability for turn clarity, legal actions, targeting, enemy turns, and battle resolution",
-      "status": "in_progress",
+      "status": "completed",
       "difficulty": "very_high"
     },
     {
       "id": "river-pass-victory-defeat-tuning",
       "title": "Tune River Pass so one fair victory path and one coherent defeat path are reachable",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
       "id": "river-pass-save-resume-proof",
       "title": "Prove save/resume from overworld, town, and battle during the real scenario path",
-      "status": "in_progress",
+      "status": "completed",
       "difficulty": "high"
     },
     {
       "id": "river-pass-outcome-proof",
       "title": "Prove victory and defeat outcome routing plus restart and menu return behavior",
-      "status": "in_progress",
+      "status": "completed",
       "difficulty": "medium"
     },
     {
       "id": "river-pass-clean-manual-completion",
       "title": "Complete River Pass manually at least twice from a clean profile and capture remaining friction",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     }
   ],
   "nextActions": [
-    "Manually inspect the HoMM3 local terrain prototype in River Pass, Ninefold Confluence, and the map editor before deciding which parts should inform original shippable terrain art and tooling.",
-    "Manually inspect grass/dirt, swamp/grass, rock/grass, snow/frost, and water shoreline lookup boundaries in River Pass, Ninefold Confluence, and the map editor before treating the terrain table presentation as visually polished.",
-    "Use the in-game map editor's terrain, terrain-rectangle, single-tile road, road-path, hero-start, object-placement, object-move, object-duplicate, object-retheme, and selected-object property tools to inspect and mutate scenario working copies before doing further overworld polish, then decide which editing affordances need to become durable production tools.",
-    "Manually inspect mapped resource-site, artifact, and unresolved encounter sprites in River Pass and Ninefold Confluence at live-client scale before treating the no-support-stack mapped-sprite grounding as visually polished across supported viewports.",
-    "Manually inspect cue-free town presentation in River Pass and Ninefold Confluence at live-client scale before treating the helper-cue cleanup as visually polished across supported viewports.",
-    "Manually inspect the 4-neighbor HoMM3 dirt-road overlay topology in River Pass and Ninefold Confluence at live-client scale, especially straights, corners, T-junctions, crosses, and diagonal-neighbor suppression, before treating road presentation as broadly polished.",
-    "Manually inspect unmapped procedural resource-site, artifact, and encounter fallbacks in River Pass and Ninefold Confluence at live-client scale before treating the no-plate fallback grounding as visually polished across supported viewports.",
-    "Manually inspect the visible explored terrain seam correction in River Pass and Ninefold Confluence at live-client scale before treating the black-grid feedback as fully solved across supported viewports.",
-    "Continue the HoMM3 terrain renderer rewrite in documented slices, with editor restamp behavior, water shoreline topology, rock/void topology, dirt/sand tightening, road regression checks, and original-art replacement planning still unresolved.",
-    "Manually inspect the corrected active-hero placed-figure presentation in River Pass and Ninefold Confluence before treating hero presence as polished across every biome and supported resolution.",
-    "Plan a future explicit multi-tile town occupancy/pathing slice before making non-entry town footprint cells affect movement, blocking, save schema, or visit resolution.",
-    "Manually inspect the corrected no-base-ellipse town presentation plus the hostile_camp overworld placeholder in River Pass and Ninefold Confluence before calling the object-art direction visually polished.",
-    "Add future authored faction-specific town variants, encounter-family variants, and high-priority site sprites so the object-first renderer is not carrying important player-facing breadth through generic placeholders or procedural silhouettes.",
-    "Add future authored town/object footprint or sprite slices so unmapped procedural silhouettes can be replaced where player-facing objects need richer presence.",
-    "Add future authored tile-art slices for water/coast, badlands/wastes, ash/lava, snow/frost, and cavern/underway before treating Ninefold Confluence's full terrain surface as art-covered.",
-    "Run a manual or routed live-client audit of Ninefold Confluence before treating the 64x64 breadth map as playable, tuned, or route-proven.",
-    "Manually inspect Ninefold Confluence's panning and remembered-object readability in the live client at the supported 16:9 runtime resolutions before treating the large-map UX as broadly polished.",
-    "Deepen selected neutral dwelling families in Ninefold Confluence with encounter tuning and manual play notes before claiming balance or player-facing readiness.",
-    "Define truthful paired transit behavior before making Ninefold Confluence ferry or rope-lift placements route-critical.",
-    "Implement paired transit traversal or guarded-bank encounter resolution before placing transit objects or guarded reward sites as player-facing route-critical content.",
-    "Integrate selected scaffold factions into scenario placements, army groups, encounters, overworld landmarks, AI fronts, and manual play notes.",
-    "Capture a short parity-ledger note for River Pass recording AcOrP's passed manual gate so the milestone stays documented beyond chat history.",
-    "Avoid pretending HoMM3-class overworld breadth exists until richer biomes, objects, and repeated manual-play scenarios actually land."
+    "Start with the world story and worldbuilding foundation: premise, tone, geography, conflicts, history, and visual identity.",
+    "Redefine each faction from the world outward so faction backstory, town identity, economy, heroes, units, and strategic style are unique and non-derivative.",
+    "Establish an image-generation concept art pipeline as a required design/art-direction stage for world mood, each faction, faction towns, units, town buildings, and heroes before implementation or deep polish.",
+    "Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, mines/resource sites, pressure, costs, collection routes, and capture/counterplay loops.",
+    "Plan overworld object taxonomy and density around decoration/non-interactable objects, interactable buildings/sites, and neutral unit encounters; use HoMM3 scale/type references only as inspiration.",
+    "Plan magic expansion with schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.",
+    "Plan artifact expansion with many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.",
+    "Plan animation systems for units, heroes, towns, map objects, UI feedback, battle readability, and state-change clarity.",
+    "Plan strategic AI for computer-controlled heroes and towns: turns, economy, recruiting/building, movement, objective play, and pressure.",
+    "Only after the foundation tracks are deep enough, resume focus on campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
+    "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
+    "Avoid claiming six-faction, HoMM2-class, or HoMM3-class readiness until world, content, systems, AI, save/load, and manual-play evidence support it."
   ],
   "blocked": false
 }

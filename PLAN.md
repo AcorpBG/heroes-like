@@ -7,7 +7,7 @@ Reality reset date: 2026-04-16
 ## Strategy
 We are building toward a full, original, release-bound fantasy strategy game, but the current repository is a prototype / pre-alpha foundation, not a playable product and not close to HoMM2/3 parity.
 
-The planning story now changes from "many completed release-facing slices" to "prove one playable scenario, then grow breadth." Existing architecture is useful, but every feature claim must be tied to live-client behavior a real player can exercise.
+River Pass proved that the basic concept can be made manually playable, but it did not prove that the game has production depth. The planning story now changes from "polish current scaffolds and grow maps" to "build the world/content/systems foundation that can support a real strategy game." Existing architecture is useful, but every feature claim must be tied to live-client behavior, coherent design, and content depth a real player can exercise.
 
 ## Locked Stack
 - engine: Godot 4 stable series
@@ -24,9 +24,39 @@ The planning story now changes from "many completed release-facing slices" to "p
 - Treat JSON-authored content as the scalable boundary for factions, heroes, units, spells, artifacts, towns, map objects, scenarios, encounters, and campaigns.
 - Keep scenic and play surfaces primary. Do not solve missing usability by stacking text panels over the game.
 - Every slice must be judged by live-client player flow, not just by data existence, rule coverage, or smoke-test routing.
-- River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; expand breadth in a controlled alpha-facing way instead of jumping straight to broad campaign sprawl.
+- River Pass has now cleared the manual play gate per AcOrP's 2026-04-18 report; keep it as proof history while the active plan deepens world, content, economy, systems, animation, and strategic AI before broad campaign/skirmish production.
 
-## Current Implementation Slice: Overworld Renderer Cache Regression Repair
+## Current Plan: Deep Production Foundation
+Status: active planning direction as of 2026-04-25.
+
+Purpose:
+- Reconcile the project around the real post-River-Pass direction: the current scaffolds are not enough. The game needs deep world, faction, art-direction, economy, overworld object, magic, artifact, animation, and strategic AI foundations before campaign/skirmish maps or final screen polish dominate the plan.
+- Keep the pre-alpha framing honest. Six-faction JSON records, Ninefold Confluence, neutral dwelling breadth, terrain/editor work, and screen presentation passes are foundations and evidence surfaces, not production depth and not broad playability proof.
+- Make the next implementation slices foundation-building slices with design/art direction gates, not shallow polish on screens that still lack the systems and content underneath.
+
+Immediate execution order:
+1. World story and worldbuilding: define the richer world premise, tone, geography, conflicts, history, and visual identity.
+2. Faction identity: revise each faction into a unique world-grounded power with backstory, town identity, hero identity, unit ladder purpose, economy pressure, and strategic style. Heroes 3 is scale/readability inspiration only, not a source to copy.
+3. Concept art pipeline using image generation: make world mood, faction, faction town, unit, town-building, and hero concept work a required design/art-direction stage before deep implementation or polish.
+4. Economy overhaul: move beyond the current gold + ore + wood baseline into multiple resources, faction resource preferences, resource-site/mine gameplay, economy pressure, town-development costs, collection routes, and capture loops.
+5. Overworld object taxonomy/content expansion: rework objects into clear classes such as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters. Use HoMM3 map-editor/assets/reverse-engineering only as scale/type inspiration. The project still lacks the world-building object density required for the target game.
+6. Magic system expansion: define schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.
+7. Artifact system expansion: plan many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.
+8. Animation systems: specify what animation support is needed for units, heroes, towns, map objects, UI feedback, battle readability, and state changes.
+9. Strategic AI: plan computer-controlled hero and town turns, economy, recruiting/building, movement, objectives, and pressure.
+10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+
+Recommended next slice:
+- Create the first foundation design package covering world premise, faction identity standards, concept-art pipeline requirements, and the economy/object/magic/artifact/AI backlog boundaries.
+- Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
+
+Acceptance:
+- `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
+- Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
+- Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
+- The next active implementation choice is tied to deepening world/content/systems foundations, not to fake HoMM2/HoMM3 parity, data volume, or visual surface polish alone.
+
+## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
 
 Purpose:
@@ -142,7 +172,7 @@ Limits:
 - This is not whole HoMM3 terrain parity, a rendered frame choice change, visual old-frame retention modeling, water shoreline topology, rock/void topology, terrain art replacement, gameplay/pathing change, save-format change, or exact original executable lookup recovery.
 - The next visually meaningful parity gap still requires fresh live/editor visual evidence rather than inferring from dead metadata alone.
 
-## Current Implementation Slice: HoMM3 Selected Frame Block Payload Truth
+## Completed Implementation Slice: HoMM3 Selected Frame Block Payload Truth
 Status: completed on 2026-04-22 as a narrow active validation-payload correction.
 
 Purpose:
@@ -165,7 +195,7 @@ Validation:
 Limits:
 - This is not whole HoMM3 terrain parity, a water shoreline topology rewrite, a rock/void topology rewrite, terrain art replacement, gameplay/pathing change, save-format change, visual old-frame retention modeling, or exact original executable lookup recovery.
 
-## Current Implementation Slice: HoMM3 Web Prototype Quadrant Reprojection Parity
+## Completed Implementation Slice: HoMM3 Web Prototype Quadrant Reprojection Parity
 Status: completed on 2026-04-22 as a narrow active validation/inspector parity correction.
 
 Purpose:
@@ -189,7 +219,7 @@ Limits:
 - This is not whole HoMM3 terrain parity, a water shoreline topology rewrite, a rock/void topology rewrite, terrain art replacement, gameplay/pathing change, save-format change, or exact original executable lookup recovery.
 - Quadrant reprojection remains a validation/inspector parity surface; the selected atlas frame remains the active terrain visual.
 
-## Current Implementation Slice: HoMM3 Direct Water/Rock Contact Fallback Parity
+## Completed Implementation Slice: HoMM3 Direct Water/Rock Contact Fallback Parity
 Status: completed on 2026-04-22 as a narrow active selector parity correction.
 
 Purpose:
@@ -213,7 +243,7 @@ Limits:
 - This is not whole HoMM3 terrain parity, a water shoreline topology rewrite, a rock/void topology rewrite, terrain art replacement, gameplay/pathing change, save-format change, or exact original executable lookup recovery.
 - The direct water/rock contact remains explicitly unresolved, matching the accepted web prototype's truth-preserving fallback behavior.
 
-## Current Implementation Slice: HoMM3 Web Prototype Terrain Selection Parity
+## Completed Implementation Slice: HoMM3 Web Prototype Terrain Selection Parity
 Status: completed on 2026-04-22 as a proper active renderer selection rewrite.
 
 Purpose:
@@ -363,7 +393,7 @@ Limits:
 - Exact original paint-history offsets, reserved mixed-junction table semantics, water inlet topology, rock topology/passability, `subbtl` bridge class, and original variant-selection policies remain unresolved.
 - This is not an editor restamp model, original-art replacement, gameplay/pathing change, save-format change, or editor-schema change.
 
-## Current Implementation Slice: HoMM3 Bridge Material Resolver
+## Completed Implementation Slice: HoMM3 Bridge Material Resolver
 Status: completed on 2026-04-21 as the next narrow renderer rewrite slice.
 
 Purpose:
@@ -389,7 +419,7 @@ Limits:
 - Existing receiver-centered frame tables remain in place until the later full land receiver stamp lookup slice.
 - The subterranean bridge policy remains explicitly provisional and data-driven.
 
-## Current Implementation Slice: HoMM3 Terrain Renderer Data Contract Groundwork
+## Completed Implementation Slice: HoMM3 Terrain Renderer Data Contract Groundwork
 Status: completed on 2026-04-21 as a renderer/data-contract groundwork pass.
 
 Purpose:
@@ -416,7 +446,7 @@ Limits:
 - Receiver-centered transition shortcuts still exist for currently covered land masks until later slices replace them with data-driven stamp tables.
 - Exact land stamp offsets, mixed junction topology, water inlet topology, rock topology/passability, `subbtl` preferred bridge class, and original variant-selection policies remain unresolved and must stay data-driven.
 
-## Current Implementation Slice: HoMM3 Terrain Renderer Rewrite Plan
+## Completed Implementation Slice: HoMM3 Terrain Renderer Rewrite Plan
 Status: completed on 2026-04-21 as a planning/specification pass.
 
 Purpose:
@@ -437,7 +467,7 @@ Limits:
 - This is not a renderer rewrite, terrain grammar runtime change, runtime asset change, gameplay/pathing/save/editor-schema change, test change, or claim that the original HoMM3 executable's hidden lookup tables have been recovered.
 - Exact land stamp offsets, terrain priority ordering, mixed junction topology, water inlet ownership, rock topology/passability, `subbtl` preferred class, and original variant-selection policies remain unresolved and must stay data-driven.
 
-## Current Implementation Slice: HoMM3 Terrain Reconstruction Lookup Spec
+## Completed Implementation Slice: HoMM3 Terrain Reconstruction Lookup Spec
 Status: completed on 2026-04-21 as an evidence/specification pass.
 
 Purpose:
@@ -456,7 +486,7 @@ Limits:
 - This is not a renderer change, terrain grammar change, runtime asset change, gameplay/pathing/save/editor-schema change, or claim that the original HoMM3 executable's exact hidden lookup table has been recovered.
 - Exact land-transition offset tables, multi-family priority ordering, grass/swamp bridge composition, rock/void topology, water inlet topology, and original variant-selection policies remain unresolved.
 
-## Current Implementation Slice: HoMM3 Terrain Evidence Labeling
+## Completed Implementation Slice: HoMM3 Terrain Evidence Labeling
 Status: completed on 2026-04-21 as a documentation/evidence pass.
 
 Purpose:
@@ -476,7 +506,7 @@ Limits:
 - This is not a renderer change, terrain grammar change, runtime asset change, gameplay/pathing/save/editor-schema change, or claim that the original executable lookup table has been recovered.
 - Exact terrain priority, transition offset tables, and some rock/junction cases remain unknown.
 
-## Current Implementation Slice: HoMM3 Sand Transition Propagation
+## Completed Implementation Slice: HoMM3 Sand Transition Propagation
 Status: completed on 2026-04-21 as a narrow corrective terrain pass.
 
 Purpose:
@@ -502,7 +532,7 @@ Limits:
 - This is not a gameplay/pathing, save-format, map-editor data-model, object/town rendering, or terrain-family rewrite.
 - The stamp table is an explicit prototype interpretation of the extracted local frames, not a claim that the original executable's hidden terrain editor logic has been fully recovered.
 
-## Current Implementation Slice: HoMM3 Terrain Base Selection Tightening
+## Completed Implementation Slice: HoMM3 Terrain Base Selection Tightening
 Status: completed on 2026-04-21 as a narrow corrective terrain pass.
 
 Purpose:
@@ -532,7 +562,7 @@ Limits:
 - This is not a terrain architecture rewrite, gameplay/pathing/save/editor schema change, object/town/UI pass, or shippable asset change.
 - Existing editor base terrain option narrowing remains intact.
 
-## Current Implementation Slice: HoMM3 Base Terrain Picker Options
+## Completed Implementation Slice: HoMM3 Base Terrain Picker Options
 Status: completed on 2026-04-21 as a narrow map editor option-surface correction.
 
 Purpose:
@@ -557,7 +587,7 @@ Limits:
 - This is not a terrain schema migration, map rewrite, save-format change, gameplay/pathing change, or removal of richer logical terrain ids.
 - Existing scenario content can still contain the broader logical ids and the HoMM3 renderer mapping remains responsible for presenting them through the local prototype families.
 
-## Current Implementation Slice: HoMM3 Transition Orientation Correction
+## Completed Implementation Slice: HoMM3 Transition Orientation Correction
 Status: completed on 2026-04-21 as a narrow visual regression fix.
 
 Purpose:
@@ -582,7 +612,7 @@ Validation:
 - Passed `godot4 --headless --path . res://tests/ninefold_scenario_smoke.tscn`
 - Passed `git diff --check`
 
-## Current Implementation Slice: HoMM3 Local Terrain Prototype
+## Completed Implementation Slice: HoMM3 Local Terrain Prototype
 Status: completed on 2026-04-21 as a local-only renderer prototype.
 
 Purpose:
@@ -611,7 +641,7 @@ Limits:
 - This is not a gameplay/pathing, save-format, map-editor data-model, object/town rendering, or town occupancy/pathing change.
 - The frame-index tables are explicit and defensible prototype lookup tables, not a claim that the original HoMM3 executable's exact hidden lookup table has been recovered.
 
-## Current Implementation Slice: Rubberduck Grassland Cohesion Correction
+## Completed Implementation Slice: Rubberduck Grassland Cohesion Correction
 Status: completed on 2026-04-21 as a narrow corrective terrain-art pass.
 
 Purpose:
@@ -639,7 +669,7 @@ Validation:
 Limits:
 - This is a visual cohesion correction only, not a rollback of the Rubberduck feel test, a terrain schema change, a renderer/projection change, a movement/pathing change, a save-format change, an object/town art pass, or a town 3x2 occupancy/pathing slice.
 
-## Current Implementation Slice: Rubberduck Terrain Surface Feel Test
+## Completed Implementation Slice: Rubberduck Terrain Surface Feel Test
 Status: completed on 2026-04-21 as a narrow overworld terrain-art feel test.
 
 Purpose:
@@ -668,7 +698,7 @@ Validation:
 Limits:
 - This is a visual feel test, not final terrain art, a legal/source-pack ingestion policy, a projection/layout change, a save-format change, a gameplay/pathing change, a map-editor schema change, an object/town asset pass, or a town 3x2 occupancy/pathing slice.
 
-## Current Implementation Slice: Map Editor Terrain Rectangle Painting
+## Completed Implementation Slice: Map Editor Terrain Rectangle Painting
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 
 Purpose:
@@ -695,7 +725,7 @@ Limits:
 - This is not an authored JSON exporter/writeback path, save-format change, terrain schema change, projection/layout change, pathing/gameplay rewrite, or town 3x2 occupancy/pathing change.
 - Terrain rectangles mutate only the in-memory working-copy map array that the existing editor preview and Play Copy path already consume.
 
-## Current Implementation Slice: Map Editor Terrain Line Painting
+## Completed Implementation Slice: Map Editor Terrain Line Painting
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 
 Purpose:
@@ -722,7 +752,7 @@ Limits:
 - This is not an authored JSON exporter/writeback path, save-format change, terrain schema change, projection/layout change, pathing/gameplay rewrite, or town 3x2 occupancy/pathing change.
 - Terrain lines mutate only the in-memory working-copy map array that the existing editor preview and Play Copy path already consume.
 
-## Current Implementation Slice: Map Editor Road Path Painting
+## Completed Implementation Slice: Map Editor Road Path Painting
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 
 Purpose:
@@ -749,7 +779,7 @@ Limits:
 - This is not an authored JSON exporter/writeback path, save-format change, road schema change, projection/layout change, pathing/gameplay rewrite, or town 3x2 occupancy/pathing change.
 - Road paths mutate only the in-memory working-copy terrain-layer road arrays that the existing editor preview and Play Copy path already consume.
 
-## Current Implementation Slice: Map Editor Terrain Flood Fill
+## Completed Implementation Slice: Map Editor Terrain Flood Fill
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 
 Purpose:
@@ -775,7 +805,7 @@ Limits:
 - This is not an authored JSON exporter/writeback path, save-format change, undo stack, terrain schema change, projection/layout change, pathing/gameplay rewrite, or town 3x2 occupancy/pathing change.
 - Fill is cardinally contiguous by terrain id and mutates only the in-memory working-copy map array that the existing editor preview and Play Copy path already consume.
 
-## Current Implementation Slice: Map Editor Selected Tile Restore
+## Completed Implementation Slice: Map Editor Selected Tile Restore
 Status: completed on 2026-04-20 as the next narrow in-project map editor working-copy slice.
 
 Purpose:
@@ -801,7 +831,7 @@ Limits:
 - This is not a bulk reset, exporter, authored JSON writeback path, undo stack, save-format change, projection/layout change, gameplay/pathing rewrite, or town 3x2 occupancy/pathing change.
 - Restore is selected-tile scoped; duplicated copies elsewhere remain part of the working copy unless they are physically on the restored tile.
 
-## Current Implementation Slice: Neighbor-Aware Terrain Transitions
+## Completed Implementation Slice: Neighbor-Aware Terrain Transitions
 Status: completed on 2026-04-20 as the next narrow overworld terrain presentation slice.
 
 Purpose:
@@ -850,7 +880,7 @@ Acceptance criteria for this design slice:
 - The design explicitly audits the current narrow coverage and identifies what is still missing.
 - The plan and progress tracker point future implementation toward biomes plus stronger overworld object families instead of only more faction JSON.
 
-## Current Implementation Slice: Map Editor Object Retheming
+## Completed Implementation Slice: Map Editor Object Retheming
 Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
 
 Purpose:
@@ -877,7 +907,7 @@ Limits:
 - This does not implement multi-select retheming, object ownership reassignment beyond the existing property editor, or broad object authoring.
 - Town 3x2 occupancy/pathing remains future work; retheming a town still changes only its existing runtime anchor placement.
 
-## Current Implementation Slice: Map Editor Object Duplication
+## Completed Implementation Slice: Map Editor Object Duplication
 Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
 
 Purpose:
@@ -905,7 +935,7 @@ Limits:
 - This does not implement undo, drag duplication, multi-select duplication, object ownership reassignment, or broad object authoring.
 - Town 3x2 occupancy/pathing remains future work; duplicating a town still creates another runtime town anchor on one empty editor tile.
 
-## Current Implementation Slice: Map Editor Object Movement
+## Completed Implementation Slice: Map Editor Object Movement
 Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
 
 Purpose:
@@ -932,7 +962,7 @@ Limits:
 - This does not implement undo, drag interaction, multi-select movement, placement ownership reassignment, or broad object authoring.
 - Town 3x2 occupancy/pathing remains future work; moving a town still changes only its current single authored/runtime anchor tile.
 
-## Current Implementation Slice: Map Editor Play Copy Return
+## Completed Implementation Slice: Map Editor Play Copy Return
 Status: completed on 2026-04-20 as the previous editor/play-flow slice.
 
 Purpose:
@@ -959,7 +989,7 @@ Limits:
 - The returned editor state is the exact editor launch snapshot kept in memory; gameplay changes made after Play Copy launch are intentionally discarded on return.
 - Town 3x2 occupancy/pathing remains future work.
 
-## Current Implementation Slice: Map Editor Object Property Editing
+## Completed Implementation Slice: Map Editor Object Property Editing
 Status: completed on 2026-04-20 as the next narrow editor working-copy slice.
 
 Purpose:
@@ -985,7 +1015,7 @@ Limits:
 - The edit surface is dev-facing and only targets currently supported runtime families and fields.
 - Town 3x2 occupancy/pathing remains future work.
 
-## Current Implementation Slice: Map Editor Object Placement Editing
+## Completed Implementation Slice: Map Editor Object Placement Editing
 Status: completed on 2026-04-20 as an earlier narrow editor slice.
 
 Purpose:
@@ -1004,7 +1034,7 @@ Limits:
 - The editor currently blocks stacking supported overworld placements on the same tile; moving or reassigning existing placements can be handled by remove-then-place in this slice.
 - Campaign/skirmish/save gameplay still uses authored content unless the editor's Play Copy route explicitly launches the mutated working copy.
 
-## Current Implementation Slice: In-Game Map Editor Shell
+## Completed Implementation Slice: In-Game Map Editor Shell
 Status: first slice implemented on 2026-04-20 as a dev-facing scenario iteration tool.
 
 Purpose:
@@ -1025,7 +1055,7 @@ Limits:
 - Edits are intentionally in-memory only; authored JSON writeback needs a separate content-pipeline slice.
 - Deeper placement workflows such as move/reassign, owner/difficulty tuning, validation overlays, and authored writeback remain future work.
 
-## Current Implementation Slice: Overworld Content Foundation
+## Completed Implementation Slice: Overworld Content Foundation
 Status: completed on 2026-04-18 as the first real implementation pass from the overworld bible.
 
 Purpose:
@@ -1046,7 +1076,7 @@ Limits:
 - Transit objects are authored and validated as route-control content, but paired transit traversal is still a future scenario/system slice.
 - Guarded reward sites are authored with guard profiles and reward grammar; full encounter-linked bank resolution remains future work.
 
-## Current Implementation Slice: Neutral Dwelling And Neutral Unit Foundation
+## Completed Implementation Slice: Neutral Dwelling And Neutral Unit Foundation
 Status: completed on 2026-04-18 as the first real neutral-content implementation slice.
 
 Purpose:
@@ -1066,7 +1096,7 @@ Limits:
 - Guarded dwelling encounters are authored and battle-ready, but existing scenarios do not yet place a full guarded-neutral-dwelling flow as route-critical content.
 - Broader neutral banks, wandering monsters, surrender/recruit diplomacy, and biome-wide neutral ecology are future slices.
 
-## Current Implementation Slice: Neutral Dwelling Breadth Expansion
+## Completed Implementation Slice: Neutral Dwelling Breadth Expansion
 Status: completed on 2026-04-18 as a breadth content slice after the first neutral dwelling foundation.
 
 Purpose:
@@ -1086,7 +1116,7 @@ Limits:
 - None of the new 23 families are placed in current scenarios yet.
 - Guard encounters and recruit sources are internally coherent content records, but they are not claimed to be manually scenario-played or tuned.
 
-## Current Implementation Slice: Six-Faction Biome Scenario Breadth
+## Completed Implementation Slice: Six-Faction Biome Scenario Breadth
 Status: completed on 2026-04-18 as a large authored scenario breadth slice.
 
 Purpose:
@@ -1107,7 +1137,7 @@ Limits:
 - Transit objects are placed as authored route-control content, but paired transit traversal is still not proven as route-critical gameplay.
 - Blocker and faction-landmark map objects remain content-vocabulary records; the current scenario schema still places gameplay through resource sites, towns, artifacts, and encounters rather than raw map-object placements.
 
-## Current Implementation Slice: Overworld Fixed Tactical Framing
+## Completed Implementation Slice: Overworld Fixed Tactical Framing
 Status: completed on 2026-04-18 as a narrow live-play presentation bugfix after the first Ninefold Confluence audit.
 
 Purpose:
@@ -1125,7 +1155,7 @@ Limits:
 - This is a default framing fix, not a full overworld camera feature. Manual panning/zoom controls remain future work if large-map navigation needs them.
 - Ninefold Confluence still needs manual route, balance, and readability passes before it can be treated as a proven playable map.
 
-## Current Implementation Slice: Player-Visible Latency Reduction
+## Completed Implementation Slice: Player-Visible Latency Reduction
 Status: completed on 2026-04-19 as a narrow latency fix after profiling the post-d2bf14a / post-6bc9bc4 hot paths.
 
 Purpose:
@@ -1145,7 +1175,7 @@ Limits:
 - Ninefold Confluence town entry still has a separate visible town-refresh cost: direct town entry measured about 3.6 s in the temporary probe, with town refresh about 0.78 s and the visible command ledger as the largest measured town summary. That is a follow-up diagnosis, not part of this save/frontier fix.
 - Opening the Frontier drawer intentionally pays the cost of building full objective, threat, and next-day risk summaries at the moment the player asks for that detail.
 
-## Current Implementation Slice: Overworld Usability Follow-Up
+## Completed Implementation Slice: Overworld Usability Follow-Up
 Status: completed on 2026-04-19 as a narrow response to AcOrP's overworld usability findings.
 
 Purpose:
@@ -1164,7 +1194,7 @@ Limits:
 - Host-side validation passed, but no full manual proof is claimed for Ninefold Confluence or for every supported runtime resolution.
 - Remote town entry is limited to owned, explored towns; hostile or neutral town interactions still require their normal scenario/system rules.
 
-## Current Implementation Slice: Overworld Readability Contrast Pass
+## Completed Implementation Slice: Overworld Readability Contrast Pass
 Status: completed on 2026-04-19 as a narrow visual/readability follow-up after AcOrP confirmed panning works but important overworld objects still blend into terrain.
 
 Purpose:
@@ -1188,7 +1218,7 @@ Limits:
 - Existing remembered-state rendering, panning, and remote owned-town entry behavior from the previous slice must remain intact.
 - Automated smoke coverage guards presentation metadata and route behavior; no broad manual visual proof is claimed.
 
-## Current Implementation Slice: Overworld Explored Terrain Visibility Follow-Up
+## Completed Implementation Slice: Overworld Explored Terrain Visibility Follow-Up
 Status: completed on 2026-04-19 as a narrow fog-presentation correction after AcOrP clarified the remaining issue.
 
 Purpose:
@@ -1211,7 +1241,7 @@ Limits:
 - This is only a fog terrain presentation fix, not another marker readability pass or broad overworld UI redesign.
 - Object-specific remembered marker styling still exists; the change is that explored terrain itself no longer darkens into a remembered state.
 
-## Current Implementation Slice: Overworld Diagonal Movement
+## Completed Implementation Slice: Overworld Diagonal Movement
 Status: completed on 2026-04-19 as a narrow movement follow-up requested by AcOrP.
 
 Purpose:
@@ -1236,7 +1266,7 @@ Limits:
 - This is only the diagonal overworld movement slice, not a broader pathfinding, movement-cost, terrain-cost, or camera redesign.
 - Diagonal movement currently uses the existing one-point step economy; any future terrain-weighted or corner-cutting rule should be a separate documented slice.
 
-## Current Implementation Slice: Generated Source Terrain Art Replacement
+## Completed Implementation Slice: Generated Source Terrain Art Replacement
 Status: completed on 2026-04-20 as a narrow visual correction after AcOrP rejected the synthetic local tile style.
 
 Purpose:
@@ -1265,7 +1295,7 @@ Limits:
 - Visual quality still needs manual live-client review after the checked-in source-derived tiles land.
 - Superseded on 2026-04-20 by the original quiet terrain correction after AcOrP clarified that generated-source per-cell tiling is the wrong primary model.
 
-## Current Implementation Slice: Overworld Original Terrain Correction
+## Completed Implementation Slice: Overworld Original Terrain Correction
 Status: completed on 2026-04-20 as a corrective slice after AcOrP rejected generated-source terrain tiling as the primary approach.
 
 Purpose:
@@ -1291,7 +1321,7 @@ Limits:
 - Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, object footprints, and road movement rules remain future slices.
 - Automated smokes can prove the renderer path and metadata; manual visual review is still required before treating the terrain direction as broadly proven.
 
-## Current Implementation Slice: Overworld Grounded Marker Presentation
+## Completed Implementation Slice: Overworld Grounded Marker Presentation
 Status: completed on 2026-04-20 as a narrow corrective slice after AcOrP reported the post-a827e04 overworld still read like a board with pasted-on UI markers.
 
 Purpose:
@@ -1316,7 +1346,7 @@ Limits:
 - The fallback procedural silhouettes remain intentionally compact and icon-like where no real object sprite exists; the correction is their terrain grounding and removal of the generic black badge.
 - Manual visual review is still needed before treating overworld presentation as broadly polished.
 
-## Current Implementation Slice: Overworld Object-First Presence
+## Completed Implementation Slice: Overworld Object-First Presence
 Status: completed on 2026-04-20 as the next narrow rendering nudge after AcOrP reported the post-c98de5d overworld still read too much like symbols/markers on a board.
 
 Purpose:
@@ -1342,7 +1372,7 @@ Limits:
 - Footprints currently guide presentation scale and grounding only; movement, blocking, visit targets, and pathing behavior are unchanged.
 - Procedural fallbacks are more object-like, but authored sprites are still needed for important towns, encounters, and many site families before the map can be considered visually mature.
 
-## Current Implementation Slice: Overworld Depth Contact Cues
+## Completed Implementation Slice: Overworld Depth Contact Cues
 Status: completed on 2026-04-20 as the next narrow presentation-only renderer slice after the first object-first presence pass.
 
 Purpose:
@@ -1367,7 +1397,7 @@ Limits:
 - The cues are still renderer-level presentation hints; authored object footprints remain presentation scale hints only.
 - Automated validation guards the presentation contract and metadata, but broad visual polish still needs manual review across more maps, biomes, resolutions, and eventual final art.
 
-## Current Implementation Slice: Overworld Footprint Placement Beds
+## Completed Implementation Slice: Overworld Footprint Placement Beds
 Status: completed on 2026-04-20 as a narrow presentation-only follow-up after the contact-depth cue slice.
 
 Purpose:
@@ -1392,7 +1422,7 @@ Limits:
 - Footprints still guide presentation only; movement, blocking, visit targets, fog, save data, and object mappings are unchanged.
 - Manual visual review is still needed before treating the overworld as polished or HoMM3-class.
 
-## Current Implementation Slice: Overworld Upper-Mass Backdrop Cues
+## Completed Implementation Slice: Overworld Upper-Mass Backdrop Cues
 Status: completed on 2026-04-20 as a narrow presentation-only follow-up after the footprint placement-bed slice.
 
 Purpose:
@@ -1417,7 +1447,7 @@ Limits:
 - The cue is renderer-level presentation only; movement, blocking, visit targets, fog, save data, and object mappings are unchanged.
 - Manual visual review is still required before claiming the overworld is polished or near HoMM3-class readability.
 
-## Current Implementation Slice: Overworld Town And Encounter Placeholder Assets
+## Completed Implementation Slice: Overworld Town And Encounter Placeholder Assets
 Status: completed on 2026-04-20 as a narrow asset-readability slice using the newly approved generated candidates.
 
 Purpose:
@@ -1444,7 +1474,7 @@ Limits:
 - The generated candidates are approved as first placeholder source only; manual live-client review is still needed before treating the overworld object art direction as polished.
 - Town and encounter sprites remain presentation only; movement, blocking, visit targets, fog, save data, and battle/object logic are unchanged.
 
-## Current Implementation Slice: Overworld Town Footprint Presentation
+## Completed Implementation Slice: Overworld Town Footprint Presentation
 Status: completed on 2026-04-20 as a narrow presentation-first readability slice.
 
 Purpose:
@@ -1471,7 +1501,7 @@ Limits:
 - Non-entry footprint tiles are blocked only in the presentation/validation model. The underlying overworld rules still treat towns as single-tile interactions until a future occupancy/pathing slice is designed.
 - Edge-placed legacy towns can have off-map clipped presentation cells; the validation metadata reports those honestly instead of moving scenario towns inside this slice.
 
-## Current Implementation Slice: Overworld Town Grounding Correction
+## Completed Implementation Slice: Overworld Town Grounding Correction
 Status: completed on 2026-04-20 as a narrow visual correction to the town object presentation.
 
 Purpose:
@@ -1496,7 +1526,7 @@ Limits:
 - Other overworld object families still use their shared terrain grounding, placement-bed, contact-shadow, and backdrop cues from earlier slices.
 - Manual visual review is still needed before treating the town presentation as polished across every biome and resolution.
 
-## Current Implementation Slice: Overworld Town Helper Cue Removal
+## Completed Implementation Slice: Overworld Town Helper Cue Removal
 Status: completed on 2026-04-20 as a narrow AcOrP screenshot-feedback correction.
 
 Purpose:
@@ -1519,7 +1549,7 @@ Limits:
 - This is not final town art, faction-specific town art, true multi-tile occupancy, pathing, movement, save/load, town logic, or ownership logic.
 - The 3x2 town footprint still exists as presentation/validation metadata only; non-entry cells remain a presentation contract rather than gameplay blocking.
 
-## Current Implementation Slice: Overworld Hero Presence Correction
+## Completed Implementation Slice: Overworld Hero Presence Correction
 Status: completed on 2026-04-20 as a narrow visual correction to the active hero presentation.
 
 Purpose:
@@ -1544,7 +1574,7 @@ Limits:
 - The active hero remains a procedural placeholder silhouette until authored hero overworld sprites are added.
 - Manual visual review is still needed before treating hero presentation as polished across every biome and resolution.
 
-## Current Implementation Slice: Overworld Terrain And Road Tile Correction
+## Completed Implementation Slice: Overworld Terrain And Road Tile Correction
 Status: completed on 2026-04-20 as an AcOrP-priority terrain/road correction after feedback that the base tiles and roads were still breaking immersion.
 
 Purpose:
@@ -1570,7 +1600,7 @@ Limits:
 - Water/coast, badlands/wastes, ash/lava, snow/frost, cavern/underway, and road movement-cost/pathfinding behavior remain future slices.
 - Automated validation proves the runtime contract and smoke surfaces; manual visual review is still needed before treating the terrain and road look as broadly solved.
 
-## Current Implementation Slice: Overworld Terrain Feedback Correction
+## Completed Implementation Slice: Overworld Terrain Feedback Correction
 Status: completed on 2026-04-20 as a narrow terrain/road-only correction after AcOrP feedback on checkerboard grass/plains, artificial borders, and road center overlap.
 
 Purpose:
@@ -1597,7 +1627,7 @@ Limits:
 - Unsliced terrain families still use grammar fallback colors/patterns until their own authored tile art lands.
 - Road overlays remain visual presentation only; movement cost and pathfinding still do not treat roads specially.
 
-## Current Implementation Slice: Overworld Visible Terrain Seam Correction
+## Completed Implementation Slice: Overworld Visible Terrain Seam Correction
 Status: completed on 2026-04-20 as a narrow presentation-only correction after AcOrP feedback that black grid lines still showed between visible explored tiles.
 
 Purpose:
@@ -1621,7 +1651,7 @@ Limits:
 - This is not a terrain palette, road art, fog-of-war, pathing, save, object, town, hero, or site behavior change.
 - Manual visual review is still needed before treating all supported viewports and biomes as polished.
 
-## Current Implementation Slice: Overworld Procedural Object Grounding
+## Completed Implementation Slice: Overworld Procedural Object Grounding
 Status: completed on 2026-04-20 as a narrow presentation-only correction after resource/artifact/encounter fallbacks still read like staged marker medallions.
 
 Purpose:
@@ -1646,7 +1676,7 @@ Limits:
 - Procedural fallback silhouettes remain compact placeholders; this slice only changes how they are grounded into the map surface.
 - No movement, pathing, fog, save/load, battle, town, resource-site, artifact, encounter, terrain, road, or seam behavior changed.
 
-## Current Implementation Slice: Overworld Mapped Sprite Grounding
+## Completed Implementation Slice: Overworld Mapped Sprite Grounding
 Status: completed on 2026-04-20 as a narrow presentation-only correction after mapped resource/artifact/encounter sprites still read like staged support-stack markers.
 
 Purpose:
@@ -1670,7 +1700,7 @@ Limits:
 - This is not final object art, a new sprite atlas, or a broad object renderer rewrite.
 - Mapped sprite footprints remain presentation scale hints only; movement, blocking, visit targets, save data, and scenario rules are unchanged.
 
-## Current Implementation Slice: Overworld Diagonal Road Tiling
+## Completed Implementation Slice: Overworld Diagonal Road Tiling
 Status: completed on 2026-04-20 as a narrow road-presentation correction after AcOrP feedback that diagonal roads still read like smeared strokes and joined awkwardly at turns.
 
 Purpose:
@@ -1695,7 +1725,7 @@ Limits:
 - The fix relies on authored road paths sharing an actual tile for intersections; adjacent road tiles no longer imply a diagonal join by themselves.
 - Manual visual review is still needed before treating every diagonal-road composition and supported viewport as polished.
 
-## Current Implementation Slice: Overworld HoMM-Style Road Topology
+## Completed Implementation Slice: Overworld HoMM-Style Road Topology
 Status: completed on 2026-04-20 as a narrow road-presentation correction after AcOrP clarified that roads should be built from same-type neighboring road tiles with different vertical and horizontal placement rules.
 
 Purpose:
@@ -1722,7 +1752,7 @@ Limits:
 - Diagonal-road art remains narrow coverage; the important correction in this slice is the topology/lane model and adjacency-derived piece selection.
 - Manual visual review is still needed before treating every road composition and supported viewport as polished.
 
-## Current Implementation Slice: Overworld Art Asset Integration
+## Completed Implementation Slice: Overworld Art Asset Integration
 Status: completed on 2026-04-19 as a narrow integration pass for the generated overworld asset cut.
 
 Purpose:
@@ -1749,7 +1779,7 @@ Limits:
 - This is not a complete overworld art pass, town art pass, encounter art pass, or object-footprint system.
 - Automated smokes prove runtime loading and presentation metadata, not manual visual polish across every object, biome, and resolution.
 
-## Current Implementation Slice: Overworld Terrain Grammar Foundation
+## Completed Implementation Slice: Overworld Terrain Grammar Foundation
 Status: completed on 2026-04-20 as a terrain-system replacement for the chopped sampled-texture direction.
 
 Purpose:
@@ -1775,7 +1805,7 @@ Limits:
 - Road overlays are presentation/grammar structure only; they do not yet change movement cost or pathfinding.
 - This slice was superseded visually by the first authored terrain tile-art slice; the grammar remains the content boundary for that art.
 
-## Current Implementation Slice: Overworld Authored Terrain Tile Art
+## Completed Implementation Slice: Overworld Authored Terrain Tile Art
 Status: completed on 2026-04-20 as the first narrow real overworld terrain tile-art slice after the grammar foundation.
 
 Purpose:
@@ -1802,7 +1832,7 @@ Limits:
 - The source builder gives repeatable checked-in PNGs for this slice; a broader artist-facing atlas/import workflow remains future work.
 
 ## Phase 0: Honest Reset / Parity Ledger / Stop Fake-Complete Language
-Status: active reset now becomes the baseline for future work.
+Status: completed baseline; keep this language as a guardrail for future work.
 
 Purpose:
 - Replace stale implied-completion docs with an honest pre-alpha roadmap.
@@ -1824,12 +1854,12 @@ Execution order:
 Acceptance criteria:
 - Docs clearly state the project is prototype / pre-alpha.
 - Docs do not claim release readiness.
-- The immediate milestone is River Pass manually completable by a real player.
+- The first milestone was River Pass manually completable by a real player; the current milestone is Phase 2 deep production foundation.
 - Progress tracking is no longer marked completed.
 - Valid architecture decisions remain visible and usable.
 
 ## Phase 1: River Pass Manually Completable End-To-End
-Status: accepted as passed from AcOrP's manual play report on 2026-04-18; keep parity notes and cleanup follow-ups, but this gate is no longer the blocker for alpha content work.
+Status: accepted as passed from AcOrP's manual play report on 2026-04-18; keep parity notes and cleanup follow-ups, but this gate is no longer the active blocker.
 
 Purpose:
 - Make one scenario, River Pass, honestly playable from start to finish in the live client.
@@ -1972,70 +2002,113 @@ River Pass acceptance criteria:
 - The scenario can be completed manually at least twice from a clean profile, with notes captured for remaining friction.
 
 Exit gate:
-- Do not begin Phase 2 until River Pass can be completed manually end-to-end and the blockers are documented or fixed.
+- Passed by AcOrP's 2026-04-18 manual report. River Pass remains historical proof and regression context, not the current blocker for Phase 2 planning.
 
-## Phase 2: Playable Alpha Baseline
-Status: active; River Pass gate has passed, and the first six-faction scaffold slice has started.
+## Phase 2: Deep Production Foundation
+Status: active; River Pass gate has passed, but the current scaffolds do not yet provide enough production depth for campaign/skirmish map work or final screen polish.
 
 Purpose:
-- Convert the single-scenario proof into a small playable alpha with real strategy loops.
-- Deepen playable faction vertical slices while the broader six-faction content scaffold matures under validation.
+- Build the world/content/systems foundation that can support a real fantasy strategy game.
+- Stop treating JSON volume, renderer experiments, or first-view polish as substitutes for world identity, faction identity, economy pressure, object density, magic, artifacts, animation, and strategic AI.
+- Use Heroes 2 / Heroes 3 and upcoming Oden Era direction for scale, readability, and strategic-density inspiration only; do not copy creative substance or assets.
+
+Execution order:
+1. World story and worldbuilding:
+   - richer premise
+   - tone
+   - geography
+   - conflicts
+   - history
+   - visual identity
+2. Faction identity:
+   - unique world-grounded backstory for each faction
+   - town identity
+   - hero identity
+   - unit ladder purpose
+   - economy preference
+   - strategic pressure
+3. Concept art pipeline using image generation:
+   - world mood and feel
+   - each faction
+   - faction towns
+   - units
+   - town buildings
+   - heroes
+   - required art-direction review before implementation or deep polish
+4. Economy overhaul:
+   - multiple resources beyond gold, ore, and wood
+   - faction resource preferences
+   - resource-site and mine gameplay
+   - economy pressure
+   - town-development costs
+   - collection, capture, and counter-capture loops
+5. Overworld object taxonomy/content expansion:
+   - decoration/non-interactable objects
+   - interactable buildings/sites
+   - overworld neutral unit encounters
+   - world-building object density inspired by HoMM3 map-editor scale/type references only
+6. Magic system expansion:
+   - schools/categories
+   - faction interactions
+   - unit interactions
+   - economy and artifact hooks
+   - tactical combat roles
+   - adventure-map roles
+7. Artifact system expansion:
+   - many more artifacts
+   - unique sets
+   - spell interactions
+   - faction-specific interactions
+   - progression/build implications
+8. Animation systems:
+   - units
+   - heroes
+   - towns
+   - map objects
+   - UI feedback
+   - battle readability
+9. Strategic AI:
+   - computer-controlled hero turns
+   - computer-controlled town turns
+   - economy
+   - recruiting/building
+   - movement
+   - objective play and pressure
+10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and full-loop polish.
+
+Acceptance criteria:
+- The world foundation is specific enough to guide factions, maps, art, units, magic, artifacts, and campaign tone.
+- Each faction has a unique, non-derivative identity and clear world fit before it is promoted beyond scaffold status.
+- The image-generation concept art pipeline is a required stage for major visual/content work, not an optional afterthought.
+- The economy plan creates real pressure and map-control stakes beyond the current gold + ore + wood baseline.
+- The overworld object plan has taxonomy and density sufficient for worldbuilding, exploration, and route choices.
+- Magic and artifacts are planned as strategy systems with faction, unit, economy, spell, and progression hooks.
+- Animation and strategic AI requirements are explicit enough to drive implementation slices.
+- Maps and final screen polish are not the active center of work until these foundation tracks are deep enough.
+
+## Phase 3: Playable Alpha Baseline
+Status: future; starts after the deep production foundation is strong enough to support alpha play.
+
+Purpose:
+- Convert the River Pass proof and foundation work into a small playable alpha with real strategy loops.
+- Deepen playable faction vertical slices while broader content remains honest scaffolding until proven.
 
 Scope:
-- At least two deeply proven factions with distinct town, unit, hero, spell, battle, AI, and scenario identities before the alpha baseline can be called playable.
+- At least two deeply proven factions with distinct world fit, town, unit, hero, spell, artifact, battle, AI, economy, and scenario identities before the alpha baseline can be called playable.
 - Six target factions may exist as scaffolded content, but no faction counts as complete until scenario placement, AI behavior, save/load, and manual play prove the loop.
 - Usable town, battle, and overworld UX.
 - Deeper units, spells, artifacts, map objects, hero growth, neutral encounters, and scenario scripting.
 - A small set of manually playable scenarios, not a broad campaign promise.
 
-Execution order:
-1. Keep the six-faction scaffold honest with content validation and no playability claims.
-2. Select the first deep-play alpha faction pair or trio from the scaffold and freeze their implementation order.
-3. Define the alpha content matrix:
-   - unit tiers
-   - town buildings
-   - recruit economy
-   - hero roles
-   - spells
-   - artifacts
-   - map objects
-   - neutral encounters
-   - faction-specific battle hooks
-4. Repair overworld UX around the alpha loop.
-   - map readability
-   - movement and pathing
-   - fog/scouting
-   - site affordances
-   - threat surfacing
-   - end-turn clarity
-5. Repair town UX around the alpha loop.
-   - build decisions
-   - recruitment
-   - garrison and transfer
-   - spell learning where present
-   - economy and affordability
-   - town defense clarity
-6. Repair battle UX around the alpha loop.
-   - deployment and initiative clarity
-   - stack identity
-   - targeting
-   - retaliation/ranged/melee expectations
-   - spell and ability availability
-   - win/loss consequences
-7. Build 3-5 alpha scenarios that can be manually completed.
-8. Add AI enough to contest the alpha scenarios without relying on scripted pressure only.
-9. Stabilize save/load across alpha loops.
-10. Run manual play passes, then add automated coverage for the issues found manually.
-
 Acceptance criteria:
-- Two factions are playable with distinct town, unit, hero, spell, and battle identities.
+- Two factions are playable with distinct town, unit, hero, spell, artifact, economy, battle, and world identities.
 - A player can complete multiple scenarios without developer guidance.
 - Town, battle, and overworld screens are usable at the default target resolution.
 - Save/load is reliable across normal alpha behavior.
 - The content pipeline catches missing ids, invalid references, impossible starts, and broken objective wiring.
-- AI can take turns, contest objectives, and resolve battles without routine dead ends.
+- Strategic AI can take turns, contest objectives, and resolve battles without routine dead ends.
 
-## Phase 3: Production Alpha Layer
+## Phase 4: Production Alpha Layer
 Status: future.
 
 Purpose:
@@ -2072,7 +2145,7 @@ Acceptance criteria:
 - Logs and reports are usable for debugging playtest issues.
 - Known blockers are tracked before wider playtest.
 
-## Phase 4: HoMM2-Class Breadth
+## Phase 5: HoMM2-Class Breadth
 Status: future product horizon.
 
 Purpose:
@@ -2109,7 +2182,7 @@ Acceptance criteria:
 - Campaign and skirmish content can be completed manually.
 - Automated validation covers content graph integrity and previously discovered live-client regressions.
 
-## Phase 5: HoMM3-Class Breadth
+## Phase 6: HoMM3-Class Breadth
 Status: late future product horizon.
 
 Purpose:
@@ -2144,23 +2217,14 @@ Acceptance criteria:
 - Parity claims are backed by playable breadth and manual evidence.
 
 ## Immediate Execution Order
-1. Complete the documentation reset.
-2. Run the current validation baseline enough to know whether docs-only changes kept the repo structurally intact.
-3. Start the River Pass manual audit from the live client.
-4. Record the River Pass parity ledger.
-5. Fix launch and routing blockers.
-6. Fix battle usability blockers.
-7. Fix town usability blockers.
-8. Fix overworld objective, map, movement, and end-turn clarity blockers.
-9. Tune River Pass for one fair victory path.
-10. Add or repair one fair defeat path.
-11. Prove save/resume from overworld.
-12. Prove save/resume from town.
-13. Prove save/resume from battle.
-14. Prove victory outcome routing.
-15. Prove defeat outcome routing.
-16. Repeat a clean manual completion pass and record notes.
-17. Only then select Phase 2 alpha scope.
+1. Define the richer world story and worldbuilding foundation: premise, tone, geography, conflicts, history, and visual identity.
+2. Redefine each faction as a unique world-grounded identity with distinct backstory, town feel, hero identity, unit ladder purpose, economy preference, and strategic pressure.
+3. Establish the image-generation concept art pipeline for world mood, factions, faction towns, units, town buildings, and heroes before implementation or deep polish.
+4. Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, resource sites/mines, pressure, town-development costs, collection routes, and capture loops.
+5. Plan overworld object taxonomy and density: decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters.
+6. Plan magic, artifact, animation, and strategic AI expansion tracks.
+7. Keep River Pass as regression proof and Ninefold Confluence as breadth/loading evidence, not as proof that broad content is production-deep.
+8. Return to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and full-loop polish only after the foundation tracks are deep enough.
 
 ## Parity Ledger Template
 Use this structure for each target system or content claim:
@@ -2177,10 +2241,10 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: River Pass manually completable by a real player.
+Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- A clean-profile manual player can start River Pass, understand what to do, make meaningful overworld/town/battle decisions, save/resume, and reach victory.
-- The same scenario can also reach a coherent defeat.
-- The result is not dependent on editor setup, hidden debug controls, or knowledge of internal ids.
-- Remaining gaps are documented as alpha gaps, not hidden behind completed language.
+- The next slice starts with world story/worldbuilding rather than map or screen polish.
+- Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
+- The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
+- Remaining gaps are documented as foundation gaps, not hidden behind completed language.

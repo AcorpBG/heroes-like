@@ -17,7 +17,8 @@ The current state is not that product. A manual play audit showed that the game 
 - Several docs previously implied completion, release-facing polish, or broad content readiness. Those claims are no longer accepted unless verified by manual play in the live client.
 - HoMM2-class breadth and HoMM3-class breadth are future product horizons, not current milestones.
 - The first product milestone was one manually completable scenario rather than a full campaign package, and AcOrP reported that River Pass manual gate passed on 2026-04-18.
-- With River Pass manually cleared, implementation has started on all six bible factions as real content scaffolds. This is not a claim that six factions are fully playable; playable alpha still requires deep vertical slices, scenario integration, AI behavior, save/load proof, and manual play evidence.
+- With River Pass manually cleared, the current product direction is not shallow post-River-Pass polish. The last week proved the basic fantasy strategy concept, but it also exposed that the project lacks core production depth: world identity, faction identity, art direction, economy pressure, object density, magic, artifacts, animation, and strategic AI are not yet deep enough to carry campaign or skirmish production.
+- Existing six-faction records, Ninefold Confluence, terrain/editor work, and presentation passes are useful scaffolds and evidence surfaces. They are not enough by themselves. The active work must deepen the world/content/systems foundation before broad maps, final screen polish, battle-screen polish, or full game-loop polish become the center of effort.
 
 ## Delivery Strategy
 The project now advances through explicit proof gates:
@@ -32,30 +33,38 @@ The project now advances through explicit proof gates:
    - The scenario must include meaningful overworld movement, town use, recruitment, at least one battle path, save/resume, victory, defeat, and outcome routing.
    - This is the first truth source for whether the game is playable.
 
-3. Playable alpha baseline
-   - Expand from one scenario to a small, coherent alpha with at least two deeply proven factions while broader six-faction scaffolds mature under validation.
+3. Deep production foundation
+   - Build the world story, faction identities, concept-art pipeline, economy model, overworld object taxonomy, magic, artifacts, animation requirements, and strategic AI plan before treating more maps or screen polish as the main path.
+   - Use Heroes 2 / Heroes 3 and upcoming Oden Era direction as scale, readability, and strategic-density inspiration only. Do not copy names, assets, maps, faction identities, unit art, music, or text.
+   - Require design and art-direction evidence before implementation/deep polish for major factions, towns, units, buildings, heroes, map objects, spells, and artifacts.
+
+4. Playable alpha baseline
+   - Expand from one scenario to a small, coherent alpha only after the foundation is deep enough to support it.
+   - At least two factions must be deeply proven through world fit, economy, town development, units, heroes, spells, artifacts, overworld placement, AI behavior, save/load, and manual play.
    - Town, battle, overworld, and front-end UX must be usable without debug interpretation.
    - Units, spells, artifacts, map objects, and scenario content must be deep enough to sustain repeated play.
 
-4. HoMM2-class breadth
+5. HoMM2-class breadth
    - Build a broad fantasy strategy package at roughly the systemic breadth expected from the Heroes II era: multiple original factions, towns, unit tiers, spells, artifacts, neutral sites, handcrafted maps, campaign structure, and reliable AI.
    - This is not just more data. It requires battle, town, overworld, AI, save/load, and UX loops to hold up under breadth.
 
-5. HoMM3-class breadth
+6. HoMM3-class breadth
    - After HoMM2-class breadth is stable, expand toward the richer strategic and content density associated with Heroes III: deeper faction variety, more objects, artifacts, magic, hero growth, map scripting, campaign complexity, AI pressure, and polish.
    - This is a late production horizon, not a near-term promise.
 
 ## Product Pillars
-1. Adventure map exploration with discovery, route planning, visible risk, and resource pressure.
-2. Tactical turn-based battles with readable unit roles, terrain pressure, hero influence, spells, morale-style momentum, and meaningful outcomes.
-3. Town development, recruitment, resource gating, strategic expansion, defense, and recovery.
-4. Strong single-player experience first: handcrafted scenarios, skirmish, campaign framework, AI opponents, save/load, difficulty, and onboarding.
-5. Production-ready foundations: data-driven content, deterministic rules where useful, validation, logging hooks, packaging, settings, and practical mod-friendly boundaries.
+1. Original world identity: clear premise, tone, geography, history, conflicts, visual language, and non-derivative fantasy texture.
+2. Asymmetric faction identity: each faction needs world-grounded backstory, town feel, economy preferences, hero identity, unit ladder logic, battlefield role mix, and unique strategic pressure.
+3. Adventure map exploration with discovery, route planning, visible risk, object density, resource pressure, mine/site capture, neutral encounters, and meaningful map control.
+4. Tactical turn-based battles with readable unit roles, terrain pressure, hero influence, expanded spells, artifact interactions, animation clarity, morale-style momentum, and meaningful outcomes.
+5. Town development, recruitment, multi-resource gating, faction-biased costs, strategic expansion, defense, and recovery.
+6. Strong single-player experience first: strategic AI turns, handcrafted scenarios, skirmish, campaign framework, save/load, difficulty, and onboarding.
+7. Production-ready foundations: data-driven content, concept-art-backed direction, deterministic rules where useful, validation, logging hooks, packaging, settings, and practical mod-friendly boundaries.
 
 ## Current Non-Goals
 - Claiming release readiness.
 - Claiming HoMM2/HoMM3 parity before live-client manual play proves the underlying loops.
-- Expanding broad campaign content before River Pass is manually completable.
+- Treating broad campaign content, six-faction scaffolds, or large scenario breadth as playable before alpha-scope manual play proves the loops.
 - Hiding playability gaps behind dashboards, validators, smoke tests, or authored data volume.
 - Direct recreation of copyrighted names, assets, maps, factions, unit art, music, or text.
 - Multiplayer-first architecture.
@@ -123,7 +132,25 @@ The authored content boundary remains split into JSON domains under `content/`:
 - `scenarios.json`
 - `campaigns.json`
 
-Near-term content work now shifts from proving River Pass completion to using that passed gate responsibly: begin the six-faction implementation loop as real JSON content scaffolds, then deepen selected factions through complete town, battle, overworld, AI, scenario, save/load, and manual-play slices before calling them playable.
+Near-term content work now shifts from proving River Pass completion to using that passed gate responsibly: deepen the world, faction, art-direction, economy, object, magic, artifact, animation, and strategic-AI foundations before calling current faction records, broad scenarios, or polished screens production-ready.
+
+## Deep Foundation Direction
+Decision date: 2026-04-25
+
+The active product direction is a deep production-foundation phase, not a final polish pass on the current scaffolds. The next work should document and then implement foundations in this order:
+
+1. World story and worldbuilding: richer premise, tone, geography, conflicts, history, and visual identity.
+2. Faction identity: original factions with distinct backstory, town identity, economy, heroes, units, and strategic style. Heroes 3 may inform the expected breadth and clarity, but not the creative substance.
+3. Concept art pipeline using image generation: required art-direction studies for world mood, each faction, towns, units, town buildings, and heroes before deep implementation or polish.
+4. Economy overhaul: move beyond gold, ore, and wood toward multiple resources, faction resource preferences, mines/resource sites, economy pressure, town-development costs, collection routes, and capture loops.
+5. Overworld object taxonomy and density: classify objects as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters; use HoMM3 map-editor/object scale as inspiration only. The current object vocabulary is not dense enough for the target game.
+6. Magic system expansion: schools/categories, faction interactions, unit interactions, economy and artifact hooks, tactical combat roles, and adventure-map roles.
+7. Artifact system expansion: many more artifacts, unique sets, spell interactions, faction-specific interactions, and build/progression implications.
+8. Animation systems: units, heroes, towns, map objects, UI feedback, battle readability, and state-change clarity.
+9. Strategic AI: computer-controlled heroes and towns need real turns, economy, recruiting/building, movement, objective play, and pressure.
+10. Campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI depth, and full game-loop polish come after the foundations above are deep enough to support them.
+
+This direction supersedes the narrower post-River-Pass alpha content/presentation polish framing. River Pass remains important proof history, and existing renderer/editor/content slices remain useful, but scaffolds are not production depth.
 
 ## Content Direction Note
 Decision date: 2026-04-18
@@ -311,21 +338,20 @@ The accepted web prototype's direct water/rock contact truth signal is now prese
 - `docs/`: design notes, wireframes, and process records.
 
 ## Near-Term Product Target
-River Pass is the first playable proof target.
+River Pass was the first playable proof target and AcOrP reported that manual gate passed on 2026-04-18. The near-term target now is the deep production foundation that makes a later playable alpha credible.
 
-A player should be able to:
-- launch River Pass from the live menu
-- understand the objective and starting situation without reading source code
-- move the hero on the overworld and make progress through visible choices
-- enter and use at least one owned town
-- recruit or recover enough forces to matter
-- enter battle through normal play
-- make tactical choices that resolve the fight
-- save and resume from overworld, town, and battle states that the scenario actually uses
-- reach a victory or defeat outcome through normal play
-- return to menu or restart without corrupting progression or saves
+The foundation should establish:
+- a richer original world premise, tone, geography, conflicts, history, and visual identity
+- unique world-grounded faction identities rather than shared scaffolds
+- an image-generation concept art pipeline for world mood, factions, towns, units, town buildings, and heroes before deep implementation or polish
+- a multi-resource economy plan with faction preferences, mines/sites, pressure, costs, collection routes, and capture loops
+- an overworld object taxonomy with enough decoration, interactable sites/buildings, and neutral encounters to support world density
+- expanded magic and artifact systems with faction, unit, economy, spell, and progression interactions
+- animation-system requirements for units, heroes, towns, map objects, UI feedback, and battle readability
+- strategic AI requirements for computer-controlled hero and town turns, economy, recruiting/building, movement, objectives, and pressure
+- a clear rule that campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI depth, and full-loop polish resume after these foundations are deep enough
 
-Until that is true, the project remains pre-alpha regardless of how many systems exist.
+Until this is true, the project remains pre-alpha regardless of how much content, renderer work, or validation coverage exists.
 
 ## Release Bar
 A release-ready v1 should eventually include:
