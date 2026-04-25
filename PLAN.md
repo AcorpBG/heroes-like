@@ -43,11 +43,12 @@ Immediate execution order:
 6. Magic system expansion: completed as the expanded accordance magic foundation in `docs/magic-system-expansion-foundation.md`. Future implementation should migrate schools, tiers, spell roles, faction/unit hooks, economy/artifact hooks, AI casting, UI readability, save/schema, validation, and concept-art gates from that plan instead of casually adding spell records.
 7. Artifact system expansion: completed as the artifact taxonomy, family, set, hook, source, AI, UI, save/schema, validation, and migration foundation in `docs/artifact-system-expansion-foundation.md`. Future implementation should migrate artifact metadata, slots, rarities, sets, spell modifiers, faction hooks, economy hooks, source tables, AI valuation, and save compatibility from that plan instead of casually adding item records.
 8. Animation systems: completed as the production motion, VFX, audio cue, UI feedback, state-change clarity, technical architecture, asset pipeline, validation, and migration foundation in `docs/animation-systems-foundation.md`. Future implementation should stage event contracts, cue catalogs, reduced-motion/fast-mode support, and vertical animatics before final town/battle polish.
-9. Strategic AI: plan computer-controlled hero and town turns, economy, recruiting/building, movement, objectives, and pressure.
-10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+9. Strategic AI: completed as the computer hero/town turn, economy, recruiting/building, movement, objective play, pressure, event surfacing, save/schema, validation, and migration foundation in `docs/strategic-ai-foundation.md`. Future implementation should migrate AI profile/schema, planner/executor boundaries, event streams, town governors, real AI heroes, object valuation, spell/artifact planning, and difficulty knobs from that plan instead of extending pressure raids casually.
+10. First actual concept-art generation execution: use `docs/concept-art-pipeline.md` to generate world mood and faction direction images, then send the generated images to AcOrP on Discord as requested before treating them as approved direction for implementation.
+11. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan strategic AI: computer-controlled hero and town turns, economy, recruiting/building, movement, objective play, pressure, animation/event surfacing, validation gates, and migration sequence.
+- Execute the first actual concept-art generation slice: world mood plus initial faction direction studies from `docs/concept-art-pipeline.md`, with the generated images sent to AcOrP on Discord when the art generation is done.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -220,6 +221,26 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, animation metadata, audio, or playability claims.
+
+## Completed Design Slice: Strategic AI Foundation
+Status: completed on 2026-04-25 as the ninth deep production foundation design package.
+
+Purpose:
+- Define the strategic AI direction before broad campaign/skirmish maps, implementation planning, final town/battle polish, or full-loop polish rely on computer opponents.
+- Tie AI to computer-controlled hero and town turns, economy, recruiting/building, movement, object valuation, objective play, pressure, spells, artifacts, faction personalities, fog/memory, difficulty, event/animation surfacing, save/schema, validation, and migration.
+- Preserve the current enemy pressure/raid, commander, governor, battle AI, and difficulty scaffolding as useful groundwork without claiming it is production strategic AI.
+
+Delivered:
+- Added `docs/strategic-ai-foundation.md` covering current gap, AI goals, turn pipeline, AI state model, town governor AI, hero/army AI, economy planning, recruitment/building planning, map movement/pathing/object valuation, site capture/defense/counter-capture, neutral encounter decisions, battle entry/avoidance, spell/artifact planning, faction personalities, scouting/fog/memory, campaign/skirmish objectives, difficulty tuning, event and animation surfacing, UI/debug explanation, save/schema implications, validation/testing gates, migration sequence, and deep-enough gates before maps can rely on AI.
+- Sequenced the next logical production slice as actual concept-art generation execution using `docs/concept-art-pipeline.md`, with generated images to be sent to AcOrP on Discord when art generation is done.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, AI profiles, animation metadata, generated images, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
