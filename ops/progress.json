@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T12:00:00Z",
+  "updatedAt": "2026-04-25T22:23:57Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "faction-identity-foundation-10184",
-  "currentSliceTitle": "Redefine each faction as a unique world-grounded identity rather than a scaffold",
+  "currentSliceId": "concept-art-pipeline-imagegen-10184",
+  "currentSliceTitle": "Establish required image-generation concept art pipeline for world, factions, towns, units, buildings, and heroes",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "The world story and worldbuilding foundation is documented in docs/worldbuilding-foundation.md. Next logical slice is faction identity refinement against that world foundation before JSON migration, broad maps, or final screen polish.",
+  "currentSliceNotes": "Worldbuilding and faction identity foundations are documented in docs/worldbuilding-foundation.md and docs/factions-content-bible.md. Next logical slice is concept-art pipeline planning before JSON migration, broad maps, or final screen polish.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -108,7 +108,7 @@
     {
       "id": "faction-identity-foundation-10184",
       "title": "Redefine each faction as a unique world-grounded identity rather than a scaffold",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
@@ -611,9 +611,8 @@
     }
   ],
   "nextActions": [
-    "Start with the world story and worldbuilding foundation: premise, tone, geography, conflicts, history, and visual identity.",
-    "Redefine each faction from the world outward so faction backstory, town identity, economy, heroes, units, and strategic style are unique and non-derivative.",
     "Establish an image-generation concept art pipeline as a required design/art-direction stage for world mood, each faction, faction towns, units, town buildings, and heroes before implementation or deep polish.",
+    "Use docs/worldbuilding-foundation.md and docs/factions-content-bible.md as the source constraints for concept-art prompts, image review, and style selection.",
     "Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, mines/resource sites, pressure, costs, collection routes, and capture/counterplay loops.",
     "Plan overworld object taxonomy and density around decoration/non-interactable objects, interactable buildings/sites, and neutral unit encounters; use HoMM3 scale/type references only as inspiration.",
     "Plan magic expansion with schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.",

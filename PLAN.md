@@ -36,7 +36,7 @@ Purpose:
 
 Immediate execution order:
 1. World story and worldbuilding: define the richer world premise, tone, geography, conflicts, history, and visual identity.
-2. Faction identity: revise each faction into a unique world-grounded power with backstory, town identity, hero identity, unit ladder purpose, economy pressure, and strategic style. Heroes 3 is scale/readability inspiration only, not a source to copy.
+2. Faction identity: completed as a world-grounded six-faction identity bible in `docs/factions-content-bible.md`. Future JSON migration should preserve that asymmetry rather than reviving scaffold templates.
 3. Concept art pipeline using image generation: make world mood, faction, faction town, unit, town-building, and hero concept work a required design/art-direction stage before deep implementation or polish.
 4. Economy overhaul: move beyond the current gold + ore + wood baseline into multiple resources, faction resource preferences, resource-site/mine gameplay, economy pressure, town-development costs, collection routes, and capture loops.
 5. Overworld object taxonomy/content expansion: rework objects into clear classes such as decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters. Use HoMM3 map-editor/assets/reverse-engineering only as scale/type inspiration. The project still lacks the world-building object density required for the target game.
@@ -47,7 +47,7 @@ Immediate execution order:
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Use `docs/worldbuilding-foundation.md` to revise the six faction identities into world-grounded, production-ready design packages before any JSON migration.
+- Define the concept-art pipeline using image generation for world mood, each faction, faction towns, unit silhouettes, town buildings, and hero archetypes before gameplay JSON migration or deep visual polish.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -74,6 +74,27 @@ Validation:
 
 Limits:
 - This is documentation and design direction only. It does not add gameplay code, scenes, scripts, tests, content JSON, assets, or claims of playability.
+
+## Completed Design Slice: Faction Identity Foundation
+Status: completed on 2026-04-25 as the second deep production foundation design package.
+
+Purpose:
+- Redefine the six target factions from the Aurelion Reach world foundation instead of treating them as generic scaffold rosters.
+- Preserve useful production IDs while making each faction asymmetric in world role, politics, moral tension, town feel, visual language, hero archetypes, unit ladder intent, economy pressure, accord identity, artifacts, building identity, strategic playstyle, and campaign hooks.
+- Give future JSON, concept art, economy, magic, artifact, AI, and scenario slices a stronger faction source before implementation.
+
+Delivered:
+- Replaced `docs/factions-content-bible.md` with a world-grounded faction identity bible for Embercourt League, Mireclaw Covenant, Sunvault Compact, Thornwake Concord, Brasshollow Combine, and Veilmourn Armada.
+- Added a cross-faction contrast matrix, economy differentiation targets, asymmetry checks, anti-generic constraints, and implementation sequencing notes.
+- Sequenced the next logical foundation slice as concept-art pipeline planning using image generation.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.

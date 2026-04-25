@@ -8,8 +8,8 @@ Updated: 2026-04-25
 
 ## Decisions Needed
 
-- No new AcOrP design decision is blocking the worldbuilding foundation slice.
+- No new AcOrP design decision is blocking the faction identity foundation slice.
 
 ## Current Follow-Up
 
-- Next foundation slice should refine six faction identities against `docs/worldbuilding-foundation.md` before gameplay JSON migration, new maps, or screen polish.
+- Next foundation slice should define the concept-art pipeline using image generation, with `docs/worldbuilding-foundation.md` and `docs/factions-content-bible.md` as prompt and review constraints before gameplay JSON migration, new maps, or screen polish.
