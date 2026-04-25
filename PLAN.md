@@ -41,13 +41,13 @@ Immediate execution order:
 4. Economy overhaul: completed as the multi-resource economy foundation in `docs/economy-overhaul-foundation.md`. Future implementation should stage schema, validation, UI, site, market, AI, and save migration from that plan instead of casually adding resource names.
 5. Overworld object taxonomy/content expansion: completed as the taxonomy and density foundation in `docs/overworld-object-taxonomy-density.md`. Future implementation should migrate object classes, footprints, approach rules, guards, ownership states, density checks, and editor implications from that plan instead of adding random object scatter.
 6. Magic system expansion: completed as the expanded accordance magic foundation in `docs/magic-system-expansion-foundation.md`. Future implementation should migrate schools, tiers, spell roles, faction/unit hooks, economy/artifact hooks, AI casting, UI readability, save/schema, validation, and concept-art gates from that plan instead of casually adding spell records.
-7. Artifact system expansion: plan many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.
+7. Artifact system expansion: completed as the artifact taxonomy, family, set, hook, source, AI, UI, save/schema, validation, and migration foundation in `docs/artifact-system-expansion-foundation.md`. Future implementation should migrate artifact metadata, slots, rarities, sets, spell modifiers, faction hooks, economy hooks, source tables, AI valuation, and save compatibility from that plan instead of casually adding item records.
 8. Animation systems: specify what animation support is needed for units, heroes, towns, map objects, UI feedback, battle readability, and state changes.
 9. Strategic AI: plan computer-controlled hero and town turns, economy, recruiting/building, movement, objectives, and pressure.
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan artifact system expansion: artifact breadth, unique sets, spell interactions, faction-specific interactions, economy hooks, hero/build implications, validation gates, and migration sequence.
+- Plan animation systems: unit, hero, town, map-object, UI feedback, battle readability, spell/artifact feedback, state-change clarity, validation gates, and migration sequence.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -171,6 +171,27 @@ Delivered:
 - Added `docs/magic-system-expansion-foundation.md` covering the current spell gap, seven accord schools, spell tiers, battle and adventure roles, faction-specific access/preferences, unit/status interactions, resource/economy costs, artifact hooks, town/building hooks, hero progression, resistance/counterplay, AI requirements, UI and animation/VFX/audio requirements, save/schema implications, validation gates, migration sequence, and deep-enough gates.
 - Included a concrete target spell family catalog and representative first-pass catalog for future production planning without editing `content/spells.json`.
 - Sequenced the next logical foundation slice as artifact system expansion planning.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
+
+## Completed Design Slice: Artifact System Expansion Foundation
+Status: completed on 2026-04-25 as the seventh deep production foundation design package.
+
+Purpose:
+- Define a production-minded artifact system expansion before artifact JSON migration, faction vertical slices, broad maps, final battle polish, town polish, or balance claims.
+- Tie artifacts to taxonomy, slots, rarities, world/faction families, unique sets, spell/magic interactions, economy resources, hero/unit/town builds, reward sources, curses/tradeoffs, AI valuation, UI readability, concept-art gates, save/schema implications, validation, and migration sequence.
+- Keep artifacts as a staged foundation for future implementation rather than a casual expansion of stat item records.
+
+Delivered:
+- Added `docs/artifact-system-expansion-foundation.md` covering the current artifact gap, target taxonomy and equipment model, rarity bands, faction and Old Measure artifact families, unique sets, magic and economy hooks, unit/hero/town interactions, map-object/drop/reward sources, curses/tradeoffs, AI valuation, UI readability, concept-art gates, save/schema implications, validation/testing gates, migration sequence, and deep-enough gates.
+- Included a concrete target artifact family catalog with production breadth targets and representative families without editing `content/artifacts.json`.
+- Sequenced the next logical foundation slice as animation systems planning.
 
 Validation:
 - Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
@@ -2346,7 +2367,7 @@ Acceptance criteria:
 3. Use the image-generation concept art pipeline for world mood, factions, faction towns, units, town buildings, and heroes before implementation or deep polish.
 4. Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, resource sites/mines, pressure, town-development costs, collection routes, and capture loops.
 5. Plan overworld object taxonomy and density: decoration/non-interactable, interactable buildings/sites, and overworld neutral unit encounters.
-6. Plan artifact, animation, and strategic AI expansion tracks.
+6. Plan animation and strategic AI expansion tracks after the completed artifact foundation.
 7. Keep River Pass as regression proof and Ninefold Confluence as breadth/loading evidence, not as proof that broad content is production-deep.
 8. Return to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and full-loop polish only after the foundation tracks are deep enough.
 
@@ -2368,7 +2389,7 @@ No claim should move to "done" unless live-client usability and evidence are fil
 Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- The next slice starts with artifact expansion planning rather than map or screen polish.
+- The next slice starts with animation systems planning rather than map or screen polish.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.
