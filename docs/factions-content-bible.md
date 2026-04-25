@@ -1,547 +1,716 @@
 # Factions Content Bible
 
 Status: design source, not implemented JSON.
-Date: 2026-04-18.
-Slice: faction-bible-design-10184.
+Date: 2026-04-25.
+Slice: faction-identity-foundation-10184.
 
-This document starts the six-faction content-design workstream for heroes-like. It is implementation-ready direction for future JSON passes, but it does not claim that the live client currently contains six playable factions. Current authored JSON still only has partial Embercourt, Mireclaw, and Sunvault content.
+This document defines the six target factions as original, world-grounded identity packages for Aurelion Reach. It supersedes the 2026-04-18 scaffold-first faction bible while preserving useful stable IDs, production naming direction, unit ladder intent, hero concepts, and building seeds.
+
+Heroes 2, Heroes 3, and Oden Era may inspire expectations for breadth, readability, and strategic density only. They are not source material for creative substance, names, maps, faction identities, unit art, music, or text.
 
 ## Design Contract
 
 - Target faction count: 6.
 - Target unit depth per faction: 7 tiers.
 - Target hero depth per faction: at least 10 hero concepts, split across might and magic identities.
-- Current surviving faction ids: `faction_embercourt`, `faction_mireclaw`, `faction_sunvault`.
-- New planned faction ids: `faction_thornwake`, `faction_brasshollow`, `faction_veilmourn`.
-- JSON implementation must happen later as vertical bundles: faction, heroes, units, buildings, towns, spells or abilities, encounters, scenario placements, AI tuning, validation, and manual play notes.
-- Until the River Pass gate is proven, this document is a design bible only. Do not use this document to claim current faction breadth or playability.
+- Existing faction ids to preserve where compatible: `faction_embercourt`, `faction_mireclaw`, `faction_sunvault`.
+- Planned faction ids: `faction_thornwake`, `faction_brasshollow`, `faction_veilmourn`.
+- JSON migration must happen later as vertical bundles: faction metadata, heroes, units, buildings, towns, spells or abilities, encounters, scenario placements, AI tuning, validation, and manual play notes.
+- This bible is design direction only. It does not claim that the live client currently contains six playable factions.
 
-## Cross-Faction Differentiation Rules
+## Shared World Grounding
 
-These rules exist to prevent the roster from collapsing into six reskins of the same faction.
+The six factions are competing powers in the Charter War over Aurelion Reach, a broken basin where sky mirrors once regulated seasons, tides, memory, weather, and ore growth. The factions are not good-versus-evil skins. Each is partly right about how to survive the shattered world and dangerous when its local answer becomes basin-wide rule.
 
-1. No commons.
-   - Avoid generic fantasy fillers such as "militia", "archer", "pikeman", "goblin", "ogre", "skeleton", "zombie", "elf", "dwarf", "angel", or "dragon" as a faction's identity carrier.
-   - A familiar creature scale is allowed only when the name, silhouette, recruitment source, battlefield role, and mechanic are faction-specific enough that it cannot be moved to another faction unchanged.
-   - Low tiers still need identity. Tier 1 cannot be a neutral-looking body with a common weapon.
+Faction identity must stay tied to:
 
-2. No shared faction template skeletons.
-   - Do not implement every ladder as cheap melee, archer, bruiser, cavalry, caster, flyer, ultimate.
-   - Every faction needs a different distribution of blockers, ranged pressure, mobility, supports, siege, summons, and elite finishers.
-   - Shared unit ability ids may exist in code, but final content should wrap them in faction-specific rules, triggers, names, and role pressure.
+- **Geography**: rivers, marshes, uplands, walking forests, furnace valleys, and fog coasts create political behavior.
+- **Infrastructure**: locks, ferries, lenses, root gates, pressure rails, and bell harbors are strategic tools, not background flavor.
+- **Accordance magic**: each faction makes reality obey through a distinct anchor language.
+- **Economy pressure**: resources are political. Gold, timber, ore, aetherglass, embergrain, peatwax, verdant grafts, brass scrip, and memory salt should matter differently by faction.
+- **Readable asymmetry**: no faction should be a swapped template with cheap melee, archer, cavalry, caster, flyer, and ultimate.
 
-3. Each town must have a unique silhouette.
-   - Embercourt reads as river fort, lockworks, beacon courts, and civic fire.
-   - Mireclaw reads as drowned ferry chains, reed dens, drum circles, and predatory bog shrines.
-   - Sunvault reads as crystal arrays, lens galleries, choirs, and solar relay crowns.
-   - Thornwake reads as migratory living orchards, graft halls, root gates, and thorn tolls.
-   - Brasshollow reads as contract foundries, pressure rails, furnace chapels, and brass gantries.
-   - Veilmourn reads as fog harbors, bell docks, mirror drydocks, obituary vaults, and black-sail slips.
+## Cross-Faction Contrast Matrix
 
-4. Each faction gets a distinct economy story.
-   - Embercourt converts stable civic investment into readiness and reliable recruitment.
-   - Mireclaw converts pressure, raiding, and den growth into cheap bodies and tempo.
-   - Sunvault converts expensive infrastructure into quality, spell cycling, and prepared ranged lanes.
-   - Thornwake converts rooted sites and growth buildings into regeneration, denial, and long campaigns.
-   - Brasshollow converts ore and capital projects into machines, armor, and slow siege power.
-   - Veilmourn converts scouting, salvage, and marked routes into ambush options and selective power spikes.
+| Faction | World role | Political motive | Moral tension | Accord identity | Economy pressure | Map pressure | Battle fingerprint |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Embercourt League | Civic river-law power of the Emberflow Basin | Restore enforceable roads, tolls, records, and granaries | Public order can become coercive occupation | Beacon Accord through writs, signal fires, court bells | Gold, timber, embergrain, road-linked income | Hold crossings, retake roads, punish overextension | Braced lines, counterfire, reserves, retaliation value |
+| Mireclaw Covenant | Marsh sovereignty and predatory ferry clans of the Drowned Marches | Keep lowlands outside courthouse maps and mine contracts | Freedom from empire can shelter raids, extortion, and blood debts | Mire Accord through drums, reeds, peat, rot rites | Peatwax, raid spoils, den growth, replacement loops | Multi-lane raids, site denial, wounded-prey pressure | Harry, blind, drag, isolate, finish wounded targets |
+| Sunvault Compact | Solar calibrators of the Glass Uplands | Rebuild mirror order under disciplined relay control | Truth and restoration can become technocratic rule | Lens Accord through crystals, choirs, prisms, relays | Ore, aetherglass, costly quality upgrades | Extend relay nodes, sightlines, and prepared fronts | Ranged lanes, shields, resonance timing, focused marks |
+| Thornwake Concord | Living orchard law and migratory root infrastructure | Give land itself veto power over settlement and extraction | Renewal can become strangling exclusion and forced obedience | Root Accord through grafts, knots, orchards, root gates | Timber, verdant grafts, rooted sites, recovery loops | Root roads, tax movement, turn lanes into hostile ground | Binds, regeneration, brambles, attrition zones |
+| Brasshollow Combine | Industrial contract power of the Brass Deeps | Make extraction, debt, and furnace capacity predictable | Fair contract can become debt rule and strip-mined necessity | Furnace Accord through clauses, gauges, heat seals | Ore, brass scrip, capital projects, repair windows | Mine camps, railheads, siege staging | Armor, heat bursts, artillery, repair, cooldown risk |
+| Veilmourn Armada | Fog maritime network and memory salvage houses | Preserve mobility, salvage rights, and uncharted routes | Autonomy and grief trade can become theft of memory and certainty | Veil Accord through bells, charts, fog, obituary ink | Memory salt, salvage spikes, scouting rewards | Fog lanes, bypasses, backline threats | Displacement, blinds, morale drain, isolation spikes |
 
-5. Each faction gets a distinct map-pressure pattern.
-   - Embercourt fortifies crossings and forces the opponent to attack into prepared relief lines.
-   - Mireclaw floods side lanes with raiders and punishes exposed sites.
-   - Sunvault expands through relay nodes and projects threat along sightlines.
-   - Thornwake roots roads and turns neutral lanes into recovery/denial zones.
-   - Brasshollow advances through mining camps and siege staging, slow but hard to uproot.
-   - Veilmourn manipulates fog, scouting, and route bypass to threaten weak backs.
+## No-Generic Constraints
 
-6. Hero rosters cannot be generic class lists.
-   - Might heroes should express how that faction commands armies, not just "better attack".
-   - Magic heroes should express how that faction understands magic, not just "more spell power".
-   - Each hero concept below includes an intended gameplay hook so future JSON specialties have a target.
+These rules apply to every future JSON, art, spell, artifact, and scenario migration.
 
-7. Building ids must carry town identity.
-   - Avoid shared upgrade names such as `building_barracks_2`.
-   - If a building is structurally similar in code, give it a faction-specific id and mechanical wrapper.
-
-8. Content migration must preserve stable ids only where they still fit.
-   - Existing partial JSON can be migrated into these designs, but generic names should be renamed or replaced during the actual JSON pass.
-   - Any migration that changes live content should update validators and manual scenario notes in the same slice.
-
-## Faction Matrix
-
-| Faction | Design id | Theme pillar | Economy style | Map pressure | Battle style | Ladder fingerprint |
-| --- | --- | --- | --- | --- | --- | --- |
-| Embercourt League | `faction_embercourt` | River charters, lockworks, beacon-fire civic war | Stable gold, readiness, discounted prepared levies | Secure crossings, signal relief, punish overextension | Braced lines, counterfire, late-order reserves | 3 line/control units, 2 support/fire units, 1 beast shock unit, 1 civic siege anchor |
-| Mireclaw Covenant | `faction_mireclaw` | Predatory bog clans, ferry chains, drum oaths | Low base income, high growth, raid spoils | Multi-lane raids, site denial, wounded-prey pressure | Harried targets, finishers, attrition, ambush | 3 swarm/pack units, 2 control supports, 1 elite finisher, 1 bog apex |
-| Sunvault Compact | `faction_sunvault` | Solar crystals, lens relays, harmonic command | Ore-heavy quality economy, support buildings, spell access | Relay nodes, battery sightlines, prepared fronts | Ranged lanes, shields, resonance timing | 2 ranged batteries, 2 line/duel pieces, 2 support/construct pieces, 1 array titan |
-| Thornwake Concord | `faction_thornwake` | Migratory living orchards, grafted pilgrims, root law | Site-rooted growth, wood pressure, slow gold | Root roads, deny movement, recover through nurseries | Terrain growth, regeneration, binds, grind | 3 denial/regrowth units, 2 support/graft units, 1 mobile beast-knot, 1 rooted bastion |
-| Brasshollow Combine | `faction_brasshollow` | Furnace contracts, pressure rails, brass debt engines | Ore and capital projects, expensive low growth | Mining camps, siege staging, resource exhaustion | Armor, heat bursts, artillery, repair windows | 2 machine skirmish/support units, 2 armored line units, 2 siege engines, 1 foundry saint |
-| Veilmourn Armada | `faction_veilmourn` | Fog-bound funeral fleets, memory piracy, mirror charts | Salvage, scouting rewards, uneven income spikes | Fog lanes, bypass routes, ambush backs | Displacement, blinds, morale drain, isolation | 3 evasive/control units, 2 debuff/support units, 1 phase raider, 1 fog leviathan |
+1. No common fantasy identity carriers.
+   - Avoid faction-defining units such as generic militia, archer, pikeman, goblin, skeleton, zombie, elf, dwarf, angel, or dragon.
+   - Familiar creature scale is allowed only when silhouette, recruitment source, name, battlefield role, and rule hooks are specific to Aurelion Reach.
+2. No shared ladder skeleton.
+   - Each faction needs a different distribution of blockers, ranged pressure, mobility, supports, siege, summons, elites, and finishers.
+   - Shared code abilities may exist, but final content must wrap them in faction-specific rules, names, triggers, and counters.
+3. No town badge thinking.
+   - Towns are large world objects with silhouettes, infrastructure, local economy, and strategic approach sides.
+4. No universal economy.
+   - Markets may smooth scarcity later, but faction costs and map priorities must not flatten into perfect exchange rates.
+5. No lore by text panel.
+   - Campaign and map identity should come from object placement, town silhouettes, rewards, guards, route pressure, and concise names.
 
 ## Embercourt League
 
-Implementation status: survives the uniqueness test only as a reworked river-charter faction. Current generic River Guard / Ember Archer style content should be replaced or renamed during the JSON pass.
+### World Role
 
-### Fantasy And Theme Pillar
+The Embercourt League is the civic river-law power of the Emberflow Basin: lock cities, mill islands, oath courts, granary barges, and beacon towers that kept the Salvage Peace moving when the sky mirrors failed.
 
-The Embercourt League is a confederation of river forts, mill cities, and oath courts that wages war through toll charters, beacon fires, lockworks, and disciplined relief columns. Their magic is not holy or noble-generic; it is civic fire, sworn signal law, and ash-sealed logistics.
+### Founding And Backstory
 
-### Mechanical Identity
+During the Long Shattering, flood seasons stopped obeying old calendars. River towns survived by chaining locks, posting beacon courts at crossings, and creating ash-sealed toll charters that guaranteed grain, ferries, and road repair. Those emergency charters became a league. By the Charter War, Embercourt leaders see the basin as a broken public work that must be governed before hunger and raiding finish what the mirrors started.
 
-Embercourt wins by preparing the board before the decisive fight. Their core loops should emphasize readiness, braced retaliations, crossing control, reserve timing, and reliable but not explosive recruitment. They are not the "human castle" faction; they are a river-state machine that turns roads, locks, granaries, and beacon courts into battlefield tempo.
+### Political Motive
 
-### Town Visual And Building Identity
+Embercourt wants enforceable roads, audited tolls, public records, and protected granaries across Aurelion Reach. It claims the new mirror fragments in the Ninefold Confluence must be placed under civic law, not faction privilege.
 
-Towns should show stone river walls, water wheels, lock gates, beacon towers, red-lit court chambers, barge cranes, and ash-sealed ledgers. The skyline is horizontal and practical, broken by signal towers rather than palaces.
+### Moral Tension
 
-### Economy Style
+The League really can prevent famine, reopen roads, and protect small settlements. It also turns emergency administration into occupation: toll seizures, forced levies, road courts, ration priority, and punishment for communities that choose hidden routes over public order.
 
-Embercourt has steady gold and strong discounts once civic/support buildings are online. It should prefer investment chains that improve readiness, reduce recruitment friction, and protect towns. It should be average on raw growth, strong on recovery and affordability.
+### Home Region And Town Feel
 
-### Map Pressure Style
+Home region: Emberflow Basin.
 
-Embercourt projects control over bridges, roads, and crossings. It wants to hold towns and outposts, then punish opponents who raid too deep. AI pressure should value town defense, road chokepoints, and retaking linked support sites.
+Town feel: horizontal river fortresses with stone weirs, water wheels, lock gates, barge cranes, ash-ledger halls, red beacon towers, warm civic fire, and soot on pale masonry. The main approach should read as a guarded river crossing or lock court, not a castle gate.
 
-### Battle Style
+### Visual Language
 
-Battle plans revolve around braced lanes, counterfire, and slow pressure. Embercourt wants the enemy to cross through controlled arcs, get marked or staggered, then be punished by sappers, barge weapons, and reserve elites.
+- Shapes: rectangles, lock steps, bridge spans, low walls, square towers, court bells.
+- Materials: pale stone, river timber, iron chains, red ceramic signal braziers, ash-stamped parchment.
+- Palette: warm fire red, river blue-green, cream masonry, dark wet wood, granary gold.
+- Unit silhouettes: disciplined crews, hook tools, barge frames, signal lanterns, court-bell machinery.
 
-### 7-Tier Unit Ladder
+### Hero Archetypes
 
-| Tier | Unit id | Unit name | Role notes |
+Might heroes are bridge marshals, lockmasters, toll-road hunters, barge captains, and castellan quartermasters.
+
+Magic heroes are beacon scribes, ash-writ lectors, rain-ledger economists, route revealers, and signal court jurists.
+
+Hero seed IDs:
+
+| Role | Hero ids |
+| --- | --- |
+| Might | `hero_embercourt_mira_flintmere`, `hero_embercourt_caelen_ashgrove`, `hero_embercourt_torren_pikeward`, `hero_embercourt_helva_tollbrand`, `hero_embercourt_saren_lockmaster` |
+| Magic | `hero_embercourt_lyra_emberwell`, `hero_embercourt_seren_valechant`, `hero_embercourt_orra_cinderquill`, `hero_embercourt_belis_rainledger`, `hero_embercourt_jorun_beaconscribe` |
+
+### Unit Ladder Intent And Roles
+
+Embercourt should not become a generic human castle. Its ladder is a prepared civic war machine: line holders, lane preparation, protected ranged crews, court authority, signal support, lock-bred shock, and a walking charter engine.
+
+| Tier | Unit id | Unit name | Intent |
 | --- | --- | --- | --- |
-| 1 | `unit_embercourt_fordhook_cadets` | Fordhook Cadets | Cheap crossing holders with hook reach, weak damage, and strong defensive retaliation when adjacent to an objective or braced ally. |
-| 2 | `unit_embercourt_lantern_sappers` | Lantern Sappers | Control skirmishers who seed ember pots, reveal hidden threats, and punish enemies that end movement in prepared lanes. |
-| 3 | `unit_embercourt_bargebow_crews` | Bargebow Crews | Heavy ranged crews with limited shots, bonus damage from protected lanes, and poor output when isolated. |
-| 4 | `unit_embercourt_ash_oath_bailiffs` | Ash-Oath Bailiffs | Elite civic enforcers that bodyguard adjacent stacks, convert defense orders into retaliation pressure, and resist morale shocks. |
-| 5 | `unit_embercourt_beacon_lectors` | Beacon Lectors | Support casters who refresh readiness, mark attack lanes, and let nearby units act with cleaner target priority. |
-| 6 | `unit_embercourt_sluicefire_lindworms` | Sluicefire Lindworms | Lock-bred fire beasts that surge through narrow lanes, scorch clustered targets, and collapse if left unsupported. |
-| 7 | `unit_embercourt_charter_colossus` | Charter Colossus | A walking court-bell engine that anchors a zone, increases allied retaliation value, and forces enemies to either disengage or commit fully. |
+| 1 | `unit_embercourt_fordhook_cadets` | Fordhook Cadets | Cheap crossing holders with reach, bracing, and objective-adjacent retaliation. |
+| 2 | `unit_embercourt_lantern_sappers` | Lantern Sappers | Lane preparation, reveal utility, ember pots, and anti-ambush control. |
+| 3 | `unit_embercourt_bargebow_crews` | Bargebow Crews | Limited-shot heavy ranged pressure that needs protection and lanes. |
+| 4 | `unit_embercourt_ash_oath_bailiffs` | Ash-Oath Bailiffs | Bodyguard and morale-stable line enforcers that punish attacks into formation. |
+| 5 | `unit_embercourt_beacon_lectors` | Beacon Lectors | Support casters that refresh readiness, mark lanes, and steady compact formations. |
+| 6 | `unit_embercourt_sluicefire_lindworms` | Sluicefire Lindworms | Narrow-lane fire shock that hits hard when supported and collapses when isolated. |
+| 7 | `unit_embercourt_charter_colossus` | Charter Colossus | Zone anchor that raises retaliation value and forces full commitment or withdrawal. |
 
-### Hero Concepts
+### Economy Preferences And Resources
 
-Might identities:
+Embercourt prefers gold, timber, embergrain, and road-linked income. Its town development should reward civic chains: granaries, tollhouses, beacon courts, and support buildings that lower recruitment friction, improve recovery, and protect holdings. It should have reliable income, average raw growth, strong affordability after investment, and high value from crossroads, bridges, mills, and granary sites.
 
-| Hero id | Name | Identity hook |
+### Magic And Accord Identity
+
+Beacon Accord: signal fires, ash writs, court bells, route marks, morale steadiness, and oath-bound retaliation. Embercourt magic should reveal lanes, stabilize allied morale, punish broken oaths, improve road scouting, and convert defense orders into tactical tempo.
+
+### Artifacts And Object Hooks
+
+- Artifacts: ash-sealed writs, tollstone rings, beacon lenses, river judge gavels, granary keys, lockmaster chains.
+- Object hooks: tollhouses, ferry courts, burned ledgers, beacon relays, granary islands, old road courts, lockworks, public ration depots.
+
+### Town Building Identity
+
+Signature building seeds:
+
+| Building id | Name | Identity |
 | --- | --- | --- |
-| `hero_embercourt_mira_flintmere` | Mira Flintmere | Bridgehead marshal; improves braced melee tempo and converts first retaliation each round into momentum. |
-| `hero_embercourt_caelen_ashgrove` | Caelen Ashgrove | Mill-country castellan; improves town defense, garrison recovery, and crossing-site support radius. |
-| `hero_embercourt_torren_pikeward` | Torren Pikeward | Quartermaster captain; reduces low and mid-tier recruitment costs after economy buildings. |
-| `hero_embercourt_helva_tollbrand` | Helva Tollbrand | Toll-road hunter; gains map movement and combat bonuses near controlled roads or bridges. |
-| `hero_embercourt_saren_lockmaster` | Saren Lockmaster | Siege-lock commander; improves sappers, bargebows, and town assault control effects. |
+| `building_embercourt_charter_bastion` | Charter Bastion | Capital court and defensive readiness hub. |
+| `building_embercourt_beacon_court` | Beacon Court | Magic, scouting, and lane-mark infrastructure. |
+| `building_embercourt_granary_lock_exchange` | Granary Lock Exchange | Steady income, embergrain logic, and recovery. |
+| `building_embercourt_oath_pikehall` | Oath Pikehall | Civic line discipline and bodyguard upgrades. |
+| `building_embercourt_bargebow_slip` | Bargebow Slip | River weapon crews and town defense pressure. |
+| `building_embercourt_drake_sluice` | Drake Sluice | High-tier lock-beast infrastructure. |
+| `building_embercourt_tollstone_weir` | Tollstone Weir | Road and crossing economy support. |
 
-Magic identities:
+### Strategic Playstyle
 
-| Hero id | Name | Identity hook |
-| --- | --- | --- |
-| `hero_embercourt_lyra_emberwell` | Lyra Emberwell | Beacon pathfinder; grants scouting and first-round lane marks on revealed enemies. |
-| `hero_embercourt_seren_valechant` | Seren Valechant | Star-ledger mage; turns exploration and cache recovery into spell tempo. |
-| `hero_embercourt_orra_cinderquill` | Orra Cinderquill | Ash writ specialist; strengthens fire-control spells and anti-ambush reveal effects. |
-| `hero_embercourt_belis_rainledger` | Belis Rainledger | Granary economist; converts civic buildings into spell points, gold smoothing, or recovery. |
-| `hero_embercourt_jorun_beaconscribe` | Jorun Beaconscribe | Signal court lector; improves ally initiative when formations remain compact. |
+Embercourt is reliable, positional, and hard to uproot from mapped infrastructure. It wants to secure crossings, build support chains, keep formations compact, and punish enemies who overextend past prepared roads. Weaknesses: less explosive economy than salvage/raid factions, less flexible mobility than fog/marsh powers, and vulnerable if forced to fight away from roads and lanes.
 
-### Signature Buildings
+### Campaign And Map Hooks
 
-| Building id | Name | Implementation note |
-| --- | --- | --- |
-| `building_embercourt_charter_bastion` | Charter Bastion | Capital project; raises readiness, defense, and reserve pressure from linked support sites. |
-| `building_embercourt_beacon_court` | Beacon Court | Support/magic hybrid; unlocks beacon spells, scouting bonuses, and lane marks. |
-| `building_embercourt_granary_lock_exchange` | Granary Lock Exchange | Economy; steady gold plus wood and small low-tier growth. |
-| `building_embercourt_oath_pikehall` | Oath Pikehall | Dwelling; unlocks Ash-Oath Bailiffs or improves Fordhook Cadet line play. |
-| `building_embercourt_bargebow_slip` | Bargebow Slip | Dwelling; unlocks Bargebow Crews and improves town defense ranged pressure. |
-| `building_embercourt_drake_sluice` | Drake Sluice | Dwelling; unlocks Sluicefire Lindworms, high ore and support requirements. |
-| `building_embercourt_tollstone_weir` | Tollstone Weir | Economy/support; improves road-site income and crossing control. |
+- Reopen a broken beacon chain before winter flood.
+- Decide whether to seize a neutral ferry town for public rationing.
+- Defend granary barges from Mireclaw raids while Sunvault demands mirror custody.
+- Capture toll courts around the Ninefold Confluence to legalize a basin-wide road charter.
+
+### Anti-Generic Constraints
+
+- Do not call it the human kingdom, noble castle, or holy order faction.
+- Avoid palace, knightly, and generic archer imagery as identity carriers.
+- Every unit and building should show river law, locks, barges, tolls, ash writs, or beacon infrastructure.
 
 ## Mireclaw Covenant
 
-Implementation status: survives the uniqueness test as the predatory bog-and-ferry faction. Current cutthroat, slinger, brute, and ripper ideas can remain as ancestors, but the full ladder needs stronger identity and tier separation.
+### World Role
 
-### Fantasy And Theme Pillar
+The Mireclaw Covenant is the sovereignty network of the Drowned Marches: ferry raiders, reed-script shrine keepers, bogplate handlers, chainboom toll breakers, and clans that treat marsh routes as living law.
 
-The Mireclaw Covenant is a marsh oath culture built from ferry raiders, beast handlers, reed-script shrine keepers, and clans that treat the bog as a living hunting ground. Their fantasy is not "green monster horde"; it is predatory wetland logistics, drum law, drowning traps, and wounded-prey rituals.
+### Founding And Backstory
 
-### Mechanical Identity
+When old roads drowned during the Long Shattering, outside courts wrote the lowlands off as lost. Marsh families survived by mapping reed lanes, breeding ferry beasts, raising shrine drums on old bridge piles, and learning which routes the bog would accept. The Covenant formed when Basin toll collectors tried to reclaim drowned causeways and found every bridge chain cut before dawn.
 
-Mireclaw wins by making the map feel unsafe. It should create pressure through cheap bodies, quick raids, harried status effects, wounded-target finishers, and den growth. It accepts losses better than most factions and turns disrupted enemies into kill opportunities.
+### Political Motive
 
-### Town Visual And Building Identity
+Mireclaw wants the lowlands free from fixed maps, mine contracts, and river-court seizure. It claims any charter that ignores peat, flood, and clan oath is an invasion document.
 
-Towns sit on drowned pilings, chain ferries, reed dens, bog forges, drum platforms, smoked hides, and black reedstone shrines. The skyline is low, wet, and threatening, with movement implied through ferry lanes rather than roads.
+### Moral Tension
 
-### Economy Style
+Mireclaw protects local autonomy and understands unstable terrain better than any outside power. It also normalizes ambush tolls, hostage routes, blood-feud justice, and predatory raids against settlements that cannot tell a clan border from a safe ferry lane.
 
-Mireclaw has lower safe income and higher pressure income. It should gain value from raiding, dwellings, den upgrades, and sites that support ferries or drums. It should have strong early growth, uneven quality, and cheaper low-tier replacement.
+### Home Region And Town Feel
 
-### Map Pressure Style
+Home region: Drowned Marches.
 
-Mireclaw should field multiple small threats, hunt resource sites, and punish isolated heroes. Its AI should prefer site denial, neutral dwelling capture, and hero hunting over slow town sieges until enough pressure has built.
+Town feel: low, wet, mobile, and threatening. Drowned pilings, chain ferries, reed dens, drum platforms, blackwater shrines, smoked hides, mudglass glints, and hidden boat slips should matter more than walls.
 
-### Battle Style
+### Visual Language
 
-Mireclaw fights dirty: harry, stagger, isolate, then finish. Many units should get better against wounded, slowed, or statused enemies. Defensive staying power should come from mass, bog armor, and debuffs rather than clean shields.
+- Shapes: low profiles, chain curves, reed clusters, hanging hides, broken causeways.
+- Materials: wet timber, peat, bone tokens, green-black water, mudglass, rope, rusted ferry chain.
+- Palette: green-black, yellow reed, cold mud, muted bone, toxic glints.
+- Unit silhouettes: crouched packs, hooks, lashes, shell or bogplate armor, drum carriers, antlered apex forms.
 
-### 7-Tier Unit Ladder
+### Hero Archetypes
 
-| Tier | Unit id | Unit name | Role notes |
+Might heroes are raid captains, packlords, ferrychain breakers, bogplate handlers, and marsh trackers.
+
+Magic heroes are reed-script hexcallers, sporewake mystics, den augurs, drum oracles, and shrine-blood negotiators.
+
+Hero seed IDs:
+
+| Role | Hero ids |
+| --- | --- |
+| Might | `hero_mireclaw_vaska_reedmaw`, `hero_mireclaw_tarn_fenhook`, `hero_mireclaw_orrik_tollreaver`, `hero_mireclaw_kessa_chainboom`, `hero_mireclaw_brakka_mudkeel` |
+| Magic | `hero_mireclaw_sable_muckscribe`, `hero_mireclaw_nix_votivejaw`, `hero_mireclaw_edda_rotlamp`, `hero_mireclaw_pell_reedscript`, `hero_mireclaw_zhorra_fenwake` |
+
+### Unit Ladder Intent And Roles
+
+Mireclaw is not a green monster horde. Its ladder is predatory wetland logistics: snares, blinds, bog armor, pulls, rot chants, wounded-target finishers, and a marsh apex that turns fear into route control.
+
+| Tier | Unit id | Unit name | Intent |
 | --- | --- | --- | --- |
-| 1 | `unit_mireclaw_reedsnare_kin` | Reedsnare Kin | Cheap snare infantry that slows or marks targets, poor straight damage, strong when surrounding. |
-| 2 | `unit_mireclaw_mudglass_slingers` | Mudglass Slingers | Ranged harriers that spread mudglass blindness and make later pack attacks more reliable. |
-| 3 | `unit_mireclaw_bogplate_maulers` | Bogplate Maulers | Slow bruisers with ranged resistance and bonus damage while enemies are harried. |
-| 4 | `unit_mireclaw_ferrychain_lashers` | Ferrychain Lashers | Control unit that pulls, pins, or punishes movement across lanes and objectives. |
-| 5 | `unit_mireclaw_sporewake_chanters` | Sporewake Chanters | Debuff support that spreads rot chants, weakens recovery, and amplifies wounded-prey triggers. |
-| 6 | `unit_mireclaw_gorefen_rippers` | Gorefen Rippers | Elite finishers that spike damage against wounded or isolated targets, fragile if forced to trade frontally. |
-| 7 | `unit_mireclaw_drowned_antler_sovereign` | Drowned Antler Sovereign | Bog apex beast that creates fear, trample lanes, and heavy pressure around wounded stacks. |
+| 1 | `unit_mireclaw_reedsnare_kin` | Reedsnare Kin | Cheap snarers that slow and mark, weak alone and strong while surrounding. |
+| 2 | `unit_mireclaw_mudglass_slingers` | Mudglass Slingers | Ranged harriers that spread blindness and set up pack attacks. |
+| 3 | `unit_mireclaw_bogplate_maulers` | Bogplate Maulers | Slow bruisers with resistance and bonus damage against harried enemies. |
+| 4 | `unit_mireclaw_ferrychain_lashers` | Ferrychain Lashers | Pulls, pins, and movement punishment across lanes or objectives. |
+| 5 | `unit_mireclaw_sporewake_chanters` | Sporewake Chanters | Rot support, recovery denial, and wounded-prey amplifier. |
+| 6 | `unit_mireclaw_gorefen_rippers` | Gorefen Rippers | Fragile elite finishers for wounded or isolated targets. |
+| 7 | `unit_mireclaw_drowned_antler_sovereign` | Drowned Antler Sovereign | Apex pressure piece with fear, trample lanes, and wounded-stack dominance. |
 
-### Hero Concepts
+### Economy Preferences And Resources
 
-Might identities:
+Mireclaw prefers peatwax, raid spoils, den growth, ferry income, and cheap replacement loops. It should have lower safe income than Embercourt, stronger early growth, and value from denying or retaking resource sites. It should care about peat cuts, ferry chains, hidden caches, beast dens, and shrine drums more than formal mines.
 
-| Hero id | Name | Identity hook |
+### Magic And Accord Identity
+
+Mire Accord: rot, drag, blind, wounded-prey marks, den growth, drum acceleration, and recovery denial. Mireclaw magic should make enemies less certain, less healed, and easier to finish rather than simply dealing clean damage.
+
+### Artifacts And Object Hooks
+
+- Artifacts: reed-script masks, chainboom hooks, peatwax votives, mudglass beads, drowned antlers, drum-hide ledgers.
+- Object hooks: reed caches, ferry toll chains, peat cuts, bog dens, spore shrines, drowned causeways, blackwater ambush posts.
+
+### Town Building Identity
+
+| Building id | Name | Identity |
 | --- | --- | --- |
-| `hero_mireclaw_vaska_reedmaw` | Vaska Reedmaw | Raid captain; increases pressure from quick site captures and first-strike pack damage. |
-| `hero_mireclaw_tarn_fenhook` | Tarn Fenhook | Fog-lane tracker; improves movement through marsh/fog and ambush setup. |
-| `hero_mireclaw_orrik_tollreaver` | Orrik Tollreaver | Packlord; improves den growth and low-tier replacement after losses. |
-| `hero_mireclaw_kessa_chainboom` | Kessa Chainboom | Ferrychain breaker; improves control units and bridge/crossing fights. |
-| `hero_mireclaw_brakka_mudkeel` | Brakka Mudkeel | Bogplate handler; makes bruisers cheaper and harder to dislodge. |
+| `building_mireclaw_blackbranch_den` | Blackbranch Den | Low-tier growth and den pressure. |
+| `building_mireclaw_chainboom_ferry` | Chainboom Ferry | Crossing control, raiding support, retreat routes. |
+| `building_mireclaw_war_drum_circle` | War Drum Circle | Pack initiative and wounded-target pressure. |
+| `building_mireclaw_sporewake_shrine` | Sporewake Shrine | Rot, blind, and recovery-denial magic. |
+| `building_mireclaw_floodtide_forge` | Floodtide Forge | Bogplate armor and rough ore use. |
+| `building_mireclaw_nightglass_dominion` | Nightglass Dominion | Deep raid sustain and elite pack growth. |
+| `building_mireclaw_antler_pit` | Antler Pit | Apex beast dwelling. |
 
-Magic identities:
+### Strategic Playstyle
 
-| Hero id | Name | Identity hook |
-| --- | --- | --- |
-| `hero_mireclaw_sable_muckscribe` | Sable Muckscribe | Reed-script hexcaller; improves debuffs and relic pressure. |
-| `hero_mireclaw_nix_votivejaw` | Nix Votivejaw | Shrine-biter; converts battlefield kills into temporary spell power or pressure. |
-| `hero_mireclaw_edda_rotlamp` | Edda Rotlamp | Sporewake mystic; strengthens rot, blind, and recovery-denial effects. |
-| `hero_mireclaw_pell_reedscript` | Pell Reedscript | Den augur; improves dwelling growth when map sites are linked. |
-| `hero_mireclaw_zhorra_fenwake` | Zhorra Fenwake | Drum oracle; accelerates units after enemies become harried or wounded. |
+Mireclaw is tempo pressure and asymmetric map danger. It wants multiple small threats, exposed site attacks, cheap replacements, debuffs, and finishing windows. Weaknesses: weaker safe economy, fragile elite attackers, poor clean sieges, and trouble against factions that keep compact guarded routes.
 
-### Signature Buildings
+### Campaign And Map Hooks
 
-| Building id | Name | Implementation note |
-| --- | --- | --- |
-| `building_mireclaw_blackbranch_den` | Blackbranch Den | Low-tier dwelling and den-growth root. |
-| `building_mireclaw_chainboom_ferry` | Chainboom Ferry | Map pressure/economy; improves raiding, crossing control, and retreat routes. |
-| `building_mireclaw_war_drum_circle` | War Drum Circle | Support; increases pressure and pack initiative around wounded targets. |
-| `building_mireclaw_sporewake_shrine` | Sporewake Shrine | Magic; unlocks rot, blind, and recovery-denial spell families. |
-| `building_mireclaw_floodtide_forge` | Floodtide Forge | Support/economy; strengthens Bogplate Maulers and grants ore trickle. |
-| `building_mireclaw_nightglass_dominion` | Nightglass Dominion | Capital project; sustains deeper raids and elite pack growth. |
-| `building_mireclaw_antler_pit` | Antler Pit | Top-tier dwelling; unlocks Drowned Antler Sovereign. |
+- Break an Embercourt survey line before it turns drowned roads into taxable causeways.
+- Choose whether to ransom a mill town or preserve it as a neutral ferry market.
+- Hunt a Sunvault relay crew that is mapping marsh paths with aetherglass.
+- Defend shrine drums from Thornwake root law that would make bog routes conditional.
+
+### Anti-Generic Constraints
+
+- Do not make them generic orcs, goblins, swamp monsters, or raiders with green paint.
+- Avoid clean tribal cliches. The culture is route law, ferry sovereignty, wetland logistics, drums, and shrines.
+- Low-tier units must still show snares, reeds, mudglass, ferry craft, or den culture.
 
 ## Sunvault Compact
 
-Implementation status: survives the uniqueness test as the crystal-array and harmonic-command faction. Current shard/prism/mirror/aurora content can remain as a partial foundation if expanded away from a generic guard-archer-duelist shape.
+### World Role
 
-### Fantasy And Theme Pillar
+The Sunvault Compact is the disciplined solar-calibration power of the Glass Uplands: lens keepers, crystal engineers, choir mathematicians, mirror duelists, and relay governors who believe the sky mirror network can be rebuilt.
 
-The Sunvault Compact is a disciplined crystal society that treats battle as calibration. Its towns are buried relay cities, lens crowns, choir galleries, and solar vaults. Their magic is geometric, harmonic, and blinding rather than celestial-good.
+### Founding And Backstory
 
-### Mechanical Identity
+When shards fell into the uplands, many settlements died from glare fields and broken weather. The survivors learned to bury observatories, tune crystal orchards, and use choirs to regulate dangerous resonance. The Compact began as a safety discipline. It became a political power when its relay maps proved it could forecast storms, reveal raiders, and make crystal fields productive.
 
-Sunvault wins by setting up resonance. It should reward formation, prepared lanes, spell timing, and target focus. The faction is expensive, quality-focused, and worse when forced into scattered brawls.
+### Political Motive
 
-### Town Visual And Building Identity
+Sunvault wants mirror fragments gathered, measured, and rebuilt into a disciplined network. It argues that only calibrated truth can stop the Reach from dissolving into local superstition and resource war.
 
-Towns should show crystal buttresses, mirrored terraces, lens tracks, resonant cloisters, prism yards, and tower crowns that redirect sun into batteries. The silhouette is bright, angular, and vertical.
+### Moral Tension
 
-### Economy Style
+Sunvault can restore weather order, protect routes with sightlines, and prevent misuse of mirror fragments. It also treats disagreement as noise, local memory as unverified, and uncalibrated communities as problems to be corrected.
 
-Sunvault wants ore and support buildings. It has moderate gold, high build costs, and strong quality once relay chains are active. Growth is not swarmy; it should get better through upgraded dwellings and support/magic infrastructure.
+### Home Region And Town Feel
 
-### Map Pressure Style
+Home region: Glass Uplands.
 
-Sunvault prefers linked relay nodes, watch sites, and prepared objectives. It should push by extending safe firing/sightline networks, not by flooding the map.
+Town feel: bright, vertical, angular, and deliberately aligned. Crystal buttresses, mirrored terraces, lens tracks, resonant cloisters, prism yards, buried observatories, and solar relay crowns should define the skyline.
 
-### Battle Style
+### Visual Language
 
-Sunvault controls range and timing. Units gain value from marked targets, defending allies, resonance stacks, and support spells. They should have high clarity and strong turns, but can be flanked or rushed when unprepared.
+- Shapes: facets, triangles, thin towers, stepped terraces, beam paths, circular lens frames.
+- Materials: pale stone, blue-violet crystal, polished mirror, gold inlay, white ceramic.
+- Palette: sun gold, hard white, pale stone, blue-violet crystal, long cool shadows.
+- Unit silhouettes: shields with facets, array frames, mirror blades, choir standards, walking batteries.
 
-### 7-Tier Unit Ladder
+### Hero Archetypes
 
-| Tier | Unit id | Unit name | Role notes |
+Might heroes are array marshals, battery captains, relay surveyors, mirror-step duel commanders, and target-focus tacticians.
+
+Magic heroes are sunlance seers, harmonic scholars, cloister keepers, solar physicians, and calibration mages.
+
+Hero seed IDs:
+
+| Role | Hero ids |
+| --- | --- |
+| Might | `hero_sunvault_solera_prismarch`, `hero_sunvault_varis_mirrorstep`, `hero_sunvault_ilyr_glassmarshal`, `hero_sunvault_dovan_lenscaptain`, `hero_sunvault_renn_facetlane` |
+| Magic | `hero_sunvault_neral_glasswind`, `hero_sunvault_thalen_choirward`, `hero_sunvault_essa_daynote`, `hero_sunvault_calis_sunvein`, `hero_sunvault_mirro_halometer` |
+
+### Unit Ladder Intent And Roles
+
+Sunvault is not a holy light faction. Its ladder is calibration warfare: shield line, marked-target ranged pressure, reposition duelists, resonance support, array constructs, heavy batteries, and a top-tier relay titan.
+
+| Tier | Unit id | Unit name | Intent |
 | --- | --- | --- | --- |
-| 1 | `unit_sunvault_shard_wardens` | Shard Wardens | Durable low-tier shield line that reflects minor damage and protects ranged arrays. |
-| 2 | `unit_sunvault_prism_adepts` | Prism Adepts | Accurate ranged unit that improves against marked or staggered targets. |
-| 3 | `unit_sunvault_mirror_duelists` | Mirror Duelists | Mobile melee unit that exploits broken timing and can reposition through reflected lanes. |
-| 4 | `unit_sunvault_resonant_choristers` | Resonant Choristers | Support stack that improves spell cycles, ally cohesion, and marked-target focus. |
+| 1 | `unit_sunvault_shard_wardens` | Shard Wardens | Durable shield line that protects arrays and reflects minor damage. |
+| 2 | `unit_sunvault_prism_adepts` | Prism Adepts | Accurate ranged pressure against marked or staggered targets. |
+| 3 | `unit_sunvault_mirror_duelists` | Mirror Duelists | Reposition melee that exploits broken timing and reflected lanes. |
+| 4 | `unit_sunvault_resonant_choristers` | Resonant Choristers | Support for spell cycling, cohesion, and focused marks. |
 | 5 | `unit_sunvault_solar_array_striders` | Solar Array Striders | Construct walkers that project small firing lanes and resist disruption. |
-| 6 | `unit_sunvault_aurora_ballistae` | Aurora Ballistae | Heavy battery unit, excellent behind protected lanes, weak to close pressure. |
-| 7 | `unit_sunvault_daybreak_colossus` | Daybreak Colossus | Top-tier array titan that amplifies resonance and turns a prepared front into a killing field. |
+| 6 | `unit_sunvault_aurora_ballistae` | Aurora Ballistae | Heavy battery, excellent when protected and weak when rushed. |
+| 7 | `unit_sunvault_daybreak_colossus` | Daybreak Colossus | Prepared-front amplifier and resonance capstone. |
 
-### Hero Concepts
+### Economy Preferences And Resources
 
-Might identities:
+Sunvault prefers ore, aetherglass, relay-linked spell infrastructure, and quality upgrades. It should be costly to build, modest in raw growth, strong after support buildings, and highly sensitive to crystal orchards, observatories, watch sites, and high-ground relays.
 
-| Hero id | Name | Identity hook |
+### Magic And Accord Identity
+
+Lens Accord: light, resonance, shields, long sight, target calibration, dispels, and spell cycling. Sunvault magic should reward planned turns, marked targets, formation cohesion, and relay control.
+
+### Artifacts And Object Hooks
+
+- Artifacts: prism sextants, choir tuning forks, shard mantles, halometers, broken mirror crowns, sun-vein lenses.
+- Object hooks: lens fields, buried observatories, crystal orchards, relay towers, glare scars, prism road markers, calibration shrines.
+
+### Town Building Identity
+
+| Building id | Name | Identity |
 | --- | --- | --- |
-| `hero_sunvault_solera_prismarch` | Solera Prismarch | Array marshal; improves line cohesion and resonance from defensive orders. |
-| `hero_sunvault_varis_mirrorstep` | Varis Mirrorstep | Flank commander; improves Mirror Duelists and reposition attacks. |
-| `hero_sunvault_ilyr_glassmarshal` | Ilyr Glassmarshal | Battery captain; improves Aurora Ballistae setup and protected-lane damage. |
-| `hero_sunvault_dovan_lenscaptain` | Dovan Lens-Captain | Relay surveyor; improves map watch sites and ranged combat near relays. |
-| `hero_sunvault_renn_facetlane` | Renn Facetlane | Duel-line tactician; improves target focus after enemy initiative drops. |
+| `building_sunvault_shard_yard` | Shard Yard | Shield-line root and crystal labor yard. |
+| `building_sunvault_lens_gallery` | Lens Gallery | Ranged support and sightline infrastructure. |
+| `building_sunvault_harmonic_cloister` | Harmonic Cloister | Spell cycling and cohesion recovery. |
+| `building_sunvault_aurora_spire` | Aurora Spire | Heavy battery dwelling. |
+| `building_sunvault_daybreak_matrix` | Daybreak Matrix | Capital relay pressure and top-tier support. |
+| `building_sunvault_mirror_forge` | Mirror Forge | Duelist and reposition technology. |
+| `building_sunvault_zenith_observatory` | Zenith Observatory | Scouting, relay sight, and sunlance access. |
 
-Magic identities:
+### Strategic Playstyle
 
-| Hero id | Name | Identity hook |
-| --- | --- | --- |
-| `hero_sunvault_neral_glasswind` | Neral Glasswind | Sunlance seer; specializes in line damage and marked target spells. |
-| `hero_sunvault_thalen_choirward` | Thalen Choirward | Cloister keeper; extends support spell duration and cohesion recovery. |
-| `hero_sunvault_essa_daynote` | Essa Daynote | Harmonic scholar; improves resonance stack generation. |
-| `hero_sunvault_calis_sunvein` | Calis Sunvein | Solar physician; turns light spells into shields and damage smoothing. |
-| `hero_sunvault_mirro_halometer` | Mirro Halometer | Calibration mage; improves spell accuracy, dispel resistance, and relay building value. |
+Sunvault is expensive, deliberate, and high-quality. It wants to extend relay networks, control sightlines, protect batteries, mark priority targets, and win by executing prepared turns. Weaknesses: costly replacement, vulnerability to scattered brawls, dependence on setup, and pressure when rushed before relay support exists.
 
-### Signature Buildings
+### Campaign And Map Hooks
 
-| Building id | Name | Implementation note |
-| --- | --- | --- |
-| `building_sunvault_shard_yard` | Shard Yard | Low-tier dwelling and shield-line root. |
-| `building_sunvault_lens_gallery` | Lens Gallery | Ranged dwelling/support; strengthens Prism Adepts and sightline play. |
-| `building_sunvault_harmonic_cloister` | Harmonic Cloister | Support/magic; improves spell cycles and formation recovery. |
-| `building_sunvault_aurora_spire` | Aurora Spire | Heavy battery dwelling; unlocks Aurora Ballistae. |
-| `building_sunvault_daybreak_matrix` | Daybreak Matrix | Capital project; activates high-tier relay pressure. |
-| `building_sunvault_mirror_forge` | Mirror Forge | Dwelling/support; upgrades duelists and line reposition tools. |
-| `building_sunvault_zenith_observatory` | Zenith Observatory | Magic/scouting; improves relay sight and sunlance spell access. |
+- Secure a cracked observatory before its glare field destroys nearby farms.
+- Escort a calibration choir through contested bridge and marsh territory.
+- Decide whether to reveal a Veilmourn route at the cost of exposing civilian memory records.
+- Compete with Brasshollow for aetherglass-bearing ore seams under the Glass Uplands.
+
+### Anti-Generic Constraints
+
+- Do not frame Sunvault as angels, clerics, high elves, or generic good light.
+- Avoid divine halos and palace sanctity. Use engineering, resonance, lenses, towers, and disciplined calibration.
+- Ranged power must depend on marks, lanes, and support, not generic archery.
 
 ## Thornwake Concord
 
-Implementation status: new planned faction. Do not reduce it to generic elves, druids, or treants. Its identity is migratory living infrastructure and graft law.
+### World Role
 
-### Fantasy And Theme Pillar
+The Thornwake Concord is the living law of the Walking Green: root pilgrims, graftwrights, seed judges, thorn toll keepers, and orchard caravans that carry settlement rules through migrating forest.
 
-The Thornwake Concord is a league of root pilgrims, graftwrights, seed judges, and living orchard-caravans that carries its homeland with it. It does not defend "nature" in the abstract; it spreads binding root law, toll briars, and living fortifications into contested roads.
+### Founding And Backstory
 
-### Mechanical Identity
+The Long Shattering made old forests move. Logging roads vanished, nurseries appeared in former fields, and root systems began rejecting towns that ignored water and soil debts. Pilgrims who learned graft law survived by negotiating with living routes. The Concord formed when several orchard caravans bound their seed vaults together and declared that no charter was legitimate unless the land itself had a voice.
 
-Thornwake wins by making the battlefield and map less convenient for enemies every turn. It should grow value from rooted sites, recover in prepared zones, create terrain pressure, and win attrition. It is slow to start and dangerous when allowed to seed a region.
+### Political Motive
 
-### Town Visual And Building Identity
+Thornwake wants settlement, extraction, and travel made conditional on renewal. It opposes permanent roads, unchecked mines, and mirror restoration that treats terrain as inert infrastructure.
 
-Towns should look alive and mobile: root wheels, suspended seed vaults, graft halls, living bridges, moss-lit courts, thorn toll arches, and orchard engines. The silhouette is rounded, tangled, and vertical-horizontal at once.
+### Moral Tension
 
-### Economy Style
+Thornwake protects exhausted land and forces long-term thinking. It also uses living tolls, forced regrowth, hostage roads, and exclusionary root law that can starve towns if they refuse Concord terms.
 
-Thornwake is wood and growth hungry, with weaker direct gold but strong site-linked growth. It should care about neutral sites becoming rooted, support radius, and recovery. Some buildings should improve unit growth only when linked sites remain controlled.
+### Home Region And Town Feel
 
-### Map Pressure Style
+Home region: Walking Green.
 
-Thornwake roots roads, slows enemy movement near controlled support sites, and uses nurseries to recover losses. Its pressure is not fast raiding; it is turning the map into hostile terrain for everyone else.
+Town feel: alive and semi-mobile. Root wheels, suspended seed vaults, graft halls, living bridges, moss-lit courts, thorn toll arches, orchard engines, and woven pilgrim markers should make the town feel like settlement and caravan at once.
 
-### Battle Style
+### Visual Language
 
-Thornwake creates brambles, binds targets, regenerates while holding ground, and forces enemies to waste actions escaping control. It has limited burst and limited clean ranged damage.
+- Shapes: branching silhouettes, root arches, graft bands, thorn braids, hanging seed lanterns.
+- Materials: pale bark, dark leaves, living rope, amber fruit glass, moss stone, red thorn.
+- Palette: deep green, pale bark, thorn red, amber fruit, damp soil, pilgrimage cloth.
+- Unit silhouettes: carriers with seed packs, whip-thorn reach, living shields, grafted support frames, rooted bastions.
 
-### 7-Tier Unit Ladder
+### Hero Archetypes
 
-| Tier | Unit id | Unit name | Role notes |
+Might heroes are briar marshals, rootwright siege growers, pilgrim captains, recovery wardens, and bramble hunt leaders.
+
+Magic heroes are seed seers, sporeglass doctors, loam singers, moss-memory mages, and graft sibyls.
+
+Hero seed IDs:
+
+| Role | Hero ids |
+| --- | --- |
+| Might | `hero_thornwake_ardren_briarmarshal`, `hero_thornwake_tova_rootwright`, `hero_thornwake_halen_thorncart`, `hero_thornwake_merek_greenbarrow`, `hero_thornwake_silsa_bramblehound` |
+| Magic | `hero_thornwake_veyra_seedseer`, `hero_thornwake_osmund_pollenglass`, `hero_thornwake_elian_loamchant`, `hero_thornwake_ralka_mossvein`, `hero_thornwake_nara_graftsibyl` |
+
+### Unit Ladder Intent And Roles
+
+Thornwake is not elves, druids, or tree people. Its ladder is living infrastructure: bramble carriers, reach binders, menders, siege growth, mobility through rooted ground, regeneration leaders, and a battlefield-rooting bastion.
+
+| Tier | Unit id | Unit name | Intent |
 | --- | --- | --- | --- |
-| 1 | `unit_thornwake_seedcutters` | Seedcutters | Low-tier carriers that plant minor brambles, block lanes, and improve when fighting on rooted ground. |
-| 2 | `unit_thornwake_thornwhip_carriers` | Thornwhip Carriers | Reach/control unit that binds enemies and punishes disengage attempts. |
-| 3 | `unit_thornwake_sporeglass_menders` | Sporeglass Menders | Support unit that heals small amounts, clears some debuffs, and spreads rooted status. |
-| 4 | `unit_thornwake_barkmantle_rams` | Barkmantle Rams | Durable living siege beasts that break fortified lines but move slowly. |
-| 5 | `unit_thornwake_stagknot_runners` | Stag-Knot Runners | Mobile beast-knot flankers that leap through allied brambles and pin ranged units. |
-| 6 | `unit_thornwake_graft_matriarchs` | Graft Matriarchs | Large support leaders that improve regeneration, create stronger brambles, and punish attackers who ignore them. |
-| 7 | `unit_thornwake_worldroot_bastion` | Worldroot Bastion | Top-tier living fortress that roots a section of the battlefield and turns nearby allies into an attrition wall. |
+| 1 | `unit_thornwake_seedcutters` | Seedcutters | Low-tier carriers that plant brambles and improve on rooted ground. |
+| 2 | `unit_thornwake_thornwhip_carriers` | Thornwhip Carriers | Reach binders and disengage punishers. |
+| 3 | `unit_thornwake_sporeglass_menders` | Sporeglass Menders | Healing, cleanse, and rooted-status support. |
+| 4 | `unit_thornwake_barkmantle_rams` | Barkmantle Rams | Durable living siege and fortified-line breakers. |
+| 5 | `unit_thornwake_stagknot_runners` | Stag-Knot Runners | Mobile flankers through allied bramble lanes and anti-ranged pins. |
+| 6 | `unit_thornwake_graft_matriarchs` | Graft Matriarchs | Regeneration leaders and stronger bramble creators. |
+| 7 | `unit_thornwake_worldroot_bastion` | Worldroot Bastion | Living fortress that roots battlefield zones and enables attrition walls. |
 
-### Hero Concepts
+### Economy Preferences And Resources
 
-Might identities:
+Thornwake prefers timber, verdant grafts, rooted neutral sites, nursery control, and long-term recovery. It should have slower direct gold but compounding value from site links and growth buildings. Some town upgrades should only reach full value while linked sites remain controlled.
 
-| Hero id | Name | Identity hook |
+### Magic And Accord Identity
+
+Root Accord: growth, bind, regeneration, terrain denial, road taxation, site renewal, and recovery. Thornwake magic should convert space into obligation: move slower here, heal here, pay a toll here, lose tempo for breaking root law.
+
+### Artifacts And Object Hooks
+
+- Artifacts: graft knives, seed-judge masks, pilgrim root maps, thorn toll rings, amber fruit lanterns, living bridge knots.
+- Object hooks: root gates, graft nurseries, thorn tolls, forbidden logging roads, orchard graves, pilgrim clearings, moss courts.
+
+### Town Building Identity
+
+| Building id | Name | Identity |
 | --- | --- | --- |
-| `hero_thornwake_ardren_briarmarshal` | Ardren Briar-Marshal | Front commander; improves binds and retaliation on rooted ground. |
-| `hero_thornwake_tova_rootwright` | Tova Rootwright | Siege grower; improves Barkmantle Rams and town assault bramble creation. |
-| `hero_thornwake_halen_thorncart` | Halen Thorncart | Pilgrim captain; improves map movement between rooted sites and low-tier growth. |
-| `hero_thornwake_merek_greenbarrow` | Merek Greenbarrow | Recovery warden; improves post-battle wounded recovery in controlled regions. |
-| `hero_thornwake_silsa_bramblehound` | Silsa Bramble-Hound | Hunt leader; improves Stag-Knot Runners and anti-ranged pinning. |
+| `building_thornwake_seed_vault` | Seed Vault | Core growth store and site-link root. |
+| `building_thornwake_graftworks` | Graftworks | Recovery, menders, and graft upgrades. |
+| `building_thornwake_bramble_toll` | Bramble Toll | Movement taxation and map pressure. |
+| `building_thornwake_sporeglass_hothouse` | Sporeglass Hothouse | Healing, cleanse, and support magic. |
+| `building_thornwake_barkmantle_run` | Barkmantle Run | Living siege dwelling. |
+| `building_thornwake_pilgrim_orchard` | Pilgrim Orchard | Growth/economy that scales with rooted sites. |
+| `building_thornwake_worldroot_gate` | Worldroot Gate | Top-tier dwelling and regional recovery. |
 
-Magic identities:
+### Strategic Playstyle
 
-| Hero id | Name | Identity hook |
-| --- | --- | --- |
-| `hero_thornwake_veyra_seedseer` | Veyra Seedseer | Root oracle; creates rooted terrain faster and improves rooted-site rewards. |
-| `hero_thornwake_osmund_pollenglass` | Osmund Pollenglass | Sporeglass doctor; improves healing, cleanse, and debuff resistance. |
-| `hero_thornwake_elian_loamchant` | Elian Loamchant | Loam singer; strengthens bind spells and battlefield bramble duration. |
-| `hero_thornwake_ralka_mossvein` | Ralka Mossvein | Moss memory mage; converts long fights into spell power and recovery. |
-| `hero_thornwake_nara_graftsibyl` | Nara Graft-Sibyl | Graft prophet; improves high-tier support units and growth chains. |
+Thornwake is slow-starting, territorial, and exhausting to fight on prepared ground. It wants to seed regions, tax roads, recover losses, bind enemies, and win through denial and compounding growth. Weaknesses: limited burst damage, limited clean ranged pressure, slower expansion before root networks, and vulnerability to fast disruption before nurseries mature.
 
-### Signature Buildings
+### Campaign And Map Hooks
 
-| Building id | Name | Implementation note |
-| --- | --- | --- |
-| `building_thornwake_seed_vault` | Seed Vault | Core civic/economy; stores growth and links map sites. |
-| `building_thornwake_graftworks` | Graftworks | Support; unlocks menders and improves recovery. |
-| `building_thornwake_bramble_toll` | Bramble Toll | Map pressure; slows enemy movement near linked sites and adds gold trickle. |
-| `building_thornwake_sporeglass_hothouse` | Sporeglass Hothouse | Magic/support; unlocks healing and cleanse spells. |
-| `building_thornwake_barkmantle_run` | Barkmantle Run | Dwelling; unlocks Barkmantle Rams. |
-| `building_thornwake_pilgrim_orchard` | Pilgrim Orchard | Economy/growth; stronger if neutral sites are rooted. |
-| `building_thornwake_worldroot_gate` | Worldroot Gate | Capital/top-tier; unlocks Worldroot Bastion and regional recovery. |
+- Root a burned mill valley before Embercourt reopens it as a permanent toll road.
+- Negotiate with a neutral nursery that refuses all faction banners.
+- Stop Brasshollow rails from crossing a migratory root corridor.
+- Decide whether to choke a Veilmourn fog slip that locals need for evacuation.
+
+### Anti-Generic Constraints
+
+- Do not make Thornwake an elf, druid, forest guardian, or treant faction.
+- Avoid pure nature-good framing. It is law, tolls, renewal debt, and living infrastructure.
+- Root and growth mechanics must create strategic obligations, not just healing flavor.
 
 ## Brasshollow Combine
 
-Implementation status: new planned faction. Do not reduce it to generic dwarves, golems, or steampunk soldiers. It is a furnace-contract society where debt, ore, pressure, and war engines are fused into law.
+### World Role
 
-### Fantasy And Theme Pillar
+The Brasshollow Combine is the industrial contract power of the Brass Deeps: quarry syndicates, furnace chapels, pressure rail offices, debt foundries, worker courts, and machine yards.
 
-The Brasshollow Combine is a network of foundry vaults, pressure rails, furnace chapels, contract courts, and brass debt engines. Its people treat war as an audited industrial obligation. Magic appears as heat rites, pressure seals, and binding clauses stamped into metal.
+### Founding And Backstory
 
-### Mechanical Identity
+The shattered mirrors exposed deep metals and unstable heat seams. Early mine houses survived cave-ins, slag storms, and famine by writing binding furnace contracts: every shaft owed heat, every crew owed repair labor, every machine owed recorded service. The Combine formed when those contracts outgrew individual mines and became a political system with armies attached.
 
-Brasshollow wins by building expensive, stubborn force. It should have low growth, high durability, repair windows, heat/overpressure bursts, and strong siege tools. It suffers if denied ore or forced to chase fast raiders across open maps.
+### Political Motive
 
-### Town Visual And Building Identity
+Brasshollow wants extraction made predictable and enforceable. It supports restoration only if mirror work, rail routes, and resource rights can be contracted, metered, insured, and paid.
 
-Towns should show furnace pits, brass lifts, ore elevators, gantry cranes, pressure rail terminals, boiler chapels, contract halls, and glowing slag canals. The silhouette is heavy, angular, smoky, and mechanical.
+### Moral Tension
 
-### Economy Style
+Brasshollow can build the machines, rails, armor, and pumps that keep the Reach alive. It also converts survival into debt, treats labor as collateral, and sees exhausted land as a solvable throughput problem.
 
-Brasshollow is ore hungry and build-order sensitive. It has strong late economy from mines and capital projects, but expensive recruitment and slow replacement. Some machine units should be repairable or recoverable differently from living troops.
+### Home Region And Town Feel
 
-### Map Pressure Style
+Home region: Brass Deeps.
 
-Brasshollow advances slowly through mining camps, railheads, and siege stages. It wants to exhaust resources, hold production sites, and bring overwhelming force to specific objectives rather than raid everywhere.
+Town feel: heavy, angular, hot, and audited. Furnace pits, brass lifts, ore elevators, gantry cranes, pressure rail terminals, boiler chapels, contract halls, slag canals, and warning banners define the town.
 
-### Battle Style
+### Visual Language
 
-Brasshollow fights with armor, heat, and artillery. Units should be hard to kill but positioning-limited. Heat bursts create dangerous turns followed by cooldown or vulnerability windows.
+- Shapes: plates, braces, rails, pipes, gantries, pressure gauges, blocky machinery.
+- Materials: brass, black iron, hot ceramic, slag glass, quarry chalk, stamped contract metal.
+- Palette: brass, charcoal, iron blue, heated orange, ash gray, chalk dust.
+- Unit silhouettes: shield teams, haulers, rivet machines, boilers, crawler engines, walking furnace icons.
 
-### 7-Tier Unit Ladder
+### Hero Archetypes
 
-| Tier | Unit id | Unit name | Role notes |
+Might heroes are contract marshals, siege captains, railhead enforcers, mine-field commanders, and pavis foremen.
+
+Magic heroes are heat rite engineers, furnace chaplains, gauge savants, clause mages, and slag alchemists.
+
+Hero seed IDs:
+
+| Role | Hero ids |
+| --- | --- |
+| Might | `hero_brasshollow_marka_ironclause`, `hero_brasshollow_oren_bellfounder`, `hero_brasshollow_kuld_varn`, `hero_brasshollow_selka_pitmarshal`, `hero_brasshollow_daxis_chaincaptain` |
+| Magic | `hero_brasshollow_vellum_quench`, `hero_brasshollow_odrik_heatpriest`, `hero_brasshollow_lina_gaugesavant`, `hero_brasshollow_harro_debtrune`, `hero_brasshollow_pava_ashmeter` |
+
+### Unit Ladder Intent And Roles
+
+Brasshollow is not dwarves, generic golems, or steampunk soldiers. Its ladder is contract industry: armored labor, machine skirmish, pavis protection, pressure artillery, debt engines, siege crawlers, and a furnace saint.
+
+| Tier | Unit id | Unit name | Intent |
 | --- | --- | --- | --- |
-| 1 | `unit_brasshollow_scrip_haulers` | Scrip Haulers | Armored labor levy that can brace and perform minor repairs, low damage. |
-| 2 | `unit_brasshollow_rivet_hounds` | Rivet Hounds | Fast clockwork skirmishers that harass ranged units and reveal weak armor. |
+| 1 | `unit_brasshollow_scrip_haulers` | Scrip Haulers | Armored labor levy with bracing and minor repair utility. |
+| 2 | `unit_brasshollow_rivet_hounds` | Rivet Hounds | Fast machine skirmishers for anti-raider work and armor weakness reveal. |
 | 3 | `unit_brasshollow_furnace_pavis_teams` | Furnace Pavis Teams | Heavy shield teams that protect engines and punish frontal attacks. |
-| 4 | `unit_brasshollow_boiler_rivetcasters` | Boiler Rivetcasters | Short-ranged pressure artillery with heat buildup and splash risk. |
-| 5 | `unit_brasshollow_debt_engine_exactors` | Debt-Engine Exactors | Elite melee engines that overheat for burst damage and then need protection. |
-| 6 | `unit_brasshollow_crucible_crawlers` | Crucible Crawlers | Siege engines that burn terrain, damage clustered enemies, and require setup. |
-| 7 | `unit_brasshollow_foundry_saint` | Foundry Saint | Top-tier walking furnace idol that repairs machines, hardens allies, and turns heat into area pressure. |
+| 4 | `unit_brasshollow_boiler_rivetcasters` | Boiler Rivetcasters | Short-range pressure artillery with heat buildup and splash risk. |
+| 5 | `unit_brasshollow_debt_engine_exactors` | Debt-Engine Exactors | Burst melee engines that overheat and then need protection. |
+| 6 | `unit_brasshollow_crucible_crawlers` | Crucible Crawlers | Setup siege engines that burn terrain and punish clustered enemies. |
+| 7 | `unit_brasshollow_foundry_saint` | Foundry Saint | Walking furnace idol that repairs machines, hardens allies, and projects heat. |
 
-### Hero Concepts
+### Economy Preferences And Resources
 
-Might identities:
+Brasshollow prefers ore, brass scrip, furnace throughput, mine control, and capital projects. It should have expensive recruitment, low growth, strong durability, repair/recovery rules for machines, and major late strength when it controls ore and rail-linked production.
 
-| Hero id | Name | Identity hook |
+### Magic And Accord Identity
+
+Furnace Accord: heat, pressure, armor, repair, binding clauses, overpressure release, and extraction acceleration. Brasshollow magic should create power with cooldowns, repair windows, area heat, and contractual punishment.
+
+### Artifacts And Object Hooks
+
+- Artifacts: debt-seal hammers, pressure gauges, furnace relic plates, rail keys, slag saint fragments, clause tablets.
+- Object hooks: ore tithe offices, pump houses, rail switches, slag vents, worker chapels, survey stakes, debt foundries.
+
+### Town Building Identity
+
+| Building id | Name | Identity |
 | --- | --- | --- |
-| `hero_brasshollow_marka_ironclause` | Marka Ironclause | Contract marshal; improves armored units and morale under attrition. |
-| `hero_brasshollow_oren_bellfounder` | Oren Bellfounder | Siege captain; improves artillery setup and town assault pressure. |
-| `hero_brasshollow_kuld_varn` | Kuld Varn | Railhead enforcer; improves map movement between owned mines and towns. |
-| `hero_brasshollow_selka_pitmarshal` | Selka Pitmarshal | Mine-field commander; improves ore-site defense and machine replacement. |
-| `hero_brasshollow_daxis_chaincaptain` | Daxis Chain-Captain | Pavis foreman; improves bodyguard rules and frontline armor. |
+| `building_brasshollow_ore_tithe_office` | Ore Tithe Office | Ore income and build affordability. |
+| `building_brasshollow_boiler_cathedral` | Boiler Cathedral | Heat rites and machine recovery. |
+| `building_brasshollow_rivet_kennels` | Rivet Kennels | Anti-raider machine dwelling. |
+| `building_brasshollow_pavis_foundry` | Pavis Foundry | Armored line and shield-team upgrades. |
+| `building_brasshollow_pressure_rail` | Pressure Rail | Mine-to-town movement and staging. |
+| `building_brasshollow_crucible_dock` | Crucible Dock | Siege crawler dwelling. |
+| `building_brasshollow_titan_charter_hall` | Titan Charter Hall | Top-tier contract and siege capstone. |
 
-Magic identities:
+### Strategic Playstyle
 
-| Hero id | Name | Identity hook |
-| --- | --- | --- |
-| `hero_brasshollow_vellum_quench` | Vellum Quench | Heat rite engineer; improves overheat spells and cooldown smoothing. |
-| `hero_brasshollow_odrik_heatpriest` | Odrik Heatpriest | Furnace chaplain; converts damage taken into temporary armor or spell power. |
-| `hero_brasshollow_lina_gaugesavant` | Lina Gauge-Savant | Pressure mathematician; improves machine accuracy and heat thresholds. |
-| `hero_brasshollow_harro_debtrune` | Harro Debt-Rune | Clause mage; specializes in binding, slowing, and punishing broken formations. |
-| `hero_brasshollow_pava_ashmeter` | Pava Ashmeter | Slag alchemist; improves burn terrain and resource conversion. |
+Brasshollow is slow, costly, and hard to dislodge. It wants mines, railheads, repair windows, siege staging, and decisive objective pushes. Weaknesses: poor chase, expensive losses, ore dependence, and vulnerability to route bypass or early site denial.
 
-### Signature Buildings
+### Campaign And Map Hooks
 
-| Building id | Name | Implementation note |
-| --- | --- | --- |
-| `building_brasshollow_ore_tithe_office` | Ore Tithe Office | Economy; boosts ore-site income and build affordability. |
-| `building_brasshollow_boiler_cathedral` | Boiler Cathedral | Magic/support; unlocks heat rites and machine recovery. |
-| `building_brasshollow_rivet_kennels` | Rivet Kennels | Dwelling; unlocks Rivet Hounds and anti-raider tools. |
-| `building_brasshollow_pavis_foundry` | Pavis Foundry | Dwelling/support; improves armored line units. |
-| `building_brasshollow_pressure_rail` | Pressure Rail | Map pressure; improves movement between owned production sites. |
-| `building_brasshollow_crucible_dock` | Crucible Dock | Dwelling; unlocks Crucible Crawlers. |
-| `building_brasshollow_titan_charter_hall` | Titan Charter Hall | Capital/top-tier; unlocks Foundry Saint and late siege pressure. |
+- Reopen a collapsed pressure rail through territory claimed by Thornwake root law.
+- Decide whether to enforce old debt contracts on a starving neutral quarry town.
+- Fortify a mine line while Veilmourn steals memory-salt ledgers from wrecked rail barges.
+- Race Sunvault for aetherglass seams needed to calibrate furnace gauges safely.
+
+### Anti-Generic Constraints
+
+- Do not make Brasshollow dwarves, generic constructs, or decorative steampunk.
+- Industrial identity must include law, debt, furnace religion, repair, and resource politics.
+- Machines should have clear positioning limits and maintenance logic, not just high stats.
 
 ## Veilmourn Armada
 
-Implementation status: new planned faction. Do not reduce it to generic undead, pirates, or shadow assassins. It is a fog-bound funeral fleet that steals routes, memories, and certainty.
+### World Role
 
-### Fantasy And Theme Pillar
+The Veilmourn Armada is the fog-maritime and memory-salvage power of the Veil Coast: black-sail houses, bell crews, obituary mages, mirror navigators, wreck claimants, and harpoon captains who move where maps fail.
 
-The Veilmourn Armada is a chain of black-sail houses, obituary mages, mirror navigators, bell crews, and mist-bound captains who sail where maps say no water exists. Their power comes from funeral vows, stolen charts, and memory salvage rather than death-horde necromancy.
+### Founding And Backstory
 
-### Mechanical Identity
+Some broken mirrors reflected memory into the coast instead of weather. Harbors disappeared for days, wrecks returned with impossible cargo, and sailors forgot routes that had saved them. Funeral crews learned to mark fog lanes with bells and memory salt. The Armada formed from houses that promised to remember the dead, salvage the lost, and keep routes open without submitting them to inland maps.
 
-Veilmourn wins by information and disruption. It should scout unusually well, create fog-lane bypasses, isolate targets, displace positions, blind ranged enemies, and spike value from marked victims. Its armies should be fragile when pinned in honest trades.
+### Political Motive
 
-### Town Visual And Building Identity
+Veilmourn wants mobility, salvage rights, and control over uncharted routes. It rejects fixed empire because fixed records make fog lanes taxable, predictable, and exploitable by powers that do not understand them.
 
-Towns should appear as harbors inside fog: bell towers, mirror drydocks, black mooring posts, obituary libraries, lantern reefs, harpoon gantries, and half-visible hulls. The silhouette is vertical masts and negative space rather than stone mass.
+### Moral Tension
 
-### Economy Style
+Veilmourn preserves lost routes, recovers the dead, and opens evacuation paths no road power can reach. It also trades in memory, conceals crimes behind fog law, steals charts, and can make communities forget the cost of its help.
 
-Veilmourn income is uneven. It gains from scouting, salvage sites, artifacts, marked routes, and battle cleanup. It should not have the stable gold of Embercourt or the raw build economy of Brasshollow.
+### Home Region And Town Feel
 
-### Map Pressure Style
+Home region: Veil Coast.
 
-Veilmourn threatens by knowing more and moving strangely. It should bypass some normal route pressure through fog wakes, threaten backline sites, and force opponents to guard what they thought was safe.
+Town feel: harbor inside fog. Bell towers, mirror drydocks, black mooring posts, obituary vaults, lantern reefs, harpoon gantries, half-visible hulls, and negative space between masts should define the silhouette.
 
-### Battle Style
+### Visual Language
 
-Veilmourn uses displacement, blinds, morale drain, and isolation. It should create confusing tactical states for enemies while keeping the player-facing UI readable: which stack is marked, which lane is fogged, and which unit can phase must be explicit.
+- Shapes: masts, hull curves, bells, lantern dots, mirror plates, trailing cloth, narrow gangways.
+- Materials: black lacquered wood, tarnished silver, salt stone, wet rope, mirror shards, funeral cloth.
+- Palette: gray-green fog, black lacquer, tarnished silver, salt white, lamp amber.
+- Unit silhouettes: oar crews, lantern bearers, maskglass corsairs, harpoon lines, scribes, phase keels, fog leviathan mass.
 
-### 7-Tier Unit Ladder
+### Hero Archetypes
 
-| Tier | Unit id | Unit name | Role notes |
+Might heroes are black-sail admirals, harpoon captains, phase raiders, signal thieves, and fleet wardens.
+
+Magic heroes are fog prophets, obituary scribes, mirror navigators, funeral hexers, and route diviners.
+
+Hero seed IDs:
+
+| Role | Hero ids |
+| --- | --- |
+| Might | `hero_veilmourn_ivara_blacktide`, `hero_veilmourn_ruln_vanehook`, `hero_veilmourn_cela_mistcorsair`, `hero_veilmourn_damar_oriflag`, `hero_veilmourn_jessa_keelwarden` |
+| Magic | `hero_veilmourn_morwen_wakeoracle`, `hero_veilmourn_thir_obituaryink`, `hero_veilmourn_sael_mirrorbell`, `hero_veilmourn_nacre_vowless`, `hero_veilmourn_orso_nightchart` |
+
+### Unit Ladder Intent And Roles
+
+Veilmourn is not pirates, undead, or generic shadow assassins. Its ladder is fog-route warfare: evasive crews, lantern marks, maskglass skirmish, harpoon displacement, obituary debuffs, phase raiders, and a fog control leviathan.
+
+| Tier | Unit id | Unit name | Intent |
 | --- | --- | --- | --- |
-| 1 | `unit_veilmourn_bellwake_oars` | Bellwake Oars | Evasive low-tier crew that scouts, screens, and gains defense while fogged. |
-| 2 | `unit_veilmourn_mourning_lanterns` | Mourning Lanterns | Support lights that reveal, blind, or mark targets for isolation. |
-| 3 | `unit_veilmourn_maskglass_corsairs` | Maskglass Corsairs | Mobile melee skirmishers that punish isolated or blinded enemies. |
-| 4 | `unit_veilmourn_undertow_harpooners` | Undertow Harpooners | Ranged/control unit that pulls targets, breaks formation, and sets up kill lanes. |
-| 5 | `unit_veilmourn_obituary_scribes` | Obituary Scribes | Debuff support that drains morale, weakens retaliation, and stores salvage value. |
-| 6 | `unit_veilmourn_mirrorkeel_reavers` | Mirror-Keel Reavers | Phase raiders that reposition through fog lanes and strike backline stacks. |
-| 7 | `unit_veilmourn_fogbound_leviathan` | Fogbound Leviathan | Top-tier control monster that floods sections of the battlefield with fog and punishes isolated victims. |
+| 1 | `unit_veilmourn_bellwake_oars` | Bellwake Oars | Evasive screens and scouts that survive better while fogged. |
+| 2 | `unit_veilmourn_mourning_lanterns` | Mourning Lanterns | Reveal, blind, and isolation-mark support. |
+| 3 | `unit_veilmourn_maskglass_corsairs` | Maskglass Corsairs | Mobile skirmishers that punish blinded or isolated enemies. |
+| 4 | `unit_veilmourn_undertow_harpooners` | Undertow Harpooners | Ranged pulls, formation breaks, and kill-lane setup. |
+| 5 | `unit_veilmourn_obituary_scribes` | Obituary Scribes | Morale drain, retaliation weakening, and salvage storage. |
+| 6 | `unit_veilmourn_mirrorkeel_reavers` | Mirror-Keel Reavers | Phase raiders that strike backlines through fog lanes. |
+| 7 | `unit_veilmourn_fogbound_leviathan` | Fogbound Leviathan | Battlefield fog control and isolated-victim punishment. |
 
-### Hero Concepts
+### Economy Preferences And Resources
 
-Might identities:
+Veilmourn prefers memory salt, salvage, scouting rewards, artifact recovery, and uneven income spikes. It should have weaker steady income than Embercourt and Brasshollow, but strong reward bursts from wreck fields, marked routes, battle cleanup, and hidden-object discovery.
 
-| Hero id | Name | Identity hook |
+### Magic And Accord Identity
+
+Veil Accord: fog, displacement, memory theft, salvage sense, morale drain, decoys, and route bypass. Veilmourn magic should manipulate information and position while keeping player-facing states explicit and readable.
+
+### Artifacts And Object Hooks
+
+- Artifacts: mirror charts, bell-buoy clappers, obituary inks, memory-salt reliquaries, black-sail compasses, harpoon vows.
+- Object hooks: fog docks, wreck caches, bell buoys, mirror shoals, obituary vaults, lantern reefs, hidden slips, ransom exchanges.
+
+### Town Building Identity
+
+| Building id | Name | Identity |
 | --- | --- | --- |
-| `hero_veilmourn_ivara_blacktide` | Ivara Blacktide | Black-sail admiral; improves isolated-target damage and retreat control. |
-| `hero_veilmourn_ruln_vanehook` | Ruln Vanehook | Harpoon captain; improves displacement, pulls, and anti-large tactics. |
-| `hero_veilmourn_cela_mistcorsair` | Cela Mist-Corsair | Backline raider; improves phase movement and fog-lane attacks. |
-| `hero_veilmourn_damar_oriflag` | Damar Oriflag | Signal thief; improves scouting raids and enemy movement disruption. |
-| `hero_veilmourn_jessa_keelwarden` | Jessa Keelwarden | Fleet defender; improves fragile-stack survival and controlled withdrawals. |
+| `building_veilmourn_bell_harbor` | Bell Harbor | Core fog defense and scouting support. |
+| `building_veilmourn_mirror_drydock` | Mirror Drydock | Phase and route-bypass infrastructure. |
+| `building_veilmourn_obituary_vault` | Obituary Vault | Magic, memory salt, and salvage conversion. |
+| `building_veilmourn_harpoon_gantry` | Harpoon Gantry | Displacement and formation-break dwelling. |
+| `building_veilmourn_mistgate_slip` | Mistgate Slip | Fog-lane movement and map pressure. |
+| `building_veilmourn_ransom_exchange` | Ransom Exchange | Scouting, cleanup, and artifact recovery economy. |
+| `building_veilmourn_leviathan_sounding` | Leviathan Sounding | Top-tier fog control dwelling. |
 
-Magic identities:
+### Strategic Playstyle
 
-| Hero id | Name | Identity hook |
-| --- | --- | --- |
-| `hero_veilmourn_morwen_wakeoracle` | Morwen Wakeoracle | Fog prophet; creates fog lanes and improves vision manipulation. |
-| `hero_veilmourn_thir_obituaryink` | Thir Obituary-Ink | Memory scribe; turns kills, artifacts, and salvage into spell tempo. |
-| `hero_veilmourn_sael_mirrorbell` | Sael Mirrorbell | Mirror navigator; improves displacement spells and decoy effects. |
-| `hero_veilmourn_nacre_vowless` | Nacre Vowless | Funeral hexer; weakens enemy retaliation and morale-style momentum. |
-| `hero_veilmourn_orso_nightchart` | Orso Nightchart | Route diviner; improves scouting rewards and hidden-route map pressure. |
+Veilmourn is information, bypass, and selective violence. It wants to scout more, threaten weak backs, isolate targets, create route uncertainty, and cash out salvage spikes. Weaknesses: fragile honest trades, uneven income, reliance on fog and marks, and risk when pinned by compact formations or strong reveal tools.
 
-### Signature Buildings
+### Campaign And Map Hooks
 
-| Building id | Name | Implementation note |
-| --- | --- | --- |
-| `building_veilmourn_bell_harbor` | Bell Harbor | Core dwelling/support; improves scouting and low-tier fog defense. |
-| `building_veilmourn_mirror_drydock` | Mirror Drydock | Mobility/support; unlocks phase and route-bypass mechanics. |
-| `building_veilmourn_obituary_vault` | Obituary Vault | Magic/economy; converts salvage into spell access or income spikes. |
-| `building_veilmourn_harpoon_gantry` | Harpoon Gantry | Dwelling; unlocks Undertow Harpooners and formation-break tools. |
-| `building_veilmourn_mistgate_slip` | Mistgate Slip | Map pressure; creates or improves fog-lane movement. |
-| `building_veilmourn_ransom_exchange` | Ransom Exchange | Economy; rewards scouting, battle cleanup, and artifact recovery. |
-| `building_veilmourn_leviathan_sounding` | Leviathan Sounding | Capital/top-tier; unlocks Fogbound Leviathan and stronger fog zones. |
+- Recover a wrecked mirror shard before Sunvault records its memory reflections.
+- Smuggle civilians through a fog lane that Embercourt calls illegal.
+- Raid a Brasshollow debt convoy for ledgers that contain stolen crew memories.
+- Decide whether to erase a route from public memory to keep it safe from the Charter War.
 
-## Current JSON Migration Notes
+### Anti-Generic Constraints
 
-- `faction_embercourt` remains valid as a stable id, but its current identity should move away from generic civic levies and archers toward lockworks, beacon courts, ash writs, and river-control units.
-- `faction_mireclaw` remains valid as a stable id. Current `unit_blackbranch_cutthroat`, `unit_mire_slinger`, `unit_bog_brute`, and `unit_gorefen_ripper` can either be renamed into the new ladder or kept as legacy prototypes until the vertical content migration.
-- `faction_sunvault` remains valid as a stable id. Current shard/prism/mirror/aurora concepts are directionally compatible, but the full seven-tier ladder needs stronger support, construct, and top-tier identities.
+- Do not make Veilmourn undead, pirate, assassin, or dark-elemental stock fantasy.
+- Funeral, memory, salvage, bells, charts, and fog logistics are the core.
+- Fog mechanics must communicate explicit readable states; confusion is for enemies, not the player.
+
+## Cross-Faction Production Notes
+
+### Asymmetry Checks For Future Implementation
+
+- Embercourt should be the most reliable at holding public infrastructure, not the most mobile or explosive.
+- Mireclaw should be the best at making exposed map play unsafe, not the best at formal sieges.
+- Sunvault should have the clearest setup turns and relay dependency, not generic ranged superiority.
+- Thornwake should transform routes over time, not simply heal more than other factions.
+- Brasshollow should be the most capital-intensive and hardest to uproot, not a fast machine swarm.
+- Veilmourn should win through information and route distortion, not raw stat efficiency.
+
+### Economy Differentiation Targets
+
+| Resource pressure | Embercourt | Mireclaw | Sunvault | Thornwake | Brasshollow | Veilmourn |
+| --- | --- | --- | --- | --- | --- | --- |
+| Gold | steady civic base | lower safe income | moderate | weaker direct | contract-heavy | spike-based |
+| Timber | roads, barges | ferries, dens | supports | core growth | secondary supports | docks |
+| Ore | defenses, heavy engines | bogplate only | core quality | limited | core requirement | harpoons |
+| Aetherglass | beacon/lens hybrids | low priority | core magic | rare graft focus | gauge safety | mirror charts |
+| Embergrain | readiness and recovery | raid target | supplies relays | growth support | worker rations | trade cargo |
+| Peatwax | low priority | core fuel/rites | low priority | soil medium | furnace fuel supplement | sealant |
+| Verdant grafts | treaty resource | contested | study material | core resource | obstruction | rare cargo |
+| Brass scrip | road contracts | stolen value | equipment trade | suspicious | core credit | ransom exchange |
+| Memory salt | records | oral oath hazard | verification | moss memory | contract proof | core resource |
+
+### Implementation Sequencing
+
+1. Do not migrate all six factions to JSON at once.
+2. Choose alpha factions only after concept-art, economy, object, magic, artifact, animation, and AI foundation plans identify which pair best proves the game.
+3. For each faction vertical slice, implement faction data, units, heroes, buildings, town lists, spell hooks, artifacts, economy costs, AI weights, map placements, validators, and manual play notes together.
+4. Preserve stable ids only where references are safe. Rename generic legacy content during a focused migration slice, not casually.
+
+### Current JSON Migration Notes
+
+- `faction_embercourt` remains valid, but current generic civic levies and archers should migrate toward lockworks, beacon courts, ash writs, and river-control units.
+- `faction_mireclaw` remains valid. Current cutthroat, slinger, brute, and ripper concepts can survive only if renamed and mechanically grounded in snares, mudglass, bogplate, ferries, or wounded-prey loops.
+- `faction_sunvault` remains valid. Current shard/prism/mirror/aurora concepts are compatible but need stronger relay, support, and construct context.
 - New ids should be introduced only when their vertical slice is ready: `faction_thornwake`, `faction_brasshollow`, and `faction_veilmourn`.
-- Hero ids in this bible are future targets. The current small hero roster should not be deleted or renamed casually if River Pass or existing scenarios reference it; migrate with compatibility in mind.
-- This bible intentionally does not add JSON content. The first implementation pass should choose the two alpha factions after River Pass is manually completable, then build those factions through complete units, towns, buildings, heroes, battle hooks, AI preferences, and scenario placements.
+- Hero ids in this bible are future targets. Existing scenario references should be migrated with compatibility in mind.
 
-## Future Implementation Checklist
+### Future Implementation Checklist
 
 For each faction implementation slice:
 
-1. Freeze the faction identity and confirm it still passes the no-commons and no-shared-skeleton rules.
-2. Add or migrate `content/factions.json` data.
-3. Add 7 tiers in `content/units.json` with unique names, roles, ability wrappers, growth, and costs.
+1. Confirm it still passes the no-generic and no-shared-ladder rules.
+2. Add or migrate `content/factions.json`.
+3. Add 7 unit tiers in `content/units.json` with unique names, roles, ability wrappers, growth, and costs.
 4. Add at least 10 heroes in `content/heroes.json`, split across might and magic identities.
 5. Add faction buildings in `content/buildings.json` and town build lists in `content/towns.json`.
-6. Add or map spells, artifacts, resource sites, and encounters needed for the faction's mechanical identity.
-7. Add AI strategy weights that express the faction's map pressure, not generic aggression.
+6. Add or map spells, artifacts, resource sites, and encounters needed for the faction identity.
+7. Add AI strategy weights that express faction map pressure.
 8. Add validator coverage for content references, roster depth, and faction-specific required hooks.
 9. Place the faction in at least one scenario or skirmish test map before calling it playable.
 10. Capture manual play notes for town, overworld, battle, save/load, and outcome routing.
