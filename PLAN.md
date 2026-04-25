@@ -44,11 +44,12 @@ Immediate execution order:
 7. Artifact system expansion: completed as the artifact taxonomy, family, set, hook, source, AI, UI, save/schema, validation, and migration foundation in `docs/artifact-system-expansion-foundation.md`. Future implementation should migrate artifact metadata, slots, rarities, sets, spell modifiers, faction hooks, economy hooks, source tables, AI valuation, and save compatibility from that plan instead of casually adding item records.
 8. Animation systems: completed as the production motion, VFX, audio cue, UI feedback, state-change clarity, technical architecture, asset pipeline, validation, and migration foundation in `docs/animation-systems-foundation.md`. Future implementation should stage event contracts, cue catalogs, reduced-motion/fast-mode support, and vertical animatics before final town/battle polish.
 9. Strategic AI: completed as the computer hero/town turn, economy, recruiting/building, movement, objective play, pressure, event surfacing, save/schema, validation, and migration foundation in `docs/strategic-ai-foundation.md`. Future implementation should migrate AI profile/schema, planner/executor boundaries, event streams, town governors, real AI heroes, object valuation, spell/artifact planning, and difficulty knobs from that plan instead of extending pressure raids casually.
-10. First actual concept-art generation execution: use `docs/concept-art-pipeline.md` to generate world mood and faction direction images, then send the generated images to AcOrP on Discord as requested before treating them as approved direction for implementation.
-11. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+10. First actual concept-art generation execution: completed as an external world mood plus six-faction identity batch, recorded in `docs/concept-art-batch-001-review.md`; generated PNGs remain outside the repo and are not runtime/source assets.
+11. First concept-art curation and second-pass brief prep: get AcOrP accept/reject/defer calls, then prepare a focused second-pass generation plan and implementation-brief inputs without copying generated images into the repo.
+12. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Execute the first actual concept-art generation slice: world mood plus initial faction direction studies from `docs/concept-art-pipeline.md`, with the generated images sent to AcOrP on Discord when the art generation is done.
+- Curate the first external concept-art batch and prepare second-pass concept-art or implementation-brief inputs from `docs/concept-art-batch-001-review.md`, keeping all generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -241,6 +242,27 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, AI profiles, animation metadata, generated images, or playability claims.
+
+## Completed Art-Direction Slice: Concept Art Batch 001 External Generation
+Status: completed on 2026-04-25 as the first actual concept-art generation execution record.
+
+Purpose:
+- Record that the first world mood plus six-faction identity image batch was generated and delivered externally.
+- Keep generated images outside the repo while preserving filenames, source briefs, prompt intent, preliminary curation, risks, deferred notes, and next art-direction steps.
+- Move the active planning state from generation execution to curation, second-pass concept art, and implementation-brief prep.
+
+Delivered:
+- Added `docs/concept-art-batch-001-review.md` documenting the seven external PNGs under `/root/.openclaw/media/tool-image-generation`.
+- Recorded preliminary curation notes for Aurelion Reach world mood, Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn.
+- Explicitly rejected generated PNGs for repo ingestion in this slice and noted that exact prompt/model metadata remains external/deferred.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, imported generated images, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.

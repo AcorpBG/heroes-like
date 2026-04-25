@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T23:59:00Z",
+  "updatedAt": "2026-04-25T23:25:47Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-generation-execution-10184",
-  "currentSliceTitle": "Generate first actual concept-art studies for world mood and faction direction",
+  "currentSliceId": "concept-art-curation-brief-prep-10184",
+  "currentSliceTitle": "Curate first concept-art batch and prepare second-pass art-direction briefs",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI foundation is documented in docs/strategic-ai-foundation.md. Next slice should execute the first actual concept-art generation from docs/concept-art-pipeline.md and send generated images to AcOrP on Discord when art generation is done.",
+  "currentSliceNotes": "First world mood plus six-faction identity image batch was generated and delivered externally, then recorded in docs/concept-art-batch-001-review.md. Generated PNGs remain outside the repo. Next slice should collect AcOrP curation calls and prepare second-pass concept-art or implementation-brief inputs.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -155,7 +155,13 @@
     },
     {
       "id": "concept-art-generation-execution-10184",
-      "title": "Generate first actual concept-art studies for world mood and faction direction, then send images to AcOrP on Discord",
+      "title": "Generate first actual concept-art studies for world mood and faction direction, then deliver images externally",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "concept-art-curation-brief-prep-10184",
+      "title": "Curate first external concept-art batch and prepare second-pass concept-art or implementation-brief inputs",
       "status": "pending",
       "difficulty": "high"
     },
@@ -623,8 +629,9 @@
     "Use docs/artifact-system-expansion-foundation.md as the artifact source before artifact JSON migration, set implementation, artifact reward tables, artifact UI, AI valuation, or spell/economy hook work.",
     "Use docs/animation-systems-foundation.md as the animation source before unit animation, hero motion, town ambience, object state animation, spell/artifact VFX, UI motion, cue catalog, audio cue, or final battle/town polish work.",
     "Use docs/strategic-ai-foundation.md as the strategic AI source before AI profile/schema migration, planner/executor work, AI event surfacing, town governors, real AI heroes, object valuation, spell/artifact planning, difficulty tuning, or broad map reliance on AI.",
-    "Execute the first actual concept-art generation slice from docs/concept-art-pipeline.md, beginning with world mood and initial faction direction studies; send generated images to AcOrP on Discord when art generation is done.",
-    "Only after foundation depth and art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
+    "Use docs/concept-art-batch-001-review.md to collect AcOrP accept/reject/defer calls on the first external world mood plus six-faction identity image batch.",
+    "Prepare focused second-pass concept-art prompts or implementation-brief inputs from accepted curation notes, without moving or copying generated PNGs into the repo.",
+    "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
     "Avoid claiming six-faction, HoMM2-class, or HoMM3-class readiness until world, content, systems, AI, save/load, and manual-play evidence support it."
   ],
