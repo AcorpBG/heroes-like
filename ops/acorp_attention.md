@@ -27,7 +27,11 @@ Updated: 2026-04-25
 - Animation implementation should confirm whether production units/heroes should target sprite sheets, cutout scene rigs, or a hybrid pipeline before asset production starts.
 - Animation implementation should confirm normal-mode versus fast-mode pacing targets before battle and AI-turn playback are implemented.
 - Animation implementation should confirm audio direction and cue priority rules before SFX production starts.
+- Strategic AI implementation should confirm whether the current pressure/raid enemy model should migrate first into explicit AI event streams or into full AI hero roster/task state.
+- Strategic AI implementation should confirm the intended fairness policy for hard difficulty: better planning and scouting inference are acceptable, but any resource, movement, visibility, or combat bonuses should be labelled.
+- Strategic AI implementation should confirm which two factions should anchor the first AI personality proof; Embercourt versus Mireclaw is the likely low-risk pair because it contrasts infrastructure defense with raid/counter-capture pressure.
+- Strategic AI implementation should confirm whether adventure-map spells that affect scouting, routes, economy, or site state are blocked until AI can evaluate them, as recommended in `docs/strategic-ai-foundation.md`.
 
 ## Current Follow-Up
 
-- Animation systems foundation is documented. Next foundation slice should plan strategic AI for computer-controlled hero and town turns, economy, recruiting/building, movement, objective play, pressure, event surfacing, validation gates, and migration sequence.
+- Strategic AI foundation is documented. Next production slice should execute the first actual concept-art generation pass from `docs/concept-art-pipeline.md`; when art generation is done, send the generated images to AcOrP on Discord before treating them as approved direction.
