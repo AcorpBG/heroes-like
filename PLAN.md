@@ -42,12 +42,12 @@ Immediate execution order:
 5. Overworld object taxonomy/content expansion: completed as the taxonomy and density foundation in `docs/overworld-object-taxonomy-density.md`. Future implementation should migrate object classes, footprints, approach rules, guards, ownership states, density checks, and editor implications from that plan instead of adding random object scatter.
 6. Magic system expansion: completed as the expanded accordance magic foundation in `docs/magic-system-expansion-foundation.md`. Future implementation should migrate schools, tiers, spell roles, faction/unit hooks, economy/artifact hooks, AI casting, UI readability, save/schema, validation, and concept-art gates from that plan instead of casually adding spell records.
 7. Artifact system expansion: completed as the artifact taxonomy, family, set, hook, source, AI, UI, save/schema, validation, and migration foundation in `docs/artifact-system-expansion-foundation.md`. Future implementation should migrate artifact metadata, slots, rarities, sets, spell modifiers, faction hooks, economy hooks, source tables, AI valuation, and save compatibility from that plan instead of casually adding item records.
-8. Animation systems: specify what animation support is needed for units, heroes, towns, map objects, UI feedback, battle readability, and state changes.
+8. Animation systems: completed as the production motion, VFX, audio cue, UI feedback, state-change clarity, technical architecture, asset pipeline, validation, and migration foundation in `docs/animation-systems-foundation.md`. Future implementation should stage event contracts, cue catalogs, reduced-motion/fast-mode support, and vertical animatics before final town/battle polish.
 9. Strategic AI: plan computer-controlled hero and town turns, economy, recruiting/building, movement, objectives, and pressure.
 10. Only after these basics are deep enough, return focus to campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan animation systems: unit, hero, town, map-object, UI feedback, battle readability, spell/artifact feedback, state-change clarity, validation gates, and migration sequence.
+- Plan strategic AI: computer-controlled hero and town turns, economy, recruiting/building, movement, objective play, pressure, animation/event surfacing, validation gates, and migration sequence.
 - Keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -200,6 +200,26 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, or playability claims.
+
+## Completed Design Slice: Animation Systems Foundation
+Status: completed on 2026-04-25 as the eighth deep production foundation design package.
+
+Purpose:
+- Define the production animation, VFX, audio cue, UI feedback, and state-change clarity requirements before final town polish, final battle polish, faction vertical slices, broad campaign/skirmish production, or runtime animation implementation.
+- Tie motion needs to the Aurelion Reach world foundation, six-faction identity bible, concept-art pipeline, overworld object taxonomy, magic schools, artifact hooks, Godot 4 architecture, save/replay determinism, accessibility, performance, validation, and migration sequence.
+- Keep animation as a staged event/cue foundation rather than a layer of ad hoc tweens on current static prototype screens.
+
+Delivered:
+- Added `docs/animation-systems-foundation.md` covering the current animation gap, target animation surfaces, taxonomy and state model, unit battle states, hero overworld/town/battle motion, town/building animation, overworld object states, spell/VFX/audio cues, artifact feedback, UI microinteractions, state-change clarity, Godot 4 technical architecture options, asset pipeline, concept-art/animatic gates, performance, accessibility, save/replay/determinism, editor/tooling implications, validation/testing gates, migration sequence, and deep-enough gates for town/battle/campaign/skirmish reliance.
+- Sequenced the next logical foundation slice as strategic AI planning.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, assets, content JSON, animation metadata, audio, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
@@ -2206,12 +2226,10 @@ Execution order:
    - faction-specific interactions
    - progression/build implications
 8. Animation systems:
-   - units
-   - heroes
-   - towns
-   - map objects
-   - UI feedback
-   - battle readability
+   - completed in `docs/animation-systems-foundation.md`
+   - units, heroes, towns, map objects, UI feedback, battle readability
+   - spell/artifact feedback, VFX/audio cues, state-change clarity
+   - Godot 4 event/cue architecture, performance, accessibility, validation, migration
 9. Strategic AI:
    - computer-controlled hero turns
    - computer-controlled town turns
@@ -2389,7 +2407,7 @@ No claim should move to "done" unless live-client usability and evidence are fil
 Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- The next slice starts with animation systems planning rather than map or screen polish.
+- The next slice starts with strategic AI planning rather than map or screen polish.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T23:40:00Z",
+  "updatedAt": "2026-04-25T23:55:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "animation-systems-foundation-10184",
-  "currentSliceTitle": "Plan animation systems for units, heroes, towns, map objects, UI feedback, and battle readability",
+  "currentSliceId": "strategic-ai-foundation-10184",
+  "currentSliceTitle": "Plan strategic AI for computer hero/town turns, economy, recruiting/building, movement, and objectives",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Artifact system expansion foundation is documented in docs/artifact-system-expansion-foundation.md. Next logical slice is animation systems planning before strategic AI, broad maps, or final screen polish.",
+  "currentSliceNotes": "Animation systems foundation is documented in docs/animation-systems-foundation.md. Next logical slice is strategic AI planning before broad maps, final town/battle polish, or full-loop polish.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -144,7 +144,7 @@
     {
       "id": "animation-systems-foundation-10184",
       "title": "Plan animation systems for units, heroes, towns, map objects, UI feedback, and battle readability",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
@@ -615,7 +615,7 @@
     "Use docs/overworld-object-taxonomy-density.md as the object taxonomy and density source before object JSON migration, broad object placement, map-editor object expansion, or final object art.",
     "Use docs/magic-system-expansion-foundation.md as the magic source before spell schema migration, magic UI, AI casting, adventure-map spell work, or spell/artifact integration.",
     "Use docs/artifact-system-expansion-foundation.md as the artifact source before artifact JSON migration, set implementation, artifact reward tables, artifact UI, AI valuation, or spell/economy hook work.",
-    "Plan animation systems for units, heroes, towns, map objects, UI feedback, battle readability, and state-change clarity.",
+    "Use docs/animation-systems-foundation.md as the animation source before unit animation, hero motion, town ambience, object state animation, spell/artifact VFX, UI motion, cue catalog, audio cue, or final battle/town polish work.",
     "Plan strategic AI for computer-controlled heroes and towns: turns, economy, recruiting/building, movement, objective play, and pressure.",
     "Only after the foundation tracks are deep enough, resume focus on campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",

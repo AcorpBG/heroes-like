@@ -22,7 +22,12 @@ Updated: 2026-04-25
 - Artifact implementation should confirm how broadly curses/tradeoffs should appear in normal maps, since they add strategic texture but require UI, AI, save, and removal-service support before use.
 - Artifact implementation should confirm that Old Measure artifacts remain rare, charged, attuned, or scenario-gated rather than becoming normal high-stat loot.
 - Artifact implementation should confirm whether artifact economy hooks may touch rare resources before the economy resource-id migration and market-cap rules are implemented.
+- Animation implementation should confirm whether the first vertical proof should prioritize battle readability or overworld/town state clarity.
+- Animation implementation should confirm which faction should anchor the first motion proof, with Embercourt as the likely low-risk candidate because Beacon, roads, towns, and River Pass-style proof are already central.
+- Animation implementation should confirm whether production units/heroes should target sprite sheets, cutout scene rigs, or a hybrid pipeline before asset production starts.
+- Animation implementation should confirm normal-mode versus fast-mode pacing targets before battle and AI-turn playback are implemented.
+- Animation implementation should confirm audio direction and cue priority rules before SFX production starts.
 
 ## Current Follow-Up
 
-- Artifact system expansion foundation is documented. Next foundation slice should plan animation systems for units, heroes, towns, map objects, UI feedback, battle readability, spell/artifact feedback, state-change clarity, validation gates, and migration sequence.
+- Animation systems foundation is documented. Next foundation slice should plan strategic AI for computer-controlled hero and town turns, economy, recruiting/building, movement, objective play, pressure, event surfacing, validation gates, and migration sequence.
