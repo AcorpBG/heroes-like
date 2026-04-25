@@ -31,7 +31,11 @@ Updated: 2026-04-25
 - Strategic AI implementation should confirm the intended fairness policy for hard difficulty: better planning and scouting inference are acceptable, but any resource, movement, visibility, or combat bonuses should be labelled.
 - Strategic AI implementation should confirm which two factions should anchor the first AI personality proof; Embercourt versus Mireclaw is the likely low-risk pair because it contrasts infrastructure defense with raid/counter-capture pressure.
 - Strategic AI implementation should confirm whether adventure-map spells that affect scouting, routes, economy, or site state are blocked until AI can evaluate them, as recommended in `docs/strategic-ai-foundation.md`.
+- Concept-art curation should get AcOrP accept/reject/defer calls on the first external world mood plus six-faction identity batch recorded in `docs/concept-art-batch-001-review.md`.
+- Concept-art curation should confirm whether the world mood direction is useful as broad Aurelion Reach infrastructure-fantasy mood, or whether the next pass should move immediately to cleaner region/readability frames.
+- Concept-art curation should confirm whether Embercourt and Mireclaw can move into town/object second-pass briefs, while Sunvault, Thornwake, Brasshollow, and Veilmourn first need stronger anti-generic silhouette passes.
+- Concept-art curation should explicitly reject embedded text, generated labels, pseudo-logos, and tagline copy from any future visual reference. The first Veilmourn sheet contains useful motifs, but its embedded labels/text make it non-approvable as-is.
 
 ## Current Follow-Up
 
-- Strategic AI foundation is documented. Next production slice should execute the first actual concept-art generation pass from `docs/concept-art-pipeline.md`; when art generation is done, send the generated images to AcOrP on Discord before treating them as approved direction.
+- First concept-art generation batch is recorded in `docs/concept-art-batch-001-review.md` and remains external only. Next production slice should collect AcOrP curation calls and prepare a second-pass concept-art or implementation-brief plan; no hard blocker.
