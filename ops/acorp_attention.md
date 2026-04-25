@@ -8,8 +8,9 @@ Updated: 2026-04-25
 
 ## Decisions Needed
 
-- No new AcOrP design decision is blocking the concept-art pipeline slice.
+- Economy implementation will need an AcOrP decision on whether the internal `wood` resource id remains as a compatibility alias/displayed as Timber or migrates to canonical `timber` through a save-aware schema update.
+- Economy implementation should also confirm whether the full nine-resource target in `docs/economy-overhaul-foundation.md` is acceptable for staged production, or whether the rare/faction resources should be grouped before JSON migration.
 
 ## Current Follow-Up
 
-- Next foundation slice should plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, mines/resource sites, pressure, costs, collection routes, and capture/counterplay loops.
+- Economy overhaul foundation is documented. Next foundation slice should plan overworld object taxonomy and density: decoration/non-interactable objects, interactable sites/buildings, neutral unit encounters, footprints, visit rules, guard expectations, and biome/faction variants.
