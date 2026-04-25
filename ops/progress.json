@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-25T22:23:57Z",
+  "updatedAt": "2026-04-25T22:29:39Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-pipeline-imagegen-10184",
-  "currentSliceTitle": "Establish required image-generation concept art pipeline for world, factions, towns, units, buildings, and heroes",
+  "currentSliceId": "economy-overhaul-foundation-10184",
+  "currentSliceTitle": "Plan the multi-resource economy, faction preferences, mines/sites, pressure, costs, collection, and capture loops",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Worldbuilding and faction identity foundations are documented in docs/worldbuilding-foundation.md and docs/factions-content-bible.md. Next logical slice is concept-art pipeline planning before JSON migration, broad maps, or final screen polish.",
+  "currentSliceNotes": "Concept-art pipeline is documented in docs/concept-art-pipeline.md. Next logical slice is economy overhaul planning before JSON migration, broad maps, or final screen polish.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -114,7 +114,7 @@
     {
       "id": "concept-art-pipeline-imagegen-10184",
       "title": "Establish required image-generation concept art pipeline for world, factions, towns, units, buildings, and heroes",
-      "status": "pending",
+      "status": "completed",
       "difficulty": "high"
     },
     {
@@ -611,9 +611,8 @@
     }
   ],
   "nextActions": [
-    "Establish an image-generation concept art pipeline as a required design/art-direction stage for world mood, each faction, faction towns, units, town buildings, and heroes before implementation or deep polish.",
-    "Use docs/worldbuilding-foundation.md and docs/factions-content-bible.md as the source constraints for concept-art prompts, image review, and style selection.",
     "Plan the economy overhaul beyond gold, ore, and wood: multiple resources, faction preferences, mines/resource sites, pressure, costs, collection routes, and capture/counterplay loops.",
+    "Use docs/concept-art-pipeline.md as a required art-direction gate before economy-related resource-site, mine, artifact, faction town, or map-object visuals move into implementation.",
     "Plan overworld object taxonomy and density around decoration/non-interactable objects, interactable buildings/sites, and neutral unit encounters; use HoMM3 scale/type references only as inspiration.",
     "Plan magic expansion with schools/categories, faction interactions, unit interactions, economy/artifact hooks, tactical roles, and adventure-map roles.",
     "Plan artifact expansion with many more artifacts, unique sets, spell interactions, faction-specific interactions, and progression/build implications.",
