@@ -54,19 +54,20 @@ Immediate execution order:
 17. First additive resource schema and validator warning/report planning: completed in `docs/economy-resource-additive-schema-validator-plan.md` as a narrow implementation contract for optional resource registry fields, `wood`/`timber` alias reporting, resource/source/cadence/capture/market reports, strict fixture scope, warning levels, CLI expectations, compatibility adapters, acceptance tests, rollback, and hard non-change boundaries.
 18. First additive validator/report scaffolding implementation: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/economy_resource_schema/`. This did not migrate production JSON, change runtime economy behavior, change markets, migrate saves, activate rare resources, or import assets.
 19. Additive overworld object schema validator/report scaffolding: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/overworld_object_schema/`. This did not migrate production JSON, ingest renderer sprites, import generated assets, change pathing/occupancy, change runtime interactions, or switch AI behavior.
-20. Next current slice: additive overworld object report review/follow-up. Review current report warning volume, first-class neutral encounter decision points, body-tile and approach metadata readiness, route-effect placeholders, animation cue placeholders, AI/editor implications, and whether a first production additive schema planning slice is ready.
-21. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+20. Additive overworld object report review/follow-up: completed in `docs/overworld-object-report-review-001.md`. The report has 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors. Current production content remains compatibility-warning-only; strict errors remain isolated to fixtures or later migrated bundles.
+21. Next current slice: first production additive object schema planning for safe metadata fields. Define the JSON shape, defaults, compatibility adapter behavior, and validation levels for `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`, while keeping production JSON migration and runtime behavior changes out of scope.
+22. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Review the additive overworld object report output from `python3 tests/validate_repo.py --overworld-object-report` and the JSON form before any production migration.
-- Decide which warnings become the first production additive schema planning targets: explicit `primary_class`, `secondary_tags`, footprint anchor/tier, body tiles, approach metadata, passability class, interaction cadence, ownership/capture metadata, route effects, animation cue ids, editor placement hints, and AI hints.
-- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until report review explicitly approves the next slice.
+- Plan the first production additive object schema fields after the report review, limited to safe metadata that can remain runtime-inactive: `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
+- Keep `body_tiles`, `approach`, neutral encounter records, route effects, animation cue ids, editor placement hints, and AI hints in the plan as staged follow-ups, not immediate production migration.
+- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is additive overworld object report review/follow-up, tied to deciding whether and how to plan the first production additive schema fields without switching production behavior.
+- The next active implementation choice is first production additive object schema planning for safe metadata fields, tied to the report review decisions and still without switching production behavior.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -130,6 +131,24 @@ Validation:
 
 Limits:
 - This is scaffolding only. It does not edit production content JSON, migrate `content/map_objects.json` or `content/resource_sites.json`, ingest renderer sprites, import generated PNGs, change pathing/body-tile/occupancy behavior, change visit/interaction runtime behavior, switch AI behavior, or claim overworld object readiness.
+
+## Completed Review Slice: Overworld Object Additive Report Review
+Status: completed on 2026-04-26 as documentation/report-review follow-up for the additive overworld object schema.
+
+Purpose:
+- Review opt-in overworld object report output and JSON before production schema migration.
+- Convert report warning volume into next-slice decisions while keeping production object/resource-site JSON, renderer, pathing, AI, runtime behavior, generated PNGs, and asset import unchanged.
+
+Delivered:
+- Added `docs/overworld-object-report-review-001.md` summarizing report counts, inferred primary classes, missing metadata volume, placed sites without object links, guard/ownership/transit/neutral encounter findings, and warning/error totals.
+- Decided current production content remains compatibility-warning-only, strict errors remain isolated to fixtures now, and migrated-bundle errors should activate only for later declared production bundles.
+- Sequenced the next slice as first production additive object schema planning for safe metadata fields: `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
+
+Validation:
+- Planned validation for this slice remains `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --overworld-object-report`, and JSON report validation.
+
+Limits:
+- This is documentation/report-review only. It does not edit production content JSON, migrate object or resource-site records, ingest renderer sprites, import generated PNGs, change pathing/body-tile/occupancy behavior, change visit/interaction runtime behavior, switch AI behavior, or claim overworld object readiness.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.

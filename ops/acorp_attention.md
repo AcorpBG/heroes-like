@@ -6,6 +6,14 @@ Updated: 2026-04-26
 
 - GitHub push/auth is blocked: local commit `c490dca` could not be pushed because GitHub credentials are invalid. Do not spend engineering time on auth until credentials are refreshed.
 
+## Recent Review Decisions
+
+- Overworld object additive report review is recorded in `docs/overworld-object-report-review-001.md`. Current report output is acceptable as compatibility-warning noise: 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors.
+- Current production object/resource-site JSON should remain warning-only for missing future metadata. Strict object-schema errors stay limited to `tests/fixtures/overworld_object_schema/` until a later production bundle explicitly declares the migrated schema.
+- The next object slice should be first production additive schema planning for safe metadata fields only: `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
+- `body_tiles`, `approach`, route effects, animation cue ids, editor placement hints, AI hints, placed-site object links, and first-class neutral encounter records should be planned as staged follow-ups. They should not switch pathing, renderer, AI, editor, or runtime behavior yet.
+- First-class visible neutral encounter records are accepted as a needed schema direction, but they require a separate representation decision before production object JSON migration.
+
 ## Decisions Needed
 
 - Economy implementation will need an AcOrP decision on whether the internal `wood` resource id remains as a compatibility alias/displayed as Timber or migrates to canonical `timber` through a save-aware schema update.

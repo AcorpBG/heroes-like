@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T03:55:00Z",
+  "updatedAt": "2026-04-26T04:30:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-additive-report-review-10184",
-  "currentSliceTitle": "Review additive overworld object report output before any production schema migration",
+  "currentSliceId": "overworld-object-safe-additive-schema-planning-10184",
+  "currentSliceTitle": "Plan first production additive overworld object schema fields for safe metadata only",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Overworld object additive validator/report scaffolding is complete as opt-in report and strict fixture support only. The next slice should review report warning volume and decisions around first-class neutral encounters, body tiles, approach metadata, route effects, animation cue placeholders, AI/editor implications, and whether a first production additive schema planning slice is ready. Production JSON migration, renderer ingestion, pathing/occupancy behavior changes, AI adoption, and runtime asset import remain out of scope until explicitly approved.",
+  "currentSliceNotes": "The additive overworld object report review is complete in docs/overworld-object-report-review-001.md. Current production content remains compatibility-warning-only: 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors. The next slice should plan safe additive metadata fields only: schema_version, primary_class, secondary_tags, footprint anchor/tier, passability_class, and interaction. Production JSON migration, renderer ingestion, pathing/occupancy behavior changes, AI adoption, runtime asset import, and generated PNG import remain out of scope until a later declared migrated bundle.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -220,8 +220,16 @@
     {
       "id": "overworld-object-additive-report-review-10184",
       "title": "Review additive overworld object report output before any production schema migration",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T04:05:00Z",
+      "completedAt": "2026-04-26T04:30:00Z",
       "difficulty": "medium"
+    },
+    {
+      "id": "overworld-object-safe-additive-schema-planning-10184",
+      "title": "Plan first production additive overworld object schema fields for safe metadata only",
+      "status": "pending",
+      "difficulty": "high"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
