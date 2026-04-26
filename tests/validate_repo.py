@@ -416,8 +416,242 @@ NEUTRAL_ENCOUNTER_CANDIDATE_PLACEMENTS = {
         "encounter_id": "encounter_basalt_gatehouse_watch",
         "proposed_mode": "guard_linked_stack",
         "proposed_guard_role": "guards_resource_node",
-        "target_placement_id": "site_basalt_gatehouse",
+        "target_id": "site_basalt_gatehouse",
+        "target_placement_id": "dwelling_basalt_gatehouse",
         "expectation": "Candidate guard-link planning case for site_basalt_gatehouse.",
+    },
+}
+NEUTRAL_ENCOUNTER_BUNDLE_001_EXPECTED = {
+    "river_pass_ghoul_grove": {
+        "scenario_id": "river-pass",
+        "base": {
+            "placement_id": "river_pass_ghoul_grove",
+            "encounter_id": "encounter_ghoul_grove",
+            "x": 3,
+            "y": 1,
+            "difficulty": "low",
+            "combat_seed": 1201,
+        },
+        "metadata": {
+            "schema_version": 1,
+            "bundle_id": NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID,
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "route_pressure"],
+            "encounter": {
+                "primary_encounter_id": "encounter_ghoul_grove",
+                "encounter_ids": ["encounter_ghoul_grove"],
+                "difficulty_source": "scenario_placement",
+                "combat_seed_source": "scenario_placement",
+                "field_objectives_source": "encounter_definition",
+                "preserve_placement_field_objectives": True,
+            },
+            "representation": {
+                "mode": "visible_stack",
+                "footprint_tier": "micro",
+                "readability_family": "bramble_grove_raiders",
+                "danger_cue_id": "neutral_warning_light",
+                "visible_before_interaction": True,
+                "uncertainty_policy": "exact_encounter_known",
+            },
+            "guard_link": {
+                "guard_role": "none",
+                "target_kind": "none",
+                "target_id": "",
+                "target_placement_id": "",
+                "blocks_approach": True,
+                "clear_required_for_target": False,
+            },
+            "state_model": {
+                "initial_state": "idle",
+                "state_after_victory": "cleared",
+                "state_after_defeat": "active",
+                "remove_on_clear": True,
+                "remember_after_clear": True,
+            },
+            "placement_ownership": {
+                "ownership_model": "neutral_ecology",
+                "allowed_owner_kinds": ["neutral"],
+                "spawner_kind": "scenario",
+                "placement_authority": "scenario",
+            },
+            "reward_guard_summary": {
+                "risk_tier": "light",
+                "reward_categories": ["gold", "small_resource", "experience"],
+                "resource_reward_ids": ["gold"],
+                "guards_reward_tier": "none",
+            },
+            "passability": {
+                "passability_class": "neutral_stack_blocking",
+                "interaction_mode": "enter",
+                "blocks_route_until_cleared": True,
+            },
+            "ai_hints": {
+                "path_blocking": True,
+                "avoid_until_strength": "light_guard",
+                "neutral_clearance_value": 2,
+                "guard_target_value_hint": 0,
+            },
+            "editor_placement": {
+                "placement_mode": "scenario_encounter_overlay",
+                "requires_clear_adjacent_target": False,
+                "warn_if_hiding_target": True,
+                "density_bucket": "guard_or_encounter",
+            },
+        },
+    },
+    "river_pass_hollow_mire": {
+        "scenario_id": "river-pass",
+        "base": {
+            "placement_id": "river_pass_hollow_mire",
+            "encounter_id": "encounter_hollow_mire",
+            "x": 6,
+            "y": 4,
+            "difficulty": "medium",
+            "combat_seed": 1202,
+        },
+        "metadata": {
+            "schema_version": 1,
+            "bundle_id": NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID,
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "route_block", "mire_pressure"],
+            "encounter": {
+                "primary_encounter_id": "encounter_hollow_mire",
+                "encounter_ids": ["encounter_hollow_mire"],
+                "difficulty_source": "scenario_placement",
+                "combat_seed_source": "scenario_placement",
+                "field_objectives_source": "none",
+                "preserve_placement_field_objectives": True,
+            },
+            "representation": {
+                "mode": "visible_stack",
+                "footprint_tier": "micro",
+                "readability_family": "hollow_mire_pack",
+                "danger_cue_id": "neutral_warning_standard",
+                "visible_before_interaction": True,
+                "uncertainty_policy": "exact_encounter_known",
+            },
+            "guard_link": {
+                "guard_role": "route_block",
+                "target_kind": "route",
+                "target_id": "river_pass_mire_lane",
+                "target_placement_id": "",
+                "blocks_approach": True,
+                "clear_required_for_target": False,
+            },
+            "state_model": {
+                "initial_state": "idle",
+                "state_after_victory": "cleared",
+                "state_after_defeat": "active",
+                "remove_on_clear": True,
+                "remember_after_clear": True,
+            },
+            "placement_ownership": {
+                "ownership_model": "neutral_ecology",
+                "allowed_owner_kinds": ["neutral"],
+                "spawner_kind": "scenario",
+                "placement_authority": "scenario",
+            },
+            "reward_guard_summary": {
+                "risk_tier": "standard",
+                "reward_categories": ["gold", "small_resource", "resource", "experience", "route_opening"],
+                "resource_reward_ids": ["gold", "ore"],
+                "guards_reward_tier": "route",
+            },
+            "passability": {
+                "passability_class": "neutral_stack_blocking",
+                "interaction_mode": "enter",
+                "blocks_route_until_cleared": True,
+            },
+            "ai_hints": {
+                "path_blocking": True,
+                "avoid_until_strength": "standard_guard",
+                "neutral_clearance_value": 4,
+                "guard_target_value_hint": 1,
+            },
+            "editor_placement": {
+                "placement_mode": "scenario_encounter_overlay",
+                "requires_clear_adjacent_target": False,
+                "warn_if_hiding_target": True,
+                "density_bucket": "guard_or_encounter",
+            },
+        },
+    },
+    "ninefold_basalt_gatehouse_watch": {
+        "scenario_id": "ninefold-confluence",
+        "base": {
+            "placement_id": "ninefold_basalt_gatehouse_watch",
+            "encounter_id": "encounter_basalt_gatehouse_watch",
+            "x": 60,
+            "y": 52,
+            "difficulty": "high",
+            "combat_seed": 16406,
+        },
+        "metadata": {
+            "schema_version": 1,
+            "bundle_id": NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID,
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "guarded_reward", "neutral_dwelling_watch", "scenario_objective_guard"],
+            "encounter": {
+                "primary_encounter_id": "encounter_basalt_gatehouse_watch",
+                "encounter_ids": ["encounter_basalt_gatehouse_watch"],
+                "difficulty_source": "scenario_placement",
+                "combat_seed_source": "scenario_placement",
+                "field_objectives_source": "encounter_definition",
+                "preserve_placement_field_objectives": True,
+            },
+            "representation": {
+                "mode": "guard_linked_stack",
+                "footprint_tier": "micro",
+                "readability_family": "basalt_gatehouse_custodians",
+                "danger_cue_id": "neutral_warning_heavy",
+                "visible_before_interaction": True,
+                "uncertainty_policy": "exact_encounter_known",
+            },
+            "guard_link": {
+                "guard_role": "guards_resource_node",
+                "target_kind": "resource_node",
+                "target_id": "site_basalt_gatehouse",
+                "target_placement_id": "dwelling_basalt_gatehouse",
+                "blocks_approach": True,
+                "clear_required_for_target": True,
+            },
+            "state_model": {
+                "initial_state": "idle",
+                "state_after_victory": "cleared",
+                "state_after_defeat": "active",
+                "remove_on_clear": True,
+                "remember_after_clear": True,
+            },
+            "placement_ownership": {
+                "ownership_model": "neutral_ecology",
+                "allowed_owner_kinds": ["neutral"],
+                "spawner_kind": "scenario",
+                "placement_authority": "scenario",
+            },
+            "reward_guard_summary": {
+                "risk_tier": "heavy",
+                "reward_categories": ["gold", "small_resource", "resource", "experience", "recruitment", "scenario_progress"],
+                "resource_reward_ids": ["gold", "ore"],
+                "guards_reward_tier": "major",
+            },
+            "passability": {
+                "passability_class": "neutral_stack_blocking",
+                "interaction_mode": "enter",
+                "blocks_route_until_cleared": True,
+            },
+            "ai_hints": {
+                "path_blocking": True,
+                "avoid_until_strength": "heavy_guard",
+                "neutral_clearance_value": 7,
+                "guard_target_value_hint": 5,
+            },
+            "editor_placement": {
+                "placement_mode": "scenario_encounter_overlay",
+                "requires_clear_adjacent_target": False,
+                "warn_if_hiding_target": True,
+                "density_bucket": "guard_or_encounter",
+            },
+        },
     },
 }
 NEUTRAL_ENCOUNTER_REPRESENTATION_MODES = {"visible_stack", "camp_anchor", "guard_linked_stack", "guard_linked_camp"}
@@ -1932,6 +2166,97 @@ def neutral_encounter_reward_categories(encounter: dict) -> list[str]:
     return categories
 
 
+def find_scenario_encounter_placement(scenarios: dict[str, dict], scenario_id: str, placement_id: str) -> dict | None:
+    scenario = scenarios.get(scenario_id, {})
+    for placement in scenario.get("encounters", []):
+        if isinstance(placement, dict) and str(placement.get("placement_id", "")) == placement_id:
+            return placement
+    return None
+
+
+def compare_expected_neutral_metadata(errors: list[str], label: str, actual, expected, path: str = "") -> None:
+    current_path = path or label
+    if isinstance(expected, dict):
+        if not isinstance(actual, dict):
+            fail(errors, f"{current_path} must be a dictionary")
+            return
+        actual_keys = set(actual.keys())
+        expected_keys = set(expected.keys())
+        for key in sorted(expected_keys - actual_keys):
+            fail(errors, f"{current_path} is missing required key {key}")
+        for key in sorted(actual_keys - expected_keys):
+            fail(errors, f"{current_path} has out-of-scope key {key}")
+        for key in sorted(expected_keys.intersection(actual_keys)):
+            compare_expected_neutral_metadata(errors, label, actual.get(key), expected.get(key), f"{current_path}.{key}")
+        return
+    if actual != expected:
+        fail(errors, f"{current_path} must equal {expected!r}; found {actual!r}")
+
+
+def validate_neutral_encounter_representation_bundle(errors: list[str], scenarios: dict[str, dict]) -> None:
+    bundle_placements = set(NEUTRAL_ENCOUNTER_BUNDLE_001_EXPECTED.keys())
+    authored_bundle_ids: set[str] = set()
+    for scenario_id, scenario in scenarios.items():
+        for placement in scenario.get("encounters", []):
+            if not isinstance(placement, dict):
+                continue
+            metadata = placement.get("neutral_encounter")
+            if not isinstance(metadata, dict):
+                continue
+            placement_id = str(placement.get("placement_id", ""))
+            authored_bundle_ids.add(placement_id)
+            ensure(placement_id in bundle_placements, errors, f"Only neutral_encounter_representation_bundle_001 placements may declare neutral_encounter metadata; found {scenario_id}:{placement_id}")
+
+    for placement_id, expected in NEUTRAL_ENCOUNTER_BUNDLE_001_EXPECTED.items():
+        scenario_id = str(expected["scenario_id"])
+        placement = find_scenario_encounter_placement(scenarios, scenario_id, placement_id)
+        ensure(isinstance(placement, dict), errors, f"neutral_encounter_representation_bundle_001 is missing placement {scenario_id}:{placement_id}")
+        if not isinstance(placement, dict):
+            continue
+        for key, expected_value in expected["base"].items():
+            ensure(placement.get(key) == expected_value, errors, f"{scenario_id}:{placement_id} must preserve {key}={expected_value!r}")
+        metadata = placement.get("neutral_encounter")
+        ensure(isinstance(metadata, dict), errors, f"{scenario_id}:{placement_id} must declare neutral_encounter metadata")
+        if not isinstance(metadata, dict):
+            continue
+        compare_expected_neutral_metadata(errors, f"{scenario_id}:{placement_id}.neutral_encounter", metadata, expected["metadata"])
+
+        guard_link = metadata.get("guard_link", {}) if isinstance(metadata, dict) else {}
+        if placement_id == "ninefold_basalt_gatehouse_watch" and isinstance(guard_link, dict):
+            scenario = scenarios.get(scenario_id, {})
+            target_placement_id = str(guard_link.get("target_placement_id", ""))
+            target_id = str(guard_link.get("target_id", ""))
+            target = next(
+                (
+                    node
+                    for node in scenario.get("resource_nodes", [])
+                    if isinstance(node, dict) and str(node.get("placement_id", "")) == target_placement_id
+                ),
+                None,
+            )
+            ensure(isinstance(target, dict), errors, f"{scenario_id}:{placement_id} guard_link target_placement_id {target_placement_id} must reference a scenario resource node")
+            if isinstance(target, dict):
+                ensure(str(target.get("site_id", "")) == target_id, errors, f"{scenario_id}:{placement_id} guard_link target_id must match resource node site_id {target_id}")
+
+    missing_authored = bundle_placements - authored_bundle_ids
+    ensure(not missing_authored, errors, f"neutral_encounter_representation_bundle_001 missing authored metadata for: {', '.join(sorted(missing_authored))}")
+
+
+def neutral_encounter_metadata_presence(metadata: dict) -> dict[str, bool]:
+    representation = metadata.get("representation", {}) if isinstance(metadata, dict) else {}
+    return {
+        "representation": isinstance(representation, dict) and bool(str(representation.get("mode", ""))),
+        "danger": isinstance(representation, dict) and bool(str(representation.get("danger_cue_id", ""))),
+        "guard": isinstance(metadata.get("guard_link", {}), dict) and bool(metadata.get("guard_link", {})),
+        "state": isinstance(metadata.get("state_model", {}), dict) and bool(metadata.get("state_model", {})),
+        "ownership": isinstance(metadata.get("placement_ownership", {}), dict) and bool(metadata.get("placement_ownership", {})),
+        "reward": isinstance(metadata.get("reward_guard_summary", {}), dict) and bool(metadata.get("reward_guard_summary", {})),
+        "passability": isinstance(metadata.get("passability", {}), dict) and bool(metadata.get("passability", {})),
+        "ai": isinstance(metadata.get("ai_hints", {}), dict) and bool(metadata.get("ai_hints", {})),
+        "editor": isinstance(metadata.get("editor_placement", {}), dict) and bool(metadata.get("editor_placement", {})),
+    }
+
+
 def build_neutral_encounter_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("scenarios", "encounters", "map_objects")}
     scenarios = items_index(payloads["scenarios"])
@@ -1970,8 +2295,10 @@ def build_neutral_encounter_report() -> dict:
             "direct_placement_count": 0,
             "script_spawn_encounter_count": sum(int(entry.get("count", 0)) for entry in script_spawns.values()),
             "first_class_neutral_encounter_object_count": first_class_count,
+            "authored_bundle_metadata_count": 0,
             "difficulty_counts": {},
             "representation_mode_counts": {},
+            "representation_mode_source_counts": {"authored": {}, "inferred": {}},
             "missing_future_metadata_counts": {key: 0 for key in missing_metadata_keys},
         },
         "scenarios": {},
@@ -1984,7 +2311,7 @@ def build_neutral_encounter_report() -> dict:
             "definition_backed": [],
         },
         "script_spawns": script_spawns,
-        "guard_links": {"present_count": 0, "missing_count": 0, "inferred_none_count": 0, "placements": []},
+        "guard_links": {"present_count": 0, "missing_count": 0, "inferred_none_count": 0, "role_counts": {"authored": {}, "inferred": {}}, "placements": []},
         "candidate_bundles": {},
         "warnings": [],
         "errors": [],
@@ -2016,7 +2343,17 @@ def build_neutral_encounter_report() -> dict:
             encounter = encounters.get(encounter_id, {})
             encounter_exists = encounter_id in encounters
             candidate = candidate_lookup.get(placement_id, {})
-            candidate_bundle_id = NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID if candidate else ""
+            neutral_metadata = placement.get("neutral_encounter", {})
+            metadata_authored = isinstance(neutral_metadata, dict) and bool(neutral_metadata)
+            metadata_presence = neutral_encounter_metadata_presence(neutral_metadata if isinstance(neutral_metadata, dict) else {})
+            authored_bundle_id = str(neutral_metadata.get("bundle_id", "")) if isinstance(neutral_metadata, dict) else ""
+            candidate_bundle_id = authored_bundle_id if authored_bundle_id else (NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID if candidate else "")
+            representation = neutral_metadata.get("representation", {}) if isinstance(neutral_metadata, dict) else {}
+            representation_mode = str(representation.get("mode", "")) if metadata_presence["representation"] else "visible_stack"
+            representation_source = "authored" if metadata_presence["representation"] else "inferred"
+            guard_link = neutral_metadata.get("guard_link", {}) if isinstance(neutral_metadata, dict) else {}
+            guard_role = str(guard_link.get("guard_role", "")) if metadata_presence["guard"] else "none_inferred"
+            guard_source = "authored" if metadata_presence["guard"] else "inferred"
             field_objective_source = "none"
             field_objective_count = 0
             placement_field_objectives = placement.get("field_objectives", [])
@@ -2035,35 +2372,64 @@ def build_neutral_encounter_report() -> dict:
                 field_objective_source = "encounter_definition"
                 field_objective_count = len(definition_field_objectives)
 
+            warning_by_metadata_key = {
+                "representation": "future schema warning: missing neutral encounter representation metadata",
+                "danger": "future schema warning: missing danger/readability cue",
+                "guard": "future schema warning: missing guard_link metadata",
+                "state": "future schema warning: missing state model metadata",
+                "ownership": "future schema warning: missing placement ownership metadata",
+                "reward": "future schema warning: missing reward/guard summary metadata",
+                "passability": "future schema warning: missing passability metadata",
+                "ai": "future schema warning: missing AI hint metadata",
+                "editor": "future schema warning: missing editor placement metadata",
+            }
             placement_warnings = [
-                "future schema warning: missing neutral encounter representation metadata",
-                "future schema warning: missing danger/readability cue",
-                "future schema warning: missing guard_link metadata",
-                "future schema warning: missing state model metadata",
-                "future schema warning: missing placement ownership metadata",
-                "future schema warning: missing reward/guard summary metadata",
-                "future schema warning: missing passability metadata",
-                "future schema warning: missing AI hint metadata",
-                "future schema warning: missing editor placement metadata",
+                warning
+                for key, warning in warning_by_metadata_key.items()
+                if not metadata_presence.get(key, False)
             ]
             if not encounter_exists:
                 report["errors"].append(f"{scenario_id}:{placement_id} references missing encounter_id {encounter_id}")
                 placement_warnings.append("linked encounter definition is missing")
             for key in missing_metadata_keys:
-                report["summary"]["missing_future_metadata_counts"][key] += 1
+                if not metadata_presence.get(key, False):
+                    report["summary"]["missing_future_metadata_counts"][key] += 1
             scenario_entry["direct_encounter_count"] += 1
-            scenario_entry["missing_representation_metadata_count"] += 1
-            scenario_entry["missing_guard_link_count"] += 1
-            scenario_entry["missing_danger_cue_count"] += 1
+            if metadata_authored:
+                report["summary"]["authored_bundle_metadata_count"] += 1
+            if not metadata_presence["representation"]:
+                scenario_entry["missing_representation_metadata_count"] += 1
+            if not metadata_presence["guard"]:
+                scenario_entry["missing_guard_link_count"] += 1
+            if not metadata_presence["danger"]:
+                scenario_entry["missing_danger_cue_count"] += 1
             increment_count(report["summary"]["difficulty_counts"], difficulty)
-            increment_count(report["summary"]["representation_mode_counts"], "visible_stack")
+            increment_count(report["summary"]["representation_mode_counts"], f"{representation_source}:{representation_mode}")
+            increment_count(report["summary"]["representation_mode_source_counts"][representation_source], representation_mode)
             increment_count(scenario_entry["difficulty_counts"], difficulty)
             increment_count(encounter_counts, encounter_id)
             increment_count(local_encounter_counts, encounter_id)
             report["summary"]["direct_placement_count"] += 1
-            report["guard_links"]["missing_count"] += 1
-            report["guard_links"]["inferred_none_count"] += 1
-            report["guard_links"]["placements"].append({"scenario_id": scenario_id, "placement_id": placement_id, "encounter_id": encounter_id, "inferred_guard_role": "none_inferred", "guard_link_present": False})
+            if metadata_presence["guard"]:
+                report["guard_links"]["present_count"] += 1
+            else:
+                report["guard_links"]["missing_count"] += 1
+            if guard_source == "inferred":
+                report["guard_links"]["inferred_none_count"] += 1
+            increment_count(report["guard_links"]["role_counts"][guard_source], guard_role)
+            report["guard_links"]["placements"].append(
+                {
+                    "scenario_id": scenario_id,
+                    "placement_id": placement_id,
+                    "encounter_id": encounter_id,
+                    "guard_role": guard_role,
+                    "guard_role_source": guard_source,
+                    "guard_link_present": metadata_presence["guard"],
+                    "target_kind": str(guard_link.get("target_kind", "")) if isinstance(guard_link, dict) else "",
+                    "target_id": str(guard_link.get("target_id", "")) if isinstance(guard_link, dict) else "",
+                    "target_placement_id": str(guard_link.get("target_placement_id", "")) if isinstance(guard_link, dict) else "",
+                }
+            )
             if candidate_bundle_id:
                 scenario_entry["candidate_bundle_placements"].append(placement_id)
             for warning in placement_warnings:
@@ -2079,11 +2445,18 @@ def build_neutral_encounter_report() -> dict:
                     "difficulty": difficulty,
                     "combat_seed": int(placement.get("combat_seed", 0)),
                     "inferred_primary_class": "neutral_encounter",
-                    "inferred_representation_mode": "visible_stack",
-                    "representation_metadata_present": False,
-                    "danger_cue_present": False,
-                    "guard_link_present": False,
-                    "inferred_guard_role": "none_inferred",
+                    "representation_mode": representation_mode,
+                    "representation_mode_source": representation_source,
+                    "inferred_representation_mode": "visible_stack" if representation_source == "inferred" else "",
+                    "authored_representation_mode": representation_mode if representation_source == "authored" else "",
+                    "representation_metadata_present": metadata_presence["representation"],
+                    "danger_cue_present": metadata_presence["danger"],
+                    "guard_link_present": metadata_presence["guard"],
+                    "guard_role": guard_role,
+                    "guard_role_source": guard_source,
+                    "inferred_guard_role": "none_inferred" if guard_source == "inferred" else "",
+                    "authored_guard_role": guard_role if guard_source == "authored" else "",
+                    "authored_bundle_id": authored_bundle_id,
                     "field_objectives_source": field_objective_source,
                     "field_objective_count": field_objective_count,
                     "reward_categories": neutral_encounter_reward_categories(encounter),
@@ -2097,32 +2470,41 @@ def build_neutral_encounter_report() -> dict:
 
     report["summary"]["difficulty_counts"] = sorted_counts(report["summary"]["difficulty_counts"])
     report["summary"]["representation_mode_counts"] = sorted_counts(report["summary"]["representation_mode_counts"])
+    report["summary"]["representation_mode_source_counts"]["authored"] = sorted_counts(report["summary"]["representation_mode_source_counts"]["authored"])
+    report["summary"]["representation_mode_source_counts"]["inferred"] = sorted_counts(report["summary"]["representation_mode_source_counts"]["inferred"])
+    report["guard_links"]["role_counts"]["authored"] = sorted_counts(report["guard_links"]["role_counts"]["authored"])
+    report["guard_links"]["role_counts"]["inferred"] = sorted_counts(report["guard_links"]["role_counts"]["inferred"])
     report["repeated_encounter_ids"] = sorted_counts({encounter_id: count for encounter_id, count in encounter_counts.items() if count > 1})
     candidate_placements = []
     candidate_warnings = []
     for placement_id, candidate in sorted(candidate_lookup.items()):
         match = next((placement for placement in report["placements"] if placement.get("placement_id") == placement_id and placement.get("scenario_id") == candidate.get("scenario_id")), None)
         exists = match is not None and bool(match.get("encounter_exists", False))
-        candidate_placements.append({**candidate, "placement_id": placement_id, "placement_exists": match is not None, "encounter_exists": exists})
+        metadata_authored = match is not None and str(match.get("authored_bundle_id", "")) == NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID
+        candidate_placements.append({**candidate, "placement_id": placement_id, "placement_exists": match is not None, "encounter_exists": exists, "metadata_authored": metadata_authored})
         if match is None:
             candidate_warnings.append(f"candidate placement {placement_id} is not present in current scenario encounters")
+        elif not metadata_authored:
+            candidate_warnings.append(f"candidate placement {placement_id} has no authored {NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID} metadata")
+    bundle_metadata_authored = all(bool(placement.get("metadata_authored", False)) for placement in candidate_placements)
     report["candidate_bundles"][NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID] = {
         "bundle_id": NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID,
-        "status": "planning_only",
-        "production_json_migration": False,
+        "status": "metadata_authored" if bundle_metadata_authored else "planning_only",
+        "production_json_migration": bundle_metadata_authored,
+        "production_json_migration_scope": "scenario_placement_metadata_only" if bundle_metadata_authored else "none",
         "placement_count": len(candidate_placements),
         "placements": candidate_placements,
-        "required_before_migration": [
+        "required_before_migration": [] if bundle_metadata_authored else [
             "review opt-in neutral encounter report output",
             "approve a production metadata bundle explicitly",
             "keep runtime/pathing/AI/editor/renderer adoption in later slices",
         ],
-        "warnings": candidate_warnings + ["candidate bundle is report-only and must not be treated as production metadata"],
+        "warnings": candidate_warnings,
     }
     if first_class_count == 0:
         add_neutral_encounter_report_warning(report, "no first-class neutral_encounter map object records exist yet; direct scenario encounter placements remain compatibility source")
-    add_neutral_encounter_report_warning(report, "neutral encounter representation metadata is compatibility-warning-only for production content")
-    add_neutral_encounter_report_warning(report, "strict neutral encounter schema checks are limited to isolated test fixtures until a migrated production bundle is approved")
+    add_neutral_encounter_report_warning(report, "unmigrated production direct encounter placements remain legacy-compatible outside declared neutral encounter metadata bundles")
+    add_neutral_encounter_report_warning(report, "strict neutral encounter fixture checks remain isolated; migrated production bundle checks cover only neutral_encounter_representation_bundle_001")
     return report
 
 
@@ -2148,6 +2530,14 @@ def print_neutral_encounter_report(report: dict) -> None:
     print("Future metadata warnings:")
     print(f"- representation={missing['representation']}; danger={missing['danger']}; guard={missing['guard']}; state={missing['state']}; ownership={missing['ownership']}")
     print(f"- reward={missing['reward']}; passability={missing['passability']}; ai={missing['ai']}; editor={missing['editor']}")
+    print("Representation modes:")
+    for source, counts in report["summary"]["representation_mode_source_counts"].items():
+        for mode, count in counts.items():
+            print(f"- {source}:{mode}: {count}")
+    print("Guard link roles:")
+    for source, counts in report["guard_links"]["role_counts"].items():
+        for role, count in counts.items():
+            print(f"- {source}:{role}: {count}")
     bundle = report["candidate_bundles"][NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID]
     print("Candidate bundle:")
     print(f"- {bundle['bundle_id']}: {bundle['status']}; placements={bundle['placement_count']}; production_json_migration={bundle['production_json_migration']}")
@@ -3284,6 +3674,7 @@ def validate_content(errors: list[str]) -> None:
                         for key in bucket.keys():
                             ensure(str(key) in ENEMY_STRATEGY_KEYS[section], errors, f"Scenario {scenario_id} enemy faction {faction_id} strategy_overrides {section} uses unsupported key {key}")
 
+    validate_neutral_encounter_representation_bundle(errors, scenarios)
     validate_campaigns(errors, campaigns, scenarios)
     ensure(RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS.issubset(objective_override_placements), errors, "Release battle-objective slice must keep authored scenario encounter overrides for the signature field-objective fronts")
     ensure(bool(skirmish_scenario_ids), errors, "At least one scenario must be marked skirmish-available")

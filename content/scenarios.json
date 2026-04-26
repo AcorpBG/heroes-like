@@ -220,8 +220,154 @@
         {"placement_id": "bastion_vault", "artifact_id": "artifact_bastion_gorget", "x": 7, "y": 2}
       ],
       "encounters": [
-        {"placement_id": "river_pass_ghoul_grove", "encounter_id": "encounter_ghoul_grove", "x": 3, "y": 1, "difficulty": "low", "combat_seed": 1201},
-        {"placement_id": "river_pass_hollow_mire", "encounter_id": "encounter_hollow_mire", "x": 6, "y": 4, "difficulty": "medium", "combat_seed": 1202},
+        {
+          "placement_id": "river_pass_ghoul_grove",
+          "encounter_id": "encounter_ghoul_grove",
+          "x": 3,
+          "y": 1,
+          "difficulty": "low",
+          "combat_seed": 1201,
+          "neutral_encounter": {
+            "schema_version": 1,
+            "bundle_id": "neutral_encounter_representation_bundle_001",
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "route_pressure"],
+            "encounter": {
+              "primary_encounter_id": "encounter_ghoul_grove",
+              "encounter_ids": ["encounter_ghoul_grove"],
+              "difficulty_source": "scenario_placement",
+              "combat_seed_source": "scenario_placement",
+              "field_objectives_source": "encounter_definition",
+              "preserve_placement_field_objectives": true
+            },
+            "representation": {
+              "mode": "visible_stack",
+              "footprint_tier": "micro",
+              "readability_family": "bramble_grove_raiders",
+              "danger_cue_id": "neutral_warning_light",
+              "visible_before_interaction": true,
+              "uncertainty_policy": "exact_encounter_known"
+            },
+            "guard_link": {
+              "guard_role": "none",
+              "target_kind": "none",
+              "target_id": "",
+              "target_placement_id": "",
+              "blocks_approach": true,
+              "clear_required_for_target": false
+            },
+            "state_model": {
+              "initial_state": "idle",
+              "state_after_victory": "cleared",
+              "state_after_defeat": "active",
+              "remove_on_clear": true,
+              "remember_after_clear": true
+            },
+            "placement_ownership": {
+              "ownership_model": "neutral_ecology",
+              "allowed_owner_kinds": ["neutral"],
+              "spawner_kind": "scenario",
+              "placement_authority": "scenario"
+            },
+            "reward_guard_summary": {
+              "risk_tier": "light",
+              "reward_categories": ["gold", "small_resource", "experience"],
+              "resource_reward_ids": ["gold"],
+              "guards_reward_tier": "none"
+            },
+            "passability": {
+              "passability_class": "neutral_stack_blocking",
+              "interaction_mode": "enter",
+              "blocks_route_until_cleared": true
+            },
+            "ai_hints": {
+              "path_blocking": true,
+              "avoid_until_strength": "light_guard",
+              "neutral_clearance_value": 2,
+              "guard_target_value_hint": 0
+            },
+            "editor_placement": {
+              "placement_mode": "scenario_encounter_overlay",
+              "requires_clear_adjacent_target": false,
+              "warn_if_hiding_target": true,
+              "density_bucket": "guard_or_encounter"
+            }
+          }
+        },
+        {
+          "placement_id": "river_pass_hollow_mire",
+          "encounter_id": "encounter_hollow_mire",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 1202,
+          "neutral_encounter": {
+            "schema_version": 1,
+            "bundle_id": "neutral_encounter_representation_bundle_001",
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "route_block", "mire_pressure"],
+            "encounter": {
+              "primary_encounter_id": "encounter_hollow_mire",
+              "encounter_ids": ["encounter_hollow_mire"],
+              "difficulty_source": "scenario_placement",
+              "combat_seed_source": "scenario_placement",
+              "field_objectives_source": "none",
+              "preserve_placement_field_objectives": true
+            },
+            "representation": {
+              "mode": "visible_stack",
+              "footprint_tier": "micro",
+              "readability_family": "hollow_mire_pack",
+              "danger_cue_id": "neutral_warning_standard",
+              "visible_before_interaction": true,
+              "uncertainty_policy": "exact_encounter_known"
+            },
+            "guard_link": {
+              "guard_role": "route_block",
+              "target_kind": "route",
+              "target_id": "river_pass_mire_lane",
+              "target_placement_id": "",
+              "blocks_approach": true,
+              "clear_required_for_target": false
+            },
+            "state_model": {
+              "initial_state": "idle",
+              "state_after_victory": "cleared",
+              "state_after_defeat": "active",
+              "remove_on_clear": true,
+              "remember_after_clear": true
+            },
+            "placement_ownership": {
+              "ownership_model": "neutral_ecology",
+              "allowed_owner_kinds": ["neutral"],
+              "spawner_kind": "scenario",
+              "placement_authority": "scenario"
+            },
+            "reward_guard_summary": {
+              "risk_tier": "standard",
+              "reward_categories": ["gold", "small_resource", "resource", "experience", "route_opening"],
+              "resource_reward_ids": ["gold", "ore"],
+              "guards_reward_tier": "route"
+            },
+            "passability": {
+              "passability_class": "neutral_stack_blocking",
+              "interaction_mode": "enter",
+              "blocks_route_until_cleared": true
+            },
+            "ai_hints": {
+              "path_blocking": true,
+              "avoid_until_strength": "standard_guard",
+              "neutral_clearance_value": 4,
+              "guard_target_value_hint": 1
+            },
+            "editor_placement": {
+              "placement_mode": "scenario_encounter_overlay",
+              "requires_clear_adjacent_target": false,
+              "warn_if_hiding_target": true,
+              "density_bucket": "guard_or_encounter"
+            }
+          }
+        },
         {"placement_id": "river_pass_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 4, "y": 0, "difficulty": "medium", "combat_seed": 1203}
       ]
     },
@@ -3274,7 +3420,80 @@
       "enemy_factions": [{"faction_id": "faction_mireclaw", "label": "Duskfen Marsh Claim", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 6, "max_active_raids": 2, "raid_pillage_delay": 1, "raid_pillage": {"gold": 160, "wood": 1}, "raid_encounter_ids": ["encounter_mire_raid", "encounter_nightglass_dominion"], "spawn_points": [{"x": 30, "y": 24}, {"x": 30, "y": 36}], "siege_target_placement_id": "ninefold_embercourt_survey_camp", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 110, "priority_target_placement_ids": ["ninefold_embercourt_survey_camp", "bog_drum_crossing", "dwelling_bogbell_croft", "ninefold_basalt_gatehouse_watch"], "strategy_overrides": {"site_family_weights": {"neutral_dwelling": 1.4, "faction_outpost": 1.5, "frontier_shrine": 1.2}, "raid_target_weights": {"town": 1.2, "resource": 1.2, "encounter": 1.1}, "raid": {"site_denial_weight": 1.4, "town_siege_weight": 1.3}}}, {"faction_id": "faction_sunvault", "label": "Prismhearth Relay Claim", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 6, "max_active_raids": 2, "raid_pillage_delay": 1, "raid_pillage": {"gold": 150, "ore": 1}, "raid_encounter_ids": ["encounter_aurora_battery", "encounter_daybreak_matrix"], "spawn_points": [{"x": 23, "y": 32}, {"x": 9, "y": 48}], "siege_target_placement_id": "ninefold_embercourt_survey_camp", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 110, "priority_target_placement_ids": ["ninefold_prismhearth_relay", "prism_watch_relay", "starlens_sanctum", "ninefold_prism_matrix"], "strategy_overrides": {"site_family_weights": {"faction_outpost": 1.5, "frontier_shrine": 1.4, "neutral_dwelling": 0.9}, "raid_target_weights": {"artifact": 1.2, "resource": 1.1, "town": 1.2}, "raid": {"objective_weight": 1.3, "site_denial_weight": 1.2}}}, {"faction_id": "faction_thornwake", "label": "Graftroot Concord Claim", "pressure_per_day": 1, "pressure_per_enemy_town": 1, "raid_threshold": 5, "max_active_raids": 1, "raid_pillage_delay": 1, "raid_pillage": {"gold": 130, "wood": 1}, "raid_encounter_ids": ["encounter_graftroot_wardens"], "spawn_points": [{"x": 16, "y": 50}], "siege_target_placement_id": "ninefold_embercourt_survey_camp", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 90, "priority_target_placement_ids": ["ninefold_graftroot_caravan", "dwelling_bramble_hedge", "dwelling_greenbranch_copse", "thornwake_root_pressure_wardens"], "strategy_overrides": {"site_family_weights": {"neutral_dwelling": 1.45, "frontier_shrine": 1.15, "faction_outpost": 0.9}, "raid_target_weights": {"resource": 1.25, "encounter": 1.15, "town": 1.1}, "raid": {"site_denial_weight": 1.35, "hero_hunt_weight": 0.8}}}, {"faction_id": "faction_brasshollow", "label": "Orevein Contract Claim", "pressure_per_day": 1, "pressure_per_enemy_town": 1, "raid_threshold": 5, "max_active_raids": 1, "raid_pillage_delay": 1, "raid_pillage": {"gold": 180, "ore": 1}, "raid_encounter_ids": ["encounter_orevein_exactors"], "spawn_points": [{"x": 37, "y": 50}], "siege_target_placement_id": "ninefold_embercourt_survey_camp", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 90, "priority_target_placement_ids": ["ninefold_orevein_gantry", "ridge_quarry", "dwelling_basalt_gatehouse", "brasshollow_contract_pressure_exactors"], "strategy_overrides": {"site_family_weights": {"faction_outpost": 1.25, "neutral_dwelling": 1.1, "frontier_shrine": 0.85}, "raid_target_weights": {"resource": 1.4, "town": 1.15, "artifact": 1.1}, "reinforcement": {"garrison_bias": 1.3, "raid_bias": 0.9}}}, {"faction_id": "faction_veilmourn", "label": "Bellwake Harbor Claim", "pressure_per_day": 1, "pressure_per_enemy_town": 1, "raid_threshold": 5, "max_active_raids": 1, "raid_pillage_delay": 1, "raid_pillage": {"gold": 150, "wood": 1}, "raid_encounter_ids": ["encounter_bellwake_privateers"], "spawn_points": [{"x": 52, "y": 50}], "siege_target_placement_id": "ninefold_embercourt_survey_camp", "siege_active_raid_threshold": 2, "siege_capture_progress": 3, "priority_target_bonus": 90, "priority_target_placement_ids": ["ninefold_bellwake_harbor", "mist_lighthouse", "dwelling_harbor_pilot_house", "veilmourn_harbor_pressure_privateers"], "strategy_overrides": {"site_family_weights": {"frontier_shrine": 1.2, "neutral_dwelling": 1.15, "faction_outpost": 1.0}, "raid_target_weights": {"artifact": 1.25, "resource": 1.2, "hero": 1.1}, "raid": {"hero_hunt_weight": 1.25, "site_denial_weight": 1.1}}}],
       "resource_nodes": [{"placement_id": "dwelling_roadward_lodge", "site_id": "site_free_company_yard", "x": 23, "y": 8}, {"placement_id": "dwelling_fenhound_kennels", "site_id": "site_fenhound_kennels", "x": 30, "y": 12}, {"placement_id": "dwelling_cliffhawk_roost", "site_id": "site_cliffhawk_roost", "x": 9, "y": 4}, {"placement_id": "dwelling_reedbarge_mooring", "site_id": "site_reedbarge_mooring", "x": 52, "y": 20}, {"placement_id": "dwelling_glowcap_croft", "site_id": "site_glowcap_croft", "x": 60, "y": 8}, {"placement_id": "dwelling_dustjack_yard", "site_id": "site_dustjack_yard", "x": 37, "y": 8, "collected_by_faction_id": "faction_brasshollow"}, {"placement_id": "dwelling_cinder_kiln", "site_id": "site_cinder_kiln", "x": 44, "y": 8}, {"placement_id": "dwelling_frostbeacon_bothy", "site_id": "site_frostbeacon_bothy", "x": 2, "y": 18}, {"placement_id": "dwelling_orchard_levy", "site_id": "site_orchard_levy", "x": 23, "y": 18}, {"placement_id": "dwelling_bramble_hedge", "site_id": "site_bramble_hedge", "x": 16, "y": 18, "collected_by_faction_id": "faction_thornwake"}, {"placement_id": "dwelling_tidepool_skiffyard", "site_id": "site_tidepool_skiffyard", "x": 52, "y": 12}, {"placement_id": "dwelling_switchback_hostel", "site_id": "site_switchback_hostel", "x": 9, "y": 14}, {"placement_id": "dwelling_saltpan_camp", "site_id": "site_saltpan_camp", "x": 37, "y": 18}, {"placement_id": "dwelling_crystal_sump", "site_id": "site_crystal_sump", "x": 60, "y": 18}, {"placement_id": "dwelling_icehook_trapper_lodge", "site_id": "site_icehook_trapper_lodge", "x": 2, "y": 28}, {"placement_id": "dwelling_obsidian_scar", "site_id": "site_obsidian_scar", "x": 44, "y": 18}, {"placement_id": "dwelling_greenbranch_copse", "site_id": "site_greenbranch_copse", "x": 16, "y": 28, "collected_by_faction_id": "faction_thornwake"}, {"placement_id": "dwelling_harbor_pilot_house", "site_id": "site_harbor_pilot_house", "x": 52, "y": 24, "collected_by_faction_id": "faction_veilmourn"}, {"placement_id": "dwelling_kite_signal_eyrie", "site_id": "site_kite_signal_eyrie", "x": 9, "y": 28}, {"placement_id": "dwelling_lantern_warren", "site_id": "site_lantern_warren", "x": 60, "y": 28}, {"placement_id": "dwelling_bogbell_croft", "site_id": "site_bogbell_croft", "x": 30, "y": 30}, {"placement_id": "dwelling_milestone_arsenal", "site_id": "site_milestone_arsenal", "x": 23, "y": 30}, {"placement_id": "dwelling_frostwharf_house", "site_id": "site_frostwharf_house", "x": 52, "y": 34, "collected_by_faction_id": "faction_veilmourn"}, {"placement_id": "dwelling_charcoal_burners", "site_id": "site_charcoal_burners", "x": 44, "y": 30}, {"placement_id": "dwelling_basalt_gatehouse", "site_id": "site_basalt_gatehouse", "x": 60, "y": 36, "collected_by_faction_id": "faction_brasshollow"}, {"placement_id": "north_snow_timber", "site_id": "site_timber_wagon", "x": 2, "y": 6}, {"placement_id": "forest_waystone_cache", "site_id": "site_waystone_cache", "x": 16, "y": 6}, {"placement_id": "ridge_ore_crates", "site_id": "site_ore_crates", "x": 9, "y": 22}, {"placement_id": "brightwood_sawmill", "site_id": "site_brightwood_sawmill", "x": 16, "y": 4}, {"placement_id": "ridge_quarry", "site_id": "site_ridge_quarry", "x": 9, "y": 36}, {"placement_id": "marsh_peat_yard", "site_id": "site_marsh_peat_yard", "x": 30, "y": 4}, {"placement_id": "watchtower_beacon", "site_id": "site_watchtower_beacon", "x": 9, "y": 40}, {"placement_id": "mist_lighthouse", "site_id": "site_mist_lighthouse", "x": 52, "y": 4}, {"placement_id": "barrow_vault", "site_id": "site_barrow_vault", "x": 16, "y": 40}, {"placement_id": "drowned_reliquary", "site_id": "site_drowned_reliquary", "x": 52, "y": 40}, {"placement_id": "repaired_ferry_stage", "site_id": "site_repaired_ferry_stage", "x": 49, "y": 20}, {"placement_id": "rope_lift", "site_id": "site_rope_lift", "x": 9, "y": 52}, {"placement_id": "wayfarer_infirmary", "site_id": "site_wayfarer_infirmary", "x": 23, "y": 42}, {"placement_id": "market_caravanserai", "site_id": "site_market_caravanserai", "x": 37, "y": 42}, {"placement_id": "ember_signal_basin", "site_id": "site_ember_signal_post", "x": 23, "y": 12, "collected_by_faction_id": "faction_embercourt"}, {"placement_id": "bog_drum_crossing", "site_id": "site_bog_drum_outpost", "x": 30, "y": 24, "collected_by_faction_id": "faction_mireclaw"}, {"placement_id": "prism_watch_relay", "site_id": "site_prism_watch_relay", "x": 23, "y": 24, "collected_by_faction_id": "faction_sunvault"}, {"placement_id": "roadside_sanctum", "site_id": "site_roadside_sanctum", "x": 23, "y": 36}, {"placement_id": "reedscript_shrine", "site_id": "site_reedscript_shrine", "x": 30, "y": 40}, {"placement_id": "starlens_sanctum", "site_id": "site_starlens_sanctum", "x": 9, "y": 48}, {"placement_id": "ash_waystone_cache", "site_id": "site_waystone_cache", "x": 44, "y": 44}, {"placement_id": "coast_salvage_cache", "site_id": "site_waystone_cache", "x": 52, "y": 44}],
       "artifact_nodes": [{"placement_id": "confluence_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 23, "y": 5}, {"placement_id": "confluence_quarry_tally_rod", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 45}, {"placement_id": "confluence_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 44, "y": 45}, {"placement_id": "confluence_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 60, "y": 45}],
-      "encounters": [{"placement_id": "ninefold_reedmaw_host", "encounter_id": "encounter_nightglass_dominion", "x": 30, "y": 32, "difficulty": "high", "combat_seed": 16401}, {"placement_id": "ninefold_prism_matrix", "encounter_id": "encounter_daybreak_matrix", "x": 23, "y": 38, "difficulty": "high", "combat_seed": 16402}, {"placement_id": "ninefold_graftroot_wardens", "encounter_id": "encounter_graftroot_wardens", "x": 16, "y": 48, "difficulty": "medium", "combat_seed": 16403}, {"placement_id": "ninefold_orevein_exactors", "encounter_id": "encounter_orevein_exactors", "x": 37, "y": 48, "difficulty": "medium", "combat_seed": 16404}, {"placement_id": "ninefold_bellwake_privateers", "encounter_id": "encounter_bellwake_privateers", "x": 52, "y": 48, "difficulty": "medium", "combat_seed": 16405}, {"placement_id": "ninefold_basalt_gatehouse_watch", "encounter_id": "encounter_basalt_gatehouse_watch", "x": 60, "y": 52, "difficulty": "high", "combat_seed": 16406}]
+      "encounters": [{"placement_id": "ninefold_reedmaw_host", "encounter_id": "encounter_nightglass_dominion", "x": 30, "y": 32, "difficulty": "high", "combat_seed": 16401}, {"placement_id": "ninefold_prism_matrix", "encounter_id": "encounter_daybreak_matrix", "x": 23, "y": 38, "difficulty": "high", "combat_seed": 16402}, {"placement_id": "ninefold_graftroot_wardens", "encounter_id": "encounter_graftroot_wardens", "x": 16, "y": 48, "difficulty": "medium", "combat_seed": 16403}, {"placement_id": "ninefold_orevein_exactors", "encounter_id": "encounter_orevein_exactors", "x": 37, "y": 48, "difficulty": "medium", "combat_seed": 16404}, {"placement_id": "ninefold_bellwake_privateers", "encounter_id": "encounter_bellwake_privateers", "x": 52, "y": 48, "difficulty": "medium", "combat_seed": 16405}, {
+        "placement_id": "ninefold_basalt_gatehouse_watch",
+        "encounter_id": "encounter_basalt_gatehouse_watch",
+        "x": 60,
+        "y": 52,
+        "difficulty": "high",
+        "combat_seed": 16406,
+        "neutral_encounter": {
+          "schema_version": 1,
+          "bundle_id": "neutral_encounter_representation_bundle_001",
+          "primary_class": "neutral_encounter",
+          "secondary_tags": ["visible_army", "guarded_reward", "neutral_dwelling_watch", "scenario_objective_guard"],
+          "encounter": {
+            "primary_encounter_id": "encounter_basalt_gatehouse_watch",
+            "encounter_ids": ["encounter_basalt_gatehouse_watch"],
+            "difficulty_source": "scenario_placement",
+            "combat_seed_source": "scenario_placement",
+            "field_objectives_source": "encounter_definition",
+            "preserve_placement_field_objectives": true
+          },
+          "representation": {
+            "mode": "guard_linked_stack",
+            "footprint_tier": "micro",
+            "readability_family": "basalt_gatehouse_custodians",
+            "danger_cue_id": "neutral_warning_heavy",
+            "visible_before_interaction": true,
+            "uncertainty_policy": "exact_encounter_known"
+          },
+          "guard_link": {
+            "guard_role": "guards_resource_node",
+            "target_kind": "resource_node",
+            "target_id": "site_basalt_gatehouse",
+            "target_placement_id": "dwelling_basalt_gatehouse",
+            "blocks_approach": true,
+            "clear_required_for_target": true
+          },
+          "state_model": {
+            "initial_state": "idle",
+            "state_after_victory": "cleared",
+            "state_after_defeat": "active",
+            "remove_on_clear": true,
+            "remember_after_clear": true
+          },
+          "placement_ownership": {
+            "ownership_model": "neutral_ecology",
+            "allowed_owner_kinds": ["neutral"],
+            "spawner_kind": "scenario",
+            "placement_authority": "scenario"
+          },
+          "reward_guard_summary": {
+            "risk_tier": "heavy",
+            "reward_categories": ["gold", "small_resource", "resource", "experience", "recruitment", "scenario_progress"],
+            "resource_reward_ids": ["gold", "ore"],
+            "guards_reward_tier": "major"
+          },
+          "passability": {
+            "passability_class": "neutral_stack_blocking",
+            "interaction_mode": "enter",
+            "blocks_route_until_cleared": true
+          },
+          "ai_hints": {
+            "path_blocking": true,
+            "avoid_until_strength": "heavy_guard",
+            "neutral_clearance_value": 7,
+            "guard_target_value_hint": 5
+          },
+          "editor_placement": {
+            "placement_mode": "scenario_encounter_overlay",
+            "requires_clear_adjacent_target": false,
+            "warn_if_hiding_target": true,
+            "density_bucket": "guard_or_encounter"
+          }
+        }
+      }]
     }
   ]
 }
