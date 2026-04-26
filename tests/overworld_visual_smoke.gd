@@ -82,8 +82,11 @@ func _run() -> void:
 		get_tree().quit(1)
 		return
 
-	_assert_remembered_owned_town_remote_entry(shell)
-	get_tree().quit(0)
+	if not _assert_remembered_owned_town_remote_entry(shell):
+		return
+	var main_loop := Engine.get_main_loop() as SceneTree
+	if main_loop != null:
+		main_loop.quit(0)
 	return
 
 func _assert_hero_identity_progression_contract(shell: Node) -> bool:
@@ -1359,7 +1362,6 @@ func _assert_small_map_fit(shell: Node) -> bool:
 	return true
 
 func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
-	var tree := get_tree()
 	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_perform_primary_action"):
 		push_error("Overworld smoke: shell is missing remote-town validation hooks.")
 		get_tree().quit(1)
@@ -1419,7 +1421,6 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		push_error("Overworld smoke: remote town route activated the wrong town. active=%s expected=%s" % [active_town, town])
 		get_tree().quit(1)
 		return false
-	tree.quit(0)
 	return true
 
 func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2i, remembered_presentation: Dictionary) -> bool:
