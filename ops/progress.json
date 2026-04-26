@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T22:48:01Z",
+    "updatedAt": "2026-04-26T22:54:34Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "editor-active-tool-cue-10184",
-  "currentSliceTitle": "Surface compact map-editor active tool cues",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact map-editor active-tool cue polish: the editor status rail, map tooltip, tool button tooltips, and validation snapshot now surface current tool action, selected tile, next click, and relevant brush/palette/path detail using existing working-copy state. Added focused map-editor smoke assertions with no internal score-field leaks. UI/tooling readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, campaign progression semantic changes, or internal score fields.",
+    "currentSliceId": "editor-menu-return-cue-10184",
+    "currentSliceTitle": "Surface compact map-editor menu return cues",
+    "currentSliceStatus": "completed",
+    "currentSliceNotes": "Implemented compact map-editor Menu return cue polish: the editor Menu button now flags unsaved in-memory edits, explains that leaving returns to the main menu without writing author files or campaign progress, and includes Play Copy launch-snapshot context after returning from a Play Copy smoke pass. Added focused map-editor smoke assertions with no internal score-field leaks. UI/tooling readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, campaign progression semantic changes, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -851,6 +851,32 @@
                 "python3 -m json.tool ops/progress.json",
                 "python3 tests/validate_repo.py",
                 "godot4 --headless --path . tests/menu_outcome_visual_smoke.tscn"
+            ],
+            "difficulty": "medium"
+        },
+        {
+            "id": "editor-menu-return-cue-10184",
+            "title": "Surface compact map-editor menu return cues",
+            "status": "completed",
+            "startedAt": "2026-04-26T22:50:25Z",
+            "completedAt": "2026-04-26T22:54:34Z",
+            "blockedOptions": [
+                "mechanics_changes",
+                "balance_changes",
+                "save_schema_version_bump",
+                "durable_event_logs",
+                "broad_dashboard_ui",
+                "campaign_progression_semantic_changes",
+                "internal_score_field_exposure",
+                "production_json_migration",
+                "pathing_body_tile_adoption",
+                "renderer_asset_import"
+            ],
+            "validation": [
+                "git diff --check",
+                "python3 -m json.tool ops/progress.json",
+                "python3 tests/validate_repo.py",
+                "godot4 --headless --path . tests/map_editor_smoke.tscn"
             ],
             "difficulty": "medium"
         },

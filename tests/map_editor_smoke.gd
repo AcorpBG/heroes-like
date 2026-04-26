@@ -45,6 +45,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_play_readiness_gate(snapshot, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero", "Objects"]):
 		return
+	if not _assert_editor_menu_return_cue(snapshot, false, ["Menu return:", "Main menu", "no editor edits need preserving", "no authored file or campaign progress is written"]):
+		return
 	if not _assert_editor_active_tool_cue(snapshot, "inspect", ["Tool cue:", "Inspect map content", "next:", "click a tile", "Selected 23,26"]):
 		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
@@ -83,6 +85,8 @@ func _run() -> void:
 	if not _assert_editor_play_handoff(paint_result, true, ["Play handoff:", "edited in-memory working copy", "return restores the editor launch snapshot"]):
 		return
 	if not _assert_editor_play_readiness_gate(paint_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 23,26", "Objects"]):
+		return
+	if not _assert_editor_menu_return_cue(paint_result, true, ["Menu return:", "Main menu", "unsaved editor edits are discarded", "Use Play Copy before leaving"]):
 		return
 	var paint_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var terrain_presentation: Dictionary = paint_presentation.get("terrain_presentation", {})
@@ -2382,6 +2386,51 @@ func _assert_editor_active_tool_cue(result: Dictionary, expected_tool: String, f
 			return false
 	return true
 
+func _assert_editor_menu_return_cue(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("menu_return", {})
+	var text := String(cue.get("text", ""))
+	var tooltip := String(result.get("menu_button_tooltip", ""))
+	var button_text := String(result.get("menu_button_text", ""))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: editor Menu return cue was not exposed: %s." % result)
+		return false
+	if bool(cue.get("dirty", false)) != expected_dirty:
+		_fail("Map editor smoke: editor Menu return cue dirty state mismatch: %s." % cue)
+		return false
+	if expected_dirty and button_text.find("Unsaved") < 0:
+		_fail("Map editor smoke: dirty editor Menu button did not flag unsaved state: %s." % result)
+		return false
+	if not expected_dirty and button_text != "Menu":
+		_fail("Map editor smoke: clean editor Menu button should stay compact: %s." % result)
+		return false
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected == "":
+			continue
+		if text.find(expected) < 0 and tooltip.find(expected) < 0:
+			_fail("Map editor smoke: editor Menu return cue missed '%s': cue=%s tooltip=%s." % [expected, cue, tooltip])
+			return false
+	var leak_text := "%s\n%s\n%s" % [text, tooltip, button_text]
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if leak_text.find(forbidden) >= 0:
+			_fail("Map editor smoke: editor Menu return cue leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
 func _assert_editor_play_handoff(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:
 	var handoff: Dictionary = result.get("play_handoff", {})
 	var text := String(handoff.get("text", ""))
@@ -2985,6 +3034,8 @@ func _assert_play_copy_round_trip(shell) -> bool:
 		_fail("Map editor smoke: returned editor imported live play mutation instead of the launch snapshot: %s." % returned_snapshot)
 		return false
 	if not _assert_editor_play_return_context(returned_snapshot, ["Play return:", "launch snapshot restored", "live play mutations discarded", "Hero 3,3", "Next: edit the working copy or launch Play Copy again"]):
+		return false
+	if not _assert_editor_menu_return_cue(returned_snapshot, true, ["Menu return:", "Main menu", "Play Copy launch snapshot restored", "unsaved editor edits are discarded"]):
 		return false
 	var returned_tile: Dictionary = returned_editor.call("validation_tile_presentation", 2, 2)
 	var returned_terrain: Dictionary = returned_tile.get("terrain_presentation", {})
