@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T14:20:00Z",
+  "updatedAt": "2026-04-26T15:10:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "foundation-game-loop-prioritization-10184",
-  "currentSliceTitle": "Prioritize the next broader foundation or game-loop slice after neutral encounter metadata review",
+  "currentSliceId": "economy-capture-resource-loop-proof-planning-10184",
+  "currentSliceTitle": "Plan the first narrow economy capture/resource loop proof",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Metadata-only first-class neutral encounter object bundle report review is complete in docs/neutral-encounter-first-class-object-bundle-001-report-review.md. The reviewed report has 3 first-class neutral encounter objects, 3 object-backed/lifted placements, 45 remaining compatibility-warning-only direct placements, 0 missing lifted agreements, 0 missing guard-target resolutions, 542 warnings, and 0 errors. The next supported slice pauses neutral encounter metadata migration and prioritizes the broader foundation/game-loop track; runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, approach adoption, and broader production migration remain out of scope.",
+  "currentSliceNotes": "Foundation/game-loop prioritization is complete in docs/foundation-game-loop-prioritization.md. The selected next track is an economy capture/resource loop proof because it has the highest player-facing leverage and can be staged on existing resource-site, town, reward, report, and River Pass proof surfaces. The next slice is planning-only: choose a narrow River Pass or River Pass-adjacent proof path for scouting, fighting, capture, daily/weekly resource value, town spending/recruitment, save/resume, and manual-play observations. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -348,8 +348,34 @@
     {
       "id": "foundation-game-loop-prioritization-10184",
       "title": "Prioritize the next broader foundation or game-loop slice after neutral encounter metadata review",
+      "status": "completed",
+      "startedAt": "2026-04-26T14:35:00Z",
+      "completedAt": "2026-04-26T15:10:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "economy-capture-resource-loop-proof-planning-10184",
+      "title": "Plan the first narrow economy capture/resource loop proof",
       "status": "pending",
       "difficulty": "high"
+    },
+    {
+      "id": "economy-capture-resource-loop-live-slice-10184",
+      "title": "Implement the selected minimal economy capture/resource loop proof path",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "economy-capture-resource-loop-manual-gate-10184",
+      "title": "Manually verify the economy capture/resource loop proof and record findings",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-economy-pressure-planning-10184",
+      "title": "Plan the first strategic AI pressure slice after economy loop proof data exists",
+      "status": "pending",
+      "difficulty": "very_high"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
