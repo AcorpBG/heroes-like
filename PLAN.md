@@ -56,12 +56,13 @@ Immediate execution order:
 19. Additive overworld object schema validator/report scaffolding: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/overworld_object_schema/`. This did not migrate production JSON, ingest renderer sprites, import generated assets, change pathing/occupancy, change runtime interactions, or switch AI behavior.
 20. Additive overworld object report review/follow-up: completed in `docs/overworld-object-report-review-001.md`. The report has 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors. Current production content remains compatibility-warning-only; strict errors remain isolated to fixtures or later migrated bundles.
 21. First production additive object schema planning for safe metadata fields: completed in `docs/overworld-object-safe-additive-schema-plan.md`. The safe metadata contract covers exact field shapes, defaults, compatibility adapter behavior, report inference mappings, migrated-bundle validation levels, rollback, first-wave examples, and a small candidate bundle without production JSON migration or runtime behavior changes.
-22. Next current slice: first production additive object schema implementation for the declared safe metadata candidate bundle, if AcOrP accepts `safe_metadata_bundle_001`; otherwise neutral encounter representation planning should come first. The implementation path must still avoid renderer/pathing/AI/runtime behavior changes, generated PNG import, and broad production JSON migration.
-23. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+22. First production additive object schema implementation: completed for `safe_metadata_bundle_001` as runtime-inactive safe metadata only on the eight declared production object ids, with strict migrated-bundle validation limited to `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
+23. Next current slice: neutral encounter representation planning. Decide visible stack object versus guarded-camp object, guard-target links, danger cues, cleared state, placement ownership, and AI/editor placeholders before first-class neutral encounter production migration.
+24. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Implement the first production additive object schema fields only if AcOrP accepts `docs/overworld-object-safe-additive-schema-plan.md` and its `safe_metadata_bundle_001` candidate set. The implementation should add only runtime-inactive metadata for `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction` to the declared bundle, plus migrated-bundle validation for those ids.
-- If implementation should wait, plan first-class neutral encounter representation next: visible stack object versus guarded-camp object, guard-target links, danger cues, cleared state, placement ownership, and AI/editor placeholders.
+- Plan first-class neutral encounter representation next: visible stack object versus guarded-camp object, guard-target links, danger cues, cleared state, placement ownership, and AI/editor placeholders.
+- Treat `safe_metadata_bundle_001` as the only currently migrated production object bundle. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep `body_tiles`, `approach`, route effects, animation cue ids, editor placement hints, and AI hints as staged follow-ups, not immediate production migration.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
 
@@ -69,7 +70,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is first production additive object schema planning for safe metadata fields, tied to the report review decisions and still without switching production behavior.
+- The next active implementation choice is neutral encounter representation planning, still without switching production behavior.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -169,6 +170,24 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit production content JSON, migrate object/resource-site records, change renderer/pathing/AI/runtime behavior, import generated PNGs, add assets, or claim overworld object readiness.
+
+## Completed Implementation Slice: Overworld Object Safe Additive Schema
+Status: completed on 2026-04-26 as the first production safe-metadata bundle implementation.
+
+Purpose:
+- Add runtime-inactive additive object metadata to the declared `safe_metadata_bundle_001` ids only, without changing renderer, pathing, AI, save/load, interactions, scenario placement, generated assets, resource-site links, or runtime behavior.
+- Activate migrated-bundle validation for only the safe field set on those ids while keeping all other production map objects compatibility-warning-only.
+
+Delivered:
+- Added `schema_version`, `primary_class`, `secondary_tags`, footprint `anchor`/`tier`, `passability_class`, and full safe `interaction` metadata to `object_waystone_cache`, `object_timber_wagon`, `object_watchtower_beacon`, `object_wayfarer_infirmary`, `object_market_caravanserai`, `object_brightwood_sawmill`, `object_bramble_wall`, and `object_ember_signal_brazier`.
+- Added `safe_metadata_bundle_001` production allowlist validation in `tests/validate_repo.py` for schema version, class/tag enums, footprint anchor/tier, legacy passability agreement, linked-site cadence agreement, interaction keys, cooldowns, and safe refresh/state values.
+- Updated the opt-in overworld object report to expose authored safe metadata for migrated objects and stop counting those eight records as missing the safe fields while later fields remain warning-only.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `python3 -m json.tool content/map_objects.json >/tmp/heroes-map-objects-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --overworld-object-report`, `python3 tests/validate_repo.py --overworld-object-report-json /tmp/heroes-overworld-object-report.json && python3 -m json.tool /tmp/heroes-overworld-object-report.json >/tmp/heroes-overworld-object-report-jsoncheck.txt`, and `python3 tests/validate_repo.py --strict-overworld-object-fixtures`.
+
+Limits:
+- This is metadata-only production migration for one declared bundle. It does not add `body_tiles`, `approach`, route effects, animation cue ids, editor placement, AI hints, first-class neutral encounter records, new map objects, new resource-site links, generated assets, renderer/pathing/AI/runtime behavior changes, or broad content migration.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.

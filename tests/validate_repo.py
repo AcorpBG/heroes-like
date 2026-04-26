@@ -476,6 +476,28 @@ OVERWORLD_OBJECT_INTERACTION_CADENCES = {
     "conditional",
     "scenario_scripted",
 }
+OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001 = {
+    "object_waystone_cache",
+    "object_timber_wagon",
+    "object_watchtower_beacon",
+    "object_wayfarer_infirmary",
+    "object_market_caravanserai",
+    "object_brightwood_sawmill",
+    "object_bramble_wall",
+    "object_ember_signal_brazier",
+}
+OVERWORLD_OBJECT_SAFE_INTERACTION_KEYS = {
+    "cadence",
+    "remains_after_visit",
+    "state_after_visit",
+    "requires_ownership",
+    "requires_guard_clear",
+    "supports_revisit",
+    "cooldown_days",
+    "refresh_rule",
+}
+OVERWORLD_OBJECT_SAFE_STATE_AFTER_VISIT = {"collected", "visited", "claimed", "opened", "cleared", "unchanged"}
+OVERWORLD_OBJECT_SAFE_REFRESH_RULES = {"none", "daily_income", "weekly_growth", "cooldown", "route_state", "scenario", "persistent_state"}
 
 
 def load_json(path: Path) -> dict:
@@ -1280,6 +1302,74 @@ def infer_overworld_object_interaction_cadence(obj: dict, site: dict | None = No
     return "one_time"
 
 
+def validate_overworld_object_safe_metadata_bundle(errors: list[str], map_objects: dict[str, dict], resource_sites: dict[str, dict]) -> None:
+    for object_id in sorted(OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001):
+        ensure(object_id in map_objects, errors, f"Safe metadata bundle safe_metadata_bundle_001 is missing map object {object_id}")
+    for object_id in sorted(OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001.intersection(map_objects.keys())):
+        obj = map_objects[object_id]
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id) if site_id else None
+        expected_primary_class = infer_overworld_object_primary_class(obj, site)
+        expected_passability_class = infer_overworld_object_passability_class(obj)
+        expected_cadence = infer_overworld_object_interaction_cadence(obj, site)
+        expected_tier = infer_overworld_object_footprint_tier(obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {})
+        inferred_allowed_tags = [tag for tag in infer_overworld_object_secondary_tags(obj, site) if tag in OVERWORLD_OBJECT_SECONDARY_TAGS]
+
+        ensure(obj.get("schema_version") == 1, errors, f"Map object {object_id} must declare schema_version 1 for safe_metadata_bundle_001")
+        primary_class = str(obj.get("primary_class", ""))
+        ensure(primary_class in OVERWORLD_OBJECT_PRIMARY_CLASSES, errors, f"Map object {object_id} safe metadata uses unsupported primary_class {primary_class}")
+        ensure(primary_class == expected_primary_class, errors, f"Map object {object_id} primary_class must match legacy-compatible inference {expected_primary_class}")
+
+        secondary_tags = obj.get("secondary_tags", [])
+        ensure(isinstance(secondary_tags, list), errors, f"Map object {object_id} secondary_tags must be a list for safe_metadata_bundle_001")
+        if isinstance(secondary_tags, list):
+            authored_tags = {str(tag) for tag in secondary_tags}
+            for tag in authored_tags:
+                ensure(tag in OVERWORLD_OBJECT_SECONDARY_TAGS, errors, f"Map object {object_id} uses unsupported secondary tag {tag}")
+            for tag in inferred_allowed_tags:
+                ensure(tag in authored_tags, errors, f"Map object {object_id} secondary_tags must include inferred safe tag {tag}")
+
+        footprint = obj.get("footprint", {})
+        ensure(isinstance(footprint, dict), errors, f"Map object {object_id} footprint must remain a dictionary for safe_metadata_bundle_001")
+        if isinstance(footprint, dict):
+            anchor = str(footprint.get("anchor", ""))
+            tier = str(footprint.get("tier", ""))
+            ensure(anchor in OVERWORLD_OBJECT_FOOTPRINT_ANCHORS, errors, f"Map object {object_id} footprint.anchor is missing or unsupported")
+            ensure(anchor == "bottom_center", errors, f"Map object {object_id} footprint.anchor must stay bottom_center in safe_metadata_bundle_001")
+            ensure(tier in OVERWORLD_OBJECT_FOOTPRINT_TIERS, errors, f"Map object {object_id} footprint.tier is missing or unsupported")
+            ensure(tier == expected_tier, errors, f"Map object {object_id} footprint.tier must match legacy dimensions as {expected_tier}")
+
+        passability_class = str(obj.get("passability_class", ""))
+        ensure(passability_class in OVERWORLD_OBJECT_PASSABILITY_CLASSES, errors, f"Map object {object_id} passability_class is missing or unsupported")
+        ensure(passability_class == expected_passability_class, errors, f"Map object {object_id} passability_class must match legacy passable/visitable inference {expected_passability_class}")
+
+        interaction = obj.get("interaction", {})
+        ensure(isinstance(interaction, dict), errors, f"Map object {object_id} interaction must be a dictionary for safe_metadata_bundle_001")
+        if isinstance(interaction, dict):
+            missing_interaction_keys = sorted(OVERWORLD_OBJECT_SAFE_INTERACTION_KEYS.difference(interaction.keys()))
+            ensure(not missing_interaction_keys, errors, f"Map object {object_id} interaction is missing safe metadata keys: {', '.join(missing_interaction_keys)}")
+            cadence = str(interaction.get("cadence", ""))
+            ensure(cadence in OVERWORLD_OBJECT_INTERACTION_CADENCES, errors, f"Map object {object_id} interaction cadence is missing or unsupported")
+            ensure(cadence == expected_cadence, errors, f"Map object {object_id} interaction cadence must match linked-site inference {expected_cadence}")
+            for bool_key in ("remains_after_visit", "requires_ownership", "requires_guard_clear", "supports_revisit"):
+                ensure(type(interaction.get(bool_key)) is bool, errors, f"Map object {object_id} interaction.{bool_key} must be boolean")
+            ensure(str(interaction.get("state_after_visit", "")) in OVERWORLD_OBJECT_SAFE_STATE_AFTER_VISIT, errors, f"Map object {object_id} interaction.state_after_visit is unsupported")
+            cooldown_days = interaction.get("cooldown_days")
+            ensure(type(cooldown_days) is int and cooldown_days >= 0, errors, f"Map object {object_id} interaction.cooldown_days must be a non-negative integer")
+            ensure(str(interaction.get("refresh_rule", "")) in OVERWORLD_OBJECT_SAFE_REFRESH_RULES, errors, f"Map object {object_id} interaction.refresh_rule is unsupported")
+            if cadence == "none":
+                ensure(bool(interaction.get("remains_after_visit", False)), errors, f"Map object {object_id} non-interaction metadata must remain after visit")
+                ensure(not bool(interaction.get("supports_revisit", True)), errors, f"Map object {object_id} non-interaction metadata must not support revisit")
+            elif cadence == "one_time":
+                ensure(not bool(interaction.get("remains_after_visit", True)), errors, f"Map object {object_id} one-time metadata must not remain after visit")
+                ensure(not bool(interaction.get("supports_revisit", True)), errors, f"Map object {object_id} one-time metadata must not support revisit")
+            else:
+                ensure(bool(interaction.get("remains_after_visit", False)), errors, f"Map object {object_id} repeatable/persistent metadata must remain after visit")
+                ensure(bool(interaction.get("supports_revisit", False)), errors, f"Map object {object_id} repeatable/persistent metadata must support revisit")
+            if cadence == "cooldown_days" and site:
+                ensure(int(interaction.get("cooldown_days", 0)) == int(site.get("visit_cooldown_days", 0)), errors, f"Map object {object_id} interaction.cooldown_days must match linked site cooldown")
+
+
 def infer_overworld_object_reward_categories(site: dict | None) -> list[str]:
     if site is None:
         return []
@@ -1372,14 +1462,15 @@ def build_overworld_object_report() -> dict:
         "mode": "compatibility_report",
         "compatibility_adapters": {
             "runtime_adoption": "not_active",
-            "production_json_migration": False,
+            "production_json_migration": "safe_metadata_bundle_001_safe_fields_only",
             "pathing_occupancy_adoption": False,
             "renderer_sprite_ingestion": False,
             "ai_behavior_switch": False,
-            "report_normalization": "inferred_only",
+            "report_normalization": "authored_safe_fields_when_present_else_inferred",
         },
         "summary": {
             "map_object_count": len(map_objects),
+            "safe_metadata_bundle_001_count": sum(1 for object_id in OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001 if object_id in map_objects),
             "resource_site_count": len(resource_sites),
             "scenario_site_placement_count": sum(int(entry.get("count", 0)) for entry in site_placements.values()),
             "scenario_encounter_placement_count": sum(int(entry.get("count", 0)) for entry in encounter_placements.values()),
@@ -1433,11 +1524,18 @@ def build_overworld_object_report() -> dict:
         family = str(obj.get("family", ""))
         site_id = str(obj.get("resource_site_id", ""))
         site = resource_sites.get(site_id) if site_id else None
+        schema_version = obj.get("schema_version", 0)
+        authored_primary_class = str(obj.get("primary_class", ""))
+        authored_secondary_tags = obj.get("secondary_tags", []) if isinstance(obj.get("secondary_tags", []), list) else []
         primary_class = infer_overworld_object_primary_class(obj, site)
         secondary_tags = infer_overworld_object_secondary_tags(obj, site)
         footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
         footprint_tier = infer_overworld_object_footprint_tier(footprint)
+        authored_footprint_tier = str(footprint.get("tier", ""))
         passability_class = infer_overworld_object_passability_class(obj)
+        authored_passability_class = str(obj.get("passability_class", ""))
+        interaction = obj.get("interaction", {}) if isinstance(obj.get("interaction", {}), dict) else {}
+        authored_interaction_cadence = str(interaction.get("cadence", ""))
         cadence = infer_overworld_object_interaction_cadence(obj, site)
         reward_categories = infer_overworld_object_reward_categories(site)
         object_warnings: list[str] = []
@@ -1551,15 +1649,21 @@ def build_overworld_object_report() -> dict:
             "object_id": object_id,
             "name": str(obj.get("name", object_id)),
             "family": family,
+            "schema_version": schema_version if isinstance(schema_version, int) else 0,
+            "safe_metadata_status": "safe_metadata_bundle_001" if object_id in OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001 else "legacy_compatibility",
+            "authored_primary_class": authored_primary_class,
             "inferred_primary_class": primary_class,
+            "authored_secondary_tags": [str(tag) for tag in authored_secondary_tags],
             "inferred_secondary_tags": secondary_tags,
             "resource_site_id": site_id,
             "resource_site_family": str(site.get("family", "one_shot_pickup")) if site else "",
             "scenario_placement_count": int(site_placements.get(site_id, {}).get("count", 0)) if site_id else 0,
-            "footprint": {"width": int(footprint.get("width", 0)), "height": int(footprint.get("height", 0)), "inferred_tier": footprint_tier, "anchor": str(footprint.get("anchor", ""))},
+            "footprint": {"width": int(footprint.get("width", 0)), "height": int(footprint.get("height", 0)), "authored_tier": authored_footprint_tier, "inferred_tier": footprint_tier, "anchor": str(footprint.get("anchor", ""))},
             "passable": bool(obj.get("passable", False)),
             "visitable": bool(obj.get("visitable", False)),
+            "authored_passability_class": authored_passability_class,
             "inferred_passability_class": passability_class,
+            "authored_interaction_cadence": authored_interaction_cadence,
             "inferred_interaction_cadence": cadence,
             "reward_categories": reward_categories,
             "warnings": object_warnings,
@@ -1587,7 +1691,7 @@ def build_overworld_object_report() -> dict:
     report["scenario_reality"]["placed_guard_encounters"] = sorted(report["scenario_reality"]["placed_guard_encounters"])
     if not report["ai_editor_implications"]["visible_neutral_encounter_records_present"]:
         add_overworld_object_report_warning(report, "no first-class neutral_encounter map object records exist yet; visible encounter placement remains scenario encounter data")
-    add_overworld_object_report_warning(report, "production map_objects.json remains legacy-compatible; inferred primary_class and tags are report-only")
+    add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata are warnings only until editor/pathing adoption is explicitly approved")
     return report
 
@@ -1597,6 +1701,7 @@ def print_overworld_object_report(report: dict) -> None:
     print(f"- schema: {report['schema']}")
     print(f"- mode: {report['mode']}")
     print(f"- map objects: {report['summary']['map_object_count']}; resource sites: {report['summary']['resource_site_count']}")
+    print(f"- safe_metadata_bundle_001 objects: {report['summary']['safe_metadata_bundle_001_count']}")
     print(f"- scenario site placements: {report['summary']['scenario_site_placement_count']}; encounter placements: {report['summary']['scenario_encounter_placement_count']}")
     print("Families:")
     for family, count in report["summary"]["family_counts"].items():
@@ -5645,6 +5750,8 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
         ensure("passable" in obj and "visitable" in obj, errors, f"Map object {object_id} must explicitly define passable and visitable")
         map_roles = obj.get("map_roles", [])
         ensure(isinstance(map_roles, list) and bool(map_roles), errors, f"Map object {object_id} must define map_roles")
+
+    validate_overworld_object_safe_metadata_bundle(errors, map_objects, resource_sites)
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (
