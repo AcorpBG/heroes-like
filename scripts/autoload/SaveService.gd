@@ -335,6 +335,9 @@ func describe_slot_details(summary: Dictionary) -> String:
 		"Resume: %s"
 		% String(summary.get("status_text", "Unavailable"))
 	)
+	var progress_recap := _summary_progress_recap(summary)
+	if progress_recap != "":
+		lines.append(progress_recap)
 
 	var warnings = summary.get("warnings", [])
 	if warnings is Array and not warnings.is_empty():
@@ -914,6 +917,14 @@ func _session_from_payload(payload: Dictionary) -> SessionStateStoreScript.Sessi
 	var session := SessionStateStoreScript.new_session_data()
 	session.from_dict(payload)
 	return session
+
+func _summary_progress_recap(summary: Dictionary) -> String:
+	if summary.is_empty() or not bool(summary.get("valid", false)):
+		return ""
+	var session := _session_from_payload(_summary_payload(summary))
+	if session == null or session.scenario_id == "":
+		return ""
+	return load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, true)
 
 func _slot_label(summary: Dictionary) -> String:
 	if String(summary.get("slot_type", "")) == SLOT_TYPE_AUTOSAVE:

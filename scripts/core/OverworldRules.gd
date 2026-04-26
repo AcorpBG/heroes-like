@@ -1186,6 +1186,9 @@ static func describe_objective_stakes_board(session: SessionStateStoreScript.Ses
 	var campaign_arc := String(surface.get("campaign_arc", ""))
 	if campaign_arc != "":
 		lines.append("Campaign arc: %s" % campaign_arc)
+	var progress_recap: String = _scenario_rules().describe_session_progress_recap(session, false)
+	if progress_recap != "":
+		lines.append(progress_recap)
 	return "\n".join(lines)
 
 static func _week_of_day(day: int) -> int:
@@ -1540,7 +1543,10 @@ static func describe_objective_board(session: SessionStateStoreScript.SessionDat
 		victory_total,
 		defeat_triggered,
 		defeat_total,
-		_scenario_describe_objectives(session),
+		"%s\n%s" % [
+			_scenario_describe_objectives(session),
+			_scenario_rules().describe_session_progress_recap(session, false),
+		],
 	]
 
 static func describe_objectives(session: SessionStateStoreScript.SessionData) -> String:

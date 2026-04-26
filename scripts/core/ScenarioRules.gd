@@ -177,10 +177,45 @@ static func describe_scenario_launch_preview(
 	var stakes_text := _scenario_stakes_text(scenario)
 	if stakes_text != "":
 		lines.append("Stakes: %s" % stakes_text)
+	var progress_line := _progress_recap_status_line(session)
+	var next_step_line := _progress_recap_next_step_line(session, scenario)
+	if progress_line != "":
+		lines.append(progress_line)
+	if next_step_line != "":
+		lines.append(next_step_line)
 	lines.append(
 		"Action: %s starts a fresh %s expedition on Day 1; it will not load a save."
 		% [action_label, mode_label.to_lower()]
 	)
+	return "\n".join(lines)
+
+static func describe_session_progress_recap(
+	session: SessionStateStoreScript.SessionData,
+	include_header: bool = true
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Progress Recap\nNo active scenario progress is available." if include_header else ""
+	_overworld_rules().normalize_overworld_state(session)
+	normalize_scenario_state(session)
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	if scenario.is_empty():
+		return "Progress Recap\nScenario progress is unavailable." if include_header else ""
+
+	var lines := []
+	if include_header:
+		lines.append("Progress Recap")
+	var context_line := _progress_recap_context_line(session, scenario)
+	if context_line != "":
+		lines.append(context_line)
+	var status_line := _progress_recap_status_line(session)
+	if status_line != "":
+		lines.append(status_line)
+	var recent_line := _progress_recap_recent_line(session, scenario)
+	if recent_line != "":
+		lines.append(recent_line)
+	var next_step_line := _progress_recap_next_step_line(session, scenario)
+	if next_step_line != "":
+		lines.append(next_step_line)
 	return "\n".join(lines)
 
 static func describe_scenario_operational_board(
@@ -259,24 +294,38 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		"carryover_summary": "",
 		"aftermath_summary": "",
 		"journal_summary": "",
+		"next_step_summary": "",
 		"actions": [],
 	}
+	var progress_recap := describe_session_progress_recap(session, true)
+	var next_step := _progress_recap_next_step_line(session, scenario)
+	model["next_step_summary"] = next_step
 
 	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		var recap := CampaignProgression.outcome_recap(session)
-		model["progression_summary"] = String(recap.get("progression_summary", ""))
+		var progression_lines := []
+		if progress_recap != "":
+			progression_lines.append(progress_recap)
+		var campaign_progression := String(recap.get("progression_summary", ""))
+		if campaign_progression != "":
+			progression_lines.append(campaign_progression)
+		model["progression_summary"] = "\n".join(progression_lines)
 		model["campaign_arc_summary"] = String(recap.get("campaign_arc_summary", ""))
 		model["carryover_summary"] = String(recap.get("carryover_summary", ""))
 		model["aftermath_summary"] = String(recap.get("aftermath_summary", ""))
 		model["journal_summary"] = String(recap.get("journal_summary", ""))
 		model["actions"] = CampaignProgression.outcome_actions(session)
 	else:
-		model["progression_summary"] = "\n".join(
+		var skirmish_lines := []
+		if progress_recap != "":
+			skirmish_lines.append(progress_recap)
+		skirmish_lines.append_array(
 			[
 				"Skirmish results are self-contained and do not change campaign progression.",
 				"Final state: %s | Hero, army, and resources shown above are the surviving expedition snapshot." % status_label,
 			]
 		)
+		model["progression_summary"] = "\n".join(skirmish_lines)
 		model["campaign_arc_summary"] = "Campaign arc closure is only tracked for launched campaign chapters."
 		model["carryover_summary"] = "Skirmish runs do not import or export campaign carryover."
 		model["aftermath_summary"] = _build_skirmish_aftermath_summary(session, scenario)
@@ -351,6 +400,193 @@ static func _build_skirmish_aftermath_summary(session: SessionStateStoreScript.S
 	if recent_events != "":
 		lines.append("Field report: %s." % recent_events)
 	return "\n".join(lines)
+
+static func _progress_recap_context_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	var scenario_name := String(scenario.get("name", session.scenario_id))
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
+	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		var campaign_id := String(session.flags.get("campaign_id", ""))
+		if campaign_id == "":
+			campaign_id = _campaign_id_for_scenario(session.scenario_id)
+		var campaign := ContentService.get_campaign(campaign_id)
+		var campaign_name := String(session.flags.get("campaign_name", campaign.get("name", campaign_id)))
+		var chapter_label := String(session.flags.get("campaign_chapter_label", ""))
+		if chapter_label == "":
+			chapter_label = _campaign_chapter_label(campaign, session.scenario_id, scenario_name)
+		if campaign_name != "" and chapter_label != "":
+			return "Campaign: %s | %s | Day %d" % [campaign_name, chapter_label, session.day]
+		if campaign_name != "":
+			return "Campaign: %s | Day %d" % [campaign_name, session.day]
+	return "%s: %s | Day %d" % [
+		_scenario_select_rules().launch_mode_label(launch_mode),
+		scenario_name,
+		session.day,
+	]
+
+static func _progress_recap_status_line(session: SessionStateStoreScript.SessionData) -> String:
+	var objective_counts := _objective_progress_counts(session)
+	if objective_counts.is_empty():
+		return ""
+	var status_text := "Current progress: %d/%d victory complete | %d/%d defeat risks active" % [
+		int(objective_counts.get("victory_met", 0)),
+		int(objective_counts.get("victory_total", 0)),
+		int(objective_counts.get("defeat_met", 0)),
+		int(objective_counts.get("defeat_total", 0)),
+	]
+	if session.scenario_status != "in_progress":
+		status_text += " | Result %s" % String(session.scenario_status).capitalize()
+	return status_text
+
+static func _progress_recap_recent_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	var recent_events: String = _scenario_script_rules().describe_recent_events(session, 2)
+	if recent_events != "":
+		return "Recently resolved: %s" % recent_events
+	var battle_aftermath := _last_battle_aftermath_compact_text(session)
+	if battle_aftermath != "":
+		return "Recently resolved: %s" % battle_aftermath
+	if session.scenario_status != "in_progress":
+		var summary := session.scenario_summary if session.scenario_summary != "" else _resolution_text(scenario, session.scenario_status)
+		if summary != "":
+			return "Recently resolved: %s" % summary
+	var completed := _completed_objective_labels(session, 2)
+	if not completed.is_empty():
+		return "Recently resolved: %s" % "; ".join(completed)
+	return ""
+
+static func _progress_recap_next_step_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	if session.scenario_status != "in_progress":
+		return "Next step: %s" % _resolved_next_step_text(session, scenario)
+	var next_objective := _next_unmet_victory_objective_label(session)
+	if next_objective != "":
+		return "Next step: Push toward %s." % next_objective
+	var objective_counts := _objective_progress_counts(session)
+	if int(objective_counts.get("victory_total", 0)) > 0:
+		return "Next step: All victory objectives are ready; finish the turn or resolve the scenario outcome."
+	return "Next step: Scout the nearest lane, secure income, and choose the next contact."
+
+static func _objective_progress_counts(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.scenario_id == "":
+		return {}
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return {}
+	var counts := {
+		"victory_total": 0,
+		"victory_met": 0,
+		"defeat_total": 0,
+		"defeat_met": 0,
+	}
+	for objective in objectives.get("victory", []):
+		if not (objective is Dictionary):
+			continue
+		counts["victory_total"] = int(counts.get("victory_total", 0)) + 1
+		if _objective_met(session, objective):
+			counts["victory_met"] = int(counts.get("victory_met", 0)) + 1
+	for objective in objectives.get("defeat", []):
+		if not (objective is Dictionary):
+			continue
+		counts["defeat_total"] = int(counts.get("defeat_total", 0)) + 1
+		if _objective_met(session, objective):
+			counts["defeat_met"] = int(counts.get("defeat_met", 0)) + 1
+	return counts
+
+static func _next_unmet_victory_objective_label(session: SessionStateStoreScript.SessionData) -> String:
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return ""
+	for objective in objectives.get("victory", []):
+		if not (objective is Dictionary):
+			continue
+		if not _objective_met(session, objective):
+			return _objective_label(session, objective)
+	return ""
+
+static func _completed_objective_labels(session: SessionStateStoreScript.SessionData, limit: int) -> Array:
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	var labels := []
+	if not (objectives is Dictionary):
+		return labels
+	for objective in objectives.get("victory", []):
+		if not (objective is Dictionary) or not _objective_met(session, objective):
+			continue
+		var label := _objective_label(session, objective)
+		if label != "" and label not in labels:
+			labels.append(label)
+		if labels.size() >= limit:
+			break
+	return labels
+
+static func _last_battle_aftermath_compact_text(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null:
+		return ""
+	var report = session.flags.get("last_battle_aftermath", {})
+	if not (report is Dictionary) or report.is_empty():
+		return ""
+	var lines := []
+	for key in ["headline", "result_summary", "reward_summary", "world_summary", "summary"]:
+		var line := String(report.get(key, "")).strip_edges()
+		if line != "" and line not in lines:
+			lines.append(line)
+		if lines.size() >= 2:
+			break
+	return " | ".join(lines)
+
+static func _resolved_next_step_text(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
+	if session.scenario_status == "victory":
+		if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+			var next_chapter := _next_campaign_chapter_label(session, scenario)
+			if next_chapter != "":
+				return "Open %s, or replay this chapter from the campaign board." % next_chapter
+			return "Return to the campaign board; this authored arc has no further unlocked chapter."
+		return "Return to the menu, or retry this skirmish for a cleaner run."
+	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		return "Retry this chapter from the outcome actions or campaign board."
+	return "Retry this skirmish from the outcome actions or return to the menu."
+
+static func _campaign_id_for_scenario(scenario_id: String) -> String:
+	if scenario_id == "":
+		return ""
+	for campaign in ContentService.load_json(ContentService.CAMPAIGNS_PATH).get("items", []):
+		if not (campaign is Dictionary):
+			continue
+		for entry in campaign.get("scenarios", []):
+			if entry is Dictionary and String(entry.get("scenario_id", "")) == scenario_id:
+				return String(campaign.get("id", ""))
+	return ""
+
+static func _campaign_chapter_label(campaign: Dictionary, scenario_id: String, fallback: String) -> String:
+	for entry in campaign.get("scenarios", []):
+		if not (entry is Dictionary) or String(entry.get("scenario_id", "")) != scenario_id:
+			continue
+		var chapter_index := int(entry.get("chapter_index", 0))
+		var chapter_title := String(entry.get("chapter_title", ""))
+		if chapter_index > 0 and chapter_title != "":
+			return "Chapter %d: %s" % [chapter_index, chapter_title]
+		if chapter_title != "":
+			return chapter_title
+		return String(entry.get("label", fallback))
+	return fallback
+
+static func _next_campaign_chapter_label(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	var campaign_id := String(session.flags.get("campaign_id", ""))
+	if campaign_id == "":
+		campaign_id = _campaign_id_for_scenario(session.scenario_id)
+	var campaign := ContentService.get_campaign(campaign_id)
+	var found_current := false
+	for entry in campaign.get("scenarios", []):
+		if not (entry is Dictionary):
+			continue
+		var scenario_id := String(entry.get("scenario_id", ""))
+		if found_current and scenario_id != "":
+			var next_scenario := ContentService.get_scenario(scenario_id)
+			return _campaign_chapter_label(campaign, scenario_id, String(next_scenario.get("name", scenario_id)))
+		if scenario_id == session.scenario_id:
+			found_current = true
+	return ""
 
 static func _last_battle_aftermath_text(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:

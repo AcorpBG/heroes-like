@@ -156,7 +156,7 @@ func _run_main_menu_smoke() -> bool:
 			String(selected_chapter_action.get("summary", "")),
 			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
 		],
-		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 
@@ -186,7 +186,7 @@ func _run_main_menu_smoke() -> bool:
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
 		],
-		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 
@@ -202,7 +202,7 @@ func _run_main_menu_smoke() -> bool:
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("load_selected_tooltip", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Progress Recap", "Current progress:", "Next step:"]
 	):
 		return false
 
@@ -351,6 +351,18 @@ func _run_outcome_smoke() -> bool:
 	if save_slot == null or int(save_slot.get_item_count()) <= 0:
 		push_error("Outcome smoke: save slot picker did not populate.")
 		get_tree().quit(1)
+		return false
+
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Outcome progress and next-step recap",
+		[
+			String(snapshot.get("progression_summary", "")),
+			String(snapshot.get("next_step_summary", "")),
+			String(snapshot.get("action_status", "")),
+		],
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:"]
+	):
 		return false
 
 	shell.queue_free()
