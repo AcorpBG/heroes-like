@@ -85,19 +85,21 @@ Immediate execution order:
 48. Strategic AI town governor pressure report gate review is completed in `docs/strategic-ai-town-governor-pressure-report-gate-review.md`. The gate passes: the focused report shows Duskfen selecting Slingers Post, routing recruitment to garrison stabilization, active raid reinforcement, and commander rebuild in the expected cases, exposing detailed build/recruit score breakdowns only in report/debug output, and emitting compact derived events without public score-table leakage. The live-client enemy-turn gate can be deferred until a later AI slice changes visible turn pacing, arrival frequency, map pressure, or UI composition.
 49. Strategic AI faction personality pressure planning is completed in `docs/strategic-ai-faction-personality-pressure-plan.md`. The plan compares Embercourt and Mireclaw as the first personality anchors, identifies usable evidence surfaces across target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases, and selects report-only faction personality evidence as the next slice before coefficient tuning, commander-role state planning, or another foundation track.
 50. Strategic AI faction personality evidence reporting is completed in `docs/strategic-ai-faction-personality-evidence-report.md` plus focused Godot coverage in `tests/ai_faction_personality_evidence_report.gd`. The report compares Embercourt and Mireclaw under a shared target/event/town-governor vocabulary, records supported, weak, contradicted, and missing claims, and finds that `prismhearth-watch` is a Mireclaw enemy fixture while `glassroad-sundering` is the current direct Embercourt enemy fixture.
-51. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+51. Strategic AI strategy config audit planning is completed in `docs/strategic-ai-strategy-config-audit-plan.md`. The plan defines a narrow Embercourt/Mireclaw audit before tuning across base faction strategy weights, scenario overrides, public reason phrase vocabulary, resource/site family priorities, build category/value weights, reinforcement/garrison/raid/commander rebuild bias, validation/report commands, and manual gate triggers.
+52. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-strategy-config-audit-planning-10184` as the next concrete slice.
-- Plan a narrow Embercourt/Mireclaw strategy-config and scenario-override audit before any coefficient tuning.
+- Run `strategic-ai-strategy-config-audit-report-10184` as the next concrete slice.
+- Produce the actual report-only Embercourt/Mireclaw strategy-config and scenario-override audit before any coefficient tuning.
 - Use `docs/strategic-ai-faction-personality-evidence-report.md` as the evidence baseline: Embercourt is supported as town-front/civic infrastructure pressure, Mireclaw is supported as raid/resource-denial pressure, and current weak/contradicted claims need config audit before tuning.
 - Explicitly account for the scenario fixture reality: `prismhearth-watch` is a Mireclaw enemy scenario, `glassroad-sundering` is the current direct Embercourt enemy scenario, and `ninefold-confluence` has Mireclaw but not Embercourt as an enemy faction.
+- Use `docs/strategic-ai-strategy-config-audit-plan.md` as the audit contract. The report should classify existing weights and overrides as supported, questionable, contradicted, or missing-evidence and identify any bounded tuning candidates without tuning them.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows poor ordering.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
-- Defer coefficient tuning until the config audit plan identifies specific, bounded changes and validation expectations.
+- Defer coefficient tuning until the config audit report identifies specific, bounded changes and validation expectations.
 - Defer commander-role/roster state planning until after the faction personality evidence report unless AcOrP explicitly asks to prioritize explicit AI hero state first.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
@@ -429,6 +431,26 @@ Validation:
 
 Limits:
 - This is report-only and behavior-neutral. It does not edit gameplay behavior, production content JSON, scenario content, AI coefficients, resource schemas, pathing/body-tile/approach behavior, renderer/editor behavior, saves, generated assets, neutral encounter metadata, River Pass balance, durable event logs, full AI hero task state, or public UI surfaces.
+
+## Completed Planning Slice: Strategic AI Strategy Config Audit
+Status: completed on 2026-04-26 as documentation-only planning for a narrow Embercourt/Mireclaw strategy-config audit before tuning.
+
+Purpose:
+- Turn the completed faction personality evidence report into an audit contract, not coefficient changes.
+- Define exactly which current config and scenario surfaces should be reviewed before tuning.
+- Preserve the scenario fixture correction: `prismhearth-watch` is a Mireclaw enemy fixture, `glassroad-sundering` is the current direct Embercourt enemy fixture, and `ninefold-confluence` has Mireclaw but not Embercourt as an enemy.
+
+Delivered:
+- Added `docs/strategic-ai-strategy-config-audit-plan.md`.
+- Defined audit categories for faction base strategy weights, scenario overrides, public reason phrase vocabulary, resource/site family priorities, build category/value weights, reinforcement/garrison/raid/commander rebuild bias, validation/report commands, and manual gate triggers.
+- Converted weak, contradicted, and missing claims from the evidence report into audit questions.
+- Recommended `strategic-ai-strategy-config-audit-report-10184` as the next concrete slice, before bounded coefficient tuning plan, commander-role state planning, or capture/counter-capture proof planning.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, and `python3 tests/validate_repo.py --neutral-encounter-report`.
+
+Limits:
+- This is documentation/planning only. It does not edit gameplay behavior, production content JSON, scenario content, AI coefficients, resource schemas, pathing/body-tile/approach behavior, renderer/editor behavior, saves, generated assets, neutral encounter metadata, River Pass balance, durable event logs, full AI hero task state, broad strategic AI rewrite, behavior tuning, or public UI surfaces.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
