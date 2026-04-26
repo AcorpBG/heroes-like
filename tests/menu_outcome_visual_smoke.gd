@@ -163,11 +163,27 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
 			String(selected_chapter_action.get("summary", "")),
+			String(selected_chapter_action.get("launch_handoff", "")),
 			String(campaign_snapshot.get("start_chapter_tooltip", "")),
 			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
 			String(campaign_snapshot.get("campaign_operational_board_full", campaign_snapshot.get("campaign_operational_board", ""))),
 		],
-		["Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
+		["Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Launch handoff:", "starts Day 1 in Campaign mode", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
+	):
+		return false
+	if not _assert_text_contains_all(
+		"Main menu visible campaign launch handoff",
+		[String(campaign_snapshot.get("chapter_details", ""))],
+		["Launch handoff:", "starts Day 1 in Campaign mode"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Main menu campaign launch handoff",
+		[
+			String(selected_chapter_action.get("launch_handoff", "")),
+			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
+			String(campaign_snapshot.get("start_chapter_tooltip", "")),
+		]
 	):
 		return false
 
@@ -197,13 +213,29 @@ func _run_main_menu_smoke() -> bool:
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
+			String(selected_skirmish_setup.get("launch_handoff", "")),
 			String(selected_skirmish_setup.get("front_context", "")),
 			String(selected_skirmish_setup.get("objective_stakes", "")),
 			String(selected_skirmish_setup.get("readiness_summary", "")),
 			String(selected_skirmish_setup.get("difficulty_consequence", "")),
 			String(selected_skirmish_setup.get("action_consequence", "")),
 		],
-		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+	):
+		return false
+	if not _assert_text_contains_all(
+		"Main menu visible skirmish launch handoff",
+		[String(skirmish_snapshot.get("skirmish_setup", ""))],
+		["Launch handoff:", "fresh Skirmish expedition on Day 1"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Main menu skirmish launch handoff",
+		[
+			String(selected_skirmish_setup.get("launch_handoff", "")),
+			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
+			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
+		]
 	):
 		return false
 
