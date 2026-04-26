@@ -43,6 +43,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_play_handoff(snapshot, false, ["Play handoff:", "Ninefold Confluence", "authored working copy", "return restores the editor launch snapshot", "no authored file or campaign progress is written"]):
 		return
+	if not _assert_editor_play_readiness_gate(snapshot, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero", "Objects"]):
+		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
@@ -75,6 +77,8 @@ func _run() -> void:
 		_fail("Map editor smoke: terrain paint did not mutate the working copy: %s." % paint_result)
 		return
 	if not _assert_editor_play_handoff(paint_result, true, ["Play handoff:", "edited in-memory working copy", "return restores the editor launch snapshot"]):
+		return
+	if not _assert_editor_play_readiness_gate(paint_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 23,26", "Objects"]):
 		return
 	var paint_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var terrain_presentation: Dictionary = paint_presentation.get("terrain_presentation", {})
@@ -2271,6 +2275,63 @@ func _assert_editor_acceptance_cue(result: Dictionary, expected_source: String, 
 			return false
 	return true
 
+func _assert_editor_play_readiness_gate(result: Dictionary, expected_ready: bool, fragments: Array) -> bool:
+	var gate: Dictionary = result.get("play_readiness_gate", result.get("launch_readiness_gate", {}))
+	var text := String(gate.get("text", ""))
+	var tooltip := String(result.get("play_button_tooltip", ""))
+	var visible_status := String(result.get("visible_status_text", ""))
+	if gate.is_empty() or text == "":
+		_fail("Map editor smoke: editor Play Copy readiness gate was not exposed: %s." % result)
+		return false
+	if bool(gate.get("ready", not expected_ready)) != expected_ready:
+		_fail("Map editor smoke: editor Play Copy readiness gate ready state mismatch: %s." % gate)
+		return false
+	if expected_ready and String(gate.get("state", "")) != "ready":
+		_fail("Map editor smoke: editor Play Copy readiness gate did not report ready state: %s." % gate)
+		return false
+	if int(gate.get("covered_objective_anchor_count", 0)) <= 0 or int(gate.get("objective_anchor_count", 0)) <= 0:
+		_fail("Map editor smoke: editor Play Copy readiness gate did not count objective anchors: %s." % gate)
+		return false
+	if int(gate.get("missing_objective_anchor_count", -1)) != 0 or int(gate.get("warning_count", -1)) != 0:
+		_fail("Map editor smoke: editor Play Copy readiness gate raised unexpected warnings for the default fixture: %s." % gate)
+		return false
+	if String(result.get("play_button_text", "")).find("Ready") < 0 and result.has("play_button_text"):
+		_fail("Map editor smoke: Play Copy button did not surface readiness: %s." % result)
+		return false
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected == "":
+			continue
+		if text.find(expected) < 0:
+			_fail("Map editor smoke: editor Play Copy readiness gate missed '%s': %s." % [expected, text])
+			return false
+		if result.has("play_button_tooltip") and tooltip.find(expected) < 0:
+			_fail("Map editor smoke: Play Copy tooltip missed readiness fragment '%s': %s." % [expected, tooltip])
+			return false
+		if result.has("visible_status_text") and visible_status.find(expected) < 0:
+			_fail("Map editor smoke: visible editor status missed readiness fragment '%s': %s." % [expected, visible_status])
+			return false
+	var leak_text := "%s\n%s\n%s" % [text, tooltip, visible_status]
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if leak_text.find(forbidden) >= 0:
+			_fail("Map editor smoke: editor Play Copy readiness gate leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
 func _assert_editor_play_handoff(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:
 	var handoff: Dictionary = result.get("play_handoff", {})
 	var text := String(handoff.get("text", ""))
@@ -2761,6 +2822,8 @@ func _assert_play_copy_round_trip(shell) -> bool:
 		or String(launch_handoff.get("write_context", "")).find("no authored file") < 0
 	):
 		_fail("Map editor smoke: Play Copy launch result did not carry the handoff context: %s." % launch_result)
+		return false
+	if not _assert_editor_play_readiness_gate(launch_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 3,3", "Objects"]):
 		return false
 
 	await get_tree().process_frame

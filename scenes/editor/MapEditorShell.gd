@@ -2416,9 +2416,17 @@ func _sync_play_handoff_surface() -> void:
 	if _play_button == null:
 		return
 	var handoff := _editor_play_handoff_payload()
+	var gate := _editor_play_readiness_gate_payload()
 	_play_button.disabled = _session == null
-	_play_button.text = String(handoff.get("button_label", "Play Copy"))
-	_play_button.tooltip_text = String(handoff.get("tooltip", "Load a scenario working copy before play-testing it."))
+	_play_button.text = String(gate.get("button_label", handoff.get("button_label", "Play Copy")))
+	var tooltip_lines := []
+	var gate_text := String(gate.get("text", "")).strip_edges()
+	if gate_text != "":
+		tooltip_lines.append(gate_text)
+	var handoff_tooltip := String(handoff.get("tooltip", "")).strip_edges()
+	if handoff_tooltip != "":
+		tooltip_lines.append(handoff_tooltip)
+	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a scenario working copy before play-testing it."
 
 func _sync_object_taxonomy_summary() -> void:
 	if _object_taxonomy_summary_label == null:
@@ -2497,6 +2505,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
+	var play_readiness_text := String(_editor_play_readiness_gate_payload().get("text", "")).strip_edges()
+	if play_readiness_text != "":
+		status_lines.append(play_readiness_text)
 	var play_handoff_text := String(_editor_play_handoff_payload().get("text", "")).strip_edges()
 	if play_handoff_text != "":
 		status_lines.append(play_handoff_text)
@@ -4187,6 +4198,50 @@ func _on_play_working_copy_pressed() -> void:
 	SessionState.set_active_session(play_session)
 	AppRouter.go_to_overworld()
 
+func _editor_play_readiness_gate_payload() -> Dictionary:
+	if _session == null:
+		return {
+			"button_label": "Play Copy",
+			"text": "",
+			"tooltip": "Load a scenario working copy before play-testing it.",
+			"state": "no_working_copy",
+		}
+	var validation := _scenario_authoring_validation_payload()
+	var warning_count := int(validation.get("warning_count", 0))
+	var covered_count := int(validation.get("covered_objective_anchor_count", 0))
+	var objective_count := int(validation.get("objective_anchors", []).size())
+	var missing_count := int(validation.get("missing_objective_anchor_count", 0))
+	var hero_position := OverworldRules.hero_position(_session)
+	var ready := warning_count == 0 and missing_count == 0
+	var state := "ready" if ready else "review"
+	var action := "Play Copy can smoke-test this working copy" if ready else "Review warnings before Play Copy"
+	var text := "Play gate: %s | Objectives %d/%d covered | Warnings %d | Hero %d,%d | Objects %d." % [
+		action,
+		covered_count,
+		objective_count,
+		warning_count,
+		hero_position.x,
+		hero_position.y,
+		_placement_count(),
+	]
+	var warnings: Array = validation.get("warnings", [])
+	var first_warning := String(warnings[0]).strip_edges() if not warnings.is_empty() else ""
+	return {
+		"button_label": "Play Copy Ready" if ready else "Play Copy Check",
+		"text": text,
+		"tooltip": "%s\n%s" % [text, first_warning] if first_warning != "" else text,
+		"state": state,
+		"ready": ready,
+		"action": action,
+		"covered_objective_anchor_count": covered_count,
+		"objective_anchor_count": objective_count,
+		"missing_objective_anchor_count": missing_count,
+		"warning_count": warning_count,
+		"first_warning": first_warning,
+		"hero_position": {"x": hero_position.x, "y": hero_position.y},
+		"object_count": _placement_count(),
+	}
+
 func _editor_play_handoff_payload() -> Dictionary:
 	if _session == null:
 		return {
@@ -4844,6 +4899,8 @@ func validation_snapshot() -> Dictionary:
 		"status_text": _last_message,
 		"visible_status_text": _status_label.text if _status_label != null else "",
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
+		"play_readiness_gate": _editor_play_readiness_gate_payload(),
+		"play_readiness_gate_text": String(_editor_play_readiness_gate_payload().get("text", "")),
 		"play_handoff": _editor_play_handoff_payload(),
 		"play_handoff_text": String(_editor_play_handoff_payload().get("text", "")),
 		"play_button_text": _play_button.text if _play_button != null else "",
@@ -5541,6 +5598,7 @@ func validation_launch_working_copy() -> Dictionary:
 	if _session == null:
 		return {"ok": false, "message": "No editor working copy is loaded."}
 	var scenario_id := String(_session.scenario_id)
+	var launch_readiness_gate := _editor_play_readiness_gate_payload()
 	var launch_handoff := _editor_play_handoff_payload()
 	_on_play_working_copy_pressed()
 	return {
@@ -5550,6 +5608,7 @@ func validation_launch_working_copy() -> Dictionary:
 		"editor_working_copy": bool(SessionState.ensure_active_session().flags.get("editor_working_copy", false)),
 		"editor_snapshot_available": SessionState.has_editor_working_copy_session(),
 		"return_model": String(SessionState.ensure_active_session().flags.get("editor_return_model", "")),
+		"launch_readiness_gate": launch_readiness_gate,
 		"launch_handoff": launch_handoff,
 	}
 

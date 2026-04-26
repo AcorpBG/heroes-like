@@ -3928,11 +3928,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: complete the compact resume/return handoff clarity surface using existing AppRouter, SaveService, MainMenu, and active shell save payloads.
+Current target: complete the compact map-editor Play Copy readiness gate summary using existing editor validation, working-copy, hero-start, object-count, and handoff payloads.
 
 Done means:
-- Main menu latest-save pulse, footer, selected-save details, and load tooltip tell the player which surface a save resumes into and what state is preserved.
-- Active overworld, town, and battle save/menu controls tell the player that returning to menu refreshes autosave, where Continue Latest will land, and what state is preserved.
-- Existing focused menu/outcome, overworld, and town/battle smoke coverage proves the handoff cue is visible and does not leak internal score/debug fields.
+- The map-editor Play Copy button and tooltip expose a compact ready/check state before launch.
+- The map-editor status surface shows objective-anchor coverage, warning count, hero start, and object count without adding a dashboard.
+- Existing focused map-editor smoke coverage proves the readiness gate is visible during normal editor work and is carried into the Play Copy launch payload without leaking internal score/debug fields.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
