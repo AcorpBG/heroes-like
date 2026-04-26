@@ -168,6 +168,7 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"save_button_tooltip": _in_session_save_tooltip(current_target, slot_summary, current_context),
 		"latest_context": _latest_context_line(latest_summary, current_target),
 		"current_context": current_context,
+		"play_check": describe_session_play_check(session),
 		"current_save_recap": describe_session_save_recap(session),
 		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
 		"latest_resume_recap": describe_summary_resume_recap(latest_summary),
@@ -257,6 +258,39 @@ func describe_summary_next_play_action(summary: Dictionary) -> String:
 			return "Next play action: %s, choose the next field route, then save or end turn." % action
 		_:
 			return "Next play action: Select a loadable save before resuming play."
+
+func describe_summary_play_check(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "Play check: no loadable save; start or select an expedition."
+	if not can_load_summary(summary):
+		return "Play check: save unavailable; select a loadable slot."
+	var session := _session_from_payload(_summary_payload(summary))
+	var resume_context := _safe_player_text(_resume_context_label(summary), 34)
+	var next_action := _safe_player_text(
+		describe_summary_next_play_action(summary).trim_prefix("Next play action:").strip_edges(),
+		72
+	)
+	var state_line := _summary_play_check_state_line(session, summary)
+	var parts := []
+	if resume_context != "":
+		parts.append("%s ready" % resume_context)
+	if next_action != "":
+		parts.append(next_action)
+	if state_line != "":
+		parts.append(state_line)
+	return "Play check: %s" % " | ".join(parts.slice(0, min(3, parts.size())))
+
+func describe_session_play_check(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.scenario_id == "":
+		return "Play check: no active expedition."
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(_selected_manual_slot), _slot_path(_selected_manual_slot))
+	summary = _populate_summary_from_payload(summary, session.to_dict())
+	summary["payload"] = session.to_dict()
+	summary["valid"] = true
+	summary["loadable"] = true
+	summary["resume_target"] = _resume_target_for_session(session)
+	summary["status_text"] = _status_text_for_summary(summary)
+	return describe_summary_play_check(summary)
 
 func describe_resume_brief(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1043,6 +1077,34 @@ func _summary_objective_line(session: SessionStateStoreScript.SessionData) -> St
 	if next_step_line != "":
 		parts.append(next_step_line.trim_prefix("Next step:").strip_edges())
 	return "Current objective: %s" % " | ".join(parts)
+
+func _summary_play_check_state_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
+	if session == null or session.scenario_id == "":
+		return ""
+	match String(summary.get("resume_target", "overworld")):
+		"battle":
+			var battle_risk: String = BattleRulesScript.describe_risk_readiness_board(session)
+			var outlook := _line_with_prefix(battle_risk, "Outlook:")
+			if outlook != "":
+				return _safe_player_text("Battle: %s" % outlook.trim_prefix("Outlook:").strip_edges(), 72)
+		"town":
+			var defense_line := _first_meaningful_line(TownRulesScript.describe_defense(session), ["Defense"])
+			if defense_line != "":
+				return _safe_player_text("Defense: %s" % defense_line.trim_prefix("- ").strip_edges(), 72)
+		"outcome":
+			var recent_line := _line_with_prefix(
+				load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false),
+				"Recently resolved:"
+			)
+			if recent_line != "":
+				return _safe_player_text(recent_line, 72)
+	var objective_line := _summary_objective_line(session).trim_prefix("Current objective:").strip_edges()
+	if objective_line != "":
+		return _safe_player_text("Objective: %s" % objective_line, 72)
+	var watch_line := _summary_watch_state_line(session, summary).trim_prefix("Risk watch:").strip_edges()
+	if watch_line != "":
+		return _safe_player_text("Watch: %s" % watch_line, 72)
+	return ""
 
 func _summary_watch_state_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
 	match String(summary.get("resume_target", "overworld")):

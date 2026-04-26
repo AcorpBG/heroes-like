@@ -513,7 +513,10 @@ func _refresh_selected_save() -> void:
 		return
 
 	var next_play_action := SaveService.describe_summary_next_play_action(summary)
+	var play_check := SaveService.describe_summary_play_check(summary)
 	var details := SaveService.describe_slot_details(summary)
+	if play_check != "":
+		details = "%s\n%s" % [play_check, details]
 	if next_play_action != "":
 		details = "%s\n%s" % [next_play_action, details]
 	_set_compact_label(_save_details_label, details, 6, 88)
@@ -655,24 +658,28 @@ func _build_campaign_pulse() -> String:
 func _build_save_pulse() -> String:
 	var latest_summary := SaveService.latest_loadable_summary()
 	var latest_line := "No active resume point."
+	var play_check := ""
 	if SaveService.can_load_summary(latest_summary):
 		latest_line = "Continue Latest: %s | %s" % [
 			SaveService.describe_resume_brief(latest_summary),
 			SaveService.format_modified_timestamp(int(latest_summary.get("modified_timestamp", 0))),
 		]
+		play_check = SaveService.describe_summary_play_check(latest_summary)
 
-	return "\n".join(
-		[
-			"Manual %d + autosave" % SaveService.get_manual_slot_ids().size(),
-			latest_line,
-		]
-	)
+	var lines := [
+		"Manual %d + autosave" % SaveService.get_manual_slot_ids().size(),
+		latest_line,
+	]
+	if play_check != "":
+		lines.append(play_check)
+	return "\n".join(lines)
 
 func _build_footer_expedition_summary() -> String:
 	var lines := [ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())]
 	var latest_summary := SaveService.latest_loadable_summary()
 	if SaveService.can_load_summary(latest_summary):
 		lines.append("Latest save: %s" % SaveService.describe_resume_brief(latest_summary))
+		lines.append(SaveService.describe_summary_play_check(latest_summary))
 	return "\n".join(lines)
 
 func _select_menu_tab(index: int) -> void:
@@ -715,6 +722,7 @@ func validation_snapshot() -> Dictionary:
 	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	var selected_save_summary := _selected_summary()
 	var latest_continue := _latest_continue_surface()
+	var latest_summary := SaveService.latest_loadable_summary()
 	return {
 		"scene_path": scene_file_path,
 		"stage_dock_visible": _stage_dock_panel.visible,
@@ -759,8 +767,10 @@ func validation_snapshot() -> Dictionary:
 		"start_skirmish_tooltip": _start_skirmish_button.tooltip_text,
 		"start_skirmish_enabled": not _start_skirmish_button.disabled,
 		"selected_save_key": _selected_save_key,
-		"latest_save_summary": SaveService.latest_loadable_summary(),
+		"latest_save_summary": latest_summary,
 		"selected_save_summary": selected_save_summary.duplicate(true),
+		"latest_play_check": SaveService.describe_summary_play_check(latest_summary),
+		"selected_save_play_check": SaveService.describe_summary_play_check(selected_save_summary),
 		"save_browser_items": _save_browser_item_labels(),
 		"save_details": _save_details_label.text,
 		"save_details_full": _save_details_label.tooltip_text,

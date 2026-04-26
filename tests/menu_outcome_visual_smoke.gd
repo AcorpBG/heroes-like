@@ -120,13 +120,22 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu latest save pulse",
 		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
-		["Continue Latest", "Skirmish", "River Pass", "Day", "Overworld"]
+		["Continue Latest", "Skirmish", "River Pass", "Day", "Overworld", "Play check:"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu footer latest save target",
 		[String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", "")))],
-		["Latest save", "Skirmish", "River Pass", "Day", "Overworld"]
+		["Latest save", "Skirmish", "River Pass", "Day", "Overworld", "Play check:"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Main menu first-view play check",
+		[
+			String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", ""))),
+			String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", ""))),
+			String(first_view_snapshot.get("latest_play_check", "")),
+		]
 	):
 		return false
 
@@ -209,8 +218,17 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("load_selected_tooltip", "")),
+			String(save_snapshot.get("selected_save_play_check", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Play check:", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Main menu save play check",
+		[
+			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
+			String(save_snapshot.get("selected_save_play_check", "")),
+		]
 	):
 		return false
 
@@ -324,6 +342,25 @@ func _assert_text_contains_all(label: String, texts: Array, needles: Array) -> b
 	for needle in needles:
 		if joined.find(String(needle)) < 0:
 			push_error("%s missing '%s'. text=%s" % [label, String(needle), joined])
+			get_tree().quit(1)
+			return false
+	return true
+
+func _assert_no_score_leak(label: String, texts: Array) -> bool:
+	var joined := "\n".join(texts).to_lower()
+	for token in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+	]:
+		if joined.find(token) >= 0:
+			push_error("%s leaked internal score field '%s'. text=%s" % [label, token, joined])
 			get_tree().quit(1)
 			return false
 	return true
