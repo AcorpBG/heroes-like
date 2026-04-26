@@ -1327,6 +1327,10 @@ static func describe_town_context(town: Dictionary, session: SessionStateStoreSc
 		parts.append("Capital Anchor")
 	elif strategic_role == "stronghold":
 		parts.append("Frontier Stronghold")
+	for identity_line in _town_identity_surface(town, session).split("\n"):
+		var line := String(identity_line)
+		if line.begins_with("Economy: ") or line.begins_with("Magic: ") or line.begins_with("Strategic cue: "):
+			parts.append(line)
 	if income != "":
 		parts.append("Daily %s" % income)
 	if weekly_growth != "":
@@ -2027,6 +2031,12 @@ static func town_strategic_role(town: Dictionary) -> String:
 
 static func town_strategic_summary(town: Dictionary) -> String:
 	return _town_strategic_summary(town)
+
+static func describe_faction_identity_surface(faction_id: String) -> String:
+	return _faction_identity_surface(faction_id)
+
+static func describe_town_identity_surface(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
+	return _town_identity_surface(town, session)
 
 static func town_capital_project_state(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	return _town_capital_project_state(town, session)
@@ -5291,6 +5301,118 @@ static func _town_strategic_summary(town: Dictionary) -> String:
 	if summary != "":
 		return summary
 	return String(template.get("identity_summary", ""))
+
+static func _faction_identity_surface(faction_id: String) -> String:
+	var faction := ContentService.get_faction(faction_id)
+	if faction.is_empty():
+		return ""
+	var pillars = faction.get("design_pillars", {})
+	var lines := ["Faction Identity: %s" % String(faction.get("name", faction_id))]
+	var identity := String(faction.get("identity_summary", "")).strip_edges()
+	if identity != "":
+		lines.append("Theme: %s" % identity)
+	if pillars is Dictionary:
+		var economy_style := String(pillars.get("economy_style", "")).strip_edges()
+		if economy_style != "":
+			lines.append("Economy: %s" % economy_style)
+		var map_pressure := String(pillars.get("map_pressure", "")).strip_edges()
+		if map_pressure != "":
+			lines.append("Pressure: %s" % map_pressure)
+		var battle_style := String(pillars.get("battle_style", "")).strip_edges()
+		if battle_style != "":
+			lines.append("Strategic cue: %s" % battle_style)
+	return "\n".join(lines)
+
+static func _town_identity_surface(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
+	if town.is_empty():
+		return ""
+	var template := ContentService.get_town(String(town.get("town_id", "")))
+	var faction_id := String(template.get("faction_id", ""))
+	var faction := ContentService.get_faction(faction_id)
+	var pillars = faction.get("design_pillars", {})
+	var role := _town_strategic_role(town)
+	var lines := [
+		"Identity: %s | %s | %s" % [
+			_town_name(town),
+			String(faction.get("name", faction_id if faction_id != "" else "Faction")),
+			_town_role_label(role),
+		]
+	]
+	var identity := String(template.get("identity_summary", "")).strip_edges()
+	if identity == "":
+		identity = String(faction.get("identity_summary", "")).strip_edges()
+	if identity != "":
+		lines.append("Town: %s" % identity)
+	var economy_line := _town_economy_identity_line(town, template, faction, session)
+	if economy_line != "":
+		lines.append(economy_line)
+	var magic_line := _town_magic_identity_line(town, template)
+	if magic_line != "":
+		lines.append(magic_line)
+	var strategic_summary := _town_strategic_summary(town).strip_edges()
+	if strategic_summary != "":
+		lines.append("Role: %s" % strategic_summary)
+	if pillars is Dictionary:
+		var map_pressure := String(pillars.get("map_pressure", "")).strip_edges()
+		if map_pressure != "":
+			lines.append("Pressure identity: %s" % map_pressure)
+		var battle_style := String(pillars.get("battle_style", "")).strip_edges()
+		if battle_style != "":
+			lines.append("Strategic cue: %s" % battle_style)
+	return "\n".join(lines)
+
+static func _town_economy_identity_line(
+	town: Dictionary,
+	template: Dictionary,
+	faction: Dictionary,
+	session: SessionStateStoreScript.SessionData = null
+) -> String:
+	var parts := []
+	var income := _describe_resource_delta(_calculate_town_income(town, session))
+	if income != "":
+		parts.append("daily %s" % income)
+	var pillars = faction.get("design_pillars", {})
+	if pillars is Dictionary:
+		var economy_style := String(pillars.get("economy_style", "")).strip_edges()
+		if economy_style != "":
+			parts.append(economy_style)
+	var pressure_output := _town_pressure_output(town, session)
+	if pressure_output > 0:
+		parts.append("%s %d" % [_town_pressure_label(town).to_lower(), pressure_output])
+	if parts.is_empty():
+		return ""
+	return "Economy: %s" % " | ".join(parts)
+
+static func _town_magic_identity_line(town: Dictionary, template: Dictionary) -> String:
+	var spell_names := []
+	var max_library_tier := 0
+	for tier_value in template.get("spell_library", []):
+		if not (tier_value is Dictionary):
+			continue
+		max_library_tier = max(max_library_tier, int(tier_value.get("tier", 0)))
+		for spell_id_value in tier_value.get("spell_ids", []):
+			if spell_names.size() >= 3:
+				break
+			var spell_id := String(spell_id_value)
+			var spell := ContentService.get_spell(spell_id)
+			var spell_name := String(spell.get("name", spell_id))
+			if spell_name != "" and spell_name not in spell_names:
+				spell_names.append(spell_name)
+	if max_library_tier <= 0 and spell_names.is_empty():
+		return ""
+	var parts := ["tier %d library" % max(max_library_tier, _town_spell_tier(town))]
+	if not spell_names.is_empty():
+		parts.append("flavor %s" % ", ".join(spell_names))
+	return "Magic: %s" % " | ".join(parts)
+
+static func _town_role_label(role: String) -> String:
+	match role:
+		"capital":
+			return "Capital Anchor"
+		"stronghold":
+			return "Frontier Stronghold"
+		_:
+			return "Frontier Town"
 
 static func _town_capital_project_state(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	var project_ids := _town_capital_project_ids(town)

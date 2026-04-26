@@ -128,7 +128,7 @@ static func describe_summary(session: SessionStateStoreScript.SessionData) -> St
 	var occupation: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
 	var market: Dictionary = OverworldRulesScript.town_market_state(town)
 	var parts := [
-		"%s" % _town_identity_summary(town),
+		"%s" % OverworldRulesScript.describe_town_identity_surface(town, session),
 		"%s" % OverworldRulesScript.town_strategic_summary(town),
 		"Battlefront %s" % String(battlefront.get("summary", "The defenders will meet the assault in ordinary lines.")),
 		"Daily income %s | Spell tier %d | Built works %d" % [

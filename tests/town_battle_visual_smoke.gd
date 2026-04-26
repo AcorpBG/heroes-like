@@ -43,6 +43,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_production_overview(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_faction_identity_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_stack_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -277,6 +280,35 @@ func _assert_town_hero_identity_progression_contract(shell: Node) -> bool:
 	if not town_hero_text.contains("Move") or not town_hero_text.contains("Scout") or not town_hero_text.contains("Army"):
 		push_error("Town smoke: hero panel did not expose readiness and army command context: %s." % town_hero_text)
 		return false
+	return true
+
+func _assert_town_faction_identity_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: town shell is missing faction identity validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var identity_text := "\n".join([
+		String(snapshot.get("summary", "")),
+		String(snapshot.get("production_overview", "")),
+	])
+	for token in [
+		"Identity:",
+		"Riverwatch Hold",
+		"Embercourt League",
+		"Frontier Stronghold",
+		"Economy:",
+		"Stable civic investment",
+		"Magic:",
+		"Strategic cue:",
+		"Braced lines",
+	]:
+		if not identity_text.contains(token):
+			push_error("Town smoke: town identity surface is missing %s: %s." % [token, identity_text])
+			return false
+	for leak_token in ["build_category_weights", "raid_target_weights", "final_priority", "debug_reason"]:
+		if identity_text.contains(leak_token):
+			push_error("Town smoke: town identity surface leaked internal strategy token %s: %s." % [leak_token, identity_text])
+			return false
 	return true
 
 func _assert_town_magic_inspection_contract(shell: Node) -> bool:

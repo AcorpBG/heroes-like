@@ -1981,6 +1981,26 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
 		return false
 
+	var town_result: Dictionary = shell.call("validation_select_tile", 23, 26)
+	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
+	var town_taxonomy: Dictionary = town_detail.get("taxonomy", {})
+	var town_identity := String(town_taxonomy.get("identity_summary", ""))
+	var town_text := String(town_result.get("tile_inspection", {}).get("text", ""))
+	if (
+		String(town_taxonomy.get("primary_class", "")) != "town"
+		or String(town_taxonomy.get("detail", "")).find("Embercourt League") < 0
+		or town_identity.find("Identity:") < 0
+		or town_identity.find("Riverwatch Hold") < 0
+		or town_identity.find("Embercourt League") < 0
+		or town_identity.find("Economy:") < 0
+		or town_identity.find("Magic:") < 0
+	):
+		_fail("Map editor smoke: town taxonomy did not expose compact faction/town identity detail: detail=%s result=%s." % [town_detail, town_result])
+		return false
+	if town_text.find("Identity: Riverwatch Hold | Embercourt League") < 0 or town_text.find("Economy:") < 0:
+		_fail("Map editor smoke: tile text did not include compact town identity lines: %s." % town_text)
+		return false
+
 	var encounter_result: Dictionary = shell.call("validation_select_tile", 60, 52)
 	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
 	var encounter_taxonomy: Dictionary = encounter_detail.get("taxonomy", {})
