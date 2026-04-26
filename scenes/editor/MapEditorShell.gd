@@ -66,6 +66,7 @@ const ENCOUNTER_DIFFICULTY_OPTIONS := ["low", "medium", "high", "pressure", "scr
 @onready var _menu_button: Button = %Menu
 @onready var _object_family_picker: OptionButton = %ObjectFamilyPicker
 @onready var _object_content_picker: OptionButton = %ObjectContentPicker
+@onready var _object_taxonomy_summary_label: Label = %ObjectTaxonomySummary
 @onready var _selected_object_picker: OptionButton = %SelectedObjectPicker
 @onready var _property_summary_label: Label = %PropertySummary
 @onready var _property_owner_picker: OptionButton = %PropertyOwnerPicker
@@ -283,15 +284,17 @@ func _sync_property_value_controls(detail: Dictionary) -> void:
 func _property_summary_text(detail: Dictionary) -> String:
 	if detail.is_empty():
 		return "Select a tile with a town, site, artifact, or encounter."
+	var taxonomy = detail.get("taxonomy", {})
+	var taxonomy_summary := _taxonomy_inline_text(taxonomy) if taxonomy is Dictionary else ""
 	match String(detail.get("kind", "")):
 		OBJECT_FAMILY_TOWN:
-			return "Town owner edits mutate the working-copy town state only."
+			return "Town owner edit | %s" % taxonomy_summary if taxonomy_summary != "" else "Town owner edits mutate the working-copy town state only."
 		OBJECT_FAMILY_RESOURCE:
-			return "Site collected edits mutate the working-copy resource node only."
+			return "Site collected edit | %s" % taxonomy_summary if taxonomy_summary != "" else "Site collected edits mutate the working-copy resource node only."
 		OBJECT_FAMILY_ARTIFACT:
-			return "Artifact collected edits mutate the working-copy artifact node only."
+			return "Artifact collected edit | %s" % taxonomy_summary if taxonomy_summary != "" else "Artifact collected edits mutate the working-copy artifact node only."
 		OBJECT_FAMILY_ENCOUNTER:
-			return "Encounter difficulty edits mutate the working-copy encounter only."
+			return "Encounter difficulty edit | %s" % taxonomy_summary if taxonomy_summary != "" else "Encounter difficulty edits mutate the working-copy encounter only."
 		_:
 			return "No mutable object property is available for this selection."
 
@@ -351,6 +354,8 @@ func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 		"collected": bool(detail.get("collected", false)),
 		"collected_by_faction_id": String(detail.get("collected_by_faction_id", "")),
 		"collected_day": max(0, int(detail.get("collected_day", 0))),
+		"taxonomy": detail.get("taxonomy", {}),
+		"taxonomy_summary": String(detail.get("taxonomy_summary", "")),
 		"x": int(detail.get("x", 0)),
 		"y": int(detail.get("y", 0)),
 	}
@@ -589,6 +594,405 @@ func _object_content_label(entry: Dictionary) -> String:
 		return "%s | %s" % [label, family]
 	return label
 
+func _object_content_taxonomy_payload(family: String, content_id: String) -> Dictionary:
+	if content_id == "":
+		return {}
+	match family:
+		OBJECT_FAMILY_TOWN:
+			var town := ContentService.get_town(content_id)
+			if town.is_empty():
+				return {}
+			return _town_taxonomy_payload(town)
+		OBJECT_FAMILY_RESOURCE:
+			var site := ContentService.get_resource_site(content_id)
+			if site.is_empty():
+				return {}
+			var node := {"site_id": content_id}
+			return _resource_taxonomy_payload(node, site)
+		OBJECT_FAMILY_ARTIFACT:
+			var artifact := ContentService.get_artifact(content_id)
+			if artifact.is_empty():
+				return {}
+			return _artifact_taxonomy_payload(artifact)
+		OBJECT_FAMILY_ENCOUNTER:
+			var encounter := ContentService.get_encounter(content_id)
+			if encounter.is_empty():
+				return {}
+			var placement := {
+				"encounter_id": content_id,
+				"difficulty": "medium",
+			}
+			return _encounter_taxonomy_payload(placement, encounter)
+		_:
+			return {}
+
+func _town_taxonomy_payload(town: Dictionary) -> Dictionary:
+	var faction_id := String(town.get("faction_id", ""))
+	var tags := ["settlement", "production", "ownership"]
+	if faction_id != "":
+		tags.append("faction_presence")
+	return {
+		"primary_class": "town",
+		"secondary_tags": tags,
+		"cadence": "persistent_control",
+		"passability_class": "town_blocking",
+		"content_link_label": "Town",
+		"content_link_id": String(town.get("id", "")),
+		"object_family": "town",
+		"summary": "Town | Cadence: persistent control | Passability: town blocking",
+		"detail": "Faction %s" % faction_id if faction_id != "" else "",
+	}
+
+func _artifact_taxonomy_payload(artifact: Dictionary) -> Dictionary:
+	return {
+		"primary_class": "artifact_reward",
+		"secondary_tags": ["reward", "hero_progression"],
+		"cadence": "one_time",
+		"passability_class": "passable_visit_on_enter",
+		"content_link_label": "Artifact",
+		"content_link_id": String(artifact.get("id", "")),
+		"object_family": "artifact",
+		"summary": "Artifact reward | Cadence: one-time | Passability: visit on enter",
+		"detail": String(artifact.get("slot", "")),
+	}
+
+func _resource_taxonomy_payload(node: Dictionary, site: Dictionary) -> Dictionary:
+	var site_id := String(site.get("id", node.get("site_id", "")))
+	var map_object := ContentService.get_map_object_for_resource_site(site_id)
+	var primary_class := String(map_object.get("primary_class", "")).strip_edges()
+	if primary_class == "":
+		primary_class = _fallback_resource_primary_class(site)
+	var secondary_tags := _string_array_for_editor(map_object.get("secondary_tags", []))
+	if secondary_tags.is_empty():
+		secondary_tags = _string_array_for_editor(map_object.get("map_roles", []))
+	if secondary_tags.is_empty():
+		secondary_tags = _fallback_resource_tags(site)
+	var interaction = map_object.get("interaction", {})
+	var cadence := ""
+	if interaction is Dictionary:
+		cadence = String(interaction.get("cadence", "")).strip_edges()
+	if cadence == "":
+		cadence = _fallback_resource_cadence(site)
+	var passability_class := String(map_object.get("passability_class", "")).strip_edges()
+	if passability_class == "":
+		passability_class = _fallback_passability_class(map_object, String(site.get("family", "")))
+	var footprint := _footprint_summary(map_object.get("footprint", {}))
+	var surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
+	var live_surface := ""
+	if _session != null:
+		live_surface = OverworldRules.describe_resource_site_surface(_session, node, site)
+	return {
+		"primary_class": primary_class,
+		"secondary_tags": secondary_tags,
+		"cadence": cadence,
+		"passability_class": passability_class,
+		"content_link_label": "Resource site",
+		"content_link_id": site_id,
+		"resource_site_id": site_id,
+		"map_object_id": String(map_object.get("id", "")),
+		"map_object_name": String(map_object.get("name", "")),
+		"object_family": String(map_object.get("family", site.get("family", "one_shot_pickup"))),
+		"site_family": String(site.get("family", "one_shot_pickup")),
+		"footprint": footprint,
+		"summary": surface,
+		"detail": live_surface,
+	}
+
+func _encounter_taxonomy_payload(placement: Dictionary, encounter: Dictionary) -> Dictionary:
+	var map_object := ContentService.get_map_object(String(placement.get("object_id", "")))
+	var neutral_metadata = placement.get("neutral_encounter", {})
+	if not (neutral_metadata is Dictionary) or neutral_metadata.is_empty():
+		neutral_metadata = map_object.get("neutral_encounter", {})
+	if not (neutral_metadata is Dictionary):
+		neutral_metadata = {}
+	var primary_class := String(map_object.get("primary_class", placement.get("primary_class", ""))).strip_edges()
+	if primary_class == "":
+		primary_class = String(neutral_metadata.get("primary_class", "neutral_encounter")).strip_edges()
+	var secondary_tags := _string_array_for_editor(map_object.get("secondary_tags", []))
+	if secondary_tags.is_empty():
+		secondary_tags = _string_array_for_editor(neutral_metadata.get("secondary_tags", []))
+	if secondary_tags.is_empty():
+		secondary_tags = ["visible_army"]
+	var interaction = map_object.get("interaction", {})
+	var cadence := ""
+	if interaction is Dictionary:
+		cadence = String(interaction.get("cadence", "")).strip_edges()
+	if cadence == "":
+		cadence = "one_time"
+	var passability_class := String(map_object.get("passability_class", "")).strip_edges()
+	var passability = neutral_metadata.get("passability", {})
+	if passability_class == "" and passability is Dictionary:
+		passability_class = String(passability.get("passability_class", "")).strip_edges()
+	if passability_class == "":
+		passability_class = "neutral_stack_blocking"
+	var representation = neutral_metadata.get("representation", {})
+	var role := ""
+	if representation is Dictionary:
+		role = String(representation.get("mode", "")).strip_edges()
+	if role == "":
+		role = _fallback_encounter_role(secondary_tags)
+	var reward_guard = neutral_metadata.get("reward_guard_summary", {})
+	var risk := ""
+	if reward_guard is Dictionary:
+		risk = String(reward_guard.get("risk_tier", "")).strip_edges()
+	if risk == "":
+		risk = _risk_from_difficulty(String(placement.get("difficulty", "medium")))
+	var guard = placement.get("guard_link", {})
+	if not (guard is Dictionary):
+		guard = neutral_metadata.get("guard_link", {})
+	if not (guard is Dictionary):
+		guard = {}
+	var surface := OverworldRules.describe_encounter_object_surface(placement)
+	if surface == "":
+		surface = "Neutral encounter | Risk %s | Cadence one-time" % _humanize_editor_id(risk)
+	return {
+		"primary_class": primary_class,
+		"secondary_tags": secondary_tags,
+		"cadence": cadence,
+		"passability_class": passability_class,
+		"content_link_label": "Encounter",
+		"content_link_id": String(encounter.get("id", placement.get("encounter_id", ""))),
+		"map_object_id": String(map_object.get("id", "")),
+		"object_placement_id": String(placement.get("object_placement_id", "")),
+		"object_family": String(map_object.get("family", "neutral_encounter")),
+		"encounter_role": role,
+		"risk_tier": risk,
+		"guard_role": String(guard.get("guard_role", "")),
+		"guard_target_id": String(guard.get("target_id", "")),
+		"guard_target_placement_id": String(guard.get("target_placement_id", "")),
+		"summary": surface,
+		"detail": _encounter_detail_summary(encounter, placement, risk, role, guard),
+	}
+
+func _taxonomy_summary_text(payload: Dictionary) -> String:
+	if payload.is_empty():
+		return ""
+	var lines := []
+	var class_label := _humanize_editor_id(String(payload.get("primary_class", "")))
+	var cadence_label := _humanize_editor_id(String(payload.get("cadence", "")))
+	var passability_label := _humanize_editor_id(String(payload.get("passability_class", "")))
+	lines.append("Class %s | Cadence %s | Passability %s" % [class_label, cadence_label, passability_label])
+	var tag_summary := _tag_summary_for_editor(payload.get("secondary_tags", []), 3)
+	if tag_summary != "":
+		lines.append("Tags %s" % tag_summary)
+	var link_line := _taxonomy_link_line(payload)
+	if link_line != "":
+		lines.append(link_line)
+	var role_line := _taxonomy_role_line(payload)
+	if role_line != "":
+		lines.append(role_line)
+	return "\n".join(lines)
+
+func _taxonomy_inline_text(payload: Dictionary) -> String:
+	if payload.is_empty():
+		return ""
+	var parts := []
+	var primary_class := String(payload.get("primary_class", ""))
+	if primary_class != "":
+		parts.append("class %s" % _humanize_editor_id(primary_class))
+	var cadence := String(payload.get("cadence", ""))
+	if cadence != "":
+		parts.append("cadence %s" % _humanize_editor_id(cadence))
+	var passability_class := String(payload.get("passability_class", ""))
+	if passability_class != "":
+		parts.append("pass %s" % _humanize_editor_id(passability_class))
+	var tag_summary := _tag_summary_for_editor(payload.get("secondary_tags", []), 2)
+	if tag_summary != "":
+		parts.append("tags %s" % tag_summary)
+	return " | ".join(parts)
+
+func _taxonomy_link_line(payload: Dictionary) -> String:
+	var links := []
+	var map_object_id := String(payload.get("map_object_id", "")).strip_edges()
+	if map_object_id != "":
+		links.append("Object %s" % map_object_id)
+	var resource_site_id := String(payload.get("resource_site_id", "")).strip_edges()
+	if resource_site_id != "":
+		links.append("Site %s" % resource_site_id)
+	var content_link_id := String(payload.get("content_link_id", "")).strip_edges()
+	if links.is_empty() and content_link_id != "":
+		links.append("%s %s" % [String(payload.get("content_link_label", "Content")), content_link_id])
+	var footprint := String(payload.get("footprint", "")).strip_edges()
+	if footprint != "":
+		links.append("Footprint %s" % footprint)
+	return " | ".join(links)
+
+func _taxonomy_role_line(payload: Dictionary) -> String:
+	var role := String(payload.get("encounter_role", "")).strip_edges()
+	var risk := String(payload.get("risk_tier", "")).strip_edges()
+	var guard_role := String(payload.get("guard_role", "")).strip_edges()
+	var guard_target := String(payload.get("guard_target_placement_id", payload.get("guard_target_id", ""))).strip_edges()
+	var parts := []
+	if role != "":
+		parts.append("Role %s" % _humanize_editor_id(role))
+	if risk != "":
+		parts.append("Risk %s" % _humanize_editor_id(risk))
+	if guard_role != "":
+		var guard_text := "Guard %s" % _humanize_editor_id(guard_role)
+		if guard_target != "":
+			guard_text = "%s -> %s" % [guard_text, guard_target]
+		parts.append(guard_text)
+	var site_family := String(payload.get("site_family", "")).strip_edges()
+	if parts.is_empty() and site_family != "":
+		parts.append("Site family %s" % _humanize_editor_id(site_family))
+	return " | ".join(parts)
+
+func _fallback_resource_primary_class(site: Dictionary) -> String:
+	if bool(site.get("persistent_control", false)):
+		match String(site.get("family", "")):
+			"neutral_dwelling":
+				return "neutral_dwelling"
+			"transit_object":
+				return "transit_route_object"
+			"guarded_reward_site":
+				return "guarded_reward_site"
+			_:
+				return "persistent_economy_site"
+	if bool(site.get("repeatable", false)):
+		return "interactable_site"
+	match String(site.get("family", "")):
+		"guarded_reward_site":
+			return "guarded_reward_site"
+		"transit_object":
+			return "transit_route_object"
+		_:
+			return "pickup"
+
+func _fallback_resource_tags(site: Dictionary) -> Array:
+	match String(site.get("family", "")):
+		"mine":
+			return ["resource_front", "income"]
+		"neutral_dwelling":
+			return ["neutral_recruit_source", "weekly_muster"]
+		"faction_outpost":
+			return ["faction_pressure", "road_control"]
+		"frontier_shrine":
+			return ["spell_access", "recovery"]
+		"scouting_structure":
+			return ["sightline", "scouting"]
+		"transit_object":
+			return ["conditional_route", "road_control"]
+		"guarded_reward_site":
+			return ["guarded_reward"]
+		"repeatable_service":
+			return ["recovery", "market"]
+		_:
+			return ["small_reward", "route_pacing"]
+
+func _fallback_resource_cadence(site: Dictionary) -> String:
+	if bool(site.get("persistent_control", false)):
+		return "persistent_control"
+	if bool(site.get("repeatable", false)):
+		return "repeatable"
+	return "one_time"
+
+func _fallback_passability_class(map_object: Dictionary, family: String) -> String:
+	if map_object.is_empty():
+		match family:
+			"", "one_shot_pickup", "pickup":
+				return "passable_visit_on_enter"
+			"transit_object":
+				return "conditional_pass"
+			"blocker":
+				return "blocking_non_visitable"
+			_:
+				return "blocking_visitable"
+	if bool(map_object.get("passable", false)) and bool(map_object.get("visitable", false)):
+		return "passable_visit_on_enter"
+	if bool(map_object.get("passable", false)):
+		return "passable_scenic"
+	if bool(map_object.get("visitable", false)):
+		return "conditional_pass" if family == "transit_object" else "blocking_visitable"
+	return "blocking_non_visitable"
+
+func _fallback_encounter_role(tags: Array) -> String:
+	if "guarded_reward" in tags:
+		return "guard_linked_stack"
+	if "route_block" in tags or "route_pacing" in tags:
+		return "visible_stack"
+	if "camp_anchor" in tags:
+		return "camp_anchor"
+	return "visible_stack"
+
+func _risk_from_difficulty(difficulty: String) -> String:
+	match difficulty:
+		"low":
+			return "light"
+		"high":
+			return "heavy"
+		"pressure", "scripted":
+			return difficulty
+		_:
+			return "standard"
+
+func _encounter_detail_summary(encounter: Dictionary, placement: Dictionary, risk: String, role: String, guard: Dictionary) -> String:
+	var parts := []
+	parts.append("Role %s" % _humanize_editor_id(role))
+	parts.append("Risk %s" % _humanize_editor_id(risk))
+	var difficulty := String(placement.get("difficulty", "")).strip_edges()
+	if difficulty != "":
+		parts.append("Difficulty %s" % _humanize_editor_id(difficulty))
+	var rewards = encounter.get("rewards", {})
+	if rewards is Dictionary and not rewards.is_empty():
+		parts.append("Reward %s" % _resource_delta_text(rewards))
+	var guard_role := String(guard.get("guard_role", "")).strip_edges()
+	if guard_role != "":
+		var target := String(guard.get("target_placement_id", guard.get("target_id", ""))).strip_edges()
+		parts.append("Guard %s%s" % [_humanize_editor_id(guard_role), " -> %s" % target if target != "" else ""])
+	return " | ".join(parts)
+
+func _footprint_summary(value: Variant) -> String:
+	if not (value is Dictionary):
+		return ""
+	var footprint: Dictionary = value
+	var width: int = max(1, int(footprint.get("width", 1)))
+	var height: int = max(1, int(footprint.get("height", 1)))
+	var tier := String(footprint.get("tier", "")).strip_edges()
+	if tier != "":
+		return "%dx%d %s" % [width, height, _humanize_editor_id(tier)]
+	return "%dx%d" % [width, height]
+
+func _tag_summary_for_editor(value: Variant, limit: int) -> String:
+	var tags := _string_array_for_editor(value)
+	var labels := []
+	for tag in tags:
+		labels.append(_humanize_editor_id(tag))
+		if labels.size() >= limit:
+			break
+	if tags.size() > labels.size():
+		labels.append("+%d" % (tags.size() - labels.size()))
+	return ", ".join(labels)
+
+func _string_array_for_editor(value: Variant) -> Array:
+	var strings := []
+	if value is Array:
+		for item in value:
+			var text := String(item).strip_edges()
+			if text != "" and text not in strings:
+				strings.append(text)
+	return strings
+
+func _humanize_editor_id(value: String) -> String:
+	var normalized := value.strip_edges().replace("_", " ").replace("-", " ")
+	if normalized == "":
+		return ""
+	var words := []
+	for word_value in normalized.split(" ", false):
+		var word := String(word_value).strip_edges()
+		if word == "":
+			continue
+		words.append(word.left(1).to_upper() + word.substr(1).to_lower())
+	return " ".join(words)
+
+func _resource_delta_text(resources: Dictionary) -> String:
+	var parts := []
+	for key in resources.keys():
+		var amount := int(resources[key])
+		if amount == 0:
+			continue
+		parts.append("%+d %s" % [amount, _humanize_editor_id(String(key))])
+	return ", ".join(parts)
+
 func _load_scenario_working_copy(scenario_id: String) -> bool:
 	var session = ScenarioFactoryScript.create_session(
 		scenario_id,
@@ -709,8 +1113,19 @@ func _make_all_tiles_visible(session) -> void:
 func _refresh_state() -> void:
 	_sync_tool_buttons()
 	_sync_property_controls()
+	_sync_object_taxonomy_summary()
 	_sync_preview()
 	_refresh_labels()
+
+func _sync_object_taxonomy_summary() -> void:
+	if _object_taxonomy_summary_label == null:
+		return
+	var payload := _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id)
+	var text := _taxonomy_summary_text(payload)
+	if text == "":
+		text = "Choose an object to see taxonomy, cadence, passability, and links."
+	_set_compact_label(_object_taxonomy_summary_label, text, 4)
+	_object_content_picker.tooltip_text = text
 
 func _sync_preview() -> void:
 	if _session == null or _map_view == null:
@@ -2509,6 +2924,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("content_id", "")),
 					String(detail.get("owner", "neutral")),
 				])
+				_append_taxonomy_object_lines(lines, detail)
 			OBJECT_FAMILY_RESOURCE:
 				lines.append("Site: %s | placement %s | content %s | family %s | collected %s" % [
 					String(detail.get("name", "")),
@@ -2517,6 +2933,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("family", "")),
 					"yes" if bool(detail.get("collected", false)) else "no",
 				])
+				_append_taxonomy_object_lines(lines, detail)
 			OBJECT_FAMILY_ARTIFACT:
 				lines.append("Artifact: %s | placement %s | content %s | collected %s" % [
 					String(detail.get("name", "")),
@@ -2524,6 +2941,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("content_id", "")),
 					"yes" if bool(detail.get("collected", false)) else "no",
 				])
+				_append_taxonomy_object_lines(lines, detail)
 			OBJECT_FAMILY_ENCOUNTER:
 				lines.append("Encounter: %s | placement %s | content %s | difficulty %s" % [
 					String(detail.get("name", "")),
@@ -2531,18 +2949,36 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("content_id", "")),
 					String(detail.get("difficulty", "medium")),
 				])
+				_append_taxonomy_object_lines(lines, detail)
 	return lines
+
+func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
+	var taxonomy = detail.get("taxonomy", {})
+	if not (taxonomy is Dictionary) or taxonomy.is_empty():
+		return
+	var summary := _taxonomy_inline_text(taxonomy)
+	if summary != "":
+		lines.append("  Taxonomy: %s" % summary)
+	var link_line := _taxonomy_link_line(taxonomy)
+	if link_line != "":
+		lines.append("  Link: %s" % link_line)
+	var role_line := _taxonomy_role_line(taxonomy)
+	if role_line != "":
+		lines.append("  Role: %s" % role_line)
 
 func _object_detail_for_placement(family: String, placement: Dictionary) -> Dictionary:
 	match family:
 		OBJECT_FAMILY_TOWN:
 			var town := ContentService.get_town(String(placement.get("town_id", "")))
+			var town_taxonomy := _town_taxonomy_payload(town)
 			return {
 				"kind": OBJECT_FAMILY_TOWN,
 				"placement_id": String(placement.get("placement_id", "")),
 				"content_id": String(placement.get("town_id", "")),
 				"name": String(town.get("name", placement.get("town_id", ""))),
 				"owner": String(placement.get("owner", "neutral")),
+				"taxonomy": town_taxonomy,
+				"taxonomy_summary": _taxonomy_inline_text(town_taxonomy),
 				"property_key": _object_property_key(OBJECT_FAMILY_TOWN, String(placement.get("placement_id", ""))),
 				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_TOWN),
 				"x": int(placement.get("x", 0)),
@@ -2550,6 +2986,7 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 			}
 		OBJECT_FAMILY_RESOURCE:
 			var site := ContentService.get_resource_site(String(placement.get("site_id", "")))
+			var resource_taxonomy := _resource_taxonomy_payload(placement, site)
 			return {
 				"kind": OBJECT_FAMILY_RESOURCE,
 				"placement_id": String(placement.get("placement_id", "")),
@@ -2559,6 +2996,8 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 				"collected": bool(placement.get("collected", false)),
 				"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
 				"collected_day": max(0, int(placement.get("collected_day", 0))),
+				"taxonomy": resource_taxonomy,
+				"taxonomy_summary": _taxonomy_inline_text(resource_taxonomy),
 				"property_key": _object_property_key(OBJECT_FAMILY_RESOURCE, String(placement.get("placement_id", ""))),
 				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_RESOURCE),
 				"x": int(placement.get("x", 0)),
@@ -2566,6 +3005,7 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 			}
 		OBJECT_FAMILY_ARTIFACT:
 			var artifact := ContentService.get_artifact(String(placement.get("artifact_id", "")))
+			var artifact_taxonomy := _artifact_taxonomy_payload(artifact)
 			return {
 				"kind": OBJECT_FAMILY_ARTIFACT,
 				"placement_id": String(placement.get("placement_id", "")),
@@ -2574,6 +3014,8 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 				"collected": bool(placement.get("collected", false)),
 				"collected_by_faction_id": String(placement.get("collected_by_faction_id", "")),
 				"collected_day": max(0, int(placement.get("collected_day", 0))),
+				"taxonomy": artifact_taxonomy,
+				"taxonomy_summary": _taxonomy_inline_text(artifact_taxonomy),
 				"property_key": _object_property_key(OBJECT_FAMILY_ARTIFACT, String(placement.get("placement_id", ""))),
 				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_ARTIFACT),
 				"x": int(placement.get("x", 0)),
@@ -2581,6 +3023,7 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 			}
 		OBJECT_FAMILY_ENCOUNTER:
 			var encounter := ContentService.get_encounter(String(placement.get("encounter_id", "")))
+			var encounter_taxonomy := _encounter_taxonomy_payload(placement, encounter)
 			return {
 				"kind": OBJECT_FAMILY_ENCOUNTER,
 				"placement_id": String(placement.get("placement_id", "")),
@@ -2588,6 +3031,8 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 				"name": String(encounter.get("name", placement.get("encounter_id", ""))),
 				"difficulty": String(placement.get("difficulty", "medium")),
 				"combat_seed": int(placement.get("combat_seed", 0)),
+				"taxonomy": encounter_taxonomy,
+				"taxonomy_summary": _taxonomy_inline_text(encounter_taxonomy),
 				"property_key": _object_property_key(OBJECT_FAMILY_ENCOUNTER, String(placement.get("placement_id", ""))),
 				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_ENCOUNTER),
 				"x": int(placement.get("x", 0)),
@@ -2911,6 +3356,7 @@ func validation_snapshot() -> Dictionary:
 		"editor_restamp": _editor_restamp_payload_for_tile(_selected_tile),
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
+		"selected_object_taxonomy": _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id),
 		"selected_property_object_key": _selected_property_object_key,
 		"selected_property_object": _selected_property_object_payload(),
 		"pending_move_object_key": _pending_move_object_key,

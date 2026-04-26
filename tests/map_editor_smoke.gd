@@ -138,6 +138,8 @@ func _run() -> void:
 		_fail("Map editor smoke: tile inspection did not identify the town object: %s." % inspect_payload)
 		return
 
+	if not _assert_object_taxonomy_surfaces(shell):
+		return
 	if not _assert_object_property_edits(shell):
 		return
 	if not _assert_object_move_edits(shell):
@@ -1914,6 +1916,60 @@ func _exercise_object_placement(shell, family: String, content_id: String, tile:
 	var after_presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
 	if bool(after_presentation.get(presentation_key, false)):
 		_fail("Map editor smoke: live preview still exposed removed %s object: %s." % [family, after_presentation])
+		return false
+	return true
+
+func _assert_object_taxonomy_surfaces(shell) -> bool:
+	var palette_family: Dictionary = shell.call("validation_select_object_family", "resource")
+	if not bool(palette_family.get("ok", false)):
+		_fail("Map editor smoke: could not select resource object family before taxonomy check: %s." % palette_family)
+		return false
+	var palette_result: Dictionary = shell.call("validation_select_object_content", "site_timber_wagon")
+	var palette_taxonomy: Dictionary = palette_result.get("selected_object_taxonomy", {})
+	if (
+		not bool(palette_result.get("ok", false))
+		or String(palette_taxonomy.get("primary_class", "")) != "pickup"
+		or String(palette_taxonomy.get("cadence", "")) != "one_time"
+		or String(palette_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
+		or String(palette_taxonomy.get("resource_site_id", "")) != "site_timber_wagon"
+		or "build_resource" not in palette_taxonomy.get("secondary_tags", [])
+	):
+		_fail("Map editor smoke: object palette did not expose resource-site taxonomy metadata: %s." % palette_result)
+		return false
+
+	var resource_result: Dictionary = shell.call("validation_select_tile", 2, 6)
+	var resource_detail := _object_detail_for_family(resource_result.get("tile_inspection", {}), "resource")
+	var resource_taxonomy: Dictionary = resource_detail.get("taxonomy", {})
+	if (
+		String(resource_taxonomy.get("primary_class", "")) != "pickup"
+		or String(resource_taxonomy.get("cadence", "")) != "one_time"
+		or String(resource_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
+		or String(resource_taxonomy.get("map_object_id", "")) != "object_timber_wagon"
+		or String(resource_detail.get("taxonomy_summary", "")).find("class Pickup") < 0
+	):
+		_fail("Map editor smoke: resource selection did not expose linked object taxonomy detail: detail=%s result=%s." % [resource_detail, resource_result])
+		return false
+	var resource_text := String(resource_result.get("tile_inspection", {}).get("text", ""))
+	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_timber_wagon | Site site_timber_wagon") < 0:
+		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
+		return false
+
+	var encounter_result: Dictionary = shell.call("validation_select_tile", 60, 52)
+	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
+	var encounter_taxonomy: Dictionary = encounter_detail.get("taxonomy", {})
+	if (
+		String(encounter_taxonomy.get("primary_class", "")) != "neutral_encounter"
+		or String(encounter_taxonomy.get("cadence", "")) != "one_time"
+		or String(encounter_taxonomy.get("passability_class", "")) != "neutral_stack_blocking"
+		or String(encounter_taxonomy.get("encounter_role", "")) != "guard_linked_stack"
+		or String(encounter_taxonomy.get("risk_tier", "")) != "heavy"
+		or String(encounter_taxonomy.get("guard_target_placement_id", "")) != "dwelling_basalt_gatehouse"
+	):
+		_fail("Map editor smoke: object-backed neutral encounter selection did not expose role/risk/guard taxonomy detail: detail=%s result=%s." % [encounter_detail, encounter_result])
+		return false
+	var encounter_text := String(encounter_result.get("tile_inspection", {}).get("text", ""))
+	if encounter_text.find("Taxonomy: class Neutral Encounter") < 0 or encounter_text.find("Risk Heavy") < 0 or encounter_text.find("Guard Guards Resource Node -> dwelling_basalt_gatehouse") < 0:
+		_fail("Map editor smoke: tile text did not include compact neutral encounter role/risk/guard lines: %s." % encounter_text)
 		return false
 	return true
 
