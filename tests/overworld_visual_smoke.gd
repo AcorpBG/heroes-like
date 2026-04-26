@@ -499,8 +499,23 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	var free_company: Dictionary = shell.call("validation_select_tile", 0, 4)
 	if not _assert_text_contains_all(
 		"River Pass free company recruit-site UI",
-		[String(free_company.get("context_summary", "")), String(free_company.get("selected_tile_rail_text", ""))],
-		["Persistent recruit site", "Neutral Dwelling", "Weekly", "Field recruits", "support response"]
+		[
+			String(free_company.get("context_summary", "")),
+			String(free_company.get("selected_tile_rail_text", "")),
+			String(free_company.get("map_tooltip", "")),
+			String(free_company.get("primary_action", {}).get("summary", "")),
+		],
+		[
+			"Persistent recruit site",
+			"Neutral Dwelling",
+			"Recruit Source: Riverwatch Free Company Yard | Faction-linked muster",
+			"Ready: +3 Ember Archer (T2 Ranged, 85 gold), +5 River Guard (T1 Melee, 60 gold)",
+			"Weekly: +1 River Guard (T1 Melee, 60 gold) to nearest held town",
+			"Cadence: persistent control | Control unclaimed",
+			"Support: Dispatch Relief",
+			"140 gold ready",
+			"Why: Capture adds field recruits, feeds weekly musters, keeps local pay flowing.",
+		]
 	):
 		return false
 

@@ -695,9 +695,14 @@ func _resource_taxonomy_payload(node: Dictionary, site: Dictionary) -> Dictionar
 		passability_class = _fallback_passability_class(map_object, String(site.get("family", "")))
 	var footprint := _footprint_summary(map_object.get("footprint", {}))
 	var surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
+	var recruit_source_summary := ""
+	var recruit_source_inspection := ""
 	var live_surface := ""
 	var control_summary := ""
 	var control_inspection := ""
+	if OverworldRules.resource_site_is_recruit_source(site):
+		recruit_source_summary = OverworldRules.describe_recruit_source_compact(_session, node, site)
+		recruit_source_inspection = OverworldRules.describe_recruit_source_inspection(_session, node, site)
 	if _session != null:
 		live_surface = OverworldRules.describe_resource_site_surface(_session, node, site)
 		control_summary = OverworldRules.describe_resource_site_control_summary(_session, node, site)
@@ -719,6 +724,8 @@ func _resource_taxonomy_payload(node: Dictionary, site: Dictionary) -> Dictionar
 		"detail": live_surface,
 		"control_summary": control_summary,
 		"control_inspection": control_inspection,
+		"recruit_source_summary": recruit_source_summary,
+		"recruit_source_inspection": recruit_source_inspection,
 	}
 
 func _encounter_taxonomy_payload(placement: Dictionary, encounter: Dictionary) -> Dictionary:
@@ -804,6 +811,7 @@ func _taxonomy_summary_text(payload: Dictionary) -> String:
 	var role_line := _taxonomy_role_line(payload)
 	if role_line != "":
 		lines.append(role_line)
+	lines.append_array(_recruit_source_summary_lines_for_editor(payload, 2))
 	lines.append_array(_identity_summary_lines_for_editor(payload, 3))
 	return "\n".join(lines)
 
@@ -875,6 +883,20 @@ func _identity_summary_lines_for_editor(payload: Dictionary, limit: int) -> Arra
 			break
 	return lines
 
+func _recruit_source_summary_lines_for_editor(payload: Dictionary, limit: int) -> Array:
+	var inspection := String(payload.get("recruit_source_inspection", "")).strip_edges()
+	if inspection == "":
+		return []
+	var lines := []
+	for raw_line in inspection.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		lines.append(line)
+		if lines.size() >= limit:
+			break
+	return lines
+
 func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) -> String:
 	if payload.is_empty():
 		return ""
@@ -899,6 +921,7 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 	var link_line := _taxonomy_link_line(payload)
 	if link_line != "":
 		lines.append(link_line)
+	lines.append_array(_recruit_source_summary_lines_for_editor(payload, 2))
 	lines.append_array(_identity_summary_lines_for_editor(payload, 2))
 	return "\n".join(lines)
 
@@ -3249,6 +3272,17 @@ func _append_resource_control_lines(lines: Array, detail: Dictionary) -> void:
 		var line := String(raw_line).strip_edges()
 		if line != "":
 			lines.append("  %s" % line)
+	var recruit_inspection := String(detail.get("recruit_source_inspection", "")).strip_edges()
+	if recruit_inspection == "":
+		var recruit_taxonomy = detail.get("taxonomy", {})
+		if recruit_taxonomy is Dictionary:
+			recruit_inspection = String(recruit_taxonomy.get("recruit_source_inspection", "")).strip_edges()
+	if recruit_inspection == "" or control_inspection.find(recruit_inspection) >= 0:
+		return
+	for raw_line in recruit_inspection.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line != "":
+			lines.append("  %s" % line)
 
 func _object_detail_for_placement(family: String, placement: Dictionary) -> Dictionary:
 	match family:
@@ -3285,6 +3319,7 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 				"taxonomy_summary": _taxonomy_inline_text(resource_taxonomy),
 				"control_summary": OverworldRules.describe_resource_site_control_summary(_session, placement, site),
 				"control_inspection": control_inspection,
+				"recruit_source_inspection": String(resource_taxonomy.get("recruit_source_inspection", "")),
 				"property_key": _object_property_key(OBJECT_FAMILY_RESOURCE, String(placement.get("placement_id", ""))),
 				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_RESOURCE),
 				"x": int(placement.get("x", 0)),
