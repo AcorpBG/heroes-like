@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T04:30:00Z",
+  "updatedAt": "2026-04-26T05:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-safe-additive-schema-planning-10184",
-  "currentSliceTitle": "Plan first production additive overworld object schema fields for safe metadata only",
+  "currentSliceId": "overworld-object-safe-additive-schema-implementation-10184",
+  "currentSliceTitle": "Implement first production additive overworld object schema fields for the safe metadata bundle",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "The additive overworld object report review is complete in docs/overworld-object-report-review-001.md. Current production content remains compatibility-warning-only: 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors. The next slice should plan safe additive metadata fields only: schema_version, primary_class, secondary_tags, footprint anchor/tier, passability_class, and interaction. Production JSON migration, renderer ingestion, pathing/occupancy behavior changes, AI adoption, runtime asset import, and generated PNG import remain out of scope until a later declared migrated bundle.",
+  "currentSliceNotes": "Safe additive schema planning is complete in docs/overworld-object-safe-additive-schema-plan.md. The next slice should implement only runtime-inactive metadata for the declared safe_metadata_bundle_001 candidate if AcOrP accepts it, plus migrated-bundle validation for those ids. If implementation should wait, do neutral encounter representation planning first. Production JSON migration must stay limited to the named safe metadata bundle; renderer, pathing, AI, runtime behavior, generated PNG import, route effects, body_tiles, approach, editor placement, and ai_hints remain out of scope.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -228,6 +228,20 @@
     {
       "id": "overworld-object-safe-additive-schema-planning-10184",
       "title": "Plan first production additive overworld object schema fields for safe metadata only",
+      "status": "completed",
+      "startedAt": "2026-04-26T05:05:00Z",
+      "completedAt": "2026-04-26T05:35:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "overworld-object-safe-additive-schema-implementation-10184",
+      "title": "Implement first production additive overworld object schema fields for the safe metadata bundle",
+      "status": "pending",
+      "difficulty": "high"
+    },
+    {
+      "id": "neutral-encounter-representation-planning-10184",
+      "title": "Plan first-class visible neutral encounter representation before production migration",
       "status": "pending",
       "difficulty": "high"
     },
@@ -697,8 +711,8 @@
     "Use docs/strategic-ai-foundation.md as the strategic AI source before AI profile/schema migration, planner/executor work, AI event surfacing, town governors, real AI heroes, object valuation, spell/artifact planning, difficulty tuning, or broad map reliance on AI.",
     "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, docs/concept-art-batch-003-review.md, docs/concept-art-batch-004-review.md, and docs/concept-art-batch-005-review.md to collect AcOrP accept/reject/defer calls on the external world/faction/object batch and second-pass follow-ups.",
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
-    "Use docs/overworld-object-schema-migration-plan.md as the planning-only contract before object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, neutral encounter split work, or runtime asset import.",
-    "Plan economy/resource schema migration as the current companion slice because persistent resource fronts need resource ids, output cadence, capture values, wood/timber compatibility, market/exchange caps, AI valuation, and save/schema decisions before content migration.",
+    "Use docs/overworld-object-schema-migration-plan.md and docs/overworld-object-safe-additive-schema-plan.md as the planning-only contracts before object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, neutral encounter split work, or runtime asset import.",
+    "If AcOrP accepts safe_metadata_bundle_001, implement only runtime-inactive safe metadata plus declared-bundle validation for the named object ids; otherwise plan neutral encounter representation first.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
     "Avoid claiming six-faction, HoMM2-class, or HoMM3-class readiness until world, content, systems, AI, save/load, and manual-play evidence support it."
