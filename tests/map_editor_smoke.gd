@@ -45,11 +45,15 @@ func _run() -> void:
 		return
 	if not _assert_editor_play_readiness_gate(snapshot, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero", "Objects"]):
 		return
+	if not _assert_editor_active_tool_cue(snapshot, "inspect", ["Tool cue:", "Inspect map content", "next:", "click a tile", "Selected 23,26"]):
+		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
 		return
 	var selection_result: Dictionary = shell.call("validation_select_tile", 10, 10)
+	if not _assert_editor_active_tool_cue(selection_result, "inspect", ["Tool cue:", "Inspect map content", "Selected 10,10"]):
+		return
 	var selection_render_cache := _render_cache_metrics(selection_result)
 	if selection_render_cache.is_empty():
 		_fail("Map editor smoke: tile selection did not preserve render-cache metrics: %s." % selection_result)
@@ -126,6 +130,8 @@ func _run() -> void:
 	var hero_position: Dictionary = hero_result.get("hero_position", {})
 	if not bool(hero_result.get("ok", false)) or int(hero_position.get("x", -1)) != 3 or int(hero_position.get("y", -1)) != 3:
 		_fail("Map editor smoke: hero-start tool did not move the working-copy hero: %s." % hero_result)
+		return
+	if not _assert_editor_active_tool_cue(hero_result, "hero_start", ["Tool cue:", "Move the playable hero start", "next:", "new starting tile", "Current hero start 3,3"]):
 		return
 
 	if not _assert_selected_tile_restore(shell):
@@ -2329,6 +2335,50 @@ func _assert_editor_play_readiness_gate(result: Dictionary, expected_ready: bool
 	]:
 		if leak_text.find(forbidden) >= 0:
 			_fail("Map editor smoke: editor Play Copy readiness gate leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
+func _assert_editor_active_tool_cue(result: Dictionary, expected_tool: String, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("active_tool_cue", {})
+	if cue.is_empty():
+		_fail("Map editor smoke: active tool cue was not exposed: %s." % result)
+		return false
+	if String(cue.get("tool", "")) != expected_tool:
+		_fail("Map editor smoke: active tool cue expected %s but got %s: %s." % [expected_tool, String(cue.get("tool", "")), cue])
+		return false
+	var text := String(cue.get("text", ""))
+	var tooltip := String(cue.get("tooltip", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	var map_tooltip := String(result.get("map_tooltip", ""))
+	for fragment in fragments:
+		var expected := String(fragment)
+		if text.find(expected) < 0 and tooltip.find(expected) < 0:
+			_fail("Map editor smoke: active tool cue missed '%s': text=%s tooltip=%s." % [expected, text, tooltip])
+			return false
+		if visible_status.find(expected) < 0:
+			_fail("Map editor smoke: visible editor status missed active-tool cue '%s': %s." % [expected, visible_status])
+			return false
+	if map_tooltip.find("Tool cue:") < 0 or map_tooltip.find("Active tool:") < 0:
+		_fail("Map editor smoke: map tooltip did not carry active-tool guidance: %s." % map_tooltip)
+		return false
+	var leak_text := "%s\n%s\n%s\n%s" % [text, tooltip, visible_status, map_tooltip]
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if leak_text.find(forbidden) >= 0:
+			_fail("Map editor smoke: active tool cue leaked internal score field %s: %s." % [forbidden, leak_text])
 			return false
 	return true
 

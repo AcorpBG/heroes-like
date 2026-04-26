@@ -2449,6 +2449,7 @@ func _sync_preview() -> void:
 	var map_size := OverworldRules.derive_map_size(_session)
 	var map_data: Array = _session.overworld.get("map", [])
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
+	_map_view.tooltip_text = String(_editor_active_tool_cue_payload().get("tooltip", ""))
 
 func _refresh_labels() -> void:
 	if _session == null:
@@ -2509,6 +2510,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
+	var active_tool_text := String(_editor_active_tool_cue_payload().get("text", "")).strip_edges()
+	if active_tool_text != "":
+		status_lines.append(active_tool_text)
 	var return_context_text := String(_editor_play_return_context_payload().get("text", "")).strip_edges()
 	if return_context_text != "":
 		status_lines.append(return_context_text)
@@ -2603,6 +2607,7 @@ func _sync_tool_buttons() -> void:
 		if button == null:
 			continue
 		button.button_pressed = tool_id == _tool
+		button.tooltip_text = String(_editor_active_tool_cue_payload(String(tool_id)).get("tooltip", _tool_label(String(tool_id))))
 
 func _on_scenario_selected(index: int) -> void:
 	if index < 0 or index >= _scenario_picker.get_item_count():
@@ -4333,6 +4338,108 @@ func _editor_play_return_context_payload() -> Dictionary:
 		"dirty": _dirty,
 	}
 
+func _editor_active_tool_cue_payload(tool: String = "") -> Dictionary:
+	var tool_id := _tool if tool == "" else tool
+	var selected_text := "%d,%d" % [_selected_tile.x, _selected_tile.y]
+	var hovered_text := "%d,%d" % [_hovered_tile.x, _hovered_tile.y] if _tile_in_bounds(_hovered_tile) else "none"
+	var action := ""
+	var next_step := ""
+	var detail := ""
+	match tool_id:
+		TOOL_TERRAIN:
+			action = "paint %s terrain" % _terrain_label_for_id(_selected_terrain_id)
+			next_step = "click a map tile to apply the active brush"
+			detail = "Brush %s" % _terrain_label_for_id(_selected_terrain_id)
+		TOOL_TERRAIN_LINE:
+			action = "paint a %s terrain line" % _terrain_label_for_id(_selected_terrain_id)
+			if _has_pending_terrain_line_start():
+				next_step = "click the line end; start is %d,%d" % [_pending_terrain_line_start.x, _pending_terrain_line_start.y]
+			else:
+				next_step = "click the first line tile"
+			detail = TERRAIN_LINE_RULE_LABEL
+		TOOL_TERRAIN_RECTANGLE:
+			action = "paint a %s terrain rectangle" % _terrain_label_for_id(_selected_terrain_id)
+			if _has_pending_terrain_rectangle_corner():
+				next_step = "click the opposite corner; first corner is %d,%d" % [_pending_terrain_rectangle_corner.x, _pending_terrain_rectangle_corner.y]
+			else:
+				next_step = "click the first rectangle corner"
+			detail = TERRAIN_RECTANGLE_RULE_LABEL
+		TOOL_ROAD:
+			action = "toggle the editor road overlay"
+			next_step = "click a map tile to add or remove road"
+			detail = "Road layer %s" % EDITOR_ROAD_LAYER_ID
+		TOOL_ROAD_PATH:
+			action = "paint a road path"
+			if _has_pending_road_path_start():
+				next_step = "click the path end; start is %d,%d" % [_pending_road_path_start.x, _pending_road_path_start.y]
+			else:
+				next_step = "click the first path tile"
+			detail = ROAD_PATH_RULE_LABEL
+		TOOL_HERO_START:
+			action = "move the playable hero start"
+			next_step = "click the new starting tile"
+			var hero_position := OverworldRules.hero_position(_session) if _session != null else _selected_tile
+			detail = "Current hero start %d,%d" % [hero_position.x, hero_position.y]
+		TOOL_PLACE_OBJECT:
+			action = "place %s %s" % [_object_family_label(_selected_object_family).to_lower(), _selected_object_content_label()]
+			next_step = "click a valid map tile or review the placement preview"
+			detail = "Palette %s:%s" % [_object_family_label(_selected_object_family), _selected_object_content_id]
+		TOOL_REMOVE_OBJECT:
+			action = "remove an object from the selected family"
+			next_step = "click a tile containing a %s" % _object_family_label(_selected_object_family).to_lower()
+			detail = "Family %s" % _object_family_label(_selected_object_family)
+		TOOL_MOVE_OBJECT:
+			action = "move an existing object"
+			if _pending_move_object_key != "":
+				var move_detail := _object_detail_by_key(_pending_move_object_key)
+				next_step = "click the destination for %s" % String(move_detail.get("placement_id", _pending_move_object_key))
+			else:
+				next_step = "click an object to pick it up"
+			detail = "Family %s" % _object_family_label(_selected_object_family)
+		TOOL_DUPLICATE_OBJECT:
+			action = "duplicate an existing object"
+			if _pending_duplicate_object_key != "":
+				var duplicate_detail := _object_detail_by_key(_pending_duplicate_object_key)
+				next_step = "click the destination for a copy of %s" % String(duplicate_detail.get("placement_id", _pending_duplicate_object_key))
+			else:
+				next_step = "click an object to copy it"
+			detail = "Family %s" % _object_family_label(_selected_object_family)
+		TOOL_RETHEME_OBJECT:
+			action = "replace an object's content with %s" % _selected_object_content_label()
+			next_step = "click a matching object to retheme it"
+			detail = "Palette %s:%s" % [_object_family_label(_selected_object_family), _selected_object_content_id]
+		_:
+			action = "inspect map content"
+			next_step = "click a tile to show terrain, objects, links, and authoring checks"
+			detail = "Read-only selection"
+	var action_sentence := action.substr(0, 1).to_upper() + action.substr(1)
+	var text := "Tool cue: Selected %s | %s; next: %s | %s." % [selected_text, action_sentence, next_step, detail]
+	return {
+		"tool": tool_id,
+		"label": _tool_label(tool_id),
+		"text": text,
+		"tooltip": "Active tool: %s\n%s\nSelected %s | Hover %s | %s." % [
+			_tool_label(tool_id),
+			text,
+			selected_text,
+			hovered_text,
+			detail,
+		],
+		"action": action,
+		"next_step": next_step,
+		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"hovered_tile": {"x": _hovered_tile.x, "y": _hovered_tile.y} if _tile_in_bounds(_hovered_tile) else {},
+		"detail": detail,
+	}
+
+func _selected_object_content_label() -> String:
+	if _selected_object_content_id == "":
+		return "selected content"
+	var entry := _object_content_lookup(_selected_object_family, _selected_object_content_id)
+	if entry.is_empty():
+		return _selected_object_content_id
+	return String(entry.get("name", _selected_object_content_id))
+
 func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_working_copy"] = true
 	_session.flags["editor_source_scenario_id"] = _session.scenario_id
@@ -4954,6 +5061,10 @@ func validation_snapshot() -> Dictionary:
 		"play_return_context_text": String(_editor_play_return_context_payload().get("text", "")),
 		"play_button_text": _play_button.text if _play_button != null else "",
 		"play_button_tooltip": _play_button.tooltip_text if _play_button != null else "",
+		"active_tool_cue": _editor_active_tool_cue_payload(),
+		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
+		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
+		"map_tooltip": _map_view.tooltip_text if _map_view != null else "",
 		"editor_acceptance_cue": _editor_acceptance_cue_payload(),
 		"last_object_authoring_recap": _last_object_authoring_recap,
 		"tool": _tool,
