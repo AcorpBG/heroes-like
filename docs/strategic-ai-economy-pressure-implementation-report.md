@@ -45,9 +45,9 @@ godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_ec
 
 The report passed these deterministic River Pass cases:
 
-- `signal_post_owned`: player-controlled `river_signal_post` outranks `north_timber`, `southern_ore`, and `eastern_cache`.
+- `signal_post_owned`: player-controlled `river_signal_post` outranks the simple pickups present in the focused reachable report, including `north_timber` and `eastern_cache`.
 - `signal_post_and_free_company_owned`: player-controlled `river_free_company` ranks first among resource targets and `river_signal_post` ranks second.
-- Simple pickups do not outrank owned persistent signal-yard sites in the resource report.
+- Simple pickups do not outrank owned persistent signal-yard sites in the resource report. `southern_ore` is part of the planning comparator set, but it is not present in the focused reachable report ordering from the tested raid origin.
 - The full target selector still chooses `riverwatch_hold` as the top target in the tested opening siege context, so town pressure can still dominate when the strategic front says it should.
 
 Representative score reasons:

@@ -76,12 +76,14 @@ Immediate execution order:
 39. Neutral encounter metadata migration remains paused. `neutral_encounter_first_class_object_bundle_001` proved the metadata boundary; further tiny neutral bundles would mostly reduce compatibility warnings without improving runtime, pathing, renderer, AI, editor, save behavior, or player-facing loop quality.
 40. Strategic AI economy pressure planning is completed in `docs/strategic-ai-economy-pressure-slice-plan.md`. The first pressure target is intentionally small: make the current Duskfen/Mireclaw pressure model value and contest the proven Riverwatch signal-yard economy sites, especially `river_free_company` and `river_signal_post`, with explainable target scores and compact event/report surfacing before any broad AI rewrite.
 41. Strategic AI economy pressure implementation is completed in `docs/strategic-ai-economy-pressure-implementation-report.md`. `EnemyAdventureRules` now has resource target score breakdown/report helpers, resource candidates carry compact debug reasons, and the focused Godot report proves `river_free_company` and `river_signal_post` outrank simple pickups when player-controlled while Riverwatch town pressure can still dominate the full target selector.
-42. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+42. Strategic AI economy pressure report gate review is completed in `docs/strategic-ai-economy-pressure-report-gate-review.md`. The gate passes: the focused report shows player-owned `river_signal_post` outranking simple pickups, player-owned `river_free_company` and `river_signal_post` ranking first and second when both are owned, explainable target reasons, no hidden difficulty bonus, no broad rewrite, and `riverwatch_hold` still able to dominate the full target selector. The next recommended slice is compact AI event/threat reason surfacing planning, not coefficient tuning.
+43. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-economy-pressure-report-gate-10184` as the next concrete slice.
-- Review the implemented River Pass AI economy pressure report, including the deterministic Godot report output for player-controlled `river_signal_post` and `river_free_company`.
-- Decide whether the first narrow pressure target passes, needs coefficient tuning, or needs a compact reusable AI event-stream planning slice before broader AI work.
+- Run `strategic-ai-event-surfacing-planning-10184` as the next concrete slice.
+- Plan a compact reusable AI event/threat reason surface for target assignment, site contest, site seizure, and pressure summaries before broader strategic AI expansion.
+- Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
+- Do not tune coefficients unless a later manual pass or report regression shows poor target ordering.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report and manual gate review are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next live slice.
@@ -91,7 +93,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is the selected strategic AI economy pressure report gate, still without production JSON migration, new schema, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
+- The next active choice is compact AI event/threat reason surfacing planning, still without production JSON migration, new schema, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -210,7 +212,7 @@ Delivered:
 - Routed resource target candidate priority through the score breakdown while preserving the existing town, hero, artifact, encounter, raid, and siege candidate paths.
 - Added compact `target_debug_reason` data to resource candidates.
 - Added focused Godot report/test coverage in `tests/ai_economy_pressure_report.gd` and `tests/ai_economy_pressure_report.tscn`.
-- Proved that player-controlled `river_signal_post` outranks simple pickups, that player-controlled `river_free_company` ranks above `river_signal_post` when both are owned, and that both owned persistent signal-yard sites outrank `north_timber`, `southern_ore`, and `eastern_cache` in the resource report.
+- Proved that player-controlled `river_signal_post` outranks simple pickups in the focused reachable report, that player-controlled `river_free_company` ranks above `river_signal_post` when both are owned, and that owned persistent signal-yard sites outrank reachable simple pickups such as `north_timber` and `eastern_cache`. `southern_ore` remains a planning comparator but is not present in the focused reachable ordering from the tested raid origin.
 - Confirmed the full target selector can still choose `riverwatch_hold` in the tested opening siege context, preserving legitimate town pressure dominance.
 
 Validation:
@@ -218,6 +220,26 @@ Validation:
 
 Limits:
 - This implementation does not edit production JSON, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul markets, change runtime economy/pathing/editor/renderer/save behavior, import generated PNGs, add assets, migrate neutral encounters, implement full AI hero task state, or rebalance River Pass broadly.
+
+## Completed Review Slice: Strategic AI Economy Pressure Report Gate
+Status: completed on 2026-04-26 as documentation/report-review for the first River Pass strategic AI economy pressure implementation.
+
+Purpose:
+- Rerun and review the focused AI economy pressure report.
+- Decide whether the first narrow signal-yard pressure target passes, needs coefficient tuning, or should lead into compact AI event/threat reason surfacing.
+
+Delivered:
+- Added `docs/strategic-ai-economy-pressure-report-gate-review.md`.
+- Reran the focused Godot report and recorded the meaningful target ordering and reasons.
+- Marked the gate as passed.
+- Confirmed explainable scoring, owned signal-yard site priority over simple pickups, preserved town-pressure dominance, no hidden difficulty bonus, and no broad strategic AI rewrite.
+- Recommended `strategic-ai-event-surfacing-planning-10184` as the next slice instead of coefficient tuning or broad AI expansion.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, `python3 tests/validate_repo.py --neutral-encounter-report`, and the focused Godot AI economy pressure report command.
+
+Limits:
+- This is documentation/report-review only. It does not edit gameplay code, production content JSON, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul markets, change runtime economy/pathing/editor/renderer/save behavior, import generated PNGs, add assets, migrate neutral encounters, implement full AI hero task state, broadly expand AI pressure, or rebalance River Pass.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
