@@ -117,6 +117,20 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: validation snapshot first-view commands are wrong: %s." % [first_view_snapshot])
 		get_tree().quit(1)
 		return false
+	var first_view_tooltips: Dictionary = first_view_snapshot.get("first_view_command_tooltips", {}) if first_view_snapshot.get("first_view_command_tooltips", {}) is Dictionary else {}
+	if not _assert_text_contains_all(
+		"Main menu first-view command tooltip cues",
+		[
+			String(first_view_tooltips.get("Campaign", "")),
+			String(first_view_tooltips.get("Skirmish", "")),
+			String(first_view_tooltips.get("Load", "")),
+			String(first_view_tooltips.get("Settings", "")),
+			String(first_view_tooltips.get("Editor", "")),
+			String(first_view_tooltips.get("Quit", "")),
+		],
+		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "Load Selected", "Play check:", "Resume handoff:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes"]
+	):
+		return false
 	if not _assert_text_contains_all(
 		"Main menu latest save pulse",
 		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
@@ -136,6 +150,7 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", ""))),
 			String(first_view_snapshot.get("latest_play_check", "")),
 			String(first_view_snapshot.get("latest_resume_handoff", "")),
+			"\n".join(first_view_tooltips.values()),
 		]
 	):
 		return false
