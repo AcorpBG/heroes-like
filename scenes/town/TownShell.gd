@@ -245,7 +245,13 @@ func _refresh() -> void:
 	_set_compact_label(_study_label, TownRules.describe_spell_access(_session), 2)
 	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
 	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 2)
-	_set_compact_label(_event_label, TownRules.describe_event_feed(_session, _last_message, _last_action_recap), 2)
+	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
+	var town_context_surface := _town_action_context_surface(dispatch_text)
+	if town_context_surface.is_empty():
+		_set_compact_label(_event_label, dispatch_text, 2)
+	else:
+		_set_compact_label(_event_label, "%s\n%s" % [String(town_context_surface.get("visible_text", "")), dispatch_text], 2)
+		_event_label.tooltip_text = String(town_context_surface.get("tooltip_text", _event_label.tooltip_text))
 	_town_stage_view.set_town_state(_session)
 	_refresh_save_slot_picker()
 	_rebuild_hero_actions()
@@ -314,6 +320,8 @@ func validation_snapshot() -> Dictionary:
 	var front := OverworldRules.town_front_state(_session, town)
 	var handoff := TownRules.town_handoff_recap(_session)
 	var departure := TownRules.town_departure_confirmation(_session)
+	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
+	var town_context_surface := _town_action_context_surface(dispatch_text)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -360,6 +368,9 @@ func validation_snapshot() -> Dictionary:
 		"town_handoff_tooltip_text": String(handoff.get("tooltip_text", "")),
 		"town_departure_confirmation": departure,
 		"town_departure_visible_text": String(departure.get("visible_text", "")),
+		"town_action_context": town_context_surface,
+		"town_action_context_text": String(town_context_surface.get("visible_text", "")),
+		"town_action_context_tooltip_text": String(town_context_surface.get("tooltip_text", "")),
 		"leave_button_text": _leave_button.text,
 		"leave_button_tooltip_text": _leave_button.tooltip_text,
 		"save_surface": AppRouter.active_save_surface(),
@@ -847,6 +858,74 @@ func _make_placeholder_label(text: String) -> Label:
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines)
+
+func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
+	if _last_action_recap.is_empty():
+		return {}
+	var latest_action := String(_last_action_recap.get("happened", "")).strip_edges()
+	if latest_action == "":
+		latest_action = String(_last_action_recap.get("message", "")).strip_edges()
+	if latest_action == "":
+		latest_action = _last_message.strip_edges()
+	if latest_action == "":
+		return {}
+	var departure := TownRules.town_departure_confirmation(_session)
+	var next_step := String(_last_action_recap.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = String(departure.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = "Review the next town order or leave to the field."
+	var visible := "Latest: %s" % _short_text(_strip_sentence(latest_action), 42)
+	visible = "%s | Next: %s" % [
+		visible,
+		_short_text(_strip_sentence(next_step).trim_suffix("."), 36),
+	]
+	var save_surface := AppRouter.active_save_surface()
+	var save_lines := []
+	var save_check := String(save_surface.get("save_check", "")).strip_edges()
+	var save_recap := String(save_surface.get("current_save_recap", "")).strip_edges()
+	if save_check != "":
+		save_lines.append(save_check)
+	if save_recap != "":
+		save_lines.append("Saving now recap:\n%s" % save_recap)
+	var tooltip := _join_tooltip_sections([
+		"Town Turn Context\n- Latest action: %s\n- Next practical step: %s\n- Town status: %s" % [
+			latest_action,
+			next_step,
+			TownRules.describe_status(_session),
+		],
+		String(_last_action_recap.get("tooltip_text", "")),
+		String(departure.get("tooltip_text", "")),
+		"\n".join(save_lines),
+		dispatch_text,
+	])
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"latest_action": latest_action,
+		"next_step": next_step,
+		"source": "town_action_recap",
+	}
+
+func _strip_sentence(text: String) -> String:
+	var cleaned := text.strip_edges().replace("\n", " ")
+	while cleaned.contains("  "):
+		cleaned = cleaned.replace("  ", " ")
+	return cleaned
+
+func _short_text(text: String, max_chars: int) -> String:
+	var cleaned := _strip_sentence(text)
+	if max_chars <= 0 or cleaned.length() <= max_chars:
+		return cleaned
+	return "%s..." % cleaned.left(max(0, max_chars - 3)).strip_edges()
+
+func _join_tooltip_sections(sections: Array) -> String:
+	var lines := []
+	for section in sections:
+		var text := String(section).strip_edges()
+		if text != "":
+			lines.append(text)
+	return "\n".join(lines)
 
 func _crest_text() -> String:
 	var town := TownRules.get_active_town(_session)
