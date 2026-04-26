@@ -61,11 +61,11 @@ Immediate execution order:
 24. Neutral encounter additive validator/report planning: completed in `docs/neutral-encounter-additive-validator-report-plan.md`. The report-only contract covers compatibility inference from current direct `scenarios[].encounters[]`, scenario/difficulty/repeated-id/field-objective counts, missing representation metadata, missing guard links, candidate bundle summaries, strict fixture scope, warning/error policy, CLI/report shape, rollback, and exact non-change rules.
 25. Neutral encounter additive validator/report scaffolding: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/neutral_encounter_schema/`. This did not migrate production JSON, change runtime encounters, change pathing, change AI/editor/renderer behavior, migrate saves, import generated PNGs, or add runtime assets.
 26. Neutral encounter additive report review/follow-up: completed in `docs/neutral-encounter-report-review-001.md`. The report has 15 scenarios, 62 encounter definitions, 48 direct placements, 36 script-spawn advisory effects, 10 repeated encounter ids, 4 placement-level field-objective overrides, 23 definition-backed field-objective placements, 435 compatibility warnings, and 0 errors. Current production direct placements remain compatibility-warning-only; strict errors remain isolated to fixtures or later declared migrated bundles.
-27. Next current slice: plan production metadata for `neutral_encounter_representation_bundle_001` before any production neutral encounter metadata migration.
+27. Production metadata planning for `neutral_encounter_representation_bundle_001`: completed in `docs/neutral-encounter-representation-bundle-001-plan.md`. The plan recommends scenario encounter placement extensions as the first attachment location, defines exact metadata for `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`, fixes the basalt guard-link convention to `target_id: "site_basalt_gatehouse"` plus `target_placement_id: "dwelling_basalt_gatehouse"`, and keeps production JSON migration/runtime adoption out of this planning slice.
 28. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan production metadata for `neutral_encounter_representation_bundle_001`: define exact metadata shape, target attachment location, guard-link target convention, field-objective preservation rules, migrated-bundle validation level, rollback behavior, and non-change boundaries for the three candidate placements only.
+- Implement metadata-only production scenario encounter placement extensions for `neutral_encounter_representation_bundle_001`, limited to `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`, plus matching migrated-bundle validation/report updates. Do not change runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, save format, generated PNG import, or asset import.
 - Treat `safe_metadata_bundle_001` as the only currently migrated production object bundle. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep production scenario/encounter/map-object/resource-site JSON edits, first-class neutral encounter production migration, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, and pathing changes as staged follow-ups, not part of this planning slice.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
@@ -74,7 +74,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is production metadata planning for `neutral_encounter_representation_bundle_001`, still without switching production behavior or migrating production content.
+- The next active implementation choice is metadata-only production migration for `neutral_encounter_representation_bundle_001`, still without switching runtime behavior, pathing, AI, editor behavior, renderer behavior, save format, or asset import.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -268,6 +268,28 @@ Validation:
 
 Limits:
 - This is documentation/report-review only. It does not edit production content JSON, migrate neutral encounter metadata, change runtime encounters, change pathing/body-tile/occupancy behavior, change AI/editor/renderer behavior, migrate saves, import generated PNGs, add assets, or claim neutral encounter readiness.
+
+## Completed Planning Slice: Neutral Encounter Representation Bundle 001
+Status: completed on 2026-04-26 as planning-only metadata contract for the first neutral encounter representation bundle.
+
+Purpose:
+- Define the exact production metadata shape for `neutral_encounter_representation_bundle_001` before any production JSON migration.
+- Decide where the first metadata should attach while preserving current direct scenario encounter placement compatibility.
+- Lock guard-link, field-objective preservation, validation, rollback, report, and non-change rules for only the three candidate placements.
+
+Delivered:
+- Added `docs/neutral-encounter-representation-bundle-001-plan.md`.
+- Recommended additive scenario encounter placement extensions under `neutral_encounter` as the first attachment location, instead of a sidecar file or first-class map-object records.
+- Defined exact metadata examples for `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`.
+- Defined the basalt gatehouse guard-link convention as `target_kind: "resource_node"`, `target_id: "site_basalt_gatehouse"`, and `target_placement_id: "dwelling_basalt_gatehouse"`.
+- Required preservation of `placement_id`, `encounter_id`, `difficulty`, `combat_seed`, and field-objective source behavior.
+- Sequenced the next slice as metadata-only production implementation for those three scenario placement extensions plus matching migrated-bundle validation/report updates.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --neutral-encounter-report`, and `python3 tests/validate_repo.py --strict-neutral-encounter-fixtures`.
+
+Limits:
+- This is documentation/planning only. It does not edit production content JSON, implement validator/tests, change runtime encounters, change pathing/body-tile/occupancy behavior, change AI/editor/renderer behavior, migrate saves, import generated PNGs, add assets, or claim neutral encounter readiness.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
