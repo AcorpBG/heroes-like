@@ -2332,17 +2332,18 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 	var terrain := _terrain_name_at(tile.x, tile.y)
 	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
 		return "%s %d,%d | Mapped %s | Out of scout net" % [prefix, tile.x, tile.y, terrain]
+	var hover_order := _hover_tile_order_cue(tile)
 	var town := _town_at(tile.x, tile.y)
 	if not town.is_empty():
 		var town_data := ContentService.get_town(String(town.get("town_id", "")))
-		return "%s %d,%d | Town: %s | Owner %s | %s" % [
+		return _append_hover_order_cue("%s %d,%d | Town: %s | Owner %s | %s" % [
 			prefix,
 			tile.x,
 			tile.y,
 			String(town_data.get("name", town.get("placement_id", "Town"))),
 			String(town.get("owner", "neutral")).capitalize(),
 			terrain,
-		]
+		], hover_order)
 	var node := _resource_node_at(tile.x, tile.y)
 	if not node.is_empty():
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
@@ -2350,7 +2351,7 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 		var interaction_surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
 		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
 		var recruit_summary := OverworldRules.describe_recruit_source_compact(_session, node, site)
-		return "%s %d,%d | %s | %s%s%s%s" % [
+		return _append_hover_order_cue("%s %d,%d | %s | %s%s%s%s" % [
 			prefix,
 			tile.x,
 			tile.y,
@@ -2359,12 +2360,12 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 			"" if interaction_surface == "" else " | %s" % interaction_surface,
 			"" if control_summary == "" else " | %s" % control_summary,
 			"" if recruit_summary == "" else " | %s" % recruit_summary,
-		]
+		], hover_order)
 	var encounter := _encounter_at(tile.x, tile.y)
 	if not encounter.is_empty():
 		var object_surface := OverworldRules.describe_encounter_object_surface(encounter)
 		var readability := OverworldRules.describe_encounter_compact_readability(_session, encounter)
-		return "%s %d,%d | %s | %s%s%s" % [
+		return _append_hover_order_cue("%s %d,%d | %s | %s%s%s" % [
 			prefix,
 			tile.x,
 			tile.y,
@@ -2372,11 +2373,11 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 			terrain,
 			"" if object_surface == "" else " | %s" % object_surface,
 			"" if readability == "" else " | %s" % readability,
-		]
+		], hover_order)
 	var artifact_node := _artifact_node_at(tile.x, tile.y)
 	if not artifact_node.is_empty():
 		var artifact_id := String(artifact_node.get("artifact_id", ""))
-		return "%s %d,%d | Artifact: %s | %s | %s | %s | %s" % [
+		return _append_hover_order_cue("%s %d,%d | Artifact: %s | %s | %s | %s | %s" % [
 			prefix,
 			tile.x,
 			tile.y,
@@ -2385,8 +2386,43 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 			ArtifactRules.artifact_effect_summary(artifact_id),
 			ArtifactRules.describe_single_artifact_impact(artifact_id),
 			terrain,
-		]
-	return "%s %d,%d | %s" % [prefix, tile.x, tile.y, terrain]
+		], hover_order)
+	return _append_hover_order_cue("%s %d,%d | %s" % [prefix, tile.x, tile.y, terrain], hover_order)
+
+func _append_hover_order_cue(text: String, hover_order: String) -> String:
+	if hover_order.strip_edges() == "":
+		return text
+	return "%s | %s" % [text, hover_order]
+
+func _hover_tile_order_cue(tile: Vector2i) -> String:
+	var movement = _session.overworld.get("movement", {})
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+	]
+	var hero_pos := OverworldRules.hero_position(_session)
+	if tile == hero_pos:
+		return "Hover order: current hero; %s" % movement_line
+	var order := "select route"
+	var adjacent := maxi(abs(hero_pos.x - tile.x), abs(hero_pos.y - tile.y)) == 1
+	var town := _town_at(tile.x, tile.y)
+	if not town.is_empty():
+		if String(town.get("owner", "neutral")) == "player":
+			order = "select Visit Town"
+		elif adjacent:
+			order = "select Approach Town"
+	var node := _resource_node_at(tile.x, tile.y)
+	if not node.is_empty():
+		order = "select Secure Site" if adjacent else "select route"
+	if not _artifact_node_at(tile.x, tile.y).is_empty():
+		order = "select Recover Artifact" if adjacent else "select route"
+	if not _encounter_at(tile.x, tile.y).is_empty():
+		order = "select Enter Battle" if adjacent else "select route"
+	if order == "select route" and OverworldRules.tile_is_blocked(_session, tile.x, tile.y):
+		return "Hover order: blocked; %s" % movement_line
+	if order == "select route" and _is_adjacent_move_target(hero_pos, tile):
+		order = "select March"
+	return "Hover order: %s, then commit if ready; %s" % [order, movement_line]
 
 func _selected_route() -> Array:
 	if not _refresh_cache.has("selected_route"):
