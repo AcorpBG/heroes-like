@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T11:34:07Z",
+  "updatedAt": "2026-04-26T11:52:04Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "hero-inventory-equipment-decision-clarity-10184",
-  "currentSliceTitle": "Surface hero inventory and equipment decision clarity in live overworld UI",
+  "currentSliceId": "town-production-overview-clarity-10184",
+  "currentSliceTitle": "Surface town identity and production overview clarity in live town UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing artifact loadout clarity through the existing overworld gear rail, artifact management actions, and result feedback. Players can now see equipped versus pack state, slots, effects, equip/stow availability, and compact result changes for collect/equip/stow without a new inventory screen, schema migration, generated assets, docs, or report-only tests.",
+  "currentSliceNotes": "Implemented compact player-facing town identity and production overview through the existing town command rail. Players now see owner/faction/role, daily income, built/open/deferred works, muster timing, ready build/recruit counts, and the next useful town action in the live town UI, with focused gameplay smoke coverage.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",

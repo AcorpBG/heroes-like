@@ -197,6 +197,52 @@ static func describe_summary(session: SessionStateStoreScript.SessionData) -> St
 		)
 	return "\n".join(parts)
 
+static func describe_production_overview(session: SessionStateStoreScript.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Production Overview\n- No active town."
+
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
+	var built_buildings = town.get("built_buildings", [])
+	var built_count: int = built_buildings.size() if built_buildings is Array else 0
+	var build_actions := get_build_actions(session)
+	var recruit_actions := get_recruit_actions(session)
+	var weekly_growth: Dictionary = OverworldRulesScript.town_weekly_growth(town, session)
+	var ready_builds := _count_ready_actions(build_actions)
+	var ready_recruits := _count_ready_actions(recruit_actions)
+	var role: String = OverworldRulesScript.town_strategic_role(town).capitalize()
+	if role == "":
+		role = "Frontier"
+	return "\n".join(
+		[
+			"Production Overview",
+			"- Owner %s | Faction %s | %s" % [
+				String(town.get("owner", "neutral")).capitalize(),
+				String(faction.get("name", town_template.get("faction_id", "Faction"))),
+				role,
+			],
+			"- Income/day %s | Works %d built, %d open, %d deferred" % [
+				_describe_resources(OverworldRulesScript.town_income(town, session)),
+				built_count,
+				build_actions.size(),
+				_locked_building_count(town),
+			],
+			"- Muster %d waiting | Weekly %s on Day %d" % [
+				_recruit_pool_total(town.get("available_recruits", {})),
+				_describe_recruit_delta(weekly_growth),
+				OverworldRulesScript.next_weekly_growth_day(session.day),
+			],
+			"- Ready now build %d/%d, recruit %d/%d | Next: %s" % [
+				ready_builds,
+				build_actions.size(),
+				ready_recruits,
+				recruit_actions.size(),
+				_next_town_action_line(session, town),
+			],
+		]
+	)
+
 static func describe_outlook_board(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
@@ -1107,6 +1153,82 @@ static func _coverage_order_ledger_line(session: SessionStateStoreScript.Session
 		int(movement_state.get("max", 0)),
 	]
 
+static func _next_town_action_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	var build_actions := get_build_actions(session)
+	for action in build_actions:
+		if not (action is Dictionary) or bool(action.get("disabled", false)):
+			continue
+		var projection := _action_projection_line(action)
+		if projection != "":
+			return "%s: %s" % [_short_action_label(action, "Build order"), projection]
+		return "%s is ready." % _short_action_label(action, "Build order")
+
+	var recruit_actions := get_recruit_actions(session)
+	for action in recruit_actions:
+		if not (action is Dictionary) or int(action.get("direct_affordable_count", 0)) <= 0:
+			continue
+		return "%s fields %d now." % [
+			_short_action_label(action, "Recruit order"),
+			int(action.get("direct_affordable_count", 0)),
+		]
+
+	for action in get_response_actions(session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return "%s secures the frontier chain." % _short_action_label(action, "Response order")
+
+	for action in get_spell_learning_actions(session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return "%s expands the hero spellbook." % _short_action_label(action, "Study order")
+
+	for action in get_market_actions(session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return "%s converts stores for blocked orders." % _short_action_label(action, "Exchange")
+
+	for action in build_actions:
+		if action is Dictionary and bool(action.get("market_coverable", false)):
+			return "Trade first for %s." % _short_action_label(action, "Build order")
+	for action in recruit_actions:
+		if action is Dictionary and bool(action.get("market_coverable", false)):
+			return "Trade first for %s." % _short_action_label(action, "Recruit order")
+	for action in build_actions:
+		if action is Dictionary:
+			return "%s blocked: %s." % [
+				_short_action_label(action, "Build order"),
+				String(action.get("disabled_reason", "stores are too thin")).trim_prefix("Blocked: "),
+			]
+	for action in recruit_actions:
+		if action is Dictionary:
+			return "%s blocked: %s." % [
+				_short_action_label(action, "Recruit order"),
+				String(action.get("disabled_reason", "stores are too thin")).trim_prefix("Blocked: "),
+			]
+	var weekly_growth := _describe_recruit_delta(OverworldRulesScript.town_weekly_growth(town, session))
+	if weekly_growth != "none":
+		return "Hold for Day %d muster (%s)." % [
+			OverworldRulesScript.next_weekly_growth_day(session.day),
+			weekly_growth,
+		]
+	return "Leave town; no production order is open."
+
+static func _short_action_label(action: Dictionary, fallback: String) -> String:
+	var label := String(action.get("label", fallback))
+	for prefix in ["Build ", "Recruit ", "Learn "]:
+		if label.begins_with(prefix):
+			return label.trim_prefix(prefix)
+	return label
+
+static func _action_projection_line(action: Dictionary) -> String:
+	var summary_lines := String(action.get("summary", "")).split("\n", false)
+	for line_value in summary_lines:
+		var line := String(line_value).strip_edges()
+		if not line.begins_with("Projection:"):
+			continue
+		line = line.trim_prefix("Projection:").strip_edges().trim_suffix(".")
+		if line.length() > 72:
+			line = "%s..." % line.left(69)
+		return line
+	return ""
+
 static func _market_coverage_line(readiness: Dictionary) -> String:
 	var actions = readiness.get("market_actions", [])
 	if not (actions is Array) or actions.is_empty():
@@ -1986,6 +2108,13 @@ static func _describe_recruit_delta(delta: Variant) -> String:
 		var unit := ContentService.get_unit(unit_id)
 		parts.append("+%d %s" % [amount, String(unit.get("name", unit_id))])
 	return ", ".join(parts) if not parts.is_empty() else "none"
+
+static func _recruit_pool_total(recruits: Variant) -> int:
+	var total := 0
+	if recruits is Dictionary:
+		for value in recruits.values():
+			total += max(0, int(value))
+	return total
 
 static func _town_unit_ids(town: Dictionary) -> Array:
 	var unit_ids := []

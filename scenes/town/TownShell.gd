@@ -28,6 +28,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _outlook_label: Label = %Outlook
 @onready var _command_ledger_label: Label = %CommandLedger
 @onready var _hero_label: Label = %Hero
+@onready var _production_overview_label: Label = %ProductionOverview
 @onready var _heroes_label: Label = %Heroes
 @onready var _specialty_label: Label = %Specialties
 @onready var _hero_actions: Container = %HeroActions
@@ -202,6 +203,7 @@ func _refresh() -> void:
 	_set_compact_label(_outlook_label, TownRules.describe_outlook_board(_session), 4)
 	_set_compact_label(_command_ledger_label, TownRules.describe_command_ledger(_session), 4)
 	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 2)
+	_set_compact_label(_production_overview_label, TownRules.describe_production_overview(_session), 4)
 	_set_compact_label(_heroes_label, TownRules.describe_heroes(_session), 2)
 	_set_compact_label(_specialty_label, TownRules.describe_specialties(_session), 2)
 	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2)
@@ -279,6 +281,8 @@ func validation_snapshot() -> Dictionary:
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
 		"summary": TownRules.describe_summary(_session),
+		"production_overview": TownRules.describe_production_overview(_session),
+		"visible_production_overview": _production_overview_label.text,
 		"front": front,
 		"occupation": occupation,
 		"base_income": OverworldRules.town_income(town),
@@ -794,6 +798,7 @@ func _apply_visual_theme() -> void:
 		_outlook_label,
 		_command_ledger_label,
 		_hero_label,
+		_production_overview_label,
 		_heroes_label,
 		_specialty_label,
 		_army_label,

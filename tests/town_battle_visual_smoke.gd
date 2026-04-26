@@ -40,6 +40,9 @@ func _run_town_smoke() -> bool:
 		push_error("Town smoke: construction action surface did not populate.")
 		get_tree().quit(1)
 		return false
+	if not _assert_town_production_overview(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -364,6 +367,29 @@ func _assert_town_economy_decision_payload(shell: Node) -> bool:
 	var message := String(progress.get("message", ""))
 	if not message.contains("Spent ") or (not message.contains("remain in town reserve") and not message.contains("Daily income now") and not message.contains("Weekly muster")):
 		push_error("Town smoke: economy action feedback did not explain spend plus the visible town/field outcome: %s." % progress)
+		return false
+	return true
+
+func _assert_town_production_overview(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: town shell does not expose validation snapshot.")
+		return false
+	var overview_label: Label = shell.get_node_or_null("%ProductionOverview")
+	if overview_label == null:
+		push_error("Town smoke: production overview label did not load.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var overview := String(snapshot.get("production_overview", ""))
+	var visible_overview := String(snapshot.get("visible_production_overview", overview_label.text))
+	if overview_label.text != visible_overview:
+		push_error("Town smoke: production overview snapshot does not match the visible label: visible=%s snapshot=%s." % [overview_label.text, snapshot])
+		return false
+	for token in ["Owner ", "Faction ", "Income/day", "Works ", "Muster ", "Weekly ", "Ready now", "Next:"]:
+		if not overview.contains(token):
+			push_error("Town smoke: production overview is missing %s: %s." % [token, overview])
+			return false
+	if not visible_overview.contains("Income/day") or not visible_overview.contains("Next:"):
+		push_error("Town smoke: visible production overview lost income or next-action clarity: %s." % visible_overview)
 		return false
 	return true
 
