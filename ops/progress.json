@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T20:33:24Z",
+  "updatedAt": "2026-04-26T20:43:54Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "resume-return-handoff-clarity-10184",
-  "currentSliceTitle": "Surface compact resume and return handoff clarity",
+  "currentSliceId": "editor-play-readiness-gate-summary-10184",
+  "currentSliceTitle": "Surface compact map-editor Play Copy readiness gate summary",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible player-facing resume/return handoff polish slice using existing AppRouter, SaveService, MainMenu, and active shell save payloads. SaveService now exposes Resume handoff and Return handoff lines that explain the landing surface and preserved state without save schema changes. Main menu save pulse/footer/save details and active overworld, town, and battle save/menu controls surface the lines, with focused smoke assertions and no-score-leak guards. Town and battle shells now stamp their active game_state on direct scene entry so validation and active save surfaces match the visible shell. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow tooling-facing readiness polish slice in the existing map editor using current scenario authoring validation, working-copy, hero-start, object-count, and Play Copy handoff payloads. The Play Copy button, tooltip, editor status, validation snapshot, and launch payload now surface a compact Play gate ready/check summary with objective coverage, warning count, hero start, and object count. Focused map-editor smoke assertions prove the visible surface and no-score-leak guard. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1678,6 +1678,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T20:23:28Z",
       "completedAt": "2026-04-26T20:33:24Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "editor-play-readiness-gate-summary-10184",
+      "title": "Surface compact map-editor Play Copy readiness gate summary",
+      "status": "completed",
+      "startedAt": "2026-04-26T20:36:27Z",
+      "completedAt": "2026-04-26T20:43:54Z",
       "difficulty": "medium"
     }
   ],
