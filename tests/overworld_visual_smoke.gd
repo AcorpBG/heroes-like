@@ -844,8 +844,16 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		return false
 	if not _assert_text_contains_all(
 		"Overworld field spell unavailable affordance",
-		[String(full_spell_action.get("summary", "")), String(full_spell_action.get("invalid_reason", ""))],
-		["Cost 3 mana", "target active hero", "Movement is already full"]
+		[
+			String(full_snapshot.get("spellbook_tooltip_text", "")),
+			String(full_spell_action.get("summary", "")),
+			String(full_spell_action.get("invalid_reason", "")),
+			String(full_spell_action.get("category", "")),
+			String(full_spell_action.get("readiness", "")),
+			String(full_spell_action.get("effect", "")),
+			String(full_spell_action.get("best_use", "")),
+		],
+		["Waystride", "Field Route", "Cost 3", "target active hero", "Movement is already full", "Restores up to 4 movement", "save until movement has room"]
 	):
 		return false
 
@@ -870,8 +878,14 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		return false
 	if not _assert_text_contains_all(
 		"Overworld field spell ready affordance",
-		[String(ready_spell_action.get("label", "")), String(ready_spell_action.get("summary", ""))],
-		["Cast Waystride (3 mana)", "Restores up to 4 movement", "Cost 3 mana", "target active hero", "Ready now"]
+		[
+			String(ready_snapshot.get("spellbook_tooltip_text", "")),
+			String(ready_spell_action.get("label", "")),
+			String(ready_spell_action.get("summary", "")),
+			String(ready_spell_action.get("readiness", "")),
+			String(ready_spell_action.get("best_use", "")),
+		],
+		["Cast Waystride (3 mana)", "Field Route", "Restores up to 4 movement", "Cost 3", "target active hero", "Ready", "recover route tempo"]
 	):
 		return false
 

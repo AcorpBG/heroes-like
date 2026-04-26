@@ -255,7 +255,7 @@ static func describe_session_commander_preview(session: SessionStateStoreScript.
 		command_line = "%s | Traits %s" % [command_line, trait_summary]
 	lines.append(command_line)
 	lines.append("Specialties: %s" % HeroProgressionRulesScript.brief_summary(hero))
-	lines.append(SpellRulesScript.describe_spellbook(hero, SpellRulesScript.CONTEXT_BATTLE))
+	lines.append(SpellRulesScript.describe_spellbook(hero))
 	lines.append(_artifact_preview(hero))
 	lines.append(_army_preview(hero.get("army", session.overworld.get("army", {}))))
 	var front_preview := _front_preview_summary(scenario)

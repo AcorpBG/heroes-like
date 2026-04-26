@@ -530,6 +530,13 @@ func validation_snapshot() -> Dictionary:
 		"player_commander_text": BattleRules.describe_commander_summary(_session, "player"),
 		"player_commander_visible_text": _player_command_label.text,
 		"player_commander_tooltip_text": _player_command_label.tooltip_text,
+		"spellbook_text": BattleRules.describe_spellbook(_session),
+		"spellbook_visible_text": _spell_label.text,
+		"spellbook_tooltip_text": _spell_label.tooltip_text,
+		"spell_actions": _duplicate_action_array(BattleRules.get_spell_actions(_session)),
+		"spell_timing_text": BattleRules.describe_spell_timing_board(_session),
+		"spell_timing_visible_text": _timing_label.text,
+		"spell_timing_tooltip_text": _timing_label.tooltip_text,
 		"enemy_commander_text": BattleRules.describe_commander_summary(_session, "enemy"),
 		"enemy_commander_visible_text": _enemy_command_label.text,
 		"enemy_commander_tooltip_text": _enemy_command_label.tooltip_text,
@@ -692,6 +699,15 @@ func _validation_battle_board_summary() -> Dictionary:
 	if _battle_board_view != null and _battle_board_view.has_method("validation_hex_layout_summary"):
 		return _battle_board_view.validation_hex_layout_summary()
 	return {}
+
+func _duplicate_action_array(actions: Variant) -> Array:
+	var duplicated := []
+	if not (actions is Array):
+		return duplicated
+	for action in actions:
+		if action is Dictionary:
+			duplicated.append(action.duplicate(true))
+	return duplicated
 
 func validation_perform_board_hex_click(q: int, r: int) -> Dictionary:
 	if _session.battle.is_empty():

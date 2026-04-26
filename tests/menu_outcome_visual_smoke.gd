@@ -154,8 +154,9 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
 			String(selected_chapter_action.get("summary", "")),
+			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
 		],
-		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Action:"]
+		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Action:", "Spellbook", "Field Route", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 
@@ -183,8 +184,9 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
+			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
 		],
-		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Action:"]
+		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Action:", "Spellbook", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 
