@@ -4516,6 +4516,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
 	OverworldRulesScript._add_resources(session, rewards)
 	var reward_summary = OverworldRulesScript._describe_resource_delta(rewards)
+	var reward_detail := OverworldRulesScript._describe_reward_delta(rewards)
 	if reward_summary != "":
 		messages.append("Battle rewards %s." % reward_summary)
 	var experience_amount = max(0, int(rewards.get("experience", 0)))
@@ -4549,6 +4550,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		base_summary,
 		{
 			"resource_summary": "Battle rewards %s." % reward_summary if reward_summary != "" else "",
+			"reward_summary": "Rewards: %s." % reward_detail if reward_detail != "" else "",
 			"pressure_summary": String(front_result.get("summary", "")),
 			"recovery_summary": commander_aftermath,
 			"logistics_summary": delivery_summary,
@@ -5230,10 +5232,20 @@ static func _record_battle_aftermath(
 	var headline := "Battle Aftermath | %s" % _titleize_token(display_outcome)
 	if not session.battle.is_empty():
 		headline = "%s | %s" % [headline, String(session.battle.get("encounter_name", session.battle.get("encounter_id", "Battle")))]
-	session.flags["last_battle_aftermath"] = {
+	var result_summary := _battle_aftermath_result_summary(summary)
+	var reward_summary := _battle_aftermath_reward_summary(details)
+	var artifact_summary := _battle_aftermath_artifact_summary(details)
+	var force_summary := _battle_aftermath_force_summary(session)
+	var world_summary := _battle_aftermath_world_summary(session, outcome, details)
+	var report := {
 		"outcome": outcome,
 		"headline": headline,
 		"summary": summary,
+		"result_summary": result_summary,
+		"reward_summary": reward_summary,
+		"artifact_summary": artifact_summary,
+		"force_summary": force_summary,
+		"world_summary": world_summary,
 		"resource_summary": String(details.get("resource_summary", "")),
 		"army_summary": String(details.get("army_summary", "")),
 		"pressure_summary": String(details.get("pressure_summary", "")),
@@ -5243,6 +5255,124 @@ static func _record_battle_aftermath(
 		"commander_summary": String(details.get("commander_summary", "")),
 		"day": session.day,
 	}
+	report["return_summary"] = _battle_aftermath_return_summary(report)
+	session.flags["last_battle_aftermath"] = report
+
+static func _battle_aftermath_result_summary(summary: String) -> String:
+	var clean_summary := summary.strip_edges()
+	if clean_summary == "":
+		return ""
+	return "Result: %s" % clean_summary
+
+static func _battle_aftermath_reward_summary(details: Dictionary) -> String:
+	var explicit := String(details.get("reward_summary", "")).strip_edges()
+	if explicit != "":
+		return explicit
+	var resource_summary := String(details.get("resource_summary", "")).strip_edges()
+	if resource_summary == "":
+		return ""
+	if resource_summary.begins_with("Battle rewards "):
+		var reward_text := resource_summary.trim_prefix("Battle rewards ").trim_suffix(".").strip_edges()
+		if reward_text != "":
+			return "Rewards: %s." % reward_text
+	return resource_summary
+
+static func _battle_aftermath_artifact_summary(details: Dictionary) -> String:
+	var artifact_summary := String(details.get("artifact_summary", "")).strip_edges()
+	if artifact_summary == "":
+		return ""
+	return artifact_summary if artifact_summary.begins_with("Artifact") else "Artifact: %s" % artifact_summary
+
+static func _battle_aftermath_force_summary(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return ""
+	var player_clause := _battle_aftermath_side_force_clause(session.battle, "player", "Your forces")
+	var enemy_clause := _battle_aftermath_side_force_clause(session.battle, "enemy", "Enemy")
+	var clauses := []
+	if player_clause != "":
+		clauses.append(player_clause)
+	if enemy_clause != "":
+		clauses.append(enemy_clause)
+	if clauses.is_empty():
+		return ""
+	return "Forces: %s." % "; ".join(clauses)
+
+static func _battle_aftermath_side_force_clause(battle: Dictionary, side: String, label: String) -> String:
+	var starting_troops := 0
+	var surviving_troops := 0
+	var surviving_companies := 0
+	var broken_companies := 0
+	for stack_value in battle.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		if String(stack.get("side", "")) != side:
+			continue
+		var base_count: int = max(0, int(stack.get("base_count", 0)))
+		var alive_count: int = _alive_count(stack)
+		starting_troops += base_count
+		surviving_troops += alive_count
+		if alive_count > 0:
+			surviving_companies += 1
+		elif base_count > 0:
+			broken_companies += 1
+	if starting_troops <= 0:
+		return "%s had no formed companies" % label
+	var lost_troops: int = max(0, starting_troops - surviving_troops)
+	if surviving_troops <= 0:
+		return "%s defeated, %d troop%s lost" % [
+			label,
+			starting_troops,
+			"" if starting_troops == 1 else "s",
+		]
+	var clause := "%s %d/%d troop%s remain in %d compan%s" % [
+		label,
+		surviving_troops,
+		starting_troops,
+		"" if starting_troops == 1 else "s",
+		surviving_companies,
+		"y" if surviving_companies == 1 else "ies",
+	]
+	if lost_troops > 0:
+		clause += ", %d lost" % lost_troops
+	if broken_companies > 0:
+		clause += ", %d compan%s broken" % [
+			broken_companies,
+			"y" if broken_companies == 1 else "ies",
+		]
+	return clause
+
+static func _battle_aftermath_world_summary(
+	session: SessionStateStoreScript.SessionData,
+	outcome: String,
+	details: Dictionary
+) -> String:
+	var parts := []
+	for key in ["front_summary", "pressure_summary", "recovery_summary", "logistics_summary", "commander_summary"]:
+		var text := String(details.get(key, "")).strip_edges()
+		if text != "" and text not in parts:
+			parts.append(text)
+	if parts.is_empty() and session != null and not session.battle.is_empty():
+		var context = session.battle.get("context", {})
+		match outcome:
+			"victory":
+				if _is_town_assault_context(context):
+					parts.append("Town control is updated on the overworld.")
+				elif String(session.battle.get("resolved_key", "")) != "":
+					parts.append("The encounter is cleared from the overworld.")
+			"retreat", "surrender", "stalemate", "hero_defeat", "defeat", "town_lost":
+				parts.append("Army and frontier state are updated before returning to the overworld.")
+	if parts.is_empty():
+		return ""
+	return "Overworld: %s" % " ".join(parts)
+
+static func _battle_aftermath_return_summary(report: Dictionary) -> String:
+	var parts := []
+	for key in ["result_summary", "reward_summary", "artifact_summary", "force_summary", "world_summary"]:
+		var text := String(report.get(key, "")).strip_edges()
+		if text != "" and text not in parts:
+			parts.append(text)
+	return " ".join(parts)
 
 static func _battle_aftermath_display_outcome(outcome: String, details: Dictionary) -> String:
 	var explicit_label := String(details.get("display_outcome", ""))
