@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T00:01:28Z",
+  "updatedAt": "2026-04-26T00:46:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-implementation-brief-prep-10184",
-  "currentSliceTitle": "Prepare implementation briefs for selected concept-art directions",
+  "currentSliceId": "overworld-object-schema-migration-planning-10184",
+  "currentSliceTitle": "Plan overworld object schema migration from concept-art briefs",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "Batch 005 records broader overworld object and town-adjacent evidence for route-law/transit sites, persistent resource fronts, neutral encounters, guarded rewards, pickups, and faction landmarks in docs/concept-art-batch-005-review.md. Generated PNGs remain outside the repo. Broader-overworld-object-town-studies-10184 is complete; the next active slice should prepare compact implementation briefs for selected accepted/deferred directions before any JSON migration, map placement, sprite ingestion, or runtime asset import.",
+  "currentSliceNotes": "docs/concept-art-implementation-briefs.md completes the first implementation-brief prep pass for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes. Generated PNGs remain external concept evidence only and AcOrP review remains open. The next active slice should plan the object schema migration contract for primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard/reward links, ownership/capture state, route effects, animation cue ids, validation, and editor implications before any JSON migration, map placement, sprite ingestion, or runtime asset import.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -180,6 +180,12 @@
     {
       "id": "concept-art-implementation-brief-prep-10184",
       "title": "Prepare implementation briefs for selected accepted concept-art directions",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "overworld-object-schema-migration-planning-10184",
+      "title": "Plan overworld object schema migration from concept-art briefs",
       "status": "in_progress",
       "difficulty": "high"
     },
@@ -648,7 +654,9 @@
     "Use docs/animation-systems-foundation.md as the animation source before unit animation, hero motion, town ambience, object state animation, spell/artifact VFX, UI motion, cue catalog, audio cue, or final battle/town polish work.",
     "Use docs/strategic-ai-foundation.md as the strategic AI source before AI profile/schema migration, planner/executor work, AI event surfacing, town governors, real AI heroes, object valuation, spell/artifact planning, difficulty tuning, or broad map reliance on AI.",
     "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, docs/concept-art-batch-003-review.md, docs/concept-art-batch-004-review.md, and docs/concept-art-batch-005-review.md to collect AcOrP accept/reject/defer calls on the external world/faction/object batch and second-pass follow-ups.",
-    "Prepare compact concept-art implementation briefs for selected accepted/deferred directions, starting with object families and first town/object targets that now have enough evidence.",
+    "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
+    "Plan the overworld object schema migration contract before JSON migration, map placement, renderer sprite ingestion, or runtime asset import.",
+    "Plan economy/resource schema migration as a tightly coupled companion to object schema work because persistent resource fronts need resource ids, output cadence, capture values, and compatibility decisions.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
     "Avoid claiming six-faction, HoMM2-class, or HoMM3-class readiness until world, content, systems, AI, save/load, and manual-play evidence support it."

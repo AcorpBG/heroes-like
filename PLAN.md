@@ -48,13 +48,15 @@ Immediate execution order:
 11. First concept-art curation and second-pass prep: completed as a concise second-pass review for world route readability, no-text Veilmourn, and Sunvault anti-paladin silhouette direction, recorded in `docs/concept-art-batch-002-review.md`; generated PNGs remain outside the repo.
 12. Remaining second-pass concept-art expansion: completed for the main named faction/town/unit gaps across `docs/concept-art-batch-003-review.md` and `docs/concept-art-batch-004-review.md`, covering Thornwake, Brasshollow, Embercourt, Mireclaw, Veilmourn, and Sunvault second-pass needs. Generated PNGs remain external only.
 13. Broader overworld object/town studies: completed as external route-law/transit, persistent resource-front, neutral encounter, guarded reward, pickup, and faction-landmark evidence recorded in `docs/concept-art-batch-005-review.md`. Generated PNGs remain external only.
-14. Concept-art implementation-brief prep: current next slice. Convert selected accepted/deferred directions into compact briefs for object families and first town/object targets, with footprints, approach sides, state variants, guard expectations, reward/risk reads, animation hooks, ownership/capture handling, and rejection constraints.
-15. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+14. Concept-art implementation-brief prep: completed in `docs/concept-art-implementation-briefs.md` for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes. Generated PNGs remain external concept evidence only, and AcOrP review remains open.
+15. Overworld object schema migration planning: current next slice. Define the production data shape for object primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard links, reward categories, ownership/capture states, route effects, and animation cue ids before JSON migration, map placement, sprite ingestion, or runtime asset work.
+16. Economy/resource schema migration planning should follow or run as a tightly coupled companion slice, because persistent resource fronts need resource ids, output cadence, capture values, and market/resource compatibility decisions.
+17. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Start concept-art implementation-brief prep from `docs/concept-art-pipeline.md`, `docs/overworld-object-taxonomy-density.md`, and the five concept-art batch reviews.
-- Prioritize brief candidates that now have enough evidence: Embercourt town/object, Mireclaw town/object, route-law/transit objects, persistent resource fronts, pickups, guarded reward sites, neutral encounter presentation, and faction landmarks.
-- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise, and keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
+- Start overworld object schema migration planning from `docs/concept-art-implementation-briefs.md`, `docs/overworld-object-taxonomy-density.md`, `docs/economy-overhaul-foundation.md`, and `docs/animation-systems-foundation.md`.
+- Prioritize object class metadata, footprint/body tile rules, approach-side rules, passability/interaction classes, state variants, guard/reward links, route effects, ownership/capture states, animation cue ids, validation expectations, and editor implications.
+- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin JSON migration, map placement, renderer sprite ingestion, or runtime asset import until the schema-planning slice selects a staged migration contract.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
@@ -351,6 +353,30 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, imported generated images, object sprites, map placements, or playability claims.
+
+## Completed Planning Slice: Concept Art Implementation Brief Prep
+Status: completed on 2026-04-26 for the first implementation-brief prep pass.
+
+Purpose:
+- Convert the strongest concept-art evidence into compact implementation briefs without treating generated images as source assets.
+- Cover the first town/object directions and core overworld object classes with source filenames, intended game surface, design intent, motifs to translate, footprints, approach sides, passability, interaction class, state variants, animation hooks, readability constraints, rejection constraints, and prerequisites.
+- Keep AcOrP review open while allowing planning to continue into object schema migration.
+
+Delivered:
+- Added `docs/concept-art-implementation-briefs.md`.
+- Included briefs for Embercourt town/object direction using batch 001, batch 003, and batch 005 evidence.
+- Included briefs for Mireclaw town/object direction using batch 001, batch 004, and batch 005 evidence.
+- Included core overworld object-class briefs for route-law/transit objects, persistent resource fronts, guarded reward sites, pickups, faction landmarks, and neutral encounter presentation.
+- Sequenced the next current slice as overworld object schema migration planning, with economy/resource schema migration as a tightly coupled companion.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, generated PNGs, object sprites, map placements, schema migration, or playability claims.
+- AcOrP final art-direction approval remains deferred; the briefs translate motifs and constraints, not exact generated-image designs.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
