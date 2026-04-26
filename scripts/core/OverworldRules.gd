@@ -2950,6 +2950,76 @@ static func _resource_site_weekly_recruits(site: Dictionary) -> Dictionary:
 			return roster_recruits
 	return {}
 
+static func resource_site_is_recruit_source(site: Dictionary) -> bool:
+	return (
+		String(site.get("family", "")) == "neutral_dwelling"
+		or not _resource_site_claim_recruits(site).is_empty()
+		or not _resource_site_weekly_recruits(site).is_empty()
+	)
+
+static func describe_recruit_source_compact(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	if not resource_site_is_recruit_source(site):
+		return ""
+	var parts := []
+	var claim_line := _recruit_source_roster_line("Ready", _resource_site_claim_recruits(site), 2)
+	if claim_line != "":
+		parts.append(claim_line)
+	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 1)
+	if weekly_line != "":
+		parts.append(weekly_line)
+	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
+	if guard_line != "":
+		parts.append(guard_line)
+	return " | ".join(_non_empty_strings(parts))
+
+static func describe_recruit_source_inspection(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	if not resource_site_is_recruit_source(site):
+		return ""
+	var lines := []
+	var dwelling_label := _resource_site_neutral_dwelling_label(site)
+	var scope := String(site.get("dwelling_scope", "")).strip_edges()
+	if dwelling_label != "":
+		lines.append("Recruit Source: %s | Neutral dwelling" % dwelling_label)
+	elif scope == "faction_linked":
+		lines.append("Recruit Source: %s | Faction-linked muster" % String(site.get("name", "Recruit source")))
+	else:
+		lines.append("Recruit Source: %s" % String(site.get("name", "Recruit source")))
+	var dwelling_id := String(site.get("neutral_dwelling_family_id", ""))
+	if dwelling_id != "":
+		var dwelling := ContentService.get_neutral_dwelling(dwelling_id)
+		var summary := _short_player_text(String(dwelling.get("summary", "")), 112)
+		if summary != "":
+			lines.append("Identity: %s" % summary)
+	var claim_line := _recruit_source_roster_line("Ready", _resource_site_claim_recruits(site), 4)
+	if claim_line != "":
+		lines.append(claim_line)
+	var weekly_line := _recruit_source_roster_line("Weekly", _resource_site_weekly_recruits(site), 4)
+	if weekly_line != "":
+		lines.append("%s to nearest held town" % weekly_line)
+	lines.append("Cadence: %s | %s" % [
+		_interaction_cadence_label(_resource_site_interaction_cadence(site, ContentService.get_map_object_for_resource_site(String(node.get("site_id", site.get("id", "")))))).trim_prefix("Cadence: "),
+		_resource_site_control_brief(node, site),
+	])
+	var support_line := _recruit_source_support_readiness_line(session, node, site)
+	if support_line != "":
+		lines.append(support_line)
+	var route_line := _resource_site_route_line(session, node, site)
+	if route_line != "":
+		lines.append("Route: %s" % route_line)
+	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
+	if guard_line != "":
+		lines.append("Guard: %s" % guard_line)
+	lines.append(_recruit_source_why_line(site))
+	return "\n".join(_non_empty_strings(lines))
+
 static func _resource_site_neutral_dwelling_label(site: Dictionary) -> String:
 	var dwelling_id := String(site.get("neutral_dwelling_family_id", ""))
 	if dwelling_id == "":
@@ -3041,6 +3111,9 @@ static func describe_resource_site_control_inspection(
 	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
 	if guard_line != "":
 		lines.append("Guard: %s" % guard_line)
+	var recruit_source := describe_recruit_source_inspection(session, node, site)
+	if recruit_source != "":
+		lines.append(recruit_source)
 	return "\n".join(lines)
 
 static func describe_resource_site_interaction_surface(node: Dictionary, site: Dictionary) -> String:
@@ -3104,6 +3177,87 @@ static func _resource_site_claim_message(site: Dictionary, previous_controller: 
 	if previous_controller == "player":
 		return "%s already answers your banners." % String(site.get("name", "The site"))
 	return "Retook %s from hostile control." % String(site.get("name", "the site"))
+
+static func _recruit_source_roster_line(label: String, recruits: Variant, limit: int) -> String:
+	if not (recruits is Dictionary) or recruits.is_empty():
+		return ""
+	var unit_ids := []
+	for unit_id_value in recruits.keys():
+		var unit_id := String(unit_id_value)
+		if unit_id != "":
+			unit_ids.append(unit_id)
+	unit_ids.sort()
+	var parts := []
+	for unit_id in unit_ids:
+		var count: int = maxi(0, int(recruits.get(unit_id, 0)))
+		if count <= 0:
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		var unit_name := String(unit.get("name", unit_id))
+		var role_label := _unit_role_tier_label(unit)
+		var cost_label := _describe_resource_delta(unit.get("cost", {}))
+		var detail_parts := _non_empty_strings([role_label, cost_label])
+		parts.append("+%d %s%s" % [
+			count,
+			unit_name,
+			" (%s)" % ", ".join(detail_parts) if not detail_parts.is_empty() else "",
+		])
+		if parts.size() >= max(1, limit):
+			break
+	var hidden_count: int = maxi(0, unit_ids.size() - parts.size())
+	if hidden_count > 0:
+		parts.append("%d more" % hidden_count)
+	return "%s: %s" % [label, ", ".join(parts)] if not parts.is_empty() else ""
+
+static func _unit_role_tier_label(unit: Dictionary) -> String:
+	var tier: int = maxi(1, int(unit.get("tier", 1)))
+	var role := String(unit.get("role", "")).strip_edges()
+	if role == "":
+		role = "ranged" if bool(unit.get("ranged", false)) else "melee"
+	return "T%d %s" % [tier, _humanize_id(role)]
+
+static func _recruit_source_support_readiness_line(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var response_state := _resource_site_response_state(session, node, site)
+	if int(response_state.get("watch_days", 0)) <= 0:
+		return ""
+	var parts := [String(response_state.get("action_label", "Support response"))]
+	var cost: Dictionary = _normalize_resource_dict(response_state.get("resource_cost", {}))
+	var cost_summary := _describe_resource_delta(cost)
+	if cost_summary != "":
+		var readiness := "ready"
+		if session != null and not _can_afford(session, cost):
+			var shortfall := _describe_resource_delta(_resource_pool_shortfall(session.overworld.get("resources", {}), cost))
+			readiness = "needs %s" % shortfall if shortfall != "" else "not ready"
+		parts.append("%s %s" % [cost_summary, readiness])
+	var movement_cost := int(response_state.get("movement_cost", 0))
+	if movement_cost > 0:
+		var movement_left := int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
+		parts.append("move %d/%d" % [movement_left, movement_cost])
+	parts.append("%d day%s" % [
+		int(response_state.get("watch_days", 0)),
+		"" if int(response_state.get("watch_days", 0)) == 1 else "s",
+	])
+	var impact_summary := _resource_site_response_effect_summary(response_state)
+	if impact_summary != "":
+		parts.append(impact_summary)
+	return "Support: %s" % " | ".join(_non_empty_strings(parts))
+
+static func _recruit_source_why_line(site: Dictionary) -> String:
+	var reasons := []
+	if not _resource_site_claim_recruits(site).is_empty():
+		reasons.append("adds field recruits")
+	if not _resource_site_weekly_recruits(site).is_empty():
+		reasons.append("feeds weekly musters")
+	var control_income = site.get("control_income", {})
+	if control_income is Dictionary and not control_income.is_empty():
+		reasons.append("keeps local pay flowing")
+	if reasons.is_empty():
+		return "Why: Securing it strengthens the local route."
+	return "Why: Capture %s." % ", ".join(reasons)
 
 static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> String:
 	var authored_label := String(site.get("action_label", ""))

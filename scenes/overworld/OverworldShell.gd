@@ -1450,10 +1450,13 @@ func _rail_tile_text() -> String:
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		var site_state := OverworldRules.describe_resource_site_surface(_session, node, site)
 		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
+		var recruit_summary := OverworldRules.describe_recruit_source_compact(_session, node, site)
 		if site_state == "":
 			site_state = "Ready"
 		if control_summary != "":
 			site_state = "%s | %s" % [site_state, control_summary]
+		if recruit_summary != "":
+			site_state = "%s | %s" % [site_state, recruit_summary]
 		return "Site: %s\n%s\n%s | %s%s" % [
 			String(site.get("name", "Frontier site")),
 			route_line,
@@ -1518,8 +1521,11 @@ func _remembered_tile_rail_text(terrain: String, coords: String, action_hint: St
 	if not node.is_empty():
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		var remembered_surface := OverworldRules.describe_resource_site_surface(_session, node, site)
+		var recruit_summary := OverworldRules.describe_recruit_source_compact(_session, node, site)
 		if remembered_surface == "":
 			remembered_surface = "Remembered"
+		if recruit_summary != "":
+			remembered_surface = "%s | %s" % [remembered_surface, recruit_summary]
 		return "Site: %s\n%s | %s | Out of scout net" % [
 			String(site.get("name", "Frontier site")),
 			remembered_surface,
@@ -1756,7 +1762,8 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 		var surface := OverworldRules.describe_resource_site_surface(_session, node, site)
 		var interaction_surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
 		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
-		return "%s %d,%d | %s | %s%s%s" % [
+		var recruit_summary := OverworldRules.describe_recruit_source_compact(_session, node, site)
+		return "%s %d,%d | %s | %s%s%s%s" % [
 			prefix,
 			tile.x,
 			tile.y,
@@ -1764,6 +1771,7 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 			surface,
 			"" if interaction_surface == "" else " | %s" % interaction_surface,
 			"" if control_summary == "" else " | %s" % control_summary,
+			"" if recruit_summary == "" else " | %s" % recruit_summary,
 		]
 	var encounter := _encounter_at(tile.x, tile.y)
 	if not encounter.is_empty():

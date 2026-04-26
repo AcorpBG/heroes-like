@@ -1993,6 +1993,26 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		_fail("Map editor smoke: guarded resource-site inspection did not expose owner/control and guard link: detail=%s result=%s." % [guarded_resource_detail, guarded_resource_result])
 		return false
 
+	var dwelling_result: Dictionary = shell.call("validation_select_tile", 23, 8)
+	var dwelling_detail := _object_detail_for_family(dwelling_result.get("tile_inspection", {}), "resource")
+	var dwelling_taxonomy: Dictionary = dwelling_detail.get("taxonomy", {})
+	var dwelling_text := "%s\n%s\n%s" % [
+		String(dwelling_result.get("tile_inspection", {}).get("text", "")),
+		String(dwelling_taxonomy.get("recruit_source_summary", "")),
+		String(dwelling_taxonomy.get("recruit_source_inspection", "")),
+	]
+	if (
+		String(dwelling_taxonomy.get("primary_class", "")) != "neutral_dwelling"
+		or String(dwelling_taxonomy.get("cadence", "")) != "persistent_control"
+		or "neutral_recruit_source" not in dwelling_taxonomy.get("secondary_tags", [])
+		or dwelling_text.find("Recruit Source: Roadward Lodge | Neutral dwelling") < 0
+		or dwelling_text.find("Ready: +1 Hearthbow Carriers (T2 Ranged, 80 gold), +2 Roadwardens (T1 Melee, 55 gold)") < 0
+		or dwelling_text.find("Weekly: +1 Roadwardens (T1 Melee, 55 gold) to nearest held town") < 0
+		or dwelling_text.find("Why: Capture adds field recruits, feeds weekly musters, keeps local pay flowing.") < 0
+	):
+		_fail("Map editor smoke: neutral dwelling site inspection did not expose recruit-source identity, roster, cadence, and value: detail=%s result=%s." % [dwelling_detail, dwelling_result])
+		return false
+
 	var town_result: Dictionary = shell.call("validation_select_tile", 23, 26)
 	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
 	var town_taxonomy: Dictionary = town_detail.get("taxonomy", {})

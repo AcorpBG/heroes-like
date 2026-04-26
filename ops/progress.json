@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T14:40:21Z",
+  "updatedAt": "2026-04-26T14:50:33Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "artifact-equipment-impact-inspection-clarity-10184",
-  "currentSliceTitle": "Surface practical artifact set and equipment impact inspection clarity in live UI",
+  "currentSliceId": "neutral-dwelling-recruit-source-inspection-clarity-10184",
+  "currentSliceTitle": "Surface practical neutral dwelling and recruit-source inspection clarity in live UI/tooling",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact artifact equipment impact readability across overworld cache context/tooltips, hero gear rails, town artifact validation surface, battle commander context, and menu launch previews using existing artifact and hero data. The slice surfaces slot fit, standalone/set context, field/command/economy impacts, action consequences, and collection count without schema, save, balance, AI, or content migration.",
+  "currentSliceNotes": "Implemented compact neutral dwelling and recruit-source readability across overworld selected-site context, rail/tooltips, and map editor palette/site inspection using existing dwelling, resource-site, map-object, and unit metadata. The slice surfaces recruit-source identity, unit role/tier/cost, ready and weekly musters, control/cadence, support readiness, guard/route links, and visit value without schema, save, balance, AI, roster, or content migration.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1400,6 +1400,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T14:34:17Z",
       "completedAt": "2026-04-26T14:40:21Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "neutral-dwelling-recruit-source-inspection-clarity-10184",
+      "title": "Surface practical neutral dwelling and recruit-source inspection clarity in live UI/tooling",
+      "status": "completed",
+      "startedAt": "2026-04-26T14:42:26Z",
+      "completedAt": "2026-04-26T14:50:33Z",
       "difficulty": "medium"
     }
   ],
