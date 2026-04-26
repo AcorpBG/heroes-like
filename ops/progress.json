@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T02:05:00Z",
+  "updatedAt": "2026-04-26T02:33:19Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-resource-additive-schema-validator-planning-10184",
-  "currentSliceTitle": "Plan first additive resource schema fields and validator warning reports",
+  "currentSliceId": "economy-resource-additive-validator-report-scaffolding-10184",
+  "currentSliceTitle": "Implement additive resource validator/report scaffolding",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "docs/economy-resource-schema-migration-plan.md completes the planning-only economy/resource schema migration contract. It documents current gold/wood/ore reality, resource id policy, wood/timber compatibility, resource categories, output cadence, persistent-site capture values, pickup/income/service distinctions, market caps, faction preferences, cost compatibility, resource-site/object-schema linkage, AI hooks, UI/readability, save compatibility, validation levels, migration order, and rollback concerns before any JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, or save migration. The next slice should plan the first additive schema and validator warning/report implementation contract for optional resource registry fields, alias metadata, source/availability reports, cadence/capture warnings, market-cap report shape, and small strict fixtures.",
+  "currentSliceNotes": "docs/economy-resource-additive-schema-validator-plan.md completes the planning-only contract for the first additive resource schema and validator warning/report work. It covers optional registry fields, wood/timber alias reporting, resource registry/report shape, source/availability reports, output-cadence inference warnings, persistent-site capture warnings, market-cap report shape, strict fixture scope, warning-vs-error levels, CLI/report expectations, compatibility adapters, acceptance tests, rollback boundaries, and hard non-change rules. The next slice should implement report-only validator scaffolding and tiny strict fixtures without production JSON migration, market/runtime behavior changes, save migration, rare-resource activation, renderer sprite ingestion, runtime asset import, or generated concept-art import.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -198,6 +198,13 @@
     {
       "id": "economy-resource-additive-schema-validator-planning-10184",
       "title": "Plan first additive resource schema fields and validator warning reports",
+      "status": "completed",
+      "completedAt": "2026-04-26T02:33:19Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "economy-resource-additive-validator-report-scaffolding-10184",
+      "title": "Implement additive resource validator/report scaffolding",
       "status": "pending",
       "difficulty": "high"
     },
