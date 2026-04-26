@@ -103,12 +103,13 @@ Immediate execution order:
 66. Strategic AI commander-role live-turn transcript/report gate review is completed in `docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md`. The gate passes: the focused report rerun printed `AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT` with `ok: true`, `schema_status: "derived_turn_transcript_report_only"`, `behavior_policy: "observe_existing_enemy_turn_only"`, `save_policy: "no_commander_role_state_write"`, River Pass and Glassroad controller-flip evidence, source-marker checks, and public leak checks across 21 compact public transcript events. Schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, full AI hero task-state implementation, and live commander-role behavior remain deferred.
 67. Strategic AI hero task-state boundary planning is completed in `docs/strategic-ai-hero-task-state-boundary-plan.md`. The plan defines the future faction-owned AI hero task-state boundary after the passed commander-role transcript gate, covering deterministic task ids, task ownership/lifecycle, role-to-task adapter path, route/task ownership, invalidation rules, save/schema risks, old-save compatibility, rollback/escape hatch, fixture/report prerequisites, validation gates, and the option decision to do minimal task-state report/fixture planning next instead of schema adoption, live behavior adoption, or pausing commander-role work.
 68. Strategic AI hero task-state report fixture planning is completed in `docs/strategic-ai-hero-task-state-report-fixture-plan.md`. The plan defines the exact future `AI_HERO_TASK_STATE_BOUNDARY_REPORT` payload, seven fixture cases, deterministic candidate task ids, actor/target ownership checks, role-to-task source checks, target reservation checks, invalidation checks, old-save absence checks, public leak checks, failure conditions, validation commands, and implementation sequence while keeping schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, full AI hero task-state implementation, production JSON edits, and live commander-role behavior deferred.
-69. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+69. Strategic AI hero task-state boundary report implementation is completed in `docs/strategic-ai-hero-task-state-report-implementation-report.md` plus focused Godot coverage in `tests/ai_hero_task_state_boundary_report.gd`. `EnemyAdventureRules` now exposes derived/report-only candidate task helpers for deterministic task ids, role-to-task source links, actor/target ownership checks, target reservations, invalidation, old-save absence, and compact public task events while keeping candidate tasks unsaved and behavior-neutral.
+70. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-hero-task-state-report-implementation-10184` as the next concrete slice.
-- Use `docs/strategic-ai-hero-task-state-report-fixture-plan.md` as the current evidence boundary: future AI hero task-state report coverage should prove deterministic candidate task ids, actor/task ownership, lifecycle, target reservation, invalidation, save/schema absence, and public leak boundaries through derived/report-only candidate tasks.
-- Keep the next slice report-only: implement pure helpers and focused Godot coverage for `AI_HERO_TASK_STATE_BOUNDARY_REPORT` without adopting schema/live behavior.
+- Run `strategic-ai-hero-task-state-report-gate-review-10184` as the next concrete slice.
+- Use `docs/strategic-ai-hero-task-state-report-implementation-report.md` as the current evidence boundary: report output now proves deterministic candidate task ids, actor/task ownership, lifecycle, target reservation, invalidation, save/schema absence, and public leak boundaries through derived/report-only candidate tasks.
+- Keep the next slice review-only: inspect the focused `AI_HERO_TASK_STATE_BOUNDARY_REPORT` output and decide whether it is sufficient to keep schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, full AI hero task-state implementation, production JSON edits, and live commander-role behavior deferred.
 - Keep the completed live-turn transcript gate boundaries active: do not change target selection, raid movement, raid arrival, town-governor choices, save data, UI composition, production JSON, or coefficients.
 - Use the completed commander-role report gate review, completed commander-role report implementation, completed fixture plan, completed minimal schema boundary plan, passed Mireclaw site-control proof, passed Embercourt Glassroad defense proof, and completed commander-role state boundary plan to keep coefficient tuning deferred. No ordering, assignment, seizure, controller-flip, town-governor, public-surface, or defense-specific durable-state defect has been found.
 - Keep defense-specific durable state deferred because the Glassroad report proved relay retake/controller flip through current raid resolution and compact event vocabulary, and the commander-role plan keeps defense as a future commander role/front assignment rather than a site-specific state addition.
@@ -377,6 +378,26 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not implement report helpers/tests, write schema, migrate saves, add durable event logs, add defense-specific durable state, tune coefficients, edit production JSON, implement full AI hero task state, adopt live commander-role behavior, change target selection, change raid movement/arrival, change town-governor choices, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
+
+## Completed Implementation Slice: Strategic AI Hero Task-State Boundary Report
+Status: completed on 2026-04-26 as report-only implementation after the completed task-state boundary and fixture plans.
+
+Purpose:
+- Implement pure/report-only `AI_HERO_TASK_STATE_BOUNDARY_REPORT` helpers and focused Godot coverage for the seven planned fixture cases.
+- Keep candidate tasks derived/report-only and unsaved while proving deterministic task ids, actor/target ownership, role-to-task source links, target reservations, invalidation, old-save absence, and public leak boundaries.
+
+Delivered:
+- Added report-only AI hero task constants, candidate task id generation, role-to-task adapter conversion, resource target snapshots, reservation arbitration, controller-flip transition reporting, old-save absence inspection, compact public task events, and validation/leak helpers in `scripts/core/EnemyAdventureRules.gd`.
+- Added `tests/ai_hero_task_state_boundary_report.gd` and `tests/ai_hero_task_state_boundary_report.tscn`.
+- Covered all seven planned cases: River Pass Free Company retake candidate, River Pass Signal Post companion contest candidate, Glassroad relay retake-to-defend transition, Glassroad Starlens stabilizer candidate, commander recovery/rebuild blocking, old-save no-task-state compatibility, and duplicate target reservation arbitration.
+- Added `docs/strategic-ai-hero-task-state-report-implementation-report.md`.
+- Recommended `strategic-ai-hero-task-state-report-gate-review-10184` as the next slice.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, `python3 tests/validate_repo.py --neutral-encounter-report`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_boundary_report.tscn`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_commander_role_turn_transcript_report.tscn`.
+
+Limits:
+- This is report-only implementation. It does not write `hero_task_state`, change live AI target selection, change raid movement, change raid arrival, change town-governor choices, tune coefficients, edit production JSON, migrate saves, add durable events, implement full AI hero tasks, add defense-specific durable state, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -3714,7 +3735,7 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: report-only strategic AI hero task-state boundary report implementation after the completed fixture plan.
+Current target: review the report-only strategic AI hero task-state boundary report output after the completed implementation.
 
 Done means:
 - The completed site-control report remains accepted as proof that current Mireclaw River Pass assignment, seizure, and controller-flip behavior works for `river_free_company`, with `river_signal_post` as companion reason coverage.
@@ -3727,7 +3748,8 @@ Done means:
 - The completed live-turn transcript/report gate review passed: River Pass and Glassroad transcript evidence is enough to keep schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, full AI hero task-state implementation, and live commander-role behavior deferred.
 - The completed hero task-state boundary plan defines future task ids, task ownership/lifecycle, role-to-task adapter path, route/task ownership, invalidation rules, save/schema risks, old-save compatibility, rollback/escape hatch, fixture/report prerequisites, and validation gates without implementing task state or adopting live behavior.
 - The completed hero task-state report fixture plan defines a planning-only `AI_HERO_TASK_STATE_BOUNDARY_REPORT` payload and fixtures for derived candidate task ids, actor/target ownership, role-to-task source links, target reservation, invalidation, old-save absence, and public leak checks without implementing report helpers/tests or adopting schema/live behavior.
-- The next slice implements report-only `AI_HERO_TASK_STATE_BOUNDARY_REPORT` helpers and focused Godot coverage for the planned fixtures while keeping all candidate tasks unsaved and behavior-neutral.
+- The completed hero task-state boundary report implementation emits `AI_HERO_TASK_STATE_BOUNDARY_REPORT` as report-only diagnostics; it does not adopt schema, migrate saves, write task state, change target selection, change raid movement/arrival, change town-governor choices, tune coefficients, add durable event logs, or implement full AI hero task state.
+- The next slice reviews the focused `AI_HERO_TASK_STATE_BOUNDARY_REPORT` output before any schema write, save migration, live behavior adoption, coefficient tuning, durable event log, or full task-state implementation.
 - The `glassroad-sundering` fixture reality remains explicitly accounted for as the current direct Embercourt enemy fixture.
 - Detailed target/build/recruit score tables stay in report/debug output only.
 - Public or derived event output stays compact and does not expose score-table fields.
