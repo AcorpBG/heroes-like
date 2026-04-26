@@ -239,19 +239,27 @@ static func equip_artifact(hero_state: Dictionary, artifact_id: String) -> Dicti
 	hero["artifacts"] = normalize_hero_artifacts(artifacts)
 
 	var suffix_message := "%s. %s" % [artifact_name(artifact_id), _artifact_equipped_note(artifact_id, slot)]
-	var message := "Equipped %s. %s" % [artifact_name(artifact_id), _artifact_equipped_note(artifact_id, slot)]
+	var message := "Equipped %s from pack into %s. %s" % [
+		artifact_name(artifact_id),
+		artifact_slot_label(artifact_id),
+		_artifact_effect_line(artifact_id),
+	]
 	if swapped_out_id != "":
-		message = "Swapped %s into the %s slot and stowed %s." % [
-			artifact_name(artifact_id),
-			slot,
-			artifact_name(swapped_out_id),
-		]
-		message += " %s" % _artifact_effect_line(artifact_id)
-		suffix_message = "%s. Swapped into %s; stowed %s. %s" % [
+		message = "Swapped %s into %s and stowed %s in pack." % [
 			artifact_name(artifact_id),
 			artifact_slot_label(artifact_id),
 			artifact_name(swapped_out_id),
-			_artifact_effect_line(artifact_id),
+		]
+		message += " New: %s Was: %s." % [
+			artifact_effect_summary(artifact_id),
+			artifact_effect_summary(swapped_out_id),
+		]
+		suffix_message = "%s. Swapped into %s; stowed %s. New: %s Was: %s." % [
+			artifact_name(artifact_id),
+			artifact_slot_label(artifact_id),
+			artifact_name(swapped_out_id),
+			artifact_effect_summary(artifact_id),
+			artifact_effect_summary(swapped_out_id),
 		]
 
 	return {
@@ -285,7 +293,11 @@ static func unequip_artifact(hero_state: Dictionary, slot: String) -> Dictionary
 		"ok": true,
 		"hero": hero,
 		"slot": slot,
-		"message": "Stored %s in the pack." % artifact_name(artifact_id),
+		"message": "Stowed %s from %s into pack. Removed: %s." % [
+			artifact_name(artifact_id),
+			artifact_slot_label(artifact_id),
+			artifact_effect_summary(artifact_id),
+		],
 	}
 
 static func describe_loadout(hero_state: Dictionary) -> String:
@@ -315,10 +327,10 @@ static func describe_management(hero_state: Dictionary) -> String:
 	for slot in EQUIPMENT_SLOTS:
 		var artifact_id := String(equipped.get(slot, ""))
 		if artifact_id == "":
-			lines.append("- %s: empty" % slot.capitalize())
+			lines.append("- %s: empty | Ready for %s" % [slot.capitalize(), slot.capitalize()])
 			continue
 		lines.append(
-			"- %s: %s | %s" % [
+			"- %s: %s | Equipped | %s" % [
 				slot.capitalize(),
 				artifact_name(artifact_id),
 				artifact_effect_summary(artifact_id),
@@ -332,9 +344,10 @@ static func describe_management(hero_state: Dictionary) -> String:
 			if artifact_id == "":
 				continue
 			lines.append(
-				"- %s | %s slot | %s" % [
+				"- %s | Pack | %s slot | %s | %s" % [
 					artifact_name(artifact_id),
 					artifact_slot_label(artifact_id),
+					artifact_decision_summary(hero_state, artifact_id),
 					artifact_effect_summary(artifact_id),
 				]
 			)
@@ -389,15 +402,14 @@ static func get_management_actions(hero_state: Dictionary) -> Array:
 			var equipped_id := String(equipped.get(slot, ""))
 			var label_prefix := "Equip"
 			var summary := "%s | %s | %s" % [
-				artifact_slot_label(artifact_id),
+				artifact_decision_summary(hero_state, artifact_id),
 				artifact_reward_role(artifact_id),
 				artifact_effect_summary(artifact_id),
 			]
 			if equipped_id != "":
 				label_prefix = "Swap In"
-				summary = "%s | Stows %s | %s | %s" % [
-					artifact_slot_label(artifact_id),
-					artifact_name(equipped_id),
+				summary = "%s | %s | %s" % [
+					artifact_decision_summary(hero_state, artifact_id),
 					artifact_reward_role(artifact_id),
 					artifact_effect_summary(artifact_id),
 				]
@@ -484,6 +496,28 @@ static func artifact_reward_role(artifact_id: String) -> String:
 	if int(bonuses.get("battle_attack", 0)) > 0 or int(bonuses.get("battle_initiative", 0)) > 0:
 		return "Command reward"
 	return "Equipment reward"
+
+static func artifact_decision_summary(hero_state: Dictionary, artifact_id: String) -> String:
+	var artifact := ContentService.get_artifact(artifact_id)
+	if artifact.is_empty():
+		return "Cannot equip"
+	var slot := artifact_slot(artifact_id)
+	if slot == "":
+		return "Pack only"
+	var location := locate_artifact(hero_state, artifact_id)
+	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
+	var equipped_id := String(artifacts.get("equipped", {}).get(slot, ""))
+	match String(location.get("location", "missing")):
+		"equipped":
+			return "Equipped in %s; can stow to pack" % artifact_slot_label(artifact_id)
+		"inventory":
+			if equipped_id == "":
+				return "Can equip to empty %s" % artifact_slot_label(artifact_id)
+			return "Can swap with %s" % artifact_name(equipped_id)
+		_:
+			if equipped_id == "":
+				return "Will auto-equip to empty %s" % artifact_slot_label(artifact_id)
+			return "Will enter pack; can swap with %s" % artifact_name(equipped_id)
 
 static func describe_artifact_short(artifact_id: String) -> String:
 	if ContentService.get_artifact(artifact_id).is_empty():

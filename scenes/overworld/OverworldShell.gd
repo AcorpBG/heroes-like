@@ -1867,6 +1867,9 @@ func validation_snapshot() -> Dictionary:
 		"primary_action_button_disabled": _primary_action_button.disabled,
 		"context_action_ids": _validation_context_action_ids(),
 		"spell_actions": _validation_spell_action_payloads(),
+		"artifact_text": _artifact_label.text,
+		"artifact_tooltip_text": _artifact_label.tooltip_text,
+		"artifact_actions": _validation_artifact_action_payloads(),
 		"active_town": active_town,
 		"selected_town": selected_town,
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
@@ -2108,6 +2111,34 @@ func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
 		"mana_after": mana_after,
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
+		"action_feedback": _validation_action_feedback(),
+	}
+
+func validation_perform_artifact_action(action_id: String) -> Dictionary:
+	var action_ids := []
+	for action in _cached_artifact_actions():
+		if not (action is Dictionary):
+			continue
+		action_ids.append(String(action.get("id", "")))
+	if action_id not in action_ids:
+		return {
+			"ok": false,
+			"action_id": action_id,
+			"artifact_action_ids": action_ids,
+			"message": "The requested artifact action is not available on the live overworld shell.",
+		}
+	var before := JSON.stringify(_validation_commander_state().get("artifacts", {}))
+	_on_artifact_action_pressed(action_id)
+	var after := JSON.stringify(_validation_commander_state().get("artifacts", {}))
+	return {
+		"ok": before != after,
+		"action_id": action_id,
+		"artifact_action_ids": action_ids,
+		"state_changed": before != after,
+		"message": _last_message,
+		"artifact_text": _artifact_label.text,
+		"artifact_tooltip_text": _artifact_label.tooltip_text,
+		"artifact_actions": _validation_artifact_action_payloads(),
 		"action_feedback": _validation_action_feedback(),
 	}
 
@@ -2599,6 +2630,14 @@ func _validation_spell_action_payloads() -> Array:
 		payload["availability"] = String(action.get("availability", ""))
 		payload["invalid_reason"] = String(action.get("invalid_reason", ""))
 		payloads.append(payload)
+	return payloads
+
+func _validation_artifact_action_payloads() -> Array:
+	var payloads := []
+	for action in OverworldRules.get_artifact_actions(_session):
+		if not (action is Dictionary):
+			continue
+		payloads.append(_validation_action_payload(action))
 	return payloads
 
 func _validation_action_payload(action: Dictionary) -> Dictionary:

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T11:40:37Z",
+  "updatedAt": "2026-04-26T11:34:07Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-outcome-reward-transition-clarity-10184",
-  "currentSliceTitle": "Surface compact battle outcome, reward, force, and transition clarity",
+  "currentSliceId": "hero-inventory-equipment-decision-clarity-10184",
+  "currentSliceTitle": "Surface hero inventory and equipment decision clarity in live overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing battle aftermath clarity through existing battle result payloads, outcome recaps, and post-battle overworld return notices. Battle aftermath now records concise result, reward, artifact-ready, force-survival, and overworld-transition summaries without battle rewrite, AI/mechanics changes, save migration, generated assets, docs, or report-only scenes.",
+  "currentSliceNotes": "Implemented compact player-facing artifact loadout clarity through the existing overworld gear rail, artifact management actions, and result feedback. Players can now see equipped versus pack state, slots, effects, equip/stow availability, and compact result changes for collect/equip/stow without a new inventory screen, schema migration, generated assets, docs, or report-only tests.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1320,6 +1320,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T11:00:00Z",
       "completedAt": "2026-04-26T11:10:26Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "hero-inventory-equipment-decision-clarity-10184",
+      "title": "Surface hero inventory and equipment decision clarity in live overworld UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T11:30:58Z",
+      "completedAt": "2026-04-26T11:34:07Z",
       "difficulty": "medium"
     }
   ],
