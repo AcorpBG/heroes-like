@@ -92,21 +92,22 @@ Immediate execution order:
 55. Strategic AI Glassroad defense/stabilization proof planning is completed in `docs/strategic-ai-glassroad-defense-proof-plan.md`. The selected proof path is a bounded Embercourt `glassroad-sundering` report centered on `glassroad_watch_relay` and `glassroad_starlens`, with `halo_spire_bridgehead` as the town-front sanity check, `glassroad_beacon_wardens` as objective/encounter companion context, current compact public/debug event vocabulary, and an explicit decision that new defense-specific durable state should wait until a focused report proves current assignment/seizure/town-governor surfaces are insufficient.
 56. Strategic AI Glassroad defense/stabilization proof reporting is completed in `docs/strategic-ai-glassroad-defense-proof-report.md` plus focused Godot coverage in `tests/ai_glassroad_defense_proof_report.gd`. The report proves current Embercourt `glassroad-sundering` relay/starlens ordering, accepted `halo_spire_bridgehead` town-front sanity, relay assignment, staged relay retake/controller flip, Starlens stabilization profile, Riverwatch town-governor garrison stabilization, and public score-table leak checks without coefficient tuning or defense-specific durable state.
 57. Strategic AI commander-role state boundary planning is completed in `docs/strategic-ai-commander-role-state-plan.md`. The plan keeps current raid encounter fields and commander roster continuity as compatibility state, defines a minimal future `commander_role_state` boundary for non-staged assignment, defense, raid, recovery, retake, stabilizer, and personality-pressure reporting, and recommends report fixture planning before schema, save migration, full AI hero task state, or live-client gate work.
-58. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+58. Strategic AI commander-role report fixture planning is completed in `docs/strategic-ai-commander-role-report-fixture-plan.md`. The plan defines exact deterministic future `AI_COMMANDER_ROLE_STATE_REPORT` cases and payload expectations for Mireclaw Free Company retaker/raider, Signal Post companion coverage, Embercourt Glassroad relay defender/retaker/stabilizer, commander recovery blocking assignment, commander memory continuity, public leak checks, pass/fail criteria, validation commands, and staged next steps before schema or live behavior adoption.
+59. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-commander-role-report-fixture-planning-10184` as the next concrete slice.
-- Use the passed Mireclaw site-control proof, passed Embercourt Glassroad defense proof, and completed commander-role state boundary plan to keep coefficient tuning deferred. No ordering, assignment, seizure, controller-flip, town-governor, public-surface, or defense-specific durable-state defect was found.
+- Run `strategic-ai-minimal-commander-role-state-schema-planning-10184` as the next concrete slice.
+- Use the completed commander-role report fixture plan, passed Mireclaw site-control proof, passed Embercourt Glassroad defense proof, and completed commander-role state boundary plan to keep coefficient tuning deferred. No ordering, assignment, seizure, controller-flip, town-governor, public-surface, or defense-specific durable-state defect was found.
 - Keep defense-specific durable state deferred because the Glassroad report proved relay retake/controller flip through current raid resolution and compact event vocabulary, and the commander-role plan keeps defense as a future commander role/front assignment rather than a site-specific state addition.
-- Plan exact report fixtures for future commander-role proposals before implementing schema, save migration, full AI hero task state, or live-client gates.
-- Keep the next planning slice scoped; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, implement minimal commander-role schema, or change pathing/renderer/editor/save behavior.
+- Plan minimal commander-role state schema location, enums, defaults, old-save compatibility, assignment id derivation, front id derivation, public-reason recomputation, and adapter path to later full AI hero state before report implementation or live behavior adoption.
+- Keep the next planning slice scoped; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, implement live commander-role behavior, implement report helpers/tests, or change pathing/renderer/editor/save behavior.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows a specific ordering, defense, or seizure/retake defect.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
 - Defer bounded coefficient tuning because the site-control proof report found no ordering or seizure/retake defect.
-- Start commander-role report fixture planning as the next planning-only strategic AI slice, because the boundary plan is now complete and the next useful evidence is exact proposed-role fixture cases.
+- Start minimal commander-role state schema planning as the next planning-only strategic AI slice, because fixture cases and payload expectations are now defined and the next useful evidence is the exact storage/compatibility boundary.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next gate slice.
@@ -116,7 +117,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is commander-role report fixture planning after the completed commander-role state boundary plan, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, asset import, minimal commander-role schema implementation, or new defense-specific durable state.
+- The next active choice is minimal commander-role state schema planning after the completed commander-role report fixture plan, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, asset import, report implementation, live commander-role behavior adoption, or new defense-specific durable state.
 
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
@@ -137,6 +138,26 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit production JSON, change AI behavior, tune coefficients, add durable event logs, implement full AI hero task state, add defense-specific durable state, implement minimal commander-role schema, migrate saves, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
+
+## Completed Planning Slice: Strategic AI Commander Role Report Fixtures
+Status: completed on 2026-04-26 as documentation-only fixture planning after the completed commander-role state boundary plan.
+
+Purpose:
+- Define exact deterministic future `AI_COMMANDER_ROLE_STATE_REPORT` fixture cases and payload expectations before schema, report implementation, save migration, live behavior adoption, or full AI hero task work.
+- Keep coefficient tuning and defense-specific durable state deferred because the passed proof reports found no ordering, seizure, retake, town-governor, public-surface, or defense-state defect.
+
+Delivered:
+- Added `docs/strategic-ai-commander-role-report-fixture-plan.md`.
+- Defined future report payload shape, per-case fields, public role event shape, and fixture-only annotation rules.
+- Planned exact cases for Mireclaw Free Company retaker/raider, Mireclaw Signal Post companion, Embercourt Glassroad relay defender/retaker/stabilizer, commander recovery blocking assignment, and commander memory continuity.
+- Defined expected targets, roles, role statuses, public reasons, reason-code minimums, supporting evidence, pass/fail criteria, public leak checks, validation commands, and staged next steps.
+- Recommended `strategic-ai-minimal-commander-role-state-schema-planning-10184` as the next slice.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, and `python3 tests/validate_repo.py --neutral-encounter-report`.
+
+Limits:
+- This is documentation/planning only. It does not implement report helpers/tests, add schema, change AI behavior, tune coefficients, edit production JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, migrate saves, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -3474,13 +3495,14 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: commander-role state planning after the passed Mireclaw site-control proof and passed Embercourt Glassroad defense proof report.
+Current target: minimal commander-role state schema planning after the completed commander-role report fixture plan.
 
 Done means:
 - The completed site-control report remains accepted as proof that current Mireclaw River Pass assignment, seizure, and controller-flip behavior works for `river_free_company`, with `river_signal_post` as companion reason coverage.
 - No coefficient tuning starts unless a later proof identifies a specific ordering, defense, seizure, or retake defect.
 - The completed Glassroad report proves `glassroad_watch_relay` assignment and retake/controller flip, `glassroad_starlens` companion stabilization surface, `halo_spire_bridgehead` town-front sanity, and `riverwatch_market` garrison stabilization.
-- The next slice plans commander-role state boundaries only; it does not implement full AI hero task state.
+- The completed commander-role report fixture plan defines future `AI_COMMANDER_ROLE_STATE_REPORT` cases for Mireclaw Free Company retaker/raider, Mireclaw Signal Post companion, Embercourt Glassroad relay defender/retaker/stabilizer, commander recovery blocking assignment, and commander memory continuity.
+- The next slice plans minimal commander-role schema boundaries only; it does not implement report helpers/tests, live behavior, save migration, or full AI hero task state.
 - The `glassroad-sundering` fixture reality remains explicitly accounted for as the current direct Embercourt enemy fixture.
 - Detailed target/build/recruit score tables stay in report/debug output only.
 - Public or derived event output stays compact and does not expose score-table fields.
