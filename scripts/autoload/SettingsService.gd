@@ -93,6 +93,12 @@ const HELP_TOPICS := [
 		"details": "Battles are tactical confrontations launched from map encounters. Use Strike, Shoot, and Defend to manage tempo, retaliation, and range pressure while hero command, spells, artifacts, and unit abilities shape the outcome. Surviving forces and scenario results flow back into the active expedition.",
 	},
 	{
+		"id": "outcome",
+		"label": "Outcome",
+		"summary": "Review the resolved scenario, save the result, and choose the next route.",
+		"details": "The outcome screen is a resolved expedition checkpoint. Save preserves the result in the selected manual slot, Return to Menu keeps Continue Latest pointed at this outcome, and retry or continue actions start a fresh expedition or next campaign chapter without changing the saved outcome unless you save again.",
+	},
+	{
 		"id": "saves",
 		"label": "Save Flow",
 		"summary": "Campaign progression and expedition saves are separate systems.",

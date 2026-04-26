@@ -542,6 +542,8 @@ func _run_outcome_smoke() -> bool:
 		return false
 
 	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_outcome_field_manual_contract(shell, "Outcome skirmish Field Manual"):
+		return false
 	var action_payload_text := _joined_action_payload_text(snapshot)
 	if not _assert_text_contains_all(
 		"Outcome progress and next-step recap",
@@ -601,6 +603,8 @@ func _run_outcome_smoke() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var campaign_snapshot: Dictionary = campaign_shell.call("validation_snapshot")
+	if not _assert_outcome_field_manual_contract(campaign_shell, "Outcome campaign Field Manual"):
+		return false
 	var campaign_action_payload_text := _joined_action_payload_text(campaign_snapshot)
 	if not _assert_text_contains_all(
 		"Outcome campaign continuity choice",
@@ -641,6 +645,57 @@ func _run_outcome_smoke() -> bool:
 
 	campaign_shell.queue_free()
 	await get_tree().process_frame
+	return true
+
+func _assert_outcome_field_manual_contract(shell: Node, label: String) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_open_outcome_guide") or not shell.has_method("validation_close_outcome_guide"):
+		push_error("%s: outcome shell is missing Field Manual validation hooks." % label)
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if bool(snapshot.get("outcome_guide_visible", true)):
+		push_error("%s: outcome Field Manual should stay collapsed until requested: %s." % [label, snapshot])
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		label + " control",
+		[
+			String(snapshot.get("outcome_guide_button", "")),
+			String(snapshot.get("outcome_guide_tooltip", "")),
+		],
+		["Guide", "Open the outcome Field Manual", "does not save, load, route, or change campaign progression"]
+	):
+		return false
+	shell.call("validation_open_outcome_guide")
+	var guide_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not bool(guide_snapshot.get("outcome_guide_visible", false)):
+		push_error("%s: outcome Field Manual did not open: %s." % [label, guide_snapshot])
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		label,
+		[
+			String(guide_snapshot.get("outcome_guide_button", "")),
+			String(guide_snapshot.get("outcome_guide_tooltip", "")),
+			String(guide_snapshot.get("outcome_guide_full", guide_snapshot.get("outcome_guide", ""))),
+		],
+		["Hide Guide", "Hide the outcome Field Manual", "Outcome", "resolved expedition checkpoint", "Save check:", "Play check:", "Return handoff:", "Guide handoff:", "same outcome actions"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		label,
+		[
+			String(guide_snapshot.get("outcome_guide_tooltip", "")),
+			String(guide_snapshot.get("outcome_guide_full", guide_snapshot.get("outcome_guide", ""))),
+		]
+	):
+		return false
+	shell.call("validation_close_outcome_guide")
+	var closed_snapshot: Dictionary = shell.call("validation_snapshot")
+	if bool(closed_snapshot.get("outcome_guide_visible", true)):
+		push_error("%s: outcome Field Manual did not close: %s." % [label, closed_snapshot])
+		get_tree().quit(1)
+		return false
 	return true
 
 func _joined_action_payload_text(snapshot: Dictionary) -> String:

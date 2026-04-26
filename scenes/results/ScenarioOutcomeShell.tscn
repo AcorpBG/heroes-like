@@ -446,6 +446,38 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Menu"
 
+[node name="Guide" type="Button" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guide"
+
+[node name="GuidePanel" type="PanelContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="GuidePad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/GuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
+
+[node name="GuideBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/GuidePanel/GuidePad"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="GuideTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/GuidePanel/GuidePad/GuideBox"]
+layout_mode = 2
+text = "Field Manual"
+
+[node name="OutcomeGuide" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/GuidePanel/GuidePad/GuideBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Outcome guide"
+
 [connection signal="item_selected" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/SaveSlot" to="." method="_on_save_slot_selected"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox/SaveBar/Guide" to="." method="_on_guide_pressed"]
