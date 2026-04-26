@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T10:31:00Z",
+  "updatedAt": "2026-04-26T10:39:59Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "neutral-encounter-readability-ui-10184",
-  "currentSliceTitle": "Improve live neutral encounter readability in overworld UI",
+  "currentSliceId": "town-economy-decision-clarity-ui-10184",
+  "currentSliceTitle": "Improve live town economy decision clarity in UI and action feedback",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live neutral encounter readability through existing overworld tooltip, context rail, movement/action summaries, and battle-start feedback. Neutral contacts now surface role, risk/difficulty, visible army, rewards, field objectives, and guard target context from existing encounter placement and metadata without changing pathing, battle behavior, save data, content balance, or adding report scenes.",
+  "currentSliceNotes": "Implemented compact player-facing town economy clarity through existing town action payloads, labels, tooltips, smoke hooks, and build/recruit feedback. Construction and recruitment now surface cost readiness, stores-vs-cost, exchange or missing-resource blockers, after-order stores/reserves, and spend/outcome messages without resource migration, rebalance, docs-only output, or new report scenes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1296,6 +1296,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T18:35:00Z",
       "completedAt": "2026-04-26T18:49:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "town-economy-decision-clarity-ui-10184",
+      "title": "Improve live town economy decision clarity in UI and action feedback",
+      "status": "completed",
+      "startedAt": "2026-04-26T10:34:52Z",
+      "completedAt": "2026-04-26T10:39:59Z",
       "difficulty": "medium"
     }
   ],

@@ -743,8 +743,18 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	var building: Dictionary = build_status.get("building", {})
 	var cost = building.get("cost", {})
 	if not _can_afford(session, cost):
-		return {"ok": false, "message": "Insufficient resources for %s." % String(building.get("name", building_id))}
+		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), cost)
+		var shortfall := _describe_cost_shortfall(readiness)
+		return {
+			"ok": false,
+			"message": "Insufficient resources for %s.%s" % [
+				String(building.get("name", building_id)),
+				" Missing %s." % shortfall if shortfall != "" else "",
+			],
+		}
 
+	var income_before := _calculate_town_income(town, session)
+	var growth_before := _town_weekly_growth(town, session)
 	_spend_resources(session, cost)
 	var built_buildings = _normalize_built_buildings_for_town_state(town)
 	built_buildings.append(building_id)
@@ -758,10 +768,25 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
+	var income_after := _calculate_town_income(town, session)
+	var growth_after := _town_weekly_growth(town, session)
+	var message_parts := ["Built %s in %s." % [String(building.get("name", building_id)), _town_name(town)]]
+	var cost_summary := _describe_resource_delta(cost)
+	if cost_summary != "":
+		message_parts.append("Spent %s." % cost_summary)
+	var income_change := _describe_resource_change(income_before, income_after)
+	if income_change != "":
+		message_parts.append("Daily income now %s (%s)." % [
+			_describe_resource_delta(income_after),
+			income_change,
+		])
+	var growth_change := _describe_recruit_projection(growth_before, growth_after)
+	if growth_change != "":
+		message_parts.append("Weekly muster %s." % growth_change)
 	return _finalize_action_result(
 		session,
 		true,
-		"Built %s in %s." % [String(building.get("name", building_id)), _town_name(town)]
+		" ".join(message_parts)
 	)
 
 static func recruit_in_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
@@ -786,9 +811,18 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 	var recruit_count = available_count if requested_count <= 0 else min(requested_count, available_count)
 	recruit_count = min(recruit_count, max_affordable)
 	if recruit_count <= 0:
-		return {"ok": false, "message": "Resources are too thin to recruit %s." % String(unit.get("name", unit_id))}
+		var readiness := town_cost_readiness(town, session.overworld.get("resources", {}), adjusted_unit_cost)
+		var shortfall := _describe_cost_shortfall(readiness)
+		return {
+			"ok": false,
+			"message": "Resources are too thin to recruit %s.%s" % [
+				String(unit.get("name", unit_id)),
+				" Missing %s." % shortfall if shortfall != "" else "",
+			],
+		}
 
-	_spend_resources(session, _multiply_cost(adjusted_unit_cost, recruit_count))
+	var recruit_cost := _multiply_cost(adjusted_unit_cost, recruit_count)
+	_spend_resources(session, recruit_cost)
 	recruits[unit_id] = available_count - recruit_count
 	town["available_recruits"] = recruits
 	towns[int(town_result.get("index", -1))] = town
@@ -808,10 +842,19 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 		stacks.append({"unit_id": unit_id, "count": recruit_count})
 	army["stacks"] = stacks
 	session.overworld["army"] = army
+	var field_total := _army_unit_count(stacks, unit_id)
+	var message_parts := ["Recruited %d %s." % [recruit_count, String(unit.get("name", unit_id))]]
+	var cost_summary := _describe_resource_delta(recruit_cost)
+	if cost_summary != "":
+		message_parts.append("Spent %s." % cost_summary)
+	message_parts.append("%d remain in town reserve; field army now has %d." % [
+		max(0, int(recruits.get(unit_id, 0))),
+		field_total,
+	])
 	return _finalize_action_result(
 		session,
 		true,
-		"Recruited %d %s." % [recruit_count, String(unit.get("name", unit_id))]
+		" ".join(message_parts)
 	)
 
 static func cast_overworld_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
@@ -4514,6 +4557,14 @@ static func _add_army_stack(stacks: Variant, unit_id: String, amount: int) -> Ar
 		normalized.append({"unit_id": unit_id, "count": amount})
 	return normalized
 
+static func _army_unit_count(stacks: Variant, unit_id: String) -> int:
+	var total := 0
+	if stacks is Array:
+		for stack_value in stacks:
+			if stack_value is Dictionary and String(stack_value.get("unit_id", "")) == unit_id:
+				total += max(0, int(stack_value.get("count", 0)))
+	return total
+
 static func _movement_max_from_hero(hero: Dictionary, session: SessionStateStoreScript.SessionData = null) -> int:
 	return HeroCommandRulesScript.movement_max_for_hero(hero, session)
 
@@ -6716,6 +6767,32 @@ static func _describe_resource_delta(delta: Variant) -> String:
 		if amount > 0:
 			parts.append("%d %s" % [amount, key])
 	return ", ".join(parts)
+
+static func _describe_resource_change(before: Variant, after: Variant) -> String:
+	if not (after is Dictionary):
+		return ""
+	var parts := []
+	for key in ["gold", "wood", "ore"]:
+		var previous := int(before.get(key, 0)) if before is Dictionary else 0
+		var current := int(after.get(key, 0))
+		var delta := current - previous
+		if delta != 0:
+			parts.append("%+d %s" % [delta, key])
+	return ", ".join(parts)
+
+static func _describe_cost_shortfall(readiness: Dictionary) -> String:
+	var shortfall_summary := _describe_resource_delta(readiness.get("direct_shortfall", {}))
+	var gold_short = max(
+		0,
+		int(readiness.get("required_gold_total", 0)) - int(readiness.get("available_gold_total", 0))
+	)
+	if shortfall_summary != "":
+		if bool(readiness.get("market_active", false)) and gold_short > 0:
+			return "%s; even full exchange leaves %d gold short" % [shortfall_summary, gold_short]
+		return shortfall_summary
+	if gold_short > 0:
+		return "%d gold after exchange" % gold_short if bool(readiness.get("market_active", false)) else "%d gold" % gold_short
+	return ""
 
 static func _describe_reward_delta(delta: Variant) -> String:
 	if not (delta is Dictionary):

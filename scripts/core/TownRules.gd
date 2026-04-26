@@ -606,15 +606,19 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 		var market_coverable := bool(readiness.get("market_affordable", false)) and not direct_affordable
 		var market_summary := _market_coverage_line(readiness)
 		var shortfall_summary := _cost_shortfall_line(readiness)
+		var affordability_line := _cost_readiness_line(resources, cost, readiness)
+		var after_spend_line := _stores_after_cost_line(resources, cost)
 		var summary_lines := [
 			"%s | Cost %s" % [
 				_building_line(building_id, "available", build_status),
 				_describe_resources(cost),
 			],
 			projection,
+			affordability_line,
 		]
 		if direct_affordable:
-			summary_lines.append("Ready now from current stores.")
+			if after_spend_line != "":
+				summary_lines.append("After build stores: %s." % after_spend_line)
 		elif market_coverable and market_summary != "":
 			summary_lines.append("Exchange path: %s" % market_summary)
 		elif shortfall_summary != "":
@@ -624,15 +628,18 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 				"id": "build:%s" % building_id,
 				"label": "Build %s" % String(building.get("name", building_id)),
 				"summary": "\n".join(summary_lines),
-				"ledger_line": "%s | Cost %s" % [
+				"ledger_line": "%s | Cost %s | %s" % [
 					_building_line(building_id, "available", build_status),
 					_describe_resources(cost),
+					String(affordability_line).trim_suffix("."),
 				],
 				"cost": cost,
+				"affordability_label": String(affordability_line).trim_suffix("."),
 				"direct_affordable": direct_affordable,
 				"market_coverable": market_coverable,
 				"market_summary": market_summary,
 				"shortfall_summary": shortfall_summary,
+				"disabled_reason": _disabled_reason_line(direct_affordable, market_coverable, market_summary, shortfall_summary),
 				"disabled": not direct_affordable,
 			}
 		)
@@ -657,6 +664,7 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
 		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
 		var market_affordable_count := _max_market_affordable_count(town, resources, unit_cost, available)
+		var direct_recruit_cost := _multiply_resource_cost(unit_cost, direct_affordable_count)
 		var market_summary := ""
 		if market_affordable_count > direct_affordable_count:
 			var market_readiness: Dictionary = OverworldRulesScript.town_cost_readiness(
@@ -677,7 +685,16 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 			]
 		]
 		if direct_affordable_count > 0:
-			summary_lines.append("Current stores can field %d now." % direct_affordable_count)
+			summary_lines.append("Ready: current stores can field %d now for %s." % [
+				direct_affordable_count,
+				_describe_resources(direct_recruit_cost),
+			])
+			var after_recruit_line := _stores_after_cost_line(resources, direct_recruit_cost)
+			if after_recruit_line != "":
+				summary_lines.append("After recruit stores: %s | Town reserve remains %d." % [
+					after_recruit_line,
+					max(0, available - direct_affordable_count),
+				])
 		elif market_affordable_count > 0 and market_summary != "":
 			summary_lines.append("Exchange can unlock %d now: %s" % [market_affordable_count, market_summary])
 		elif shortfall_summary != "":
@@ -690,11 +707,13 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 				"unit_cost": unit_cost,
 				"available_count": available,
 				"weekly_growth": weekly_growth,
+				"affordability_label": _recruit_affordability_label(direct_affordable_count, market_affordable_count, shortfall_summary),
 				"direct_affordable_count": direct_affordable_count,
 				"market_affordable_count": market_affordable_count,
 				"market_coverable": market_affordable_count > direct_affordable_count,
 				"market_summary": market_summary,
 				"shortfall_summary": shortfall_summary,
+				"disabled_reason": _disabled_reason_line(direct_affordable_count > 0, market_affordable_count > direct_affordable_count, market_summary, shortfall_summary),
 				"disabled": direct_affordable_count <= 0,
 			}
 		)
@@ -1118,6 +1137,54 @@ static func _cost_shortfall_line(readiness: Dictionary) -> String:
 			return "even a full exchange leaves %d gold short" % gold_short
 		return "need %d more gold" % gold_short
 	return "stores are too thin"
+
+static func _cost_readiness_line(resources: Dictionary, cost: Variant, readiness: Dictionary) -> String:
+	if not (cost is Dictionary) or cost.is_empty():
+		return "Ready: no resource cost."
+	var stock_line := _stock_against_cost_line(resources, cost)
+	if bool(readiness.get("direct_affordable", false)):
+		return "Ready: stores cover %s." % stock_line
+	if bool(readiness.get("market_affordable", false)) and bool(readiness.get("market_active", false)):
+		return "Needs exchange: stores show %s." % stock_line
+	var shortfall := _cost_shortfall_line(readiness)
+	return "Blocked: %s." % shortfall
+
+static func _stock_against_cost_line(resources: Dictionary, cost: Variant) -> String:
+	if not (cost is Dictionary) or cost.is_empty():
+		return "no cost"
+	var parts := []
+	for resource_key in ["gold", "wood", "ore"]:
+		var required := int(cost.get(resource_key, 0))
+		if required <= 0:
+			continue
+		parts.append("%s %d/%d" % [resource_key, int(resources.get(resource_key, 0)), required])
+	return ", ".join(parts) if not parts.is_empty() else "no cost"
+
+static func _stores_after_cost_line(resources: Dictionary, cost: Variant) -> String:
+	if not (cost is Dictionary):
+		return ""
+	var after := {}
+	for resource_key in ["gold", "wood", "ore"]:
+		after[resource_key] = max(0, int(resources.get(resource_key, 0)) - int(cost.get(resource_key, 0)))
+	return _describe_resources(after, "none")
+
+static func _recruit_affordability_label(direct_count: int, market_count: int, shortfall_summary: String) -> String:
+	if direct_count > 0:
+		return "Ready now x%d" % direct_count
+	if market_count > 0:
+		return "Needs exchange x%d" % market_count
+	if shortfall_summary != "":
+		return "Blocked: %s" % shortfall_summary
+	return "Blocked: stores are too thin"
+
+static func _disabled_reason_line(ready: bool, market_coverable: bool, market_summary: String, shortfall_summary: String) -> String:
+	if ready:
+		return ""
+	if market_coverable and market_summary != "":
+		return "Use exchange first: %s" % market_summary
+	if shortfall_summary != "":
+		return "Blocked: %s" % shortfall_summary
+	return "Blocked: stores are too thin"
 
 static func _max_market_affordable_count(
 	town: Dictionary,
