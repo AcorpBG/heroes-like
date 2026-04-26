@@ -66,20 +66,21 @@ Immediate execution order:
 29. Authored neutral encounter bundle report review: completed in `docs/neutral-encounter-representation-bundle-001-report-review.md`. The report now marks `neutral_encounter_representation_bundle_001` as `metadata_authored`, `production_json_migration_scope: "scenario_placement_metadata_only"`, 3 authored placements, 45 remaining inferred placements, 408 warnings, and 0 errors. The basalt gatehouse guard-link convention is confirmed as `target_id: "site_basalt_gatehouse"` plus `target_placement_id: "dwelling_basalt_gatehouse"`.
 30. First-class neutral encounter object planning: completed in `docs/neutral-encounter-first-class-object-migration-plan.md`. The plan defines when representation metadata stays on direct scenario encounter placements versus moves to object-backed records, target object/object-placement identifiers, compatibility for `neutral_encounter_representation_bundle_001`, validation levels, rollback, and a no-runtime-switch migration sequence.
 31. First-class neutral encounter object report/fixture scaffolding: completed as opt-in report and fixture-only support in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/neutral_encounter_schema/`. The report now distinguishes direct-only, authored scenario-metadata, object-backed, and lifted records; counts missing object ids, object-placement ids, lifted agreement, guard-target resolution, and object schema fields as warnings only; and keeps production direct placements compatibility-warning-only.
-32. First-class neutral encounter object report review/follow-up should come next before any production object-backed migration. The goal is to review the updated opt-in report output and strict fixture coverage, then decide whether a tiny planning bundle should lift existing authored metadata into object-backed records.
-33. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+32. First-class neutral encounter object report review/follow-up: completed in `docs/neutral-encounter-first-class-object-report-review.md`. The report has 45 direct-only placements, 3 scenario-metadata placements, 0 object-backed placements, 0 lifted records, 48 missing object ids, 48 missing object-placement ids, 48 missing object-schema-field records, 553 warnings, and 0 errors. Strict object-backed fixture coverage now exists for `visible_stack`, `camp_anchor`, `guard_linked_stack`, `guard_linked_camp`, and six invalid object-backed authority/link cases.
+33. Tiny first-class object bundle planning should come next before any production object-backed migration. The goal is to plan `neutral_encounter_first_class_object_bundle_001` by lifting the existing three authored `neutral_encounter_representation_bundle_001` placements into proposed object-backed records, without editing production JSON or changing runtime/pathing/AI/editor/renderer/save behavior.
+34. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Review the updated first-class neutral encounter object report and strict fixture output before any production object-backed migration. The next slice should document the new authority counts, object-backed/lifted counts, first-class object warning counts, guard-target resolution stance, strict object-backed fixture coverage, and whether a tiny planning-only object-backed bundle should lift existing `neutral_encounter_representation_bundle_001` metadata.
+- Plan a tiny first-class neutral encounter object bundle before any production object-backed migration. The next slice should define proposed `object_id`, `object_placement_id`, legacy placement bridge, encounter refs, lifted metadata agreement, object-schema fields, guard-target convention, rollback, validation level, and non-change boundaries for only the three existing `neutral_encounter_representation_bundle_001` placements.
 - Treat `safe_metadata_bundle_001` as the only currently migrated production object bundle. All other production map objects remain compatibility-warning-only until a later bundle is declared.
-- Keep production scenario/encounter/map-object/resource-site JSON edits, first-class neutral encounter production migration, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, and pathing changes as staged follow-ups, not part of the next report-review slice.
+- Keep production scenario/encounter/map-object/resource-site JSON edits, first-class neutral encounter production migration, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, and pathing changes as staged follow-ups, not part of the next planning slice.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is first-class neutral encounter object report review/follow-up after the opt-in report/fixture scaffolding, still without switching runtime behavior, pathing, AI, editor behavior, renderer behavior, save format, or asset import.
+- The next active choice is tiny first-class neutral encounter object bundle planning after the report review, still without editing production JSON or switching runtime behavior, pathing, AI, editor behavior, renderer behavior, save format, or asset import.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -376,6 +377,29 @@ Validation:
 
 Limits:
 - This is scaffolding only. It does not edit production content JSON, migrate first-class neutral encounter objects, change runtime encounter behavior, change pathing/body-tile/occupancy behavior, change AI/editor/renderer behavior, migrate saves, import generated PNGs, add assets, or claim neutral encounter readiness.
+
+## Completed Review Slice: Neutral Encounter First-Class Object Report Review
+Status: completed on 2026-04-26 as documentation/report-review follow-up for the first-class object report and fixture scaffolding.
+
+Purpose:
+- Review the opt-in neutral encounter report output after it gained first-class object migration fields.
+- Review strict object-backed fixture coverage before any production object-backed migration.
+- Decide whether the next slice should plan a tiny object-backed lift or pause the neutral encounter migration.
+
+Delivered:
+- Added `docs/neutral-encounter-first-class-object-report-review.md`.
+- Confirmed current report output: 15 scenarios, 62 encounter definitions, 48 direct placements, 36 script-spawn advisory effects, 45 direct-only placements, 3 scenario-metadata placements, 0 object-backed placements, 0 lifted records, 48 missing object ids, 48 missing object-placement ids, 48 missing object-schema-field records, 553 warnings, and 0 errors.
+- Confirmed missing object schema field counts of 48 each for `schema_version`, `primary_class`, `secondary_tags`, `footprint`, `passability_class`, `interaction`, and `neutral_encounter`.
+- Confirmed guard-target resolution stance: 0 missing guard target resolutions in the current report, with basalt gatehouse still validated as advisory scenario metadata using `target_id: "site_basalt_gatehouse"` and `target_placement_id: "dwelling_basalt_gatehouse"`.
+- Confirmed strict fixture coverage for object-backed `visible_stack`, `camp_anchor`, `guard_linked_stack`, and `guard_linked_camp`, plus invalid missing object id, missing legacy placement bridge, missing encounter ref, field-objective mismatch, guard-target mismatch, and duplicate authority disagreement cases.
+- Decided current production content remains compatibility-warning-only, strict object-backed coverage remains fixture-only, and migrated-bundle strict production checks remain limited to the existing scenario-metadata `neutral_encounter_representation_bundle_001`.
+- Recommended the next slice as planning-only `neutral_encounter_first_class_object_bundle_001`, lifting the existing three authored bundle-001 placements into proposed object-backed records without production JSON migration.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --neutral-encounter-report`, `python3 tests/validate_repo.py --neutral-encounter-report-json /tmp/heroes-neutral-encounter-report.json && python3 -m json.tool /tmp/heroes-neutral-encounter-report.json >/tmp/heroes-neutral-encounter-report-jsoncheck.txt`, `python3 tests/validate_repo.py --strict-neutral-encounter-fixtures`, and `python3 tests/validate_repo.py --overworld-object-report`.
+
+Limits:
+- This is documentation/report-review only. It does not edit production content JSON, migrate first-class neutral encounter objects, implement validator/test behavior, change runtime encounter behavior, change pathing/body-tile/occupancy behavior, change AI/editor/renderer behavior, migrate saves, import generated PNGs, add assets, or claim neutral encounter readiness.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
