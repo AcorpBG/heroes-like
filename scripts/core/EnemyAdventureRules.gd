@@ -30,6 +30,7 @@ const COMMANDER_EXPERIENCE_ASSAULT_VICTORY := 210
 const COMMANDER_EXPERIENCE_DEFEATED := 45
 const COMMANDER_EXPERIENCE_STALEMATE := 30
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
+const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
@@ -2055,7 +2056,6 @@ static func _target_candidates(session: SessionStateStoreScript.SessionData, con
 			seen,
 			node,
 			origin_pos,
-			_resource_target_priority(session, node, faction_id),
 			config,
 			faction_id
 		)
@@ -2151,7 +2151,6 @@ static func _append_resource_candidate(
 	seen: Dictionary,
 	node: Variant,
 	origin_pos: Vector2i,
-	priority: int,
 	config: Dictionary,
 	faction_id: String
 ) -> void:
@@ -2167,7 +2166,8 @@ static func _append_resource_candidate(
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
 	if goal_distance >= 9999:
 		return
-	var site_family = String(site.get("family", ""))
+	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
+	var priority := int(breakdown.get("final_priority", 0))
 	candidates.append(
 		{
 			"target_kind": "resource",
@@ -2178,18 +2178,8 @@ static func _append_resource_candidate(
 			"goal_x": goal_tile.x,
 			"goal_y": goal_tile.y,
 			"goal_distance": goal_distance,
-			"priority": max(
-				0,
-				_weighted_priority(
-					config,
-					faction_id,
-					"resource",
-					placement_id,
-					priority,
-					site_family,
-					false
-				) - _assignment_penalty(session, "resource", placement_id)
-			),
+			"priority": priority,
+			"target_debug_reason": String(breakdown.get("debug_reason", "")),
 		}
 	)
 
@@ -2599,6 +2589,148 @@ static func _candidate_beats(candidate: Dictionary, best: Dictionary) -> bool:
 		return int(candidate.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999))
 	return int(candidate.get("priority", 0)) > int(best.get("priority", 0))
 
+static func resource_pressure_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin: Dictionary,
+	faction_id: String = "",
+	limit: int = 0
+) -> Dictionary:
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+	var targets := []
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var breakdown := resource_target_score_breakdown(session, config, node_value, origin_pos, resolved_faction_id)
+		if int(breakdown.get("final_priority", 0)) <= 0:
+			continue
+		targets.append(breakdown)
+	targets.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("final_priority", 0)) == int(b.get("final_priority", 0)):
+			if int(a.get("travel_cost", 0)) == int(b.get("travel_cost", 0)):
+				return String(a.get("placement_id", "")) < String(b.get("placement_id", ""))
+			return int(a.get("travel_cost", 0)) < int(b.get("travel_cost", 0))
+		return int(a.get("final_priority", 0)) > int(b.get("final_priority", 0))
+	)
+	if limit > 0 and targets.size() > limit:
+		targets = targets.slice(0, limit)
+	return {
+		"scenario_id": String(session.scenario_id),
+		"faction_id": resolved_faction_id,
+		"origin": {"x": origin_pos.x, "y": origin_pos.y},
+		"target_count": targets.size(),
+		"targets": targets,
+	}
+
+static func resource_target_score_breakdown(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	node: Variant,
+	origin_pos: Vector2i,
+	faction_id: String = ""
+) -> Dictionary:
+	if not (node is Dictionary):
+		return {}
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var placement_id := String(node.get("placement_id", ""))
+	var site_id := String(node.get("site_id", ""))
+	var site := ContentService.get_resource_site(site_id)
+	var site_family := String(site.get("family", ""))
+	var label := String(site.get("name", "Resource Site"))
+	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var goal_distance := _path_distance(session, origin_pos, [target_tile], "")
+	var claim_value := _target_resource_value(_resource_site_claim_rewards(site))
+	var income_value := _target_resource_value(site.get("control_income", {}))
+	var claim_recruit_value := _recruit_payload_value(site.get("claim_recruits", {}))
+	var weekly_recruit_value := _recruit_payload_value(site.get("weekly_recruits", {}))
+	var recruit_payload_value := claim_recruit_value + weekly_recruit_value
+	var persistent := _resource_site_is_persistent(site)
+	var player_controlled := String(node.get("collected_by_faction_id", "")) == "player"
+	var contestable := placement_id != "" and _resource_node_contestable_by_faction(node, site, resolved_faction_id)
+
+	var base_value := 0
+	var persistent_income_value := 0
+	var recruit_value := 0
+	var scarcity_value := 0
+	var denial_value := 0
+	var route_pressure_value := 0
+	var town_enablement_value := 0
+	var objective_value := 0
+	var faction_bias := 0
+	var travel_cost := 0
+	var guard_cost := 0
+	var assignment_penalty := 0
+	var final_priority := 0
+	var debug_reason := "not contestable"
+
+	if contestable and goal_distance < 9999:
+		base_value = 85 + int(min(45.0, float(claim_value) / 150.0))
+		persistent_income_value = int(min(45.0, float(income_value * 4) / 8.0)) if persistent else 0
+		recruit_value = int(min(70.0, float(recruit_payload_value) / 40.0))
+		scarcity_value = _resource_scarcity_value(session, _resource_site_claim_rewards(site))
+		if player_controlled and persistent:
+			denial_value = 45 + int(min(35.0, float(income_value * 4) / 20.0)) + int(min(40.0, float(recruit_payload_value) / 80.0))
+		if player_controlled and int(node.get("response_until_day", 0)) >= int(session.day):
+			denial_value += 20 + (max(1, int(node.get("response_security_rating", 0))) * 6)
+		var delivery_value := _recruit_payload_value(node.get("delivery_manifest", {}))
+		if player_controlled and delivery_value > 0:
+			denial_value += 28 + int(min(95.0, float(delivery_value) / 10.0))
+		route_pressure_value = _resource_route_pressure_value(site)
+		town_enablement_value = _linked_player_town_bonus(session, node)
+		objective_value = _objective_proximity_bonus(session, target_tile.x, target_tile.y)
+		var target_weight := strategy_target_weight(config, resolved_faction_id, "resource", placement_id, site_family, false)
+		faction_bias = priority_target_bonus(config, placement_id) + int(round(max(0.0, target_weight - 1.0) * 50.0))
+		travel_cost = max(0, goal_distance - 1) * 3
+		guard_cost = _resource_guard_cost(site)
+		assignment_penalty = _assignment_penalty(session, "resource", placement_id)
+		final_priority = max(
+			0,
+			base_value
+			+ persistent_income_value
+			+ recruit_value
+			+ scarcity_value
+			+ denial_value
+			+ route_pressure_value
+			+ town_enablement_value
+			+ objective_value
+			+ faction_bias
+			- travel_cost
+			- guard_cost
+			- assignment_penalty
+		)
+		debug_reason = _resource_target_debug_reason(site, player_controlled, persistent, claim_value, income_value, recruit_payload_value, route_pressure_value, town_enablement_value)
+	elif contestable:
+		debug_reason = "unreachable from current raid origin"
+
+	return {
+		"target_kind": "resource",
+		"placement_id": placement_id,
+		"site_id": site_id,
+		"site_family": site_family,
+		"target_label": label,
+		"controller_id": String(node.get("collected_by_faction_id", "")),
+		"player_controlled": player_controlled,
+		"base_value": base_value,
+		"persistent_income_value": persistent_income_value,
+		"recruit_value": recruit_value,
+		"scarcity_value": scarcity_value,
+		"denial_value": denial_value,
+		"route_pressure_value": route_pressure_value,
+		"town_enablement_value": town_enablement_value,
+		"objective_value": objective_value,
+		"faction_bias": faction_bias,
+		"travel_cost": travel_cost,
+		"guard_cost": guard_cost,
+		"assignment_penalty": assignment_penalty,
+		"final_priority": final_priority,
+		"debug_reason": debug_reason,
+	}
+
 static func _weighted_priority(
 	config: Dictionary,
 	faction_id: String,
@@ -2737,6 +2869,87 @@ static func _resource_target_priority(session: SessionStateStoreScript.SessionDa
 	priority += _linked_player_town_bonus(session, node)
 	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
 	return priority
+
+static func _resource_scarcity_value(session: SessionStateStoreScript.SessionData, rewards: Variant) -> int:
+	if not (rewards is Dictionary):
+		return 0
+	var player_resources: Dictionary = session.overworld.get("resources", {})
+	var value := 0
+	for resource_key in ["wood", "ore"]:
+		var amount: int = max(0, int(rewards.get(resource_key, 0)))
+		if amount <= 0:
+			continue
+		var current: int = max(0, int(player_resources.get(resource_key, 0)))
+		if current < 4:
+			value += amount * 16
+		elif current < 7:
+			value += amount * 11
+		elif current < 10:
+			value += amount * 6
+	if max(0, int(player_resources.get("gold", 0))) < 1400:
+		value += int(min(18.0, float(max(0, int(rewards.get("gold", 0)))) / 90.0))
+	return clampi(value, 0, 42)
+
+static func _resource_route_pressure_value(site: Dictionary) -> int:
+	var value := 0
+	value += max(0, int(site.get("vision_radius", 0))) * 8
+	value += max(0, int(site.get("pressure_guard", 0))) * 12
+	value += max(0, int(site.get("pressure_bonus", 0))) * 14
+	if String(site.get("family", "")) in LOGISTICS_SITE_FAMILIES:
+		value += 12
+	value += int(min(30.0, float(_resource_site_support_value(site)) / 45.0))
+	return value
+
+static func _resource_guard_cost(site: Dictionary) -> int:
+	var neutral_roster: Variant = site.get("neutral_roster", {})
+	if not (neutral_roster is Dictionary):
+		return 0
+	if String(neutral_roster.get("guard_encounter_id", "")) == "" and String(neutral_roster.get("guard_army_group_id", "")) == "":
+		return 0
+	return 12
+
+static func _resource_target_debug_reason(
+	site: Dictionary,
+	player_controlled: bool,
+	persistent: bool,
+	claim_value: int,
+	income_value: int,
+	recruit_payload_value: int,
+	route_pressure_value: int,
+	town_enablement_value: int
+) -> String:
+	var parts := []
+	if player_controlled and persistent:
+		if income_value > 0:
+			parts.append("denies %s daily" % _resource_payload_summary(site.get("control_income", {})))
+		else:
+			parts.append("denies persistent site control")
+	if recruit_payload_value > 0:
+		parts.append("recruit denial")
+	if route_pressure_value > 0:
+		if max(0, int(site.get("vision_radius", 0))) > 0:
+			parts.append("route vision")
+		elif max(0, int(site.get("pressure_guard", 0))) > 0 or max(0, int(site.get("pressure_bonus", 0))) > 0:
+			parts.append("route pressure")
+	if town_enablement_value > 0:
+		parts.append("player-town support")
+	if parts.is_empty() and claim_value > 0:
+		parts.append("claims %s" % _resource_payload_summary(_resource_site_claim_rewards(site)))
+	if parts.is_empty():
+		parts.append("frontier denial")
+	return ", ".join(parts)
+
+static func _resource_payload_summary(payload: Variant) -> String:
+	if not (payload is Dictionary):
+		return "site value"
+	var parts := []
+	for key in ["gold", "wood", "ore", "experience"]:
+		var amount: int = max(0, int(payload.get(key, 0)))
+		if amount > 0:
+			parts.append("%d %s" % [amount, key])
+	if parts.is_empty():
+		return "site value"
+	return ", ".join(parts)
 
 static func _linked_player_town_bonus(session: SessionStateStoreScript.SessionData, node: Dictionary) -> int:
 	var linked_town = {}
