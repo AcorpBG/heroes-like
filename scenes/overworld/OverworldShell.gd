@@ -535,10 +535,11 @@ func _refresh() -> void:
 	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	var event_surface := _event_feed_surface()
+	var action_context_surface := _action_context_surface(event_surface, readiness_surface)
 	_set_rail_text(
 		_event_label,
-		String(event_surface.get("tooltip_text", "")),
-		String(event_surface.get("visible_text", _rail_log_text())),
+		String(action_context_surface.get("tooltip_text", "")),
+		String(action_context_surface.get("visible_text", _rail_log_text())),
 		1
 	)
 	var end_turn_check := _end_turn_confirmation_surface(readiness_surface)
@@ -1719,6 +1720,55 @@ func _event_feed_surface() -> Dictionary:
 	surface["dispatch_text"] = OverworldRules.describe_dispatch(_session, _last_message)
 	return surface
 
+func _action_context_surface(event_surface: Dictionary, readiness_surface: Dictionary = {}) -> Dictionary:
+	var recap := _duplicate_dictionary(event_surface.get("post_action_recap", {}))
+	if recap.is_empty() and not _last_action_recap.is_empty():
+		recap = _last_action_recap.duplicate(true)
+	if recap.is_empty():
+		return event_surface
+
+	var latest_action := String(recap.get("happened", "")).strip_edges()
+	if latest_action == "":
+		latest_action = String(recap.get("cue_text", _action_feedback_text())).strip_edges()
+	if latest_action == "":
+		return event_surface
+
+	var next_step := String(recap.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = String(readiness_surface.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = String(event_surface.get("next_step", "")).strip_edges()
+
+	var surface := event_surface.duplicate(true)
+	var visible := "Latest: %s" % _short_text(_context_strip_sentence(latest_action), 38)
+	if next_step != "":
+		visible = "%s | Next: %s" % [
+			visible,
+			_short_text(_context_strip_sentence(next_step).trim_suffix("."), 34),
+		]
+	surface["visible_text"] = visible
+	surface["tooltip_text"] = _join_tooltip_sections([
+		"Current Turn Context\n- Latest action: %s\n- Next practical step: %s" % [
+			latest_action,
+			next_step if next_step != "" else "Select the next destination or end the turn when field orders are spent.",
+		],
+		String(event_surface.get("tooltip_text", "")),
+		String(readiness_surface.get("tooltip_text", "")),
+	])
+	surface["latest_action"] = latest_action
+	surface["next_practical_step"] = next_step
+	surface["source"] = "post_action_recap"
+	return surface
+
+func _context_strip_sentence(text: String) -> String:
+	var cleaned := text.strip_edges().replace("\n", " ")
+	while cleaned.find("  ") >= 0:
+		cleaned = cleaned.replace("  ", " ")
+	for prefix in ["Order resolved: ", "Scenario pulse: "]:
+		if cleaned.begins_with(prefix):
+			cleaned = cleaned.trim_prefix(prefix).strip_edges()
+	return cleaned
+
 func _field_feed_is_idle() -> bool:
 	return (
 		_last_message.strip_edges() == ""
@@ -2531,6 +2581,8 @@ func validation_snapshot() -> Dictionary:
 	var route_decision := _selected_route_decision_surface()
 	var field_readiness := _field_readiness_surface()
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
+	var event_feed := _event_feed_surface()
+	var action_context := _action_context_surface(event_feed, field_readiness)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -2576,7 +2628,8 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_rail_text": OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
-		"event_feed": _event_feed_surface(),
+		"event_feed": event_feed,
+		"action_context": action_context,
 		"field_readiness": field_readiness,
 		"post_action_recap": _last_action_recap.duplicate(true),
 		"objective_brief_visible_text": _objective_brief_label.text,
