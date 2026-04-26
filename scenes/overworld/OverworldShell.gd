@@ -1168,6 +1168,8 @@ func _record_action_feedback(kind: String, message: String, fallback: String = "
 		"post_action_recap": recap.duplicate(true),
 		"sequence": _action_feedback_sequence,
 	}
+	if not recap.is_empty():
+		_session.flags["last_overworld_action_recap"] = recap.duplicate(true)
 	_pulse_action_feedback()
 
 func _result_post_action_recap(result: Dictionary) -> Dictionary:

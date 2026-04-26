@@ -86,11 +86,18 @@ func _refresh_save_surface() -> void:
 			break
 	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
-	_set_compact_label(_save_status_label, String(surface.get("latest_context", "Latest ready save: none.")), 3)
+	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
+	var current_save_recap := String(surface.get("current_save_recap", ""))
+	_set_compact_label(_save_status_label, current_save_recap if current_save_recap != "" else latest_context, 3)
 	var current_context := String(surface.get("current_context", ""))
-	var save_tooltip_lines := [_save_status_label.text]
+	var save_tooltip_lines := [latest_context]
+	if current_save_recap != "":
+		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
 		save_tooltip_lines.append("Saving now: %s" % current_context)
+	var slot_resume_recap := String(surface.get("slot_resume_recap", ""))
+	if slot_resume_recap != "":
+		save_tooltip_lines.append("Selected slot recap:\n%s" % slot_resume_recap)
 	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
@@ -184,6 +191,8 @@ func validation_snapshot() -> Dictionary:
 		"actions": action_payloads,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"save_surface": save_surface,
+		"current_save_recap": String(save_surface.get("current_save_recap", "")),
+		"slot_resume_recap": String(save_surface.get("slot_resume_recap", "")),
 	}
 
 func validation_select_save_slot(slot: int) -> bool:
