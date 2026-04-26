@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T16:35:00Z",
+  "updatedAt": "2026-04-26T17:25:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
-  "currentSliceTitle": "Implement report-only strategic AI hero task-state save-normalizer preservation proof",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI hero task-state save-normalizer preservation planning is complete. The recommended next slice is report-only implementation of AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT, focused on synthetic fixture-only enemy_states[].hero_task_state preservation through EnemyTurnRules.normalize_enemy_states, old-save absence compatibility, malformed-state tolerance, unknown-field isolation, no SAVE_VERSION bump, and keeping SaveService outside strategic AI task semantics before any schema writes or live behavior adoption.",
+  "currentSliceId": "overworld-object-economy-ui-integration-10184",
+  "currentSliceTitle": "Surface overworld object taxonomy and economy-site metadata in live gameplay UI",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Implemented real player-visible overworld UI integration for existing map object taxonomy and resource-site metadata. River Pass selection, rail text, hover tooltip, context, and validation surfaces now show object class, interaction cadence, persistent-control/pickup/support role, ownership, income, recruit, response, and safe neutral-encounter metadata without changing economy balance, pathing, save format, AI behavior, or broad schemas.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1247,6 +1247,14 @@
       "title": "Complete River Pass manually at least twice from a clean profile and capture remaining friction",
       "status": "completed",
       "difficulty": "high"
+    },
+    {
+      "id": "overworld-object-economy-ui-integration-10184",
+      "title": "Surface overworld object taxonomy and economy-site metadata in live gameplay UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T17:05:00Z",
+      "completedAt": "2026-04-26T17:25:00Z",
+      "difficulty": "medium"
     }
   ],
   "nextActions": [

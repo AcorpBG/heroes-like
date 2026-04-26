@@ -31,6 +31,8 @@ func _run() -> void:
 		return
 	if not _assert_overworld_art_contract(shell):
 		return
+	if not _assert_object_economy_ui_contract(shell):
+		return
 	if not await _assert_diagonal_movement_contract(shell, map_node):
 		return
 
@@ -258,6 +260,81 @@ func _assert_wireframe_contract(shell: Node) -> bool:
 	for chip in [resource_chip, status_chip, cue_chip]:
 		if not _is_descendant_of(chip, command_band):
 			push_error("Overworld smoke: resources, date, and map cue must live inside the footer ribbon.")
+			get_tree().quit(1)
+			return false
+	return true
+
+func _assert_object_economy_ui_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_hover_tile") or not shell.has_method("validation_resource_site_state"):
+		push_error("Overworld smoke: shell is missing object/economy UI validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	_set_active_hero_position(session, Vector2i(1, 2))
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+
+	var timber: Dictionary = shell.call("validation_select_tile", 1, 0)
+	if not _assert_text_contains_all(
+		"River Pass timber pickup/cache UI",
+		[String(timber.get("context_summary", "")), String(timber.get("selected_tile_rail_text", ""))],
+		["Pickup/cache", "Class: Pickup", "Cadence: one-time", "Reward"]
+	):
+		return false
+	var signal_post: Dictionary = shell.call("validation_select_tile", 2, 3)
+	if not _assert_text_contains_all(
+		"River Pass signal post economy UI",
+		[String(signal_post.get("context_summary", "")), String(signal_post.get("selected_tile_rail_text", ""))],
+		["Transit/support object", "Faction Outpost", "Unclaimed", "Daily", "support response"]
+	):
+		return false
+	var timber_hover: Dictionary = shell.call("validation_hover_tile", 1, 0)
+	if not _assert_text_contains_all(
+		"River Pass timber hover tooltip",
+		[String(timber_hover.get("map_tooltip", ""))],
+		["Timber Wagon", "Pickup/cache", "Cadence: one-time"]
+	):
+		return false
+	var signal_state: Dictionary = shell.call("validation_resource_site_state", "river_signal_post")
+	if not _assert_text_contains_all(
+		"River Pass signal post validation surface",
+		[String(signal_state.get("surface", "")), String(signal_state.get("interaction_surface", ""))],
+		["Transit/support object", "Cadence: persistent control", "capture/ownership", "income"]
+	):
+		return false
+
+	var free_company: Dictionary = shell.call("validation_select_tile", 0, 4)
+	if not _assert_text_contains_all(
+		"River Pass free company recruit-site UI",
+		[String(free_company.get("context_summary", "")), String(free_company.get("selected_tile_rail_text", ""))],
+		["Persistent recruit site", "Neutral Dwelling", "Weekly", "Field recruits", "support response"]
+	):
+		return false
+
+	var encounter: Dictionary = shell.call("validation_select_tile", 3, 1)
+	if not _assert_text_contains_all(
+		"River Pass safe encounter metadata UI",
+		[String(encounter.get("context_summary", "")), String(encounter.get("selected_tile_rail_text", ""))],
+		["Neutral Encounter", "Visible Army", "Route Pressure", "Cadence: one-time"]
+	):
+		return false
+
+	session.overworld["fog"] = original_fog
+	_set_active_hero_position(
+		session,
+		Vector2i(int(original_hero_position.get("x", 0)), int(original_hero_position.get("y", 0)))
+	)
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
+func _assert_text_contains_all(label: String, texts: Array, needles: Array) -> bool:
+	var joined := "\n".join(texts)
+	for needle in needles:
+		if joined.find(String(needle)) < 0:
+			push_error("%s missing '%s'. text=%s" % [label, String(needle), joined])
 			get_tree().quit(1)
 			return false
 	return true

@@ -1170,7 +1170,7 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			var node = context.get("node", {})
 			var site = ContentService.get_resource_site(String(node.get("site_id", "")))
 			return "%s\nTerrain %s | %s\n%s" % [
-				_resource_site_family_label(site),
+				_resource_site_role_label(node, site),
 				terrain,
 				String(site.get("name", "Resource Cache")),
 				_resource_site_context_summary(session, node, site),
@@ -1183,9 +1183,11 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			]
 		"encounter":
 			var placement = context.get("encounter", {})
-			return "Hostile Contact\nTerrain %s | %s\n%s" % [
+			var object_surface := describe_encounter_object_surface(placement)
+			return "Hostile Contact\nTerrain %s | %s%s\n%s" % [
 				terrain,
 				encounter_display_name(placement),
+				"" if object_surface == "" else " | %s" % object_surface,
 				_encounter_pressure_summary(session, placement),
 			]
 		_:
@@ -2335,6 +2337,77 @@ static func _resource_site_family_label(site: Dictionary) -> String:
 		_:
 			return "Resource Site"
 
+static func describe_resource_site_surface(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var parts := [_resource_site_role_label(node, site), _resource_site_family_label(site)]
+	var control_label := _resource_site_control_label(node, site)
+	if control_label != "":
+		parts.append(control_label)
+	var income_summary := _describe_resource_delta(site.get("control_income", {}))
+	if income_summary != "":
+		parts.append("Daily %s" % income_summary)
+	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
+	if weekly_summary != "":
+		parts.append("Weekly %s" % weekly_summary)
+	var claim_recruit_summary := _describe_recruit_delta(_resource_site_claim_recruits(site))
+	if claim_recruit_summary != "":
+		parts.append("Field recruits %s" % claim_recruit_summary)
+	var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+	if reward_summary != "" and not _resource_site_is_persistent(site):
+		parts.append("Reward %s" % reward_summary)
+	var response_state := _resource_site_response_state(session, node, site)
+	if String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
+		parts.append("Support order ready")
+	return " | ".join(_non_empty_strings(parts))
+
+static func describe_resource_site_interaction_surface(node: Dictionary, site: Dictionary) -> String:
+	var map_object := ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
+	var cadence := _resource_site_interaction_cadence(site, map_object)
+	var interaction_parts := [_interaction_cadence_label(cadence)]
+	if _resource_site_is_persistent(site):
+		interaction_parts.append("capture/ownership")
+		var control_income = site.get("control_income", {})
+		if control_income is Dictionary and not control_income.is_empty():
+			interaction_parts.append("income")
+		if not _resource_site_weekly_recruits(site).is_empty():
+			interaction_parts.append("weekly recruits")
+		if site.has("response_profile"):
+			interaction_parts.append("support response")
+	elif _resource_site_is_repeatable(site):
+		interaction_parts.append("repeat service")
+	else:
+		interaction_parts.append("pickup/cache")
+	var object_class := _resource_site_object_class_label(site, map_object)
+	if object_class != "":
+		interaction_parts.push_front(object_class)
+	var role_tags := _resource_site_role_tag_summary(site, map_object)
+	if role_tags != "":
+		interaction_parts.append(role_tags)
+	return " | ".join(_non_empty_strings(interaction_parts))
+
+static func describe_encounter_object_surface(encounter: Dictionary) -> String:
+	var map_object := ContentService.get_map_object(String(encounter.get("object_id", "")))
+	var neutral_metadata = encounter.get("neutral_encounter", {})
+	var primary_class := String(map_object.get("primary_class", encounter.get("primary_class", ""))).strip_edges()
+	if primary_class == "" and neutral_metadata is Dictionary:
+		primary_class = String(neutral_metadata.get("primary_class", "")).strip_edges()
+	var parts := []
+	if primary_class != "":
+		parts.append(_humanize_id(primary_class))
+	var tag_summary := _encounter_object_tag_summary(encounter, map_object)
+	if tag_summary != "":
+		parts.append(tag_summary)
+	var interaction_mode := _encounter_object_interaction_label(encounter, map_object)
+	if interaction_mode != "":
+		parts.append(interaction_mode)
+	var guard_summary := _encounter_guard_summary(encounter)
+	if guard_summary != "":
+		parts.append(guard_summary)
+	return " | ".join(_non_empty_strings(parts))
+
 static func _resource_site_claim_message(site: Dictionary, previous_controller: String) -> String:
 	if _resource_site_is_repeatable(site) and not _resource_site_is_persistent(site):
 		return "Used %s." % String(site.get("name", "the service"))
@@ -2371,6 +2444,189 @@ static func _resource_site_action_label(node: Dictionary, site: Dictionary) -> S
 			return "Use Service"
 		_:
 			return "Claim Site"
+
+static func _resource_site_role_label(node: Dictionary, site: Dictionary) -> String:
+	if _resource_site_is_persistent(site):
+		match String(site.get("family", "")):
+			"mine":
+				return "Persistent economy site"
+			"neutral_dwelling":
+				return "Persistent recruit site"
+			"faction_outpost", "scouting_structure", "transit_object":
+				return "Transit/support object"
+			"frontier_shrine":
+				return "Support shrine"
+			"guarded_reward_site":
+				return "Persistent reward site"
+			_:
+				return "Persistent economy site"
+	if _resource_site_is_repeatable(site):
+		return "Repeatable service"
+	var site_id := String(node.get("site_id", ""))
+	var map_object := ContentService.get_map_object_for_resource_site(site_id)
+	if String(map_object.get("family", "")) == "pickup":
+		return "Pickup/cache"
+	return "Pickup/cache"
+
+static func _resource_site_control_label(node: Dictionary, site: Dictionary) -> String:
+	if _resource_site_is_persistent(site):
+		var controller := String(node.get("collected_by_faction_id", ""))
+		if controller == "":
+			return "Unclaimed"
+		if controller == "player":
+			return "Player held"
+		return "AI held: %s" % _controller_display_name(controller)
+	if bool(node.get("collected", false)):
+		return "Collected"
+	return "Unclaimed"
+
+static func _resource_site_object_class_label(site: Dictionary, map_object: Dictionary) -> String:
+	var primary_class := String(map_object.get("primary_class", "")).strip_edges()
+	if primary_class == "":
+		primary_class = String(site.get("family", "")).strip_edges()
+	if primary_class == "":
+		return ""
+	return "Class: %s" % _humanize_id(primary_class)
+
+static func _resource_site_interaction_cadence(site: Dictionary, map_object: Dictionary) -> String:
+	var interaction = map_object.get("interaction", {})
+	if interaction is Dictionary:
+		var cadence := String(interaction.get("cadence", "")).strip_edges()
+		if cadence != "":
+			return cadence
+	if _resource_site_is_persistent(site):
+		return "persistent_control"
+	if _resource_site_is_repeatable(site):
+		return "repeatable"
+	return "one_time"
+
+static func _interaction_cadence_label(cadence: String) -> String:
+	match cadence:
+		"persistent_control":
+			return "Cadence: persistent control"
+		"one_time":
+			return "Cadence: one-time"
+		"repeatable":
+			return "Cadence: repeatable"
+		"conditional":
+			return "Cadence: conditional"
+		"none":
+			return "Cadence: none"
+		_:
+			return "Cadence: %s" % _humanize_id(cadence) if cadence != "" else ""
+
+static func _resource_site_role_tag_summary(site: Dictionary, map_object: Dictionary) -> String:
+	var roles: Array[String] = _string_array(map_object.get("map_roles", []))
+	if roles.is_empty():
+		roles = _fallback_resource_site_roles(site)
+	var visible := []
+	for role in roles:
+		var label := _humanize_id(role)
+		if label != "" and label not in visible:
+			visible.append(label)
+		if visible.size() >= 3:
+			break
+	return "Roles: %s" % ", ".join(visible) if not visible.is_empty() else ""
+
+static func _fallback_resource_site_roles(site: Dictionary) -> Array[String]:
+	match String(site.get("family", "")):
+		"mine":
+			return ["income"]
+		"neutral_dwelling":
+			return ["recruit source", "weekly muster"]
+		"faction_outpost":
+			return ["frontier watch", "route support"]
+		"frontier_shrine":
+			return ["spell route", "recovery"]
+		"transit_object":
+			return ["route link"]
+		"repeatable_service":
+			return ["service"]
+		_:
+			return ["route pacing"]
+
+static func _encounter_object_tag_summary(encounter: Dictionary, map_object: Dictionary) -> String:
+	var tags := _string_array(map_object.get("secondary_tags", []))
+	var neutral_metadata = encounter.get("neutral_encounter", {})
+	if tags.is_empty() and neutral_metadata is Dictionary:
+		tags = _string_array(neutral_metadata.get("secondary_tags", []))
+	var visible := []
+	for tag in tags:
+		var label := _humanize_id(tag)
+		if label != "" and label not in visible:
+			visible.append(label)
+		if visible.size() >= 3:
+			break
+	return "Tags: %s" % ", ".join(visible) if not visible.is_empty() else ""
+
+static func _encounter_object_interaction_label(encounter: Dictionary, map_object: Dictionary) -> String:
+	var interaction = map_object.get("interaction", {})
+	if interaction is Dictionary:
+		var cadence := String(interaction.get("cadence", "")).strip_edges()
+		if cadence != "":
+			return _interaction_cadence_label(cadence)
+	var neutral_metadata = encounter.get("neutral_encounter", {})
+	if neutral_metadata is Dictionary:
+		var passability = neutral_metadata.get("passability", {})
+		if passability is Dictionary:
+			var mode := String(passability.get("interaction_mode", "")).strip_edges()
+			if mode != "":
+				return "Interaction: %s" % _humanize_id(mode)
+	return "Interaction: enter battle"
+
+static func _encounter_guard_summary(encounter: Dictionary) -> String:
+	var guard = encounter.get("guard_link", {})
+	if not (guard is Dictionary):
+		var neutral_metadata = encounter.get("neutral_encounter", {})
+		if neutral_metadata is Dictionary:
+			guard = neutral_metadata.get("guard_link", {})
+	if not (guard is Dictionary):
+		return ""
+	var role := String(guard.get("guard_role", "")).strip_edges()
+	if role == "" or role == "none":
+		return ""
+	if String(guard.get("target_placement_id", "")) != "":
+		return "Guard: %s for %s" % [_humanize_id(role), String(guard.get("target_placement_id", ""))]
+	if String(guard.get("target_id", "")) != "":
+		return "Guard: %s for %s" % [_humanize_id(role), String(guard.get("target_id", ""))]
+	return "Guard: %s" % _humanize_id(role)
+
+static func _controller_display_name(controller_id: String) -> String:
+	if controller_id == "enemy":
+		return "enemy"
+	var faction := ContentService.get_faction(controller_id)
+	if not faction.is_empty():
+		return String(faction.get("name", controller_id))
+	return controller_id
+
+static func _string_array(value: Variant) -> Array[String]:
+	var strings: Array[String] = []
+	if value is Array:
+		for item in value:
+			var text := String(item).strip_edges()
+			if text != "" and text not in strings:
+				strings.append(text)
+	return strings
+
+static func _non_empty_strings(value: Array) -> Array[String]:
+	var strings: Array[String] = []
+	for item in value:
+		var text := String(item).strip_edges()
+		if text != "":
+			strings.append(text)
+	return strings
+
+static func _humanize_id(value: String) -> String:
+	var normalized := value.strip_edges().replace("_", " ").replace("-", " ")
+	if normalized == "":
+		return ""
+	var words := []
+	for word_value in normalized.split(" ", false):
+		var word := String(word_value).strip_edges()
+		if word == "":
+			continue
+		words.append(word.left(1).to_upper() + word.substr(1).to_lower())
+	return " ".join(words)
 
 static func _resource_site_response_profile(site: Dictionary) -> Dictionary:
 	var profile := {
@@ -3191,6 +3447,12 @@ static func _resource_site_response_action(
 
 static func _resource_site_context_summary(session: SessionStateStoreScript.SessionData, node: Dictionary, site: Dictionary) -> String:
 	var parts := []
+	var surface := describe_resource_site_surface(session, node, site)
+	if surface != "":
+		parts.append(surface)
+	var interaction_surface := describe_resource_site_interaction_surface(node, site)
+	if interaction_surface != "":
+		parts.append(interaction_surface)
 	if _resource_site_is_persistent(site):
 		var controller := String(node.get("collected_by_faction_id", ""))
 		match controller:
