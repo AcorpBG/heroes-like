@@ -417,6 +417,8 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: collected artifact was not visible in commander state. state=%s" % commander_state)
 		get_tree().quit(1)
 		return false
+	if not _assert_artifact_loadout_decision_contract(shell):
+		return false
 
 	session.overworld["fog"] = original_fog
 	session.overworld["hero"] = original_hero
@@ -426,6 +428,94 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 	session.overworld["artifact_nodes"] = original_artifact_nodes
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
+	return true
+
+func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_perform_artifact_action"):
+		push_error("Overworld smoke: shell is missing artifact loadout validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var hero: Dictionary = session.overworld.get("hero", {})
+	var artifacts: Dictionary = ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {}))
+	var inventory: Array = artifacts.get("inventory", [])
+	if "artifact_warcrest_pennon" not in inventory:
+		inventory.append("artifact_warcrest_pennon")
+	artifacts["inventory"] = inventory
+	hero["artifacts"] = ArtifactRules.normalize_hero_artifacts(artifacts)
+	session.overworld["hero"] = hero
+	shell.call("_refresh")
+
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var gear_text := "%s\n%s" % [
+		String(snapshot.get("artifact_text", "")),
+		String(snapshot.get("artifact_tooltip_text", "")),
+	]
+	if not _assert_text_contains_all(
+		"Overworld artifact loadout rail",
+		[gear_text],
+		[
+			"Boots: Trailsinger Boots",
+			"Equipped",
+			"Pack",
+			"Warcrest Pennon",
+			"Can equip to empty Banner",
+			"+1 attack",
+		]
+	):
+		return false
+
+	var equip_action := _validation_action_by_id(snapshot.get("artifact_actions", []), "equip_artifact:artifact_warcrest_pennon")
+	if equip_action.is_empty():
+		push_error("Overworld smoke: pack artifact did not expose a live equip action. snapshot=%s" % snapshot)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld artifact equip action",
+		[String(equip_action.get("label", "")), String(equip_action.get("summary", ""))],
+		["Equip Warcrest Pennon", "Can equip to empty Banner", "Command reward", "+1 attack"]
+	):
+		return false
+
+	var equip_result: Dictionary = shell.call("validation_perform_artifact_action", "equip_artifact:artifact_warcrest_pennon")
+	if not bool(equip_result.get("ok", false)):
+		push_error("Overworld smoke: live artifact equip action did not update the loadout. result=%s" % equip_result)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld artifact equip result",
+		[
+			String(equip_result.get("message", "")),
+			String(equip_result.get("artifact_tooltip_text", "")),
+		],
+		["Equipped Warcrest Pennon from pack into Banner", "Banner: Warcrest Pennon", "Equipped", "+1 attack"]
+	):
+		return false
+	if not _assert_action_feedback("artifact equip feedback cue", shell.call("validation_snapshot"), "artifact", ["Artifact:", "Warcrest Pennon"]):
+		return false
+
+	var stow_action := _validation_action_by_id(equip_result.get("artifact_actions", []), "unequip_artifact:banner")
+	if stow_action.is_empty():
+		push_error("Overworld smoke: equipped artifact did not expose a live stow action. result=%s" % equip_result)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld artifact stow action",
+		[String(stow_action.get("label", "")), String(stow_action.get("summary", ""))],
+		["Stow Warcrest Pennon", "Move to pack", "+1 attack"]
+	):
+		return false
+	var stow_result: Dictionary = shell.call("validation_perform_artifact_action", "unequip_artifact:banner")
+	if not bool(stow_result.get("ok", false)):
+		push_error("Overworld smoke: live artifact stow action did not update the loadout. result=%s" % stow_result)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld artifact stow result",
+		[String(stow_result.get("message", "")), String(stow_result.get("artifact_tooltip_text", ""))],
+		["Stowed Warcrest Pennon from Banner into pack", "Removed: +1 attack", "Warcrest Pennon", "Can equip to empty Banner"]
+	):
+		return false
 	return true
 
 func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
