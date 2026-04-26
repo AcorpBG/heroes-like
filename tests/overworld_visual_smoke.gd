@@ -35,6 +35,8 @@ func _run() -> void:
 		return
 	if not _assert_artifact_reward_visibility_contract(shell):
 		return
+	if not await _assert_overworld_magic_affordance_contract(shell):
+		return
 	if not await _assert_enemy_activity_feed_contract(shell):
 		return
 	if not await _assert_diagonal_movement_contract(shell, map_node):
@@ -399,6 +401,91 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 	shell.call("_refresh")
 	return true
 
+func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_select_tile") or not shell.has_method("validation_perform_primary_action") or not shell.has_method("validation_cast_overworld_spell"):
+		push_error("Overworld smoke: shell is missing overworld magic validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	shell.call("_refresh")
+	var full_snapshot: Dictionary = shell.call("validation_snapshot")
+	var full_spell_action := _validation_action_by_id(full_snapshot.get("spell_actions", []), "cast_spell:spell_waystride")
+	if full_spell_action.is_empty():
+		push_error("Overworld smoke: Waystride field spell action was not exposed in the live command drawer. actions=%s" % full_snapshot.get("spell_actions", []))
+		get_tree().quit(1)
+		return false
+	if not bool(full_spell_action.get("disabled", false)):
+		push_error("Overworld smoke: full-movement field spell should be disabled until movement can fit. action=%s" % full_spell_action)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld field spell unavailable affordance",
+		[String(full_spell_action.get("summary", "")), String(full_spell_action.get("invalid_reason", ""))],
+		["Cost 3 mana", "target active hero", "Movement is already full"]
+	):
+		return false
+
+	var start := OverworldRules.hero_position(session)
+	var safe_step: Vector2i = shell.call("_first_validation_safe_step", start)
+	if safe_step.x < 0:
+		push_error("Overworld smoke: could not find a safe step for field spell movement coverage.")
+		get_tree().quit(1)
+		return false
+	shell.call("validation_select_tile", safe_step.x, safe_step.y)
+	var move_result: Dictionary = shell.call("validation_perform_primary_action")
+	await get_tree().process_frame
+	if not bool(move_result.get("ok", false)):
+		push_error("Overworld smoke: could not spend movement before field spell cast coverage. result=%s" % move_result)
+		get_tree().quit(1)
+		return false
+	var ready_snapshot: Dictionary = shell.call("validation_snapshot")
+	var ready_spell_action := _validation_action_by_id(ready_snapshot.get("spell_actions", []), "cast_spell:spell_waystride")
+	if ready_spell_action.is_empty() or bool(ready_spell_action.get("disabled", false)):
+		push_error("Overworld smoke: spent movement did not make Waystride castable. action=%s" % ready_spell_action)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld field spell ready affordance",
+		[String(ready_spell_action.get("label", "")), String(ready_spell_action.get("summary", ""))],
+		["Cast Waystride (3 mana)", "Restores up to 4 movement", "Cost 3 mana", "target active hero", "Ready now"]
+	):
+		return false
+
+	var cast_result: Dictionary = shell.call("validation_cast_overworld_spell", "spell_waystride")
+	if not bool(cast_result.get("ok", false)):
+		push_error("Overworld smoke: Waystride did not cast through the live overworld UI. result=%s" % cast_result)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld field spell outcome feedback",
+		[String(cast_result.get("message", ""))],
+		["Waystride restores", "movement", "spends 3 mana"]
+	):
+		return false
+	var cast_snapshot: Dictionary = shell.call("validation_snapshot")
+	if String(cast_snapshot.get("event_visible_text", "")).find("Waystride restores") < 0:
+		push_error("Overworld smoke: spell cast outcome did not surface in the live event rail. snapshot=%s" % cast_snapshot)
+		get_tree().quit(1)
+		return false
+
+	session.overworld["fog"] = original_fog
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
 func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_end_turn") or not shell.has_method("validation_snapshot"):
 		push_error("Overworld smoke: shell is missing enemy-activity validation hooks.")
@@ -440,6 +527,17 @@ func _assert_text_contains_all(label: String, texts: Array, needles: Array) -> b
 			get_tree().quit(1)
 			return false
 	return true
+
+func _validation_action_by_id(actions: Variant, action_id: String) -> Dictionary:
+	if not (actions is Array):
+		return {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if String(action.get("id", "")) == action_id:
+			return action
+	return {}
 
 func _assert_small_map_fit(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
