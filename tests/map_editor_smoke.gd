@@ -2044,8 +2044,11 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		or String(encounter_taxonomy.get("encounter_role", "")) != "guard_linked_stack"
 		or String(encounter_taxonomy.get("risk_tier", "")) != "heavy"
 		or String(encounter_taxonomy.get("guard_target_placement_id", "")) != "dwelling_basalt_gatehouse"
+		or String(encounter_taxonomy.get("guard_link_surface", "")).find("Target Basalt Gatehouse") < 0
+		or String(encounter_taxonomy.get("consequence_summary", "")).find("Clear: access Basalt Gatehouse") < 0
+		or String(encounter_taxonomy.get("consequence_summary", "")).find("After clear: reveals Waystone Cache") < 0
 	):
-		_fail("Map editor smoke: object-backed neutral encounter selection did not expose role/risk/guard taxonomy detail: detail=%s result=%s." % [encounter_detail, encounter_result])
+		_fail("Map editor smoke: object-backed neutral encounter selection did not expose role/risk/guard/consequence taxonomy detail: detail=%s result=%s." % [encounter_detail, encounter_result])
 		return false
 	if (
 		String(encounter_guidance.get("placement_role", "")) != "Guard or route threat"
@@ -2055,8 +2058,17 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		_fail("Map editor smoke: neutral encounter selection did not expose guard/encounter placement guidance: detail=%s result=%s." % [encounter_detail, encounter_result])
 		return false
 	var encounter_text := String(encounter_result.get("tile_inspection", {}).get("text", ""))
-	if encounter_text.find("Taxonomy: class Neutral Encounter") < 0 or encounter_text.find("Risk Heavy") < 0 or encounter_text.find("Guard Guards Resource Node -> dwelling_basalt_gatehouse") < 0 or encounter_text.find("Place: Guard or route threat | Density 2-4 guards/encounters per 16x16") < 0:
+	if encounter_text.find("Taxonomy: class Neutral Encounter") < 0 or encounter_text.find("Risk Heavy") < 0 or encounter_text.find("Guard Guards Resource Node -> dwelling_basalt_gatehouse") < 0 or encounter_text.find("Guard Link: Guard Guards Resource Node | Target Basalt Gatehouse | clear required") < 0 or encounter_text.find("Clear: access Basalt Gatehouse") < 0 or encounter_text.find("Place: Guard or route threat | Density 2-4 guards/encounters per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact neutral encounter role/risk/guard lines: %s." % encounter_text)
+		return false
+	var guarded_dwelling_result: Dictionary = shell.call("validation_select_tile", 60, 36)
+	var guarded_dwelling_detail := _object_detail_for_family(guarded_dwelling_result.get("tile_inspection", {}), "resource")
+	var guarded_dwelling_text := String(guarded_dwelling_result.get("tile_inspection", {}).get("text", ""))
+	if (
+		String(guarded_dwelling_detail.get("control_inspection", "")).find("Guarded by Basalt Gatehouse Watch; clear guard to use site") < 0
+		or guarded_dwelling_text.find("Guarded by Basalt Gatehouse Watch; clear guard to use site") < 0
+	):
+		_fail("Map editor smoke: guarded resource-site inspection did not expose the live encounter guard link: detail=%s result=%s." % [guarded_dwelling_detail, guarded_dwelling_result])
 		return false
 	return true
 

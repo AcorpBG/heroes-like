@@ -1480,10 +1480,14 @@ func _rail_tile_text() -> String:
 	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
 		var object_surface := OverworldRules.describe_encounter_object_surface(encounter)
+		var readability := OverworldRules.describe_encounter_compact_readability(_session, encounter)
+		var encounter_surface := terrain if object_surface == "" else "%s | %s" % [terrain, object_surface]
+		if readability != "":
+			encounter_surface = "%s | %s" % [encounter_surface, readability]
 		return "Hostile: %s\n%s\n%s%s" % [
 			OverworldRules.encounter_display_name(encounter),
 			route_line,
-			terrain if object_surface == "" else "%s | %s" % [terrain, object_surface],
+			encounter_surface,
 			"" if action_hint == "" else " | %s" % action_hint,
 		]
 

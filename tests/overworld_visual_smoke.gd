@@ -536,8 +536,12 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 			"Army: Blackbranch Raiders",
 			"12 troops/2 groups",
 			"Blackbranch Cutthroat x8",
+			"Readiness: your army",
+			"Ready",
 			"Reward: 250 gold, 180 xp",
 			"Cadence: one-time",
+			"Clear: advances Break the Blackbranch raiders",
+			"After clear: reveals Waystone Cache",
 		]
 	):
 		return false
@@ -546,7 +550,7 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass encounter hover tooltip",
 		[String(encounter_hover.get("map_tooltip", ""))],
-		["Ghoul Grove", "Risk Light", "Difficulty Low", "Blackbranch Raiders", "12 troops/2 groups", "Reward 250 gold, 180 xp"]
+		["Ghoul Grove", "Risk Light", "Difficulty Low", "Blackbranch Raiders", "12 troops/2 groups", "Reward 250 gold, 180 xp", "Clear: advances Break the Blackbranch raiders"]
 	):
 		return false
 
