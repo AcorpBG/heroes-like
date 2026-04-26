@@ -83,18 +83,21 @@ Immediate execution order:
 46. Strategic AI pressure expansion planning is completed in `docs/strategic-ai-pressure-expansion-plan.md`. The selected next boundary is behavior-neutral town governor pressure reporting: expose existing enemy town build, recruit, garrison, raid reinforcement, and commander rebuild choices through focused report/debug output and compact derived events before full AI heroes, durable event logs, faction-wide tuning, or broad rewrites.
 47. Strategic AI town governor pressure report implementation is completed in `docs/strategic-ai-town-governor-pressure-implementation-report.md`. `EnemyTurnRules` now exposes behavior-neutral town governor reports, build score breakdowns, recruitment destination breakdowns, and compact derived events for `ai_town_built`, `ai_town_recruited`, `ai_garrison_reinforced`, `ai_raid_reinforced`, and `ai_commander_rebuilt`; the focused Godot report proves River Pass Duskfen / Mireclaw garrison, active raid reinforcement, and commander rebuild surfaces without public score-table leakage.
 48. Strategic AI town governor pressure report gate review is completed in `docs/strategic-ai-town-governor-pressure-report-gate-review.md`. The gate passes: the focused report shows Duskfen selecting Slingers Post, routing recruitment to garrison stabilization, active raid reinforcement, and commander rebuild in the expected cases, exposing detailed build/recruit score breakdowns only in report/debug output, and emitting compact derived events without public score-table leakage. The live-client enemy-turn gate can be deferred until a later AI slice changes visible turn pacing, arrival frequency, map pressure, or UI composition.
-49. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+49. Strategic AI faction personality pressure planning is completed in `docs/strategic-ai-faction-personality-pressure-plan.md`. The plan compares Embercourt and Mireclaw as the first personality anchors, identifies usable evidence surfaces across target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases, and selects report-only faction personality evidence as the next slice before coefficient tuning, commander-role state planning, or another foundation track.
+50. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-faction-personality-pressure-planning-10184` as the next concrete slice.
-- Compare Embercourt and Mireclaw as the first personality anchors using the existing resource target pressure, compact event/threat reason, and town governor pressure reports as evidence.
-- Define which pressure surfaces can support personality planning before any tuning: target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases.
+- Run `strategic-ai-faction-personality-evidence-report-10184` as the next concrete slice.
+- Produce a report-only side-by-side Embercourt/Mireclaw evidence report using the existing resource target pressure, compact event/threat reason, and town governor pressure report surfaces before any tuning.
+- Treat the current gap honestly: Mireclaw has direct Duskfen/River Pass focused report evidence, while Embercourt has config and scenario evidence that needs an equivalent focused report pass before personality claims harden.
+- Use the pressure surfaces defined in `docs/strategic-ai-faction-personality-pressure-plan.md`: target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows poor ordering.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
-- Defer commander-role/roster state planning until after faction personality pressure planning unless AcOrP explicitly asks to prioritize explicit AI hero state first.
+- Defer coefficient/strategy config audit planning until the evidence report records supported, weak, and contradicted personality claims.
+- Defer commander-role/roster state planning until after the faction personality evidence report unless AcOrP explicitly asks to prioritize explicit AI hero state first.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next gate slice.
@@ -104,7 +107,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is strategic AI faction personality pressure planning, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
+- The next active choice is report-only strategic AI faction personality evidence, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -383,6 +386,26 @@ Validation:
 
 Limits:
 - This is documentation/report-review only. It does not edit gameplay code, production content JSON, add a durable AI event log, migrate saves, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul markets, change runtime economy/pathing/editor/renderer behavior, import generated PNGs, add assets, migrate neutral encounters, implement full AI hero task state, tune behavior, broadly rewrite strategic AI, or rebalance River Pass.
+
+## Completed Planning Slice: Strategic AI Faction Personality Pressure
+Status: completed on 2026-04-26 as documentation-only planning for faction personality evidence from existing strategic AI reports.
+
+Purpose:
+- Compare Embercourt and Mireclaw as the first strategic AI personality anchors before coefficient tuning or commander-role state planning.
+- Define which existing pressure surfaces can support personality evidence: target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases.
+
+Delivered:
+- Added `docs/strategic-ai-faction-personality-pressure-plan.md`.
+- Recorded that Mireclaw currently has direct Duskfen/River Pass report evidence across resource pressure, compact event/threat reasons, and town governor choices.
+- Recorded that Embercourt has config and scenario evidence, but still needs equivalent focused report coverage before personality claims should drive tuning.
+- Selected `strategic-ai-faction-personality-evidence-report-10184` as the next concrete slice.
+- Deferred coefficient/strategy config audit planning, commander-role state planning, capture/counter-capture proof planning, durable AI event logs, and broad AI rewrites until after the evidence report.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, and `python3 tests/validate_repo.py --neutral-encounter-report`.
+
+Limits:
+- This is documentation/planning only. It does not edit gameplay code, production content JSON, scenario content, AI coefficients, resource schemas, pathing, renderer/editor behavior, saves, generated assets, neutral encounter metadata, River Pass balance, or public UI surfaces.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -3289,12 +3312,13 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: report-only town governor pressure implementation after strategic AI pressure expansion planning.
+Current target: report-only faction personality evidence after strategic AI faction personality pressure planning.
 
 Done means:
-- The next slice explains existing enemy town build, recruit, garrison, raid reinforcement, and commander rebuild choices without changing AI behavior.
-- River Pass Duskfen / Mireclaw is covered as the first focused example because it connects enemy town pressure with the already passed signal-yard pressure and event-surfacing gates.
-- Detailed build/recruit score tables stay in report/debug output only.
+- The next slice compares Embercourt and Mireclaw through existing strategic AI report surfaces without changing AI behavior.
+- Mireclaw's Duskfen/River Pass report evidence and Embercourt's current config/scenario evidence are compared honestly, including any missing Embercourt focused report coverage.
+- Target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases are treated as evidence surfaces before any tuning.
+- Detailed target/build/recruit score tables stay in report/debug output only.
 - Public or derived event output stays compact and does not expose score-table fields.
 - No production JSON migration, durable AI event log, save migration, full AI hero task state, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, or River Pass rebalance is pulled into the slice.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
