@@ -296,6 +296,7 @@ func validation_snapshot() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
 	var occupation := OverworldRules.town_occupation_state(_session, town)
 	var front := OverworldRules.town_front_state(_session, town)
+	var handoff := TownRules.town_handoff_recap(_session)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -337,6 +338,9 @@ func validation_snapshot() -> Dictionary:
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
 		"town_action_recap": _duplicate_dictionary(_last_action_recap),
 		"town_action_recap_text": String(_last_action_recap.get("text", "")),
+		"town_handoff": handoff,
+		"town_handoff_visible_text": String(handoff.get("visible_text", "")),
+		"town_handoff_tooltip_text": String(handoff.get("tooltip_text", "")),
 		"visible_consequence_text": _event_label.text,
 		"consequence_tooltip_text": _event_label.tooltip_text,
 		"front": front,
