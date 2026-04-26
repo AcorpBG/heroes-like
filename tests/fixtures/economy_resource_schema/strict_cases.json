@@ -1,0 +1,123 @@
+{
+  "schema": "economy_resource_strict_cases_v1",
+  "valid": {
+    "resource_dicts": [
+      {
+        "id": "valid_pickup_rewards",
+        "kind": "pickup",
+        "resources": {"gold": 120, "wood": 1},
+        "stockpile": true
+      }
+    ],
+    "sites": [
+      {
+        "id": "fixture_timber_cache",
+        "family": "one_shot_pickup",
+        "rewards": {"gold": 120, "wood": 1}
+      },
+      {
+        "id": "fixture_daily_sawmill",
+        "family": "mine",
+        "persistent_control": true,
+        "claim_rewards": {"gold": 80},
+        "control_income": {"wood": 1},
+        "resource_outputs": [
+          {
+            "resource_id": "wood",
+            "cadence": "daily",
+            "amount": 1,
+            "requires_owner": true,
+            "starts_after_claim": true
+          }
+        ],
+        "capture_profile": {
+          "capture_model": "capturable",
+          "counter_capture_value": 5,
+          "pillage_policy": "limited_stock",
+          "damaged_state_policy": "temporary_output_pause",
+          "retake_recovery_days": 2
+        }
+      },
+      {
+        "id": "fixture_missing_capture_warning",
+        "family": "mine",
+        "persistent_control": true,
+        "control_income": {"ore": 1},
+        "resource_outputs": [
+          {
+            "resource_id": "ore",
+            "cadence": "daily",
+            "amount": 1,
+            "requires_owner": true,
+            "starts_after_claim": true
+          }
+        ],
+        "expect_capture_warning": true
+      },
+      {
+        "id": "fixture_market_service",
+        "family": "repeatable_service",
+        "repeatable": true,
+        "visit_cooldown_days": 7,
+        "service_cost": {"gold": 50}
+      }
+    ],
+    "market_profiles": [
+      {
+        "id": "fixture_common_weekly_market",
+        "refresh_cadence": "weekly",
+        "buy_caps": {"wood": 6, "ore": 6},
+        "sell_caps": {"wood": 8, "ore": 8},
+        "restricted_buy_resource_ids": ["aetherglass", "verdant_grafts", "brass_scrip", "memory_salt"]
+      }
+    ],
+    "faction_preferences": [
+      {
+        "id": "fixture_embercourt_preferences",
+        "policy": "advisory",
+        "primary": ["gold", "wood"],
+        "secondary": ["ore"],
+        "awkward": ["experience"]
+      }
+    ],
+    "save_payloads": [
+      {
+        "id": "fixture_old_save_resources",
+        "resources": {"gold": 900, "wood": 3, "ore": 2}
+      }
+    ]
+  },
+  "invalid": {
+    "registry_items": [
+      {
+        "id": "bad_missing_registry_metadata",
+        "display_name": "Bad Missing Metadata"
+      }
+    ],
+    "resource_dicts": [
+      {
+        "id": "bad_alias_collision",
+        "resources": {"wood": 1, "timber": 1},
+        "stockpile": true
+      },
+      {
+        "id": "bad_unknown_resource",
+        "resources": {"unknown_relic_credit": 1},
+        "stockpile": true
+      },
+      {
+        "id": "bad_experience_stockpile",
+        "resources": {"experience": 20},
+        "stockpile": true
+      }
+    ],
+    "market_profiles": [
+      {
+        "id": "bad_rare_normal_market",
+        "normal_market": true,
+        "refresh_cadence": "weekly",
+        "buy_caps": {"aetherglass": 2}
+      }
+    ]
+  }
+}

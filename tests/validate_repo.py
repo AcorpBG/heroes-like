@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import json
+import argparse
 import re
 import struct
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -54,6 +56,9 @@ BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
+ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
+ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
+ECONOMY_RESOURCE_STRICT_CASES_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "strict_cases.json"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -355,6 +360,35 @@ ENEMY_STRATEGY_KEYS = {
     "reinforcement": {"garrison_bias", "raid_bias", "ranged_weight", "melee_weight", "low_tier_weight", "high_tier_weight"},
     "raid": {"threshold_scale", "max_active_bonus", "pressure_commitment_scale", "objective_weight", "town_siege_weight", "site_denial_weight", "hero_hunt_weight"},
 }
+ECONOMY_REPORT_SCHEMA = "economy_resource_report_v1"
+ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", "timber", "experience")
+ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore"}
+ECONOMY_NON_STOCKPILE_REWARD_IDS = {"experience"}
+ECONOMY_RARE_RESOURCE_IDS = {"aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"}
+ECONOMY_USAGE_BUCKETS = (
+    "unit_costs",
+    "building_costs",
+    "building_income",
+    "hero_costs",
+    "faction_income",
+    "town_income",
+    "site_rewards",
+    "site_income",
+    "service_cost",
+    "scenario_starting_resources",
+    "scenario_script_grants",
+    "campaign_rewards",
+    "market_rules",
+)
+ECONOMY_SOURCE_BUCKETS = (
+    "town_income",
+    "building_income",
+    "persistent_sites",
+    "pickups",
+    "repeatable_services",
+    "market_profiles",
+    "scenario_grants",
+)
 
 
 def load_json(path: Path) -> dict:
@@ -401,6 +435,55 @@ def ensure(condition: bool, errors: list[str], message: str) -> None:
 def append_unique(values: list[str], value: str) -> None:
     if value and value not in values:
         values.append(value)
+
+
+def append_unique_dict(values: list[dict], item: dict) -> None:
+    if item not in values:
+        values.append(item)
+
+
+def resource_display_name(resource_id: str, registry_items: dict[str, dict] | None = None) -> str:
+    registry_items = registry_items or {}
+    if resource_id in registry_items:
+        return str(registry_items[resource_id].get("display_name", resource_id))
+    fallback = {
+        "gold": "Gold",
+        "wood": "Timber",
+        "timber": "Timber",
+        "ore": "Ore",
+        "experience": "Experience",
+    }
+    return fallback.get(resource_id, resource_id.replace("_", " ").title())
+
+
+def resource_is_stockpile(resource_id: str, registry_items: dict[str, dict] | None = None) -> bool:
+    registry_items = registry_items or {}
+    if resource_id in registry_items:
+        return bool(registry_items[resource_id].get("stockpile", False))
+    return resource_id in ECONOMY_STOCKPILE_RESOURCE_IDS
+
+
+def resource_is_non_stockpile_reward(resource_id: str, registry_items: dict[str, dict] | None = None) -> bool:
+    registry_items = registry_items or {}
+    if resource_id in registry_items:
+        return not bool(registry_items[resource_id].get("stockpile", False))
+    return resource_id in ECONOMY_NON_STOCKPILE_REWARD_IDS
+
+
+def positive_resource_amount(resources: dict, resource_id: str) -> bool:
+    try:
+        return int(resources.get(resource_id, 0)) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+def detect_alias_collisions(resources: object) -> list[str]:
+    if not isinstance(resources, dict):
+        return []
+    collisions: list[str] = []
+    if positive_resource_amount(resources, "wood") and positive_resource_amount(resources, "timber"):
+        collisions.append("wood/timber")
+    return collisions
 
 
 def scene_has_node(scene_text: str, node_name: str, node_type: str) -> bool:
@@ -623,6 +706,388 @@ def validate_script_effect(
         ensure(int(effect.get("amount", 0)) > 0 or int(effect.get("minimum", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} add_enemy_pressure must define amount > 0 or minimum > 0")
     else:
         fail(errors, f"Scenario {scenario_id} hook {hook_id} has unsupported effect type {effect_type}")
+
+
+def load_economy_resource_registry() -> dict:
+    if ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH.exists():
+        return load_json(ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH)
+    return {
+        "schema": "economy_resource_registry_fixture_v1",
+        "items": [
+            {"id": "gold", "display_name": "Gold", "category": "liquidity", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "ui_sort": 10, "stockpile": True},
+            {"id": "wood", "display_name": "Timber", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "target_aliases": ["timber"], "canonical_target_id": "timber", "canonical_status": "legacy_live_id", "ui_sort": 20, "stockpile": True, "report_only": True},
+            {"id": "ore", "display_name": "Ore", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "ui_sort": 30, "stockpile": True},
+            {"id": "timber", "display_name": "Timber", "category": "construction_staple", "market_tier": "common", "default_visible": False, "legacy_aliases": ["wood"], "canonical_status": "alias_only", "ui_sort": 21, "stockpile": True, "report_only": True},
+            {"id": "experience", "display_name": "Experience", "category": "progression_reward", "market_tier": "none", "default_visible": False, "legacy_aliases": [], "canonical_status": "non_stockpile_reward", "ui_sort": 900, "stockpile": False},
+        ],
+    }
+
+
+def economy_registry_items(registry: dict) -> dict[str, dict]:
+    return items_index(registry)
+
+
+def economy_report_resource_entry(resource_id: str, registry_items: dict[str, dict]) -> dict:
+    return {
+        "resource_id": resource_id,
+        "display_name": resource_display_name(resource_id, registry_items),
+        "stockpile": resource_is_stockpile(resource_id, registry_items),
+        "used_by": {bucket: 0 for bucket in ECONOMY_USAGE_BUCKETS},
+        "source_paths": {bucket: [] for bucket in ECONOMY_SOURCE_BUCKETS},
+        "occurrences": [],
+        "availability": "registry_only",
+        "warnings": [],
+    }
+
+
+def add_economy_report_warning(report: dict, warning: str) -> None:
+    if warning not in report["warnings"]:
+        report["warnings"].append(warning)
+
+
+def record_economy_resource_dict(report: dict, registry_items: dict[str, dict], resources: object, domain: str, owner_id: str, field: str, usage_bucket: str, source_bucket: str = "") -> None:
+    if not isinstance(resources, dict) or not resources:
+        return
+    for collision in detect_alias_collisions(resources):
+        add_economy_report_warning(report, f"{domain} {owner_id} {field} contains positive {collision} amounts without a merge rule")
+    for raw_resource_id, raw_amount in resources.items():
+        resource_id = str(raw_resource_id)
+        try:
+            amount = int(raw_amount)
+        except (TypeError, ValueError):
+            amount = 0
+        if resource_id not in report["usage"]:
+            report["usage"][resource_id] = economy_report_resource_entry(resource_id, registry_items)
+        entry = report["usage"][resource_id]
+        if usage_bucket in entry["used_by"]:
+            entry["used_by"][usage_bucket] += 1
+        append_unique_dict(entry["occurrences"], {"domain": domain, "id": owner_id, "field": field, "amount": amount})
+        if source_bucket and source_bucket in entry["source_paths"]:
+            append_unique(entry["source_paths"][source_bucket], f"{domain}:{owner_id}:{field}")
+        if resource_id == "timber" and amount > 0:
+            warning = f"{domain} {owner_id} uses target resource id timber before adapter/save migration"
+            append_unique(entry["warnings"], warning)
+            add_economy_report_warning(report, warning)
+        if resource_id not in registry_items and resource_id not in ECONOMY_STOCKPILE_RESOURCE_IDS and resource_id not in ECONOMY_NON_STOCKPILE_REWARD_IDS:
+            warning = f"{domain} {owner_id} references unregistered resource id {resource_id}"
+            append_unique(entry["warnings"], warning)
+            add_economy_report_warning(report, warning)
+
+
+def infer_economy_site_cadence(report: dict, registry_items: dict[str, dict], site_id: str, site: dict) -> None:
+    family = str(site.get("family", "one_shot_pickup"))
+    site_report = {
+        "site_id": site_id,
+        "family": family,
+        "persistent_control": bool(site.get("persistent_control", False)),
+        "repeatable": bool(site.get("repeatable", False)),
+        "inferred_outputs": [],
+        "warnings": [],
+    }
+    for field in ("rewards", "claim_rewards"):
+        resources = site.get(field, {})
+        if isinstance(resources, dict) and resources:
+            cadence = "battle_cleanup" if bool(site.get("guarded", False)) else "instant_claim"
+            for resource_id, amount in resources.items():
+                site_report["inferred_outputs"].append({"resource_id": str(resource_id), "display_name": resource_display_name(str(resource_id), registry_items), "cadence": cadence, "amount": int(amount)})
+    if bool(site.get("persistent_control", False)) and isinstance(site.get("control_income", {}), dict) and site.get("control_income", {}):
+        for resource_id, amount in site.get("control_income", {}).items():
+            site_report["inferred_outputs"].append({"resource_id": str(resource_id), "display_name": resource_display_name(str(resource_id), registry_items), "cadence": "daily", "amount": int(amount)})
+        if "resource_outputs" not in site:
+            site_report["warnings"].append("persistent site has inferred daily control_income but no explicit future resource_outputs cadence")
+    if bool(site.get("repeatable", False)) and int(site.get("visit_cooldown_days", 0)) > 0:
+        site_report["inferred_outputs"].append({"resource_id": "", "display_name": "", "cadence": "service_refresh", "amount": 0, "cooldown_days": int(site.get("visit_cooldown_days", 0))})
+        if isinstance(site.get("rewards", {}), dict) and site.get("rewards", {}):
+            site_report["warnings"].append("repeatable service grants resources without future cap or refresh profile metadata")
+    if isinstance(site.get("weekly_recruits", {}), dict) and site.get("weekly_recruits", {}):
+        site_report["inferred_outputs"].append({"resource_id": "", "display_name": "", "cadence": "weekly_recruit_refresh", "amount": 0})
+    if isinstance(site.get("transit_profile", {}), dict) and site.get("transit_profile", {}):
+        site_report["inferred_outputs"].append({"resource_id": "", "display_name": "", "cadence": "route_effect", "amount": 0})
+        if any(key in site for key in ("rewards", "claim_rewards", "control_income")):
+            site_report["warnings"].append("transit object has resource payloads but no route-linked output metadata")
+    for warning in site_report["warnings"]:
+        add_economy_report_warning(report, f"{site_id}: {warning}")
+    report["cadence"][site_id] = site_report
+
+
+def infer_economy_capture_report(report: dict, registry_items: dict[str, dict], site_id: str, site: dict) -> None:
+    if not bool(site.get("persistent_control", False)):
+        return
+    family = str(site.get("family", "one_shot_pickup"))
+    capture_profile = site.get("capture_profile", {})
+    capture_report = {
+        "site_id": site_id,
+        "family": family,
+        "persistent_control": True,
+        "inferred_outputs": [],
+        "capture_profile_present": isinstance(capture_profile, dict) and bool(capture_profile),
+        "recommended_capture_model": "capturable" if family in {"mine", "neutral_dwelling", "faction_outpost", "frontier_shrine"} else "claim_once",
+        "recommended_counter_capture_value": 5 if family == "mine" else 3,
+        "warnings": [],
+    }
+    if isinstance(site.get("control_income", {}), dict):
+        for resource_id, amount in site.get("control_income", {}).items():
+            capture_report["inferred_outputs"].append({"resource_id": str(resource_id), "display_name": resource_display_name(str(resource_id), registry_items), "cadence": "daily", "amount": int(amount)})
+    if not capture_report["capture_profile_present"]:
+        capture_report["warnings"].append("persistent site lacks capture_profile")
+        capture_report["warnings"].append("persistent site lacks counter_capture_value")
+        capture_report["warnings"].append("persistent site lacks retake/damaged-state policy")
+    elif "counter_capture_value" not in capture_profile:
+        capture_report["warnings"].append("persistent site lacks counter_capture_value")
+    if not any(bool(site.get(key)) for key in ("control_income", "town_support", "claim_recruits", "weekly_recruits", "transit_profile", "vision_radius", "response_profile")):
+        capture_report["warnings"].append("site has persistent_control but no clear income, support, recruit, route, scouting, or response reason")
+    for output in capture_report["inferred_outputs"]:
+        if str(output.get("resource_id", "")) in ECONOMY_RARE_RESOURCE_IDS and not bool(site.get("guarded", False)):
+            capture_report["warnings"].append("persistent rare-resource output lacks guard/counter-capture metadata")
+    for warning in capture_report["warnings"]:
+        add_economy_report_warning(report, f"{site_id}: {warning}")
+    report["capture"][site_id] = capture_report
+
+
+def finalize_economy_resource_availability(report: dict, registry_items: dict[str, dict]) -> None:
+    for resource_id, entry in report["usage"].items():
+        if resource_is_non_stockpile_reward(resource_id, registry_items):
+            entry["availability"] = "non_stockpile_reward"
+            continue
+        used_by = entry["used_by"]
+        source_count = used_by.get("building_income", 0) + used_by.get("faction_income", 0) + used_by.get("town_income", 0) + used_by.get("site_rewards", 0) + used_by.get("site_income", 0) + used_by.get("scenario_starting_resources", 0) + used_by.get("scenario_script_grants", 0)
+        cost_count = used_by.get("unit_costs", 0) + used_by.get("building_costs", 0) + used_by.get("hero_costs", 0) + used_by.get("service_cost", 0)
+        if resource_id not in registry_items:
+            entry["availability"] = "unknown_unregistered"
+        elif source_count > 0 and cost_count > 0:
+            entry["availability"] = "available"
+        elif source_count > 0:
+            entry["availability"] = "reward_only"
+        elif cost_count > 0:
+            entry["availability"] = "cost_only"
+        elif used_by.get("scenario_script_grants", 0) > 0:
+            entry["availability"] = "script_only"
+        else:
+            entry["availability"] = "registry_only"
+
+
+def build_economy_resource_report() -> dict:
+    registry = load_economy_resource_registry()
+    registry_items = economy_registry_items(registry)
+    report = {
+        "schema": ECONOMY_REPORT_SCHEMA,
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "mode": "compatibility_report",
+        "registry": {
+            "resource_count": len(registry_items),
+            "stockpile_resource_ids": sorted([resource_id for resource_id, item in registry_items.items() if bool(item.get("stockpile", False)) and str(item.get("canonical_status", "canonical")) != "alias_only"]),
+            "non_stockpile_reward_ids": sorted([resource_id for resource_id, item in registry_items.items() if not bool(item.get("stockpile", False))]),
+            "alias_pairs": [],
+            "missing_metadata": [],
+        },
+        "usage": {},
+        "sources": {},
+        "cadence": {},
+        "capture": {},
+        "market_caps": {},
+        "compatibility_adapters": {"runtime_adoption": "not_active", "report_normalization": "display_only", "wood_live_id": "wood", "timber_target_id": "timber", "save_rewrite": False},
+        "warnings": [],
+        "errors": [],
+    }
+    for resource_id in ECONOMY_REPORT_RESOURCE_IDS:
+        report["usage"][resource_id] = economy_report_resource_entry(resource_id, registry_items)
+    report["registry"]["alias_pairs"].append({"resource_id": "wood", "display_name": "Timber", "legacy_id": "wood", "target_id": "timber", "canonical_target_id": "timber", "status": "legacy_live_id", "warning": "wood remains the live id; timber is target display/canonical planning only", "decision_needed": "AcOrP must decide permanent wood display alias vs save-aware timber migration"})
+    add_economy_report_warning(report, "wood remains the live resource id and is reported as Timber pending AcOrP canonical-id decision")
+
+    payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("factions", "heroes", "units", "towns", "buildings", "resource_sites", "scenarios", "campaigns")}
+    factions = items_index(payloads["factions"])
+    heroes = items_index(payloads["heroes"])
+    units = items_index(payloads["units"])
+    towns = items_index(payloads["towns"])
+    buildings = items_index(payloads["buildings"])
+    resource_sites = items_index(payloads["resource_sites"])
+    scenarios = items_index(payloads["scenarios"])
+    campaigns = items_index(payloads["campaigns"])
+
+    for unit_id, unit in units.items():
+        record_economy_resource_dict(report, registry_items, unit.get("cost", {}), "units", unit_id, "cost", "unit_costs")
+    for building_id, building in buildings.items():
+        record_economy_resource_dict(report, registry_items, building.get("cost", {}), "buildings", building_id, "cost", "building_costs")
+        record_economy_resource_dict(report, registry_items, building.get("income", {}), "buildings", building_id, "income", "building_income", "building_income")
+    for hero_id, hero in heroes.items():
+        record_economy_resource_dict(report, registry_items, hero.get("recruit_cost", {}), "heroes", hero_id, "recruit_cost", "hero_costs")
+    for faction_id, faction in factions.items():
+        economy = faction.get("economy", {})
+        if isinstance(economy, dict):
+            record_economy_resource_dict(report, registry_items, economy.get("base_income", {}), "factions", faction_id, "economy.base_income", "faction_income")
+            for category, resources in economy.get("per_category_income", {}).items() if isinstance(economy.get("per_category_income", {}), dict) else []:
+                record_economy_resource_dict(report, registry_items, resources, "factions", faction_id, f"economy.per_category_income.{category}", "faction_income")
+    for town_id, town in towns.items():
+        economy = town.get("economy", {})
+        if isinstance(economy, dict):
+            record_economy_resource_dict(report, registry_items, economy.get("base_income", {}), "towns", town_id, "economy.base_income", "town_income", "town_income")
+            for category, resources in economy.get("per_category_income", {}).items() if isinstance(economy.get("per_category_income", {}), dict) else []:
+                record_economy_resource_dict(report, registry_items, resources, "towns", town_id, f"economy.per_category_income.{category}", "town_income", "town_income")
+    for site_id, site in resource_sites.items():
+        record_economy_resource_dict(report, registry_items, site.get("rewards", {}), "resource_sites", site_id, "rewards", "site_rewards", "pickups" if not bool(site.get("persistent_control", False)) else "persistent_sites")
+        record_economy_resource_dict(report, registry_items, site.get("claim_rewards", {}), "resource_sites", site_id, "claim_rewards", "site_rewards", "persistent_sites" if bool(site.get("persistent_control", False)) else "pickups")
+        record_economy_resource_dict(report, registry_items, site.get("control_income", {}), "resource_sites", site_id, "control_income", "site_income", "persistent_sites")
+        record_economy_resource_dict(report, registry_items, site.get("service_cost", {}), "resource_sites", site_id, "service_cost", "service_cost", "repeatable_services")
+        if isinstance(site.get("response_profile", {}), dict):
+            record_economy_resource_dict(report, registry_items, site.get("response_profile", {}).get("resource_cost", {}), "resource_sites", site_id, "response_profile.resource_cost", "service_cost", "repeatable_services")
+        infer_economy_site_cadence(report, registry_items, site_id, site)
+        infer_economy_capture_report(report, registry_items, site_id, site)
+    for scenario_id, scenario in scenarios.items():
+        record_economy_resource_dict(report, registry_items, scenario.get("starting_resources", {}), "scenarios", scenario_id, "starting_resources", "scenario_starting_resources", "scenario_grants")
+        for hook in scenario.get("script_hooks", []):
+            if isinstance(hook, dict):
+                hook_id = str(hook.get("id", "unknown_hook"))
+                for effect in hook.get("effects", []):
+                    if isinstance(effect, dict) and str(effect.get("type", "")) == "add_resources":
+                        record_economy_resource_dict(report, registry_items, effect.get("resources", {}), "scenarios", scenario_id, f"script_hooks.{hook_id}.add_resources", "scenario_script_grants", "scenario_grants")
+    for campaign_id, campaign in campaigns.items():
+        for scenario_entry in campaign.get("scenarios", []):
+            if isinstance(scenario_entry, dict) and bool(scenario_entry.get("carryover_export", {}).get("resources", False)):
+                report["usage"]["gold"]["used_by"]["campaign_rewards"] += 1
+                append_unique(report["usage"]["gold"]["source_paths"]["scenario_grants"], f"campaigns:{campaign_id}:carryover_export.resources")
+    for market_resource_id in ("wood", "ore"):
+        report["usage"][market_resource_id]["used_by"]["market_rules"] += 1
+        append_unique(report["usage"][market_resource_id]["source_paths"]["market_profiles"], "legacy_common_exchange")
+    report["market_caps"]["legacy_common_exchange"] = {"market_profile_id": "legacy_common_exchange", "source": "inferred_from_current_town_market_code", "buy_resources": ["wood", "ore"], "sell_resources": ["wood", "ore"], "buy_caps_present": False, "sell_caps_present": False, "refresh_cadence_present": False, "rare_resource_buying_enabled": False, "warnings": ["legacy market has no serialized weekly caps", "legacy market is common-resource only", "legacy market code is hardcoded to wood/ore"]}
+    for warning in report["market_caps"]["legacy_common_exchange"]["warnings"]:
+        add_economy_report_warning(report, warning)
+    report["registry"]["alias_pairs"][0]["production_occurrences"] = len(report["usage"].get("wood", {}).get("occurrences", []))
+    report["registry"]["alias_pairs"][0]["target_occurrences"] = len(report["usage"].get("timber", {}).get("occurrences", []))
+    if report["usage"]["timber"]["occurrences"]:
+        add_economy_report_warning(report, "production content uses timber before migration support is implemented")
+    if report["usage"]["experience"]["occurrences"]:
+        append_unique(report["usage"]["experience"]["warnings"], "experience is a non-stockpile progression reward and must stay outside normal markets")
+    finalize_economy_resource_availability(report, registry_items)
+    report["sources"] = {resource_id: {"resource_id": resource_id, "display_name": entry["display_name"], "stockpile": entry["stockpile"], "used_by": entry["used_by"], "source_paths": entry["source_paths"], "availability": entry["availability"], "warnings": entry["warnings"]} for resource_id, entry in sorted(report["usage"].items())}
+    return report
+
+
+def print_economy_resource_report(report: dict) -> None:
+    print("ECONOMY RESOURCE REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- stockpile resources: {', '.join(report['registry']['stockpile_resource_ids'])}")
+    print(f"- non-stockpile rewards: {', '.join(report['registry']['non_stockpile_reward_ids'])}")
+    for alias in report["registry"].get("alias_pairs", []):
+        print(f"- alias: {alias['legacy_id']} is live id, {alias['target_id']} is target; display={alias['display_name']}; occurrences={alias.get('production_occurrences', 0)}")
+    print("Resource usage:")
+    for resource_id in sorted(report["usage"].keys()):
+        entry = report["usage"][resource_id]
+        total = len(entry.get("occurrences", []))
+        if total == 0 and resource_id not in ECONOMY_REPORT_RESOURCE_IDS:
+            continue
+        print(f"- {resource_id} ({entry['display_name']}): {entry['availability']}, occurrences={total}, stockpile={entry['stockpile']}")
+    print("Cadence inference:")
+    cadence_counts: dict[str, int] = {}
+    for site in report["cadence"].values():
+        for output in site.get("inferred_outputs", []):
+            cadence = str(output.get("cadence", "unknown"))
+            cadence_counts[cadence] = cadence_counts.get(cadence, 0) + 1
+    for cadence, count in sorted(cadence_counts.items()):
+        print(f"- {cadence}: {count}")
+    capture_warning_count = sum(len(item.get("warnings", [])) for item in report["capture"].values())
+    print("Capture warnings:")
+    print(f"- persistent sites reviewed: {len(report['capture'])}; warnings={capture_warning_count}")
+    print("Market cap stance:")
+    for market in report["market_caps"].values():
+        print(f"- {market['market_profile_id']}: common={','.join(market['buy_resources'])}; rare_buying={market['rare_resource_buying_enabled']}; caps={market['buy_caps_present']}")
+    print("Compatibility adapters:")
+    print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; save rewrite={report['compatibility_adapters']['save_rewrite']}")
+    print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
+
+
+def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    ensure(ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH.exists(), errors, f"Missing strict economy fixture: {ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH.relative_to(ROOT)}")
+    ensure(ECONOMY_RESOURCE_STRICT_CASES_PATH.exists(), errors, f"Missing strict economy fixture: {ECONOMY_RESOURCE_STRICT_CASES_PATH.relative_to(ROOT)}")
+    if errors:
+        return errors, warnings
+    registry = load_json(ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH)
+    cases = load_json(ECONOMY_RESOURCE_STRICT_CASES_PATH)
+    registry_items = economy_registry_items(registry)
+    required_registry_fields = {"id", "display_name", "category", "market_tier", "default_visible", "legacy_aliases", "ui_sort", "stockpile"}
+    for resource_id, item in registry_items.items():
+        missing = sorted([field for field in required_registry_fields if field not in item])
+        if missing:
+            fail(errors, f"Strict registry resource {resource_id} is missing required fields: {', '.join(missing)}")
+        if resource_id == "experience" and bool(item.get("stockpile", True)):
+            fail(errors, "Strict registry must keep experience as a non-stockpile reward")
+        if resource_id == "wood":
+            ensure(str(item.get("canonical_status", "")) == "legacy_live_id", errors, "Strict registry must mark wood as the legacy_live_id")
+            ensure(str(item.get("canonical_target_id", "")) == "timber", errors, "Strict registry must report timber as wood's target id")
+
+    def strict_resource_dict_errors(label: str, resources: object, stockpile_payload: bool = True) -> list[str]:
+        local_errors: list[str] = []
+        if not isinstance(resources, dict) or not resources:
+            local_errors.append(f"{label} must define a non-empty resource dictionary")
+            return local_errors
+        if detect_alias_collisions(resources):
+            local_errors.append(f"{label} contains positive wood and timber without a merge policy")
+        for resource_id, amount in resources.items():
+            rid = str(resource_id)
+            if rid not in registry_items:
+                local_errors.append(f"{label} uses unknown resource id {rid}")
+            if stockpile_payload and rid == "experience" and int(amount) > 0:
+                local_errors.append(f"{label} treats experience as a stockpile resource")
+            if int(amount) < 0:
+                local_errors.append(f"{label} has negative amount for {rid}")
+        return local_errors
+
+    valid = cases.get("valid", {})
+    for entry in valid.get("resource_dicts", []):
+        errors.extend(strict_resource_dict_errors(str(entry.get("id", "valid_resource_dict")), entry.get("resources", {}), bool(entry.get("stockpile", True))))
+    for site in valid.get("sites", []):
+        site_id = str(site.get("id", "valid_site"))
+        for field in ("rewards", "claim_rewards", "control_income", "service_cost"):
+            if field in site:
+                errors.extend(strict_resource_dict_errors(f"{site_id}.{field}", site.get(field, {}), True))
+        if bool(site.get("persistent_control", False)) and isinstance(site.get("control_income", {}), dict) and site.get("control_income", {}):
+            if bool(site.get("expect_capture_warning", False)):
+                if "capture_profile" in site:
+                    fail(errors, f"{site_id} expected capture warning but defines capture_profile")
+                warnings.append(f"{site_id}: persistent fixture intentionally lacks capture_profile")
+            else:
+                ensure(isinstance(site.get("resource_outputs", []), list) and bool(site.get("resource_outputs", [])), errors, f"{site_id} must define resource_outputs in strict fixture mode")
+                ensure(isinstance(site.get("capture_profile", {}), dict) and bool(site.get("capture_profile", {})), errors, f"{site_id} must define capture_profile in strict fixture mode")
+                ensure("counter_capture_value" in site.get("capture_profile", {}), errors, f"{site_id} capture_profile must define counter_capture_value")
+        if bool(site.get("repeatable", False)):
+            ensure(int(site.get("visit_cooldown_days", 0)) > 0, errors, f"{site_id} repeatable service must define visit_cooldown_days > 0")
+            ensure(not bool(site.get("control_income", {})), errors, f"{site_id} repeatable service must not masquerade as passive income")
+    for profile in valid.get("market_profiles", []):
+        profile_id = str(profile.get("id", "valid_market_profile"))
+        for field in ("buy_caps", "sell_caps"):
+            errors.extend(strict_resource_dict_errors(f"{profile_id}.{field}", profile.get(field, {}), True))
+        ensure(str(profile.get("refresh_cadence", "")) == "weekly", errors, f"{profile_id} must declare weekly refresh cadence")
+    for profile in valid.get("faction_preferences", []):
+        profile_id = str(profile.get("id", "valid_faction_preference"))
+        ensure(str(profile.get("policy", "")) == "advisory", errors, f"{profile_id} must keep faction preferences advisory")
+        for bucket in ("primary", "secondary", "awkward"):
+            for resource_id in profile.get(bucket, []):
+                ensure(str(resource_id) in registry_items, errors, f"{profile_id} references unknown preference resource {resource_id}")
+    for payload in valid.get("save_payloads", []):
+        payload_id = str(payload.get("id", "valid_save_payload"))
+        resources = payload.get("resources", {})
+        errors.extend(strict_resource_dict_errors(f"{payload_id}.resources", resources, True))
+        ensure("resource_schema_version" not in payload or int(payload.get("resource_schema_version", 0)) >= 0, errors, f"{payload_id} resource_schema_version must remain optional and nonnegative")
+        ensure("wood" in resources, errors, f"{payload_id} must preserve wood in old-save compatibility fixture")
+
+    invalid = cases.get("invalid", {})
+    for entry in invalid.get("resource_dicts", []):
+        local_errors = strict_resource_dict_errors(str(entry.get("id", "invalid_resource_dict")), entry.get("resources", {}), bool(entry.get("stockpile", True)))
+        if not local_errors:
+            fail(errors, f"Strict invalid fixture {entry.get('id')} unexpectedly passed")
+    for item in invalid.get("registry_items", []):
+        missing = sorted([field for field in required_registry_fields if field not in item])
+        if not missing:
+            fail(errors, f"Strict invalid registry fixture {item.get('id')} unexpectedly passed")
+    for profile in invalid.get("market_profiles", []):
+        profile_id = str(profile.get("id", "invalid_market_profile"))
+        buy_caps = profile.get("buy_caps", {})
+        rare_buying = any(str(resource_id) in ECONOMY_RARE_RESOURCE_IDS and int(amount) > 0 for resource_id, amount in buy_caps.items()) if isinstance(buy_caps, dict) else False
+        if not (bool(profile.get("normal_market", False)) and rare_buying):
+            fail(errors, f"Strict invalid market fixture {profile_id} unexpectedly passed")
+    return errors, warnings
 
 
 def validate_campaigns(errors: list[str], campaigns: dict[str, dict], scenarios: dict[str, dict]) -> None:
@@ -6305,6 +6770,12 @@ def validate_live_client_harness(errors: list[str]) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
+    parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
+    parser.add_argument("--economy-resource-report-json", type=str, default="", help="Write the opt-in economy/resource compatibility report as JSON.")
+    parser.add_argument("--strict-economy-resource-fixtures", action="store_true", help="Validate isolated strict economy/resource schema fixtures.")
+    args = parser.parse_args()
+
     errors: list[str] = []
     validate_content(errors)
     validate_project_and_scenes(errors)
@@ -6350,6 +6821,10 @@ def main() -> int:
     validate_live_client_harness(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
+    strict_fixture_warnings: list[str] = []
+    if args.strict_economy_resource_fixtures:
+        strict_fixture_errors, strict_fixture_warnings = validate_strict_economy_resource_fixtures()
+        errors.extend(strict_fixture_errors)
 
     if errors:
         print("VALIDATION FAILED")
@@ -6409,6 +6884,16 @@ def main() -> int:
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
+    if args.strict_economy_resource_fixtures:
+        print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
+    if args.economy_resource_report or args.economy_resource_report_json:
+        report = build_economy_resource_report()
+        if args.economy_resource_report_json:
+            report_path = Path(args.economy_resource_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- economy/resource report JSON written to {report_path}")
+        if args.economy_resource_report:
+            print_economy_resource_report(report)
     return 0
 
 
