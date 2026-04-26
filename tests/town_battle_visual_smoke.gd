@@ -218,9 +218,13 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: defend action button did not load.")
 		get_tree().quit(1)
 		return false
+	var post_action_response := {}
 	if not defend_button.disabled:
-		shell._on_defend_pressed()
+		post_action_response = shell.call("validation_perform_action", "defend")
 		await get_tree().process_frame
+		if not _assert_battle_post_action_status_recap_contract(shell, post_action_response):
+			get_tree().quit(1)
+			return false
 
 	var recent_after: int = int(session.battle.get("recent_events", []).size())
 	if recent_after < recent_before:
@@ -233,6 +237,42 @@ func _run_battle_smoke() -> bool:
 	if not await _assert_battle_aftermath_transition(session):
 		get_tree().quit(1)
 		return false
+	return true
+
+func _assert_battle_post_action_status_recap_contract(shell: Node, action_response: Dictionary) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: battle shell does not expose post-action validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var response_recap: Dictionary = action_response.get("post_action_recap", {}) if action_response.get("post_action_recap", {}) is Dictionary else {}
+	var snapshot_recap: Dictionary = snapshot.get("post_action_recap", {}) if snapshot.get("post_action_recap", {}) is Dictionary else {}
+	var recap_text := "\n".join([
+		String(action_response.get("post_action_recap_text", "")),
+		String(snapshot.get("post_action_recap_text", "")),
+		String(snapshot.get("visible_consequence_text", "")),
+		String(snapshot.get("consequence_tooltip_text", "")),
+	])
+	for token in ["After order:", "Affected:", "Decision:", "Next:"]:
+		if not recap_text.contains(token):
+			push_error("Battle smoke: post-action recap lost %s clarity: response=%s snapshot=%s text=%s." % [token, action_response, snapshot_recap, recap_text])
+			return false
+	for key in ["happened", "affected", "decision", "next_actor", "text"]:
+		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
+			push_error("Battle smoke: post-action recap payload is missing %s: response=%s snapshot=%s." % [key, response_recap, snapshot_recap])
+			return false
+	var action_tooltips := "\n".join([
+		String(snapshot.get("advance_tooltip", "")),
+		String(snapshot.get("strike_tooltip", "")),
+		String(snapshot.get("shoot_tooltip", "")),
+		String(snapshot.get("defend_tooltip", "")),
+	])
+	if not action_tooltips.contains("Last order:") or not action_tooltips.contains("acts now"):
+		push_error("Battle smoke: action tooltips did not carry the post-action next-actor recap: %s." % action_tooltips)
+		return false
+	for leak_token in ["final_priority", "debug_reason", "ai_score", "weight"]:
+		if recap_text.contains(leak_token) or action_tooltips.contains(leak_token):
+			push_error("Battle smoke: post-action recap leaked internal token %s." % leak_token)
+			return false
 	return true
 
 func _assert_battle_entry_context(shell: Node) -> bool:
@@ -413,9 +453,10 @@ func _assert_battle_aftermath_transition(source_session) -> bool:
 	var event_tooltip := String(snapshot.get("event_tooltip_text", ""))
 	var feedback: Dictionary = snapshot.get("action_feedback", {})
 	var feedback_text := String(feedback.get("full_text", feedback.get("text", "")))
+	var return_recap_text := "%s\n%s" % [event_tooltip, feedback_text]
 	overworld_shell.queue_free()
 	await get_tree().process_frame
-	if not event_tooltip.contains("Rewards:") or not event_tooltip.contains("Forces:") or not event_tooltip.contains("Overworld:"):
+	if not return_recap_text.contains("Rewards:") or not return_recap_text.contains("Forces:") or not return_recap_text.contains("Overworld:"):
 		push_error("Battle smoke: overworld return notice did not expose reward, force, and transition clarity: %s." % snapshot)
 		return false
 	if String(feedback.get("kind", "")) != "battle" or not feedback_text.contains("Forces:"):

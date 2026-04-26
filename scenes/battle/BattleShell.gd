@@ -62,6 +62,8 @@ var _validation_max_spell_casts := 1
 var _validation_prioritize_support_spell := false
 var _validation_spell_casting_enabled := true
 var _validation_battle_resolution_routing_enabled := true
+var _last_action_recap_payload := {}
+var _last_action_recap_text := ""
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -134,8 +136,10 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	var board_intent := BattleRules.board_click_attack_intent_for_target(_session.battle, battle_id)
 	var board_action := String(board_intent.get("action", ""))
 	if board_action != "":
+		var recap_context := BattleRules.post_action_recap_context(_session, board_action)
 		var result := BattleRules.perform_player_action(_session, board_action)
 		_last_message = String(result.get("message", ""))
+		_record_action_recap(board_action, result, recap_context)
 		if bool(result.get("ok", false)):
 			_dismiss_tactical_briefing()
 		var routed := _handle_battle_resolution(result)
@@ -190,6 +194,8 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 			"selected_target_closing_on_target": not selected_closing_context.is_empty(),
 			"action_guidance": action_guidance,
 			"target_context": target_context,
+			"post_action_recap": _last_action_recap_payload.duplicate(true),
+			"post_action_recap_text": _last_action_recap_text,
 			"battle_board": board_summary,
 			"state": String(result.get("state", "")),
 			"message": _last_message,
@@ -263,11 +269,13 @@ func _reject_board_stack_click(
 
 func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
+	var recap_context := BattleRules.post_action_recap_context(_session, "move")
 	var result := BattleRules.move_active_stack_to_hex(_session, q, r)
 	var result_intent_value: Variant = result.get("movement_intent", movement_intent)
 	if result_intent_value is Dictionary:
 		movement_intent = result_intent_value
 	_last_message = String(result.get("message", ""))
+	_record_action_recap("move", result, recap_context)
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(result):
@@ -296,8 +304,10 @@ func _on_surrender_pressed() -> void:
 func _on_spell_action_pressed(action_id: String) -> void:
 	if not action_id.begins_with("cast_spell:"):
 		return
+	var recap_context := BattleRules.post_action_recap_context(_session, action_id)
 	var result := BattleRules.cast_player_spell(_session, action_id.trim_prefix("cast_spell:"))
 	_last_message = String(result.get("message", ""))
+	_record_action_recap(action_id, result, recap_context)
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(result):
@@ -319,8 +329,10 @@ func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
 func _perform_action(action: String) -> void:
+	var recap_context := BattleRules.post_action_recap_context(_session, action)
 	var result := BattleRules.perform_player_action(_session, action)
 	_last_message = String(result.get("message", ""))
+	_record_action_recap(action, result, recap_context)
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(result):
@@ -365,7 +377,7 @@ func _refresh() -> void:
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
 	_set_compact_label(_risk_label, BattleRules.describe_risk_readiness_board(_session), 4)
-	_set_compact_label(_consequence_label, BattleRules.describe_order_consequence_board(_session), 4)
+	_set_compact_label(_consequence_label, _battle_consequence_text(), 4)
 	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 1)
 	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 1)
 	_set_compact_label(_initiative_label, BattleRules.describe_initiative_track(_session), 5)
@@ -431,6 +443,7 @@ func _refresh_action_buttons() -> void:
 	var target_name := String(target_stack.get("name", "No target"))
 	_strike_button.tooltip_text = "%s Target: %s." % [_strike_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _strike_button.tooltip_text
 	_shoot_button.tooltip_text = "%s Target: %s." % [_shoot_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _shoot_button.tooltip_text
+	_append_last_action_tooltips()
 
 func _apply_action_surface(button: Button, action: Dictionary) -> void:
 	button.text = String(action.get("label", button.text))
@@ -525,6 +538,10 @@ func validation_snapshot() -> Dictionary:
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"target_context": BattleRules.describe_target_context(_session),
 		"active_consequence_payload": consequence_payload,
+		"post_action_recap": _last_action_recap_payload.duplicate(true),
+		"post_action_recap_text": _last_action_recap_text,
+		"visible_consequence_text": _consequence_label.text,
+		"consequence_tooltip_text": _consequence_label.tooltip_text,
 		"active_ability_role": String(consequence_payload.get("active_ability_role", "")),
 		"active_status_pressure": String(consequence_payload.get("status_pressure", "")),
 		"active_target_range": String(consequence_payload.get("target_range", "")),
@@ -581,8 +598,10 @@ func validation_try_progress_action() -> Dictionary:
 	var spell_action := _preferred_validation_spell_action()
 	if not spell_action.is_empty():
 		var spell_id := String(spell_action.get("id", "")).trim_prefix("cast_spell:")
+		var recap_context := BattleRules.post_action_recap_context(_session, String(spell_action.get("id", "")))
 		var spell_result := BattleRules.cast_player_spell(_session, spell_id)
 		_last_message = String(spell_result.get("message", ""))
+		_record_action_recap(String(spell_action.get("id", "")), spell_result, recap_context)
 		if bool(spell_result.get("ok", false)):
 			_validation_spell_casts += 1
 			_dismiss_tactical_briefing()
@@ -594,6 +613,8 @@ func validation_try_progress_action() -> Dictionary:
 				"target_battle_id": aligned_target_id,
 				"state": String(spell_result.get("state", "")),
 				"message": _last_message,
+				"post_action_recap": _last_action_recap_payload.duplicate(true),
+				"post_action_recap_text": _last_action_recap_text,
 			}
 		_refresh()
 		return {
@@ -603,13 +624,17 @@ func validation_try_progress_action() -> Dictionary:
 			"target_battle_id": aligned_target_id,
 			"state": String(spell_result.get("state", "")),
 			"message": _last_message,
+			"post_action_recap": _last_action_recap_payload.duplicate(true),
+			"post_action_recap_text": _last_action_recap_text,
 		}
 
 	var action_id := _preferred_validation_action_id()
 	if action_id == "":
 		return {"ok": false, "message": "No legal battle validation action is available."}
+	var recap_context := BattleRules.post_action_recap_context(_session, action_id)
 	var action_result := BattleRules.perform_player_action(_session, action_id)
 	_last_message = String(action_result.get("message", ""))
+	_record_action_recap(action_id, action_result, recap_context)
 	if bool(action_result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(action_result):
@@ -619,6 +644,8 @@ func validation_try_progress_action() -> Dictionary:
 			"target_battle_id": aligned_target_id,
 			"state": String(action_result.get("state", "")),
 			"message": _last_message,
+			"post_action_recap": _last_action_recap_payload.duplicate(true),
+			"post_action_recap_text": _last_action_recap_text,
 		}
 	_refresh()
 	return {
@@ -627,13 +654,17 @@ func validation_try_progress_action() -> Dictionary:
 		"target_battle_id": aligned_target_id,
 		"state": String(action_result.get("state", "")),
 		"message": _last_message,
+		"post_action_recap": _last_action_recap_payload.duplicate(true),
+		"post_action_recap_text": _last_action_recap_text,
 	}
 
 func validation_perform_action(action_id: String) -> Dictionary:
 	if _session.battle.is_empty():
 		return {"ok": false, "action": action_id, "message": "No active battle is loaded for validation.", "state": "invalid"}
+	var recap_context := BattleRules.post_action_recap_context(_session, action_id)
 	var result := BattleRules.perform_player_action(_session, action_id)
 	_last_message = String(result.get("message", ""))
+	_record_action_recap(action_id, result, recap_context)
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	var routed := _handle_battle_resolution(result)
@@ -702,6 +733,8 @@ func _action_validation_response(action_id: String, result: Dictionary, routed: 
 	response["action_guidance"] = action_guidance
 	response["target_context"] = target_context
 	response["active_consequence_payload"] = BattleRules.active_consequence_payload(_session) if _session != null and not _session.battle.is_empty() else {}
+	response["post_action_recap"] = _last_action_recap_payload.duplicate(true)
+	response["post_action_recap_text"] = _last_action_recap_text
 	response["battle_board"] = board_summary
 	return response
 
@@ -807,6 +840,26 @@ func _make_placeholder_label(text: String) -> Label:
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, 96, false)
 
+func _record_action_recap(action_id: String, result: Dictionary, context: Dictionary = {}) -> void:
+	if not bool(result.get("ok", false)):
+		_last_action_recap_payload = {}
+		_last_action_recap_text = ""
+		return
+	_last_action_recap_payload = BattleRules.post_action_recap_payload(_session, result, action_id, context)
+	_last_action_recap_text = String(_last_action_recap_payload.get("text", ""))
+
+func _battle_consequence_text() -> String:
+	if _last_action_recap_text.strip_edges() != "":
+		return _last_action_recap_text
+	return BattleRules.describe_order_consequence_board(_session)
+
+func _append_last_action_tooltips() -> void:
+	var recap_tooltip := String(_last_action_recap_payload.get("tooltip", "")).strip_edges()
+	if recap_tooltip == "":
+		return
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button]:
+		button.tooltip_text = "%s\nLast order: %s" % [button.tooltip_text, recap_tooltip]
+
 func _style_action_button(button: Button, primary: bool = false, width: float = 112.0) -> void:
 	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", width, 32.0, 12)
 
@@ -883,6 +936,8 @@ func _movement_click_response(
 		"post_move_action_guidance": action_guidance,
 		"post_move_target_context": target_context,
 		"post_move_active_consequence_payload": BattleRules.active_consequence_payload(_session) if _session != null and not _session.battle.is_empty() else {},
+		"post_action_recap": _last_action_recap_payload.duplicate(true),
+		"post_action_recap_text": _last_action_recap_text,
 		"post_move_board_summary": board_summary,
 	}
 
