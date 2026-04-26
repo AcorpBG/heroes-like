@@ -4,10 +4,10 @@
   "updatedAt": "2026-04-26T23:59:59Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-commander-role-state-planning-10184",
-  "currentSliceTitle": "Plan commander-role state boundaries after site-control and Glassroad defense proofs",
+  "currentSliceId": "strategic-ai-commander-role-report-fixture-planning-10184",
+  "currentSliceTitle": "Plan commander-role report fixtures before schema or live behavior adoption",
     "currentSliceStatus": "pending",
-    "currentSliceNotes": "Strategic AI Glassroad defense proof reporting is complete in docs/strategic-ai-glassroad-defense-proof-report.md with focused Godot coverage in tests/ai_glassroad_defense_proof_report.gd. The report proves current Embercourt relay/starlens ordering, Halo Spire town-front sanity, relay assignment, staged relay retake/controller flip, Starlens stabilization profile, Riverwatch town-governor garrison stabilization, and public score-table leak checks. No coefficient defect, relay blocker, or defense-specific durable state need was found. The next current slice is planning-only commander-role state boundaries; continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, defense-specific durable state, behavior tuning, coefficient tuning, or River Pass rebalance.",
+    "currentSliceNotes": "Strategic AI commander-role state boundary planning is complete in docs/strategic-ai-commander-role-state-plan.md. The plan separates current raid encounter fields, current commander roster continuity, and a future minimal commander_role_state boundary for non-staged assignment, defense, raid, recovery, retake, stabilizer, and personality-pressure reporting. The recommended next slice is planning-only commander-role report fixtures using River Pass and Glassroad evidence before schema implementation, save migration, full AI hero task state, live-client gate work, coefficient tuning, defense-specific durable state, production JSON migration, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, content/resources.json, wood-to-timber migration, rare resources, market-cap overhaul, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -535,8 +535,18 @@
         {
             "id": "strategic-ai-commander-role-state-planning-10184",
             "title": "Plan commander-role state boundaries after site-control and Glassroad defense proofs",
-            "status": "pending",
+            "status": "completed",
+            "startedAt": "2026-04-26T23:59:59Z",
+            "completedAt": "2026-04-26T23:59:59Z",
+            "decision": "commander-role-report-fixture-planning-next",
+            "planningDoc": "docs/strategic-ai-commander-role-state-plan.md",
             "difficulty": "very_high"
+        },
+        {
+            "id": "strategic-ai-commander-role-report-fixture-planning-10184",
+            "title": "Plan commander-role report fixtures before schema or live behavior adoption",
+            "status": "pending",
+            "difficulty": "high"
         },
         {
             "id": "post-foundation-map-screen-polish-10184",
