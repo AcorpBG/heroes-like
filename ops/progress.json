@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:14:50Z",
+  "updatedAt": "2026-04-26T23:22:18Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "editor-placement-action-cue-10184",
-  "currentSliceTitle": "Surface compact map-editor placement action cues",
+  "currentSliceId": "battle-spell-action-cue-10184",
+  "currentSliceTitle": "Surface compact battle spell action cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact map-editor placement action cues: the existing placement preview and availability payload now surface a public `Placement action:` line in editor status plus matching Place Object and map tooltip guidance, including ready/blocked state, next step, why it matters, and working-copy scope. Added focused map-editor smoke assertions for ready and blocked placement previews with no internal score-field leaks. UI/tooling readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, campaign progression semantic changes, or internal score fields.",
+  "currentSliceNotes": "Implemented compact battle spell-action cues: live battle spell buttons now surface visible Ready/Blocked state and public tooltips with spell action, readiness, target, cost, use, effect, and next-step context sourced from existing spell action payloads. Added focused town/battle smoke assertions for rendered spell button surfaces and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1855,6 +1855,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T23:08:52Z",
       "completedAt": "2026-04-26T23:14:50Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-spell-action-cue-10184",
+      "title": "Surface compact battle spell action cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:19:58Z",
+      "completedAt": "2026-04-26T23:22:18Z",
       "difficulty": "small"
     }
   ],

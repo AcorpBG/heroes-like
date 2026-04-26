@@ -940,6 +940,35 @@ func _assert_battle_magic_inspection_contract(shell: Node) -> bool:
 	if not inspected_action:
 		push_error("Battle smoke: spell action tooltips do not expose category, cost, target, effect, and use context: %s." % [spell_actions])
 		return false
+	var button_surfaces: Array = snapshot.get("spell_action_button_surfaces", [])
+	var inspected_button := false
+	var button_text := ""
+	for surface in button_surfaces:
+		if not (surface is Dictionary):
+			continue
+		var rendered := "%s\n%s" % [
+			String(surface.get("text", "")),
+			String(surface.get("tooltip", "")),
+		]
+		button_text += "\n%s" % rendered
+		if (
+			(rendered.contains("| Ready") or rendered.contains("| Blocked"))
+			and rendered.contains("Spell action:")
+			and rendered.contains("Readiness:")
+			and rendered.contains("Target:")
+			and rendered.contains("Cost:")
+			and rendered.contains("Use:")
+			and rendered.contains("Effect:")
+			and rendered.contains("Next:")
+		):
+			inspected_button = true
+	if not inspected_button:
+		push_error("Battle smoke: rendered spell buttons do not expose visible readiness and action tooltip context: %s." % button_surfaces)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if button_text.contains(leak_token):
+			push_error("Battle smoke: spell action cue leaked internal token %s: %s." % [leak_token, button_text])
+			return false
 	return true
 
 func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> bool:
