@@ -1058,6 +1058,67 @@ func _route_decision_tooltip(surface: Dictionary) -> String:
 	sections.append(decision_brief)
 	return _join_tooltip_sections(sections)
 
+func _route_target_handoff_surface(surface: Dictionary = {}) -> Dictionary:
+	var route_surface := surface
+	if route_surface.is_empty():
+		route_surface = _selected_route_decision_surface()
+	if route_surface.is_empty() or String(route_surface.get("status", "")) == "current":
+		return {}
+	var destination := String(route_surface.get("destination", "Selected route")).strip_edges()
+	if destination == "":
+		destination = "%d,%d" % [int(route_surface.get("x", _selected_tile.x)), int(route_surface.get("y", _selected_tile.y))]
+	var action_label := String(route_surface.get("action_label", "Route order")).strip_edges()
+	if action_label == "":
+		action_label = String(route_surface.get("action_kind", "Route order")).capitalize()
+	var status_label := _route_decision_status_label(route_surface)
+	var steps := int(route_surface.get("steps", 0))
+	var step_text := "%d step%s" % [steps, "" if steps == 1 else "s"] if steps > 0 else "no path"
+	var movement_current := int(route_surface.get("movement_current", 0))
+	var movement_max := int(route_surface.get("movement_max", movement_current))
+	var movement_after := int(route_surface.get("movement_after_order", movement_current))
+	var movement_text := "Move %d/%d" % [movement_current, movement_max]
+	if int(route_surface.get("movement_cost", 0)) > 0:
+		movement_text = "Move %d->%d" % [movement_current, movement_after]
+	var brief := _route_decision_brief(route_surface)
+	var why := String(brief.get("why_it_matters", "")).strip_edges()
+	if why == "":
+		why = _route_decision_why_it_matters(route_surface)
+	var next_step := String(brief.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = _route_decision_next_practical_action(route_surface)
+	var readiness := "%s, %s, %s" % [step_text, status_label, movement_text]
+	var visible := "Route target: %s | %s | %s" % [
+		_short_action_label(destination, 22),
+		_short_action_label(action_label, 18),
+		status_label,
+	]
+	var tooltip := "Route Target Handoff\n- Target: %s at %d,%d\n- Order: %s\n- Readiness: %s\n- Why it matters: %s\n- Next: %s" % [
+		destination,
+		int(route_surface.get("x", _selected_tile.x)),
+		int(route_surface.get("y", _selected_tile.y)),
+		action_label,
+		readiness,
+		why,
+		next_step,
+	]
+	var blocked_reason := String(route_surface.get("blocked_reason", "")).strip_edges()
+	if blocked_reason != "":
+		tooltip += "\n- Blocked: %s" % blocked_reason
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"target_label": destination,
+		"action_label": action_label,
+		"status": String(route_surface.get("status", "")),
+		"status_label": status_label,
+		"steps": steps,
+		"movement_line": movement_text,
+		"readiness": readiness,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"blocked_reason": blocked_reason,
+	}
+
 func _route_decision_brief_text(surface: Dictionary) -> String:
 	var brief_value: Variant = surface.get("decision_brief", {})
 	var brief: Dictionary = brief_value if brief_value is Dictionary else _route_decision_brief(surface)
@@ -1809,16 +1870,27 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		var summary := String(primary_action.get("summary", "")).strip_edges()
 		if summary != "":
 			primary_line = "%s %s" % [primary_line, summary]
-	var route_line := _route_decision_line(_selected_route_decision_surface())
+	var route_decision := _selected_route_decision_surface()
+	var route_line := _route_decision_line(route_decision)
+	var route_target_handoff := _route_target_handoff_surface(route_decision)
 	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
 	var visible_next := _short_text(next_step.trim_suffix("."), 44)
 	var visible := "Ready: %s | %s" % [visible_next, movement_line]
+	var route_target_visible := String(route_target_handoff.get("visible_text", "")).strip_edges()
+	if route_target_visible != "":
+		visible = "Ready: %s | %s" % [
+			visible_next,
+			_short_text(route_target_visible.trim_prefix("Route target: "), 36),
+		]
 	var tooltip_lines := [
 		"Field Readiness",
 		"- %s" % (progress_line if progress_line != "" else "Current progress: no authored objective progress is available."),
 		"- Next practical action: %s" % next_step,
 		"- %s" % primary_line,
 	]
+	var route_target_tooltip := String(route_target_handoff.get("tooltip_text", "")).strip_edges()
+	if route_target_tooltip != "":
+		tooltip_lines.append(route_target_tooltip)
 	if route_line != "":
 		tooltip_lines.append("- %s" % route_line)
 	if forecast != "":
@@ -1830,6 +1902,7 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"next_step": next_step,
 		"primary_order": primary_line,
 		"route_line": route_line,
+		"route_target_handoff": route_target_handoff,
 		"movement_line": movement_line,
 		"end_turn_forecast": forecast,
 	}
@@ -2591,6 +2664,7 @@ func validation_snapshot() -> Dictionary:
 	var selected_town := _validation_selected_town_state()
 	var primary_action := _current_primary_action()
 	var route_decision := _selected_route_decision_surface()
+	var route_target_handoff := _route_target_handoff_surface(route_decision)
 	var field_readiness := _field_readiness_surface()
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
 	var event_feed := _event_feed_surface()
@@ -2660,6 +2734,9 @@ func validation_snapshot() -> Dictionary:
 		"selected_route_decision": route_decision,
 		"selected_route_decision_text": _route_decision_line(route_decision),
 		"selected_route_decision_brief": _duplicate_dictionary(route_decision.get("decision_brief", {})),
+		"route_target_handoff": route_target_handoff,
+		"route_target_handoff_visible_text": String(route_target_handoff.get("visible_text", "")),
+		"route_target_handoff_tooltip_text": String(route_target_handoff.get("tooltip_text", "")),
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),

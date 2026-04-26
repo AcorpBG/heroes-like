@@ -45,6 +45,8 @@ func _run() -> void:
 		return
 	if not _assert_route_decision_clarity_contract(shell):
 		return
+	if not _assert_route_target_handoff_contract(shell):
+		return
 	if not _assert_artifact_reward_visibility_contract(shell):
 		return
 	if not await _assert_overworld_magic_affordance_contract(shell):
@@ -967,6 +969,76 @@ func _assert_route_decision_fields(label: String, snapshot: Dictionary, expected
 			push_error("Overworld smoke: %s route UI missing '%s'. decision=%s text=%s" % [label, String(needle), route_decision, text])
 			get_tree().quit(1)
 			return false
+	return true
+
+func _assert_route_target_handoff_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing route-target handoff validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+
+	_set_active_hero_position(session, Vector2i(1, 2))
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+
+	var snapshot: Dictionary = shell.call("validation_select_tile", 1, 0)
+	var handoff: Dictionary = snapshot.get("route_target_handoff", {})
+	var readiness: Dictionary = snapshot.get("field_readiness", {})
+	var readiness_handoff: Dictionary = readiness.get("route_target_handoff", {})
+	var joined := "\n".join([
+		String(snapshot.get("route_target_handoff_visible_text", "")),
+		String(snapshot.get("route_target_handoff_tooltip_text", "")),
+		String(handoff.get("target_label", "")),
+		String(handoff.get("action_label", "")),
+		String(handoff.get("readiness", "")),
+		String(handoff.get("why_it_matters", "")),
+		String(handoff.get("next_step", "")),
+		String(readiness.get("visible_text", "")),
+		String(readiness.get("tooltip_text", "")),
+		String(readiness_handoff.get("visible_text", "")),
+		String(readiness_handoff.get("tooltip_text", "")),
+		String(snapshot.get("event_visible_text", "")),
+		String(snapshot.get("event_tooltip_text", "")),
+		String(snapshot.get("objective_brief_tooltip_text", "")),
+		String(snapshot.get("map_cue_tooltip_text", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld route target handoff",
+		[joined],
+		[
+			"Route target:",
+			"Route Target Handoff",
+			"Target:",
+			"Timber Wagon",
+			"Order:",
+			"Advance to Site",
+			"Readiness:",
+			"reachable today",
+			"Why it matters:",
+			"Next:",
+			"Move",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld route target handoff", joined):
+		return false
+
+	session.overworld["fog"] = original_fog
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
 	return true
 
 func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:

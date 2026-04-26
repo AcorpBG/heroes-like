@@ -3964,11 +3964,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact town order target handoff cues using existing build, recruit, response, study, market, and departure payloads.
+Current target: completed compact overworld route target handoff cues using existing selected-route decision, objective, movement, and readiness payloads.
 
 Done means:
-- The town dispatch footer exposes a compact visible `Order target:` line so a player can see the best next town order and whether it is ready, needs exchange, or is blocked.
-- The order target tooltip exposes the action lane, target, where to act in the town UI, readiness, impact, and departure context using public-facing language.
-- Focused town smoke coverage proves the visible order target cue, structured validation payload, and no internal score/debug leaks.
+- The overworld idle field rail and readiness tooltip expose a compact visible `Route target:` handoff so a player can see the selected destination, order, readiness, and movement implication.
+- The route target tooltip exposes target, order, readiness, impact, and next action using public-facing language from existing route/objective/readiness payloads.
+- Focused overworld smoke coverage proves the visible route target cue, structured validation payload, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, settings persistence semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
