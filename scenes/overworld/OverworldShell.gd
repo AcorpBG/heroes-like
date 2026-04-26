@@ -1530,10 +1530,13 @@ func _map_cue_text() -> String:
 	var feedback := _action_feedback_text()
 	if feedback != "":
 		return feedback
+	var action := _current_primary_action()
+	var acceptance_cue := _manual_play_acceptance_cue(action)
+	if acceptance_cue != "":
+		return acceptance_cue
 	var route_cue := _route_decision_cue(_selected_route_decision_surface())
 	if route_cue != "":
 		return _short_text(route_cue, 52)
-	var action := _current_primary_action()
 	if action.is_empty():
 		var movement = _session.overworld.get("movement", {})
 		var cue := "Move %d/%d | Select destination" % [
@@ -1550,6 +1553,14 @@ func _map_cue_text() -> String:
 		return cue
 	return "Action: %s [Enter]" % _short_action_label(String(action.get("label", "Action")), 20)
 
+func _manual_play_acceptance_cue(action: Dictionary) -> String:
+	if action.is_empty() or bool(action.get("disabled", false)):
+		return ""
+	var label := _short_action_label(String(action.get("label", "Action")), 22)
+	if label == "":
+		return ""
+	return _short_text("Try: %s [Enter]" % label, 52)
+
 func _map_cue_tooltip() -> String:
 	var feedback := _action_feedback_tooltip()
 	var action := _current_primary_action()
@@ -1563,7 +1574,7 @@ func _map_cue_tooltip() -> String:
 		var next_hint := " Select another destination or press Enter/Space for the current primary order." if not action.is_empty() else " Select a destination or open a command drawer for the next order."
 		return "%s.%s%s" % [feedback, next_hint, pan_hint]
 	if route_tooltip != "":
-		var commit_hint := " Press Enter or Space to commit the primary order." if not action.is_empty() and not bool(action.get("disabled", false)) else ""
+		var commit_hint := " Try %s with Enter or Space now." % String(action.get("label", "the primary order")) if not action.is_empty() and not bool(action.get("disabled", false)) else ""
 		return "%s%s%s" % [route_tooltip, commit_hint, pan_hint]
 	if action.is_empty():
 		return "Click a visible adjacent tile to move now, or select a farther visible tile to set the next route step.%s" % pan_hint

@@ -30,6 +30,7 @@ func _run() -> void:
 		String(decision_brief.get("affected", "")),
 		String(decision_brief.get("why_it_matters", "")),
 		String(decision_brief.get("next_step", "")),
+		String(snapshot.get("map_cue_text", "")),
 		String(snapshot.get("map_cue_tooltip_text", "")),
 		String(snapshot.get("map_tooltip", "")),
 		String(snapshot.get("primary_action", {}).get("summary", "")),
@@ -52,6 +53,7 @@ func _run() -> void:
 			"Why it matters:",
 			"Next:",
 			"Commit Advance to Site now.",
+			"Try: Advance to Site [Enter]",
 		]
 	):
 		return
