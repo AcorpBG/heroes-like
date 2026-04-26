@@ -176,6 +176,24 @@ Validation:
 Limits:
 - This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
+## Completed Implementation Slice: Town Departure Readiness Confirmation
+Status: completed on 2026-04-26 as compact player-facing town UI polish.
+
+Purpose:
+- Help a manual player decide whether to act in town, leave to the field, or leave and end the turn from the existing town screen.
+- Reuse current town handoff, recommendation, defense/frontier, logistics, and movement payloads instead of adding mechanics or durable logs.
+
+Delivered:
+- Added a compact town departure confirmation payload in `scripts/core/TownRules.gd`.
+- The live town `Leave` control now carries the current movement/end-turn readiness state in its label and a detailed departure check in its tooltip.
+- Added focused smoke coverage in `tests/town_battle_visual_smoke.gd`, including visible-control and no-score-leak assertions.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
+
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
 

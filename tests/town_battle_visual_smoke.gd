@@ -61,6 +61,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_field_handoff_recap_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_departure_confirmation_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -680,6 +683,47 @@ func _assert_town_field_handoff_recap_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
 		if handoff_text.contains(leak_token):
 			push_error("Town smoke: town handoff recap leaked internal strategy token %s: %s." % [leak_token, handoff_text])
+			return false
+	return true
+
+func _assert_town_departure_confirmation_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell is missing town departure confirmation validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var departure: Dictionary = snapshot.get("town_departure_confirmation", {}) if snapshot.get("town_departure_confirmation", {}) is Dictionary else {}
+	var departure_text := "\n".join([
+		String(snapshot.get("town_departure_visible_text", "")),
+		String(snapshot.get("leave_button_text", "")),
+		String(snapshot.get("leave_button_tooltip_text", "")),
+		String(departure.get("town_readiness", "")),
+		String(departure.get("affected", "")),
+		String(departure.get("why_it_matters", "")),
+		String(departure.get("next_step", "")),
+	])
+	for token in ["Ready check:", "Departure Check", "Town readiness:", "Next practical action:", "Leave"]:
+		if not departure_text.contains(token):
+			push_error("Town smoke: town departure confirmation lost %s clarity: %s." % [token, departure_text])
+			return false
+	if not String(snapshot.get("leave_button_text", "")).contains("Leave"):
+		push_error("Town smoke: departure confirmation is not visible on the Leave control: %s." % snapshot)
+		return false
+	for key in ["button_label", "visible_text", "tooltip_text", "town_readiness", "affected", "why_it_matters", "next_step"]:
+		if String(departure.get(key, "")) == "":
+			push_error("Town smoke: departure confirmation is missing structured %s: %s." % [key, departure])
+			return false
+	var decision_text := String(departure.get("visible_text", "")) + "\n" + String(departure.get("next_step", ""))
+	if not (
+		decision_text.contains("town orders")
+		or decision_text.contains("response order")
+		or decision_text.contains("end turn")
+		or decision_text.contains("field route")
+	):
+		push_error("Town smoke: departure confirmation did not help decide town action, field route, or end turn: %s." % departure_text)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
+		if departure_text.contains(leak_token):
+			push_error("Town smoke: departure confirmation leaked internal strategy token %s: %s." % [leak_token, departure_text])
 			return false
 	return true
 

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T20:55:00Z",
+  "updatedAt": "2026-04-26T19:20:48Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "menu-save-play-check-10184",
-  "currentSliceTitle": "Surface compact play-check summary from existing save and loop payloads",
+  "currentSliceId": "town-departure-readiness-confirmation-10184",
+  "currentSliceTitle": "Surface compact town departure readiness confirmation on the live Leave control",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible main-menu Play check line sourced from existing save summary, resume target, objective/progress recap, next play action, and risk/defense watch payloads. The latest-save pulse, first-view footer, selected-save details, and validation snapshot expose the compact summary, with focused smoke no-score-leak assertions. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow visible town in-session readiness confirmation on the existing Leave control, sourced from current town handoff, recommendation, defense/frontier, logistics, and movement payloads only. The Leave label now surfaces move/end-turn readiness and the tooltip carries the departure check, with focused smoke no-score-leak assertions. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1614,6 +1614,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T19:55:00Z",
       "completedAt": "2026-04-26T20:05:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "town-departure-readiness-confirmation-10184",
+      "title": "Surface compact town departure readiness confirmation on the live Leave control",
+      "status": "completed",
+      "startedAt": "2026-04-26T19:17:42Z",
+      "completedAt": "2026-04-26T19:20:48Z",
       "difficulty": "medium"
     }
   ],
