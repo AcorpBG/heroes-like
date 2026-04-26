@@ -324,8 +324,31 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	var encounter: Dictionary = shell.call("validation_select_tile", 3, 1)
 	if not _assert_text_contains_all(
 		"River Pass safe encounter metadata UI",
-		[String(encounter.get("context_summary", "")), String(encounter.get("selected_tile_rail_text", ""))],
-		["Neutral Encounter", "Visible Army", "Route Pressure", "Cadence: one-time"]
+		[
+			String(encounter.get("context_summary", "")),
+			String(encounter.get("selected_tile_rail_text", "")),
+			String(encounter.get("primary_action", {}).get("summary", "")),
+		],
+		[
+			"Neutral Encounter",
+			"Visible Army",
+			"Route Pressure",
+			"Risk Light",
+			"Difficulty Low",
+			"Army: Blackbranch Raiders",
+			"12 troops/2 groups",
+			"Blackbranch Cutthroat x8",
+			"Reward: 250 gold, 180 xp",
+			"Cadence: one-time",
+		]
+	):
+		return false
+	shell.call("validation_select_tile", 1, 0)
+	var encounter_hover: Dictionary = shell.call("validation_hover_tile", 3, 1)
+	if not _assert_text_contains_all(
+		"River Pass encounter hover tooltip",
+		[String(encounter_hover.get("map_tooltip", ""))],
+		["Ghoul Grove", "Risk Light", "Difficulty Low", "Blackbranch Raiders", "12 troops/2 groups", "Reward 250 gold, 180 xp"]
 	):
 		return false
 
