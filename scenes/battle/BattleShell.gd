@@ -387,6 +387,10 @@ func _refresh() -> void:
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
 	_set_compact_label(_action_guide, BattleRules.describe_action_surface(_session), 5)
+	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
+	var action_confirmation_tooltip := String(action_confirmation.get("tooltip_text", "")).strip_edges()
+	if action_confirmation_tooltip != "":
+		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
 	_battle_board_view.set_battle_state(_session)
 
 	var player_lines = BattleRules.roster_lines(_session.battle, "player")
@@ -504,6 +508,7 @@ func validation_snapshot() -> Dictionary:
 	var enemy_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "enemy"))
 	var action_surface := BattleRules.get_action_surface(_session)
 	var consequence_payload := BattleRules.active_consequence_payload(_session)
+	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -535,6 +540,9 @@ func validation_snapshot() -> Dictionary:
 		"active_movement_board_click_action": String(movement_click_intent.get("action", "")),
 		"active_movement_board_click_label": String(movement_click_intent.get("label", "")),
 		"action_surface": action_surface,
+		"action_confirmation": action_confirmation,
+		"action_confirmation_text": String(action_confirmation.get("visible_text", "")),
+		"action_confirmation_tooltip_text": String(action_confirmation.get("tooltip_text", "")),
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),

@@ -1956,6 +1956,7 @@ static func active_consequence_payload(session: SessionStateStoreScript.SessionD
 			"active_ability_role": "No battle is active.",
 			"status_pressure": "No status pressure.",
 			"target_range": "No target selected.",
+			"confirmation": "Ready check unavailable.",
 			"preferred_action_id": "",
 			"action_previews": [],
 		}
@@ -1971,6 +1972,7 @@ static func active_consequence_payload(session: SessionStateStoreScript.SessionD
 		"active_ability_role": _active_ability_role_line(active_stack, battle, target),
 		"status_pressure": _stack_status_pressure_line(active_stack, battle),
 		"target_range": _target_range_readiness_line(active_stack, target, battle),
+		"confirmation": describe_action_readiness_confirmation(session),
 		"preferred_action_id": preferred_action_id,
 		"action_previews": _action_consequence_preview_list(surface),
 	}
@@ -2125,8 +2127,10 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 		board_click_line = String(closing_context.get("message", board_click_line))
 	var movement_click_line := String(movement_intent.get("message", ""))
 	var manual_cue := _manual_battle_action_cue(actions, click_intent, movement_intent)
+	var confirmation_line := describe_action_readiness_confirmation(session)
 	var lines = [
 		"Target focus: %s" % target_line,
+		confirmation_line,
 		manual_cue,
 		board_click_line,
 	]
@@ -2139,6 +2143,90 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 			String(action.get("summary", "")),
 		])
 	return "\n".join(lines)
+
+static func action_readiness_confirmation_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {
+			"visible_text": "Ready check unavailable.",
+			"tooltip_text": "Action Confirmation\n- No battle is active.",
+		}
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	if active_stack.is_empty():
+		return {
+			"visible_text": "Ready check: no stack is queued.",
+			"tooltip_text": "Action Confirmation\n- No stack is queued to act.",
+			"next_step": "Wait for battle resolution.",
+		}
+	if String(active_stack.get("side", "")) != "player":
+		var enemy_text := "Ready check: %s has initiative; wait for command to return." % _stack_label(active_stack)
+		return {
+			"visible_text": enemy_text,
+			"tooltip_text": "Action Confirmation\n- Active: %s\n- Next: wait for command to return." % _stack_label(active_stack),
+			"active_stack": _stack_label(active_stack),
+			"next_step": "Wait for command to return.",
+		}
+
+	var target = get_selected_target(battle)
+	var surface = get_action_surface(session)
+	var action_id := _preferred_player_action_id(surface, active_stack)
+	var action: Dictionary = surface.get(action_id, {}) if surface.get(action_id, {}) is Dictionary else {}
+	var action_label := String(action.get("label", action_id.capitalize())).strip_edges()
+	var target_label := String(action.get("target", _stack_label(target) if not target.is_empty() else "current focus")).strip_edges()
+	var consequence := String(action.get("consequence", action.get("summary", ""))).strip_edges()
+	var spell_action := _preferred_spell_timing_action(session, battle, active_stack, target)
+	var spell_label := String(spell_action.get("label", "")).strip_edges()
+	var hold_action: Dictionary = surface.get("defend", {}) if surface.get("defend", {}) is Dictionary else {}
+	var hold_ready := not bool(hold_action.get("disabled", true))
+	if action_id == "":
+		var blocked_text := "Ready check: retarget, move, or wait for a legal order."
+		return {
+			"visible_text": blocked_text,
+			"tooltip_text": "Action Confirmation\n- No ready order is open from this posture.\n- Next: retarget, move, or wait for command to return.",
+			"next_step": "Retarget or change posture.",
+		}
+
+	var option_parts := []
+	if spell_label != "":
+		option_parts.append("cast %s" % spell_label)
+	if hold_ready and action_id != "defend":
+		option_parts.append("Defend to hold")
+	var option_text := ""
+	if not option_parts.is_empty():
+		option_text = "; or %s" % ", ".join(option_parts)
+	var target_text := " on %s" % target_label if target_label != "" and action_id in ["strike", "shoot"] else ""
+	var visible := "Ready check: confirm %s%s%s; order ends this stack's action." % [
+		action_label,
+		target_text,
+		option_text,
+	]
+	var tooltip := "Action Confirmation\n- Confirm: %s%s\n- Readiness: %s\n- Why: %s\n- Result: %s\n- Next: order ends this stack's action and initiative advances." % [
+		action_label,
+		target_text,
+		String(action.get("readiness", "")),
+		String(action.get("why", "")),
+		consequence,
+	]
+	if spell_label != "":
+		tooltip += "\n- Cast option: %s" % String(spell_action.get("summary", spell_label))
+	if hold_ready and action_id != "defend":
+		tooltip += "\n- Hold option: %s" % String(hold_action.get("summary", "Defend to hold position."))
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"action_id": action_id,
+		"button_label": action_label,
+		"target": target_label,
+		"readiness": String(action.get("readiness", "")),
+		"why": String(action.get("why", "")),
+		"consequence": consequence,
+		"spell_option": spell_label,
+		"hold_option": "Defend" if hold_ready else "",
+		"next_step": "Order ends this stack's action and initiative advances.",
+	}
+
+static func describe_action_readiness_confirmation(session: SessionStateStoreScript.SessionData) -> String:
+	return String(action_readiness_confirmation_payload(session).get("visible_text", "Ready check unavailable."))
 
 static func _manual_battle_action_cue(actions: Dictionary, click_intent: Dictionary, movement_intent: Dictionary) -> String:
 	var click_action := String(click_intent.get("action", ""))
@@ -4063,6 +4151,7 @@ static func _enrich_action_surface_entry(
 	action["range"] = _action_range_line(action_id, active_stack, target, battle)
 	action["why"] = _action_why_line(action_id, session, battle, active_stack, target, ready)
 	action["consequence"] = _action_consequence_line(action_id, session, battle, active_stack, target, action)
+	action["confirmation"] = _action_confirmation_line(action_id, active_stack, target, action)
 	action["tooltip"] = _compact_action_tooltip(action)
 
 static func _compact_action_tooltip(action: Dictionary) -> String:
@@ -4072,6 +4161,7 @@ static func _compact_action_tooltip(action: Dictionary) -> String:
 		"Target/range: %s | %s" % [String(action.get("target", "")), String(action.get("range", ""))],
 		"Why: %s" % String(action.get("why", "")),
 		"Consequence: %s" % String(action.get("consequence", "")),
+		"Confirm: %s" % String(action.get("confirmation", "")),
 	]
 	var compact := []
 	for line_value in lines:
@@ -4079,6 +4169,31 @@ static func _compact_action_tooltip(action: Dictionary) -> String:
 		if line != "":
 			compact.append(line)
 	return "\n".join(compact)
+
+static func _action_confirmation_line(
+	action_id: String,
+	active_stack: Dictionary,
+	target: Dictionary,
+	action: Dictionary
+) -> String:
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return "input is locked until command returns."
+	var label := String(action.get("label", action_id.capitalize()))
+	if bool(action.get("disabled", false)):
+		return "%s is not ready from this posture; retarget or change range first." % label
+	match action_id:
+		"strike", "shoot":
+			var target_label := _stack_label(target) if not target.is_empty() else "the selected target"
+			return "%s %s; this stack spends its action and initiative advances." % [label, target_label]
+		"advance":
+			return "move this stack on the tactical grid; initiative advances after the move resolves."
+		"defend":
+			return "brace in place as the hold/wait order; initiative advances."
+		"retreat":
+			return "leave the field and route back through the battle outcome."
+		"surrender":
+			return "concede the field under surrender terms."
+	return "confirm this order; initiative advances after it resolves."
 
 static func _action_target_label(action_id: String, active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
 	match action_id:

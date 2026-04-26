@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T19:27:23Z",
+  "updatedAt": "2026-04-26T19:35:42Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-end-turn-readiness-confirmation-10184",
-  "currentSliceTitle": "Surface compact overworld end-turn readiness confirmation on the live End Turn control",
+  "currentSliceId": "battle-action-readiness-confirmation-10184",
+  "currentSliceTitle": "Surface compact battle action readiness confirmation on the live battle order rail and controls",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible manual-play polish slice on the existing overworld End Turn control, sourced from current field readiness, route, objective/progress, event-feed, and end-turn forecast payloads only. The button now shows whether movement, route, battle, or town action remains before ending the day, and its tooltip carries the compact end-turn readiness confirmation with focused smoke no-score-leak assertions. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow visible manual-play polish slice on the existing battle order rail and action controls, sourced from current BattleRules action surface, selected target, initiative/turn state, spell-action availability, and consequence payloads only. The order rail now shows a Ready check confirmation line, action button tooltips include Confirm guidance, and focused smoke asserts visible readiness/confirmation without leaking internal score fields. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1630,6 +1630,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T19:23:38Z",
       "completedAt": "2026-04-26T19:27:23Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "battle-action-readiness-confirmation-10184",
+      "title": "Surface compact battle action readiness confirmation on the live battle order rail and controls",
+      "status": "completed",
+      "startedAt": "2026-04-26T19:32:35Z",
+      "completedAt": "2026-04-26T19:35:42Z",
       "difficulty": "medium"
     }
   ],
