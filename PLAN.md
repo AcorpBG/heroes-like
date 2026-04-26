@@ -109,10 +109,11 @@ Immediate execution order:
 72. Strategic AI hero task-state save-normalizer preservation planning is completed in `docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md`. The plan defines a future `AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT` for old-save absence, optional future-field preservation, malformed-state tolerance, unknown-field isolation, `SaveService` semantic boundaries, failure conditions, validation commands, rollback, and exact implementation sequence without schema writes, save migration, `SAVE_VERSION` bump, durable event logs, full AI hero task-state implementation, live behavior adoption, or production JSON edits.
 73. Map editor object taxonomy usability implementation is completed as real editor/tooling UI in `scenes/editor/MapEditorShell.gd` and focused smoke coverage in `tests/map_editor_smoke.gd`. The existing object palette, selected tile inspection, selected-property payloads, and tooltips now surface object primary class, secondary tags, cadence, passability class, resource-site/map-object links, neutral encounter role/risk, and guard-target links without production JSON migration, renderer sprite ingestion, pathing/body-tile adoption, save migration, or new report-only scenes.
 74. Overworld field readiness recap implementation is completed as real player-facing UI in `scenes/overworld/OverworldShell.gd` with focused smoke coverage in `tests/overworld_visual_smoke.gd`. The existing objective, event-feed, route, movement, and end-turn forecast payloads now produce a compact visible readiness/next-action line plus tooltip detail without mechanics changes, content migration, save/schema changes, AI tuning, durable event logs, or internal score-field exposure.
-75. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+75. Main-menu save play-check implementation is completed as compact player-facing UI in `scenes/menus/MainMenu.gd`, backed by reusable save-summary helpers in `scripts/autoload/SaveService.gd` and focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`. Existing save summary, resume-target, objective/progress, next-action, risk, and town-defense payloads now produce one `Play check:` line without mechanics changes, save schema/version changes, durable event logs, AI tuning, production JSON migration, or internal score-field exposure.
+76. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Prefer another compact real player-facing or tooling-facing implementation slice before returning to report-only foundation work, unless AcOrP explicitly redirects back to strategic AI evidence gates. Keep the overworld field readiness recap boundary active: it may reuse existing objective, event-feed, route, and forecast payloads, but it does not authorize new mechanics, save/schema changes, durable event logs, AI tuning, or broader dashboard composition.
+- Prefer another compact real player-facing or tooling-facing implementation slice before returning to report-only foundation work, unless AcOrP explicitly redirects back to strategic AI evidence gates. Keep the menu save play-check and overworld field readiness recap boundaries active: they may reuse existing save, objective, event-feed, route, defense, risk, and forecast payloads, but they do not authorize new mechanics, save/schema changes, durable event logs, AI tuning, or broader dashboard composition.
 - Keep the completed editor taxonomy slice boundary active: editor UI may read existing object/resource/encounter metadata, but it does not authorize broad production JSON migration, renderer sprite ingestion, pathing/body-tile/approach adoption, save migration, or AI tuning.
 - Keep `docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md` available as the next AI evidence boundary if work returns to strategic AI: any such proof should remain report-only and avoid schema writes, save migration, live behavior switches, or `SAVE_VERSION` changes.
 - Keep the completed live-turn transcript gate boundaries active: do not change target selection, raid movement, raid arrival, town-governor choices, save data, UI composition, production JSON, or coefficients.
@@ -136,7 +137,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact overworld field readiness recap UI, with live overworld field-feed/objective tooltip coverage and focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact main-menu save play-check UI, with reusable save-summary helper coverage and focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
 
 ## Completed Implementation Slice: Overworld Field Readiness Recap
 Status: completed on 2026-04-26 as compact player-facing overworld UI polish.
@@ -153,6 +154,24 @@ Delivered:
 
 Validation:
 - Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
+
+## Completed Implementation Slice: Main-Menu Save Play Check
+Status: completed on 2026-04-26 as compact player-facing loop-readiness UI polish.
+
+Purpose:
+- Help a manual player understand the stored loop state from the main menu before resuming an overworld, town, battle, or outcome save.
+- Reuse existing save summary, resume target, objective/progress recap, next-action, risk, and town-defense payloads instead of adding mechanics or durable logs.
+
+Delivered:
+- Added reusable `Play check:` builders in `scripts/autoload/SaveService.gd`.
+- The main menu latest-save pulse, first-view footer, and selected-save details now surface the compact play-check line.
+- Added focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`, including no-score-leak assertions.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/menu_outcome_visual_smoke.tscn`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_visual_smoke.tscn`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
 
 Limits:
 - This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
