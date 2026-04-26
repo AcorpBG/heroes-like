@@ -366,6 +366,7 @@ func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 		"control_summary": String(detail.get("control_summary", "")),
 		"control_inspection": String(detail.get("control_inspection", "")),
 		"placement_guidance": guidance,
+		"authoring_dependencies": detail.get("authoring_dependencies", {}),
 		"x": int(detail.get("x", 0)),
 		"y": int(detail.get("y", 0)),
 	}
@@ -937,6 +938,9 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 	var link_line := _taxonomy_link_line(payload)
 	if link_line != "":
 		lines.append(link_line)
+	var tile_dependency := _selected_tile_authoring_dependency_text()
+	if tile_dependency != "":
+		lines.append(tile_dependency)
 	lines.append_array(_recruit_source_summary_lines_for_editor(payload, 2))
 	lines.append_array(_identity_summary_lines_for_editor(payload, 2))
 	return "\n".join(lines)
@@ -965,6 +969,417 @@ func _placement_guidance_payload(payload: Dictionary, tile: Vector2i) -> Diction
 		"local_density_region": region,
 		"content_link": link_line,
 	}
+
+func _selected_tile_authoring_dependency_text() -> String:
+	if _session == null or not _tile_in_bounds(_selected_tile):
+		return ""
+	var summaries := []
+	for detail in _object_details_at(_selected_tile, false):
+		if not (detail is Dictionary):
+			continue
+		var dependencies: Dictionary = detail.get("authoring_dependencies", {})
+		var summary := String(dependencies.get("summary", "")).strip_edges()
+		if summary != "" and summary not in summaries:
+			summaries.append(summary)
+		if summaries.size() >= 2:
+			break
+	if summaries.is_empty():
+		var scenario_validation := _scenario_authoring_validation_payload()
+		var missing_count := int(scenario_validation.get("missing_objective_anchor_count", 0))
+		if missing_count > 0:
+			return "Scenario warnings: %d missing objective anchor%s" % [
+				missing_count,
+				"" if missing_count == 1 else "s",
+			]
+		return ""
+	return "Tile links: %s" % " | ".join(summaries)
+
+func _authoring_dependencies_for_detail(detail: Dictionary) -> Dictionary:
+	if _session == null or detail.is_empty():
+		return {}
+	var placement_id := String(detail.get("placement_id", ""))
+	if placement_id == "":
+		return {}
+	var kind := String(detail.get("kind", ""))
+	var content_id := String(detail.get("content_id", ""))
+	var objective_links := _objective_links_for_placement(placement_id)
+	var guard_links := _guard_links_for_placement(kind, placement_id, content_id)
+	var route_links := _route_links_for_placement(kind, placement_id, content_id, guard_links)
+	var reward_links := _reward_links_for_placement(placement_id, objective_links)
+	var enemy_focus_links := _enemy_focus_links_for_placement(placement_id)
+	var warnings := _authoring_warnings_for_detail(detail, objective_links, guard_links, reward_links, enemy_focus_links)
+	var summary_parts := []
+	if not objective_links.is_empty():
+		summary_parts.append("objectives %d" % objective_links.size())
+	if not guard_links.is_empty():
+		summary_parts.append("guards %d" % guard_links.size())
+	if not route_links.is_empty():
+		summary_parts.append("routes %d" % route_links.size())
+	if not reward_links.is_empty():
+		summary_parts.append("rewards %d" % reward_links.size())
+	if not enemy_focus_links.is_empty():
+		summary_parts.append("enemy focus %d" % enemy_focus_links.size())
+	if not warnings.is_empty():
+		summary_parts.append("warnings %d" % warnings.size())
+	return {
+		"placement_id": placement_id,
+		"kind": kind,
+		"objective_links": objective_links,
+		"guard_links": guard_links,
+		"route_links": route_links,
+		"reward_links": reward_links,
+		"enemy_focus_links": enemy_focus_links,
+		"warnings": warnings,
+		"summary": " | ".join(summary_parts),
+	}
+
+func _objective_links_for_placement(placement_id: String) -> Array:
+	var links := []
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return links
+	for bucket in ["victory", "defeat"]:
+		var objective_bucket = objectives.get(bucket, [])
+		if not (objective_bucket is Array):
+			continue
+		for objective in objective_bucket:
+			if not (objective is Dictionary):
+				continue
+			if String(objective.get("placement_id", "")) != placement_id:
+				continue
+			links.append(
+				{
+					"id": String(objective.get("id", "")),
+					"bucket": bucket,
+					"type": String(objective.get("type", "")),
+					"label": String(objective.get("label", objective.get("id", "Objective"))),
+					"covered": _placement_id_exists(placement_id),
+				}
+			)
+	return links
+
+func _guard_links_for_placement(kind: String, placement_id: String, content_id: String) -> Array:
+	var links := []
+	for encounter in _session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		var guard := _guard_link_for_editor(encounter)
+		if guard.is_empty():
+			continue
+		var source_placement_id := String(encounter.get("placement_id", ""))
+		var target_placement_id := String(guard.get("target_placement_id", ""))
+		var target_id := String(guard.get("target_id", ""))
+		var target_kind := String(guard.get("target_kind", ""))
+		var is_source := kind == OBJECT_FAMILY_ENCOUNTER and source_placement_id == placement_id
+		var is_target := target_placement_id == placement_id or (target_placement_id == "" and target_id in [placement_id, content_id])
+		if not is_source and not is_target:
+			continue
+		links.append(
+			{
+				"role": "guards" if is_source else "guarded_by",
+				"guard_role": String(guard.get("guard_role", "")),
+				"source_placement_id": source_placement_id,
+				"source_label": _placement_label_for_editor(source_placement_id),
+				"target_kind": target_kind,
+				"target_id": target_id,
+				"target_placement_id": target_placement_id,
+				"target_label": _guard_target_label_for_editor(guard),
+				"clear_required": bool(guard.get("clear_required_for_target", false)),
+				"blocks_approach": bool(guard.get("blocks_approach", false)),
+				"target_present": _guard_target_present_for_editor(guard),
+			}
+		)
+	return links
+
+func _route_links_for_placement(kind: String, placement_id: String, content_id: String, guard_links: Array) -> Array:
+	var links := []
+	for link in guard_links:
+		if not (link is Dictionary):
+			continue
+		if String(link.get("target_kind", "")) == "route" or String(link.get("guard_role", "")).find("route") >= 0:
+			links.append(
+				{
+					"route_id": String(link.get("target_id", "")),
+					"source_placement_id": String(link.get("source_placement_id", "")),
+					"role": String(link.get("role", "")),
+					"blocks_approach": bool(link.get("blocks_approach", false)),
+				}
+			)
+	if kind == OBJECT_FAMILY_RESOURCE:
+		var site := ContentService.get_resource_site(content_id)
+		var route_effect = site.get("transit_profile", {})
+		if not (route_effect is Dictionary) or route_effect.is_empty():
+			route_effect = site.get("route_effect", {})
+		if route_effect is Dictionary and not route_effect.is_empty():
+			links.append(
+				{
+					"route_id": String(route_effect.get("route_id", route_effect.get("route_role", ""))),
+					"source_placement_id": placement_id,
+					"role": String(route_effect.get("route_role", "route effect")),
+					"blocks_approach": false,
+				}
+			)
+	return links
+
+func _reward_links_for_placement(placement_id: String, objective_links: Array) -> Array:
+	var links := []
+	var objective_ids := []
+	for objective_link in objective_links:
+		if objective_link is Dictionary:
+			var objective_id := String(objective_link.get("id", ""))
+			if objective_id != "":
+				objective_ids.append(objective_id)
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	for hook in scenario.get("script_hooks", []):
+		if not (hook is Dictionary):
+			continue
+		var hook_id := String(hook.get("id", ""))
+		var gated_by_selected_objective := false
+		for condition in hook.get("conditions", []):
+			if condition is Dictionary and String(condition.get("objective_id", "")) in objective_ids:
+				gated_by_selected_objective = true
+				break
+		for effect in hook.get("effects", []):
+			if not (effect is Dictionary):
+				continue
+			var effect_type := String(effect.get("type", ""))
+			var spawned = effect.get("placement", {})
+			var spawned_placement_id := ""
+			if spawned is Dictionary:
+				spawned_placement_id = String(spawned.get("placement_id", ""))
+			if spawned_placement_id == placement_id or (gated_by_selected_objective and effect_type in ["spawn_resource_node", "spawn_encounter", "add_resources", "award_experience", "town_add_recruits"]):
+				links.append(
+					{
+						"hook_id": hook_id,
+						"effect_type": effect_type,
+						"placement_id": spawned_placement_id,
+						"label": _effect_label_for_editor(effect),
+						"gated_by_selected_objective": gated_by_selected_objective,
+					}
+				)
+	return links
+
+func _enemy_focus_links_for_placement(placement_id: String) -> Array:
+	var links := []
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	for config in scenario.get("enemy_factions", []):
+		if not (config is Dictionary):
+			continue
+		var faction_id := String(config.get("faction_id", ""))
+		var label := String(config.get("label", ContentService.get_faction(faction_id).get("name", faction_id)))
+		if String(config.get("siege_target_placement_id", "")) == placement_id:
+			links.append({"faction_id": faction_id, "label": label, "role": "siege target"})
+		var targets = config.get("priority_target_placement_ids", [])
+		if targets is Array and placement_id in targets:
+			links.append({"faction_id": faction_id, "label": label, "role": "priority target"})
+	return links
+
+func _authoring_warnings_for_detail(
+	detail: Dictionary,
+	objective_links: Array,
+	guard_links: Array,
+	reward_links: Array,
+	enemy_focus_links: Array
+) -> Array:
+	var warnings := []
+	var placement_id := String(detail.get("placement_id", ""))
+	for link in guard_links:
+		if not (link is Dictionary):
+			continue
+		if String(link.get("role", "")) == "guards" and not bool(link.get("target_present", false)):
+			warnings.append("Guard target is missing: %s" % String(link.get("target_label", "target")))
+	var kind := String(detail.get("kind", ""))
+	var taxonomy = detail.get("taxonomy", {})
+	var primary_class := String(taxonomy.get("primary_class", "")) if taxonomy is Dictionary else ""
+	if kind == OBJECT_FAMILY_TOWN and objective_links.is_empty() and not enemy_focus_links.is_empty():
+		warnings.append("Enemy focus has no matching scenario objective anchor.")
+	if kind == OBJECT_FAMILY_ENCOUNTER and primary_class == "neutral_encounter" and objective_links.is_empty() and reward_links.is_empty() and not _guard_link_for_detail(detail).is_empty():
+		warnings.append("Guard has no objective or reward hook tied to this placement.")
+	if placement_id.begins_with("editor_") and (not objective_links.is_empty() or not guard_links.is_empty() or not enemy_focus_links.is_empty()):
+		warnings.append("Editor placement id is linked; keep the id stable before saving author data.")
+	return warnings
+
+func _scenario_authoring_validation_payload() -> Dictionary:
+	if _session == null:
+		return {}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var placement_ids := _all_current_placement_ids()
+	var objective_anchors := []
+	var missing_objective_anchors := []
+	var covered_objective_anchors := []
+	var objectives = scenario.get("objectives", {})
+	if objectives is Dictionary:
+		for bucket in ["victory", "defeat"]:
+			var objective_bucket = objectives.get(bucket, [])
+			if not (objective_bucket is Array):
+				continue
+			for objective in objective_bucket:
+				if not (objective is Dictionary):
+					continue
+				var placement_id := String(objective.get("placement_id", ""))
+				if placement_id == "":
+					continue
+				var entry := {
+					"id": String(objective.get("id", "")),
+					"bucket": bucket,
+					"type": String(objective.get("type", "")),
+					"placement_id": placement_id,
+					"label": String(objective.get("label", objective.get("id", "Objective"))),
+					"covered": placement_ids.has(placement_id),
+				}
+				objective_anchors.append(entry)
+				if bool(entry.get("covered", false)):
+					covered_objective_anchors.append(entry)
+				else:
+					missing_objective_anchors.append(entry)
+	var guard_warnings := []
+	for encounter in _session.overworld.get("encounters", []):
+		if not (encounter is Dictionary):
+			continue
+		var guard := _guard_link_for_editor(encounter)
+		if guard.is_empty() or String(guard.get("guard_role", "")) in ["", "none"]:
+			continue
+		if not _guard_target_present_for_editor(guard):
+			guard_warnings.append(
+				{
+					"placement_id": String(encounter.get("placement_id", "")),
+					"warning": "Guard target is missing: %s" % _guard_target_label_for_editor(guard),
+				}
+			)
+	var warning_lines := []
+	for missing in missing_objective_anchors:
+		if missing is Dictionary:
+			warning_lines.append("Missing objective anchor: %s" % String(missing.get("placement_id", "")))
+	for warning in guard_warnings:
+		if warning is Dictionary:
+			warning_lines.append(String(warning.get("warning", "")))
+	return {
+		"objective_anchors": objective_anchors,
+		"covered_objective_anchors": covered_objective_anchors,
+		"missing_objective_anchors": missing_objective_anchors,
+		"covered_objective_anchor_count": covered_objective_anchors.size(),
+		"missing_objective_anchor_count": missing_objective_anchors.size(),
+		"guard_warnings": guard_warnings,
+		"warning_count": warning_lines.size(),
+		"warnings": warning_lines,
+		"summary": "Objectives %d/%d covered | Warnings %d" % [
+			covered_objective_anchors.size(),
+			objective_anchors.size(),
+			warning_lines.size(),
+		],
+	}
+
+func _all_current_placement_ids() -> Dictionary:
+	var ids := {}
+	if _session == null:
+		return ids
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var placements = _session.overworld.get(_placement_array_key(family), [])
+		if not (placements is Array):
+			continue
+		for placement in placements:
+			if placement is Dictionary:
+				var placement_id := String(placement.get("placement_id", ""))
+				if placement_id != "":
+					ids[placement_id] = true
+	return ids
+
+func _guard_link_for_detail(detail: Dictionary) -> Dictionary:
+	if String(detail.get("kind", "")) != OBJECT_FAMILY_ENCOUNTER:
+		return {}
+	var placement_id := String(detail.get("placement_id", ""))
+	for encounter in _session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return _guard_link_for_editor(encounter)
+	return {}
+
+func _guard_link_for_editor(encounter: Dictionary) -> Dictionary:
+	var guard = encounter.get("guard_link", {})
+	if guard is Dictionary and not guard.is_empty():
+		return guard
+	var metadata = encounter.get("neutral_encounter", {})
+	if metadata is Dictionary:
+		guard = metadata.get("guard_link", {})
+		if guard is Dictionary:
+			return guard
+	var map_object := ContentService.get_map_object(String(encounter.get("object_id", "")))
+	metadata = map_object.get("neutral_encounter", {})
+	if metadata is Dictionary:
+		guard = metadata.get("guard_link", {})
+		if guard is Dictionary:
+			return guard
+	return {}
+
+func _guard_target_present_for_editor(guard: Dictionary) -> bool:
+	var target_kind := String(guard.get("target_kind", ""))
+	if target_kind == "route":
+		return String(guard.get("target_id", "")) != ""
+	var target_placement_id := String(guard.get("target_placement_id", ""))
+	if target_placement_id != "":
+		return _placement_id_exists(target_placement_id)
+	var target_id := String(guard.get("target_id", ""))
+	if target_id == "":
+		return false
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var placements = _session.overworld.get(_placement_array_key(family), [])
+		if not (placements is Array):
+			continue
+		var content_key := _placement_content_key(family)
+		for placement in placements:
+			if not (placement is Dictionary):
+				continue
+			if String(placement.get("placement_id", "")) == target_id or (content_key != "" and String(placement.get(content_key, "")) == target_id):
+				return true
+	return false
+
+func _guard_target_label_for_editor(guard: Dictionary) -> String:
+	var target_placement_id := String(guard.get("target_placement_id", ""))
+	if target_placement_id != "":
+		return _placement_label_for_editor(target_placement_id)
+	var target_id := String(guard.get("target_id", ""))
+	if target_id == "":
+		return _humanize_editor_id(String(guard.get("target_kind", "target")))
+	if String(guard.get("target_kind", "")) == "route":
+		return "route %s" % target_id
+	var placement_label := _placement_label_for_editor(target_id)
+	return placement_label if placement_label != "" else target_id
+
+func _placement_label_for_editor(placement_id: String) -> String:
+	if placement_id == "":
+		return ""
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var placements = _session.overworld.get(_placement_array_key(family), []) if _session != null else []
+		if not (placements is Array):
+			continue
+		for placement in placements:
+			if placement is Dictionary and String(placement.get("placement_id", "")) == placement_id:
+				var detail := _object_detail_for_placement(family, placement)
+				var name := String(detail.get("name", ""))
+				return "%s (%s)" % [name, placement_id] if name != "" else placement_id
+	return _humanize_editor_id(placement_id)
+
+func _effect_label_for_editor(effect: Dictionary) -> String:
+	var effect_type := String(effect.get("type", ""))
+	match effect_type:
+		"spawn_resource_node":
+			var placement = effect.get("placement", {})
+			if placement is Dictionary:
+				var site := ContentService.get_resource_site(String(placement.get("site_id", "")))
+				return "spawns %s" % String(site.get("name", placement.get("placement_id", "resource")))
+		"spawn_encounter":
+			var encounter_placement = effect.get("placement", {})
+			if encounter_placement is Dictionary:
+				var encounter := ContentService.get_encounter(String(encounter_placement.get("encounter_id", "")))
+				return "spawns %s" % String(encounter.get("name", encounter_placement.get("placement_id", "encounter")))
+		"add_resources":
+			var resources = effect.get("resources", {})
+			return "grants %s" % _resource_delta_text(resources) if resources is Dictionary else "grants resources"
+		"award_experience":
+			return "grants +%d experience" % int(effect.get("amount", 0))
+		"town_add_recruits":
+			return "adds recruits to %s" % _placement_label_for_editor(String(effect.get("placement_id", "")))
+	return _humanize_editor_id(effect_type)
 
 func _placement_role_flags(payload: Dictionary) -> Dictionary:
 	var primary_class := String(payload.get("primary_class", "")).strip_edges()
@@ -1448,6 +1863,10 @@ func _refresh_labels() -> void:
 	]
 	if _dirty:
 		state_line = "%s | Unsaved in memory" % state_line
+	var authoring_validation := _scenario_authoring_validation_payload()
+	var authoring_warning_count := int(authoring_validation.get("warning_count", 0))
+	if authoring_warning_count > 0:
+		state_line = "%s | Authoring warnings %d" % [state_line, authoring_warning_count]
 	if _pending_move_object_key != "":
 		var pending_detail := _object_detail_by_key(_pending_move_object_key)
 		state_line = "%s | Move %s" % [
@@ -3222,6 +3641,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("owner", "neutral")),
 				])
 				_append_taxonomy_object_lines(lines, detail)
+				_append_authoring_dependency_lines(lines, detail)
 			OBJECT_FAMILY_RESOURCE:
 				lines.append("Site: %s | placement %s | content %s | family %s | collected %s" % [
 					String(detail.get("name", "")),
@@ -3232,6 +3652,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 				])
 				_append_resource_control_lines(lines, detail)
 				_append_taxonomy_object_lines(lines, detail)
+				_append_authoring_dependency_lines(lines, detail)
 			OBJECT_FAMILY_ARTIFACT:
 				lines.append("Artifact: %s | placement %s | content %s | collected %s" % [
 					String(detail.get("name", "")),
@@ -3240,6 +3661,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					"yes" if bool(detail.get("collected", false)) else "no",
 				])
 				_append_taxonomy_object_lines(lines, detail)
+				_append_authoring_dependency_lines(lines, detail)
 			OBJECT_FAMILY_ENCOUNTER:
 				lines.append("Encounter: %s | placement %s | content %s | difficulty %s" % [
 					String(detail.get("name", "")),
@@ -3248,6 +3670,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("difficulty", "medium")),
 				])
 				_append_taxonomy_object_lines(lines, detail)
+				_append_authoring_dependency_lines(lines, detail)
 	return lines
 
 func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
@@ -3281,6 +3704,57 @@ func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
 			String(guidance.get("role_flags_text", "")),
 			int(guidance.get("local_density_count", 0)),
 		])
+
+func _append_authoring_dependency_lines(lines: Array, detail: Dictionary) -> void:
+	var dependencies = detail.get("authoring_dependencies", {})
+	if not (dependencies is Dictionary) or dependencies.is_empty():
+		return
+	var objective_links: Array = dependencies.get("objective_links", [])
+	for index in range(min(2, objective_links.size())):
+		var link = objective_links[index]
+		if not (link is Dictionary):
+			continue
+		lines.append("  Objective: %s %s" % [
+			String(link.get("bucket", "")).capitalize(),
+			String(link.get("label", link.get("id", ""))),
+		])
+	var guard_links: Array = dependencies.get("guard_links", [])
+	for index in range(min(2, guard_links.size())):
+		var guard = guard_links[index]
+		if not (guard is Dictionary):
+			continue
+		if String(guard.get("role", "")) == "guards":
+			lines.append("  Guards: %s%s" % [
+				String(guard.get("target_label", "target")),
+				" | clear required" if bool(guard.get("clear_required", false)) else "",
+			])
+		else:
+			lines.append("  Guarded by: %s" % String(guard.get("source_label", "encounter")))
+	var route_links: Array = dependencies.get("route_links", [])
+	if not route_links.is_empty():
+		var route = route_links[0]
+		if route is Dictionary:
+			lines.append("  Route: %s" % String(route.get("route_id", route.get("role", ""))))
+	var reward_links: Array = dependencies.get("reward_links", [])
+	if not reward_links.is_empty():
+		var reward_labels := []
+		for index in range(min(2, reward_links.size())):
+			var reward = reward_links[index]
+			if reward is Dictionary:
+				reward_labels.append(String(reward.get("label", reward.get("effect_type", ""))))
+		if not reward_labels.is_empty():
+			lines.append("  Follow-up: %s" % "; ".join(reward_labels))
+	var enemy_focus_links: Array = dependencies.get("enemy_focus_links", [])
+	if not enemy_focus_links.is_empty():
+		var focus = enemy_focus_links[0]
+		if focus is Dictionary:
+			lines.append("  Enemy focus: %s | %s" % [
+				String(focus.get("label", "")),
+				String(focus.get("role", "")),
+			])
+	var warnings: Array = dependencies.get("warnings", [])
+	for index in range(min(2, warnings.size())):
+		lines.append("  Warning: %s" % String(warnings[index]))
 
 func _append_resource_control_lines(lines: Array, detail: Dictionary) -> void:
 	var control_inspection := String(detail.get("control_inspection", "")).strip_edges()
@@ -3419,6 +3893,7 @@ func _object_detail_with_guidance(detail: Dictionary, tile: Vector2i) -> Diction
 	var taxonomy = detail.get("taxonomy", {})
 	if taxonomy is Dictionary:
 		detail["placement_guidance"] = _placement_guidance_payload(taxonomy, tile)
+	detail["authoring_dependencies"] = _authoring_dependencies_for_detail(detail)
 	return detail
 
 func _placement_at_tile(placement: Dictionary, tile: Vector2i) -> bool:
@@ -3732,6 +4207,7 @@ func validation_snapshot() -> Dictionary:
 		"map_size": {"x": map_size.x, "y": map_size.y},
 		"road_tile_count": _road_tile_count(),
 		"placement_count": _placement_count(),
+		"scenario_authoring_validation": _scenario_authoring_validation_payload(),
 		"tile_inspection": _tile_inspection_payload(_selected_tile),
 		"map_viewport": _map_view.call("validation_view_metrics") if _map_view != null and _map_view.has_method("validation_view_metrics") else {},
 	}
