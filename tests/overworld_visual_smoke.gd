@@ -25,6 +25,8 @@ func _run() -> void:
 		return
 	if not await _assert_objective_stakes_ui_contract(shell):
 		return
+	if not _assert_field_readiness_recap_contract(shell):
+		return
 	if not _assert_small_map_fit(shell):
 		return
 	if not await _assert_render_cache_split(shell):
@@ -232,6 +234,45 @@ func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 	SessionState.active_session = original_session
 	shell.call("_refresh")
 	await get_tree().process_frame
+	return true
+
+func _assert_field_readiness_recap_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing field readiness validation hooks.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("field_readiness", {})
+	var event_feed: Dictionary = snapshot.get("event_feed", {})
+	var joined := "\n".join([
+		String(readiness.get("visible_text", "")),
+		String(readiness.get("tooltip_text", "")),
+		String(readiness.get("progress_line", "")),
+		String(readiness.get("next_step", "")),
+		String(readiness.get("primary_order", "")),
+		String(readiness.get("end_turn_forecast", "")),
+		String(snapshot.get("event_visible_text", "")),
+		String(snapshot.get("event_tooltip_text", "")),
+		String(snapshot.get("objective_brief_tooltip_text", "")),
+		str(event_feed.get("field_readiness", {})),
+	])
+	if not _assert_text_contains_all(
+		"overworld field readiness recap",
+		[joined],
+		[
+			"Ready:",
+			"Field Readiness",
+			"Current progress:",
+			"Next practical action:",
+			"Push toward Claim Duskfen Bastion",
+			"Primary order:",
+			"End turn forecast:",
+			"Move",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld field readiness recap", joined):
+		return false
 	return true
 
 func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
