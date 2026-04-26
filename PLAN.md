@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact map-editor placement action cues using existing placement preview and availability payloads.
+Current target: completed compact battle spell action cues using existing battle spell action payloads.
 
 Done means:
-- The map editor exposes a compact visible `Placement action:` line when the Place Object flow previews a ready or blocked tile.
-- The Place Object button tooltip and map tooltip carry matching placement-action guidance, including target tile, ready/blocked state, why it matters, next step, and in-memory working-copy scope.
-- Focused map-editor smoke coverage proves ready and blocked placement previews, structured validation payloads, visible status/tooltips, and no internal score/debug leaks.
-- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, campaign progression semantic changes, or internal/debug score fields are introduced.
+- Live battle spell buttons expose compact visible Ready/Blocked state.
+- Spell button tooltips carry public action context: spell action, readiness, target, cost, use, effect, and next step.
+- Focused town/battle smoke coverage proves the rendered spell button surface and no internal score/debug leaks.
+- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

@@ -421,9 +421,9 @@ func _rebuild_spell_actions() -> void:
 		if not (action is Dictionary):
 			continue
 		var button := Button.new()
-		button.text = String(action.get("label", action.get("id", "Spell")))
+		button.text = _battle_spell_action_button_text(action)
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _battle_spell_action_tooltip(action)
 		_style_action_button(button, false, 132)
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
 		_spell_actions.add_child(button)
@@ -604,6 +604,7 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_visible_text": _spell_label.text,
 		"spellbook_tooltip_text": _spell_label.tooltip_text,
 		"spell_actions": _duplicate_action_array(BattleRules.get_spell_actions(_session)),
+		"spell_action_button_surfaces": _spell_action_button_surfaces(),
 		"spell_timing_text": BattleRules.describe_spell_timing_board(_session),
 		"spell_timing_visible_text": _timing_label.text,
 		"spell_timing_tooltip_text": _timing_label.tooltip_text,
@@ -955,6 +956,57 @@ func _append_last_action_tooltips() -> void:
 		return
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button]:
 		button.tooltip_text = "%s\nLast order: %s" % [button.tooltip_text, recap_tooltip]
+
+func _battle_spell_action_button_text(action: Dictionary) -> String:
+	var label := String(action.get("label", action.get("id", "Spell"))).strip_edges()
+	if label.begins_with("Cast "):
+		label = label.trim_prefix("Cast ")
+	var readiness := _spell_action_readiness_label(action)
+	if readiness == "":
+		return label
+	return "%s | %s" % [_short_text(label, 24), readiness]
+
+func _battle_spell_action_tooltip(action: Dictionary) -> String:
+	var label := String(action.get("label", action.get("id", "Spell"))).strip_edges()
+	var readiness := String(action.get("readiness", "")).strip_edges()
+	if readiness == "":
+		readiness = "Ready" if not bool(action.get("disabled", false)) else "Blocked"
+	var next_step := "Casting consumes the commander spell window for this round and returns to stack orders."
+	if bool(action.get("disabled", false)):
+		next_step = "Retarget, wait for mana, or use a stack order instead."
+	var cost_text := "%d mana" % int(action.get("cost", 0))
+	return _join_tooltip_sections([
+		"Spell action: %s\n- Readiness: %s\n- Target: %s\n- Cost: %s\n- Use: %s\n- Effect: %s\n- Next: %s" % [
+			label,
+			readiness,
+			String(action.get("target", "current battle focus")),
+			cost_text,
+			String(action.get("best_use", "Use when this spell improves the current exchange.")),
+			String(action.get("effect", "Spell effect is described in the spellbook.")),
+			next_step,
+		],
+		String(action.get("summary", "")),
+	])
+
+func _spell_action_readiness_label(action: Dictionary) -> String:
+	var readiness := String(action.get("readiness", "")).strip_edges()
+	if readiness.begins_with("Blocked"):
+		return "Blocked"
+	if readiness != "":
+		return "Ready"
+	return "Ready" if not bool(action.get("disabled", false)) else "Blocked"
+
+func _spell_action_button_surfaces() -> Array:
+	var surfaces := []
+	for child in _spell_actions.get_children():
+		if child is Button:
+			var button: Button = child
+			surfaces.append({
+				"text": button.text,
+				"tooltip": button.tooltip_text,
+				"disabled": button.disabled,
+			})
+	return surfaces
 
 func _strip_sentence(text: String) -> String:
 	var cleaned := text.strip_edges().replace("\n", " ")
