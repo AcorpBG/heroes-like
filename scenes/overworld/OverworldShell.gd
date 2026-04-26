@@ -913,7 +913,7 @@ func _selected_route_decision_surface() -> Dictionary:
 		blocked_reason = ""
 		if steps <= 0:
 			movement_cost = 0
-	return {
+	var surface := {
 		"destination": destination_name,
 		"x": _selected_tile.x,
 		"y": _selected_tile.y,
@@ -937,6 +937,10 @@ func _selected_route_decision_surface() -> Dictionary:
 		"interception_cue": String(interception_surface.get("cue_text", "")),
 		"interception_tooltip": String(interception_surface.get("tooltip_text", "")),
 	}
+	var decision_brief := _route_decision_brief(surface)
+	surface["decision_brief"] = decision_brief
+	surface["decision_brief_text"] = String(decision_brief.get("tooltip_text", ""))
+	return surface
 
 func _selected_route_action_kind(adjacent: bool) -> String:
 	if not _tile_in_bounds(_selected_tile):
@@ -1015,14 +1019,174 @@ func _route_decision_tooltip(surface: Dictionary) -> String:
 	var reason := String(surface.get("blocked_reason", "")).strip_edges()
 	var interception := _route_decision_interception(surface)
 	var interception_tooltip := String(interception.get("tooltip_text", "")).strip_edges()
+	var decision_brief := _route_decision_brief_text(surface)
+	var sections := []
 	if reason != "":
 		if interception_tooltip != "":
-			return "%s. %s\n%s" % [line, reason, interception_tooltip]
-		return "%s. %s" % [line, reason]
+			sections.append("%s. %s" % [line, reason])
+			sections.append(interception_tooltip)
+			sections.append(decision_brief)
+			return _join_tooltip_sections(sections)
+		sections.append("%s. %s" % [line, reason])
+		sections.append(decision_brief)
+		return _join_tooltip_sections(sections)
 	var commit_line := "%s. Commit %s." % [line, String(surface.get("action_label", "the selected order"))]
 	if interception_tooltip != "":
-		return "%s\n%s" % [commit_line, interception_tooltip]
-	return commit_line
+		sections.append(commit_line)
+		sections.append(interception_tooltip)
+		sections.append(decision_brief)
+		return _join_tooltip_sections(sections)
+	sections.append(commit_line)
+	sections.append(decision_brief)
+	return _join_tooltip_sections(sections)
+
+func _route_decision_brief_text(surface: Dictionary) -> String:
+	var brief_value: Variant = surface.get("decision_brief", {})
+	var brief: Dictionary = brief_value if brief_value is Dictionary else _route_decision_brief(surface)
+	return String(brief.get("tooltip_text", "")).strip_edges()
+
+func _route_decision_brief(surface: Dictionary) -> Dictionary:
+	if surface.is_empty():
+		return {}
+	var affected := _route_decision_affected_text(surface)
+	var why := _route_decision_why_it_matters(surface)
+	var next_step := _route_decision_next_practical_action(surface)
+	if affected == "" or why == "" or next_step == "":
+		return {}
+	var tooltip := "Decision Brief\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [
+		affected,
+		why,
+		next_step,
+	]
+	return {
+		"affected": affected,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"tooltip_text": tooltip,
+	}
+
+func _route_decision_affected_text(surface: Dictionary) -> String:
+	var destination := String(surface.get("destination", "Selected")).strip_edges()
+	if destination == "":
+		destination = "%d,%d" % [int(surface.get("x", _selected_tile.x)), int(surface.get("y", _selected_tile.y))]
+	var route_label := "%s route" % destination
+	var objective_label := _selected_tile_objective_label()
+	if objective_label == "":
+		objective_label = _current_objective_next_label()
+	if objective_label != "":
+		return "%s | Objective: %s" % [route_label, objective_label]
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		return "%s | Town: %s" % [route_label, String(town.get("owner", "neutral")).capitalize()]
+	return route_label
+
+func _route_decision_why_it_matters(surface: Dictionary) -> String:
+	var status := String(surface.get("status", ""))
+	var reason := String(surface.get("blocked_reason", "")).strip_edges()
+	if status in ["blocked", "no_movement"] and reason != "":
+		return reason
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		var context := OverworldRules.describe_town_context(town, _session).replace("\n", " ")
+		return _short_player_sentence(context, "Town control shapes recruitment, defense, route support, and objective pressure.")
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var control := OverworldRules.describe_resource_site_control_summary(_session, node, site)
+		if control == "":
+			control = OverworldRules.describe_resource_site_interaction_surface(node, site)
+		return _short_player_sentence(control, "This site can change income, scouting, recruits, or route control.")
+	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		var pressure := OverworldRules.describe_encounter_pressure(_session, encounter).replace("\n", " ")
+		if pressure == "":
+			pressure = OverworldRules.describe_encounter_compact_readability(_session, encounter)
+		return _short_player_sentence(pressure, "Breaking this host can open the route, reward, or objective lane.")
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		return _short_player_sentence(
+			ArtifactRules.describe_single_artifact_impact(String(artifact_node.get("artifact_id", ""))),
+			"Recovering the artifact changes the active commander's field options."
+		)
+	if status == "reachable":
+		return "The route can be acted on with today's movement."
+	if status == "not_today":
+		return "The route is clear, but it needs more movement than remains today."
+	return "This route decides where the active hero spends the next field order."
+
+func _route_decision_next_practical_action(surface: Dictionary) -> String:
+	var status := String(surface.get("status", ""))
+	var action_label := String(surface.get("action_label", "the selected order")).strip_edges()
+	var destination := String(surface.get("destination", "the destination")).strip_edges()
+	match status:
+		"current":
+			return "Select a visible destination or open a command drawer."
+		"blocked":
+			var reason := String(surface.get("blocked_reason", "")).strip_edges()
+			return reason if reason != "" else "Choose a different visible route."
+		"no_movement":
+			return "End the turn after checking town orders, then continue toward %s." % destination
+		"not_today":
+			return "Take the next step toward %s now, then continue next day." % destination
+		"reachable":
+			return "Commit %s now." % action_label
+	return "Review the selected tile, then choose the next route order."
+
+func _selected_tile_objective_label() -> String:
+	var placement_id := _selected_tile_objective_placement_id()
+	if placement_id == "":
+		return ""
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return ""
+	for bucket in ["victory", "defeat"]:
+		var bucket_values = objectives.get(bucket, [])
+		if not (bucket_values is Array):
+			continue
+		for objective_value in bucket_values:
+			if not (objective_value is Dictionary):
+				continue
+			var objective: Dictionary = objective_value
+			if String(objective.get("placement_id", "")) == placement_id:
+				var label := String(objective.get("label", objective.get("id", "objective"))).strip_edges()
+				if label != "":
+					return label
+	return ""
+
+func _selected_tile_objective_placement_id() -> String:
+	var town := _town_at(_selected_tile.x, _selected_tile.y)
+	if not town.is_empty():
+		return String(town.get("placement_id", ""))
+	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		return String(encounter.get("placement_id", encounter.get("id", "")))
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		return String(node.get("placement_id", ""))
+	return ""
+
+func _current_objective_next_label() -> String:
+	var progress_recap := ScenarioRules.describe_session_progress_recap(_session, false)
+	var next_line := _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
+	if next_line.begins_with("Push toward "):
+		next_line = next_line.trim_prefix("Push toward ").strip_edges()
+	if next_line.ends_with("."):
+		next_line = next_line.left(next_line.length() - 1)
+	return next_line
+
+func _short_player_sentence(text: String, fallback: String) -> String:
+	var cleaned := text.strip_edges().replace("\n", " ")
+	while cleaned.find("  ") >= 0:
+		cleaned = cleaned.replace("  ", " ")
+	if cleaned == "":
+		cleaned = fallback
+	var sentence_end := cleaned.find(". ")
+	if sentence_end >= 0:
+		cleaned = cleaned.left(sentence_end + 1)
+	if cleaned.length() > 150:
+		cleaned = "%s..." % cleaned.left(147)
+	return cleaned
 
 func _route_decision_interception(surface: Dictionary) -> Dictionary:
 	var value: Variant = surface.get("interception", {})
@@ -2293,6 +2457,7 @@ func validation_snapshot() -> Dictionary:
 		"map_cue_tooltip_text": _map_cue_label.tooltip_text,
 		"selected_route_decision": route_decision,
 		"selected_route_decision_text": _route_decision_line(route_decision),
+		"selected_route_decision_brief": _duplicate_dictionary(route_decision.get("decision_brief", {})),
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),
