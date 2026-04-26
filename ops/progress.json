@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T16:20:00Z",
+  "updatedAt": "2026-04-26T16:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-planning-10184",
-  "currentSliceTitle": "Plan report-only strategic AI hero task-state save-normalizer preservation proof",
+  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+  "currentSliceTitle": "Implement report-only strategic AI hero task-state save-normalizer preservation proof",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI hero task-state adoption sequencing planning is complete. The recommended next slice is report-only save-normalizer preservation planning, focused on future optional enemy_states[].hero_task_state preservation through EnemyTurnRules.normalize_enemy_states, old-save absence compatibility, malformed-state tolerance, no SAVE_VERSION bump unless separately planned, and keeping SaveService outside strategic AI task semantics before any schema writes or live behavior adoption.",
+  "currentSliceNotes": "Strategic AI hero task-state save-normalizer preservation planning is complete. The recommended next slice is report-only implementation of AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT, focused on synthetic fixture-only enemy_states[].hero_task_state preservation through EnemyTurnRules.normalize_enemy_states, old-save absence compatibility, malformed-state tolerance, unknown-field isolation, no SAVE_VERSION bump, and keeping SaveService outside strategic AI task semantics before any schema writes or live behavior adoption.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -749,6 +749,35 @@
         {
             "id": "strategic-ai-hero-task-state-save-normalizer-preservation-planning-10184",
             "title": "Plan report-only hero task-state save-normalizer preservation proof",
+            "status": "completed",
+            "startedAt": "2026-04-26T16:20:00Z",
+            "completedAt": "2026-04-26T16:35:00Z",
+            "decision": "hero-task-state-save-normalizer-preservation-report-implementation-next",
+            "planningDoc": "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
+            "recommendedNextSlice": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+            "rejectedNextOptions": [
+                "minimal-hero-task-state-schema-planning-now",
+                "save-migration-now",
+                "live-behavior-transcript-proof-now",
+                "full-ai-hero-task-state-planning-now",
+                "pause-ai-foundation-work"
+            ],
+            "blockedOptions": [
+                "hero_task_state_schema_writes_now",
+                "save_migration_now",
+                "save_version_bump_now",
+                "durable_event_logs_now",
+                "defense_specific_durable_state_now",
+                "coefficient_tuning_now",
+                "full_ai_hero_task_state_implementation_now",
+                "live_commander_role_behavior_now",
+                "live_ai_hero_behavior_now"
+            ],
+            "difficulty": "high"
+        },
+        {
+            "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
+            "title": "Implement report-only hero task-state save-normalizer preservation proof",
             "status": "pending",
             "blockedOptions": [
                 "hero_task_state_schema_writes_now",
