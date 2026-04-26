@@ -79,6 +79,7 @@ const DIRECTIONS := [
 ]
 const RAIL_ACTION_WIDTH := 248.0
 const RAIL_LINE_CHARS := 42
+const ACTION_FEEDBACK_CHARS := 40
 
 var _session: SessionStateStore.SessionData
 var _map_data: Array = []
@@ -91,6 +92,9 @@ var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
 var _refresh_cache: Dictionary = {}
+var _action_feedback: Dictionary = {}
+var _action_feedback_sequence := 0
+var _action_feedback_tween: Tween = null
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -211,6 +215,10 @@ func _on_end_turn_pressed() -> void:
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = String(result.get("enemy_activity_summary", ""))
+	if bool(result.get("ok", false)) and _last_enemy_activity_text != "":
+		_record_action_feedback("enemy", _last_enemy_activity_text, "Enemy turn resolved.")
+	else:
+		_record_result_feedback("turn", result, "Day %d begins." % _session.day)
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -224,6 +232,7 @@ func _on_save_pressed() -> void:
 	var result = AppRouter.save_active_session_to_selected_manual_slot()
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback("system", result, "Save updated.")
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -274,6 +283,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback(_feedback_kind_for_context_action(action_id), result, String(action_id).capitalize())
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -287,6 +297,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback("artifact", result, "Artifact loadout updated.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -303,6 +314,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback("hero", result, "Hero command updated.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -319,6 +331,7 @@ func _on_hero_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback("hero", result, "Hero command updated.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -335,6 +348,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback("cast", result, "Spell resolved.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -369,12 +383,14 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 func _visit_selected_town() -> bool:
 	if not _is_selected_owned_town_visit_target():
 		_last_message = "Select an owned town to enter it."
+		_record_action_feedback("blocked", _last_message)
 		_refresh()
 		return false
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	var result: Dictionary = OverworldRules.set_active_town_visit(_session, String(town.get("placement_id", "")))
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback("town", result, "Town opened.")
 	if not bool(result.get("ok", false)):
 		_refresh()
 		return false
@@ -393,6 +409,7 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 		_session.flags["last_action"] = "moved" if bool(result.get("ok", false)) else "blocked_move"
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_record_result_feedback(_feedback_kind_for_move(result, route), result, _movement_feedback_fallback(result))
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		if not preserve_selection:
@@ -419,6 +436,7 @@ func _start_encounter() -> void:
 	var placement = OverworldRules.get_active_encounter(_session)
 	if placement.is_empty():
 		_last_message = "No encounter is active here."
+		_record_action_feedback("blocked", _last_message)
 		_refresh()
 		return
 
@@ -426,12 +444,14 @@ func _start_encounter() -> void:
 	if payload.is_empty():
 		push_error("Unable to create battle payload for encounter %s." % String(placement.get("encounter_id", placement.get("id", ""))))
 		_last_message = "Battle setup failed."
+		_record_action_feedback("blocked", _last_message)
 		_refresh()
 		return
 
 	_session.battle = payload
 	_session.flags["last_action"] = "entered_battle"
 	_last_enemy_activity_text = ""
+	_record_action_feedback("battle", "Battle is joined against %s." % OverworldRules.encounter_display_name(placement))
 	AppRouter.go_to_battle()
 
 func _render_state() -> void:
@@ -850,7 +870,143 @@ func _selected_tile_destination_name() -> String:
 
 	return ""
 
+func _record_result_feedback(kind: String, result: Dictionary, fallback: String = "") -> void:
+	var feedback_kind := kind
+	if not bool(result.get("ok", false)):
+		feedback_kind = "blocked"
+	_record_action_feedback(feedback_kind, String(result.get("message", "")), fallback)
+
+func _record_action_feedback(kind: String, message: String, fallback: String = "") -> void:
+	var body := _feedback_body(message, fallback)
+	if body == "":
+		return
+	var label := _feedback_kind_label(kind)
+	var text := "%s: %s" % [label, body]
+	_action_feedback_sequence += 1
+	_action_feedback = {
+		"kind": kind,
+		"label": label,
+		"text": _short_text(text, ACTION_FEEDBACK_CHARS),
+		"full_text": text,
+		"sequence": _action_feedback_sequence,
+	}
+	_pulse_action_feedback()
+
+func _feedback_body(message: String, fallback: String = "") -> String:
+	var body := message.strip_edges()
+	if body == "":
+		body = fallback.strip_edges()
+	body = _strip_moved_feedback_prefix(body)
+	body = body.replace("\n", " ")
+	while body.find("  ") >= 0:
+		body = body.replace("  ", " ")
+	if body.ends_with("."):
+		body = body.left(body.length() - 1)
+	return body
+
+func _strip_moved_feedback_prefix(message: String) -> String:
+	if not message.begins_with("Moved to "):
+		return message
+	var sentence_break := message.find(". ")
+	if sentence_break < 0 or sentence_break + 2 >= message.length():
+		return message
+	return message.substr(sentence_break + 2).strip_edges()
+
+func _feedback_kind_label(kind: String) -> String:
+	match kind:
+		"artifact":
+			return "Artifact"
+		"battle":
+			return "Battle"
+		"blocked":
+			return "Blocked"
+		"cast":
+			return "Cast"
+		"collect":
+			return "Collected"
+		"enemy":
+			return "Enemy"
+		"hero":
+			return "Hero"
+		"move":
+			return "Moved"
+		"system":
+			return "System"
+		"town":
+			return "Town"
+		"turn":
+			return "Turn"
+		_:
+			return "Action"
+
+func _feedback_kind_for_context_action(action_id: String) -> String:
+	match action_id:
+		"collect_artifact":
+			return "artifact"
+		"collect_resource":
+			return "collect"
+		"capture_town", "visit_town":
+			return "town"
+		"enter_battle":
+			return "battle"
+		"site_response":
+			return "collect"
+		_:
+			return "system"
+
+func _feedback_kind_for_move(result: Dictionary, route: String) -> String:
+	if not bool(result.get("ok", false)):
+		return "blocked"
+	if route == "battle":
+		return "battle"
+	if route == "town":
+		return "town"
+	var message := String(result.get("message", ""))
+	if message.find("Recovered ") >= 0 or message.find("Equipped in ") >= 0:
+		return "artifact"
+	if message.find("Stores ") >= 0 or message.find("claimed") >= 0 or message.find("Claimed") >= 0:
+		return "collect"
+	return "move"
+
+func _movement_feedback_fallback(result: Dictionary) -> String:
+	if bool(result.get("ok", false)):
+		var pos := OverworldRules.hero_position(_session)
+		return "%d,%d" % [pos.x, pos.y]
+	return "Route did not resolve."
+
+func _action_feedback_text() -> String:
+	if _action_feedback.is_empty():
+		return ""
+	return String(_action_feedback.get("text", ""))
+
+func _action_feedback_tooltip() -> String:
+	if _action_feedback.is_empty():
+		return ""
+	return String(_action_feedback.get("full_text", _action_feedback.get("text", "")))
+
+func _pulse_action_feedback() -> void:
+	if _cue_chip_panel == null:
+		return
+	_cue_chip_panel.pivot_offset = _cue_chip_panel.size * 0.5
+	if _action_feedback_tween != null:
+		_action_feedback_tween.kill()
+		_action_feedback_tween = null
+	_cue_chip_panel.scale = Vector2.ONE
+	_cue_chip_panel.modulate = Color.WHITE
+	if SettingsService.reduced_motion_enabled():
+		return
+	_action_feedback_tween = create_tween()
+	_action_feedback_tween.set_trans(Tween.TRANS_QUAD)
+	_action_feedback_tween.set_ease(Tween.EASE_OUT)
+	_action_feedback_tween.tween_property(_cue_chip_panel, "scale", Vector2(1.025, 1.025), 0.08)
+	_action_feedback_tween.parallel().tween_property(_cue_chip_panel, "modulate", Color(1.0, 0.94, 0.72, 1.0), 0.08)
+	_action_feedback_tween.tween_property(_cue_chip_panel, "scale", Vector2.ONE, 0.18)
+	_action_feedback_tween.parallel().tween_property(_cue_chip_panel, "modulate", Color.WHITE, 0.18)
+
 func _map_cue_text() -> String:
+	var feedback := _action_feedback_text()
+	if feedback != "":
+		return feedback
 	var action := _current_primary_action()
 	if action.is_empty():
 		var movement = _session.overworld.get("movement", {})
@@ -869,12 +1025,16 @@ func _map_cue_text() -> String:
 	return "Action: %s [Enter]" % _short_action_label(String(action.get("label", "Action")), 20)
 
 func _map_cue_tooltip() -> String:
+	var feedback := _action_feedback_tooltip()
 	var action := _current_primary_action()
 	var pan_hint := ""
 	if _map_view != null and _map_view.has_method("validation_view_metrics"):
 		var metrics: Dictionary = _map_view.call("validation_view_metrics")
 		if bool(metrics.get("pan_supported", false)):
 			pan_hint = " Drag the map, use the mouse wheel, or hold Shift with arrow/WASD keys to pan. Home returns to the active hero."
+	if feedback != "":
+		var next_hint := " Select another destination or press Enter/Space for the current primary order." if not action.is_empty() else " Select a destination or open a command drawer for the next order."
+		return "%s.%s%s" % [feedback, next_hint, pan_hint]
 	if action.is_empty():
 		return "Click a visible adjacent tile to move now, or select a farther visible tile to set the next route step.%s" % pan_hint
 	return "Press Enter or Space for %s. Click the map to move or change the selected route.%s" % [String(action.get("label", "the primary order")), pan_hint]
@@ -1662,6 +1822,8 @@ func validation_snapshot() -> Dictionary:
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"enemy_activity_summary": _last_enemy_activity_text,
+		"action_feedback": _validation_action_feedback(),
+		"action_feedback_text": _action_feedback_text(),
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),
@@ -1713,7 +1875,29 @@ func _validation_chrome_state() -> Dictionary:
 			or get_node_or_null("%MoveEast") != null
 		),
 		"map_cue_text": _map_cue_label.text,
+		"action_feedback": _validation_action_feedback(),
 		"frontier_indicator": _frontier_indicator_label.text,
+	}
+
+func _validation_action_feedback() -> Dictionary:
+	if _action_feedback.is_empty():
+		return {
+			"active": false,
+			"kind": "",
+			"text": "",
+			"full_text": "",
+			"sequence": 0,
+			"cue_chip_text": _map_cue_label.text if _map_cue_label != null else "",
+		}
+	return {
+		"active": true,
+		"kind": String(_action_feedback.get("kind", "")),
+		"label": String(_action_feedback.get("label", "")),
+		"text": String(_action_feedback.get("text", "")),
+		"full_text": String(_action_feedback.get("full_text", "")),
+		"sequence": int(_action_feedback.get("sequence", 0)),
+		"cue_chip_text": _map_cue_label.text if _map_cue_label != null else "",
+		"reduced_motion": SettingsService.reduced_motion_enabled(),
 	}
 
 func validation_open_command_drawer() -> Dictionary:
@@ -1872,6 +2056,7 @@ func validation_end_turn() -> Dictionary:
 		"enemy_activity_summary": _last_enemy_activity_text,
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
+		"action_feedback": _validation_action_feedback(),
 	}
 
 func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
@@ -1889,6 +2074,7 @@ func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
 		"mana_after": mana_after,
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
+		"action_feedback": _validation_action_feedback(),
 	}
 
 func validation_try_progress_action() -> Dictionary:
@@ -1938,6 +2124,7 @@ func validation_perform_context_action(action_id: String) -> Dictionary:
 		"battle_started": not _session.battle.is_empty(),
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
+		"action_feedback": _validation_action_feedback(),
 	}
 
 func validation_perform_primary_action() -> Dictionary:
@@ -1968,6 +2155,7 @@ func validation_perform_primary_action() -> Dictionary:
 		"scenario_status": _session.scenario_status,
 		"last_action": String(_session.flags.get("last_action", "")),
 		"message": _last_message,
+		"action_feedback": _validation_action_feedback(),
 	}
 
 func validation_route_step_to_nearest_target(target_kind: String, owner_id: String = "") -> Dictionary:
@@ -2001,6 +2189,7 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 			"remaining_steps": maxi(0, path.size() - 1),
 			"last_action": String(_session.flags.get("last_action", "")),
 			"message": _last_message,
+			"action_feedback": _validation_action_feedback(),
 		}
 
 	if path.size() <= 1:
@@ -2239,6 +2428,7 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 		"remaining_steps": maxi(0, path.size() - 2),
 		"last_action": String(_session.flags.get("last_action", "")),
 		"message": _last_message,
+		"action_feedback": _validation_action_feedback(),
 	}
 
 func _first_validation_safe_step(start: Vector2i) -> Vector2i:

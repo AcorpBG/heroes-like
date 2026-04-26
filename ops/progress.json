@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T09:54:37Z",
+  "updatedAt": "2026-04-26T10:12:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-magic-affordance-ui-10184",
-  "currentSliceTitle": "Surface overworld spell affordances in live UI and action feedback",
+  "currentSliceId": "overworld-action-feedback-ui-10184",
+  "currentSliceTitle": "Add compact live overworld action feedback cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented concise live overworld field-spell affordances using existing spell content and casting flow. Field spell actions now surface effect, mana cost, target, ready or blocked reason, and cast outcome text; the overworld rail prioritizes field spells, and focused smoke coverage exercises disabled, ready, and cast feedback. No spell-system migration, save version change, new assets, AI casting, or report-only scene was added.",
+  "currentSliceNotes": "Implemented compact live overworld action feedback cues on the existing footer cue chip. Movement, blocked orders, collection/artifact pickup, spell casts, town/battle routing, saves, and end-turn enemy activity now record validation-friendly cue state and use a lightweight reduced-motion-aware pulse without adding a new animation framework, scene, schema, or assets.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -781,6 +781,19 @@
             "status": "completed",
             "startedAt": "2026-04-26T09:48:46Z",
             "completedAt": "2026-04-26T09:54:37Z",
+            "validation": [
+                "git diff --check",
+                "python3 tests/validate_repo.py",
+                "godot4 --headless --path . tests/overworld_visual_smoke.tscn"
+            ],
+            "difficulty": "medium"
+        },
+        {
+            "id": "overworld-action-feedback-ui-10184",
+            "title": "Add compact live overworld action feedback cues",
+            "status": "completed",
+            "startedAt": "2026-04-26T10:02:00Z",
+            "completedAt": "2026-04-26T10:12:00Z",
             "validation": [
                 "git diff --check",
                 "python3 tests/validate_repo.py",

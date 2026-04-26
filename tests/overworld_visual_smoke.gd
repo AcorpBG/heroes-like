@@ -108,6 +108,8 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		push_error("Overworld smoke: primary action did not move the hero during render-cache coverage. result=%s." % move_result)
 		get_tree().quit(1)
 		return false
+	if not _assert_action_feedback("movement feedback cue", shell.call("validation_snapshot"), "move", ["Moved:"]):
+		return false
 	if (
 		int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))
 		or int(move_cache.get("dynamic_generation", -1)) <= int(selection_cache.get("dynamic_generation", -1))
@@ -385,6 +387,8 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 		["Trailsinger Boots", "Exploration reward", "+2 move", "Equipped in Boots slot"]
 	):
 		return false
+	if not _assert_action_feedback("artifact pickup feedback cue", shell.call("validation_snapshot"), "artifact", ["Artifact:", "Trailsinger Boots"]):
+		return false
 	var commander_state: Dictionary = shell.call("validation_snapshot").get("commander_state", {})
 	if "artifact_trailsinger_boots" not in commander_state.get("artifact_ids", []):
 		push_error("Overworld smoke: collected artifact was not visible in commander state. state=%s" % commander_state)
@@ -476,6 +480,8 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: spell cast outcome did not surface in the live event rail. snapshot=%s" % cast_snapshot)
 		get_tree().quit(1)
 		return false
+	if not _assert_action_feedback("spell cast feedback cue", cast_snapshot, "cast", ["Cast:", "Waystride restores"]):
+		return false
 
 	session.overworld["fog"] = original_fog
 	session.overworld["hero"] = original_hero
@@ -505,6 +511,11 @@ func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: enemy activity did not surface through the compact overworld event rail. summary=%s visible=%s tooltip=%s" % [summary, visible_text, tooltip_text])
 		get_tree().quit(1)
 		return false
+	var first_enemy_cue := summary.split("|", false)[0].strip_edges()
+	if first_enemy_cue.ends_with("."):
+		first_enemy_cue = first_enemy_cue.left(first_enemy_cue.length() - 1)
+	if not _assert_action_feedback("enemy turn feedback cue", snapshot, "enemy", ["Enemy:", first_enemy_cue]):
+		return false
 	if not _assert_no_ai_score_leak("enemy activity summary", summary):
 		return false
 	if not _assert_no_ai_score_leak("enemy activity rail", "%s\n%s" % [visible_text, tooltip_text]):
@@ -524,6 +535,29 @@ func _assert_text_contains_all(label: String, texts: Array, needles: Array) -> b
 	for needle in needles:
 		if joined.find(String(needle)) < 0:
 			push_error("%s missing '%s'. text=%s" % [label, String(needle), joined])
+			get_tree().quit(1)
+			return false
+	return true
+
+func _assert_action_feedback(label: String, snapshot: Dictionary, expected_kind: String, needles: Array) -> bool:
+	var feedback: Dictionary = snapshot.get("action_feedback", {})
+	var cue_text := String(feedback.get("cue_chip_text", snapshot.get("action_feedback_text", "")))
+	var full_text := String(feedback.get("full_text", feedback.get("text", "")))
+	if not bool(feedback.get("active", false)) or String(feedback.get("kind", "")) != expected_kind:
+		push_error("Overworld smoke: %s did not expose the expected feedback kind. feedback=%s snapshot=%s" % [label, feedback, snapshot])
+		get_tree().quit(1)
+		return false
+	if cue_text == "" or full_text == "":
+		push_error("Overworld smoke: %s did not expose validation-friendly cue text. feedback=%s" % [label, feedback])
+		get_tree().quit(1)
+		return false
+	if cue_text != String(snapshot.get("chrome", {}).get("map_cue_text", cue_text)):
+		push_error("Overworld smoke: %s cue chip text drifted from the chrome snapshot. feedback=%s chrome=%s" % [label, feedback, snapshot.get("chrome", {})])
+		get_tree().quit(1)
+		return false
+	for needle in needles:
+		if full_text.find(String(needle)) < 0 and cue_text.find(String(needle)) < 0:
+			push_error("Overworld smoke: %s missing '%s'. feedback=%s" % [label, String(needle), feedback])
 			get_tree().quit(1)
 			return false
 	return true
