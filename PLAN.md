@@ -266,6 +266,24 @@ Validation:
 Limits:
 - This is UI/tooling readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression, authored file writes, or broad dashboard composition.
 
+## Completed Implementation Slice: Main-Menu Contextual Field Manual Access
+Status: completed on 2026-04-26 as compact player-facing onboarding UI polish.
+
+Purpose:
+- Help a manual player reach the existing Field Manual from the secondary main-menu boards without adding another first-view command or turning the scenic menu into a help dashboard.
+- Reuse current help topics, campaign/skirmish/save/settings boards, and secondary-board header controls instead of adding mechanics, save fields, or new progression state.
+
+Delivered:
+- Added a contextual `Guide`/`Back` header control to the main-menu secondary board.
+- Campaign and save boards now open the Field Manual to the matching topic and return to the prior board without closing the secondary menu.
+- Added focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`, including contextual guide access, return flow, and no-score-leak assertions.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/menu_outcome_visual_smoke.tscn`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_visual_smoke.tscn`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
+
+Limits:
+- This is UI/onboarding polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression, settings persistence semantics, or broad dashboard composition.
+
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
 
@@ -3928,11 +3946,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact map-editor Play Copy return context using the existing editor return snapshot and Play Copy handoff surfaces.
+Current target: completed contextual Field Manual access from secondary main-menu boards using the existing help topic data and main-menu stage dock.
 
 Done means:
-- Returning from a map-editor Play Copy run visibly confirms that the editor restored the launch snapshot rather than importing live play mutations.
-- The return context stays compact in the existing editor status/Play Copy tooltip surfaces and points to the next edit or Play Copy action.
-- Focused map-editor smoke coverage proves the return context after a Play Copy round trip without leaking internal score/debug fields.
-- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
+- Campaign and save secondary boards expose a compact contextual `Guide` control without adding first-view commands or large help panels over the scenic menu.
+- The contextual guide opens the existing Field Manual to the matching topic and the same header control returns to the previous secondary board.
+- Focused main-menu smoke coverage proves contextual guide access, return flow, and no internal score/debug leaks.
+- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, settings persistence semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

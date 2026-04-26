@@ -30,11 +30,18 @@ const TAB_STAGE_COPY := {
 		"hint": "Presentation, sound, and readability controls live in a secondary board.",
 	},
 }
+const TAB_HELP_TOPIC := {
+	TAB_CAMPAIGN: "campaign",
+	TAB_SKIRMISH: "skirmish",
+	TAB_SAVES: "saves",
+	TAB_SETTINGS: "saves",
+}
 
 @onready var _menu_tabs: TabContainer = %MenuTabs
 @onready var _stage_dock_panel: PanelContainer = $StageDockPanel
 @onready var _stage_dock_title_label: Label = %ActionLead
 @onready var _stage_dock_hint_label: Label = %ActionHint
+@onready var _stage_help_button: Button = %StageHelp
 @onready var _close_stage_dock_button: Button = %CloseStageDock
 @onready var _eyebrow_label: Label = %Eyebrow
 @onready var _title_label: Label = %Title
@@ -92,6 +99,7 @@ var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
 var _help_entries: Array = []
 var _selected_help_topic_id := ""
+var _last_context_tab := TAB_CAMPAIGN
 var _syncing_settings_ui := false
 var _menu_notice := ""
 
@@ -188,10 +196,21 @@ func _on_open_saves_pressed() -> void:
 	_toggle_stage_dock(TAB_SAVES)
 
 func _on_open_guide_pressed() -> void:
+	_select_help_topic(SettingsService.default_help_topic_id())
 	_toggle_stage_dock(TAB_GUIDE)
 
 func _on_open_settings_pressed() -> void:
 	_toggle_stage_dock(TAB_SETTINGS)
+
+func _on_stage_help_pressed() -> void:
+	if _menu_tabs.current_tab == TAB_GUIDE:
+		_select_menu_tab(_last_context_tab)
+		_show_stage_dock()
+		return
+	_last_context_tab = _menu_tabs.current_tab
+	_select_help_topic(_help_topic_for_tab(_menu_tabs.current_tab))
+	_select_menu_tab(TAB_GUIDE)
+	_show_stage_dock()
 
 func _on_open_editor_pressed() -> void:
 	AppRouter.go_to_map_editor()
@@ -436,6 +455,17 @@ func _refresh_help_browser() -> void:
 		_help_list.select(0)
 
 	_set_compact_label(_help_details_label, SettingsService.describe_help_topic(_selected_help_topic_id), 7, 88)
+
+func _select_help_topic(topic_id: String) -> void:
+	if topic_id == "":
+		return
+	_selected_help_topic_id = topic_id
+	for index in range(_help_entries.size()):
+		if String(_help_entries[index].get("id", "")) != topic_id:
+			continue
+		_help_list.select(index)
+		break
+	_refresh_help_browser()
 
 func _refresh_settings_panel() -> void:
 	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)
@@ -697,6 +727,8 @@ func _build_footer_expedition_summary() -> String:
 func _select_menu_tab(index: int) -> void:
 	if _menu_tabs.get_tab_count() == 0:
 		return
+	if index != TAB_GUIDE:
+		_last_context_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
 	_menu_tabs.current_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
 	_refresh_stage_dock_header()
 	_sync_command_button_styles()
@@ -726,6 +758,14 @@ func _refresh_stage_dock_header() -> void:
 	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
 	_set_compact_label(_stage_dock_title_label, String(stage_copy.get("title", "Command board")), 1, 48)
 	_set_compact_label(_stage_dock_hint_label, String(stage_copy.get("hint", "")), 2, 92)
+	if _menu_tabs.current_tab == TAB_GUIDE:
+		var return_copy: Dictionary = TAB_STAGE_COPY.get(_last_context_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
+		_stage_help_button.text = "Back"
+		_stage_help_button.tooltip_text = "Return to %s without closing the secondary board." % String(return_copy.get("title", "the previous board")).to_lower()
+	else:
+		var topic_label := SettingsService.help_topic_label(_help_topic_for_tab(_menu_tabs.current_tab))
+		_stage_help_button.text = "Guide"
+		_stage_help_button.tooltip_text = "Open the Field Manual to the %s topic for this board. This does not start, load, save, or change settings." % topic_label
 	_close_stage_dock_button.tooltip_text = "Dismiss this secondary board and return to the clean scenic first view."
 
 func validation_snapshot() -> Dictionary:
@@ -741,6 +781,9 @@ func validation_snapshot() -> Dictionary:
 		"current_tab": _menu_tabs.current_tab,
 		"first_view_command_surface": "painted_backdrop_hotspots",
 		"first_view_commands": _first_view_command_labels(),
+		"stage_help_text": _stage_help_button.text,
+		"stage_help_tooltip": _stage_help_button.tooltip_text,
+		"stage_help_return_tab": _last_context_tab,
 		"has_generated_command_spine": get_node_or_null("CommandSpinePanel") != null,
 		"has_first_view_status_box": get_node_or_null("SpineStatusPanel") != null,
 		"campaign_count": _campaign_entries.size(),
@@ -763,6 +806,12 @@ func validation_snapshot() -> Dictionary:
 		"campaign_operational_board": _campaign_operational_board_label.text,
 		"campaign_operational_board_full": _campaign_operational_board_label.tooltip_text,
 		"save_count": _save_summaries.size(),
+		"help_topic_id": _selected_help_topic_id,
+		"help_items": _help_browser_item_labels(),
+		"help_intro": _help_intro_label.text,
+		"help_intro_full": _help_intro_label.tooltip_text,
+		"help_details": _help_details_label.text,
+		"help_details_full": _help_details_label.tooltip_text,
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_difficulty": _selected_difficulty,
@@ -828,6 +877,12 @@ func _save_browser_item_labels() -> Array:
 		labels.append(_save_list.get_item_text(index))
 	return labels
 
+func _help_browser_item_labels() -> Array:
+	var labels := []
+	for index in range(_help_list.get_item_count()):
+		labels.append(_help_list.get_item_text(index))
+	return labels
+
 func _picker_item_labels(picker: OptionButton) -> Array:
 	var labels := []
 	for index in range(picker.get_item_count()):
@@ -846,6 +901,13 @@ func validation_open_saves_stage() -> void:
 	_select_menu_tab(TAB_SAVES)
 	_show_stage_dock()
 	_rebuild_save_browser()
+
+func validation_open_contextual_guide_stage() -> void:
+	_on_stage_help_pressed()
+
+func validation_return_from_contextual_guide() -> void:
+	if _menu_tabs.current_tab == TAB_GUIDE:
+		_on_stage_help_pressed()
 
 func validation_open_settings_stage() -> void:
 	_select_menu_tab(TAB_SETTINGS)
@@ -1027,6 +1089,9 @@ func _sync_system_command_buttons() -> void:
 	_apply_backdrop_plaque_button(_open_editor_button, false, false)
 	_apply_backdrop_plaque_button(_quit_button, false, true)
 
+func _help_topic_for_tab(tab_index: int) -> String:
+	return String(TAB_HELP_TOPIC.get(tab_index, SettingsService.default_help_topic_id()))
+
 func _apply_backdrop_plaque_button(button: BaseButton, active: bool, danger: bool) -> void:
 	button.focus_mode = Control.FOCUS_NONE
 	button.add_theme_font_size_override("font_size", 19 if not danger else 18)
@@ -1099,6 +1164,7 @@ func _apply_visual_theme() -> void:
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
 		FrontierVisualKit.apply_item_list(list, "smoke")
 
+	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
