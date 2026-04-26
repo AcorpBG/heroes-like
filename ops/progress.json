@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T16:05:00Z",
+  "updatedAt": "2026-04-26T16:20:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-hero-task-state-adoption-sequencing-planning-10184",
-  "currentSliceTitle": "Plan next strategic AI hero task-state adoption sequence",
+  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-planning-10184",
+  "currentSliceTitle": "Plan report-only strategic AI hero task-state save-normalizer preservation proof",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI hero task-state boundary report gate review passed. The focused AI_HERO_TASK_STATE_BOUNDARY_REPORT output is sufficient to keep schema writes, save migration, durable event logs, coefficient tuning, defense-specific durable state, full AI hero task-state implementation, production JSON edits, live commander-role behavior, and live AI hero behavior deferred. The next slice should be planning-only adoption sequencing before any schema or behavior switch.",
+  "currentSliceNotes": "Strategic AI hero task-state adoption sequencing planning is complete. The recommended next slice is report-only save-normalizer preservation planning, focused on future optional enemy_states[].hero_task_state preservation through EnemyTurnRules.normalize_enemy_states, old-save absence compatibility, malformed-state tolerance, no SAVE_VERSION bump unless separately planned, and keeping SaveService outside strategic AI task semantics before any schema writes or live behavior adoption.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -722,10 +722,38 @@
         {
             "id": "strategic-ai-hero-task-state-adoption-sequencing-planning-10184",
             "title": "Plan next strategic AI hero task-state adoption sequence before schema or live behavior adoption",
+            "status": "completed",
+            "startedAt": "2026-04-26T16:05:00Z",
+            "completedAt": "2026-04-26T16:20:00Z",
+            "decision": "hero-task-state-save-normalizer-preservation-planning-next",
+            "planningDoc": "docs/strategic-ai-hero-task-state-adoption-sequencing-plan.md",
+            "recommendedNextSlice": "strategic-ai-hero-task-state-save-normalizer-preservation-planning-10184",
+            "rejectedNextOptions": [
+                "minimal-hero-task-state-schema-planning-now",
+                "live-behavior-transcript-proof-now",
+                "full-ai-hero-task-state-planning-now",
+                "pause-ai-foundation-work"
+            ],
+            "blockedOptions": [
+                "hero_task_state_schema_writes_now",
+                "save_migration_now",
+                "durable_event_logs_now",
+                "defense_specific_durable_state_now",
+                "coefficient_tuning_now",
+                "full_ai_hero_task_state_implementation_now",
+                "live_commander_role_behavior_now",
+                "live_ai_hero_behavior_now"
+            ],
+            "difficulty": "high"
+        },
+        {
+            "id": "strategic-ai-hero-task-state-save-normalizer-preservation-planning-10184",
+            "title": "Plan report-only hero task-state save-normalizer preservation proof",
             "status": "pending",
             "blockedOptions": [
                 "hero_task_state_schema_writes_now",
                 "save_migration_now",
+                "save_version_bump_now",
                 "durable_event_logs_now",
                 "defense_specific_durable_state_now",
                 "coefficient_tuning_now",
