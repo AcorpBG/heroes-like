@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T02:33:19Z",
+  "updatedAt": "2026-04-26T03:05:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-resource-additive-validator-report-scaffolding-10184",
-  "currentSliceTitle": "Implement additive resource validator/report scaffolding",
+  "currentSliceId": "overworld-object-additive-validator-report-scaffolding-10184",
+  "currentSliceTitle": "Implement additive overworld object validator/report scaffolding",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "docs/economy-resource-additive-schema-validator-plan.md completes the planning-only contract for the first additive resource schema and validator warning/report work. It covers optional registry fields, wood/timber alias reporting, resource registry/report shape, source/availability reports, output-cadence inference warnings, persistent-site capture warnings, market-cap report shape, strict fixture scope, warning-vs-error levels, CLI/report expectations, compatibility adapters, acceptance tests, rollback boundaries, and hard non-change rules. The next slice should implement report-only validator scaffolding and tiny strict fixtures without production JSON migration, market/runtime behavior changes, save migration, rare-resource activation, renderer sprite ingestion, runtime asset import, or generated concept-art import.",
+  "currentSliceNotes": "Economy/resource additive validator/report scaffolding is complete as opt-in report and strict fixture support only. The next slice should mirror that report-first approach for overworld object schema migration: current production object content for report reality, strict non-production fixtures for future-schema checks, and no production JSON migration, renderer ingestion, pathing/occupancy behavior changes, AI adoption, or runtime asset import.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -205,6 +205,13 @@
     {
       "id": "economy-resource-additive-validator-report-scaffolding-10184",
       "title": "Implement additive resource validator/report scaffolding",
+      "status": "completed",
+      "completedAt": "2026-04-26T03:05:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "overworld-object-additive-validator-report-scaffolding-10184",
+      "title": "Implement additive overworld object validator/report scaffolding",
       "status": "pending",
       "difficulty": "high"
     },

@@ -52,19 +52,20 @@ Immediate execution order:
 15. Overworld object schema migration planning: completed in `docs/overworld-object-schema-migration-plan.md` as a planning-only migration contract for object primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard links, reward categories, ownership/capture states, route effects, resource-site linkage, animation cue ids, validation, editor/tooling, and rollback.
 16. Economy/resource schema migration planning: completed in `docs/economy-resource-schema-migration-plan.md` as the planning-only companion contract for resource ids, `wood`/`timber` compatibility, resource categories, output cadence, persistent-site capture values, pickup/income/service distinction, market caps, faction preferences, cost compatibility, object-schema linkage, AI hooks, UI/readability, save compatibility, validation levels, migration order, and rollback.
 17. First additive resource schema and validator warning/report planning: completed in `docs/economy-resource-additive-schema-validator-plan.md` as a narrow implementation contract for optional resource registry fields, `wood`/`timber` alias reporting, resource/source/cadence/capture/market reports, strict fixture scope, warning levels, CLI expectations, compatibility adapters, acceptance tests, rollback, and hard non-change boundaries.
-18. First additive validator/report scaffolding implementation is the next current slice. It should implement report-only warnings and strict sample fixtures without production JSON migration, runtime economy behavior changes, market changes, save migration, rare-resource activation, or asset/sprite import.
-19. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+18. First additive validator/report scaffolding implementation: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/economy_resource_schema/`. This did not migrate production JSON, change runtime economy behavior, change markets, migrate saves, activate rare resources, or import assets.
+19. Next current slice: additive overworld object schema validator/report scaffolding. It should mirror the report-first approach used for economy resources, using current production content only for report reality and isolated fixtures for strict future-schema behavior.
+20. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Implement the first additive validator/report scaffolding from `docs/economy-resource-additive-schema-validator-plan.md`.
-- Prioritize opt-in report output, compatibility-mode warnings, `wood`/Timber alias reporting, source/availability matrices, output-cadence inference, persistent-site capture warnings, market-cap reports, and tiny strict fixtures.
-- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin economy JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, runtime asset import, or save cleanup until additive schema and validator/report work is explicitly approved.
+- Implement additive overworld object schema validator/report scaffolding from `docs/overworld-object-schema-migration-plan.md`.
+- Prioritize opt-in report output, compatibility-mode warnings, current object family/class/linkage reality, footprint/approach/passability report scaffolding, guard/ownership/route-effect warnings, and tiny strict fixtures.
+- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until additive object schema and validator/report work is explicitly approved.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is additive validator/report scaffolding, tied to deepening economy/resource foundations without switching production behavior.
+- The next active implementation choice is additive overworld object validator/report scaffolding, tied to deepening object-schema foundations without switching production behavior.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -82,6 +83,29 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, fixtures, assets, production content JSON, market behavior, save migration, rare resources, or playability claims.
+
+## Completed Implementation Slice: Economy Resource Additive Validator Report Scaffolding
+Status: completed on 2026-04-26 as report-only validator scaffolding for the additive economy/resource schema.
+
+Purpose:
+- Add opt-in economy/resource report generation and strict fixture validation without migrating production JSON or changing runtime economy, market, save, AI, renderer, asset, or rare-resource behavior.
+- Use current content only as report reality while keeping future-schema strictness isolated to tiny non-production fixtures.
+
+Delivered:
+- Added `--economy-resource-report`, `--economy-resource-report-json`, and `--strict-economy-resource-fixtures` CLI support to `tests/validate_repo.py`.
+- Added report-only compatibility adapter helpers for display names, stockpile/non-stockpile classification, `wood`/Timber alias reporting, target `timber` warnings, alias-collision detection, source/availability matrices, cadence inference, persistent-site capture warnings, market-cap stance warnings, and JSON/text report output.
+- Added non-production fixtures under `tests/fixtures/economy_resource_schema/` for registry metadata, valid pickup, persistent daily site, intentional missing-capture warning, repeatable service, capped common market, advisory faction preferences, old-save resource payload, and invalid strict cases for missing registry metadata, alias collision, unknown resources, `experience` stockpile misuse, and rare-resource normal-market buying.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+- Passed `python3 tests/validate_repo.py --economy-resource-report`
+- Passed `python3 tests/validate_repo.py --economy-resource-report-json /tmp/heroes-economy-resource-report.json && python3 -m json.tool /tmp/heroes-economy-resource-report.json >/tmp/heroes-economy-resource-report-jsoncheck.txt`
+- Passed `python3 tests/validate_repo.py --strict-economy-resource-fixtures`
+
+Limits:
+- This is scaffolding only. It does not edit production content JSON, add `content/resources.json`, change runtime spend/add/market/save behavior, migrate `wood` to `timber`, activate rare resources in production, import generated concept art, ingest sprites, alter pathing, or claim economy balance/readiness.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
