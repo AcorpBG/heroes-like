@@ -19,6 +19,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _carryover_label: Label = %Carryover
 @onready var _aftermath_label: Label = %Aftermath
 @onready var _journal_label: Label = %Journal
+@onready var _actions_hint_label: Label = %ActionsHint
 @onready var _save_status_label: Label = %SaveStatus
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
@@ -64,6 +65,7 @@ func _refresh() -> void:
 	var next_step_summary := String(_model.get("next_step_summary", ""))
 	var next_play_action_summary := String(_model.get("next_play_action_summary", ""))
 	var continuity_choice_summary := String(_model.get("continuity_choice_summary", ""))
+	var action_cue_summary := String(_model.get("action_cue_summary", ""))
 	var action_status_lines := []
 	if next_step_summary != "":
 		action_status_lines.append(next_step_summary)
@@ -77,6 +79,12 @@ func _refresh() -> void:
 		_last_action_message if _last_action_message != "" else (action_status_text if action_status_text != "" else "Review the outcome, then choose the next step."),
 		3
 	)
+	_set_compact_label(
+		_actions_hint_label,
+		action_cue_summary if action_cue_summary != "" else "Action cue: choose the follow-up action that matches the saved outcome you want to keep.",
+		3
+	)
+	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [action_cue_summary]).strip_edges()
 	_rebuild_actions()
 
 func _configure_save_slot_picker() -> void:
@@ -198,6 +206,9 @@ func validation_snapshot() -> Dictionary:
 		"next_step_summary": String(_model.get("next_step_summary", "")),
 		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
 		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
+		"action_cue_summary": String(_model.get("action_cue_summary", "")),
+		"actions_hint": _actions_hint_label.text,
+		"actions_hint_tooltip": _actions_hint_label.tooltip_text,
 		"action_status": _action_status_label.text,
 		"action_ids": action_ids,
 		"actions": action_payloads,

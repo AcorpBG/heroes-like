@@ -535,6 +535,7 @@ func _run_outcome_smoke() -> bool:
 		return false
 
 	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var action_payload_text := _joined_action_payload_text(snapshot)
 	if not _assert_text_contains_all(
 		"Outcome progress and next-step recap",
 		[
@@ -542,16 +543,22 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("next_step_summary", "")),
 			String(snapshot.get("continuity_choice_summary", "")),
 			String(snapshot.get("next_play_action_summary", "")),
+			String(snapshot.get("action_cue_summary", "")),
+			String(snapshot.get("actions_hint", "")),
+			action_payload_text,
 			String(snapshot.get("action_status", "")),
 			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Outcome skirmish continuity choice",
 		[
 			String(snapshot.get("continuity_choice_summary", "")),
+			String(snapshot.get("action_cue_summary", "")),
+			String(snapshot.get("actions_hint", "")),
+			action_payload_text,
 			String(snapshot.get("action_status", "")),
 		]
 	):
@@ -578,6 +585,7 @@ func _run_outcome_smoke() -> bool:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var campaign_snapshot: Dictionary = campaign_shell.call("validation_snapshot")
+	var campaign_action_payload_text := _joined_action_payload_text(campaign_snapshot)
 	if not _assert_text_contains_all(
 		"Outcome campaign continuity choice",
 		[
@@ -585,15 +593,21 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("campaign_arc_summary", "")),
 			String(campaign_snapshot.get("carryover_summary", "")),
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
+			String(campaign_snapshot.get("action_cue_summary", "")),
+			String(campaign_snapshot.get("actions_hint", "")),
+			campaign_action_payload_text,
 			String(campaign_snapshot.get("action_status", "")),
 		],
-		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu"]
+		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Outcome campaign continuity choice",
 		[
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
+			String(campaign_snapshot.get("action_cue_summary", "")),
+			String(campaign_snapshot.get("actions_hint", "")),
+			campaign_action_payload_text,
 			String(campaign_snapshot.get("action_status", "")),
 			String(campaign_snapshot.get("carryover_summary", "")),
 		]
@@ -603,3 +617,14 @@ func _run_outcome_smoke() -> bool:
 	campaign_shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _joined_action_payload_text(snapshot: Dictionary) -> String:
+	var lines := []
+	var actions = snapshot.get("actions", [])
+	if actions is Array:
+		for action in actions:
+			if action is Dictionary:
+				lines.append(String(action.get("label", "")))
+				lines.append(String(action.get("summary", "")))
+				lines.append(String(action.get("action_cue", "")))
+	return "\n".join(lines)
