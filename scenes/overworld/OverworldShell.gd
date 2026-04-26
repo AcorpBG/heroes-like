@@ -89,6 +89,7 @@ var _selected_tile := Vector2i(-1, -1)
 var _hovered_tile := Vector2i(-1, -1)
 var _last_message := ""
 var _last_enemy_activity_text := ""
+var _last_enemy_activity_events: Array = []
 var _last_turn_resolution_text := ""
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -220,6 +221,7 @@ func _on_end_turn_pressed() -> void:
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = String(result.get("enemy_activity_summary", ""))
+	_last_enemy_activity_events = _duplicate_array(result.get("enemy_activity_events", []))
 	_last_turn_resolution_text = String(result.get("turn_resolution_summary", ""))
 	_record_action_feedback("turn", _last_turn_resolution_text, _turn_resolution_feedback_fallback())
 	if bool(result.get("ok", false)):
@@ -525,12 +527,13 @@ func _refresh() -> void:
 		_set_collapsed_frontier_indicator()
 	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
-	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
-	if _last_turn_resolution_text != "":
-		dispatch_text += "\n- Daybreak result: %s" % _last_turn_resolution_text
-	if _last_enemy_activity_text != "":
-		dispatch_text += "\n- Recent enemy activity: %s" % _last_enemy_activity_text
-	_set_rail_text(_event_label, dispatch_text, _rail_log_text(), 1)
+	var event_surface := _event_feed_surface()
+	_set_rail_text(
+		_event_label,
+		String(event_surface.get("tooltip_text", "")),
+		String(event_surface.get("visible_text", _rail_log_text())),
+		1
+	)
 	_end_turn_button.tooltip_text = OverworldRules.describe_end_turn_forecast(_session)
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
@@ -1400,6 +1403,17 @@ func _rail_log_text() -> String:
 		message = "Awaiting order"
 	return "Log: %s" % message
 
+func _event_feed_surface() -> Dictionary:
+	var surface := OverworldRules.describe_event_feed_surface(
+		_session,
+		_last_message,
+		_last_turn_resolution_text,
+		_last_enemy_activity_text,
+		_last_enemy_activity_events
+	)
+	surface["dispatch_text"] = OverworldRules.describe_dispatch(_session, _last_message)
+	return surface
+
 func _rail_order_text(commitment_text: String) -> String:
 	var primary_action := _current_primary_action()
 	var order_line := "Order: select tile"
@@ -2126,6 +2140,7 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_rail_text": OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
+		"event_feed": _event_feed_surface(),
 		"objective_brief_visible_text": _objective_brief_label.text,
 		"objective_brief_tooltip_text": _objective_brief_label.tooltip_text,
 		"enemy_activity_summary": _last_enemy_activity_text,
@@ -2381,6 +2396,7 @@ func validation_end_turn() -> Dictionary:
 		"end_turn_forecast_compact": OverworldRules.describe_end_turn_forecast_compact(_session),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
+		"event_feed": _event_feed_surface(),
 		"action_feedback": _validation_action_feedback(),
 	}
 

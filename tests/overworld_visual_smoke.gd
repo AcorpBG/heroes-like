@@ -1009,6 +1009,7 @@ func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 	var resolution := String(result.get("turn_resolution_summary", snapshot.get("turn_resolution_summary", "")))
 	var visible_text := String(result.get("event_visible_text", snapshot.get("event_visible_text", "")))
 	var tooltip_text := String(result.get("event_tooltip_text", snapshot.get("event_tooltip_text", "")))
+	var event_feed: Dictionary = result.get("event_feed", snapshot.get("event_feed", {}))
 	if summary == "":
 		push_error("Overworld smoke: enemy turn did not produce a recent enemy activity summary. result=%s" % result)
 		get_tree().quit(1)
@@ -1020,6 +1021,18 @@ func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 	if visible_text.find("Turn:") < 0 or tooltip_text.find("Daybreak result:") < 0 or tooltip_text.find("Recent enemy activity:") < 0 or tooltip_text.find(summary) < 0:
 		push_error("Overworld smoke: end-turn result did not surface through the compact overworld event rail. summary=%s visible=%s tooltip=%s" % [summary, visible_text, tooltip_text])
 		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Overworld field feed consequence recap",
+		[
+			tooltip_text,
+			String(event_feed.get("happened", "")),
+			String(event_feed.get("why_it_matters", "")),
+			String(event_feed.get("affected", "")),
+			String(event_feed.get("next_step", "")),
+		],
+		["Field Feed", "Happened:", "Affected:", "Why it matters:", "Next:", "routes", "Push toward"]
+	):
 		return false
 	var first_enemy_cue := summary.split("|", false)[0].strip_edges()
 	if first_enemy_cue.ends_with("."):

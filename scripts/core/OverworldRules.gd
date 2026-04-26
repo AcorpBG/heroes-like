@@ -1936,6 +1936,50 @@ static func describe_dispatch(session: SessionStateStoreScript.SessionData, last
 		lines.append("- Outcome pending: %s" % session.scenario_summary)
 	return "\n".join(lines)
 
+static func describe_event_feed_surface(
+	session: SessionStateStoreScript.SessionData,
+	last_message: String = "",
+	turn_resolution_summary: String = "",
+	enemy_activity_summary: String = "",
+	enemy_activity_events_value: Variant = []
+) -> Dictionary:
+	normalize_overworld_state(session)
+	var recent_events := _describe_recent_events(session, 2)
+	var happened := _event_feed_happened_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
+	var affected := _event_feed_affected_line(session, enemy_activity_summary, enemy_activity_events_value)
+	var why := _event_feed_why_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
+	var next_step := _event_feed_next_step_line(session)
+	var watch := _event_feed_watch_line(session)
+	var visible := _event_feed_visible_line(happened, turn_resolution_summary, enemy_activity_summary)
+	var tooltip_lines := ["Field Feed"]
+	tooltip_lines.append("- Happened: %s" % happened)
+	if turn_resolution_summary.strip_edges() != "":
+		tooltip_lines.append("- Daybreak result: %s" % turn_resolution_summary.strip_edges())
+	if enemy_activity_summary.strip_edges() != "":
+		tooltip_lines.append("- Recent enemy activity: %s" % enemy_activity_summary.strip_edges())
+	if recent_events != "":
+		tooltip_lines.append("- Scenario pulse: %s" % _short_player_text(recent_events, 180))
+	if affected != "":
+		tooltip_lines.append("- Affected: %s" % affected)
+	if why != "":
+		tooltip_lines.append("- Why it matters: %s" % why)
+	if next_step != "":
+		tooltip_lines.append("- Next: %s" % next_step)
+	if watch != "":
+		tooltip_lines.append("- Watch: %s" % watch)
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"happened": happened,
+		"affected": affected,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"watch": watch,
+		"recent_events": recent_events,
+		"enemy_activity_summary": enemy_activity_summary,
+		"turn_resolution_summary": turn_resolution_summary,
+	}
+
 static func describe_enemy_activity(events_value: Variant, limit: int = 4) -> String:
 	var lines := []
 	var seen := {}
@@ -2055,6 +2099,124 @@ static func _enemy_activity_public_text(text: String) -> String:
 		if output.find(token) >= 0:
 			return ""
 	return output
+
+static func _event_feed_visible_line(happened: String, turn_resolution_summary: String, enemy_activity_summary: String) -> String:
+	if turn_resolution_summary.strip_edges() != "":
+		return "Turn: %s" % _short_player_text(turn_resolution_summary, 72)
+	if enemy_activity_summary.strip_edges() != "":
+		return "Enemy: %s" % _short_player_text(enemy_activity_summary, 72)
+	var action_text := happened
+	if action_text.begins_with("Order resolved: "):
+		action_text = action_text.trim_prefix("Order resolved: ")
+	elif action_text.begins_with("Scenario pulse: "):
+		action_text = action_text.trim_prefix("Scenario pulse: ")
+	return "Event: %s" % _short_player_text(action_text, 72)
+
+static func _event_feed_happened_line(
+	last_message: String,
+	turn_resolution_summary: String,
+	enemy_activity_summary: String,
+	recent_events: String
+) -> String:
+	var turn_text := _enemy_activity_public_text(turn_resolution_summary)
+	if turn_text != "":
+		return "Daybreak resolved: %s" % _short_player_text(turn_text, 160)
+	var message_text := _enemy_activity_public_text(last_message)
+	if message_text != "":
+		return "Order resolved: %s" % _short_player_text(message_text, 160)
+	var enemy_text := _enemy_activity_public_text(enemy_activity_summary)
+	if enemy_text != "":
+		return "Enemy movement reported: %s" % _short_player_text(enemy_text, 160)
+	if recent_events != "":
+		return "Scenario pulse: %s" % _short_player_text(recent_events, 160)
+	return "No new report; the frontier watch is current."
+
+static func _event_feed_affected_line(
+	session: SessionStateStoreScript.SessionData,
+	enemy_activity_summary: String,
+	enemy_activity_events_value: Variant
+) -> String:
+	var affected := []
+	if enemy_activity_summary.strip_edges() != "" and enemy_activity_events_value is Array:
+		for event_value in enemy_activity_events_value:
+			if not (event_value is Dictionary):
+				continue
+			var event: Dictionary = event_value
+			var target_label := String(event.get("target_label", "")).strip_edges()
+			if target_label == "":
+				continue
+			var target_kind := String(event.get("target_kind", "")).strip_edges()
+			var faction_label := String(event.get("faction_label", "")).strip_edges()
+			var label := target_label
+			if target_kind != "":
+				label += " %s" % _humanize_id(target_kind).to_lower()
+			if faction_label != "":
+				label = "%s: %s" % [faction_label, label]
+			if label not in affected:
+				affected.append(label)
+			if affected.size() >= 2:
+				break
+	var convoy_line := _event_feed_convoy_line(session)
+	if convoy_line != "":
+		affected.append(convoy_line)
+	if affected.is_empty():
+		affected.append(_dispatch_context_brief(session))
+	return " | ".join(affected.slice(0, min(3, affected.size())))
+
+static func _event_feed_why_line(
+	last_message: String,
+	turn_resolution_summary: String,
+	enemy_activity_summary: String,
+	recent_events: String
+) -> String:
+	var combined := "%s %s %s %s" % [last_message, turn_resolution_summary, enemy_activity_summary, recent_events]
+	var lower := combined.to_lower()
+	if enemy_activity_summary.strip_edges() != "":
+		return "Enemy moves can close routes, contest sites, or add town pressure before your next turn."
+	if lower.find("convoy") >= 0 or lower.find("escort") >= 0 or lower.find("route") >= 0:
+		return "Route orders move reinforcements and may need protection from active raids."
+	if recent_events != "":
+		return "Scenario pulses can open rewards, spawn counterforces, or advance objective stakes."
+	if lower.find("claim") >= 0 or lower.find("control") >= 0 or lower.find("captur") >= 0:
+		return "Control changes affect income, recruitment, routes, and objective progress."
+	if lower.find("recruit") >= 0 or lower.find("muster") >= 0:
+		return "Fresh troops change the next battle or town-defense decision."
+	return "Use the next order to turn the report into progress toward the active objective."
+
+static func _event_feed_next_step_line(session: SessionStateStoreScript.SessionData) -> String:
+	var surface := _objective_stakes_surface(session)
+	var next_objective := String(surface.get("next_objective", "")).strip_edges()
+	if next_objective != "":
+		return "Push toward %s." % _short_player_text(next_objective, 92)
+	var watch_objective := String(surface.get("watch_objective", "")).strip_edges()
+	if watch_objective != "":
+		return "Keep watch on %s." % _short_player_text(watch_objective, 92)
+	if session.scenario_status != "in_progress" and session.scenario_summary != "":
+		return "Resolve the pending scenario outcome."
+	return "Scout, consolidate, or end the turn when orders are spent."
+
+static func _event_feed_watch_line(session: SessionStateStoreScript.SessionData) -> String:
+	var parts := []
+	var local_pressure := _local_visible_threat_summary(session, "")
+	if local_pressure != "":
+		parts.append(local_pressure)
+	var management_watch := describe_management_watch(session)
+	if management_watch != "" and management_watch != "Town lines are stable.":
+		parts.append(management_watch)
+	if parts.is_empty():
+		return "No urgent raid, convoy, or town-management warning is visible."
+	return " | ".join(parts.slice(0, min(2, parts.size())))
+
+static func _event_feed_convoy_line(session: SessionStateStoreScript.SessionData) -> String:
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var delivery_line := _resource_site_delivery_line(session, node, site)
+		if delivery_line != "":
+			return "Convoy: %s" % _short_player_text(delivery_line, 120)
+	return ""
 
 static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData) -> String:
 	var context := get_active_context(session)
