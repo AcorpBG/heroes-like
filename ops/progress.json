@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:25:00Z",
+  "updatedAt": "2026-04-26T18:15:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-economy-pressure-implementation-10184",
-  "currentSliceTitle": "Implement the first narrow strategic AI economy pressure target",
+  "currentSliceId": "strategic-ai-economy-pressure-report-gate-10184",
+  "currentSliceTitle": "Review the strategic AI economy pressure report and manual gate output",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI economy pressure planning is complete in docs/strategic-ai-economy-pressure-slice-plan.md. No prerequisite blocker exists. The next implementation slice should keep to the existing River Pass and EnemyTurn/EnemyAdventure pressure model: explainably score and surface why Duskfen/Mireclaw values player-controlled river_free_company and river_signal_post, with common pickups, fight-gated routes, Riverwatch town spend/recruit proof, save/resume continuity, and remaining objectives as evidence. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Strategic AI economy pressure implementation is complete in docs/strategic-ai-economy-pressure-implementation-report.md. EnemyAdventureRules now exposes resource target score breakdown/report helpers and uses them for resource candidate priority; focused Godot report coverage proves player-controlled river_signal_post and river_free_company outrank simple pickups in River Pass resource target ordering while the full selector can still prefer riverwatch_hold when town pressure legitimately dominates. The next slice should review the report/manual gate output and decide pass/tune/event-stream follow-up. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -388,7 +388,9 @@
     {
       "id": "strategic-ai-economy-pressure-implementation-10184",
       "title": "Implement the first narrow strategic AI economy pressure target",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T17:30:00Z",
+      "completedAt": "2026-04-26T18:15:00Z",
       "difficulty": "very_high"
     },
     {
