@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T21:20:00Z",
+  "updatedAt": "2026-04-26T22:05:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-town-governor-pressure-report-implementation-10184",
-  "currentSliceTitle": "Implement report-only town governor pressure surfacing",
+  "currentSliceId": "strategic-ai-town-governor-pressure-report-gate-10184",
+  "currentSliceTitle": "Review report-only town governor pressure surfacing output",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI pressure expansion planning is complete in docs/strategic-ai-pressure-expansion-plan.md. The selected next boundary is behavior-neutral town governor pressure surfacing: explain existing enemy town build, recruit, garrison, raid reinforcement, and commander rebuild choices through focused report/debug output and compact derived events. Use River Pass Duskfen / Mireclaw as the first example because it connects enemy town pressure, raid reinforcement bias, signal-yard site denial, and the Riverwatch town front. Keep the passed event-surfacing gate as contract: public output compact, score tables report/debug-only, live-client gate triggered only when visible turn pacing, arrival frequency, map pressure, or UI composition changes. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, or River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Strategic AI town governor pressure report implementation is complete in docs/strategic-ai-town-governor-pressure-implementation-report.md. EnemyTurnRules now exposes behavior-neutral town governor reports, build score breakdowns, recruitment destination breakdowns, and compact derived events for ai_town_built, ai_town_recruited, ai_garrison_reinforced, ai_raid_reinforced, and ai_commander_rebuilt. The focused Godot report prints AI_TOWN_GOVERNOR_PRESSURE_REPORT for River Pass Duskfen / Mireclaw, covering selected build reasoning, garrison reinforcement, active raid reinforcement, commander rebuild, and public-event leak checks. Next gate should review that output and decide whether the report-only boundary passes and whether any live-client enemy-turn gate is needed. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -439,8 +439,16 @@
     {
       "id": "strategic-ai-town-governor-pressure-report-implementation-10184",
       "title": "Implement report-only town governor pressure surfacing",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T21:25:00Z",
+      "completedAt": "2026-04-26T22:05:00Z",
       "difficulty": "very_high"
+    },
+    {
+      "id": "strategic-ai-town-governor-pressure-report-gate-10184",
+      "title": "Review report-only town governor pressure surfacing output",
+      "status": "pending",
+      "difficulty": "high"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
