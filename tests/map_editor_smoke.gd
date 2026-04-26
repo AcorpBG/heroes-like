@@ -2383,6 +2383,63 @@ func _assert_editor_play_handoff(result: Dictionary, expected_dirty: bool, fragm
 			return false
 	return true
 
+func _assert_editor_play_return_context(result: Dictionary, fragments: Array) -> bool:
+	var return_context: Dictionary = result.get("play_return_context", {})
+	var text := String(return_context.get("text", ""))
+	var tooltip := String(return_context.get("tooltip", ""))
+	var play_tooltip := String(result.get("play_button_tooltip", ""))
+	var visible_status := String(result.get("visible_status_text", ""))
+	var full_status := String(result.get("visible_status_full", ""))
+	if return_context.is_empty() or text == "":
+		_fail("Map editor smoke: editor Play Copy return context was not exposed: %s." % result)
+		return false
+	if not bool(return_context.get("restored", false)):
+		_fail("Map editor smoke: editor Play Copy return context did not mark restored state: %s." % return_context)
+		return false
+	if String(return_context.get("return_model", "")) != "launch_snapshot":
+		_fail("Map editor smoke: editor Play Copy return context did not preserve launch-snapshot model: %s." % return_context)
+		return false
+	var hero: Dictionary = return_context.get("hero_position", {})
+	if int(hero.get("x", -1)) != 3 or int(hero.get("y", -1)) != 3:
+		_fail("Map editor smoke: editor Play Copy return context did not report launch hero position: %s." % return_context)
+		return false
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected == "":
+			continue
+		if text.find(expected) < 0 and tooltip.find(expected) < 0:
+			_fail("Map editor smoke: editor Play Copy return context missed '%s': %s" % [expected, return_context])
+			return false
+		if play_tooltip.find(expected) < 0:
+			_fail("Map editor smoke: Play Copy tooltip missed return-context fragment '%s': %s" % [expected, play_tooltip])
+			return false
+		if full_status.find(expected) < 0:
+			_fail("Map editor smoke: visible status full text missed return-context fragment '%s': %s" % [expected, full_status])
+			return false
+	if visible_status.find("Play return:") < 0:
+		_fail("Map editor smoke: visible status text did not include the Play Copy return label: %s." % visible_status)
+		return false
+	var leak_text := "%s\n%s\n%s\n%s" % [text, tooltip, play_tooltip, full_status]
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if leak_text.find(forbidden) >= 0:
+			_fail("Map editor smoke: editor Play Copy return context leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
 func _assert_object_property_edits(shell) -> bool:
 	var before_cache := _render_cache_metrics(shell.call("validation_snapshot"))
 	var town_result: Dictionary = shell.call("validation_edit_object_property", 23, 26, "town", "owner", "neutral")
@@ -2876,6 +2933,8 @@ func _assert_play_copy_round_trip(shell) -> bool:
 	var returned_hero: Dictionary = returned_snapshot.get("hero_position", {})
 	if int(returned_hero.get("x", -1)) != 3 or int(returned_hero.get("y", -1)) != 3:
 		_fail("Map editor smoke: returned editor imported live play mutation instead of the launch snapshot: %s." % returned_snapshot)
+		return false
+	if not _assert_editor_play_return_context(returned_snapshot, ["Play return:", "launch snapshot restored", "live play mutations discarded", "Hero 3,3", "Next: edit the working copy or launch Play Copy again"]):
 		return false
 	var returned_tile: Dictionary = returned_editor.call("validation_tile_presentation", 2, 2)
 	var returned_terrain: Dictionary = returned_tile.get("terrain_presentation", {})

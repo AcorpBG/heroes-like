@@ -2426,6 +2426,10 @@ func _sync_play_handoff_surface() -> void:
 	var handoff_tooltip := String(handoff.get("tooltip", "")).strip_edges()
 	if handoff_tooltip != "":
 		tooltip_lines.append(handoff_tooltip)
+	var return_context := _editor_play_return_context_payload()
+	var return_tooltip := String(return_context.get("tooltip", "")).strip_edges()
+	if return_tooltip != "":
+		tooltip_lines.append(return_tooltip)
 	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a scenario working copy before play-testing it."
 
 func _sync_object_taxonomy_summary() -> void:
@@ -2505,6 +2509,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
+	var return_context_text := String(_editor_play_return_context_payload().get("text", "")).strip_edges()
+	if return_context_text != "":
+		status_lines.append(return_context_text)
 	var play_readiness_text := String(_editor_play_readiness_gate_payload().get("text", "")).strip_edges()
 	if play_readiness_text != "":
 		status_lines.append(play_readiness_text)
@@ -4286,6 +4293,46 @@ func _editor_play_handoff_payload() -> Dictionary:
 		"hero_position": {"x": hero_position.x, "y": hero_position.y},
 	}
 
+func _editor_play_return_context_payload() -> Dictionary:
+	if _session == null or not _restored_from_play_copy:
+		return {
+			"text": "",
+			"tooltip": "",
+			"restored": false,
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var map_size := OverworldRules.derive_map_size(_session)
+	var hero_position := OverworldRules.hero_position(_session)
+	var return_model := String(_session.flags.get("editor_return_model", "launch_snapshot"))
+	var dirty_text := "unsaved edits still in memory" if _dirty else "authored working copy unchanged"
+	var text := "Play return: launch snapshot restored; live play mutations discarded; Hero %d,%d | Selected %d,%d | Objects %d | Next: edit the working copy or launch Play Copy again." % [
+		hero_position.x,
+		hero_position.y,
+		_selected_tile.x,
+		_selected_tile.y,
+		_placement_count(),
+	]
+	return {
+		"text": text,
+		"tooltip": "%s\n%s | Map %dx%d | Return model %s | %s | Next: edit the working copy or launch Play Copy again." % [
+			text,
+			scenario_name,
+			map_size.x,
+			map_size.y,
+			return_model,
+			dirty_text,
+		],
+		"restored": true,
+		"scenario_id": _session.scenario_id,
+		"scenario_name": scenario_name,
+		"return_model": return_model,
+		"hero_position": {"x": hero_position.x, "y": hero_position.y},
+		"selected_tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"object_count": _placement_count(),
+		"dirty": _dirty,
+	}
+
 func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_working_copy"] = true
 	_session.flags["editor_source_scenario_id"] = _session.scenario_id
@@ -4903,6 +4950,8 @@ func validation_snapshot() -> Dictionary:
 		"play_readiness_gate_text": String(_editor_play_readiness_gate_payload().get("text", "")),
 		"play_handoff": _editor_play_handoff_payload(),
 		"play_handoff_text": String(_editor_play_handoff_payload().get("text", "")),
+		"play_return_context": _editor_play_return_context_payload(),
+		"play_return_context_text": String(_editor_play_return_context_payload().get("text", "")),
 		"play_button_text": _play_button.text if _play_button != null else "",
 		"play_button_tooltip": _play_button.tooltip_text if _play_button != null else "",
 		"editor_acceptance_cue": _editor_acceptance_cue_payload(),
