@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T13:07:49Z",
+  "updatedAt": "2026-04-26T13:52:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-scenario-launch-clarity-10184",
-  "currentSliceTitle": "Surface main menu and scenario launch clarity in live UI",
+  "currentSliceId": "map-editor-placement-guidance-10184",
+  "currentSliceTitle": "Surface object placement and density guidance in the live map editor",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing main menu launch clarity. Campaign chapters and skirmish setup now surface launch previews with mode, difficulty, scenario/campaign context, objectives, stakes, and action consequences, while the footer/save surfaces show the latest resume target using existing save summaries without content or save schema changes.",
+  "currentSliceNotes": "Implemented compact real map editor placement guidance. The object palette and tile inspection now surface placement role, economy/reward/transit/neutral/faction-landmark flags, content links, density bands, 16x16 local density counts, and placement feedback using existing object taxonomy/resource-site/encounter metadata.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
