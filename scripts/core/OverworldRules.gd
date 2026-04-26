@@ -354,10 +354,14 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	if not delivery_messages.is_empty():
 		messages.append("Reserve deliveries %s." % "; ".join(delivery_messages))
 	var enemy_turn_result: Dictionary = _run_enemy_turn_cycle(session)
+	var enemy_activity_summary := describe_enemy_activity(enemy_turn_result.get("events", []), 4)
 	var enemy_message := String(enemy_turn_result.get("message", ""))
 	if enemy_message != "":
 		messages.append(enemy_message)
-	return _finalize_action_result(session, true, " ".join(messages))
+	var result := _finalize_action_result(session, true, " ".join(messages))
+	result["enemy_activity_summary"] = enemy_activity_summary
+	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 6)
+	return result
 
 static func collect_active_resource(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
@@ -1461,6 +1465,126 @@ static func describe_dispatch(session: SessionStateStoreScript.SessionData, last
 	if session.scenario_status != "in_progress" and session.scenario_summary != "":
 		lines.append("- Outcome pending: %s" % session.scenario_summary)
 	return "\n".join(lines)
+
+static func describe_enemy_activity(events_value: Variant, limit: int = 4) -> String:
+	var lines := []
+	var seen := {}
+	for event_value in _compact_enemy_activity_events(events_value, max(1, limit * 2)):
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		var line := _enemy_activity_line(event)
+		if line == "" or seen.has(line):
+			continue
+		seen[line] = true
+		lines.append(line)
+		if lines.size() >= max(1, limit):
+			break
+	return " | ".join(lines)
+
+static func _compact_enemy_activity_events(events_value: Variant, limit: int = 6) -> Array:
+	var compact := []
+	if not (events_value is Array):
+		return compact
+	for event_value in events_value:
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		if not _enemy_activity_event_is_player_facing(event):
+			continue
+		compact.append(
+			{
+				"event_type": String(event.get("event_type", "")),
+				"day": int(event.get("day", 0)),
+				"faction_label": String(event.get("faction_label", "")),
+				"actor_label": String(event.get("actor_label", "")),
+				"target_kind": String(event.get("target_kind", "")),
+				"target_label": String(event.get("target_label", "")),
+				"visibility": String(event.get("visibility", "")),
+				"public_importance": String(event.get("public_importance", "")),
+				"public_reason": String(event.get("public_reason", "")),
+				"summary": _enemy_activity_public_text(String(event.get("summary", ""))),
+			}
+		)
+		if compact.size() >= max(1, limit):
+			break
+	return compact
+
+static func _enemy_activity_event_is_player_facing(event: Dictionary) -> bool:
+	var event_type := String(event.get("event_type", ""))
+	if event_type not in [
+		"ai_target_assigned",
+		"ai_pressure_summary",
+		"ai_site_seized",
+		"ai_site_contested",
+		"ai_town_built",
+		"ai_town_recruited",
+		"ai_garrison_reinforced",
+		"ai_raid_reinforced",
+		"ai_commander_rebuilt",
+		"ai_commander_role_observed",
+		"ai_raid_moved",
+		"ai_raid_arrived",
+	]:
+		return false
+	var text := _enemy_activity_public_text(String(event.get("summary", "")))
+	if text == "":
+		return String(event.get("target_label", "")) != ""
+	return true
+
+static func _enemy_activity_line(event: Dictionary) -> String:
+	var summary := _enemy_activity_public_text(String(event.get("summary", "")))
+	if summary != "":
+		return summary
+	var actor := String(event.get("actor_label", event.get("faction_label", "Enemy")))
+	var target := String(event.get("target_label", event.get("target_id", "the frontier")))
+	var reason := _enemy_activity_public_text(String(event.get("public_reason", "")))
+	var suffix := " (%s)" % reason if reason != "" else ""
+	match String(event.get("event_type", "")):
+		"ai_target_assigned":
+			return "%s targets %s%s." % [actor, target, suffix]
+		"ai_pressure_summary":
+			return "%s pressure centers on %s%s." % [String(event.get("faction_label", actor)), target, suffix]
+		"ai_site_seized":
+			return "%s seizes %s%s." % [actor, target, suffix]
+		"ai_site_contested":
+			return "%s contests %s%s." % [actor, target, suffix]
+		"ai_town_built":
+			return "%s builds %s%s." % [actor, target, suffix]
+		"ai_town_recruited":
+			return "%s recruits %s%s." % [actor, target, suffix]
+		"ai_garrison_reinforced":
+			return "%s reinforces %s%s." % [actor, target, suffix]
+		"ai_raid_reinforced":
+			return "%s feeds %s%s." % [actor, target, suffix]
+		"ai_commander_rebuilt":
+			return "%s rebuilds %s%s." % [actor, target, suffix]
+		_:
+			return ""
+
+static func _enemy_activity_public_text(text: String) -> String:
+	var output := text.strip_edges().replace("\n", " ")
+	while output.find("  ") >= 0:
+		output = output.replace("  ", " ")
+	for token in [
+		"base_value",
+		"persistent_income_value",
+		"recruit_value",
+		"scarcity_value",
+		"denial_value",
+		"route_pressure_value",
+		"town_enablement_value",
+		"objective_value",
+		"faction_bias",
+		"travel_cost",
+		"guard_cost",
+		"assignment_penalty",
+		"final_priority",
+		"debug_reason",
+	]:
+		if output.find(token) >= 0:
+			return ""
+	return output
 
 static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData) -> String:
 	var context := get_active_context(session)
