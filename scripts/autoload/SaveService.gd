@@ -335,6 +335,9 @@ func describe_slot_details(summary: Dictionary) -> String:
 		"Resume: %s"
 		% String(summary.get("status_text", "Unavailable"))
 	)
+	var continuity_lines := _summary_continuity_lines(summary)
+	if not continuity_lines.is_empty():
+		lines.append_array(continuity_lines)
 	var progress_recap := _summary_progress_recap(summary)
 	if progress_recap != "":
 		lines.append(progress_recap)
@@ -925,6 +928,120 @@ func _summary_progress_recap(summary: Dictionary) -> String:
 	if session == null or session.scenario_id == "":
 		return ""
 	return load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, true)
+
+func _summary_continuity_lines(summary: Dictionary) -> Array:
+	if summary.is_empty() or not bool(summary.get("valid", false)):
+		return []
+	var session := _session_from_payload(_summary_payload(summary))
+	if session == null or session.scenario_id == "":
+		return []
+
+	var lines := []
+	var action_line := _summary_resume_action_line(summary)
+	if action_line != "":
+		lines.append(action_line)
+	var context_line := _summary_campaign_context_line(summary)
+	if context_line != "":
+		lines.append(context_line)
+	var objective_line := _summary_objective_line(session)
+	if objective_line != "":
+		lines.append(objective_line)
+	var watch_line := _summary_watch_state_line(session, summary)
+	if watch_line != "":
+		lines.append(watch_line)
+	return lines
+
+func _summary_resume_action_line(summary: Dictionary) -> String:
+	if not can_load_summary(summary):
+		return ""
+	var action := load_action_label(summary)
+	var target := _resume_context_label(summary)
+	match String(summary.get("resume_target", "blocked")):
+		"battle":
+			return "Action: %s will restore %s before the next tactical order." % [action, target]
+		"town":
+			return "Action: %s will reopen %s with current build, recruit, and logistics state." % [action, target]
+		"outcome":
+			return "Action: %s will reopen %s and its follow-up choices." % [action, target]
+		"overworld":
+			return "Action: %s will restore %s with current movement, map control, and turn state." % [action, target]
+		_:
+			return ""
+
+func _summary_campaign_context_line(summary: Dictionary) -> String:
+	var mode_label := ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
+	var parts := [mode_label]
+	var campaign_name := String(summary.get("campaign_name", "")).strip_edges()
+	var chapter_label := String(summary.get("chapter_label", "")).strip_edges()
+	if campaign_name != "":
+		parts.append(campaign_name)
+	if chapter_label != "":
+		parts.append(chapter_label)
+	var day := int(summary.get("day", 0))
+	if day > 0:
+		parts.append("Day %d" % day)
+	if parts.size() <= 1:
+		return ""
+	return "Continuity: %s." % " | ".join(parts)
+
+func _summary_objective_line(session: SessionStateStoreScript.SessionData) -> String:
+	var recap: String = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false)
+	var progress_line := _line_with_prefix(recap, "Current progress:")
+	var next_step_line := _line_with_prefix(recap, "Next step:")
+	if progress_line == "" and next_step_line == "":
+		return ""
+	var parts := []
+	if progress_line != "":
+		parts.append(progress_line.trim_prefix("Current progress:").strip_edges())
+	if next_step_line != "":
+		parts.append(next_step_line.trim_prefix("Next step:").strip_edges())
+	return "Current objective: %s" % " | ".join(parts)
+
+func _summary_watch_state_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
+	match String(summary.get("resume_target", "overworld")):
+		"battle":
+			var battle_risk: String = BattleRulesScript.describe_risk_readiness_board(session)
+			var outlook := _line_with_prefix(battle_risk, "Outlook:")
+			if outlook != "":
+				return "Risk watch: %s" % outlook.trim_prefix("Outlook:").strip_edges()
+		"outcome":
+			var recent_line := _line_with_prefix(
+				load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false),
+				"Recently resolved:"
+			)
+			if recent_line != "":
+				return "Risk watch: %s" % recent_line.trim_prefix("Recently resolved:").strip_edges()
+		_:
+			var command_risk: String = OverworldRulesScript.describe_command_risk(session)
+			var risk_line := _first_meaningful_line(command_risk, ["Command Risk"])
+			if risk_line != "" and not risk_line.begins_with("Steady watch"):
+				return "Risk watch: %s" % risk_line
+			var frontier_watch: String = OverworldRulesScript.describe_frontier_threats(session)
+			var frontier_line := _first_meaningful_line(frontier_watch, ["Frontier Watch"])
+			if frontier_line != "" and not frontier_line.contains("No hostile factions are active"):
+				return "Risk watch: %s" % frontier_line.trim_prefix("- ").strip_edges()
+			var management_watch: String = OverworldRulesScript.describe_management_watch(session)
+			if management_watch != "" and management_watch != "Town lines are stable.":
+				return "Risk watch: %s" % management_watch
+	return "Risk watch: No immediate stored warning; review the resumed scene before ending the turn."
+
+func _line_with_prefix(text: String, prefix: String) -> String:
+	for raw_line in text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with(prefix):
+			return line
+	return ""
+
+func _first_meaningful_line(text: String, ignored_lines: Array = []) -> String:
+	for raw_line in text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		var normalized := line.trim_prefix("- ").strip_edges()
+		if normalized in ignored_lines:
+			continue
+		return normalized
+	return ""
 
 func _slot_label(summary: Dictionary) -> String:
 	if String(summary.get("slot_type", "")) == SLOT_TYPE_AUTOSAVE:
