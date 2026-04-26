@@ -420,11 +420,16 @@ static func describe_event_feed(
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var market_actions := get_market_actions(session).size()
 	var response_actions := get_response_actions(session).size()
+	var handoff := town_handoff_recap(session)
 	var lines := [
 		"Town Dispatch",
-		lead_line if recap_text != "" else "- %s" % lead_line,
+		lead_line if recap_text != "" else "- %s" % String(handoff.get("visible_text", lead_line)),
 		"- Construction %d | Recruitment %d | Study %d" % [open_builds, open_recruits, open_study],
 	]
+	if bool(handoff.get("active", false)):
+		lines.append("- Affected: %s" % String(handoff.get("affected", "")))
+		lines.append("- Why it matters: %s" % String(handoff.get("why_it_matters", "")))
+		lines.append("- Next practical action: %s" % String(handoff.get("next_step", "")))
 	if pressure_line != "":
 		lines.append("- %s" % pressure_line)
 	lines.append("- Defense readiness: %s" % OverworldRulesScript.describe_town_defense_readiness_warning(session, town))
@@ -437,6 +442,52 @@ static func describe_event_feed(
 	if response_actions > 0:
 		lines.append("- Strategic response orders %d" % response_actions)
 	return "\n".join(lines)
+
+static func town_handoff_recap(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {
+			"active": false,
+			"visible_text": "Handoff: no active town.",
+			"affected": "",
+			"why_it_matters": "",
+			"next_step": "Return to the overworld.",
+			"tooltip_text": "Town Handoff\n- No active town.",
+		}
+
+	var town_name := _town_name(town)
+	var front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var occupation: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var response_actions := get_response_actions(session)
+	var ready_response := _first_ready_action(response_actions)
+	var movement := _active_hero_movement_state(session)
+	var affected := _town_handoff_affected_line(town_name, front, occupation, logistics, ready_response)
+	var why := _town_handoff_why_line(town, front, occupation, logistics, recovery, ready_response)
+	var next := _town_handoff_next_line(session, town, ready_response, movement)
+	var visible := "Handoff: %s | Why: %s | Next: %s" % [
+		_short_town_handoff_text(affected, 58),
+		_short_town_handoff_text(why, 70),
+		_short_town_handoff_text(next, 72),
+	]
+	var tooltip := "Town Handoff\n- Affected: %s\n- Why it matters: %s\n- Next practical action: %s" % [
+		affected,
+		why,
+		next,
+	]
+	return {
+		"active": true,
+		"town_name": town_name,
+		"affected": affected,
+		"why_it_matters": why,
+		"next_step": next,
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"ready_response_action_count": 1 if not ready_response.is_empty() else 0,
+		"movement_current": int(movement.get("current", 0)),
+		"movement_max": int(movement.get("max", 0)),
+	}
 
 static func town_action_consequence_signature(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
@@ -1505,6 +1556,84 @@ static func _next_town_action_line(session: SessionStateStoreScript.SessionData,
 			weekly_growth,
 		]
 	return "Leave town; no production order is open."
+
+static func _first_ready_action(actions: Array) -> Dictionary:
+	for action in actions:
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			return action
+	return {}
+
+static func _town_handoff_affected_line(
+	town_name: String,
+	front: Dictionary,
+	occupation: Dictionary,
+	logistics: Dictionary,
+	ready_response: Dictionary
+) -> String:
+	if bool(occupation.get("active", false)):
+		return "%s occupation and recovery front" % town_name
+	if bool(front.get("active", false)):
+		var enemy_label := String(front.get("enemy_label", ""))
+		if enemy_label != "":
+			return "%s %s front against %s" % [town_name, String(front.get("mode", "front")).capitalize(), enemy_label]
+		return "%s active front" % town_name
+	if not ready_response.is_empty():
+		return "%s response order: %s" % [
+			town_name,
+			_short_action_label(ready_response, "Response order"),
+		]
+	if int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0:
+		return "%s frontier support chain" % town_name
+	return "%s town order queue and return route" % town_name
+
+static func _town_handoff_why_line(
+	town: Dictionary,
+	front: Dictionary,
+	occupation: Dictionary,
+	logistics: Dictionary,
+	recovery: Dictionary,
+	ready_response: Dictionary
+) -> String:
+	if bool(occupation.get("active", false)) and String(occupation.get("summary", "")) != "":
+		return String(occupation.get("summary", ""))
+	if bool(front.get("active", false)) and String(front.get("summary", "")) != "":
+		return String(front.get("summary", ""))
+	if not ready_response.is_empty():
+		var delivery_summary := String(ready_response.get("delivery_summary", ""))
+		if delivery_summary != "":
+			return "dispatch can carry reserves into the next field route: %s" % delivery_summary
+		return "dispatch can steady a linked frontier route before enemy pressure compounds"
+	var logistics_summary := _logistics_watch_summary(logistics)
+	if int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0 or int(logistics.get("support_gap", 0)) > 0:
+		return logistics_summary
+	if bool(recovery.get("active", false)) and String(recovery.get("summary", "")) != "":
+		return String(recovery.get("summary", ""))
+	return "%s orders shape the army, walls, and field route before leaving town" % _town_name(town)
+
+static func _town_handoff_next_line(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	ready_response: Dictionary,
+	movement: Dictionary
+) -> String:
+	if not ready_response.is_empty():
+		var label := _short_action_label(ready_response, "Response order")
+		var move_left := int(ready_response.get("remaining_movement_after_order", movement.get("current", 0)))
+		return "Use %s in Logistics, then leave for the field route with %d move." % [label, move_left]
+	var next_town_action := _next_town_action_line(session, town)
+	if int(movement.get("current", 0)) <= 0:
+		return "%s Then leave town and end the day to refresh movement." % next_town_action
+	return "%s Then Leave to resume the field route with %d/%d move." % [
+		next_town_action,
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+	]
+
+static func _short_town_handoff_text(text: String, max_chars: int) -> String:
+	var trimmed := text.strip_edges().replace("\n", " ")
+	if max_chars <= 3 or trimmed.length() <= max_chars:
+		return trimmed
+	return "%s..." % trimmed.left(max_chars - 3)
 
 static func _short_action_label(action: Dictionary, fallback: String) -> String:
 	var label := String(action.get("label", fallback))
