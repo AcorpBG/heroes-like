@@ -59,6 +59,8 @@ RUN_LIVE_FLOW_HARNESS_PATH = ROOT / "tests" / "run_live_flow_harness.py"
 ECONOMY_RESOURCE_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "economy_resource_schema"
 ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resource_registry.json"
 ECONOMY_RESOURCE_STRICT_CASES_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "strict_cases.json"
+OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
+OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -389,6 +391,91 @@ ECONOMY_SOURCE_BUCKETS = (
     "market_profiles",
     "scenario_grants",
 )
+OVERWORLD_OBJECT_REPORT_SCHEMA = "overworld_object_report_v1"
+OVERWORLD_OBJECT_PRIMARY_CLASSES = {
+    "decoration",
+    "pickup",
+    "interactable_site",
+    "persistent_economy_site",
+    "transit_route_object",
+    "neutral_dwelling",
+    "neutral_encounter",
+    "guarded_reward_site",
+    "faction_landmark",
+    "scenario_objective",
+}
+OVERWORLD_OBJECT_SECONDARY_TAGS = {
+    "road_control",
+    "sightline",
+    "ambush_lane",
+    "resource_front",
+    "recovery",
+    "spell_access",
+    "market",
+    "blocked_route",
+    "conditional_route",
+    "world_lore",
+    "guarded_reward",
+    "neutral_recruit_source",
+    "faction_pressure",
+    "scenario_objective",
+    "counter_capture_target",
+    "town_support",
+    "weekly_muster",
+    "small_reward",
+    "route_pacing",
+    "build_resource",
+}
+OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS = {
+    "pickup": "pickup",
+    "mine": "persistent_economy_site",
+    "neutral_dwelling": "neutral_dwelling",
+    "shrine": "interactable_site",
+    "guarded_reward_site": "guarded_reward_site",
+    "scouting_structure": "interactable_site",
+    "transit_object": "transit_route_object",
+    "repeatable_service": "interactable_site",
+    "blocker": "decoration",
+    "decoration": "decoration",
+    "faction_landmark": "faction_landmark",
+}
+OVERWORLD_OBJECT_FAMILY_TAGS = {
+    "pickup": {"small_reward", "route_pacing"},
+    "mine": {"resource_front", "counter_capture_target"},
+    "neutral_dwelling": {"neutral_recruit_source", "weekly_muster", "counter_capture_target"},
+    "shrine": {"spell_access", "recovery"},
+    "guarded_reward_site": {"guarded_reward"},
+    "scouting_structure": {"sightline", "counter_capture_target"},
+    "transit_object": {"road_control", "conditional_route"},
+    "repeatable_service": {"recovery"},
+    "blocker": {"blocked_route"},
+    "decoration": {"world_lore"},
+    "faction_landmark": {"faction_pressure", "world_lore"},
+}
+OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
+    "passable_visit_on_enter",
+    "passable_scenic",
+    "blocking_visitable",
+    "blocking_non_visitable",
+    "edge_blocker",
+    "conditional_pass",
+    "town_blocking",
+    "neutral_stack_blocking",
+}
+OVERWORLD_OBJECT_APPROACH_MODES = {"enter", "adjacent", "pass_through", "linked_endpoint", "none"}
+OVERWORLD_OBJECT_APPROACH_SIDES = {"north", "east", "south", "west"}
+OVERWORLD_OBJECT_FOOTPRINT_ANCHORS = {"bottom_center", "center", "top_left", "bottom_left", "bottom_right"}
+OVERWORLD_OBJECT_FOOTPRINT_TIERS = {"micro", "small", "medium", "large", "region_feature"}
+OVERWORLD_OBJECT_INTERACTION_CADENCES = {
+    "none",
+    "one_time",
+    "repeatable_daily",
+    "repeatable_weekly",
+    "cooldown_days",
+    "persistent_control",
+    "conditional",
+    "scenario_scripted",
+}
 
 
 def load_json(path: Path) -> dict:
@@ -1087,6 +1174,571 @@ def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
         rare_buying = any(str(resource_id) in ECONOMY_RARE_RESOURCE_IDS and int(amount) > 0 for resource_id, amount in buy_caps.items()) if isinstance(buy_caps, dict) else False
         if not (bool(profile.get("normal_market", False)) and rare_buying):
             fail(errors, f"Strict invalid market fixture {profile_id} unexpectedly passed")
+    return errors, warnings
+
+
+def add_overworld_object_report_warning(report: dict, warning: str) -> None:
+    if warning not in report["warnings"]:
+        report["warnings"].append(warning)
+
+
+def increment_count(bucket: dict, key: str, amount: int = 1) -> None:
+    bucket[key] = int(bucket.get(key, 0)) + amount
+
+
+def sorted_counts(bucket: dict) -> dict:
+    return {key: bucket[key] for key in sorted(bucket.keys())}
+
+
+def infer_overworld_object_primary_class(obj: dict, site: dict | None = None) -> str:
+    family = str(obj.get("family", ""))
+    if family in OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS:
+        return OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS[family]
+    if site:
+        site_family = str(site.get("family", "one_shot_pickup"))
+        if site_family == "one_shot_pickup":
+            return "pickup"
+        if site_family in OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS:
+            return OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS[site_family]
+    return "interactable_site" if bool(obj.get("visitable", False)) else "decoration"
+
+
+def infer_overworld_object_secondary_tags(obj: dict, site: dict | None = None) -> list[str]:
+    tags: set[str] = set()
+    family = str(obj.get("family", ""))
+    tags.update(OVERWORLD_OBJECT_FAMILY_TAGS.get(family, set()))
+    roles = obj.get("map_roles", [])
+    if isinstance(roles, list):
+        for role in roles:
+            role_key = str(role)
+            if role_key:
+                tags.add(role_key)
+    if site:
+        if bool(site.get("persistent_control", False)):
+            tags.add("counter_capture_target")
+        if bool(site.get("guarded", False)) or isinstance(site.get("guard_profile", {}), dict) and bool(site.get("guard_profile", {})):
+            tags.add("guarded_reward")
+        if isinstance(site.get("transit_profile", {}), dict) and bool(site.get("transit_profile", {})):
+            tags.add("conditional_route")
+            tags.add("road_control")
+        if int(site.get("vision_radius", 0)) > 0:
+            tags.add("sightline")
+        if isinstance(site.get("neutral_roster", {}), dict) and bool(site.get("neutral_roster", {})):
+            tags.add("neutral_recruit_source")
+        if isinstance(site.get("town_support", {}), dict) and bool(site.get("town_support", {})):
+            tags.add("town_support")
+        if str(site.get("learn_spell_id", "")):
+            tags.add("spell_access")
+    return sorted(tags)
+
+
+def infer_overworld_object_footprint_tier(footprint: dict) -> str:
+    width = int(footprint.get("width", 0)) if isinstance(footprint, dict) else 0
+    height = int(footprint.get("height", 0)) if isinstance(footprint, dict) else 0
+    area = width * height
+    if area <= 1:
+        return "micro"
+    if area <= 2:
+        return "small"
+    if area <= 4:
+        return "medium"
+    if area <= 6:
+        return "large"
+    return "region_feature"
+
+
+def infer_overworld_object_passability_class(obj: dict) -> str:
+    family = str(obj.get("family", ""))
+    passable = bool(obj.get("passable", False))
+    visitable = bool(obj.get("visitable", False))
+    if family == "transit_object" and not passable and visitable:
+        return "conditional_pass"
+    if family == "blocker" and not passable:
+        return "blocking_non_visitable" if not visitable else "edge_blocker"
+    if passable and visitable:
+        return "passable_visit_on_enter"
+    if passable and not visitable:
+        return "passable_scenic"
+    if not passable and visitable:
+        return "blocking_visitable"
+    return "blocking_non_visitable"
+
+
+def infer_overworld_object_interaction_cadence(obj: dict, site: dict | None = None) -> str:
+    if not bool(obj.get("visitable", False)):
+        return "none"
+    if site is None:
+        return "one_time" if bool(obj.get("visitable", False)) else "none"
+    if isinstance(site.get("transit_profile", {}), dict) and bool(site.get("transit_profile", {})):
+        return "conditional"
+    if bool(site.get("persistent_control", False)):
+        return "persistent_control"
+    if bool(site.get("repeatable", False)):
+        return "cooldown_days" if int(site.get("visit_cooldown_days", 0)) > 0 else "repeatable_weekly"
+    if isinstance(site.get("weekly_recruits", {}), dict) and site.get("weekly_recruits", {}):
+        return "repeatable_weekly"
+    return "one_time"
+
+
+def infer_overworld_object_reward_categories(site: dict | None) -> list[str]:
+    if site is None:
+        return []
+    categories: list[str] = []
+    if isinstance(site.get("rewards", {}), dict) and site.get("rewards", {}):
+        append_unique(categories, "small_resource_reward")
+    if isinstance(site.get("claim_rewards", {}), dict) and site.get("claim_rewards", {}):
+        append_unique(categories, "claim_reward")
+    if isinstance(site.get("control_income", {}), dict) and site.get("control_income", {}):
+        append_unique(categories, "persistent_income")
+    if isinstance(site.get("weekly_recruits", {}), dict) and site.get("weekly_recruits", {}):
+        append_unique(categories, "recruitment")
+    if str(site.get("learn_spell_id", "")):
+        append_unique(categories, "spell_access")
+    if int(site.get("vision_radius", 0)) > 0:
+        append_unique(categories, "scouting_reveal")
+    if isinstance(site.get("transit_profile", {}), dict) and bool(site.get("transit_profile", {})):
+        append_unique(categories, "route_opening")
+    if isinstance(site.get("town_support", {}), dict) and bool(site.get("town_support", {})):
+        append_unique(categories, "town_support")
+    if bool(site.get("repeatable", False)):
+        append_unique(categories, "repeatable_service")
+    return categories
+
+
+def collect_overworld_object_scenario_site_placements(scenarios: dict[str, dict]) -> dict[str, dict]:
+    placements: dict[str, dict] = {}
+    for scenario_id, scenario in scenarios.items():
+        for node in scenario.get("resource_nodes", []):
+            if not isinstance(node, dict):
+                continue
+            site_id = str(node.get("site_id", ""))
+            if not site_id:
+                continue
+            entry = placements.setdefault(site_id, {"count": 0, "scenarios": [], "placements": []})
+            entry["count"] += 1
+            append_unique(entry["scenarios"], scenario_id)
+            append_unique_dict(
+                entry["placements"],
+                {
+                    "scenario_id": scenario_id,
+                    "placement_id": str(node.get("placement_id", "")),
+                    "x": int(node.get("x", 0)),
+                    "y": int(node.get("y", 0)),
+                    "collected_by_faction_id": str(node.get("collected_by_faction_id", "")),
+                },
+            )
+    return placements
+
+
+def collect_overworld_object_scenario_encounter_placements(scenarios: dict[str, dict]) -> dict[str, dict]:
+    placements: dict[str, dict] = {}
+    for scenario_id, scenario in scenarios.items():
+        for node in scenario.get("encounters", []):
+            if not isinstance(node, dict):
+                continue
+            encounter_id = str(node.get("encounter_id", ""))
+            if not encounter_id:
+                continue
+            entry = placements.setdefault(encounter_id, {"count": 0, "scenarios": [], "placements": []})
+            entry["count"] += 1
+            append_unique(entry["scenarios"], scenario_id)
+            append_unique_dict(
+                entry["placements"],
+                {
+                    "scenario_id": scenario_id,
+                    "placement_id": str(node.get("placement_id", "")),
+                    "x": int(node.get("x", 0)),
+                    "y": int(node.get("y", 0)),
+                    "difficulty": str(node.get("difficulty", "")),
+                },
+            )
+    return placements
+
+
+def build_overworld_object_report() -> dict:
+    payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions")}
+    map_objects = items_index(payloads["map_objects"])
+    resource_sites = items_index(payloads["resource_sites"])
+    scenarios = items_index(payloads["scenarios"])
+    encounters = items_index(payloads["encounters"])
+    army_groups = items_index(payloads["army_groups"])
+    factions = items_index(payloads["factions"])
+    site_placements = collect_overworld_object_scenario_site_placements(scenarios)
+    encounter_placements = collect_overworld_object_scenario_encounter_placements(scenarios)
+    object_ids_by_site_id = {str(obj.get("resource_site_id", "")): object_id for object_id, obj in map_objects.items() if str(obj.get("resource_site_id", ""))}
+    report = {
+        "schema": OVERWORLD_OBJECT_REPORT_SCHEMA,
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "mode": "compatibility_report",
+        "compatibility_adapters": {
+            "runtime_adoption": "not_active",
+            "production_json_migration": False,
+            "pathing_occupancy_adoption": False,
+            "renderer_sprite_ingestion": False,
+            "ai_behavior_switch": False,
+            "report_normalization": "inferred_only",
+        },
+        "summary": {
+            "map_object_count": len(map_objects),
+            "resource_site_count": len(resource_sites),
+            "scenario_site_placement_count": sum(int(entry.get("count", 0)) for entry in site_placements.values()),
+            "scenario_encounter_placement_count": sum(int(entry.get("count", 0)) for entry in encounter_placements.values()),
+            "family_counts": {},
+            "inferred_primary_class_counts": {},
+            "passability_class_counts": {},
+            "footprint_tier_counts": {},
+            "missing_future_metadata_counts": {
+                "schema_version": 0,
+                "primary_class": 0,
+                "secondary_tags": 0,
+                "footprint_anchor": 0,
+                "footprint_tier": 0,
+                "body_tiles": 0,
+                "approach": 0,
+                "passability_class": 0,
+                "interaction": 0,
+                "animation_cues": 0,
+                "editor_placement": 0,
+                "ai_hints": 0,
+            },
+        },
+        "families": {},
+        "objects": {},
+        "resource_site_links": {"linked_object_count": 0, "unlinked_resource_site_ids": [], "linked_resource_site_ids": [], "family_mismatches": []},
+        "scenario_reality": {
+            "resource_site_placements": site_placements,
+            "encounter_placements": encounter_placements,
+            "placed_site_ids_without_map_object": [],
+            "placed_guard_encounters": [],
+        },
+        "route_transit": {},
+        "guard_reward": {},
+        "ownership_capture": {},
+        "ai_editor_implications": {
+            "requires_future_body_tile_validation": [],
+            "requires_future_approach_validation": [],
+            "requires_future_density_review": [],
+            "requires_future_ai_valuation": [],
+            "visible_neutral_encounter_records_present": False,
+        },
+        "warnings": [],
+        "errors": [],
+    }
+    report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
+        infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
+        for obj in map_objects.values()
+    )
+
+    for object_id, obj in map_objects.items():
+        family = str(obj.get("family", ""))
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id) if site_id else None
+        primary_class = infer_overworld_object_primary_class(obj, site)
+        secondary_tags = infer_overworld_object_secondary_tags(obj, site)
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        footprint_tier = infer_overworld_object_footprint_tier(footprint)
+        passability_class = infer_overworld_object_passability_class(obj)
+        cadence = infer_overworld_object_interaction_cadence(obj, site)
+        reward_categories = infer_overworld_object_reward_categories(site)
+        object_warnings: list[str] = []
+        object_hints: list[str] = []
+        increment_count(report["summary"]["family_counts"], family)
+        increment_count(report["summary"]["inferred_primary_class_counts"], primary_class)
+        increment_count(report["summary"]["passability_class_counts"], passability_class)
+        increment_count(report["summary"]["footprint_tier_counts"], footprint_tier)
+        if family not in report["families"]:
+            report["families"][family] = {"family": family, "count": 0, "inferred_primary_classes": {}, "secondary_tags": [], "resource_site_links": 0, "scenario_placements": 0}
+        report["families"][family]["count"] += 1
+        increment_count(report["families"][family]["inferred_primary_classes"], primary_class)
+        for tag in secondary_tags:
+            append_unique(report["families"][family]["secondary_tags"], tag)
+        if site_id:
+            report["families"][family]["resource_site_links"] += 1
+            report["resource_site_links"]["linked_object_count"] += 1
+            append_unique(report["resource_site_links"]["linked_resource_site_ids"], site_id)
+            if site is not None:
+                report["families"][family]["scenario_placements"] += int(site_placements.get(site_id, {}).get("count", 0))
+                site_family = str(site.get("family", "one_shot_pickup"))
+                if family in OVERWORLD_FOUNDATION_SITE_FAMILIES and site_family != family:
+                    report["resource_site_links"]["family_mismatches"].append({"object_id": object_id, "family": family, "resource_site_id": site_id, "site_family": site_family})
+        if "schema_version" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["schema_version"] += 1
+        if "primary_class" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["primary_class"] += 1
+        if "secondary_tags" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["secondary_tags"] += 1
+        if "anchor" not in footprint:
+            report["summary"]["missing_future_metadata_counts"]["footprint_anchor"] += 1
+        if "tier" not in footprint:
+            report["summary"]["missing_future_metadata_counts"]["footprint_tier"] += 1
+        if "body_tiles" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["body_tiles"] += 1
+            object_warnings.append("future schema warning: missing body_tiles; rectangular footprint is inferred for report only")
+            append_unique(report["ai_editor_implications"]["requires_future_body_tile_validation"], object_id)
+        if bool(obj.get("visitable", False)) and "approach" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["approach"] += 1
+            object_warnings.append("future schema warning: visitable object lacks approach metadata")
+            append_unique(report["ai_editor_implications"]["requires_future_approach_validation"], object_id)
+        if "passability_class" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["passability_class"] += 1
+        if "interaction" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["interaction"] += 1
+        if "animation_cues" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["animation_cues"] += 1
+            if primary_class != "decoration":
+                object_warnings.append("future schema warning: animation cue ids are not authored yet")
+        if "editor_placement" not in obj:
+            report["summary"]["missing_future_metadata_counts"]["editor_placement"] += 1
+            append_unique(report["ai_editor_implications"]["requires_future_density_review"], object_id)
+        if "ai_hints" not in obj and primary_class != "decoration":
+            report["summary"]["missing_future_metadata_counts"]["ai_hints"] += 1
+            append_unique(report["ai_editor_implications"]["requires_future_ai_valuation"], object_id)
+        if site is None and site_id:
+            object_warnings.append(f"linked resource_site_id {site_id} is missing")
+        if primary_class == "transit_route_object":
+            route_entry = {
+                "object_id": object_id,
+                "resource_site_id": site_id,
+                "site_has_transit_profile": isinstance(site.get("transit_profile", {}) if site else {}, dict) and bool(site.get("transit_profile", {}) if site else {}),
+                "future_route_effect_present": "route_effect" in obj or "route_effect_id" in obj,
+                "warnings": [],
+            }
+            if not route_entry["future_route_effect_present"]:
+                route_entry["warnings"].append("future route_effect metadata is missing; report keeps transit runtime behavior unchanged")
+                object_warnings.append("future schema warning: transit object lacks route_effect metadata")
+            report["route_transit"][object_id] = route_entry
+        if site and (bool(site.get("guarded", False)) or isinstance(site.get("guard_profile", {}), dict) and bool(site.get("guard_profile", {})) or isinstance(site.get("neutral_roster", {}), dict) and bool(site.get("neutral_roster", {}))):
+            neutral_roster = site.get("neutral_roster", {}) if isinstance(site.get("neutral_roster", {}), dict) else {}
+            guard_encounter_id = str(neutral_roster.get("guard_encounter_id", ""))
+            guard_army_group_id = str(neutral_roster.get("guard_army_group_id", ""))
+            report["guard_reward"][object_id] = {
+                "object_id": object_id,
+                "resource_site_id": site_id,
+                "guarded": bool(site.get("guarded", False)),
+                "guard_profile_present": isinstance(site.get("guard_profile", {}), dict) and bool(site.get("guard_profile", {})),
+                "neutral_guard_encounter_id": guard_encounter_id,
+                "neutral_guard_encounter_exists": guard_encounter_id in encounters if guard_encounter_id else False,
+                "neutral_guard_army_group_id": guard_army_group_id,
+                "neutral_guard_army_group_exists": guard_army_group_id in army_groups if guard_army_group_id else False,
+                "reward_categories": reward_categories,
+            }
+            if guard_encounter_id and guard_encounter_id in encounter_placements:
+                append_unique(report["scenario_reality"]["placed_guard_encounters"], guard_encounter_id)
+        if site and (bool(site.get("persistent_control", False)) or str(obj.get("faction_id", ""))):
+            capture_profile = site.get("capture_profile", {}) if isinstance(site.get("capture_profile", {}), dict) else {}
+            ownership_entry = {
+                "object_id": object_id,
+                "resource_site_id": site_id,
+                "persistent_control": bool(site.get("persistent_control", False)),
+                "faction_id": str(obj.get("faction_id", "")),
+                "faction_exists": str(obj.get("faction_id", "")) in factions if str(obj.get("faction_id", "")) else False,
+                "scenario_placement_count": int(site_placements.get(site_id, {}).get("count", 0)),
+                "capture_profile_present": bool(capture_profile),
+                "collected_by_faction_placement_count": sum(1 for placement in site_placements.get(site_id, {}).get("placements", []) if str(placement.get("collected_by_faction_id", ""))),
+                "warnings": [],
+            }
+            if bool(site.get("persistent_control", False)) and not capture_profile:
+                ownership_entry["warnings"].append("future capture_profile metadata is missing")
+                object_warnings.append("future schema warning: persistent/capturable object lacks capture_profile metadata")
+            report["ownership_capture"][object_id] = ownership_entry
+        if primary_class == "neutral_dwelling":
+            object_hints.append("AI/editor hint: future placement should reserve approach, guard, weekly recruit, and counter-capture context")
+        if primary_class in {"persistent_economy_site", "guarded_reward_site", "transit_route_object", "faction_landmark"}:
+            object_hints.append("AI/editor hint: future AI valuation and density rules should treat this as a strategic object")
+        for warning in object_warnings:
+            add_overworld_object_report_warning(report, f"{object_id}: {warning}")
+        report["objects"][object_id] = {
+            "object_id": object_id,
+            "name": str(obj.get("name", object_id)),
+            "family": family,
+            "inferred_primary_class": primary_class,
+            "inferred_secondary_tags": secondary_tags,
+            "resource_site_id": site_id,
+            "resource_site_family": str(site.get("family", "one_shot_pickup")) if site else "",
+            "scenario_placement_count": int(site_placements.get(site_id, {}).get("count", 0)) if site_id else 0,
+            "footprint": {"width": int(footprint.get("width", 0)), "height": int(footprint.get("height", 0)), "inferred_tier": footprint_tier, "anchor": str(footprint.get("anchor", ""))},
+            "passable": bool(obj.get("passable", False)),
+            "visitable": bool(obj.get("visitable", False)),
+            "inferred_passability_class": passability_class,
+            "inferred_interaction_cadence": cadence,
+            "reward_categories": reward_categories,
+            "warnings": object_warnings,
+            "hints": object_hints,
+        }
+
+    for site_id, site in resource_sites.items():
+        if site_id not in object_ids_by_site_id:
+            report["resource_site_links"]["unlinked_resource_site_ids"].append(site_id)
+            if site_id in site_placements:
+                report["scenario_reality"]["placed_site_ids_without_map_object"].append(site_id)
+                add_overworld_object_report_warning(report, f"{site_id}: placed resource site has no current map_object link")
+        if str(site.get("family", "one_shot_pickup")) == "transit_object" and site_id not in object_ids_by_site_id:
+            add_overworld_object_report_warning(report, f"{site_id}: transit resource site has no linked object metadata")
+
+    for key in ("family_counts", "inferred_primary_class_counts", "passability_class_counts", "footprint_tier_counts"):
+        report["summary"][key] = sorted_counts(report["summary"][key])
+    for family_entry in report["families"].values():
+        family_entry["inferred_primary_classes"] = sorted_counts(family_entry["inferred_primary_classes"])
+        family_entry["secondary_tags"] = sorted(family_entry["secondary_tags"])
+    report["families"] = {family: report["families"][family] for family in sorted(report["families"].keys())}
+    report["resource_site_links"]["unlinked_resource_site_ids"] = sorted(report["resource_site_links"]["unlinked_resource_site_ids"])
+    report["resource_site_links"]["linked_resource_site_ids"] = sorted(report["resource_site_links"]["linked_resource_site_ids"])
+    report["scenario_reality"]["placed_site_ids_without_map_object"] = sorted(report["scenario_reality"]["placed_site_ids_without_map_object"])
+    report["scenario_reality"]["placed_guard_encounters"] = sorted(report["scenario_reality"]["placed_guard_encounters"])
+    if not report["ai_editor_implications"]["visible_neutral_encounter_records_present"]:
+        add_overworld_object_report_warning(report, "no first-class neutral_encounter map object records exist yet; visible encounter placement remains scenario encounter data")
+    add_overworld_object_report_warning(report, "production map_objects.json remains legacy-compatible; inferred primary_class and tags are report-only")
+    add_overworld_object_report_warning(report, "body_tiles and approach metadata are warnings only until editor/pathing adoption is explicitly approved")
+    return report
+
+
+def print_overworld_object_report(report: dict) -> None:
+    print("OVERWORLD OBJECT REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- map objects: {report['summary']['map_object_count']}; resource sites: {report['summary']['resource_site_count']}")
+    print(f"- scenario site placements: {report['summary']['scenario_site_placement_count']}; encounter placements: {report['summary']['scenario_encounter_placement_count']}")
+    print("Families:")
+    for family, count in report["summary"]["family_counts"].items():
+        primary = ",".join(report["families"].get(family, {}).get("inferred_primary_classes", {}).keys())
+        print(f"- {family}: {count}; inferred={primary}")
+    print("Primary classes:")
+    for primary_class, count in report["summary"]["inferred_primary_class_counts"].items():
+        print(f"- {primary_class}: {count}")
+    print("Footprints and passability:")
+    for tier, count in report["summary"]["footprint_tier_counts"].items():
+        print(f"- footprint {tier}: {count}")
+    for passability_class, count in report["summary"]["passability_class_counts"].items():
+        print(f"- passability {passability_class}: {count}")
+    missing = report["summary"]["missing_future_metadata_counts"]
+    print("Future metadata warnings:")
+    print(f"- body_tiles missing: {missing['body_tiles']}; approach missing: {missing['approach']}; animation cues missing: {missing['animation_cues']}")
+    print(f"- ai hints missing: {missing['ai_hints']}; editor placement missing: {missing['editor_placement']}")
+    print("Links and implications:")
+    print(f"- linked resource sites: {report['resource_site_links']['linked_object_count']}; placed sites without object link: {len(report['scenario_reality']['placed_site_ids_without_map_object'])}")
+    print(f"- guarded/reward links: {len(report['guard_reward'])}; ownership/capture hints: {len(report['ownership_capture'])}; transit warnings: {sum(len(item.get('warnings', [])) for item in report['route_transit'].values())}")
+    print(f"- first-class neutral encounter objects: {report['ai_editor_implications']['visible_neutral_encounter_records_present']}")
+    print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
+    print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
+
+
+def validate_strict_overworld_object_fixtures() -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    ensure(OVERWORLD_OBJECT_STRICT_CASES_PATH.exists(), errors, f"Missing strict overworld object fixture: {OVERWORLD_OBJECT_STRICT_CASES_PATH.relative_to(ROOT)}")
+    if errors:
+        return errors, warnings
+    cases = load_json(OVERWORLD_OBJECT_STRICT_CASES_PATH)
+
+    def strict_object_errors(obj: dict, label: str) -> list[str]:
+        local_errors: list[str] = []
+        object_id = str(obj.get("id", label))
+        primary_class = str(obj.get("primary_class", ""))
+        if primary_class not in OVERWORLD_OBJECT_PRIMARY_CLASSES:
+            local_errors.append(f"{object_id} uses unsupported primary_class {primary_class}")
+        tags = obj.get("secondary_tags", [])
+        if not isinstance(tags, list):
+            local_errors.append(f"{object_id} secondary_tags must be a list")
+        else:
+            for tag in tags:
+                if str(tag) not in OVERWORLD_OBJECT_SECONDARY_TAGS:
+                    local_errors.append(f"{object_id} uses unsupported secondary tag {tag}")
+        family = str(obj.get("family", ""))
+        if family and family not in SUPPORTED_MAP_OBJECT_FAMILIES:
+            local_errors.append(f"{object_id} uses unsupported legacy family {family}")
+        footprint = obj.get("footprint", {})
+        if not isinstance(footprint, dict):
+            local_errors.append(f"{object_id} footprint must be a dictionary")
+            footprint = {}
+        width = int(footprint.get("width", 0))
+        height = int(footprint.get("height", 0))
+        if width <= 0 or height <= 0:
+            local_errors.append(f"{object_id} footprint dimensions must be positive")
+        if str(footprint.get("anchor", "")) not in OVERWORLD_OBJECT_FOOTPRINT_ANCHORS:
+            local_errors.append(f"{object_id} footprint anchor is missing or unsupported")
+        if str(footprint.get("tier", "")) not in OVERWORLD_OBJECT_FOOTPRINT_TIERS:
+            local_errors.append(f"{object_id} footprint tier is missing or unsupported")
+        body_tiles = obj.get("body_tiles", [])
+        if not isinstance(body_tiles, list) or not body_tiles:
+            local_errors.append(f"{object_id} body_tiles must be a non-empty list")
+        elif width > 0 and height > 0:
+            for tile in body_tiles:
+                if not isinstance(tile, dict):
+                    local_errors.append(f"{object_id} body_tiles entries must be dictionaries")
+                    continue
+                x = int(tile.get("x", -999))
+                y = int(tile.get("y", -999))
+                if x < 0 or y < 0 or x >= width or y >= height:
+                    local_errors.append(f"{object_id} body tile {x},{y} is outside footprint")
+        passability_class = str(obj.get("passability_class", ""))
+        if passability_class not in OVERWORLD_OBJECT_PASSABILITY_CLASSES:
+            local_errors.append(f"{object_id} passability_class is missing or unsupported")
+        interaction = obj.get("interaction", {})
+        if not isinstance(interaction, dict):
+            local_errors.append(f"{object_id} interaction must be a dictionary")
+            interaction = {}
+        cadence = str(interaction.get("cadence", ""))
+        if cadence not in OVERWORLD_OBJECT_INTERACTION_CADENCES:
+            local_errors.append(f"{object_id} interaction cadence is missing or unsupported")
+        approach = obj.get("approach", {})
+        if primary_class != "decoration" and cadence != "none":
+            if not isinstance(approach, dict) or not approach:
+                local_errors.append(f"{object_id} visitable/interactable object must define approach")
+            else:
+                mode = str(approach.get("mode", ""))
+                if mode not in OVERWORLD_OBJECT_APPROACH_MODES:
+                    local_errors.append(f"{object_id} approach mode is unsupported")
+                sides = approach.get("primary_sides", [])
+                if not isinstance(sides, list):
+                    local_errors.append(f"{object_id} approach primary_sides must be a list")
+                elif mode != "none":
+                    for side in sides:
+                        if str(side) not in OVERWORLD_OBJECT_APPROACH_SIDES:
+                            local_errors.append(f"{object_id} approach side {side} is unsupported")
+                visit_offsets = approach.get("visit_offsets", [])
+                if mode in {"adjacent", "linked_endpoint"} and (not isinstance(visit_offsets, list) or not visit_offsets):
+                    local_errors.append(f"{object_id} approach mode {mode} must define visit_offsets")
+        if primary_class == "transit_route_object":
+            route_effect = obj.get("route_effect", {})
+            if not isinstance(route_effect, dict) or not route_effect:
+                local_errors.append(f"{object_id} transit object must define route_effect in strict fixtures")
+            elif str(route_effect.get("effect_type", "")) not in {"open_route", "movement_discount", "toll", "linked_endpoint", "conditional_pass"}:
+                local_errors.append(f"{object_id} route_effect effect_type is unsupported")
+        if primary_class == "guarded_reward_site":
+            guard = obj.get("guard", {})
+            reward_summary = obj.get("reward_summary", {})
+            if not isinstance(guard, dict) or not guard:
+                local_errors.append(f"{object_id} guarded reward object must define guard")
+            if not isinstance(reward_summary, dict) or not reward_summary.get("reward_categories", []):
+                local_errors.append(f"{object_id} guarded reward object must define reward_summary.reward_categories")
+        if primary_class in {"persistent_economy_site", "neutral_dwelling", "faction_landmark"}:
+            ownership = obj.get("ownership", {})
+            if not isinstance(ownership, dict) or not ownership:
+                local_errors.append(f"{object_id} persistent/capturable object must define ownership metadata")
+            elif str(ownership.get("capture_model", "")) not in {"none", "claim_once", "capturable", "owned_static", "scenario_controlled"}:
+                local_errors.append(f"{object_id} ownership capture_model is unsupported")
+        animation_cues = obj.get("animation_cues", [])
+        if primary_class != "decoration" and (not isinstance(animation_cues, list) or not animation_cues):
+            local_errors.append(f"{object_id} non-decoration object must define placeholder animation_cues")
+        editor_placement = obj.get("editor_placement", {})
+        if not isinstance(editor_placement, dict) or not editor_placement:
+            local_errors.append(f"{object_id} must define editor_placement metadata in strict fixtures")
+        ai_hints = obj.get("ai_hints", {})
+        if primary_class != "decoration" and (not isinstance(ai_hints, dict) or not ai_hints):
+            local_errors.append(f"{object_id} non-decoration object must define ai_hints in strict fixtures")
+        return local_errors
+
+    valid = cases.get("valid", {})
+    for obj in valid.get("objects", []):
+        errors.extend(strict_object_errors(obj, str(obj.get("id", "valid_object"))))
+        if bool(obj.get("expect_animation_placeholder_warning", False)):
+            warnings.append(f"{obj.get('id')}: animation cue ids are placeholder fixture ids")
+
+    invalid = cases.get("invalid", {})
+    for obj in invalid.get("objects", []):
+        local_errors = strict_object_errors(obj, str(obj.get("id", "invalid_object")))
+        if not local_errors:
+            fail(errors, f"Strict invalid overworld object fixture {obj.get('id')} unexpectedly passed")
     return errors, warnings
 
 
@@ -6774,6 +7426,9 @@ def main() -> int:
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
     parser.add_argument("--economy-resource-report-json", type=str, default="", help="Write the opt-in economy/resource compatibility report as JSON.")
     parser.add_argument("--strict-economy-resource-fixtures", action="store_true", help="Validate isolated strict economy/resource schema fixtures.")
+    parser.add_argument("--overworld-object-report", action="store_true", help="Print the opt-in overworld object compatibility report.")
+    parser.add_argument("--overworld-object-report-json", type=str, default="", help="Write the opt-in overworld object compatibility report as JSON.")
+    parser.add_argument("--strict-overworld-object-fixtures", action="store_true", help="Validate isolated strict overworld object schema fixtures.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -6825,6 +7480,10 @@ def main() -> int:
     if args.strict_economy_resource_fixtures:
         strict_fixture_errors, strict_fixture_warnings = validate_strict_economy_resource_fixtures()
         errors.extend(strict_fixture_errors)
+    strict_overworld_object_warnings: list[str] = []
+    if args.strict_overworld_object_fixtures:
+        strict_object_errors, strict_overworld_object_warnings = validate_strict_overworld_object_fixtures()
+        errors.extend(strict_object_errors)
 
     if errors:
         print("VALIDATION FAILED")
@@ -6886,6 +7545,8 @@ def main() -> int:
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
+    if args.strict_overworld_object_fixtures:
+        print(f"- strict overworld object fixtures passed with {len(strict_overworld_object_warnings)} intentional warning case(s)")
     if args.economy_resource_report or args.economy_resource_report_json:
         report = build_economy_resource_report()
         if args.economy_resource_report_json:
@@ -6894,6 +7555,14 @@ def main() -> int:
             print(f"- economy/resource report JSON written to {report_path}")
         if args.economy_resource_report:
             print_economy_resource_report(report)
+    if args.overworld_object_report or args.overworld_object_report_json:
+        report = build_overworld_object_report()
+        if args.overworld_object_report_json:
+            report_path = Path(args.overworld_object_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- overworld object report JSON written to {report_path}")
+        if args.overworld_object_report:
+            print_overworld_object_report(report)
     return 0
 
 

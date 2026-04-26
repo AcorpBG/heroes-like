@@ -75,7 +75,11 @@ Updated: 2026-04-26
 - Economy/resource additive validator planning should confirm that missing output cadence, capture profile, and market caps are compatibility warnings only, not production-content errors, until a migrated bundle declares the strict schema.
 - Economy/resource additive validator report review should decide whether the opt-in report's compatibility warning volume is acceptable for the next migration planning pass, especially capture-profile warnings on current persistent sites and legacy market-cap warnings.
 - Economy/resource additive validator report review should confirm that strict economy fixtures may remain isolated under `tests/fixtures/economy_resource_schema/` until a later explicit `content/resources.json` production registry slice.
-- Overworld object additive validator planning should now mirror the economy report-first approach: current production object data for report reality, strict non-production fixtures for future schema, and no production JSON migration or runtime/pathing/renderer behavior changes.
+- Overworld object additive validator report review should decide whether the opt-in report's warning volume is acceptable for the next migration planning pass, especially missing body tiles, approach metadata, passability class, interaction metadata, animation cue ids, editor placement hints, and AI hints across current map objects.
+- Overworld object additive validator report review should decide whether placed resource sites without map-object links should stay compatibility-only for now or become first production additive schema targets.
+- Overworld object additive validator report review should confirm whether strict overworld object fixtures may remain isolated under `tests/fixtures/overworld_object_schema/` until a later explicit production object-schema migration slice.
+- Overworld object additive validator report review should confirm whether first-class neutral encounter object records should be planned before production object JSON migration, since the report currently finds scenario encounter placements but no `neutral_encounter` map-object records.
+- Overworld object additive validator report review should confirm that transit route-effect metadata, animation cue ids, and AI/editor hints remain report-only placeholders until pathing, animation catalog, and strategic AI adoption slices are approved.
 
 ## Current Follow-Up
 
@@ -85,5 +89,6 @@ Updated: 2026-04-26
 - The economy/resource schema migration planning contract is recorded in `docs/economy-resource-schema-migration-plan.md`. It is planning evidence only; no production JSON migration, runtime economy behavior change, market implementation, save migration, renderer sprite ingestion, or resource-site bundle migration has happened yet.
 - The first additive resource schema and validator warning/report planning contract is recorded in `docs/economy-resource-additive-schema-validator-plan.md`.
 - The first additive resource validator/report scaffolding implementation is complete locally as opt-in `tests/validate_repo.py` report support plus non-production strict fixtures. It adds no production JSON migration, market/runtime behavior change, save migration, rare-resource activation, renderer sprite ingestion, runtime asset import, or generated concept-art import.
-- Additive overworld object validator/report scaffolding is the next current companion slice.
+- Additive overworld object validator/report scaffolding is complete locally as opt-in `tests/validate_repo.py` report support plus non-production strict fixtures. It adds no production JSON migration, renderer sprite ingestion, runtime asset import, pathing/body-tile/occupancy behavior change, visit/interaction runtime change, or AI adoption.
+- Additive overworld object report review/follow-up is the next current companion slice.
 - GitHub push/auth remains blocked by invalid credentials; keep work local and do not push until credentials are refreshed.

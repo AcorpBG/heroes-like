@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T03:05:00Z",
+  "updatedAt": "2026-04-26T03:55:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-additive-validator-report-scaffolding-10184",
-  "currentSliceTitle": "Implement additive overworld object validator/report scaffolding",
+  "currentSliceId": "overworld-object-additive-report-review-10184",
+  "currentSliceTitle": "Review additive overworld object report output before any production schema migration",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Economy/resource additive validator/report scaffolding is complete as opt-in report and strict fixture support only. The next slice should mirror that report-first approach for overworld object schema migration: current production object content for report reality, strict non-production fixtures for future-schema checks, and no production JSON migration, renderer ingestion, pathing/occupancy behavior changes, AI adoption, or runtime asset import.",
+  "currentSliceNotes": "Overworld object additive validator/report scaffolding is complete as opt-in report and strict fixture support only. The next slice should review report warning volume and decisions around first-class neutral encounters, body tiles, approach metadata, route effects, animation cue placeholders, AI/editor implications, and whether a first production additive schema planning slice is ready. Production JSON migration, renderer ingestion, pathing/occupancy behavior changes, AI adoption, and runtime asset import remain out of scope until explicitly approved.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -212,8 +212,16 @@
     {
       "id": "overworld-object-additive-validator-report-scaffolding-10184",
       "title": "Implement additive overworld object validator/report scaffolding",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T03:20:00Z",
+      "completedAt": "2026-04-26T03:55:00Z",
       "difficulty": "high"
+    },
+    {
+      "id": "overworld-object-additive-report-review-10184",
+      "title": "Review additive overworld object report output before any production schema migration",
+      "status": "pending",
+      "difficulty": "medium"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
