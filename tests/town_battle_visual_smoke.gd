@@ -55,6 +55,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_magic_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_build_recruit_next_step_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -498,6 +501,58 @@ func _assert_town_economy_decision_payload(shell: Node) -> bool:
 		return false
 	return true
 
+func _assert_town_build_recruit_next_step_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_action_catalog"):
+		push_error("Town smoke: shell is missing town next-step recommendation validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var overview := String(snapshot.get("production_overview", ""))
+	if not overview.contains("Practical priority:") or not overview.contains("Defense/frontier:"):
+		push_error("Town smoke: production overview did not surface a practical build/recruit priority with readiness impact: %s." % overview)
+		return false
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var inspected_build := false
+	for action in catalog.get("build", []):
+		if not (action is Dictionary):
+			continue
+		var payload := "%s\n%s\n%s\n%s" % [
+			String(action.get("button_label", "")),
+			String(action.get("affordability_label", "")),
+			String(action.get("impact_line", "")),
+			String(action.get("recommendation_line", "")),
+		]
+		if payload.contains("|") and payload.contains("Defense/frontier:") and (
+			payload.contains("Ready") or payload.contains("Trade") or payload.contains("Blocked")
+		):
+			inspected_build = true
+			break
+	if not inspected_build:
+		push_error("Town smoke: build actions did not expose button status, impact, and recommendation payloads: %s." % [catalog.get("build", [])])
+		return false
+	var inspected_recruit := false
+	for action in catalog.get("recruit", []):
+		if not (action is Dictionary):
+			continue
+		var payload := "%s\n%s\n%s\n%s" % [
+			String(action.get("button_label", "")),
+			String(action.get("affordability_label", "")),
+			String(action.get("impact_line", "")),
+			String(action.get("recommendation_line", "")),
+		]
+		if payload.contains("|") and payload.contains("Defense/frontier:") and (
+			payload.contains("Ready") or payload.contains("Trade") or payload.contains("Blocked")
+		):
+			inspected_recruit = true
+			break
+	if not inspected_recruit:
+		push_error("Town smoke: recruit actions did not expose button status, impact, and recommendation payloads: %s." % [catalog.get("recruit", [])])
+		return false
+	for leak_token in ["build_category_weights", "final_score", "debug_reason", "raid_target_weights"]:
+		if overview.contains(leak_token):
+			push_error("Town smoke: next-step recommendation leaked internal strategy token %s: %s." % [leak_token, overview])
+			return false
+	return true
+
 func _assert_town_production_overview(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
 		push_error("Town smoke: town shell does not expose validation snapshot.")
@@ -512,7 +567,7 @@ func _assert_town_production_overview(shell: Node) -> bool:
 	if overview_label.text != visible_overview:
 		push_error("Town smoke: production overview snapshot does not match the visible label: visible=%s snapshot=%s." % [overview_label.text, snapshot])
 		return false
-	for token in ["Owner ", "Faction ", "Income/day", "Works ", "Muster ", "Weekly ", "Ready now", "Next:"]:
+	for token in ["Owner ", "Faction ", "Income/day", "Works ", "Muster ", "Weekly ", "Ready now", "Next:", "Practical priority:"]:
 		if not overview.contains(token):
 			push_error("Town smoke: production overview is missing %s: %s." % [token, overview])
 			return false
