@@ -3928,11 +3928,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: complete the compact map-editor Play Copy readiness gate summary using existing editor validation, working-copy, hero-start, object-count, and handoff payloads.
+Current target: complete the compact overworld latest-action and next-step context strip using existing shell post-action recap, field feed, and readiness payloads.
 
 Done means:
-- The map-editor Play Copy button and tooltip expose a compact ready/check state before launch.
-- The map-editor status surface shows objective-anchor coverage, warning count, hero start, and object count without adding a dashboard.
-- Existing focused map-editor smoke coverage proves the readiness gate is visible during normal editor work and is carried into the Play Copy launch payload without leaking internal score/debug fields.
+- The overworld event rail exposes a compact `Latest:` and `Next:` strip after a manual player action.
+- The tooltip preserves the current-turn context with latest action and next practical step while keeping the existing field-feed and readiness details available.
+- Existing focused overworld smoke coverage proves the surface is visible after an action without leaking internal score/debug fields.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

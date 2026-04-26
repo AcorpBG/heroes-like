@@ -155,6 +155,8 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		["Moved from", "Affected:", "Why it matters:", "Next:", "scout net", "Push toward"]
 	):
 		return false
+	if not _assert_overworld_action_context_strip_contract(move_snapshot):
+		return false
 	if (
 		int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))
 		or int(move_cache.get("dynamic_generation", -1)) <= int(selection_cache.get("dynamic_generation", -1))
@@ -1379,6 +1381,34 @@ func _assert_post_action_recap(label: String, snapshot: Dictionary, expected_kin
 			get_tree().quit(1)
 			return false
 	if not _assert_no_ai_score_leak(label, joined):
+		return false
+	return true
+
+func _assert_overworld_action_context_strip_contract(snapshot: Dictionary) -> bool:
+	var action_context: Dictionary = snapshot.get("action_context", {})
+	var joined := "\n".join([
+		String(snapshot.get("event_visible_text", "")),
+		String(snapshot.get("event_tooltip_text", "")),
+		String(action_context.get("visible_text", "")),
+		String(action_context.get("tooltip_text", "")),
+		String(action_context.get("latest_action", "")),
+		String(action_context.get("next_practical_step", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld action context strip",
+		[joined],
+		[
+			"Latest:",
+			"Next:",
+			"Current Turn Context",
+			"Latest action:",
+			"Next practical step:",
+			"Moved from",
+			"Push toward",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld action context strip", joined):
 		return false
 	return true
 
