@@ -572,15 +572,24 @@ func _refresh_save_slot_picker() -> void:
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var current_context := String(surface.get("current_context", ""))
+	var save_check := String(surface.get("save_check", ""))
+	var current_save_recap := String(surface.get("current_save_recap", ""))
 	var save_tooltip_lines := [latest_context]
+	if save_check != "":
+		save_tooltip_lines.append(save_check)
+	if current_save_recap != "":
+		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
 		save_tooltip_lines.append("Saving now: %s" % current_context)
 	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
-	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_status_label.text = _save_status_text(selected_slot, summary, latest_context)
+	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save"
-	_save_button.tooltip_text = String(surface.get("save_button_tooltip", "Save the active expedition."))
+	_save_button.tooltip_text = "%s\n%s" % [
+		String(surface.get("save_button_tooltip", "Save the active expedition.")),
+		save_check,
+	]
 	if bool(_session.flags.get("editor_working_copy", false)):
 		_menu_button.text = "Editor"
 		_menu_button.tooltip_text = "Return to the map editor and restore the Play Copy launch snapshot."

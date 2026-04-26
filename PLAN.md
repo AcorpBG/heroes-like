@@ -230,6 +230,24 @@ Validation:
 Limits:
 - This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
+## Completed Implementation Slice: In-Session Save Continuity Check
+Status: completed on 2026-04-26 as compact player-facing save/resume UI polish.
+
+Purpose:
+- Help a manual player understand what an in-session save will preserve after overworld, town, or battle actions, including what changed recently and where the player will resume.
+- Reuse current SaveService recap/play-check, ScenarioRules progress recap, battle/town/overworld action recap flags, and resume-target payloads instead of adding mechanics or durable logs.
+
+Delivered:
+- Added a compact `Save check:` line in `scripts/autoload/SaveService.gd`.
+- The live overworld, town, and battle save/status tooltips now include the save continuity check and full current-save recap while preserving stable footer label footprints.
+- Added focused smoke assertions in `tests/overworld_visual_smoke.gd` and `tests/town_battle_visual_smoke.gd`, including no-score-leak coverage.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/overworld_visual_smoke.tscn`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
+
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
 

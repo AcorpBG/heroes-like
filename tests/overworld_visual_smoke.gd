@@ -421,9 +421,21 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 			String(summary.get("detail", "")),
 			String(save_surface.get("latest_context", "")),
 			String(save_surface.get("current_context", "")),
+			String(save_surface.get("save_check", "")),
+			String(save_surface.get("current_save_recap", "")),
+			String(snapshot.get("save_status_visible_text", "")),
 			String(snapshot.get("save_status_tooltip_text", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Save check:", "What changed:", "Resume:", "Next:"]
+	):
+		return false
+	if not _assert_no_ai_score_leak(
+		"manual save continuity check",
+		"%s\n%s\n%s" % [
+			String(save_surface.get("save_check", "")),
+			String(save_surface.get("current_save_recap", "")),
+			String(snapshot.get("save_status_tooltip_text", "")),
+		]
 	):
 		return false
 	return true

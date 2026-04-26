@@ -258,9 +258,20 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		String(snapshot.get("visible_consequence_text", "")),
 		String(snapshot.get("consequence_tooltip_text", "")),
 	])
+	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
+	var save_text := "\n".join([
+		String(save_surface.get("save_check", "")),
+		String(save_surface.get("current_save_recap", "")),
+		String(snapshot.get("save_status_visible_text", "")),
+		String(snapshot.get("save_status_tooltip_text", "")),
+	])
 	for token in ["After order:", "Affected:", "Why it matters:", "Next:"]:
 		if not recap_text.contains(token):
 			push_error("Battle smoke: post-action recap lost %s clarity: response=%s snapshot=%s text=%s." % [token, action_response, snapshot_recap, recap_text])
+			return false
+	for token in ["Save check:", "What changed:", "Resume:", "Next:"]:
+		if not save_text.contains(token):
+			push_error("Battle smoke: save continuity check lost %s clarity after a battle order: %s." % [token, save_text])
 			return false
 	for key in ["happened", "affected", "why_it_matters", "next_step", "decision", "next_actor", "text"]:
 		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
@@ -276,7 +287,7 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		push_error("Battle smoke: action tooltips did not carry the post-action next-actor recap: %s." % action_tooltips)
 		return false
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "ai_score", "weight"]:
-		if recap_text.contains(leak_token) or action_tooltips.contains(leak_token):
+		if recap_text.contains(leak_token) or action_tooltips.contains(leak_token) or save_text.contains(leak_token):
 			push_error("Battle smoke: post-action recap leaked internal token %s." % leak_token)
 			return false
 	return true
@@ -574,9 +585,20 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		String(snapshot.get("visible_consequence_text", "")),
 		String(snapshot.get("consequence_tooltip_text", "")),
 	])
+	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
+	var save_text := "\n".join([
+		String(save_surface.get("save_check", "")),
+		String(save_surface.get("current_save_recap", "")),
+		String(snapshot.get("save_status_visible_text", "")),
+		String(snapshot.get("save_status_tooltip_text", "")),
+	])
 	for token in ["After order:", "Affected:", "Why it matters:", "Next:"]:
 		if not recap_text.contains(token):
 			push_error("Town smoke: post-action town recap lost %s clarity: response=%s snapshot=%s text=%s." % [token, response_recap, snapshot_recap, recap_text])
+			return false
+	for token in ["Save check:", "What changed:", "Resume:", "Next:"]:
+		if not save_text.contains(token):
+			push_error("Town smoke: save continuity check lost %s clarity after a town order: %s." % [token, save_text])
 			return false
 	for key in ["happened", "affected", "why_it_matters", "next_step", "matters", "next", "text"]:
 		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
@@ -597,7 +619,7 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		push_error("Town smoke: post-action town recap did not explain a practical town/field consequence: %s." % response_recap)
 		return false
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
-		if recap_text.contains(leak_token):
+		if recap_text.contains(leak_token) or save_text.contains(leak_token):
 			push_error("Town smoke: post-action town recap leaked internal strategy token %s: %s." % [leak_token, recap_text])
 			return false
 	if String(snapshot.get("visible_consequence_text", "")) == "" or String(snapshot.get("consequence_tooltip_text", "")) == "":
