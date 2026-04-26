@@ -250,6 +250,7 @@ func _supported_map_object_families() -> Array:
 		"pickup",
 		"mine",
 		"neutral_dwelling",
+		"neutral_encounter",
 		"shrine",
 		"guarded_reward_site",
 		"scouting_structure",

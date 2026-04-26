@@ -227,6 +227,37 @@
           "y": 1,
           "difficulty": "low",
           "combat_seed": 1201,
+          "object_id": "object_neutral_encounter_river_pass_ghoul_grove_stack",
+          "object_placement_id": "object_placement_river_pass_ghoul_grove",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {
+            "encounter_id": "encounter_ghoul_grove",
+            "primary_encounter_id": "encounter_ghoul_grove",
+            "encounter_ids": ["encounter_ghoul_grove"],
+            "difficulty": "low",
+            "difficulty_source": "scenario_placement",
+            "combat_seed": 1201,
+            "combat_seed_source": "scenario_placement",
+            "field_objectives_source": "encounter_definition",
+            "preserve_placement_field_objectives": true
+          },
+          "legacy_scenario_encounter_ref": {
+            "placement_id": "river_pass_ghoul_grove",
+            "encounter_id": "encounter_ghoul_grove",
+            "source_list": "scenarios.encounters"
+          },
+          "guard_link": {
+            "guard_role": "none",
+            "target_kind": "none",
+            "target_id": "",
+            "target_placement_id": "",
+            "blocks_approach": true,
+            "clear_required_for_target": false
+          },
+          "authored_metadata": {
+            "bundle_id": "neutral_encounter_first_class_object_bundle_001",
+            "lifted_from_bundle_id": "neutral_encounter_representation_bundle_001"
+          },
           "neutral_encounter": {
             "schema_version": 1,
             "bundle_id": "neutral_encounter_representation_bundle_001",
@@ -301,6 +332,37 @@
           "y": 4,
           "difficulty": "medium",
           "combat_seed": 1202,
+          "object_id": "object_neutral_encounter_river_pass_hollow_mire_stack",
+          "object_placement_id": "object_placement_river_pass_hollow_mire",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {
+            "encounter_id": "encounter_hollow_mire",
+            "primary_encounter_id": "encounter_hollow_mire",
+            "encounter_ids": ["encounter_hollow_mire"],
+            "difficulty": "medium",
+            "difficulty_source": "scenario_placement",
+            "combat_seed": 1202,
+            "combat_seed_source": "scenario_placement",
+            "field_objectives_source": "none",
+            "preserve_placement_field_objectives": true
+          },
+          "legacy_scenario_encounter_ref": {
+            "placement_id": "river_pass_hollow_mire",
+            "encounter_id": "encounter_hollow_mire",
+            "source_list": "scenarios.encounters"
+          },
+          "guard_link": {
+            "guard_role": "route_block",
+            "target_kind": "route",
+            "target_id": "river_pass_mire_lane",
+            "target_placement_id": "",
+            "blocks_approach": true,
+            "clear_required_for_target": false
+          },
+          "authored_metadata": {
+            "bundle_id": "neutral_encounter_first_class_object_bundle_001",
+            "lifted_from_bundle_id": "neutral_encounter_representation_bundle_001"
+          },
           "neutral_encounter": {
             "schema_version": 1,
             "bundle_id": "neutral_encounter_representation_bundle_001",
@@ -3427,6 +3489,37 @@
         "y": 52,
         "difficulty": "high",
         "combat_seed": 16406,
+        "object_id": "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
+        "object_placement_id": "object_placement_ninefold_basalt_gatehouse_watch",
+        "primary_class": "neutral_encounter",
+        "encounter_ref": {
+          "encounter_id": "encounter_basalt_gatehouse_watch",
+          "primary_encounter_id": "encounter_basalt_gatehouse_watch",
+          "encounter_ids": ["encounter_basalt_gatehouse_watch"],
+          "difficulty": "high",
+          "difficulty_source": "scenario_placement",
+          "combat_seed": 16406,
+          "combat_seed_source": "scenario_placement",
+          "field_objectives_source": "encounter_definition",
+          "preserve_placement_field_objectives": true
+        },
+        "legacy_scenario_encounter_ref": {
+          "placement_id": "ninefold_basalt_gatehouse_watch",
+          "encounter_id": "encounter_basalt_gatehouse_watch",
+          "source_list": "scenarios.encounters"
+        },
+        "guard_link": {
+          "guard_role": "guards_resource_node",
+          "target_kind": "resource_node",
+          "target_id": "site_basalt_gatehouse",
+          "target_placement_id": "dwelling_basalt_gatehouse",
+          "blocks_approach": true,
+          "clear_required_for_target": true
+        },
+        "authored_metadata": {
+          "bundle_id": "neutral_encounter_first_class_object_bundle_001",
+          "lifted_from_bundle_id": "neutral_encounter_representation_bundle_001"
+        },
         "neutral_encounter": {
           "schema_version": 1,
           "bundle_id": "neutral_encounter_representation_bundle_001",
