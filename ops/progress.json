@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T11:52:04Z",
+  "updatedAt": "2026-04-26T12:31:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-production-overview-clarity-10184",
-  "currentSliceTitle": "Surface town identity and production overview clarity in live town UI",
+  "currentSliceId": "scenario-objective-clarity-overworld-10184",
+  "currentSliceTitle": "Surface scenario objective and campaign stakes clarity in live overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing town identity and production overview through the existing town command rail. Players now see owner/faction/role, daily income, built/open/deferred works, muster timing, ready build/recruit counts, and the next useful town action in the live town UI, with focused gameplay smoke coverage.",
+  "currentSliceNotes": "Implemented a compact player-facing objective/stakes brief in the live overworld top strip. Players now see skirmish or campaign context, victory progress, next incomplete objective, defeat watch pressure, and detailed win/loss/campaign stakes through the existing objective surfaces, with focused overworld smoke coverage.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1328,6 +1328,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T11:30:58Z",
       "completedAt": "2026-04-26T11:34:07Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "scenario-objective-clarity-overworld-10184",
+      "title": "Surface scenario objective and campaign stakes clarity in live overworld UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T12:18:00Z",
+      "completedAt": "2026-04-26T12:31:00Z",
       "difficulty": "medium"
     }
   ],

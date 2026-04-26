@@ -49,6 +49,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _threat_label: Label = %Threats
 @onready var _forecast_label: Label = %Forecast
 @onready var _orders_title_label: Label = %OrdersTitle
+@onready var _objective_brief_label: Label = %ObjectiveBrief
 @onready var _primary_action_button: Button = %PrimaryAction
 @onready var _map_view = %Map
 @onready var _context_label: Label = %Context
@@ -478,6 +479,10 @@ func _refresh() -> void:
 
 	var scenario = ContentService.get_scenario(_session.scenario_id)
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
+	var objective_brief := OverworldRules.describe_objective_brief(_session)
+	var objective_stakes := OverworldRules.describe_objective_stakes_board(_session)
+	_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)
+	_objective_brief_label.tooltip_text = objective_stakes
 	var status_text := OverworldRules.describe_status(_session)
 	_status_label.tooltip_text = status_text
 	_status_label.text = _compact_text(status_text, 1, 64, false)
@@ -1855,6 +1860,8 @@ func validation_snapshot() -> Dictionary:
 		"context_visible_text": _context_label.text,
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
+		"objective_brief_visible_text": _objective_brief_label.text,
+		"objective_brief_tooltip_text": _objective_brief_label.tooltip_text,
 		"enemy_activity_summary": _last_enemy_activity_text,
 		"action_feedback": _validation_action_feedback(),
 		"action_feedback_text": _action_feedback_text(),
@@ -3013,6 +3020,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 92.0, 32.0, 13)
 
 	FrontierVisualKit.apply_label(_header_label, "title", 22)
+	FrontierVisualKit.apply_label(_objective_brief_label, "muted", 11)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
 	FrontierVisualKit.apply_label(_resource_label, "gold", 12)
 	FrontierVisualKit.apply_label(_map_cue_label, "blue", 12)

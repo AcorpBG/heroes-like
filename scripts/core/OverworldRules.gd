@@ -27,6 +27,9 @@ static func _scenario_factory() -> Variant:
 static func _scenario_rules() -> Variant:
 	return load("res://scripts/core/ScenarioRules.gd")
 
+static func _campaign_rules() -> Variant:
+	return load("res://scripts/core/CampaignRules.gd")
+
 static func _scenario_script_rules() -> Variant:
 	# Validator anchor: ScenarioScriptRules.describe_recent_events
 	return load("res://scripts/core/ScenarioScriptRules.gd")
@@ -1058,6 +1061,67 @@ static func describe_status(session: SessionStateStoreScript.SessionData) -> Str
 		"" if days_until_growth == 1 else "s",
 	]
 
+static func describe_objective_brief(session: SessionStateStoreScript.SessionData) -> String:
+	var surface := _objective_stakes_surface(session)
+	if surface.is_empty():
+		return "Objectives unavailable"
+
+	var line := "%s | Objectives %d/%d" % [
+		String(surface.get("mode_label", "Scenario")),
+		int(surface.get("victory_met", 0)),
+		int(surface.get("victory_total", 0)),
+	]
+	var next_objective := String(surface.get("next_objective", ""))
+	if next_objective != "":
+		line += " | Next %s" % _short_player_text(next_objective, 32)
+	elif int(surface.get("victory_total", 0)) > 0:
+		line += " | Victory ready"
+	var watch_objective := String(surface.get("watch_objective", ""))
+	if watch_objective != "":
+		line += " | Watch %s" % _short_player_text(watch_objective, 28)
+	return line
+
+static func describe_objective_stakes_board(session: SessionStateStoreScript.SessionData) -> String:
+	var surface := _objective_stakes_surface(session)
+	if surface.is_empty():
+		return "Objective Stakes\nNo authored scenario objectives are available."
+
+	var lines := [
+		"Objective Stakes",
+		String(surface.get("context_line", "Scenario context unavailable.")),
+		"Progress: %d/%d victory complete | %d/%d defeat risks triggered" % [
+			int(surface.get("victory_met", 0)),
+			int(surface.get("victory_total", 0)),
+			int(surface.get("defeat_triggered", 0)),
+			int(surface.get("defeat_total", 0)),
+		],
+	]
+	var campaign_stakes := String(surface.get("campaign_stakes", ""))
+	if campaign_stakes != "":
+		lines.append("Campaign stakes: %s" % campaign_stakes)
+	else:
+		lines.append("Skirmish context: self-contained run; no campaign carryover changes.")
+	var next_objective := String(surface.get("next_objective", ""))
+	lines.append("Next objective: %s" % (next_objective if next_objective != "" else "All victory objectives are complete."))
+
+	var completed: Array = surface.get("completed_objectives", [])
+	var incomplete: Array = surface.get("incomplete_objectives", [])
+	lines.append("Complete: %s" % _join_limited_labels(completed, 3, "none"))
+	lines.append("Incomplete: %s" % _join_limited_labels(incomplete, 3, "none"))
+	var defeat_watch: Array = surface.get("defeat_watch", [])
+	lines.append("Defeat watch: %s" % _join_limited_labels(defeat_watch, 2, "clear"))
+
+	var victory_text := String(surface.get("victory_text", ""))
+	if victory_text != "":
+		lines.append("Win: %s" % victory_text)
+	var defeat_text := String(surface.get("defeat_text", ""))
+	if defeat_text != "":
+		lines.append("Lose: %s" % defeat_text)
+	var campaign_arc := String(surface.get("campaign_arc", ""))
+	if campaign_arc != "":
+		lines.append("Campaign arc: %s" % campaign_arc)
+	return "\n".join(lines)
+
 static func _week_of_day(day: int) -> int:
 	return int(floori(float(max(day, 1) - 1) / 7.0)) + 1
 
@@ -1352,6 +1416,124 @@ static func describe_objective_board(session: SessionStateStoreScript.SessionDat
 
 static func describe_objectives(session: SessionStateStoreScript.SessionData) -> String:
 	return describe_objective_board(session)
+
+static func _objective_stakes_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	normalize_overworld_state(session)
+	if session == null or session.scenario_id == "":
+		return {}
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return {}
+
+	var victory_total := 0
+	var victory_met := 0
+	var defeat_total := 0
+	var defeat_triggered := 0
+	var completed: Array = []
+	var incomplete: Array = []
+	var defeat_watch: Array = []
+	var next_objective := ""
+	var watch_objective := ""
+
+	for objective in objectives.get("victory", []):
+		if not (objective is Dictionary):
+			continue
+		victory_total += 1
+		var label := _scenario_objective_player_label(session, objective)
+		if _scenario_objective_met(session, objective):
+			victory_met += 1
+			if label != "":
+				completed.append(label)
+		else:
+			if label != "":
+				incomplete.append(label)
+				if next_objective == "":
+					next_objective = label
+
+	for objective in objectives.get("defeat", []):
+		if not (objective is Dictionary):
+			continue
+		defeat_total += 1
+		var label := _scenario_objective_player_label(session, objective)
+		if _scenario_objective_met(session, objective):
+			defeat_triggered += 1
+		if label != "":
+			defeat_watch.append(label)
+			if watch_objective == "":
+				watch_objective = label
+
+	var campaign_context := _campaign_context_for_session(session, scenario)
+	return {
+		"mode_label": String(campaign_context.get("mode_label", "Scenario")),
+		"context_line": String(campaign_context.get("context_line", "")),
+		"campaign_stakes": String(campaign_context.get("campaign_stakes", "")),
+		"campaign_arc": String(campaign_context.get("campaign_arc", "")),
+		"victory_total": victory_total,
+		"victory_met": victory_met,
+		"defeat_total": defeat_total,
+		"defeat_triggered": defeat_triggered,
+		"next_objective": next_objective,
+		"watch_objective": watch_objective,
+		"completed_objectives": completed,
+		"incomplete_objectives": incomplete,
+		"defeat_watch": defeat_watch,
+		"victory_text": String(objectives.get("victory_text", "")),
+		"defeat_text": String(objectives.get("defeat_text", "")),
+	}
+
+static func _campaign_context_for_session(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> Dictionary:
+	var scenario_name := String(scenario.get("name", session.scenario_id))
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
+	if launch_mode != SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		return {
+			"mode_label": "Skirmish",
+			"context_line": "Skirmish: %s | Day %d" % [scenario_name, session.day],
+			"campaign_stakes": "",
+			"campaign_arc": "",
+		}
+
+	var campaign_id := String(session.flags.get("campaign_id", ""))
+	if campaign_id == "":
+		campaign_id = _campaign_rules().get_campaign_id_for_scenario(session.scenario_id)
+	var campaign := ContentService.get_campaign(campaign_id)
+	var entry := _campaign_scenario_entry(campaign, session.scenario_id)
+	var campaign_name := String(session.flags.get("campaign_name", campaign.get("name", campaign_id)))
+	var chapter_label := String(session.flags.get("campaign_chapter_label", entry.get("label", scenario_name)))
+	return {
+		"mode_label": "Campaign",
+		"context_line": "Campaign: %s | %s | Day %d" % [campaign_name, chapter_label, session.day],
+		"campaign_stakes": String(entry.get("stakes", "")),
+		"campaign_arc": String(campaign.get("arc_goal", "")),
+	}
+
+static func _campaign_scenario_entry(campaign: Dictionary, scenario_id: String) -> Dictionary:
+	for entry in campaign.get("scenarios", []):
+		if entry is Dictionary and String(entry.get("scenario_id", "")) == scenario_id:
+			return entry
+	return {}
+
+static func _scenario_objective_player_label(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> String:
+	var label := String(_scenario_rules()._objective_label(session, objective)).strip_edges()
+	return label if label != "" else String(objective.get("label", objective.get("id", "Objective")))
+
+static func _join_limited_labels(labels: Array, limit: int, fallback: String) -> String:
+	if labels.is_empty():
+		return fallback
+	var visible := []
+	for index in range(min(max(1, limit), labels.size())):
+		visible.append(String(labels[index]))
+	if labels.size() > visible.size():
+		visible.append("%d more" % (labels.size() - visible.size()))
+	return "; ".join(visible)
+
+static func _short_player_text(text: String, max_chars: int) -> String:
+	var compact := text.strip_edges().replace("\n", " ")
+	while compact.find("  ") >= 0:
+		compact = compact.replace("  ", " ")
+	if compact.length() <= max_chars:
+		return compact
+	return "%s..." % compact.left(max(1, max_chars - 3)).strip_edges()
 
 static func describe_frontier_threats(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
