@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T07:55:00Z",
+  "updatedAt": "2026-04-26T08:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "neutral-encounter-additive-validator-report-scaffolding-10184",
-  "currentSliceTitle": "Implement additive neutral encounter report and fixture scaffolding only",
+  "currentSliceId": "neutral-encounter-additive-report-review-10184",
+  "currentSliceTitle": "Review additive neutral encounter report output before any production migration",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Neutral encounter additive validator/report planning is complete in docs/neutral-encounter-additive-validator-report-plan.md. The next supported slice is opt-in report/fixture scaffolding only: add --neutral-encounter-report, JSON report output, and isolated strict fixtures for visible_stack, camp_anchor, guard_linked_stack, guard_linked_camp, and invalid cue/link cases. Production content JSON migration, runtime encounters, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, and approach adoption remain out of scope.",
+  "currentSliceNotes": "Neutral encounter additive validator/report scaffolding is complete locally as opt-in report support plus isolated strict fixtures. The next supported slice is review/follow-up for the report output before any production neutral encounter metadata migration. Production content JSON migration, runtime encounters, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, and approach adoption remain out of scope.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -260,6 +260,14 @@
     {
       "id": "neutral-encounter-additive-validator-report-scaffolding-10184",
       "title": "Implement additive neutral encounter report and fixture scaffolding only",
+      "status": "completed",
+      "startedAt": "2026-04-26T08:00:00Z",
+      "completedAt": "2026-04-26T08:35:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "neutral-encounter-additive-report-review-10184",
+      "title": "Review additive neutral encounter report output before any production migration",
       "status": "pending",
       "difficulty": "high"
     },

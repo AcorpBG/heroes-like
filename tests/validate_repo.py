@@ -61,6 +61,8 @@ ECONOMY_RESOURCE_REGISTRY_FIXTURE_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "resourc
 ECONOMY_RESOURCE_STRICT_CASES_PATH = ECONOMY_RESOURCE_FIXTURE_DIR / "strict_cases.json"
 OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_schema"
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
+NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
+NEUTRAL_ENCOUNTER_STRICT_CASES_PATH = NEUTRAL_ENCOUNTER_FIXTURE_DIR / "strict_cases.json"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -392,6 +394,48 @@ ECONOMY_SOURCE_BUCKETS = (
     "scenario_grants",
 )
 OVERWORLD_OBJECT_REPORT_SCHEMA = "overworld_object_report_v1"
+NEUTRAL_ENCOUNTER_REPORT_SCHEMA = "neutral_encounter_report_v1"
+NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID = "neutral_encounter_representation_bundle_001"
+NEUTRAL_ENCOUNTER_CANDIDATE_PLACEMENTS = {
+    "river_pass_ghoul_grove": {
+        "scenario_id": "river-pass",
+        "encounter_id": "encounter_ghoul_grove",
+        "proposed_mode": "visible_stack",
+        "proposed_guard_role": "none",
+        "expectation": "Candidate independent visible stack.",
+    },
+    "river_pass_hollow_mire": {
+        "scenario_id": "river-pass",
+        "encounter_id": "encounter_hollow_mire",
+        "proposed_mode": "visible_stack",
+        "proposed_guard_role": "route_block",
+        "expectation": "Candidate route-block summary without runtime pathing adoption.",
+    },
+    "ninefold_basalt_gatehouse_watch": {
+        "scenario_id": "ninefold-confluence",
+        "encounter_id": "encounter_basalt_gatehouse_watch",
+        "proposed_mode": "guard_linked_stack",
+        "proposed_guard_role": "guards_resource_node",
+        "target_placement_id": "site_basalt_gatehouse",
+        "expectation": "Candidate guard-link planning case for site_basalt_gatehouse.",
+    },
+}
+NEUTRAL_ENCOUNTER_REPRESENTATION_MODES = {"visible_stack", "camp_anchor", "guard_linked_stack", "guard_linked_camp"}
+NEUTRAL_ENCOUNTER_GUARD_ROLES = {
+    "none",
+    "route_block",
+    "guards_object",
+    "guards_resource_node",
+    "guards_artifact_node",
+    "guards_town_approach",
+    "guards_scenario_objective",
+    "patrol_zone",
+}
+NEUTRAL_ENCOUNTER_TARGET_KINDS = {"none", "map_object", "resource_node", "artifact_node", "town", "scenario_objective", "route"}
+NEUTRAL_ENCOUNTER_PASSABILITY_CLASSES = {"neutral_stack_blocking", "blocking_visitable"}
+NEUTRAL_ENCOUNTER_OWNERSHIP_MODELS = {"neutral_ecology", "scenario_fixed", "faction_influenced_neutral"}
+NEUTRAL_ENCOUNTER_STATES = {"idle", "active", "cleared", "depleted"}
+NEUTRAL_ENCOUNTER_RISK_TIERS = {"light", "standard", "heavy", "elite", "ambush_uncertain"}
 OVERWORLD_OBJECT_PRIMARY_CLASSES = {
     "decoration",
     "pickup",
@@ -1844,6 +1888,394 @@ def validate_strict_overworld_object_fixtures() -> tuple[list[str], list[str]]:
         local_errors = strict_object_errors(obj, str(obj.get("id", "invalid_object")))
         if not local_errors:
             fail(errors, f"Strict invalid overworld object fixture {obj.get('id')} unexpectedly passed")
+    return errors, warnings
+
+
+def add_neutral_encounter_report_warning(report: dict, warning: str) -> None:
+    if warning not in report["warnings"]:
+        report["warnings"].append(warning)
+
+
+def collect_neutral_encounter_script_spawns(scenarios: dict[str, dict]) -> dict[str, dict]:
+    spawns: dict[str, dict] = {}
+    for scenario_id, scenario in scenarios.items():
+        scenario_spawns: list[dict] = []
+        for hook in scenario.get("script_hooks", []):
+            if not isinstance(hook, dict):
+                continue
+            hook_id = str(hook.get("id", "unknown_hook"))
+            for effect in hook.get("effects", []):
+                if not isinstance(effect, dict) or str(effect.get("type", "")) != "spawn_encounter":
+                    continue
+                placement = effect.get("placement", {})
+                placement_id = str(placement.get("placement_id", "")) if isinstance(placement, dict) else ""
+                encounter_id = str(placement.get("encounter_id", "")) if isinstance(placement, dict) else ""
+                scenario_spawns.append({"hook_id": hook_id, "placement_id": placement_id, "encounter_id": encounter_id})
+        if scenario_spawns:
+            spawns[scenario_id] = {"scenario_id": scenario_id, "count": len(scenario_spawns), "spawns": scenario_spawns}
+    return spawns
+
+
+def neutral_encounter_reward_categories(encounter: dict) -> list[str]:
+    rewards = encounter.get("rewards", {}) if isinstance(encounter, dict) else {}
+    categories: list[str] = []
+    if not isinstance(rewards, dict):
+        return categories
+    if int(rewards.get("gold", 0)) > 0:
+        append_unique(categories, "gold")
+        append_unique(categories, "small_resource")
+    if int(rewards.get("experience", 0)) > 0:
+        append_unique(categories, "experience")
+    for reward_id, amount in rewards.items():
+        if str(reward_id) not in {"gold", "experience"} and int(amount) > 0:
+            append_unique(categories, "resource")
+    return categories
+
+
+def build_neutral_encounter_report() -> dict:
+    payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("scenarios", "encounters", "map_objects")}
+    scenarios = items_index(payloads["scenarios"])
+    encounters = items_index(payloads["encounters"])
+    map_objects = items_index(payloads["map_objects"])
+    script_spawns = collect_neutral_encounter_script_spawns(scenarios)
+    first_class_count = sum(1 for obj in map_objects.values() if str(obj.get("primary_class", "")) == "neutral_encounter")
+    missing_metadata_keys = (
+        "representation",
+        "danger",
+        "guard",
+        "state",
+        "ownership",
+        "reward",
+        "passability",
+        "ai",
+        "editor",
+    )
+    report = {
+        "schema": NEUTRAL_ENCOUNTER_REPORT_SCHEMA,
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "mode": "compatibility_report",
+        "compatibility_adapters": {
+            "runtime_adoption": "not_active",
+            "production_json_migration": False,
+            "pathing_occupancy_adoption": False,
+            "renderer_adoption": False,
+            "ai_behavior_switch": False,
+            "editor_behavior_switch": False,
+            "save_migration": False,
+            "report_normalization": "direct_scenario_encounters_as_inferred_visible_stacks",
+        },
+        "summary": {
+            "scenario_count": len(scenarios),
+            "encounter_definition_count": len(encounters),
+            "direct_placement_count": 0,
+            "script_spawn_encounter_count": sum(int(entry.get("count", 0)) for entry in script_spawns.values()),
+            "first_class_neutral_encounter_object_count": first_class_count,
+            "difficulty_counts": {},
+            "representation_mode_counts": {},
+            "missing_future_metadata_counts": {key: 0 for key in missing_metadata_keys},
+        },
+        "scenarios": {},
+        "placements": [],
+        "repeated_encounter_ids": {},
+        "field_objectives": {
+            "placement_override_count": 0,
+            "definition_backed_count": 0,
+            "placement_overrides": [],
+            "definition_backed": [],
+        },
+        "script_spawns": script_spawns,
+        "guard_links": {"present_count": 0, "missing_count": 0, "inferred_none_count": 0, "placements": []},
+        "candidate_bundles": {},
+        "warnings": [],
+        "errors": [],
+    }
+    encounter_counts: dict[str, int] = {}
+    candidate_lookup = NEUTRAL_ENCOUNTER_CANDIDATE_PLACEMENTS
+
+    for scenario_id, scenario in sorted(scenarios.items()):
+        scenario_entry = {
+            "scenario_id": scenario_id,
+            "direct_encounter_count": 0,
+            "difficulty_counts": {},
+            "repeated_encounter_ids": {},
+            "placement_field_objective_count": 0,
+            "definition_field_objective_count": 0,
+            "missing_representation_metadata_count": 0,
+            "missing_guard_link_count": 0,
+            "missing_danger_cue_count": 0,
+            "candidate_bundle_placements": [],
+            "script_spawn_encounter_count": int(script_spawns.get(scenario_id, {}).get("count", 0)),
+        }
+        local_encounter_counts: dict[str, int] = {}
+        for placement in scenario.get("encounters", []):
+            if not isinstance(placement, dict):
+                continue
+            placement_id = str(placement.get("placement_id", ""))
+            encounter_id = str(placement.get("encounter_id", ""))
+            difficulty = str(placement.get("difficulty", ""))
+            encounter = encounters.get(encounter_id, {})
+            encounter_exists = encounter_id in encounters
+            candidate = candidate_lookup.get(placement_id, {})
+            candidate_bundle_id = NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID if candidate else ""
+            field_objective_source = "none"
+            field_objective_count = 0
+            placement_field_objectives = placement.get("field_objectives", [])
+            definition_field_objectives = encounter.get("field_objectives", []) if isinstance(encounter, dict) else []
+            if isinstance(placement_field_objectives, list) and placement_field_objectives:
+                field_objective_source = "placement_override"
+                field_objective_count = len(placement_field_objectives)
+                scenario_entry["placement_field_objective_count"] += 1
+                report["field_objectives"]["placement_override_count"] += 1
+                report["field_objectives"]["placement_overrides"].append({"scenario_id": scenario_id, "placement_id": placement_id, "encounter_id": encounter_id, "field_objective_count": field_objective_count})
+            if isinstance(definition_field_objectives, list) and definition_field_objectives:
+                scenario_entry["definition_field_objective_count"] += 1
+                report["field_objectives"]["definition_backed_count"] += 1
+                report["field_objectives"]["definition_backed"].append({"scenario_id": scenario_id, "placement_id": placement_id, "encounter_id": encounter_id, "field_objective_count": len(definition_field_objectives)})
+            if field_objective_source == "none" and isinstance(definition_field_objectives, list) and definition_field_objectives:
+                field_objective_source = "encounter_definition"
+                field_objective_count = len(definition_field_objectives)
+
+            placement_warnings = [
+                "future schema warning: missing neutral encounter representation metadata",
+                "future schema warning: missing danger/readability cue",
+                "future schema warning: missing guard_link metadata",
+                "future schema warning: missing state model metadata",
+                "future schema warning: missing placement ownership metadata",
+                "future schema warning: missing reward/guard summary metadata",
+                "future schema warning: missing passability metadata",
+                "future schema warning: missing AI hint metadata",
+                "future schema warning: missing editor placement metadata",
+            ]
+            if not encounter_exists:
+                report["errors"].append(f"{scenario_id}:{placement_id} references missing encounter_id {encounter_id}")
+                placement_warnings.append("linked encounter definition is missing")
+            for key in missing_metadata_keys:
+                report["summary"]["missing_future_metadata_counts"][key] += 1
+            scenario_entry["direct_encounter_count"] += 1
+            scenario_entry["missing_representation_metadata_count"] += 1
+            scenario_entry["missing_guard_link_count"] += 1
+            scenario_entry["missing_danger_cue_count"] += 1
+            increment_count(report["summary"]["difficulty_counts"], difficulty)
+            increment_count(report["summary"]["representation_mode_counts"], "visible_stack")
+            increment_count(scenario_entry["difficulty_counts"], difficulty)
+            increment_count(encounter_counts, encounter_id)
+            increment_count(local_encounter_counts, encounter_id)
+            report["summary"]["direct_placement_count"] += 1
+            report["guard_links"]["missing_count"] += 1
+            report["guard_links"]["inferred_none_count"] += 1
+            report["guard_links"]["placements"].append({"scenario_id": scenario_id, "placement_id": placement_id, "encounter_id": encounter_id, "inferred_guard_role": "none_inferred", "guard_link_present": False})
+            if candidate_bundle_id:
+                scenario_entry["candidate_bundle_placements"].append(placement_id)
+            for warning in placement_warnings:
+                add_neutral_encounter_report_warning(report, f"{scenario_id}:{placement_id}: {warning}")
+            report["placements"].append(
+                {
+                    "scenario_id": scenario_id,
+                    "placement_id": placement_id,
+                    "encounter_id": encounter_id,
+                    "encounter_exists": encounter_exists,
+                    "x": int(placement.get("x", 0)),
+                    "y": int(placement.get("y", 0)),
+                    "difficulty": difficulty,
+                    "combat_seed": int(placement.get("combat_seed", 0)),
+                    "inferred_primary_class": "neutral_encounter",
+                    "inferred_representation_mode": "visible_stack",
+                    "representation_metadata_present": False,
+                    "danger_cue_present": False,
+                    "guard_link_present": False,
+                    "inferred_guard_role": "none_inferred",
+                    "field_objectives_source": field_objective_source,
+                    "field_objective_count": field_objective_count,
+                    "reward_categories": neutral_encounter_reward_categories(encounter),
+                    "candidate_bundle_id": candidate_bundle_id,
+                    "warnings": placement_warnings,
+                }
+            )
+        scenario_entry["difficulty_counts"] = sorted_counts(scenario_entry["difficulty_counts"])
+        scenario_entry["repeated_encounter_ids"] = sorted_counts({encounter_id: count for encounter_id, count in local_encounter_counts.items() if count > 1})
+        report["scenarios"][scenario_id] = scenario_entry
+
+    report["summary"]["difficulty_counts"] = sorted_counts(report["summary"]["difficulty_counts"])
+    report["summary"]["representation_mode_counts"] = sorted_counts(report["summary"]["representation_mode_counts"])
+    report["repeated_encounter_ids"] = sorted_counts({encounter_id: count for encounter_id, count in encounter_counts.items() if count > 1})
+    candidate_placements = []
+    candidate_warnings = []
+    for placement_id, candidate in sorted(candidate_lookup.items()):
+        match = next((placement for placement in report["placements"] if placement.get("placement_id") == placement_id and placement.get("scenario_id") == candidate.get("scenario_id")), None)
+        exists = match is not None and bool(match.get("encounter_exists", False))
+        candidate_placements.append({**candidate, "placement_id": placement_id, "placement_exists": match is not None, "encounter_exists": exists})
+        if match is None:
+            candidate_warnings.append(f"candidate placement {placement_id} is not present in current scenario encounters")
+    report["candidate_bundles"][NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID] = {
+        "bundle_id": NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID,
+        "status": "planning_only",
+        "production_json_migration": False,
+        "placement_count": len(candidate_placements),
+        "placements": candidate_placements,
+        "required_before_migration": [
+            "review opt-in neutral encounter report output",
+            "approve a production metadata bundle explicitly",
+            "keep runtime/pathing/AI/editor/renderer adoption in later slices",
+        ],
+        "warnings": candidate_warnings + ["candidate bundle is report-only and must not be treated as production metadata"],
+    }
+    if first_class_count == 0:
+        add_neutral_encounter_report_warning(report, "no first-class neutral_encounter map object records exist yet; direct scenario encounter placements remain compatibility source")
+    add_neutral_encounter_report_warning(report, "neutral encounter representation metadata is compatibility-warning-only for production content")
+    add_neutral_encounter_report_warning(report, "strict neutral encounter schema checks are limited to isolated test fixtures until a migrated production bundle is approved")
+    return report
+
+
+def print_neutral_encounter_report(report: dict) -> None:
+    print("NEUTRAL ENCOUNTER REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- scenarios: {report['summary']['scenario_count']}; encounter definitions: {report['summary']['encounter_definition_count']}")
+    print(f"- direct placements: {report['summary']['direct_placement_count']}; script-spawn advisory count: {report['summary']['script_spawn_encounter_count']}")
+    print(f"- first-class neutral encounter objects: {report['summary']['first_class_neutral_encounter_object_count']}")
+    print("Difficulty counts:")
+    for difficulty, count in report["summary"]["difficulty_counts"].items():
+        print(f"- {difficulty}: {count}")
+    print("Scenario counts:")
+    for scenario_id, scenario in report["scenarios"].items():
+        print(f"- {scenario_id}: direct={scenario['direct_encounter_count']}; scripts={scenario['script_spawn_encounter_count']}; candidates={len(scenario['candidate_bundle_placements'])}")
+    print("Repeated encounter ids:")
+    for encounter_id, count in report["repeated_encounter_ids"].items():
+        print(f"- {encounter_id}: {count}")
+    print("Field objectives:")
+    print(f"- placement overrides: {report['field_objectives']['placement_override_count']}; definition-backed: {report['field_objectives']['definition_backed_count']}")
+    missing = report["summary"]["missing_future_metadata_counts"]
+    print("Future metadata warnings:")
+    print(f"- representation={missing['representation']}; danger={missing['danger']}; guard={missing['guard']}; state={missing['state']}; ownership={missing['ownership']}")
+    print(f"- reward={missing['reward']}; passability={missing['passability']}; ai={missing['ai']}; editor={missing['editor']}")
+    bundle = report["candidate_bundles"][NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID]
+    print("Candidate bundle:")
+    print(f"- {bundle['bundle_id']}: {bundle['status']}; placements={bundle['placement_count']}; production_json_migration={bundle['production_json_migration']}")
+    print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
+    print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
+
+
+def validate_strict_neutral_encounter_fixtures() -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    ensure(NEUTRAL_ENCOUNTER_STRICT_CASES_PATH.exists(), errors, f"Missing strict neutral encounter fixture: {NEUTRAL_ENCOUNTER_STRICT_CASES_PATH.relative_to(ROOT)}")
+    if errors:
+        return errors, warnings
+    cases = load_json(NEUTRAL_ENCOUNTER_STRICT_CASES_PATH)
+    fixture_encounters = {str(item.get("id", "")): item for item in cases.get("encounter_definitions", []) if isinstance(item, dict) and str(item.get("id", ""))}
+
+    def strict_neutral_encounter_errors(obj: dict, label: str) -> list[str]:
+        local_errors: list[str] = []
+        object_id = str(obj.get("id", label))
+        encounter = obj.get("encounter", {})
+        if not isinstance(encounter, dict) or not encounter:
+            local_errors.append(f"{object_id} must define encounter metadata")
+            encounter = {}
+        primary_encounter_id = str(encounter.get("primary_encounter_id", ""))
+        encounter_ids = encounter.get("encounter_ids", [])
+        if not primary_encounter_id:
+            local_errors.append(f"{object_id} must define primary_encounter_id")
+        elif primary_encounter_id not in fixture_encounters:
+            local_errors.append(f"{object_id} references unknown primary_encounter_id {primary_encounter_id}")
+        if not isinstance(encounter_ids, list) or primary_encounter_id not in [str(value) for value in encounter_ids]:
+            local_errors.append(f"{object_id} encounter_ids must include primary_encounter_id")
+
+        representation = obj.get("representation", {})
+        if not isinstance(representation, dict) or not representation:
+            local_errors.append(f"{object_id} must define representation metadata")
+            representation = {}
+        mode = str(representation.get("mode", ""))
+        if mode not in NEUTRAL_ENCOUNTER_REPRESENTATION_MODES:
+            local_errors.append(f"{object_id} uses unsupported representation mode {mode}")
+        if not str(representation.get("readability_family", "")):
+            local_errors.append(f"{object_id} representation must define readability_family")
+        if not str(representation.get("danger_cue_id", "")):
+            local_errors.append(f"{object_id} representation must define danger_cue_id")
+        if type(representation.get("visible_before_interaction", None)) is not bool:
+            local_errors.append(f"{object_id} representation.visible_before_interaction must be boolean")
+
+        guard_link = obj.get("guard_link", {})
+        if not isinstance(guard_link, dict) or not guard_link:
+            local_errors.append(f"{object_id} must define guard_link metadata")
+            guard_link = {}
+        guard_role = str(guard_link.get("guard_role", ""))
+        target_kind = str(guard_link.get("target_kind", ""))
+        if guard_role not in NEUTRAL_ENCOUNTER_GUARD_ROLES:
+            local_errors.append(f"{object_id} guard_link.guard_role is missing or unsupported")
+        if target_kind not in NEUTRAL_ENCOUNTER_TARGET_KINDS:
+            local_errors.append(f"{object_id} guard_link.target_kind is missing or unsupported")
+        guard_linked = mode in {"guard_linked_stack", "guard_linked_camp"}
+        if guard_linked:
+            if guard_role == "none":
+                local_errors.append(f"{object_id} guard-linked encounter cannot use guard_role none")
+            if target_kind == "none":
+                local_errors.append(f"{object_id} guard-linked encounter must define target_kind")
+            if not str(guard_link.get("target_id", "")) and not str(guard_link.get("target_placement_id", "")):
+                local_errors.append(f"{object_id} guard-linked encounter must define target_id or target_placement_id")
+            if type(guard_link.get("clear_required_for_target", None)) is not bool:
+                local_errors.append(f"{object_id} guard-linked encounter must define clear_required_for_target as boolean")
+        elif guard_role != "none" and target_kind == "none":
+            local_errors.append(f"{object_id} non-linked guard role must still define a target kind")
+
+        state_model = obj.get("state_model", {})
+        if not isinstance(state_model, dict) or not state_model:
+            local_errors.append(f"{object_id} must define state_model")
+            state_model = {}
+        if str(state_model.get("initial_state", "")) not in NEUTRAL_ENCOUNTER_STATES:
+            local_errors.append(f"{object_id} state_model.initial_state is missing or unsupported")
+        if str(state_model.get("state_after_victory", "")) not in NEUTRAL_ENCOUNTER_STATES:
+            local_errors.append(f"{object_id} state_model.state_after_victory is missing or unsupported")
+        for bool_key in ("remove_on_clear", "remember_after_clear"):
+            if type(state_model.get(bool_key, None)) is not bool:
+                local_errors.append(f"{object_id} state_model.{bool_key} must be boolean")
+        if mode in {"camp_anchor", "guard_linked_camp"} and bool(state_model.get("remove_on_clear", True)):
+            local_errors.append(f"{object_id} camp representation should keep depleted/cleared state instead of remove_on_clear")
+
+        placement_ownership = obj.get("placement_ownership", {})
+        if not isinstance(placement_ownership, dict) or not placement_ownership:
+            local_errors.append(f"{object_id} must define placement_ownership")
+            placement_ownership = {}
+        if str(placement_ownership.get("ownership_model", "")) not in NEUTRAL_ENCOUNTER_OWNERSHIP_MODELS:
+            local_errors.append(f"{object_id} placement_ownership.ownership_model is missing or unsupported")
+
+        reward_guard_summary = obj.get("reward_guard_summary", {})
+        if not isinstance(reward_guard_summary, dict) or not reward_guard_summary:
+            local_errors.append(f"{object_id} must define reward_guard_summary")
+            reward_guard_summary = {}
+        if str(reward_guard_summary.get("risk_tier", "")) not in NEUTRAL_ENCOUNTER_RISK_TIERS:
+            local_errors.append(f"{object_id} reward_guard_summary.risk_tier is missing or unsupported")
+        reward_categories = reward_guard_summary.get("reward_categories", [])
+        if (guard_linked or target_kind != "none") and (not isinstance(reward_categories, list) or not reward_categories):
+            local_errors.append(f"{object_id} guard-target encounter must define reward_guard_summary.reward_categories")
+
+        passability = obj.get("passability", {})
+        if not isinstance(passability, dict) or not passability:
+            local_errors.append(f"{object_id} must define passability metadata")
+            passability = {}
+        if str(passability.get("passability_class", "")) not in NEUTRAL_ENCOUNTER_PASSABILITY_CLASSES:
+            local_errors.append(f"{object_id} passability.passability_class is missing or unsupported")
+        if str(passability.get("interaction_mode", "")) not in {"enter", "adjacent"}:
+            local_errors.append(f"{object_id} passability.interaction_mode is missing or unsupported")
+
+        ai_hints = obj.get("ai_hints", {})
+        if not isinstance(ai_hints, dict) or not ai_hints:
+            local_errors.append(f"{object_id} must define ai_hints")
+        editor_placement = obj.get("editor_placement", {})
+        if not isinstance(editor_placement, dict) or not editor_placement:
+            local_errors.append(f"{object_id} must define editor_placement")
+        return local_errors
+
+    valid = cases.get("valid", {})
+    for obj in valid.get("neutral_encounters", []):
+        errors.extend(strict_neutral_encounter_errors(obj, str(obj.get("id", "valid_neutral_encounter"))))
+        if bool(obj.get("expect_placeholder_cue_warning", False)):
+            warnings.append(f"{obj.get('id')}: danger cue id is a placeholder fixture id")
+
+    invalid = cases.get("invalid", {})
+    for obj in invalid.get("neutral_encounters", []):
+        local_errors = strict_neutral_encounter_errors(obj, str(obj.get("id", "invalid_neutral_encounter")))
+        if not local_errors:
+            fail(errors, f"Strict invalid neutral encounter fixture {obj.get('id')} unexpectedly passed")
     return errors, warnings
 
 
@@ -7536,6 +7968,9 @@ def main() -> int:
     parser.add_argument("--overworld-object-report", action="store_true", help="Print the opt-in overworld object compatibility report.")
     parser.add_argument("--overworld-object-report-json", type=str, default="", help="Write the opt-in overworld object compatibility report as JSON.")
     parser.add_argument("--strict-overworld-object-fixtures", action="store_true", help="Validate isolated strict overworld object schema fixtures.")
+    parser.add_argument("--neutral-encounter-report", action="store_true", help="Print the opt-in neutral encounter compatibility report.")
+    parser.add_argument("--neutral-encounter-report-json", type=str, default="", help="Write the opt-in neutral encounter compatibility report as JSON.")
+    parser.add_argument("--strict-neutral-encounter-fixtures", action="store_true", help="Validate isolated strict neutral encounter schema fixtures.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -7591,6 +8026,10 @@ def main() -> int:
     if args.strict_overworld_object_fixtures:
         strict_object_errors, strict_overworld_object_warnings = validate_strict_overworld_object_fixtures()
         errors.extend(strict_object_errors)
+    strict_neutral_encounter_warnings: list[str] = []
+    if args.strict_neutral_encounter_fixtures:
+        strict_neutral_encounter_errors, strict_neutral_encounter_warnings = validate_strict_neutral_encounter_fixtures()
+        errors.extend(strict_neutral_encounter_errors)
 
     if errors:
         print("VALIDATION FAILED")
@@ -7654,6 +8093,8 @@ def main() -> int:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
         print(f"- strict overworld object fixtures passed with {len(strict_overworld_object_warnings)} intentional warning case(s)")
+    if args.strict_neutral_encounter_fixtures:
+        print(f"- strict neutral encounter fixtures passed with {len(strict_neutral_encounter_warnings)} intentional warning case(s)")
     if args.economy_resource_report or args.economy_resource_report_json:
         report = build_economy_resource_report()
         if args.economy_resource_report_json:
@@ -7670,6 +8111,14 @@ def main() -> int:
             print(f"- overworld object report JSON written to {report_path}")
         if args.overworld_object_report:
             print_overworld_object_report(report)
+    if args.neutral_encounter_report or args.neutral_encounter_report_json:
+        report = build_neutral_encounter_report()
+        if args.neutral_encounter_report_json:
+            report_path = Path(args.neutral_encounter_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- neutral encounter report JSON written to {report_path}")
+        if args.neutral_encounter_report:
+            print_neutral_encounter_report(report)
     return 0
 
 
