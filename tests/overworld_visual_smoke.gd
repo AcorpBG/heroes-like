@@ -47,6 +47,8 @@ func _run() -> void:
 		return
 	if not _assert_route_target_handoff_contract(shell):
 		return
+	if not _assert_hover_order_cue_contract(shell):
+		return
 	if not _assert_artifact_reward_visibility_contract(shell):
 		return
 	if not await _assert_overworld_magic_affordance_contract(shell):
@@ -1035,6 +1037,52 @@ func _assert_route_target_handoff_contract(shell: Node) -> bool:
 	session.overworld["fog"] = original_fog
 	session.overworld["hero"] = original_hero
 	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
+func _assert_hover_order_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_hover_tile") or not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing hover-order validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+
+	_set_active_hero_position(session, Vector2i(1, 2))
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+
+	var route_hover: Dictionary = shell.call("validation_hover_tile", 1, 0)
+	var adjacent_hover: Dictionary = shell.call("validation_hover_tile", 2, 3)
+	var joined := "\n".join([
+		String(route_hover.get("map_tooltip", "")),
+		String(adjacent_hover.get("map_tooltip", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld hover order cue",
+		[joined],
+		[
+			"Hover order:",
+			"select route, then commit if ready",
+			"Timber Wagon",
+			"select Secure Site, then commit if ready",
+			"Ember Signal Post",
+			"Move",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld hover order cue", joined):
+		return false
+
+	session.overworld["fog"] = original_fog
 	session.overworld["hero_position"] = original_hero_position
 	session.overworld["movement"] = original_movement
 	OverworldRules.refresh_fog_of_war(session)

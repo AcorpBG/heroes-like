@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:39:20Z",
+  "updatedAt": "2026-04-26T23:50:46Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-command-tab-readiness-cues-10184",
-  "currentSliceTitle": "Surface compact town command-tab readiness cues",
+  "currentSliceId": "overworld-hover-order-cues-10184",
+  "currentSliceTitle": "Surface compact overworld hover order cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact ready-action counts on the live town management tab labels, plus selected-tab hover context, using existing town action catalogs only. Added focused town/battle smoke assertions for tab labels, tooltip context, and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible overworld hover-order cues in live map tooltips using existing tile/object/session surfaces only, including interactable-site cues on presentation-blocked tiles. Added focused overworld smoke assertions for hover route/site order hints and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1887,6 +1887,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T23:37:16Z",
       "completedAt": "2026-04-26T23:39:20Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "overworld-hover-order-cues-10184",
+      "title": "Surface compact overworld hover order cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:42:25Z",
+      "completedAt": "2026-04-26T23:50:46Z",
       "difficulty": "small"
     }
   ],
