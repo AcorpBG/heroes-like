@@ -51,6 +51,11 @@ const COMMANDER_ROLE_PUBLIC_EVENT_KEYS := [
 	"target_label",
 	"target_x",
 	"target_y",
+	"from_x",
+	"from_y",
+	"to_x",
+	"to_y",
+	"phase_id",
 	"visibility",
 	"public_importance",
 	"summary",
@@ -78,7 +83,17 @@ const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"growth_value",
 	"pressure_value",
 	"category_bonus",
+	"garrison_score",
 	"raid_score",
+	"rebuild_score",
+	"resource_score_breakdown",
+	"target_memory",
+	"commander_role_state",
+	"fixture_state",
+	"saved",
+	"durable",
+	"migration",
+	"SAVE_VERSION",
 	"focus_pressure_count",
 	"rivalry_count",
 	"fixture_previous_controller",
@@ -87,6 +102,22 @@ const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
 	"fixture_threatened_by_player_front",
 	"fixture_recently_secured",
 	"fixture_recent_pressure_count",
+]
+const COMMANDER_ROLE_TURN_NO_OP_REASONS := [
+	"target_unchanged",
+	"no_active_commander",
+	"commander_recovering",
+	"commander_rebuilding",
+	"no_valid_target",
+	"town_front_dominates_selector",
+	"pressure_below_launch_threshold",
+	"max_active_raids_reached",
+	"no_open_spawn_point",
+	"no_available_commander",
+	"town_governor_only_turn",
+	"battle_queued_before_spawn",
+	"no_existing_raid_to_move",
+	"report_fixture_not_configured_for_assignment",
 ]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
@@ -3540,6 +3571,900 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 	if "commander_memory" in codes:
 		return "known commander focus"
 	return ""
+
+static func commander_role_turn_snapshot(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	options: Dictionary = {}
+) -> Dictionary:
+	if session == null:
+		return {}
+	normalize_all_commander_rosters(session)
+	var roster := commander_roster_for_faction(session, faction_id)
+	var role_assignments: Array = options.get("role_assignments", [])
+	var origin: Dictionary = options.get("origin", {})
+	var role_proposals := []
+	for assignment_value in role_assignments:
+		if not (assignment_value is Dictionary):
+			continue
+		var assignment: Dictionary = assignment_value
+		var roster_hero_id := String(assignment.get("roster_hero_id", ""))
+		var target_id := String(assignment.get("target_id", ""))
+		var commander_entry := _commander_roster_entry(roster, roster_hero_id)
+		if commander_entry.is_empty():
+			continue
+		var target_view := commander_role_resource_target_view(session, config, faction_id, target_id, origin)
+		var proposal := commander_role_proposal_for_resource_target(
+			session,
+			config,
+			faction_id,
+			commander_entry,
+			target_view,
+			assignment.get("fixture_state", {})
+		)
+		role_proposals.append(_turn_transcript_role_proposal(session, faction_id, commander_entry, target_view, proposal))
+	return {
+		"schema_status": "derived_turn_transcript_report_only",
+		"source_policy": "snapshot_derived",
+		"scenario_id": String(session.scenario_id),
+		"day": int(session.day),
+		"faction_id": faction_id,
+		"faction_label": String(config.get("label", faction_id)),
+		"enemy_state": _turn_transcript_enemy_state_counts(session, faction_id),
+		"active_raids": _turn_transcript_active_raid_snapshots(session, faction_id),
+		"commander_links": _turn_transcript_commander_links(session, faction_id),
+		"resource_controllers": _turn_transcript_resource_controller_map(session),
+		"derived_role_proposals": role_proposals,
+		"town_governor_supporting_event_refs": _turn_transcript_town_governor_refs(
+			options.get("town_governor_reports", []),
+			String(options.get("supporting_front_id", ""))
+		),
+		"battle_pending": not session.battle.is_empty(),
+	}
+
+static func commander_role_turn_transcript_report(
+	before_snapshot: Dictionary,
+	after_snapshot: Dictionary,
+	config: Dictionary,
+	turn_result: Dictionary,
+	options: Dictionary = {}
+) -> Dictionary:
+	var faction_id := String(after_snapshot.get("faction_id", before_snapshot.get("faction_id", config.get("faction_id", ""))))
+	var scenario_id := String(after_snapshot.get("scenario_id", before_snapshot.get("scenario_id", "")))
+	var case_id := String(options.get("case_id", "%s_%s_turn" % [scenario_id, faction_id]))
+	var before_proposals := _turn_transcript_timed_proposals(before_snapshot.get("derived_role_proposals", []), "before_turn")
+	var after_proposals := _turn_transcript_timed_proposals(after_snapshot.get("derived_role_proposals", []), "after_turn")
+	var assignment_records := _turn_transcript_target_assignment_records(before_snapshot, after_snapshot)
+	var no_op_records := _turn_transcript_target_no_op_records(before_snapshot, before_proposals, assignment_records)
+	var movement_summary := _turn_transcript_raid_movement_summary(before_snapshot, after_snapshot)
+	var arrival_summary := _turn_transcript_raid_arrival_summary(before_snapshot, after_snapshot)
+	var town_refs := _turn_transcript_merge_town_refs(
+		before_snapshot.get("town_governor_supporting_event_refs", []),
+		after_snapshot.get("town_governor_supporting_event_refs", [])
+	)
+	var phase_records := _turn_transcript_phase_records(
+		before_snapshot,
+		after_snapshot,
+		assignment_records,
+		movement_summary,
+		arrival_summary,
+		town_refs
+	)
+	var public_events := _turn_transcript_public_events(
+		before_snapshot,
+		after_snapshot,
+		before_proposals,
+		assignment_records,
+		movement_summary,
+		arrival_summary,
+		town_refs,
+		phase_records
+	)
+	var leak_check := commander_role_public_leak_check(public_events)
+	var source_marker_check := _turn_transcript_source_marker_check(
+		[
+			phase_records,
+			before_snapshot.get("commander_links", []),
+			after_snapshot.get("commander_links", []),
+			before_proposals,
+			after_proposals,
+			assignment_records,
+			no_op_records,
+			movement_summary,
+			arrival_summary,
+			town_refs,
+			public_events,
+		]
+	)
+	var pass_criteria := [
+		"Existing EnemyTurnRules.run_enemy_turn executed once for this fixture.",
+		"Before/after commander links and role proposals are snapshot-derived only.",
+		"Relevant commanders have either a target assignment record or a recognized no-op reason.",
+		"Public transcript events pass compact leak checks.",
+	]
+	var ok := bool(turn_result.get("ok", false)) and bool(leak_check.get("ok", false)) and bool(source_marker_check.get("ok", false)) and _turn_transcript_no_ops_valid(no_op_records)
+	return {
+		"case_id": case_id,
+		"scenario_id": scenario_id,
+		"faction_id": faction_id,
+		"day_before": int(before_snapshot.get("day", 0)),
+		"day_after": int(after_snapshot.get("day", 0)),
+		"fixture_setup": options.get("fixture_setup", {}),
+		"turn_result": {
+			"ok": bool(turn_result.get("ok", false)),
+			"message_summary": String(turn_result.get("message", "")),
+		},
+		"phase_records": phase_records,
+		"active_commander_links": {
+			"before": before_snapshot.get("commander_links", []),
+			"after": after_snapshot.get("commander_links", []),
+		},
+		"derived_role_proposals": {
+			"before_turn": before_proposals,
+			"after_turn": after_proposals,
+		},
+		"target_assignment_records": assignment_records,
+		"target_no_op_records": no_op_records,
+		"raid_movement_summary": movement_summary,
+		"raid_arrival_summary": arrival_summary,
+		"town_governor_supporting_event_refs": town_refs,
+		"public_transcript_events": public_events,
+		"public_leak_check": leak_check,
+		"source_marker_check": source_marker_check,
+		"case_pass_criteria": pass_criteria,
+		"ok": ok,
+	}
+
+static func commander_role_turn_transcript_public_leak_check(public_surfaces: Variant) -> Dictionary:
+	return commander_role_public_leak_check(public_surfaces)
+
+static func _turn_transcript_role_proposal(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_entry: Dictionary,
+	target_view: Dictionary,
+	proposal: Dictionary
+) -> Dictionary:
+	var target_kind := String(target_view.get("target_kind", ""))
+	var target_id := String(target_view.get("target_id", ""))
+	return {
+		"timing": "",
+		"roster_hero_id": String(commander_entry.get("roster_hero_id", "")),
+		"commander_label": commander_display_name(commander_entry, false),
+		"role": String(proposal.get("role", COMMANDER_ROLE_RESERVE)),
+		"role_status": String(proposal.get("role_status", "")),
+		"validity": String(proposal.get("validity", "")),
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": String(target_view.get("target_label", target_id)),
+		"target_x": int(target_view.get("target_x", 0)),
+		"target_y": int(target_view.get("target_y", 0)),
+		"front_id": String(target_view.get("front_id", commander_role_front_id(String(session.scenario_id), target_kind, target_id))),
+		"priority_reason_codes": _normalize_string_array(proposal.get("priority_reason_codes", [])),
+		"public_reason": String(proposal.get("public_reason", "")),
+		"assignment_id_hint": String(proposal.get("assignment_id_hint", "")),
+		"expected_next_transition": String(proposal.get("expected_next_transition", "")),
+		"state_policy": "report_only",
+	}
+
+static func _turn_transcript_enemy_state_counts(session: SessionStateStoreScript.SessionData, faction_id: String) -> Dictionary:
+	var state := {}
+	for state_value in session.overworld.get("enemy_states", []):
+		if state_value is Dictionary and String(state_value.get("faction_id", "")) == faction_id:
+			state = state_value
+			break
+	var roster: Array = state.get("commander_roster", [])
+	var commander_counts := {"available": 0, "active": 0, "recovering": 0, "rebuilding": 0}
+	for entry_value in roster:
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var status := _normalize_commander_status(entry.get("status", COMMANDER_STATUS_AVAILABLE))
+		if commander_can_deploy(entry):
+			commander_counts[status] = int(commander_counts.get(status, 0)) + 1
+		else:
+			commander_counts["rebuilding"] = int(commander_counts.get("rebuilding", 0)) + 1
+	return {
+		"pressure": int(state.get("pressure", 0)),
+		"raid_counter": int(state.get("raid_counter", 0)),
+		"commander_counter": int(state.get("commander_counter", 0)),
+		"siege_progress": int(state.get("siege_progress", 0)),
+		"posture": String(state.get("posture", "")),
+		"active_raid_count": _turn_transcript_active_raid_snapshots(session, faction_id).size(),
+		"commander_counts": commander_counts,
+		"state_policy": "derived",
+	}
+
+static func _turn_transcript_active_raid_snapshots(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> Array:
+	var snapshots := []
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		var commander_state = encounter.get("enemy_commander_state", {})
+		if not (commander_state is Dictionary):
+			commander_state = {}
+		var current := Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+		var goal_tiles := _goal_tiles_from_raid(session, encounter)
+		var goal_distance := int(encounter.get("goal_distance", 9999))
+		if not goal_tiles.is_empty():
+			goal_distance = _path_distance(session, current, goal_tiles, String(encounter.get("placement_id", "")))
+			if goal_distance == 9999 and current in goal_tiles:
+				goal_distance = 0
+		var target := _current_target_snapshot(encounter)
+		snapshots.append(
+			{
+				"placement_id": String(encounter.get("placement_id", "")),
+				"encounter_id": String(encounter.get("encounter_id", encounter.get("id", ""))),
+				"raid_label": raid_display_name(encounter),
+				"roster_hero_id": String(commander_state.get("roster_hero_id", "")),
+				"commander_label": commander_display_name(commander_state, false),
+				"x": current.x,
+				"y": current.y,
+				"arrived": bool(encounter.get("arrived", false)),
+				"goal_distance": goal_distance,
+				"target_kind": String(target.get("target_kind", "")),
+				"target_id": String(target.get("target_placement_id", "")),
+				"target_label": String(target.get("target_label", "")),
+				"target_x": int(target.get("target_x", 0)),
+				"target_y": int(target.get("target_y", 0)),
+				"target_signature": _target_signature(target),
+				"reason_codes": _normalize_string_array(encounter.get("target_reason_codes", [])),
+				"public_reason": String(encounter.get("target_public_reason", "")),
+				"public_importance": String(encounter.get("target_public_importance", "medium")),
+				"state_policy": "derived",
+			}
+		)
+	return snapshots
+
+static func _turn_transcript_commander_links(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String
+) -> Array:
+	var links := []
+	var roster := commander_roster_for_faction(session, faction_id)
+	for commander_entry_value in roster:
+		if not (commander_entry_value is Dictionary):
+			continue
+		var commander_entry: Dictionary = commander_entry_value
+		var roster_hero_id := String(commander_entry.get("roster_hero_id", ""))
+		var active_link := commander_role_active_encounter_link(session, faction_id, roster_hero_id)
+		var linked := bool(active_link.get("linked", false))
+		var status := _normalize_commander_status(commander_entry.get("status", COMMANDER_STATUS_AVAILABLE))
+		var no_link_reason := ""
+		if not linked:
+			if status == COMMANDER_STATUS_RECOVERING:
+				no_link_reason = "recovering"
+			elif not commander_can_deploy(commander_entry):
+				no_link_reason = "rebuilding"
+			else:
+				no_link_reason = "reserve"
+		links.append(
+			{
+				"roster_hero_id": roster_hero_id,
+				"commander_label": commander_display_name(commander_entry, false),
+				"status": status,
+				"active_placement_id": String(active_link.get("placement_id", "")),
+				"linked": linked,
+				"no_link_reason": no_link_reason,
+				"target_kind": String(active_link.get("target_kind", "")),
+				"target_id": String(active_link.get("target_id", "")),
+				"target_label": String(active_link.get("target_label", "")),
+				"army_status": commander_army_status(commander_entry),
+				"memory_summary": commander_memory_summary(commander_entry),
+				"state_policy": "derived",
+			}
+		)
+	return links
+
+static func _turn_transcript_resource_controller_map(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var controllers := {}
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var placement_id := String(node.get("placement_id", ""))
+		if placement_id == "":
+			continue
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		controllers[placement_id] = {
+			"controller_id": String(node.get("collected_by_faction_id", "")),
+			"target_label": String(site.get("name", placement_id)),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"state_policy": "derived",
+		}
+	return controllers
+
+static func _turn_transcript_town_governor_refs(reports_value: Variant, fallback_front_id: String = "") -> Array:
+	var reports: Array = reports_value if reports_value is Array else [reports_value]
+	var refs := []
+	var allowed_types := [
+		"ai_town_built",
+		"ai_town_recruited",
+		"ai_garrison_reinforced",
+		"ai_raid_reinforced",
+		"ai_commander_rebuilt",
+	]
+	for report_value in reports:
+		if not (report_value is Dictionary):
+			continue
+		for town_value in report_value.get("towns", []):
+			if not (town_value is Dictionary):
+				continue
+			var town: Dictionary = town_value
+			for event_value in town.get("events", []):
+				if not (event_value is Dictionary):
+					continue
+				var event: Dictionary = event_value
+				var event_type := String(event.get("event_type", ""))
+				if event_type not in allowed_types:
+					continue
+				var target_kind := String(event.get("target_kind", ""))
+				var target_id := String(event.get("target_id", ""))
+				var front_id := commander_role_front_id(String(report_value.get("scenario_id", "")), target_kind, target_id)
+				if front_id == "":
+					front_id = fallback_front_id
+				refs.append(
+					{
+						"event_ref_id": String(event.get("event_id", "")),
+						"event_type": event_type,
+						"town_placement_id": String(town.get("placement_id", event.get("actor_id", ""))),
+						"target_kind": target_kind,
+						"target_id": target_id,
+						"target_label": String(event.get("target_label", target_id)),
+						"public_reason": String(event.get("public_reason", "")),
+						"reason_codes": _normalize_string_array(event.get("reason_codes", [])),
+						"supports_front_id": front_id,
+						"state_policy": "derived",
+					}
+				)
+	return refs
+
+static func _turn_transcript_timed_proposals(proposals_value: Variant, timing: String) -> Array:
+	var timed := []
+	if not (proposals_value is Array):
+		return timed
+	for proposal_value in proposals_value:
+		if not (proposal_value is Dictionary):
+			continue
+		var proposal: Dictionary = proposal_value.duplicate(true)
+		proposal["timing"] = timing
+		proposal["state_policy"] = "report_only"
+		timed.append(proposal)
+	return timed
+
+static func _turn_transcript_target_assignment_records(before_snapshot: Dictionary, after_snapshot: Dictionary) -> Array:
+	var before_map := _turn_transcript_raid_map(before_snapshot.get("active_raids", []))
+	var records := []
+	for after_raid_value in after_snapshot.get("active_raids", []):
+		if not (after_raid_value is Dictionary):
+			continue
+		var after_raid: Dictionary = after_raid_value
+		var placement_id := String(after_raid.get("placement_id", ""))
+		var before_raid: Dictionary = before_map.get(placement_id, {})
+		var previous_signature := String(before_raid.get("target_signature", ""))
+		var current_signature := String(after_raid.get("target_signature", ""))
+		if current_signature == "" or previous_signature == current_signature:
+			continue
+		var event_ref_id := _turn_transcript_event_ref_id(
+			int(after_snapshot.get("day", 0)),
+			String(after_snapshot.get("faction_id", "")),
+			"ai_target_assigned",
+			placement_id,
+			String(after_raid.get("target_id", ""))
+		)
+		records.append(
+			{
+				"placement_id": placement_id,
+				"roster_hero_id": String(after_raid.get("roster_hero_id", "")),
+				"previous_target_signature": previous_signature,
+				"current_target_signature": current_signature,
+				"assignment_changed": true,
+				"target_kind": String(after_raid.get("target_kind", "")),
+				"target_id": String(after_raid.get("target_id", "")),
+				"target_label": String(after_raid.get("target_label", "")),
+				"target_x": int(after_raid.get("target_x", 0)),
+				"target_y": int(after_raid.get("target_y", 0)),
+				"reason_codes": _normalize_string_array(after_raid.get("reason_codes", [])),
+				"public_reason": String(after_raid.get("public_reason", "")),
+				"event_ref_id": event_ref_id,
+				"state_policy": "derived",
+			}
+		)
+	return records
+
+static func _turn_transcript_target_no_op_records(
+	before_snapshot: Dictionary,
+	before_proposals: Array,
+	assignment_records: Array
+) -> Array:
+	var assigned_commanders := {}
+	for record_value in assignment_records:
+		if record_value is Dictionary:
+			assigned_commanders[String(record_value.get("roster_hero_id", ""))] = true
+	var raid_by_commander := _turn_transcript_raid_by_commander(before_snapshot.get("active_raids", []))
+	var no_ops := []
+	for proposal_value in before_proposals:
+		if not (proposal_value is Dictionary):
+			continue
+		var proposal: Dictionary = proposal_value
+		var roster_hero_id := String(proposal.get("roster_hero_id", ""))
+		if roster_hero_id == "" or assigned_commanders.has(roster_hero_id):
+			continue
+		var role_status := String(proposal.get("role_status", ""))
+		var role := String(proposal.get("role", ""))
+		var no_op_reason := "no_active_commander"
+		var raid: Dictionary = raid_by_commander.get(roster_hero_id, {})
+		if role == COMMANDER_ROLE_RECOVERING and role_status == "cooldown":
+			no_op_reason = "commander_recovering"
+		elif role == COMMANDER_ROLE_RECOVERING and role_status == "rebuilding":
+			no_op_reason = "commander_rebuilding"
+		elif String(proposal.get("validity", "")) == "invalid_target_missing":
+			no_op_reason = "no_valid_target"
+		elif not raid.is_empty():
+			no_op_reason = "target_unchanged"
+		no_ops.append(
+			{
+				"placement_id": String(raid.get("placement_id", "")),
+				"roster_hero_id": roster_hero_id,
+				"target_kind": String(proposal.get("target_kind", "")),
+				"target_id": String(proposal.get("target_id", "")),
+				"target_label": String(proposal.get("target_label", "")),
+				"no_op_reason": no_op_reason,
+				"public_reason": String(proposal.get("public_reason", "")),
+				"reason_codes": _normalize_string_array(proposal.get("priority_reason_codes", [])),
+				"state_policy": "derived",
+			}
+		)
+	return no_ops
+
+static func _turn_transcript_raid_movement_summary(before_snapshot: Dictionary, after_snapshot: Dictionary) -> Array:
+	var before_map := _turn_transcript_raid_map(before_snapshot.get("active_raids", []))
+	var movements := []
+	for after_raid_value in after_snapshot.get("active_raids", []):
+		if not (after_raid_value is Dictionary):
+			continue
+		var after_raid: Dictionary = after_raid_value
+		var placement_id := String(after_raid.get("placement_id", ""))
+		var before_raid: Dictionary = before_map.get(placement_id, {})
+		if before_raid.is_empty():
+			continue
+		var moved := int(before_raid.get("x", 0)) != int(after_raid.get("x", 0)) or int(before_raid.get("y", 0)) != int(after_raid.get("y", 0))
+		if not moved and String(after_raid.get("target_signature", "")) == "":
+			continue
+		movements.append(
+			{
+				"placement_id": placement_id,
+				"roster_hero_id": String(after_raid.get("roster_hero_id", "")),
+				"from": {"x": int(before_raid.get("x", 0)), "y": int(before_raid.get("y", 0))},
+				"to": {"x": int(after_raid.get("x", 0)), "y": int(after_raid.get("y", 0))},
+				"target_kind": String(after_raid.get("target_kind", "")),
+				"target_id": String(after_raid.get("target_id", "")),
+				"target_label": String(after_raid.get("target_label", "")),
+				"goal_distance_before": int(before_raid.get("goal_distance", 9999)),
+				"goal_distance_after": int(after_raid.get("goal_distance", 9999)),
+				"arrived_before": bool(before_raid.get("arrived", false)),
+				"arrived_after": bool(after_raid.get("arrived", false)),
+				"movement_policy": "existing_advance_raids",
+				"state_policy": "derived",
+			}
+		)
+	return movements
+
+static func _turn_transcript_raid_arrival_summary(before_snapshot: Dictionary, after_snapshot: Dictionary) -> Array:
+	var before_map := _turn_transcript_raid_map(before_snapshot.get("active_raids", []))
+	var before_controllers: Dictionary = before_snapshot.get("resource_controllers", {})
+	var after_controllers: Dictionary = after_snapshot.get("resource_controllers", {})
+	var arrivals := []
+	for after_raid_value in after_snapshot.get("active_raids", []):
+		if not (after_raid_value is Dictionary):
+			continue
+		var after_raid: Dictionary = after_raid_value
+		var placement_id := String(after_raid.get("placement_id", ""))
+		var before_raid: Dictionary = before_map.get(placement_id, {})
+		if before_raid.is_empty() or not bool(after_raid.get("arrived", false)):
+			continue
+		var target_kind := String(after_raid.get("target_kind", ""))
+		var target_id := String(after_raid.get("target_id", ""))
+		var controller_before := ""
+		var controller_after := ""
+		if target_kind == "resource":
+			controller_before = String(before_controllers.get(target_id, {}).get("controller_id", ""))
+			controller_after = String(after_controllers.get(target_id, {}).get("controller_id", ""))
+		if bool(before_raid.get("arrived", false)) and controller_before == controller_after:
+			continue
+		var event_type := "ai_raid_arrived"
+		if target_kind == "resource" and controller_before != controller_after and controller_after == String(after_snapshot.get("faction_id", "")):
+			event_type = "ai_site_seized"
+		elif target_kind == "encounter":
+			event_type = "ai_site_contested"
+		var event_ref_id := _turn_transcript_event_ref_id(
+			int(after_snapshot.get("day", 0)),
+			String(after_snapshot.get("faction_id", "")),
+			event_type,
+			placement_id,
+			target_id
+		)
+		arrivals.append(
+			{
+				"placement_id": placement_id,
+				"roster_hero_id": String(after_raid.get("roster_hero_id", "")),
+				"event_type": event_type,
+				"event_ref_id": event_ref_id,
+				"target_kind": target_kind,
+				"target_id": target_id,
+				"target_label": String(after_raid.get("target_label", "")),
+				"target_controller_before": controller_before,
+				"target_controller_after": controller_after,
+				"site_event_ref_ids": [event_ref_id] if event_type in ["ai_site_seized", "ai_site_contested"] else [],
+				"battle_queue_ref_ids": [],
+				"pillage_message_ref_ids": [],
+				"state_policy": "derived",
+			}
+		)
+	return arrivals
+
+static func _turn_transcript_phase_records(
+	before_snapshot: Dictionary,
+	after_snapshot: Dictionary,
+	assignment_records: Array,
+	movement_summary: Array,
+	arrival_summary: Array,
+	town_refs: Array
+) -> Array:
+	var phase_ids := [
+		"normalize_enemy_states",
+		"town_income_and_governor_projection",
+		"town_build_recruit_reinforce",
+		"pressure_gain",
+		"advance_existing_raids",
+		"battle_queue_checks",
+		"spawn_raid_if_ready",
+		"siege_and_posture",
+		"turn_summary",
+	]
+	var phases := []
+	for phase_id in phase_ids:
+		var event_ref_ids := []
+		var no_op_reason := ""
+		match String(phase_id):
+			"town_income_and_governor_projection", "town_build_recruit_reinforce":
+				for ref_value in town_refs:
+					if ref_value is Dictionary:
+						event_ref_ids.append(String(ref_value.get("event_ref_id", "")))
+				if event_ref_ids.is_empty():
+					no_op_reason = "town_governor_only_turn"
+			"advance_existing_raids":
+				for record in assignment_records:
+					event_ref_ids.append(String(record.get("event_ref_id", "")))
+				for arrival in arrival_summary:
+					event_ref_ids.append(String(arrival.get("event_ref_id", "")))
+				if movement_summary.is_empty() and arrival_summary.is_empty():
+					no_op_reason = "no_existing_raid_to_move"
+			"spawn_raid_if_ready":
+				if _turn_transcript_active_raid_count_delta(before_snapshot, after_snapshot) <= 0:
+					no_op_reason = "pressure_below_launch_threshold"
+			_:
+				pass
+		phases.append(
+			{
+				"phase_id": String(phase_id),
+				"source_policy": "snapshot_derived",
+				"faction_id": String(after_snapshot.get("faction_id", before_snapshot.get("faction_id", ""))),
+				"before_counts": before_snapshot.get("enemy_state", {}),
+				"after_counts": after_snapshot.get("enemy_state", {}),
+				"event_ref_ids": _turn_transcript_non_empty_strings(event_ref_ids),
+				"no_op_reason": no_op_reason,
+			}
+		)
+	return phases
+
+static func _turn_transcript_public_events(
+	before_snapshot: Dictionary,
+	after_snapshot: Dictionary,
+	before_proposals: Array,
+	assignment_records: Array,
+	movement_summary: Array,
+	arrival_summary: Array,
+	town_refs: Array,
+	phase_records: Array
+) -> Array:
+	var events := []
+	var sequence := 1
+	var faction_id := String(after_snapshot.get("faction_id", before_snapshot.get("faction_id", "")))
+	var faction_label := String(after_snapshot.get("faction_label", before_snapshot.get("faction_label", faction_id)))
+	var day := int(after_snapshot.get("day", before_snapshot.get("day", 0)))
+	for proposal_value in before_proposals:
+		if not (proposal_value is Dictionary):
+			continue
+		var proposal: Dictionary = proposal_value
+		events.append(_turn_transcript_public_event(
+			day,
+			sequence,
+			"ai_commander_role_observed",
+			faction_id,
+			faction_label,
+			String(proposal.get("roster_hero_id", "")),
+			String(proposal.get("commander_label", "")),
+			String(proposal.get("target_kind", "")),
+			String(proposal.get("target_id", "")),
+			String(proposal.get("target_label", "")),
+			int(proposal.get("target_x", 0)),
+			int(proposal.get("target_y", 0)),
+			"%s observed as %s for %s." % [
+				String(proposal.get("commander_label", proposal.get("roster_hero_id", ""))),
+				String(proposal.get("role", COMMANDER_ROLE_RESERVE)),
+				String(proposal.get("target_label", proposal.get("target_id", "the front"))),
+			],
+			_normalize_string_array(proposal.get("priority_reason_codes", [])),
+			String(proposal.get("public_reason", "")),
+			"derived commander role",
+			"medium",
+			String(proposal.get("front_id", ""))
+		))
+		sequence += 1
+	for record_value in assignment_records:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		events.append(_turn_transcript_public_event(
+			day,
+			sequence,
+			"ai_target_assigned",
+			faction_id,
+			faction_label,
+			String(record.get("placement_id", "")),
+			String(record.get("roster_hero_id", record.get("placement_id", ""))),
+			String(record.get("target_kind", "")),
+			String(record.get("target_id", "")),
+			String(record.get("target_label", "")),
+			int(record.get("target_x", 0)),
+			int(record.get("target_y", 0)),
+			"%s targets %s." % [String(record.get("roster_hero_id", "Raid host")), String(record.get("target_label", "the front"))],
+			_normalize_string_array(record.get("reason_codes", [])),
+			String(record.get("public_reason", "")),
+			"existing target assignment",
+			"high"
+		))
+		sequence += 1
+	for movement_value in movement_summary:
+		if not (movement_value is Dictionary):
+			continue
+		var movement: Dictionary = movement_value
+		var event := _turn_transcript_public_event(
+			day,
+			sequence,
+			"ai_raid_moved",
+			faction_id,
+			faction_label,
+			String(movement.get("placement_id", "")),
+			String(movement.get("roster_hero_id", movement.get("placement_id", ""))),
+			String(movement.get("target_kind", "")),
+			String(movement.get("target_id", "")),
+			String(movement.get("target_label", "")),
+			0,
+			0,
+			"%s moves toward %s." % [String(movement.get("roster_hero_id", "Raid host")), String(movement.get("target_label", "the front"))],
+			[],
+			"",
+			"existing raid movement",
+			"medium"
+		)
+		var from_pos: Dictionary = movement.get("from", {})
+		var to_pos: Dictionary = movement.get("to", {})
+		event["from_x"] = int(from_pos.get("x", 0))
+		event["from_y"] = int(from_pos.get("y", 0))
+		event["to_x"] = int(to_pos.get("x", 0))
+		event["to_y"] = int(to_pos.get("y", 0))
+		events.append(event)
+		sequence += 1
+	for arrival_value in arrival_summary:
+		if not (arrival_value is Dictionary):
+			continue
+		var arrival: Dictionary = arrival_value
+		events.append(_turn_transcript_public_event(
+			day,
+			sequence,
+			String(arrival.get("event_type", "ai_raid_arrived")),
+			faction_id,
+			faction_label,
+			String(arrival.get("placement_id", "")),
+			String(arrival.get("roster_hero_id", arrival.get("placement_id", ""))),
+			String(arrival.get("target_kind", "")),
+			String(arrival.get("target_id", "")),
+			String(arrival.get("target_label", "")),
+			0,
+			0,
+			"%s reaches %s." % [String(arrival.get("roster_hero_id", "Raid host")), String(arrival.get("target_label", "the front"))],
+			["site_seized"] if String(arrival.get("event_type", "")) == "ai_site_seized" else [],
+			"site seized" if String(arrival.get("event_type", "")) == "ai_site_seized" else "",
+			"existing raid arrival",
+			"high"
+		))
+		sequence += 1
+	for ref_value in town_refs:
+		if not (ref_value is Dictionary):
+			continue
+		var ref: Dictionary = ref_value
+		events.append(_turn_transcript_public_event(
+			day,
+			sequence,
+			"ai_town_governor_support_ref",
+			faction_id,
+			faction_label,
+			String(ref.get("town_placement_id", "")),
+			String(ref.get("town_placement_id", "")),
+			String(ref.get("target_kind", "")),
+			String(ref.get("target_id", "")),
+			String(ref.get("target_label", "")),
+			0,
+			0,
+			"Town governor support noted for %s." % String(ref.get("target_label", ref.get("target_id", "the front"))),
+			_normalize_string_array(ref.get("reason_codes", [])),
+			String(ref.get("public_reason", "")),
+			"supporting town governor event",
+			"medium",
+			String(ref.get("supports_front_id", ""))
+		))
+		sequence += 1
+	events.append(_turn_transcript_public_event(
+		day,
+		sequence,
+		"ai_turn_phase_summary",
+		faction_id,
+		faction_label,
+		faction_id,
+		faction_label,
+		"front",
+		String(options_get_case_front_id(before_proposals)),
+		"enemy turn",
+		0,
+		0,
+		"%s enemy turn summarized in %d phases." % [faction_label, phase_records.size()],
+		[],
+		"",
+		"snapshot phase summary",
+		"low",
+		"turn_summary"
+	))
+	return events
+
+static func _turn_transcript_public_event(
+	day: int,
+	sequence: int,
+	event_type: String,
+	faction_id: String,
+	faction_label: String,
+	actor_id: String,
+	actor_label: String,
+	target_kind: String,
+	target_id: String,
+	target_label: String,
+	target_x: int,
+	target_y: int,
+	summary: String,
+	reason_codes: Array,
+	public_reason: String,
+	debug_reason: String,
+	public_importance: String = "medium",
+	phase_id: String = ""
+) -> Dictionary:
+	return {
+		"event_id": "%d:%s:%s:%s:%s:%d" % [day, faction_id, event_type, actor_id, target_id, sequence],
+		"day": day,
+		"sequence": sequence,
+		"event_type": event_type,
+		"phase_id": phase_id,
+		"faction_id": faction_id,
+		"faction_label": faction_label,
+		"actor_id": actor_id,
+		"actor_label": actor_label if actor_label != "" else actor_id,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label if target_label != "" else target_id,
+		"target_x": target_x,
+		"target_y": target_y,
+		"visibility": "hidden_debug",
+		"public_importance": public_importance,
+		"summary": summary,
+		"reason_codes": _normalize_string_array(reason_codes),
+		"public_reason": public_reason,
+		"debug_reason": debug_reason,
+		"state_policy": "derived",
+	}
+
+static func _turn_transcript_source_marker_check(values: Array) -> Dictionary:
+	var stack := values.duplicate(true)
+	var checked := 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if not (value is Dictionary):
+			continue
+		if value.has("phase_id") or value.has("event_type") or value.has("role") or value.has("placement_id") or value.has("event_ref_id") or value.has("roster_hero_id"):
+			checked += 1
+			if not (
+				String(value.get("state_policy", "")) in ["derived", "report_only"]
+				or String(value.get("source_policy", "")) == "snapshot_derived"
+				or String(value.get("schema_status", "")) == "report_fixture_only"
+			):
+				return {"ok": false, "error": "transcript record missing derived/report-only source marker: %s" % JSON.stringify(value)}
+		for nested_key in value.keys():
+			var nested = value[nested_key]
+			if nested is Array or nested is Dictionary:
+				stack.append(nested)
+	return {"ok": true, "checked_records": checked}
+
+static func _turn_transcript_no_ops_valid(no_ops: Array) -> bool:
+	for record_value in no_ops:
+		if not (record_value is Dictionary):
+			return false
+		if String(record_value.get("no_op_reason", "")) not in COMMANDER_ROLE_TURN_NO_OP_REASONS:
+			return false
+	return true
+
+static func _turn_transcript_raid_map(raids_value: Variant) -> Dictionary:
+	var output := {}
+	if not (raids_value is Array):
+		return output
+	for raid_value in raids_value:
+		if raid_value is Dictionary:
+			output[String(raid_value.get("placement_id", ""))] = raid_value
+	return output
+
+static func _turn_transcript_raid_by_commander(raids_value: Variant) -> Dictionary:
+	var output := {}
+	if not (raids_value is Array):
+		return output
+	for raid_value in raids_value:
+		if raid_value is Dictionary:
+			output[String(raid_value.get("roster_hero_id", ""))] = raid_value
+	return output
+
+static func _turn_transcript_merge_town_refs(before_refs_value: Variant, after_refs_value: Variant) -> Array:
+	var output := []
+	var seen := {}
+	for source in [before_refs_value, after_refs_value]:
+		if not (source is Array):
+			continue
+		for ref_value in source:
+			if not (ref_value is Dictionary):
+				continue
+			var ref_id := String(ref_value.get("event_ref_id", ""))
+			if ref_id == "" or seen.has(ref_id):
+				continue
+			seen[ref_id] = true
+			output.append(ref_value)
+	return output
+
+static func _turn_transcript_non_empty_strings(values: Array) -> Array:
+	var output := []
+	for value in values:
+		var text := String(value)
+		if text != "" and text not in output:
+			output.append(text)
+	return output
+
+static func _turn_transcript_active_raid_count_delta(before_snapshot: Dictionary, after_snapshot: Dictionary) -> int:
+	return int(after_snapshot.get("active_raids", []).size()) - int(before_snapshot.get("active_raids", []).size())
+
+static func _turn_transcript_event_ref_id(day: int, faction_id: String, event_type: String, actor_id: String, target_id: String) -> String:
+	return "%d:%s:%s:%s:%s" % [day, faction_id, event_type, actor_id, target_id]
+
+static func options_get_case_front_id(proposals: Array) -> String:
+	for proposal_value in proposals:
+		if proposal_value is Dictionary and String(proposal_value.get("front_id", "")) != "":
+			return String(proposal_value.get("front_id", ""))
+	return "turn_summary"
 
 static func _commander_role_assignment_id_hint(
 	session: SessionStateStoreScript.SessionData,
