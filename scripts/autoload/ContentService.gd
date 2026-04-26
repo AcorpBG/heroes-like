@@ -122,6 +122,23 @@ func get_biome_for_terrain(terrain_id: String) -> Dictionary:
 func get_map_object(id: String) -> Dictionary:
 	return get_content_by_id(MAP_OBJECTS_PATH, id)
 
+func get_map_object_for_resource_site(site_id: String) -> Dictionary:
+	var normalized_site_id := site_id.strip_edges()
+	if normalized_site_id == "":
+		return {}
+	var best := {}
+	for item in _items_from_raw(load_json(MAP_OBJECTS_PATH)):
+		if not (item is Dictionary):
+			continue
+		if String(item.get("resource_site_id", "")).strip_edges() != normalized_site_id:
+			continue
+		if best.is_empty():
+			best = item
+			continue
+		if _map_object_footprint_area(item) > _map_object_footprint_area(best):
+			best = item
+	return best
+
 func get_neutral_dwelling(id: String) -> Dictionary:
 	return get_content_by_id(NEUTRAL_DWELLINGS_PATH, id)
 
@@ -159,6 +176,12 @@ func _index_items(items: Array) -> Dictionary:
 		if item is Dictionary and item.has("id"):
 			index[String(item["id"])] = item
 	return index
+
+func _map_object_footprint_area(item: Dictionary) -> int:
+	var footprint = item.get("footprint", {})
+	if not (footprint is Dictionary):
+		return 1
+	return max(1, int(footprint.get("width", 1))) * max(1, int(footprint.get("height", 1)))
 
 func _validate_content() -> void:
 	var faction_index := _index_items(_items_from_raw(load_json(FACTIONS_PATH)))
