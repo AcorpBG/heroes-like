@@ -237,6 +237,7 @@ static func build_menu_actions(profile: Dictionary, campaign_id: String) -> Arra
 				"campaign_framing": String(context.get("campaign_framing", "")),
 				"continuity_summary": String(context.get("continuity_summary", "")),
 				"readiness_summary": String(context.get("readiness_summary", "")),
+				"launch_handoff": String(context.get("launch_handoff", "")),
 				"action_consequence": String(context.get("action_consequence", "")),
 			}
 		)
@@ -295,8 +296,13 @@ static func describe_campaign_chapter(profile: Dictionary, campaign_id: String, 
 	var context := _chapter_action_context(normalized, campaign_id, scenario_entry, unlocked, record)
 	var lines := [
 		"%s | %s" % [_chapter_heading(scenario_entry, scenario_id), _scenario_status_label(unlocked, record)],
-		String(scenario_entry.get("description", "")),
 	]
+	var launch_handoff := String(context.get("launch_handoff", ""))
+	if launch_handoff != "":
+		lines.append(launch_handoff)
+	var description := String(scenario_entry.get("description", ""))
+	if description != "":
+		lines.append(description)
 	for key in ["chapter_position", "campaign_framing", "continuity_summary", "readiness_summary"]:
 		var context_line := String(context.get(key, ""))
 		if context_line != "":
@@ -395,6 +401,7 @@ static func build_chapter_action(profile: Dictionary, campaign_id: String, scena
 			"campaign_framing": String(locked_context.get("campaign_framing", "")),
 			"continuity_summary": String(locked_context.get("continuity_summary", "")),
 			"readiness_summary": String(locked_context.get("readiness_summary", "")),
+			"launch_handoff": String(locked_context.get("launch_handoff", "")),
 			"action_consequence": String(locked_context.get("action_consequence", "")),
 		}
 
@@ -415,6 +422,7 @@ static func build_chapter_action(profile: Dictionary, campaign_id: String, scena
 		"campaign_framing": String(context.get("campaign_framing", "")),
 		"continuity_summary": String(context.get("continuity_summary", "")),
 		"readiness_summary": String(context.get("readiness_summary", "")),
+		"launch_handoff": String(context.get("launch_handoff", "")),
 		"action_consequence": String(context.get("action_consequence", "")),
 	}
 
@@ -1176,6 +1184,9 @@ static func _menu_action_summary(
 		if readiness_summary != "":
 			parts.append(readiness_summary)
 		parts.append(_campaign_launch_preview(campaign_id, scenario_entry, record))
+		var launch_handoff := String(context.get("launch_handoff", ""))
+		if launch_handoff != "":
+			parts.append(launch_handoff)
 	if unlocked and not record.is_empty():
 		parts.append("Last result: %s (Day %d)" % [String(record.get("summary", "")), int(record.get("day", 0))])
 	elif not unlocked:
@@ -1201,12 +1212,18 @@ static func _chapter_action_context(
 ) -> Dictionary:
 	var campaign := ContentService.get_campaign(campaign_id)
 	var scenario_id := String(scenario_entry.get("scenario_id", ""))
+	var chapter_position := _chapter_position_summary(campaign, scenario_entry, scenario_id)
+	var campaign_framing := _chapter_campaign_framing(profile, campaign_id, campaign, scenario_entry, scenario_id)
+	var continuity_summary := _chapter_continuity_summary(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record)
+	var readiness_summary := _chapter_readiness_summary(profile, campaign_id, scenario_entry, scenario_id, unlocked)
+	var action_consequence := _chapter_action_consequence(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record)
 	return {
-		"chapter_position": _chapter_position_summary(campaign, scenario_entry, scenario_id),
-		"campaign_framing": _chapter_campaign_framing(profile, campaign_id, campaign, scenario_entry, scenario_id),
-		"continuity_summary": _chapter_continuity_summary(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record),
-		"readiness_summary": _chapter_readiness_summary(profile, campaign_id, scenario_entry, scenario_id, unlocked),
-		"action_consequence": _chapter_action_consequence(profile, campaign_id, campaign, scenario_entry, scenario_id, unlocked, record),
+		"chapter_position": chapter_position,
+		"campaign_framing": campaign_framing,
+		"continuity_summary": continuity_summary,
+		"readiness_summary": readiness_summary,
+		"launch_handoff": _chapter_launch_handoff(campaign_id, scenario_entry, scenario_id, unlocked, record, continuity_summary, action_consequence),
+		"action_consequence": action_consequence,
 	}
 
 static func _chapter_position_summary(campaign: Dictionary, scenario_entry: Dictionary, scenario_id: String) -> String:
@@ -1337,6 +1354,37 @@ static func _chapter_action_consequence(
 	return "Action consequence: %s creates a fresh Campaign expedition on Day 1, %s, updates campaign selection, and does not load or overwrite an expedition save." % [
 		verb,
 		carryover_text,
+	]
+
+static func _chapter_launch_handoff(
+	campaign_id: String,
+	scenario_entry: Dictionary,
+	scenario_id: String,
+	unlocked: bool,
+	record: Dictionary,
+	continuity_summary: String,
+	action_consequence: String
+) -> String:
+	if scenario_id == "":
+		return ""
+	var chapter_heading := _chapter_heading(scenario_entry, scenario_id)
+	if not unlocked:
+		return "Launch handoff: %s is locked; no expedition, save slot, or campaign progress changes." % chapter_heading
+	var launch_preview := _campaign_launch_preview(campaign_id, scenario_entry, record)
+	var objective_line := _first_line_with_prefix(launch_preview, "Objective:")
+	if objective_line == "":
+		objective_line = "Objective: authored chapter objective applies"
+	var continuity_text := continuity_summary.trim_prefix("Continuity:").strip_edges()
+	if continuity_text == "":
+		continuity_text = "campaign context applies"
+	var consequence_text := "fresh expedition, no save load or overwrite"
+	if action_consequence.find("updates campaign selection") >= 0:
+		consequence_text = "fresh expedition, updates campaign selection, no save load or overwrite"
+	return "Launch handoff: %s starts Day 1 in Campaign mode; %s; continuity %s; %s." % [
+		chapter_heading,
+		objective_line,
+		continuity_text,
+		consequence_text,
 	]
 
 static func _campaign_chapter_count(campaign: Dictionary) -> int:

@@ -166,7 +166,15 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 	var readiness_summary := _skirmish_readiness_summary(commander_preview, operational_board)
 	var difficulty_consequence := _skirmish_difficulty_consequence(normalized_difficulty, recommended_difficulty)
 	var action_consequence := _skirmish_action_consequence(normalized_difficulty)
+	var launch_handoff := _skirmish_launch_handoff(
+		scenario,
+		normalized_difficulty,
+		launch_preview,
+		objective_stakes,
+		action_consequence
+	)
 	var setup_lines := []
+	setup_lines.append(launch_handoff)
 	setup_lines.append(launch_preview)
 	for context_line in [front_context, objective_stakes, readiness_summary, difficulty_consequence]:
 		if String(context_line) != "":
@@ -198,7 +206,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		setup_lines.append("Recommended difficulty: %s" % difficulty_label(recommended_difficulty))
 	setup_lines.append(action_consequence)
 
-	var action_tooltip_lines := [launch_preview]
+	var action_tooltip_lines := [launch_preview, launch_handoff]
 	for action_line in [front_context, readiness_summary, difficulty_consequence, action_consequence]:
 		if String(action_line) != "":
 			action_tooltip_lines.append(String(action_line))
@@ -214,6 +222,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"recommended_difficulty_label": difficulty_label(recommended_difficulty),
 		"setup_summary": "\n".join(setup_lines),
 		"launch_preview": launch_preview,
+		"launch_handoff": launch_handoff,
 		"front_context": front_context,
 		"objective_stakes": objective_stakes,
 		"readiness_summary": readiness_summary,
@@ -481,6 +490,31 @@ static func _skirmish_difficulty_consequence(difficulty_id: String, recommended_
 
 static func _skirmish_action_consequence(difficulty_id: String) -> String:
 	return "Action consequence: Launching creates a fresh Skirmish expedition on Day 1 at %s difficulty, uses authored opening forces, does not load or overwrite an expedition save, and does not change campaign progression." % difficulty_label(difficulty_id)
+
+static func _skirmish_launch_handoff(
+	scenario: Dictionary,
+	difficulty_id: String,
+	launch_preview: String,
+	objective_stakes: String,
+	action_consequence: String
+) -> String:
+	var scenario_id := String(scenario.get("id", ""))
+	var scenario_name := String(scenario.get("name", scenario_id))
+	var objective_line := _first_line_with_prefix(launch_preview, "Objective:")
+	if objective_line == "":
+		objective_line = objective_stakes
+	var objective_text := objective_line
+	if objective_text == "":
+		objective_text = "Objective: authored scenario objective applies"
+	var continuity_text := "fresh expedition, no save load or overwrite, campaign progress unchanged"
+	if action_consequence.find("does not change campaign progression") < 0:
+		continuity_text = "fresh expedition, no save load or overwrite"
+	return "Launch handoff: %s starts a fresh Skirmish expedition on Day 1 at %s difficulty; %s; continuity %s." % [
+		scenario_name,
+		difficulty_label(difficulty_id),
+		objective_text,
+		continuity_text,
+	]
 
 static func _first_line_with_prefix(text: String, prefix: String) -> String:
 	for raw_line in text.split("\n"):
