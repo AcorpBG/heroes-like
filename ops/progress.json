@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:59:00Z",
+  "updatedAt": "2026-04-26T23:59:30Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-capture-countercapture-defense-proof-planning-10184",
-  "currentSliceTitle": "Plan a narrow strategic AI capture, counter-capture, or defense proof",
+  "currentSliceId": "strategic-ai-site-control-proof-report-10184",
+  "currentSliceTitle": "Produce a focused strategic AI site-control proof report",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI strategy config audit reporting is complete in docs/strategic-ai-strategy-config-audit-report.md. The next current slice should plan one narrow site-control proof before coefficient tuning: likely Mireclaw retaking or denying river_signal_post / river_free_company, or Embercourt defending or stabilizing glassroad_watch_relay / glassroad_starlens. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, coefficient tuning, or River Pass rebalance.",
+  "currentSliceNotes": "Strategic AI capture/counter-capture/defense proof planning is complete in docs/strategic-ai-capture-countercapture-defense-proof-plan.md. The next current slice should add a focused AI_SITE_CONTROL_PROOF_REPORT for the selected Mireclaw river-pass signal-yard counter-capture/denial path: primary site river_free_company, companion reason/order check river_signal_post, compact ai_target_assigned and ai_site_seized events, and no coefficient tuning. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, coefficient tuning, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -495,6 +495,16 @@
     {
       "id": "strategic-ai-capture-countercapture-defense-proof-planning-10184",
       "title": "Plan a narrow strategic AI capture, counter-capture, or defense proof",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:59:00Z",
+      "completedAt": "2026-04-26T23:59:30Z",
+      "decision": "mireclaw-river-pass-signal-yard-countercapture-proof-next",
+      "proofPlan": "docs/strategic-ai-capture-countercapture-defense-proof-plan.md",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-site-control-proof-report-10184",
+      "title": "Produce a focused strategic AI site-control proof report",
       "status": "pending",
       "difficulty": "high"
     },
