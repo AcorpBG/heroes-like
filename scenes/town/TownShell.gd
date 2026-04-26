@@ -254,7 +254,12 @@ func _refresh_save_slot_picker() -> void:
 	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	_save_status_label.text = String(surface.get("latest_context", "Latest ready save: none."))
-	_save_status_label.tooltip_text = SaveService.describe_slot_details(summary)
+	var current_context := String(surface.get("current_context", ""))
+	var save_tooltip_lines := [_save_status_label.text]
+	if current_context != "":
+		save_tooltip_lines.append("Saving now: %s" % current_context)
+	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
+	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Town"))
 	_save_button.tooltip_text = String(surface.get("save_button_tooltip", "Save the active town visit safely."))

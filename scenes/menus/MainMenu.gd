@@ -650,7 +650,10 @@ func _build_save_pulse() -> String:
 	var latest_summary := SaveService.latest_loadable_summary()
 	var latest_line := "No active resume point."
 	if not latest_summary.is_empty():
-		latest_line = SaveService.describe_slot(latest_summary)
+		latest_line = "%s | %s" % [
+			SaveService.describe_resume_brief(latest_summary),
+			SaveService.format_modified_timestamp(int(latest_summary.get("modified_timestamp", 0))),
+		]
 
 	return "\n".join(
 		[

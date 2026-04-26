@@ -159,15 +159,17 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 	var slot_summary := inspect_manual_slot(selected_slot)
 	var latest_summary := latest_loadable_summary()
 	var current_target := _resume_target_for_session(session)
+	var current_context := _runtime_session_resume_brief(session)
 	return {
 		"selected_slot": selected_slot,
 		"slot_summary": slot_summary,
 		"latest_summary": latest_summary,
 		"save_button_label": _in_session_save_label(current_target, selected_slot),
-		"save_button_tooltip": _in_session_save_tooltip(current_target, slot_summary),
+		"save_button_tooltip": _in_session_save_tooltip(current_target, slot_summary, current_context),
 		"latest_context": _latest_context_line(latest_summary, current_target),
+		"current_context": current_context,
 		"menu_button_label": "Return to Menu",
-		"menu_button_tooltip": _return_to_menu_tooltip(current_target, latest_summary),
+		"menu_button_tooltip": _return_to_menu_tooltip(current_target, latest_summary, current_context),
 	}
 
 func resume_target_for_session(session: SessionStateStoreScript.SessionData) -> String:
@@ -208,9 +210,28 @@ func load_action_tooltip(summary: Dictionary) -> String:
 	if not can_load_summary(summary):
 		return String(summary.get("status_text", "This save cannot be resumed."))
 	return "%s\n%s" % [
-		String(summary.get("status_text", "Ready to load.")),
+		describe_resume_brief(summary),
 		describe_slot_details(summary),
 	]
+
+func describe_resume_brief(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "No save selected."
+	if not can_load_summary(summary):
+		return String(summary.get("status_text", "This save cannot be resumed."))
+	var parts := []
+	parts.append(ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))))
+	var scenario_name := String(summary.get("scenario_name", summary.get("scenario_id", "Unknown Scenario")))
+	if scenario_name != "":
+		parts.append(scenario_name)
+	var day := int(summary.get("day", 0))
+	if day > 0:
+		parts.append("Day %d" % day)
+	parts.append(_resume_context_label(summary))
+	var scenario_status := String(summary.get("scenario_status", "in_progress"))
+	if scenario_status != "in_progress":
+		parts.append(_humanize_label(scenario_status))
+	return " | ".join(parts)
 
 func describe_slot(summary: Dictionary) -> String:
 	var slot_label := _slot_label(summary)
@@ -230,6 +251,9 @@ func describe_slot(summary: Dictionary) -> String:
 	var battle_name := String(summary.get("battle_name", ""))
 	if battle_name != "" and String(summary.get("resume_target", "")) == "battle":
 		parts.append(battle_name)
+	var resume_location := String(summary.get("resume_location", ""))
+	if resume_location != "" and String(summary.get("resume_target", "")) != "battle":
+		parts.append(resume_location)
 	var day := int(summary.get("day", 0))
 	if day > 0:
 		parts.append("Day %d" % day)
@@ -285,6 +309,10 @@ func describe_slot_details(summary: Dictionary) -> String:
 	var day := int(summary.get("day", 0))
 	if day > 0:
 		lines.append("Day: %d" % day)
+	lines.append("Resume target: %s" % _resume_context_label(summary))
+	var scenario_summary := String(summary.get("scenario_summary", ""))
+	if scenario_summary != "":
+		lines.append("Recent result: %s" % scenario_summary)
 	lines.append("Integrity: %s" % _validity_label(String(summary.get("validity", "missing"))))
 	lines.append("Load state: %s" % _resume_target_label(summary))
 
@@ -639,6 +667,7 @@ func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) ->
 	summary["recorded_timestamp"] = _recorded_timestamp_from_payload(payload, int(summary.get("modified_timestamp", 0)))
 	summary["scenario_id"] = scenario_id
 	summary["scenario_name"] = String(scenario.get("name", scenario_id))
+	summary["scenario_summary"] = String(normalized.get("scenario_summary", ""))
 	summary["campaign_id"] = String(campaign_metadata.get("campaign_id", ""))
 	summary["campaign_name"] = String(campaign_metadata.get("campaign_name", ""))
 	summary["chapter_label"] = String(campaign_metadata.get("chapter_label", ""))
@@ -651,6 +680,7 @@ func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) ->
 	summary["scenario_status"] = String(normalized.get("scenario_status", "in_progress"))
 	summary["game_state"] = String(normalized.get("game_state", "overworld"))
 	summary["battle_name"] = _battle_name_from_payload(normalized)
+	summary["resume_location"] = _resume_location_from_payload(normalized)
 	summary["saved_from_game_state"] = String(payload.get(SAVE_METADATA_GAME_STATE_KEY, summary.get("game_state", "overworld")))
 	summary["saved_from_scenario_status"] = String(payload.get(SAVE_METADATA_SCENARIO_STATUS_KEY, summary.get("scenario_status", "in_progress")))
 	summary["saved_from_launch_mode"] = String(payload.get(SAVE_METADATA_LAUNCH_MODE_KEY, summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)))
@@ -694,6 +724,55 @@ func _battle_name_from_payload(normalized_payload: Dictionary) -> String:
 		return ""
 	return String(battle_state.get("encounter_name", battle_state.get("encounter_id", "")))
 
+func _resume_location_from_payload(normalized_payload: Dictionary) -> String:
+	if String(normalized_payload.get("scenario_status", "in_progress")) != "in_progress":
+		return _humanize_label(String(normalized_payload.get("scenario_status", "outcome")))
+	var battle_name := _battle_name_from_payload(normalized_payload)
+	if battle_name != "":
+		return battle_name
+	if String(normalized_payload.get("game_state", "overworld")) == "town":
+		var town_name := _active_town_name_from_payload(normalized_payload)
+		if town_name != "":
+			return town_name
+	var hero_pos := _hero_position_from_payload(normalized_payload)
+	return "Overworld %d,%d" % [hero_pos.x, hero_pos.y]
+
+func _active_town_name_from_payload(normalized_payload: Dictionary) -> String:
+	var overworld_state = normalized_payload.get("overworld", {})
+	if not (overworld_state is Dictionary):
+		return ""
+	var flags = normalized_payload.get("flags", {})
+	var active_placement_id := ""
+	if flags is Dictionary:
+		active_placement_id = String(flags.get("active_town_placement_id", ""))
+	var towns = overworld_state.get("towns", [])
+	if not (towns is Array):
+		return ""
+	if active_placement_id != "":
+		for town in towns:
+			if town is Dictionary and String(town.get("placement_id", "")) == active_placement_id:
+				return _town_name_for_summary(town)
+	var hero_pos := _hero_position_from_payload(normalized_payload)
+	for town in towns:
+		if town is Dictionary and int(town.get("x", 0)) == hero_pos.x and int(town.get("y", 0)) == hero_pos.y:
+			return _town_name_for_summary(town)
+	return ""
+
+func _town_name_for_summary(town: Dictionary) -> String:
+	var town_id := String(town.get("town_id", ""))
+	var town_template := ContentService.get_town(town_id)
+	return String(town_template.get("name", town_id))
+
+func _hero_position_from_payload(normalized_payload: Dictionary) -> Vector2i:
+	var overworld_state = normalized_payload.get("overworld", {})
+	if not (overworld_state is Dictionary):
+		return Vector2i.ZERO
+	var position = overworld_state.get("hero_position", {})
+	if not (position is Dictionary):
+		var hero_state = overworld_state.get("hero", {})
+		position = hero_state.get("position", {}) if hero_state is Dictionary else {}
+	return Vector2i(int(position.get("x", 0)), int(position.get("y", 0))) if position is Dictionary else Vector2i.ZERO
+
 func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	return {
 		"slot_type": slot_type,
@@ -705,6 +784,7 @@ func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Di
 		"save_version": 0,
 		"scenario_id": "",
 		"scenario_name": "",
+		"scenario_summary": "",
 		"campaign_id": "",
 		"campaign_name": "",
 		"chapter_label": "",
@@ -712,13 +792,14 @@ func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Di
 		"hero_id": "",
 		"hero_name": "",
 		"battle_name": "",
-			"difficulty": ScenarioSelectRulesScript.default_difficulty_id(),
-			"launch_mode": SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
+		"resume_location": "",
+		"difficulty": ScenarioSelectRulesScript.default_difficulty_id(),
+		"launch_mode": SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
 		"scenario_status": "in_progress",
 		"game_state": "overworld",
 		"saved_from_game_state": "overworld",
 		"saved_from_scenario_status": "in_progress",
-			"saved_from_launch_mode": SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
+		"saved_from_launch_mode": SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
 		"resume_target": "blocked",
 		"validity": "missing",
 		"valid": false,
@@ -815,6 +896,18 @@ func _summary_payload(summary: Dictionary) -> Dictionary:
 func _summary_sort_timestamp(summary: Dictionary) -> int:
 	return max(int(summary.get("modified_timestamp", 0)), int(summary.get("recorded_timestamp", 0)))
 
+func _runtime_session_resume_brief(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.scenario_id == "":
+		return ""
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(_selected_manual_slot), _slot_path(_selected_manual_slot))
+	summary = _populate_summary_from_payload(summary, session.to_dict())
+	summary["payload"] = session.to_dict()
+	summary["valid"] = true
+	summary["loadable"] = true
+	summary["resume_target"] = _resume_target_for_session(session)
+	summary["status_text"] = _status_text_for_summary(summary)
+	return describe_resume_brief(summary)
+
 func _session_from_payload(payload: Dictionary) -> SessionStateStoreScript.SessionData:
 	if payload.is_empty():
 		return null
@@ -842,24 +935,24 @@ func _summary_status_badge(summary: Dictionary) -> String:
 
 func _runtime_save_message(slot_type: String, summary: Dictionary) -> String:
 	if slot_type == SLOT_TYPE_AUTOSAVE:
-		return "Autosaved. %s" % _main_menu_continue_hint(summary)
-	return "Saved %s. %s" % [_slot_label(summary), _main_menu_continue_hint(summary)]
+		return "Autosaved: %s. %s" % [describe_resume_brief(summary), _main_menu_continue_hint(summary)]
+	return "Saved %s: %s. %s" % [_slot_label(summary), describe_resume_brief(summary), _main_menu_continue_hint(summary)]
 
 func _main_menu_continue_hint(summary: Dictionary) -> String:
 	if summary.is_empty() or not can_load_summary(summary):
 		return "Main menu continue is unavailable for this snapshot."
 	match String(summary.get("resume_target", "blocked")):
 		"battle":
-			var battle_name := String(summary.get("battle_name", ""))
-			if battle_name != "":
-				return "Continue Latest will resume %s." % battle_name
+			var battle_context := _resume_context_label(summary)
+			if battle_context != "Battle":
+				return "Continue Latest will resume %s." % battle_context
 			return "Continue Latest will resume the active battle."
 		"town":
-			return "Continue Latest will resume town management."
+			return "Continue Latest will resume %s." % _resume_context_label(summary)
 		"outcome":
-			return "Continue Latest will review this outcome."
+			return "Continue Latest will review %s." % _resume_context_label(summary)
 		"overworld":
-			return "Continue Latest will resume the expedition."
+			return "Continue Latest will resume %s." % _resume_context_label(summary)
 		_:
 			return "This snapshot cannot be resumed safely."
 
@@ -885,9 +978,9 @@ func _in_session_save_label(current_target: String, selected_slot: int) -> Strin
 		_:
 			return "Save Expedition to Manual %d" % selected_slot
 
-func _in_session_save_tooltip(current_target: String, slot_summary: Dictionary) -> String:
+func _in_session_save_tooltip(current_target: String, slot_summary: Dictionary, current_context: String = "") -> String:
 	var lines := [
-		"Write a safe %s snapshot into %s." % [_resume_target_noun(current_target), _slot_label(slot_summary)],
+		"Write %s into %s." % [current_context if current_context != "" else "a safe %s snapshot" % _resume_target_noun(current_target), _slot_label(slot_summary)],
 		_main_menu_continue_hint({"resume_target": current_target, "valid": true, "loadable": true, "payload": {"scenario_id": "active"}}),
 	]
 	var existing_status := String(slot_summary.get("status_text", ""))
@@ -904,13 +997,13 @@ func _latest_context_line(latest_summary: Dictionary, current_target: String = "
 	return "%s: %s | %s | %s" % [
 		prefix,
 		_slot_label(latest_summary),
-		_resume_target_label(latest_summary),
+		describe_resume_brief(latest_summary),
 		format_modified_timestamp(_summary_sort_timestamp(latest_summary)),
 	]
 
-func _return_to_menu_tooltip(current_target: String, latest_summary: Dictionary) -> String:
+func _return_to_menu_tooltip(current_target: String, latest_summary: Dictionary, current_context: String = "") -> String:
 	var lines := [
-		"Return to the main menu after refreshing autosave for this %s state." % _resume_target_noun(current_target),
+		"Return to the main menu after refreshing autosave for %s." % (current_context if current_context != "" else "this %s state" % _resume_target_noun(current_target)),
 	]
 	if latest_summary.is_empty():
 		lines.append("A fresh autosave will become the latest continue target.")
@@ -932,27 +1025,42 @@ func _resume_target_label(summary: Dictionary) -> String:
 		_:
 			return "Blocked"
 
+func _resume_context_label(summary: Dictionary) -> String:
+	var location := String(summary.get("resume_location", "")).strip_edges()
+	match String(summary.get("resume_target", "blocked")):
+		"battle":
+			return "Battle: %s" % location if location != "" else "Battle"
+		"town":
+			return "Town: %s" % location if location != "" else "Town"
+		"outcome":
+			var result := _humanize_label(String(summary.get("scenario_status", "outcome")))
+			return "Outcome: %s" % result if result != "" else "Outcome"
+		"overworld":
+			return location if location != "" else "Overworld"
+		_:
+			return "Blocked"
+
 func _status_text_for_summary(summary: Dictionary) -> String:
 	if not bool(summary.get("valid", false)):
 		return String(summary.get("status_text", "Unavailable"))
 	match String(summary.get("resume_target", "blocked")):
 		"battle":
-			var battle_name := String(summary.get("battle_name", ""))
-			if battle_name != "":
-				return "Ready to resume %s." % battle_name
+			var battle_context := _resume_context_label(summary)
+			if battle_context != "Battle":
+				return "Ready to resume %s." % battle_context
 			return "Ready to resume the active battle."
 		"town":
-			return "Ready to resume town management."
+			return "Ready to resume %s." % _resume_context_label(summary)
 		"outcome":
-			return "Outcome is ready to review."
+			return "%s is ready to review." % _resume_context_label(summary)
 		"overworld":
 			match String(summary.get("validity", "ok")):
 				"degraded":
-					return "Recovered expedition is ready to resume."
+					return "Recovered %s is ready to resume." % _resume_context_label(summary)
 				"legacy":
-					return "Legacy expedition is ready to resume."
+					return "Legacy %s is ready to resume." % _resume_context_label(summary)
 				_:
-					return "Ready to resume expedition."
+					return "Ready to resume %s." % _resume_context_label(summary)
 		_:
 			return "This save cannot be loaded."
 

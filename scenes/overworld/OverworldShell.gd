@@ -559,7 +559,12 @@ func _refresh_save_slot_picker() -> void:
 	var summary_value: Variant = surface.get("slot_summary", SaveService.inspect_manual_slot(selected_slot))
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
-	_save_status_label.tooltip_text = latest_context
+	var current_context := String(surface.get("current_context", ""))
+	var save_tooltip_lines := [latest_context]
+	if current_context != "":
+		save_tooltip_lines.append("Saving now: %s" % current_context)
+	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
+	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_status_label.text = _save_status_text(selected_slot, summary, latest_context)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save"
@@ -2100,6 +2105,9 @@ func validation_snapshot() -> Dictionary:
 		"frontier_watch": _cached_frontier_threats(),
 		"enemy_pressure_states": _validation_enemy_pressure_states(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+		"save_surface": AppRouter.active_save_surface(),
+		"save_status_visible_text": _save_status_label.text,
+		"save_status_tooltip_text": _save_status_label.tooltip_text,
 		"map_viewport": _validation_map_viewport_state(),
 		"town_presentation_profiles": _validation_town_presentation_profiles(),
 		"chrome": _validation_chrome_state(),
