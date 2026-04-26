@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T15:32:43Z",
+  "updatedAt": "2026-04-26T15:42:08Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-spell-target-consequence-clarity-10184",
-  "currentSliceTitle": "Surface practical overworld spell target and consequence clarity in live UI",
+  "currentSliceId": "map-editor-objective-route-dependency-authoring-10184",
+  "currentSliceTitle": "Surface practical scenario objective, route, guard, and reward dependency guidance in map editor tooling",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing overworld spell target/consequence clarity in live UI. Field spell rails now show practical readiness, no-target active-hero casting, mana state, and consequence; spell action tooltips and validation payloads expose target requirement, mana readiness/shortfall, expected field consequence, and why casting matters from existing SpellRules/OverworldRules data.",
+  "currentSliceNotes": "Implemented compact editor-visible dependency links and authoring warnings for scenario objective anchors, route/guard/reward relationships, and object placement validation payloads using existing scenario/object metadata. Map editor inspection now surfaces objective coverage, reverse guard targets, follow-up reward hooks, and enemy focus links without adding report-only dashboards or schema migrations.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1448,6 +1448,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T15:29:29Z",
       "completedAt": "2026-04-26T15:32:43Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "map-editor-objective-route-dependency-authoring-10184",
+      "title": "Surface practical scenario objective, route, guard, and reward dependency guidance in map editor tooling",
+      "status": "completed",
+      "startedAt": "2026-04-26T15:35:38Z",
+      "completedAt": "2026-04-26T15:42:08Z",
       "difficulty": "medium"
     }
   ],

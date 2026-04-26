@@ -140,6 +140,8 @@ func _run() -> void:
 
 	if not _assert_object_taxonomy_surfaces(shell):
 		return
+	if not _assert_object_authoring_dependency_surfaces(shell):
+		return
 	if not _assert_object_property_edits(shell):
 		return
 	if not _assert_object_move_edits(shell):
@@ -2080,6 +2082,63 @@ func _object_detail_for_family(inspection: Dictionary, family: String) -> Dictio
 		if detail is Dictionary and String(detail.get("kind", "")) == family:
 			return detail
 	return {}
+
+func _assert_object_authoring_dependency_surfaces(shell) -> bool:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var scenario_validation: Dictionary = snapshot.get("scenario_authoring_validation", {})
+	if (
+		String(scenario_validation.get("summary", "")).find("Objectives") < 0
+		or int(scenario_validation.get("covered_objective_anchor_count", 0)) <= 0
+		or int(scenario_validation.get("missing_objective_anchor_count", -1)) != 0
+		or int(scenario_validation.get("warning_count", -1)) != 0
+	):
+		_fail("Map editor smoke: scenario-level authoring validation did not expose covered objective anchors without false warnings: %s." % scenario_validation)
+		return false
+
+	var town_result: Dictionary = shell.call("validation_select_tile", 23, 26)
+	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")
+	var town_dependencies: Dictionary = town_detail.get("authoring_dependencies", {})
+	if (
+		town_dependencies.is_empty()
+		or int(town_dependencies.get("objective_links", []).size()) <= 0
+		or int(town_dependencies.get("enemy_focus_links", []).size()) <= 0
+		or String(town_dependencies.get("summary", "")).find("objectives") < 0
+	):
+		_fail("Map editor smoke: town inspection did not expose objective/enemy authoring dependency links: detail=%s result=%s." % [town_detail, town_result])
+		return false
+	var town_text := String(town_result.get("tile_inspection", {}).get("text", ""))
+	if town_text.find("Objective: Defeat Keep the Embercourt survey camp under your banner") < 0 or town_text.find("Enemy focus: Duskfen Marsh Claim | siege target") < 0:
+		_fail("Map editor smoke: town tile text did not include compact objective/enemy dependency lines: %s." % town_text)
+		return false
+
+	var guard_result: Dictionary = shell.call("validation_select_tile", 60, 52)
+	var guard_detail := _object_detail_for_family(guard_result.get("tile_inspection", {}), "encounter")
+	var guard_dependencies: Dictionary = guard_detail.get("authoring_dependencies", {})
+	if (
+		guard_dependencies.is_empty()
+		or int(guard_dependencies.get("objective_links", []).size()) <= 0
+		or int(guard_dependencies.get("guard_links", []).size()) <= 0
+		or int(guard_dependencies.get("reward_links", []).size()) <= 0
+		or not guard_dependencies.get("warnings", []).is_empty()
+	):
+		_fail("Map editor smoke: guard encounter inspection did not expose objective/guard/reward dependencies cleanly: detail=%s result=%s." % [guard_detail, guard_result])
+		return false
+	var guard_text := String(guard_result.get("tile_inspection", {}).get("text", ""))
+	if guard_text.find("Objective: Victory Break the Basalt Gatehouse custodians") < 0 or guard_text.find("Guards: Basalt Gatehouse") < 0 or guard_text.find("Follow-up: spawns Waystone Cache") < 0:
+		_fail("Map editor smoke: guard encounter tile text did not include compact objective/guard/reward authoring lines: %s." % guard_text)
+		return false
+
+	var target_result: Dictionary = shell.call("validation_select_tile", 60, 36)
+	var target_detail := _object_detail_for_family(target_result.get("tile_inspection", {}), "resource")
+	var target_dependencies: Dictionary = target_detail.get("authoring_dependencies", {})
+	if target_dependencies.is_empty() or int(target_dependencies.get("guard_links", []).size()) <= 0:
+		_fail("Map editor smoke: guarded resource target did not expose reverse guard dependency links: detail=%s result=%s." % [target_detail, target_result])
+		return false
+	var target_text := String(target_result.get("tile_inspection", {}).get("text", ""))
+	if target_text.find("Guarded by: Basalt Gatehouse Watch") < 0 or target_text.find("Enemy focus: Orevein Contract Claim | priority target") < 0:
+		_fail("Map editor smoke: guarded resource tile text did not include reverse guard/enemy focus dependency lines: %s." % target_text)
+		return false
+	return true
 
 func _assert_object_property_edits(shell) -> bool:
 	var before_cache := _render_cache_metrics(shell.call("validation_snapshot"))
