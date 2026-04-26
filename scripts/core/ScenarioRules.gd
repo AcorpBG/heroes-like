@@ -310,6 +310,11 @@ static func _last_battle_aftermath_text(session: SessionStateStoreScript.Session
 	var lines := []
 	for key in [
 		"headline",
+		"result_summary",
+		"reward_summary",
+		"artifact_summary",
+		"force_summary",
+		"world_summary",
 		"summary",
 		"resource_summary",
 		"army_summary",

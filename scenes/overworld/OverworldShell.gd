@@ -112,9 +112,12 @@ func _ready() -> void:
 		AppRouter.go_to_scenario_outcome()
 		return
 	_configure_save_slot_picker()
-	_last_message = String(_session.flags.get("return_notice", ""))
-	if _last_message != "":
+	var return_notice := String(_session.flags.get("return_notice", ""))
+	if return_notice != "":
 		_session.flags.erase("return_notice")
+	_last_message = _battle_return_notice(return_notice)
+	if _last_message != "" and _last_message != return_notice:
+		_record_action_feedback("battle", _last_message)
 	var command_briefing_text = OverworldRules.consume_command_briefing(_session)
 	if command_briefing_text != "":
 		_set_command_briefing("First Turn Briefing", command_briefing_text)
@@ -950,6 +953,22 @@ func _feedback_kind_label(kind: String) -> String:
 			return "Turn"
 		_:
 			return "Action"
+
+func _battle_return_notice(fallback: String) -> String:
+	var report = _session.flags.get("last_battle_aftermath", {}) if _session != null else {}
+	if not (report is Dictionary) or report.is_empty():
+		return fallback
+	var compact := String(report.get("return_summary", "")).strip_edges()
+	if compact != "":
+		return compact
+	var lines := []
+	for key in ["result_summary", "reward_summary", "artifact_summary", "force_summary", "world_summary"]:
+		var line := String(report.get(key, "")).strip_edges()
+		if line != "" and line not in lines:
+			lines.append(line)
+	if not lines.is_empty():
+		return " ".join(lines)
+	return fallback
 
 func _feedback_kind_for_context_action(action_id: String) -> String:
 	match action_id:

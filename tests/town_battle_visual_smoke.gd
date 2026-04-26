@@ -203,6 +203,9 @@ func _run_battle_smoke() -> bool:
 
 	shell.queue_free()
 	await get_tree().process_frame
+	if not await _assert_battle_aftermath_transition(session):
+		get_tree().quit(1)
+		return false
 	return true
 
 func _assert_battle_entry_context(shell: Node) -> bool:
@@ -229,6 +232,67 @@ func _assert_battle_entry_context(shell: Node) -> bool:
 		push_error("Battle smoke: live battle entry label is not carrying the validation entry context: visible=%s tooltip=%s snapshot=%s." % [visible_context, battle_context_label.tooltip_text, entry_context])
 		return false
 	return true
+
+func _assert_battle_aftermath_transition(source_session) -> bool:
+	var outcome_session = _clone_session(source_session)
+	if outcome_session.battle.is_empty():
+		push_error("Battle smoke: aftermath transition coverage needs an active battle payload.")
+		return false
+	var stacks = outcome_session.battle.get("stacks", [])
+	for index in range(stacks.size()):
+		var stack = stacks[index]
+		if stack is Dictionary and String(stack.get("side", "")) == "enemy":
+			stack["total_health"] = 0
+			stacks[index] = stack
+	outcome_session.battle["stacks"] = stacks
+	var result: Dictionary = BattleRules.resolve_if_battle_ready(outcome_session)
+	if String(result.get("state", "")) != "victory":
+		push_error("Battle smoke: aftermath transition did not resolve the live battle payload into victory: %s." % result)
+		return false
+	var report: Dictionary = outcome_session.flags.get("last_battle_aftermath", {})
+	if "Rewards:" not in String(report.get("reward_summary", "")) or "xp" not in String(report.get("reward_summary", "")):
+		push_error("Battle smoke: aftermath report did not expose compact rewards and experience: %s." % report)
+		return false
+	if "Forces:" not in String(report.get("force_summary", "")) or "Enemy defeated" not in String(report.get("force_summary", "")):
+		push_error("Battle smoke: aftermath report did not expose surviving and defeated forces: %s." % report)
+		return false
+	if "Overworld:" not in String(report.get("world_summary", "")) or String(report.get("return_summary", "")) == "":
+		push_error("Battle smoke: aftermath report did not expose the post-battle overworld transition: %s." % report)
+		return false
+	if outcome_session.scenario_status != "in_progress":
+		return true
+
+	SessionState.set_active_session(outcome_session)
+	var overworld_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(overworld_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if not overworld_shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: overworld shell does not expose validation snapshot for post-battle transition.")
+		overworld_shell.queue_free()
+		await get_tree().process_frame
+		return false
+	var snapshot: Dictionary = overworld_shell.call("validation_snapshot")
+	var event_tooltip := String(snapshot.get("event_tooltip_text", ""))
+	var feedback: Dictionary = snapshot.get("action_feedback", {})
+	var feedback_text := String(feedback.get("full_text", feedback.get("text", "")))
+	overworld_shell.queue_free()
+	await get_tree().process_frame
+	if not event_tooltip.contains("Rewards:") or not event_tooltip.contains("Forces:") or not event_tooltip.contains("Overworld:"):
+		push_error("Battle smoke: overworld return notice did not expose reward, force, and transition clarity: %s." % snapshot)
+		return false
+	if String(feedback.get("kind", "")) != "battle" or not feedback_text.contains("Forces:"):
+		push_error("Battle smoke: post-battle action feedback did not surface as a battle recap: %s." % snapshot)
+		return false
+	return true
+
+func _clone_session(session):
+	var clone = SessionState.new_session_data()
+	clone.from_dict(session.to_dict())
+	OverworldRules.normalize_overworld_state(clone)
+	if not clone.battle.is_empty():
+		BattleRules.normalize_battle_state(clone)
+	return clone
 
 func _first_player_town(session) -> Dictionary:
 	for town in session.overworld.get("towns", []):

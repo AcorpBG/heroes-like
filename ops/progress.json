@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T11:10:26Z",
+  "updatedAt": "2026-04-26T11:40:37Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-entry-readability-ui-10184",
-  "currentSliceTitle": "Surface compact battle entry context in live battle UI",
+  "currentSliceId": "battle-outcome-reward-transition-clarity-10184",
+  "currentSliceTitle": "Surface compact battle outcome, reward, force, and transition clarity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live battle-entry readability using existing encounter, army, stack, reward, objective, and difficulty data. The battle shell now surfaces matchup, force/risk summary, and stakes text in the visible banner without battle rewrite, AI/mechanics changes, save migration, generated assets, docs, or report-only scenes.",
+  "currentSliceNotes": "Implemented compact player-facing battle aftermath clarity through existing battle result payloads, outcome recaps, and post-battle overworld return notices. Battle aftermath now records concise result, reward, artifact-ready, force-survival, and overworld-transition summaries without battle rewrite, AI/mechanics changes, save migration, generated assets, docs, or report-only scenes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
