@@ -2201,6 +2201,8 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 			return false
 	if not _assert_editor_acceptance_cue(preview_result, "placement_preview", ["Cue:", "Click 5,4", "site_timber_wagon", "then"]):
 		return false
+	if not _assert_editor_placement_action_cue(preview_result, true, ["Placement action:", "Resource", "Timber Wagon", "5,4", "ready", "Play Copy", "working copy"]):
+		return false
 
 	var encounter_preview_result: Dictionary = shell.call("validation_preview_object_placement", 7, 4, "encounter", "encounter_mire_raid")
 	var encounter_preview: Dictionary = encounter_preview_result.get("selected_object_placement_preview", {})
@@ -2225,6 +2227,8 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 		_fail("Map editor smoke: occupied-tile placement preview did not warn before placement: preview=%s result=%s." % [blocked_preview, blocked_preview_result])
 		return false
 	if not _assert_editor_acceptance_cue(blocked_preview_result, "placement_preview", ["Cue:", "Pick another tile", "Tile already has"]):
+		return false
+	if not _assert_editor_placement_action_cue(blocked_preview_result, false, ["Placement action:", "Town", "Riverwatch", "23,26", "blocked", "choose another tile", "Tile already has"]):
 		return false
 	return true
 
@@ -2286,6 +2290,61 @@ func _assert_editor_acceptance_cue(result: Dictionary, expected_source: String, 
 	]:
 		if leak_text.find(forbidden) >= 0:
 			_fail("Map editor smoke: editor acceptance cue leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
+func _assert_editor_placement_action_cue(result: Dictionary, expected_can_place: bool, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("placement_action_cue", {})
+	var text := String(cue.get("text", ""))
+	var tooltip := String(cue.get("tooltip_text", ""))
+	var status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	var place_tooltip := String(result.get("place_object_tooltip", ""))
+	var map_tooltip := String(result.get("map_tooltip", ""))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: placement action cue was not exposed: %s." % result)
+		return false
+	if bool(cue.get("can_place", not expected_can_place)) != expected_can_place:
+		_fail("Map editor smoke: placement action cue can_place mismatch: %s." % cue)
+		return false
+	if String(cue.get("scope", "")) != "working_copy_only":
+		_fail("Map editor smoke: placement action cue did not declare working-copy scope: %s." % cue)
+		return false
+	for key in ["text", "tooltip_text", "status", "why_it_matters", "next_step", "scope"]:
+		if String(cue.get(key, "")) == "":
+			_fail("Map editor smoke: placement action cue missed structured key %s: %s." % [key, cue])
+			return false
+	var combined := "%s\n%s\n%s\n%s\n%s" % [text, tooltip, status, place_tooltip, map_tooltip]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: placement action cue missed '%s': %s." % [expected, combined])
+			return false
+	if status.find("Placement action:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry placement action cue: %s." % status)
+		return false
+	if place_tooltip.find("Placement Action") < 0:
+		_fail("Map editor smoke: Place Object tooltip did not carry placement action cue: %s." % place_tooltip)
+		return false
+	if map_tooltip.find("Placement Action") < 0:
+		_fail("Map editor smoke: map tooltip did not carry placement action cue: %s." % map_tooltip)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: placement action cue leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 

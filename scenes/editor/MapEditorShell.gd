@@ -1155,6 +1155,67 @@ func _editor_acceptance_cue_payload() -> Dictionary:
 		}
 	return {}
 
+func _editor_placement_action_cue_payload() -> Dictionary:
+	if _session == null:
+		return {}
+	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
+	if preview.is_empty():
+		return {}
+	var target_tile: Dictionary = preview.get("target_tile", {})
+	var target_label := "%d,%d" % [
+		int(target_tile.get("x", _selected_tile.x)),
+		int(target_tile.get("y", _selected_tile.y)),
+	]
+	var family := String(preview.get("family", _selected_object_family))
+	var family_label := _object_family_label(family)
+	var content_id := String(preview.get("content_id", _selected_object_content_id))
+	var content_label := _selected_object_content_label()
+	if content_label == "":
+		content_label = content_id
+	var can_place := bool(preview.get("can_place", false))
+	var blocked_reason := String(preview.get("blocked_reason", "")).strip_edges()
+	var consequence := String(preview.get("authoring_consequence", "")).strip_edges()
+	var dependency_warning := String(preview.get("dependency_warning", "")).strip_edges()
+	var status := "ready" if can_place else "blocked"
+	var why := consequence if consequence != "" else "adds or updates the selected object family in the current editor working copy"
+	var next_step := "click %s to place it, then inspect or use Play Copy to smoke-test the working copy" % target_label
+	if not can_place:
+		why = blocked_reason if blocked_reason != "" else "the selected tile cannot accept this object"
+		next_step = "choose another tile or remove the blocker before placing"
+	elif dependency_warning != "":
+		next_step = "click %s to place it, then review dependency warning: %s" % [target_label, dependency_warning]
+	var visible_text := "Placement action: %s %s at %s is %s; next: %s." % [
+		family_label,
+		content_label,
+		target_label,
+		status,
+		next_step,
+	]
+	var tooltip := "Placement Action\n- Target: %s %s at %s\n- Preview: %s\n- Why it matters: %s\n- Next: %s\n- Scope: in-memory working copy only; no authored file or campaign progress is written." % [
+		family_label,
+		content_label,
+		target_label,
+		status,
+		why,
+		next_step,
+	]
+	if dependency_warning != "" and can_place:
+		tooltip += "\n- Watch: %s" % dependency_warning
+	return {
+		"text": visible_text,
+		"tooltip_text": tooltip,
+		"target_tile": target_tile,
+		"family": family,
+		"content_id": content_id,
+		"can_place": can_place,
+		"status": status,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"blocked_reason": blocked_reason,
+		"dependency_warning": dependency_warning,
+		"scope": "working_copy_only",
+	}
+
 func _set_object_authoring_recap(
 	action: String,
 	changed: bool,
@@ -2544,7 +2605,12 @@ func _sync_preview() -> void:
 	var map_size := OverworldRules.derive_map_size(_session)
 	var map_data: Array = _session.overworld.get("map", [])
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
-	_map_view.tooltip_text = String(_editor_active_tool_cue_payload().get("tooltip", ""))
+	var tooltip_sections := [String(_editor_active_tool_cue_payload().get("tooltip", ""))]
+	if _tool == TOOL_PLACE_OBJECT:
+		var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
+		if placement_action != "":
+			tooltip_sections.append(placement_action)
+	_map_view.tooltip_text = "\n".join(tooltip_sections)
 
 func _refresh_labels() -> void:
 	if _session == null:
@@ -2608,6 +2674,10 @@ func _refresh_labels() -> void:
 	var active_tool_text := String(_editor_active_tool_cue_payload().get("text", "")).strip_edges()
 	if active_tool_text != "":
 		status_lines.append(active_tool_text)
+	if _tool == TOOL_PLACE_OBJECT:
+		var placement_action_text := String(_editor_placement_action_cue_payload().get("text", "")).strip_edges()
+		if placement_action_text != "":
+			status_lines.append(placement_action_text)
 	var return_context_text := String(_editor_play_return_context_payload().get("text", "")).strip_edges()
 	if return_context_text != "":
 		status_lines.append(return_context_text)
@@ -2702,7 +2772,12 @@ func _sync_tool_buttons() -> void:
 		if button == null:
 			continue
 		button.button_pressed = tool_id == _tool
-		button.tooltip_text = String(_editor_active_tool_cue_payload(String(tool_id)).get("tooltip", _tool_label(String(tool_id))))
+		var tooltip := String(_editor_active_tool_cue_payload(String(tool_id)).get("tooltip", _tool_label(String(tool_id))))
+		if tool_id == TOOL_PLACE_OBJECT:
+			var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
+			if placement_action != "":
+				tooltip = "%s\n%s" % [tooltip, placement_action]
+		button.tooltip_text = tooltip
 
 func _on_scenario_selected(index: int) -> void:
 	if index < 0 or index >= _scenario_picker.get_item_count():
@@ -2796,6 +2871,9 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_hovered_tile = tile
 	if _tool == TOOL_PLACE_OBJECT:
 		_sync_object_taxonomy_summary()
+		_sync_tool_buttons()
+		_sync_preview()
+		_refresh_labels()
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _session == null or not _tile_in_bounds(tile):
@@ -5203,6 +5281,10 @@ func validation_snapshot() -> Dictionary:
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
 		"map_tooltip": _map_view.tooltip_text if _map_view != null else "",
+		"placement_action_cue": _editor_placement_action_cue_payload(),
+		"placement_action_cue_text": String(_editor_placement_action_cue_payload().get("text", "")),
+		"placement_action_cue_tooltip": String(_editor_placement_action_cue_payload().get("tooltip_text", "")),
+		"place_object_tooltip": _place_object_tool_button.tooltip_text if _place_object_tool_button != null else "",
 		"editor_acceptance_cue": _editor_acceptance_cue_payload(),
 		"last_object_authoring_recap": _last_object_authoring_recap,
 		"tool": _tool,

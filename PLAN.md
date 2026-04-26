@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact outcome save readiness cues using existing SaveService save-check, play-check, return-handoff, and save-recap payloads.
+Current target: completed compact map-editor placement action cues using existing placement preview and availability payloads.
 
 Done means:
-- The outcome save panel exposes a compact visible `Save check:` line so a player can see what saving will preserve before retrying, continuing, or returning to menu.
-- The outcome save status and save button tooltips include `Save check:`, `Play check:`, and `Return handoff:` details using public-facing language from existing save-surface payloads.
-- Focused menu/outcome smoke coverage proves the visible outcome save readiness cue, structured validation payload, skirmish/campaign outcome coverage, and no internal score/debug leaks.
-- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, settings persistence semantic changes, or internal/debug score fields are introduced.
+- The map editor exposes a compact visible `Placement action:` line when the Place Object flow previews a ready or blocked tile.
+- The Place Object button tooltip and map tooltip carry matching placement-action guidance, including target tile, ready/blocked state, why it matters, next step, and in-memory working-copy scope.
+- Focused map-editor smoke coverage proves ready and blocked placement previews, structured validation payloads, visible status/tooltips, and no internal score/debug leaks.
+- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
