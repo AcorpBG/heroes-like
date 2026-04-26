@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T14:06:13Z",
+  "updatedAt": "2026-04-26T14:17:30Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "spellbook-magic-inspection-clarity-10184",
-  "currentSliceTitle": "Surface practical spellbook and magic inspection clarity in live UI",
+  "currentSliceId": "faction-town-identity-inspection-clarity-10184",
+  "currentSliceTitle": "Surface practical faction and town identity inspection clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live spellbook and magic inspection clarity across overworld, town, launch preview, and battle spell surfaces. Existing spellbook, hero mana, spell context, target, effect, cost, readiness, and battle timing data now surface as player-facing category, effect, and best-use text without changing spell mechanics, content, balance, saves, schemas, or AI.",
+  "currentSliceNotes": "Implemented compact live faction and town identity readability across town overview, overworld selected-town context, menu launch preview, and map editor town inspection. Existing faction names, town roles, economy identity, pressure flavor, magic library flavor, and strategic cues now surface without changing content, balance, schemas, saves, or AI.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1376,6 +1376,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T13:56:26Z",
       "completedAt": "2026-04-26T14:06:13Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "faction-town-identity-inspection-clarity-10184",
+      "title": "Surface practical faction and town identity inspection clarity in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T14:08:09Z",
+      "completedAt": "2026-04-26T14:17:30Z",
       "difficulty": "medium"
     }
   ],

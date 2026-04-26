@@ -636,9 +636,14 @@ func _object_content_taxonomy_payload(family: String, content_id: String) -> Dic
 
 func _town_taxonomy_payload(town: Dictionary) -> Dictionary:
 	var faction_id := String(town.get("faction_id", ""))
+	var faction := ContentService.get_faction(faction_id)
 	var tags := ["settlement", "production", "ownership"]
 	if faction_id != "":
 		tags.append("faction_presence")
+	var town_state := {
+		"town_id": String(town.get("id", "")),
+		"built_buildings": town.get("starting_building_ids", []),
+	}
 	return {
 		"primary_class": "town",
 		"secondary_tags": tags,
@@ -648,7 +653,9 @@ func _town_taxonomy_payload(town: Dictionary) -> Dictionary:
 		"content_link_id": String(town.get("id", "")),
 		"object_family": "town",
 		"summary": "Town | Cadence: persistent control | Passability: town blocking",
-		"detail": "Faction %s" % faction_id if faction_id != "" else "",
+		"detail": "Faction %s" % String(faction.get("name", faction_id)) if faction_id != "" else "",
+		"town_role": String(town.get("strategic_role", "frontier")),
+		"identity_summary": OverworldRules.describe_town_identity_surface(town_state),
 	}
 
 func _artifact_taxonomy_payload(artifact: Dictionary) -> Dictionary:
@@ -789,6 +796,7 @@ func _taxonomy_summary_text(payload: Dictionary) -> String:
 	var role_line := _taxonomy_role_line(payload)
 	if role_line != "":
 		lines.append(role_line)
+	lines.append_array(_identity_summary_lines_for_editor(payload, 3))
 	return "\n".join(lines)
 
 func _taxonomy_inline_text(payload: Dictionary) -> String:
@@ -845,6 +853,20 @@ func _taxonomy_role_line(payload: Dictionary) -> String:
 		parts.append("Site family %s" % _humanize_editor_id(site_family))
 	return " | ".join(parts)
 
+func _identity_summary_lines_for_editor(payload: Dictionary, limit: int) -> Array:
+	var identity_summary := String(payload.get("identity_summary", "")).strip_edges()
+	if identity_summary == "":
+		return []
+	var lines := []
+	for raw_line in identity_summary.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		lines.append(line)
+		if lines.size() >= limit:
+			break
+	return lines
+
 func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) -> String:
 	if payload.is_empty():
 		return ""
@@ -869,6 +891,7 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 	var link_line := _taxonomy_link_line(payload)
 	if link_line != "":
 		lines.append(link_line)
+	lines.append_array(_identity_summary_lines_for_editor(payload, 2))
 	return "\n".join(lines)
 
 func _placement_guidance_payload(payload: Dictionary, tile: Vector2i) -> Dictionary:
@@ -3192,6 +3215,8 @@ func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
 	var role_line := _taxonomy_role_line(taxonomy)
 	if role_line != "":
 		lines.append("  Role: %s" % role_line)
+	for identity_line in _identity_summary_lines_for_editor(taxonomy, 3):
+		lines.append("  %s" % identity_line)
 	var guidance := _placement_guidance_payload(taxonomy, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))))
 	if not guidance.is_empty():
 		lines.append("  Place: %s | Density %s" % [

@@ -446,6 +446,15 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 		["Transit/support object", "Faction Outpost", "Unclaimed", "Daily", "support response"]
 	):
 		return false
+	var town_context: Dictionary = shell.call("validation_select_tile", 0, 2)
+	if not _assert_text_contains_all(
+		"River Pass selected town faction identity UI",
+		[String(town_context.get("context_summary", "")), String(town_context.get("selected_tile_rail_text", "")), String(town_context.get("map_tooltip", ""))],
+		["Riverwatch Hold", "Embercourt League", "Frontier Stronghold", "Economy:", "Stable civic investment", "Magic:", "Strategic cue:"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("selected town faction identity UI", String(town_context.get("context_summary", ""))):
+		return false
 	var timber_hover: Dictionary = shell.call("validation_hover_tile", 1, 0)
 	if not _assert_text_contains_all(
 		"River Pass timber hover tooltip",

@@ -183,6 +183,9 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"Player: %s" % String(selection.get("player_summary", "")),
 		"Enemy: %s" % String(selection.get("enemy_summary", "")),
 	])
+	var faction_setup: String = OverworldRulesScript.describe_faction_identity_surface(String(scenario.get("player_faction_id", "")))
+	if faction_setup != "":
+		setup_lines.append(faction_setup)
 	if normalized_difficulty != recommended_difficulty:
 		setup_lines.append("Recommended difficulty: %s" % difficulty_label(recommended_difficulty))
 
@@ -244,6 +247,9 @@ static func describe_session_commander_preview(session: SessionStateStoreScript.
 	var identity_summary: String = HeroCommandRulesScript.hero_identity_summary(hero)
 	if identity_summary != "":
 		lines.append(identity_summary)
+	var faction_identity: String = OverworldRulesScript.describe_faction_identity_surface(String(scenario.get("player_faction_id", "")))
+	if faction_identity != "":
+		lines.append(faction_identity)
 	var command_line := "Battle command A%d D%d P%d K%d" % [
 		int(command.get("attack", 0)),
 		int(command.get("defense", 0)),
