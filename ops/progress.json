@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:40:00Z",
+  "updatedAt": "2026-04-26T23:55:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-strategy-config-audit-planning-10184",
-  "currentSliceTitle": "Plan a narrow Embercourt and Mireclaw strategy config audit before tuning",
+  "currentSliceId": "strategic-ai-strategy-config-audit-report-10184",
+  "currentSliceTitle": "Produce a narrow Embercourt and Mireclaw strategy config audit report before tuning",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI faction personality evidence is complete in docs/strategic-ai-faction-personality-evidence-report.md plus focused AI_FACTION_PERSONALITY_EVIDENCE_REPORT coverage. The next current slice should plan a narrow strategy-config and scenario-override audit before coefficient tuning, using the supported/weak/contradicted/missing claims from the evidence report. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, or River Pass rebalance.",
+  "currentSliceNotes": "Strategic AI strategy config audit planning is complete in docs/strategic-ai-strategy-config-audit-plan.md. The next current slice should produce the report-only Embercourt/Mireclaw strategy-config and scenario-override audit before coefficient tuning, classifying current weights and overrides as supported, questionable, contradicted, or missing-evidence. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -475,6 +475,16 @@
     {
       "id": "strategic-ai-strategy-config-audit-planning-10184",
       "title": "Plan a narrow Embercourt and Mireclaw strategy config audit before tuning",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:40:00Z",
+      "completedAt": "2026-04-26T23:55:00Z",
+      "decision": "strategy-config-audit-report-next",
+      "auditPlan": "docs/strategic-ai-strategy-config-audit-plan.md",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-strategy-config-audit-report-10184",
+      "title": "Produce a narrow Embercourt and Mireclaw strategy config audit report before tuning",
       "status": "pending",
       "difficulty": "high"
     },
@@ -946,7 +956,7 @@
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
     "Use docs/strategic-ai-event-surfacing-report-gate-review.md as the current AI surfacing gate result: compact public assignment, pressure, seizure, contest, threat, and dispatch reason output passes; score tables stay report/debug-only; manual live-client signal-yard enemy-turn review is deferred until broader AI expansion affects live turn readability.",
-    "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, and docs/strategic-ai-faction-personality-evidence-report.md as the current AI planning/evidence contracts: the next slice is strategy-config audit planning before coefficient tuning, commander-role state planning, durable event logs, full AI heroes, or broad rewrites.",
+    "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, and docs/strategic-ai-strategy-config-audit-plan.md as the current AI planning/evidence contracts: the next slice is a report-only strategy-config audit before coefficient tuning, commander-role state planning, durable event logs, full AI heroes, or broad rewrites.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
