@@ -86,21 +86,21 @@ Immediate execution order:
 49. Strategic AI faction personality pressure planning is completed in `docs/strategic-ai-faction-personality-pressure-plan.md`. The plan compares Embercourt and Mireclaw as the first personality anchors, identifies usable evidence surfaces across target preferences, town build reasons, recruitment destination reasons, garrison/raid/commander priorities, and compact public reason phrases, and selects report-only faction personality evidence as the next slice before coefficient tuning, commander-role state planning, or another foundation track.
 50. Strategic AI faction personality evidence reporting is completed in `docs/strategic-ai-faction-personality-evidence-report.md` plus focused Godot coverage in `tests/ai_faction_personality_evidence_report.gd`. The report compares Embercourt and Mireclaw under a shared target/event/town-governor vocabulary, records supported, weak, contradicted, and missing claims, and finds that `prismhearth-watch` is a Mireclaw enemy fixture while `glassroad-sundering` is the current direct Embercourt enemy fixture.
 51. Strategic AI strategy config audit planning is completed in `docs/strategic-ai-strategy-config-audit-plan.md`. The plan defines a narrow Embercourt/Mireclaw audit before tuning across base faction strategy weights, scenario overrides, public reason phrase vocabulary, resource/site family priorities, build category/value weights, reinforcement/garrison/raid/commander rebuild bias, validation/report commands, and manual gate triggers.
-52. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+52. Strategic AI strategy config audit reporting is completed in `docs/strategic-ai-strategy-config-audit-report.md`. The report classifies current Embercourt and Mireclaw base weights, scenario overrides, public reasons, site priorities, build weights, and reinforcement/raid bias as supported, questionable, contradicted, or missing-evidence; it finds most current weights coherent enough to avoid immediate tuning and selects capture/counter-capture proof planning as the next slice.
+53. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-strategy-config-audit-report-10184` as the next concrete slice.
-- Produce the actual report-only Embercourt/Mireclaw strategy-config and scenario-override audit before any coefficient tuning.
-- Use `docs/strategic-ai-faction-personality-evidence-report.md` as the evidence baseline: Embercourt is supported as town-front/civic infrastructure pressure, Mireclaw is supported as raid/resource-denial pressure, and current weak/contradicted claims need config audit before tuning.
-- Explicitly account for the scenario fixture reality: `prismhearth-watch` is a Mireclaw enemy scenario, `glassroad-sundering` is the current direct Embercourt enemy scenario, and `ninefold-confluence` has Mireclaw but not Embercourt as an enemy faction.
-- Use `docs/strategic-ai-strategy-config-audit-plan.md` as the audit contract. The report should classify existing weights and overrides as supported, questionable, contradicted, or missing-evidence and identify any bounded tuning candidates without tuning them.
+- Run `strategic-ai-capture-countercapture-defense-proof-planning-10184` as the next concrete slice.
+- Use `docs/strategic-ai-strategy-config-audit-report.md` as the evidence baseline: current Embercourt and Mireclaw weights are mostly supported, while the main missing proof is actual site-control behavior under normal strategic pressure.
+- Plan one narrow proof path for Mireclaw retaking or denying a logistics site, or Embercourt defending/stabilizing a charter front. Likely candidates are `river_signal_post` / `river_free_company` for Mireclaw and `glassroad_watch_relay` / `glassroad_starlens` for Embercourt.
+- Keep this next slice planning-only unless it explicitly scopes a later implementation; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, or change pathing/renderer/editor/save behavior.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows poor ordering.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
-- Defer coefficient tuning until the config audit report identifies specific, bounded changes and validation expectations.
-- Defer commander-role/roster state planning until after the faction personality evidence report unless AcOrP explicitly asks to prioritize explicit AI hero state first.
+- Defer bounded coefficient tuning until capture/counter-capture proof planning or later proof output shows a specific ordering defect.
+- Defer commander-role/roster state planning until site-control proof planning has clarified whether the next blocker is target/capture behavior or explicit hero-role state.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next gate slice.
@@ -110,7 +110,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is strategic AI strategy-config audit planning from the completed faction personality evidence report, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
+- The next active choice is strategic AI capture/counter-capture defense proof planning from the completed strategy-config audit report, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -451,6 +451,28 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit gameplay behavior, production content JSON, scenario content, AI coefficients, resource schemas, pathing/body-tile/approach behavior, renderer/editor behavior, saves, generated assets, neutral encounter metadata, River Pass balance, durable event logs, full AI hero task state, broad strategic AI rewrite, behavior tuning, or public UI surfaces.
+
+## Completed Audit Slice: Strategic AI Strategy Config Audit Report
+Status: completed on 2026-04-26 as a report-only Embercourt/Mireclaw strategy-config audit before tuning.
+
+Purpose:
+- Classify current Embercourt and Mireclaw base strategy weights, scenario overrides, public reason vocabulary, site priorities, build weights, and reinforcement/raid bias before any coefficient tuning.
+- Preserve fixture reality: `prismhearth-watch` is a Mireclaw enemy fixture, `glassroad-sundering` is the current direct Embercourt enemy fixture, and `ninefold-confluence` has Mireclaw but not Embercourt as an enemy.
+- Identify bounded future tuning candidates only as candidates.
+
+Delivered:
+- Added `docs/strategic-ai-strategy-config-audit-report.md`.
+- Classified most base weights as supported: Embercourt civic/economy/support/readiness, town-front, garrison, ranged/high-tier bias; Mireclaw dwelling/growth/pressure, resource/encounter/hero, neutral-dwelling, raid, melee/low-tier, site-denial, and hero-hunt bias.
+- Classified River Pass, Prismhearth, and Glassroad scenario overrides as supported, with Ninefold Mireclaw broad-map sharpness as questionable but acceptable context.
+- Recorded contradicted claims around Prismhearth/Glassroad/Ninefold fixture misuse and overclaiming Mireclaw resource denial over legitimate town fronts.
+- Identified bounded future candidates: Embercourt public build reason wording, possible later Embercourt infrastructure weighting review, Ninefold Mireclaw override review, and richer site metadata vocabulary.
+- Selected `strategic-ai-capture-countercapture-defense-proof-planning-10184` as the next concrete slice instead of immediate coefficient tuning or commander-role state planning.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, `python3 tests/validate_repo.py --neutral-encounter-report`, and the four focused Godot AI report commands.
+
+Limits:
+- This is report-only and behavior-neutral. It does not edit gameplay behavior, production content JSON, scenario content, AI coefficients, resource schemas, pathing/body-tile/approach behavior, renderer/editor behavior, saves, generated assets, neutral encounter metadata, River Pass balance, durable event logs, full AI hero task state, broad strategic AI rewrite, behavior tuning, or public UI surfaces.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -3357,13 +3379,14 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: strategy-config audit planning after report-only faction personality evidence.
+Current target: capture/counter-capture defense proof planning after the report-only strategy-config audit.
 
 Done means:
-- The next slice plans a narrow Embercourt/Mireclaw strategy config and scenario-override audit before any coefficient tuning.
-- The completed evidence report's supported, weak, contradicted, and missing claims are used as audit inputs.
+- The next slice plans one narrow site-control proof before any coefficient tuning.
+- The completed strategy-config audit report's supported, questionable, contradicted, and missing-evidence claims are used as planning inputs.
 - The `prismhearth-watch` / `glassroad-sundering` fixture reality is explicitly accounted for.
+- The proof planning chooses whether the first site-control path should emphasize Mireclaw retaking/denying `river_signal_post` or `river_free_company`, Embercourt defending/stabilizing `glassroad_watch_relay` or `glassroad_starlens`, or another bounded site-control case.
 - Detailed target/build/recruit score tables stay in report/debug output only.
 - Public or derived event output stays compact and does not expose score-table fields.
-- No production JSON migration, durable AI event log, save migration, full AI hero task state, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, or River Pass rebalance is pulled into the slice.
+- No coefficient tuning, production JSON migration, durable AI event log, save migration, full AI hero task state, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, or River Pass rebalance is pulled into the planning slice.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
