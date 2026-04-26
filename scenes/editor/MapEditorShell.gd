@@ -36,6 +36,7 @@ const OBJECT_FAMILY_RESOURCE := "resource"
 const OBJECT_FAMILY_ARTIFACT := "artifact"
 const OBJECT_FAMILY_ENCOUNTER := "encounter"
 const DEFAULT_OBJECT_FAMILY := OBJECT_FAMILY_RESOURCE
+const EDITOR_DENSITY_REGION_SIZE := 16
 const PROPERTY_TOWN_OWNER := "owner"
 const PROPERTY_ENCOUNTER_DIFFICULTY := "difficulty"
 const PROPERTY_COLLECTED := "collected"
@@ -342,6 +343,12 @@ func _selected_property_object_payload() -> Dictionary:
 func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 	if detail.is_empty():
 		return {}
+	var taxonomy = detail.get("taxonomy", {})
+	var guidance = detail.get("placement_guidance", {})
+	if not (guidance is Dictionary):
+		guidance = {}
+	if guidance.is_empty() and taxonomy is Dictionary:
+		guidance = _placement_guidance_payload(taxonomy, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))))
 	return {
 		"property_key": String(detail.get("property_key", "")),
 		"kind": String(detail.get("kind", "")),
@@ -356,6 +363,7 @@ func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 		"collected_day": max(0, int(detail.get("collected_day", 0))),
 		"taxonomy": detail.get("taxonomy", {}),
 		"taxonomy_summary": String(detail.get("taxonomy_summary", "")),
+		"placement_guidance": guidance,
 		"x": int(detail.get("x", 0)),
 		"y": int(detail.get("y", 0)),
 	}
@@ -837,6 +845,217 @@ func _taxonomy_role_line(payload: Dictionary) -> String:
 		parts.append("Site family %s" % _humanize_editor_id(site_family))
 	return " | ".join(parts)
 
+func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) -> String:
+	if payload.is_empty():
+		return ""
+	var lines := []
+	var class_label := _humanize_editor_id(String(payload.get("primary_class", "")))
+	var cadence_label := _humanize_editor_id(String(payload.get("cadence", "")))
+	var passability_label := _humanize_editor_id(String(payload.get("passability_class", "")))
+	lines.append("Class %s | Cadence %s | Passability %s" % [class_label, cadence_label, passability_label])
+	if not guidance.is_empty():
+		lines.append("Place %s | Density %s" % [
+			String(guidance.get("placement_role", "")),
+			String(guidance.get("density_target", "")),
+		])
+		lines.append("Flags %s | Local %d in 16x16" % [
+			String(guidance.get("role_flags_text", "")),
+			int(guidance.get("local_density_count", 0)),
+		])
+	else:
+		var tag_summary := _tag_summary_for_editor(payload.get("secondary_tags", []), 3)
+		if tag_summary != "":
+			lines.append("Tags %s" % tag_summary)
+	var link_line := _taxonomy_link_line(payload)
+	if link_line != "":
+		lines.append(link_line)
+	return "\n".join(lines)
+
+func _placement_guidance_payload(payload: Dictionary, tile: Vector2i) -> Dictionary:
+	if payload.is_empty():
+		return {}
+	var flags := _placement_role_flags(payload)
+	var density := _density_guidance_for_payload(payload, flags)
+	var density_group := String(density.get("group", ""))
+	var local_count := 0
+	var region := {}
+	if _session != null and _tile_in_bounds(tile):
+		local_count = _local_density_count(tile, density_group)
+		region = _density_region_bounds(tile)
+	var link_line := _taxonomy_link_line(payload)
+	return {
+		"placement_role": _placement_role_label(payload, flags),
+		"role_flags": flags,
+		"role_flags_text": _role_flags_text(flags),
+		"density_group": density_group,
+		"density_band": String(density.get("band", "")),
+		"density_target": String(density.get("target", "")),
+		"density_note": String(density.get("note", "")),
+		"local_density_count": local_count,
+		"local_density_region": region,
+		"content_link": link_line,
+	}
+
+func _placement_role_flags(payload: Dictionary) -> Dictionary:
+	var primary_class := String(payload.get("primary_class", "")).strip_edges()
+	var object_family := String(payload.get("object_family", "")).strip_edges()
+	var site_family := String(payload.get("site_family", "")).strip_edges()
+	var tags := _string_array_for_editor(payload.get("secondary_tags", []))
+	var economy := primary_class in ["persistent_economy_site", "mine", "resource_front"]
+	economy = economy or site_family == "mine" or "resource_front" in tags or "income" in tags or "build_resource" in tags
+	var reward := primary_class in ["pickup", "artifact_reward", "guarded_reward_site"]
+	reward = reward or "small_reward" in tags or "guarded_reward" in tags or "hero_progression" in tags
+	var transit := primary_class in ["transit_route_object", "transit_object"]
+	transit = transit or site_family == "transit_object" or "road_control" in tags or "conditional_route" in tags or "water_route_control" in tags
+	var neutral := primary_class in ["neutral_dwelling", "neutral_encounter"]
+	neutral = neutral or object_family in ["neutral_dwelling", "neutral_encounter"] or site_family == "neutral_dwelling" or "neutral_recruit_source" in tags
+	var faction_landmark := primary_class == "faction_landmark"
+	faction_landmark = faction_landmark or site_family == "faction_outpost" or "faction_pressure" in tags or "faction_presence" in tags
+	return {
+		"economy": economy,
+		"reward": reward,
+		"transit": transit,
+		"neutral": neutral,
+		"faction_landmark": faction_landmark,
+	}
+
+func _role_flags_text(flags: Dictionary) -> String:
+	var labels := []
+	if bool(flags.get("economy", false)):
+		labels.append("economy")
+	if bool(flags.get("reward", false)):
+		labels.append("reward")
+	if bool(flags.get("transit", false)):
+		labels.append("transit")
+	if bool(flags.get("neutral", false)):
+		labels.append("neutral")
+	if bool(flags.get("faction_landmark", false)):
+		labels.append("faction landmark")
+	return ", ".join(labels) if not labels.is_empty() else "general"
+
+func _placement_role_label(payload: Dictionary, flags: Dictionary) -> String:
+	var primary_class := String(payload.get("primary_class", "")).strip_edges()
+	if primary_class == "town":
+		return "Town anchor"
+	if primary_class == "neutral_dwelling":
+		return "Neutral recruit source"
+	if primary_class == "neutral_encounter":
+		return "Guard or route threat"
+	if bool(flags.get("transit", false)) and bool(flags.get("economy", false)):
+		return "Route/economy control"
+	if bool(flags.get("transit", false)):
+		return "Route control"
+	if bool(flags.get("faction_landmark", false)):
+		return "Faction landmark"
+	if bool(flags.get("economy", false)) and bool(flags.get("reward", false)):
+		return "Resource reward pacing"
+	if bool(flags.get("economy", false)):
+		return "Economy pressure"
+	if bool(flags.get("reward", false)):
+		return "Reward pacing"
+	return _humanize_editor_id(primary_class)
+
+func _density_guidance_for_payload(payload: Dictionary, flags: Dictionary) -> Dictionary:
+	var primary_class := String(payload.get("primary_class", "")).strip_edges()
+	var site_family := String(payload.get("site_family", "")).strip_edges()
+	if primary_class == "town":
+		return {"group": "town_anchor", "band": "town_influence", "target": "leave town breathing room", "note": "Keep nearby lanes and approach tiles readable."}
+	if primary_class == "neutral_encounter":
+		return {"group": "guard_encounter", "band": "standard_adventure", "target": "2-4 guards/encounters per 16x16", "note": "Use to guard lanes, rewards, or territory without hiding the target."}
+	if primary_class == "guarded_reward_site":
+		return {"group": "guarded_reward", "band": "ruin_reward_pocket", "target": "2-4 guarded sites per 16x16", "note": "Pair with visible danger and clear reward category."}
+	if primary_class == "neutral_dwelling" or site_family == "neutral_dwelling":
+		return {"group": "interactable", "band": "standard_adventure", "target": "3-5 interactables per 16x16", "note": "Leave gate/approach space and show recruit-source identity."}
+	if bool(flags.get("transit", false)) or site_family == "transit_object":
+		return {"group": "economy_transit", "band": "contested_economy", "target": "4-7 economy/transit sites per 16x16", "note": "Place on junctions, chokepoints, or route alternatives."}
+	if bool(flags.get("faction_landmark", false)):
+		return {"group": "faction_landmark", "band": "town_influence", "target": "1-3 landmarks per 16x16", "note": "Use near faction fronts or territory identity pockets."}
+	if bool(flags.get("economy", false)) and not bool(flags.get("reward", false)):
+		return {"group": "economy_transit", "band": "contested_economy", "target": "4-7 economy/transit sites per 16x16", "note": "Make resource fronts contestable and route-visible."}
+	if bool(flags.get("reward", false)):
+		return {"group": "pickup_reward", "band": "standard_adventure", "target": "4-7 pickups/rewards per 16x16", "note": "Use on side routes and reward pockets; keep main lanes legible."}
+	return {"group": "interactable", "band": "standard_adventure", "target": "3-5 interactables per 16x16", "note": "Mix with scenery and negative space instead of uniform scatter."}
+
+func _local_density_count(tile: Vector2i, density_group: String) -> int:
+	if density_group == "" or _session == null:
+		return 0
+	var bounds := _density_region_bounds(tile)
+	var count := 0
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var placements = _session.overworld.get(_placement_array_key(family), [])
+		if not (placements is Array):
+			continue
+		for placement in placements:
+			if not (placement is Dictionary):
+				continue
+			var object_tile := Vector2i(int(placement.get("x", -999)), int(placement.get("y", -999)))
+			if object_tile.x < int(bounds.get("min_x", 0)) or object_tile.x > int(bounds.get("max_x", 0)):
+				continue
+			if object_tile.y < int(bounds.get("min_y", 0)) or object_tile.y > int(bounds.get("max_y", 0)):
+				continue
+			if _density_group_for_placement(family, placement) == density_group:
+				count += 1
+	return count
+
+func _density_region_bounds(tile: Vector2i) -> Dictionary:
+	var map_size := OverworldRules.derive_map_size(_session) if _session != null else Vector2i.ZERO
+	var min_x := int(floor(float(tile.x) / float(EDITOR_DENSITY_REGION_SIZE))) * EDITOR_DENSITY_REGION_SIZE
+	var min_y := int(floor(float(tile.y) / float(EDITOR_DENSITY_REGION_SIZE))) * EDITOR_DENSITY_REGION_SIZE
+	return {
+		"min_x": min_x,
+		"min_y": min_y,
+		"max_x": min(map_size.x - 1, min_x + EDITOR_DENSITY_REGION_SIZE - 1),
+		"max_y": min(map_size.y - 1, min_y + EDITOR_DENSITY_REGION_SIZE - 1),
+		"size": EDITOR_DENSITY_REGION_SIZE,
+	}
+
+func _density_group_for_placement(family: String, placement: Dictionary) -> String:
+	match family:
+		OBJECT_FAMILY_TOWN:
+			return "town_anchor"
+		OBJECT_FAMILY_ARTIFACT:
+			return "pickup_reward"
+		OBJECT_FAMILY_RESOURCE:
+			var site := ContentService.get_resource_site(String(placement.get("site_id", "")))
+			var site_id := String(site.get("id", placement.get("site_id", "")))
+			var map_object := ContentService.get_map_object_for_resource_site(site_id)
+			var primary_class := String(map_object.get("primary_class", "")).strip_edges()
+			if primary_class == "":
+				primary_class = _fallback_resource_primary_class(site)
+			var secondary_tags := _string_array_for_editor(map_object.get("secondary_tags", []))
+			if secondary_tags.is_empty():
+				secondary_tags = _string_array_for_editor(map_object.get("map_roles", []))
+			if secondary_tags.is_empty():
+				secondary_tags = _fallback_resource_tags(site)
+			var payload := {
+				"primary_class": primary_class,
+				"secondary_tags": secondary_tags,
+				"object_family": String(map_object.get("family", site.get("family", ""))),
+				"site_family": String(site.get("family", "")),
+			}
+			return String(_density_guidance_for_payload(payload, _placement_role_flags(payload)).get("group", ""))
+		OBJECT_FAMILY_ENCOUNTER:
+			var map_object := ContentService.get_map_object(String(placement.get("object_id", "")))
+			var neutral_metadata = placement.get("neutral_encounter", {})
+			if not (neutral_metadata is Dictionary) or neutral_metadata.is_empty():
+				neutral_metadata = map_object.get("neutral_encounter", {})
+			if not (neutral_metadata is Dictionary):
+				neutral_metadata = {}
+			var primary_class := String(map_object.get("primary_class", placement.get("primary_class", ""))).strip_edges()
+			if primary_class == "":
+				primary_class = String(neutral_metadata.get("primary_class", "neutral_encounter")).strip_edges()
+			var tags := _string_array_for_editor(map_object.get("secondary_tags", []))
+			if tags.is_empty():
+				tags = _string_array_for_editor(neutral_metadata.get("secondary_tags", []))
+			var payload := {
+				"primary_class": primary_class,
+				"secondary_tags": tags,
+				"object_family": String(map_object.get("family", "neutral_encounter")),
+			}
+			return String(_density_guidance_for_payload(payload, _placement_role_flags(payload)).get("group", ""))
+		_:
+			return ""
+
 func _fallback_resource_primary_class(site: Dictionary) -> String:
 	if bool(site.get("persistent_control", false)):
 		match String(site.get("family", "")):
@@ -1121,9 +1340,10 @@ func _sync_object_taxonomy_summary() -> void:
 	if _object_taxonomy_summary_label == null:
 		return
 	var payload := _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id)
-	var text := _taxonomy_summary_text(payload)
+	var guidance := _placement_guidance_payload(payload, _selected_tile)
+	var text := _object_palette_guidance_text(payload, guidance)
 	if text == "":
-		text = "Choose an object to see taxonomy, cadence, passability, and links."
+		text = "Choose an object to see taxonomy, placement role, density, and links."
 	_set_compact_label(_object_taxonomy_summary_label, text, 4)
 	_object_content_picker.tooltip_text = text
 
@@ -2063,6 +2283,13 @@ func _place_object(tile: Vector2i) -> bool:
 		tile.y,
 		placement_id,
 	]
+	var guidance := _placement_guidance_payload(_object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id), tile)
+	if not guidance.is_empty():
+		_last_message = "%s Guidance: %s; local %d in 16x16." % [
+			_last_message,
+			String(guidance.get("density_target", "")),
+			int(guidance.get("local_density_count", 0)),
+		]
 	return true
 
 func _remove_object(tile: Vector2i) -> bool:
@@ -2965,6 +3192,16 @@ func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
 	var role_line := _taxonomy_role_line(taxonomy)
 	if role_line != "":
 		lines.append("  Role: %s" % role_line)
+	var guidance := _placement_guidance_payload(taxonomy, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))))
+	if not guidance.is_empty():
+		lines.append("  Place: %s | Density %s" % [
+			String(guidance.get("placement_role", "")),
+			String(guidance.get("density_target", "")),
+		])
+		lines.append("  Flags: %s | Local %d in 16x16" % [
+			String(guidance.get("role_flags_text", "")),
+			int(guidance.get("local_density_count", 0)),
+		])
 
 func _object_detail_for_placement(family: String, placement: Dictionary) -> Dictionary:
 	match family:
@@ -3057,17 +3294,25 @@ func _object_details_at(tile: Vector2i, include_hero: bool = true) -> Array:
 			)
 	for town_value in _session.overworld.get("towns", []):
 		if town_value is Dictionary and _placement_at_tile(town_value, tile):
-			details.append(_object_detail_for_placement(OBJECT_FAMILY_TOWN, town_value))
+			details.append(_object_detail_with_guidance(_object_detail_for_placement(OBJECT_FAMILY_TOWN, town_value), tile))
 	for node_value in _session.overworld.get("resource_nodes", []):
 		if node_value is Dictionary and _placement_at_tile(node_value, tile):
-			details.append(_object_detail_for_placement(OBJECT_FAMILY_RESOURCE, node_value))
+			details.append(_object_detail_with_guidance(_object_detail_for_placement(OBJECT_FAMILY_RESOURCE, node_value), tile))
 	for artifact_value in _session.overworld.get("artifact_nodes", []):
 		if artifact_value is Dictionary and _placement_at_tile(artifact_value, tile):
-			details.append(_object_detail_for_placement(OBJECT_FAMILY_ARTIFACT, artifact_value))
+			details.append(_object_detail_with_guidance(_object_detail_for_placement(OBJECT_FAMILY_ARTIFACT, artifact_value), tile))
 	for encounter_value in _session.overworld.get("encounters", []):
 		if encounter_value is Dictionary and _placement_at_tile(encounter_value, tile):
-			details.append(_object_detail_for_placement(OBJECT_FAMILY_ENCOUNTER, encounter_value))
+			details.append(_object_detail_with_guidance(_object_detail_for_placement(OBJECT_FAMILY_ENCOUNTER, encounter_value), tile))
 	return details
+
+func _object_detail_with_guidance(detail: Dictionary, tile: Vector2i) -> Dictionary:
+	if detail.is_empty():
+		return detail
+	var taxonomy = detail.get("taxonomy", {})
+	if taxonomy is Dictionary:
+		detail["placement_guidance"] = _placement_guidance_payload(taxonomy, tile)
+	return detail
 
 func _placement_at_tile(placement: Dictionary, tile: Vector2i) -> bool:
 	return int(placement.get("x", -999)) == tile.x and int(placement.get("y", -999)) == tile.y
@@ -3357,6 +3602,7 @@ func validation_snapshot() -> Dictionary:
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
 		"selected_object_taxonomy": _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id),
+		"selected_object_guidance": _placement_guidance_payload(_object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id), _selected_tile),
 		"selected_property_object_key": _selected_property_object_key,
 		"selected_property_object": _selected_property_object_payload(),
 		"pending_move_object_key": _pending_move_object_key,

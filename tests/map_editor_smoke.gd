@@ -1885,6 +1885,10 @@ func _exercise_object_placement(shell, family: String, content_id: String, tile:
 	if int(place_result.get("placement_count", 0)) != before_count + 1:
 		_fail("Map editor smoke: placing %s did not add exactly one placement: %s." % [family, place_result])
 		return false
+	var placement_guidance: Dictionary = place_result.get("selected_object_guidance", {})
+	if placement_guidance.is_empty() or String(placement_guidance.get("density_target", "")) == "" or String(placement_guidance.get("placement_role", "")) == "":
+		_fail("Map editor smoke: placing %s did not keep palette placement guidance visible in editor state: %s." % [family, place_result])
+		return false
 
 	var placed_detail := _object_detail_for_family(place_result.get("tile_inspection", {}), family)
 	if placed_detail.is_empty():
@@ -1896,6 +1900,10 @@ func _exercise_object_placement(shell, family: String, content_id: String, tile:
 	var placement_id := String(placed_detail.get("placement_id", ""))
 	if not placement_id.begins_with("editor_%s_" % family):
 		_fail("Map editor smoke: placed %s did not receive an editor placement id: %s." % [family, placed_detail])
+		return false
+	var detail_guidance: Dictionary = placed_detail.get("placement_guidance", {})
+	if detail_guidance.is_empty() or String(detail_guidance.get("content_link", "")).find(content_id) < 0:
+		_fail("Map editor smoke: placed %s detail did not expose content-linked placement guidance: %s." % [family, placed_detail])
 		return false
 
 	var presentation: Dictionary = shell.call("validation_tile_presentation", tile.x, tile.y)
@@ -1926,6 +1934,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		return false
 	var palette_result: Dictionary = shell.call("validation_select_object_content", "site_timber_wagon")
 	var palette_taxonomy: Dictionary = palette_result.get("selected_object_taxonomy", {})
+	var palette_guidance: Dictionary = palette_result.get("selected_object_guidance", {})
 	if (
 		not bool(palette_result.get("ok", false))
 		or String(palette_taxonomy.get("primary_class", "")) != "pickup"
@@ -1936,10 +1945,21 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	):
 		_fail("Map editor smoke: object palette did not expose resource-site taxonomy metadata: %s." % palette_result)
 		return false
+	if (
+		String(palette_guidance.get("placement_role", "")) != "Resource reward pacing"
+		or String(palette_guidance.get("density_group", "")) != "pickup_reward"
+		or String(palette_guidance.get("density_target", "")) != "4-7 pickups/rewards per 16x16"
+		or not bool(palette_guidance.get("role_flags", {}).get("economy", false))
+		or not bool(palette_guidance.get("role_flags", {}).get("reward", false))
+		or String(palette_guidance.get("content_link", "")).find("site_timber_wagon") < 0
+	):
+		_fail("Map editor smoke: object palette did not expose practical placement/density guidance for resource rewards: %s." % palette_result)
+		return false
 
 	var resource_result: Dictionary = shell.call("validation_select_tile", 2, 6)
 	var resource_detail := _object_detail_for_family(resource_result.get("tile_inspection", {}), "resource")
 	var resource_taxonomy: Dictionary = resource_detail.get("taxonomy", {})
+	var resource_guidance: Dictionary = resource_detail.get("placement_guidance", {})
 	if (
 		String(resource_taxonomy.get("primary_class", "")) != "pickup"
 		or String(resource_taxonomy.get("cadence", "")) != "one_time"
@@ -1949,14 +1969,22 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	):
 		_fail("Map editor smoke: resource selection did not expose linked object taxonomy detail: detail=%s result=%s." % [resource_detail, resource_result])
 		return false
+	if (
+		String(resource_guidance.get("placement_role", "")) != "Resource reward pacing"
+		or String(resource_guidance.get("density_band", "")) != "standard_adventure"
+		or int(resource_guidance.get("local_density_count", 0)) <= 0
+	):
+		_fail("Map editor smoke: resource selection did not expose local placement-density guidance: detail=%s result=%s." % [resource_detail, resource_result])
+		return false
 	var resource_text := String(resource_result.get("tile_inspection", {}).get("text", ""))
-	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_timber_wagon | Site site_timber_wagon") < 0:
+	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_timber_wagon | Site site_timber_wagon") < 0 or resource_text.find("Place: Resource reward pacing | Density 4-7 pickups/rewards per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
 		return false
 
 	var encounter_result: Dictionary = shell.call("validation_select_tile", 60, 52)
 	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
 	var encounter_taxonomy: Dictionary = encounter_detail.get("taxonomy", {})
+	var encounter_guidance: Dictionary = encounter_detail.get("placement_guidance", {})
 	if (
 		String(encounter_taxonomy.get("primary_class", "")) != "neutral_encounter"
 		or String(encounter_taxonomy.get("cadence", "")) != "one_time"
@@ -1967,8 +1995,15 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	):
 		_fail("Map editor smoke: object-backed neutral encounter selection did not expose role/risk/guard taxonomy detail: detail=%s result=%s." % [encounter_detail, encounter_result])
 		return false
+	if (
+		String(encounter_guidance.get("placement_role", "")) != "Guard or route threat"
+		or String(encounter_guidance.get("density_target", "")) != "2-4 guards/encounters per 16x16"
+		or not bool(encounter_guidance.get("role_flags", {}).get("neutral", false))
+	):
+		_fail("Map editor smoke: neutral encounter selection did not expose guard/encounter placement guidance: detail=%s result=%s." % [encounter_detail, encounter_result])
+		return false
 	var encounter_text := String(encounter_result.get("tile_inspection", {}).get("text", ""))
-	if encounter_text.find("Taxonomy: class Neutral Encounter") < 0 or encounter_text.find("Risk Heavy") < 0 or encounter_text.find("Guard Guards Resource Node -> dwelling_basalt_gatehouse") < 0:
+	if encounter_text.find("Taxonomy: class Neutral Encounter") < 0 or encounter_text.find("Risk Heavy") < 0 or encounter_text.find("Guard Guards Resource Node -> dwelling_basalt_gatehouse") < 0 or encounter_text.find("Place: Guard or route threat | Density 2-4 guards/encounters per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact neutral encounter role/risk/guard lines: %s." % encounter_text)
 		return false
 	return true
