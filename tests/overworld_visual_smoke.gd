@@ -33,6 +33,8 @@ func _run() -> void:
 		return
 	if not _assert_object_economy_ui_contract(shell):
 		return
+	if not await _assert_enemy_activity_feed_contract(shell):
+		return
 	if not await _assert_diagonal_movement_contract(shell, map_node):
 		return
 
@@ -328,6 +330,39 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	)
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
+	return true
+
+func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_end_turn") or not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing enemy-activity validation hooks.")
+		get_tree().quit(1)
+		return false
+	var result: Dictionary = shell.call("validation_end_turn")
+	await get_tree().process_frame
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var summary := String(result.get("enemy_activity_summary", ""))
+	var visible_text := String(result.get("event_visible_text", snapshot.get("event_visible_text", "")))
+	var tooltip_text := String(result.get("event_tooltip_text", snapshot.get("event_tooltip_text", "")))
+	if summary == "":
+		push_error("Overworld smoke: enemy turn did not produce a recent enemy activity summary. result=%s" % result)
+		get_tree().quit(1)
+		return false
+	if visible_text.find("Enemy:") < 0 or tooltip_text.find("Recent enemy activity:") < 0 or tooltip_text.find(summary) < 0:
+		push_error("Overworld smoke: enemy activity did not surface through the compact overworld event rail. summary=%s visible=%s tooltip=%s" % [summary, visible_text, tooltip_text])
+		get_tree().quit(1)
+		return false
+	if not _assert_no_ai_score_leak("enemy activity summary", summary):
+		return false
+	if not _assert_no_ai_score_leak("enemy activity rail", "%s\n%s" % [visible_text, tooltip_text]):
+		return false
+	return true
+
+func _assert_no_ai_score_leak(label: String, text: String) -> bool:
+	for token in ["base_value", "persistent_income_value", "final_priority", "assignment_penalty", "route_pressure_value", "denial_value", "debug_reason"]:
+		if text.find(token) >= 0:
+			push_error("%s leaked AI score/debug token %s: %s" % [label, token, text])
+			get_tree().quit(1)
+			return false
 	return true
 
 func _assert_text_contains_all(label: String, texts: Array, needles: Array) -> bool:

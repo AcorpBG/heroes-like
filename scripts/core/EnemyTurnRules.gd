@@ -84,6 +84,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 
 	var states = session.overworld.get("enemy_states", [])
 	var messages = []
+	var events = []
 	var should_apply_weekly_growth: bool = OverworldRulesScript.is_weekly_growth_day(session.day)
 
 	for config in configs:
@@ -101,11 +102,19 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 			for message in turn_messages:
 				if String(message) != "":
 					messages.append(String(message))
+		_append_event_records(events, turn_result.get("events", []))
 		states[state_index] = state
 
 	session.overworld["enemy_states"] = states
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
-	return {"ok": true, "message": " ".join(messages)}
+	return {"ok": true, "message": " ".join(messages), "events": events}
+
+static func _append_event_records(output: Array, events_value: Variant) -> void:
+	if not (events_value is Array):
+		return
+	for event_value in events_value:
+		if event_value is Dictionary and not event_value.is_empty():
+			output.append(event_value)
 
 static func describe_threats(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_enemy_states(session)
@@ -649,11 +658,13 @@ static func _run_empire_cycle(
 	var town_entries = _owned_town_entries(session, faction_id)
 	var front_state := _faction_front_state(session, faction_id)
 	var messages = []
+	var events = []
 	state["captured_artifact_ids"] = _normalize_string_array(state.get("captured_artifact_ids", []))
 	if town_entries.is_empty():
 		if active_raid_count(session, faction_id) > 0:
 			var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
 			state = raid_result.get("state", state)
+			_append_event_records(events, raid_result.get("events", []))
 			var raid_message = String(raid_result.get("message", ""))
 			if raid_message != "":
 				messages.append(raid_message)
@@ -663,20 +674,20 @@ static func _run_empire_cycle(
 				if defense_message != "":
 					messages.append(defense_message)
 				state["posture"] = "raiding"
-				return {"state": state, "messages": messages}
+				return {"state": state, "messages": messages, "events": events}
 			var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
 			if bool(intercept_result.get("battle_started", false)):
 				var intercept_message = String(intercept_result.get("message", ""))
 				if intercept_message != "":
 					messages.append(intercept_message)
 				state["posture"] = "raiding"
-				return {"state": state, "messages": messages}
+				return {"state": state, "messages": messages, "events": events}
 			state["posture"] = "raiding"
-			return {"state": state, "messages": messages}
+			return {"state": state, "messages": messages, "events": events}
 		if int(state.get("pressure", 0)) > 0 and active_raid_count(session, faction_id) == 0:
 			state["pressure"] = max(0, int(state.get("pressure", 0)) - 1)
 		state["posture"] = "collapsed"
-		return {"state": state, "messages": messages}
+		return {"state": state, "messages": messages, "events": events}
 
 	var treasury = _normalize_resource_pool(state.get("treasury", {}))
 	var income_summary = _apply_empire_income(session, town_entries, treasury, state)
@@ -689,14 +700,18 @@ static func _run_empire_cycle(
 			messages.append(muster_message)
 		session.overworld["towns"] = towns
 
-	var build_messages = _build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)
+	var build_result := _build_in_enemy_towns(session, town_entries, towns, treasury, faction_id, config)
+	var build_messages: Array = build_result.get("messages", [])
 	if not build_messages.is_empty():
 		messages.append_array(build_messages)
+	_append_event_records(events, build_result.get("events", []))
 	session.overworld["towns"] = towns
 
-	var reinforcement_message = _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
+	var reinforcement_result := _reinforce_enemy_forces(session, config, towns, treasury, faction_id)
+	var reinforcement_message = String(reinforcement_result.get("message", ""))
 	if reinforcement_message != "":
 		messages.append(reinforcement_message)
+	_append_event_records(events, reinforcement_result.get("events", []))
 	session.overworld["towns"] = towns
 	var refreshed_state := _find_state(session.overworld.get("enemy_states", []), faction_id)
 	if not refreshed_state.is_empty():
@@ -718,9 +733,18 @@ static func _run_empire_cycle(
 	)
 	var pressure_gain = DifficultyRulesScript.adjust_enemy_pressure_gain(session, base_pressure_gain)
 	state["pressure"] = max(0, int(state.get("pressure", 0)) + pressure_gain)
+	if pressure_gain > 0:
+		var pressure_event := EnemyAdventureRulesScript.ai_pressure_summary_event(
+			session,
+			config,
+			EnemyAdventureRulesScript.choose_target(session, config, _enemy_activity_origin(town_entries, config)),
+			state
+		)
+		_append_event_records(events, [pressure_event])
 
 	var raid_result = EnemyAdventureRulesScript.advance_raids(session, config, faction_id, state)
 	state = raid_result.get("state", state)
+	_append_event_records(events, raid_result.get("events", []))
 	treasury = _normalize_resource_pool(state.get("treasury", treasury))
 	var raid_message = String(raid_result.get("message", ""))
 	if raid_message != "":
@@ -733,7 +757,7 @@ static func _run_empire_cycle(
 			messages.append(defense_message)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
-		return {"state": state, "messages": messages}
+		return {"state": state, "messages": messages, "events": events}
 
 	var intercept_result = _queue_hero_intercept_battle(session, config, faction_id)
 	if bool(intercept_result.get("battle_started", false)):
@@ -742,13 +766,14 @@ static func _run_empire_cycle(
 			messages.append(intercept_message)
 		state["treasury"] = treasury
 		state["posture"] = "raiding"
-		return {"state": state, "messages": messages}
+		return {"state": state, "messages": messages, "events": events}
 
 	while _can_launch_raid(session, config, state, faction_id):
 		var spawn_result = _spawn_raid(session, config, state)
 		if spawn_result.is_empty():
 			break
 		messages.append(String(spawn_result.get("message", "")))
+		_append_event_records(events, spawn_result.get("events", []))
 
 	var siege_message = _advance_siege(session, config, state, faction_id)
 	if siege_message != "":
@@ -756,7 +781,21 @@ static func _run_empire_cycle(
 
 	state["treasury"] = treasury
 	state["posture"] = _determine_posture(session, config, state, faction_id, towns)
-	return {"state": state, "messages": messages}
+	return {"state": state, "messages": messages, "events": events}
+
+static func _enemy_activity_origin(town_entries: Array, config: Dictionary) -> Dictionary:
+	for entry_value in town_entries:
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var town: Dictionary = entry.get("town", {})
+		if town.is_empty():
+			continue
+		return {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
+	var spawn_points = config.get("spawn_points", [])
+	if spawn_points is Array and not spawn_points.is_empty() and spawn_points[0] is Dictionary:
+		return {"x": int(spawn_points[0].get("x", 0)), "y": int(spawn_points[0].get("y", 0))}
+	return {"x": 0, "y": 0}
 
 static func _apply_empire_income(
 	session: SessionStateStoreScript.SessionData,
@@ -806,8 +845,9 @@ static func _build_in_enemy_towns(
 	treasury: Dictionary,
 	faction_id: String,
 	config: Dictionary
-) -> Array:
+) -> Dictionary:
 	var messages = []
+	var events = []
 	for entry in town_entries:
 		var town = towns[int(entry.get("index", -1))]
 		var build_choice = _best_build_candidate(session, town, treasury, config, faction_id)
@@ -835,7 +875,10 @@ static func _build_in_enemy_towns(
 				String(building.get("name", building_id)),
 			]
 		)
-	return messages
+		var build_event := ai_town_build_event(session, config, town, build_choice)
+		if not build_event.is_empty():
+			events.append(build_event)
+	return {"messages": messages, "events": events}
 
 static func _reinforce_enemy_forces(
 	session: SessionStateStoreScript.SessionData,
@@ -843,10 +886,11 @@ static func _reinforce_enemy_forces(
 	towns: Array,
 	treasury: Dictionary,
 	faction_id: String
-) -> String:
+) -> Dictionary:
 	var garrisoned_towns = []
 	var raid_reinforcements = 0
 	var rebuild_batches = 0
+	var events = []
 	for index in range(towns.size()):
 		var town = towns[index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "enemy":
@@ -856,13 +900,14 @@ static func _reinforce_enemy_forces(
 		var recruit_result = _recruit_town_forces(session, config, town, treasury, faction_id)
 		town = recruit_result.get("town", town)
 		towns[index] = town
+		_append_event_records(events, recruit_result.get("events", []))
 		if bool(recruit_result.get("garrisoned", false)):
 			garrisoned_towns.append(_town_name(town))
 		raid_reinforcements += int(recruit_result.get("raid_batches", 0))
 		rebuild_batches += int(recruit_result.get("rebuild_batches", 0))
 	if garrisoned_towns.is_empty() and raid_reinforcements <= 0:
 		if rebuild_batches <= 0:
-			return ""
+			return {"message": "", "events": events}
 
 	var parts = []
 	if not garrisoned_towns.is_empty():
@@ -871,7 +916,10 @@ static func _reinforce_enemy_forces(
 		parts.append("feeds %d raid host%s" % [raid_reinforcements, "" if raid_reinforcements == 1 else "s"])
 	if rebuild_batches > 0:
 		parts.append("rebuilds %d command host%s" % [rebuild_batches, "" if rebuild_batches == 1 else "s"])
-	return "%s %s." % [String(config.get("label", faction_id)), " and ".join(parts)]
+	return {
+		"message": "%s %s." % [String(config.get("label", faction_id)), " and ".join(parts)],
+		"events": events,
+	}
 
 static func _recruit_town_forces(
 	session: SessionStateStoreScript.SessionData,
@@ -883,6 +931,7 @@ static func _recruit_town_forces(
 	var garrisoned = false
 	var raid_batches = 0
 	var rebuild_batches = 0
+	var events = []
 	var recruit_ids = []
 	for unit_id_value in town.get("available_recruits", {}).keys():
 		recruit_ids.append(String(unit_id_value))
@@ -903,6 +952,7 @@ static func _recruit_town_forces(
 		if recruit_count <= 0:
 			continue
 		var destination = _choose_recruit_destination(session, config, town, faction_id)
+		var destination_breakdown = _choose_recruit_destination_breakdown(session, config, town, faction_id)
 		var applied_count = recruit_count
 		if String(destination.get("type", "")) == "raid":
 			applied_count = _apply_reinforcement_to_raid(
@@ -930,11 +980,24 @@ static func _recruit_town_forces(
 			continue
 		town["available_recruits"] = _consume_recruits(town.get("available_recruits", {}), unit_id, applied_count)
 		_spend_from_pool(treasury, _scale_resource_pool(cost, applied_count))
+		var selected_recruitment := {
+			"unit_id": unit_id,
+			"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+			"recruit_count": applied_count,
+			"destination": destination_breakdown,
+		}
+		var town_event := ai_town_recruit_event(session, config, town, selected_recruitment)
+		if not town_event.is_empty():
+			events.append(town_event)
+		var destination_event := ai_town_recruit_destination_event(session, config, town, selected_recruitment)
+		if not destination_event.is_empty():
+			events.append(destination_event)
 	return {
 		"town": town,
 		"garrisoned": garrisoned,
 		"raid_batches": raid_batches,
 		"rebuild_batches": rebuild_batches,
+		"events": events,
 	}
 
 static func _choose_recruit_destination(
@@ -1391,6 +1454,7 @@ static func _spawn_raid(session: SessionStateStoreScript.SessionData, config: Di
 			int(spawn_point.get("y", 0)),
 			target_suffix,
 		],
+		"events": [EnemyAdventureRulesScript.ai_target_assignment_event(session, config, raid, {})],
 	}
 
 static func _queue_town_defense_battle(
@@ -1560,7 +1624,17 @@ static func _best_build_candidate(
 		var score = _score_build_candidate(session, town, building, cost, config, faction_id)
 		if score > best_score:
 			best_score = score
-			best = {"building_id": String(building_id), "building": building, "cost": cost}
+			var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
+			best = {
+				"building_id": String(building_id),
+				"building": building,
+				"building_label": String(building.get("name", building_id)),
+				"category": String(building.get("category", "support")),
+				"cost": cost,
+				"reason_codes": breakdown.get("reason_codes", []),
+				"public_reason": String(breakdown.get("public_reason", "")),
+				"debug_reason": String(breakdown.get("debug_reason", "")),
+			}
 	return best
 
 static func _score_build_candidate(

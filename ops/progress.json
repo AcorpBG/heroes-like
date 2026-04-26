@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:25:00Z",
+  "updatedAt": "2026-04-26T18:24:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-economy-ui-integration-10184",
-  "currentSliceTitle": "Surface overworld object taxonomy and economy-site metadata in live gameplay UI",
+  "currentSliceId": "enemy-turn-activity-feed-ui-10184",
+  "currentSliceTitle": "Surface recent enemy actions in the live overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented real player-visible overworld UI integration for existing map object taxonomy and resource-site metadata. River Pass selection, rail text, hover tooltip, context, and validation surfaces now show object class, interaction cadence, persistent-control/pickup/support role, ownership, income, recruit, response, and safe neutral-encounter metadata without changing economy balance, pathing, save format, AI behavior, or broad schemas.",
+  "currentSliceNotes": "Implemented player-facing enemy-turn activity summaries in the existing overworld dispatch rail from compact public AI event data. End Turn now returns compact enemy activity events and a public summary; the live overworld event rail shows recent enemy actions without AI tuning, save migration, durable event logs, or report-only scenes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1254,6 +1254,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T17:05:00Z",
       "completedAt": "2026-04-26T17:25:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "enemy-turn-activity-feed-ui-10184",
+      "title": "Surface recent enemy actions in the live overworld UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T18:10:00Z",
+      "completedAt": "2026-04-26T18:24:00Z",
       "difficulty": "medium"
     }
   ],

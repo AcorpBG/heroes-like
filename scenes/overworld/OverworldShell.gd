@@ -86,6 +86,7 @@ var _map_size := Vector2i(1, 1)
 var _selected_tile := Vector2i(-1, -1)
 var _hovered_tile := Vector2i(-1, -1)
 var _last_message := ""
+var _last_enemy_activity_text := ""
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
@@ -209,6 +210,7 @@ func _on_end_turn_pressed() -> void:
 	var result = OverworldRules.end_turn(_session)
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = String(result.get("enemy_activity_summary", ""))
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -221,6 +223,7 @@ func _on_end_turn_pressed() -> void:
 func _on_save_pressed() -> void:
 	var result = AppRouter.save_active_session_to_selected_manual_slot()
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -270,6 +273,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -282,6 +286,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -297,6 +302,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -312,6 +318,7 @@ func _on_hero_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -327,6 +334,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		return
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -366,6 +374,7 @@ func _visit_selected_town() -> bool:
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	var result: Dictionary = OverworldRules.set_active_town_visit(_session, String(town.get("placement_id", "")))
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if not bool(result.get("ok", false)):
 		_refresh()
 		return false
@@ -383,6 +392,7 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 	else:
 		_session.flags["last_action"] = "moved" if bool(result.get("ok", false)) else "blocked_move"
 	_last_message = String(result.get("message", ""))
+	_last_enemy_activity_text = ""
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		if not preserve_selection:
@@ -421,6 +431,7 @@ func _start_encounter() -> void:
 
 	_session.battle = payload
 	_session.flags["last_action"] = "entered_battle"
+	_last_enemy_activity_text = ""
 	AppRouter.go_to_battle()
 
 func _render_state() -> void:
@@ -473,6 +484,8 @@ func _refresh() -> void:
 	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
+	if _last_enemy_activity_text != "":
+		dispatch_text += "\n- Recent enemy activity: %s" % _last_enemy_activity_text
 	_set_rail_text(_event_label, dispatch_text, _rail_log_text(), 1)
 	_end_turn_button.tooltip_text = String(command_risk_surface.get("forecast", "")) if not command_risk_surface.is_empty() else "End the day and resolve hostile pressure."
 	_briefing_title_label.text = _briefing_title_text
@@ -945,6 +958,8 @@ func _describe_focus_tile() -> String:
 	return _describe_selected_tile()
 
 func _rail_log_text() -> String:
+	if _last_enemy_activity_text != "":
+		return "Enemy: %s" % _last_enemy_activity_text
 	var message := _last_message.strip_edges()
 	if message == "":
 		message = "Awaiting order"
@@ -1614,6 +1629,9 @@ func validation_snapshot() -> Dictionary:
 		},
 		"context_summary": _cached_focus_tile_text(),
 		"context_visible_text": _context_label.text,
+		"event_visible_text": _event_label.text,
+		"event_tooltip_text": _event_label.tooltip_text,
+		"enemy_activity_summary": _last_enemy_activity_text,
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),
@@ -1820,6 +1838,9 @@ func validation_end_turn() -> Dictionary:
 		"enemy_pressure_after": _validation_enemy_pressure_states(),
 		"last_action": String(_session.flags.get("last_action", "")),
 		"message": _last_message,
+		"enemy_activity_summary": _last_enemy_activity_text,
+		"event_visible_text": _event_label.text,
+		"event_tooltip_text": _event_label.tooltip_text,
 	}
 
 func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
