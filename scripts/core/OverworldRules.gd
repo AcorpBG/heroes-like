@@ -319,18 +319,17 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	)
 	var specialty_income = HeroProgressionRulesScript.daily_income_bonus(hero_state)
 	var site_income = DifficultyRulesScript.scale_income_resources(session, controlled_resource_site_income(session, "player"))
+	var total_income := _add_resource_sets(
+		_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
+		site_income
+	)
 	var site_muster_messages := []
 	if should_apply_weekly_growth:
 		site_muster_messages = apply_controlled_resource_site_musters(session, "player")
-	_add_resources(
-		session,
-		_add_resource_sets(
-			_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
-			site_income
-		)
-	)
+	_add_resources(session, total_income)
 	_refresh_all_player_heroes_for_new_day(session)
 	hero_state = session.overworld.get("hero", {})
+	var movement_after = session.overworld.get("movement", {})
 
 	var messages := ["Day %d begins." % session.day]
 	var town_income_summary := _describe_resource_delta(town_income)
@@ -364,6 +363,18 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	var result := _finalize_action_result(session, true, " ".join(messages))
 	result["enemy_activity_summary"] = enemy_activity_summary
 	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 6)
+	result["resource_income_summary"] = _describe_resource_delta(total_income)
+	result["weekly_muster_summary"] = _end_turn_muster_summary(weekly_growth_messages, site_muster_messages)
+	result["movement_reset_summary"] = "Move %d/%d ready" % [
+		int(movement_after.get("current", 0)),
+		int(movement_after.get("max", 0)),
+	]
+	result["town_economy_summary"] = _end_turn_town_economy_summary(
+		occupation_messages,
+		recovery_messages,
+		delivery_messages
+	)
+	result["turn_resolution_summary"] = _end_turn_resolution_summary(session, result)
 	return result
 
 static func collect_active_resource(session: SessionStateStoreScript.SessionData) -> Dictionary:
@@ -1715,6 +1726,38 @@ static func describe_commitment_board(session: SessionStateStoreScript.SessionDa
 static func describe_command_risk_forecast(session: SessionStateStoreScript.SessionData) -> String:
 	return String(describe_command_risk_surfaces(session).get("forecast", ""))
 
+static func describe_end_turn_forecast(session: SessionStateStoreScript.SessionData) -> String:
+	normalize_overworld_state(session)
+	var next_day := session.day + 1
+	var lines := [
+		"Next day: Day %d | %s | %s" % [
+			next_day,
+			_end_turn_income_forecast_line(session),
+			_end_turn_muster_forecast_line(session, next_day),
+		],
+		"- Movement: %s" % _end_turn_movement_forecast_line(session),
+	]
+	var risk_line := _end_turn_risk_forecast_line(session)
+	if risk_line != "":
+		lines.append("- Pressure: %s" % risk_line)
+	var management_line := describe_management_watch(session)
+	if management_line != "":
+		lines.append("- Town lines: %s" % management_line)
+	return "\n".join(lines)
+
+static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.SessionData) -> String:
+	normalize_overworld_state(session)
+	var next_day := session.day + 1
+	var parts := [
+		"Day %d" % next_day,
+		_end_turn_income_forecast_line(session),
+		_end_turn_movement_forecast_line(session),
+	]
+	var risk_line := _end_turn_risk_forecast_line(session)
+	if risk_line != "":
+		parts.append(risk_line)
+	return " | ".join(parts)
+
 static func describe_command_risk_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
 	var forecast := _command_risk_forecast(session)
@@ -1986,6 +2029,115 @@ static func controlled_resource_site_income(session: SessionStateStoreScript.Ses
 			continue
 		income = _add_resource_sets(income, site.get("control_income", {}))
 	return income
+
+static func _player_daily_income_projection(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var town_income := {"gold": 0, "wood": 0, "ore": 0}
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+			continue
+		town_income = _add_resource_sets(
+			town_income,
+			DifficultyRulesScript.scale_income_resources(session, _calculate_town_income(town, session))
+		)
+	var hero_state = session.overworld.get("hero", {})
+	var artifact_income = DifficultyRulesScript.scale_income_resources(
+		session,
+		ArtifactRulesScript.aggregate_bonuses(hero_state).get("daily_income", {})
+	)
+	var specialty_income = HeroProgressionRulesScript.daily_income_bonus(hero_state)
+	var site_income = DifficultyRulesScript.scale_income_resources(session, controlled_resource_site_income(session, "player"))
+	return _add_resource_sets(
+		_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
+		site_income
+	)
+
+static func _end_turn_income_forecast_line(session: SessionStateStoreScript.SessionData) -> String:
+	var income_summary := _describe_resource_delta(_player_daily_income_projection(session))
+	if income_summary == "":
+		return "income steady"
+	return "income %s" % income_summary
+
+static func _end_turn_muster_forecast_line(session: SessionStateStoreScript.SessionData, next_day: int) -> String:
+	if is_weekly_growth_day(next_day):
+		var previews := []
+		for town in session.overworld.get("towns", []):
+			if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+				continue
+			var growth_summary := _describe_recruit_delta(_town_weekly_growth(town, session))
+			if growth_summary != "":
+				previews.append("%s %s" % [_town_name(town), growth_summary])
+			if previews.size() >= 2:
+				break
+		if previews.is_empty():
+			return "weekly muster resolves"
+		return "weekly muster %s" % "; ".join(previews)
+	var days_until: int = max(1, next_weekly_growth_day(session.day) - next_day)
+	return "muster Day %d in %d day%s" % [
+		next_weekly_growth_day(session.day),
+		days_until,
+		"" if days_until == 1 else "s",
+	]
+
+static func _end_turn_movement_forecast_line(session: SessionStateStoreScript.SessionData) -> String:
+	var max_movement := _movement_max_from_hero(session.overworld.get("hero", {}), session)
+	return "move resets %d/%d" % [max_movement, max_movement]
+
+static func _end_turn_risk_forecast_line(session: SessionStateStoreScript.SessionData) -> String:
+	var risk_surface := describe_command_risk_surfaces(session)
+	var risk_text := String(risk_surface.get("risk", "")).strip_edges()
+	if risk_text == "" or risk_text.find("Steady watch") >= 0:
+		var local_pressure := _local_visible_threat_summary(session, "")
+		return local_pressure if local_pressure != "" else "watch steady"
+	var lines := risk_text.split("\n", false)
+	return _short_player_text(String(lines[lines.size() - 1]), 96)
+
+static func _end_turn_muster_summary(weekly_growth_messages: Array, site_muster_messages: Array) -> String:
+	var parts := []
+	for message in weekly_growth_messages:
+		var text := String(message).strip_edges()
+		if text != "":
+			parts.append(text)
+	for message in site_muster_messages:
+		var text := String(message).strip_edges()
+		if text != "":
+			parts.append(text)
+	if parts.is_empty():
+		return ""
+	return "; ".join(parts)
+
+static func _end_turn_town_economy_summary(
+	occupation_messages: Array,
+	recovery_messages: Array,
+	delivery_messages: Array
+) -> String:
+	var parts := []
+	for source in [occupation_messages, recovery_messages, delivery_messages]:
+		for message in source:
+			var text := String(message).strip_edges()
+			if text != "":
+				parts.append(text)
+			if parts.size() >= 3:
+				return "; ".join(parts)
+	return "; ".join(parts)
+
+static func _end_turn_resolution_summary(session: SessionStateStoreScript.SessionData, result: Dictionary) -> String:
+	var parts := ["Day %d" % session.day]
+	var income_summary := String(result.get("resource_income_summary", "")).strip_edges()
+	if income_summary != "":
+		parts.append("income %s" % income_summary)
+	var movement_summary := String(result.get("movement_reset_summary", "")).strip_edges()
+	if movement_summary != "":
+		parts.append(movement_summary)
+	var muster_summary := String(result.get("weekly_muster_summary", "")).strip_edges()
+	if muster_summary != "":
+		parts.append("muster %s" % _short_player_text(muster_summary, 72))
+	var town_summary := String(result.get("town_economy_summary", "")).strip_edges()
+	if town_summary != "":
+		parts.append("towns %s" % _short_player_text(town_summary, 72))
+	var enemy_summary := String(result.get("enemy_activity_summary", "")).strip_edges()
+	if enemy_summary != "":
+		parts.append("enemy %s" % _short_player_text(enemy_summary, 96))
+	return " | ".join(parts)
 
 static func can_afford_cost_with_town_market(town: Dictionary, pool: Dictionary, cost: Variant) -> bool:
 	return bool(_town_market_cost_coverage(town, pool, cost).get("affordable", false))
