@@ -287,6 +287,15 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		String(snapshot.get("visible_consequence_text", "")),
 		String(snapshot.get("consequence_tooltip_text", "")),
 	])
+	var context: Dictionary = snapshot.get("battle_action_context", {}) if snapshot.get("battle_action_context", {}) is Dictionary else {}
+	var context_text := "\n".join([
+		String(snapshot.get("battle_action_context_text", "")),
+		String(snapshot.get("battle_action_context_tooltip_text", "")),
+		String(snapshot.get("event_visible_text", "")),
+		String(snapshot.get("event_tooltip_text", "")),
+		String(context.get("latest_action", "")),
+		String(context.get("next_step", "")),
+	])
 	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
 	var save_text := "\n".join([
 		String(save_surface.get("save_check", "")),
@@ -302,6 +311,16 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		if not save_text.contains(token):
 			push_error("Battle smoke: save continuity check lost %s clarity after a battle order: %s." % [token, save_text])
 			return false
+	for token in ["Latest:", "Next:", "Battle Turn Context", "Latest action:", "Next practical step:"]:
+		if not context_text.contains(token):
+			push_error("Battle smoke: battle action context strip lost %s clarity: context=%s snapshot=%s." % [token, context_text, snapshot])
+			return false
+	if String(context.get("source", "")) != "post_action_recap":
+		push_error("Battle smoke: battle action context strip did not use the post-action recap source: %s." % context)
+		return false
+	if not String(snapshot.get("event_visible_text", "")).contains("Latest:"):
+		push_error("Battle smoke: battle action context strip is not visible in the dispatch rail: %s." % snapshot)
+		return false
 	for key in ["happened", "affected", "why_it_matters", "next_step", "decision", "next_actor", "text"]:
 		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
 			push_error("Battle smoke: post-action recap payload is missing %s: response=%s snapshot=%s." % [key, response_recap, snapshot_recap])
@@ -316,7 +335,7 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		push_error("Battle smoke: action tooltips did not carry the post-action next-actor recap: %s." % action_tooltips)
 		return false
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "ai_score", "weight"]:
-		if recap_text.contains(leak_token) or action_tooltips.contains(leak_token) or save_text.contains(leak_token):
+		if recap_text.contains(leak_token) or context_text.contains(leak_token) or action_tooltips.contains(leak_token) or save_text.contains(leak_token):
 			push_error("Battle smoke: post-action recap leaked internal token %s." % leak_token)
 			return false
 	return true

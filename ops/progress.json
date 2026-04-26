@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T20:50:49Z",
+  "updatedAt": "2026-04-26T20:58:02Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-action-context-strip-10184",
-  "currentSliceTitle": "Surface compact overworld latest-action and next-step context",
+  "currentSliceId": "battle-action-context-strip-10184",
+  "currentSliceTitle": "Surface compact battle latest-action and next-step context",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow player-facing overworld clarity slice using current shell post-action recap, field feed, and readiness payloads. The event rail now surfaces a compact visible Latest/Next context strip after manual actions, and its tooltip preserves latest action, next practical step, field feed, and readiness detail. Focused overworld smoke assertions prove the visible surface and no-score-leak guard. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow player-facing battle clarity slice using current battle post-action recap, dispatch rail, and action readiness payloads. The battle dispatch rail now surfaces a compact visible Latest/Next context strip after player orders, and its tooltip preserves latest action, next practical step, action recap, readiness confirmation, and dispatch detail. Focused town_battle smoke assertions prove the visible surface and no-score-leak guard. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1694,6 +1694,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T20:46:15Z",
       "completedAt": "2026-04-26T20:50:49Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "battle-action-context-strip-10184",
+      "title": "Surface compact battle latest-action and next-step context",
+      "status": "completed",
+      "startedAt": "2026-04-26T20:56:26Z",
+      "completedAt": "2026-04-26T20:58:02Z",
       "difficulty": "medium"
     }
   ],

@@ -373,7 +373,13 @@ func _refresh() -> void:
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
-	_set_compact_label(_event_label, dispatch_text, 1)
+	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
+	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
+	if action_context_surface.is_empty():
+		_set_compact_label(_event_label, dispatch_text, 1)
+	else:
+		_set_compact_label(_event_label, "%s\n%s" % [String(action_context_surface.get("visible_text", "")), dispatch_text], 1)
+		_event_label.tooltip_text = String(action_context_surface.get("tooltip_text", _event_label.tooltip_text))
 	_set_compact_label(_battle_context_label, BattleRules.describe_entry_context(_session), 3)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
@@ -388,7 +394,6 @@ func _refresh() -> void:
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
 	_set_compact_label(_action_guide, BattleRules.describe_action_surface(_session), 5)
-	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var action_confirmation_tooltip := String(action_confirmation.get("tooltip_text", "")).strip_edges()
 	if action_confirmation_tooltip != "":
 		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
@@ -523,6 +528,10 @@ func validation_snapshot() -> Dictionary:
 	var action_surface := BattleRules.get_action_surface(_session)
 	var consequence_payload := BattleRules.active_consequence_payload(_session)
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
+	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
+	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
+		dispatch_text = _tactical_briefing_text
+	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -561,8 +570,13 @@ func validation_snapshot() -> Dictionary:
 		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),
 		"active_consequence_payload": consequence_payload,
+		"battle_action_context": action_context_surface,
+		"battle_action_context_text": String(action_context_surface.get("visible_text", "")),
+		"battle_action_context_tooltip_text": String(action_context_surface.get("tooltip_text", "")),
 		"post_action_recap": _last_action_recap_payload.duplicate(true),
 		"post_action_recap_text": _last_action_recap_text,
+		"event_visible_text": _event_label.text,
+		"event_tooltip_text": _event_label.tooltip_text,
 		"visible_consequence_text": _consequence_label.text,
 		"consequence_tooltip_text": _consequence_label.tooltip_text,
 		"active_ability_role": String(consequence_payload.get("active_ability_role", "")),
@@ -880,12 +894,70 @@ func _battle_consequence_text() -> String:
 		return _last_action_recap_text
 	return BattleRules.describe_order_consequence_board(_session)
 
+func _battle_action_context_surface(dispatch_text: String = "", action_confirmation: Dictionary = {}) -> Dictionary:
+	if _last_action_recap_payload.is_empty():
+		return {}
+	var latest_action := String(_last_action_recap_payload.get("happened", "")).strip_edges()
+	if latest_action == "":
+		latest_action = String(_last_message).strip_edges()
+	if latest_action == "":
+		return {}
+	var next_step := String(_last_action_recap_payload.get("next_step", "")).strip_edges()
+	if next_step == "" and not action_confirmation.is_empty():
+		next_step = String(action_confirmation.get("next_step", action_confirmation.get("visible_text", ""))).strip_edges()
+	if next_step == "":
+		next_step = "Choose the next legal battle order."
+	var visible := "Latest: %s" % _short_text(_strip_sentence(latest_action), 38)
+	if next_step != "":
+		visible = "%s | Next: %s" % [
+			visible,
+			_short_text(_strip_sentence(next_step).trim_suffix("."), 34),
+		]
+	var tooltip := _join_tooltip_sections([
+		"Battle Turn Context\n- Latest action: %s\n- Next practical step: %s" % [
+			latest_action,
+			next_step,
+		],
+		String(_last_action_recap_payload.get("tooltip_text", _last_action_recap_payload.get("tooltip", ""))),
+		String(action_confirmation.get("tooltip_text", "")),
+		dispatch_text,
+	])
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"latest_action": latest_action,
+		"next_step": next_step,
+		"source": "post_action_recap",
+	}
+
 func _append_last_action_tooltips() -> void:
 	var recap_tooltip := String(_last_action_recap_payload.get("tooltip", "")).strip_edges()
 	if recap_tooltip == "":
 		return
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button]:
 		button.tooltip_text = "%s\nLast order: %s" % [button.tooltip_text, recap_tooltip]
+
+func _strip_sentence(text: String) -> String:
+	var cleaned := text.strip_edges().replace("\n", " ")
+	while cleaned.contains("  "):
+		cleaned = cleaned.replace("  ", " ")
+	return cleaned
+
+func _join_tooltip_sections(sections: Array) -> String:
+	var lines := []
+	for section in sections:
+		var text := String(section).strip_edges()
+		if text != "":
+			lines.append(text)
+	return "\n\n".join(lines)
+
+func _short_text(text: String, max_chars: int) -> String:
+	var cleaned := _strip_sentence(text)
+	if max_chars <= 0 or cleaned.length() <= max_chars:
+		return cleaned
+	if max_chars <= 1:
+		return cleaned.substr(0, max_chars)
+	return "%s..." % cleaned.substr(0, max_chars - 1).strip_edges()
 
 func _style_action_button(button: Button, primary: bool = false, width: float = 112.0) -> void:
 	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", width, 32.0, 12)
