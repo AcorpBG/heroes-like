@@ -57,20 +57,21 @@ Immediate execution order:
 20. Additive overworld object report review/follow-up: completed in `docs/overworld-object-report-review-001.md`. The report has 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors. Current production content remains compatibility-warning-only; strict errors remain isolated to fixtures or later migrated bundles.
 21. First production additive object schema planning for safe metadata fields: completed in `docs/overworld-object-safe-additive-schema-plan.md`. The safe metadata contract covers exact field shapes, defaults, compatibility adapter behavior, report inference mappings, migrated-bundle validation levels, rollback, first-wave examples, and a small candidate bundle without production JSON migration or runtime behavior changes.
 22. First production additive object schema implementation: completed for `safe_metadata_bundle_001` as runtime-inactive safe metadata only on the eight declared production object ids, with strict migrated-bundle validation limited to `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
-23. Next current slice: neutral encounter representation planning. Decide visible stack object versus guarded-camp object, guard-target links, danger cues, cleared state, placement ownership, and AI/editor placeholders before first-class neutral encounter production migration.
-24. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+23. Neutral encounter representation planning: completed in `docs/neutral-encounter-representation-plan.md`. The target decision is a hybrid representation with visible stack as default, explicit camp-anchor subtypes, guard-target links, danger/readability cues, cleared-state policy, placement ownership, reward/guard summaries, passability/interaction implications, AI/editor placeholders, scenario-placement compatibility, save/state implications, validation stages, migration sequence, rollback, and a tiny candidate planning bundle. No production JSON migration or runtime behavior change is approved.
+24. Next current slice: neutral encounter additive validator/report planning. Define report-only compatibility inference, output fields, fixture scope, warning/error policy, CLI expectations, and review gates before any first-class neutral encounter production migration.
+25. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan first-class neutral encounter representation next: visible stack object versus guarded-camp object, guard-target links, danger cues, cleared state, placement ownership, and AI/editor placeholders.
+- Plan additive neutral encounter validator/report support next: report-only compatibility inference from current `scenarios[].encounters[]`, warning counts for missing representation metadata, strict non-production fixtures for visible stacks/camp anchors/guard links, and CLI/review expectations.
 - Treat `safe_metadata_bundle_001` as the only currently migrated production object bundle. All other production map objects remain compatibility-warning-only until a later bundle is declared.
-- Keep `body_tiles`, `approach`, route effects, animation cue ids, editor placement hints, and AI hints as staged follow-ups, not immediate production migration.
+- Keep first-class neutral encounter production migration, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, and pathing changes as staged follow-ups, not immediate production migration.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is neutral encounter representation planning, still without switching production behavior.
+- The next active implementation choice is neutral encounter additive validator/report planning, still without switching production behavior or migrating production content.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -188,6 +189,26 @@ Validation:
 
 Limits:
 - This is metadata-only production migration for one declared bundle. It does not add `body_tiles`, `approach`, route effects, animation cue ids, editor placement, AI hints, first-class neutral encounter records, new map objects, new resource-site links, generated assets, renderer/pathing/AI/runtime behavior changes, or broad content migration.
+
+## Completed Planning Slice: Neutral Encounter Representation
+Status: completed on 2026-04-26 as planning-only representation contract before first-class neutral encounter migration.
+
+Purpose:
+- Decide how visible neutral encounters should be represented before production migration, using current scenario encounter placements and object-schema plans as reality.
+- Compare visible stack objects, guarded-camp objects, and a hybrid representation while preserving current direct scenario encounter placement compatibility.
+
+Delivered:
+- Added `docs/neutral-encounter-representation-plan.md`.
+- Chose a hybrid target model with `visible_stack` as the default, explicit `camp_anchor` subtypes, and guard-linked variants for encounters that protect another placement.
+- Documented target fields for `primary_class`, linked encounter ids, guard-target links, danger/readability cues, cleared state, placement ownership, reward/guard summary, passability/interaction implications, AI/editor placeholders, scenario placement compatibility, save/state implications, validation stages, migration sequence, rollback, and a tiny candidate planning bundle.
+- Identified current scenario reality: 48 direct `scenarios[].encounters[]` placements using `placement_id`, `encounter_id`, coordinates, difficulty, combat seed, and occasional field objectives, with no first-class neutral encounter map-object records or guard-target links today.
+- Sequenced the next slice as additive neutral encounter validator/report planning, not production JSON migration.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, and `python3 tests/validate_repo.py --overworld-object-report`.
+
+Limits:
+- This is documentation/planning only. It does not edit production content JSON, migrate scenario encounter placements, add map-object records, change runtime encounters, change pathing, change AI, change editor behavior, change renderer behavior, import generated PNGs, add assets, or claim neutral encounter readiness.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
