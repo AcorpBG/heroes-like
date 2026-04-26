@@ -120,16 +120,50 @@ static func describe_spellbook(hero_state: Dictionary, context_filter: String = 
 		", ".join(names) if not names.is_empty() else "No known spells",
 	]
 
+static func describe_overworld_spellbook(hero_state: Dictionary, movement_state: Dictionary) -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var lines := [
+		"Field Spells | Mana %d/%d" % [
+			int(mana.get("current", 0)),
+			int(mana.get("max", 0)),
+		]
+	]
+	var spell_lines := []
+	for spell in known_spells(hero, CONTEXT_OVERWORLD):
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+		var validation := validate_overworld_spell(hero, movement_state, spell)
+		var availability := "ready" if bool(validation.get("ok", false)) else String(validation.get("message", "not ready")).to_lower()
+		spell_lines.append(
+			"%s: %s, %d mana, %s" % [
+				String(spell.get("name", "Spell")),
+				_overworld_spell_effect_summary(spell, movement_state),
+				mana_cost,
+				availability,
+			]
+		)
+	if spell_lines.is_empty():
+		lines.append("No field spells known.")
+	else:
+		lines.append("; ".join(spell_lines))
+	return "\n".join(lines)
+
 static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictionary) -> Array:
 	var actions := []
 	for spell in known_spells(hero_state, CONTEXT_OVERWORLD):
 		var validation := validate_overworld_spell(hero_state, movement_state, spell)
 		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
+		var summary := _overworld_spell_action_summary(movement_state, spell, validation, mana_cost)
 		actions.append(
 			{
 				"id": "cast_spell:%s" % String(spell.get("id", "")),
-				"label": "Cast %s (%d)" % [String(spell.get("name", "Spell")), mana_cost],
+				"label": "Cast %s (%d mana)" % [String(spell.get("name", "Spell")), mana_cost],
 				"disabled": not bool(validation.get("ok", false)),
+				"summary": summary,
+				"cost": mana_cost,
+				"target": _target_mode_label(String(spell.get("target_mode", "self"))),
+				"availability": "ready" if bool(validation.get("ok", false)) else "blocked",
+				"invalid_reason": String(validation.get("message", "")) if not bool(validation.get("ok", false)) else "",
 			}
 		)
 	return actions
@@ -154,13 +188,20 @@ static func cast_overworld_spell(hero_state: Dictionary, movement_state: Diction
 			var amount := int(max(1, int(effect.get("amount", 0))))
 			var current := int(movement.get("current", 0))
 			var max_movement := int(movement.get("max", 0))
-			movement["current"] = min(max_movement, current + amount)
+			var restored: int = min(amount, max(0, max_movement - current))
+			movement["current"] = min(max_movement, current + restored)
 			hero = _consume_mana(hero, mana_cost)
 			return {
 				"ok": true,
 				"hero": hero,
 				"movement": movement,
-				"message": "%s restores %d movement." % [String(spell.get("name", spell_id)), amount],
+				"message": "%s restores %d movement (%d -> %d) and spends %d mana." % [
+					String(spell.get("name", spell_id)),
+					restored,
+					current,
+					int(movement.get("current", 0)),
+					mana_cost,
+				],
 			}
 		_:
 			return {"ok": false, "hero": hero, "movement": movement, "message": "That overworld spell has no supported effect."}
@@ -254,14 +295,16 @@ static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dic
 		return {"ok": false, "message": "That spell is not known."}
 	if String(spell_dict.get("context", "")) != CONTEXT_OVERWORLD:
 		return {"ok": false, "message": "That spell cannot be used on the overworld."}
-	if not _has_mana(hero, HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))):
-		return {"ok": false, "message": "Insufficient mana."}
+	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))
+	if not _has_mana(hero, mana_cost):
+		var current_mana := int(hero.get("spellbook", {}).get("mana", {}).get("current", 0))
+		return {"ok": false, "message": "Need %d mana; only %d available." % [mana_cost, current_mana]}
 
 	var effect = spell_dict.get("effect", {})
 	match String(effect.get("type", "")):
 		"restore_movement":
 			if int(movement_state.get("current", 0)) >= int(movement_state.get("max", 0)):
-				return {"ok": false, "message": "Movement is already at full strength."}
+				return {"ok": false, "message": "Movement is already full."}
 			return {"ok": true}
 		_:
 			return {"ok": false, "message": "That overworld spell effect is unsupported."}
@@ -498,6 +541,49 @@ static func battle_spell_timing_summary(
 			return "Best immediately before a damage trade."
 		_:
 			return ""
+
+static func _overworld_spell_action_summary(
+	movement_state: Dictionary,
+	spell: Dictionary,
+	validation: Dictionary,
+	mana_cost: int
+) -> String:
+	var target_label := _target_mode_label(String(spell.get("target_mode", "self")))
+	var availability := "Ready now." if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
+	var description := String(spell.get("description", "")).strip_edges()
+	var pieces := [
+		"%s." % _overworld_spell_effect_summary(spell, movement_state),
+		"Cost %d mana; target %s." % [mana_cost, target_label],
+		availability,
+	]
+	if description != "":
+		pieces.append(description)
+	return " ".join(pieces)
+
+static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary) -> String:
+	var effect = spell.get("effect", {})
+	match String(effect.get("type", "")):
+		"restore_movement":
+			var amount: int = max(1, int(effect.get("amount", 0)))
+			var current := int(movement_state.get("current", 0))
+			var max_movement := int(movement_state.get("max", 0))
+			var available_room: int = max(0, max_movement - current)
+			if available_room > 0:
+				return "Restores up to %d movement; %d can fit now" % [amount, min(amount, available_room)]
+			return "Restores up to %d movement" % amount
+		_:
+			return "No supported overworld effect"
+
+static func _target_mode_label(target_mode: String) -> String:
+	match target_mode:
+		"self":
+			return "active hero"
+		"ally_active":
+			return "active allied stack"
+		"enemy_selected":
+			return "selected enemy"
+		_:
+			return target_mode.replace("_", " ")
 
 static func _normalize_spell_ids(value: Variant) -> Array:
 	var ids := []

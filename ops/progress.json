@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T18:49:00Z",
+  "updatedAt": "2026-04-26T09:54:37Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "artifact-reward-visibility-ui-10184",
-  "currentSliceTitle": "Surface artifact reward and equipment effects in live overworld UI",
+  "currentSliceId": "overworld-magic-affordance-ui-10184",
+  "currentSliceTitle": "Surface overworld spell affordances in live UI and action feedback",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented player-facing artifact inspection, hover, action, and collection text using existing artifact definitions and hero equipment state. Artifact UI now surfaces slot/type, derived reward role, effect summary, and equip or pack state in live overworld flow without artifact schema migration, save version change, generated assets, or report-only scenes.",
+  "currentSliceNotes": "Implemented concise live overworld field-spell affordances using existing spell content and casting flow. Field spell actions now surface effect, mana cost, target, ready or blocked reason, and cast outcome text; the overworld rail prioritizes field spells, and focused smoke coverage exercises disabled, ready, and cast feedback. No spell-system migration, save version change, new assets, AI casting, or report-only scene was added.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -774,6 +774,19 @@
                 "live_ai_hero_behavior_now"
             ],
             "difficulty": "high"
+        },
+        {
+            "id": "overworld-magic-affordance-ui-10184",
+            "title": "Surface overworld spell affordances in live UI and action feedback",
+            "status": "completed",
+            "startedAt": "2026-04-26T09:48:46Z",
+            "completedAt": "2026-04-26T09:54:37Z",
+            "validation": [
+                "git diff --check",
+                "python3 tests/validate_repo.py",
+                "godot4 --headless --path . tests/overworld_visual_smoke.tscn"
+            ],
+            "difficulty": "medium"
         },
         {
             "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",

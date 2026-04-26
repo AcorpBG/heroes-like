@@ -472,7 +472,7 @@ func _refresh() -> void:
 	_set_rail_text(_heroes_label, heroes_text, _rail_prefixed_summary("Heroes", heroes_text), 1)
 	var specialty_text := OverworldRules.describe_specialties(_session)
 	_set_rail_text(_specialty_label, specialty_text, _rail_prefixed_summary("Spec", specialty_text), 1)
-	var spell_text := OverworldRules.describe_spellbook(_session)
+	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
 	_set_rail_text(_spell_label, spell_text, _rail_prefixed_summary("Spell", spell_text), 1)
 	var artifact_text := OverworldRules.describe_artifacts(_session)
 	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
@@ -1670,6 +1670,7 @@ func validation_snapshot() -> Dictionary:
 		"primary_action_button_text": _primary_action_button.text,
 		"primary_action_button_disabled": _primary_action_button.disabled,
 		"context_action_ids": _validation_context_action_ids(),
+		"spell_actions": _validation_spell_action_payloads(),
 		"active_town": active_town,
 		"selected_town": selected_town,
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
@@ -2362,6 +2363,19 @@ func _validation_context_action_ids() -> Array[String]:
 			continue
 		ids.append(String(action.get("id", "")))
 	return ids
+
+func _validation_spell_action_payloads() -> Array:
+	var payloads := []
+	for action in OverworldRules.get_spell_actions(_session):
+		if not (action is Dictionary):
+			continue
+		var payload := _validation_action_payload(action)
+		payload["cost"] = int(action.get("cost", 0))
+		payload["target"] = String(action.get("target", ""))
+		payload["availability"] = String(action.get("availability", ""))
+		payload["invalid_reason"] = String(action.get("invalid_reason", ""))
+		payloads.append(payload)
+	return payloads
 
 func _validation_action_payload(action: Dictionary) -> Dictionary:
 	if action.is_empty():

@@ -1379,8 +1379,13 @@ static func _occupied_town_watch_summary(session: SessionStateStoreScript.Sessio
 static func describe_enemy_threats(session: SessionStateStoreScript.SessionData) -> String:
 	return describe_frontier_threats(session)
 
-static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
-	return SpellRulesScript.describe_spellbook(session.overworld.get("hero", {}))
+static func describe_spellbook(session: SessionStateStoreScript.SessionData, context_filter: String = "") -> String:
+	if context_filter == SpellRulesScript.CONTEXT_OVERWORLD:
+		return SpellRulesScript.describe_overworld_spellbook(
+			session.overworld.get("hero", {}),
+			session.overworld.get("movement", {})
+		)
+	return SpellRulesScript.describe_spellbook(session.overworld.get("hero", {}), context_filter)
 
 static func describe_specialties(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
