@@ -181,14 +181,20 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	var skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
+	var selected_skirmish_setup: Dictionary = skirmish_snapshot.get("selected_skirmish_setup", {}) if skirmish_snapshot.get("selected_skirmish_setup", {}) is Dictionary else {}
 	if not _assert_text_contains_all(
 		"Main menu skirmish launch preview",
 		[
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
+			String(selected_skirmish_setup.get("front_context", "")),
+			String(selected_skirmish_setup.get("objective_stakes", "")),
+			String(selected_skirmish_setup.get("readiness_summary", "")),
+			String(selected_skirmish_setup.get("difficulty_consequence", "")),
+			String(selected_skirmish_setup.get("action_consequence", "")),
 		],
-		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 

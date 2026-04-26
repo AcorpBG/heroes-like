@@ -161,8 +161,16 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
 		"Launch Skirmish"
 	)
+	var front_context := _skirmish_front_context(scenario, selection, availability_dict)
+	var objective_stakes := _skirmish_objective_stakes(scenario)
+	var readiness_summary := _skirmish_readiness_summary(commander_preview, operational_board)
+	var difficulty_consequence := _skirmish_difficulty_consequence(normalized_difficulty, recommended_difficulty)
+	var action_consequence := _skirmish_action_consequence(normalized_difficulty)
 	var setup_lines := []
 	setup_lines.append(launch_preview)
+	for context_line in [front_context, objective_stakes, readiness_summary, difficulty_consequence]:
+		if String(context_line) != "":
+			setup_lines.append(String(context_line))
 	var briefing_summary: String = ScenarioRulesScript.describe_scenario_briefing(scenario_id)
 	if briefing_summary != "":
 		setup_lines.append(briefing_summary)
@@ -188,6 +196,12 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		setup_lines.append(faction_setup)
 	if normalized_difficulty != recommended_difficulty:
 		setup_lines.append("Recommended difficulty: %s" % difficulty_label(recommended_difficulty))
+	setup_lines.append(action_consequence)
+
+	var action_tooltip_lines := [launch_preview]
+	for action_line in [front_context, readiness_summary, difficulty_consequence, action_consequence]:
+		if String(action_line) != "":
+			action_tooltip_lines.append(String(action_line))
 
 	return {
 		"scenario_id": scenario_id,
@@ -200,6 +214,12 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"recommended_difficulty_label": difficulty_label(recommended_difficulty),
 		"setup_summary": "\n".join(setup_lines),
 		"launch_preview": launch_preview,
+		"front_context": front_context,
+		"objective_stakes": objective_stakes,
+		"readiness_summary": readiness_summary,
+		"difficulty_consequence": difficulty_consequence,
+		"action_consequence": action_consequence,
+		"action_tooltip": "\n".join(action_tooltip_lines),
 		"commander_preview": commander_preview,
 		"operational_board": operational_board,
 	}
@@ -400,6 +420,74 @@ static func _front_preview_summary(scenario: Dictionary) -> String:
 	if battlefield_summary != "":
 		parts.append("Expected ground %s" % battlefield_summary)
 	return "Front posture: %s" % " | ".join(parts) if not parts.is_empty() else ""
+
+static func _skirmish_front_context(scenario: Dictionary, selection: Dictionary, availability: Dictionary) -> String:
+	var scenario_id := String(scenario.get("id", ""))
+	var scenario_name := String(scenario.get("name", scenario_id))
+	var player_faction := ContentService.get_faction(String(scenario.get("player_faction_id", "")))
+	var player_name := String(player_faction.get("name", scenario.get("player_faction_id", "Player host")))
+	var enemy_summary := String(selection.get("enemy_summary", _default_enemy_summary(scenario)))
+	var map_label := String(selection.get("map_size_label", _fallback_map_size_label(scenario)))
+	return "Front context: %s | %s | %s against %s | %s." % [
+		scenario_name,
+		map_label,
+		player_name,
+		enemy_summary,
+		availability_label(availability),
+	]
+
+static func _skirmish_objective_stakes(scenario: Dictionary) -> String:
+	var objectives = scenario.get("objectives", {})
+	if not (objectives is Dictionary):
+		return ""
+	var victory_text := String(objectives.get("victory_text", ""))
+	var defeat_text := String(objectives.get("defeat_text", ""))
+	if victory_text != "" and defeat_text != "":
+		return "Objective stakes: %s Failure means %s" % [victory_text, defeat_text]
+	if victory_text != "":
+		return "Objective stakes: %s" % victory_text
+	if defeat_text != "":
+		return "Objective stakes: Failure means %s" % defeat_text
+	return ""
+
+static func _skirmish_readiness_summary(commander_preview: String, operational_board: String) -> String:
+	var parts := []
+	var readiness_line := _first_line_with_prefix(commander_preview, "Opening readiness:")
+	if readiness_line != "":
+		parts.append(readiness_line.replace("Opening readiness:", "opening").strip_edges())
+	var failure_watch := _first_line_with_prefix(operational_board, "Failure watch:")
+	if failure_watch != "":
+		parts.append(failure_watch.replace("Failure watch:", "watch").strip_edges())
+	var enemy_posture := _first_line_with_prefix(operational_board, "Enemy posture:")
+	if enemy_posture != "":
+		parts.append(enemy_posture.replace("Enemy posture:", "enemy").strip_edges())
+	var first_contact := _first_line_with_prefix(operational_board, "Likely first contact:")
+	if first_contact != "":
+		parts.append(first_contact.replace("Likely first contact:", "first contact").strip_edges())
+	if parts.is_empty():
+		return ""
+	return "Readiness watch: %s." % " | ".join(parts.slice(0, min(4, parts.size())))
+
+static func _skirmish_difficulty_consequence(difficulty_id: String, recommended_difficulty: String) -> String:
+	var difficulty_text := difficulty_summary(difficulty_id)
+	var recommendation := "matches the recommended setup for this front"
+	if difficulty_id != recommended_difficulty:
+		recommendation = "recommended setup is %s" % difficulty_label(recommended_difficulty)
+	return "Difficulty consequence: %s uses %s; %s." % [
+		difficulty_label(difficulty_id),
+		difficulty_text.to_lower(),
+		recommendation,
+	]
+
+static func _skirmish_action_consequence(difficulty_id: String) -> String:
+	return "Action consequence: Launching creates a fresh Skirmish expedition on Day 1 at %s difficulty, uses authored opening forces, does not load or overwrite an expedition save, and does not change campaign progression." % difficulty_label(difficulty_id)
+
+static func _first_line_with_prefix(text: String, prefix: String) -> String:
+	for raw_line in text.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with(prefix):
+			return line
+	return ""
 
 static func _battlefield_tag_summary(scenario: Dictionary) -> String:
 	var labels := []

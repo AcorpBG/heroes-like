@@ -613,7 +613,7 @@ func _refresh_skirmish_setup() -> void:
 	_set_compact_label(_skirmish_operational_board_label, String(setup.get("operational_board", "Operational board unavailable.")), 4, 84)
 	_start_skirmish_button.disabled = false
 	_start_skirmish_button.text = "Launch Skirmish"
-	_start_skirmish_button.tooltip_text = String(setup.get("launch_preview", "")).strip_edges()
+	_start_skirmish_button.tooltip_text = String(setup.get("action_tooltip", setup.get("launch_preview", ""))).strip_edges()
 	if _start_skirmish_button.tooltip_text == "":
 		_start_skirmish_button.tooltip_text = "Launch %s at %s difficulty." % [
 			String(setup.get("scenario_name", _selected_skirmish_id)),
@@ -708,6 +708,7 @@ func _refresh_stage_dock_header() -> void:
 func validation_snapshot() -> Dictionary:
 	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id)
+	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	var selected_save_summary := _selected_summary()
 	var latest_continue := _latest_continue_surface()
 	return {
@@ -741,6 +742,7 @@ func validation_snapshot() -> Dictionary:
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_difficulty": _selected_difficulty,
+		"selected_skirmish_setup": selected_skirmish_setup.duplicate(true),
 		"skirmish_details": _skirmish_details_label.text,
 		"skirmish_details_full": _skirmish_details_label.tooltip_text,
 		"skirmish_setup": _setup_summary_label.text,
