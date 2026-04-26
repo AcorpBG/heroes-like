@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T15:45:00Z",
+  "updatedAt": "2026-04-26T16:20:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-capture-resource-loop-live-slice-10184",
-  "currentSliceTitle": "Implement the selected minimal economy capture/resource loop proof path",
+  "currentSliceId": "economy-capture-resource-loop-manual-gate-10184",
+  "currentSliceTitle": "Manually verify the economy capture/resource loop proof and record findings",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Economy capture/resource loop proof planning is complete in docs/economy-capture-resource-loop-proof-plan.md. The selected proof is the Riverwatch signal-yard path in river-pass: claim north_timber, capture river_signal_post and river_free_company, evaluate river_pass_ghoul_grove and river_pass_hollow_mire, claim southern_ore if viable, make a Riverwatch build/recruit choice, and verify save/resume. The next slice should implement or manually prove only that minimal path using current gold/wood/ore behavior and existing systems. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Economy capture/resource loop live proof is complete in docs/economy-capture-resource-loop-live-proof-report.md. Current authored data and Godot core systems prove the selected Riverwatch signal-yard path without production code/content changes: north_timber, river_signal_post, river_free_company, river_pass_ghoul_grove, river_pass_hollow_mire, southern_ore, optional eastern_cache, Riverwatch Bowyer Lodge plus Ember Archer recruitment, and save/resume all preserve expected economy state. The next slice should be manual gate/report review, or a narrow exact routed live-client transcript only if AcOrP wants one. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -364,7 +364,9 @@
     {
       "id": "economy-capture-resource-loop-live-slice-10184",
       "title": "Implement the selected minimal economy capture/resource loop proof path",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T15:50:00Z",
+      "completedAt": "2026-04-26T16:20:00Z",
       "difficulty": "high"
     },
     {
