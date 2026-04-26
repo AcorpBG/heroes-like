@@ -439,6 +439,7 @@ func _refresh_help_browser() -> void:
 
 func _refresh_settings_panel() -> void:
 	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)
+	var settings_check := SettingsService.describe_settings_persistence_check()
 
 	_syncing_settings_ui = true
 	_presentation_mode_picker.clear()
@@ -453,7 +454,7 @@ func _refresh_settings_panel() -> void:
 			selected_index = index
 	if selected_index >= 0:
 		_presentation_mode_picker.select(selected_index)
-		_presentation_mode_picker.tooltip_text = String(options[selected_index].get("summary", ""))
+		_presentation_mode_picker.tooltip_text = "%s\n%s" % [String(options[selected_index].get("summary", "")), settings_check]
 
 	_resolution_picker.clear()
 	var resolution_options := SettingsService.build_resolution_options()
@@ -467,14 +468,18 @@ func _refresh_settings_panel() -> void:
 			selected_resolution_index = index
 	if selected_resolution_index >= 0:
 		_resolution_picker.select(selected_resolution_index)
-		_resolution_picker.tooltip_text = String(resolution_options[selected_resolution_index].get("summary", ""))
+		_resolution_picker.tooltip_text = "%s\n%s" % [String(resolution_options[selected_resolution_index].get("summary", "")), settings_check]
 
 	_master_volume_slider.value = SettingsService.master_volume_percent()
+	_master_volume_slider.tooltip_text = "Master volume applies immediately.\n%s" % settings_check
 	_master_volume_value.text = "%d%%" % SettingsService.master_volume_percent()
 	_music_volume_slider.value = SettingsService.music_volume_percent()
+	_music_volume_slider.tooltip_text = "Music volume applies immediately.\n%s" % settings_check
 	_music_volume_value.text = "%d%%" % SettingsService.music_volume_percent()
 	_large_text_toggle.button_pressed = SettingsService.large_ui_text_enabled()
+	_large_text_toggle.tooltip_text = "Large UI text applies immediately.\n%s" % settings_check
 	_reduce_motion_toggle.button_pressed = SettingsService.reduced_motion_enabled()
+	_reduce_motion_toggle.tooltip_text = "Reduced motion preference applies immediately.\n%s" % settings_check
 	_syncing_settings_ui = false
 
 func _rebuild_save_browser() -> void:
@@ -793,11 +798,18 @@ func validation_snapshot() -> Dictionary:
 		"load_selected_enabled": not _load_selected_button.disabled,
 		"settings_summary": _settings_summary_label.text,
 		"settings_summary_full": _settings_summary_label.tooltip_text,
+		"settings_persistence_check": SettingsService.describe_settings_persistence_check(),
 		"presentation_mode": SettingsService.presentation_mode_id(),
+		"presentation_mode_tooltip": _presentation_mode_picker.tooltip_text,
 		"presentation_resolution": SettingsService.presentation_resolution_id(),
 		"presentation_resolution_size": SettingsService.presentation_resolution_size(),
 		"presentation_resolution_options": SettingsService.build_resolution_options(),
+		"presentation_resolution_tooltip": _resolution_picker.tooltip_text,
 		"resolution_picker_items": _picker_item_labels(_resolution_picker),
+		"master_volume_tooltip": _master_volume_slider.tooltip_text,
+		"music_volume_tooltip": _music_volume_slider.tooltip_text,
+		"large_text_tooltip": _large_text_toggle.tooltip_text,
+		"reduce_motion_tooltip": _reduce_motion_toggle.tooltip_text,
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
 		"active_expedition_full": _active_expedition_label.tooltip_text,

@@ -304,6 +304,33 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: settings summary did not reflect selected 1600x900 resolution: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
+	if not _assert_text_contains_all(
+		"Main menu settings persistence check",
+		[
+			settings_summary,
+			String(settings_snapshot.get("settings_persistence_check", "")),
+			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
+			String(settings_snapshot.get("master_volume_tooltip", "")),
+			String(settings_snapshot.get("large_text_tooltip", "")),
+		],
+		["Settings check:", "applies immediately", "stored in device config", "campaign progress", "expedition saves stay unchanged"]
+	):
+		if original_resolution != "1600x900":
+			shell.call("validation_select_resolution", original_resolution)
+		return false
+	if not _assert_no_score_leak(
+		"Main menu settings persistence check",
+		[
+			settings_summary,
+			String(settings_snapshot.get("settings_persistence_check", "")),
+			String(settings_snapshot.get("presentation_resolution_tooltip", "")),
+			String(settings_snapshot.get("master_volume_tooltip", "")),
+			String(settings_snapshot.get("large_text_tooltip", "")),
+		]
+	):
+		if original_resolution != "1600x900":
+			shell.call("validation_select_resolution", original_resolution)
+		return false
 
 	if original_resolution != "1600x900" and not bool(shell.call("validation_select_resolution", original_resolution)):
 		push_error("Main menu smoke: settings resolution picker could not restore %s." % original_resolution)

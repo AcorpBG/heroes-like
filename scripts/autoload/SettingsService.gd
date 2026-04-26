@@ -264,9 +264,12 @@ func describe_settings() -> String:
 			"Presentation: %s | %s" % [presentation_mode_label(presentation_mode_id()), presentation_resolution_label(presentation_resolution_id())],
 			"Audio: Master %d%% | Music %d%%" % [master_volume_percent(), music_volume_percent()],
 			"Accessibility: %s" % " | ".join(accessibility_parts),
-			"Device settings are saved separately from campaign progression and expedition slots.",
+			describe_settings_persistence_check(),
 		]
 	)
+
+func describe_settings_persistence_check() -> String:
+	return "Settings check: applies immediately; stored in device config; campaign progress and expedition saves stay unchanged."
 
 func help_browser_summary() -> String:
 	return "Review the core modes and controls before launching a run. Campaign progression, skirmish starts, town growth, battle resolution, and save flow each have their own system boundaries."
