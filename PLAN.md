@@ -91,21 +91,22 @@ Immediate execution order:
 54. Strategic AI site-control proof reporting is completed in `docs/strategic-ai-capture-countercapture-defense-proof-report.md` plus focused Godot coverage in `tests/ai_site_control_proof_report.gd`. The report proves current Mireclaw `river-pass` Free Company counter-capture/controller flip behavior, companion Signal Post denial reasons, compact assignment/seizure events, public score-table leak checks, and the valid `riverwatch_hold` full-selector town-front sanity result without coefficient tuning.
 55. Strategic AI Glassroad defense/stabilization proof planning is completed in `docs/strategic-ai-glassroad-defense-proof-plan.md`. The selected proof path is a bounded Embercourt `glassroad-sundering` report centered on `glassroad_watch_relay` and `glassroad_starlens`, with `halo_spire_bridgehead` as the town-front sanity check, `glassroad_beacon_wardens` as objective/encounter companion context, current compact public/debug event vocabulary, and an explicit decision that new defense-specific durable state should wait until a focused report proves current assignment/seizure/town-governor surfaces are insufficient.
 56. Strategic AI Glassroad defense/stabilization proof reporting is completed in `docs/strategic-ai-glassroad-defense-proof-report.md` plus focused Godot coverage in `tests/ai_glassroad_defense_proof_report.gd`. The report proves current Embercourt `glassroad-sundering` relay/starlens ordering, accepted `halo_spire_bridgehead` town-front sanity, relay assignment, staged relay retake/controller flip, Starlens stabilization profile, Riverwatch town-governor garrison stabilization, and public score-table leak checks without coefficient tuning or defense-specific durable state.
-57. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+57. Strategic AI commander-role state boundary planning is completed in `docs/strategic-ai-commander-role-state-plan.md`. The plan keeps current raid encounter fields and commander roster continuity as compatibility state, defines a minimal future `commander_role_state` boundary for non-staged assignment, defense, raid, recovery, retake, stabilizer, and personality-pressure reporting, and recommends report fixture planning before schema, save migration, full AI hero task state, or live-client gate work.
+58. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-commander-role-state-planning-10184` as the next concrete slice.
-- Use the passed Mireclaw site-control proof and passed Embercourt Glassroad defense proof to keep coefficient tuning deferred. No ordering, assignment, seizure, controller-flip, town-governor, or public-surface defect was found.
-- Keep defense-specific durable state deferred because the Glassroad report proved relay retake/controller flip through current raid resolution and compact event vocabulary.
-- Plan explicit commander-role state boundaries for future non-staged assignment, defense, raid, recovery, and commander continuity behavior, without implementing full AI hero task state yet.
-- Keep the next planning slice scoped; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, or change pathing/renderer/editor/save behavior.
+- Run `strategic-ai-commander-role-report-fixture-planning-10184` as the next concrete slice.
+- Use the passed Mireclaw site-control proof, passed Embercourt Glassroad defense proof, and completed commander-role state boundary plan to keep coefficient tuning deferred. No ordering, assignment, seizure, controller-flip, town-governor, public-surface, or defense-specific durable-state defect was found.
+- Keep defense-specific durable state deferred because the Glassroad report proved relay retake/controller flip through current raid resolution and compact event vocabulary, and the commander-role plan keeps defense as a future commander role/front assignment rather than a site-specific state addition.
+- Plan exact report fixtures for future commander-role proposals before implementing schema, save migration, full AI hero task state, or live-client gates.
+- Keep the next planning slice scoped; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, implement minimal commander-role schema, or change pathing/renderer/editor/save behavior.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows a specific ordering, defense, or seizure/retake defect.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
 - Defer bounded coefficient tuning because the site-control proof report found no ordering or seizure/retake defect.
-- Start commander-role/roster state planning as the next planning-only strategic AI slice, because the defense proof passed without requiring defense-specific durable state or coefficient tuning.
+- Start commander-role report fixture planning as the next planning-only strategic AI slice, because the boundary plan is now complete and the next useful evidence is exact proposed-role fixture cases.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next gate slice.
@@ -115,7 +116,27 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is commander-role state planning after the passed Embercourt Glassroad defense proof report, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, asset import, or new defense-specific durable state.
+- The next active choice is commander-role report fixture planning after the completed commander-role state boundary plan, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, asset import, minimal commander-role schema implementation, or new defense-specific durable state.
+
+## Completed Planning Slice: Strategic AI Commander Role State Boundaries
+Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
+
+Purpose:
+- Define the minimal future commander-role state boundary for non-staged assignment, defense, raid, recovery, commander continuity, and personality-pressure behavior.
+- Keep coefficient tuning and defense-specific durable state deferred because the passed proofs found no ordering, seizure, retake, town-governor, or public-surface defect.
+
+Delivered:
+- Added `docs/strategic-ai-commander-role-state-plan.md`.
+- Separated current raid encounter fields, current commander roster continuity, and future minimal `commander_role_state`.
+- Proposed planning-only role values: `raider`, `defender`, `retaker`, `stabilizer`, `recovering`, and `reserve`.
+- Defined schema questions, report surfaces, validation strategy, save/migration risks, and staged proof order.
+- Recommended `strategic-ai-commander-role-report-fixture-planning-10184` as the next slice.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, and `python3 tests/validate_repo.py --neutral-encounter-report`.
+
+Limits:
+- This is documentation/planning only. It does not edit production JSON, change AI behavior, tune coefficients, add durable event logs, implement full AI hero task state, add defense-specific durable state, implement minimal commander-role schema, migrate saves, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
