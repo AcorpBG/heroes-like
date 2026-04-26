@@ -90,21 +90,22 @@ Immediate execution order:
 53. Strategic AI capture/counter-capture/defense proof planning is completed in `docs/strategic-ai-capture-countercapture-defense-proof-plan.md`. The selected proof path is a narrow Mireclaw `river-pass` signal-yard counter-capture/denial report centered on `river_free_company`, with `river_signal_post` as the companion ordering and reason check, before any coefficient tuning.
 54. Strategic AI site-control proof reporting is completed in `docs/strategic-ai-capture-countercapture-defense-proof-report.md` plus focused Godot coverage in `tests/ai_site_control_proof_report.gd`. The report proves current Mireclaw `river-pass` Free Company counter-capture/controller flip behavior, companion Signal Post denial reasons, compact assignment/seizure events, public score-table leak checks, and the valid `riverwatch_hold` full-selector town-front sanity result without coefficient tuning.
 55. Strategic AI Glassroad defense/stabilization proof planning is completed in `docs/strategic-ai-glassroad-defense-proof-plan.md`. The selected proof path is a bounded Embercourt `glassroad-sundering` report centered on `glassroad_watch_relay` and `glassroad_starlens`, with `halo_spire_bridgehead` as the town-front sanity check, `glassroad_beacon_wardens` as objective/encounter companion context, current compact public/debug event vocabulary, and an explicit decision that new defense-specific durable state should wait until a focused report proves current assignment/seizure/town-governor surfaces are insufficient.
-56. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+56. Strategic AI Glassroad defense/stabilization proof reporting is completed in `docs/strategic-ai-glassroad-defense-proof-report.md` plus focused Godot coverage in `tests/ai_glassroad_defense_proof_report.gd`. The report proves current Embercourt `glassroad-sundering` relay/starlens ordering, accepted `halo_spire_bridgehead` town-front sanity, relay assignment, staged relay retake/controller flip, Starlens stabilization profile, Riverwatch town-governor garrison stabilization, and public score-table leak checks without coefficient tuning or defense-specific durable state.
+57. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-glassroad-defense-proof-report-10184` as the next concrete slice.
-- Use the completed Glassroad proof plan and the passed Mireclaw site-control proof report to avoid coefficient tuning for now. No ordering, assignment, seizure, controller-flip, or public-surface defect was found in the Mireclaw River Pass proof, and the Glassroad plan does not authorize tuning.
-- Add a focused `AI_GLASSROAD_DEFENSE_PROOF_REPORT` Godot report and short report document for `glassroad-sundering`.
-- Prove or block current Embercourt assignment and relay retake/seizure behavior for `glassroad_watch_relay`, keep `glassroad_starlens` as the companion stabilization/reason surface, preserve `halo_spire_bridgehead` as the valid town-front sanity result, and record Embercourt town-governor garrison stabilization at `riverwatch_market`.
-- Keep the next slice report/test-scaffolding scoped unless the report identifies a current-system blocker; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, or change pathing/renderer/editor/save behavior.
+- Run `strategic-ai-commander-role-state-planning-10184` as the next concrete slice.
+- Use the passed Mireclaw site-control proof and passed Embercourt Glassroad defense proof to keep coefficient tuning deferred. No ordering, assignment, seizure, controller-flip, town-governor, or public-surface defect was found.
+- Keep defense-specific durable state deferred because the Glassroad report proved relay retake/controller flip through current raid resolution and compact event vocabulary.
+- Plan explicit commander-role state boundaries for future non-staged assignment, defense, raid, recovery, and commander continuity behavior, without implementing full AI hero task state yet.
+- Keep the next planning slice scoped; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, add defense-specific durable state, or change pathing/renderer/editor/save behavior.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows a specific ordering, defense, or seizure/retake defect.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
 - Defer bounded coefficient tuning because the site-control proof report found no ordering or seizure/retake defect.
-- Defer commander-role/roster state planning until a defense/stabilization or later pressure proof shows explicit hero-role state is the blocker.
+- Start commander-role/roster state planning as the next planning-only strategic AI slice, because the defense proof passed without requiring defense-specific durable state or coefficient tuning.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next gate slice.
@@ -114,7 +115,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is the Embercourt Glassroad defense proof report after the completed planning slice and passed Mireclaw River Pass site-control proof report, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, asset import, or new defense-specific durable state.
+- The next active choice is commander-role state planning after the passed Embercourt Glassroad defense proof report, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, asset import, or new defense-specific durable state.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -3452,15 +3453,14 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: bounded Embercourt Glassroad defense proof reporting after completed planning and the passed Mireclaw River Pass site-control proof report.
+Current target: commander-role state planning after the passed Mireclaw site-control proof and passed Embercourt Glassroad defense proof report.
 
 Done means:
 - The completed site-control report remains accepted as proof that current Mireclaw River Pass assignment, seizure, and controller-flip behavior works for `river_free_company`, with `river_signal_post` as companion reason coverage.
 - No coefficient tuning starts unless a later proof identifies a specific ordering, defense, seizure, or retake defect.
-- The completed planning slice defines a bounded Embercourt Glassroad defense/stabilization proof around `glassroad_watch_relay` and `glassroad_starlens`.
-- The next slice adds a focused `AI_GLASSROAD_DEFENSE_PROOF_REPORT` and report document without behavior tuning.
-- The `glassroad-sundering` fixture reality is explicitly accounted for as the current direct Embercourt enemy fixture.
-- The plan preserves `halo_spire_bridgehead` as the valid town-front sanity check and records `riverwatch_market` garrison stabilization as the town-governor defense signal.
+- The completed Glassroad report proves `glassroad_watch_relay` assignment and retake/controller flip, `glassroad_starlens` companion stabilization surface, `halo_spire_bridgehead` town-front sanity, and `riverwatch_market` garrison stabilization.
+- The next slice plans commander-role state boundaries only; it does not implement full AI hero task state.
+- The `glassroad-sundering` fixture reality remains explicitly accounted for as the current direct Embercourt enemy fixture.
 - Detailed target/build/recruit score tables stay in report/debug output only.
 - Public or derived event output stays compact and does not expose score-table fields.
 - No production JSON migration, durable AI event log, save migration, full AI hero task state, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, new defense-specific durable state, or River Pass rebalance is pulled into the proof slice.
