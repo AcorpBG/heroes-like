@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T10:12:00Z",
+  "updatedAt": "2026-04-26T10:31:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-action-feedback-ui-10184",
-  "currentSliceTitle": "Add compact live overworld action feedback cues",
+  "currentSliceId": "neutral-encounter-readability-ui-10184",
+  "currentSliceTitle": "Improve live neutral encounter readability in overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live overworld action feedback cues on the existing footer cue chip. Movement, blocked orders, collection/artifact pickup, spell casts, town/battle routing, saves, and end-turn enemy activity now record validation-friendly cue state and use a lightweight reduced-motion-aware pulse without adding a new animation framework, scene, schema, or assets.",
+  "currentSliceNotes": "Implemented compact live neutral encounter readability through existing overworld tooltip, context rail, movement/action summaries, and battle-start feedback. Neutral contacts now surface role, risk/difficulty, visible army, rewards, field objectives, and guard target context from existing encounter placement and metadata without changing pathing, battle behavior, save data, content balance, or adding report scenes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",

@@ -451,7 +451,7 @@ func _start_encounter() -> void:
 	_session.battle = payload
 	_session.flags["last_action"] = "entered_battle"
 	_last_enemy_activity_text = ""
-	_record_action_feedback("battle", "Battle is joined against %s." % OverworldRules.encounter_display_name(placement))
+	_record_action_feedback("battle", OverworldRules.describe_encounter_battle_cue(_session, placement))
 	AppRouter.go_to_battle()
 
 func _render_state() -> void:
@@ -841,6 +841,18 @@ func _selected_tile_order_summary(adjacent: bool) -> String:
 		if adjacent:
 			return "Recover %s. %s." % [ArtifactRules.describe_artifact_short(artifact_id), state]
 		return "Take the next step toward %s. %s." % [ArtifactRules.artifact_name(artifact_id), state]
+	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
+	if not encounter.is_empty():
+		var readout := OverworldRules.describe_encounter_compact_readability(_session, encounter)
+		if adjacent:
+			return "Enter battle with %s%s." % [
+				OverworldRules.encounter_display_name(encounter),
+				"" if readout == "" else ". %s" % readout,
+			]
+		return "Take the next step toward %s%s." % [
+			OverworldRules.encounter_display_name(encounter),
+			"" if readout == "" else ". %s" % readout,
+		]
 	var destination := _selected_tile_destination_name()
 	var target := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	if destination != "":
@@ -1398,12 +1410,13 @@ func _describe_selected_tile() -> String:
 	var encounter = _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
 		var encounter_data = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-		return "Hostile Contact\nCoords %d,%d | Terrain %s\n%s\n%s\n%s" % [
+		return "Hostile Contact\nCoords %d,%d | Terrain %s\n%s\n%s\n%s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
 			String(encounter_data.get("name", "Skirmish host")),
 			OverworldRules.describe_encounter_object_surface(encounter),
+			OverworldRules.describe_encounter_readability_surface(_session, encounter),
 			OverworldRules.describe_encounter_pressure(_session, encounter),
 		]
 
@@ -1492,13 +1505,15 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 	var encounter := _encounter_at(tile.x, tile.y)
 	if not encounter.is_empty():
 		var object_surface := OverworldRules.describe_encounter_object_surface(encounter)
-		return "%s %d,%d | %s | %s%s" % [
+		var readability := OverworldRules.describe_encounter_compact_readability(_session, encounter)
+		return "%s %d,%d | %s | %s%s%s" % [
 			prefix,
 			tile.x,
 			tile.y,
 			OverworldRules.encounter_display_name(encounter),
 			terrain,
 			"" if object_surface == "" else " | %s" % object_surface,
+			"" if readability == "" else " | %s" % readability,
 		]
 	var artifact_node := _artifact_node_at(tile.x, tile.y)
 	if not artifact_node.is_empty():
