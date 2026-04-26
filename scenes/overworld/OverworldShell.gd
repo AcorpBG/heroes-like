@@ -761,7 +761,9 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	if action.is_empty():
 		_primary_action_button.text = "Select Site"
 		_primary_action_button.disabled = true
-		_primary_action_button.tooltip_text = "Select a visible destination or stand on a site to reveal its primary order."
+		var route_decision := _selected_route_decision_surface()
+		var route_tooltip := _route_decision_tooltip(route_decision)
+		_primary_action_button.tooltip_text = route_tooltip if route_tooltip != "" else "Select a visible destination or stand on a site to reveal its primary order."
 		return
 
 	_primary_action_button.text = "%s [Enter]" % _short_action_label(String(action.get("label", "Action")), 22)
@@ -791,25 +793,197 @@ func _selected_tile_movement_action() -> Dictionary:
 
 	var hero_pos = OverworldRules.hero_position(_session)
 	if _is_adjacent_move_target(hero_pos, _selected_tile):
+		var route_decision := _selected_route_decision_surface()
 		return {
 			"id": "march_selected",
 			"label": _selected_tile_order_label(true),
 			"summary": _selected_tile_order_summary(true),
+			"route_decision": route_decision,
 		}
 
 	var route = _selected_route()
 	if route.size() > 1:
-		var steps = route.size() - 1
+		var route_decision := _selected_route_decision_surface()
 		return {
 			"id": "advance_route",
 			"label": _selected_tile_order_label(false),
-			"summary": "%s Route length %d step%s." % [
+			"summary": "%s %s" % [
 				_selected_tile_order_summary(false),
-				steps,
-				"" if steps == 1 else "s",
+				_route_decision_tooltip(route_decision),
 			],
+			"route_decision": route_decision,
 		}
 	return {}
+
+func _selected_route_decision_surface() -> Dictionary:
+	if not _tile_in_bounds(_selected_tile):
+		return {}
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	var movement_current := int(movement.get("current", 0))
+	var movement_max := int(movement.get("max", movement_current))
+	var selected_is_hero := _selected_tile == hero_pos
+	var explored := OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y)
+	var visible := OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y)
+	var blocked := OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y)
+	var destination_name := _selected_tile_destination_name()
+	if destination_name == "":
+		destination_name = "%d,%d" % [_selected_tile.x, _selected_tile.y]
+	var route: Array = []
+	if not selected_is_hero and explored and not blocked:
+		route = _selected_route()
+	var steps: int = max(0, route.size() - 1)
+	var adjacent: bool = _is_adjacent_move_target(hero_pos, _selected_tile)
+	var action_kind := _selected_route_action_kind(adjacent)
+	var action_label := _selected_tile_order_label(adjacent) if not selected_is_hero else "Hold"
+	var movement_cost: int = 1 if steps > 0 and movement_current > 0 else 0
+	var reachable_today: bool = steps > 0 and movement_current >= steps
+	var route_clear: bool = steps > 0
+	var status := "selected"
+	var blocked_reason := ""
+	if selected_is_hero:
+		status = "current"
+		action_kind = "hold"
+		action_label = "Current Position"
+		reachable_today = true
+	elif not explored:
+		status = "blocked"
+		blocked_reason = "Unexplored ground; scout closer."
+	elif blocked:
+		status = "blocked"
+		blocked_reason = "%s blocks travel." % _terrain_name_at(_selected_tile.x, _selected_tile.y)
+	elif route_clear and movement_current <= 0:
+		status = "no_movement"
+		blocked_reason = "No movement left today."
+	elif route_clear and reachable_today:
+		status = "reachable"
+	elif route_clear:
+		status = "not_today"
+		blocked_reason = "Route is clear, but not reachable with today's movement."
+	else:
+		status = "blocked"
+		blocked_reason = "No clear route from the active hero."
+	var remote_owned_town := _is_selected_owned_town_visit_target()
+	if remote_owned_town:
+		action_kind = "town"
+		action_label = "Visit Town"
+		status = "reachable"
+		reachable_today = true
+		route_clear = true
+		blocked_reason = ""
+		if steps <= 0:
+			movement_cost = 0
+	return {
+		"destination": destination_name,
+		"x": _selected_tile.x,
+		"y": _selected_tile.y,
+		"action_kind": action_kind,
+		"action_label": action_label,
+		"status": status,
+		"reachable_today": reachable_today,
+		"route_clear": route_clear,
+		"blocked_reason": blocked_reason,
+		"steps": steps,
+		"distance": steps,
+		"movement_current": movement_current,
+		"movement_max": movement_max,
+		"movement_cost": movement_cost,
+		"movement_after_order": max(0, movement_current - movement_cost),
+		"visible": visible,
+		"explored": explored,
+		"terrain": _terrain_name_at(_selected_tile.x, _selected_tile.y),
+	}
+
+func _selected_route_action_kind(adjacent: bool) -> String:
+	if not _tile_in_bounds(_selected_tile):
+		return "select"
+	if not _town_at(_selected_tile.x, _selected_tile.y).is_empty():
+		return "town" if adjacent or _is_selected_owned_town_visit_target() else "move/town"
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if adjacent:
+			if bool(site.get("persistent_control", false)) and String(node.get("collected_by_faction_id", "")) == "player":
+				return "enter"
+			return "collect"
+		return "move/collect"
+	if not _artifact_node_at(_selected_tile.x, _selected_tile.y).is_empty():
+		return "collect" if adjacent else "move/collect"
+	if not _encounter_at(_selected_tile.x, _selected_tile.y).is_empty():
+		return "enter" if adjacent else "move/enter"
+	return "move"
+
+func _route_decision_line(surface: Dictionary) -> String:
+	if surface.is_empty():
+		return ""
+	var status := String(surface.get("status", ""))
+	var steps := int(surface.get("steps", 0))
+	var step_text := "%d step%s" % [steps, "" if steps == 1 else "s"] if steps > 0 else "no path"
+	if status == "current":
+		step_text = "current tile"
+	var movement_current := int(surface.get("movement_current", 0))
+	var movement_after := int(surface.get("movement_after_order", movement_current))
+	var movement_text := "Move %d/%d" % [movement_current, int(surface.get("movement_max", movement_current))]
+	if int(surface.get("movement_cost", 0)) > 0:
+		movement_text = "Move %d->%d" % [movement_current, movement_after]
+	var status_text := _route_decision_status_label(surface)
+	var line := "Route: %s | %s | %s | %s | %s" % [
+		_short_action_label(String(surface.get("destination", "Selected")), 22),
+		String(surface.get("action_kind", "move")).capitalize(),
+		step_text,
+		status_text,
+		movement_text,
+	]
+	var reason := String(surface.get("blocked_reason", "")).strip_edges()
+	if reason != "":
+		line += " | %s" % reason
+	return line
+
+func _route_decision_cue(surface: Dictionary) -> String:
+	if surface.is_empty():
+		return ""
+	var status := String(surface.get("status", ""))
+	if status == "current":
+		return ""
+	var destination := _short_action_label(String(surface.get("destination", "Selected")), 18)
+	var movement_current := int(surface.get("movement_current", 0))
+	var movement_after := int(surface.get("movement_after_order", movement_current))
+	var movement_text := "%d/%d" % [movement_current, int(surface.get("movement_max", movement_current))]
+	if int(surface.get("movement_cost", 0)) > 0:
+		movement_text = "%d->%d" % [movement_current, movement_after]
+	if status in ["blocked", "no_movement"]:
+		return "Route: %s | %s | Move %s" % [destination, _route_decision_status_label(surface), movement_text]
+	return "%s: %s | %d step%s | Move %s" % [
+		String(surface.get("action_kind", "move")).capitalize(),
+		destination,
+		int(surface.get("steps", 0)),
+		"" if int(surface.get("steps", 0)) == 1 else "s",
+		movement_text,
+	]
+
+func _route_decision_tooltip(surface: Dictionary) -> String:
+	if surface.is_empty():
+		return ""
+	var line := _route_decision_line(surface)
+	var reason := String(surface.get("blocked_reason", "")).strip_edges()
+	if reason != "":
+		return "%s. %s" % [line, reason]
+	return "%s. Commit %s." % [line, String(surface.get("action_label", "the selected order"))]
+
+func _route_decision_status_label(surface: Dictionary) -> String:
+	match String(surface.get("status", "")):
+		"reachable":
+			return "reachable today"
+		"not_today":
+			return "not reachable today"
+		"no_movement":
+			return "no movement"
+		"blocked":
+			return "blocked"
+		"current":
+			return "current"
+		_:
+			return "selected"
 
 func _selected_tile_order_label(adjacent: bool) -> String:
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
@@ -1043,6 +1217,9 @@ func _map_cue_text() -> String:
 	var feedback := _action_feedback_text()
 	if feedback != "":
 		return feedback
+	var route_cue := _route_decision_cue(_selected_route_decision_surface())
+	if route_cue != "":
+		return _short_text(route_cue, 52)
 	var action := _current_primary_action()
 	if action.is_empty():
 		var movement = _session.overworld.get("movement", {})
@@ -1063,6 +1240,7 @@ func _map_cue_text() -> String:
 func _map_cue_tooltip() -> String:
 	var feedback := _action_feedback_tooltip()
 	var action := _current_primary_action()
+	var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())
 	var pan_hint := ""
 	if _map_view != null and _map_view.has_method("validation_view_metrics"):
 		var metrics: Dictionary = _map_view.call("validation_view_metrics")
@@ -1071,6 +1249,9 @@ func _map_cue_tooltip() -> String:
 	if feedback != "":
 		var next_hint := " Select another destination or press Enter/Space for the current primary order." if not action.is_empty() else " Select a destination or open a command drawer for the next order."
 		return "%s.%s%s" % [feedback, next_hint, pan_hint]
+	if route_tooltip != "":
+		var commit_hint := " Press Enter or Space to commit the primary order." if not action.is_empty() and not bool(action.get("disabled", false)) else ""
+		return "%s%s%s" % [route_tooltip, commit_hint, pan_hint]
 	if action.is_empty():
 		return "Click a visible adjacent tile to move now, or select a farther visible tile to set the next route step.%s" % pan_hint
 	return "Press Enter or Space for %s. Click the map to move or change the selected route.%s" % [String(action.get("label", "the primary order")), pan_hint]
@@ -1203,19 +1384,20 @@ func _rail_tile_text() -> String:
 	var terrain := _terrain_name_at(_selected_tile.x, _selected_tile.y)
 	var coords := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	var action_hint := _rail_action_hint()
+	var route_line := _route_decision_line(_selected_route_decision_surface())
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
-		return "Tile %s | Unexplored\nScout closer" % coords
+		return "Tile %s | Unexplored\n%s\nScout closer" % [coords, route_line]
 	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
 		var remembered_rail := _remembered_tile_rail_text(terrain, coords, action_hint)
 		if remembered_rail != "":
-			return remembered_rail
-		return "Tile %s | Mapped %s\nOut of scout net" % [coords, terrain]
+			return "%s\n%s" % [remembered_rail, route_line]
+		return "Tile %s | Mapped %s\n%s\nOut of scout net" % [coords, terrain, route_line]
 
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	if not town.is_empty():
 		var town_line := "Town: %s" % _selected_tile_destination_name()
 		var owner := String(town.get("owner", "neutral")).capitalize()
-		return "%s\n%s%s" % [town_line, "Owner %s | %s" % [owner, terrain], "" if action_hint == "" else " | %s" % action_hint]
+		return "%s\n%s\n%s%s" % [town_line, route_line, "Owner %s | %s" % [owner, terrain], "" if action_hint == "" else " | %s" % action_hint]
 
 	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
@@ -1223,8 +1405,9 @@ func _rail_tile_text() -> String:
 		var site_state := OverworldRules.describe_resource_site_surface(_session, node, site)
 		if site_state == "":
 			site_state = "Ready"
-		return "Site: %s\n%s | %s%s" % [
+		return "Site: %s\n%s\n%s | %s%s" % [
 			String(site.get("name", "Frontier site")),
+			route_line,
 			site_state,
 			terrain,
 			"" if action_hint == "" else " | %s" % action_hint,
@@ -1233,8 +1416,9 @@ func _rail_tile_text() -> String:
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
 		var artifact_id := String(artifact_node.get("artifact_id", ""))
-		return "Artifact: %s\n%s | %s%s" % [
+		return "Artifact: %s\n%s\n%s | %s%s" % [
 			ArtifactRules.artifact_name(artifact_id),
+			route_line,
 			"%s | %s" % [ArtifactRules.artifact_slot_label(artifact_id), ArtifactRules.artifact_reward_role(artifact_id)],
 			ArtifactRules.artifact_effect_summary(artifact_id),
 			"" if action_hint == "" else " | %s" % action_hint,
@@ -1243,8 +1427,9 @@ func _rail_tile_text() -> String:
 	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
 		var object_surface := OverworldRules.describe_encounter_object_surface(encounter)
-		return "Hostile: %s\n%s%s" % [
+		return "Hostile: %s\n%s\n%s%s" % [
 			OverworldRules.encounter_display_name(encounter),
+			route_line,
 			terrain if object_surface == "" else "%s | %s" % [terrain, object_surface],
 			"" if action_hint == "" else " | %s" % action_hint,
 		]
@@ -1255,9 +1440,9 @@ func _rail_tile_text() -> String:
 		for entry in heroes_here:
 			if entry is Dictionary:
 				names.append(String(entry.get("name", "Hero")))
-		return "Marker: %s\n%s" % [", ".join(names), terrain]
+		return "Marker: %s\n%s\n%s" % [", ".join(names), route_line, terrain]
 
-	return "Open: %s | %s\n%s" % [coords, terrain, action_hint if action_hint != "" else "Route or march"]
+	return "Open: %s | %s\n%s\n%s" % [coords, terrain, route_line, action_hint if action_hint != "" else "Route or march"]
 
 func _rail_action_hint() -> String:
 	var primary_action := _current_primary_action()
@@ -1387,30 +1572,33 @@ func _describe_selected_tile() -> String:
 		return OverworldRules.describe_context(_session)
 
 	var terrain = _terrain_name_at(_selected_tile.x, _selected_tile.y)
+	var route_line := _route_decision_line(_selected_route_decision_surface())
 	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
-		return "Unexplored Frontier\nCoords %d,%d | Terrain unknown\nScouts have not charted this ground yet." % [_selected_tile.x, _selected_tile.y]
+		return "Unexplored Frontier\nCoords %d,%d | Terrain unknown\n%s\nScouts have not charted this ground yet." % [_selected_tile.x, _selected_tile.y, route_line]
 	if not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
 		var remembered_text := _remembered_selected_tile_text(terrain)
 		if remembered_text != "":
-			return remembered_text
-		return "Mapped Ground\nCoords %d,%d | Terrain %s\nThis tile is outside the current scout net." % [_selected_tile.x, _selected_tile.y, terrain]
+			return "%s\n%s" % [remembered_text, route_line]
+		return "Mapped Ground\nCoords %d,%d | Terrain %s\n%s\nThis tile is outside the current scout net." % [_selected_tile.x, _selected_tile.y, terrain, route_line]
 
 	var town = _town_at(_selected_tile.x, _selected_tile.y)
 	if not town.is_empty():
-		return "Town Site\nCoords %d,%d | Terrain %s\n%s" % [
+		return "Town Site\nCoords %d,%d | Terrain %s\n%s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
+			route_line,
 			OverworldRules.describe_town_context(town, _session),
 		]
 
 	var node = _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-		return "Resource Site\nCoords %d,%d | Terrain %s\n%s\n%s\n%s" % [
+		return "Resource Site\nCoords %d,%d | Terrain %s\n%s\n%s\n%s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
+			route_line,
 			String(site.get("name", "Frontier cache")),
 			OverworldRules.describe_resource_site_surface(_session, node, site),
 			OverworldRules.describe_resource_site_interaction_surface(node, site),
@@ -1419,10 +1607,11 @@ func _describe_selected_tile() -> String:
 	var artifact_node = _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
 		var artifact_id := String(artifact_node.get("artifact_id", ""))
-		return "Artifact Cache\nCoords %d,%d | Terrain %s\n%s" % [
+		return "Artifact Cache\nCoords %d,%d | Terrain %s\n%s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
+			route_line,
 			ArtifactRules.describe_artifact_inspection(
 				_session.overworld.get("hero", {}),
 				artifact_id,
@@ -1434,10 +1623,11 @@ func _describe_selected_tile() -> String:
 	var encounter = _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
 		var encounter_data = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
-		return "Hostile Contact\nCoords %d,%d | Terrain %s\n%s\n%s\n%s\n%s" % [
+		return "Hostile Contact\nCoords %d,%d | Terrain %s\n%s\n%s\n%s\n%s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
+			route_line,
 			String(encounter_data.get("name", "Skirmish host")),
 			OverworldRules.describe_encounter_object_surface(encounter),
 			OverworldRules.describe_encounter_readability_surface(_session, encounter),
@@ -1450,17 +1640,19 @@ func _describe_selected_tile() -> String:
 		for entry in heroes_here:
 			if entry is Dictionary:
 				names.append(String(entry.get("name", "Hero")))
-		return "Command Marker\nCoords %d,%d | Terrain %s\nReserve commanders: %s" % [
+		return "Command Marker\nCoords %d,%d | Terrain %s\n%s\nReserve commanders: %s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
+			route_line,
 			", ".join(names),
 		]
 
-	return "Open Ground\nCoords %d,%d | Terrain %s\nSelect a route and march the active hero through the frontier." % [
+	return "Open Ground\nCoords %d,%d | Terrain %s\n%s\nSelect a route and march the active hero through the frontier." % [
 		_selected_tile.x,
 		_selected_tile.y,
 		terrain,
+		route_line,
 	]
 
 func _update_map_tooltip() -> void:
@@ -1470,7 +1662,6 @@ func _map_tooltip_text() -> String:
 	if _tile_in_bounds(_hovered_tile) and _hovered_tile != _selected_tile:
 		return _tile_visibility_tooltip(_hovered_tile, "Hover")
 	var hero_pos = OverworldRules.hero_position(_session)
-	var movement_left = int(_session.overworld.get("movement", {}).get("current", 0))
 	var primary_action := _current_primary_action()
 	if _selected_tile == hero_pos:
 		if not primary_action.is_empty():
@@ -1479,21 +1670,9 @@ func _map_tooltip_text() -> String:
 				_short_action_label(String(primary_action.get("label", "Action")), 22),
 			]
 		return "%s | Select a mapped destination on the map." % OverworldRules.describe_visibility(_session)
-	if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):
-		return "Selected %d,%d | Unexplored ground | Move closer to reveal it." % [_selected_tile.x, _selected_tile.y]
-	if OverworldRules.tile_is_blocked(_session, _selected_tile.x, _selected_tile.y):
-		return "Selected %d,%d | Sea blocks travel." % [_selected_tile.x, _selected_tile.y]
-	var route = _selected_route()
-	if route.size() > 1:
-		var steps = route.size() - 1
-		return "Selected %d,%d | Route %d step%s | Move %d today | Enter: %s." % [
-			_selected_tile.x,
-			_selected_tile.y,
-			steps,
-			"" if steps == 1 else "s",
-			movement_left,
-			_short_action_label(String(primary_action.get("label", "Advance")), 22),
-		]
+	var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())
+	if route_tooltip != "":
+		return route_tooltip
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
 
 func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
@@ -1828,6 +2007,7 @@ func validation_snapshot() -> Dictionary:
 	var active_town := _validation_active_town_state()
 	var selected_town := _validation_selected_town_state()
 	var primary_action := _current_primary_action()
+	var route_decision := _selected_route_decision_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -1865,6 +2045,10 @@ func validation_snapshot() -> Dictionary:
 		"enemy_activity_summary": _last_enemy_activity_text,
 		"action_feedback": _validation_action_feedback(),
 		"action_feedback_text": _action_feedback_text(),
+		"map_cue_text": _map_cue_label.text,
+		"map_cue_tooltip_text": _map_cue_label.tooltip_text,
+		"selected_route_decision": route_decision,
+		"selected_route_decision_text": _route_decision_line(route_decision),
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),
@@ -2650,12 +2834,15 @@ func _validation_artifact_action_payloads() -> Array:
 func _validation_action_payload(action: Dictionary) -> Dictionary:
 	if action.is_empty():
 		return {}
-	return {
+	var payload := {
 		"id": String(action.get("id", "")),
 		"label": String(action.get("label", "")),
 		"summary": String(action.get("summary", "")),
 		"disabled": bool(action.get("disabled", false)),
 	}
+	if action.get("route_decision", {}) is Dictionary:
+		payload["route_decision"] = action.get("route_decision", {})
+	return payload
 
 func _validation_context_action_signature() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
