@@ -62,6 +62,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
+var _last_action_recap := {}
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -83,87 +84,110 @@ func _ready() -> void:
 	_refresh()
 
 func _on_build_action_pressed(action_id: String) -> void:
+	var full_action_id := "build:%s" % action_id
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.build_active_town(_session, action_id)
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("build", full_action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_recruit_action_pressed(action_id: String) -> void:
+	var full_action_id := "recruit:%s" % action_id
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.recruit_active_town(_session, action_id)
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("recruit", full_action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_market_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := TownRules.perform_market_action(_session, action_id)
 	if result.is_empty():
 		return
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("market", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_hero_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := {}
 	if action_id.begins_with("switch_hero:"):
 		result = TownRules.switch_active_hero_at_town(_session, action_id.trim_prefix("switch_hero:"))
 	if result.is_empty():
 		return
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("order", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_tavern_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := {}
 	if action_id.begins_with("hire_hero:"):
 		result = TownRules.hire_hero_at_active_town(_session, action_id.trim_prefix("hire_hero:"))
 	if result.is_empty():
 		return
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("order", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_transfer_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := TownRules.transfer_in_active_town(_session, action_id)
 	if result.is_empty():
 		return
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("order", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_response_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := TownRules.perform_response_action(_session, action_id)
 	if result.is_empty():
 		return
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("response", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_study_action_pressed(action_id: String) -> void:
+	var full_action_id := "learn_spell:%s" % action_id
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.learn_spell_at_active_town(_session, action_id)
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("order", full_action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_artifact_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := TownRules.manage_artifact_at_active_town(_session, action_id)
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("order", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
 
 func _on_specialty_action_pressed(action_id: String) -> void:
+	var before := TownRules.town_action_consequence_signature(_session)
+	var action := _validation_action_for_id(action_id)
 	var result := {}
 	if action_id.begins_with("choose_specialty:"):
 		result = TownRules.choose_specialty_at_active_town(_session, action_id.trim_prefix("choose_specialty:"))
-	_last_message = String(result.get("message", ""))
+	_record_town_action_result("order", action_id, action, result, before)
 	if _handle_session_resolution():
 		return
 	_refresh()
@@ -171,6 +195,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 func _on_save_pressed() -> void:
 	var result := AppRouter.save_active_session_to_selected_manual_slot()
 	_last_message = String(result.get("message", ""))
+	_last_action_recap = {}
 	_refresh()
 
 func _on_save_slot_selected(index: int) -> void:
@@ -219,7 +244,7 @@ func _refresh() -> void:
 	_set_compact_label(_study_label, TownRules.describe_spell_access(_session), 2)
 	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
 	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 2)
-	_set_compact_label(_event_label, TownRules.describe_event_feed(_session, _last_message), 1)
+	_set_compact_label(_event_label, TownRules.describe_event_feed(_session, _last_message, _last_action_recap), 2)
 	_town_stage_view.set_town_state(_session)
 	_refresh_save_slot_picker()
 	_rebuild_hero_actions()
@@ -310,6 +335,10 @@ func validation_snapshot() -> Dictionary:
 		"artifact_visible_text": _artifact_label.text,
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
+		"town_action_recap": _duplicate_dictionary(_last_action_recap),
+		"town_action_recap_text": String(_last_action_recap.get("text", "")),
+		"visible_consequence_text": _event_label.text,
+		"consequence_tooltip_text": _event_label.tooltip_text,
 		"front": front,
 		"occupation": occupation,
 		"base_income": OverworldRules.town_income(town),
@@ -377,6 +406,10 @@ func validation_try_progress_action() -> Dictionary:
 			"action_id": action_id,
 			"label": String(action.get("label", action_id)),
 			"message": _last_message,
+			"town_action_recap": _duplicate_dictionary(_last_action_recap),
+			"town_action_recap_text": String(_last_action_recap.get("text", "")),
+			"visible_consequence_text": _event_label.text,
+			"consequence_tooltip_text": _event_label.tooltip_text,
 			"state_changed": before_signature != after_signature,
 		}
 
@@ -445,6 +478,10 @@ func validation_perform_town_action(action_id: String) -> Dictionary:
 		"action_id": action_id,
 		"label": String(action.get("label", action_id)),
 		"message": _last_message,
+		"town_action_recap": _duplicate_dictionary(_last_action_recap),
+		"town_action_recap_text": String(_last_action_recap.get("text", "")),
+		"visible_consequence_text": _event_label.text,
+		"consequence_tooltip_text": _event_label.tooltip_text,
 		"state_changed": before_signature != after_signature,
 	}
 
@@ -684,6 +721,16 @@ func _rebuild_specialty_actions() -> void:
 		_style_action_button(button)
 		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
 		_specialty_actions.add_child(button)
+
+func _record_town_action_result(
+	lane: String,
+	action_id: String,
+	action: Dictionary,
+	result: Dictionary,
+	before: Dictionary
+) -> void:
+	_last_message = String(result.get("message", ""))
+	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before)
 
 func _handle_session_resolution() -> bool:
 	if _session.scenario_status == "in_progress":

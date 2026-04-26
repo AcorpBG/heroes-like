@@ -543,6 +543,52 @@ func _assert_town_economy_decision_payload(shell: Node) -> bool:
 	if not message.contains("Spent ") or (not message.contains("remain in town reserve") and not message.contains("Daily income now") and not message.contains("Weekly muster")):
 		push_error("Town smoke: economy action feedback did not explain spend plus the visible town/field outcome: %s." % progress)
 		return false
+	if not _assert_town_post_action_consequence_contract(shell, progress):
+		return false
+	return true
+
+func _assert_town_post_action_consequence_contract(shell: Node, action_response: Dictionary) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: town shell does not expose post-action validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var response_recap: Dictionary = action_response.get("town_action_recap", {}) if action_response.get("town_action_recap", {}) is Dictionary else {}
+	var snapshot_recap: Dictionary = snapshot.get("town_action_recap", {}) if snapshot.get("town_action_recap", {}) is Dictionary else {}
+	var recap_text := "\n".join([
+		String(action_response.get("town_action_recap_text", "")),
+		String(snapshot.get("town_action_recap_text", "")),
+		String(snapshot.get("visible_consequence_text", "")),
+		String(snapshot.get("consequence_tooltip_text", "")),
+	])
+	for token in ["After order:", "Affected:", "Why it matters:", "Next:"]:
+		if not recap_text.contains(token):
+			push_error("Town smoke: post-action town recap lost %s clarity: response=%s snapshot=%s text=%s." % [token, response_recap, snapshot_recap, recap_text])
+			return false
+	for key in ["happened", "affected", "matters", "next", "text"]:
+		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
+			push_error("Town smoke: post-action town recap is missing structured %s: response=%s snapshot=%s." % [key, response_recap, snapshot_recap])
+			return false
+	var consequence_text := "\n".join([
+		String(response_recap.get("affected", "")),
+		String(response_recap.get("matters", "")),
+		String(response_recap.get("next", "")),
+	])
+	var practical_tokens := ["Stores", "Reserve", "Field", "Building", "Income", "Weekly muster", "readiness", "frontier", "build", "recruit"]
+	var practical_token_found := false
+	for token in practical_tokens:
+		if consequence_text.contains(String(token)):
+			practical_token_found = true
+			break
+	if not practical_token_found:
+		push_error("Town smoke: post-action town recap did not explain a practical town/field consequence: %s." % response_recap)
+		return false
+	for leak_token in ["build_category_weights", "final_score", "debug_reason", "raid_target_weights"]:
+		if recap_text.contains(leak_token):
+			push_error("Town smoke: post-action town recap leaked internal strategy token %s: %s." % [leak_token, recap_text])
+			return false
+	if String(snapshot.get("visible_consequence_text", "")) == "" or String(snapshot.get("consequence_tooltip_text", "")) == "":
+		push_error("Town smoke: post-action town recap is not exposed through visible rail and tooltip text: %s." % snapshot)
+		return false
 	return true
 
 func _assert_town_build_recruit_next_step_contract(shell: Node) -> bool:

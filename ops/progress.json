@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:18:00Z",
+  "updatedAt": "2026-04-26T17:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-post-action-status-recap-clarity-ui-10184",
-  "currentSliceTitle": "Surface practical battle post-action and status recap clarity in live UI",
+  "currentSliceId": "town-post-action-consequence-recap-ui-10184",
+  "currentSliceTitle": "Surface practical town post-action consequence recap clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live battle post-action recap clarity through BattleRules recap helpers and BattleShell consequence rail, action tooltip, and validation payload surfaces. Resolved player actions now summarize what happened, affected stack health/status/position where available, why the next tactical decision matters, and the next acting stack without battle mechanics, schema, save, AI, or content migration changes.",
+  "currentSliceNotes": "Implemented compact live town post-action consequence recaps through TownRules before/after recap helpers and TownShell dispatch rail, tooltip, and validation payload surfaces. Resolved build, recruit, market, and town order actions now summarize what happened, affected building/resource/unit/queue state where available, why the change matters for production, defense, or frontier pressure, and the next practical town or field decision without schema, economy, save, AI, or content migration changes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1488,6 +1488,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T17:05:00Z",
       "completedAt": "2026-04-26T17:18:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "town-post-action-consequence-recap-ui-10184",
+      "title": "Surface practical town post-action consequence recap clarity in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T17:30:00Z",
+      "completedAt": "2026-04-26T17:45:00Z",
       "difficulty": "medium"
     }
   ],

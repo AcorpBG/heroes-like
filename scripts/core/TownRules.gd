@@ -398,7 +398,11 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 		lines.append("- Capital watch: %s" % _project_watch_summary(capital_project))
 	return "\n".join(lines)
 
-static func describe_event_feed(session: SessionStateStoreScript.SessionData, last_message: String = "") -> String:
+static func describe_event_feed(
+	session: SessionStateStoreScript.SessionData,
+	last_message: String = "",
+	action_recap: Dictionary = {}
+) -> String:
 	var town := get_active_town(session)
 	if town.is_empty():
 		return "Town Dispatch\n- No active town."
@@ -406,7 +410,8 @@ static func describe_event_feed(session: SessionStateStoreScript.SessionData, la
 	var open_builds := get_build_actions(session).size()
 	var open_recruits := get_recruit_actions(session).size()
 	var open_study := get_spell_learning_actions(session).size()
-	var lead_line := "Latest order: %s" % last_message if last_message != "" else "The council chamber awaits fresh orders."
+	var recap_text := String(action_recap.get("text", ""))
+	var lead_line := recap_text if recap_text != "" else ("Latest order: %s" % last_message if last_message != "" else "The council chamber awaits fresh orders.")
 	var pressure_line := _pressure_brief(session, town)
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
@@ -414,7 +419,7 @@ static func describe_event_feed(session: SessionStateStoreScript.SessionData, la
 	var response_actions := get_response_actions(session).size()
 	var lines := [
 		"Town Dispatch",
-		"- %s" % lead_line,
+		lead_line if recap_text != "" else "- %s" % lead_line,
 		"- Construction %d | Recruitment %d | Study %d" % [open_builds, open_recruits, open_study],
 	]
 	if pressure_line != "":
@@ -428,6 +433,76 @@ static func describe_event_feed(session: SessionStateStoreScript.SessionData, la
 	if response_actions > 0:
 		lines.append("- Strategic response orders %d" % response_actions)
 	return "\n".join(lines)
+
+static func town_action_consequence_signature(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {}
+	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
+	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
+	var front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	return {
+		"town_name": _town_name(town),
+		"resources": _duplicate_dictionary(session.overworld.get("resources", {})),
+		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
+		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
+		"army_counts": _army_unit_counts(session.overworld.get("army", {})),
+		"income": OverworldRulesScript.town_income(town, session),
+		"weekly_growth": OverworldRulesScript.town_weekly_growth(town, session),
+		"battle_readiness": OverworldRulesScript.town_battle_readiness(town, session),
+		"reinforcement_quality": OverworldRulesScript.town_reinforcement_quality(town, session),
+		"pressure_output": OverworldRulesScript.town_pressure_output(town, session),
+		"logistics_summary": String(logistics.get("summary", "")),
+		"logistics_impact": String(logistics.get("impact_summary", "")),
+		"recovery_summary": String(recovery.get("summary", "")),
+		"front_summary": String(front.get("summary", "")),
+		"front_active": bool(front.get("active", false)),
+		"build_action_count": get_build_actions(session).size(),
+		"recruit_action_count": get_recruit_actions(session).size(),
+		"market_action_count": get_market_actions(session).size(),
+		"response_action_count": get_response_actions(session).size(),
+	}
+
+static func build_town_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	lane: String,
+	action_id: String,
+	action: Dictionary,
+	result: Dictionary,
+	before: Dictionary
+) -> Dictionary:
+	var message := String(result.get("message", ""))
+	if not bool(result.get("ok", false)):
+		return {
+			"active": false,
+			"kind": lane,
+			"action_id": action_id,
+			"message": message,
+			"text": message,
+		}
+	var after := town_action_consequence_signature(session)
+	var happened := _town_action_happened_line(lane, action_id, action, message)
+	var affected := _town_action_affected_line(lane, action_id, action, before, after)
+	var matters := _town_action_matters_line(session, lane, before, after)
+	var next := _town_action_next_line(session)
+	var text := "After order: %s\nAffected: %s\nWhy it matters: %s\nNext: %s" % [
+		happened,
+		affected,
+		matters,
+		next,
+	]
+	return {
+		"active": true,
+		"kind": lane,
+		"action_id": action_id,
+		"label": String(action.get("label", action_id)),
+		"happened": happened,
+		"affected": affected,
+		"matters": matters,
+		"next": next,
+		"text": text,
+		"message": message,
+	}
 
 static func describe_buildings(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
@@ -1436,6 +1511,202 @@ static func _action_projection_line(action: Dictionary) -> String:
 			line = "%s..." % line.left(69)
 		return line
 	return ""
+
+static func _town_action_happened_line(lane: String, action_id: String, action: Dictionary, message: String) -> String:
+	var first_sentence := _first_sentence(message)
+	if first_sentence != "":
+		return first_sentence
+	var label := _short_action_label(action, action_id)
+	match lane:
+		"build":
+			return "Built %s." % label
+		"recruit":
+			return "Recruited %s." % label
+		"market":
+			return "%s resolved through the exchange." % label
+		"response":
+			return "%s resolved as a frontier order." % label
+		_:
+			return "%s resolved." % label
+
+static func _town_action_affected_line(
+	lane: String,
+	action_id: String,
+	action: Dictionary,
+	before: Dictionary,
+	after: Dictionary
+) -> String:
+	var parts := []
+	match lane:
+		"build":
+			var building_id := action_id.trim_prefix("build:")
+			var building := ContentService.get_building(building_id)
+			parts.append("Building %s" % String(building.get("name", _short_action_label(action, building_id))))
+		"recruit":
+			var unit_id := action_id.trim_prefix("recruit:")
+			var unit := ContentService.get_unit(unit_id)
+			parts.append("Unit %s" % String(unit.get("name", _short_action_label(action, unit_id))))
+		"market":
+			parts.append(_market_action_target_line(action_id, action))
+		"response":
+			parts.append("Order %s" % _short_action_label(action, action_id))
+		_:
+			parts.append("Order %s" % _short_action_label(action, action_id))
+	var built_delta := _built_delta_summary(before.get("built_buildings", []), after.get("built_buildings", []))
+	if built_delta != "":
+		parts.append(built_delta)
+	var resource_delta := _signed_resource_delta_summary(before.get("resources", {}), after.get("resources", {}))
+	if resource_delta != "":
+		parts.append(resource_delta)
+	var reserve_delta := _signed_recruit_delta_summary(before.get("available_recruits", {}), after.get("available_recruits", {}), "Reserve")
+	if reserve_delta != "":
+		parts.append(reserve_delta)
+	var army_delta := _signed_recruit_delta_summary(before.get("army_counts", {}), after.get("army_counts", {}), "Field")
+	if army_delta != "":
+		parts.append(army_delta)
+	if parts.size() <= 1:
+		parts.append("Town queue and stores updated.")
+	return " | ".join(parts)
+
+static func _town_action_matters_line(
+	session: SessionStateStoreScript.SessionData,
+	lane: String,
+	before: Dictionary,
+	after: Dictionary
+) -> String:
+	var parts := []
+	var readiness_delta := int(after.get("battle_readiness", 0)) - int(before.get("battle_readiness", 0))
+	if readiness_delta != 0:
+		parts.append("readiness %s" % _signed_int(readiness_delta))
+	var quality_delta := int(after.get("reinforcement_quality", 0)) - int(before.get("reinforcement_quality", 0))
+	if quality_delta != 0:
+		parts.append("muster quality %s" % _signed_int(quality_delta))
+	var pressure_delta := int(after.get("pressure_output", 0)) - int(before.get("pressure_output", 0))
+	if pressure_delta != 0:
+		var town := get_active_town(session)
+		parts.append("%s %s" % [_town_pressure_label(town).to_lower(), _signed_int(pressure_delta)])
+	var income_delta := _signed_resource_delta_summary(before.get("income", {}), after.get("income", {}), "Income")
+	if income_delta != "":
+		parts.append(income_delta)
+	var growth_delta := _signed_recruit_delta_summary(before.get("weekly_growth", {}), after.get("weekly_growth", {}), "Weekly muster")
+	if growth_delta != "":
+		parts.append(growth_delta)
+	var logistics_summary := String(after.get("logistics_summary", ""))
+	if logistics_summary != "" and logistics_summary != String(before.get("logistics_summary", "")):
+		parts.append("logistics %s" % logistics_summary)
+	if bool(after.get("front_active", false)) and String(after.get("front_summary", "")) != "":
+		parts.append(String(after.get("front_summary", "")))
+	if not parts.is_empty():
+		return "Production/defense now shows %s." % " | ".join(parts)
+	match lane:
+		"market":
+			return "Stores shifted, so the next blocked build or recruit order may be closer."
+		"recruit":
+			return "The marching army is stronger while the town reserve is thinner."
+		"build":
+			return "The town engine changed even if frontier numbers stayed steady this turn."
+		"response":
+			return "The frontier chain was acted on before enemy pressure can compound."
+		_:
+			return "The town state changed; review the next available order before leaving."
+
+static func _town_action_next_line(session: SessionStateStoreScript.SessionData) -> String:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return "Return to the overworld."
+	return _next_town_action_line(session, town)
+
+static func _first_sentence(text: String) -> String:
+	var trimmed := text.strip_edges()
+	if trimmed == "":
+		return ""
+	var period_index := trimmed.find(".")
+	if period_index < 0:
+		return trimmed
+	return trimmed.left(period_index + 1)
+
+static func _market_action_target_line(action_id: String, action: Dictionary) -> String:
+	var parts := action_id.split(":")
+	if parts.size() == 4 and parts[0] == "market":
+		return "Exchange %s %d %s" % [
+			String(parts[1]),
+			int(parts[3]),
+			String(parts[2]),
+		]
+	return "Exchange %s" % _short_action_label(action, action_id)
+
+static func _built_delta_summary(before_value: Variant, after_value: Variant) -> String:
+	var before := _normalize_string_array(before_value)
+	var after := _normalize_string_array(after_value)
+	var added := []
+	for building_id in after:
+		if building_id in before:
+			continue
+		var building := ContentService.get_building(building_id)
+		added.append(String(building.get("name", building_id)))
+	if added.is_empty():
+		return ""
+	return "Built %s" % ", ".join(added)
+
+static func _signed_resource_delta_summary(before_value: Variant, after_value: Variant, label: String = "Stores") -> String:
+	var before := _duplicate_dictionary(before_value)
+	var after := _duplicate_dictionary(after_value)
+	var parts := []
+	for resource_key in ["gold", "wood", "ore"]:
+		var delta := int(after.get(resource_key, 0)) - int(before.get(resource_key, 0))
+		if delta == 0:
+			continue
+		parts.append("%s %s" % [resource_key, _signed_int(delta)])
+	return "%s %s" % [label, ", ".join(parts)] if not parts.is_empty() else ""
+
+static func _signed_recruit_delta_summary(before_value: Variant, after_value: Variant, label: String) -> String:
+	var before := _duplicate_dictionary(before_value)
+	var after := _duplicate_dictionary(after_value)
+	var unit_ids := []
+	for unit_id_value in before.keys():
+		var before_unit_id := String(unit_id_value)
+		if before_unit_id not in unit_ids:
+			unit_ids.append(before_unit_id)
+	for unit_id_value in after.keys():
+		var after_unit_id := String(unit_id_value)
+		if after_unit_id not in unit_ids:
+			unit_ids.append(after_unit_id)
+	unit_ids.sort()
+	var parts := []
+	for unit_id in unit_ids:
+		var delta := int(after.get(unit_id, 0)) - int(before.get(unit_id, 0))
+		if delta == 0:
+			continue
+		var unit := ContentService.get_unit(unit_id)
+		parts.append("%s %s" % [String(unit.get("name", unit_id)), _signed_int(delta)])
+	return "%s %s" % [label, ", ".join(parts)] if not parts.is_empty() else ""
+
+static func _army_unit_counts(army: Variant) -> Dictionary:
+	var counts := {}
+	var stacks = army.get("stacks", []) if army is Dictionary else []
+	if not (stacks is Array):
+		return counts
+	for stack in stacks:
+		if not (stack is Dictionary):
+			continue
+		var unit_id := String(stack.get("unit_id", ""))
+		if unit_id == "":
+			continue
+		counts[unit_id] = int(counts.get(unit_id, 0)) + max(0, int(stack.get("count", 0)))
+	return counts
+
+static func _duplicate_dictionary(value: Variant) -> Dictionary:
+	return value.duplicate(true) if value is Dictionary else {}
+
+static func _normalize_string_array(value: Variant) -> Array[String]:
+	var normalized: Array[String] = []
+	if not (value is Array):
+		return normalized
+	for entry in value:
+		var text := String(entry)
+		if text != "":
+			normalized.append(text)
+	return normalized
 
 static func _market_coverage_line(readiness: Dictionary) -> String:
 	var actions = readiness.get("market_actions", [])
