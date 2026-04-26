@@ -37,6 +37,8 @@ func _run() -> void:
 		return
 	if not _assert_army_stack_inspection_contract(shell):
 		return
+	if not _assert_hero_identity_progression_contract(shell):
+		return
 	if not _assert_route_decision_clarity_contract(shell):
 		return
 	if not _assert_artifact_reward_visibility_contract(shell):
@@ -80,6 +82,25 @@ func _run() -> void:
 
 	_assert_remembered_owned_town_remote_entry(shell)
 	return
+
+func _assert_hero_identity_progression_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing hero identity validation hooks.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"overworld hero identity/progression rail",
+		[
+			String(snapshot.get("hero_text", "")),
+			String(snapshot.get("hero_tooltip_text", "")),
+			String(snapshot.get("heroes_text", "")),
+			String(snapshot.get("heroes_tooltip_text", "")),
+		],
+		["Lyra Emberwell", "Embercourt League", "Fast scouting caster", "Lv1", "XP 0/250", "Wayfinder I", "Move", "Scout", "Army"]
+	):
+		return false
+	return true
 
 func _assert_render_cache_split(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_select_tile") or not shell.has_method("validation_perform_primary_action"):

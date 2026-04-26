@@ -4,10 +4,10 @@
   "updatedAt": "2026-04-26T13:54:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "army-stack-inspection-clarity-10184",
-  "currentSliceTitle": "Surface practical army and unit stack inspection clarity in live UI",
+  "currentSliceId": "hero-identity-progression-inspection-clarity-10184",
+  "currentSliceTitle": "Surface practical hero identity and progression inspection clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live army and unit stack inspection clarity across overworld, town, and battle surfaces. Existing unit and stack data now surfaces tier, role, count, health, display strength, and readiness in marching-army summaries, town garrison/recruitment panels, recruit tooltips, battle rosters, and stack focus text without changing mechanics, balance, saves, schemas, or content rosters.",
+  "currentSliceNotes": "Implemented compact live hero identity and progression inspection clarity across overworld, town, launch preview, and battle commander surfaces. Existing hero/faction/specialty/progression data now surfaces faction, role, level, XP, specialty, movement, mana, scouting, army, and command context without changing content, balance, saves, schemas, or AI.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1359,6 +1359,14 @@
       "title": "Surface practical army and unit stack inspection clarity in live UI",
       "status": "completed",
       "startedAt": "2026-04-26T13:53:00Z",
+      "completedAt": "2026-04-26T13:54:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "hero-identity-progression-inspection-clarity-10184",
+      "title": "Surface practical hero identity and progression inspection clarity in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T13:49:21Z",
       "completedAt": "2026-04-26T13:54:00Z",
       "difficulty": "medium"
     }

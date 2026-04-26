@@ -1635,6 +1635,16 @@ static func describe_entry_context(session: SessionStateStoreScript.SessionData)
 			_player_force_name_from_battle(battle),
 			_enemy_force_name_from_battle(battle, session),
 		],
+		"Commanders: %s vs %s." % [
+			HeroCommandRulesScript.hero_identity_context_line(
+				_commander_state_for_side(battle, "player"),
+				String(scenario.get("player_faction_id", ""))
+			),
+			HeroCommandRulesScript.hero_identity_context_line(
+				_commander_state_for_side(battle, "enemy"),
+				_battle_enemy_faction_id(session)
+			),
+		],
 		"Forces: %s | Friendly %s | Enemy %s." % [
 			_battle_entry_risk_label(session, battle),
 			_compact_army_total(_army_totals(battle, "player")),
@@ -1862,15 +1872,14 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 		initiative_label = "+%d" % battle_initiative
 	var lines := [
 		"%s | %s" % [
-			EnemyAdventureRulesScript.commander_display_name(commander_state),
+			HeroCommandRulesScript.hero_identity_context_line(
+				commander_state,
+				String(ContentService.get_scenario(session.scenario_id).get("player_faction_id", "")) if side == "player" else _battle_enemy_faction_id(session)
+			),
 			_commander_role_label(battle, side),
 		],
-		"Command: Atk %d | Def %d | Power %d | Knowledge %d" % [
-			int(command.get("attack", 0)),
-			int(command.get("defense", 0)),
-			int(command.get("power", 0)),
-			int(command.get("knowledge", 0)),
-		],
+		HeroCommandRulesScript.hero_progress_context_line(commander_state),
+		"Readiness: %s" % HeroCommandRulesScript.hero_readiness_context_line(commander_state, false),
 		"Battle aura: Atk %d | Def %d | Init %s" % [
 			battle_attack,
 			battle_defense,

@@ -1141,63 +1141,20 @@ static func _weekday_of_day(day: int) -> int:
 
 static func describe_hero(session: SessionStateStoreScript.SessionData) -> String:
 	var hero = session.overworld.get("hero", {})
-	var command = hero.get("command", {})
-	var mana = hero.get("spellbook", {}).get("mana", {})
-	var position = hero.get("position", {})
-	var army = hero.get("army", {})
-	var stack_count := 0
-	for stack in army.get("stacks", []):
-		if stack is Dictionary and int(stack.get("count", 0)) > 0:
-			stack_count += 1
-	var base := "%s Lv%d XP %d/%d | Command A%d D%d P%d K%d" % [
-		String(hero.get("name", "Hero")),
-		int(hero.get("level", 1)),
-		int(hero.get("experience", 0)),
-		int(hero.get("next_level_experience", 250)),
-		int(command.get("attack", 0)),
-		int(command.get("defense", 0)),
-		int(command.get("power", 0)),
-		int(command.get("knowledge", 0)),
-	]
-	var profile := HeroCommandRulesScript.hero_profile_summary(hero, true)
-	var profile_line := "%s | %s" % [
-		HeroCommandRulesScript.hero_archetype_label(hero),
-		HeroProgressionRulesScript.brief_summary(hero),
-	]
-	if profile != "":
-		profile_line = "%s | %s" % [profile_line, profile]
-	return "%s\n%s\nField position %d,%d | Scout %d | Mana %d/%d | Army groups %d" % [
-		base,
-		profile_line,
-		int(position.get("x", 0)),
-		int(position.get("y", 0)),
-		HeroCommandRulesScript.scouting_radius_for_hero(hero),
-		int(mana.get("current", 0)),
-		int(mana.get("max", 0)),
-		stack_count,
-	]
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	return "\n".join(
+		[
+			HeroCommandRulesScript.hero_identity_context_line(hero, String(scenario.get("player_faction_id", ""))),
+			HeroCommandRulesScript.hero_progress_context_line(hero),
+			HeroCommandRulesScript.hero_readiness_context_line(hero, true),
+		]
+	)
 
 static func _overworld_hero_line(hero: Dictionary) -> String:
-	var position = hero.get("position", {})
-	var army = hero.get("army", {})
-	var headcount := 0
-	var groups := 0
-	for stack in army.get("stacks", []):
-		if not (stack is Dictionary):
-			continue
-		var count := int(stack.get("count", 0))
-		if count <= 0:
-			continue
-		headcount += count
-		groups += 1
-	return "%s Lv%d | Pos %d,%d | Scout %d | %d troops/%d groups" % [
-		"%s (%s)" % [String(hero.get("name", "Hero")), HeroCommandRulesScript.hero_archetype_label(hero)],
-		int(hero.get("level", 1)),
-		int(position.get("x", 0)),
-		int(position.get("y", 0)),
-		HeroCommandRulesScript.scouting_radius_for_hero(hero),
-		headcount,
-		groups,
+	return "%s | %s | %s" % [
+		HeroCommandRulesScript.hero_identity_context_line(hero),
+		HeroCommandRulesScript.hero_progress_context_line(hero),
+		HeroCommandRulesScript.hero_readiness_context_line(hero, true),
 	]
 
 static func describe_heroes(session: SessionStateStoreScript.SessionData) -> String:
