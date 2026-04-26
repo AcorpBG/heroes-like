@@ -446,10 +446,10 @@ func _refresh_action_buttons() -> void:
 		_prev_target_button.tooltip_text = "Cycle focus to the previous legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the previous enemy stack."
 		_next_target_button.tooltip_text = "Cycle focus to the next legal enemy target." if not legal_target_ids.is_empty() else "Cycle focus to the next enemy stack."
 
-	_apply_action_surface(_advance_button, surface.get("advance", {}))
-	_apply_action_surface(_strike_button, surface.get("strike", {}))
-	_apply_action_surface(_shoot_button, surface.get("shoot", {}))
-	_apply_action_surface(_defend_button, surface.get("defend", {}))
+	_apply_action_surface(_advance_button, surface.get("advance", {}), true)
+	_apply_action_surface(_strike_button, surface.get("strike", {}), true)
+	_apply_action_surface(_shoot_button, surface.get("shoot", {}), true)
+	_apply_action_surface(_defend_button, surface.get("defend", {}), true)
 	_apply_action_surface(_retreat_button, surface.get("retreat", {}))
 	_apply_action_surface(_surrender_button, surface.get("surrender", {}))
 
@@ -458,10 +458,15 @@ func _refresh_action_buttons() -> void:
 	_shoot_button.tooltip_text = "%s Target: %s." % [_shoot_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _shoot_button.tooltip_text
 	_append_last_action_tooltips()
 
-func _apply_action_surface(button: Button, action: Dictionary) -> void:
-	button.text = String(action.get("label", button.text))
+func _apply_action_surface(button: Button, action: Dictionary, show_order_cue: bool = false) -> void:
+	button.text = _battle_order_button_text(action) if show_order_cue else String(action.get("label", button.text))
 	button.disabled = bool(action.get("disabled", false))
 	button.tooltip_text = String(action.get("tooltip", action.get("summary", "")))
+	if show_order_cue:
+		button.tooltip_text = _join_tooltip_sections([
+			button.tooltip_text,
+			_battle_order_button_tooltip(action),
+		])
 	_style_action_button(button, true, 112.0)
 
 func _configure_save_slot_picker() -> void:
@@ -589,10 +594,15 @@ func validation_snapshot() -> Dictionary:
 		"active_ability_role": String(consequence_payload.get("active_ability_role", "")),
 		"active_status_pressure": String(consequence_payload.get("status_pressure", "")),
 		"active_target_range": String(consequence_payload.get("target_range", "")),
+		"advance_text": _advance_button.text,
+		"strike_text": _strike_button.text,
+		"shoot_text": _shoot_button.text,
+		"defend_text": _defend_button.text,
 		"advance_tooltip": _advance_button.tooltip_text,
 		"strike_tooltip": _strike_button.tooltip_text,
 		"shoot_tooltip": _shoot_button.tooltip_text,
 		"defend_tooltip": _defend_button.tooltip_text,
+		"battle_order_button_surfaces": _battle_order_button_surfaces(),
 		"player_stack_count": player_roster.size(),
 		"enemy_stack_count": enemy_roster.size(),
 		"player_roster": player_roster,
@@ -957,6 +967,39 @@ func _append_last_action_tooltips() -> void:
 	for button in [_advance_button, _strike_button, _shoot_button, _defend_button]:
 		button.tooltip_text = "%s\nLast order: %s" % [button.tooltip_text, recap_tooltip]
 
+func _battle_order_button_text(action: Dictionary) -> String:
+	var label := String(action.get("label", "Order")).strip_edges()
+	var readiness := _battle_order_readiness_label(action)
+	if readiness == "":
+		return label
+	return "%s | %s" % [_short_text(label, 18), readiness]
+
+func _battle_order_readiness_label(action: Dictionary) -> String:
+	var readiness := String(action.get("readiness", "")).strip_edges()
+	if readiness.begins_with("Ready"):
+		return "Ready"
+	if readiness.begins_with("Blocked"):
+		return "Blocked"
+	return "Blocked" if bool(action.get("disabled", false)) else "Ready"
+
+func _battle_order_button_tooltip(action: Dictionary) -> String:
+	var label := String(action.get("label", "Order")).strip_edges()
+	var readiness := _battle_order_readiness_label(action)
+	var target := String(action.get("target", "")).strip_edges()
+	var range_text := String(action.get("range", "")).strip_edges()
+	var why := String(action.get("why", "")).strip_edges()
+	var next := String(action.get("confirmation", action.get("consequence", ""))).strip_edges()
+	return _join_tooltip_sections([
+		"Order cue: %s\n- Readiness: %s\n- Target: %s\n- Range: %s\n- Why: %s\n- Next: %s" % [
+			label,
+			readiness,
+			target if target != "" else "Current battle focus",
+			range_text if range_text != "" else "Current range",
+			why if why != "" else String(action.get("summary", "Use this order when it fits the current exchange.")),
+			next if next != "" else "Confirming spends this stack's action.",
+		],
+	])
+
 func _battle_spell_action_button_text(action: Dictionary) -> String:
 	var label := String(action.get("label", action.get("id", "Spell"))).strip_edges()
 	if label.begins_with("Cast "):
@@ -1006,6 +1049,16 @@ func _spell_action_button_surfaces() -> Array:
 				"tooltip": button.tooltip_text,
 				"disabled": button.disabled,
 			})
+	return surfaces
+
+func _battle_order_button_surfaces() -> Array:
+	var surfaces := []
+	for button in [_advance_button, _strike_button, _shoot_button, _defend_button]:
+		surfaces.append({
+			"text": button.text,
+			"tooltip": button.tooltip_text,
+			"disabled": button.disabled,
+		})
 	return surfaces
 
 func _strip_sentence(text: String) -> String:

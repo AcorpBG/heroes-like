@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:50:46Z",
+  "updatedAt": "2026-04-26T23:56:36Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-hover-order-cues-10184",
-  "currentSliceTitle": "Surface compact overworld hover order cues",
+  "currentSliceId": "battle-nonspell-order-cues-10184",
+  "currentSliceTitle": "Surface compact battle non-spell order cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible overworld hover-order cues in live map tooltips using existing tile/object/session surfaces only, including interactable-site cues on presentation-blocked tiles. Added focused overworld smoke assertions for hover route/site order hints and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible battle non-spell order cues on the live Advance, Strike, Shoot, and Defend controls using existing action-surface payloads only. Button text now exposes Ready/Blocked state, tooltips include a compact Order cue with target/range/why/next context, and focused town/battle smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1895,6 +1895,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T23:42:25Z",
       "completedAt": "2026-04-26T23:50:46Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-nonspell-order-cues-10184",
+      "title": "Surface compact battle non-spell order cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:54:18Z",
+      "completedAt": "2026-04-26T23:56:36Z",
       "difficulty": "small"
     }
   ],
