@@ -18,6 +18,7 @@ func _run_main_menu_smoke() -> bool:
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
 	SessionState.set_active_session(session)
+	SaveService.save_runtime_autosave_session(session)
 
 	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(shell)
@@ -116,6 +117,12 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: validation snapshot first-view commands are wrong: %s." % [first_view_snapshot])
 		get_tree().quit(1)
 		return false
+	if not _assert_text_contains_all(
+		"Main menu latest save pulse",
+		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
+		["Skirmish", "River Pass", "Day", "Overworld"]
+	):
+		return false
 
 	var campaign_list = shell.get_node_or_null("%CampaignList")
 	if campaign_list == null or int(campaign_list.get_item_count()) <= 0:
@@ -132,6 +139,22 @@ func _run_main_menu_smoke() -> bool:
 	if not shell.has_method("validation_open_settings_stage") or not shell.has_method("validation_select_resolution"):
 		push_error("Main menu smoke: settings resolution validation hooks are missing.")
 		get_tree().quit(1)
+		return false
+
+	if not shell.has_method("validation_open_saves_stage"):
+		push_error("Main menu smoke: save board validation hook is missing.")
+		get_tree().quit(1)
+		return false
+	shell.call("validation_open_saves_stage")
+	var save_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Main menu selected save details",
+		[
+			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
+			String(save_snapshot.get("load_selected_tooltip", "")),
+		],
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld"]
+	):
 		return false
 
 	var inactive_settings_text_color := (settings_button as Button).get_theme_color("font_color")
@@ -238,6 +261,15 @@ func _hero_view_draws_backdrop_washes() -> bool:
 		return true
 	var source := source_file.get_as_text()
 	return source.contains("draw_rect(") or source.contains("TOP_WASH") or source.contains("LOWER_SHADE")
+
+func _assert_text_contains_all(label: String, texts: Array, needles: Array) -> bool:
+	var joined := "\n".join(texts)
+	for needle in needles:
+		if joined.find(String(needle)) < 0:
+			push_error("%s missing '%s'. text=%s" % [label, String(needle), joined])
+			get_tree().quit(1)
+			return false
+	return true
 
 func _run_outcome_smoke() -> bool:
 	var session = ScenarioFactory.create_session(

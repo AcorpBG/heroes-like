@@ -43,6 +43,8 @@ func _run() -> void:
 		return
 	if not await _assert_enemy_activity_feed_contract(shell):
 		return
+	if not await _assert_save_resume_clarity_contract(shell):
+		return
 	if not await _assert_diagonal_movement_contract(shell, map_node):
 		return
 
@@ -260,6 +262,49 @@ func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
 	if click_finish != click_target or movement_after_click != movement_before_click - 1:
 		push_error("Overworld smoke: diagonal map click did not move to the adjacent diagonal tile for one point. target=%s finish=%s before=%d after=%d." % [click_target, click_finish, movement_before_click, movement_after_click])
 		get_tree().quit(1)
+		return false
+	return true
+
+func _assert_save_resume_clarity_contract(shell: Node) -> bool:
+	if (
+		not shell.has_method("validation_snapshot")
+		or not shell.has_method("validation_select_save_slot")
+		or not shell.has_method("validation_save_to_selected_slot")
+	):
+		push_error("Overworld smoke: shell is missing save/resume clarity validation hooks.")
+		get_tree().quit(1)
+		return false
+	if not bool(shell.call("validation_select_save_slot", 1)):
+		push_error("Overworld smoke: save slot selection failed for resume clarity coverage.")
+		get_tree().quit(1)
+		return false
+	var save_result: Dictionary = shell.call("validation_save_to_selected_slot")
+	await get_tree().process_frame
+	if not bool(save_result.get("ok", false)):
+		push_error("Overworld smoke: manual save did not report a loadable summary. result=%s" % save_result)
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_action_feedback(
+		"manual save feedback cue",
+		snapshot,
+		"system",
+		["Saved Manual 1:", "Skirmish", "River Pass", "Day"]
+	):
+		return false
+	var summary: Dictionary = save_result.get("summary", {}) if save_result.get("summary", {}) is Dictionary else {}
+	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
+	if not _assert_text_contains_all(
+		"manual save resume summary",
+		[
+			String(summary.get("summary", "")),
+			String(summary.get("detail", "")),
+			String(save_surface.get("latest_context", "")),
+			String(save_surface.get("current_context", "")),
+			String(snapshot.get("save_status_tooltip_text", "")),
+		],
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld"]
+	):
 		return false
 	return true
 
