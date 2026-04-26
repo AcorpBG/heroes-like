@@ -24,6 +24,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _status_label: Label = %Status
 @onready var _pressure_label: Label = %Pressure
 @onready var _event_label: Label = %Event
+@onready var _battle_context_label: Label = %BattleContext
 @onready var _briefing_label: Label = %Briefing
 @onready var _risk_label: Label = %Risk
 @onready var _consequence_label: Label = %Consequence
@@ -360,6 +361,7 @@ func _refresh() -> void:
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
 	_set_compact_label(_event_label, dispatch_text, 1)
+	_set_compact_label(_battle_context_label, BattleRules.describe_entry_context(_session), 3)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
 	_set_compact_label(_risk_label, BattleRules.describe_risk_readiness_board(_session), 4)
@@ -492,6 +494,7 @@ func validation_snapshot() -> Dictionary:
 		"game_state": _session.game_state,
 		"encounter_id": String(_session.battle.get("encounter_id", "")),
 		"encounter_name": String(_session.battle.get("encounter_name", "")),
+		"entry_context": BattleRules.describe_entry_context(_session),
 		"battle_context_type": String(context.get("type", "")),
 		"battle_context_town_placement_id": String(context.get("town_placement_id", "")),
 		"battle_context_trigger_faction_id": String(context.get("trigger_faction_id", "")),
@@ -884,6 +887,7 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
 	FrontierVisualKit.apply_label(_pressure_label, "gold", 12)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)
+	FrontierVisualKit.apply_label(_battle_context_label, "teal", 12)
 	FrontierVisualKit.apply_label(_system_body_label, "muted", 12)
 
 	FrontierVisualKit.apply_labels([

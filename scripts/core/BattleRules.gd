@@ -89,6 +89,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"encounter_name": _battle_name(session, encounter, battle_context, encounter_placement),
 		"resolved_key": OverworldRulesScript.encounter_key(encounter_placement),
 		"terrain": String(encounter.get("terrain", "plains")),
+		"encounter_difficulty": _battle_difficulty_value(encounter_placement, encounter),
 		"battlefield_tags": battlefield_tags,
 		"combat_seed": int(encounter_placement.get("combat_seed", 0)),
 		"round": 1,
@@ -96,6 +97,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"distance": _starting_distance_for_encounter(encounter, battle_context),
 		"context": battle_context,
 		"enemy_army_id": String(enemy_army.get("id", "")),
+		"enemy_army_name": _battle_enemy_army_name(enemy_army, battle_context, session),
 		"enemy_army_affiliation": _army_affiliation(enemy_army),
 		"retreat_allowed": not _is_town_defense_context(battle_context),
 		"surrender_allowed": not _is_town_defense_context(battle_context),
@@ -952,6 +954,10 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 	var encounter_placement = _current_battle_encounter_placement(session)
 	session.battle["resolved_key"] = _normalized_battle_resolved_key(session, encounter_placement, normalized_context)
 	session.battle["encounter_name"] = _battle_name(session, encounter, normalized_context, encounter_placement)
+	session.battle["encounter_difficulty"] = _battle_difficulty_value(encounter_placement, encounter)
+	if String(session.battle.get("enemy_army_name", "")).strip_edges() == "":
+		var normalized_enemy_army_name := _enemy_force_name_from_battle_army_id(session.battle, session)
+		session.battle["enemy_army_name"] = normalized_enemy_army_name if normalized_enemy_army_name != "" else "Enemy force"
 	session.battle["battlefield_tags"] = _normalized_battlefield_tags(encounter, session.battle.get("context", {}))
 	session.battle[FIELD_OBJECTIVES_KEY] = _normalize_field_objectives(
 		session.battle.get(FIELD_OBJECTIVES_KEY, []),
@@ -1617,6 +1623,144 @@ static func describe_status(session: SessionStateStoreScript.SessionData) -> Str
 	if objective_brief != "":
 		status += " | %s" % objective_brief
 	return status
+
+static func describe_entry_context(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return "Battle context unavailable."
+	var battle = session.battle
+	var encounter = ContentService.get_encounter(String(battle.get("encounter_id", "")))
+	var scenario = ContentService.get_scenario(session.scenario_id)
+	var lines := [
+		"Matchup: %s vs %s." % [
+			_player_force_name_from_battle(battle),
+			_enemy_force_name_from_battle(battle, session),
+		],
+		"Forces: %s | Friendly %s | Enemy %s." % [
+			_battle_entry_risk_label(session, battle),
+			_compact_army_total(_army_totals(battle, "player")),
+			_compact_army_total(_army_totals(battle, "enemy")),
+		],
+	]
+	var stakes_line := _battle_entry_stakes_line(session, battle, encounter, scenario)
+	if stakes_line != "":
+		lines.append("Stakes: %s." % stakes_line)
+	return "\n".join(lines)
+
+static func _battle_entry_risk_label(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> String:
+	var parts := []
+	var difficulty_label := _battle_difficulty_label(battle)
+	if difficulty_label != "":
+		parts.append(difficulty_label)
+	var outlook := _risk_readiness_grade(session, battle).strip_edges()
+	var period_index := outlook.find(".")
+	if period_index >= 0:
+		outlook = outlook.left(period_index)
+	if outlook != "":
+		parts.append("Outlook %s" % outlook)
+	return " | ".join(parts) if not parts.is_empty() else "Outlook unscouted"
+
+static func _battle_entry_stakes_line(
+	session: SessionStateStoreScript.SessionData,
+	battle: Dictionary,
+	encounter: Dictionary,
+	scenario: Dictionary
+) -> String:
+	var parts := []
+	var objective_line := _tactical_objective_line(session, battle, scenario).strip_edges()
+	if objective_line.begins_with("Battle aim:"):
+		objective_line = objective_line.trim_prefix("Battle aim:").strip_edges()
+	if objective_line != "":
+		parts.append(objective_line)
+	var reward_line := _battle_entry_reward_line(session, encounter)
+	if reward_line != "":
+		parts.append("Reward %s" % reward_line)
+	var field_line := _field_objective_status_brief(battle)
+	if field_line != "":
+		parts.append("Field %s" % field_line)
+	return " | ".join(parts)
+
+static func _battle_entry_reward_line(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> String:
+	if encounter.is_empty():
+		return ""
+	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	return OverworldRulesScript._describe_resource_delta(rewards)
+
+static func _battle_difficulty_value(encounter_placement: Dictionary, encounter: Dictionary) -> String:
+	var difficulty := String(encounter_placement.get("difficulty", "")).strip_edges()
+	if difficulty == "":
+		var encounter_ref = encounter_placement.get("encounter_ref", {})
+		if encounter_ref is Dictionary:
+			difficulty = String(encounter_ref.get("difficulty", "")).strip_edges()
+	if difficulty == "":
+		difficulty = String(encounter.get("difficulty", "")).strip_edges()
+	return difficulty
+
+static func _battle_difficulty_label(battle: Dictionary) -> String:
+	var difficulty := String(battle.get("encounter_difficulty", battle.get("difficulty", ""))).strip_edges()
+	return "Difficulty %s" % _titleize_token(difficulty) if difficulty != "" else ""
+
+static func _compact_army_total(totals: Dictionary) -> String:
+	var ranged_count := int(totals.get("ranged_stacks", 0))
+	var text := "%d stacks, %d units, %d HP" % [
+		int(totals.get("stacks", 0)),
+		int(totals.get("units", 0)),
+		int(totals.get("health", 0)),
+	]
+	if ranged_count > 0:
+		text += ", %d ranged" % ranged_count
+	return text
+
+static func _player_force_name_from_battle(battle: Dictionary) -> String:
+	var commander_state = _commander_state_for_side(battle, "player")
+	var commander_name := String(commander_state.get("name", "")).strip_edges()
+	if commander_name != "":
+		return "%s's command" % commander_name
+	return "Friendly command"
+
+static func _enemy_force_name_from_battle(battle: Dictionary, session: SessionStateStoreScript.SessionData) -> String:
+	var army_name := String(battle.get("enemy_army_name", "")).strip_edges()
+	if army_name == "":
+		army_name = _enemy_force_name_from_battle_army_id(battle, session)
+	var commander_state = _commander_state_for_side(battle, "enemy")
+	var commander_name := String(commander_state.get("name", "")).strip_edges()
+	if commander_name != "" and army_name != "" and commander_name != army_name:
+		return "%s's %s" % [commander_name, army_name]
+	if army_name != "":
+		return army_name
+	return "Enemy force"
+
+static func _enemy_force_name_from_battle_army_id(
+	battle: Dictionary,
+	session: SessionStateStoreScript.SessionData
+) -> String:
+	var army_id := String(battle.get("enemy_army_id", "")).strip_edges()
+	if army_id != "":
+		var army := ContentService.get_army_group(army_id)
+		var army_name := String(army.get("name", "")).strip_edges()
+		if army_name != "":
+			return army_name
+	if _is_town_assault_context(battle.get("context", {})) or _is_town_defense_context(battle.get("context", {})):
+		var town_name = _town_name_from_placement_id(
+			session,
+			String(battle.get("context", {}).get("town_placement_id", ""))
+		)
+		if town_name != "":
+			return "%s Garrison" % town_name
+	return ""
+
+static func _battle_enemy_army_name(
+	enemy_army: Dictionary,
+	battle_context: Dictionary,
+	session: SessionStateStoreScript.SessionData
+) -> String:
+	var army_name := String(enemy_army.get("name", "")).strip_edges()
+	if army_name != "":
+		return army_name
+	if _is_town_assault_context(battle_context) or _is_town_defense_context(battle_context):
+		var town_name = _town_name_from_placement_id(session, String(battle_context.get("town_placement_id", "")))
+		if town_name != "":
+			return "%s Garrison" % town_name
+	return "Enemy force"
 
 static func describe_pressure(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
