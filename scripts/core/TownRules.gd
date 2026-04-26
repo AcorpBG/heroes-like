@@ -498,9 +498,10 @@ static func describe_recruitment(session: SessionStateStoreScript.SessionData) -
 			var growth_sources := _growth_source_summary(town, unit_id)
 			var reserve_label := "x%d" % available if available > 0 else "reserve empty"
 			lines.append(
-				"- %s %s | Weekly +%d%s | Cost %s" % [
+				"- %s %s | %s | Weekly +%d%s | Cost %s" % [
 					String(unit.get("name", unit_id)),
 					reserve_label,
+					OverworldRulesScript.describe_unit_recruit_brief(unit_id, available),
 					max(0, growth),
 					" via %s" % growth_sources if growth_sources != "" else "",
 					_describe_resources(OverworldRulesScript.town_recruit_cost(session, town, unit_id)),
@@ -723,9 +724,10 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		if market_affordable_count <= 0:
 			shortfall_summary = _cost_shortfall_line(OverworldRulesScript.town_cost_readiness(town, resources, unit_cost))
 		var summary_lines := [
-			"%s x%d | Weekly +%d | Cost %s" % [
+			"%s x%d | %s | Weekly +%d | Cost %s" % [
 				String(unit.get("name", unit_id)),
 				available,
+				OverworldRulesScript.describe_unit_recruit_brief(unit_id, available),
 				weekly_growth,
 				_describe_resources(unit_cost),
 			]
@@ -1458,9 +1460,8 @@ static func _describe_garrison(town: Dictionary) -> String:
 	for stack in town.get("garrison", []):
 		if not (stack is Dictionary):
 			continue
-		var unit := ContentService.get_unit(String(stack.get("unit_id", "")))
-		lines.append("%s x%d" % [String(unit.get("name", stack.get("unit_id", ""))), int(stack.get("count", 0))])
-	return ", ".join(lines) if not lines.is_empty() else "No standing garrison"
+		lines.append(OverworldRulesScript.describe_stack_inspection_line(stack))
+	return "; ".join(lines) if not lines.is_empty() else "No standing garrison"
 
 static func _garrison_company_count(town: Dictionary) -> int:
 	var companies := 0

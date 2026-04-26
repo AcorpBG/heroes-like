@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T13:52:00Z",
+  "updatedAt": "2026-04-26T13:54:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-editor-placement-guidance-10184",
-  "currentSliceTitle": "Surface object placement and density guidance in the live map editor",
+  "currentSliceId": "army-stack-inspection-clarity-10184",
+  "currentSliceTitle": "Surface practical army and unit stack inspection clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact real map editor placement guidance. The object palette and tile inspection now surface placement role, economy/reward/transit/neutral/faction-landmark flags, content links, density bands, 16x16 local density counts, and placement feedback using existing object taxonomy/resource-site/encounter metadata.",
+  "currentSliceNotes": "Implemented compact live army and unit stack inspection clarity across overworld, town, and battle surfaces. Existing unit and stack data now surfaces tier, role, count, health, display strength, and readiness in marching-army summaries, town garrison/recruitment panels, recruit tooltips, battle rosters, and stack focus text without changing mechanics, balance, saves, schemas, or content rosters.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1352,6 +1352,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T12:50:25Z",
       "completedAt": "2026-04-26T12:58:05Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "army-stack-inspection-clarity-10184",
+      "title": "Surface practical army and unit stack inspection clarity in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T13:53:00Z",
+      "completedAt": "2026-04-26T13:54:00Z",
       "difficulty": "medium"
     }
   ],

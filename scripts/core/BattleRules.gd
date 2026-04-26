@@ -7778,9 +7778,8 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 			_side_label(side),
 			" | Acting now" if is_active else "",
 		],
-		"Count %d | HP %d | Dmg %d-%d | Speed %d" % [
-			_alive_count(stack),
-			int(stack.get("total_health", 0)),
+		OverworldRulesScript.describe_stack_inspection_line(stack, {"include_name": false}),
+		"Dmg %d-%d | Speed %d" % [
 			int(stack.get("min_damage", 1)),
 			int(stack.get("max_damage", 1)),
 			int(stack.get("speed", 1)),
@@ -9543,7 +9542,6 @@ static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id
 		markers.append("ACT")
 	if String(stack.get("battle_id", "")) == selected_id:
 		markers.append("TGT")
-	var count = _alive_count(stack)
 	var role_summary = (
 		"Shots %d" % int(stack.get("shots_remaining", 0))
 		if bool(stack.get("ranged", false))
@@ -9552,11 +9550,9 @@ static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id
 	var ability_summary = _stack_ability_summary(stack)
 	var effect_summary = SpellRulesScript.effect_summary(stack, battle)
 	var stance = " | Defending" if bool(stack.get("defending", false)) else ""
-	return "%s%s x%d | HP %d | Atk %d Def %d Init %d | %s%s%s%s" % [
+	return "%s%s | Atk %d Def %d Init %d | %s%s%s%s" % [
 		("[%s] " % ",".join(markers)) if not markers.is_empty() else "",
-		String(stack.get("name", stack.get("unit_id", ""))),
-		count,
-		int(stack.get("total_health", 0)),
+		OverworldRulesScript.describe_stack_inspection_line(stack),
 		_stack_attack_total(stack, battle),
 		_stack_defense_total(stack, battle),
 		_stack_initiative_total(stack, battle),

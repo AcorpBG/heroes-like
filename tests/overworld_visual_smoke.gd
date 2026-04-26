@@ -35,6 +35,8 @@ func _run() -> void:
 		return
 	if not _assert_object_economy_ui_contract(shell):
 		return
+	if not _assert_army_stack_inspection_contract(shell):
+		return
 	if not _assert_route_decision_clarity_contract(shell):
 		return
 	if not _assert_artifact_reward_visibility_contract(shell):
@@ -583,6 +585,24 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 	session.overworld["movement"] = original_movement
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
+	return true
+
+func _assert_army_stack_inspection_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing army stack validation snapshot.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Overworld army stack inspection",
+		[
+			String(snapshot.get("army_text", "")),
+			String(snapshot.get("army_visible_text", "")),
+			String(snapshot.get("army_tooltip_text", "")),
+		],
+		["Marching Army", "Strength", "HP", "T", "Ready"]
+	):
+		return false
 	return true
 
 func _assert_route_decision_fields(label: String, snapshot: Dictionary, expected_status: String, expected_action_kind: String, expected_steps: int, text_needles: Array) -> bool:
