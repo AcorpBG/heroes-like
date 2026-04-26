@@ -1950,6 +1950,31 @@ static func describe_active_context(session: SessionStateStoreScript.SessionData
 		return "No active stack."
 	return _stack_focus_summary(get_active_stack(session.battle), session.battle, true)
 
+static func active_consequence_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {
+			"active_ability_role": "No battle is active.",
+			"status_pressure": "No status pressure.",
+			"target_range": "No target selected.",
+			"preferred_action_id": "",
+			"action_previews": [],
+		}
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
+	var surface = get_action_surface(session)
+	var preferred_action_id := _preferred_player_action_id(surface, active_stack) if String(active_stack.get("side", "")) == "player" else ""
+	return {
+		"active_stack_name": _stack_label(active_stack) if not active_stack.is_empty() else "",
+		"active_side": String(active_stack.get("side", "")),
+		"target_name": _stack_label(target) if not target.is_empty() else "",
+		"active_ability_role": _active_ability_role_line(active_stack, battle, target),
+		"status_pressure": _stack_status_pressure_line(active_stack, battle),
+		"target_range": _target_range_readiness_line(active_stack, target, battle),
+		"preferred_action_id": preferred_action_id,
+		"action_previews": _action_consequence_preview_list(surface),
+	}
+
 static func describe_target_context(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No target selected."
@@ -3064,6 +3089,172 @@ static func _active_ability_window_summary(stack: Dictionary, battle: Dictionary
 	var ability_summary = _stack_ability_summary(stack)
 	return "Abilities in hand: %s." % ability_summary if ability_summary != "" else ""
 
+static func _active_ability_role_line(stack: Dictionary, battle: Dictionary, target: Dictionary) -> String:
+	if stack.is_empty():
+		return "No active ability role."
+	var role_lines := []
+	for ability in stack.get("abilities", []):
+		if not (ability is Dictionary):
+			continue
+		var line := _ability_role_sentence(stack, ability, battle, target)
+		if line != "":
+			role_lines.append(line)
+		if role_lines.size() >= 2:
+			break
+	if role_lines.is_empty():
+		return "Role: base %s pressure; no special ability is shaping this order." % String(stack.get("role", "combat"))
+	return "Role: %s" % "; ".join(role_lines)
+
+static func _ability_role_sentence(stack: Dictionary, ability: Dictionary, battle: Dictionary, target: Dictionary) -> String:
+	var ability_id := String(ability.get("id", ""))
+	var name := String(ability.get("name", ability_id.capitalize()))
+	var status_label := String(ability.get("status_label", "status"))
+	var modifier_text := _ability_modifier_text(ability)
+	var target_is_marked := false
+	if not target.is_empty():
+		target_is_marked = SpellRulesScript.has_any_effect_ids(target, battle, ability.get("status_ids", []))
+	match ability_id:
+		"reach":
+			if not target.is_empty() and _stack_hex_distance(stack, target) <= 2:
+				return "%s keeps melee live from the half-open lane" % name
+			return "%s extends melee threat before full contact" % name
+		"harry":
+			return "%s applies %s%s for follow-up pressure" % [
+				name,
+				status_label,
+				" (%s)" % modifier_text if modifier_text != "" else "",
+			]
+		"brace":
+			return "%s turns a defended retaliation into %s%s" % [
+				name,
+				status_label,
+				" (%s)" % modifier_text if modifier_text != "" else "",
+			]
+		"formation_guard":
+			return "%s steadies allied lanes and improves support fire" % name
+		"volley":
+			return "%s rewards an open firing lane%s" % [
+				name,
+				" into marked targets" if target_is_marked else "",
+			]
+		"backstab":
+			return "%s punishes marked or wounded targets%s" % [
+				name,
+				" now" if target_is_marked or (not target.is_empty() and _health_ratio(target) <= float(ability.get("health_threshold_ratio", 0.0))) else "",
+			]
+		"bloodrush":
+			return "%s snowballs against wounded lines%s" % [
+				name,
+				" now" if not target.is_empty() and _health_ratio(target) <= float(ability.get("wounded_threshold_ratio", 0.0)) else "",
+			]
+		"shielding":
+			return "%s blunts missile pressure and helps the line hold" % name
+	if String(ability.get("description", "")) != "":
+		return "%s: %s" % [name, String(ability.get("description", ""))]
+	return name
+
+static func _ability_modifier_text(ability: Dictionary) -> String:
+	var modifiers = ability.get("modifiers", {})
+	if not (modifiers is Dictionary):
+		return ""
+	var parts := []
+	for key in ["attack", "defense", "initiative", "cohesion", "momentum"]:
+		if not modifiers.has(key):
+			continue
+		var amount := int(modifiers.get(key, 0))
+		if amount == 0:
+			continue
+		parts.append("%s %s%d" % [
+			_status_modifier_label(key),
+			"+" if amount > 0 else "",
+			amount,
+		])
+	return ", ".join(parts)
+
+static func _status_modifier_label(key: String) -> String:
+	match key:
+		"attack":
+			return "Atk"
+		"defense":
+			return "Def"
+		"initiative":
+			return "Init"
+		"cohesion":
+			return "Coh"
+		"momentum":
+			return "Mom"
+	return key.capitalize()
+
+static func _stack_status_pressure_line(stack: Dictionary, battle: Dictionary) -> String:
+	if stack.is_empty():
+		return "Status pressure: no stack selected."
+	var effects := SpellRulesScript.active_effects_for_round(stack, int(battle.get("round", 1)))
+	var parts := []
+	for effect in effects:
+		if not (effect is Dictionary):
+			continue
+		var rounds_left := int(effect.get("expires_after_round", int(battle.get("round", 1)))) - int(battle.get("round", 1)) + 1
+		var modifier_text := _effect_modifier_text(effect)
+		parts.append("%s %dr%s" % [
+			String(effect.get("label", effect.get("kind", "Status"))),
+			max(1, rounds_left),
+			" (%s)" % modifier_text if modifier_text != "" else "",
+		])
+	if not parts.is_empty():
+		return "Status pressure: %s." % "; ".join(parts)
+	var pressure_bits := [
+		"Coh %d" % _stack_cohesion_total(stack, battle),
+		"Mom %d" % _stack_momentum_total(stack, battle),
+	]
+	if bool(stack.get("defending", false)):
+		pressure_bits.append("Defending")
+	if _stack_is_isolated(battle, stack):
+		pressure_bits.append("Isolated")
+	return "Status pressure: clear; %s." % ", ".join(pressure_bits)
+
+static func _stack_status_pressure_short(stack: Dictionary, battle: Dictionary) -> String:
+	var line := _stack_status_pressure_line(stack, battle)
+	return line.trim_prefix("Status pressure: ").trim_suffix(".")
+
+static func _effect_modifier_text(effect: Dictionary) -> String:
+	var modifiers = effect.get("modifiers", {})
+	if not (modifiers is Dictionary):
+		return ""
+	var parts := []
+	for key in ["attack", "defense", "initiative", "cohesion", "momentum"]:
+		if not modifiers.has(key):
+			continue
+		var amount := int(modifiers.get(key, 0))
+		if amount == 0:
+			continue
+		parts.append("%s %s%d" % [
+			_status_modifier_label(key),
+			"+" if amount > 0 else "",
+			amount,
+		])
+	return ", ".join(parts)
+
+static func _target_range_readiness_line(active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
+	if active_stack.is_empty():
+		return "Target/range: no active stack."
+	if target.is_empty():
+		return "Target/range: select an enemy stack; %s." % _distance_label(int(battle.get("distance", 1))).to_lower()
+	var legality := _attack_legality_for_target(active_stack, target, battle)
+	var readiness := "ready" if bool(legality.get("attackable", false)) else "blocked"
+	var options := []
+	if bool(legality.get("melee", false)):
+		options.append("Strike")
+	if bool(legality.get("ranged", false)):
+		options.append("Shoot")
+	if options.is_empty():
+		options.append("move first")
+	return "Target/range: %s is %s at hex range %d; %s." % [
+		_stack_label(target),
+		readiness,
+		int(legality.get("hex_distance", -1)),
+		" or ".join(options),
+	]
+
 static func _field_objective_action_preview(battle: Dictionary, action_context: Dictionary) -> String:
 	var acting_side = String(action_context.get("side", ""))
 	if acting_side not in ["player", "enemy"]:
@@ -3697,6 +3888,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("advance", false)),
 		"summary": advance_summary,
 	}
+	_enrich_action_surface_entry(surface["advance"], "advance", session, battle, active_stack, target, availability)
 	var strike_summary = locked_summary
 	if player_turn:
 		strike_summary = _attack_action_summary(active_stack, target, battle, false) if bool(availability.get("strike", false)) else _attack_unavailable_summary(active_stack, target, battle, false)
@@ -3705,6 +3897,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("strike", false)),
 		"summary": strike_summary,
 	}
+	_enrich_action_surface_entry(surface["strike"], "strike", session, battle, active_stack, target, availability)
 	var shoot_summary = locked_summary
 	if player_turn:
 		shoot_summary = _attack_action_summary(active_stack, target, battle, true) if bool(availability.get("shoot", false)) else _attack_unavailable_summary(active_stack, target, battle, true)
@@ -3713,11 +3906,13 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("shoot", false)),
 		"summary": shoot_summary,
 	}
+	_enrich_action_surface_entry(surface["shoot"], "shoot", session, battle, active_stack, target, availability)
 	surface["defend"] = {
 		"label": "Defend",
 		"disabled": not player_turn or not bool(availability.get("defend", false)),
 		"summary": locked_summary if not player_turn else _defend_action_summary(battle, active_stack),
 	}
+	_enrich_action_surface_entry(surface["defend"], "defend", session, battle, active_stack, target, availability)
 	var retreat_summary = locked_summary
 	if player_turn:
 		retreat_summary = _retreat_action_summary(session)
@@ -3726,6 +3921,7 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("retreat", false)),
 		"summary": retreat_summary,
 	}
+	_enrich_action_surface_entry(surface["retreat"], "retreat", session, battle, active_stack, target, availability)
 	var surrender_summary = locked_summary
 	if player_turn:
 		surrender_summary = _surrender_action_summary(session)
@@ -3734,7 +3930,179 @@ static func get_action_surface(session: SessionStateStoreScript.SessionData) -> 
 		"disabled": not player_turn or not bool(availability.get("surrender", false)),
 		"summary": surrender_summary,
 	}
+	_enrich_action_surface_entry(surface["surrender"], "surrender", session, battle, active_stack, target, availability)
 	return surface
+
+static func _enrich_action_surface_entry(
+	action: Dictionary,
+	action_id: String,
+	session: SessionStateStoreScript.SessionData,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target: Dictionary,
+	availability: Dictionary
+) -> void:
+	var ready := String(active_stack.get("side", "")) == "player" and bool(availability.get(action_id, false))
+	action["readiness"] = "Ready" if ready else "Blocked"
+	action["target"] = _action_target_label(action_id, active_stack, target, battle)
+	action["range"] = _action_range_line(action_id, active_stack, target, battle)
+	action["why"] = _action_why_line(action_id, session, battle, active_stack, target, ready)
+	action["consequence"] = _action_consequence_line(action_id, session, battle, active_stack, target, action)
+	action["tooltip"] = _compact_action_tooltip(action)
+
+static func _compact_action_tooltip(action: Dictionary) -> String:
+	var lines = [
+		"%s | %s" % [String(action.get("label", "Order")), String(action.get("readiness", ""))],
+		String(action.get("summary", "")),
+		"Target/range: %s | %s" % [String(action.get("target", "")), String(action.get("range", ""))],
+		"Why: %s" % String(action.get("why", "")),
+		"Consequence: %s" % String(action.get("consequence", "")),
+	]
+	var compact := []
+	for line_value in lines:
+		var line := String(line_value).strip_edges()
+		if line != "":
+			compact.append(line)
+	return "\n".join(compact)
+
+static func _action_target_label(action_id: String, active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
+	match action_id:
+		"strike", "shoot":
+			return _stack_label(target) if not target.is_empty() else "Select an enemy"
+		"advance":
+			if not target.is_empty():
+				return "Close toward %s" % _stack_label(target)
+			return "Nearest lane"
+		"defend":
+			return _stack_label(active_stack) if not active_stack.is_empty() else "Active stack"
+		"retreat", "surrender":
+			return "Whole army"
+	return "Battle line"
+
+static func _action_range_line(action_id: String, active_stack: Dictionary, target: Dictionary, battle: Dictionary) -> String:
+	if active_stack.is_empty():
+		return "No active stack"
+	match action_id:
+		"strike":
+			if target.is_empty():
+				return "Needs target"
+			var legality := _attack_legality_for_target(active_stack, target, battle)
+			if bool(legality.get("melee", false)):
+				return "Melee ready at hex range %d" % int(legality.get("hex_distance", -1))
+			if _has_ability(active_stack, "reach"):
+				return "Reach needs hex range 2 or closer"
+			return "Needs adjacent contact"
+		"shoot":
+			if not bool(active_stack.get("ranged", false)):
+				return "No ranged attack"
+			if target.is_empty():
+				return "Needs target"
+			var ranged_legality := _attack_legality_for_target(active_stack, target, battle)
+			if bool(ranged_legality.get("ranged", false)):
+				return "Fire lane ready at %s" % _distance_label(_attack_distance_for_action(active_stack, target, battle, true)).to_lower()
+			return "Fire lane blocked"
+		"advance":
+			var destinations := legal_destinations_for_active_stack(battle)
+			if destinations.is_empty() and int(battle.get("distance", 1)) <= 0:
+				return "No move lane"
+			return "%s | %d green hex%s" % [
+				_distance_label(int(battle.get("distance", 1))),
+				destinations.size(),
+				"" if destinations.size() == 1 else "es",
+			]
+		"defend":
+			return "Current hex"
+		"retreat", "surrender":
+			return "Exit order"
+	return _distance_label(int(battle.get("distance", 1)))
+
+static func _action_why_line(
+	action_id: String,
+	session: SessionStateStoreScript.SessionData,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target: Dictionary,
+	ready: bool
+) -> String:
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
+		return _player_input_locked_summary()
+	match action_id:
+		"strike":
+			if target.is_empty():
+				return "melee pressure needs a selected enemy."
+			if ready:
+				var melee_ability := _active_ability_window_summary(active_stack, battle, target)
+				return melee_ability if melee_ability != "" else "this trades damage now and can force the next break."
+			return _attack_unavailable_summary(active_stack, target, battle, false)
+		"shoot":
+			if target.is_empty():
+				return "ranged pressure needs a selected enemy."
+			if ready:
+				var ranged_ability := _active_ability_window_summary(active_stack, battle, target)
+				return ranged_ability if ranged_ability != "" else "this spends a shot to soften the target before melee closes."
+			return _attack_unavailable_summary(active_stack, target, battle, true)
+		"advance":
+			if ready:
+				if not target.is_empty() and bool(_attack_legality_for_target(active_stack, target, battle).get("blocked", false)):
+					return "movement turns the selected target from blocked into reachable pressure."
+				return "closing changes range, threatens contact, and can pull objectives."
+			return "the line is already engaged or no legal movement hex is open."
+		"defend":
+			return _active_ability_window_summary(active_stack, battle, target) if _active_ability_window_summary(active_stack, battle, target) != "" else "bracing buys cohesion and keeps retaliation or firing posture intact."
+		"retreat":
+			return "withdrawal preserves survivors but yields this battle's field result." if ready else _retreat_action_summary(session)
+		"surrender":
+			return "surrender preserves what terms allow while conceding the field." if ready else _surrender_action_summary(session)
+	return "this order changes the next exchange."
+
+static func _action_consequence_line(
+	action_id: String,
+	session: SessionStateStoreScript.SessionData,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target: Dictionary,
+	action: Dictionary
+) -> String:
+	var summary := String(action.get("summary", "")).strip_edges()
+	var objective_preview := ""
+	if not active_stack.is_empty() and String(active_stack.get("side", "")) == "player":
+		objective_preview = _field_objective_action_preview(
+			battle,
+			{
+				"action": action_id,
+				"side": "player",
+				"battle_id": String(active_stack.get("battle_id", "")),
+				"target_battle_id": String(target.get("battle_id", "")),
+			}
+		)
+	if objective_preview != "":
+		return objective_preview
+	if action_id in ["strike", "shoot"] and not target.is_empty() and not bool(action.get("disabled", false)):
+		return _attack_action_summary(active_stack, target, battle, action_id == "shoot")
+	if action_id == "defend" and not active_stack.is_empty():
+		return "Cohesion can rise by %d; status pressure has a safer round to expire." % _preview_defend_cohesion_gain(active_stack, battle)
+	if action_id == "advance":
+		return _advance_action_summary(battle, active_stack)
+	if summary != "":
+		return summary
+	return "No immediate consequence preview."
+
+static func _action_consequence_preview_list(surface: Dictionary) -> Array:
+	var previews := []
+	for action_id in ["advance", "strike", "shoot", "defend", "retreat", "surrender"]:
+		var action = surface.get(action_id, {})
+		if not (action is Dictionary):
+			continue
+		previews.append({
+			"id": action_id,
+			"label": String(action.get("label", action_id.capitalize())),
+			"readiness": String(action.get("readiness", "")),
+			"target": String(action.get("target", "")),
+			"range": String(action.get("range", "")),
+			"why": String(action.get("why", "")),
+			"consequence": String(action.get("consequence", "")),
+		})
+	return previews
 
 static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
@@ -7788,6 +8156,7 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 	if stack.is_empty():
 		return "No stack is selected."
 	var side = String(stack.get("side", ""))
+	var comparison_stack := get_selected_target(battle) if is_active else get_active_stack(battle)
 	var lines = [
 		"%s [%s]%s" % [
 			_stack_label(stack),
@@ -7822,9 +8191,13 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 		lines.append("Stance: Defending")
 	var effect_summary = SpellRulesScript.effect_summary(stack, battle)
 	lines.append("Effects: %s" % (effect_summary if effect_summary != "" else "none"))
+	lines.append(_stack_status_pressure_line(stack, battle))
 	var ability_summary = _stack_ability_summary(stack)
 	if ability_summary != "":
 		lines.append("Abilities: %s" % ability_summary)
+	lines.append(_active_ability_role_line(stack, battle, comparison_stack))
+	if is_active:
+		lines.append(_target_range_readiness_line(stack, comparison_stack, battle))
 	var objective_summary = _field_objective_focus_line(battle, side, stack)
 	if objective_summary != "":
 		lines.append(objective_summary)
@@ -9564,7 +9937,9 @@ static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id
 		else "Retal %d/%d" % [int(stack.get("retaliations_left", 0)), int(stack.get("retaliations", 0))]
 	)
 	var ability_summary = _stack_ability_summary(stack)
+	var ability_role = _active_ability_role_line(stack, battle, get_selected_target(battle)).trim_prefix("Role: ")
 	var effect_summary = SpellRulesScript.effect_summary(stack, battle)
+	var status_pressure = _stack_status_pressure_short(stack, battle)
 	var stance = " | Defending" if bool(stack.get("defending", false)) else ""
 	return "%s%s | Atk %d Def %d Init %d | %s%s%s%s" % [
 		("[%s] " % ",".join(markers)) if not markers.is_empty() else "",
@@ -9579,6 +9954,6 @@ static func _stack_summary_line(stack: Dictionary, battle: Dictionary, active_id
 			" Iso" if _stack_is_isolated(battle, stack) else "",
 		],
 		stance,
-		(" | %s" % ability_summary) if ability_summary != "" else "",
-		(" | %s" % effect_summary) if effect_summary != "" else "",
+		(" | Role %s" % ability_role) if ability_role != "" else ((" | %s" % ability_summary) if ability_summary != "" else ""),
+		(" | Status %s" % status_pressure) if status_pressure != "" else ((" | %s" % effect_summary) if effect_summary != "" else ""),
 	]

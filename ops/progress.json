@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T15:18:55Z",
+  "updatedAt": "2026-04-26T15:26:47Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-build-recruit-next-step-recommendation-ui-10184",
-  "currentSliceTitle": "Surface practical town build and recruit next-step recommendations in live UI",
+  "currentSliceId": "battle-ability-status-action-consequence-clarity-10184",
+  "currentSliceTitle": "Surface practical battle ability, status, and action consequence clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing town build/recruit priority clarity in the live town UI. Build and recruit actions now show ready/trade/blocked button status, affordability and blocker payloads, and defense/frontier impact text; the production overview names the practical priority using existing town economy, building, recruitment, and readiness data.",
+  "currentSliceNotes": "Implemented compact player-facing battle ability/status/action consequence clarity in the live battle UI. Active stack and roster text now explain ability role, status pressure, target range/readiness, and action consequences; action button tooltips and validation payloads carry readiness, target/range, why-it-matters, and consequence previews from existing BattleRules/unit data.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1432,6 +1432,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T15:14:22Z",
       "completedAt": "2026-04-26T15:18:55Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "battle-ability-status-action-consequence-clarity-10184",
+      "title": "Surface practical battle ability, status, and action consequence clarity in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T15:21:25Z",
+      "completedAt": "2026-04-26T15:26:47Z",
       "difficulty": "medium"
     }
   ],
