@@ -24,6 +24,9 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _menu_button: Button = %Menu
+@onready var _guide_button: Button = %Guide
+@onready var _guide_panel: PanelContainer = %GuidePanel
+@onready var _guide_label: Label = %OutcomeGuide
 @onready var _action_status_label: Label = %ActionStatus
 @onready var _actions_bar: HFlowContainer = %Actions
 
@@ -85,6 +88,7 @@ func _refresh() -> void:
 		3
 	)
 	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [action_cue_summary]).strip_edges()
+	_refresh_guide_surface()
 	_rebuild_actions()
 
 func _configure_save_slot_picker() -> void:
@@ -137,6 +141,7 @@ func _refresh_save_surface() -> void:
 	])
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
+	_refresh_guide_surface()
 
 func _rebuild_actions() -> void:
 	for child in _actions_bar.get_children():
@@ -189,6 +194,10 @@ func _on_save_slot_selected(index: int) -> void:
 func _on_menu_pressed() -> void:
 	AppRouter.return_to_main_menu_from_active_play()
 
+func _on_guide_pressed() -> void:
+	_guide_panel.visible = not _guide_panel.visible
+	_refresh_guide_surface()
+
 func validation_snapshot() -> Dictionary:
 	var action_ids: Array[String] = []
 	var action_payloads := []
@@ -232,6 +241,11 @@ func validation_snapshot() -> Dictionary:
 		"save_status_tooltip": _save_status_label.tooltip_text,
 		"save_button_tooltip": _save_button.tooltip_text,
 		"menu_button_tooltip": _menu_button.tooltip_text,
+		"outcome_guide_visible": _guide_panel.visible,
+		"outcome_guide_button": _guide_button.text,
+		"outcome_guide_tooltip": _guide_button.tooltip_text,
+		"outcome_guide": _guide_label.text,
+		"outcome_guide_full": _guide_label.tooltip_text,
 		"save_check": String(save_surface.get("save_check", "")),
 		"play_check": String(save_surface.get("play_check", "")),
 		"return_handoff": String(save_surface.get("return_handoff", "")),
@@ -304,6 +318,14 @@ func validation_return_to_menu() -> Dictionary:
 		"scenario_status": _session.scenario_status,
 		"message": "Outcome route returned to the main menu.",
 	}
+
+func validation_open_outcome_guide() -> void:
+	if not _guide_panel.visible:
+		_on_guide_pressed()
+
+func validation_close_outcome_guide() -> void:
+	if _guide_panel.visible:
+		_on_guide_pressed()
 
 func _result_status_label(status: String) -> String:
 	var normalized := status.replace("_", " ").strip_edges()
@@ -380,14 +402,51 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 132.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_save_button, "primary", 126.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_menu_button, "secondary", 138.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_guide_button, "secondary", 96.0, 34.0, 13)
 
 	for label in find_children("*", "Label", true, false):
 		if label is Label:
 			FrontierVisualKit.apply_label(label, "body")
 
-	for label_name in ["HeroTitle", "ArmyTitle", "ResourceTitle", "ProgressionTitle", "AftermathTitle", "CampaignArcTitle", "CarryoverTitle", "JournalTitle", "SaveTitle", "ActionsTitle"]:
+	for label_name in ["HeroTitle", "ArmyTitle", "ResourceTitle", "ProgressionTitle", "AftermathTitle", "CampaignArcTitle", "CarryoverTitle", "JournalTitle", "SaveTitle", "ActionsTitle", "GuideTitle"]:
 		for title_label in find_children(label_name, "Label", true, false):
 			if title_label is Label:
 				FrontierVisualKit.apply_label(title_label, "title", 14)
 	FrontierVisualKit.apply_label(_header_label, "title", 24)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
+
+func _refresh_guide_surface() -> void:
+	if _guide_button == null or _guide_label == null or _guide_panel == null:
+		return
+	_guide_button.text = "Hide Guide" if _guide_panel.visible else "Guide"
+	_guide_button.tooltip_text = (
+		"Hide the outcome Field Manual without saving, loading, routing, or changing campaign progression."
+		if _guide_panel.visible
+		else "Open the outcome Field Manual. This does not save, load, route, or change campaign progression."
+	)
+	var guide_text := _build_outcome_guide_text()
+	_set_compact_label(_guide_label, guide_text, 8, 92)
+
+func _build_outcome_guide_text() -> String:
+	var lines := [SettingsService.describe_help_topic("outcome")]
+	var continuity_choice := String(_model.get("continuity_choice_summary", "")).strip_edges()
+	var next_play_action := String(_model.get("next_play_action_summary", "")).strip_edges()
+	var action_cue := String(_model.get("action_cue_summary", "")).strip_edges()
+	var save_surface := AppRouter.active_save_surface()
+	var save_check := String(save_surface.get("save_check", "")).strip_edges()
+	var play_check := String(save_surface.get("play_check", "")).strip_edges()
+	var return_handoff := String(save_surface.get("return_handoff", "")).strip_edges()
+	if continuity_choice != "":
+		lines.append(continuity_choice)
+	if next_play_action != "":
+		lines.append(next_play_action)
+	if action_cue != "":
+		lines.append(action_cue)
+	if save_check != "":
+		lines.append(save_check)
+	if play_check != "":
+		lines.append(play_check)
+	if return_handoff != "":
+		lines.append(return_handoff)
+	lines.append("Guide handoff: this panel is informational; close it to keep choosing from the same outcome actions.")
+	return "\n".join(lines)

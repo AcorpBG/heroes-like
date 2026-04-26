@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact battle spell action cues using existing battle spell action payloads.
+Current target: completed compact outcome Field Manual handoff cues using existing outcome, save, and guide payloads.
 
 Done means:
-- Live battle spell buttons expose compact visible Ready/Blocked state.
-- Spell button tooltips carry public action context: spell action, readiness, target, cost, use, effect, and next step.
-- Focused town/battle smoke coverage proves the rendered spell button surface and no internal score/debug leaks.
+- The outcome save rail exposes a compact `Guide` control without expanding the first-view outcome layout by default.
+- The guide opens a contextual Field Manual popout that explains resolved-outcome save, return, retry, continue, and resume handoff.
+- Focused menu/outcome smoke coverage proves collapsed/open/close guide state and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
