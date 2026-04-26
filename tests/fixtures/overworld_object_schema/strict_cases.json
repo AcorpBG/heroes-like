@@ -1,0 +1,321 @@
+{
+  "schema": "overworld_object_strict_cases_v1",
+  "valid": {
+    "objects": [
+      {
+        "id": "fixture_timber_cache_object",
+        "name": "Fixture Timber Cache",
+        "family": "pickup",
+        "primary_class": "pickup",
+        "secondary_tags": ["small_reward", "route_pacing", "build_resource"],
+        "resource_site_id": "fixture_timber_cache",
+        "footprint": {
+          "width": 1,
+          "height": 1,
+          "anchor": "bottom_center",
+          "tier": "micro"
+        },
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "passable_visit_on_enter",
+        "approach": {
+          "mode": "enter",
+          "primary_sides": [],
+          "visit_offsets": [{"x": 0, "y": 0}],
+          "stop_before_interaction": false,
+          "requires_clear_tile": true,
+          "linked_exit_offsets": []
+        },
+        "interaction": {
+          "cadence": "one_time",
+          "remains_after_visit": false,
+          "state_after_visit": "collected",
+          "requires_ownership": false,
+          "requires_guard_clear": false,
+          "supports_revisit": false,
+          "cooldown_days": 0,
+          "refresh_rule": "none"
+        },
+        "animation_cues": ["object_pickup_glint_placeholder"],
+        "editor_placement": {
+          "density_band": "standard_adventure",
+          "minimum_lane_clearance": 1,
+          "allows_adjacent_visitable": false
+        },
+        "ai_hints": {
+          "strategic_value": 1,
+          "risk_tier": "unguarded",
+          "placement_role": "route_pacing"
+        },
+        "expect_animation_placeholder_warning": true
+      },
+      {
+        "id": "fixture_toll_bridge_object",
+        "name": "Fixture Toll Bridge",
+        "family": "transit_object",
+        "primary_class": "transit_route_object",
+        "secondary_tags": ["road_control", "conditional_route"],
+        "resource_site_id": "fixture_toll_bridge",
+        "footprint": {
+          "width": 2,
+          "height": 1,
+          "anchor": "bottom_center",
+          "tier": "small"
+        },
+        "body_tiles": [
+          {"x": 0, "y": 0, "role": "body"},
+          {"x": 1, "y": 0, "role": "body"}
+        ],
+        "passability_class": "conditional_pass",
+        "approach": {
+          "mode": "linked_endpoint",
+          "primary_sides": ["west", "east"],
+          "visit_offsets": [{"x": -1, "y": 0}, {"x": 2, "y": 0}],
+          "stop_before_interaction": true,
+          "requires_clear_tile": true,
+          "linked_exit_offsets": [{"x": -1, "y": 0}, {"x": 2, "y": 0}]
+        },
+        "interaction": {
+          "cadence": "conditional",
+          "remains_after_visit": true,
+          "state_after_visit": "opened",
+          "requires_ownership": false,
+          "requires_guard_clear": false,
+          "supports_revisit": true,
+          "cooldown_days": 0,
+          "refresh_rule": "route_state"
+        },
+        "route_effect": {
+          "effect_type": "linked_endpoint",
+          "endpoint_group_id": "fixture_bridge_pair",
+          "requires_repair": false,
+          "movement_delta": -1
+        },
+        "animation_cues": ["object_chain_gate_open_placeholder", "object_route_active_placeholder"],
+        "editor_placement": {
+          "density_band": "contested_economy",
+          "minimum_lane_clearance": 2,
+          "requires_road_adjacency": true
+        },
+        "ai_hints": {
+          "strategic_value": 5,
+          "risk_tier": "standard",
+          "placement_role": "route_control"
+        },
+        "expect_animation_placeholder_warning": true
+      },
+      {
+        "id": "fixture_ore_front_object",
+        "name": "Fixture Ore Front",
+        "family": "mine",
+        "primary_class": "persistent_economy_site",
+        "secondary_tags": ["resource_front", "counter_capture_target"],
+        "resource_site_id": "fixture_daily_quarry",
+        "footprint": {
+          "width": 2,
+          "height": 2,
+          "anchor": "bottom_center",
+          "tier": "medium"
+        },
+        "body_tiles": [
+          {"x": 0, "y": 0, "role": "body"},
+          {"x": 1, "y": 0, "role": "body"},
+          {"x": 0, "y": 1, "role": "body"},
+          {"x": 1, "y": 1, "role": "body"}
+        ],
+        "passability_class": "blocking_visitable",
+        "approach": {
+          "mode": "adjacent",
+          "primary_sides": ["south"],
+          "visit_offsets": [{"x": 0, "y": 2}],
+          "stop_before_interaction": true,
+          "requires_clear_tile": true,
+          "linked_exit_offsets": []
+        },
+        "interaction": {
+          "cadence": "persistent_control",
+          "remains_after_visit": true,
+          "state_after_visit": "claimed",
+          "requires_ownership": false,
+          "requires_guard_clear": false,
+          "supports_revisit": true,
+          "cooldown_days": 0,
+          "refresh_rule": "daily_income"
+        },
+        "ownership": {
+          "capture_model": "capturable",
+          "counter_capture_value": 5,
+          "pillage_policy": "limited_stock",
+          "damaged_state_policy": "temporary_output_pause",
+          "retake_recovery_days": 2
+        },
+        "reward_summary": {
+          "reward_categories": ["persistent_income"],
+          "reward_tier": "standard",
+          "resource_output_ids": ["ore"]
+        },
+        "animation_cues": ["object_output_ready_placeholder", "object_capture_placeholder"],
+        "editor_placement": {
+          "density_band": "contested_economy",
+          "minimum_lane_clearance": 1,
+          "requires_approach_clearance": true
+        },
+        "ai_hints": {
+          "strategic_value": 6,
+          "risk_tier": "standard",
+          "placement_role": "economy_front"
+        },
+        "expect_animation_placeholder_warning": true
+      },
+      {
+        "id": "fixture_guarded_ruin_object",
+        "name": "Fixture Guarded Ruin",
+        "family": "guarded_reward_site",
+        "primary_class": "guarded_reward_site",
+        "secondary_tags": ["guarded_reward", "world_lore"],
+        "resource_site_id": "fixture_guarded_ruin",
+        "footprint": {
+          "width": 2,
+          "height": 2,
+          "anchor": "bottom_center",
+          "tier": "medium"
+        },
+        "body_tiles": [
+          {"x": 0, "y": 0, "role": "body"},
+          {"x": 1, "y": 0, "role": "body"},
+          {"x": 0, "y": 1, "role": "body"},
+          {"x": 1, "y": 1, "role": "body"}
+        ],
+        "passability_class": "blocking_visitable",
+        "approach": {
+          "mode": "adjacent",
+          "primary_sides": ["south"],
+          "visit_offsets": [{"x": 0, "y": 2}],
+          "stop_before_interaction": true,
+          "requires_clear_tile": true,
+          "linked_exit_offsets": []
+        },
+        "interaction": {
+          "cadence": "one_time",
+          "remains_after_visit": true,
+          "state_after_visit": "cleared",
+          "requires_ownership": false,
+          "requires_guard_clear": true,
+          "supports_revisit": false,
+          "cooldown_days": 0,
+          "refresh_rule": "none"
+        },
+        "guard": {
+          "guard_policy": "linked_encounter",
+          "guard_tier": "standard",
+          "encounter_id": "fixture_ruin_guard",
+          "guard_target_role": "blocks_approach",
+          "warning_cue_id": "object_warning_guarded_standard",
+          "visible_before_interaction": true
+        },
+        "reward_summary": {
+          "reward_categories": ["artifact", "experience"],
+          "reward_tier": "standard",
+          "artifact_pool_id": "fixture_minor_ruin_pool"
+        },
+        "animation_cues": ["object_guard_warning_placeholder", "object_ruin_cleared_placeholder"],
+        "editor_placement": {
+          "density_band": "ruin_reward_pocket",
+          "minimum_lane_clearance": 1,
+          "requires_guard_space": true
+        },
+        "ai_hints": {
+          "strategic_value": 7,
+          "risk_tier": "standard",
+          "placement_role": "guarded_reward"
+        },
+        "expect_animation_placeholder_warning": true
+      }
+    ]
+  },
+  "invalid": {
+    "objects": [
+      {
+        "id": "bad_missing_primary_class",
+        "family": "pickup",
+        "secondary_tags": ["small_reward"],
+        "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "passable_visit_on_enter",
+        "interaction": {"cadence": "one_time"},
+        "approach": {"mode": "enter", "primary_sides": [], "visit_offsets": [{"x": 0, "y": 0}]},
+        "animation_cues": ["object_pickup_glint_placeholder"],
+        "editor_placement": {"density_band": "standard_adventure"},
+        "ai_hints": {"strategic_value": 1}
+      },
+      {
+        "id": "bad_body_tile_outside_footprint",
+        "primary_class": "pickup",
+        "secondary_tags": ["small_reward"],
+        "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"},
+        "body_tiles": [{"x": 2, "y": 0, "role": "body"}],
+        "passability_class": "passable_visit_on_enter",
+        "interaction": {"cadence": "one_time"},
+        "approach": {"mode": "enter", "primary_sides": [], "visit_offsets": [{"x": 0, "y": 0}]},
+        "animation_cues": ["object_pickup_glint_placeholder"],
+        "editor_placement": {"density_band": "standard_adventure"},
+        "ai_hints": {"strategic_value": 1}
+      },
+      {
+        "id": "bad_visitable_missing_approach",
+        "primary_class": "persistent_economy_site",
+        "secondary_tags": ["resource_front"],
+        "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "blocking_visitable",
+        "interaction": {"cadence": "persistent_control"},
+        "ownership": {"capture_model": "capturable"},
+        "animation_cues": ["object_capture_placeholder"],
+        "editor_placement": {"density_band": "contested_economy"},
+        "ai_hints": {"strategic_value": 5}
+      },
+      {
+        "id": "bad_transit_missing_route_effect",
+        "family": "transit_object",
+        "primary_class": "transit_route_object",
+        "secondary_tags": ["road_control"],
+        "footprint": {"width": 2, "height": 1, "anchor": "bottom_center", "tier": "small"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "conditional_pass",
+        "interaction": {"cadence": "conditional"},
+        "approach": {"mode": "linked_endpoint", "primary_sides": ["west", "east"], "visit_offsets": [{"x": -1, "y": 0}]},
+        "animation_cues": ["object_route_active_placeholder"],
+        "editor_placement": {"density_band": "contested_economy"},
+        "ai_hints": {"strategic_value": 5}
+      },
+      {
+        "id": "bad_guarded_reward_missing_guard",
+        "family": "guarded_reward_site",
+        "primary_class": "guarded_reward_site",
+        "secondary_tags": ["guarded_reward"],
+        "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "blocking_visitable",
+        "interaction": {"cadence": "one_time"},
+        "approach": {"mode": "adjacent", "primary_sides": ["south"], "visit_offsets": [{"x": 0, "y": 2}]},
+        "reward_summary": {"reward_categories": ["artifact"]},
+        "animation_cues": ["object_guard_warning_placeholder"],
+        "editor_placement": {"density_band": "ruin_reward_pocket"},
+        "ai_hints": {"strategic_value": 7}
+      },
+      {
+        "id": "bad_persistent_missing_ownership",
+        "family": "mine",
+        "primary_class": "persistent_economy_site",
+        "secondary_tags": ["resource_front"],
+        "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}],
+        "passability_class": "blocking_visitable",
+        "interaction": {"cadence": "persistent_control"},
+        "approach": {"mode": "adjacent", "primary_sides": ["south"], "visit_offsets": [{"x": 0, "y": 2}]},
+        "animation_cues": ["object_capture_placeholder"],
+        "editor_placement": {"density_band": "contested_economy"},
+        "ai_hints": {"strategic_value": 5}
+      }
+    ]
+  }
+}
