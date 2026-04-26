@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T10:25:00Z",
+  "updatedAt": "2026-04-26T10:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "neutral-encounter-first-class-object-planning-10184",
-  "currentSliceTitle": "Plan first-class neutral encounter object migration boundary",
+  "currentSliceId": "neutral-encounter-first-class-object-report-fixtures-10184",
+  "currentSliceTitle": "Implement opt-in first-class neutral encounter object report and fixture scaffolding",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "The authored neutral_encounter_representation_bundle_001 report review is complete locally. The report marks the bundle metadata_authored with production_json_migration_scope scenario_placement_metadata_only, three authored placements, 45 remaining inferred placements, 408 warnings, and 0 errors. The next supported slice is first-class neutral encounter object planning before any broader metadata bundle, runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, or approach adoption.",
+  "currentSliceNotes": "First-class neutral encounter object migration-boundary planning is complete in docs/neutral-encounter-first-class-object-migration-plan.md. The next supported slice is opt-in report and strict fixture scaffolding for direct-only, scenario-metadata, and object-backed neutral encounter records. Production JSON migration, runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, and approach adoption remain out of scope.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -300,6 +300,14 @@
     {
       "id": "neutral-encounter-first-class-object-planning-10184",
       "title": "Plan first-class neutral encounter object migration boundary",
+      "status": "completed",
+      "startedAt": "2026-04-26T10:30:00Z",
+      "completedAt": "2026-04-26T10:45:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "neutral-encounter-first-class-object-report-fixtures-10184",
+      "title": "Implement opt-in first-class neutral encounter object report and fixture scaffolding",
       "status": "pending",
       "difficulty": "high"
     },

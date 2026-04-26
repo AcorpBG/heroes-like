@@ -327,6 +327,10 @@ Implementation note date: 2026-04-22
 
 The accepted web prototype's direct water/rock contact truth signal is now preserved in the active Godot selector path. `TerrainPlacementRules.visual_selection_payload` detects adjacent water and rock cells, marks the relation-class frame result as an explicit unresolved fallback, and keeps the selected placeholder frame, relation ring, class, row group, and flags inspectable. `OverworldMapView` exposes that signal in live and editor validation payloads. This is a narrow diagnostic/parity correction only, not a water shoreline rewrite, rock/void topology rewrite, terrain-art replacement, gameplay/pathing change, save-format change, or claim of whole HoMM3 terrain parity.
 
+Planning note date: 2026-04-26
+
+First-class neutral encounter object migration is now bounded by `docs/neutral-encounter-first-class-object-migration-plan.md`. Direct scenario encounter placements remain the current authority for `placement_id`, `encounter_id`, coordinates, difficulty, combat seed, field objectives, and save/objective compatibility until a later object-backed migration slice is explicitly declared. Future first-class neutral encounter records should separate reusable object definitions from scenario-local object placements, preserving links back to existing placement ids, encounter ids, guard targets, resource-site/object/town targets, and authored metadata bundle ids. This is documentation/planning only: no production object records, runtime encounter behavior, pathing, renderer, editor, AI, save behavior, generated PNG import, or asset import changed.
+
 ## Repository Structure
 - `content/`: authored gameplay domains.
 - `scenes/`: Godot scene assets for boot, menu, overworld, town, battle, and outcome.
