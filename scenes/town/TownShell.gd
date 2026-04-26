@@ -273,6 +273,7 @@ func _refresh() -> void:
 	_rebuild_study_actions()
 	_rebuild_specialty_actions()
 	_rebuild_artifact_actions()
+	_refresh_management_tab_cues()
 	TownRules.end_read_scope(_session)
 	OverworldRules.end_normalized_read_scope(_session)
 
@@ -332,6 +333,7 @@ func validation_snapshot() -> Dictionary:
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
+	var tab_readiness := _management_tab_readiness_payload()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -384,6 +386,10 @@ func validation_snapshot() -> Dictionary:
 		"town_action_context": town_context_surface,
 		"town_action_context_text": String(town_context_surface.get("visible_text", "")),
 		"town_action_context_tooltip_text": String(town_context_surface.get("tooltip_text", "")),
+		"town_tab_readiness": tab_readiness,
+		"town_tab_titles": _management_tab_titles(),
+		"town_tab_readiness_tooltip_text": _management_tabs.tooltip_text,
+		"town_active_tab": _management_tabs.current_tab,
 		"leave_button_text": _leave_button.text,
 		"leave_button_tooltip_text": _leave_button.tooltip_text,
 		"save_surface": AppRouter.active_save_surface(),
@@ -951,6 +957,85 @@ func _join_tooltip_sections(sections: Array) -> String:
 		if text != "":
 			lines.append(text)
 	return "\n".join(lines)
+
+func _refresh_management_tab_cues() -> void:
+	var payload := _management_tab_readiness_payload()
+	var tabs: Array = payload.get("tabs", [])
+	for index in range(min(_management_tabs.get_tab_count(), tabs.size())):
+		var tab: Dictionary = tabs[index]
+		_management_tabs.set_tab_title(index, String(tab.get("title", "")))
+	_management_tabs.tooltip_text = String(payload.get("tooltip_text", ""))
+
+func _management_tab_readiness_payload() -> Dictionary:
+	var tabs := [
+		_tab_readiness_entry("Build", TownRules.get_build_actions(_session)),
+		_tab_readiness_entry("Muster", TownRules.get_recruit_actions(_session)),
+		_tab_readiness_entry("Spells", TownRules.get_spell_learning_actions(_session)),
+		_tab_readiness_entry("Trade", TownRules.get_market_actions(_session)),
+		_tab_readiness_entry("Log", _logistics_tab_actions()),
+	]
+	var selected_index := clampi(_management_tabs.current_tab, 0, max(0, tabs.size() - 1))
+	var selected: Dictionary = tabs[selected_index] if selected_index < tabs.size() else {}
+	var tooltip_lines := ["Town command tabs:"]
+	for tab in tabs:
+		tooltip_lines.append("- %s" % String(tab.get("summary", "")))
+	if not selected.is_empty():
+		tooltip_lines.append("Selected: %s" % String(selected.get("focus", "")))
+	return {
+		"tabs": tabs,
+		"selected_tab": selected.duplicate(true),
+		"tooltip_text": "\n".join(tooltip_lines),
+	}
+
+func _tab_readiness_entry(base_title: String, actions: Variant) -> Dictionary:
+	var total := 0
+	var ready := 0
+	if actions is Array:
+		for action in actions:
+			if not (action is Dictionary):
+				continue
+			total += 1
+			if not bool(action.get("disabled", false)):
+				ready += 1
+	var title := base_title
+	if ready > 0:
+		title = "%s %d" % [base_title, ready]
+	var summary := "%s: %d ready of %d orders" % [base_title, ready, total]
+	var focus := "%s has %d ready order%s." % [
+		base_title,
+		ready,
+		"" if ready == 1 else "s",
+	]
+	if ready <= 0 and total > 0:
+		focus = "%s has %d blocked or spent order%s." % [
+			base_title,
+			total,
+			"" if total == 1 else "s",
+		]
+	elif total <= 0:
+		focus = "%s has no listed orders." % base_title
+	return {
+		"base_title": base_title,
+		"title": title,
+		"ready_count": ready,
+		"total_count": total,
+		"summary": summary,
+		"focus": focus,
+	}
+
+func _logistics_tab_actions() -> Array:
+	var actions := []
+	actions.append_array(TownRules.get_tavern_actions(_session))
+	actions.append_array(TownRules.get_transfer_actions(_session))
+	actions.append_array(TownRules.get_response_actions(_session))
+	actions.append_array(TownRules.get_artifact_actions(_session))
+	return actions
+
+func _management_tab_titles() -> Array:
+	var titles := []
+	for index in range(_management_tabs.get_tab_count()):
+		titles.append(_management_tabs.get_tab_title(index))
+	return titles
 
 func _crest_text() -> String:
 	var town := TownRules.get_active_town(_session)

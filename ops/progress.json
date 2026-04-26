@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:34:28Z",
+  "updatedAt": "2026-04-26T23:39:20Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-first-view-command-tooltips-10184",
-  "currentSliceTitle": "Surface compact main-menu first-view command tooltip cues",
+  "currentSliceId": "town-command-tab-readiness-cues-10184",
+  "currentSliceTitle": "Surface compact town command-tab readiness cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact contextual hover cues on the main menu's existing first-view painted plaque commands. Campaign, Skirmish, Load, Settings, Editor, and Quit now expose command-cue tooltips, with Load reusing existing save play-check and return-handoff helpers. Added focused menu/outcome smoke assertions for the first-view command tooltip payload and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact ready-action counts on the live town management tab labels, plus selected-tab hover context, using existing town action catalogs only. Added focused town/battle smoke assertions for tab labels, tooltip context, and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1879,6 +1879,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T23:32:27Z",
       "completedAt": "2026-04-26T23:34:28Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "town-command-tab-readiness-cues-10184",
+      "title": "Surface compact town command-tab readiness cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:37:16Z",
+      "completedAt": "2026-04-26T23:39:20Z",
       "difficulty": "small"
     }
   ],
