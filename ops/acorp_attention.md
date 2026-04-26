@@ -10,7 +10,8 @@ Updated: 2026-04-26
 
 - Overworld object additive report review is recorded in `docs/overworld-object-report-review-001.md`. Current report output is acceptable as compatibility-warning noise: 43 map objects, 48 resource sites, 127 site placements, 48 encounter placements, 169 warnings, and 0 errors.
 - Current production object/resource-site JSON should remain warning-only for missing future metadata. Strict object-schema errors stay limited to `tests/fixtures/overworld_object_schema/` until a later production bundle explicitly declares the migrated schema.
-- The next object slice should be first production additive schema planning for safe metadata fields only: `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
+- First production additive schema planning for safe metadata fields is recorded in `docs/overworld-object-safe-additive-schema-plan.md`. The approved-for-planning safe field set is `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
+- The first small production migrated bundle candidate is `safe_metadata_bundle_001`: `object_waystone_cache`, `object_timber_wagon`, `object_watchtower_beacon`, `object_wayfarer_infirmary`, `object_market_caravanserai`, `object_brightwood_sawmill`, `object_bramble_wall`, and `object_ember_signal_brazier`. This is a candidate only, not implemented.
 - `body_tiles`, `approach`, route effects, animation cue ids, editor placement hints, AI hints, placed-site object links, and first-class neutral encounter records should be planned as staged follow-ups. They should not switch pathing, renderer, AI, editor, or runtime behavior yet.
 - First-class visible neutral encounter records are accepted as a needed schema direction, but they require a separate representation decision before production object JSON migration.
 
@@ -21,6 +22,8 @@ Updated: 2026-04-26
 - Object implementation should confirm whether the density bands and object-class contract in `docs/overworld-object-taxonomy-density.md` are acceptable as the production target before schema/editor migration.
 - Object implementation should confirm whether neutral encounters should become a first-class visible overworld object model separate from neutral dwellings and guarded reward sites.
 - Object implementation should confirm when true footprint occupancy and approach-tile validation should become gameplay rules rather than renderer/editor hints.
+- Object implementation should review `docs/overworld-object-safe-additive-schema-plan.md` and confirm whether `safe_metadata_bundle_001` is acceptable for the first runtime-inactive production metadata implementation slice, or whether neutral encounter representation planning should happen first.
+- Object implementation should confirm that migrated-bundle validation may become strict only for the declared bundle ids while all other production object records remain compatibility warnings.
 - Magic implementation should confirm whether the seven-school accord model in `docs/magic-system-expansion-foundation.md` is the production target before spell schema, UI, AI, and content migration.
 - Magic implementation should confirm how aggressively resource catalysts should be used for tier 3+ and adventure-map spells so the future economy model gains meaning without making spellcasting feel like bookkeeping.
 - Magic implementation should confirm that Old Measure spells remain rare, scenario-gated, and route/object constrained rather than becoming a normal universal spell school.
@@ -98,5 +101,5 @@ Updated: 2026-04-26
 - The first additive resource schema and validator warning/report planning contract is recorded in `docs/economy-resource-additive-schema-validator-plan.md`.
 - The first additive resource validator/report scaffolding implementation is complete locally as opt-in `tests/validate_repo.py` report support plus non-production strict fixtures. It adds no production JSON migration, market/runtime behavior change, save migration, rare-resource activation, renderer sprite ingestion, runtime asset import, or generated concept-art import.
 - Additive overworld object validator/report scaffolding is complete locally as opt-in `tests/validate_repo.py` report support plus non-production strict fixtures. It adds no production JSON migration, renderer sprite ingestion, runtime asset import, pathing/body-tile/occupancy behavior change, visit/interaction runtime change, or AI adoption.
-- Additive overworld object report review/follow-up is the next current companion slice.
+- Additive overworld object report review/follow-up and safe additive schema planning are complete locally as documentation-only slices. The next current companion slice is either first safe metadata implementation for the declared candidate bundle or neutral encounter representation planning if implementation should wait.
 - GitHub push/auth remains blocked by invalid credentials; keep work local and do not push until credentials are refreshed.
