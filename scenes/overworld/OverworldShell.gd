@@ -1059,6 +1059,21 @@ func _selected_tile_order_summary(adjacent: bool) -> String:
 			OverworldRules.encounter_display_name(encounter),
 			"" if readout == "" else ". %s" % readout,
 		]
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if not node.is_empty():
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
+		var site_name := String(site.get("name", "Frontier site"))
+		if adjacent:
+			return "%s %s%s." % [
+				_selected_tile_order_label(true),
+				site_name,
+				"" if control_summary == "" else ". %s" % control_summary,
+			]
+		return "Take the next step toward %s%s." % [
+			site_name,
+			"" if control_summary == "" else ". %s" % control_summary,
+		]
 	var destination := _selected_tile_destination_name()
 	var target := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	if destination != "":
@@ -1434,8 +1449,11 @@ func _rail_tile_text() -> String:
 	if not node.is_empty():
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		var site_state := OverworldRules.describe_resource_site_surface(_session, node, site)
+		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
 		if site_state == "":
 			site_state = "Ready"
+		if control_summary != "":
+			site_state = "%s | %s" % [site_state, control_summary]
 		return "Site: %s\n%s\n%s | %s%s" % [
 			String(site.get("name", "Frontier site")),
 			route_line,
@@ -1539,12 +1557,16 @@ func _remembered_selected_tile_text(terrain: String) -> String:
 	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var control_inspection := OverworldRules.describe_resource_site_control_inspection(_session, node, site)
 		return "Remembered Site\nCoords %d,%d | Terrain %s\n%s\n%s\nThis mapped site is outside the current scout net." % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
 			String(site.get("name", "Frontier site")),
-			OverworldRules.describe_resource_site_surface(_session, node, site),
+			OverworldRules.describe_resource_site_surface(_session, node, site) if control_inspection == "" else "%s\n%s" % [
+				OverworldRules.describe_resource_site_surface(_session, node, site),
+				control_inspection,
+			],
 		]
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
@@ -1625,7 +1647,8 @@ func _describe_selected_tile() -> String:
 	var node = _resource_node_at(_selected_tile.x, _selected_tile.y)
 	if not node.is_empty():
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-		return "Resource Site\nCoords %d,%d | Terrain %s\n%s\n%s\n%s\n%s" % [
+		var control_inspection := OverworldRules.describe_resource_site_control_inspection(_session, node, site)
+		return "Resource Site\nCoords %d,%d | Terrain %s\n%s\n%s\n%s\n%s%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
@@ -1633,6 +1656,7 @@ func _describe_selected_tile() -> String:
 			String(site.get("name", "Frontier cache")),
 			OverworldRules.describe_resource_site_surface(_session, node, site),
 			OverworldRules.describe_resource_site_interaction_surface(node, site),
+			"" if control_inspection == "" else "\n%s" % control_inspection,
 		]
 
 	var artifact_node = _artifact_node_at(_selected_tile.x, _selected_tile.y)
@@ -1703,6 +1727,8 @@ func _map_tooltip_text() -> String:
 		return "%s | Select a mapped destination on the map." % OverworldRules.describe_visibility(_session)
 	var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())
 	if route_tooltip != "":
+		if not _resource_node_at(_selected_tile.x, _selected_tile.y).is_empty():
+			return "%s\n%s" % [route_tooltip, _tile_visibility_tooltip(_selected_tile, "Selected")]
 		return route_tooltip
 	return "Selected %d,%d | No clear route from the active hero." % [_selected_tile.x, _selected_tile.y]
 
@@ -1728,13 +1754,15 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 		var surface := OverworldRules.describe_resource_site_surface(_session, node, site)
 		var interaction_surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
-		return "%s %d,%d | %s | %s%s" % [
+		var control_summary := OverworldRules.describe_resource_site_control_summary(_session, node, site)
+		return "%s %d,%d | %s | %s%s%s" % [
 			prefix,
 			tile.x,
 			tile.y,
 			String(site.get("name", "Frontier site")),
 			surface,
 			"" if interaction_surface == "" else " | %s" % interaction_surface,
+			"" if control_summary == "" else " | %s" % control_summary,
 		]
 	var encounter := _encounter_at(tile.x, tile.y)
 	if not encounter.is_empty():
@@ -2263,6 +2291,8 @@ func validation_resource_site_state(placement_id: String) -> Dictionary:
 			"site_name": String(site.get("name", "")),
 			"surface": OverworldRules.describe_resource_site_surface(_session, node, site),
 			"interaction_surface": OverworldRules.describe_resource_site_interaction_surface(node, site),
+			"control_summary": OverworldRules.describe_resource_site_control_summary(_session, node, site),
+			"control_inspection": OverworldRules.describe_resource_site_control_inspection(_session, node, site),
 			"x": int(node.get("x", 0)),
 			"y": int(node.get("y", 0)),
 			"collected": bool(node.get("collected", false)),

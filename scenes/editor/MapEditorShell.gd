@@ -363,6 +363,8 @@ func _property_object_payload_from_detail(detail: Dictionary) -> Dictionary:
 		"collected_day": max(0, int(detail.get("collected_day", 0))),
 		"taxonomy": detail.get("taxonomy", {}),
 		"taxonomy_summary": String(detail.get("taxonomy_summary", "")),
+		"control_summary": String(detail.get("control_summary", "")),
+		"control_inspection": String(detail.get("control_inspection", "")),
 		"placement_guidance": guidance,
 		"x": int(detail.get("x", 0)),
 		"y": int(detail.get("y", 0)),
@@ -694,8 +696,12 @@ func _resource_taxonomy_payload(node: Dictionary, site: Dictionary) -> Dictionar
 	var footprint := _footprint_summary(map_object.get("footprint", {}))
 	var surface := OverworldRules.describe_resource_site_interaction_surface(node, site)
 	var live_surface := ""
+	var control_summary := ""
+	var control_inspection := ""
 	if _session != null:
 		live_surface = OverworldRules.describe_resource_site_surface(_session, node, site)
+		control_summary = OverworldRules.describe_resource_site_control_summary(_session, node, site)
+		control_inspection = OverworldRules.describe_resource_site_control_inspection(_session, node, site)
 	return {
 		"primary_class": primary_class,
 		"secondary_tags": secondary_tags,
@@ -711,6 +717,8 @@ func _resource_taxonomy_payload(node: Dictionary, site: Dictionary) -> Dictionar
 		"footprint": footprint,
 		"summary": surface,
 		"detail": live_surface,
+		"control_summary": control_summary,
+		"control_inspection": control_inspection,
 	}
 
 func _encounter_taxonomy_payload(placement: Dictionary, encounter: Dictionary) -> Dictionary:
@@ -3183,6 +3191,7 @@ func _object_lines_at(tile: Vector2i) -> Array:
 					String(detail.get("family", "")),
 					"yes" if bool(detail.get("collected", false)) else "no",
 				])
+				_append_resource_control_lines(lines, detail)
 				_append_taxonomy_object_lines(lines, detail)
 			OBJECT_FAMILY_ARTIFACT:
 				lines.append("Artifact: %s | placement %s | content %s | collected %s" % [
@@ -3228,6 +3237,19 @@ func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
 			int(guidance.get("local_density_count", 0)),
 		])
 
+func _append_resource_control_lines(lines: Array, detail: Dictionary) -> void:
+	var control_inspection := String(detail.get("control_inspection", "")).strip_edges()
+	if control_inspection == "":
+		var taxonomy = detail.get("taxonomy", {})
+		if taxonomy is Dictionary:
+			control_inspection = String(taxonomy.get("control_inspection", "")).strip_edges()
+	if control_inspection == "":
+		return
+	for raw_line in control_inspection.split("\n"):
+		var line := String(raw_line).strip_edges()
+		if line != "":
+			lines.append("  %s" % line)
+
 func _object_detail_for_placement(family: String, placement: Dictionary) -> Dictionary:
 	match family:
 		OBJECT_FAMILY_TOWN:
@@ -3249,6 +3271,7 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 		OBJECT_FAMILY_RESOURCE:
 			var site := ContentService.get_resource_site(String(placement.get("site_id", "")))
 			var resource_taxonomy := _resource_taxonomy_payload(placement, site)
+			var control_inspection := OverworldRules.describe_resource_site_control_inspection(_session, placement, site)
 			return {
 				"kind": OBJECT_FAMILY_RESOURCE,
 				"placement_id": String(placement.get("placement_id", "")),
@@ -3260,6 +3283,8 @@ func _object_detail_for_placement(family: String, placement: Dictionary) -> Dict
 				"collected_day": max(0, int(placement.get("collected_day", 0))),
 				"taxonomy": resource_taxonomy,
 				"taxonomy_summary": _taxonomy_inline_text(resource_taxonomy),
+				"control_summary": OverworldRules.describe_resource_site_control_summary(_session, placement, site),
+				"control_inspection": control_inspection,
 				"property_key": _object_property_key(OBJECT_FAMILY_RESOURCE, String(placement.get("placement_id", ""))),
 				"editable_properties": _editable_properties_for_object(OBJECT_FAMILY_RESOURCE),
 				"x": int(placement.get("x", 0)),

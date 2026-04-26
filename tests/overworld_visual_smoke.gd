@@ -442,8 +442,21 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	var signal_post: Dictionary = shell.call("validation_select_tile", 2, 3)
 	if not _assert_text_contains_all(
 		"River Pass signal post economy UI",
-		[String(signal_post.get("context_summary", "")), String(signal_post.get("selected_tile_rail_text", ""))],
-		["Transit/support object", "Faction Outpost", "Unclaimed", "Daily", "support response"]
+		[
+			String(signal_post.get("context_summary", "")),
+			String(signal_post.get("selected_tile_rail_text", "")),
+			String(signal_post.get("map_tooltip", "")),
+		],
+		[
+			"Transit/support object",
+			"Faction Outpost",
+			"Unclaimed",
+			"Daily",
+			"support response",
+			"Control: Unclaimed; capture flips control.",
+			"Economy: claim 50 gold, daily 20 gold",
+			"Route: Linked Riverwatch Hold",
+		]
 	):
 		return false
 	var town_context: Dictionary = shell.call("validation_select_tile", 0, 2)
@@ -465,8 +478,21 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	var signal_state: Dictionary = shell.call("validation_resource_site_state", "river_signal_post")
 	if not _assert_text_contains_all(
 		"River Pass signal post validation surface",
-		[String(signal_state.get("surface", "")), String(signal_state.get("interaction_surface", ""))],
-		["Transit/support object", "Cadence: persistent control", "capture/ownership", "income"]
+		[
+			String(signal_state.get("surface", "")),
+			String(signal_state.get("interaction_surface", "")),
+			String(signal_state.get("control_summary", "")),
+			String(signal_state.get("control_inspection", "")),
+		],
+		[
+			"Transit/support object",
+			"Cadence: persistent control",
+			"capture/ownership",
+			"income",
+			"Control unclaimed",
+			"claim 50 gold, daily 20 gold",
+			"Linked Riverwatch Hold",
+		]
 	):
 		return false
 
