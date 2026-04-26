@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T20:10:00Z",
+  "updatedAt": "2026-04-26T20:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-event-surfacing-report-gate-10184",
-  "currentSliceTitle": "Review compact strategic AI event and threat reason surfacing output",
+  "currentSliceId": "strategic-ai-pressure-expansion-planning-10184",
+  "currentSliceTitle": "Plan the next strategic AI pressure expansion after compact event surfacing",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI event/threat reason surfacing implementation is complete in docs/strategic-ai-event-surfacing-implementation-report.md. EnemyAdventureRules now builds reusable ephemeral/derived records for ai_target_assigned, ai_pressure_summary, ai_site_seized, and ai_site_contested; resource and town candidates carry compact public reasons; visible threat and dispatch surfaces can show one short reason phrase; and the focused Godot report proves River Pass river_free_company, river_signal_post, riverwatch_hold, resource-site seizure, and objective-contest examples without leaking score table fields to public surfaces. The next slice should rerun/review the focused report and decide whether a manual live-client signal-yard gate is needed before broader strategic AI expansion. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Strategic AI event/threat reason surfacing report gate passed in docs/strategic-ai-event-surfacing-report-gate-review.md. The focused event report and economy pressure report both passed: compact assignment, pressure, seizure, contest, threat, and dispatch reason output works for River Pass signal-yard examples; public records and text do not leak score-table fields; owned signal-yard resource targets still outrank simple pickups while riverwatch_hold can legitimately dominate the full target selector. A manual live-client signal-yard enemy-turn gate is deferred until a later AI expansion affects visible turn pacing, arrival frequency, map pressure, or UI composition. The next slice should be planning-only and decide the smallest useful broader strategic AI pressure expansion boundary, such as explicit AI event streams, full AI hero roster/task state, town governor pressure, faction personality pressure, or another narrow opponent-pressure proof. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -421,8 +421,17 @@
     {
       "id": "strategic-ai-event-surfacing-report-gate-10184",
       "title": "Review compact strategic AI event and threat reason surfacing output",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T20:15:00Z",
+      "completedAt": "2026-04-26T20:45:00Z",
+      "decision": "passed",
       "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-pressure-expansion-planning-10184",
+      "title": "Plan the next strategic AI pressure expansion after compact event surfacing",
+      "status": "pending",
+      "difficulty": "very_high"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
@@ -891,7 +900,7 @@
     "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, docs/concept-art-batch-003-review.md, docs/concept-art-batch-004-review.md, and docs/concept-art-batch-005-review.md to collect AcOrP accept/reject/defer calls on the external world/faction/object batch and second-pass follow-ups.",
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
-    "Use docs/strategic-ai-economy-pressure-report-gate-review.md as the current AI pressure gate result: the River Pass signal-yard pressure target passes, coefficient tuning is not needed from the focused report, and the next slice should plan compact AI event/threat reason surfacing before broader AI work.",
+    "Use docs/strategic-ai-event-surfacing-report-gate-review.md as the current AI surfacing gate result: compact public assignment, pressure, seizure, contest, threat, and dispatch reason output passes; score tables stay report/debug-only; manual live-client signal-yard enemy-turn review is deferred until broader AI expansion affects live turn readability; and the next slice should plan strategic AI pressure expansion before implementation.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
