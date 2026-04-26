@@ -1181,9 +1181,14 @@ static func describe_context(session: SessionStateStoreScript.SessionData) -> St
 			]
 		"artifact":
 			var artifact_node = context.get("node", {})
-			return "Artifact Cache\nTerrain %s | %s\nRecovering the cache adds the relic to the active hero inventory." % [
+			return "Artifact Cache\nTerrain %s\n%s" % [
 				terrain,
-				ArtifactRulesScript.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+				ArtifactRulesScript.describe_artifact_inspection(
+					session.overworld.get("hero", {}),
+					String(artifact_node.get("artifact_id", "")),
+					bool(artifact_node.get("collected", false)),
+					String(artifact_node.get("collected_by_faction_id", ""))
+				),
 			]
 		"encounter":
 			var placement = context.get("encounter", {})
@@ -1600,7 +1605,10 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "%s on %s" % [String(site.get("name", "Resource site")), terrain]
 		"artifact":
 			var artifact_node = context.get("node", {})
-			return "%s on %s" % [ArtifactRulesScript.describe_artifact(String(artifact_node.get("artifact_id", ""))), terrain]
+			return "%s on %s" % [
+				ArtifactRulesScript.describe_artifact_short(String(artifact_node.get("artifact_id", ""))),
+				terrain,
+			]
 		"encounter":
 			var encounter_placement = context.get("encounter", {})
 			return "%s on %s" % [encounter_display_name(encounter_placement), terrain]
@@ -7141,7 +7149,16 @@ static func _context_action_briefing(session: SessionStateStoreScript.SessionDat
 				int(response_state.get("security_rating", 1)),
 			]
 		"collect_artifact":
-			return "Recover the relic on this tile now before hostile pressure reaches the lane."
+			var artifact_node = context.get("node", {})
+			return "Recover %s now; %s." % [
+				ArtifactRulesScript.artifact_name(String(artifact_node.get("artifact_id", ""))),
+				ArtifactRulesScript.artifact_collection_state(
+					session.overworld.get("hero", {}),
+					String(artifact_node.get("artifact_id", "")),
+					bool(artifact_node.get("collected", false)),
+					String(artifact_node.get("collected_by_faction_id", ""))
+				),
+			]
 		"enter_battle":
 			var encounter = context.get("encounter", {})
 			var delivery_pressure: String = _encounter_delivery_pressure_summary(session, encounter, true)
@@ -7160,9 +7177,16 @@ static func _context_action_summary(session: SessionStateStoreScript.SessionData
 			return _resource_site_context_summary(session, node, site)
 		"collect_artifact":
 			var artifact_node = context.get("node", {})
-			return "Recover %s for the active hero before hostile pressure reaches this lane." % ArtifactRulesScript.describe_artifact(
-				String(artifact_node.get("artifact_id", ""))
-			)
+			var artifact_id := String(artifact_node.get("artifact_id", ""))
+			return "Recover %s for the active hero. %s" % [
+				ArtifactRulesScript.describe_artifact_short(artifact_id),
+				ArtifactRulesScript.artifact_collection_state(
+					session.overworld.get("hero", {}),
+					artifact_id,
+					bool(artifact_node.get("collected", false)),
+					String(artifact_node.get("collected_by_faction_id", ""))
+				),
+			]
 		"enter_battle":
 			var encounter = context.get("encounter", {})
 			return _encounter_pressure_summary(session, encounter, true)
@@ -7330,9 +7354,10 @@ static func _command_commitment_route_line(session: SessionStateStoreScript.Sess
 			)
 		"artifact":
 			var artifact_node = context.get("node", {})
-			return "%s lies exposed on the active lane. Recovering it strengthens the current commander before the front tightens." % ArtifactRulesScript.describe_artifact(
-				String(artifact_node.get("artifact_id", ""))
-			)
+			return "%s lies exposed on the active lane. Recovering it adds %s to the current commander before the front tightens." % [
+				ArtifactRulesScript.artifact_name(String(artifact_node.get("artifact_id", ""))),
+				ArtifactRulesScript.describe_artifact_short(String(artifact_node.get("artifact_id", ""))),
+			]
 	var site_plan := _nearest_logistics_plan(session)
 	if not site_plan.is_empty():
 		return String(site_plan.get("summary", "The nearest logistics lane needs attention."))

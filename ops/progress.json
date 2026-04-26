@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T18:24:00Z",
+  "updatedAt": "2026-04-26T18:49:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "enemy-turn-activity-feed-ui-10184",
-  "currentSliceTitle": "Surface recent enemy actions in the live overworld UI",
+  "currentSliceId": "artifact-reward-visibility-ui-10184",
+  "currentSliceTitle": "Surface artifact reward and equipment effects in live overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented player-facing enemy-turn activity summaries in the existing overworld dispatch rail from compact public AI event data. End Turn now returns compact enemy activity events and a public summary; the live overworld event rail shows recent enemy actions without AI tuning, save migration, durable event logs, or report-only scenes.",
+  "currentSliceNotes": "Implemented player-facing artifact inspection, hover, action, and collection text using existing artifact definitions and hero equipment state. Artifact UI now surfaces slot/type, derived reward role, effect summary, and equip or pack state in live overworld flow without artifact schema migration, save version change, generated assets, or report-only scenes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1262,6 +1262,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T18:10:00Z",
       "completedAt": "2026-04-26T18:24:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "artifact-reward-visibility-ui-10184",
+      "title": "Surface artifact reward and equipment effects in live overworld UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T18:35:00Z",
+      "completedAt": "2026-04-26T18:49:00Z",
       "difficulty": "medium"
     }
   ],

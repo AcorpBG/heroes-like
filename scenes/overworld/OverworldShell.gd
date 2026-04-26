@@ -809,6 +809,18 @@ func _selected_tile_order_label(adjacent: bool) -> String:
 	return "March" if adjacent else "Advance"
 
 func _selected_tile_order_summary(adjacent: bool) -> String:
+	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
+	if not artifact_node.is_empty():
+		var artifact_id := String(artifact_node.get("artifact_id", ""))
+		var state := ArtifactRules.artifact_collection_state(
+			_session.overworld.get("hero", {}),
+			artifact_id,
+			bool(artifact_node.get("collected", false)),
+			String(artifact_node.get("collected_by_faction_id", ""))
+		)
+		if adjacent:
+			return "Recover %s. %s." % [ArtifactRules.describe_artifact_short(artifact_id), state]
+		return "Take the next step toward %s. %s." % [ArtifactRules.artifact_name(artifact_id), state]
 	var destination := _selected_tile_destination_name()
 	var target := "%d,%d" % [_selected_tile.x, _selected_tile.y]
 	if destination != "":
@@ -830,7 +842,7 @@ func _selected_tile_destination_name() -> String:
 
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
-		return ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", "")))
+		return ArtifactRules.artifact_name(String(artifact_node.get("artifact_id", "")))
 
 	var encounter := _encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
@@ -1024,9 +1036,11 @@ func _rail_tile_text() -> String:
 
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
-		return "Artifact: %s\n%s%s" % [
-			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
-			terrain,
+		var artifact_id := String(artifact_node.get("artifact_id", ""))
+		return "Artifact: %s\n%s | %s%s" % [
+			ArtifactRules.artifact_name(artifact_id),
+			"%s | %s" % [ArtifactRules.artifact_slot_label(artifact_id), ArtifactRules.artifact_reward_role(artifact_id)],
+			ArtifactRules.artifact_effect_summary(artifact_id),
 			"" if action_hint == "" else " | %s" % action_hint,
 		]
 
@@ -1082,8 +1096,9 @@ func _remembered_tile_rail_text(terrain: String, coords: String, action_hint: St
 		]
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
+		var artifact_id := String(artifact_node.get("artifact_id", ""))
 		return "Artifact: %s\nRemembered | %s | Out of scout net" % [
-			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			ArtifactRules.describe_artifact_short(artifact_id),
 			terrain,
 		]
 	var encounter := _rememberable_encounter_at(_selected_tile.x, _selected_tile.y)
@@ -1121,11 +1136,17 @@ func _remembered_selected_tile_text(terrain: String) -> String:
 		]
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
+		var artifact_id := String(artifact_node.get("artifact_id", ""))
 		return "Remembered Artifact\nCoords %d,%d | Terrain %s\n%s\nThe cache remains mapped outside the current scout net." % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
-			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			ArtifactRules.describe_artifact_inspection(
+				_session.overworld.get("hero", {}),
+				artifact_id,
+				bool(artifact_node.get("collected", false)),
+				String(artifact_node.get("collected_by_faction_id", ""))
+			),
 		]
 	var encounter := _rememberable_encounter_at(_selected_tile.x, _selected_tile.y)
 	if not encounter.is_empty():
@@ -1201,11 +1222,17 @@ func _describe_selected_tile() -> String:
 
 	var artifact_node = _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
-		return "Artifact Cache\nCoords %d,%d | Terrain %s\n%s\nRecover the relic by marching onto the cache." % [
+		var artifact_id := String(artifact_node.get("artifact_id", ""))
+		return "Artifact Cache\nCoords %d,%d | Terrain %s\n%s" % [
 			_selected_tile.x,
 			_selected_tile.y,
 			terrain,
-			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			ArtifactRules.describe_artifact_inspection(
+				_session.overworld.get("hero", {}),
+				artifact_id,
+				bool(artifact_node.get("collected", false)),
+				String(artifact_node.get("collected_by_faction_id", ""))
+			),
 		]
 
 	var encounter = _encounter_at(_selected_tile.x, _selected_tile.y)
@@ -1315,11 +1342,14 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 		]
 	var artifact_node := _artifact_node_at(tile.x, tile.y)
 	if not artifact_node.is_empty():
-		return "%s %d,%d | Artifact: %s | %s" % [
+		var artifact_id := String(artifact_node.get("artifact_id", ""))
+		return "%s %d,%d | Artifact: %s | %s | %s | %s" % [
 			prefix,
 			tile.x,
 			tile.y,
-			ArtifactRules.describe_artifact(String(artifact_node.get("artifact_id", ""))),
+			ArtifactRules.artifact_name(artifact_id),
+			ArtifactRules.artifact_reward_role(artifact_id),
+			ArtifactRules.artifact_effect_summary(artifact_id),
 			terrain,
 		]
 	return "%s %d,%d | %s" % [prefix, tile.x, tile.y, terrain]
