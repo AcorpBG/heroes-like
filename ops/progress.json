@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T12:20:00Z",
+  "updatedAt": "2026-04-26T12:55:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "neutral-encounter-first-class-object-bundle-planning-10184",
-  "currentSliceTitle": "Plan tiny first-class neutral encounter object bundle",
+  "currentSliceId": "neutral-encounter-first-class-object-bundle-implementation-10184",
+  "currentSliceTitle": "Implement metadata-only first-class neutral encounter object bundle 001",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "First-class neutral encounter object report review is complete. The next supported slice is planning-only neutral_encounter_first_class_object_bundle_001, preferably lifting the three existing neutral_encounter_representation_bundle_001 placements into proposed object-backed records while keeping production JSON migration, runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, and approach adoption out of scope.",
+  "currentSliceNotes": "Planning for neutral_encounter_first_class_object_bundle_001 is complete in docs/neutral-encounter-first-class-object-bundle-001-plan.md. The next supported slice is metadata-only production object-backed implementation for exactly river_pass_ghoul_grove, river_pass_hollow_mire, and ninefold_basalt_gatehouse_watch, or report/validator prep first if blockers appear. Runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, approach adoption, and broader production migration remain out of scope.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -324,6 +324,14 @@
     {
       "id": "neutral-encounter-first-class-object-bundle-planning-10184",
       "title": "Plan tiny first-class neutral encounter object bundle lifting authored bundle 001 metadata",
+      "status": "completed",
+      "startedAt": "2026-04-26T12:25:00Z",
+      "completedAt": "2026-04-26T12:55:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "neutral-encounter-first-class-object-bundle-implementation-10184",
+      "title": "Implement metadata-only first-class neutral encounter object bundle 001 for the three authored placements",
       "status": "pending",
       "difficulty": "high"
     },
