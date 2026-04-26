@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T21:24:17Z",
+  "updatedAt": "2026-04-26T21:31:55Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "editor-play-return-context-10184",
-  "currentSliceTitle": "Surface compact map-editor Play Copy return context",
+  "currentSliceId": "settings-persistence-context-10184",
+  "currentSliceTitle": "Surface compact settings persistence context",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow tooling-facing UI slice: after returning from a map-editor Play Copy run, the editor visibly confirms that the launch snapshot was restored, live play mutations were discarded, and the working-copy hero/object context is ready for the next edit or Play Copy run. Focused map-editor smoke coverage proves the return context after a round trip and guards against internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow player-facing settings-board clarity slice: the settings summary and control tooltips now visibly explain that presentation/audio/accessibility changes apply immediately, persist in device settings, and do not mutate campaign progression or expedition saves. Focused main-menu smoke coverage checks the visible persistence cue after a resolution change and guards against internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1726,6 +1726,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T21:16:42Z",
       "completedAt": "2026-04-26T21:24:17Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "settings-persistence-context-10184",
+      "title": "Surface compact settings persistence context",
+      "status": "completed",
+      "startedAt": "2026-04-26T21:30:18Z",
+      "completedAt": "2026-04-26T21:31:55Z",
       "difficulty": "medium"
     }
   ],
