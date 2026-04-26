@@ -2409,6 +2409,7 @@ func _refresh_state() -> void:
 	_sync_property_controls()
 	_sync_object_taxonomy_summary()
 	_sync_play_handoff_surface()
+	_sync_menu_return_surface()
 	_sync_preview()
 	_refresh_labels()
 
@@ -2431,6 +2432,14 @@ func _sync_play_handoff_surface() -> void:
 	if return_tooltip != "":
 		tooltip_lines.append(return_tooltip)
 	_play_button.tooltip_text = "\n".join(tooltip_lines) if not tooltip_lines.is_empty() else "Load a scenario working copy before play-testing it."
+
+func _sync_menu_return_surface() -> void:
+	if _menu_button == null:
+		return
+	var menu_return := _editor_menu_return_payload()
+	_menu_button.disabled = false
+	_menu_button.text = String(menu_return.get("button_label", "Menu"))
+	_menu_button.tooltip_text = String(menu_return.get("tooltip", "Return to the main menu."))
 
 func _sync_object_taxonomy_summary() -> void:
 	if _object_taxonomy_summary_label == null:
@@ -4338,6 +4347,45 @@ func _editor_play_return_context_payload() -> Dictionary:
 		"dirty": _dirty,
 	}
 
+func _editor_menu_return_payload() -> Dictionary:
+	if _session == null:
+		var empty_text := "Menu return: Main menu; no editor working copy is loaded."
+		return {
+			"button_label": "Menu",
+			"text": empty_text,
+			"tooltip": empty_text,
+			"state": "empty",
+			"dirty": false,
+			"restored_from_play_copy": false,
+			"write_context": "no editor working copy is loaded",
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var dirty_context := "unsaved editor edits are discarded when leaving" if _dirty else "no editor edits need preserving"
+	var restored_context := "Play Copy launch snapshot restored" if _restored_from_play_copy else "active editor working copy"
+	var write_context := "no authored file or campaign progress is written"
+	var play_hint := "Use Play Copy before leaving when you need one more smoke pass."
+	var text := "Menu return: Main menu; %s; %s." % [dirty_context, write_context]
+	return {
+		"button_label": "Menu: Unsaved" if _dirty else "Menu",
+		"text": text,
+		"tooltip": "%s\n%s | %s | Scenario %s | %s" % [
+			text,
+			restored_context,
+			play_hint,
+			scenario_name,
+			write_context,
+		],
+		"state": "dirty" if _dirty else "clean",
+		"dirty": _dirty,
+		"restored_from_play_copy": _restored_from_play_copy,
+		"scenario_id": _session.scenario_id,
+		"scenario_name": scenario_name,
+		"write_context": write_context,
+		"dirty_context": dirty_context,
+		"play_hint": play_hint,
+	}
+
 func _editor_active_tool_cue_payload(tool: String = "") -> Dictionary:
 	var tool_id := _tool if tool == "" else tool
 	var selected_text := "%d,%d" % [_selected_tile.x, _selected_tile.y]
@@ -5061,6 +5109,10 @@ func validation_snapshot() -> Dictionary:
 		"play_return_context_text": String(_editor_play_return_context_payload().get("text", "")),
 		"play_button_text": _play_button.text if _play_button != null else "",
 		"play_button_tooltip": _play_button.tooltip_text if _play_button != null else "",
+		"menu_return": _editor_menu_return_payload(),
+		"menu_return_text": String(_editor_menu_return_payload().get("text", "")),
+		"menu_button_text": _menu_button.text if _menu_button != null else "",
+		"menu_button_tooltip": _menu_button.tooltip_text if _menu_button != null else "",
 		"active_tool_cue": _editor_active_tool_cue_payload(),
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
