@@ -558,6 +558,42 @@ static func build_outcome_recap(profile: Dictionary, session: SessionStateStoreS
 static func build_outcome_recap_bridge(profile: Dictionary, session) -> Dictionary:
 	return build_outcome_recap(profile, session)
 
+static func build_outcome_continuity_choice(profile: Dictionary, session: SessionStateStoreScript.SessionData) -> String:
+	var normalized := normalize_profile(profile)
+	var campaign_id := campaign_id_for_session(session)
+	if session == null or session.scenario_id == "" or campaign_id == "":
+		return ""
+
+	var campaign := ContentService.get_campaign(campaign_id)
+	if campaign.is_empty():
+		return ""
+	var current_entry := _find_scenario_entry(campaign, session.scenario_id)
+	var current_heading := _chapter_heading(current_entry, session.scenario_id)
+	var status := String(session.scenario_status)
+	if status == "victory" and _campaign_is_completed(normalized, campaign_id):
+		return "Continuity choice: campaign complete; carry forward the final record, replay keeps %s recorded, or return to menu to resume this outcome or choose another arc." % current_heading
+	if status == "victory":
+		var next_entry := _next_scenario_entry(campaign, session.scenario_id)
+		var next_scenario_id := String(next_entry.get("scenario_id", ""))
+		var exported_summary := describe_carryover_bundle(_outcome_export_bundle(normalized, campaign_id, session.scenario_id))
+		var carry_text := exported_summary if exported_summary != "" else "the recorded victory only"
+		if next_scenario_id != "" and is_scenario_unlocked(normalized, campaign_id, next_scenario_id):
+			return "Continuity choice: carry forward %s into %s, replay keeps %s recorded, or return to menu to resume this outcome later." % [
+				carry_text,
+				_chapter_heading(next_entry, next_scenario_id),
+				current_heading,
+			]
+		if next_scenario_id != "":
+			return "Continuity choice: victory is recorded but %s is still locked; replay keeps %s recorded, or return to menu to review requirements." % [
+				_chapter_heading(next_entry, next_scenario_id),
+				current_heading,
+			]
+		return "Continuity choice: carry forward %s; no downstream chapter is authored, so replay or return to menu are the available follow-ups." % carry_text
+	return "Continuity choice: retry starts %s fresh; no carryover is banked until victory, and return to menu can resume this outcome later." % current_heading
+
+static func build_outcome_continuity_choice_bridge(profile: Dictionary, session) -> String:
+	return build_outcome_continuity_choice(profile, session)
+
 static func build_outcome_actions(profile: Dictionary, session: SessionStateStoreScript.SessionData) -> Array:
 	var normalized := normalize_profile(profile)
 	var campaign_id := campaign_id_for_session(session)

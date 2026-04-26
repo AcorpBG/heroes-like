@@ -3910,31 +3910,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: implement a compact battle outcome to field handoff recap in live overworld UI using the existing battle aftermath and overworld feedback surfaces.
+Current target: complete the compact post-scenario continuity choice cue in the live outcome UI using existing ScenarioRules, CampaignRules, SaveService, and outcome action payloads.
 
 Done means:
-- A resolved battle returning to the overworld tells the player what changed, what field/town/objective surface was affected, and the next practical action.
-- Existing focused smoke coverage proves the handoff recap is visible in the battle-to-overworld transition.
+- A resolved skirmish outcome tells the player that the run is self-contained, retry starts fresh, and menu/resume can reopen the outcome.
+- A resolved campaign outcome tells the player what carries forward, which next chapter/replay/menu choice is available, and what stays recorded.
+- Existing focused menu/outcome smoke coverage proves the continuity cue is visible for both skirmish and campaign outcome cases.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
-- The completed site-control report remains accepted as proof that current Mireclaw River Pass assignment, seizure, and controller-flip behavior works for `river_free_company`, with `river_signal_post` as companion reason coverage.
-- No coefficient tuning starts unless a later proof identifies a specific ordering, defense, seizure, or retake defect.
-- The completed Glassroad report proves `glassroad_watch_relay` assignment and retake/controller flip, `glassroad_starlens` companion stabilization surface, `halo_spire_bridgehead` town-front sanity, and `riverwatch_market` garrison stabilization.
-- The completed commander-role report fixture plan, minimal schema plan, implementation boundary plan, implementation report, and gate review remain the accepted evidence chain for `AI_COMMANDER_ROLE_STATE_REPORT`.
-- The completed adoption sequencing plan selected derived live-turn transcript/report planning as the narrow bridge before any schema write or live behavior adoption.
-- The completed live-turn transcript/report planning slice defined `AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT` ownership, payload shape, fixtures, phase records, active commander links, before/after role proposals, target assignment/no-op records, raid movement/arrival summaries, town-governor supporting references, public transcript events, leak checks, validation commands, failure conditions, and implementation sequence.
-- The completed live-turn transcript/report implementation emits `AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT` as report-only diagnostics; it does not adopt live behavior, migrate saves, write schema, add durable event logs, tune coefficients, or implement full AI hero task state.
-- The completed live-turn transcript/report gate review passed: River Pass and Glassroad transcript evidence is enough to keep schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, full AI hero task-state implementation, and live commander-role behavior deferred.
-- The completed hero task-state boundary plan defines future task ids, task ownership/lifecycle, role-to-task adapter path, route/task ownership, invalidation rules, save/schema risks, old-save compatibility, rollback/escape hatch, fixture/report prerequisites, and validation gates without implementing task state or adopting live behavior.
-- The completed hero task-state report fixture plan defines a planning-only `AI_HERO_TASK_STATE_BOUNDARY_REPORT` payload and fixtures for derived candidate task ids, actor/target ownership, role-to-task source links, target reservation, invalidation, old-save absence, and public leak checks without implementing report helpers/tests or adopting schema/live behavior.
-- The completed hero task-state boundary report implementation emits `AI_HERO_TASK_STATE_BOUNDARY_REPORT` as report-only diagnostics; it does not adopt schema, migrate saves, write task state, change target selection, change raid movement/arrival, change town-governor choices, tune coefficients, add durable event logs, or implement full AI hero task state.
-- The completed hero task-state boundary report gate review passed and remains the current evidence boundary before any schema write, save migration, live behavior adoption, coefficient tuning, durable event log, or full task-state implementation.
-- The completed hero task-state adoption sequencing plan compares minimal schema planning, report-only save-normalizer preservation planning, live behavior transcript proof, full AI hero task-state planning, and pausing AI.
-- The completed hero task-state save-normalizer preservation plan defines a future `AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT` because `EnemyTurnRules.normalize_enemy_states(...)` currently rebuilds known enemy-state fields and would drop a future optional `hero_task_state` unless intentionally preserved or normalized.
-- The next slice implements that report-only preservation proof with synthetic fixture-only task boards; it does not approve schema writes, save migration, live behavior adoption, or a `SAVE_VERSION` bump.
-- Old-save compatibility remains explicit: missing `hero_task_state` means no saved tasks, derived candidate reports are allowed, and no `SAVE_VERSION` bump happens unless separately planned with fixtures.
-- `SaveService` remains a top-level payload save/restore boundary and does not become the owner of strategic AI task semantics.
-- The `glassroad-sundering` fixture reality remains explicitly accounted for as the current direct Embercourt enemy fixture.
-- Detailed target/build/recruit score tables stay in report/debug output only.
-- Public or derived event output stays compact and does not expose score-table fields.
-- No production JSON migration, durable AI event log, save migration, full AI hero task-state implementation, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, new defense-specific durable state, live commander-role behavior, or River Pass rebalance is pulled into the report-only next slice.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

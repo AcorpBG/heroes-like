@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T19:47:38Z",
+  "updatedAt": "2026-04-26T19:56:56Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "in-session-save-continuity-check-10184",
-  "currentSliceTitle": "Surface compact in-session save continuity checks in live overworld, town, and battle footers",
+  "currentSliceId": "outcome-continuity-choice-cue-10184",
+  "currentSliceTitle": "Surface compact post-scenario continuity choice cues on the live outcome screen",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible manual-play polish slice on the existing overworld, town, and battle save surfaces. SaveService now emits a compact Save check line from current save recap/play continuity, and the active play shells expose it through save/status tooltips so a player can see what the save preserves, what changed recently, and where resume will land. Focused overworld and town/battle smokes assert the continuity surface after live actions without leaking internal score fields. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow visible manual-play polish slice on the existing scenario outcome surface. ScenarioRules now adds a compact continuity choice line, CampaignRules describes campaign carry-forward/replay/menu outcomes from current campaign records and carryover bundles, and the outcome shell surfaces the line in the existing banner status. Focused menu/outcome smoke covers both skirmish and campaign outcome continuity without leaking internal score fields. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1646,6 +1646,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T19:40:26Z",
       "completedAt": "2026-04-26T19:47:38Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "outcome-continuity-choice-cue-10184",
+      "title": "Surface compact post-scenario continuity choice cues on the live outcome screen",
+      "status": "completed",
+      "startedAt": "2026-04-26T19:54:02Z",
+      "completedAt": "2026-04-26T19:56:56Z",
       "difficulty": "medium"
     }
   ],
