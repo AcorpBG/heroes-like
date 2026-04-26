@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T15:10:00Z",
+  "updatedAt": "2026-04-26T15:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-capture-resource-loop-proof-planning-10184",
-  "currentSliceTitle": "Plan the first narrow economy capture/resource loop proof",
+  "currentSliceId": "economy-capture-resource-loop-live-slice-10184",
+  "currentSliceTitle": "Implement the selected minimal economy capture/resource loop proof path",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Foundation/game-loop prioritization is complete in docs/foundation-game-loop-prioritization.md. The selected next track is an economy capture/resource loop proof because it has the highest player-facing leverage and can be staged on existing resource-site, town, reward, report, and River Pass proof surfaces. The next slice is planning-only: choose a narrow River Pass or River Pass-adjacent proof path for scouting, fighting, capture, daily/weekly resource value, town spending/recruitment, save/resume, and manual-play observations. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Economy capture/resource loop proof planning is complete in docs/economy-capture-resource-loop-proof-plan.md. The selected proof is the Riverwatch signal-yard path in river-pass: claim north_timber, capture river_signal_post and river_free_company, evaluate river_pass_ghoul_grove and river_pass_hollow_mire, claim southern_ore if viable, make a Riverwatch build/recruit choice, and verify save/resume. The next slice should implement or manually prove only that minimal path using current gold/wood/ore behavior and existing systems. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -356,7 +356,9 @@
     {
       "id": "economy-capture-resource-loop-proof-planning-10184",
       "title": "Plan the first narrow economy capture/resource loop proof",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T15:15:00Z",
+      "completedAt": "2026-04-26T15:45:00Z",
       "difficulty": "high"
     },
     {
