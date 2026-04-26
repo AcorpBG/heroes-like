@@ -95,6 +95,7 @@ var _hovered_tile := Vector2i(-1, -1)
 var _tool := TOOL_INSPECT
 var _dirty := false
 var _last_message := ""
+var _last_object_authoring_recap := {}
 var _restored_from_play_copy := false
 var _terrain_paint_order := 0
 var _last_terrain_placement_result := {}
@@ -1004,6 +1005,269 @@ func _selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
 		"guidance": guidance,
 		"text": "\n".join(text_lines),
 	}
+
+func _set_object_authoring_recap(
+	action: String,
+	changed: bool,
+	before_detail: Dictionary,
+	after_detail: Dictionary,
+	from_tile: Vector2i,
+	to_tile: Vector2i,
+	preview: Dictionary = {},
+	property_name: String = "",
+	previous_value: Variant = null,
+	new_value: Variant = null
+) -> Dictionary:
+	var recap := _object_authoring_recap_payload(
+		action,
+		changed,
+		before_detail,
+		after_detail,
+		from_tile,
+		to_tile,
+		preview,
+		property_name,
+		previous_value,
+		new_value
+	)
+	_last_object_authoring_recap = recap
+	var text := String(recap.get("text", "")).strip_edges()
+	if text != "":
+		_last_message = text
+	return recap
+
+func _object_authoring_recap_payload(
+	action: String,
+	changed: bool,
+	before_detail: Dictionary,
+	after_detail: Dictionary,
+	from_tile: Vector2i,
+	to_tile: Vector2i,
+	preview: Dictionary = {},
+	property_name: String = "",
+	previous_value: Variant = null,
+	new_value: Variant = null
+) -> Dictionary:
+	var detail := after_detail if not after_detail.is_empty() else before_detail
+	if detail.is_empty():
+		return {}
+	var kind := String(detail.get("kind", ""))
+	var content_id := String(detail.get("content_id", ""))
+	var placement_id := String(detail.get("placement_id", ""))
+	var target_tile := to_tile
+	if not _tile_in_bounds(target_tile):
+		target_tile = Vector2i(int(detail.get("x", from_tile.x)), int(detail.get("y", from_tile.y)))
+	var taxonomy = detail.get("taxonomy", {})
+	if not (taxonomy is Dictionary):
+		taxonomy = _object_content_taxonomy_payload(kind, content_id)
+	var enriched_detail := detail.duplicate(true)
+	if taxonomy is Dictionary and not taxonomy.is_empty():
+		enriched_detail["taxonomy"] = taxonomy
+	if not _tile_in_bounds(target_tile):
+		target_tile = from_tile
+	enriched_detail = _object_detail_with_guidance(enriched_detail, target_tile)
+	var dependencies: Dictionary = enriched_detail.get("authoring_dependencies", {})
+	var context_lines := []
+	if taxonomy is Dictionary and not taxonomy.is_empty() and _tile_in_bounds(target_tile):
+		context_lines = _placement_context_lines(kind, content_id, taxonomy, target_tile)
+	var dependency_line := _dependency_recap_line(enriched_detail)
+	var why_line := _object_action_why_line(action, enriched_detail, preview, property_name)
+	var next_check := _object_action_next_check(action, enriched_detail, preview, property_name)
+	var headline := _object_action_headline(action, changed, before_detail, after_detail, from_tile, target_tile, property_name, previous_value, new_value)
+	var text_lines := [headline]
+	if not context_lines.is_empty():
+		text_lines.append("Context: %s" % _compact_join_limited(context_lines, 2))
+	if dependency_line != "":
+		text_lines.append("Dependency: %s" % dependency_line)
+	if why_line != "":
+		text_lines.append("Matters: %s" % why_line)
+	if next_check != "":
+		text_lines.append("Next: %s" % next_check)
+	return {
+		"action": action,
+		"changed": changed,
+		"family": kind,
+		"placement_id": placement_id,
+		"content_id": content_id,
+		"name": String(detail.get("name", content_id)),
+		"from": {"x": from_tile.x, "y": from_tile.y} if _tile_in_bounds(from_tile) else {},
+		"to": {"x": target_tile.x, "y": target_tile.y} if _tile_in_bounds(target_tile) else {},
+		"property": property_name,
+		"previous_value": _editor_variant_text(previous_value) if property_name != "" else "",
+		"new_value": _editor_variant_text(new_value) if property_name != "" else "",
+		"context": context_lines,
+		"dependency_summary": dependency_line,
+		"dependency_warning_count": dependencies.get("warnings", []).size() if dependencies is Dictionary else 0,
+		"why": why_line,
+		"next_check": next_check,
+		"text": "\n".join(text_lines),
+	}
+
+func _object_action_headline(
+	action: String,
+	changed: bool,
+	before_detail: Dictionary,
+	after_detail: Dictionary,
+	from_tile: Vector2i,
+	to_tile: Vector2i,
+	property_name: String,
+	previous_value: Variant,
+	new_value: Variant
+) -> String:
+	var detail := after_detail if not after_detail.is_empty() else before_detail
+	var object_label := _object_recap_label(detail)
+	var changed_prefix := _object_action_label(action, changed)
+	match action:
+		"place":
+			return "%s %s at %d,%d." % [changed_prefix, object_label, to_tile.x, to_tile.y]
+		"remove":
+			return "%s %s from %d,%d." % [changed_prefix, object_label, from_tile.x, from_tile.y]
+		"move":
+			return "%s %s from %d,%d to %d,%d." % [changed_prefix, object_label, from_tile.x, from_tile.y, to_tile.x, to_tile.y]
+		"duplicate":
+			return "%s %s from %d,%d to %d,%d." % [changed_prefix, object_label, from_tile.x, from_tile.y, to_tile.x, to_tile.y]
+		"retheme":
+			return "%s %s from %s to %s at %d,%d." % [
+				changed_prefix,
+				_object_recap_label(before_detail),
+				String(before_detail.get("content_id", "")),
+				String(after_detail.get("content_id", "")),
+				to_tile.x,
+				to_tile.y,
+			]
+		"edit_property":
+			return "%s %s %s from %s to %s at %d,%d." % [
+				changed_prefix,
+				object_label,
+				_humanize_editor_id(property_name),
+				_editor_variant_text(previous_value),
+				_editor_variant_text(new_value),
+				to_tile.x,
+				to_tile.y,
+			]
+		_:
+			return "%s %s." % [changed_prefix, object_label]
+
+func _object_action_label(action: String, changed: bool) -> String:
+	if not changed:
+		return "No change for"
+	match action:
+		"place":
+			return "Placed"
+		"remove":
+			return "Removed"
+		"move":
+			return "Moved"
+		"duplicate":
+			return "Duplicated"
+		"retheme":
+			return "Rethemed"
+		"edit_property":
+			return "Edited"
+		_:
+			return "Updated"
+
+func _object_recap_label(detail: Dictionary) -> String:
+	if detail.is_empty():
+		return "object"
+	var family_label := _object_family_label(String(detail.get("kind", "")))
+	var name := String(detail.get("name", detail.get("content_id", ""))).strip_edges()
+	var placement_id := String(detail.get("placement_id", "")).strip_edges()
+	if placement_id == "":
+		return "%s %s" % [family_label, name]
+	return "%s %s (%s)" % [family_label, name, placement_id]
+
+func _dependency_recap_line(detail: Dictionary) -> String:
+	var dependencies = detail.get("authoring_dependencies", {})
+	if not (dependencies is Dictionary) or dependencies.is_empty():
+		return "no authored objective, guard, reward, route, or enemy-focus link found"
+	var parts := []
+	var summary := String(dependencies.get("summary", "")).strip_edges()
+	if summary != "":
+		parts.append(summary)
+	var warnings: Array = dependencies.get("warnings", [])
+	if not warnings.is_empty():
+		parts.append("warning: %s" % String(warnings[0]))
+	if parts.is_empty():
+		return "no authored objective, guard, reward, route, or enemy-focus link found"
+	return " | ".join(parts)
+
+func _object_action_why_line(action: String, detail: Dictionary, preview: Dictionary, property_name: String) -> String:
+	var taxonomy_value = detail.get("taxonomy", {})
+	var taxonomy: Dictionary = taxonomy_value if taxonomy_value is Dictionary else {}
+	var flags := _placement_role_flags(taxonomy) if not taxonomy.is_empty() else {}
+	var preview_consequence := String(preview.get("authoring_consequence", "")).strip_edges()
+	match action:
+		"place":
+			var guidance_value = detail.get("placement_guidance", {})
+			var guidance: Dictionary = guidance_value if guidance_value is Dictionary else {}
+			return preview_consequence if preview_consequence != "" else _placement_authoring_consequence(String(detail.get("kind", "")), String(detail.get("content_id", "")), taxonomy, guidance)
+		"remove":
+			if bool(flags.get("economy", false)):
+				return "removes an economy/control source from route and objective planning."
+			if bool(flags.get("neutral", false)):
+				return "removes a battle gate or recruit/guard anchor from route planning."
+			return "removes a reward, town, or route anchor from the authored map state."
+		"move":
+			return "keeps the placement id stable while changing terrain, road, town-distance, and dependency context."
+		"duplicate":
+			return "creates a fresh editor id with copied runtime properties; authored links still need deliberate targets."
+		"retheme":
+			return "keeps the placement id and links but changes object taxonomy, economy role, reward, or encounter identity."
+		"edit_property":
+			match property_name:
+				PROPERTY_TOWN_OWNER:
+					return "changes control state used by objectives, enemy focus, and town economy pressure."
+				PROPERTY_COLLECTED:
+					return "changes whether this reward/site appears and whether its economy value is already claimed."
+				PROPERTY_ENCOUNTER_DIFFICULTY:
+					return "changes battle pressure without moving the guard, route, or reward anchor."
+			return "changes the working-copy runtime state for this authored object."
+	return ""
+
+func _object_action_next_check(action: String, detail: Dictionary, preview: Dictionary, property_name: String) -> String:
+	var dependencies = detail.get("authoring_dependencies", {})
+	var warnings: Array = dependencies.get("warnings", []) if dependencies is Dictionary else []
+	if not warnings.is_empty():
+		return String(warnings[0])
+	if action in ["remove", "move", "retheme"] and dependencies is Dictionary and String(dependencies.get("summary", "")).strip_edges() != "":
+		return "recheck linked objectives, guards, rewards, routes, and enemy focus in tile inspection."
+	if action in ["place", "duplicate"]:
+		var dependency_warning := String(preview.get("dependency_warning", "")).strip_edges()
+		if dependency_warning != "":
+			return "stabilize the placement id before adding objective, guard, reward, or enemy-focus links."
+	var taxonomy_value = detail.get("taxonomy", {})
+	var taxonomy: Dictionary = taxonomy_value if taxonomy_value is Dictionary else {}
+	var flags := _placement_role_flags(taxonomy) if not taxonomy.is_empty() else {}
+	if property_name == PROPERTY_TOWN_OWNER:
+		return "check victory/defeat anchors and nearest enemy focus after the ownership change."
+	if property_name == PROPERTY_COLLECTED:
+		return "check live preview visibility and nearby route reward pacing."
+	if property_name == PROPERTY_ENCOUNTER_DIFFICULTY:
+		return "check guard pressure against the reward or route it blocks."
+	if bool(flags.get("economy", false)) or bool(flags.get("transit", false)):
+		return "check road contact, local density, nearest town ownership, and economy pacing."
+	if bool(flags.get("neutral", false)):
+		return "check guarded target/reward link and whether the route block is intentional."
+	return "inspect the tile, density band, and dependency summary before saving author data."
+
+func _compact_join_limited(lines: Array, limit: int) -> String:
+	var compact := []
+	for line_value in lines:
+		var line := String(line_value).strip_edges()
+		if line == "":
+			continue
+		compact.append(line)
+		if compact.size() >= limit:
+			break
+	return " | ".join(compact)
+
+func _editor_variant_text(value: Variant) -> String:
+	if value == null:
+		return ""
+	if value is bool:
+		return "true" if bool(value) else "false"
+	return String(value)
 
 func _placement_availability_for_selected_object(tile: Vector2i) -> Dictionary:
 	if not _tile_in_bounds(tile):
@@ -2287,10 +2551,30 @@ func _on_apply_object_properties_pressed() -> void:
 		_last_message = "Select a supported overworld object before editing properties."
 		_refresh_state()
 		return
+	var property_name := _primary_editable_property_for_kind(String(detail.get("kind", "")))
+	var previous_value: Variant = null
+	if property_name != "":
+		previous_value = detail.get(property_name, null)
 	var result := _apply_selected_object_properties(detail)
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
-		_last_message = String(result.get("message", "Updated selected object properties."))
+		var after_detail := _object_detail_by_key(String(detail.get("property_key", "")))
+		var tile := Vector2i(int(detail.get("x", _selected_tile.x)), int(detail.get("y", _selected_tile.y)))
+		var new_value: Variant = null
+		if property_name != "":
+			new_value = after_detail.get(property_name, null)
+		_set_object_authoring_recap(
+			"edit_property",
+			bool(result.get("changed", false)),
+			detail,
+			after_detail,
+			tile,
+			tile,
+			{},
+			property_name,
+			previous_value,
+			new_value
+		)
 	else:
 		_last_message = String(result.get("message", "Could not update selected object properties."))
 	_refresh_state()
@@ -3032,23 +3316,8 @@ func _place_object(tile: Vector2i) -> bool:
 	placements.append(built_placement)
 	_session.overworld[array_key] = placements
 	_dirty = true
-	_last_message = "Placed %s %s at %d,%d as %s." % [
-		_object_family_label(_selected_object_family),
-		_selected_object_content_id,
-		tile.x,
-		tile.y,
-		placement_id,
-	]
-	var guidance := _placement_guidance_payload(_object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id), tile)
-	if not guidance.is_empty():
-		_last_message = "%s Guidance: %s; local %d in 16x16." % [
-			_last_message,
-			String(guidance.get("density_target", "")),
-			int(guidance.get("local_density_count", 0)),
-		]
-	var consequence := String(preview.get("authoring_consequence", "")).strip_edges()
-	if consequence != "":
-		_last_message = "%s Consequence: %s" % [_last_message, consequence]
+	var after_detail := _object_detail_by_key(_object_property_key(_selected_object_family, placement_id))
+	_set_object_authoring_recap("place", true, {}, after_detail, tile, tile, preview)
 	return true
 
 func _remove_object(tile: Vector2i) -> bool:
@@ -3063,9 +3332,11 @@ func _remove_object(tile: Vector2i) -> bool:
 		return false
 	var updated := []
 	var removed_ids := []
+	var removed_details := []
 	for placement in placements:
 		if placement is Dictionary and _placement_at_tile(placement, tile):
 			removed_ids.append(String(placement.get("placement_id", "")))
+			removed_details.append(_object_detail_with_guidance(_object_detail_for_placement(_selected_object_family, placement), tile))
 			continue
 		updated.append(placement)
 	if removed_ids.is_empty():
@@ -3075,14 +3346,8 @@ func _remove_object(tile: Vector2i) -> bool:
 	if _selected_object_family == OBJECT_FAMILY_ENCOUNTER:
 		_remove_resolved_encounter_ids(removed_ids)
 	_dirty = true
-	_last_message = "Removed %d %s placement%s at %d,%d: %s." % [
-		removed_ids.size(),
-		_object_family_label(_selected_object_family),
-		"" if removed_ids.size() == 1 else "s",
-		tile.x,
-		tile.y,
-		", ".join(removed_ids),
-	]
+	var before_detail: Dictionary = removed_details[0] if not removed_details.is_empty() else {}
+	_set_object_authoring_recap("remove", true, before_detail, {}, tile, tile)
 	return true
 
 func _move_object_tool_click(tile: Vector2i) -> bool:
@@ -3099,11 +3364,14 @@ func _move_object_tool_click(tile: Vector2i) -> bool:
 			tile.y,
 		]
 		return true
+	var before_detail := _object_detail_by_key(_pending_move_object_key)
+	var source_tile := Vector2i(int(before_detail.get("x", tile.x)), int(before_detail.get("y", tile.y)))
 	var result := _move_object_by_key(_pending_move_object_key, tile)
 	if bool(result.get("ok", false)):
 		_pending_move_object_key = ""
 		_dirty = _dirty or bool(result.get("changed", false))
-		_last_message = String(result.get("message", "Moved object placement."))
+		var after_detail := _object_detail_by_key(String(before_detail.get("property_key", "")))
+		_set_object_authoring_recap("move", bool(result.get("changed", false)), before_detail, after_detail, source_tile, tile)
 	else:
 		_last_message = String(result.get("message", "Could not move object placement."))
 	return bool(result.get("ok", false))
@@ -3202,11 +3470,15 @@ func _duplicate_object_tool_click(tile: Vector2i) -> bool:
 			tile.y,
 		]
 		return true
+	var before_detail := _object_detail_by_key(_pending_duplicate_object_key)
+	var source_tile := Vector2i(int(before_detail.get("x", tile.x)), int(before_detail.get("y", tile.y)))
 	var result := _duplicate_object_by_key(_pending_duplicate_object_key, tile)
 	if bool(result.get("ok", false)):
 		_pending_duplicate_object_key = ""
 		_dirty = _dirty or bool(result.get("changed", false))
-		_last_message = String(result.get("message", "Duplicated object placement."))
+		var duplicate_key := _object_property_key(String(before_detail.get("kind", "")), String(result.get("object", {}).get("placement_id", "")))
+		var after_detail := _object_detail_by_key(duplicate_key)
+		_set_object_authoring_recap("duplicate", bool(result.get("changed", false)), before_detail, after_detail, source_tile, tile)
 	else:
 		_last_message = String(result.get("message", "Could not duplicate object placement."))
 	return bool(result.get("ok", false))
@@ -3287,7 +3559,8 @@ func _retheme_object(tile: Vector2i) -> bool:
 	var result := _retheme_object_by_key(String(source_detail.get("property_key", "")), _selected_object_content_id)
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
-		_last_message = String(result.get("message", "Rethemed object placement."))
+		var after_detail := _object_detail_by_key(String(source_detail.get("property_key", "")))
+		_set_object_authoring_recap("retheme", bool(result.get("changed", false)), source_detail, after_detail, tile, tile)
 	else:
 		_last_message = String(result.get("message", "Could not retheme object placement."))
 	return bool(result.get("ok", false))
@@ -4213,6 +4486,10 @@ func _editable_properties_for_object(kind: String) -> Array:
 		_:
 			return []
 
+func _primary_editable_property_for_kind(kind: String) -> String:
+	var properties := _editable_properties_for_object(kind)
+	return String(properties[0]) if not properties.is_empty() else ""
+
 func _object_family_label(family: String) -> String:
 	match family:
 		OBJECT_FAMILY_TOWN:
@@ -4439,6 +4716,8 @@ func validation_snapshot() -> Dictionary:
 		"restored_from_play_copy": _restored_from_play_copy,
 		"return_model": String(_session.flags.get("editor_return_model", "")) if _session != null else "",
 		"dirty": _dirty,
+		"status_text": _last_message,
+		"last_object_authoring_recap": _last_object_authoring_recap,
 		"tool": _tool,
 		"selected_terrain_id": _selected_terrain_id,
 		"selected_terrain_label": _terrain_label_for_id(_selected_terrain_id),
@@ -4877,6 +5156,8 @@ func validation_place_object(x: int, y: int, family: String, content_id: String)
 	snapshot["ok"] = changed
 	snapshot["family_selected"] = family_selected
 	snapshot["content_selected"] = content_selected
+	snapshot["message"] = _last_message
+	snapshot["authoring_recap"] = _last_object_authoring_recap
 	return snapshot
 
 func validation_preview_object_placement(x: int, y: int, family: String, content_id: String) -> Dictionary:
@@ -4907,6 +5188,8 @@ func validation_remove_object(x: int, y: int, family: String) -> Dictionary:
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = changed
 	snapshot["family_selected"] = family_selected
+	snapshot["message"] = _last_message
+	snapshot["authoring_recap"] = _last_object_authoring_recap
 	return snapshot
 
 func validation_move_object(from_x: int, from_y: int, to_x: int, to_y: int, family: String = "") -> Dictionary:
@@ -4937,12 +5220,16 @@ func validation_move_object(from_x: int, from_y: int, to_x: int, to_y: int, fami
 		_pending_move_object_key = ""
 		_dirty = _dirty or bool(result.get("changed", false))
 		_selected_tile = destination_tile
-	_last_message = String(result.get("message", ""))
+		var after_detail := _object_detail_by_key(move_key)
+		_set_object_authoring_recap("move", bool(result.get("changed", false)), before_detail, after_detail, source_tile, destination_tile)
+	else:
+		_last_message = String(result.get("message", ""))
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = bool(result.get("ok", false))
 	snapshot["changed"] = bool(result.get("changed", false))
-	snapshot["message"] = String(result.get("message", ""))
+	snapshot["message"] = _last_message
+	snapshot["authoring_recap"] = _last_object_authoring_recap
 	snapshot["from"] = result.get("from", {"x": from_x, "y": from_y})
 	snapshot["to"] = result.get("to", {"x": to_x, "y": to_y})
 	snapshot["source_detail_before"] = before_detail
@@ -4979,12 +5266,20 @@ func validation_duplicate_object(from_x: int, from_y: int, to_x: int, to_y: int,
 		_pending_duplicate_object_key = ""
 		_dirty = _dirty or bool(result.get("changed", false))
 		_selected_tile = destination_tile
-	_last_message = String(result.get("message", ""))
+		var duplicated_placement = result.get("object", {})
+		var duplicated_key := ""
+		if duplicated_placement is Dictionary:
+			duplicated_key = _object_property_key(String(before_detail.get("kind", "")), String(duplicated_placement.get("placement_id", "")))
+		var after_detail := _object_detail_by_key(duplicated_key)
+		_set_object_authoring_recap("duplicate", bool(result.get("changed", false)), before_detail, after_detail, source_tile, destination_tile)
+	else:
+		_last_message = String(result.get("message", ""))
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = bool(result.get("ok", false))
 	snapshot["changed"] = bool(result.get("changed", false))
-	snapshot["message"] = String(result.get("message", ""))
+	snapshot["message"] = _last_message
+	snapshot["authoring_recap"] = _last_object_authoring_recap
 	snapshot["from"] = result.get("from", {"x": from_x, "y": from_y})
 	snapshot["to"] = result.get("to", {"x": to_x, "y": to_y})
 	snapshot["source_detail_before"] = before_detail
@@ -5017,12 +5312,16 @@ func validation_retheme_object(x: int, y: int, family: String, replacement_conte
 	var result := _retheme_object_by_key(String(source_detail.get("property_key", "")), replacement_content_id)
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
-	_last_message = String(result.get("message", ""))
+		var after_detail := _object_detail_by_key(String(source_detail.get("property_key", "")))
+		_set_object_authoring_recap("retheme", bool(result.get("changed", false)), before_detail, after_detail, tile, tile)
+	else:
+		_last_message = String(result.get("message", ""))
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = bool(result.get("ok", false))
 	snapshot["changed"] = bool(result.get("changed", false))
-	snapshot["message"] = String(result.get("message", ""))
+	snapshot["message"] = _last_message
+	snapshot["authoring_recap"] = _last_object_authoring_recap
 	snapshot["family_selected"] = family_selected
 	snapshot["content_selected"] = content_selected
 	snapshot["source_detail_before"] = before_detail
@@ -5045,15 +5344,32 @@ func validation_edit_object_property(x: int, y: int, family: String, property_na
 		missing_snapshot["ok"] = false
 		missing_snapshot["message"] = "No editable %s object at %d,%d." % [family, x, y]
 		return missing_snapshot
+	var before_detail := _object_detail_by_key(String(_selected_property_object_key))
+	var previous_value = before_detail.get(property_name, null)
 	var result := _apply_object_property_value(property_name, value)
 	if bool(result.get("ok", false)):
 		_dirty = _dirty or bool(result.get("changed", false))
-	_last_message = String(result.get("message", ""))
+		var after_detail := _object_detail_by_key(String(_selected_property_object_key))
+		_set_object_authoring_recap(
+			"edit_property",
+			bool(result.get("changed", false)),
+			before_detail,
+			after_detail,
+			tile,
+			tile,
+			{},
+			property_name,
+			previous_value,
+			after_detail.get(property_name, null)
+		)
+	else:
+		_last_message = String(result.get("message", ""))
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = bool(result.get("ok", false))
 	snapshot["changed"] = bool(result.get("changed", false))
-	snapshot["message"] = String(result.get("message", ""))
+	snapshot["message"] = _last_message
+	snapshot["authoring_recap"] = _last_object_authoring_recap
 	return snapshot
 
 func validation_restore_selected_tile(x: int = -999, y: int = -999) -> Dictionary:

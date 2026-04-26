@@ -1901,6 +1901,8 @@ func _exercise_object_placement(shell, family: String, content_id: String, tile:
 	if String(placed_detail.get("content_id", "")) != content_id:
 		_fail("Map editor smoke: placed %s detail used the wrong content id: %s." % [family, placed_detail])
 		return false
+	if not _assert_authoring_recap(place_result, "place", true, ["Placed", "Context:", "Dependency:", "Matters:", "Next:"]):
+		return false
 	var placement_id := String(placed_detail.get("placement_id", ""))
 	if not placement_id.begins_with("editor_%s_" % family):
 		_fail("Map editor smoke: placed %s did not receive an editor placement id: %s." % [family, placed_detail])
@@ -1921,6 +1923,8 @@ func _exercise_object_placement(shell, family: String, content_id: String, tile:
 		return false
 	if int(remove_result.get("placement_count", 0)) != before_count:
 		_fail("Map editor smoke: removing %s did not restore the placement count: %s." % [family, remove_result])
+		return false
+	if not _assert_authoring_recap(remove_result, "remove", true, ["Removed", "Context:", "Dependency:", "Matters:", "Next:"]):
 		return false
 	if not _object_detail_for_family(remove_result.get("tile_inspection", {}), family).is_empty():
 		_fail("Map editor smoke: tile inspection still exposed removed %s: %s." % [family, remove_result])
@@ -2198,6 +2202,30 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 		return false
 	return true
 
+func _assert_authoring_recap(result: Dictionary, expected_action: String, expected_changed: bool, fragments: Array) -> bool:
+	var recap: Dictionary = result.get("authoring_recap", result.get("last_object_authoring_recap", {}))
+	var text := String(recap.get("text", ""))
+	if recap.is_empty():
+		_fail("Map editor smoke: object action did not expose an authoring recap payload: %s." % result)
+		return false
+	if String(recap.get("action", "")) != expected_action:
+		_fail("Map editor smoke: authoring recap action mismatch; expected %s got %s in %s." % [expected_action, recap.get("action", ""), recap])
+		return false
+	if bool(recap.get("changed", not expected_changed)) != expected_changed:
+		_fail("Map editor smoke: authoring recap changed flag mismatch: %s." % recap)
+		return false
+	for fragment in fragments:
+		if text.find(String(fragment)) < 0:
+			_fail("Map editor smoke: authoring recap missed '%s': %s." % [String(fragment), text])
+			return false
+	if String(result.get("status_text", "")).find(text) < 0 and String(result.get("message", "")).find(text) < 0:
+		_fail("Map editor smoke: visible status/message did not carry the authoring recap text: result=%s recap=%s." % [result, recap])
+		return false
+	if String(recap.get("why", "")) == "" or String(recap.get("next_check", "")) == "":
+		_fail("Map editor smoke: authoring recap did not expose why/next-check fields: %s." % recap)
+		return false
+	return true
+
 func _assert_object_property_edits(shell) -> bool:
 	var before_cache := _render_cache_metrics(shell.call("validation_snapshot"))
 	var town_result: Dictionary = shell.call("validation_edit_object_property", 23, 26, "town", "owner", "neutral")
@@ -2209,6 +2237,8 @@ func _assert_object_property_edits(shell) -> bool:
 	var town_property: Dictionary = town_result.get("selected_property_object", {})
 	if String(town_property.get("property_key", "")) != "town:ninefold_embercourt_survey_camp" or "owner" not in town_property.get("editable_properties", []):
 		_fail("Map editor smoke: town property editor did not expose structured owner detail: %s." % town_result)
+		return false
+	if not _assert_authoring_recap(town_result, "edit_property", true, ["Edited", "Owner", "changes control state", "Next:"]):
 		return false
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", 23, 26)
 	if String(town_presentation.get("town_presentation", {}).get("owner", "")) != "neutral":
@@ -2234,6 +2264,8 @@ func _assert_object_property_edits(shell) -> bool:
 	if bool(resource_presentation.get("has_resource", true)):
 		_fail("Map editor smoke: live preview still exposed a collected resource pickup: %s." % resource_presentation)
 		return false
+	if not _assert_authoring_recap(resource_result, "edit_property", true, ["Collected", "economy value is already claimed", "Next:"]):
+		return false
 
 	var artifact_result: Dictionary = shell.call("validation_edit_object_property", 9, 45, "artifact", "collected", true)
 	var artifact_detail := _object_detail_for_family(artifact_result.get("tile_inspection", {}), "artifact")
@@ -2248,6 +2280,8 @@ func _assert_object_property_edits(shell) -> bool:
 	if bool(artifact_presentation.get("has_artifact", true)):
 		_fail("Map editor smoke: live preview still exposed a collected artifact node: %s." % artifact_presentation)
 		return false
+	if not _assert_authoring_recap(artifact_result, "edit_property", true, ["Collected", "reward/site appears", "Next:"]):
+		return false
 
 	var encounter_result: Dictionary = shell.call("validation_edit_object_property", 30, 32, "encounter", "difficulty", "low")
 	var encounter_detail := _object_detail_for_family(encounter_result.get("tile_inspection", {}), "encounter")
@@ -2257,6 +2291,8 @@ func _assert_object_property_edits(shell) -> bool:
 	var encounter_property: Dictionary = encounter_result.get("selected_property_object", {})
 	if "difficulty" not in encounter_property.get("editable_properties", []):
 		_fail("Map editor smoke: encounter property editor did not expose structured difficulty detail: %s." % encounter_result)
+		return false
+	if not _assert_authoring_recap(encounter_result, "edit_property", true, ["Difficulty", "changes battle pressure", "Next:"]):
 		return false
 	return true
 
@@ -2419,6 +2455,8 @@ func _assert_object_move(
 	if int(moved_detail.get("x", -1)) != destination.x or int(moved_detail.get("y", -1)) != destination.y:
 		_fail("Map editor smoke: moved %s inspection did not report destination coordinates: %s." % [family, moved_detail])
 		return false
+	if not _assert_authoring_recap(move_result, "move", true, ["Moved", "keeps the placement id stable", "Next:"]):
+		return false
 	if moved_detail.get(preserved_key) != preserved_value:
 		_fail("Map editor smoke: moving %s did not preserve %s=%s: %s." % [family, preserved_key, preserved_value, moved_detail])
 		return false
@@ -2489,6 +2527,8 @@ func _assert_object_duplicate(
 		return false
 	if int(duplicate_detail.get("x", -1)) != destination.x or int(duplicate_detail.get("y", -1)) != destination.y:
 		_fail("Map editor smoke: duplicated %s inspection did not report destination coordinates: %s." % [family, duplicate_detail])
+		return false
+	if not _assert_authoring_recap(duplicate_result, "duplicate", true, ["Duplicated", "fresh editor id", "Next:"]):
 		return false
 	if String(duplicate_detail.get("content_id", "")) != String(before_detail.get("content_id", "")):
 		_fail("Map editor smoke: duplicating %s did not preserve content id: before=%s after=%s." % [family, before_detail, duplicate_detail])
@@ -2561,6 +2601,8 @@ func _assert_object_retheme(
 		return false
 	if int(after_detail.get("x", -1)) != tile.x or int(after_detail.get("y", -1)) != tile.y:
 		_fail("Map editor smoke: retheming %s changed placement coordinates: %s." % [family, after_detail])
+		return false
+	if not _assert_authoring_recap(retheme_result, "retheme", true, ["Rethemed", "keeps the placement id", "Next:"]):
 		return false
 	if after_detail.get(preserved_key) != preserved_value:
 		_fail("Map editor smoke: retheming %s did not preserve %s=%s: %s." % [family, preserved_key, preserved_value, after_detail])
