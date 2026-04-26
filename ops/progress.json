@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T06:24:13Z",
+  "updatedAt": "2026-04-26T06:33:53Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-commander-role-live-turn-transcript-report-planning-10184",
-  "currentSliceTitle": "Plan behavior-neutral commander-role live-turn transcript/report surfacing",
-    "currentSliceStatus": "pending",
-    "currentSliceNotes": "Commander-role adoption sequencing is completed in docs/strategic-ai-commander-role-adoption-sequencing-plan.md. The recommended next slice is planning-only derived live-turn transcript/report surfacing for commander role decisions, without implementation, schema writes, save migration, durable event logs, coefficient tuning, defense-specific durable state, full AI hero task state, or live commander-role behavior adoption.",
+  "currentSliceId": "strategic-ai-commander-role-live-turn-transcript-report-implementation-10184",
+  "currentSliceTitle": "Implement behavior-neutral commander-role live-turn transcript/report surfacing",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Commander-role live-turn transcript/report planning is completed in docs/strategic-ai-commander-role-live-turn-transcript-report-plan.md. The recommended next slice is report-only AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT implementation over existing enemy-turn execution, without schema writes, save migration, durable event logs, coefficient tuning, defense-specific durable state, full AI hero task state, production JSON edits, or live commander-role behavior adoption.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -620,6 +620,23 @@
         {
             "id": "strategic-ai-commander-role-live-turn-transcript-report-planning-10184",
             "title": "Plan behavior-neutral commander-role live-turn transcript/report surfacing",
+            "status": "completed",
+            "startedAt": "2026-04-26T06:24:13Z",
+            "completedAt": "2026-04-26T06:33:53Z",
+            "decision": "commander-role-live-turn-transcript-report-implementation-next",
+            "planningDoc": "docs/strategic-ai-commander-role-live-turn-transcript-report-plan.md",
+            "recommendedNextSlice": "strategic-ai-commander-role-live-turn-transcript-report-implementation-10184",
+            "rejectedNextOptions": [
+                "minimal-commander-role-state-write-read-adoption-now",
+                "full-ai-hero-task-state-sequencing-now",
+                "coefficient-tuning-now",
+                "pause-commander-role-work"
+            ],
+            "difficulty": "high"
+        },
+        {
+            "id": "strategic-ai-commander-role-live-turn-transcript-report-implementation-10184",
+            "title": "Implement behavior-neutral commander-role live-turn transcript/report surfacing",
             "status": "pending",
             "difficulty": "high"
         },
