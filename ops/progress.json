@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:59:30Z",
+  "updatedAt": "2026-04-26T23:59:50Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-site-control-proof-report-10184",
-  "currentSliceTitle": "Produce a focused strategic AI site-control proof report",
+  "currentSliceId": "strategic-ai-glassroad-defense-proof-planning-10184",
+  "currentSliceTitle": "Plan a bounded Embercourt Glassroad defense and stabilization proof",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI capture/counter-capture/defense proof planning is complete in docs/strategic-ai-capture-countercapture-defense-proof-plan.md. The next current slice should add a focused AI_SITE_CONTROL_PROOF_REPORT for the selected Mireclaw river-pass signal-yard counter-capture/denial path: primary site river_free_company, companion reason/order check river_signal_post, compact ai_target_assigned and ai_site_seized events, and no coefficient tuning. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, coefficient tuning, or River Pass rebalance.",
+  "currentSliceNotes": "Strategic AI site-control proof reporting is complete in docs/strategic-ai-capture-countercapture-defense-proof-report.md plus tests/ai_site_control_proof_report.gd. The Mireclaw river-pass proof passed: river_free_company and river_signal_post rank first and second when player controlled, assignment and seizure public events stay compact, river_free_company flips from player to faction_mireclaw under current raid resolution, and choose_target may still prefer riverwatch_hold as the valid town-front sanity result. No coefficient defect was found, so the next current slice should plan a bounded Embercourt Glassroad defense/stabilization proof around glassroad_watch_relay and glassroad_starlens rather than tuning. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, coefficient tuning, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -505,6 +505,16 @@
     {
       "id": "strategic-ai-site-control-proof-report-10184",
       "title": "Produce a focused strategic AI site-control proof report",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:59:40Z",
+      "completedAt": "2026-04-26T23:59:50Z",
+      "decision": "glassroad-defense-proof-planning-next",
+      "proofReport": "docs/strategic-ai-capture-countercapture-defense-proof-report.md",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-glassroad-defense-proof-planning-10184",
+      "title": "Plan a bounded Embercourt Glassroad defense and stabilization proof",
       "status": "pending",
       "difficulty": "high"
     },

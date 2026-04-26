@@ -88,20 +88,21 @@ Immediate execution order:
 51. Strategic AI strategy config audit planning is completed in `docs/strategic-ai-strategy-config-audit-plan.md`. The plan defines a narrow Embercourt/Mireclaw audit before tuning across base faction strategy weights, scenario overrides, public reason phrase vocabulary, resource/site family priorities, build category/value weights, reinforcement/garrison/raid/commander rebuild bias, validation/report commands, and manual gate triggers.
 52. Strategic AI strategy config audit reporting is completed in `docs/strategic-ai-strategy-config-audit-report.md`. The report classifies current Embercourt and Mireclaw base weights, scenario overrides, public reasons, site priorities, build weights, and reinforcement/raid bias as supported, questionable, contradicted, or missing-evidence; it finds most current weights coherent enough to avoid immediate tuning and selects capture/counter-capture proof planning as the next slice.
 53. Strategic AI capture/counter-capture/defense proof planning is completed in `docs/strategic-ai-capture-countercapture-defense-proof-plan.md`. The selected proof path is a narrow Mireclaw `river-pass` signal-yard counter-capture/denial report centered on `river_free_company`, with `river_signal_post` as the companion ordering and reason check, before any coefficient tuning.
-54. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+54. Strategic AI site-control proof reporting is completed in `docs/strategic-ai-capture-countercapture-defense-proof-report.md` plus focused Godot coverage in `tests/ai_site_control_proof_report.gd`. The report proves current Mireclaw `river-pass` Free Company counter-capture/controller flip behavior, companion Signal Post denial reasons, compact assignment/seizure events, public score-table leak checks, and the valid `riverwatch_hold` full-selector town-front sanity result without coefficient tuning.
+55. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-site-control-proof-report-10184` as the next concrete slice.
-- Use `docs/strategic-ai-capture-countercapture-defense-proof-plan.md` as the implementation/report contract: add a focused `AI_SITE_CONTROL_PROOF_REPORT` for Mireclaw retaking or denying `river_free_company`, with `river_signal_post` as the companion reason/order check.
-- Prove current site-control behavior first. If current systems already satisfy the report, document that; if they fail, record the exact blocker without coefficient tuning or broadening scope.
-- Keep this next slice focused on report/proof scaffolding unless a current-system bug blocks the proof; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, or change pathing/renderer/editor/save behavior.
+- Run `strategic-ai-glassroad-defense-proof-planning-10184` as the next concrete slice.
+- Use the passed site-control proof report to avoid coefficient tuning for now. No ordering, assignment, seizure, controller-flip, or public-surface defect was found in the Mireclaw River Pass proof.
+- Plan a bounded Embercourt Glassroad defense/stabilization proof around `glassroad_watch_relay` and `glassroad_starlens`, using `glassroad-sundering` as the current direct Embercourt enemy fixture evidence.
+- Keep the next slice planning/report scoped unless the plan identifies a current-system blocker; do not tune coefficients, change production content JSON, add durable event logs, implement full AI hero task state, or change pathing/renderer/editor/save behavior.
 - Keep the passed town governor gate as the contract: public output stays compact, score tables stay in report/debug surfaces, and enemy-turn live-client checks are triggered only when a later AI slice affects visible turn pacing, arrival frequency, map pressure, or UI composition.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
-- Do not tune coefficients unless a later manual pass or report regression shows poor ordering.
+- Do not tune coefficients unless a later manual pass or report regression shows a specific ordering, defense, or seizure/retake defect.
 - Defer a manual live-client signal-yard enemy-turn gate unless AcOrP explicitly requests it or the next AI expansion changes live turn readability enough to require composition/pacing validation.
-- Defer bounded coefficient tuning until the site-control proof report shows a specific ordering or seizure/retake defect.
-- Defer commander-role/roster state planning until site-control proof planning has clarified whether the next blocker is target/capture behavior or explicit hero-role state.
+- Defer bounded coefficient tuning because the site-control proof report found no ordering or seizure/retake defect.
+- Defer commander-role/roster state planning until a defense/stabilization or later pressure proof shows explicit hero-role state is the blocker.
 - Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report, manual gate review, and focused AI reports are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad AI rewrite, and generated asset import as staged follow-ups, not part of the next gate slice.
@@ -111,7 +112,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is the strategic AI site-control proof report from the completed capture/counter-capture/defense proof plan, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
+- The next active choice is Embercourt Glassroad defense proof planning after the passed Mireclaw River Pass site-control proof report, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -496,6 +497,31 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit production content JSON, gameplay behavior, AI coefficients, resource schemas, pathing/body-tile/approach behavior, renderer/editor behavior, saves, generated assets, neutral encounter metadata, River Pass balance, durable event logs, full AI hero task state, broad strategic AI rewrite, behavior tuning, or public UI surfaces.
+
+## Completed Proof Slice: Strategic AI Site-Control Proof Report
+Status: completed on 2026-04-26 as focused Godot report/proof scaffolding for the selected Mireclaw River Pass signal-yard path.
+
+Purpose:
+- Prove current site-control behavior before coefficient tuning.
+- Use the existing `EnemyAdventureRules` resource pressure, assignment event, raid arrival, and site seizure surfaces.
+- Record exact blockers if current systems fail, without broadening scope.
+
+Delivered:
+- Added `tests/ai_site_control_proof_report.gd` and `tests/ai_site_control_proof_report.tscn`.
+- Added `docs/strategic-ai-capture-countercapture-defense-proof-report.md`.
+- Proved `river_free_company` and `river_signal_post` rank first and second in the focused Mireclaw resource ordering when both are player controlled.
+- Proved `river_free_company` assignment emits compact `ai_target_assigned` output with public reason `recruit and income denial`.
+- Proved a staged current-system Mireclaw raid flips `river_free_company` from `player` to `faction_mireclaw` and emits compact `ai_site_seized` output with `denies its logistics route` wording.
+- Proved `river_signal_post` keeps companion public reason `income and route vision denial`.
+- Confirmed public assignment/seizure events do not leak score-table keys while detailed score rows remain report/debug-only.
+- Recorded the valid full selector sanity result: `choose_target(...)` still selects `riverwatch_hold` as the town-front target.
+- Selected `strategic-ai-glassroad-defense-proof-planning-10184` as the next slice because no site-control coefficient defect was found.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, `python3 tests/validate_repo.py --neutral-encounter-report`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_site_control_proof_report.tscn`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_economy_pressure_report.tscn`, `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_event_surfacing_report.tscn`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_faction_personality_evidence_report.tscn`.
+
+Limits:
+- This is focused report/proof scaffolding only. It does not tune coefficients, change AI behavior, edit production content JSON, add durable event logs, migrate saves, implement full AI hero task state, change pathing/body-tile/approach behavior, alter renderer/editor behavior, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, rebalance River Pass, import generated PNGs, push, or open a PR.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -3402,14 +3428,14 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: capture/counter-capture defense proof planning after the report-only strategy-config audit.
+Current target: bounded Embercourt Glassroad defense proof planning after the passed Mireclaw River Pass site-control proof report.
 
 Done means:
-- The next slice plans one narrow site-control proof before any coefficient tuning.
-- The completed strategy-config audit report's supported, questionable, contradicted, and missing-evidence claims are used as planning inputs.
-- The `prismhearth-watch` / `glassroad-sundering` fixture reality is explicitly accounted for.
-- The proof planning chooses whether the first site-control path should emphasize Mireclaw retaking/denying `river_signal_post` or `river_free_company`, Embercourt defending/stabilizing `glassroad_watch_relay` or `glassroad_starlens`, or another bounded site-control case.
+- The completed site-control report remains accepted as proof that current Mireclaw River Pass assignment, seizure, and controller-flip behavior works for `river_free_company`, with `river_signal_post` as companion reason coverage.
+- No coefficient tuning starts unless a later proof identifies a specific ordering, defense, seizure, or retake defect.
+- The next slice plans a bounded Embercourt Glassroad defense/stabilization proof around `glassroad_watch_relay` and `glassroad_starlens`.
+- The `glassroad-sundering` fixture reality is explicitly accounted for as the current direct Embercourt enemy fixture.
 - Detailed target/build/recruit score tables stay in report/debug output only.
 - Public or derived event output stays compact and does not expose score-table fields.
-- No coefficient tuning, production JSON migration, durable AI event log, save migration, full AI hero task state, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, or River Pass rebalance is pulled into the planning slice.
+- No production JSON migration, durable AI event log, save migration, full AI hero task state, broad AI rewrite, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, rare-resource activation, market-cap overhaul, or River Pass rebalance is pulled into the planning slice.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
