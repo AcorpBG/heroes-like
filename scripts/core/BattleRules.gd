@@ -1975,6 +1975,72 @@ static func active_consequence_payload(session: SessionStateStoreScript.SessionD
 		"action_previews": _action_consequence_preview_list(surface),
 	}
 
+static func post_action_recap_context(session: SessionStateStoreScript.SessionData, action_id: String = "") -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {}
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
+	return {
+		"action_id": action_id,
+		"active_battle_id": String(active_stack.get("battle_id", "")),
+		"active_name": _stack_label(active_stack) if not active_stack.is_empty() else "",
+		"active_side": String(active_stack.get("side", "")),
+		"active_count_before": _alive_count(active_stack) if not active_stack.is_empty() else 0,
+		"active_health_before": int(active_stack.get("total_health", 0)),
+		"active_hex_before": _hex_label(_stack_hex(active_stack)) if not active_stack.is_empty() else "",
+		"active_status_before": _stack_status_pressure_short(active_stack, battle) if not active_stack.is_empty() else "",
+		"target_battle_id": String(target.get("battle_id", "")),
+		"target_name": _stack_label(target) if not target.is_empty() else "",
+		"target_side": String(target.get("side", "")),
+		"target_count_before": _alive_count(target) if not target.is_empty() else 0,
+		"target_health_before": int(target.get("total_health", 0)),
+		"target_hex_before": _hex_label(_stack_hex(target)) if not target.is_empty() else "",
+		"target_status_before": _stack_status_pressure_short(target, battle) if not target.is_empty() else "",
+	}
+
+static func post_action_recap_payload(
+	session: SessionStateStoreScript.SessionData,
+	result: Dictionary,
+	action_id: String = "",
+	context: Dictionary = {}
+) -> Dictionary:
+	if result.is_empty() or not bool(result.get("ok", false)):
+		return {}
+	var battle: Dictionary = session.battle if session != null and not session.battle.is_empty() else {}
+	var normalized_action_id := action_id
+	if normalized_action_id == "":
+		normalized_action_id = String(context.get("action_id", result.get("attack_action", "")))
+	var happened := _post_action_happened_line(result, normalized_action_id)
+	var affected := _post_action_affected_line(battle, result, normalized_action_id, context)
+	var decision := _post_action_decision_line(session, result, context)
+	var next_actor := _post_action_next_actor_line(session)
+	var lines := [
+		"After order: %s" % happened,
+		"- Affected: %s" % affected,
+		"- Decision: %s" % decision,
+		"- Next: %s" % next_actor,
+	]
+	var tooltip := "%s | %s | %s" % [affected, decision, next_actor]
+	return {
+		"action_id": normalized_action_id,
+		"state": String(result.get("state", "")),
+		"happened": happened,
+		"affected": affected,
+		"decision": decision,
+		"next_actor": next_actor,
+		"text": "\n".join(lines),
+		"tooltip": tooltip,
+	}
+
+static func describe_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	result: Dictionary,
+	action_id: String = "",
+	context: Dictionary = {}
+) -> String:
+	return String(post_action_recap_payload(session, result, action_id, context).get("text", ""))
+
 static func describe_target_context(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "No target selected."
@@ -4103,6 +4169,169 @@ static func _action_consequence_preview_list(surface: Dictionary) -> Array:
 			"consequence": String(action.get("consequence", "")),
 		})
 	return previews
+
+static func _post_action_happened_line(result: Dictionary, action_id: String) -> String:
+	var message := String(result.get("message", "")).strip_edges()
+	if message == "":
+		return "%s resolved." % _post_action_label(action_id)
+	var sentences := message.split(". ", false)
+	var happened := String(sentences[0]).strip_edges()
+	if happened != "" and not happened.ends_with(".") and not happened.ends_with("!") and not happened.ends_with("?"):
+		happened += "."
+	return happened
+
+static func _post_action_affected_line(
+	battle: Dictionary,
+	result: Dictionary,
+	action_id: String,
+	context: Dictionary
+) -> String:
+	var attack_target_id := String(result.get("attack_target_battle_id", ""))
+	if attack_target_id != "":
+		return _post_action_stack_delta_line(
+			battle,
+			attack_target_id,
+			String(result.get("attack_target_name", context.get("target_name", "Target"))),
+			int(context.get("target_count_before", 0)),
+			int(context.get("target_health_before", 0))
+		)
+
+	var movement_value: Variant = result.get("movement_intent", {})
+	if movement_value is Dictionary and not movement_value.is_empty():
+		var movement_intent: Dictionary = movement_value
+		var mover_id := String(movement_intent.get("active_battle_id", context.get("active_battle_id", "")))
+		var destination := String(movement_intent.get("destination_detail", movement_intent.get("destination_label", "")))
+		var mover_line := _post_action_stack_delta_line(
+			battle,
+			mover_id,
+			String(movement_intent.get("active_stack_name", context.get("active_name", "Acting stack"))),
+			int(context.get("active_count_before", 0)),
+			int(context.get("active_health_before", 0))
+		)
+		if destination != "":
+			return "%s; position %s." % [mover_line.trim_suffix("."), destination]
+		return mover_line
+
+	var actor_id := String(context.get("active_battle_id", ""))
+	var actor_name := String(context.get("active_name", "Acting stack"))
+	if action_id == "defend":
+		return "%s braced; %s." % [
+			actor_name,
+			_post_action_status_after(battle, actor_id, String(context.get("active_status_before", ""))),
+		]
+	if action_id == "advance":
+		return _post_action_stack_delta_line(
+			battle,
+			actor_id,
+			actor_name,
+			int(context.get("active_count_before", 0)),
+			int(context.get("active_health_before", 0))
+		)
+	var target_id := String(context.get("target_battle_id", ""))
+	if target_id != "":
+		return _post_action_stack_delta_line(
+			battle,
+			target_id,
+			String(context.get("target_name", "Target")),
+			int(context.get("target_count_before", 0)),
+			int(context.get("target_health_before", 0))
+		)
+	return "%s resolved; battlefield status updated." % _post_action_label(action_id)
+
+static func _post_action_stack_delta_line(
+	battle: Dictionary,
+	battle_id: String,
+	fallback_name: String,
+	count_before: int,
+	health_before: int
+) -> String:
+	var stack := _get_stack_by_id(battle, battle_id)
+	if stack.is_empty() or _alive_count(stack) <= 0:
+		if count_before > 0 or health_before > 0:
+			return "%s removed from the field." % fallback_name
+		return "%s changed state." % fallback_name
+	var count_after := _alive_count(stack)
+	var health_after := int(stack.get("total_health", 0))
+	var count_delta := count_after - count_before
+	var health_delta := health_after - health_before
+	var delta_parts := []
+	if count_before > 0 and count_delta != 0:
+		delta_parts.append("x%s%d" % ["+" if count_delta > 0 else "", count_delta])
+	if health_before > 0 and health_delta != 0:
+		delta_parts.append("%s%d HP" % ["+" if health_delta > 0 else "", health_delta])
+	var delta_text := " | %s" % ", ".join(delta_parts) if not delta_parts.is_empty() else ""
+	return "%s x%d, %d HP at %s%s; %s." % [
+		_stack_label(stack),
+		count_after,
+		health_after,
+		_hex_label(_stack_hex(stack)),
+		delta_text,
+		_stack_status_pressure_short(stack, battle),
+	]
+
+static func _post_action_status_after(battle: Dictionary, battle_id: String, fallback_status: String) -> String:
+	var stack := _get_stack_by_id(battle, battle_id)
+	if not stack.is_empty() and _alive_count(stack) > 0:
+		return _stack_status_pressure_short(stack, battle)
+	return fallback_status if fallback_status != "" else "status pressure updated"
+
+static func _post_action_decision_line(
+	session: SessionStateStoreScript.SessionData,
+	result: Dictionary,
+	context: Dictionary
+) -> String:
+	var state := String(result.get("state", "continue"))
+	if state != "" and state != "continue":
+		return "battle result is %s; routing follows the field outcome." % state.replace("_", " ")
+	if session == null or session.battle.is_empty():
+		return "battlefield state changed; check the return route."
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	if active_stack.is_empty():
+		return "no stack is ready; resolution will continue."
+	if String(active_stack.get("side", "")) != "player":
+		return "%s has initiative; expect enemy pressure before the next order." % _stack_label(active_stack)
+	var target = get_selected_target(battle)
+	var click_intent := selected_target_board_click_intent(battle)
+	var action_label := String(click_intent.get("label", ""))
+	if action_label != "" and not target.is_empty():
+		return "%s can %s %s now." % [_stack_label(active_stack), action_label, _stack_label(target)]
+	var target_range := _target_range_readiness_line(active_stack, target, battle).trim_prefix("Target/range: ")
+	if target_range != "":
+		return "%s order window: %s" % [_stack_label(active_stack), target_range]
+	return "%s has command; choose the next order from current status pressure." % _stack_label(active_stack)
+
+static func _post_action_next_actor_line(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.battle.is_empty():
+		return "battle will leave the tactical field."
+	var active_stack = get_active_stack(session.battle)
+	if active_stack.is_empty():
+		return "no living stack is queued."
+	return "%s [%s] acts now at Init %d." % [
+		_stack_label(active_stack),
+		_side_label(String(active_stack.get("side", ""))),
+		_stack_initiative_total(active_stack, session.battle),
+	]
+
+static func _post_action_label(action_id: String) -> String:
+	var normalized := action_id
+	if normalized.begins_with("cast_spell:"):
+		var spell := ContentService.get_spell(normalized.trim_prefix("cast_spell:"))
+		return String(spell.get("name", "Spell")) if not spell.is_empty() else "Spell"
+	match normalized:
+		"shoot":
+			return "Shot"
+		"strike":
+			return "Strike"
+		"advance", "move":
+			return "Move"
+		"defend":
+			return "Defend"
+		"retreat":
+			return "Retreat"
+		"surrender":
+			return "Surrender"
+	return "Order"
 
 static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
 	if session == null or session.battle.is_empty():
