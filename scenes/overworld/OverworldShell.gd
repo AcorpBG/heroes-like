@@ -541,7 +541,9 @@ func _refresh() -> void:
 		String(event_surface.get("visible_text", _rail_log_text())),
 		1
 	)
-	_end_turn_button.tooltip_text = OverworldRules.describe_end_turn_forecast(_session)
+	var end_turn_check := _end_turn_confirmation_surface(readiness_surface)
+	_end_turn_button.text = String(end_turn_check.get("button_text", "End Turn"))
+	_end_turn_button.tooltip_text = String(end_turn_check.get("tooltip_text", OverworldRules.describe_end_turn_forecast(_session)))
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
@@ -1755,6 +1757,67 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"end_turn_forecast": forecast,
 	}
 
+func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Dictionary:
+	var readiness := field_readiness
+	if readiness.is_empty():
+		readiness = _field_readiness_surface()
+	var movement = _session.overworld.get("movement", {})
+	var move_current := int(movement.get("current", 0))
+	var move_max := int(movement.get("max", 0))
+	var primary_action := _current_primary_action()
+	var action_id := String(primary_action.get("id", ""))
+	var action_label := String(primary_action.get("label", "")).strip_edges()
+	var button_text := "End Turn"
+	var confirmation := "End the day when field orders are complete."
+	if move_current <= 0:
+		confirmation = "Movement is spent; ending the day is the practical next step."
+	elif action_id == "enter_battle":
+		button_text = "End? Battle"
+		confirmation = "An encounter order is available before ending the day."
+	elif action_id == "visit_town":
+		button_text = "End? Town"
+		confirmation = "A town entry order is available before ending the day."
+	elif action_id in ["advance_route", "march_selected"]:
+		button_text = "End? Route"
+		confirmation = "A route order is available before ending the day."
+	elif action_label != "" and not bool(primary_action.get("disabled", false)):
+		button_text = "End? Action"
+		confirmation = "%s is available before ending the day." % action_label
+	else:
+		button_text = "End? %d Move" % move_current
+		confirmation = "Movement remains before ending the day."
+	var next_step := String(readiness.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = confirmation
+	var primary_line := String(readiness.get("primary_order", "")).strip_edges()
+	if primary_line == "":
+		primary_line = "Primary order: select a visible destination."
+	var route_line := String(readiness.get("route_line", "")).strip_edges()
+	var forecast := String(readiness.get("end_turn_forecast", "")).strip_edges()
+	if forecast == "":
+		forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
+	var tooltip_lines := [
+		"End Turn Check",
+		"- Field readiness: %s" % String(readiness.get("visible_text", "Ready: field orders")).strip_edges(),
+		"- Next practical action: %s" % next_step,
+		"- %s" % primary_line,
+		"- Confirmation: %s" % confirmation,
+	]
+	if route_line != "":
+		tooltip_lines.append("- %s" % route_line)
+	if forecast != "":
+		tooltip_lines.append("- End turn forecast: %s" % forecast)
+	return {
+		"button_text": button_text,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"confirmation": confirmation,
+		"next_step": next_step,
+		"primary_order": primary_line,
+		"route_line": route_line,
+		"movement_line": "Move %d/%d" % [move_current, move_max],
+		"end_turn_forecast": forecast,
+	}
+
 func _line_with_prefix(text: String, prefix: String) -> String:
 	for raw_line in text.split("\n", false):
 		var line := String(raw_line).strip_edges()
@@ -2452,6 +2515,7 @@ func validation_snapshot() -> Dictionary:
 	var primary_action := _current_primary_action()
 	var route_decision := _selected_route_decision_surface()
 	var field_readiness := _field_readiness_surface()
+	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -2506,6 +2570,9 @@ func validation_snapshot() -> Dictionary:
 		"turn_resolution_summary": _last_turn_resolution_text,
 		"end_turn_forecast": OverworldRules.describe_end_turn_forecast(_session),
 		"end_turn_forecast_compact": OverworldRules.describe_end_turn_forecast_compact(_session),
+		"end_turn_button_text": _end_turn_button.text,
+		"end_turn_tooltip_text": _end_turn_button.tooltip_text,
+		"end_turn_confirmation": end_turn_check,
 		"action_feedback": _validation_action_feedback(),
 		"action_feedback_text": _action_feedback_text(),
 		"map_cue_text": _map_cue_label.text,

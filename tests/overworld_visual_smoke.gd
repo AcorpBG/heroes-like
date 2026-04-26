@@ -27,6 +27,8 @@ func _run() -> void:
 		return
 	if not _assert_field_readiness_recap_contract(shell):
 		return
+	if not _assert_end_turn_readiness_confirmation_contract(shell):
+		return
 	if not _assert_small_map_fit(shell):
 		return
 	if not await _assert_render_cache_split(shell):
@@ -276,6 +278,46 @@ func _assert_field_readiness_recap_contract(shell: Node) -> bool:
 	):
 		return false
 	if not _assert_no_ai_score_leak("overworld field readiness recap", joined):
+		return false
+	return true
+
+func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing end-turn readiness validation hooks.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var confirmation: Dictionary = snapshot.get("end_turn_confirmation", {})
+	var joined := "\n".join([
+		String(snapshot.get("end_turn_button_text", "")),
+		String(snapshot.get("end_turn_tooltip_text", "")),
+		String(confirmation.get("button_text", "")),
+		String(confirmation.get("tooltip_text", "")),
+		String(confirmation.get("confirmation", "")),
+		String(confirmation.get("next_step", "")),
+		String(confirmation.get("primary_order", "")),
+		String(confirmation.get("route_line", "")),
+		String(confirmation.get("movement_line", "")),
+		String(confirmation.get("end_turn_forecast", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld end-turn readiness confirmation",
+		[joined],
+		[
+			"End?",
+			"End Turn Check",
+			"Field readiness:",
+			"Next practical action:",
+			"Push toward Claim Duskfen Bastion",
+			"Primary order:",
+			"Confirmation:",
+			"Movement remains before ending the day.",
+			"End turn forecast:",
+			"Move",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld end-turn readiness confirmation", joined):
 		return false
 	return true
 
