@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T19:25:00Z",
+  "updatedAt": "2026-04-26T19:40:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-outcome-field-handoff-recap-polish-10184",
-  "currentSliceTitle": "Surface compact battle outcome to field handoff recap in live overworld UI",
+  "currentSliceId": "menu-outcome-save-next-play-action-polish-10184",
+  "currentSliceTitle": "Surface compact menu, outcome, and save next-play action polish in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact post-battle overworld handoff recap using the existing battle aftermath report and overworld action-feedback/readiness surfaces. The battle return notice now answers what changed, what field/town/objective surface was affected, why it matters, and the next practical action. Added focused town/battle smoke assertions without mechanics, balance, save schema changes, content migration, AI tuning, durable event logs, or internal score fields.",
+  "currentSliceNotes": "Implemented a compact player-facing next-play-action line on existing menu save/load details, outcome action status, and save recap surfaces using current scenario/campaign/outcome/save payloads only. Added focused menu/outcome smoke assertions without mechanics, balance, save schema changes, durable event logs, content migration, AI tuning, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1574,6 +1574,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T18:15:52Z",
       "completedAt": "2026-04-26T19:25:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "menu-outcome-save-next-play-action-polish-10184",
+      "title": "Surface compact menu, outcome, and save next-play action polish in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T19:32:00Z",
+      "completedAt": "2026-04-26T19:40:00Z",
       "difficulty": "medium"
     }
   ],

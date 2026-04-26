@@ -62,9 +62,16 @@ func _refresh() -> void:
 	_set_compact_label(_journal_label, String(_model.get("journal_summary", "")), 4)
 	_refresh_save_surface()
 	var next_step_summary := String(_model.get("next_step_summary", ""))
+	var next_play_action_summary := String(_model.get("next_play_action_summary", ""))
+	var action_status_lines := []
+	if next_step_summary != "":
+		action_status_lines.append(next_step_summary)
+	if next_play_action_summary != "":
+		action_status_lines.append(next_play_action_summary)
+	var action_status_text := "\n".join(action_status_lines)
 	_set_compact_label(
 		_action_status_label,
-		_last_action_message if _last_action_message != "" else (next_step_summary if next_step_summary != "" else "Review the outcome, then choose the next step."),
+		_last_action_message if _last_action_message != "" else (action_status_text if action_status_text != "" else "Review the outcome, then choose the next step."),
 		3
 	)
 	_rebuild_actions()
@@ -186,6 +193,7 @@ func validation_snapshot() -> Dictionary:
 		"aftermath_summary": String(_model.get("aftermath_summary", "")),
 		"journal_summary": String(_model.get("journal_summary", "")),
 		"next_step_summary": String(_model.get("next_step_summary", "")),
+		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
 		"action_status": _action_status_label.text,
 		"action_ids": action_ids,
 		"actions": action_payloads,

@@ -512,7 +512,11 @@ func _refresh_selected_save() -> void:
 		_load_selected_button.tooltip_text = "Select a loadable save to resume it."
 		return
 
-	_set_compact_label(_save_details_label, SaveService.describe_slot_details(summary), 6, 88)
+	var next_play_action := SaveService.describe_summary_next_play_action(summary)
+	var details := SaveService.describe_slot_details(summary)
+	if next_play_action != "":
+		details = "%s\n%s" % [next_play_action, details]
+	_set_compact_label(_save_details_label, details, 6, 88)
 	_load_selected_button.text = SaveService.load_action_label(summary)
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
 	_load_selected_button.tooltip_text = SaveService.load_action_tooltip(summary)

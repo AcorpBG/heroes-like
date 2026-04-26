@@ -295,11 +295,13 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		"aftermath_summary": "",
 		"journal_summary": "",
 		"next_step_summary": "",
+		"next_play_action_summary": "",
 		"actions": [],
 	}
 	var progress_recap := describe_session_progress_recap(session, true)
 	var next_step := _progress_recap_next_step_line(session, scenario)
 	model["next_step_summary"] = next_step
+	model["next_play_action_summary"] = _outcome_next_play_action_line(session, scenario)
 
 	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		var recap := CampaignProgression.outcome_recap(session)
@@ -546,6 +548,19 @@ static func _resolved_next_step_text(session: SessionStateStoreScript.SessionDat
 	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		return "Retry this chapter from the outcome actions or campaign board."
 	return "Retry this skirmish from the outcome actions or return to the menu."
+
+static func _outcome_next_play_action_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
+	if session.scenario_status == "victory":
+		if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+			var next_chapter := _next_campaign_chapter_label(session, scenario)
+			if next_chapter != "":
+				return "Next play action: Save this outcome, then start %s from the outcome actions or campaign board." % next_chapter
+			return "Next play action: Save this outcome, then return to the campaign board for replay or another available chapter."
+		return "Next play action: Save this outcome, then return to the menu or retry the skirmish."
+	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		return "Next play action: Save this outcome, then retry the chapter from the outcome actions or campaign board."
+	return "Next play action: Save this outcome, then retry the skirmish or return to the menu."
 
 static func _campaign_id_for_scenario(scenario_id: String) -> String:
 	if scenario_id == "":
