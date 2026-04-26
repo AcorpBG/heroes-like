@@ -273,6 +273,7 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	HeroCommandRulesScript.commit_active_hero(session)
 
 	var messages := ["Moved to %d,%d." % [nx, ny]]
+	var target_context := _post_action_tile_context(session, Vector2i(nx, ny))
 	var interaction_result := _resolve_post_move_interaction(session)
 	var interaction_message := String(interaction_result.get("message", ""))
 	if interaction_message != "":
@@ -285,6 +286,19 @@ static func try_move(session: SessionStateStoreScript.SessionData, dx: int, dy: 
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
 		result["route"] = route
+	result = _attach_post_action_recap(
+		result,
+		session,
+		"move",
+		{
+			"from_x": pos.x,
+			"from_y": pos.y,
+			"to_x": nx,
+			"to_y": ny,
+			"route": route,
+			"target_context": target_context,
+		}
+	)
 	return result
 
 static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
@@ -436,7 +450,20 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 	if disruption_message != "":
 		messages.append(disruption_message)
 	messages.append_array(_award_experience(session, int(rewards.get("experience", 0))))
-	return _finalize_action_result(session, true, " ".join(messages))
+	var result := _finalize_action_result(session, true, " ".join(messages))
+	return _attach_post_action_recap(
+		result,
+		session,
+		"resource_site",
+		{
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"previous_controller": previous_controller,
+			"rewards": rewards,
+		}
+	)
 
 static func collect_active_artifact(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
@@ -464,7 +491,17 @@ static func collect_active_artifact(session: SessionStateStoreScript.SessionData
 	nodes[int(node_result.get("index", -1))] = node
 	session.overworld["artifact_nodes"] = nodes
 
-	return _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")))
+	var result := _finalize_action_result(session, true, String(pickup_result.get("message", "Recovered artifact.")))
+	return _attach_post_action_recap(
+		result,
+		session,
+		"artifact",
+		{
+			"artifact_id": String(node.get("artifact_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+		}
+	)
 
 static func perform_context_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if session == null:
@@ -590,7 +627,17 @@ static func capture_active_town(session: SessionStateStoreScript.SessionData) ->
 	if String(town.get("owner", "neutral")) == "enemy" and _town_requires_assault(town):
 		return _begin_town_assault(session, town)
 
-	return _finalize_action_result(session, true, capture_town_by_placement(session, String(town.get("placement_id", ""))))
+	var result := _finalize_action_result(session, true, capture_town_by_placement(session, String(town.get("placement_id", ""))))
+	return _attach_post_action_recap(
+		result,
+		session,
+		"town_capture",
+		{
+			"placement_id": String(town.get("placement_id", "")),
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+		}
+	)
 
 static func capture_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> String:
 	if session == null or placement_id == "":
@@ -1941,14 +1988,17 @@ static func describe_event_feed_surface(
 	last_message: String = "",
 	turn_resolution_summary: String = "",
 	enemy_activity_summary: String = "",
-	enemy_activity_events_value: Variant = []
+	enemy_activity_events_value: Variant = [],
+	action_recap_value: Variant = {}
 ) -> Dictionary:
 	normalize_overworld_state(session)
 	var recent_events := _describe_recent_events(session, 2)
-	var happened := _event_feed_happened_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
-	var affected := _event_feed_affected_line(session, enemy_activity_summary, enemy_activity_events_value)
-	var why := _event_feed_why_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
-	var next_step := _event_feed_next_step_line(session)
+	var action_recap := _normalize_post_action_recap(action_recap_value)
+	var use_action_recap := turn_resolution_summary.strip_edges() == "" and enemy_activity_summary.strip_edges() == "" and not action_recap.is_empty()
+	var happened := String(action_recap.get("happened", "")) if use_action_recap else _event_feed_happened_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
+	var affected := String(action_recap.get("affected", "")) if use_action_recap else _event_feed_affected_line(session, enemy_activity_summary, enemy_activity_events_value)
+	var why := String(action_recap.get("why_it_matters", "")) if use_action_recap else _event_feed_why_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
+	var next_step := String(action_recap.get("next_step", "")) if use_action_recap else _event_feed_next_step_line(session)
 	var watch := _event_feed_watch_line(session)
 	var visible := _event_feed_visible_line(happened, turn_resolution_summary, enemy_activity_summary)
 	var tooltip_lines := ["Field Feed"]
@@ -1978,6 +2028,7 @@ static func describe_event_feed_surface(
 		"recent_events": recent_events,
 		"enemy_activity_summary": enemy_activity_summary,
 		"turn_resolution_summary": turn_resolution_summary,
+		"post_action_recap": action_recap,
 	}
 
 static func describe_enemy_activity(events_value: Variant, limit: int = 4) -> String:
@@ -5367,7 +5418,18 @@ static func _issue_resource_site_response(
 		)
 	if relief_message != "":
 		messages.append(relief_message)
-	return _finalize_action_result(session, true, " ".join(messages))
+	var result := _finalize_action_result(session, true, " ".join(messages))
+	return _attach_post_action_recap(
+		result,
+		session,
+		"site_response",
+		{
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+		}
+	)
 
 static func _resource_node_linked_town(
 	session: SessionStateStoreScript.SessionData,
@@ -8582,6 +8644,415 @@ static func _count_grid(grid: Variant) -> int:
 			if bool(value):
 				count += 1
 	return count
+
+static func _attach_post_action_recap(
+	result: Dictionary,
+	session: SessionStateStoreScript.SessionData,
+	action_kind: String,
+	context: Dictionary = {}
+) -> Dictionary:
+	if not bool(result.get("ok", false)):
+		return result
+	var recap := _build_post_action_recap(session, action_kind, context, String(result.get("message", "")))
+	if not recap.is_empty():
+		result["post_action_recap"] = recap
+	return result
+
+static func _build_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	action_kind: String,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	match action_kind:
+		"move":
+			return _movement_post_action_recap(session, context, message)
+		"resource_site":
+			return _resource_site_post_action_recap(session, context, message)
+		"artifact":
+			return _artifact_post_action_recap(session, context, message)
+		"site_response":
+			return _site_response_post_action_recap(session, context, message)
+		"town_capture":
+			return _town_capture_post_action_recap(session, context, message)
+		_:
+			return _generic_post_action_recap(session, action_kind, context, message)
+
+static func _movement_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var target_context: Dictionary = context.get("target_context", {}) if context.get("target_context", {}) is Dictionary else {}
+	match String(target_context.get("type", "")):
+		"resource":
+			var site_context := target_context.duplicate(true)
+			site_context["moved_from"] = "%d,%d" % [int(context.get("from_x", 0)), int(context.get("from_y", 0))]
+			return _resource_site_post_action_recap(session, site_context, message)
+		"artifact":
+			var artifact_context := target_context.duplicate(true)
+			artifact_context["moved_from"] = "%d,%d" % [int(context.get("from_x", 0)), int(context.get("from_y", 0))]
+			return _artifact_post_action_recap(session, artifact_context, message)
+		"encounter":
+			return _battle_post_action_recap(session, target_context, message)
+		"town":
+			if String(context.get("route", "")) == "town":
+				return _town_visit_post_action_recap(session, target_context, message)
+
+	var to_x := int(context.get("to_x", 0))
+	var to_y := int(context.get("to_y", 0))
+	var movement = session.overworld.get("movement", {})
+	var terrain := _terrain_name_at(session, to_x, to_y)
+	var happened := "Moved from %d,%d to %d,%d; Move %d/%d remains." % [
+		int(context.get("from_x", 0)),
+		int(context.get("from_y", 0)),
+		to_x,
+		to_y,
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+	]
+	var affected := "Tile %d,%d on %s; scout net now shows %d tiles and has mapped %d." % [
+		to_x,
+		to_y,
+		terrain,
+		_visible_tile_count(session),
+		_explored_tile_count(session),
+	]
+	return _post_action_recap_payload(
+		"move",
+		happened,
+		affected,
+		"Movement spends route tempo, updates scouting, and changes which sites or threats can be reached before daybreak.",
+		_post_action_next_step(session),
+		"%d,%d | Move %d/%d | scout net updated" % [
+			to_x,
+			to_y,
+			int(movement.get("current", 0)),
+			int(movement.get("max", 0)),
+		]
+	)
+
+static func _resource_site_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var node := _post_action_resource_node(session, context)
+	var site := ContentService.get_resource_site(String(context.get("site_id", node.get("site_id", ""))))
+	var site_name := String(site.get("name", "the site"))
+	var tile := _post_action_tile_label(context, node)
+	var surface := describe_resource_site_surface(session, node, site)
+	var control := describe_resource_site_control_summary(session, node, site)
+	var reward := _describe_reward_delta(context.get("rewards", _resource_site_claim_rewards(site)))
+	var happened := _sentence_with_keyword_or_default(message, site_name, "Secured %s." % site_name)
+	var affected_parts := [site_name, tile, surface]
+	if control != "":
+		affected_parts.append(control)
+	if reward != "":
+		affected_parts.append("Reward %s" % reward)
+	return _post_action_recap_payload(
+		"resource_site",
+		happened,
+		" | ".join(_non_empty_strings(affected_parts)),
+		_resource_site_post_action_why(site),
+		_post_action_next_step(session),
+		"%s secured | %s" % [site_name, _short_player_text(control if control != "" else surface, 46)]
+	)
+
+static func _artifact_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var artifact_id := String(context.get("artifact_id", ""))
+	var artifact_name := ArtifactRulesScript.artifact_name(artifact_id)
+	var happened := _sentence_with_keyword_or_default(message, artifact_name, "Recovered %s." % artifact_name)
+	var affected := "%s at %s | %s | %s" % [
+		artifact_name,
+		_post_action_tile_label(context, {}),
+		ArtifactRulesScript.artifact_reward_role(artifact_id),
+		ArtifactRulesScript.artifact_effect_summary(artifact_id),
+	]
+	return _post_action_recap_payload(
+		"artifact",
+		happened,
+		affected,
+		"Artifacts change the hero's field tempo, command profile, or next battle odds immediately after pickup.",
+		_post_action_next_step(session),
+		"%s recovered | %s" % [artifact_name, _short_player_text(ArtifactRulesScript.artifact_effect_summary(artifact_id), 46)]
+	)
+
+static func _site_response_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var node := _post_action_resource_node(session, context)
+	var site := ContentService.get_resource_site(String(context.get("site_id", node.get("site_id", ""))))
+	var response_state := _resource_site_response_state(session, node, site)
+	var site_name := String(site.get("name", "the site"))
+	var affected := "%s at %s | %s" % [
+		site_name,
+		_post_action_tile_label(context, node),
+		_resource_site_context_summary(session, node, site),
+	]
+	var impact_summary := _resource_site_response_effect_summary(response_state)
+	return _post_action_recap_payload(
+		"site_response",
+		_first_sentence_or_default(message, "%s response order issued." % site_name),
+		affected,
+		"Response orders turn site control into route security%s before enemy pressure resolves." % ("" if impact_summary == "" else " and %s" % impact_summary),
+		_post_action_next_step(session),
+		"%s response active | %s" % [site_name, _short_player_text(impact_summary, 46)]
+	)
+
+static func _town_capture_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var town_result := _find_town_by_placement(session, String(context.get("placement_id", "")))
+	var town: Dictionary = town_result.get("town", {})
+	var town_name := _town_name(town) if not town.is_empty() else "the town"
+	return _post_action_recap_payload(
+		"town_capture",
+		_first_sentence_or_default(message, "Captured %s." % town_name),
+		"%s at %s | %s" % [town_name, _post_action_tile_label(context, town), describe_town_context(town, session) if not town.is_empty() else "Control changed"],
+		"Town control changes recruitment, economy, defense posture, and objective progress.",
+		_post_action_next_step(session),
+		"%s captured | check town orders" % town_name
+	)
+
+static func _town_visit_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var town_result := _find_town_by_placement(session, String(context.get("placement_id", "")))
+	var town: Dictionary = town_result.get("town", {})
+	var town_name := _town_name(town) if not town.is_empty() else String(context.get("label", "the town"))
+	return _post_action_recap_payload(
+		"town_visit",
+		_first_sentence_or_default(message, "%s opens its gates." % town_name),
+		"%s at %s" % [town_name, _post_action_tile_label(context, town)],
+		"Entering town converts field position into construction, recruitment, market, and recovery decisions.",
+		"Review build or recruit orders, then return to the field route.",
+		"%s opened | choose town orders" % town_name
+	)
+
+static func _battle_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var placement_id := String(context.get("placement_id", ""))
+	var encounter_result := _find_encounter_by_placement(session, placement_id)
+	var encounter: Dictionary = encounter_result.get("encounter", context)
+	var label := encounter_display_name(encounter)
+	var consequence := describe_encounter_consequence_surface(session, encounter, true)
+	return _post_action_recap_payload(
+		"battle",
+		_sentence_with_keyword_or_default(message, label, "Battle is joined against %s." % label),
+		"%s at %s | %s" % [label, _post_action_tile_label(context, encounter), describe_encounter_compact_readability(session, encounter)],
+		"Clearing the guard can open routes, rewards, scouting, or objective progress%s." % ("" if consequence == "" else " (%s)" % consequence),
+		"Resolve the battle, then check the returned field report before spending the next move.",
+		"%s engaged | resolve battle" % label
+	)
+
+static func _generic_post_action_recap(
+	session: SessionStateStoreScript.SessionData,
+	action_kind: String,
+	context: Dictionary,
+	message: String
+) -> Dictionary:
+	var pos := hero_position(session)
+	return _post_action_recap_payload(
+		action_kind,
+		_first_sentence_or_default(message, "Order resolved."),
+		_dispatch_context_brief(session),
+		"Resolved orders change the live route, economy, objective, or next-turn risk surface.",
+		_post_action_next_step(session),
+		"%s | %d,%d" % [_short_player_text(_first_sentence_or_default(message, "Order resolved."), 52), pos.x, pos.y]
+	)
+
+static func _post_action_recap_payload(
+	kind: String,
+	happened: String,
+	affected: String,
+	why_it_matters: String,
+	next_step: String,
+	cue_text: String
+) -> Dictionary:
+	var recap := {
+		"kind": kind,
+		"happened": _short_player_text(happened.strip_edges(), 180),
+		"affected": _short_player_text(affected.strip_edges(), 180),
+		"why_it_matters": _short_player_text(why_it_matters.strip_edges(), 180),
+		"next_step": _short_player_text(next_step.strip_edges(), 140),
+		"cue_text": _short_player_text(cue_text.strip_edges(), 96),
+	}
+	recap["tooltip_text"] = "Action Recap\n- Happened: %s\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [
+		String(recap.get("happened", "")),
+		String(recap.get("affected", "")),
+		String(recap.get("why_it_matters", "")),
+		String(recap.get("next_step", "")),
+	]
+	return _normalize_post_action_recap(recap)
+
+static func _normalize_post_action_recap(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {}
+	var recap: Dictionary = value
+	var happened := String(recap.get("happened", "")).strip_edges()
+	var affected := String(recap.get("affected", "")).strip_edges()
+	var why := String(recap.get("why_it_matters", "")).strip_edges()
+	var next_step := String(recap.get("next_step", "")).strip_edges()
+	if happened == "" or affected == "" or why == "" or next_step == "":
+		return {}
+	var cue_text := String(recap.get("cue_text", happened)).strip_edges()
+	var tooltip_text := String(recap.get("tooltip_text", "")).strip_edges()
+	if tooltip_text == "":
+		tooltip_text = "Action Recap\n- Happened: %s\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [happened, affected, why, next_step]
+	return {
+		"kind": String(recap.get("kind", "action")),
+		"happened": happened,
+		"affected": affected,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"cue_text": cue_text,
+		"tooltip_text": tooltip_text,
+	}
+
+static func _post_action_tile_context(session: SessionStateStoreScript.SessionData, tile: Vector2i) -> Dictionary:
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y:
+			return {
+				"type": "resource",
+				"placement_id": String(node.get("placement_id", "")),
+				"site_id": String(node.get("site_id", "")),
+				"x": tile.x,
+				"y": tile.y,
+			}
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if int(node.get("x", -1)) == tile.x and int(node.get("y", -1)) == tile.y:
+			return {
+				"type": "artifact",
+				"artifact_id": String(node.get("artifact_id", "")),
+				"x": tile.x,
+				"y": tile.y,
+			}
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if int(encounter.get("x", -1)) == tile.x and int(encounter.get("y", -1)) == tile.y:
+			return {
+				"type": "encounter",
+				"placement_id": String(encounter.get("placement_id", encounter.get("id", ""))),
+				"encounter_id": String(encounter.get("encounter_id", encounter.get("id", ""))),
+				"label": encounter_display_name(encounter),
+				"x": tile.x,
+				"y": tile.y,
+			}
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if int(town.get("x", -1)) == tile.x and int(town.get("y", -1)) == tile.y:
+			return {
+				"type": "town",
+				"placement_id": String(town.get("placement_id", "")),
+				"label": _town_name(town),
+				"x": tile.x,
+				"y": tile.y,
+			}
+	return {
+		"type": "open",
+		"x": tile.x,
+		"y": tile.y,
+	}
+
+static func _post_action_resource_node(session: SessionStateStoreScript.SessionData, context: Dictionary) -> Dictionary:
+	var placement_id := String(context.get("placement_id", ""))
+	var node_result := _find_resource_node_by_placement(session, placement_id)
+	if int(node_result.get("index", -1)) >= 0:
+		return node_result.get("node", {})
+	return {
+		"placement_id": placement_id,
+		"site_id": String(context.get("site_id", "")),
+		"x": int(context.get("x", 0)),
+		"y": int(context.get("y", 0)),
+	}
+
+static func _post_action_tile_label(context: Dictionary, fallback: Dictionary) -> String:
+	var x := int(context.get("x", fallback.get("x", 0)))
+	var y := int(context.get("y", fallback.get("y", 0)))
+	return "%d,%d" % [x, y]
+
+static func _post_action_next_step(session: SessionStateStoreScript.SessionData) -> String:
+	var objective_next := _event_feed_next_step_line(session)
+	if objective_next != "":
+		return objective_next
+	var movement = session.overworld.get("movement", {})
+	if int(movement.get("current", 0)) <= 0:
+		return "End the turn after checking exposed routes and town orders."
+	return "Choose the next route step, site order, or town response before ending the day."
+
+static func _resource_site_post_action_why(site: Dictionary) -> String:
+	var reasons := []
+	if _resource_site_is_persistent(site):
+		var income_summary := _describe_resource_delta(site.get("control_income", {}))
+		if income_summary != "":
+			reasons.append("adds daily %s" % income_summary)
+		if not _resource_site_weekly_recruits(site).is_empty():
+			reasons.append("feeds weekly recruits")
+		if int(site.get("vision_radius", 0)) > 0:
+			reasons.append("widens scouting")
+		if site.has("response_profile"):
+			reasons.append("opens route response")
+	else:
+		var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+		if reward_summary != "":
+			reasons.append("adds %s now" % reward_summary)
+	if reasons.is_empty():
+		return "Site actions change economy, map control, objective tempo, or next-turn route risk."
+	return "This site %s." % ", ".join(reasons)
+
+static func _first_sentence_or_default(text: String, fallback: String) -> String:
+	var cleaned := _enemy_activity_public_text(text)
+	if cleaned == "":
+		return fallback
+	var sentence_end := cleaned.find(". ")
+	if sentence_end >= 0:
+		return cleaned.left(sentence_end + 1)
+	return cleaned
+
+static func _sentence_with_keyword_or_default(text: String, keyword: String, fallback: String) -> String:
+	var cleaned := _enemy_activity_public_text(text)
+	var needle := keyword.strip_edges()
+	if cleaned == "" or needle == "":
+		return _first_sentence_or_default(text, fallback)
+	for sentence_value in cleaned.split(". ", false):
+		var sentence := String(sentence_value).strip_edges()
+		if sentence == "":
+			continue
+		if sentence.find(needle) >= 0:
+			return sentence if sentence.ends_with(".") else "%s." % sentence
+	return _first_sentence_or_default(text, fallback)
+
+static func _visible_tile_count(session: SessionStateStoreScript.SessionData) -> int:
+	var fog = session.overworld.get(FOG_KEY, {})
+	return int(fog.get("visible_count", 0))
+
+static func _explored_tile_count(session: SessionStateStoreScript.SessionData) -> int:
+	var fog = session.overworld.get(FOG_KEY, {})
+	return int(fog.get("explored_count", 0))
 
 static func _finalize_action_result(
 	session: SessionStateStoreScript.SessionData,

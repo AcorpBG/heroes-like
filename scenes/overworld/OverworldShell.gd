@@ -91,6 +91,7 @@ var _last_message := ""
 var _last_enemy_activity_text := ""
 var _last_enemy_activity_events: Array = []
 var _last_turn_resolution_text := ""
+var _last_action_recap: Dictionary = {}
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
@@ -223,6 +224,7 @@ func _on_end_turn_pressed() -> void:
 	_last_enemy_activity_text = String(result.get("enemy_activity_summary", ""))
 	_last_enemy_activity_events = _duplicate_array(result.get("enemy_activity_events", []))
 	_last_turn_resolution_text = String(result.get("turn_resolution_summary", ""))
+	_last_action_recap = {}
 	_record_action_feedback("turn", _last_turn_resolution_text, _turn_resolution_feedback_fallback())
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -238,6 +240,7 @@ func _on_save_pressed() -> void:
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
+	_last_action_recap = {}
 	_record_result_feedback("system", result, "Save updated.")
 	if _handle_session_resolution():
 		return
@@ -1110,23 +1113,46 @@ func _record_result_feedback(kind: String, result: Dictionary, fallback: String 
 	var feedback_kind := kind
 	if not bool(result.get("ok", false)):
 		feedback_kind = "blocked"
-	_record_action_feedback(feedback_kind, String(result.get("message", "")), fallback)
+	var recap := _result_post_action_recap(result)
+	_last_action_recap = recap
+	var message := String(result.get("message", ""))
+	if not recap.is_empty() and String(recap.get("cue_text", "")).strip_edges() != "":
+		message = String(recap.get("cue_text", ""))
+	_record_action_feedback(feedback_kind, message, fallback, recap)
 
-func _record_action_feedback(kind: String, message: String, fallback: String = "") -> void:
+func _record_action_feedback(kind: String, message: String, fallback: String = "", recap: Dictionary = {}) -> void:
+	if recap.is_empty():
+		_last_action_recap = {}
 	var body := _feedback_body(message, fallback)
 	if body == "":
 		return
 	var label := _feedback_kind_label(kind)
 	var text := "%s: %s" % [label, body]
+	var full_text := text
+	if not recap.is_empty():
+		var recap_tooltip := String(recap.get("tooltip_text", "")).strip_edges()
+		if recap_tooltip != "":
+			full_text = "%s\n%s" % [text, recap_tooltip]
 	_action_feedback_sequence += 1
 	_action_feedback = {
 		"kind": kind,
 		"label": label,
 		"text": _short_text(text, ACTION_FEEDBACK_CHARS),
-		"full_text": text,
+		"full_text": full_text,
+		"post_action_recap": recap.duplicate(true),
 		"sequence": _action_feedback_sequence,
 	}
 	_pulse_action_feedback()
+
+func _result_post_action_recap(result: Dictionary) -> Dictionary:
+	var recap_value: Variant = result.get("post_action_recap", {})
+	if not (recap_value is Dictionary):
+		return {}
+	var recap: Dictionary = recap_value
+	for key in ["happened", "affected", "why_it_matters", "next_step"]:
+		if String(recap.get(key, "")).strip_edges() == "":
+			return {}
+	return recap.duplicate(true)
 
 func _feedback_body(message: String, fallback: String = "") -> String:
 	var body := message.strip_edges()
@@ -1409,7 +1435,8 @@ func _event_feed_surface() -> Dictionary:
 		_last_message,
 		_last_turn_resolution_text,
 		_last_enemy_activity_text,
-		_last_enemy_activity_events
+		_last_enemy_activity_events,
+		_last_action_recap
 	)
 	surface["dispatch_text"] = OverworldRules.describe_dispatch(_session, _last_message)
 	return surface
@@ -2141,6 +2168,7 @@ func validation_snapshot() -> Dictionary:
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"event_feed": _event_feed_surface(),
+		"post_action_recap": _last_action_recap.duplicate(true),
 		"objective_brief_visible_text": _objective_brief_label.text,
 		"objective_brief_tooltip_text": _objective_brief_label.tooltip_text,
 		"enemy_activity_summary": _last_enemy_activity_text,
@@ -2221,6 +2249,7 @@ func _validation_action_feedback() -> Dictionary:
 			"kind": "",
 			"text": "",
 			"full_text": "",
+			"post_action_recap": {},
 			"sequence": 0,
 			"cue_chip_text": _map_cue_label.text if _map_cue_label != null else "",
 		}
@@ -2230,6 +2259,7 @@ func _validation_action_feedback() -> Dictionary:
 		"label": String(_action_feedback.get("label", "")),
 		"text": String(_action_feedback.get("text", "")),
 		"full_text": String(_action_feedback.get("full_text", "")),
+		"post_action_recap": _duplicate_dictionary(_action_feedback.get("post_action_recap", {})),
 		"sequence": int(_action_feedback.get("sequence", 0)),
 		"cue_chip_text": _map_cue_label.text if _map_cue_label != null else "",
 		"reduced_motion": SettingsService.reduced_motion_enabled(),
@@ -2398,6 +2428,7 @@ func validation_end_turn() -> Dictionary:
 		"event_tooltip_text": _event_label.tooltip_text,
 		"event_feed": _event_feed_surface(),
 		"action_feedback": _validation_action_feedback(),
+		"post_action_recap": _last_action_recap.duplicate(true),
 	}
 
 func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
@@ -2416,6 +2447,7 @@ func validation_cast_overworld_spell(spell_id: String) -> Dictionary:
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
 		"action_feedback": _validation_action_feedback(),
+		"post_action_recap": _last_action_recap.duplicate(true),
 	}
 
 func validation_perform_artifact_action(action_id: String) -> Dictionary:
@@ -2444,6 +2476,7 @@ func validation_perform_artifact_action(action_id: String) -> Dictionary:
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
 		"artifact_actions": _validation_artifact_action_payloads(),
 		"action_feedback": _validation_action_feedback(),
+		"post_action_recap": _last_action_recap.duplicate(true),
 	}
 
 func validation_try_progress_action() -> Dictionary:
@@ -2494,6 +2527,7 @@ func validation_perform_context_action(action_id: String) -> Dictionary:
 		"scenario_status": _session.scenario_status,
 		"message": _last_message,
 		"action_feedback": _validation_action_feedback(),
+		"post_action_recap": _last_action_recap.duplicate(true),
 	}
 
 func validation_perform_primary_action() -> Dictionary:
@@ -2525,6 +2559,7 @@ func validation_perform_primary_action() -> Dictionary:
 		"last_action": String(_session.flags.get("last_action", "")),
 		"message": _last_message,
 		"action_feedback": _validation_action_feedback(),
+		"post_action_recap": _last_action_recap.duplicate(true),
 	}
 
 func validation_route_step_to_nearest_target(target_kind: String, owner_id: String = "") -> Dictionary:
