@@ -77,9 +77,9 @@ Immediate execution order:
 40. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `economy-capture-resource-loop-manual-gate-10184` as the next concrete slice.
-- Review the proof report for the Riverwatch signal-yard path in `river-pass`: `north_timber`, `river_signal_post`, `river_free_company`, `river_pass_ghoul_grove`, `river_pass_hollow_mire`, `southern_ore`, optional `eastern_cache`, Riverwatch build/recruit decision, and save/resume.
-- If AcOrP needs a live-client transcript for this exact sequence, approve a narrow manual-gate/routed-harness pass rather than broad economy migration.
+- Run `strategic-ai-economy-pressure-planning-10184` as the next concrete slice.
+- Use the passed Riverwatch signal-yard economy gate as the evidence base for the first AI pressure planning target: persistent income sites, common-resource pickups, fight-gated route choices, town spend/recruit decisions, save/resume continuity, and remaining scenario objectives.
+- Defer an exact routed live-client transcript for the economy route unless AcOrP explicitly requests it or a later regression needs repeatable transcript coverage. The current proof report and manual gate review are enough to avoid broad harness work now.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, and generated asset import as staged follow-ups, not part of the next live slice.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
@@ -150,6 +150,28 @@ Validation:
 
 Limits:
 - This proof did not add a new routed harness flow because the existing routed harness does not cover the exact selected path and adding one was unnecessary after the current systems proved the loop. It does not edit production content JSON, change runtime economy/pathing/AI/editor/renderer/save behavior, add a resource registry, migrate `wood` to `timber`, activate rare resources, overhaul market caps, import generated PNGs, add assets, rebalance River Pass broadly, or claim full scenario completion from this economy proof alone.
+
+## Completed Review Slice: Economy Capture Resource Loop Manual Gate
+Status: completed on 2026-04-26 as documentation/report-review for the Riverwatch signal-yard current-systems proof.
+
+Purpose:
+- Review the proof report and decide whether the economy capture/resource loop gate passes, partially passes, or is blocked.
+- Decide whether an exact routed live-client transcript is required now.
+- Choose the next high-leverage slice without starting broad economy migration, harness implementation, UI surfacing, or River Pass rebalance work.
+
+Delivered:
+- Added `docs/economy-capture-resource-loop-manual-gate-review.md`.
+- Marked the gate as passed for the selected current-systems proof.
+- Confirmed the report proves current `gold`/`wood`/`ore` resource flow, persistent daily income from `river_signal_post` and `river_free_company`, immediate recruit joins, fight-gated route/resource decisions, Riverwatch `building_bowyer_lodge` plus `unit_ember_archer` recruitment, save/resume preservation, and plausible scenario continuation.
+- Accepted caveats: battle victories were forced for post-fight economy inspection, this is not a fresh tactical balance claim, this is not full scenario completion, weekly recruit behavior was not required, and broader multi-resource economy migration remains deferred.
+- Deferred an exact routed live-client transcript unless AcOrP explicitly requests one or a later regression needs repeatable transcript coverage.
+- Sequenced the next slice as `strategic-ai-economy-pressure-planning-10184`, because economy proof data now exists for the same sites/resources/town choices an opponent should value.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, and `python3 tests/validate_repo.py --neutral-encounter-report`.
+
+Limits:
+- This is documentation/report-review only. It does not edit production content JSON, add harness/test implementation, change runtime economy/pathing/AI/editor/renderer/save behavior, add a resource registry, migrate `wood` to `timber`, activate rare resources, overhaul markets, import generated PNGs, add assets, or rebalance River Pass broadly.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -3056,10 +3078,12 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: broader foundation/game-loop prioritization after the first safe object metadata and neutral encounter object-backed metadata proofs.
+Current target: strategic AI economy pressure planning after the Riverwatch economy capture/resource loop gate passed.
 
 Done means:
-- The next slice chooses a high-leverage foundation/game-loop implementation track instead of continuing neutral encounter metadata migration only to reduce compatibility-warning counts.
+- The first AI pressure planning slice uses the Riverwatch economy proof data as its evidence base: persistent income sites, resource pickups, fight-gated route choices, town spend/recruit decisions, save/resume continuity, and remaining scenario objectives.
+- The plan chooses the smallest strategic-AI pressure boundary before implementation, such as event streams, town-governor choices, raid target valuation, or real AI hero task state.
+- Fairness and difficulty constraints are stated before any AI implementation.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.
