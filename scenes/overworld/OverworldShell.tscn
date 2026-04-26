@@ -145,6 +145,12 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Adventure Map"
 
+[node name="ObjectiveBrief" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/TopStrip/TopPad/TopBar/TitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+clip_text = true
+text = "Scenario objectives"
+
 [node name="HeroPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 142)

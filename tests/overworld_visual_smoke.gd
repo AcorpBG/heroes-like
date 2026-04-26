@@ -23,6 +23,8 @@ func _run() -> void:
 		return
 	if not _assert_wireframe_contract(shell):
 		return
+	if not await _assert_objective_stakes_ui_contract(shell):
+		return
 	if not _assert_small_map_fit(shell):
 		return
 	if not await _assert_render_cache_split(shell):
@@ -117,6 +119,82 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		push_error("Overworld smoke: hero movement on the fitted small map should not rebuild the session-static terrain cache. select=%s move=%s." % [selection_cache, move_cache])
 		get_tree().quit(1)
 		return false
+	return true
+
+func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_open_frontier_drawer"):
+		push_error("Overworld smoke: shell is missing objective/stakes validation hooks.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"River Pass objective brief",
+		[
+			String(snapshot.get("objective_brief_visible_text", "")),
+			String(snapshot.get("objective_brief_tooltip_text", "")),
+		],
+		[
+			"Skirmish",
+			"Objectives 0/4",
+			"Next Claim Duskfen Bastion",
+			"Objective Stakes",
+			"Progress: 0/4 victory complete",
+			"Incomplete: Claim Duskfen Bastion",
+			"Defeat watch:",
+			"Win: River Pass holds",
+			"Lose: The Mireclaw warhost breaks the pass",
+		]
+	):
+		return false
+	shell.call("validation_open_frontier_drawer")
+	var frontier_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"River Pass objective drawer",
+		[String(frontier_snapshot.get("objective_summary", ""))],
+		["Objective Board", "Victory 0/4", "Defeat risks 0/3 triggered", "Claim Duskfen Bastion", "Avoid Defeat"]
+	):
+		return false
+	shell.call("_on_close_drawers_pressed")
+
+	var original_session = SessionState.ensure_active_session()
+	var campaign_session = CampaignRules.build_session(
+		CampaignRules.normalize_profile({}),
+		"river-pass",
+		"normal",
+		"campaign_reedfall"
+	)
+	if campaign_session.scenario_id == "":
+		push_error("Overworld smoke: could not build campaign session for objective/stakes UI coverage.")
+		get_tree().quit(1)
+		return false
+	SessionState.active_session = campaign_session
+	var campaign_shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(campaign_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var campaign_snapshot: Dictionary = campaign_shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Campaign objective brief",
+		[
+			String(campaign_snapshot.get("objective_brief_visible_text", "")),
+			String(campaign_snapshot.get("objective_brief_tooltip_text", "")),
+		],
+		[
+			"Campaign",
+			"Objectives 0/4",
+			"Next Claim Duskfen Bastion",
+			"Campaign: Lanterns Through Reedfall",
+			"Chapter I: River Pass",
+			"Campaign stakes:",
+			"Secure Riverwatch",
+			"Campaign arc:",
+		]
+	):
+		return false
+	campaign_shell.queue_free()
+	SessionState.active_session = original_session
+	shell.call("_refresh")
+	await get_tree().process_frame
 	return true
 
 func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:
