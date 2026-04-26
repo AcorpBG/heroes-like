@@ -71,21 +71,22 @@ Immediate execution order:
 34. Metadata-only production object-backed implementation for `neutral_encounter_first_class_object_bundle_001` is completed for exactly `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`. The implementation adds first-class neutral encounter map-object metadata plus scenario encounter placement bridge metadata while keeping runtime behavior on legacy direct encounter placements.
 35. Metadata-only first-class neutral encounter object bundle report review is completed in `docs/neutral-encounter-first-class-object-bundle-001-report-review.md`. The report now shows 3 first-class neutral encounter objects, 3 object-backed placements, 3 lifted records, 45 remaining missing object ids/object-placement ids/object-schema-field records, 0 missing lifted agreements, 0 missing guard-target resolutions, 542 warnings, and 0 errors. Strict production checks cover only `neutral_encounter_representation_bundle_001` and `neutral_encounter_first_class_object_bundle_001`; the remaining 45 direct placements stay compatibility-warning-only.
 36. Broader foundation/game-loop prioritization is completed in `docs/foundation-game-loop-prioritization.md`. The selected next track is an economy capture/resource loop proof, starting with planning for one narrow live-client proof path using current resource/site/town capabilities.
-37. Neutral encounter metadata migration remains paused. `neutral_encounter_first_class_object_bundle_001` proved the metadata boundary; further tiny neutral bundles would mostly reduce compatibility warnings without improving runtime, pathing, renderer, AI, editor, save behavior, or player-facing loop quality.
-38. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+37. First narrow economy capture/resource loop proof planning is completed in `docs/economy-capture-resource-loop-proof-plan.md`. The selected target is the Riverwatch signal-yard economy proof in `river-pass`, using `river_signal_post`, `river_free_company`, `north_timber`, `southern_ore`, `eastern_cache`, Riverwatch build/recruit choices, current `gold`/`wood`/`ore` behavior, and manual save/resume observations.
+38. Neutral encounter metadata migration remains paused. `neutral_encounter_first_class_object_bundle_001` proved the metadata boundary; further tiny neutral bundles would mostly reduce compatibility warnings without improving runtime, pathing, renderer, AI, editor, save behavior, or player-facing loop quality.
+39. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `economy-capture-resource-loop-proof-planning-10184` as the next concrete slice.
-- Use the planning slice to choose a narrow River Pass or River Pass-adjacent proof path for scouting, fighting, capturing, daily/weekly resource value, town spending/recruitment, save/resume, and manual-play observations.
+- Run `economy-capture-resource-loop-live-slice-10184` as the next concrete slice.
+- Use the live slice to prove the Riverwatch signal-yard path in `river-pass`: claim `north_timber`, capture `river_signal_post` and `river_free_company`, clear or evaluate `river_pass_ghoul_grove` and `river_pass_hollow_mire`, claim `southern_ore` if viable, make a Riverwatch build/recruit decision, and verify save/resume.
 - Treat `safe_metadata_bundle_001` and `neutral_encounter_first_class_object_bundle_001` as the only currently migrated production object bundles. All other production map objects remain compatibility-warning-only until a later bundle is declared.
-- Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, pathing changes, new resource registry work, rare-resource activation, market-cap overhaul, and generated asset import as staged follow-ups, not part of the next planning slice.
+- Keep broad production scenario/encounter/map-object/resource-site JSON edits, any first-class neutral encounter migration outside the three declared records, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, pathing changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, and generated asset import as staged follow-ups, not part of the next live slice.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is economy capture/resource loop proof planning, still without production JSON migration, runtime behavior changes, pathing, AI, editor behavior, renderer behavior, save format, generated PNG import, or asset import in the prioritization slice.
+- The next active choice is the selected River Pass economy capture/resource loop live slice, still without production JSON migration, new schema, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing, AI, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -106,6 +107,27 @@ Validation:
 
 Limits:
 - This is documentation/prioritization only. It does not edit production content JSON, implement validators/tests, change runtime economy/encounter/pathing/AI/editor/renderer/save behavior, migrate resources, activate rare resources, import generated PNGs, add assets, or claim playability.
+
+## Completed Planning Slice: Economy Capture Resource Loop Proof
+Status: completed on 2026-04-26 as documentation-only planning for the first narrow economy capture/resource loop proof.
+
+Purpose:
+- Choose one exact live-client proof target using existing content and current `gold`, `wood`, and `ore` behavior.
+- Define the resource sites, capture states, rewards/income cadence, town spending/recruit choices, scouting/fight/capture decisions, save/resume checkpoints, validation expectations, rollback, and follow-up decision tree before implementation.
+
+Delivered:
+- Added `docs/economy-capture-resource-loop-proof-plan.md`.
+- Selected the Riverwatch signal-yard economy proof in `river-pass`.
+- Named the target path: `north_timber`, `river_signal_post`, `river_free_company`, `river_pass_ghoul_grove`, `river_pass_hollow_mire`, `southern_ore`, optional `eastern_cache`, and Riverwatch spend/recruit choices.
+- Identified `river_signal_post` and `river_free_company` as the persistent daily gold capture proof, with `north_timber` and `southern_ore` supplying current common-resource pressure for town choices.
+- Defined save/resume observation points and manual proof checklist.
+- Sequenced the next slice as `economy-capture-resource-loop-live-slice-10184`.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, and `python3 tests/validate_repo.py --neutral-encounter-report`.
+
+Limits:
+- This is documentation/planning only. It does not edit production content JSON, implement validators/tests, change runtime economy/pathing/AI/editor/renderer/save behavior, add a resource registry, migrate `wood` to `timber`, activate rare resources, overhaul market caps, import generated PNGs, add assets, or claim economy balance/readiness.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
