@@ -3819,9 +3819,12 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: implement report-only strategic AI hero task-state save-normalizer preservation proof after completed preservation planning.
+Current target: implement a compact battle outcome to field handoff recap in live overworld UI using the existing battle aftermath and overworld feedback surfaces.
 
 Done means:
+- A resolved battle returning to the overworld tells the player what changed, what field/town/objective surface was affected, and the next practical action.
+- Existing focused smoke coverage proves the handoff recap is visible in the battle-to-overworld transition.
+- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
 - The completed site-control report remains accepted as proof that current Mireclaw River Pass assignment, seizure, and controller-flip behavior works for `river_free_company`, with `river_signal_post` as companion reason coverage.
 - No coefficient tuning starts unless a later proof identifies a specific ordering, defense, seizure, or retake defect.
 - The completed Glassroad report proves `glassroad_watch_relay` assignment and retake/controller flip, `glassroad_starlens` companion stabilization surface, `halo_spire_bridgehead` town-front sanity, and `riverwatch_market` garrison stabilization.
