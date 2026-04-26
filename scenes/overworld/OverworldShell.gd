@@ -89,6 +89,7 @@ var _selected_tile := Vector2i(-1, -1)
 var _hovered_tile := Vector2i(-1, -1)
 var _last_message := ""
 var _last_enemy_activity_text := ""
+var _last_turn_resolution_text := ""
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
 var _active_drawer := ""
@@ -219,10 +220,8 @@ func _on_end_turn_pressed() -> void:
 	_session.flags["last_action"] = "ended_turn"
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = String(result.get("enemy_activity_summary", ""))
-	if bool(result.get("ok", false)) and _last_enemy_activity_text != "":
-		_record_action_feedback("enemy", _last_enemy_activity_text, "Enemy turn resolved.")
-	else:
-		_record_result_feedback("turn", result, "Day %d begins." % _session.day)
+	_last_turn_resolution_text = String(result.get("turn_resolution_summary", ""))
+	_record_action_feedback("turn", _last_turn_resolution_text, _turn_resolution_feedback_fallback())
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
@@ -236,6 +235,7 @@ func _on_save_pressed() -> void:
 	var result = AppRouter.save_active_session_to_selected_manual_slot()
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback("system", result, "Save updated.")
 	if _handle_session_resolution():
 		return
@@ -287,6 +287,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback(_feedback_kind_for_context_action(action_id), result, String(action_id).capitalize())
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -301,6 +302,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback("artifact", result, "Artifact loadout updated.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -318,6 +320,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback("hero", result, "Hero command updated.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -335,6 +338,7 @@ func _on_hero_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback("hero", result, "Hero command updated.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -352,6 +356,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 		return
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback("cast", result, "Spell resolved.")
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -387,6 +392,8 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 func _visit_selected_town() -> bool:
 	if not _is_selected_owned_town_visit_target():
 		_last_message = "Select an owned town to enter it."
+		_last_enemy_activity_text = ""
+		_last_turn_resolution_text = ""
 		_record_action_feedback("blocked", _last_message)
 		_refresh()
 		return false
@@ -394,6 +401,7 @@ func _visit_selected_town() -> bool:
 	var result: Dictionary = OverworldRules.set_active_town_visit(_session, String(town.get("placement_id", "")))
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback("town", result, "Town opened.")
 	if not bool(result.get("ok", false)):
 		_refresh()
@@ -413,6 +421,7 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 		_session.flags["last_action"] = "moved" if bool(result.get("ok", false)) else "blocked_move"
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_result_feedback(_feedback_kind_for_move(result, route), result, _movement_feedback_fallback(result))
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
@@ -440,6 +449,8 @@ func _start_encounter() -> void:
 	var placement = OverworldRules.get_active_encounter(_session)
 	if placement.is_empty():
 		_last_message = "No encounter is active here."
+		_last_enemy_activity_text = ""
+		_last_turn_resolution_text = ""
 		_record_action_feedback("blocked", _last_message)
 		_refresh()
 		return
@@ -448,6 +459,8 @@ func _start_encounter() -> void:
 	if payload.is_empty():
 		push_error("Unable to create battle payload for encounter %s." % String(placement.get("encounter_id", placement.get("id", ""))))
 		_last_message = "Battle setup failed."
+		_last_enemy_activity_text = ""
+		_last_turn_resolution_text = ""
 		_record_action_feedback("blocked", _last_message)
 		_refresh()
 		return
@@ -455,6 +468,7 @@ func _start_encounter() -> void:
 	_session.battle = payload
 	_session.flags["last_action"] = "entered_battle"
 	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
 	_record_action_feedback("battle", OverworldRules.describe_encounter_battle_cue(_session, placement))
 	AppRouter.go_to_battle()
 
@@ -512,10 +526,12 @@ func _refresh() -> void:
 	var context_text := _cached_focus_tile_text()
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	var dispatch_text := OverworldRules.describe_dispatch(_session, _last_message)
+	if _last_turn_resolution_text != "":
+		dispatch_text += "\n- Daybreak result: %s" % _last_turn_resolution_text
 	if _last_enemy_activity_text != "":
 		dispatch_text += "\n- Recent enemy activity: %s" % _last_enemy_activity_text
 	_set_rail_text(_event_label, dispatch_text, _rail_log_text(), 1)
-	_end_turn_button.tooltip_text = String(command_risk_surface.get("forecast", "")) if not command_risk_surface.is_empty() else "End the day and resolve hostile pressure."
+	_end_turn_button.tooltip_text = OverworldRules.describe_end_turn_forecast(_session)
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
@@ -571,15 +587,18 @@ func _refresh_frontier_drawer() -> Dictionary:
 	var threat_text := _cached_frontier_threats()
 	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
 	var command_risk_surface := _cached_command_risk_surface()
-	var forecast_text := String(command_risk_surface.get("risk", ""))
-	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Risk", forecast_text), 1)
+	var forecast_text := OverworldRules.describe_end_turn_forecast(_session)
+	command_risk_surface["forecast"] = forecast_text
+	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Next", forecast_text), 1)
 	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
 	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
 	return command_risk_surface
 
 func _set_collapsed_frontier_indicator() -> void:
-	_frontier_indicator_label.text = "Frontier: watch"
-	_frontier_indicator_label.tooltip_text = "Open Frontier for objectives, threat watch, and next-day risk."
+	var forecast_text := OverworldRules.describe_end_turn_forecast(_session)
+	var compact_forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
+	_frontier_indicator_label.text = "Next: %s" % _short_text(compact_forecast, 34)
+	_frontier_indicator_label.tooltip_text = "%s\n\nOpen Frontier for objectives, threat watch, and next-day risk." % forecast_text
 
 func _rebuild_hero_actions() -> void:
 	for child in _hero_actions.get_children():
@@ -1184,6 +1203,11 @@ func _movement_feedback_fallback(result: Dictionary) -> String:
 		return "%d,%d" % [pos.x, pos.y]
 	return "Route did not resolve."
 
+func _turn_resolution_feedback_fallback() -> String:
+	if _last_turn_resolution_text != "":
+		return _last_turn_resolution_text
+	return "Day %d begins." % _session.day
+
 func _action_feedback_text() -> String:
 	if _action_feedback.is_empty():
 		return ""
@@ -1347,6 +1371,8 @@ func _describe_focus_tile() -> String:
 	return _describe_selected_tile()
 
 func _rail_log_text() -> String:
+	if _last_turn_resolution_text != "":
+		return "Turn: %s" % _last_turn_resolution_text
 	if _last_enemy_activity_text != "":
 		return "Enemy: %s" % _last_enemy_activity_text
 	var message := _last_message.strip_edges()
@@ -2043,6 +2069,9 @@ func validation_snapshot() -> Dictionary:
 		"objective_brief_visible_text": _objective_brief_label.text,
 		"objective_brief_tooltip_text": _objective_brief_label.tooltip_text,
 		"enemy_activity_summary": _last_enemy_activity_text,
+		"turn_resolution_summary": _last_turn_resolution_text,
+		"end_turn_forecast": OverworldRules.describe_end_turn_forecast(_session),
+		"end_turn_forecast_compact": OverworldRules.describe_end_turn_forecast_compact(_session),
 		"action_feedback": _validation_action_feedback(),
 		"action_feedback_text": _action_feedback_text(),
 		"map_cue_text": _map_cue_label.text,
@@ -2282,6 +2311,9 @@ func validation_end_turn() -> Dictionary:
 		"last_action": String(_session.flags.get("last_action", "")),
 		"message": _last_message,
 		"enemy_activity_summary": _last_enemy_activity_text,
+		"turn_resolution_summary": _last_turn_resolution_text,
+		"end_turn_forecast": OverworldRules.describe_end_turn_forecast(_session),
+		"end_turn_forecast_compact": OverworldRules.describe_end_turn_forecast_compact(_session),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"action_feedback": _validation_action_feedback(),

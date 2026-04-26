@@ -822,24 +822,39 @@ func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: shell is missing enemy-activity validation hooks.")
 		get_tree().quit(1)
 		return false
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var forecast_text := String(before_snapshot.get("end_turn_forecast", ""))
+	var forecast_compact := String(before_snapshot.get("end_turn_forecast_compact", ""))
+	var frontier_indicator := String(before_snapshot.get("chrome", {}).get("frontier_indicator", ""))
+	if not _assert_text_contains_all(
+		"Overworld end-turn forecast UI",
+		[forecast_text, forecast_compact, frontier_indicator, String(before_snapshot.get("map_cue_tooltip_text", ""))],
+		["Next day:", "income", "move resets", "Next:"]
+	):
+		return false
 	var result: Dictionary = shell.call("validation_end_turn")
 	await get_tree().process_frame
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var summary := String(result.get("enemy_activity_summary", ""))
+	var resolution := String(result.get("turn_resolution_summary", snapshot.get("turn_resolution_summary", "")))
 	var visible_text := String(result.get("event_visible_text", snapshot.get("event_visible_text", "")))
 	var tooltip_text := String(result.get("event_tooltip_text", snapshot.get("event_tooltip_text", "")))
 	if summary == "":
 		push_error("Overworld smoke: enemy turn did not produce a recent enemy activity summary. result=%s" % result)
 		get_tree().quit(1)
 		return false
-	if visible_text.find("Enemy:") < 0 or tooltip_text.find("Recent enemy activity:") < 0 or tooltip_text.find(summary) < 0:
-		push_error("Overworld smoke: enemy activity did not surface through the compact overworld event rail. summary=%s visible=%s tooltip=%s" % [summary, visible_text, tooltip_text])
+	if resolution.find("income") < 0 or resolution.find("Move") < 0 or resolution.find("enemy") < 0:
+		push_error("Overworld smoke: end-turn resolution did not summarize income, movement reset, and enemy activity. resolution=%s result=%s" % [resolution, result])
+		get_tree().quit(1)
+		return false
+	if visible_text.find("Turn:") < 0 or tooltip_text.find("Daybreak result:") < 0 or tooltip_text.find("Recent enemy activity:") < 0 or tooltip_text.find(summary) < 0:
+		push_error("Overworld smoke: end-turn result did not surface through the compact overworld event rail. summary=%s visible=%s tooltip=%s" % [summary, visible_text, tooltip_text])
 		get_tree().quit(1)
 		return false
 	var first_enemy_cue := summary.split("|", false)[0].strip_edges()
 	if first_enemy_cue.ends_with("."):
 		first_enemy_cue = first_enemy_cue.left(first_enemy_cue.length() - 1)
-	if not _assert_action_feedback("enemy turn feedback cue", snapshot, "enemy", ["Enemy:", first_enemy_cue]):
+	if not _assert_action_feedback("end-turn feedback cue", snapshot, "turn", ["Turn:", "income", "Move", first_enemy_cue]):
 		return false
 	if not _assert_no_ai_score_leak("enemy activity summary", summary):
 		return false
