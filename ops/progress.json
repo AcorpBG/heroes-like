@@ -4,10 +4,10 @@
   "updatedAt": "2026-04-26T23:59:59Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-minimal-commander-role-state-schema-planning-10184",
-  "currentSliceTitle": "Plan minimal commander-role state schema boundaries",
+  "currentSliceId": "strategic-ai-commander-role-report-implementation-planning-10184",
+  "currentSliceTitle": "Plan commander-role report implementation boundaries",
     "currentSliceStatus": "pending",
-    "currentSliceNotes": "Strategic AI commander-role report fixture planning is complete in docs/strategic-ai-commander-role-report-fixture-plan.md. The fixture plan defines future AI_COMMANDER_ROLE_STATE_REPORT cases and payload expectations for Mireclaw Free Company retaker/raider, Mireclaw Signal Post companion, Embercourt Glassroad relay defender/retaker/stabilizer, commander recovery blocking assignment, commander memory continuity, public leak checks, pass/fail criteria, validation commands, and staged next steps. The recommended next slice is planning-only minimal commander-role state schema boundaries before report implementation, save migration, full AI hero task state, live-client gate work, coefficient tuning, defense-specific durable state, production JSON migration, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, content/resources.json, wood-to-timber migration, rare resources, market-cap overhaul, or River Pass rebalance.",
+    "currentSliceNotes": "Strategic AI minimal commander-role state schema planning is complete in docs/strategic-ai-minimal-commander-role-state-schema-plan.md. The plan selects future optional roster-entry field location enemy_states[].commander_roster[].commander_role_state, defines minimal fields, enum sets, defaults, old-save compatibility, deterministic assignment id derivation, derived front id rules, public-reason recomputation, fixture-only annotation boundaries, validation strategy, migration risks, and adapter path to later full AI hero state. The recommended next slice is planning-only commander-role report implementation boundaries before report helpers/tests, live commander-role behavior, full AI hero task state, durable event logs, coefficient tuning, defense-specific durable state, production JSON migration, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, content/resources.json, wood-to-timber migration, rare resources, market-cap overhaul, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -555,6 +555,16 @@
         {
             "id": "strategic-ai-minimal-commander-role-state-schema-planning-10184",
             "title": "Plan minimal commander-role state schema boundaries",
+            "status": "completed",
+            "startedAt": "2026-04-26T23:59:59Z",
+            "completedAt": "2026-04-26T23:59:59Z",
+            "decision": "commander-role-report-implementation-planning-next",
+            "planningDoc": "docs/strategic-ai-minimal-commander-role-state-schema-plan.md",
+            "difficulty": "high"
+        },
+        {
+            "id": "strategic-ai-commander-role-report-implementation-planning-10184",
+            "title": "Plan commander-role report implementation boundaries",
             "status": "pending",
             "difficulty": "high"
         },
@@ -1026,7 +1036,7 @@
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
     "Use docs/strategic-ai-event-surfacing-report-gate-review.md as the current AI surfacing gate result: compact public assignment, pressure, seizure, contest, threat, and dispatch reason output passes; score tables stay report/debug-only; manual live-client signal-yard enemy-turn review is deferred until broader AI expansion affects live turn readability.",
-        "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, docs/strategic-ai-glassroad-defense-proof-plan.md, docs/strategic-ai-glassroad-defense-proof-report.md, docs/strategic-ai-commander-role-state-plan.md, and docs/strategic-ai-commander-role-report-fixture-plan.md as the current AI planning/evidence contracts: the next slice is planning-only minimal commander-role state schema boundaries before report implementation, durable event logs, full AI heroes, defense-specific durable state, coefficient tuning, or broad rewrites.",
+        "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, docs/strategic-ai-glassroad-defense-proof-plan.md, docs/strategic-ai-glassroad-defense-proof-report.md, docs/strategic-ai-commander-role-state-plan.md, docs/strategic-ai-commander-role-report-fixture-plan.md, and docs/strategic-ai-minimal-commander-role-state-schema-plan.md as the current AI planning/evidence contracts: the next slice is planning-only commander-role report implementation boundaries before report implementation, durable event logs, full AI heroes, defense-specific durable state, coefficient tuning, or broad rewrites.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
