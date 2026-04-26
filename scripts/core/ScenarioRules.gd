@@ -132,6 +132,57 @@ static func describe_scenario_briefing(scenario_id: String) -> String:
 		return ""
 	return "\n".join(_scenario_briefing_lines(scenario))
 
+static func describe_scenario_launch_preview(
+	scenario_id: String,
+	difficulty_id: String = "normal",
+	launch_mode: String = SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+	action_label: String = "Launch",
+	context_label: String = ""
+) -> String:
+	var normalized_difficulty: String = _scenario_select_rules().normalize_difficulty(difficulty_id)
+	var normalized_mode: String = SessionStateStoreScript.normalize_launch_mode(launch_mode)
+	var session: SessionStateStoreScript.SessionData = _scenario_factory().create_session(
+		scenario_id,
+		normalized_difficulty,
+		normalized_mode
+	)
+	if session.scenario_id == "":
+		return "Launch preview unavailable."
+	_overworld_rules().normalize_overworld_state(session)
+	normalize_scenario_state(session)
+
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var scenario_name := String(scenario.get("name", session.scenario_id))
+	var mode_label: String = _scenario_select_rules().launch_mode_label(normalized_mode)
+	var launch_context := context_label if context_label != "" else scenario_name
+	var lines := [
+		"Launch Preview",
+		"%s | %s | %s"
+		% [
+			mode_label,
+			_scenario_select_rules().difficulty_label(normalized_difficulty),
+			launch_context,
+		],
+	]
+
+	var objectives = scenario.get("objectives", {})
+	if objectives is Dictionary:
+		var victory_labels := _objective_labels_from_bucket(session, objectives.get("victory", []), 3)
+		if not victory_labels.is_empty():
+			lines.append("Objective: %s" % "; ".join(victory_labels))
+		var defeat_labels := _objective_labels_from_bucket(session, objectives.get("defeat", []), 2)
+		if not defeat_labels.is_empty():
+			lines.append("Failure watch: %s" % "; ".join(defeat_labels))
+
+	var stakes_text := _scenario_stakes_text(scenario)
+	if stakes_text != "":
+		lines.append("Stakes: %s" % stakes_text)
+	lines.append(
+		"Action: %s starts a fresh %s expedition on Day 1; it will not load a save."
+		% [action_label, mode_label.to_lower()]
+	)
+	return "\n".join(lines)
+
 static func describe_scenario_operational_board(
 	scenario_id: String,
 	difficulty_id: String = "normal",

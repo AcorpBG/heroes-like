@@ -1107,6 +1107,8 @@ static func _menu_action_summary(
 	var parts := []
 	parts.append(String(scenario_entry.get("description", scenario.get("name", scenario_id))))
 	parts.append_array(_chapter_briefing_lines(profile, campaign_id, scenario_entry, record, unlocked))
+	if unlocked:
+		parts.append(_campaign_launch_preview(campaign_id, scenario_entry, record))
 	if unlocked and not record.is_empty():
 		parts.append("Last result: %s (Day %d)" % [String(record.get("summary", "")), int(record.get("day", 0))])
 	elif not unlocked:
@@ -1119,6 +1121,33 @@ static func _menu_action_summary(
 	if carryover_summary != "":
 		parts.append("Carryover: %s" % carryover_summary)
 	return "\n".join(parts)
+
+static func _campaign_launch_preview(
+	campaign_id: String,
+	scenario_entry: Dictionary,
+	record: Dictionary
+) -> String:
+	var campaign := ContentService.get_campaign(campaign_id)
+	var scenario_id := String(scenario_entry.get("scenario_id", ""))
+	var action_label := "Start Chapter"
+	match String(record.get("status", "")):
+		"victory":
+			action_label = "Replay Chapter"
+		"defeat":
+			action_label = "Retry Chapter"
+	var context_parts := []
+	var campaign_name := String(campaign.get("name", campaign_id))
+	if campaign_name != "":
+		context_parts.append(campaign_name)
+	context_parts.append(_chapter_heading(scenario_entry, scenario_id))
+	var context_label := " / ".join(context_parts)
+	return ScenarioRulesScript.describe_scenario_launch_preview(
+		scenario_id,
+		_scenario_select_rules().default_difficulty_id(),
+		SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN,
+		action_label,
+		context_label
+	)
 
 static func _chapter_briefing_lines(
 	profile: Dictionary,

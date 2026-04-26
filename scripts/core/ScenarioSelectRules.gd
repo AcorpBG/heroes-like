@@ -155,7 +155,14 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		normalized_difficulty,
 		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
 	)
+	var launch_preview: String = ScenarioRulesScript.describe_scenario_launch_preview(
+		scenario_id,
+		normalized_difficulty,
+		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH,
+		"Launch Skirmish"
+	)
 	var setup_lines := []
+	setup_lines.append(launch_preview)
 	var briefing_summary: String = ScenarioRulesScript.describe_scenario_briefing(scenario_id)
 	if briefing_summary != "":
 		setup_lines.append(briefing_summary)
@@ -189,6 +196,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 		"recommended_difficulty": recommended_difficulty,
 		"recommended_difficulty_label": difficulty_label(recommended_difficulty),
 		"setup_summary": "\n".join(setup_lines),
+		"launch_preview": launch_preview,
 		"commander_preview": commander_preview,
 		"operational_board": operational_board,
 	}
