@@ -233,14 +233,11 @@ static func describe_session_commander_preview(session: SessionStateStoreScript.
 	OverworldRulesScript.normalize_overworld_state(session)
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var hero = session.overworld.get("hero", {})
-	var faction := ContentService.get_faction(String(hero.get("faction_id", scenario.get("player_faction_id", ""))))
 	var command = hero.get("command", {})
 	var lines := ["Commander Preview"]
-	lines.append("%s | %s | %s" % [
-		String(hero.get("name", "Field Commander")),
-		String(faction.get("name", scenario.get("player_faction_id", "Frontier host"))),
-		HeroCommandRulesScript.hero_archetype_label(hero),
-	])
+	lines.append(HeroCommandRulesScript.hero_identity_context_line(hero, String(scenario.get("player_faction_id", ""))))
+	lines.append(HeroCommandRulesScript.hero_progress_context_line(hero))
+	lines.append("Opening readiness: %s" % HeroCommandRulesScript.hero_readiness_context_line(hero, true))
 	var profile_summary: String = HeroCommandRulesScript.hero_profile_summary(hero, true)
 	if profile_summary != "":
 		lines.append(profile_summary)

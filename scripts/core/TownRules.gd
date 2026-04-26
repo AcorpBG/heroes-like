@@ -1516,13 +1516,10 @@ static func _town_identity_summary(town: Dictionary) -> String:
 	return String(faction.get("identity_summary", "No town identity has been authored yet."))
 
 static func _hero_command_line(hero: Dictionary) -> String:
-	var command = hero.get("command", {})
-	return "%s Lv%d | A%d D%d | %s" % [
-		String(hero.get("name", "Hero")),
-		int(hero.get("level", 1)),
-		int(command.get("attack", 0)),
-		int(command.get("defense", 0)),
-		_army_summary(hero.get("army", {})),
+	return "%s | %s | %s" % [
+		HeroCommandRulesScript.hero_identity_context_line(hero),
+		HeroCommandRulesScript.hero_progress_context_line(hero),
+		HeroCommandRulesScript.hero_readiness_context_line(hero, true),
 	]
 
 static func _army_summary(army: Variant) -> String:

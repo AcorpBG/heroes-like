@@ -286,9 +286,74 @@ static func hero_archetype_label(payload: Dictionary) -> String:
 	var archetype := String(template.get("archetype", payload.get("archetype", "field captain")))
 	return archetype.capitalize()
 
+static func hero_faction_label(payload: Dictionary, fallback_faction_id: String = "") -> String:
+	var template := hero_template(payload)
+	var faction_id := String(payload.get("faction_id", template.get("faction_id", fallback_faction_id)))
+	if faction_id == "":
+		return "Free Banner"
+	var faction := ContentService.get_faction(faction_id)
+	return String(faction.get("name", faction_id))
+
 static func hero_identity_summary(payload: Dictionary) -> String:
 	var template := hero_template(payload)
 	return String(template.get("identity_summary", ""))
+
+static func hero_role_label(payload: Dictionary) -> String:
+	var template := hero_template(payload)
+	var roster_summary := String(template.get("roster_summary", payload.get("roster_summary", "")))
+	if roster_summary != "":
+		return roster_summary
+	return hero_archetype_label(payload)
+
+static func hero_identity_context_line(payload: Dictionary, fallback_faction_id: String = "") -> String:
+	return "%s | %s | %s" % [
+		String(payload.get("name", hero_template(payload).get("name", "Field Commander"))),
+		hero_faction_label(payload, fallback_faction_id),
+		hero_role_label(payload),
+	]
+
+static func hero_progress_context_line(hero_state: Dictionary) -> String:
+	var hero := HeroProgressionRulesScript.ensure_hero_progression(hero_state.duplicate(true))
+	var summary := HeroProgressionRulesScript.brief_summary(hero)
+	if summary == "":
+		summary = "No specialty"
+	return "Lv%d | XP %d/%d | %s" % [
+		int(hero.get("level", 1)),
+		int(hero.get("experience", 0)),
+		int(hero.get("next_level_experience", 250)),
+		summary,
+	]
+
+static func hero_readiness_context_line(hero_state: Dictionary, include_position: bool = false) -> String:
+	var parts := []
+	if include_position:
+		var position := _normalize_position(hero_state.get("position", {}))
+		parts.append("Pos %d,%d" % [int(position.get("x", 0)), int(position.get("y", 0))])
+	var movement = hero_state.get("movement", {})
+	if movement is Dictionary and not movement.is_empty():
+		parts.append("Move %d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))])
+	var mana = hero_state.get("spellbook", {}).get("mana", {})
+	if mana is Dictionary and int(mana.get("max", 0)) > 0:
+		parts.append("Mana %d/%d" % [int(mana.get("current", 0)), int(mana.get("max", 0))])
+	var army_totals := _army_count_summary(hero_state.get("army", {}))
+	parts.append(
+		"Scout %d | %s"
+		% [
+			scouting_radius_for_hero(hero_state),
+			"Army %d/%d" % [int(army_totals.get("troops", 0)), int(army_totals.get("groups", 0))],
+		]
+	)
+	var command = hero_state.get("command", {})
+	parts.append(
+		"A%d D%d P%d K%d"
+		% [
+			int(command.get("attack", 0)),
+			int(command.get("defense", 0)),
+			int(command.get("power", 0)),
+			int(command.get("knowledge", 0)),
+		]
+	)
+	return " | ".join(parts)
 
 static func hero_profile_summary(payload: Dictionary, include_focus: bool = false) -> String:
 	var template := hero_template(payload)
@@ -789,22 +854,27 @@ static func _hero_roster_line(hero: Dictionary, active_hero_id: String) -> Strin
 		tags.append("Primary")
 	if String(hero.get("id", "")) == active_hero_id:
 		tags.append("Active")
-	var position := _normalize_position(hero.get("position", {}))
-	var movement = hero.get("movement", {})
-	return "%s | %s%sPos %d,%d | Move %d/%d | %s" % [
-		String(hero.get("name", "Hero")),
+	return "%s | %s%s | %s" % [
+		hero_identity_context_line(hero),
 		", ".join(tags) + " | " if not tags.is_empty() else "",
-		"",
-		int(position.get("x", 0)),
-		int(position.get("y", 0)),
-		int(movement.get("current", 0)),
-		int(movement.get("max", 0)),
-		"Scout %d | %s | %s" % [
-			scouting_radius_for_hero(hero),
-			_army_summary(hero.get("army", {})),
-			HeroProgressionRulesScript.brief_summary(hero),
-		],
+		hero_progress_context_line(hero),
+		hero_readiness_context_line(hero, true),
 	]
+
+static func _army_count_summary(army: Variant) -> Dictionary:
+	var stacks = army.get("stacks", []) if army is Dictionary else []
+	var troops := 0
+	var groups := 0
+	if stacks is Array:
+		for stack in stacks:
+			if not (stack is Dictionary):
+				continue
+			var count := int(stack.get("count", 0))
+			if count <= 0:
+				continue
+			troops += count
+			groups += 1
+	return {"troops": troops, "groups": groups}
 
 static func _normalize_authored_specialties(value: Variant) -> Array:
 	var normalized := []

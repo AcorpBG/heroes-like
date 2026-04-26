@@ -46,6 +46,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_stack_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_hero_identity_progression_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -231,6 +234,9 @@ func _assert_battle_entry_context(shell: Node) -> bool:
 	if not entry_context.contains("Matchup:") or not entry_context.contains("Forces:") or not entry_context.contains("Stakes:"):
 		push_error("Battle smoke: entry context did not expose matchup, force, and stakes lines: %s." % entry_context)
 		return false
+	if not entry_context.contains("Commanders:") or not entry_context.contains("Lyra Emberwell") or not entry_context.contains("Embercourt League"):
+		push_error("Battle smoke: entry context did not expose commander identity context: %s." % entry_context)
+		return false
 	if not entry_context.contains("Blackbranch Raiders") or not entry_context.contains("Difficulty Low"):
 		push_error("Battle smoke: entry context did not expose enemy force identity and encounter difficulty: %s." % entry_context)
 		return false
@@ -239,6 +245,31 @@ func _assert_battle_entry_context(shell: Node) -> bool:
 		return false
 	if not visible_context.contains("Matchup:") or battle_context_label.tooltip_text != entry_context:
 		push_error("Battle smoke: live battle entry label is not carrying the validation entry context: visible=%s tooltip=%s snapshot=%s." % [visible_context, battle_context_label.tooltip_text, entry_context])
+		return false
+	var player_commander := String(snapshot.get("player_commander_text", ""))
+	if not player_commander.contains("Lyra Emberwell") or not player_commander.contains("Fast scouting caster") or not player_commander.contains("Lv1") or not player_commander.contains("XP 0/250") or not player_commander.contains("Wayfinder I"):
+		push_error("Battle smoke: player commander summary did not expose hero identity and progression context: %s." % player_commander)
+		return false
+	return true
+
+func _assert_town_hero_identity_progression_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell is missing hero identity validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var town_hero_text := "%s\n%s\n%s" % [
+		String(snapshot.get("hero_text", "")),
+		String(snapshot.get("hero_tooltip_text", "")),
+		String(snapshot.get("heroes_text", "")),
+	]
+	if not town_hero_text.contains("Lyra Emberwell") or not town_hero_text.contains("Embercourt League") or not town_hero_text.contains("Fast scouting caster"):
+		push_error("Town smoke: hero panel did not expose hero identity/faction/role context: %s." % town_hero_text)
+		return false
+	if not town_hero_text.contains("Lv1") or not town_hero_text.contains("XP 0/250") or not town_hero_text.contains("Wayfinder I"):
+		push_error("Town smoke: hero panel did not expose progression and specialty context: %s." % town_hero_text)
+		return false
+	if not town_hero_text.contains("Move") or not town_hero_text.contains("Scout") or not town_hero_text.contains("Army"):
+		push_error("Town smoke: hero panel did not expose readiness and army command context: %s." % town_hero_text)
 		return false
 	return true
 
