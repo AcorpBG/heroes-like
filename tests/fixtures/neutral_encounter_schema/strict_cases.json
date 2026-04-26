@@ -1,0 +1,549 @@
+{
+  "schema": "neutral_encounter_strict_cases_v1",
+  "encounter_definitions": [
+    {
+      "id": "fixture_road_pickets",
+      "name": "Fixture Road Pickets"
+    },
+    {
+      "id": "fixture_barrow_camp_guard",
+      "name": "Fixture Barrow Camp Guard"
+    },
+    {
+      "id": "fixture_gatehouse_watch",
+      "name": "Fixture Gatehouse Watch"
+    },
+    {
+      "id": "fixture_chain_camp",
+      "name": "Fixture Chain Camp"
+    }
+  ],
+  "valid": {
+    "neutral_encounters": [
+      {
+        "id": "fixture_visible_stack",
+        "schema_version": 1,
+        "primary_class": "neutral_encounter",
+        "secondary_tags": ["visible_army", "route_pacing"],
+        "encounter": {
+          "encounter_ids": ["fixture_road_pickets"],
+          "primary_encounter_id": "fixture_road_pickets",
+          "difficulty_source": "scenario_placement",
+          "combat_seed_source": "scenario_placement"
+        },
+        "representation": {
+          "mode": "visible_stack",
+          "footprint_tier": "micro",
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true,
+          "uncertainty_policy": "exact_encounter_known"
+        },
+        "guard_link": {
+          "guard_role": "none",
+          "target_kind": "none",
+          "target_id": "",
+          "target_placement_id": "",
+          "blocks_approach": true,
+          "clear_required_for_target": false
+        },
+        "state_model": {
+          "initial_state": "idle",
+          "state_after_victory": "cleared",
+          "state_after_defeat": "active",
+          "remove_on_clear": true,
+          "remember_after_clear": true
+        },
+        "placement_ownership": {
+          "ownership_model": "neutral_ecology",
+          "allowed_owner_kinds": ["neutral"],
+          "spawner_kind": "scenario",
+          "placement_authority": "scenario"
+        },
+        "reward_guard_summary": {
+          "risk_tier": "light",
+          "reward_categories": ["experience", "small_resource"],
+          "resource_reward_ids": ["gold"],
+          "guards_reward_tier": "none"
+        },
+        "passability": {
+          "passability_class": "neutral_stack_blocking",
+          "interaction_mode": "enter",
+          "blocks_route_until_cleared": true
+        },
+        "ai_hints": {
+          "path_blocking": true,
+          "avoid_until_strength": "light_guard",
+          "neutral_clearance_value": 2,
+          "guard_target_value_hint": 0
+        },
+        "editor_placement": {
+          "placement_mode": "scenario_encounter_overlay",
+          "requires_clear_adjacent_target": false,
+          "warn_if_hiding_target": true,
+          "density_bucket": "guard_or_encounter"
+        },
+        "expect_placeholder_cue_warning": true
+      },
+      {
+        "id": "fixture_camp_anchor",
+        "schema_version": 1,
+        "primary_class": "neutral_encounter",
+        "secondary_tags": ["camp_anchor", "fixed_encounter"],
+        "encounter": {
+          "encounter_ids": ["fixture_barrow_camp_guard"],
+          "primary_encounter_id": "fixture_barrow_camp_guard",
+          "difficulty_source": "scenario_placement",
+          "combat_seed_source": "scenario_placement"
+        },
+        "representation": {
+          "mode": "camp_anchor",
+          "footprint_tier": "small",
+          "readability_family": "barrow_camp",
+          "danger_cue_id": "neutral_warning_camp_fixture",
+          "visible_before_interaction": true,
+          "uncertainty_policy": "tier_known"
+        },
+        "guard_link": {
+          "guard_role": "none",
+          "target_kind": "none",
+          "target_id": "",
+          "target_placement_id": "",
+          "blocks_approach": true,
+          "clear_required_for_target": false
+        },
+        "state_model": {
+          "initial_state": "idle",
+          "state_after_victory": "depleted",
+          "state_after_defeat": "active",
+          "remove_on_clear": false,
+          "remember_after_clear": true
+        },
+        "placement_ownership": {
+          "ownership_model": "neutral_ecology",
+          "allowed_owner_kinds": ["neutral"],
+          "spawner_kind": "scenario",
+          "placement_authority": "scenario"
+        },
+        "reward_guard_summary": {
+          "risk_tier": "standard",
+          "reward_categories": ["experience"],
+          "resource_reward_ids": [],
+          "guards_reward_tier": "none"
+        },
+        "passability": {
+          "passability_class": "blocking_visitable",
+          "interaction_mode": "adjacent",
+          "blocks_route_until_cleared": true
+        },
+        "ai_hints": {
+          "path_blocking": true,
+          "avoid_until_strength": "standard_guard",
+          "neutral_clearance_value": 4,
+          "guard_target_value_hint": 0
+        },
+        "editor_placement": {
+          "placement_mode": "scenario_encounter_overlay",
+          "requires_clear_adjacent_target": true,
+          "warn_if_hiding_target": true,
+          "density_bucket": "guard_or_encounter"
+        },
+        "expect_placeholder_cue_warning": true
+      },
+      {
+        "id": "fixture_guard_linked_stack",
+        "schema_version": 1,
+        "primary_class": "neutral_encounter",
+        "secondary_tags": ["visible_army", "guarded_reward"],
+        "encounter": {
+          "encounter_ids": ["fixture_gatehouse_watch"],
+          "primary_encounter_id": "fixture_gatehouse_watch",
+          "difficulty_source": "scenario_placement",
+          "combat_seed_source": "scenario_placement"
+        },
+        "representation": {
+          "mode": "guard_linked_stack",
+          "footprint_tier": "micro",
+          "readability_family": "gatehouse_watch",
+          "danger_cue_id": "neutral_warning_guard_fixture",
+          "visible_before_interaction": true,
+          "uncertainty_policy": "exact_encounter_known"
+        },
+        "guard_link": {
+          "guard_role": "guards_resource_node",
+          "target_kind": "resource_node",
+          "target_id": "fixture_basalt_gatehouse",
+          "target_placement_id": "fixture_basalt_gatehouse_placement",
+          "blocks_approach": true,
+          "clear_required_for_target": true
+        },
+        "state_model": {
+          "initial_state": "idle",
+          "state_after_victory": "cleared",
+          "state_after_defeat": "active",
+          "remove_on_clear": true,
+          "remember_after_clear": true
+        },
+        "placement_ownership": {
+          "ownership_model": "neutral_ecology",
+          "allowed_owner_kinds": ["neutral"],
+          "spawner_kind": "scenario",
+          "placement_authority": "scenario"
+        },
+        "reward_guard_summary": {
+          "risk_tier": "standard",
+          "reward_categories": ["route_opening", "persistent_income"],
+          "resource_reward_ids": ["ore"],
+          "guards_reward_tier": "standard"
+        },
+        "passability": {
+          "passability_class": "neutral_stack_blocking",
+          "interaction_mode": "enter",
+          "blocks_route_until_cleared": true
+        },
+        "ai_hints": {
+          "path_blocking": true,
+          "avoid_until_strength": "standard_guard",
+          "neutral_clearance_value": 5,
+          "guard_target_value_hint": 4
+        },
+        "editor_placement": {
+          "placement_mode": "scenario_encounter_overlay",
+          "requires_clear_adjacent_target": true,
+          "warn_if_hiding_target": true,
+          "density_bucket": "guard_or_encounter"
+        },
+        "expect_placeholder_cue_warning": true
+      },
+      {
+        "id": "fixture_guard_linked_camp",
+        "schema_version": 1,
+        "primary_class": "neutral_encounter",
+        "secondary_tags": ["camp_anchor", "guarded_reward"],
+        "encounter": {
+          "encounter_ids": ["fixture_chain_camp"],
+          "primary_encounter_id": "fixture_chain_camp",
+          "difficulty_source": "scenario_placement",
+          "combat_seed_source": "scenario_placement"
+        },
+        "representation": {
+          "mode": "guard_linked_camp",
+          "footprint_tier": "small",
+          "readability_family": "chain_camp",
+          "danger_cue_id": "neutral_warning_camp_guard_fixture",
+          "visible_before_interaction": true,
+          "uncertainty_policy": "tier_known"
+        },
+        "guard_link": {
+          "guard_role": "guards_scenario_objective",
+          "target_kind": "scenario_objective",
+          "target_id": "fixture_chain_release",
+          "target_placement_id": "fixture_chain_gate",
+          "blocks_approach": true,
+          "clear_required_for_target": true
+        },
+        "state_model": {
+          "initial_state": "idle",
+          "state_after_victory": "depleted",
+          "state_after_defeat": "active",
+          "remove_on_clear": false,
+          "remember_after_clear": true
+        },
+        "placement_ownership": {
+          "ownership_model": "scenario_fixed",
+          "allowed_owner_kinds": ["neutral"],
+          "spawner_kind": "scenario",
+          "placement_authority": "scenario"
+        },
+        "reward_guard_summary": {
+          "risk_tier": "heavy",
+          "reward_categories": ["scenario_progress", "experience"],
+          "resource_reward_ids": [],
+          "guards_reward_tier": "major"
+        },
+        "passability": {
+          "passability_class": "blocking_visitable",
+          "interaction_mode": "adjacent",
+          "blocks_route_until_cleared": true
+        },
+        "ai_hints": {
+          "path_blocking": true,
+          "avoid_until_strength": "heavy_guard",
+          "neutral_clearance_value": 8,
+          "guard_target_value_hint": 8
+        },
+        "editor_placement": {
+          "placement_mode": "scenario_encounter_overlay",
+          "requires_clear_adjacent_target": true,
+          "warn_if_hiding_target": true,
+          "density_bucket": "guard_or_encounter"
+        },
+        "expect_placeholder_cue_warning": true
+      }
+    ]
+  },
+  "invalid": {
+    "neutral_encounters": [
+      {
+        "id": "bad_missing_representation_mode",
+        "encounter": {
+          "encounter_ids": ["fixture_road_pickets"],
+          "primary_encounter_id": "fixture_road_pickets"
+        },
+        "representation": {
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {
+          "guard_role": "none",
+          "target_kind": "none"
+        },
+        "state_model": {
+          "initial_state": "idle",
+          "state_after_victory": "cleared",
+          "remove_on_clear": true,
+          "remember_after_clear": true
+        },
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_invalid_representation_mode",
+        "encounter": {
+          "encounter_ids": ["fixture_road_pickets"],
+          "primary_encounter_id": "fixture_road_pickets"
+        },
+        "representation": {
+          "mode": "hidden_ambush",
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {"guard_role": "none", "target_kind": "none"},
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_danger_cue",
+        "encounter": {
+          "encounter_ids": ["fixture_road_pickets"],
+          "primary_encounter_id": "fixture_road_pickets"
+        },
+        "representation": {
+          "mode": "visible_stack",
+          "readability_family": "road_pickets",
+          "visible_before_interaction": true
+        },
+        "guard_link": {"guard_role": "none", "target_kind": "none"},
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_guard_link",
+        "encounter": {
+          "encounter_ids": ["fixture_gatehouse_watch"],
+          "primary_encounter_id": "fixture_gatehouse_watch"
+        },
+        "representation": {
+          "mode": "guard_linked_stack",
+          "readability_family": "gatehouse_watch",
+          "danger_cue_id": "neutral_warning_guard_fixture",
+          "visible_before_interaction": true
+        },
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["persistent_income"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_guard_role_none",
+        "encounter": {
+          "encounter_ids": ["fixture_gatehouse_watch"],
+          "primary_encounter_id": "fixture_gatehouse_watch"
+        },
+        "representation": {
+          "mode": "guard_linked_stack",
+          "readability_family": "gatehouse_watch",
+          "danger_cue_id": "neutral_warning_guard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {
+          "guard_role": "none",
+          "target_kind": "resource_node",
+          "target_placement_id": "fixture_basalt_gatehouse_placement",
+          "clear_required_for_target": true
+        },
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["persistent_income"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_unknown_target_kind",
+        "encounter": {
+          "encounter_ids": ["fixture_gatehouse_watch"],
+          "primary_encounter_id": "fixture_gatehouse_watch"
+        },
+        "representation": {
+          "mode": "guard_linked_stack",
+          "readability_family": "gatehouse_watch",
+          "danger_cue_id": "neutral_warning_guard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {
+          "guard_role": "guards_resource_node",
+          "target_kind": "treasure_cloud",
+          "target_placement_id": "fixture_basalt_gatehouse_placement",
+          "clear_required_for_target": true
+        },
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["persistent_income"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_target_reference",
+        "encounter": {
+          "encounter_ids": ["fixture_gatehouse_watch"],
+          "primary_encounter_id": "fixture_gatehouse_watch"
+        },
+        "representation": {
+          "mode": "guard_linked_stack",
+          "readability_family": "gatehouse_watch",
+          "danger_cue_id": "neutral_warning_guard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {
+          "guard_role": "guards_resource_node",
+          "target_kind": "resource_node",
+          "clear_required_for_target": true
+        },
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["persistent_income"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_state_model",
+        "encounter": {
+          "encounter_ids": ["fixture_road_pickets"],
+          "primary_encounter_id": "fixture_road_pickets"
+        },
+        "representation": {
+          "mode": "visible_stack",
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {"guard_role": "none", "target_kind": "none"},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_placement_ownership",
+        "encounter": {
+          "encounter_ids": ["fixture_road_pickets"],
+          "primary_encounter_id": "fixture_road_pickets"
+        },
+        "representation": {
+          "mode": "visible_stack",
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {"guard_role": "none", "target_kind": "none"},
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_linked_encounter_id",
+        "encounter": {
+          "encounter_ids": []
+        },
+        "representation": {
+          "mode": "visible_stack",
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {"guard_role": "none", "target_kind": "none"},
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_unknown_linked_encounter_id",
+        "encounter": {
+          "encounter_ids": ["fixture_missing_encounter"],
+          "primary_encounter_id": "fixture_missing_encounter"
+        },
+        "representation": {
+          "mode": "visible_stack",
+          "readability_family": "road_pickets",
+          "danger_cue_id": "neutral_warning_standard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {"guard_role": "none", "target_kind": "none"},
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "reward_guard_summary": {"risk_tier": "light", "reward_categories": ["experience"]},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      },
+      {
+        "id": "bad_missing_guard_reward_summary",
+        "encounter": {
+          "encounter_ids": ["fixture_gatehouse_watch"],
+          "primary_encounter_id": "fixture_gatehouse_watch"
+        },
+        "representation": {
+          "mode": "guard_linked_stack",
+          "readability_family": "gatehouse_watch",
+          "danger_cue_id": "neutral_warning_guard_fixture",
+          "visible_before_interaction": true
+        },
+        "guard_link": {
+          "guard_role": "guards_resource_node",
+          "target_kind": "resource_node",
+          "target_placement_id": "fixture_basalt_gatehouse_placement",
+          "clear_required_for_target": true
+        },
+        "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "remove_on_clear": true, "remember_after_clear": true},
+        "placement_ownership": {"ownership_model": "neutral_ecology"},
+        "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
+        "ai_hints": {"path_blocking": true},
+        "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      }
+    ]
+  }
+}

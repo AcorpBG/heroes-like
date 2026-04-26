@@ -59,11 +59,12 @@ Immediate execution order:
 22. First production additive object schema implementation: completed for `safe_metadata_bundle_001` as runtime-inactive safe metadata only on the eight declared production object ids, with strict migrated-bundle validation limited to `schema_version`, `primary_class`, `secondary_tags`, footprint anchor/tier, `passability_class`, and `interaction`.
 23. Neutral encounter representation planning: completed in `docs/neutral-encounter-representation-plan.md`. The target decision is a hybrid representation with visible stack as default, explicit camp-anchor subtypes, guard-target links, danger/readability cues, cleared-state policy, placement ownership, reward/guard summaries, passability/interaction implications, AI/editor placeholders, scenario-placement compatibility, save/state implications, validation stages, migration sequence, rollback, and a tiny candidate planning bundle. No production JSON migration or runtime behavior change is approved.
 24. Neutral encounter additive validator/report planning: completed in `docs/neutral-encounter-additive-validator-report-plan.md`. The report-only contract covers compatibility inference from current direct `scenarios[].encounters[]`, scenario/difficulty/repeated-id/field-objective counts, missing representation metadata, missing guard links, candidate bundle summaries, strict fixture scope, warning/error policy, CLI/report shape, rollback, and exact non-change rules.
-25. Next current slice: implement neutral encounter report/fixtures only. Add opt-in `--neutral-encounter-report`, JSON report output, and isolated strict fixtures if the implementation keeps production content warning-only and does not change runtime/pathing/AI/editor/renderer behavior.
-26. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+25. Neutral encounter additive validator/report scaffolding: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/neutral_encounter_schema/`. This did not migrate production JSON, change runtime encounters, change pathing, change AI/editor/renderer behavior, migrate saves, import generated PNGs, or add runtime assets.
+26. Next current slice: review additive neutral encounter report output before any production neutral encounter metadata migration.
+27. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Implement additive neutral encounter validator/report scaffolding next: opt-in report-only compatibility inference from current `scenarios[].encounters[]`, JSON/text report output, and strict non-production fixtures for visible stacks, camp anchors, guard-linked stacks/camps, and invalid cue/link cases.
+- Review additive neutral encounter report output before any production metadata migration: confirm the compatibility-warning volume, candidate `neutral_encounter_representation_bundle_001` summary, repeated encounter-id reality, field-objective counts, script-spawn advisory count, missing metadata counts, and strict fixture coverage.
 - Treat `safe_metadata_bundle_001` as the only currently migrated production object bundle. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep first-class neutral encounter production migration, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, and pathing changes as staged follow-ups, not immediate production migration.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
@@ -230,6 +231,24 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit production content JSON, implement validator/tests, change runtime encounters, change pathing, change AI, change editor behavior, change renderer behavior, import generated PNGs, add assets, migrate saves, or claim neutral encounter readiness.
+
+## Completed Implementation Slice: Neutral Encounter Additive Validator Report Scaffolding
+Status: completed on 2026-04-26 as report-only validator scaffolding for neutral encounter representation.
+
+Purpose:
+- Add opt-in neutral encounter report generation and strict fixture validation without migrating production scenario, encounter, map-object, or resource-site JSON and without changing runtime encounter, pathing, AI, editor, renderer, save, or asset behavior.
+- Use current direct `scenarios[].encounters[]` placements and encounter definitions as report reality while keeping future-schema strictness isolated to tiny non-production fixtures.
+
+Delivered:
+- Added `--neutral-encounter-report`, `--neutral-encounter-report-json`, and `--strict-neutral-encounter-fixtures` CLI support to `tests/validate_repo.py`.
+- Added report-only compatibility inference for 48 direct placements across 15 scenarios, 62 encounter definitions, 36 script-spawn advisory effects, 0 first-class neutral encounter objects, scenario/difficulty/repeated-id counts, field-objective override and definition-backed counts, missing future metadata counts, guard-link warnings, reward category summaries, and planning-only `neutral_encounter_representation_bundle_001` output.
+- Added non-production strict fixtures under `tests/fixtures/neutral_encounter_schema/` covering `visible_stack`, `camp_anchor`, `guard_linked_stack`, `guard_linked_camp`, and invalid missing cue/link/schema cases.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --neutral-encounter-report`, `python3 tests/validate_repo.py --neutral-encounter-report-json /tmp/heroes-neutral-encounter-report.json && python3 -m json.tool /tmp/heroes-neutral-encounter-report.json >/tmp/heroes-neutral-encounter-report-jsoncheck.txt`, `python3 tests/validate_repo.py --strict-neutral-encounter-fixtures`, and `python3 tests/validate_repo.py --overworld-object-report`.
+
+Limits:
+- This is scaffolding only. It does not edit production content JSON, migrate neutral encounter metadata, change runtime encounters, change pathing/body-tile/occupancy behavior, change AI/editor/renderer behavior, migrate saves, import generated PNGs, add assets, or claim neutral encounter readiness.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
