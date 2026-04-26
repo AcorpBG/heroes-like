@@ -35,6 +35,8 @@ func _run() -> void:
 		return
 	if not _assert_object_economy_ui_contract(shell):
 		return
+	if not _assert_route_decision_clarity_contract(shell):
+		return
 	if not _assert_artifact_reward_visibility_contract(shell):
 		return
 	if not await _assert_overworld_magic_affordance_contract(shell):
@@ -437,6 +439,138 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	)
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
+	return true
+
+func _assert_route_decision_clarity_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_snapshot"):
+		push_error("Overworld smoke: shell is missing route-decision validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+
+	_set_active_hero_position(session, Vector2i(1, 2))
+	var movement: Dictionary = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+
+	var reachable: Dictionary = shell.call("validation_select_tile", 1, 0)
+	if not _assert_route_decision_fields(
+		"reachable route decision",
+		reachable,
+		"reachable",
+		"move/collect",
+		2,
+		["Route:", "Timber Wagon", "Move/collect", "2 steps", "reachable today", "Move"]
+	):
+		return false
+	if not _assert_text_contains_all(
+		"reachable route visible UI",
+		[
+			String(reachable.get("map_cue_text", "")),
+			String(reachable.get("context_visible_text", "")),
+			String(reachable.get("selected_tile_rail_text", "")),
+			String(reachable.get("map_tooltip", "")),
+			String(reachable.get("primary_action", {}).get("summary", "")),
+		],
+		["Timber Wagon", "Route:", "2 step", "Move", "reachable today"]
+	):
+		return false
+
+	movement = session.overworld.get("movement", {})
+	movement["current"] = 1
+	session.overworld["movement"] = movement
+	shell.call("_refresh")
+	var not_today: Dictionary = shell.call("validation_select_tile", 1, 0)
+	if not _assert_route_decision_fields(
+		"not-today route decision",
+		not_today,
+		"not_today",
+		"move/collect",
+		2,
+		["not reachable today", "Move 1->0"]
+	):
+		return false
+
+	movement = session.overworld.get("movement", {})
+	movement["current"] = 0
+	session.overworld["movement"] = movement
+	shell.call("_refresh")
+	var no_movement: Dictionary = shell.call("validation_select_tile", 1, 0)
+	if not _assert_route_decision_fields(
+		"no-movement route decision",
+		no_movement,
+		"no_movement",
+		"move/collect",
+		2,
+		["no movement", "No movement left today", "Move 0/"]
+	):
+		return false
+
+	movement = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	var blocked_tile := _first_visible_blocked_tile(session)
+	if blocked_tile.x >= 0:
+		var blocked: Dictionary = shell.call("validation_select_tile", blocked_tile.x, blocked_tile.y)
+		if not _assert_route_decision_fields(
+			"blocked route decision",
+			blocked,
+			"blocked",
+			"move",
+			0,
+			["blocked", "blocks travel", "Move"]
+		):
+			return false
+
+	session.overworld["fog"] = original_fog
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
+func _assert_route_decision_fields(label: String, snapshot: Dictionary, expected_status: String, expected_action_kind: String, expected_steps: int, text_needles: Array) -> bool:
+	var route_decision: Dictionary = snapshot.get("selected_route_decision", {})
+	if route_decision.is_empty():
+		push_error("Overworld smoke: %s did not expose selected_route_decision. snapshot=%s" % [label, snapshot])
+		get_tree().quit(1)
+		return false
+	if String(route_decision.get("status", "")) != expected_status:
+		push_error("Overworld smoke: %s exposed wrong route status. expected=%s decision=%s" % [label, expected_status, route_decision])
+		get_tree().quit(1)
+		return false
+	if String(route_decision.get("action_kind", "")) != expected_action_kind:
+		push_error("Overworld smoke: %s exposed wrong action kind. expected=%s decision=%s" % [label, expected_action_kind, route_decision])
+		get_tree().quit(1)
+		return false
+	if int(route_decision.get("steps", -1)) != expected_steps:
+		push_error("Overworld smoke: %s exposed wrong step count. expected=%d decision=%s" % [label, expected_steps, route_decision])
+		get_tree().quit(1)
+		return false
+	var text := "\n".join([
+		String(snapshot.get("selected_route_decision_text", "")),
+		String(snapshot.get("map_cue_text", "")),
+		String(snapshot.get("map_cue_tooltip_text", "")),
+		String(snapshot.get("context_visible_text", "")),
+		String(snapshot.get("selected_tile_rail_text", "")),
+		String(snapshot.get("map_tooltip", "")),
+	])
+	for needle in text_needles:
+		if text.find(String(needle)) < 0:
+			push_error("Overworld smoke: %s route UI missing '%s'. decision=%s text=%s" % [label, String(needle), route_decision, text])
+			get_tree().quit(1)
+			return false
 	return true
 
 func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
@@ -2046,6 +2180,16 @@ func _first_open_adjacent_tile(session, origin: Vector2i) -> Vector2i:
 		if _tile_has_overworld_object(session, tile):
 			continue
 		return tile
+	return Vector2i(-1, -1)
+
+func _first_visible_blocked_tile(session) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			if not OverworldRules.is_tile_visible(session, x, y):
+				continue
+			if OverworldRules.tile_is_blocked(session, x, y):
+				return Vector2i(x, y)
 	return Vector2i(-1, -1)
 
 func _tile_has_overworld_object(session, tile: Vector2i) -> bool:
