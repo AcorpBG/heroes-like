@@ -775,6 +775,13 @@ func _encounter_taxonomy_payload(placement: Dictionary, encounter: Dictionary) -
 	var surface := OverworldRules.describe_encounter_object_surface(placement)
 	if surface == "":
 		surface = "Neutral encounter | Risk %s | Cadence one-time" % _humanize_editor_id(risk)
+	var guard_surface := ""
+	var consequence_surface := ""
+	var readiness_surface := ""
+	if _session != null:
+		guard_surface = OverworldRules.describe_encounter_guard_link_surface(_session, placement)
+		consequence_surface = OverworldRules.describe_encounter_consequence_surface(_session, placement)
+		readiness_surface = OverworldRules.describe_encounter_compact_readability(_session, placement)
 	return {
 		"primary_class": primary_class,
 		"secondary_tags": secondary_tags,
@@ -790,6 +797,9 @@ func _encounter_taxonomy_payload(placement: Dictionary, encounter: Dictionary) -
 		"guard_role": String(guard.get("guard_role", "")),
 		"guard_target_id": String(guard.get("target_id", "")),
 		"guard_target_placement_id": String(guard.get("target_placement_id", "")),
+		"guard_link_surface": guard_surface,
+		"consequence_summary": consequence_surface,
+		"readiness_summary": readiness_surface,
 		"summary": surface,
 		"detail": _encounter_detail_summary(encounter, placement, risk, role, guard),
 	}
@@ -811,6 +821,12 @@ func _taxonomy_summary_text(payload: Dictionary) -> String:
 	var role_line := _taxonomy_role_line(payload)
 	if role_line != "":
 		lines.append(role_line)
+	var guard_link_surface := String(payload.get("guard_link_surface", "")).strip_edges()
+	if guard_link_surface != "":
+		lines.append("Guard link %s" % guard_link_surface)
+	var consequence_summary := String(payload.get("consequence_summary", "")).strip_edges()
+	if consequence_summary != "":
+		lines.append(consequence_summary)
 	lines.append_array(_recruit_source_summary_lines_for_editor(payload, 2))
 	lines.append_array(_identity_summary_lines_for_editor(payload, 3))
 	return "\n".join(lines)
@@ -3247,6 +3263,12 @@ func _append_taxonomy_object_lines(lines: Array, detail: Dictionary) -> void:
 	var role_line := _taxonomy_role_line(taxonomy)
 	if role_line != "":
 		lines.append("  Role: %s" % role_line)
+	var guard_link_surface := String(taxonomy.get("guard_link_surface", "")).strip_edges()
+	if guard_link_surface != "":
+		lines.append("  Guard Link: %s" % guard_link_surface)
+	var consequence_summary := String(taxonomy.get("consequence_summary", "")).strip_edges()
+	if consequence_summary != "":
+		lines.append("  %s" % consequence_summary)
 	for identity_line in _identity_summary_lines_for_editor(taxonomy, 3):
 		lines.append("  %s" % identity_line)
 	var guidance := _placement_guidance_payload(taxonomy, Vector2i(int(detail.get("x", 0)), int(detail.get("y", 0))))

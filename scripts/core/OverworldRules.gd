@@ -695,12 +695,18 @@ static func describe_encounter_readability_surface(
 	var army_line := _encounter_army_surface(encounter, true)
 	if army_line != "":
 		lines.append("Army: %s" % army_line)
+	var readiness_line := _encounter_readiness_surface(session, encounter)
+	if readiness_line != "":
+		lines.append(readiness_line)
 	var reward_line := _encounter_reward_surface(encounter)
 	if reward_line != "":
 		lines.append("Reward: %s" % reward_line)
 	var guard_line := _encounter_guard_summary(encounter, session)
 	if guard_line != "":
 		lines.append(guard_line)
+	var consequence_line := describe_encounter_consequence_surface(session, encounter)
+	if consequence_line != "":
+		lines.append(consequence_line)
 	var field_line := _encounter_field_objective_surface(encounter)
 	if field_line != "":
 		lines.append("Field: %s" % field_line)
@@ -715,11 +721,15 @@ static func describe_encounter_compact_readability(
 		_encounter_risk_label(encounter),
 		_encounter_difficulty_label(encounter),
 		_encounter_army_surface(encounter, false),
+		_encounter_readiness_surface(session, encounter, true),
 		"" if reward_summary == "" else "Reward %s" % reward_summary,
 	]
 	var guard_line := _encounter_guard_summary(encounter, session)
 	if guard_line != "":
 		parts.append(guard_line)
+	var consequence_line := describe_encounter_consequence_surface(session, encounter, true)
+	if consequence_line != "":
+		parts.append(consequence_line)
 	return " | ".join(_non_empty_strings(parts))
 
 static func describe_encounter_battle_cue(
@@ -730,14 +740,59 @@ static func describe_encounter_battle_cue(
 		_encounter_risk_label(encounter),
 		_encounter_difficulty_label(encounter),
 		_encounter_army_surface(encounter, false),
+		_encounter_readiness_surface(session, encounter, true),
 	]
 	var guard_line := _encounter_guard_summary(encounter, session)
 	if guard_line != "":
 		cue_parts.append(guard_line)
+	var consequence_line := describe_encounter_consequence_surface(session, encounter, true)
+	if consequence_line != "":
+		cue_parts.append(consequence_line)
 	var cue := " | ".join(_non_empty_strings(cue_parts))
 	if cue == "":
 		return "Battle is joined against %s." % encounter_display_name(encounter)
 	return "Battle is joined against %s. %s." % [encounter_display_name(encounter), cue]
+
+static func describe_encounter_guard_link_surface(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary
+) -> String:
+	var guard := _encounter_guard_link(encounter)
+	if guard.is_empty():
+		return ""
+	var role := String(guard.get("guard_role", "")).strip_edges()
+	if role == "" or role == "none":
+		return ""
+	var target_label := _encounter_guard_target_label(session, guard)
+	var parts := ["Guard %s" % _humanize_id(role)]
+	if target_label != "":
+		parts.append("Target %s" % target_label)
+	if bool(guard.get("clear_required_for_target", false)):
+		parts.append("clear required")
+	elif bool(guard.get("blocks_approach", false)):
+		parts.append("blocks approach")
+	return " | ".join(parts)
+
+static func describe_encounter_consequence_surface(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	compact: bool = false
+) -> String:
+	var lines := []
+	var guard_consequence := _encounter_guard_consequence_line(session, encounter, compact)
+	if guard_consequence != "":
+		lines.append(guard_consequence)
+	var objective_consequence := _encounter_objective_consequence_line(session, encounter)
+	if objective_consequence != "":
+		lines.append(objective_consequence)
+	var hook_consequence := _encounter_hook_consequence_line(session, encounter)
+	if hook_consequence != "":
+		lines.append(hook_consequence)
+	var limit := 2 if compact else 3
+	var visible := []
+	for index in range(min(limit, lines.size())):
+		visible.append(String(lines[index]))
+	return " | ".join(_non_empty_strings(visible))
 
 static func build_in_active_town(session: SessionStateStoreScript.SessionData, building_id: String) -> Dictionary:
 	normalize_overworld_state(session)
@@ -3593,14 +3648,19 @@ static func _encounter_object_interaction_label(encounter: Dictionary, map_objec
 				return "Interaction: %s" % _humanize_id(mode)
 	return "Interaction: enter battle"
 
-static func _encounter_guard_summary(encounter: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
+static func _encounter_guard_link(encounter: Dictionary) -> Dictionary:
 	var guard = encounter.get("guard_link", {})
-	if not (guard is Dictionary):
-		var neutral_metadata = encounter.get("neutral_encounter", {})
-		if neutral_metadata is Dictionary:
-			guard = neutral_metadata.get("guard_link", {})
-	if not (guard is Dictionary):
-		return ""
+	if guard is Dictionary and not guard.is_empty():
+		return guard
+	var neutral_metadata = encounter.get("neutral_encounter", {})
+	if neutral_metadata is Dictionary:
+		guard = neutral_metadata.get("guard_link", {})
+		if guard is Dictionary:
+			return guard
+	return {}
+
+static func _encounter_guard_summary(encounter: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
+	var guard := _encounter_guard_link(encounter)
 	var role := String(guard.get("guard_role", "")).strip_edges()
 	if role == "" or role == "none":
 		return ""
@@ -3628,6 +3688,247 @@ static func _encounter_role_label(encounter: Dictionary) -> String:
 	if "visible_army" in tags:
 		return "Visible Stack"
 	return "Hostile Contact"
+
+static func _encounter_readiness_surface(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	compact: bool = false
+) -> String:
+	if session == null:
+		return ""
+	var enemy_totals := _army_totals(_encounter_army_payload(encounter))
+	var hero_value: Variant = session.overworld.get("hero", {})
+	if not (hero_value is Dictionary):
+		return ""
+	var hero: Dictionary = hero_value
+	var player_army_value: Variant = hero.get("army", session.overworld.get("army", {}))
+	if not (player_army_value is Dictionary):
+		return ""
+	var player_army: Dictionary = player_army_value
+	var player_totals := _army_totals(player_army)
+	var player_headcount := int(player_totals.get("headcount", 0))
+	var enemy_headcount := int(enemy_totals.get("headcount", 0))
+	if player_headcount <= 0 or enemy_headcount <= 0:
+		return ""
+	var relation := "even contact"
+	if enemy_headcount >= player_headcount * 2:
+		relation = "enemy outnumbers"
+	elif player_headcount >= enemy_headcount * 2:
+		relation = "you outnumber"
+	elif enemy_headcount > player_headcount:
+		relation = "enemy larger"
+	elif player_headcount > enemy_headcount:
+		relation = "you larger"
+	if compact:
+		return "Ready %d vs %d troops; %s" % [player_headcount, enemy_headcount, relation]
+	return "Readiness: your army %d troops/%d groups vs enemy %d troops/%d groups; %s." % [
+		player_headcount,
+		int(player_totals.get("groups", 0)),
+		enemy_headcount,
+		int(enemy_totals.get("groups", 0)),
+		relation,
+	]
+
+static func _encounter_guard_consequence_line(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	compact: bool = false
+) -> String:
+	var guard := _encounter_guard_link(encounter)
+	if guard.is_empty():
+		return ""
+	var role := String(guard.get("guard_role", "")).strip_edges()
+	if role == "" or role == "none":
+		return ""
+	var target_label := _encounter_guard_target_label(session, guard)
+	var target_kind := String(guard.get("target_kind", "")).strip_edges()
+	if target_kind == "route":
+		var route_label := target_label if target_label != "" else "this route"
+		return "Clear: opens %s route" % route_label if compact else "Clear: opens the %s route for safer movement." % route_label
+	if target_kind == "resource_node":
+		if target_label == "":
+			target_label = "linked site"
+		var value_line := ""
+		if session != null:
+			var node_result := _find_resource_node_by_guard(guard, session)
+			var node: Dictionary = node_result.get("node", {})
+			if not node.is_empty():
+				var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+				value_line = _resource_site_yield_line(session, node, site)
+		if value_line != "":
+			return "Clear: access %s (%s)" % [target_label, value_line]
+		return "Clear: access %s" % target_label
+	if target_label != "":
+		var verb := "access" if bool(guard.get("clear_required_for_target", false)) else "reach"
+		return "Clear: %s %s" % [verb, target_label]
+	return ""
+
+static func _find_resource_node_by_guard(guard: Dictionary, session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null:
+		return {"index": -1, "node": {}}
+	var target_placement_id := String(guard.get("target_placement_id", "")).strip_edges()
+	if target_placement_id != "":
+		return _find_resource_node_by_placement(session, target_placement_id)
+	var target_id := String(guard.get("target_id", "")).strip_edges()
+	if target_id == "":
+		return {"index": -1, "node": {}}
+	var nodes = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary):
+			continue
+		if String(node.get("placement_id", "")) == target_id or String(node.get("site_id", "")) == target_id:
+			return {"index": index, "node": node}
+	return {"index": -1, "node": {}}
+
+static func _encounter_objective_consequence_line(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary
+) -> String:
+	var objectives := _encounter_clear_objectives(session, encounter)
+	if objectives.is_empty():
+		return ""
+	var labels := []
+	for objective in objectives:
+		if not (objective is Dictionary):
+			continue
+		var label := String(objective.get("label", "")).strip_edges()
+		if label == "" and session != null:
+			label = _scenario_objective_player_label(session, objective)
+		if label != "":
+			labels.append(label)
+		if labels.size() >= 2:
+			break
+	if labels.is_empty():
+		return ""
+	return "Clear: advances %s" % "; ".join(labels)
+
+static func _encounter_hook_consequence_line(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return ""
+	var objective_ids := _encounter_clear_objective_ids(session, encounter)
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var summaries := []
+	for hook in scenario.get("script_hooks", []):
+		if not (hook is Dictionary):
+			continue
+		if not _hook_follows_encounter_clear(hook, encounter, objective_ids):
+			continue
+		var effect_summary := _script_hook_effect_consequence_summary(hook.get("effects", []))
+		if effect_summary != "":
+			summaries.append(effect_summary)
+		if summaries.size() >= 2:
+			break
+	if summaries.is_empty():
+		return ""
+	return "After clear: %s" % "; ".join(summaries)
+
+static func _encounter_clear_objectives(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary
+) -> Array:
+	var objectives := []
+	if session == null or session.scenario_id == "":
+		return objectives
+	var placement_id := encounter_key(encounter)
+	var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
+	var victory_flags: Array[String] = _string_array(encounter_def.get("victory_flags", []))
+	var scenario := ContentService.get_scenario(session.scenario_id)
+	var objective_bucket = scenario.get("objectives", {})
+	if not (objective_bucket is Dictionary):
+		return objectives
+	for bucket_name in ["victory", "defeat"]:
+		for objective in objective_bucket.get(bucket_name, []):
+			if not (objective is Dictionary):
+				continue
+			var objective_type := String(objective.get("type", ""))
+			var linked := (
+				objective_type == "encounter_resolved"
+				and String(objective.get("placement_id", "")) == placement_id
+			)
+			linked = linked or (
+				objective_type == "flag_true"
+				and String(objective.get("flag", "")) in victory_flags
+			)
+			if linked:
+				objectives.append(objective)
+	return objectives
+
+static func _encounter_clear_objective_ids(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary
+) -> Array[String]:
+	var ids: Array[String] = []
+	for objective in _encounter_clear_objectives(session, encounter):
+		if not (objective is Dictionary):
+			continue
+		var objective_id := String(objective.get("id", "")).strip_edges()
+		if objective_id != "" and objective_id not in ids:
+			ids.append(objective_id)
+	return ids
+
+static func _hook_follows_encounter_clear(
+	hook: Dictionary,
+	encounter: Dictionary,
+	objective_ids: Array[String]
+) -> bool:
+	var placement_id := encounter_key(encounter)
+	for condition in hook.get("conditions", []):
+		if not (condition is Dictionary):
+			continue
+		match String(condition.get("type", "")):
+			"encounter_resolved":
+				if String(condition.get("placement_id", "")) == placement_id:
+					return true
+			"objective_met":
+				if String(condition.get("objective_id", "")) in objective_ids:
+					return true
+	return false
+
+static func _script_hook_effect_consequence_summary(effects: Variant) -> String:
+	if not (effects is Array):
+		return ""
+	var parts := []
+	var fallback_message := ""
+	for effect in effects:
+		if not (effect is Dictionary):
+			continue
+		match String(effect.get("type", "")):
+			"spawn_resource_node":
+				var resource_placement = effect.get("placement", {})
+				if resource_placement is Dictionary:
+					var site := ContentService.get_resource_site(String(resource_placement.get("site_id", "")))
+					parts.append("reveals %s" % String(site.get("name", "supplies")))
+			"spawn_artifact_node":
+				var artifact_placement = effect.get("placement", {})
+				if artifact_placement is Dictionary:
+					parts.append("reveals %s" % ArtifactRulesScript.artifact_name(String(artifact_placement.get("artifact_id", ""))))
+			"award_experience":
+				var amount := int(effect.get("amount", 0))
+				if amount > 0:
+					parts.append("+%d xp" % amount)
+			"add_resources":
+				var resources := _describe_reward_delta(effect.get("resources", {}))
+				if resources != "":
+					parts.append("+%s" % resources)
+			"town_add_recruits":
+				parts.append("reinforces a town")
+			"town_add_building":
+				var building := ContentService.get_building(String(effect.get("building_id", "")))
+				parts.append("unlocks %s" % String(building.get("name", "town support")))
+			"spawn_encounter":
+				parts.append("may draw a counterforce")
+			"message":
+				if fallback_message == "":
+					fallback_message = _short_player_text(String(effect.get("text", "")), 96)
+		if parts.size() >= 2:
+			break
+	if parts.is_empty() and fallback_message != "":
+		parts.append(fallback_message)
+	return ", ".join(_non_empty_strings(parts))
 
 static func _encounter_risk_label(encounter: Dictionary) -> String:
 	var metadata := _encounter_neutral_metadata(encounter)
