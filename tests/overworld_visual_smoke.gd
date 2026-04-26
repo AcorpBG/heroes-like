@@ -422,17 +422,21 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 			String(save_surface.get("latest_context", "")),
 			String(save_surface.get("current_context", "")),
 			String(save_surface.get("save_check", "")),
+			String(save_surface.get("return_handoff", "")),
 			String(save_surface.get("current_save_recap", "")),
 			String(snapshot.get("save_status_visible_text", "")),
 			String(snapshot.get("save_status_tooltip_text", "")),
+			String(save_surface.get("menu_button_label", "")),
+			String(save_surface.get("menu_button_tooltip", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Save check:", "What changed:", "Resume:", "Next:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Save check:", "Return handoff:", "Continue Latest returns", "preserved", "Menu: Field", "What changed:", "Resume:", "Next:"]
 	):
 		return false
 	if not _assert_no_ai_score_leak(
 		"manual save continuity check",
-		"%s\n%s\n%s" % [
+		"%s\n%s\n%s\n%s" % [
 			String(save_surface.get("save_check", "")),
+			String(save_surface.get("return_handoff", "")),
 			String(save_surface.get("current_save_recap", "")),
 			String(snapshot.get("save_status_tooltip_text", "")),
 		]

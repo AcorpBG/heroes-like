@@ -3928,11 +3928,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: complete the compact post-scenario continuity choice cue in the live outcome UI using existing ScenarioRules, CampaignRules, SaveService, and outcome action payloads.
+Current target: complete the compact resume/return handoff clarity surface using existing AppRouter, SaveService, MainMenu, and active shell save payloads.
 
 Done means:
-- A resolved skirmish outcome tells the player that the run is self-contained, retry starts fresh, and menu/resume can reopen the outcome.
-- A resolved campaign outcome tells the player what carries forward, which next chapter/replay/menu choice is available, and what stays recorded.
-- Existing focused menu/outcome smoke coverage proves the continuity cue is visible for both skirmish and campaign outcome cases.
+- Main menu latest-save pulse, footer, selected-save details, and load tooltip tell the player which surface a save resumes into and what state is preserved.
+- Active overworld, town, and battle save/menu controls tell the player that returning to menu refreshes autosave, where Continue Latest will land, and what state is preserved.
+- Existing focused menu/outcome, overworld, and town/battle smoke coverage proves the handoff cue is visible and does not leak internal score/debug fields.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

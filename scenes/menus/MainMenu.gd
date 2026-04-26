@@ -514,7 +514,10 @@ func _refresh_selected_save() -> void:
 
 	var next_play_action := SaveService.describe_summary_next_play_action(summary)
 	var play_check := SaveService.describe_summary_play_check(summary)
+	var resume_handoff := SaveService.describe_summary_resume_handoff(summary)
 	var details := SaveService.describe_slot_details(summary)
+	if resume_handoff != "":
+		details = "%s\n%s" % [resume_handoff, details]
 	if play_check != "":
 		details = "%s\n%s" % [play_check, details]
 	if next_play_action != "":
@@ -665,6 +668,7 @@ func _build_save_pulse() -> String:
 			SaveService.format_modified_timestamp(int(latest_summary.get("modified_timestamp", 0))),
 		]
 		play_check = SaveService.describe_summary_play_check(latest_summary)
+	var resume_handoff := SaveService.describe_summary_resume_handoff(latest_summary) if SaveService.can_load_summary(latest_summary) else ""
 
 	var lines := [
 		"Manual %d + autosave" % SaveService.get_manual_slot_ids().size(),
@@ -672,6 +676,8 @@ func _build_save_pulse() -> String:
 	]
 	if play_check != "":
 		lines.append(play_check)
+	if resume_handoff != "":
+		lines.append(resume_handoff)
 	return "\n".join(lines)
 
 func _build_footer_expedition_summary() -> String:
@@ -680,6 +686,7 @@ func _build_footer_expedition_summary() -> String:
 	if SaveService.can_load_summary(latest_summary):
 		lines.append("Latest save: %s" % SaveService.describe_resume_brief(latest_summary))
 		lines.append(SaveService.describe_summary_play_check(latest_summary))
+		lines.append(SaveService.describe_summary_resume_handoff(latest_summary))
 	return "\n".join(lines)
 
 func _select_menu_tab(index: int) -> void:
@@ -771,6 +778,8 @@ func validation_snapshot() -> Dictionary:
 		"selected_save_summary": selected_save_summary.duplicate(true),
 		"latest_play_check": SaveService.describe_summary_play_check(latest_summary),
 		"selected_save_play_check": SaveService.describe_summary_play_check(selected_save_summary),
+		"latest_resume_handoff": SaveService.describe_summary_resume_handoff(latest_summary),
+		"selected_save_resume_handoff": SaveService.describe_summary_resume_handoff(selected_save_summary),
 		"save_browser_items": _save_browser_item_labels(),
 		"save_details": _save_details_label.text,
 		"save_details_full": _save_details_label.tooltip_text,

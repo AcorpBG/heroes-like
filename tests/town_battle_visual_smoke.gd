@@ -64,6 +64,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_departure_confirmation_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_active_return_handoff_contract(shell, "Town", "Menu: Town"):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -218,6 +221,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_ability_status_action_consequence_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_active_return_handoff_contract(shell, "Battle", "Menu: Battle"):
+		get_tree().quit(1)
+		return false
 
 	var defend_button = shell.get_node_or_null("%Defend")
 	if defend_button == null:
@@ -243,6 +249,29 @@ func _run_battle_smoke() -> bool:
 	if not await _assert_battle_aftermath_transition(session):
 		get_tree().quit(1)
 		return false
+	return true
+
+func _assert_active_return_handoff_contract(shell: Node, expected_target: String, expected_button_label: String) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("%s smoke: shell does not expose return handoff validation snapshot." % expected_target)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
+	var handoff_text := "\n".join([
+		String(save_surface.get("return_handoff", "")),
+		String(save_surface.get("menu_button_label", "")),
+		String(save_surface.get("menu_button_tooltip", "")),
+		String(snapshot.get("save_status_visible_text", "")),
+		String(snapshot.get("save_status_tooltip_text", "")),
+	])
+	for token in ["Return handoff:", "Continue Latest returns", expected_target, "preserved", expected_button_label]:
+		if not handoff_text.contains(token):
+			push_error("%s smoke: active return handoff lost %s clarity: %s." % [expected_target, token, handoff_text])
+			return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if handoff_text.contains(leak_token):
+			push_error("%s smoke: active return handoff leaked internal token %s: %s." % [expected_target, leak_token, handoff_text])
+			return false
 	return true
 
 func _assert_battle_post_action_status_recap_contract(shell: Node, action_response: Dictionary) -> bool:
