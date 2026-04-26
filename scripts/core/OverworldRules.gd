@@ -1222,23 +1222,125 @@ static func describe_heroes(session: SessionStateStoreScript.SessionData) -> Str
 	return "\n".join(lines)
 
 static func describe_army(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null:
+		return "Marching Army\n0 troops in 0 groups | Strength 0\nNo standing force"
 	var army = session.overworld.get("army", {})
-	var parts := []
+	var lines := []
 	var headcount := 0
+	var strength := 0
 	for stack in army.get("stacks", []):
 		if not (stack is Dictionary):
 			continue
-		var unit = ContentService.get_unit(String(stack.get("unit_id", "")))
 		var count := int(stack.get("count", 0))
 		if count <= 0:
 			continue
 		headcount += count
-		parts.append("%s x%d" % [String(unit.get("name", stack.get("unit_id", ""))), count])
-	return "Marching Army\n%d troops in %d groups\n%s" % [
+		strength += unit_stack_strength_value(String(stack.get("unit_id", "")), count)
+		lines.append("- %s" % describe_stack_inspection_line(stack))
+	return "Marching Army\n%d troops in %d groups | Strength %d\n%s" % [
 		headcount,
-		parts.size(),
-		", ".join(parts) if not parts.is_empty() else "No standing force",
+		lines.size(),
+		strength,
+		"\n".join(lines) if not lines.is_empty() else "No standing force",
 	]
+
+static func describe_stack_inspection_line(stack: Dictionary, options: Dictionary = {}) -> String:
+	var unit_id := String(stack.get("unit_id", ""))
+	var unit := ContentService.get_unit(unit_id)
+	var unit_name := String(unit.get("name", unit_id))
+	var count := _stack_display_count(stack, unit)
+	var health := _stack_display_health(stack, unit, count)
+	var max_health := _stack_display_max_health(stack, unit, count)
+	var health_text := "%d/%d" % [health, max_health] if max_health > health else "%d" % health
+	var include_name := bool(options.get("include_name", true))
+	var parts := []
+	if include_name:
+		parts.append("%s x%d" % [unit_name, count])
+	else:
+		parts.append("Count %d" % count)
+	parts.append("%s %s" % [unit_tier_label(unit), unit_role_label(unit)])
+	parts.append("HP %s" % health_text)
+	parts.append("Strength %d" % unit_stack_strength_value(unit_id, count))
+	parts.append(_stack_readiness_label(stack, health, max_health))
+	return " | ".join(parts)
+
+static func describe_unit_recruit_brief(unit_id: String, count: int = 0) -> String:
+	var unit := ContentService.get_unit(unit_id)
+	if unit.is_empty():
+		return "Unknown unit"
+	var strength_count: int = max(1, count)
+	var strength_label: String = "reserve" if count > 0 else "each"
+	return "%s %s | HP %d each | Strength %d %s" % [
+		unit_tier_label(unit),
+		unit_role_label(unit),
+		max(1, int(unit.get("hp", 1))),
+		unit_stack_strength_value(unit_id, strength_count),
+		strength_label,
+	]
+
+static func unit_tier_label(unit: Dictionary) -> String:
+	return "T%d" % max(1, int(unit.get("tier", 1)))
+
+static func unit_role_label(unit: Dictionary) -> String:
+	var role := String(unit.get("role", "")).strip_edges()
+	if role == "":
+		role = "ranged" if bool(unit.get("ranged", false)) else "melee"
+	return role.capitalize()
+
+static func unit_stack_strength_value(unit_id: String, count: int) -> int:
+	var unit := ContentService.get_unit(unit_id)
+	if unit.is_empty() or count <= 0:
+		return 0
+	return max(0, count) * unit_strength_value(unit_id)
+
+static func unit_strength_value(unit_id: String) -> int:
+	var unit := ContentService.get_unit(unit_id)
+	if unit.is_empty():
+		return 0
+	var damage_average := int(round(float(int(unit.get("min_damage", 1)) + int(unit.get("max_damage", 1))) / 2.0))
+	return (
+		max(1, int(unit.get("hp", 1)))
+		+ max(0, int(unit.get("attack", 0)))
+		+ max(0, int(unit.get("defense", 0)))
+		+ max(1, damage_average)
+		+ max(1, int(unit.get("speed", 1)))
+		+ max(1, int(unit.get("initiative", 1)))
+		+ (3 if bool(unit.get("ranged", false)) else 0)
+		+ max(0, int(unit.get("tier", 1)) - 1)
+	)
+
+static func _stack_display_count(stack: Dictionary, unit: Dictionary) -> int:
+	if stack.has("total_health"):
+		var unit_hp: int = max(1, int(stack.get("unit_hp", unit.get("hp", 1))))
+		return max(0, int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp))))
+	if stack.has("count"):
+		return max(0, int(stack.get("count", 0)))
+	return max(0, int(stack.get("base_count", 0)))
+
+static func _stack_display_health(stack: Dictionary, unit: Dictionary, count: int) -> int:
+	if stack.has("total_health"):
+		return max(0, int(stack.get("total_health", 0)))
+	return max(0, count) * max(1, int(unit.get("hp", 1)))
+
+static func _stack_display_max_health(stack: Dictionary, unit: Dictionary, count: int) -> int:
+	var unit_hp: int = max(1, int(stack.get("unit_hp", unit.get("hp", 1))))
+	if stack.has("base_count"):
+		return max(0, int(stack.get("base_count", 0))) * unit_hp
+	return max(0, count) * unit_hp
+
+static func _stack_readiness_label(stack: Dictionary, health: int, max_health: int) -> String:
+	if health <= 0:
+		return "Broken"
+	if bool(stack.get("defending", false)):
+		return "Braced"
+	if max_health <= 0:
+		return "Ready"
+	var ratio := float(health) / float(max_health)
+	if ratio < 0.35:
+		return "Critical"
+	if ratio < 0.70:
+		return "Wounded"
+	return "Ready"
 
 static func is_weekly_growth_day(day: int) -> bool:
 	return day > 1 and ((day - 1) % WEEKLY_GROWTH_INTERVAL) == 0

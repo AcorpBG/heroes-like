@@ -43,6 +43,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_production_overview(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_stack_inspection_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -76,6 +79,9 @@ func _run_battle_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	if not _assert_battle_entry_context(shell):
+		get_tree().quit(1)
+		return false
+	if not _assert_battle_stack_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
 	if not board.has_method("validation_hex_layout_summary"):
@@ -236,6 +242,18 @@ func _assert_battle_entry_context(shell: Node) -> bool:
 		return false
 	return true
 
+func _assert_battle_stack_inspection_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: battle shell does not expose validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var roster_text := "\n".join(snapshot.get("player_roster", [])) + "\n" + "\n".join(snapshot.get("enemy_roster", []))
+	for token in ["Strength", "HP", "T", "Ready", "Atk", "Coh"]:
+		if not roster_text.contains(token):
+			push_error("Battle smoke: stack rosters lost compact inspection token %s: %s." % [token, roster_text])
+			return false
+	return true
+
 func _assert_battle_aftermath_transition(source_session) -> bool:
 	var outcome_session = _clone_session(source_session)
 	if outcome_session.battle.is_empty():
@@ -392,6 +410,30 @@ func _assert_town_production_overview(shell: Node) -> bool:
 		push_error("Town smoke: visible production overview lost income or next-action clarity: %s." % visible_overview)
 		return false
 	return true
+
+func _assert_town_stack_inspection_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_action_catalog"):
+		push_error("Town smoke: town shell is missing stack inspection validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var town_text := "\n".join([
+		String(snapshot.get("army_text", "")),
+		String(snapshot.get("army_visible_text", "")),
+		String(snapshot.get("defense_text", "")),
+		String(snapshot.get("defense_visible_text", "")),
+		String(snapshot.get("recruit_text", "")),
+		String(snapshot.get("recruit_visible_text", "")),
+	])
+	for token in ["Strength", "HP", "T", "Ready"]:
+		if not town_text.contains(token):
+			push_error("Town smoke: town stack inspection text is missing %s: %s." % [token, town_text])
+			return false
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	for action in catalog.get("recruit", []):
+		if action is Dictionary and String(action.get("summary", "")).contains("Strength") and String(action.get("summary", "")).contains("HP"):
+			return true
+	push_error("Town smoke: recruit action tooltips do not expose stack role/health/strength: %s." % [catalog.get("recruit", [])])
+	return false
 
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
