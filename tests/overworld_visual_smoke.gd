@@ -904,14 +904,20 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		"Overworld field spell unavailable affordance",
 		[
 			String(full_snapshot.get("spellbook_tooltip_text", "")),
+			String(full_snapshot.get("spellbook_visible_text", "")),
+			String(full_snapshot.get("spellbook_rail_text", "")),
 			String(full_spell_action.get("summary", "")),
 			String(full_spell_action.get("invalid_reason", "")),
 			String(full_spell_action.get("category", "")),
 			String(full_spell_action.get("readiness", "")),
 			String(full_spell_action.get("effect", "")),
 			String(full_spell_action.get("best_use", "")),
+			String(full_spell_action.get("target_requirement", "")),
+			String(full_spell_action.get("mana_state", "")),
+			String(full_spell_action.get("consequence", "")),
+			String(full_spell_action.get("why_cast", "")),
 		],
-		["Waystride", "Field Route", "Cost 3", "target active hero", "Movement is already full", "Restores up to 4 movement", "save until movement has room"]
+		["Waystride", "Field Magic", "Field Route", "Cost 3", "target active hero", "No map target", "affects active hero", "Movement is already full", "Mana", "need 3", "Restores up to 4 movement", "save until movement has room"]
 	):
 		return false
 
@@ -938,12 +944,18 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		"Overworld field spell ready affordance",
 		[
 			String(ready_snapshot.get("spellbook_tooltip_text", "")),
+			String(ready_snapshot.get("spellbook_visible_text", "")),
+			String(ready_snapshot.get("spellbook_rail_text", "")),
 			String(ready_spell_action.get("label", "")),
 			String(ready_spell_action.get("summary", "")),
 			String(ready_spell_action.get("readiness", "")),
 			String(ready_spell_action.get("best_use", "")),
+			String(ready_spell_action.get("target_requirement", "")),
+			String(ready_spell_action.get("mana_state", "")),
+			String(ready_spell_action.get("consequence", "")),
+			String(ready_spell_action.get("why_cast", "")),
 		],
-		["Cast Waystride (3 mana)", "Field Route", "Restores up to 4 movement", "Cost 3", "target active hero", "Ready", "recover route tempo"]
+		["Cast Waystride (3 mana)", "Field Magic", "Field Route", "Restores up to 4 movement", "Cost 3", "target active hero", "No map target", "affects active hero", "Mana", "need 3", "Ready", "recover route tempo"]
 	):
 		return false
 

@@ -241,18 +241,43 @@ static func describe_overworld_spellbook(hero_state: Dictionary, movement_state:
 	]
 	var spell_lines := []
 	for spell in known_spells(hero, CONTEXT_OVERWORLD):
-		spell_lines.append(
-			"- %s" % describe_spell_inspection_line(
-				hero,
-				spell,
-				{"movement": movement_state}
-			)
-		)
+		var validation := validate_overworld_spell(hero, movement_state, spell)
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+		spell_lines.append("- %s" % _overworld_spell_readability_line(hero, movement_state, spell, validation, mana_cost))
 	if spell_lines.is_empty():
 		lines.append("- No field spells known")
 	else:
 		lines.append_array(spell_lines)
 	return "\n".join(lines)
+
+static func describe_overworld_spell_rail(hero_state: Dictionary, movement_state: Dictionary) -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var actions := get_overworld_actions(hero, movement_state)
+	if actions.is_empty():
+		return "Field Magic | Mana %d/%d | No field spells known" % [
+			int(mana.get("current", 0)),
+			int(mana.get("max", 0)),
+		]
+	var focus: Dictionary = {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if not bool(action.get("disabled", false)):
+			focus = action
+			break
+	if focus.is_empty():
+		focus = actions[0]
+	var state := "Ready" if not bool(focus.get("disabled", false)) else "Blocked"
+	return "Field Magic | Mana %d/%d | %s: %s | %s | %s" % [
+		int(mana.get("current", 0)),
+		int(mana.get("max", 0)),
+		state,
+		String(focus.get("spell_name", focus.get("label", "Spell"))),
+		String(focus.get("target_requirement", focus.get("target", ""))),
+		String(focus.get("consequence", focus.get("effect", ""))),
+	]
 
 static func _mana_readiness_label(hero_state: Dictionary, mana_cost: int) -> String:
 	var current_mana := int(hero_state.get("spellbook", {}).get("mana", {}).get("current", 0))
@@ -351,25 +376,40 @@ static func _legacy_spellbook_summary(hero_state: Dictionary, context_filter: St
 
 static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictionary) -> Array:
 	var actions := []
-	for spell in known_spells(hero_state, CONTEXT_OVERWORLD):
-		var validation := validate_overworld_spell(hero_state, movement_state, spell)
-		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	for spell in known_spells(hero, CONTEXT_OVERWORLD):
+		var validation := validate_overworld_spell(hero, movement_state, spell)
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
 		var summary := _overworld_spell_action_summary(movement_state, spell, validation, mana_cost)
 		var category := spell_category_label(spell)
 		var effect_summary := _overworld_spell_effect_summary(spell, movement_state)
 		var readiness := "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
+		var mana_current := int(hero.get("spellbook", {}).get("mana", {}).get("current", 0))
+		var mana_shortfall: int = max(0, mana_cost - mana_current)
+		var why_cast := _best_use_line(spell, movement_state)
 		actions.append(
 			{
 				"id": "cast_spell:%s" % String(spell.get("id", "")),
 				"label": "Cast %s (%d mana)" % [String(spell.get("name", "Spell")), mana_cost],
+				"spell_name": String(spell.get("name", "Spell")),
 				"disabled": not bool(validation.get("ok", false)),
 				"summary": summary,
 				"cost": mana_cost,
 				"category": category,
 				"effect": effect_summary,
 				"readiness": readiness,
-				"best_use": _best_use_line(spell, movement_state),
+				"best_use": why_cast,
 				"target": _target_mode_label(String(spell.get("target_mode", "self"))),
+				"target_requirement": _overworld_target_requirement(spell),
+				"mana_state": "Mana %d/%d, need %d" % [
+					mana_current,
+					int(hero.get("spellbook", {}).get("mana", {}).get("max", mana_current)),
+					mana_cost,
+				],
+				"mana_ready": mana_shortfall <= 0,
+				"mana_shortfall": mana_shortfall,
+				"consequence": effect_summary,
+				"why_cast": why_cast,
 				"availability": "ready" if bool(validation.get("ok", false)) else "blocked",
 				"invalid_reason": String(validation.get("message", "")) if not bool(validation.get("ok", false)) else "",
 			}
@@ -772,15 +812,39 @@ static func _overworld_spell_action_summary(
 	var target_label := _target_mode_label(String(spell.get("target_mode", "self")))
 	var availability := "Ready now." if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
 	var description := String(spell.get("description", "")).strip_edges()
+	var consequence := _overworld_spell_effect_summary(spell, movement_state)
+	var why_cast := _best_use_line(spell, movement_state)
 	var pieces := [
-		"%s | %s." % [String(spell_category_label(spell)), _overworld_spell_effect_summary(spell, movement_state)],
-		"Cost %d mana; target %s." % [mana_cost, target_label],
+		"%s | Consequence: %s." % [String(spell_category_label(spell)), consequence],
+		"Cost %d mana; target %s; %s." % [mana_cost, target_label, _overworld_target_requirement(spell)],
 		availability,
-		"Use: %s." % _best_use_line(spell, movement_state),
+		"Why cast: %s." % why_cast,
 	]
 	if description != "":
 		pieces.append(description)
 	return " ".join(pieces)
+
+static func _overworld_spell_readability_line(
+	hero_state: Dictionary,
+	movement_state: Dictionary,
+	spell: Dictionary,
+	validation: Dictionary,
+	mana_cost: int
+) -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var readiness := "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
+	return "%s | %s | %s | Mana %d/%d, need %d | %s | Consequence: %s | Why: %s" % [
+		String(spell.get("name", "Spell")),
+		spell_category_label(spell),
+		readiness,
+		int(mana.get("current", 0)),
+		int(mana.get("max", 0)),
+		mana_cost,
+		_overworld_target_requirement(spell),
+		_overworld_spell_effect_summary(spell, movement_state),
+		_best_use_line(spell, movement_state),
+	]
 
 static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary) -> String:
 	var effect = spell.get("effect", {})
@@ -795,6 +859,13 @@ static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: D
 			return "Restores up to %d movement" % amount
 		_:
 			return "No supported overworld effect"
+
+static func _overworld_target_requirement(spell: Dictionary) -> String:
+	match String(spell.get("target_mode", "self")):
+		"self":
+			return "No map target; affects active hero"
+		_:
+			return "Choose %s before casting" % _target_mode_label(String(spell.get("target_mode", "")))
 
 static func _target_mode_label(target_mode: String) -> String:
 	match target_mode:
