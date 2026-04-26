@@ -31,6 +31,63 @@ const COMMANDER_EXPERIENCE_DEFEATED := 45
 const COMMANDER_EXPERIENCE_STALEMATE := 30
 const COMMANDER_VETERANCY_LABELS := ["", "Blooded", "Veteran", "War-hardened"]
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
+const COMMANDER_ROLE_RAIDER := "raider"
+const COMMANDER_ROLE_DEFENDER := "defender"
+const COMMANDER_ROLE_RETAKER := "retaker"
+const COMMANDER_ROLE_STABILIZER := "stabilizer"
+const COMMANDER_ROLE_RECOVERING := "recovering"
+const COMMANDER_ROLE_RESERVE := "reserve"
+const COMMANDER_ROLE_PUBLIC_EVENT_KEYS := [
+	"event_id",
+	"day",
+	"sequence",
+	"event_type",
+	"faction_id",
+	"faction_label",
+	"actor_id",
+	"actor_label",
+	"target_kind",
+	"target_id",
+	"target_label",
+	"target_x",
+	"target_y",
+	"visibility",
+	"public_importance",
+	"summary",
+	"reason_codes",
+	"public_reason",
+	"debug_reason",
+	"state_policy",
+]
+const COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS := [
+	"base_value",
+	"persistent_income_value",
+	"recruit_value",
+	"scarcity_value",
+	"denial_value",
+	"route_pressure_value",
+	"town_enablement_value",
+	"objective_value",
+	"faction_bias",
+	"travel_cost",
+	"guard_cost",
+	"assignment_penalty",
+	"final_priority",
+	"final_score",
+	"income_value",
+	"growth_value",
+	"pressure_value",
+	"category_bonus",
+	"raid_score",
+	"focus_pressure_count",
+	"rivalry_count",
+	"fixture_previous_controller",
+	"fixture_denial_only",
+	"fixture_primary_target_covered",
+	"fixture_threatened_by_player_front",
+	"fixture_recently_secured",
+	"fixture_recent_pressure_count",
+]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
@@ -2654,6 +2711,330 @@ static func resource_pressure_report(
 		"targets": targets,
 	}
 
+static func commander_role_front_id(scenario_id: String, target_kind: String, target_id: String) -> String:
+	if scenario_id == "river-pass" and target_id in ["river_free_company", "river_signal_post", "riverwatch_hold", "duskfen_bastion"]:
+		return "riverwatch_signal_yard"
+	if scenario_id == "glassroad-sundering" and target_id in ["glassroad_watch_relay", "glassroad_starlens", "halo_spire_bridgehead", "riverwatch_market"]:
+		return "glassroad_charter_front"
+	if target_kind == "town" and target_id != "":
+		return "town:%s" % target_id
+	if target_kind == "resource" and target_id != "":
+		return "%s:resource:%s" % [scenario_id, target_id]
+	if target_kind != "" and target_id != "":
+		return "%s:%s:%s" % [scenario_id, target_kind, target_id]
+	return ""
+
+static func commander_role_public_reason_from_codes(reason_codes: Array) -> String:
+	return _public_reason_from_codes(reason_codes)
+
+static func commander_role_active_encounter_link(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String
+) -> Dictionary:
+	if session == null or faction_id == "" or roster_hero_id == "":
+		return {
+			"linked": false,
+			"placement_id": "",
+			"target_kind": "",
+			"target_id": "",
+		}
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter in session.overworld.get("encounters", []):
+		if not _is_active_raid(encounter, faction_id, resolved_encounters):
+			continue
+		var commander_state = encounter.get("enemy_commander_state", {})
+		if not (commander_state is Dictionary):
+			continue
+		if String(commander_state.get("roster_hero_id", "")) != roster_hero_id:
+			continue
+		return {
+			"linked": true,
+			"placement_id": String(encounter.get("placement_id", "")),
+			"target_kind": String(encounter.get("target_kind", "")),
+			"target_id": String(encounter.get("target_placement_id", "")),
+			"target_label": String(encounter.get("target_label", "")),
+		}
+	return {
+		"linked": false,
+		"placement_id": "",
+		"target_kind": "",
+		"target_id": "",
+	}
+
+static func commander_role_state_view(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_entry: Dictionary
+) -> Dictionary:
+	var roster_hero_id := String(commander_entry.get("roster_hero_id", ""))
+	var active_link := commander_role_active_encounter_link(session, faction_id, roster_hero_id)
+	var status := _normalize_commander_status(commander_entry.get("status", COMMANDER_STATUS_AVAILABLE))
+	var recovery_day: int = max(0, int(commander_entry.get("recovery_day", 0)))
+	var session_day := int(session.day) if session != null else 0
+	var role := COMMANDER_ROLE_RESERVE
+	var role_status := "available"
+	var validation := "valid"
+	if status == COMMANDER_STATUS_RECOVERING and recovery_day > session_day:
+		role = COMMANDER_ROLE_RECOVERING
+		role_status = "cooldown"
+		validation = "blocked_recovery"
+	elif status == COMMANDER_STATUS_ACTIVE or bool(active_link.get("linked", false)):
+		role = COMMANDER_ROLE_RAIDER
+		role_status = "active"
+	elif not commander_can_deploy(commander_entry):
+		role = COMMANDER_ROLE_RECOVERING
+		role_status = "rebuilding"
+		validation = "blocked_rebuild"
+	return {
+		"schema_status": "report_fixture_only",
+		"roster_hero_id": roster_hero_id,
+		"status": status,
+		"active_placement_id": String(commander_entry.get("active_placement_id", active_link.get("placement_id", ""))),
+		"recovery_day": recovery_day,
+		"army_status": commander_army_status(commander_entry),
+		"army_summary": commander_army_summary(commander_entry),
+		"memory_summary": commander_memory_summary(commander_entry),
+		"display_name": commander_display_name(commander_entry, false),
+		"role": role,
+		"role_status": role_status,
+		"last_validation": validation,
+	}
+
+static func commander_role_resource_target_view(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	placement_id: String,
+	origin: Dictionary
+) -> Dictionary:
+	if session == null or placement_id == "":
+		return {}
+	var node_result := _find_resource_by_placement(session, placement_id)
+	var node: Dictionary = node_result.get("node", {})
+	if int(node_result.get("index", -1)) < 0:
+		return {}
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
+	var reason_codes: Array = _normalize_string_array(breakdown.get("reason_codes", []))
+	if reason_codes.is_empty():
+		reason_codes = _resource_target_reason_codes(
+			site,
+			String(node.get("collected_by_faction_id", "")) == "player",
+			_resource_site_is_persistent(site),
+			_target_resource_value(site.get("control_income", {})),
+			_recruit_payload_value(site.get("claim_recruits", {})) + _recruit_payload_value(site.get("weekly_recruits", {})),
+			_resource_route_pressure_value(site),
+			_linked_player_town_bonus(session, node)
+		)
+	var target_x := int(node.get("x", 0))
+	var target_y := int(node.get("y", 0))
+	return {
+		"target_kind": "resource",
+		"target_id": placement_id,
+		"target_label": String(site.get("name", placement_id)),
+		"target_x": target_x,
+		"target_y": target_y,
+		"front_id": commander_role_front_id(String(session.scenario_id), "resource", placement_id),
+		"origin_kind": "town",
+		"origin_id": commander_role_origin_id(String(session.scenario_id), faction_id),
+		"controller_id": String(node.get("collected_by_faction_id", "")),
+		"site_id": String(node.get("site_id", "")),
+		"site_family": String(site.get("family", "")),
+		"reason_codes": reason_codes,
+		"public_reason": _public_reason_from_codes(reason_codes),
+		"public_importance": String(breakdown.get("public_importance", _resource_target_public_importance(String(node.get("collected_by_faction_id", "")) == "player", _resource_site_is_persistent(site), reason_codes, int(breakdown.get("final_priority", 0))))),
+		"debug_reason": String(breakdown.get("debug_reason", "")),
+		"resource_breakdown": breakdown,
+	}
+
+static func commander_role_origin_id(scenario_id: String, faction_id: String) -> String:
+	if scenario_id == "river-pass" and faction_id == "faction_mireclaw":
+		return "duskfen_bastion"
+	if scenario_id == "glassroad-sundering" and faction_id == "faction_embercourt":
+		return "riverwatch_market"
+	return ""
+
+static func commander_role_proposal_for_resource_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	commander_entry: Dictionary,
+	target_view: Dictionary,
+	fixture_state: Dictionary = {}
+) -> Dictionary:
+	var state_view := commander_role_state_view(session, faction_id, commander_entry)
+	var blocked_proposal := commander_role_proposal_for_recovery(session, faction_id, commander_entry)
+	if not blocked_proposal.is_empty():
+		return blocked_proposal
+	if target_view.is_empty():
+		return {
+			"role": COMMANDER_ROLE_RESERVE,
+			"role_status": "available",
+			"validity": "invalid_target_missing",
+			"assignment_id_hint": "",
+			"priority_reason_codes": [],
+			"public_reason": "",
+			"report_debug_reason": "report-only target missing",
+			"expected_next_transition": "wait_for_target",
+		}
+	var role := COMMANDER_ROLE_RAIDER
+	if String(fixture_state.get("fixture_previous_controller", "")) == faction_id:
+		role = COMMANDER_ROLE_RETAKER
+	elif bool(fixture_state.get("fixture_threatened_by_player_front", false)):
+		role = COMMANDER_ROLE_DEFENDER
+	elif bool(fixture_state.get("fixture_recently_secured", false)):
+		role = COMMANDER_ROLE_STABILIZER
+	elif bool(fixture_state.get("fixture_denial_only", false)):
+		role = COMMANDER_ROLE_RAIDER
+	var reason_codes: Array = _normalize_string_array(target_view.get("reason_codes", []))
+	if role in [COMMANDER_ROLE_RETAKER, COMMANDER_ROLE_RAIDER, COMMANDER_ROLE_DEFENDER]:
+		var target_id := String(target_view.get("target_id", ""))
+		if target_id in ["river_free_company", "glassroad_watch_relay"] and "persistent_income_denial" not in reason_codes:
+			reason_codes.push_front("persistent_income_denial")
+		if target_id == "river_free_company" and "recruit_denial" not in reason_codes:
+			reason_codes.append("recruit_denial")
+		if target_id in ["river_signal_post", "glassroad_watch_relay"] and "route_vision" not in reason_codes:
+			reason_codes.append("route_vision")
+		if target_id in ["river_free_company", "river_signal_post", "glassroad_watch_relay"] and "player_town_support" not in reason_codes:
+			reason_codes.append("player_town_support")
+	if role == COMMANDER_ROLE_STABILIZER:
+		reason_codes = ["route_pressure"] if String(target_view.get("target_id", "")) == "glassroad_starlens" else reason_codes
+	var report_reason := "report-only role proposal"
+	if String(state_view.get("memory_summary", "")) != "":
+		report_reason += "; target memory: %s" % String(state_view.get("memory_summary", ""))
+	return {
+		"role": role,
+		"role_status": "assigned",
+		"validity": "valid",
+		"assignment_id_hint": _commander_role_assignment_id_hint(session, faction_id, String(commander_entry.get("roster_hero_id", "")), role, "resource", String(target_view.get("target_id", ""))),
+		"priority_reason_codes": reason_codes,
+		"public_reason": _public_reason_from_codes(reason_codes),
+		"report_debug_reason": report_reason,
+		"expected_next_transition": _commander_role_expected_transition(role),
+	}
+
+static func commander_role_proposal_for_recovery(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	commander_entry: Dictionary
+) -> Dictionary:
+	var state_view := commander_role_state_view(session, faction_id, commander_entry)
+	match String(state_view.get("last_validation", "")):
+		"blocked_recovery":
+			return {
+				"role": COMMANDER_ROLE_RECOVERING,
+				"role_status": "cooldown",
+				"validity": "blocked",
+				"assignment_id_hint": "",
+				"priority_reason_codes": ["commander_recovery"],
+				"public_reason": "commander recovering",
+				"report_debug_reason": "report-only recovery blocks active assignment until day %d" % int(state_view.get("recovery_day", 0)),
+				"expected_next_transition": "wait_until_recovery_day",
+			}
+		"blocked_rebuild":
+			return {
+				"role": COMMANDER_ROLE_RECOVERING,
+				"role_status": "rebuilding",
+				"validity": "blocked",
+				"assignment_id_hint": "",
+				"priority_reason_codes": ["commander_rebuild"],
+				"public_reason": "commander rebuilding",
+				"report_debug_reason": "report-only rebuild blocks active assignment",
+				"expected_next_transition": "rebuild_host_then_reserve",
+			}
+	return {}
+
+static func commander_role_public_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	commander_entry: Dictionary,
+	target_view: Dictionary,
+	role_proposal: Dictionary
+) -> Dictionary:
+	var actor_id := String(commander_entry.get("roster_hero_id", ""))
+	var actor_label := commander_display_name(commander_entry, false)
+	if actor_label == "":
+		actor_label = actor_id
+	var target_kind := String(target_view.get("target_kind", ""))
+	var target_id := String(target_view.get("target_id", ""))
+	var target_label := String(target_view.get("target_label", target_id))
+	if target_kind == "" or target_id == "":
+		target_kind = "commander"
+		target_id = actor_id
+		target_label = actor_label
+	var reason_codes: Array = _normalize_string_array(role_proposal.get("priority_reason_codes", []))
+	var public_reason := String(role_proposal.get("public_reason", _public_reason_from_codes(reason_codes)))
+	var summary := "%s assigned as %s for %s" % [
+		actor_label,
+		String(role_proposal.get("role", COMMANDER_ROLE_RESERVE)),
+		target_label,
+	]
+	if public_reason != "":
+		summary += " (%s)" % public_reason
+	summary += "."
+	return {
+		"event_id": "%d:%s:ai_commander_role_assigned:%s:%s" % [int(session.day), faction_id, actor_id, target_id],
+		"day": int(session.day),
+		"sequence": 0,
+		"event_type": "ai_commander_role_assigned",
+		"faction_id": faction_id,
+		"faction_label": String(config.get("label", faction_id)),
+		"actor_id": actor_id,
+		"actor_label": actor_label,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label,
+		"target_x": int(target_view.get("target_x", 0)),
+		"target_y": int(target_view.get("target_y", 0)),
+		"visibility": _event_visibility(session, int(target_view.get("target_x", 0)), int(target_view.get("target_y", 0)), String(target_view.get("public_importance", "medium"))),
+		"public_importance": String(target_view.get("public_importance", "medium")),
+		"summary": summary,
+		"reason_codes": reason_codes,
+		"public_reason": public_reason,
+		"debug_reason": "derived commander role",
+		"state_policy": "derived",
+	}
+
+static func commander_role_public_leak_check(public_surfaces: Variant) -> Dictionary:
+	var blocked := COMMANDER_ROLE_BLOCKED_PUBLIC_TOKENS
+	var allowed := COMMANDER_ROLE_PUBLIC_EVENT_KEYS
+	var stack := [public_surfaces]
+	var checked_events := 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if not (value is Dictionary):
+			var value_text := String(value)
+			for token in blocked:
+				if value_text.contains(String(token)):
+					return {"ok": false, "error": "public surface leaked token %s" % String(token)}
+			continue
+		if String(value.get("event_type", "")) != "":
+			checked_events += 1
+			for key in value.keys():
+				if String(key) not in allowed:
+					return {"ok": false, "error": "%s leaked non-compact key %s" % [value.get("event_type", "event"), key]}
+		var text := JSON.stringify(value)
+		for token in blocked:
+			if text.contains(String(token)):
+				return {"ok": false, "error": "%s leaked blocked token %s" % [value.get("event_type", "event"), token]}
+		for nested_key in value.keys():
+			var nested = value[nested_key]
+			if nested is Array or nested is Dictionary:
+				stack.append(nested)
+	return {
+		"ok": true,
+		"checked_events": checked_events,
+		"allowed_public_event_keys": allowed,
+		"blocked_public_tokens": blocked,
+	}
+
 static func ai_target_assignment_event(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -3159,6 +3540,39 @@ static func _public_reason_from_codes(reason_codes: Array) -> String:
 	if "commander_memory" in codes:
 		return "known commander focus"
 	return ""
+
+static func _commander_role_assignment_id_hint(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	roster_hero_id: String,
+	role: String,
+	target_kind: String,
+	target_id: String
+) -> String:
+	if session == null or faction_id == "" or roster_hero_id == "" or role == "" or target_kind == "" or target_id == "":
+		return ""
+	return "role:%s:%s:%s:%s:%s:%s:day_%d" % [
+		String(session.scenario_id),
+		faction_id,
+		roster_hero_id,
+		role,
+		target_kind,
+		target_id,
+		int(session.day),
+	]
+
+static func _commander_role_expected_transition(role: String) -> String:
+	match role:
+		COMMANDER_ROLE_DEFENDER:
+			return "hold_front_or_intercept"
+		COMMANDER_ROLE_STABILIZER:
+			return "support_front_stabilization"
+		COMMANDER_ROLE_RECOVERING:
+			return "wait_until_recovery_day"
+		COMMANDER_ROLE_RESERVE:
+			return "wait_for_target"
+		_:
+			return "spawn_or_link_raid"
 
 static func _default_reason_codes_for_target(target_kind: String, target_id: String, target: Dictionary = {}) -> Array:
 	match target_kind:
