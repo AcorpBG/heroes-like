@@ -810,6 +810,15 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 		if not button_tooltips.contains(token):
 			push_error("Battle smoke: live action button tooltips lost %s clarity: %s." % [token, button_tooltips])
 			return false
+	var action_guidance := String(snapshot.get("action_guidance", ""))
+	var visible_action_guidance := String(snapshot.get("visible_action_guidance", ""))
+	var manual_cue_text := "%s\n%s" % [action_guidance, visible_action_guidance]
+	if not manual_cue_text.contains("Try:") or not manual_cue_text.contains("click"):
+		push_error("Battle smoke: battle order rail lost the compact manual-play action cue: %s." % snapshot)
+		return false
+	if not visible_action_guidance.contains("Try:"):
+		push_error("Battle smoke: manual-play action cue is not visible in the order rail: %s." % snapshot)
+		return false
 	var roster_text := "\n".join(snapshot.get("player_roster", []) + snapshot.get("enemy_roster", []))
 	if not roster_text.contains("Role ") or not roster_text.contains("Status "):
 		push_error("Battle smoke: roster lines do not expose ability role and status pressure text: %s." % roster_text)
@@ -819,7 +828,7 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 		push_error("Battle smoke: active consequence payload is missing ability/status/range fields: %s." % [consequence_payload])
 		return false
 	for leak_token in ["final_priority", "debug_reason", "score", "ai_score", "weight"]:
-		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or roster_text.contains(leak_token):
+		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or manual_cue_text.contains(leak_token) or roster_text.contains(leak_token):
 			push_error("Battle smoke: battle consequence UI leaked internal token %s." % leak_token)
 			return false
 	return true

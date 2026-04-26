@@ -536,6 +536,7 @@ func validation_snapshot() -> Dictionary:
 		"active_movement_board_click_label": String(movement_click_intent.get("label", "")),
 		"action_surface": action_surface,
 		"action_guidance": BattleRules.describe_action_surface(_session),
+		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),
 		"active_consequence_payload": consequence_payload,
 		"post_action_recap": _last_action_recap_payload.duplicate(true),
