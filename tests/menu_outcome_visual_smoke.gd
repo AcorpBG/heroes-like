@@ -187,6 +187,43 @@ func _run_main_menu_smoke() -> bool:
 		]
 	):
 		return false
+	if not shell.has_method("validation_open_contextual_guide_stage") or not shell.has_method("validation_return_from_contextual_guide"):
+		push_error("Main menu smoke: contextual Field Manual validation hooks are missing.")
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"Main menu campaign contextual guide control",
+		[String(campaign_snapshot.get("stage_help_tooltip", ""))],
+		["Open the Field Manual", "Campaign", "does not start, load, save, or change settings"]
+	):
+		return false
+	shell.call("validation_open_contextual_guide_stage")
+	var campaign_guide_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Main menu campaign contextual Field Manual",
+		[
+			String(campaign_guide_snapshot.get("stage_help_text", "")),
+			String(campaign_guide_snapshot.get("stage_help_tooltip", "")),
+			String(campaign_guide_snapshot.get("help_topic_id", "")),
+			String(campaign_guide_snapshot.get("help_details_full", campaign_guide_snapshot.get("help_details", ""))),
+		],
+		["Back", "Return to campaign board", "campaign", "Campaigns are the authored progression path", "carryover"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Main menu campaign contextual Field Manual",
+		[
+			String(campaign_guide_snapshot.get("stage_help_tooltip", "")),
+			String(campaign_guide_snapshot.get("help_details_full", campaign_guide_snapshot.get("help_details", ""))),
+		]
+	):
+		return false
+	shell.call("validation_return_from_contextual_guide")
+	campaign_snapshot = shell.call("validation_snapshot")
+	if int(campaign_snapshot.get("current_tab", -1)) != 0 or String(campaign_snapshot.get("stage_help_text", "")) != "Guide":
+		push_error("Main menu smoke: contextual Field Manual did not return to the campaign board: %s." % [campaign_snapshot])
+		get_tree().quit(1)
+		return false
 
 	if not shell.has_method("validation_open_settings_stage") or not shell.has_method("validation_select_resolution"):
 		push_error("Main menu smoke: settings resolution validation hooks are missing.")
@@ -265,6 +302,39 @@ func _run_main_menu_smoke() -> bool:
 			String(save_snapshot.get("selected_save_resume_handoff", "")),
 		]
 	):
+		return false
+	if not _assert_text_contains_all(
+		"Main menu save contextual guide control",
+		[String(save_snapshot.get("stage_help_tooltip", ""))],
+		["Open the Field Manual", "Save Flow", "does not start, load, save, or change settings"]
+	):
+		return false
+	shell.call("validation_open_contextual_guide_stage")
+	var save_guide_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Main menu save contextual Field Manual",
+		[
+			String(save_guide_snapshot.get("stage_help_text", "")),
+			String(save_guide_snapshot.get("stage_help_tooltip", "")),
+			String(save_guide_snapshot.get("help_topic_id", "")),
+			String(save_guide_snapshot.get("help_details_full", save_guide_snapshot.get("help_details", ""))),
+		],
+		["Back", "Return to war ledger", "saves", "Campaign unlocks and carryover live in progression data", "manual slots plus autosave"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Main menu save contextual Field Manual",
+		[
+			String(save_guide_snapshot.get("stage_help_tooltip", "")),
+			String(save_guide_snapshot.get("help_details_full", save_guide_snapshot.get("help_details", ""))),
+		]
+	):
+		return false
+	shell.call("validation_return_from_contextual_guide")
+	save_snapshot = shell.call("validation_snapshot")
+	if int(save_snapshot.get("current_tab", -1)) != 2 or String(save_snapshot.get("stage_help_text", "")) != "Guide":
+		push_error("Main menu smoke: contextual Field Manual did not return to the save board: %s." % [save_snapshot])
+		get_tree().quit(1)
 		return false
 
 	var inactive_settings_text_color := (settings_button as Button).get_theme_color("font_color")

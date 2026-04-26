@@ -124,6 +124,11 @@ custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="StageHelp" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guide"
+
 [node name="CloseStageDock" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -964,6 +969,7 @@ text = "Quit"
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/StageHelp" to="." method="_on_stage_help_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CloseStageDock" to="." method="_on_close_stage_dock_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/DifficultyPicker" to="." method="_on_difficulty_selected"]

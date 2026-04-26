@@ -291,6 +291,12 @@ func default_help_topic_id() -> String:
 		return ""
 	return String(HELP_TOPICS[0].get("id", ""))
 
+func help_topic_label(topic_id: String) -> String:
+	for topic in HELP_TOPICS:
+		if String(topic.get("id", "")) == topic_id:
+			return String(topic.get("label", topic_id))
+	return "Campaign"
+
 func describe_help_topic(topic_id: String) -> String:
 	for topic in HELP_TOPICS:
 		if String(topic.get("id", "")) == topic_id:

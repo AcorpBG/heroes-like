@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T21:31:55Z",
+  "updatedAt": "2026-04-26T21:42:40Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "settings-persistence-context-10184",
-  "currentSliceTitle": "Surface compact settings persistence context",
+  "currentSliceId": "main-menu-contextual-field-manual-access-10184",
+  "currentSliceTitle": "Surface contextual field manual access from secondary menu boards",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow player-facing settings-board clarity slice: the settings summary and control tooltips now visibly explain that presentation/audio/accessibility changes apply immediately, persist in device settings, and do not mutate campaign progression or expedition saves. Focused main-menu smoke coverage checks the visible persistence cue after a resolution change and guards against internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
+  "currentSliceNotes": "Implemented a compact player-facing onboarding slice: the existing Field Manual is now reachable from secondary main-menu boards through a contextual Guide/Back header control, opening to the matching campaign or save-flow topic without adding first-view commands or broad text panels. Focused main-menu smoke coverage checks contextual guide access, return flow, and no internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1734,6 +1734,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T21:30:18Z",
       "completedAt": "2026-04-26T21:31:55Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "main-menu-contextual-field-manual-access-10184",
+      "title": "Surface contextual field manual access from secondary menu boards",
+      "status": "completed",
+      "startedAt": "2026-04-26T21:34:46Z",
+      "completedAt": "2026-04-26T21:37:44Z",
       "difficulty": "medium"
     }
   ],
