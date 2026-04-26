@@ -403,6 +403,41 @@ func describe_slot(summary: Dictionary) -> String:
 		parts.append("Day %d" % day)
 	return " | ".join(parts)
 
+func describe_slot_browser_row(summary: Dictionary) -> String:
+	var slot_label := _slot_label(summary)
+	if not bool(summary.get("valid", false)):
+		return "%s | Blocked | %s" % [slot_label, String(summary.get("status_text", "Unavailable"))]
+
+	var parts := [slot_label, _summary_status_badge(summary)]
+	var cue := describe_slot_continuity_cue(summary)
+	if cue != "":
+		parts.append(cue)
+	var scenario_name := _safe_player_text(String(summary.get("scenario_name", summary.get("scenario_id", "Unknown Scenario"))), 34)
+	var day := int(summary.get("day", 0))
+	if scenario_name != "" and day > 0:
+		parts.append("%s Day %d" % [scenario_name, day])
+	elif scenario_name != "":
+		parts.append(scenario_name)
+	elif day > 0:
+		parts.append("Day %d" % day)
+	parts.append(ScenarioSelectRulesScript.launch_mode_label(String(summary.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))))
+	return " | ".join(parts)
+
+func describe_slot_continuity_cue(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "Cue: select a saved expedition."
+	if not can_load_summary(summary):
+		return "Cue: this save cannot be resumed."
+
+	var target := _safe_player_text(_resume_target_label(summary), 28)
+	var session := _session_from_payload(_summary_payload(summary))
+	var next_decision := _safe_player_text(_session_next_decision_line(session, summary), 56)
+	if next_decision == "":
+		next_decision = _fallback_resume_decision(String(summary.get("resume_target", "blocked")))
+	if target == "":
+		target = _safe_player_text(_resume_context_label(summary), 28)
+	return "Cue: %s -> %s" % [target, next_decision]
+
 func describe_slot_details(summary: Dictionary) -> String:
 	var lines := [_slot_label(summary)]
 	var modified_label := format_modified_timestamp(int(summary.get("modified_timestamp", 0)))
@@ -1258,6 +1293,19 @@ func _session_next_decision_line(session: SessionStateStoreScript.SessionData, s
 	if action_line != "":
 		return _safe_player_text(action_line.trim_prefix("Action:").strip_edges(), 220)
 	return "Load the save, inspect the resumed scene, then choose the next order."
+
+func _fallback_resume_decision(resume_target: String) -> String:
+	match resume_target:
+		"battle":
+			return "finish the encounter"
+		"town":
+			return "make the next town order"
+		"outcome":
+			return "choose the follow-up result action"
+		"overworld":
+			return "choose the next field route"
+		_:
+			return "select a loadable save"
 
 func _preferred_recent_action_recap(session: SessionStateStoreScript.SessionData, resume_target: String) -> Dictionary:
 	if session == null:

@@ -283,6 +283,9 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	shell.call("validation_open_saves_stage")
 	var save_snapshot: Dictionary = shell.call("validation_snapshot")
+	var save_browser_item_texts := []
+	for item_label in (save_snapshot.get("save_browser_items", []) if save_snapshot.get("save_browser_items", []) is Array else []):
+		save_browser_item_texts.append(String(item_label))
 	if not _assert_text_contains_all(
 		"Main menu selected save details",
 		[
@@ -290,8 +293,10 @@ func _run_main_menu_smoke() -> bool:
 			String(save_snapshot.get("load_selected_tooltip", "")),
 			String(save_snapshot.get("selected_save_play_check", "")),
 			String(save_snapshot.get("selected_save_resume_handoff", "")),
+			String(save_snapshot.get("selected_save_browser_cue", "")),
+			"\n".join(save_browser_item_texts),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Play check:", "Resume handoff:", "opens Overworld", "preserved", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Overworld Resume", "Cue:", "->", "Play check:", "Resume handoff:", "opens Overworld", "preserved", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -299,6 +304,8 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("selected_save_play_check", "")),
+			String(save_snapshot.get("selected_save_browser_cue", "")),
+			"\n".join(save_browser_item_texts),
 			String(save_snapshot.get("selected_save_resume_handoff", "")),
 		]
 	):
