@@ -120,7 +120,13 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu latest save pulse",
 		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
-		["Skirmish", "River Pass", "Day", "Overworld"]
+		["Continue Latest", "Skirmish", "River Pass", "Day", "Overworld"]
+	):
+		return false
+	if not _assert_text_contains_all(
+		"Main menu footer latest save target",
+		[String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", "")))],
+		["Latest save", "Skirmish", "River Pass", "Day", "Overworld"]
 	):
 		return false
 
@@ -136,9 +142,50 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
+	if not shell.has_method("validation_open_campaign_stage"):
+		push_error("Main menu smoke: campaign launch preview validation hook is missing.")
+		get_tree().quit(1)
+		return false
+	shell.call("validation_open_campaign_stage")
+	var campaign_snapshot: Dictionary = shell.call("validation_snapshot")
+	var selected_chapter_action: Dictionary = campaign_snapshot.get("selected_chapter_action", {}) if campaign_snapshot.get("selected_chapter_action", {}) is Dictionary else {}
+	if not _assert_text_contains_all(
+		"Main menu campaign launch preview",
+		[
+			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
+			String(selected_chapter_action.get("summary", "")),
+		],
+		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Action:"]
+	):
+		return false
+
 	if not shell.has_method("validation_open_settings_stage") or not shell.has_method("validation_select_resolution"):
 		push_error("Main menu smoke: settings resolution validation hooks are missing.")
 		get_tree().quit(1)
+		return false
+
+	if not shell.has_method("validation_open_skirmish_stage") or not shell.has_method("validation_select_skirmish") or not shell.has_method("validation_set_difficulty"):
+		push_error("Main menu smoke: skirmish launch preview validation hooks are missing.")
+		get_tree().quit(1)
+		return false
+	shell.call("validation_open_skirmish_stage")
+	if not bool(shell.call("validation_select_skirmish", "river-pass")):
+		push_error("Main menu smoke: could not select River Pass for skirmish launch preview.")
+		get_tree().quit(1)
+		return false
+	if not bool(shell.call("validation_set_difficulty", "hard")):
+		push_error("Main menu smoke: could not set Warlord difficulty for skirmish launch preview.")
+		get_tree().quit(1)
+		return false
+	var skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Main menu skirmish launch preview",
+		[
+			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
+			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
+		],
+		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Action:"]
+	):
 		return false
 
 	if not shell.has_method("validation_open_saves_stage"):

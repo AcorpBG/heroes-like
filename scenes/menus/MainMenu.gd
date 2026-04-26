@@ -121,7 +121,7 @@ func _latest_continue_surface() -> Dictionary:
 	var latest_summary := SaveService.latest_loadable_summary()
 	return {
 		"text": SaveService.continue_action_label(latest_summary),
-		"enabled": not latest_summary.is_empty(),
+		"enabled": SaveService.can_load_summary(latest_summary),
 		"tooltip": SaveService.load_action_tooltip(latest_summary),
 	}
 
@@ -131,7 +131,7 @@ func _refresh_summary() -> void:
 	_set_compact_label(_summary_label, lead, 3, 84)
 	_set_compact_label(
 		_active_expedition_label,
-		ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session()),
+		_build_footer_expedition_summary(),
 		4,
 		84
 	)
@@ -613,10 +613,12 @@ func _refresh_skirmish_setup() -> void:
 	_set_compact_label(_skirmish_operational_board_label, String(setup.get("operational_board", "Operational board unavailable.")), 4, 84)
 	_start_skirmish_button.disabled = false
 	_start_skirmish_button.text = "Launch Skirmish"
-	_start_skirmish_button.tooltip_text = "Launch %s at %s difficulty." % [
-		String(setup.get("scenario_name", _selected_skirmish_id)),
-		String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty))),
-	]
+	_start_skirmish_button.tooltip_text = String(setup.get("launch_preview", "")).strip_edges()
+	if _start_skirmish_button.tooltip_text == "":
+		_start_skirmish_button.tooltip_text = "Launch %s at %s difficulty." % [
+			String(setup.get("scenario_name", _selected_skirmish_id)),
+			String(setup.get("difficulty_label", ScenarioSelectRulesScript.difficulty_label(_selected_difficulty))),
+		]
 
 func _selected_skirmish_entry() -> Dictionary:
 	for entry in _skirmish_entries:
@@ -649,8 +651,8 @@ func _build_campaign_pulse() -> String:
 func _build_save_pulse() -> String:
 	var latest_summary := SaveService.latest_loadable_summary()
 	var latest_line := "No active resume point."
-	if not latest_summary.is_empty():
-		latest_line = "%s | %s" % [
+	if SaveService.can_load_summary(latest_summary):
+		latest_line = "Continue Latest: %s | %s" % [
 			SaveService.describe_resume_brief(latest_summary),
 			SaveService.format_modified_timestamp(int(latest_summary.get("modified_timestamp", 0))),
 		]
@@ -661,6 +663,13 @@ func _build_save_pulse() -> String:
 			latest_line,
 		]
 	)
+
+func _build_footer_expedition_summary() -> String:
+	var lines := [ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())]
+	var latest_summary := SaveService.latest_loadable_summary()
+	if SaveService.can_load_summary(latest_summary):
+		lines.append("Latest save: %s" % SaveService.describe_resume_brief(latest_summary))
+	return "\n".join(lines)
 
 func _select_menu_tab(index: int) -> void:
 	if _menu_tabs.get_tab_count() == 0:
@@ -724,6 +733,15 @@ func validation_snapshot() -> Dictionary:
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_difficulty": _selected_difficulty,
+		"skirmish_details": _skirmish_details_label.text,
+		"skirmish_details_full": _skirmish_details_label.tooltip_text,
+		"skirmish_setup": _setup_summary_label.text,
+		"skirmish_setup_full": _setup_summary_label.tooltip_text,
+		"difficulty_summary": _difficulty_summary_label.text,
+		"difficulty_summary_full": _difficulty_summary_label.tooltip_text,
+		"start_skirmish_text": _start_skirmish_button.text,
+		"start_skirmish_tooltip": _start_skirmish_button.tooltip_text,
+		"start_skirmish_enabled": not _start_skirmish_button.disabled,
 		"selected_save_key": _selected_save_key,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"selected_save_summary": selected_save_summary.duplicate(true),
@@ -746,6 +764,8 @@ func validation_snapshot() -> Dictionary:
 		"presentation_resolution_options": SettingsService.build_resolution_options(),
 		"resolution_picker_items": _picker_item_labels(_resolution_picker),
 		"summary": _summary_label.text,
+		"active_expedition": _active_expedition_label.text,
+		"active_expedition_full": _active_expedition_label.tooltip_text,
 	}
 
 func _first_view_command_labels() -> Array:
