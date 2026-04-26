@@ -40,6 +40,9 @@ func _run_town_smoke() -> bool:
 		push_error("Town smoke: construction action surface did not populate.")
 		get_tree().quit(1)
 		return false
+	if not _assert_town_economy_decision_payload(shell):
+		get_tree().quit(1)
+		return false
 
 	shell.queue_free()
 	await get_tree().process_frame
@@ -219,6 +222,58 @@ func _move_active_hero_to_town(session, town: Dictionary) -> void:
 			hero["position"] = position.duplicate(true)
 			heroes[index] = hero
 	session.overworld["player_heroes"] = heroes
+
+func _assert_town_economy_decision_payload(shell: Node) -> bool:
+	if not shell.has_method("validation_action_catalog") or not shell.has_method("validation_try_progress_action"):
+		push_error("Town smoke: town shell does not expose action catalog validation hooks.")
+		return false
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var build_actions: Array = catalog.get("build", [])
+	if build_actions.is_empty():
+		push_error("Town smoke: town action catalog did not expose build actions.")
+		return false
+	var build_surface_ok := false
+	for action in build_actions:
+		if not (action is Dictionary):
+			continue
+		var summary := String(action.get("summary", ""))
+		var affordability := String(action.get("affordability_label", ""))
+		if summary.contains("Cost ") and (summary.contains("Ready:") or summary.contains("Blocked:") or summary.contains("Needs exchange:")) and affordability != "":
+			build_surface_ok = true
+		if bool(action.get("disabled", false)) and String(action.get("disabled_reason", "")) == "":
+			push_error("Town smoke: disabled build action is missing an economy disabled reason: %s." % action)
+			return false
+	if not build_surface_ok:
+		push_error("Town smoke: build actions do not explain cost readiness in their live tooltip payload: %s." % build_actions)
+		return false
+
+	var recruit_actions: Array = catalog.get("recruit", [])
+	if recruit_actions.is_empty():
+		push_error("Town smoke: town action catalog did not expose recruit actions.")
+		return false
+	var recruit_surface_ok := false
+	for action in recruit_actions:
+		if not (action is Dictionary):
+			continue
+		var summary := String(action.get("summary", ""))
+		if summary.contains("Weekly +") and summary.contains("Cost ") and String(action.get("affordability_label", "")) != "":
+			recruit_surface_ok = true
+		if bool(action.get("disabled", false)) and String(action.get("disabled_reason", "")) == "":
+			push_error("Town smoke: disabled recruit action is missing an economy disabled reason: %s." % action)
+			return false
+	if not recruit_surface_ok:
+		push_error("Town smoke: recruit actions do not explain weekly growth, cost, and affordability in their live payload: %s." % recruit_actions)
+		return false
+
+	var progress: Dictionary = shell.call("validation_try_progress_action")
+	if not bool(progress.get("ok", false)):
+		push_error("Town smoke: validation town economy action did not change state: %s." % progress)
+		return false
+	var message := String(progress.get("message", ""))
+	if not message.contains("Spent ") or (not message.contains("remain in town reserve") and not message.contains("Daily income now") and not message.contains("Weekly muster")):
+		push_error("Town smoke: economy action feedback did not explain spend plus the visible town/field outcome: %s." % progress)
+		return false
+	return true
 
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):
