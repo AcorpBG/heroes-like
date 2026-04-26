@@ -1807,6 +1807,14 @@ static func describe_spellbook(session: SessionStateStoreScript.SessionData, con
 		)
 	return SpellRulesScript.describe_spellbook(session.overworld.get("hero", {}), context_filter)
 
+static func describe_spellbook_rail(session: SessionStateStoreScript.SessionData, context_filter: String = "") -> String:
+	if context_filter == SpellRulesScript.CONTEXT_OVERWORLD:
+		return SpellRulesScript.describe_overworld_spell_rail(
+			session.overworld.get("hero", {}),
+			session.overworld.get("movement", {})
+		)
+	return SpellRulesScript.describe_spellbook(session.overworld.get("hero", {}), context_filter)
+
 static func describe_specialties(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	return HeroProgressionRulesScript.describe_specialties(session.overworld.get("hero", {}))

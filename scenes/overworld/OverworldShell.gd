@@ -515,7 +515,7 @@ func _refresh() -> void:
 	var specialty_text := OverworldRules.describe_specialties(_session)
 	_set_rail_text(_specialty_label, specialty_text, _rail_prefixed_summary("Spec", specialty_text), 1)
 	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
-	_set_rail_text(_spell_label, spell_text, _rail_prefixed_summary("Spell", spell_text), 1)
+	_set_rail_text(_spell_label, spell_text, OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD), 1)
 	var artifact_text := OverworldRules.describe_artifacts(_session)
 	_set_rail_text(_artifact_label, artifact_text, _rail_prefixed_summary("Gear", artifact_text), 1)
 	var command_risk_surface := {}
@@ -2123,6 +2123,7 @@ func validation_snapshot() -> Dictionary:
 		"spellbook_text": OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD),
 		"spellbook_visible_text": _spell_label.text,
 		"spellbook_tooltip_text": _spell_label.tooltip_text,
+		"spellbook_rail_text": OverworldRules.describe_spellbook_rail(_session, SpellRules.CONTEXT_OVERWORLD),
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"objective_brief_visible_text": _objective_brief_label.text,
@@ -2918,6 +2919,12 @@ func _validation_spell_action_payloads() -> Array:
 		payload["readiness"] = String(action.get("readiness", ""))
 		payload["best_use"] = String(action.get("best_use", ""))
 		payload["target"] = String(action.get("target", ""))
+		payload["target_requirement"] = String(action.get("target_requirement", ""))
+		payload["mana_state"] = String(action.get("mana_state", ""))
+		payload["mana_ready"] = bool(action.get("mana_ready", false))
+		payload["mana_shortfall"] = int(action.get("mana_shortfall", 0))
+		payload["consequence"] = String(action.get("consequence", ""))
+		payload["why_cast"] = String(action.get("why_cast", ""))
 		payload["availability"] = String(action.get("availability", ""))
 		payload["invalid_reason"] = String(action.get("invalid_reason", ""))
 		payloads.append(payload)
