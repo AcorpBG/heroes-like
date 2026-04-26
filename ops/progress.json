@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T22:36:28Z",
+  "updatedAt": "2026-04-26T22:48:01Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-save-readiness-check-10184",
-  "currentSliceTitle": "Surface compact outcome save readiness cues",
+  "currentSliceId": "editor-active-tool-cue-10184",
+  "currentSliceTitle": "Surface compact map-editor active tool cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible outcome UI polish: the outcome save panel, save status tooltip, and save button tooltip now surface SaveService save-check/play-check/return-handoff payloads, with focused skirmish/campaign outcome smoke coverage. UI/readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, campaign progression semantic changes, or internal score fields.",
+  "currentSliceNotes": "Implemented compact map-editor active-tool cue polish: the editor status rail, map tooltip, tool button tooltips, and validation snapshot now surface current tool action, selected tile, next click, and relevant brush/palette/path detail using existing working-copy state. Added focused map-editor smoke assertions with no internal score-field leaks. UI/tooling readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, campaign progression semantic changes, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1805,6 +1805,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T22:22:13Z",
       "completedAt": "2026-04-26T22:28:33Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "editor-active-tool-cue-10184",
+      "title": "Surface compact map-editor active tool cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T22:39:15Z",
+      "completedAt": "2026-04-26T22:48:01Z",
       "difficulty": "small"
     }
   ],
