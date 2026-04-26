@@ -1574,7 +1574,13 @@ static func cycle_target(session: SessionStateStoreScript.SessionData, direction
 static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
 		return "Battle Spells | Mana 0/0 | No known spells"
-	var summary := SpellRulesScript.describe_spellbook(_player_commander_state(session), SpellRulesScript.CONTEXT_BATTLE)
+	var battle = session.battle if not session.battle.is_empty() else {}
+	var summary := SpellRulesScript.describe_battle_spellbook(
+		_player_commander_state(session),
+		battle,
+		get_active_stack(battle) if not battle.is_empty() else {},
+		get_selected_target(battle) if not battle.is_empty() else {}
+	)
 	if not session.battle.is_empty() and _commander_spell_cast_this_round(session.battle, "player"):
 		summary += " | Commander spell already cast this round"
 	return summary

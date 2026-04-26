@@ -49,6 +49,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_hero_identity_progression_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_magic_inspection_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_economy_decision_payload(shell):
 		get_tree().quit(1)
 		return false
@@ -85,6 +88,9 @@ func _run_battle_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	if not _assert_battle_stack_inspection_contract(shell):
+		get_tree().quit(1)
+		return false
+	if not _assert_battle_magic_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
 	if not board.has_method("validation_hex_layout_summary"):
@@ -272,6 +278,37 @@ func _assert_town_hero_identity_progression_contract(shell: Node) -> bool:
 		push_error("Town smoke: hero panel did not expose readiness and army command context: %s." % town_hero_text)
 		return false
 	return true
+
+func _assert_town_magic_inspection_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_action_catalog"):
+		push_error("Town smoke: shell is missing magic inspection validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var magic_text := "\n".join([
+		String(snapshot.get("study_text", "")),
+		String(snapshot.get("study_tooltip_text", "")),
+		String(snapshot.get("spellbook_text", "")),
+		String(snapshot.get("spellbook_tooltip_text", "")),
+	])
+	for token in ["Spell Study", "Spellbook", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Ready mana", "Use:"]:
+		if not magic_text.contains(token):
+			push_error("Town smoke: magic panels lost practical spellbook token %s: %s." % [token, magic_text])
+			return false
+	var catalog: Dictionary = shell.call("validation_action_catalog")
+	var study_actions: Array = catalog.get("study", [])
+	if study_actions.is_empty():
+		return true
+	for action in study_actions:
+		if action is Dictionary:
+			var payload := "%s\n%s\n%s" % [
+				String(action.get("label", "")),
+				String(action.get("category", "")),
+				String(action.get("summary", "")),
+			]
+			if payload.contains("Cost") and payload.contains("Use:") and (payload.contains("Battle ") or payload.contains("Field ")):
+				return true
+	push_error("Town smoke: study actions do not expose compact category/cost/effect/use payloads: %s." % study_actions)
+	return false
 
 func _assert_battle_stack_inspection_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
@@ -465,6 +502,40 @@ func _assert_town_stack_inspection_contract(shell: Node) -> bool:
 			return true
 	push_error("Town smoke: recruit action tooltips do not expose stack role/health/strength: %s." % [catalog.get("recruit", [])])
 	return false
+
+func _assert_battle_magic_inspection_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: battle shell does not expose magic validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var magic_text := "\n".join([
+		String(snapshot.get("spellbook_text", "")),
+		String(snapshot.get("spellbook_tooltip_text", "")),
+		String(snapshot.get("spell_timing_text", "")),
+		String(snapshot.get("spell_timing_tooltip_text", "")),
+	])
+	for token in ["Battle Spells", "Mana", "Cinder Burst", "Battle Strike", "Stone Veil", "Battle Ward", "Cost", "Use:"]:
+		if not magic_text.contains(token):
+			push_error("Battle smoke: spellbook/timing panels lost practical magic token %s: %s." % [token, magic_text])
+			return false
+	var spell_actions: Array = snapshot.get("spell_actions", [])
+	var inspected_action := false
+	for action in spell_actions:
+		if action is Dictionary:
+			var payload := "%s\n%s\n%s\n%s\n%s" % [
+				String(action.get("label", "")),
+				String(action.get("category", "")),
+				String(action.get("effect", "")),
+				String(action.get("best_use", "")),
+				String(action.get("summary", "")),
+			]
+			if payload.contains("Battle ") and payload.contains("Cost") and payload.contains("Target") and String(action.get("best_use", "")) != "":
+				inspected_action = true
+				break
+	if not inspected_action:
+		push_error("Battle smoke: spell action tooltips do not expose category, cost, target, effect, and use context: %s." % [spell_actions])
+		return false
+	return true
 
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

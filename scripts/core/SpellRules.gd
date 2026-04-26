@@ -105,6 +105,235 @@ static func known_spells(hero_state: Dictionary, context_filter: String = "") ->
 static func describe_spellbook(hero_state: Dictionary, context_filter: String = "") -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var label := "Spellbook"
+	if context_filter == CONTEXT_OVERWORLD:
+		label = "Field Spells"
+	elif context_filter == CONTEXT_BATTLE:
+		label = "Battle Spells"
+	var lines := [
+		"%s | Mana %d/%d" % [
+			label,
+			int(mana.get("current", 0)),
+			int(mana.get("max", 0)),
+		]
+	]
+	var spell_lines := []
+	for spell in known_spells(hero, context_filter):
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+		spell_lines.append(
+			"- %s | %s | Cost %d | %s | %s | Use: %s" % [
+				String(spell.get("name", spell.get("id", "Spell"))),
+				spell_category_label(spell),
+				mana_cost,
+				_mana_readiness_label(hero, mana_cost),
+				_spell_effect_summary(spell, hero),
+				_best_use_line(spell),
+			]
+		)
+	if spell_lines.is_empty():
+		lines.append("- No known spells")
+	else:
+		lines.append_array(spell_lines)
+	return "\n".join(lines)
+
+static func spell_category_label(spell: Dictionary) -> String:
+	var context := String(spell.get("context", ""))
+	var effect = spell.get("effect", {})
+	var effect_type := String(effect.get("type", ""))
+	if context == CONTEXT_OVERWORLD:
+		match effect_type:
+			"restore_movement":
+				return "Field Route"
+			_:
+				return "Field Utility"
+	if context == CONTEXT_BATTLE:
+		match effect_type:
+			"damage_enemy":
+				return "Battle Strike"
+			"defense_buff":
+				return "Battle Ward"
+			"initiative_buff":
+				return "Battle Tempo"
+			"attack_buff":
+				return "Battle Assault"
+			_:
+				return "Battle Utility"
+	return "Unsorted Magic"
+
+static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+	var readiness := _mana_readiness_label(hero, mana_cost)
+	var context := String(spell.get("context", ""))
+	if context == CONTEXT_OVERWORLD:
+		var movement: Dictionary = context_state.get("movement", {})
+		if not movement.is_empty():
+			var validation := validate_overworld_spell(hero, movement, spell)
+			readiness = "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
+		return "%s | %s | Cost %d | %s | %s | Use: %s" % [
+			String(spell.get("name", "Spell")),
+			spell_category_label(spell),
+			mana_cost,
+			readiness,
+			_overworld_spell_effect_summary(spell, movement),
+			_best_use_line(spell, movement),
+		]
+	if context == CONTEXT_BATTLE:
+		var battle: Dictionary = context_state.get("battle", {})
+		var active_stack: Dictionary = context_state.get("active_stack", {})
+		var target_stack: Dictionary = context_state.get("target_stack", {})
+		if not battle.is_empty():
+			var validation := validate_battle_spell(hero, battle, active_stack, target_stack, spell)
+			readiness = "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
+		return "%s | %s | Cost %d | %s | %s | Use: %s" % [
+			String(spell.get("name", "Spell")),
+			spell_category_label(spell),
+			mana_cost,
+			readiness,
+			_battle_spell_effect_summary(hero, spell, battle, active_stack, target_stack),
+			_best_use_line(spell, battle, active_stack, target_stack),
+		]
+	return "%s | %s | Cost %d | %s | %s | Use: %s" % [
+		String(spell.get("name", "Spell")),
+		spell_category_label(spell),
+		mana_cost,
+		readiness,
+		_spell_effect_summary(spell, hero),
+		_best_use_line(spell),
+	]
+
+static func describe_battle_spellbook(hero_state: Dictionary, battle: Dictionary, active_stack: Dictionary, target_stack: Dictionary) -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var lines := [
+		"Battle Spells | Mana %d/%d" % [
+			int(mana.get("current", 0)),
+			int(mana.get("max", 0)),
+		]
+	]
+	var spell_lines := []
+	for spell in known_spells(hero, CONTEXT_BATTLE):
+		spell_lines.append(
+			"- %s" % describe_spell_inspection_line(
+				hero,
+				spell,
+				{
+					"battle": battle,
+					"active_stack": active_stack,
+					"target_stack": target_stack,
+				}
+			)
+		)
+	if spell_lines.is_empty():
+		lines.append("- No battle spells known")
+	else:
+		lines.append_array(spell_lines)
+	return "\n".join(lines)
+
+static func describe_overworld_spellbook(hero_state: Dictionary, movement_state: Dictionary) -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var lines := [
+		"Field Spells | Mana %d/%d" % [
+			int(mana.get("current", 0)),
+			int(mana.get("max", 0)),
+		]
+	]
+	var spell_lines := []
+	for spell in known_spells(hero, CONTEXT_OVERWORLD):
+		spell_lines.append(
+			"- %s" % describe_spell_inspection_line(
+				hero,
+				spell,
+				{"movement": movement_state}
+			)
+		)
+	if spell_lines.is_empty():
+		lines.append("- No field spells known")
+	else:
+		lines.append_array(spell_lines)
+	return "\n".join(lines)
+
+static func _mana_readiness_label(hero_state: Dictionary, mana_cost: int) -> String:
+	var current_mana := int(hero_state.get("spellbook", {}).get("mana", {}).get("current", 0))
+	if current_mana >= max(0, mana_cost):
+		return "Ready mana"
+	return "Need %d mana" % max(0, mana_cost - current_mana)
+
+static func _spell_effect_summary(spell: Dictionary, hero_state: Dictionary) -> String:
+	match String(spell.get("context", "")):
+		CONTEXT_OVERWORLD:
+			return _overworld_spell_effect_summary(spell, {})
+		CONTEXT_BATTLE:
+			return _battle_spell_effect_summary(hero_state, spell, {}, {}, {})
+		_:
+			return "No supported effect"
+
+static func _battle_spell_effect_summary(
+	hero_state: Dictionary,
+	spell: Dictionary,
+	battle: Dictionary = {},
+	active_stack: Dictionary = {},
+	target_stack: Dictionary = {}
+) -> String:
+	var effect = spell.get("effect", {})
+	match String(effect.get("type", "")):
+		"damage_enemy":
+			var power := int(hero_state.get("command", {}).get("power", 0))
+			var damage := int(max(1, int(effect.get("base_damage", 0)) + (max(0, power) * int(effect.get("power_scale", 0)))))
+			var target_label := String(target_stack.get("name", "selected enemy"))
+			var summary := "%d damage to %s" % [damage, target_label]
+			var status_effect: Dictionary = effect.get("status_effect", {})
+			if status_effect is Dictionary and not status_effect.is_empty():
+				summary += "; applies %s %dr" % [
+					String(status_effect.get("label", "effect")),
+					max(1, int(status_effect.get("duration_rounds", 1))),
+				]
+			return summary
+		"defense_buff", "initiative_buff", "attack_buff":
+			var target_label := String(active_stack.get("name", "active stack"))
+			return "%s to %s for %d rounds" % [
+				_modifier_summary(battle_spell_modifiers(spell)),
+				target_label,
+				max(1, int(effect.get("duration_rounds", 1))),
+			]
+		_:
+			return "No supported battle effect"
+
+static func _best_use_line(
+	spell: Dictionary,
+	context: Dictionary = {},
+	active_stack: Dictionary = {},
+	target_stack: Dictionary = {}
+) -> String:
+	var effect = spell.get("effect", {})
+	match String(effect.get("type", "")):
+		"restore_movement":
+			if not context.is_empty():
+				var current := int(context.get("current", 0))
+				var max_movement := int(context.get("max", 0))
+				if current >= max_movement:
+					return "save until movement has room"
+			return "recover route tempo after spending movement"
+		"damage_enemy":
+			var damage_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
+			return damage_timing.trim_prefix("Best ").trim_suffix(".") if damage_timing != "" else "soften the selected enemy before a trade"
+		"defense_buff":
+			var defense_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
+			return defense_timing.trim_prefix("Best ").trim_suffix(".") if defense_timing != "" else "hold the stack that must absorb the reply"
+		"initiative_buff":
+			var initiative_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
+			return initiative_timing.trim_prefix("Best ").trim_suffix(".") if initiative_timing != "" else "win a contested activation window"
+		"attack_buff":
+			var attack_timing := battle_spell_timing_summary({}, context, active_stack, target_stack, spell)
+			return attack_timing.trim_prefix("Best ").trim_suffix(".") if attack_timing != "" else "cast before an immediate damage order"
+		_:
+			var description := String(spell.get("description", "")).strip_edges()
+			return description if description != "" else "use when the current board state supports it"
+
+static func _legacy_spellbook_summary(hero_state: Dictionary, context_filter: String = "") -> String:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
 	var names := []
 	for spell in known_spells(hero, context_filter):
 		names.append(String(spell.get("name", spell.get("id", "Spell"))))
@@ -120,40 +349,15 @@ static func describe_spellbook(hero_state: Dictionary, context_filter: String = 
 		", ".join(names) if not names.is_empty() else "No known spells",
 	]
 
-static func describe_overworld_spellbook(hero_state: Dictionary, movement_state: Dictionary) -> String:
-	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
-	var lines := [
-		"Field Spells | Mana %d/%d" % [
-			int(mana.get("current", 0)),
-			int(mana.get("max", 0)),
-		]
-	]
-	var spell_lines := []
-	for spell in known_spells(hero, CONTEXT_OVERWORLD):
-		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
-		var validation := validate_overworld_spell(hero, movement_state, spell)
-		var availability := "ready" if bool(validation.get("ok", false)) else String(validation.get("message", "not ready")).to_lower()
-		spell_lines.append(
-			"%s: %s, %d mana, %s" % [
-				String(spell.get("name", "Spell")),
-				_overworld_spell_effect_summary(spell, movement_state),
-				mana_cost,
-				availability,
-			]
-		)
-	if spell_lines.is_empty():
-		lines.append("No field spells known.")
-	else:
-		lines.append("; ".join(spell_lines))
-	return "\n".join(lines)
-
 static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictionary) -> Array:
 	var actions := []
 	for spell in known_spells(hero_state, CONTEXT_OVERWORLD):
 		var validation := validate_overworld_spell(hero_state, movement_state, spell)
 		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
 		var summary := _overworld_spell_action_summary(movement_state, spell, validation, mana_cost)
+		var category := spell_category_label(spell)
+		var effect_summary := _overworld_spell_effect_summary(spell, movement_state)
+		var readiness := "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
 		actions.append(
 			{
 				"id": "cast_spell:%s" % String(spell.get("id", "")),
@@ -161,6 +365,10 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 				"disabled": not bool(validation.get("ok", false)),
 				"summary": summary,
 				"cost": mana_cost,
+				"category": category,
+				"effect": effect_summary,
+				"readiness": readiness,
+				"best_use": _best_use_line(spell, movement_state),
 				"target": _target_mode_label(String(spell.get("target_mode", "self"))),
 				"availability": "ready" if bool(validation.get("ok", false)) else "blocked",
 				"invalid_reason": String(validation.get("message", "")) if not bool(validation.get("ok", false)) else "",
@@ -214,13 +422,26 @@ static func get_battle_actions(hero_state: Dictionary, battle: Dictionary, activ
 		var summary := _battle_spell_action_summary(hero_state, battle, active_stack, target_stack, spell)
 		var validation_message := String(validation.get("message", ""))
 		if validation_message != "":
-			summary = "%s %s" % [summary, validation_message]
+			summary = "%s Blocked: %s" % [summary, validation_message]
+		summary = "%s | Cost %d mana | Target %s | %s %s" % [
+			spell_category_label(spell),
+			mana_cost,
+			_target_mode_label(String(spell.get("target_mode", "self"))),
+			"Ready." if bool(validation.get("ok", false)) else "",
+			summary.strip_edges(),
+		]
 		actions.append(
 			{
 				"id": "cast_spell:%s" % String(spell.get("id", "")),
 				"label": "Cast %s (%d)" % [String(spell.get("name", "Spell")), mana_cost],
 				"disabled": not bool(validation.get("ok", false)),
 				"summary": summary.strip_edges(),
+				"cost": mana_cost,
+				"category": spell_category_label(spell),
+				"effect": _battle_spell_effect_summary(hero_state, spell, battle, active_stack, target_stack),
+				"readiness": "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % validation_message,
+				"target": _target_mode_label(String(spell.get("target_mode", "self"))),
+				"best_use": _best_use_line(spell, battle, active_stack, target_stack),
 			}
 		)
 	return actions
@@ -552,9 +773,10 @@ static func _overworld_spell_action_summary(
 	var availability := "Ready now." if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
 	var description := String(spell.get("description", "")).strip_edges()
 	var pieces := [
-		"%s." % _overworld_spell_effect_summary(spell, movement_state),
+		"%s | %s." % [String(spell_category_label(spell)), _overworld_spell_effect_summary(spell, movement_state)],
 		"Cost %d mana; target %s." % [mana_cost, target_label],
 		availability,
+		"Use: %s." % _best_use_line(spell, movement_state),
 	]
 	if description != "":
 		pieces.append(description)

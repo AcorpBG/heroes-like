@@ -568,10 +568,12 @@ static func describe_spell_access(session: SessionStateStoreScript.SessionData) 
 		var spell := ContentService.get_spell(spell_id)
 		if spell.is_empty():
 			continue
+		var status := "Known" if SpellRulesScript.knows_spell(hero, spell_id) else "Ready to learn"
 		lines.append(
-			"- %s | %s" % [
-				String(spell.get("name", spell_id)),
-				"Known" if SpellRulesScript.knows_spell(hero, spell_id) else "Ready to learn",
+			"- %s | %s | %s" % [
+				status,
+				SpellRulesScript.spell_category_label(spell),
+				SpellRulesScript.describe_spell_inspection_line(hero, spell),
 			]
 		)
 	return "Spell Study\nTier %d archive access\n%s" % [
@@ -845,14 +847,17 @@ static func get_spell_learning_actions(session: SessionStateStoreScript.SessionD
 		var spell := ContentService.get_spell(spell_id)
 		if spell.is_empty():
 			continue
+		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
 		actions.append(
 			{
 				"id": "learn_spell:%s" % spell_id,
-				"label": "Learn %s" % String(spell.get("name", spell_id)),
-				"summary": "%s | %s" % [
+				"label": "Learn %s (%d mana)" % [String(spell.get("name", spell_id)), mana_cost],
+				"summary": "%s\n%s" % [
 					String(spell.get("name", spell_id)),
-					String(spell.get("description", "")),
+					SpellRulesScript.describe_spell_inspection_line(hero, spell),
 				],
+				"cost": mana_cost,
+				"category": SpellRulesScript.spell_category_label(spell),
 				"disabled": false,
 			}
 		)

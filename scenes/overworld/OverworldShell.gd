@@ -2078,6 +2078,9 @@ func validation_snapshot() -> Dictionary:
 		"army_text": OverworldRules.describe_army(_session),
 		"army_visible_text": _army_label.text,
 		"army_tooltip_text": _army_label.tooltip_text,
+		"spellbook_text": OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD),
+		"spellbook_visible_text": _spell_label.text,
+		"spellbook_tooltip_text": _spell_label.tooltip_text,
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"objective_brief_visible_text": _objective_brief_label.text,
@@ -2866,6 +2869,10 @@ func _validation_spell_action_payloads() -> Array:
 			continue
 		var payload := _validation_action_payload(action)
 		payload["cost"] = int(action.get("cost", 0))
+		payload["category"] = String(action.get("category", ""))
+		payload["effect"] = String(action.get("effect", ""))
+		payload["readiness"] = String(action.get("readiness", ""))
+		payload["best_use"] = String(action.get("best_use", ""))
 		payload["target"] = String(action.get("target", ""))
 		payload["availability"] = String(action.get("availability", ""))
 		payload["invalid_reason"] = String(action.get("invalid_reason", ""))
