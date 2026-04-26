@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T18:45:00Z",
+  "updatedAt": "2026-04-26T19:20:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-event-surfacing-planning-10184",
-  "currentSliceTitle": "Plan compact strategic AI event and threat reason surfacing",
+  "currentSliceId": "strategic-ai-event-surfacing-implementation-10184",
+  "currentSliceTitle": "Implement compact strategic AI event and threat reason surfacing",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI economy pressure report gate is complete in docs/strategic-ai-economy-pressure-report-gate-review.md and passes. The focused Godot report shows player-owned river_signal_post outranking simple pickups in the reachable report, player-owned river_free_company and river_signal_post ranking first and second when both are owned, explainable target reasons, no hidden difficulty bonus, no broad rewrite, and riverwatch_hold still able to dominate the full target selector. The next slice should plan compact reusable AI event/threat reason surfacing for target assignment, site contest, site seizure, and pressure summaries before broader strategic AI expansion. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Strategic AI event/threat reason surfacing planning is complete in docs/strategic-ai-event-surfacing-plan.md. The plan defines a compact two-surface model: minimal public AI event/threat reasons for target assignment, site contest, site seizure, and pressure summaries, with full score breakdowns kept debug/report-only. It uses the River Pass signal-yard gate as the first example: river_free_company, river_signal_post, riverwatch_hold, site contest, and site seizure messaging. The next slice should implement this narrowly and report-first from existing EnemyAdventureRules / EnemyTurnRules hooks, prefer ephemeral or derived event records, and avoid save migration unless a bounded durable recent-event log is explicitly justified. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -405,6 +405,14 @@
     {
       "id": "strategic-ai-event-surfacing-planning-10184",
       "title": "Plan compact strategic AI event and threat reason surfacing",
+      "status": "completed",
+      "startedAt": "2026-04-26T18:50:00Z",
+      "completedAt": "2026-04-26T19:20:00Z",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-event-surfacing-implementation-10184",
+      "title": "Implement compact strategic AI event and threat reason surfacing",
       "status": "pending",
       "difficulty": "high"
     },
