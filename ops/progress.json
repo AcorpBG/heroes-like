@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:59:50Z",
+  "updatedAt": "2026-04-26T23:59:59Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-glassroad-defense-proof-planning-10184",
-  "currentSliceTitle": "Plan a bounded Embercourt Glassroad defense and stabilization proof",
+  "currentSliceId": "strategic-ai-glassroad-defense-proof-report-10184",
+  "currentSliceTitle": "Produce a focused Embercourt Glassroad defense and stabilization proof report",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI site-control proof reporting is complete in docs/strategic-ai-capture-countercapture-defense-proof-report.md plus tests/ai_site_control_proof_report.gd. The Mireclaw river-pass proof passed: river_free_company and river_signal_post rank first and second when player controlled, assignment and seizure public events stay compact, river_free_company flips from player to faction_mireclaw under current raid resolution, and choose_target may still prefer riverwatch_hold as the valid town-front sanity result. No coefficient defect was found, so the next current slice should plan a bounded Embercourt Glassroad defense/stabilization proof around glassroad_watch_relay and glassroad_starlens rather than tuning. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, coefficient tuning, or River Pass rebalance.",
+  "currentSliceNotes": "Strategic AI Glassroad defense proof planning is complete in docs/strategic-ai-glassroad-defense-proof-plan.md. The plan selects glassroad-sundering as the direct Embercourt enemy fixture, glassroad_watch_relay as the primary relay proof site, glassroad_starlens as the companion stabilization/reason surface, halo_spire_bridgehead as the valid town-front sanity check, and riverwatch_market town-governor garrison stabilization as the defense signal. The next current slice should add a focused AI_GLASSROAD_DEFENSE_PROOF_REPORT Godot report and short report document, proving current assignment/retake or recording the exact blocker. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, defense-specific durable state, behavior tuning, coefficient tuning, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -515,6 +515,16 @@
     {
       "id": "strategic-ai-glassroad-defense-proof-planning-10184",
       "title": "Plan a bounded Embercourt Glassroad defense and stabilization proof",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:59:50Z",
+      "completedAt": "2026-04-26T23:59:59Z",
+      "decision": "glassroad-defense-proof-report-next",
+      "proofPlan": "docs/strategic-ai-glassroad-defense-proof-plan.md",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-glassroad-defense-proof-report-10184",
+      "title": "Produce a focused Embercourt Glassroad defense and stabilization proof report",
       "status": "pending",
       "difficulty": "high"
     },
@@ -986,7 +996,7 @@
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
     "Use docs/strategic-ai-event-surfacing-report-gate-review.md as the current AI surfacing gate result: compact public assignment, pressure, seizure, contest, threat, and dispatch reason output passes; score tables stay report/debug-only; manual live-client signal-yard enemy-turn review is deferred until broader AI expansion affects live turn readability.",
-    "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, and docs/strategic-ai-strategy-config-audit-report.md as the current AI planning/evidence contracts: the next slice is capture/counter-capture defense proof planning before coefficient tuning, commander-role state planning, durable event logs, full AI heroes, or broad rewrites.",
+    "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, and docs/strategic-ai-glassroad-defense-proof-plan.md as the current AI planning/evidence contracts: the next slice is a focused Glassroad defense/stabilization proof report before coefficient tuning, commander-role state planning, durable event logs, full AI heroes, defense-specific durable state, or broad rewrites.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
