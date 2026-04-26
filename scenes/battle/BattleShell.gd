@@ -907,6 +907,7 @@ func _battle_action_context_surface(dispatch_text: String = "", action_confirmat
 		next_step = String(action_confirmation.get("next_step", action_confirmation.get("visible_text", ""))).strip_edges()
 	if next_step == "":
 		next_step = "Choose the next legal battle order."
+	var handoff_check := _battle_action_handoff_check(next_step, action_confirmation)
 	var visible := "Latest: %s" % _short_text(_strip_sentence(latest_action), 38)
 	if next_step != "":
 		visible = "%s | Next: %s" % [
@@ -914,9 +915,10 @@ func _battle_action_context_surface(dispatch_text: String = "", action_confirmat
 			_short_text(_strip_sentence(next_step).trim_suffix("."), 34),
 		]
 	var tooltip := _join_tooltip_sections([
-		"Battle Turn Context\n- Latest action: %s\n- Next practical step: %s" % [
+		"Battle Turn Context\n- Latest action: %s\n- Next practical step: %s\n- Handoff check: %s" % [
 			latest_action,
 			next_step,
+			handoff_check,
 		],
 		String(_last_action_recap_payload.get("tooltip_text", _last_action_recap_payload.get("tooltip", ""))),
 		String(action_confirmation.get("tooltip_text", "")),
@@ -927,8 +929,18 @@ func _battle_action_context_surface(dispatch_text: String = "", action_confirmat
 		"tooltip_text": tooltip,
 		"latest_action": latest_action,
 		"next_step": next_step,
+		"handoff_check": handoff_check,
 		"source": "post_action_recap",
 	}
+
+func _battle_action_handoff_check(next_step: String, action_confirmation: Dictionary = {}) -> String:
+	var cleaned_next := _strip_sentence(next_step).trim_suffix(".")
+	if cleaned_next == "":
+		cleaned_next = "choose the next legal battle order"
+	var ready_text := _strip_sentence(String(action_confirmation.get("visible_text", ""))).trim_suffix(".")
+	if ready_text != "":
+		return "%s; %s." % [cleaned_next.capitalize(), ready_text]
+	return "%s before returning to field, menu, or outcome flow." % cleaned_next.capitalize()
 
 func _append_last_action_tooltips() -> void:
 	var recap_tooltip := String(_last_action_recap_payload.get("tooltip", "")).strip_edges()

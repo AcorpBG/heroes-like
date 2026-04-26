@@ -875,6 +875,7 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		next_step = String(departure.get("next_step", "")).strip_edges()
 	if next_step == "":
 		next_step = "Review the next town order or leave to the field."
+	var handoff_check := _town_action_handoff_check(next_step, departure)
 	var visible := "Latest: %s" % _short_text(_strip_sentence(latest_action), 42)
 	visible = "%s | Next: %s" % [
 		visible,
@@ -889,9 +890,10 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 	if save_recap != "":
 		save_lines.append("Saving now recap:\n%s" % save_recap)
 	var tooltip := _join_tooltip_sections([
-		"Town Turn Context\n- Latest action: %s\n- Next practical step: %s\n- Town status: %s" % [
+		"Town Turn Context\n- Latest action: %s\n- Next practical step: %s\n- Handoff check: %s\n- Town status: %s" % [
 			latest_action,
 			next_step,
+			handoff_check,
 			TownRules.describe_status(_session),
 		],
 		String(_last_action_recap.get("tooltip_text", "")),
@@ -904,8 +906,18 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		"tooltip_text": tooltip,
 		"latest_action": latest_action,
 		"next_step": next_step,
+		"handoff_check": handoff_check,
 		"source": "town_action_recap",
 	}
+
+func _town_action_handoff_check(next_step: String, departure: Dictionary = {}) -> String:
+	var cleaned_next := _strip_sentence(next_step).trim_suffix(".")
+	if cleaned_next == "":
+		cleaned_next = "review the next town order"
+	var departure_text := _strip_sentence(String(departure.get("visible_text", ""))).trim_suffix(".")
+	if departure_text != "":
+		return "%s; %s." % [cleaned_next.capitalize(), departure_text]
+	return "%s before leaving, saving, or returning to the menu." % cleaned_next.capitalize()
 
 func _strip_sentence(text: String) -> String:
 	var cleaned := text.strip_edges().replace("\n", " ")

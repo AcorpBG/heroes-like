@@ -1738,6 +1738,7 @@ func _action_context_surface(event_surface: Dictionary, readiness_surface: Dicti
 		next_step = String(readiness_surface.get("next_step", "")).strip_edges()
 	if next_step == "":
 		next_step = String(event_surface.get("next_step", "")).strip_edges()
+	var handoff_check := _action_context_handoff_check(next_step, readiness_surface)
 
 	var surface := event_surface.duplicate(true)
 	var visible := "Latest: %s" % _short_text(_context_strip_sentence(latest_action), 38)
@@ -1748,17 +1749,28 @@ func _action_context_surface(event_surface: Dictionary, readiness_surface: Dicti
 		]
 	surface["visible_text"] = visible
 	surface["tooltip_text"] = _join_tooltip_sections([
-		"Current Turn Context\n- Latest action: %s\n- Next practical step: %s" % [
+		"Current Turn Context\n- Latest action: %s\n- Next practical step: %s\n- Handoff check: %s" % [
 			latest_action,
 			next_step if next_step != "" else "Select the next destination or end the turn when field orders are spent.",
+			handoff_check,
 		],
 		String(event_surface.get("tooltip_text", "")),
 		String(readiness_surface.get("tooltip_text", "")),
 	])
 	surface["latest_action"] = latest_action
 	surface["next_practical_step"] = next_step
+	surface["handoff_check"] = handoff_check
 	surface["source"] = "post_action_recap"
 	return surface
+
+func _action_context_handoff_check(next_step: String, readiness_surface: Dictionary = {}) -> String:
+	var cleaned_next := _context_strip_sentence(next_step).trim_suffix(".")
+	if cleaned_next == "":
+		cleaned_next = "choose the next field order"
+	var movement_line := String(readiness_surface.get("movement_line", "")).strip_edges()
+	if movement_line != "":
+		return "%s with %s available." % [cleaned_next.capitalize(), movement_line]
+	return "%s before saving, entering a surface, or ending the turn." % cleaned_next.capitalize()
 
 func _context_strip_sentence(text: String) -> String:
 	var cleaned := text.strip_edges().replace("\n", " ")

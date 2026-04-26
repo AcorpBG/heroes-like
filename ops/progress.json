@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T21:03:18Z",
+  "updatedAt": "2026-04-26T21:11:17Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-action-context-strip-10184",
-  "currentSliceTitle": "Surface compact town latest-action and next-step context",
+  "currentSliceId": "action-context-handoff-check-10184",
+  "currentSliceTitle": "Align Latest/Next context-strip handoff checks across overworld, battle, and town",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow player-facing town clarity slice using current town post-action recap, event/status label, town handoff/departure readiness, and save/status payloads. The town event rail now surfaces a compact visible Latest/Next context strip after town orders, and its tooltip preserves latest action, next practical step, town status, departure readiness, save continuity, and dispatch detail. Focused town_battle smoke assertions prove the visible surface and no-score-leak guard. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow player-facing UI consistency slice: the existing overworld, battle, and town Latest/Next context-strip tooltips now share a compact Handoff check line using current action recap/readiness/confirmation/departure payloads only. Focused overworld and town/battle smoke assertions prove the public surface and no-score-leak guard. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1710,6 +1710,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T21:00:49Z",
       "completedAt": "2026-04-26T21:03:18Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "action-context-handoff-check-10184",
+      "title": "Align Latest/Next context-strip handoff checks across overworld, battle, and town",
+      "status": "completed",
+      "startedAt": "2026-04-26T21:07:09Z",
+      "completedAt": "2026-04-26T21:11:17Z",
       "difficulty": "medium"
     }
   ],

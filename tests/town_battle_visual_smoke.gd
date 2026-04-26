@@ -295,6 +295,7 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		String(snapshot.get("event_tooltip_text", "")),
 		String(context.get("latest_action", "")),
 		String(context.get("next_step", "")),
+		String(context.get("handoff_check", "")),
 	])
 	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
 	var save_text := "\n".join([
@@ -311,7 +312,7 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		if not save_text.contains(token):
 			push_error("Battle smoke: save continuity check lost %s clarity after a battle order: %s." % [token, save_text])
 			return false
-	for token in ["Latest:", "Next:", "Battle Turn Context", "Latest action:", "Next practical step:"]:
+	for token in ["Latest:", "Next:", "Battle Turn Context", "Latest action:", "Next practical step:", "Handoff check:"]:
 		if not context_text.contains(token):
 			push_error("Battle smoke: battle action context strip lost %s clarity: context=%s snapshot=%s." % [token, context_text, snapshot])
 			return false
@@ -639,6 +640,7 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		String(snapshot.get("town_action_context_tooltip_text", "")),
 		String(context.get("latest_action", "")),
 		String(context.get("next_step", "")),
+		String(context.get("handoff_check", "")),
 	])
 	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
 	var save_text := "\n".join([
@@ -655,7 +657,7 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		if not save_text.contains(token):
 			push_error("Town smoke: save continuity check lost %s clarity after a town order: %s." % [token, save_text])
 			return false
-	for token in ["Latest:", "Next:", "Town Turn Context", "Latest action:", "Next practical step:", "Town status:", "Departure Check", "Save check:"]:
+	for token in ["Latest:", "Next:", "Town Turn Context", "Latest action:", "Next practical step:", "Handoff check:", "Town status:", "Departure Check", "Save check:"]:
 		if not context_text.contains(token):
 			push_error("Town smoke: town action context strip lost %s clarity: %s." % [token, context_text])
 			return false
