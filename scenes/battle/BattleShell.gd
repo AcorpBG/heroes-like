@@ -435,7 +435,7 @@ func _refresh_action_buttons() -> void:
 func _apply_action_surface(button: Button, action: Dictionary) -> void:
 	button.text = String(action.get("label", button.text))
 	button.disabled = bool(action.get("disabled", false))
-	button.tooltip_text = String(action.get("summary", ""))
+	button.tooltip_text = String(action.get("tooltip", action.get("summary", "")))
 	_style_action_button(button, true, 112.0)
 
 func _configure_save_slot_picker() -> void:
@@ -490,6 +490,7 @@ func validation_snapshot() -> Dictionary:
 	var player_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "player"))
 	var enemy_roster := _normalize_string_array(BattleRules.roster_lines(_session.battle, "enemy"))
 	var action_surface := BattleRules.get_action_surface(_session)
+	var consequence_payload := BattleRules.active_consequence_payload(_session)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -523,6 +524,14 @@ func validation_snapshot() -> Dictionary:
 		"action_surface": action_surface,
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"target_context": BattleRules.describe_target_context(_session),
+		"active_consequence_payload": consequence_payload,
+		"active_ability_role": String(consequence_payload.get("active_ability_role", "")),
+		"active_status_pressure": String(consequence_payload.get("status_pressure", "")),
+		"active_target_range": String(consequence_payload.get("target_range", "")),
+		"advance_tooltip": _advance_button.tooltip_text,
+		"strike_tooltip": _strike_button.tooltip_text,
+		"shoot_tooltip": _shoot_button.tooltip_text,
+		"defend_tooltip": _defend_button.tooltip_text,
 		"player_stack_count": player_roster.size(),
 		"enemy_stack_count": enemy_roster.size(),
 		"player_roster": player_roster,
@@ -692,6 +701,7 @@ func _action_validation_response(action_id: String, result: Dictionary, routed: 
 	response["action_surface"] = action_surface
 	response["action_guidance"] = action_guidance
 	response["target_context"] = target_context
+	response["active_consequence_payload"] = BattleRules.active_consequence_payload(_session) if _session != null and not _session.battle.is_empty() else {}
 	response["battle_board"] = board_summary
 	return response
 
@@ -872,6 +882,7 @@ func _movement_click_response(
 		"post_move_action_surface": action_surface,
 		"post_move_action_guidance": action_guidance,
 		"post_move_target_context": target_context,
+		"post_move_active_consequence_payload": BattleRules.active_consequence_payload(_session) if _session != null and not _session.battle.is_empty() else {},
 		"post_move_board_summary": board_summary,
 	}
 

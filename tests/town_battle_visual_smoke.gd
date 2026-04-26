@@ -209,6 +209,9 @@ func _run_battle_smoke() -> bool:
 			guard += 1
 		shell._refresh()
 		await get_tree().process_frame
+	if not _assert_battle_ability_status_action_consequence_contract(shell):
+		get_tree().quit(1)
+		return false
 
 	var defend_button = shell.get_node_or_null("%Defend")
 	if defend_button == null:
@@ -632,6 +635,66 @@ func _assert_battle_magic_inspection_contract(shell: Node) -> bool:
 	if not inspected_action:
 		push_error("Battle smoke: spell action tooltips do not expose category, cost, target, effect, and use context: %s." % [spell_actions])
 		return false
+	return true
+
+func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: battle shell does not expose action consequence validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var active_text := "\n".join([
+		String(snapshot.get("active_ability_role", "")),
+		String(snapshot.get("active_status_pressure", "")),
+		String(snapshot.get("active_target_range", "")),
+		String(snapshot.get("target_context", "")),
+	])
+	for token in ["Role:", "Status pressure:", "Target/range:"]:
+		if not active_text.contains(token):
+			push_error("Battle smoke: active battle focus lost %s clarity: %s." % [token, active_text])
+			return false
+	var action_surface: Dictionary = snapshot.get("action_surface", {})
+	var inspected_ready_action := false
+	for action_id in ["shoot", "strike", "advance", "defend"]:
+		var action: Dictionary = action_surface.get(action_id, {}) if action_surface.get(action_id, {}) is Dictionary else {}
+		var payload := "\n".join([
+			String(action.get("readiness", "")),
+			String(action.get("target", "")),
+			String(action.get("range", "")),
+			String(action.get("why", "")),
+			String(action.get("consequence", "")),
+			String(action.get("tooltip", "")),
+		])
+		for token in ["Target/range:", "Why:", "Consequence:"]:
+			if not payload.contains(token):
+				push_error("Battle smoke: %s action tooltip/payload lost %s clarity: %s." % [action_id, token, payload])
+				return false
+		if not bool(action.get("disabled", true)) and payload.contains("Ready") and String(action.get("why", "")) != "" and String(action.get("consequence", "")) != "":
+			inspected_ready_action = true
+	if not inspected_ready_action:
+		push_error("Battle smoke: no ready action exposed readiness, why, and consequence payloads: %s." % [action_surface])
+		return false
+	var button_tooltips := "\n".join([
+		String(snapshot.get("advance_tooltip", "")),
+		String(snapshot.get("strike_tooltip", "")),
+		String(snapshot.get("shoot_tooltip", "")),
+		String(snapshot.get("defend_tooltip", "")),
+	])
+	for token in ["Target/range:", "Why:", "Consequence:"]:
+		if not button_tooltips.contains(token):
+			push_error("Battle smoke: live action button tooltips lost %s clarity: %s." % [token, button_tooltips])
+			return false
+	var roster_text := "\n".join(snapshot.get("player_roster", []) + snapshot.get("enemy_roster", []))
+	if not roster_text.contains("Role ") or not roster_text.contains("Status "):
+		push_error("Battle smoke: roster lines do not expose ability role and status pressure text: %s." % roster_text)
+		return false
+	var consequence_payload: Dictionary = snapshot.get("active_consequence_payload", {}) if snapshot.get("active_consequence_payload", {}) is Dictionary else {}
+	if String(consequence_payload.get("active_ability_role", "")) == "" or String(consequence_payload.get("status_pressure", "")) == "" or String(consequence_payload.get("target_range", "")) == "":
+		push_error("Battle smoke: active consequence payload is missing ability/status/range fields: %s." % [consequence_payload])
+		return false
+	for leak_token in ["final_priority", "debug_reason", "score", "ai_score", "weight"]:
+		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or roster_text.contains(leak_token):
+			push_error("Battle smoke: battle consequence UI leaked internal token %s." % leak_token)
+			return false
 	return true
 
 func _first_encounter(session) -> Dictionary:
