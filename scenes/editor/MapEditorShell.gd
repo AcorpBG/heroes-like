@@ -265,8 +265,12 @@ func _rebuild_selected_object_picker() -> void:
 func _sync_property_value_controls(detail: Dictionary) -> void:
 	var has_detail := not detail.is_empty()
 	var kind := String(detail.get("kind", ""))
-	_property_summary_label.text = _property_summary_text(detail)
-	_property_summary_label.tooltip_text = _property_summary_label.text
+	var handoff := _selected_property_handoff_payload(detail)
+	var handoff_text := String(handoff.get("visible_text", _property_summary_text(detail)))
+	var handoff_tooltip := String(handoff.get("tooltip_text", handoff_text))
+	_set_compact_label(_property_summary_label, handoff_text, 3)
+	_selected_object_picker.tooltip_text = handoff_tooltip
+	_property_apply_button.tooltip_text = String(handoff.get("apply_tooltip", "Apply editable object properties to the in-memory working copy."))
 	_property_owner_picker.disabled = kind != OBJECT_FAMILY_TOWN
 	_property_difficulty_picker.disabled = kind != OBJECT_FAMILY_ENCOUNTER
 	_property_collected_check.disabled = kind != OBJECT_FAMILY_RESOURCE and kind != OBJECT_FAMILY_ARTIFACT
@@ -282,6 +286,9 @@ func _sync_property_value_controls(detail: Dictionary) -> void:
 		_select_picker_metadata(_property_owner_picker, "neutral")
 		_select_picker_metadata(_property_difficulty_picker, "medium")
 		_property_collected_check.button_pressed = false
+	_property_owner_picker.tooltip_text = handoff_tooltip
+	_property_difficulty_picker.tooltip_text = handoff_tooltip
+	_property_collected_check.tooltip_text = handoff_tooltip
 
 func _property_summary_text(detail: Dictionary) -> String:
 	if detail.is_empty():
@@ -299,6 +306,85 @@ func _property_summary_text(detail: Dictionary) -> String:
 			return "Encounter difficulty edit | %s" % taxonomy_summary if taxonomy_summary != "" else "Encounter difficulty edits mutate the working-copy encounter only."
 		_:
 			return "No mutable object property is available for this selection."
+
+func _selected_property_handoff_payload(detail: Dictionary) -> Dictionary:
+	if detail.is_empty():
+		var empty_text := "Selection handoff: choose a placed town, site, artifact, or encounter to edit working-copy properties."
+		return {
+			"visible_text": empty_text,
+			"tooltip_text": "%s\nProperty edits stay in the in-memory editor working copy until Play Copy or leaving the editor." % empty_text,
+			"apply_tooltip": "Select a mutable placed object before applying property changes.",
+			"scope": "working_copy_only",
+			"next_step": "select a placed editable object",
+		}
+	var kind := String(detail.get("kind", ""))
+	var kind_label := _object_family_label(kind)
+	var name := String(detail.get("name", detail.get("content_id", "")))
+	var placement_id := String(detail.get("placement_id", ""))
+	var tile_text := "%d,%d" % [int(detail.get("x", 0)), int(detail.get("y", 0))]
+	var field_label := ""
+	var readiness := ""
+	var next_step := ""
+	var why := ""
+	match kind:
+		OBJECT_FAMILY_TOWN:
+			field_label = "Owner"
+			readiness = "owner %s" % String(detail.get("owner", "neutral"))
+			next_step = "choose owner, then Apply Properties"
+			why = "changes control state for this working copy"
+		OBJECT_FAMILY_RESOURCE:
+			field_label = "Collected"
+			readiness = "collected %s" % ("yes" if bool(detail.get("collected", false)) else "no")
+			next_step = "toggle Collected, then Apply Properties"
+			why = "sets whether this economy node is already claimed"
+		OBJECT_FAMILY_ARTIFACT:
+			field_label = "Collected"
+			readiness = "collected %s" % ("yes" if bool(detail.get("collected", false)) else "no")
+			next_step = "toggle Collected, then Apply Properties"
+			why = "sets whether this reward appears on the map"
+		OBJECT_FAMILY_ENCOUNTER:
+			field_label = "Difficulty"
+			readiness = "difficulty %s" % String(detail.get("difficulty", "medium"))
+			next_step = "choose difficulty, then Apply Properties"
+			why = "changes battle pressure for this working copy"
+		_:
+			field_label = "Properties"
+			readiness = "read-only"
+			next_step = "select an editable object"
+			why = "no mutable property is available"
+	var visible_text := "Selection handoff: %s %s at %s | %s; next: %s." % [
+		kind_label,
+		name,
+		tile_text,
+		readiness,
+		next_step,
+	]
+	var tooltip := "Selected object: %s %s\nPlacement: %s at %s\nEditable field: %s | Current: %s\nWhy it matters: %s\nNext: %s\nScope: in-memory working copy only; no authored file or campaign progress is written." % [
+		kind_label,
+		name,
+		placement_id,
+		tile_text,
+		field_label,
+		readiness,
+		why,
+		next_step,
+	]
+	return {
+		"visible_text": visible_text,
+		"tooltip_text": tooltip,
+		"apply_tooltip": "%s\nApply Properties updates the in-memory working copy only." % tooltip,
+		"kind": kind,
+		"placement_id": placement_id,
+		"content_id": String(detail.get("content_id", "")),
+		"name": name,
+		"field": field_label,
+		"readiness": readiness,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"scope": "working_copy_only",
+		"x": int(detail.get("x", 0)),
+		"y": int(detail.get("y", 0)),
+	}
 
 func _property_object_options_at(tile: Vector2i) -> Array:
 	var options := []
@@ -5139,6 +5225,11 @@ func validation_snapshot() -> Dictionary:
 		"selected_object_palette_text": _object_taxonomy_summary_label.tooltip_text if _object_taxonomy_summary_label != null else "",
 		"selected_property_object_key": _selected_property_object_key,
 		"selected_property_object": _selected_property_object_payload(),
+		"selected_property_handoff": _selected_property_handoff_payload(_selected_property_object_detail()),
+		"property_summary_text": _property_summary_label.text if _property_summary_label != null else "",
+		"property_summary_tooltip": _property_summary_label.tooltip_text if _property_summary_label != null else "",
+		"selected_object_picker_tooltip": _selected_object_picker.tooltip_text if _selected_object_picker != null else "",
+		"property_apply_tooltip": _property_apply_button.tooltip_text if _property_apply_button != null else "",
 		"pending_move_object_key": _pending_move_object_key,
 		"pending_move_object": _pending_move_object_payload(),
 		"pending_duplicate_object_key": _pending_duplicate_object_key,

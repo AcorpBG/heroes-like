@@ -49,6 +49,8 @@ func _run() -> void:
 		return
 	if not _assert_editor_active_tool_cue(snapshot, "inspect", ["Tool cue:", "Inspect map content", "next:", "click a tile", "Selected 23,26"]):
 		return
+	if not _assert_editor_selected_property_handoff(snapshot, "town", ["Selection handoff:", "Town", "Owner", "Apply Properties", "working copy"]):
+		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
@@ -154,6 +156,8 @@ func _run() -> void:
 			break
 	if not found_town:
 		_fail("Map editor smoke: tile inspection did not identify the town object: %s." % inspect_payload)
+		return
+	if not _assert_editor_selected_property_handoff(inspect_result, "town", ["Selection handoff:", "Town", "Owner", "Apply Properties", "no authored file or campaign progress is written"]):
 		return
 
 	if not _assert_object_taxonomy_surfaces(shell):
@@ -2431,6 +2435,59 @@ func _assert_editor_menu_return_cue(result: Dictionary, expected_dirty: bool, fr
 			return false
 	return true
 
+func _assert_editor_selected_property_handoff(result: Dictionary, expected_kind: String, fragments: Array) -> bool:
+	var handoff: Dictionary = result.get("selected_property_handoff", {})
+	var text := String(handoff.get("visible_text", ""))
+	var tooltip := String(handoff.get("tooltip_text", ""))
+	var summary_text := String(result.get("property_summary_text", ""))
+	var summary_tooltip := String(result.get("property_summary_tooltip", ""))
+	var picker_tooltip := String(result.get("selected_object_picker_tooltip", ""))
+	var apply_tooltip := String(result.get("property_apply_tooltip", ""))
+	if handoff.is_empty() or text == "":
+		_fail("Map editor smoke: selected-object property handoff was not exposed: %s." % result)
+		return false
+	if String(handoff.get("kind", "")) != expected_kind:
+		_fail("Map editor smoke: selected-object property handoff kind mismatch; expected %s: %s." % [expected_kind, handoff])
+		return false
+	for key in ["visible_text", "tooltip_text", "field", "readiness", "why_it_matters", "next_step", "scope"]:
+		if String(handoff.get(key, "")) == "":
+			_fail("Map editor smoke: selected-object property handoff missed structured key %s: %s." % [key, handoff])
+			return false
+	if String(handoff.get("scope", "")) != "working_copy_only":
+		_fail("Map editor smoke: selected-object property handoff did not declare working-copy scope: %s." % handoff)
+		return false
+	var combined := "%s\n%s\n%s\n%s\n%s\n%s" % [text, tooltip, summary_text, summary_tooltip, picker_tooltip, apply_tooltip]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: selected-object property handoff missed '%s': %s." % [expected, combined])
+			return false
+	if summary_text.find("Selection handoff:") < 0:
+		_fail("Map editor smoke: visible property summary did not carry selection handoff text: %s." % summary_text)
+		return false
+	if picker_tooltip.find("Selected object:") < 0 or apply_tooltip.find("Apply Properties") < 0:
+		_fail("Map editor smoke: property picker/apply tooltip did not carry selected-object handoff: picker=%s apply=%s." % [picker_tooltip, apply_tooltip])
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: selected-object property handoff leaked internal score field %s: %s." % [forbidden, combined])
+			return false
+	return true
+
 func _assert_editor_play_handoff(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:
 	var handoff: Dictionary = result.get("play_handoff", {})
 	var text := String(handoff.get("text", ""))
@@ -2551,6 +2608,8 @@ func _assert_object_property_edits(shell) -> bool:
 	if String(town_property.get("property_key", "")) != "town:ninefold_embercourt_survey_camp" or "owner" not in town_property.get("editable_properties", []):
 		_fail("Map editor smoke: town property editor did not expose structured owner detail: %s." % town_result)
 		return false
+	if not _assert_editor_selected_property_handoff(town_result, "town", ["Selection handoff:", "Town", "Owner", "owner neutral", "changes control state", "Apply Properties"]):
+		return false
 	if not _assert_authoring_recap(town_result, "edit_property", true, ["Edited", "Owner", "changes control state", "Next:"]):
 		return false
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", 23, 26)
@@ -2604,6 +2663,8 @@ func _assert_object_property_edits(shell) -> bool:
 	var encounter_property: Dictionary = encounter_result.get("selected_property_object", {})
 	if "difficulty" not in encounter_property.get("editable_properties", []):
 		_fail("Map editor smoke: encounter property editor did not expose structured difficulty detail: %s." % encounter_result)
+		return false
+	if not _assert_editor_selected_property_handoff(encounter_result, "encounter", ["Selection handoff:", "Encounter", "Difficulty", "difficulty low", "battle pressure", "Apply Properties"]):
 		return false
 	if not _assert_authoring_recap(encounter_result, "edit_property", true, ["Difficulty", "changes battle pressure", "Next:"]):
 		return false
