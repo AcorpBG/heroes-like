@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T10:39:59Z",
+  "updatedAt": "2026-04-26T10:57:47Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-economy-decision-clarity-ui-10184",
-  "currentSliceTitle": "Improve live town economy decision clarity in UI and action feedback",
+  "currentSliceId": "map-editor-object-taxonomy-usability-10184",
+  "currentSliceTitle": "Surface object taxonomy metadata in live map editor placement and selection UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact player-facing town economy clarity through existing town action payloads, labels, tooltips, smoke hooks, and build/recruit feedback. Construction and recruitment now surface cost readiness, stores-vs-cost, exchange or missing-resource blockers, after-order stores/reserves, and spend/outcome messages without resource migration, rebalance, docs-only output, or new report scenes.",
+  "currentSliceNotes": "Implemented compact map-editor usability for existing object/resource/encounter classes. The object palette, selected tile inspection, selected-property payloads, and tooltips now surface primary class, secondary tags, cadence, passability class, resource-site/map-object links, neutral encounter role/risk, and guard-target links without production JSON migration, renderer sprite ingestion, pathing/body-tile adoption, save migration, or report-only scenes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1304,6 +1304,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T10:34:52Z",
       "completedAt": "2026-04-26T10:39:59Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "map-editor-object-taxonomy-usability-10184",
+      "title": "Surface object taxonomy metadata in live map editor placement and selection UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T10:49:07Z",
+      "completedAt": "2026-04-26T10:57:47Z",
       "difficulty": "medium"
     }
   ],
