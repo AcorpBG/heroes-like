@@ -210,6 +210,364 @@ static func active_raid_count(session: SessionStateStoreScript.SessionData, fact
 		count += 1
 	return count
 
+static func town_governor_pressure_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary = {},
+	faction_id: String = ""
+) -> Dictionary:
+	if session == null:
+		return {}
+	DifficultyRulesScript.normalize_session(session)
+	normalize_enemy_states(session)
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	if config.is_empty() or resolved_faction_id == "":
+		var scenario := ContentService.get_scenario(session.scenario_id)
+		for enemy_config in scenario.get("enemy_factions", []):
+			if not (enemy_config is Dictionary):
+				continue
+			if resolved_faction_id == "" or String(enemy_config.get("faction_id", "")) == resolved_faction_id:
+				config = enemy_config
+				resolved_faction_id = String(config.get("faction_id", resolved_faction_id))
+				break
+	if resolved_faction_id == "":
+		return {}
+
+	var state := _find_state(session.overworld.get("enemy_states", []), resolved_faction_id)
+	var current_treasury := _normalize_resource_pool(state.get("treasury", {}))
+	var projected_treasury := current_treasury.duplicate(true)
+	var town_entries := _owned_town_entries(session, resolved_faction_id)
+	var income := _apply_empire_income(session, town_entries, projected_treasury, state)
+	var towns := []
+	for entry in town_entries:
+		var town: Dictionary = entry.get("town", {})
+		var town_report := town_governor_town_report(
+			session,
+			config,
+			town,
+			projected_treasury,
+			resolved_faction_id,
+			true
+		)
+		if not town_report.is_empty():
+			towns.append(town_report)
+	return {
+		"scenario_id": String(session.scenario_id),
+		"day": int(session.day),
+		"faction_id": resolved_faction_id,
+		"faction_label": String(config.get("label", resolved_faction_id)),
+		"current_treasury": current_treasury,
+		"income_projection": income,
+		"projected_treasury": projected_treasury,
+		"town_count": towns.size(),
+		"towns": towns,
+	}
+
+static func town_governor_town_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	treasury: Dictionary,
+	faction_id: String,
+	include_projected_build: bool = true
+) -> Dictionary:
+	if town.is_empty():
+		return {}
+	var build_report := town_build_pressure_report(session, config, town, treasury, faction_id)
+	var projected_town := town.duplicate(true)
+	var projected_treasury := _normalize_resource_pool(treasury)
+	var selected_build: Dictionary = build_report.get("selected_build", {})
+	if include_projected_build and not selected_build.is_empty():
+		var building_id := String(selected_build.get("building_id", ""))
+		var cost: Dictionary = selected_build.get("cost", {})
+		OverworldRulesScript.apply_market_cost_coverage(projected_town, projected_treasury, cost)
+		_spend_from_pool(projected_treasury, cost)
+		var built_buildings = projected_town.get("built_buildings", [])
+		if not (built_buildings is Array):
+			built_buildings = []
+		built_buildings = built_buildings.duplicate(true)
+		built_buildings.append(building_id)
+		projected_town["built_buildings"] = built_buildings
+		projected_town["available_recruits"] = _merge_recruits(
+			projected_town.get("available_recruits", {}),
+			_building_growth_payload(building_id)
+		)
+	var recruit_report := town_recruitment_pressure_report(
+		session,
+		config,
+		projected_town,
+		projected_treasury,
+		faction_id
+	)
+	var events := []
+	var build_event := ai_town_build_event(session, config, town, selected_build)
+	if not build_event.is_empty():
+		events.append(build_event)
+	var recruit_events: Array = recruit_report.get("events", [])
+	for event in recruit_events:
+		if event is Dictionary and not event.is_empty():
+			events.append(event)
+	return {
+		"placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"town_label": _town_name(town),
+		"strategic_role": OverworldRulesScript.town_strategic_role(town),
+		"garrison_strength": _army_strength(town.get("garrison", [])),
+		"desired_garrison_strength": _desired_town_strength(session, town, config),
+		"build": build_report,
+		"recruitment": recruit_report,
+		"events": events,
+	}
+
+static func town_build_pressure_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	treasury: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var candidates := []
+	for building_id in OverworldRulesScript.get_town_build_options(town):
+		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
+		if not bool(status.get("buildable", false)):
+			continue
+		var building: Dictionary = status.get("building", {})
+		var cost: Dictionary = building.get("cost", {})
+		var breakdown := _build_candidate_score_breakdown(session, town, building, cost, config, faction_id)
+		breakdown["affordable"] = OverworldRulesScript.can_afford_cost_with_town_market(town, treasury, cost)
+		breakdown["building_id"] = String(building_id)
+		breakdown["building_label"] = String(building.get("name", building_id))
+		breakdown["category"] = String(building.get("category", "support"))
+		breakdown["cost"] = cost
+		candidates.append(breakdown)
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_affordable := bool(a.get("affordable", false))
+		var b_affordable := bool(b.get("affordable", false))
+		if a_affordable != b_affordable:
+			return a_affordable
+		var a_score := float(a.get("final_score", 0.0))
+		var b_score := float(b.get("final_score", 0.0))
+		if is_equal_approx(a_score, b_score):
+			return String(a.get("building_id", "")) < String(b.get("building_id", ""))
+		return a_score > b_score
+	)
+	var selected := {}
+	for candidate in candidates:
+		if bool(candidate.get("affordable", false)):
+			selected = candidate
+			break
+	return {
+		"selected_build": selected,
+		"candidate_count": candidates.size(),
+		"candidates": candidates,
+	}
+
+static func town_recruitment_pressure_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	treasury: Dictionary,
+	faction_id: String
+) -> Dictionary:
+	var candidates := []
+	var recruit_ids := []
+	for unit_id_value in town.get("available_recruits", {}).keys():
+		recruit_ids.append(String(unit_id_value))
+	recruit_ids.sort_custom(func(a: String, b: String) -> bool:
+		var a_priority = _recruit_priority(a, config, faction_id)
+		var b_priority = _recruit_priority(b, config, faction_id)
+		if is_equal_approx(a_priority, b_priority):
+			return a < b
+		return a_priority > b_priority
+	)
+	for unit_id in recruit_ids:
+		var available := int(town.get("available_recruits", {}).get(unit_id, 0))
+		var cost := _enemy_recruit_cost(town, unit_id)
+		var recruit_count: int = min(available, _max_affordable_from_pool(treasury, cost))
+		var destination := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+		candidates.append(
+			{
+				"unit_id": unit_id,
+				"unit_label": String(ContentService.get_unit(unit_id).get("name", unit_id)),
+				"available": available,
+				"recruit_count": recruit_count,
+				"cost": cost,
+				"priority": _recruit_priority(unit_id, config, faction_id),
+				"affordable": recruit_count > 0,
+				"destination": destination,
+			}
+		)
+	var selected := {}
+	for candidate in candidates:
+		if int(candidate.get("recruit_count", 0)) > 0:
+			selected = candidate
+			break
+	var events := []
+	if not selected.is_empty():
+		var town_event := ai_town_recruit_event(session, config, town, selected)
+		if not town_event.is_empty():
+			events.append(town_event)
+		var destination_event := ai_town_recruit_destination_event(session, config, town, selected)
+		if not destination_event.is_empty():
+			events.append(destination_event)
+	return {
+		"selected_recruitment": selected,
+		"candidate_count": candidates.size(),
+		"candidates": candidates,
+		"events": events,
+	}
+
+static func ai_town_build_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	selected_build: Dictionary
+) -> Dictionary:
+	if selected_build.is_empty():
+		return {}
+	var building_id := String(selected_build.get("building_id", ""))
+	if building_id == "":
+		return {}
+	return EnemyAdventureRulesScript.build_ai_event_record(
+		session,
+		config,
+		"ai_town_built",
+		_town_actor(town),
+		{
+			"target_kind": "town_building",
+			"target_placement_id": building_id,
+			"target_label": String(selected_build.get("building_label", building_id)),
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": selected_build.get("reason_codes", []),
+			"target_public_reason": String(selected_build.get("public_reason", "")),
+			"target_public_importance": "medium",
+			"target_debug_reason": String(selected_build.get("debug_reason", "")),
+		},
+		{
+			"actor_label": _town_name(town),
+			"summary": "%s builds %s (%s)." % [
+				_town_name(town),
+				String(selected_build.get("building_label", building_id)),
+				String(selected_build.get("public_reason", "town pressure")),
+			],
+			"state_policy": "derived",
+		}
+	)
+
+static func ai_town_recruit_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	selected_recruitment: Dictionary
+) -> Dictionary:
+	if selected_recruitment.is_empty():
+		return {}
+	var unit_id := String(selected_recruitment.get("unit_id", ""))
+	if unit_id == "":
+		return {}
+	var destination: Dictionary = selected_recruitment.get("destination", {})
+	var reason_codes: Array = _normalize_string_array(destination.get("reason_codes", []))
+	if "town_recruitment" not in reason_codes:
+		reason_codes.push_front("town_recruitment")
+	return EnemyAdventureRulesScript.build_ai_event_record(
+		session,
+		config,
+		"ai_town_recruited",
+		_town_actor(town),
+		{
+			"target_kind": "unit",
+			"target_placement_id": unit_id,
+			"target_label": "%d %s" % [
+				int(selected_recruitment.get("recruit_count", 0)),
+				String(selected_recruitment.get("unit_label", unit_id)),
+			],
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": String(destination.get("public_reason", "")),
+			"target_public_importance": "medium",
+			"target_debug_reason": String(destination.get("debug_reason", "")),
+		},
+		{
+			"actor_label": _town_name(town),
+			"summary": "%s recruits %d %s for %s." % [
+				_town_name(town),
+				int(selected_recruitment.get("recruit_count", 0)),
+				String(selected_recruitment.get("unit_label", unit_id)),
+				String(destination.get("public_reason", "front pressure")),
+			],
+			"state_policy": "derived",
+		}
+	)
+
+static func ai_town_recruit_destination_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	selected_recruitment: Dictionary
+) -> Dictionary:
+	var destination: Dictionary = selected_recruitment.get("destination", {})
+	if destination.is_empty():
+		return {}
+	var destination_type := String(destination.get("type", "garrison"))
+	var event_type := "ai_garrison_reinforced"
+	var target_kind := "town"
+	var target_id := String(town.get("placement_id", ""))
+	var target_label := _town_name(town)
+	match destination_type:
+		"raid":
+			event_type = "ai_raid_reinforced"
+			target_kind = "raid"
+			target_id = String(destination.get("raid_placement_id", target_id))
+			target_label = String(destination.get("raid_label", target_id))
+		"rebuild":
+			event_type = "ai_commander_rebuilt"
+			target_kind = "commander"
+			target_id = String(destination.get("roster_hero_id", ""))
+			target_label = String(destination.get("commander_label", target_id))
+		_:
+			pass
+	if target_label == "":
+		target_label = target_id
+	return EnemyAdventureRulesScript.build_ai_event_record(
+		session,
+		config,
+		event_type,
+		_town_actor(town),
+		{
+			"target_kind": target_kind,
+			"target_placement_id": target_id,
+			"target_label": target_label,
+			"target_x": int(town.get("x", 0)),
+			"target_y": int(town.get("y", 0)),
+			"target_reason_codes": destination.get("reason_codes", []),
+			"target_public_reason": String(destination.get("public_reason", "")),
+			"target_public_importance": "medium",
+			"target_debug_reason": String(destination.get("debug_reason", "")),
+		},
+		{
+			"actor_label": _town_name(town),
+			"summary": "%s sends %d %s to %s (%s)." % [
+				_town_name(town),
+				int(selected_recruitment.get("recruit_count", 0)),
+				String(selected_recruitment.get("unit_label", selected_recruitment.get("unit_id", "units"))),
+				target_label,
+				String(destination.get("public_reason", "front pressure")),
+			],
+			"state_policy": "derived",
+		}
+	)
+
+static func _town_actor(town: Dictionary) -> Dictionary:
+	return {
+		"placement_id": String(town.get("placement_id", "")),
+		"name": _town_name(town),
+		"x": int(town.get("x", 0)),
+		"y": int(town.get("y", 0)),
+	}
+
 static func _visible_raids_for_faction(session: SessionStateStoreScript.SessionData, faction_id: String) -> Array:
 	var visible := []
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
@@ -585,29 +943,26 @@ static func _choose_recruit_destination(
 	town: Dictionary,
 	faction_id: String
 ) -> Dictionary:
+	var breakdown := _choose_recruit_destination_breakdown(session, config, town, faction_id)
+	match String(breakdown.get("type", "garrison")):
+		"raid":
+			return {"type": "raid", "index": int(breakdown.get("index", -1))}
+		"rebuild":
+			return {"type": "rebuild", "roster_hero_id": String(breakdown.get("roster_hero_id", ""))}
+		_:
+			return {"type": "garrison"}
+
+static func _choose_recruit_destination_breakdown(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	town: Dictionary,
+	faction_id: String
+) -> Dictionary:
 	var defense_target = _desired_town_strength(session, town, config)
 	var current_defense = _army_strength(town.get("garrison", []))
 	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
-	if (
-		not best_rebuild.is_empty()
-		and not EnemyAdventureRulesScript.has_available_raid_commander(
-			session,
-			faction_id,
-			EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
-		)
-	):
-		return {"type": "rebuild", "roster_hero_id": String(best_rebuild.get("roster_hero_id", ""))}
-	if current_defense < int(round(float(defense_target) * 0.72)):
-		return {"type": "garrison"}
-	if (
-		bool(local_front.get("active", false))
-		and String(local_front.get("mode", "")) == "stabilizing"
-		and current_defense < defense_target + int(round(float(int(local_front.get("garrison_bonus", 0))) / 2.0))
-	):
-		return {"type": "garrison"}
-
 	var best_raid = _best_raid_reinforcement_target(session, config, faction_id)
 	var faction_front_state := _faction_front_state(session, faction_id)
 	var garrison_gap = max(0, defense_target - current_defense)
@@ -617,11 +972,156 @@ static func _choose_recruit_destination(
 	raid_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.35
 	var rebuild_score = float(int(best_rebuild.get("need", 0))) * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0) * 0.85
 	rebuild_score += float(int(faction_front_state.get("top_front_priority", 0))) * 0.18
+	if (
+		not best_rebuild.is_empty()
+		and not EnemyAdventureRulesScript.has_available_raid_commander(
+			session,
+			faction_id,
+			EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
+		)
+	):
+		return _recruit_destination_report_payload(
+			"rebuild",
+			"commander_rebuild_required",
+			"rebuilds command",
+			["commander_rebuild"],
+			"no available commander can launch until a host is rebuilt",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front
+		)
+	if current_defense < int(round(float(defense_target) * 0.72)):
+		return _recruit_destination_report_payload(
+			"garrison",
+			"critical_garrison_gap",
+			"stabilizes garrison",
+			["garrison_safety"],
+			"local defense is below the minimum wall target",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front
+		)
+	if (
+		bool(local_front.get("active", false))
+		and String(local_front.get("mode", "")) == "stabilizing"
+		and current_defense < defense_target + int(round(float(int(local_front.get("garrison_bonus", 0))) / 2.0))
+	):
+		return _recruit_destination_report_payload(
+			"garrison",
+			"stabilizing_front",
+			"stabilizes garrison",
+			["garrison_safety", "objective_front"],
+			"the town is stabilizing a live front",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front
+		)
 	if not best_rebuild.is_empty() and rebuild_score > max(garrison_score, raid_score):
-		return {"type": "rebuild", "roster_hero_id": String(best_rebuild.get("roster_hero_id", ""))}
+		return _recruit_destination_report_payload(
+			"rebuild",
+			"commander_rebuild_pressure",
+			"rebuilds command",
+			["commander_rebuild"],
+			"commander continuity has the strongest reinforcement need",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front
+		)
 	if not best_raid.is_empty() and raid_score > garrison_score:
-		return {"type": "raid", "index": int(best_raid.get("index", -1))}
-	return {"type": "garrison"}
+		return _recruit_destination_report_payload(
+			"raid",
+			"active_raid_need",
+			"feeds raid hosts",
+			["raid_reinforcement"],
+			"an active raid host has the stronger field need",
+			garrison_score,
+			raid_score,
+			rebuild_score,
+			defense_target,
+			current_defense,
+			best_raid,
+			best_rebuild,
+			local_front
+		)
+	return _recruit_destination_report_payload(
+		"garrison",
+		"default_garrison",
+		"stabilizes garrison",
+		["garrison_safety"],
+		"no active raid or commander rebuild need beats local defense",
+		garrison_score,
+		raid_score,
+		rebuild_score,
+		defense_target,
+		current_defense,
+		best_raid,
+		best_rebuild,
+		local_front
+	)
+
+static func _recruit_destination_report_payload(
+	destination_type: String,
+	decision_rule: String,
+	public_reason: String,
+	reason_codes: Array,
+	debug_reason: String,
+	garrison_score: float,
+	raid_score: float,
+	rebuild_score: float,
+	defense_target: int,
+	current_defense: int,
+	best_raid: Dictionary,
+	best_rebuild: Dictionary,
+	local_front: Dictionary
+) -> Dictionary:
+	var payload := {
+		"type": destination_type,
+		"decision_rule": decision_rule,
+		"public_reason": public_reason,
+		"reason_codes": reason_codes,
+		"debug_reason": debug_reason,
+		"garrison_score": garrison_score,
+		"raid_score": raid_score,
+		"rebuild_score": rebuild_score,
+		"defense_target": defense_target,
+		"current_defense": current_defense,
+		"garrison_gap": max(0, defense_target - current_defense),
+		"local_front_mode": String(local_front.get("mode", "")) if bool(local_front.get("active", false)) else "",
+	}
+	if destination_type == "raid":
+		var raid: Dictionary = best_raid.get("encounter", {})
+		payload["index"] = int(best_raid.get("index", -1))
+		payload["raid_placement_id"] = String(raid.get("placement_id", ""))
+		payload["raid_label"] = EnemyAdventureRulesScript.raid_display_name(raid)
+		payload["raid_need"] = int(best_raid.get("need", 0))
+		payload["target_id"] = String(raid.get("target_placement_id", ""))
+		payload["target_label"] = String(raid.get("target_label", raid.get("target_placement_id", "")))
+	elif destination_type == "rebuild":
+		payload["roster_hero_id"] = String(best_rebuild.get("roster_hero_id", ""))
+		payload["commander_label"] = String(ContentService.get_hero(String(best_rebuild.get("roster_hero_id", ""))).get("name", payload["roster_hero_id"]))
+		payload["rebuild_need"] = int(best_rebuild.get("need", 0))
+		payload["commander_status"] = String(best_rebuild.get("status", ""))
+	return payload
 
 static func _best_raid_reinforcement_target(
 	session: SessionStateStoreScript.SessionData,
@@ -1071,6 +1571,16 @@ static func _score_build_candidate(
 	config: Dictionary,
 	faction_id: String
 ) -> float:
+	return float(_build_candidate_score_breakdown(session, town, building, cost, config, faction_id).get("final_score", 0.0))
+
+static func _build_candidate_score_breakdown(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	building: Dictionary,
+	cost: Dictionary,
+	config: Dictionary,
+	faction_id: String
+) -> Dictionary:
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var building_id = String(building.get("id", ""))
 	var current_income: Dictionary = OverworldRulesScript.town_income(town, session)
@@ -1116,14 +1626,20 @@ static func _score_build_candidate(
 		float(int(projected_market.get("exchange_value", 0)) - int(current_market.get("exchange_value", 0))) * 0.55
 	)
 
-	var score = (
-		marginal_income * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "income", 1.0)
-		+ growth_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "growth", 1.0)
-		+ quality_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "quality", 1.0)
-		+ readiness_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "readiness", 1.0)
-		+ pressure_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "pressure", 1.0)
+	var weighted_income_value: float = marginal_income * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "income", 1.0)
+	var weighted_growth_value: float = growth_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "growth", 1.0)
+	var weighted_quality_value: float = quality_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "quality", 1.0)
+	var weighted_readiness_value: float = readiness_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "readiness", 1.0)
+	var weighted_pressure_value: float = pressure_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "pressure", 1.0)
+	var weighted_market_value: float = market_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "income", 1.0)
+	var score: float = (
+		weighted_income_value
+		+ weighted_growth_value
+		+ weighted_quality_value
+		+ weighted_readiness_value
+		+ weighted_pressure_value
 		+ recovery_value
-		+ market_value * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_value_weights", "income", 1.0)
+		+ weighted_market_value
 	)
 	var category = String(building.get("category", "support"))
 	var category_bonus = 0.0
@@ -1138,19 +1654,31 @@ static func _score_build_candidate(
 			category_bonus = 110.0
 		"magic":
 			category_bonus = 60.0
-	score += category_bonus * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_category_weights", category, 1.0)
+	var weighted_category_bonus: float = category_bonus * EnemyAdventureRulesScript.strategy_scalar(strategy, "build_category_weights", category, 1.0)
+	score += weighted_category_bonus
+	var upgrade_bonus := 0.0
 	if String(building.get("upgrade_from", "")) != "":
-		score += 90.0
+		upgrade_bonus = 90.0
+		score += upgrade_bonus
+	var garrison_need_bonus := 0.0
 	if _desired_town_strength(session, town, config) > _army_strength(town.get("garrison", [])):
 		if category in ["support", "dwelling"]:
-			score += 120.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
+			garrison_need_bonus = 120.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "garrison_bias", 1.0)
+			score += garrison_need_bonus
+	var raid_need_bonus := 0.0
 	if active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id) and category == "dwelling":
-		score += 90.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+		raid_need_bonus = 90.0 * EnemyAdventureRulesScript.strategy_scalar(strategy, "reinforcement", "raid_bias", 1.0)
+		score += raid_need_bonus
+	var front_bonus := 0.0
 	if bool(town_front.get("active", false)) and String(town_front.get("mode", "")) == "stabilizing":
 		if category in ["support", "dwelling", "civic"]:
-			score += 100.0 + float(int(town_front.get("build_bonus", 0)))
+			front_bonus = 100.0 + float(int(town_front.get("build_bonus", 0)))
+			score += front_bonus
 		elif category == "economy":
-			score += 35.0
+			front_bonus = 35.0
+			score += front_bonus
+	var project_bonus := 0.0
+	var role_bonus := 0.0
 	if capital_project is Dictionary and not capital_project.is_empty():
 		var project_score = 260.0
 		match town_role:
@@ -1164,13 +1692,111 @@ static func _score_build_candidate(
 			project_score += 120.0
 		if String(config.get("siege_target_placement_id", "")) != "":
 			project_score += 80.0
-		score += project_score
+		project_bonus = project_score
+		score += project_bonus
 	elif town_role == "capital" and category in ["support", "civic", "magic"]:
-		score += 110.0
+		role_bonus = 110.0
+		score += role_bonus
 	elif town_role == "stronghold" and category in ["support", "civic", "dwelling"]:
-		score += 80.0
+		role_bonus = 80.0
+		score += role_bonus
 	var efficiency_divisor = max(400.0, float(_resource_value(cost)))
-	return score / (efficiency_divisor / 400.0)
+	var final_score: float = score / (efficiency_divisor / 400.0)
+	var reason_codes := _town_build_reason_codes(
+		marginal_income,
+		growth_value,
+		quality_value,
+		readiness_value,
+		pressure_value,
+		recovery_value,
+		market_value,
+		garrison_need_bonus,
+		raid_need_bonus,
+		project_bonus,
+		category
+	)
+	return {
+		"income_value": marginal_income,
+		"growth_value": growth_value,
+		"quality_value": quality_value,
+		"readiness_value": readiness_value,
+		"pressure_value": pressure_value,
+		"recovery_value": recovery_value,
+		"market_value": market_value,
+		"weighted_income_value": weighted_income_value,
+		"weighted_growth_value": weighted_growth_value,
+		"weighted_quality_value": weighted_quality_value,
+		"weighted_readiness_value": weighted_readiness_value,
+		"weighted_pressure_value": weighted_pressure_value,
+		"weighted_market_value": weighted_market_value,
+		"category_bonus": weighted_category_bonus,
+		"upgrade_bonus": upgrade_bonus,
+		"garrison_need_bonus": garrison_need_bonus,
+		"raid_need_bonus": raid_need_bonus,
+		"front_bonus": front_bonus,
+		"project_bonus": project_bonus,
+		"role_bonus": role_bonus,
+		"cost_value": _resource_value(cost),
+		"efficiency_divisor": efficiency_divisor,
+		"final_score": final_score,
+		"reason_codes": reason_codes,
+		"public_reason": _town_build_public_reason(reason_codes),
+		"debug_reason": _town_build_debug_reason(reason_codes, category),
+	}
+
+static func _town_build_reason_codes(
+	income_value: float,
+	growth_value: float,
+	quality_value: float,
+	readiness_value: float,
+	pressure_value: float,
+	recovery_value: float,
+	market_value: float,
+	garrison_need_bonus: float,
+	raid_need_bonus: float,
+	project_bonus: float,
+	category: String
+) -> Array:
+	var codes := []
+	if pressure_value > 0.0 or project_bonus > 0.0:
+		codes.append("builds_pressure")
+	if growth_value > 0.0 or category == "dwelling":
+		codes.append("unlocks_recruits")
+	if raid_need_bonus > 0.0:
+		codes.append("feeds_raid_hosts")
+	if garrison_need_bonus > 0.0 or quality_value > 0.0 or readiness_value > 0.0:
+		codes.append("stabilizes_garrison")
+	if income_value > 0.0:
+		codes.append("expands_income")
+	if market_value > 0.0:
+		codes.append("market_support")
+	if recovery_value > 0.0:
+		codes.append("recovery_support")
+	if codes.is_empty():
+		codes.append("town_development")
+	return codes
+
+static func _town_build_public_reason(reason_codes: Array) -> String:
+	var codes := _normalize_string_array(reason_codes)
+	if "feeds_raid_hosts" in codes:
+		return "feeds raid hosts"
+	if "builds_pressure" in codes:
+		return "builds pressure"
+	if "unlocks_recruits" in codes:
+		return "unlocks recruits"
+	if "stabilizes_garrison" in codes:
+		return "stabilizes garrison"
+	if "expands_income" in codes or "market_support" in codes:
+		return "expands income"
+	if "recovery_support" in codes:
+		return "supports recovery"
+	return "town development"
+
+static func _town_build_debug_reason(reason_codes: Array, category: String) -> String:
+	var public_reason := _town_build_public_reason(reason_codes)
+	if category != "":
+		return "%s through %s build" % [public_reason, category]
+	return public_reason
 
 static func _determine_posture(
 	session: SessionStateStoreScript.SessionData,
