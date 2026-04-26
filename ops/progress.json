@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T06:17:13Z",
+  "updatedAt": "2026-04-26T06:24:13Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-commander-role-adoption-sequencing-planning-10184",
-  "currentSliceTitle": "Plan commander-role adoption sequencing before schema or live behavior",
+  "currentSliceId": "strategic-ai-commander-role-live-turn-transcript-report-planning-10184",
+  "currentSliceTitle": "Plan behavior-neutral commander-role live-turn transcript/report surfacing",
     "currentSliceStatus": "pending",
-    "currentSliceNotes": "Commander-role report gate review passed in docs/strategic-ai-commander-role-report-gate-review.md. The next slice should be planning-only sequencing for derived live-turn transcript/report surfacing, minimal commander_role_state adoption, full AI hero task-state sequencing, or pausing commander roles, without schema writes, save migration, durable event logs, coefficient tuning, defense-specific durable state, or live commander-role behavior adoption.",
+    "currentSliceNotes": "Commander-role adoption sequencing is completed in docs/strategic-ai-commander-role-adoption-sequencing-plan.md. The recommended next slice is planning-only derived live-turn transcript/report surfacing for commander role decisions, without implementation, schema writes, save migration, durable event logs, coefficient tuning, defense-specific durable state, full AI hero task state, or live commander-role behavior adoption.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -604,6 +604,22 @@
         {
             "id": "strategic-ai-commander-role-adoption-sequencing-planning-10184",
             "title": "Plan commander-role adoption sequencing before schema or live behavior",
+            "status": "completed",
+            "startedAt": "2026-04-26T06:17:13Z",
+            "completedAt": "2026-04-26T06:24:13Z",
+            "decision": "commander-role-live-turn-transcript-report-planning-next",
+            "planningDoc": "docs/strategic-ai-commander-role-adoption-sequencing-plan.md",
+            "recommendedNextSlice": "strategic-ai-commander-role-live-turn-transcript-report-planning-10184",
+            "rejectedNextOptions": [
+                "minimal-commander-role-state-write-read-adoption-now",
+                "full-ai-hero-task-state-sequencing-now",
+                "pause-commander-roles-until-broader-ai-hero-movement"
+            ],
+            "difficulty": "high"
+        },
+        {
+            "id": "strategic-ai-commander-role-live-turn-transcript-report-planning-10184",
+            "title": "Plan behavior-neutral commander-role live-turn transcript/report surfacing",
             "status": "pending",
             "difficulty": "high"
         },
@@ -1075,7 +1091,7 @@
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
     "Use docs/strategic-ai-event-surfacing-report-gate-review.md as the current AI surfacing gate result: compact public assignment, pressure, seizure, contest, threat, and dispatch reason output passes; score tables stay report/debug-only; manual live-client signal-yard enemy-turn review is deferred until broader AI expansion affects live turn readability.",
-        "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, docs/strategic-ai-glassroad-defense-proof-plan.md, docs/strategic-ai-glassroad-defense-proof-report.md, docs/strategic-ai-commander-role-state-plan.md, docs/strategic-ai-commander-role-report-fixture-plan.md, docs/strategic-ai-minimal-commander-role-state-schema-plan.md, docs/strategic-ai-commander-role-report-implementation-plan.md, docs/strategic-ai-commander-role-report-implementation-report.md, and docs/strategic-ai-commander-role-report-gate-review.md as the current AI planning/evidence contracts: the next slice is planning-only commander-role adoption sequencing before live role behavior, schema writes, durable event logs, full AI heroes, defense-specific durable state, coefficient tuning, or broad rewrites.",
+        "Use docs/strategic-ai-pressure-expansion-plan.md, docs/strategic-ai-town-governor-pressure-report-gate-review.md, docs/strategic-ai-faction-personality-pressure-plan.md, docs/strategic-ai-faction-personality-evidence-report.md, docs/strategic-ai-strategy-config-audit-plan.md, docs/strategic-ai-strategy-config-audit-report.md, docs/strategic-ai-capture-countercapture-defense-proof-plan.md, docs/strategic-ai-capture-countercapture-defense-proof-report.md, docs/strategic-ai-glassroad-defense-proof-plan.md, docs/strategic-ai-glassroad-defense-proof-report.md, docs/strategic-ai-commander-role-state-plan.md, docs/strategic-ai-commander-role-report-fixture-plan.md, docs/strategic-ai-minimal-commander-role-state-schema-plan.md, docs/strategic-ai-commander-role-report-implementation-plan.md, docs/strategic-ai-commander-role-report-implementation-report.md, docs/strategic-ai-commander-role-report-gate-review.md, and docs/strategic-ai-commander-role-adoption-sequencing-plan.md as the current AI planning/evidence contracts: the next slice is planning-only derived live-turn transcript/report surfacing before report/test implementation, live role behavior, schema writes, durable event logs, full AI heroes, defense-specific durable state, coefficient tuning, or broad rewrites.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
