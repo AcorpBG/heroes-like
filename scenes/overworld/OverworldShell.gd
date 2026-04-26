@@ -1401,17 +1401,61 @@ func _battle_return_notice(fallback: String) -> String:
 	var report = _session.flags.get("last_battle_aftermath", {}) if _session != null else {}
 	if not (report is Dictionary) or report.is_empty():
 		return fallback
+	var handoff := _battle_return_handoff_summary(report)
 	var compact := String(report.get("return_summary", "")).strip_edges()
 	if compact != "":
+		if handoff != "":
+			return "%s %s" % [compact, handoff]
 		return compact
 	var lines := []
 	for key in ["result_summary", "reward_summary", "artifact_summary", "force_summary", "world_summary"]:
 		var line := String(report.get(key, "")).strip_edges()
 		if line != "" and line not in lines:
 			lines.append(line)
+	if handoff != "":
+		lines.append(handoff)
 	if not lines.is_empty():
 		return " ".join(lines)
 	return fallback
+
+func _battle_return_handoff_summary(report: Dictionary) -> String:
+	var affected := _battle_handoff_affected(report)
+	var why := _battle_handoff_why(report)
+	var next_action := String(_field_readiness_surface().get("next_step", "")).strip_edges()
+	if next_action == "":
+		next_action = "Select the next destination or end the turn when field orders are spent."
+	if affected == "" and why == "":
+		return ""
+	return "Handoff: Affected: %s Why it matters: %s Next practical action: %s" % [
+		affected if affected != "" else "the field state after battle",
+		why if why != "" else "the battle result changes what the commander should do next",
+		next_action,
+	]
+
+func _battle_handoff_affected(report: Dictionary) -> String:
+	var world_summary := String(report.get("world_summary", "")).strip_edges()
+	if world_summary != "":
+		return _trim_known_prefix(world_summary, "Overworld:")
+	var headline := String(report.get("headline", "")).strip_edges()
+	if headline != "":
+		return headline
+	var result_summary := String(report.get("result_summary", "")).strip_edges()
+	if result_summary != "":
+		return _trim_known_prefix(result_summary, "Result:")
+	return ""
+
+func _battle_handoff_why(report: Dictionary) -> String:
+	for key in ["reward_summary", "artifact_summary", "force_summary", "result_summary"]:
+		var text := String(report.get(key, "")).strip_edges()
+		if text != "":
+			return _trim_known_prefix(text, "Result:")
+	return ""
+
+func _trim_known_prefix(text: String, prefix: String) -> String:
+	var trimmed := text.strip_edges()
+	if trimmed.begins_with(prefix):
+		return trimmed.trim_prefix(prefix).strip_edges()
+	return trimmed
 
 func _feedback_kind_for_context_action(action_id: String) -> String:
 	match action_id:

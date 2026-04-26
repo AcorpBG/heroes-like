@@ -462,9 +462,17 @@ func _assert_battle_aftermath_transition(source_session) -> bool:
 	if not return_recap_text.contains("Rewards:") or not return_recap_text.contains("Forces:") or not return_recap_text.contains("Overworld:"):
 		push_error("Battle smoke: overworld return notice did not expose reward, force, and transition clarity: %s." % snapshot)
 		return false
+	for token in ["Handoff:", "Affected:", "Why it matters:", "Next practical action:"]:
+		if not return_recap_text.contains(token):
+			push_error("Battle smoke: overworld return notice lost battle handoff token %s: %s." % [token, snapshot])
+			return false
 	if String(feedback.get("kind", "")) != "battle" or not feedback_text.contains("Forces:"):
 		push_error("Battle smoke: post-battle action feedback did not surface as a battle recap: %s." % snapshot)
 		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "ai_score", "weight"]:
+		if return_recap_text.contains(leak_token):
+			push_error("Battle smoke: battle handoff recap leaked internal token %s." % leak_token)
+			return false
 	return true
 
 func _clone_session(session):
