@@ -3928,11 +3928,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact handoff-check consistency across the existing overworld, battle, and town Latest/Next context strips using current action recap, readiness, action-confirmation, departure, and save/status payloads.
+Current target: completed compact map-editor Play Copy return context using the existing editor return snapshot and Play Copy handoff surfaces.
 
 Done means:
-- The overworld, battle, and town context-strip tooltips all expose a compact public `Handoff check:` line after a manual player action.
-- The visible `Latest:` and `Next:` strips remain compact and use existing action-context surfaces instead of new dashboards.
-- Existing focused overworld and town/battle smoke coverage proves the surfaces remain visible after an action without leaking internal score/debug fields.
+- Returning from a map-editor Play Copy run visibly confirms that the editor restored the launch snapshot rather than importing live play mutations.
+- The return context stays compact in the existing editor status/Play Copy tooltip surfaces and points to the next edit or Play Copy action.
+- Focused map-editor smoke coverage proves the return context after a Play Copy round trip without leaking internal score/debug fields.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
