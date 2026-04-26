@@ -62,10 +62,11 @@ Immediate execution order:
 25. Neutral encounter additive validator/report scaffolding: completed as opt-in report/fixture/test scaffolding in `tests/validate_repo.py` plus isolated fixtures under `tests/fixtures/neutral_encounter_schema/`. This did not migrate production JSON, change runtime encounters, change pathing, change AI/editor/renderer behavior, migrate saves, import generated PNGs, or add runtime assets.
 26. Neutral encounter additive report review/follow-up: completed in `docs/neutral-encounter-report-review-001.md`. The report has 15 scenarios, 62 encounter definitions, 48 direct placements, 36 script-spawn advisory effects, 10 repeated encounter ids, 4 placement-level field-objective overrides, 23 definition-backed field-objective placements, 435 compatibility warnings, and 0 errors. Current production direct placements remain compatibility-warning-only; strict errors remain isolated to fixtures or later declared migrated bundles.
 27. Production metadata planning for `neutral_encounter_representation_bundle_001`: completed in `docs/neutral-encounter-representation-bundle-001-plan.md`. The plan recommends scenario encounter placement extensions as the first attachment location, defines exact metadata for `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`, fixes the basalt guard-link convention to `target_id: "site_basalt_gatehouse"` plus `target_placement_id: "dwelling_basalt_gatehouse"`, and keeps production JSON migration/runtime adoption out of this planning slice.
-28. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+28. Metadata-only production implementation for `neutral_encounter_representation_bundle_001`: completed as additive `neutral_encounter` placement metadata on `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`, with migrated-bundle validation and report updates. This did not change runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, save format, generated PNG import, or assets.
+29. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Implement metadata-only production scenario encounter placement extensions for `neutral_encounter_representation_bundle_001`, limited to `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch`, plus matching migrated-bundle validation/report updates. Do not change runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, save format, generated PNG import, or asset import.
+- Review/follow up on the authored `neutral_encounter_representation_bundle_001` report output and decide whether the next neutral encounter step should be a broader metadata bundle, a first-class object migration plan, or a different documented foundation slice. Runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, save format, generated PNG import, and asset import remain out of scope until explicitly planned.
 - Treat `safe_metadata_bundle_001` as the only currently migrated production object bundle. All other production map objects remain compatibility-warning-only until a later bundle is declared.
 - Keep production scenario/encounter/map-object/resource-site JSON edits, first-class neutral encounter production migration, `body_tiles`, `approach`, route effects, animation cue ids, editor placement adoption, AI adoption, renderer changes, save migration, and pathing changes as staged follow-ups, not part of this planning slice.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin production object JSON migration, resource-site bundle migration, renderer sprite ingestion, runtime asset import, pathing/occupancy changes, or AI adoption until a planning slice names a specific migrated bundle and validation level.
@@ -74,7 +75,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is metadata-only production migration for `neutral_encounter_representation_bundle_001`, still without switching runtime behavior, pathing, AI, editor behavior, renderer behavior, save format, or asset import.
+- The next active choice is report review/follow-up after the metadata-only production migration for `neutral_encounter_representation_bundle_001`, still without switching runtime behavior, pathing, AI, editor behavior, renderer behavior, save format, or asset import.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
@@ -290,6 +291,25 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit production content JSON, implement validator/tests, change runtime encounters, change pathing/body-tile/occupancy behavior, change AI/editor/renderer behavior, migrate saves, import generated PNGs, add assets, or claim neutral encounter readiness.
+
+## Completed Implementation Slice: Neutral Encounter Representation Bundle 001
+Status: completed on 2026-04-26 as metadata-only production scenario placement migration for the first neutral encounter representation bundle.
+
+Purpose:
+- Add the approved `neutral_encounter_representation_bundle_001` metadata to only the three declared direct scenario encounter placements.
+- Activate migrated-bundle validation and report normalization for those placement extensions while leaving all runtime behavior unchanged.
+
+Delivered:
+- Added `neutral_encounter` metadata to `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `ninefold_basalt_gatehouse_watch` in `content/scenarios.json`.
+- Preserved `placement_id`, `encounter_id`, `x`, `y`, `difficulty`, `combat_seed`, and field-objective behavior.
+- Added default migrated-bundle validation in `tests/validate_repo.py` for the three declared placement extensions only, including the basalt link to `target_id: "site_basalt_gatehouse"` and `target_placement_id: "dwelling_basalt_gatehouse"`.
+- Updated `--neutral-encounter-report` and JSON output so the bundle status is `metadata_authored`, missing authored future metadata counts drop from 48 to 45, and authored representation/guard-link modes are distinct from inferred compatibility modes.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `python3 -m json.tool content/scenarios.json >/tmp/heroes-scenarios-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --neutral-encounter-report`, `python3 tests/validate_repo.py --neutral-encounter-report-json /tmp/heroes-neutral-encounter-report.json && python3 -m json.tool /tmp/heroes-neutral-encounter-report.json >/tmp/heroes-neutral-encounter-report-jsoncheck.txt`, `python3 tests/validate_repo.py --strict-neutral-encounter-fixtures`, and `python3 tests/validate_repo.py --overworld-object-report`.
+
+Limits:
+- This is metadata-only production migration for one declared bundle. It does not edit `content/encounters.json`, `content/map_objects.json`, `content/resource_sites.json`, runtime code, renderer/editor/AI/pathing/save behavior, generated PNGs, or assets.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
