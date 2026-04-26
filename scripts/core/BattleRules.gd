@@ -2124,8 +2124,10 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 	elif not closing_context.is_empty():
 		board_click_line = String(closing_context.get("message", board_click_line))
 	var movement_click_line := String(movement_intent.get("message", ""))
+	var manual_cue := _manual_battle_action_cue(actions, click_intent, movement_intent)
 	var lines = [
 		"Target focus: %s" % target_line,
+		manual_cue,
 		board_click_line,
 	]
 	if movement_click_line != "":
@@ -2137,6 +2139,45 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 			String(action.get("summary", "")),
 		])
 	return "\n".join(lines)
+
+static func _manual_battle_action_cue(actions: Dictionary, click_intent: Dictionary, movement_intent: Dictionary) -> String:
+	var click_action := String(click_intent.get("action", ""))
+	var click_label := String(click_intent.get("label", "")).strip_edges()
+	if click_action != "" and click_label != "":
+		return "Try: click the highlighted target to %s, or click %s." % [
+			click_label.to_lower(),
+			_action_button_label(actions, click_action),
+		]
+
+	if String(movement_intent.get("action", "")) == "move":
+		var ready_after_move := _first_ready_action_label(actions, ["strike", "shoot", "advance", "defend"])
+		if ready_after_move != "":
+			return "Try: click a green hex to move, or click %s." % ready_after_move
+		return "Try: click a green hex to move this stack."
+
+	var ready_action := _first_ready_action_label(actions, ["strike", "shoot", "advance", "defend", "retreat", "surrender"])
+	if ready_action != "":
+		return "Try: click %s for the next order." % ready_action
+	return "Try: cycle target focus or wait for command to return."
+
+static func _action_button_label(actions: Dictionary, action_id: String) -> String:
+	var action_value = actions.get(action_id, {})
+	if action_value is Dictionary:
+		var label := String(action_value.get("label", action_id.capitalize())).strip_edges()
+		if label != "":
+			return label
+	return action_id.capitalize()
+
+static func _first_ready_action_label(actions: Dictionary, action_ids: Array) -> String:
+	for action_id_value in action_ids:
+		var action_id := String(action_id_value)
+		var action_value = actions.get(action_id, {})
+		if not (action_value is Dictionary):
+			continue
+		if bool(action_value.get("disabled", false)):
+			continue
+		return _action_button_label(actions, action_id)
+	return ""
 
 static func describe_order_consequence_board(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
