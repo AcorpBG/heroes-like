@@ -41,6 +41,8 @@ func _run() -> void:
 	if not is_equal_approx(float(viewport_metrics.get("visible_tile_span_zoom_out_factor", 0.0)), 1.5):
 		_fail("Map editor smoke: editor map view did not zoom out by a factor of 1.5 from the gameplay tactical span: %s." % viewport_metrics)
 		return
+	if not _assert_editor_play_handoff(snapshot, false, ["Play handoff:", "Ninefold Confluence", "authored working copy", "return restores the editor launch snapshot", "no authored file or campaign progress is written"]):
+		return
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
@@ -71,6 +73,8 @@ func _run() -> void:
 	var paint_inspection: Dictionary = paint_result.get("tile_inspection", {})
 	if String(paint_inspection.get("terrain_id", "")) != "forest" or not bool(paint_result.get("dirty", false)):
 		_fail("Map editor smoke: terrain paint did not mutate the working copy: %s." % paint_result)
+		return
+	if not _assert_editor_play_handoff(paint_result, true, ["Play handoff:", "edited in-memory working copy", "return restores the editor launch snapshot"]):
 		return
 	var paint_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 2)
 	var terrain_presentation: Dictionary = paint_presentation.get("terrain_presentation", {})
@@ -2267,6 +2271,57 @@ func _assert_editor_acceptance_cue(result: Dictionary, expected_source: String, 
 			return false
 	return true
 
+func _assert_editor_play_handoff(result: Dictionary, expected_dirty: bool, fragments: Array) -> bool:
+	var handoff: Dictionary = result.get("play_handoff", {})
+	var text := String(handoff.get("text", ""))
+	var tooltip := String(result.get("play_button_tooltip", ""))
+	var visible_status := String(result.get("visible_status_text", ""))
+	var full_status := String(result.get("visible_status_full", ""))
+	if handoff.is_empty() or text == "":
+		_fail("Map editor smoke: editor Play Copy handoff was not exposed: %s." % result)
+		return false
+	if bool(handoff.get("dirty", false)) != expected_dirty:
+		_fail("Map editor smoke: editor Play Copy handoff dirty context mismatch: %s." % handoff)
+		return false
+	if String(handoff.get("return_model", "")) != "launch_snapshot":
+		_fail("Map editor smoke: editor Play Copy handoff did not declare launch-snapshot return: %s." % handoff)
+		return false
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected == "":
+			continue
+		if text.find(expected) < 0:
+			_fail("Map editor smoke: editor Play Copy handoff missed '%s': %s." % [expected, text])
+			return false
+		if tooltip.find(expected) < 0:
+			_fail("Map editor smoke: Play Copy tooltip missed handoff fragment '%s': %s." % [expected, tooltip])
+			return false
+		if full_status.find(expected) < 0:
+			_fail("Map editor smoke: visible status full text missed handoff fragment '%s': %s." % [expected, full_status])
+			return false
+	if visible_status.find("Play handoff:") < 0:
+		_fail("Map editor smoke: visible status text did not include the Play Copy handoff label: %s." % visible_status)
+		return false
+	var leak_text := "%s\n%s\n%s" % [text, tooltip, full_status]
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+	]:
+		if leak_text.find(forbidden) >= 0:
+			_fail("Map editor smoke: editor Play Copy handoff leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
+	return true
+
 func _assert_object_property_edits(shell) -> bool:
 	var before_cache := _render_cache_metrics(shell.call("validation_snapshot"))
 	var town_result: Dictionary = shell.call("validation_edit_object_property", 23, 26, "town", "owner", "neutral")
@@ -2697,6 +2752,15 @@ func _assert_play_copy_round_trip(shell) -> bool:
 		or String(launch_result.get("return_model", "")) != "launch_snapshot"
 	):
 		_fail("Map editor smoke: Play Copy did not stage the editor working-copy snapshot: %s." % launch_result)
+		return false
+	var launch_handoff: Dictionary = launch_result.get("launch_handoff", {})
+	if (
+		launch_handoff.is_empty()
+		or String(launch_handoff.get("state_context", "")) != "edited in-memory working copy"
+		or String(launch_handoff.get("return_context", "")).find("launch snapshot") < 0
+		or String(launch_handoff.get("write_context", "")).find("no authored file") < 0
+	):
+		_fail("Map editor smoke: Play Copy launch result did not carry the handoff context: %s." % launch_result)
 		return false
 
 	await get_tree().process_frame
