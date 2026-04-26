@@ -142,6 +142,8 @@ func _run() -> void:
 		return
 	if not _assert_object_authoring_dependency_surfaces(shell):
 		return
+	if not _assert_object_placement_preview_surfaces(shell):
+		return
 	if not _assert_object_property_edits(shell):
 		return
 	if not _assert_object_move_edits(shell):
@@ -2137,6 +2139,62 @@ func _assert_object_authoring_dependency_surfaces(shell) -> bool:
 	var target_text := String(target_result.get("tile_inspection", {}).get("text", ""))
 	if target_text.find("Guarded by: Basalt Gatehouse Watch") < 0 or target_text.find("Enemy focus: Orevein Contract Claim | priority target") < 0:
 		_fail("Map editor smoke: guarded resource tile text did not include reverse guard/enemy focus dependency lines: %s." % target_text)
+		return false
+	return true
+
+func _assert_object_placement_preview_surfaces(shell) -> bool:
+	var before_snapshot: Dictionary = shell.call("validation_snapshot")
+	var before_count := int(before_snapshot.get("placement_count", 0))
+	var preview_result: Dictionary = shell.call("validation_preview_object_placement", 5, 4, "resource", "site_timber_wagon")
+	var preview: Dictionary = preview_result.get("selected_object_placement_preview", {})
+	var preview_text := String(preview.get("text", ""))
+	var palette_text := String(preview_result.get("selected_object_palette_text", ""))
+	if (
+		not bool(preview_result.get("ok", false))
+		or int(preview_result.get("placement_count", 0)) != before_count
+		or not bool(preview.get("can_place", false))
+		or String(preview.get("placement_role", "")) != "Resource reward pacing"
+		or String(preview.get("authoring_consequence", "")).find("economy/control and route context update") < 0
+	):
+		_fail("Map editor smoke: resource placement preview did not expose pre-placement role/consequence without mutating the map: preview=%s result=%s." % [preview, preview_result])
+		return false
+	for expected in [
+		"Preview 5,4: Resource reward pacing | can place",
+		"Terrain:",
+		"Faction: nearest",
+		"Economy: one-time",
+		"Route:",
+		"Dependency:",
+		"Consequence:",
+	]:
+		if preview_text.find(expected) < 0:
+			_fail("Map editor smoke: resource placement preview text missed '%s': %s." % [expected, preview_text])
+			return false
+		if palette_text.find(expected) < 0:
+			_fail("Map editor smoke: visible object palette text missed placement preview '%s': %s." % [expected, palette_text])
+			return false
+
+	var encounter_preview_result: Dictionary = shell.call("validation_preview_object_placement", 7, 4, "encounter", "encounter_mire_raid")
+	var encounter_preview: Dictionary = encounter_preview_result.get("selected_object_placement_preview", {})
+	var dependency_warning := String(encounter_preview.get("dependency_warning", ""))
+	if (
+		not bool(encounter_preview_result.get("ok", false))
+		or int(encounter_preview_result.get("placement_count", 0)) != before_count
+		or not bool(encounter_preview.get("can_place", false))
+		or dependency_warning.find("Stable placement id") < 0
+		or String(encounter_preview.get("authoring_consequence", "")).find("blocking battle threat") < 0
+	):
+		_fail("Map editor smoke: encounter placement preview did not expose dependency warning/consequence without placement: preview=%s result=%s." % [encounter_preview, encounter_preview_result])
+		return false
+
+	var blocked_preview_result: Dictionary = shell.call("validation_preview_object_placement", 23, 26, "town", "town_riverwatch")
+	var blocked_preview: Dictionary = blocked_preview_result.get("selected_object_placement_preview", {})
+	if (
+		bool(blocked_preview.get("can_place", true))
+		or String(blocked_preview.get("blocked_reason", "")).find("Tile already has") < 0
+		or int(blocked_preview_result.get("placement_count", 0)) != before_count
+	):
+		_fail("Map editor smoke: occupied-tile placement preview did not warn before placement: preview=%s result=%s." % [blocked_preview, blocked_preview_result])
 		return false
 	return true
 

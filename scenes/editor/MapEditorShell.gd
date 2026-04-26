@@ -935,6 +935,13 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 		var tag_summary := _tag_summary_for_editor(payload.get("secondary_tags", []), 3)
 		if tag_summary != "":
 			lines.append("Tags %s" % tag_summary)
+	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
+	var preview_text := String(preview.get("text", "")).strip_edges()
+	if preview_text != "":
+		for raw_line in preview_text.split("\n"):
+			var line := String(raw_line).strip_edges()
+			if line != "":
+				lines.append(line)
 	var link_line := _taxonomy_link_line(payload)
 	if link_line != "":
 		lines.append(link_line)
@@ -944,6 +951,262 @@ func _object_palette_guidance_text(payload: Dictionary, guidance: Dictionary) ->
 	lines.append_array(_recruit_source_summary_lines_for_editor(payload, 2))
 	lines.append_array(_identity_summary_lines_for_editor(payload, 2))
 	return "\n".join(lines)
+
+func _placement_preview_tile() -> Vector2i:
+	if _tool == TOOL_PLACE_OBJECT and _tile_in_bounds(_hovered_tile):
+		return _hovered_tile
+	return _selected_tile
+
+func _selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
+	var payload := _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id)
+	if payload.is_empty() or _selected_object_family == "" or _selected_object_content_id == "":
+		return {}
+	var guidance := _placement_guidance_payload(payload, tile)
+	var availability := _placement_availability_for_selected_object(tile)
+	var context_lines := _placement_context_lines(_selected_object_family, _selected_object_content_id, payload, tile)
+	var density_warning := _density_warning_for_guidance(guidance, bool(availability.get("can_place", false)))
+	var dependency_warning := _placement_dependency_warning(payload)
+	var consequence := _placement_authoring_consequence(_selected_object_family, _selected_object_content_id, payload, guidance)
+	var warning_lines := []
+	var blocked_reason := String(availability.get("blocked_reason", "")).strip_edges()
+	if blocked_reason != "":
+		warning_lines.append(blocked_reason)
+	if density_warning != "":
+		warning_lines.append(density_warning)
+	if dependency_warning != "":
+		warning_lines.append(dependency_warning)
+	var text_lines := [
+		"Preview %d,%d: %s | %s" % [
+			tile.x,
+			tile.y,
+			String(guidance.get("placement_role", "")),
+			"can place" if bool(availability.get("can_place", false)) else "blocked",
+		],
+	]
+	text_lines.append_array(context_lines)
+	if not warning_lines.is_empty():
+		text_lines.append("Warning: %s" % " | ".join(warning_lines))
+	text_lines.append("Consequence: %s" % consequence)
+	return {
+		"target_tile": {"x": tile.x, "y": tile.y},
+		"family": _selected_object_family,
+		"content_id": _selected_object_content_id,
+		"can_place": bool(availability.get("can_place", false)),
+		"blocked_reason": blocked_reason,
+		"placement_role": String(guidance.get("placement_role", "")),
+		"role_flags_text": String(guidance.get("role_flags_text", "")),
+		"terrain_context": _placement_terrain_context_line(tile),
+		"affected_context": context_lines,
+		"density_warning": density_warning,
+		"dependency_warning": dependency_warning,
+		"warnings": warning_lines,
+		"authoring_consequence": consequence,
+		"guidance": guidance,
+		"text": "\n".join(text_lines),
+	}
+
+func _placement_availability_for_selected_object(tile: Vector2i) -> Dictionary:
+	if not _tile_in_bounds(tile):
+		return {"can_place": false, "blocked_reason": "Target tile is outside the map."}
+	if _selected_object_family == "" or _selected_object_content_id == "":
+		return {"can_place": false, "blocked_reason": "Choose an object before placing."}
+	if _object_content_lookup(_selected_object_family, _selected_object_content_id).is_empty():
+		return {
+			"can_place": false,
+			"blocked_reason": "Unknown %s content id %s." % [_object_family_label(_selected_object_family), _selected_object_content_id],
+		}
+	if _selected_object_family == OBJECT_FAMILY_ARTIFACT and _artifact_content_id_exists(_selected_object_content_id):
+		return {"can_place": false, "blocked_reason": "Artifact is already placed in this working copy."}
+	var occupied_label := _first_placement_label_at_tile(tile)
+	if occupied_label != "":
+		return {
+			"can_place": false,
+			"blocked_reason": "Tile already has %s." % occupied_label,
+		}
+	return {"can_place": true, "blocked_reason": ""}
+
+func _first_placement_label_at_tile(tile: Vector2i) -> String:
+	if _session == null or not _tile_in_bounds(tile):
+		return ""
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var placements = _session.overworld.get(_placement_array_key(family), [])
+		if not (placements is Array):
+			continue
+		for placement in placements:
+			if placement is Dictionary and _placement_at_tile(placement, tile):
+				var placement_id := String(placement.get("placement_id", ""))
+				return placement_id if placement_id != "" else family
+	return ""
+
+func _placement_context_lines(family: String, content_id: String, payload: Dictionary, tile: Vector2i) -> Array:
+	var lines := []
+	var terrain_context := _placement_terrain_context_line(tile)
+	if terrain_context != "":
+		lines.append(terrain_context)
+	var faction_context := _placement_faction_context_line(family, content_id, tile)
+	if faction_context != "":
+		lines.append(faction_context)
+	var economy_context := _placement_economy_context_line(family, content_id)
+	if economy_context != "":
+		lines.append(economy_context)
+	var route_context := _placement_route_context_line(tile)
+	if route_context != "":
+		lines.append(route_context)
+	var dependency_context := _placement_dependency_context_line(payload, tile)
+	if dependency_context != "":
+		lines.append(dependency_context)
+	return lines
+
+func _placement_terrain_context_line(tile: Vector2i) -> String:
+	if not _tile_in_bounds(tile):
+		return ""
+	var terrain_id := _terrain_at(tile)
+	var biome := ContentService.get_biome_for_terrain(terrain_id)
+	var biome_name := String(biome.get("name", "Unknown biome"))
+	var passable := bool(biome.get("passable", terrain_id != "water"))
+	return "Terrain: %s / %s | passable %s" % [terrain_id, biome_name, "yes" if passable else "no"]
+
+func _placement_faction_context_line(family: String, content_id: String, tile: Vector2i) -> String:
+	if family == OBJECT_FAMILY_TOWN:
+		var town := ContentService.get_town(content_id)
+		var faction_id := String(town.get("faction_id", ""))
+		var faction := ContentService.get_faction(faction_id)
+		var faction_name := String(faction.get("name", faction_id))
+		return "Faction: %s | %s" % [faction_name, String(town.get("strategic_role", "frontier")).capitalize()] if faction_name != "" else ""
+	var nearest := _nearest_town_context(tile)
+	if nearest.is_empty():
+		return ""
+	return "Faction: nearest %s (%s, %s) %d tiles" % [
+		String(nearest.get("name", "town")),
+		String(nearest.get("owner", "neutral")),
+		String(nearest.get("faction_name", "")),
+		int(nearest.get("distance", 0)),
+	]
+
+func _nearest_town_context(tile: Vector2i) -> Dictionary:
+	if _session == null:
+		return {}
+	var best := {}
+	var best_distance := 999999
+	for town_placement in _session.overworld.get("towns", []):
+		if not (town_placement is Dictionary):
+			continue
+		var town_tile := Vector2i(int(town_placement.get("x", 0)), int(town_placement.get("y", 0)))
+		var distance: int = abs(town_tile.x - tile.x) + abs(town_tile.y - tile.y)
+		if distance >= best_distance:
+			continue
+		var town := ContentService.get_town(String(town_placement.get("town_id", "")))
+		var faction_id := String(town.get("faction_id", ""))
+		var faction := ContentService.get_faction(faction_id)
+		best_distance = distance
+		best = {
+			"name": String(town.get("name", town_placement.get("town_id", "town"))),
+			"owner": String(town_placement.get("owner", "neutral")),
+			"faction_name": String(faction.get("name", faction_id)),
+			"distance": distance,
+		}
+	return best
+
+func _placement_economy_context_line(family: String, content_id: String) -> String:
+	match family:
+		OBJECT_FAMILY_RESOURCE:
+			var site := ContentService.get_resource_site(content_id)
+			var parts := []
+			var rewards = site.get("rewards", {})
+			if rewards is Dictionary and not rewards.is_empty():
+				parts.append("one-time %s" % _resource_delta_text(rewards))
+			var claim_rewards = site.get("claim_rewards", {})
+			if claim_rewards is Dictionary and not claim_rewards.is_empty():
+				parts.append("claim %s" % _resource_delta_text(claim_rewards))
+			var control_income = site.get("control_income", {})
+			if control_income is Dictionary and not control_income.is_empty():
+				parts.append("income %s/day" % _resource_delta_text(control_income))
+			var weekly_recruits = site.get("weekly_recruits", {})
+			if weekly_recruits is Dictionary and not weekly_recruits.is_empty():
+				parts.append("weekly recruits %s" % _resource_delta_text(weekly_recruits))
+			return "Economy: %s" % "; ".join(parts) if not parts.is_empty() else ""
+		OBJECT_FAMILY_TOWN:
+			var town := ContentService.get_town(content_id)
+			var economy = town.get("economy", {})
+			if economy is Dictionary:
+				var base_income = economy.get("base_income", {})
+				if base_income is Dictionary and not base_income.is_empty():
+					return "Economy: town base %s/day" % _resource_delta_text(base_income)
+		OBJECT_FAMILY_ENCOUNTER:
+			var encounter := ContentService.get_encounter(content_id)
+			var rewards = encounter.get("rewards", {})
+			if rewards is Dictionary and not rewards.is_empty():
+				return "Economy: battle reward %s" % _resource_delta_text(rewards)
+		OBJECT_FAMILY_ARTIFACT:
+			var artifact := ContentService.get_artifact(content_id)
+			var slot := String(artifact.get("slot", "")).strip_edges()
+			return "Economy: hero progression reward%s" % (" | slot %s" % _humanize_editor_id(slot) if slot != "" else "")
+	return ""
+
+func _placement_route_context_line(tile: Vector2i) -> String:
+	if not _tile_in_bounds(tile):
+		return ""
+	if _has_road_at(tile):
+		return "Route: on road %s" % ", ".join(_road_layer_ids_at(tile))
+	var adjacent_roads := 0
+	for offset in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		if _tile_in_bounds(tile + offset) and _has_road_at(tile + offset):
+			adjacent_roads += 1
+	if adjacent_roads > 0:
+		return "Route: adjacent to %d road tile%s" % [adjacent_roads, "" if adjacent_roads == 1 else "s"]
+	return "Route: no immediate road contact"
+
+func _placement_dependency_context_line(payload: Dictionary, tile: Vector2i) -> String:
+	if _first_placement_label_at_tile(tile) != "":
+		return "Dependency: inspect existing placement links before replacing this tile"
+	var primary_class := String(payload.get("primary_class", ""))
+	var flags := _placement_role_flags(payload)
+	if primary_class in ["town", "neutral_encounter", "neutral_dwelling"] or bool(flags.get("transit", false)) or bool(flags.get("faction_landmark", false)):
+		return "Dependency: new editor id starts unlinked until objectives, guards, rewards, or enemy focus target it"
+	return "Dependency: no authored objective/guard link is created automatically"
+
+func _placement_dependency_warning(payload: Dictionary) -> String:
+	var primary_class := String(payload.get("primary_class", ""))
+	var flags := _placement_role_flags(payload)
+	if primary_class in ["town", "neutral_encounter"] or bool(flags.get("transit", false)) or bool(flags.get("faction_landmark", false)):
+		return "Stable placement id needed before linking objectives, guards, rewards, or enemy focus."
+	return ""
+
+func _density_warning_for_guidance(guidance: Dictionary, can_place: bool) -> String:
+	if guidance.is_empty() or not can_place:
+		return ""
+	var target := String(guidance.get("density_target", ""))
+	var upper_bound := _density_target_upper_bound(target)
+	if upper_bound <= 0:
+		return ""
+	var projected_count := int(guidance.get("local_density_count", 0)) + 1
+	if projected_count > upper_bound:
+		return "Density after placement is %d, above target %s." % [projected_count, target]
+	if projected_count == upper_bound:
+		return "Density after placement reaches target cap %s." % target
+	return ""
+
+func _density_target_upper_bound(target: String) -> int:
+	var first_token := String(target.strip_edges().split(" ")[0]) if target.strip_edges() != "" else ""
+	if first_token.find("-") < 0:
+		return -1
+	var range_parts := first_token.split("-")
+	if range_parts.size() < 2:
+		return -1
+	return int(String(range_parts[1]))
+
+func _placement_authoring_consequence(family: String, content_id: String, payload: Dictionary, guidance: Dictionary) -> String:
+	var role := String(guidance.get("placement_role", _placement_role_label(payload, _placement_role_flags(payload))))
+	match family:
+		OBJECT_FAMILY_TOWN:
+			return "creates a persistent town anchor for %s; authoring links must choose whether it is an objective, front, or enemy focus." % content_id
+		OBJECT_FAMILY_RESOURCE:
+			return "creates a %s site for %s; economy/control and route context update from this tile." % [role.to_lower(), content_id]
+		OBJECT_FAMILY_ARTIFACT:
+			return "creates a one-time hero progression reward for %s; collection removes it from the field." % content_id
+		OBJECT_FAMILY_ENCOUNTER:
+			return "creates a blocking battle threat for %s; use guard/reward links when it gates a lane or prize." % content_id
+	return "creates a %s placement for %s." % [role.to_lower(), content_id]
 
 func _placement_guidance_payload(payload: Dictionary, tile: Vector2i) -> Dictionary:
 	if payload.is_empty():
@@ -1954,6 +2217,7 @@ func _select_tool(tool: String) -> void:
 	if _tool != TOOL_ROAD_PATH:
 		_pending_road_path_start = Vector2i(-1, -1)
 	_sync_tool_buttons()
+	_sync_object_taxonomy_summary()
 	_refresh_labels()
 
 func _sync_tool_buttons() -> void:
@@ -2047,6 +2311,8 @@ func _on_restore_selected_tile_pressed() -> void:
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
 	_hovered_tile = tile
+	if _tool == TOOL_PLACE_OBJECT:
+		_sync_object_taxonomy_summary()
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _session == null or not _tile_in_bounds(tile):
@@ -2752,6 +3018,7 @@ func _place_object(tile: Vector2i) -> bool:
 		]
 		return false
 
+	var preview := _selected_object_placement_preview_payload(tile)
 	var placement_id := _generate_editor_placement_id(_selected_object_family, _selected_object_content_id, tile)
 	var built_placement := _build_runtime_placement(_selected_object_family, _selected_object_content_id, placement_id, tile)
 	if built_placement.is_empty():
@@ -2779,6 +3046,9 @@ func _place_object(tile: Vector2i) -> bool:
 			String(guidance.get("density_target", "")),
 			int(guidance.get("local_density_count", 0)),
 		]
+	var consequence := String(preview.get("authoring_consequence", "")).strip_edges()
+	if consequence != "":
+		_last_message = "%s Consequence: %s" % [_last_message, consequence]
 	return true
 
 func _remove_object(tile: Vector2i) -> bool:
@@ -4185,6 +4455,8 @@ func validation_snapshot() -> Dictionary:
 		"selected_object_content_id": _selected_object_content_id,
 		"selected_object_taxonomy": _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id),
 		"selected_object_guidance": _placement_guidance_payload(_object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id), _selected_tile),
+		"selected_object_placement_preview": _selected_object_placement_preview_payload(_placement_preview_tile()),
+		"selected_object_palette_text": _object_taxonomy_summary_label.tooltip_text if _object_taxonomy_summary_label != null else "",
 		"selected_property_object_key": _selected_property_object_key,
 		"selected_property_object": _selected_property_object_payload(),
 		"pending_move_object_key": _pending_move_object_key,
@@ -4603,6 +4875,23 @@ func validation_place_object(x: int, y: int, family: String, content_id: String)
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = changed
+	snapshot["family_selected"] = family_selected
+	snapshot["content_selected"] = content_selected
+	return snapshot
+
+func validation_preview_object_placement(x: int, y: int, family: String, content_id: String) -> Dictionary:
+	var family_selected := true
+	var content_selected := true
+	if family != "":
+		family_selected = _select_object_family_by_id(family)
+	if content_id != "":
+		content_selected = _select_object_content_by_id(content_id)
+	_selected_tile = Vector2i(x, y)
+	_hovered_tile = _selected_tile
+	_tool = TOOL_PLACE_OBJECT
+	_refresh_state()
+	var snapshot := validation_snapshot()
+	snapshot["ok"] = family_selected and content_selected and not snapshot.get("selected_object_placement_preview", {}).is_empty()
 	snapshot["family_selected"] = family_selected
 	snapshot["content_selected"] = content_selected
 	return snapshot
