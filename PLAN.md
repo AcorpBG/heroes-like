@@ -49,14 +49,14 @@ Immediate execution order:
 12. Remaining second-pass concept-art expansion: completed for the main named faction/town/unit gaps across `docs/concept-art-batch-003-review.md` and `docs/concept-art-batch-004-review.md`, covering Thornwake, Brasshollow, Embercourt, Mireclaw, Veilmourn, and Sunvault second-pass needs. Generated PNGs remain external only.
 13. Broader overworld object/town studies: completed as external route-law/transit, persistent resource-front, neutral encounter, guarded reward, pickup, and faction-landmark evidence recorded in `docs/concept-art-batch-005-review.md`. Generated PNGs remain external only.
 14. Concept-art implementation-brief prep: completed in `docs/concept-art-implementation-briefs.md` for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes. Generated PNGs remain external concept evidence only, and AcOrP review remains open.
-15. Overworld object schema migration planning: current next slice. Define the production data shape for object primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard links, reward categories, ownership/capture states, route effects, and animation cue ids before JSON migration, map placement, sprite ingestion, or runtime asset work.
-16. Economy/resource schema migration planning should follow or run as a tightly coupled companion slice, because persistent resource fronts need resource ids, output cadence, capture values, and market/resource compatibility decisions.
+15. Overworld object schema migration planning: completed in `docs/overworld-object-schema-migration-plan.md` as a planning-only migration contract for object primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard links, reward categories, ownership/capture states, route effects, resource-site linkage, animation cue ids, validation, editor/tooling, and rollback.
+16. Economy/resource schema migration planning is the next current slice and should run as the tightly coupled companion, because persistent resource fronts need resource ids, output cadence, capture values, `wood`/`timber` compatibility, market limits, AI valuation, and save compatibility decisions before JSON migration.
 17. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Start overworld object schema migration planning from `docs/concept-art-implementation-briefs.md`, `docs/overworld-object-taxonomy-density.md`, `docs/economy-overhaul-foundation.md`, and `docs/animation-systems-foundation.md`.
-- Prioritize object class metadata, footprint/body tile rules, approach-side rules, passability/interaction classes, state variants, guard/reward links, route effects, ownership/capture states, animation cue ids, validation expectations, and editor implications.
-- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin JSON migration, map placement, renderer sprite ingestion, or runtime asset import until the schema-planning slice selects a staged migration contract.
+- Start economy/resource schema migration planning from `docs/economy-overhaul-foundation.md`, `docs/overworld-object-schema-migration-plan.md`, current `content/resource_sites.json`, and current economy validators.
+- Prioritize resource ids, `wood`/`timber` compatibility, resource categories, output cadence, persistent-site capture values, market/exchange caps, faction preferences, town/recruitment cost compatibility, AI valuation hooks, save/schema migration, and staged validator warnings before any JSON migration.
+- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin economy JSON migration, resource-site bundle migration, renderer sprite ingestion, or runtime asset import until the economy/resource schema-planning slice selects a staged migration contract.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
@@ -377,6 +377,29 @@ Validation:
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, generated PNGs, object sprites, map placements, schema migration, or playability claims.
 - AcOrP final art-direction approval remains deferred; the briefs translate motifs and constraints, not exact generated-image designs.
+
+## Completed Planning Slice: Overworld Object Schema Migration Plan
+Status: completed on 2026-04-26 as a planning-only migration contract.
+
+Purpose:
+- Define the staged production data/schema contract for overworld objects before JSON migration, scenario placement, renderer sprite ingestion, runtime asset import, true pathing occupancy, or AI adoption.
+- Convert the object taxonomy, implementation briefs, economy foundation, animation foundation, and strategic-AI foundation into a concrete compatibility strategy.
+- Explicitly separate planning from implementation so current object/site content and runtime behavior remain unchanged.
+
+Delivered:
+- Added `docs/overworld-object-schema-migration-plan.md`.
+- Documented current `content/map_objects.json` and `content/resource_sites.json` reality, including current object/site counts, family fields, passable/visitable booleans, footprint limitations, resource-site behavior fields, and validator coverage.
+- Defined target object fields for `schema_version`, `primary_class`, `secondary_tags`, family/subtype compatibility, footprint/body tiles, approach offsets/sides, passability class, interaction cadence, guard/reward links, ownership/capture states, route effects, resource-site linkage, animation cue ids, AI valuation hooks, and editor/tooling metadata.
+- Staged the compatibility path as additive schema first, validator warnings, strict sample fixtures, content migration bundles, renderer/editor adoption, pathing/interaction adoption, AI adoption, and only then legacy cleanup.
+- Sequenced the next current slice as economy/resource schema migration planning because persistent resource fronts need resource ids, output cadence, capture values, `wood`/`timber` compatibility, market rules, AI valuation, and save/schema decisions before content migration.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, generated PNGs, object sprites, map placements, validator code, schema migration, pathing changes, AI changes, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
@@ -2564,7 +2587,7 @@ No claim should move to "done" unless live-client usability and evidence are fil
 Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- The next slice starts with strategic AI planning rather than map or screen polish.
+- The next slice starts with economy/resource schema migration planning rather than JSON migration, map placement, renderer asset ingestion, or screen polish.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.
