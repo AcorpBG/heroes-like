@@ -1731,7 +1731,244 @@ static func describe_frontier_threats(session: SessionStateStoreScript.SessionDa
 	var occupation_watch := _occupied_town_watch_summary(session)
 	if occupation_watch != "":
 		lines.append("Occupation watch: %s" % occupation_watch)
+	lines.append("Defense readiness: %s" % describe_defense_readiness_warnings(session))
 	return "\n".join(lines)
+
+static func describe_defense_readiness_warnings(session: SessionStateStoreScript.SessionData, limit: int = 2) -> String:
+	normalize_overworld_state(session)
+	var items := _defense_readiness_warning_items(session)
+	if items.is_empty():
+		return "No exposed town or route-defense warning is visible."
+	var fragments := []
+	var max_items := clampi(limit, 1, 4)
+	for index in range(min(max_items, items.size())):
+		var item: Dictionary = items[index]
+		fragments.append("%s: %s Why: %s Next: %s" % [
+			String(item.get("label", "Town front")),
+			_short_player_text(String(item.get("context", "")), 128),
+			_short_player_text(String(item.get("why", "")), 112),
+			_short_player_text(String(item.get("next_step", "")), 112),
+		])
+	if items.size() > max_items:
+		fragments.append("+%d more town/front warning%s" % [
+			items.size() - max_items,
+			"" if items.size() - max_items == 1 else "s",
+		])
+	return " | ".join(fragments)
+
+static func describe_town_defense_readiness_warning(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary
+) -> String:
+	normalize_overworld_state(session)
+	if town.is_empty():
+		return "No town front is selected."
+	var item := _defense_readiness_warning_item(session, town, true)
+	if item.is_empty():
+		return "No town front is selected."
+	return "%s: %s Why: %s Next: %s" % [
+		String(item.get("label", _town_name(town))),
+		_short_player_text(String(item.get("context", "")), 132),
+		_short_player_text(String(item.get("why", "")), 112),
+		_short_player_text(String(item.get("next_step", "")), 112),
+	]
+
+static func _defense_readiness_warning_items(session: SessionStateStoreScript.SessionData) -> Array:
+	var items := []
+	if session == null:
+		return items
+	for town in session.overworld.get("towns", []):
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+			continue
+		var item := _defense_readiness_warning_item(session, town, false)
+		if not item.is_empty():
+			items.append(item)
+	items.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a.get("severity", 0)) > int(b.get("severity", 0))
+	)
+	return items
+
+static func _defense_readiness_warning_item(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	include_steady: bool
+) -> Dictionary:
+	if session == null or town.is_empty():
+		return {}
+	var readiness := town_battle_readiness(town, session)
+	var defense := _town_defense_summary(town)
+	var logistics := town_logistics_state(session, town)
+	var recovery := town_recovery_state(session, town)
+	var capital_project := town_capital_project_state(town, session)
+	var occupation := town_occupation_state(session, town)
+	var front := _town_front_state(session, town)
+	var threat_state := _town_command_risk_state(session, town)
+	var objective_anchor: bool = _raid_target_is_objective_anchor(
+		session,
+		"town",
+		String(town.get("placement_id", ""))
+	)
+	var pressure_parts := _defense_readiness_pressure_parts(threat_state, front, occupation)
+	var logistics_alert := (
+		int(logistics.get("disrupted_count", 0)) > 0
+		or int(logistics.get("threatened_count", 0)) > 0
+		or int(logistics.get("support_gap", 0)) > 0
+	)
+	var recovery_alert := bool(recovery.get("active", false))
+	var capital_alert := bool(capital_project.get("vulnerable", false))
+	var low_readiness := readiness <= 18 or defense == "thin watch"
+	var strained_readiness := readiness <= 30
+	var has_warning := (
+		not pressure_parts.is_empty()
+		or logistics_alert
+		or recovery_alert
+		or capital_alert
+		or low_readiness
+		or bool(occupation.get("active", false))
+	)
+	if not has_warning and not include_steady:
+		return {}
+	var severity := 0
+	if int(threat_state.get("visible_pressuring", 0)) > 0 or int(threat_state.get("siege_progress", 0)) > 0:
+		severity += 5
+	elif int(threat_state.get("visible_marching", 0)) > 0:
+		severity += 3
+	if bool(threat_state.get("hidden_targeting", false)):
+		severity += 2
+	if bool(front.get("active", false)):
+		severity += 2 if String(front.get("mode", "")) == "retake" else 1
+	if bool(occupation.get("active", false)):
+		severity += 2
+	if low_readiness:
+		severity += 2
+	elif strained_readiness:
+		severity += 1
+	if logistics_alert:
+		severity += 2
+	if recovery_alert or capital_alert or objective_anchor:
+		severity += 1
+	var status := "ready"
+	if low_readiness:
+		status = "under-defended"
+	elif has_warning:
+		status = "pressured"
+	elif strained_readiness:
+		status = "guarded"
+	var context_parts := []
+	if not pressure_parts.is_empty():
+		context_parts.append("Pressure %s" % "; ".join(pressure_parts))
+	context_parts.append("Readiness %d" % readiness)
+	if defense != "":
+		context_parts.append(defense)
+	if String(logistics.get("summary", "")) != "":
+		context_parts.append("Routes %s" % String(logistics.get("summary", "")))
+	if String(logistics.get("impact_summary", "")) != "" and (logistics_alert or include_steady):
+		context_parts.append("Economy/frontier %s" % String(logistics.get("impact_summary", "")))
+	if recovery_alert:
+		context_parts.append(String(recovery.get("summary", "")))
+	if capital_alert and String(capital_project.get("vulnerability_summary", "")) != "":
+		context_parts.append(String(capital_project.get("vulnerability_summary", "")))
+	if objective_anchor:
+		context_parts.append("objective anchor")
+	return {
+		"label": "%s %s" % [_town_name(town), status],
+		"context": " | ".join(context_parts),
+		"why": _defense_readiness_warning_why(
+			objective_anchor,
+			not pressure_parts.is_empty(),
+			logistics_alert,
+			recovery_alert,
+			capital_alert,
+			low_readiness
+		),
+		"next_step": _defense_readiness_next_step(
+			not pressure_parts.is_empty(),
+			logistics_alert,
+			recovery_alert,
+			capital_alert,
+			low_readiness,
+			bool(front.get("active", false)),
+			readiness
+		),
+		"severity": severity,
+	}
+
+static func _defense_readiness_pressure_parts(threat_state: Dictionary, front: Dictionary, occupation: Dictionary) -> Array:
+	var parts := []
+	if int(threat_state.get("visible_pressuring", 0)) > 0:
+		var pressuring: Array = threat_state.get("pressuring_commanders", [])
+		if int(threat_state.get("visible_pressuring", 0)) == 1 and pressuring is Array and not pressuring.is_empty():
+			parts.append("%s at the approaches" % String(pressuring[0]))
+		else:
+			parts.append("%d raid hosts at the approaches" % int(threat_state.get("visible_pressuring", 0)))
+	if int(threat_state.get("visible_marching", 0)) > 0:
+		var marching: Array = threat_state.get("marching_commanders", [])
+		var distance: int = max(1, int(threat_state.get("nearest_goal_distance", 9999)))
+		if int(threat_state.get("visible_marching", 0)) == 1 and marching is Array and not marching.is_empty():
+			parts.append("%s can reach in %d day%s" % [
+				String(marching[0]),
+				distance,
+				"" if distance == 1 else "s",
+			])
+		else:
+			parts.append("%d raid hosts marching" % int(threat_state.get("visible_marching", 0)))
+	if bool(threat_state.get("hidden_targeting", false)):
+		parts.append("hostile movement beyond the fog")
+	if int(threat_state.get("siege_progress", 0)) > 0:
+		parts.append("siege %d/%d" % [
+			int(threat_state.get("siege_progress", 0)),
+			max(1, int(threat_state.get("siege_capture_progress", 1))),
+		])
+	if bool(front.get("active", false)) and String(front.get("summary", "")) != "":
+		parts.append(String(front.get("summary", "")))
+	if bool(occupation.get("active", false)) and String(occupation.get("summary", "")) != "":
+		parts.append(String(occupation.get("summary", "")))
+	return parts
+
+static func _defense_readiness_warning_why(
+	objective_anchor: bool,
+	has_pressure: bool,
+	logistics_alert: bool,
+	recovery_alert: bool,
+	capital_alert: bool,
+	low_readiness: bool
+) -> String:
+	if objective_anchor:
+		return "This front anchors an objective while control, recruitment, income, and defense tempo stay exposed."
+	if has_pressure:
+		return "Raid pressure can become control loss, recruitment disruption, convoy loss, or siege risk."
+	if logistics_alert:
+		return "Route and economy pressure weakens readiness, recruitment, convoy support, and recovery."
+	if recovery_alert:
+		return "Recovery pressure keeps troops and routes brittle until relief or response orders land."
+	if capital_alert:
+		return "The capital chain needs linked support before its civic and defense gains are safe."
+	if low_readiness:
+		return "Low readiness leaves the garrison brittle if a raid reaches the walls."
+	return "Control, income, recruitment, and route cover remain stable while the watch holds."
+
+static func _defense_readiness_next_step(
+	has_pressure: bool,
+	logistics_alert: bool,
+	recovery_alert: bool,
+	capital_alert: bool,
+	low_readiness: bool,
+	front_active: bool,
+	readiness: int
+) -> String:
+	if has_pressure and low_readiness:
+		return "Recruit reserves or build readiness, then intercept the nearest raid if movement allows."
+	if has_pressure:
+		return "Intercept the raid before ending the day, or hold reserves if this town must anchor the front."
+	if logistics_alert or recovery_alert:
+		return "Send a town response order or intercept the route blocker before ending the day."
+	if capital_alert:
+		return "Restore linked route support or hold until the project is covered."
+	if low_readiness or readiness <= 30:
+		return "Build readiness or recruit reserves before the next exposed day."
+	if front_active:
+		return "Hold the watch and keep a response route open for the front."
+	return "Hold the watch; build or recruit only if it improves the next defense turn."
 
 static func _local_visible_threat_summary(session: SessionStateStoreScript.SessionData, fallback: String = "") -> String:
 	var pos := hero_position(session)
@@ -1976,6 +2213,9 @@ static func describe_dispatch(session: SessionStateStoreScript.SessionData, last
 	var management_watch := describe_management_watch(session)
 	if management_watch != "":
 		lines.append("- Management watch: %s" % management_watch)
+	var defense_watch := describe_defense_readiness_warnings(session, 1)
+	if defense_watch != "No exposed town or route-defense warning is visible.":
+		lines.append("- Defense readiness: %s" % defense_watch)
 	var recent_events: String = _describe_recent_events(session, 2)
 	if recent_events != "":
 		lines.append("- Scenario pulse: %s" % recent_events)
@@ -2263,9 +2503,12 @@ static func _event_feed_watch_line(session: SessionStateStoreScript.SessionData)
 	var management_watch := describe_management_watch(session)
 	if management_watch != "" and management_watch != "Town lines are stable.":
 		parts.append(management_watch)
+	var defense_watch := describe_defense_readiness_warnings(session, 1)
+	if defense_watch != "No exposed town or route-defense warning is visible.":
+		parts.append("Defense readiness: %s" % defense_watch)
 	if parts.is_empty():
 		return "No urgent raid, convoy, or town-management warning is visible."
-	return " | ".join(parts.slice(0, min(2, parts.size())))
+	return " | ".join(parts.slice(0, min(3, parts.size())))
 
 static func describe_route_interception_surface(
 	session: SessionStateStoreScript.SessionData,

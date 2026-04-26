@@ -336,6 +336,7 @@ static func describe_defense(session: SessionStateStoreScript.SessionData) -> St
 			OverworldRulesScript.town_battle_readiness(town, session),
 			_reinforcement_grade(OverworldRulesScript.town_reinforcement_quality(town, session)),
 		],
+		"- Defense readiness: %s" % OverworldRulesScript.describe_town_defense_readiness_warning(session, town),
 		"- Garrison %s" % _describe_garrison(town),
 		"- Logistics %s" % _logistics_watch_summary(OverworldRulesScript.town_logistics_state(session, town)),
 	]
@@ -365,6 +366,7 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 	var occupation_state: Dictionary = OverworldRulesScript.town_occupation_state(session, town)
 	if threat_lines.is_empty():
 		lines.append("- No hostile raid hosts are currently aligned on %s." % _town_name(town))
+		lines.append("- Defense readiness: %s" % OverworldRulesScript.describe_town_defense_readiness_warning(session, town))
 		if bool(front_state.get("active", false)):
 			lines.append("- Front watch: %s" % String(front_state.get("summary", "")))
 		if bool(occupation_state.get("active", false)):
@@ -381,6 +383,7 @@ static func describe_threats(session: SessionStateStoreScript.SessionData) -> St
 
 	for threat_line in threat_lines:
 		lines.append("- %s" % threat_line)
+	lines.append("- Defense readiness: %s" % OverworldRulesScript.describe_town_defense_readiness_warning(session, town))
 	if String(battlefront.get("summary", "")) != "":
 		lines.append("- Siege profile: %s" % String(battlefront.get("summary", "")))
 	lines.append("- Logistics chain: %s" % _logistics_watch_summary(logistics))
@@ -424,6 +427,7 @@ static func describe_event_feed(
 	]
 	if pressure_line != "":
 		lines.append("- %s" % pressure_line)
+	lines.append("- Defense readiness: %s" % OverworldRulesScript.describe_town_defense_readiness_warning(session, town))
 	if bool(recovery.get("active", false)):
 		lines.append("- Recovery watch: %s" % String(recovery.get("summary", "")))
 	elif int(logistics.get("disrupted_count", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0:

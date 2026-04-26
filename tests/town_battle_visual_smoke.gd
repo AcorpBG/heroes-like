@@ -679,7 +679,7 @@ func _assert_town_stack_inspection_contract(shell: Node) -> bool:
 		String(snapshot.get("recruit_text", "")),
 		String(snapshot.get("recruit_visible_text", "")),
 	])
-	for token in ["Strength", "HP", "T", "Ready"]:
+	for token in ["Strength", "HP", "T", "Ready", "Defense readiness:", "Why:", "Next:", "Readiness"]:
 		if not town_text.contains(token):
 			push_error("Town smoke: town stack inspection text is missing %s: %s." % [token, town_text])
 			return false

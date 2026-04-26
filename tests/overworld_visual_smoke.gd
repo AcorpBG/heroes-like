@@ -764,6 +764,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(convoy_watch.get("selected_tile_rail_text", "")),
 			String(convoy_watch.get("primary_action", {}).get("summary", "")),
 			String(convoy_watch.get("event_tooltip_text", "")),
+			String(convoy_watch.get("frontier_watch", "")),
 			String(route_watch.get("tooltip_text", "")),
 		],
 		[
@@ -776,6 +777,10 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			"Next:",
 			"Break",
 			"control",
+			"Defense readiness:",
+			"Why:",
+			"response",
+			"intercept",
 		]
 	):
 		return false
@@ -785,6 +790,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(convoy_watch.get("selected_route_decision_text", "")),
 			String(convoy_watch.get("map_cue_tooltip_text", "")),
 			String(convoy_watch.get("event_tooltip_text", "")),
+			String(convoy_watch.get("frontier_watch", "")),
 			String(route_watch.get("tooltip_text", "")),
 		])
 	):
