@@ -212,7 +212,8 @@ func load_action_tooltip(summary: Dictionary) -> String:
 		return "No loadable saves are available."
 	if not can_load_summary(summary):
 		return String(summary.get("status_text", "This save cannot be resumed."))
-	return "%s\n%s" % [
+	return "%s\n%s\n%s" % [
+		describe_summary_next_play_action(summary),
 		describe_resume_brief(summary),
 		describe_slot_details(summary),
 	]
@@ -238,6 +239,24 @@ func describe_summary_resume_recap(summary: Dictionary) -> String:
 	if session == null or session.scenario_id == "":
 		return "Saved state: This save cannot be inspected."
 	return _session_save_resume_recap(session, summary)
+
+func describe_summary_next_play_action(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "Next play action: Select a loadable save or start a fresh expedition."
+	if not can_load_summary(summary):
+		return "Next play action: Select a loadable save before resuming play."
+	var action := load_action_label(summary)
+	match String(summary.get("resume_target", "blocked")):
+		"battle":
+			return "Next play action: %s, finish the encounter, then return to the field." % action
+		"town":
+			return "Next play action: %s, make the town order, then return to the field." % action
+		"outcome":
+			return "Next play action: %s, save if needed, then choose retry, next chapter, or menu." % action
+		"overworld":
+			return "Next play action: %s, choose the next field route, then save or end turn." % action
+		_:
+			return "Next play action: Select a loadable save before resuming play."
 
 func describe_resume_brief(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1056,6 +1075,9 @@ func _summary_watch_state_line(session: SessionStateStoreScript.SessionData, sum
 func _session_save_resume_recap(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
 	var lines := []
 	lines.append("Saved state: %s" % describe_resume_brief(summary))
+	var next_play_action := describe_summary_next_play_action(summary)
+	if next_play_action != "":
+		lines.append(next_play_action)
 	var changed_line := _session_changed_recap_line(session, summary)
 	if changed_line != "":
 		lines.append("What changed: %s" % changed_line)
