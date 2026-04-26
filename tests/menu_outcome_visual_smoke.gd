@@ -154,9 +154,11 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(campaign_snapshot.get("chapter_details_full", campaign_snapshot.get("chapter_details", ""))),
 			String(selected_chapter_action.get("summary", "")),
+			String(campaign_snapshot.get("start_chapter_tooltip", "")),
 			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
+			String(campaign_snapshot.get("campaign_operational_board_full", campaign_snapshot.get("campaign_operational_board", ""))),
 		],
-		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
+		["Chapter position:", "Campaign framing:", "Continuity:", "Readiness watch:", "Action consequence:", "Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 
