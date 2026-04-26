@@ -29,7 +29,8 @@
           "encounter_ids": ["fixture_road_pickets"],
           "primary_encounter_id": "fixture_road_pickets",
           "difficulty_source": "scenario_placement",
-          "combat_seed_source": "scenario_placement"
+          "combat_seed_source": "scenario_placement",
+          "field_objectives_source": "none"
         },
         "representation": {
           "mode": "visible_stack",
@@ -94,7 +95,8 @@
           "encounter_ids": ["fixture_barrow_camp_guard"],
           "primary_encounter_id": "fixture_barrow_camp_guard",
           "difficulty_source": "scenario_placement",
-          "combat_seed_source": "scenario_placement"
+          "combat_seed_source": "scenario_placement",
+          "field_objectives_source": "none"
         },
         "representation": {
           "mode": "camp_anchor",
@@ -159,7 +161,8 @@
           "encounter_ids": ["fixture_gatehouse_watch"],
           "primary_encounter_id": "fixture_gatehouse_watch",
           "difficulty_source": "scenario_placement",
-          "combat_seed_source": "scenario_placement"
+          "combat_seed_source": "scenario_placement",
+          "field_objectives_source": "encounter_definition"
         },
         "representation": {
           "mode": "guard_linked_stack",
@@ -224,7 +227,8 @@
           "encounter_ids": ["fixture_chain_camp"],
           "primary_encounter_id": "fixture_chain_camp",
           "difficulty_source": "scenario_placement",
-          "combat_seed_source": "scenario_placement"
+          "combat_seed_source": "scenario_placement",
+          "field_objectives_source": "placement_override"
         },
         "representation": {
           "mode": "guard_linked_camp",
@@ -279,6 +283,128 @@
           "density_bucket": "guard_or_encounter"
         },
         "expect_placeholder_cue_warning": true
+      }
+    ],
+    "object_backed_neutral_encounters": [
+      {
+        "id": "object_backed_visible_stack",
+        "object": {
+          "id": "object_fixture_visible_stack",
+          "schema_version": 1,
+          "primary_class": "neutral_encounter",
+          "secondary_tags": ["visible_army", "route_pacing"],
+          "family": "neutral_encounter",
+          "subtype": "visible_stack",
+          "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"},
+          "passable": false,
+          "visitable": true,
+          "passability_class": "neutral_stack_blocking",
+          "interaction": {"cadence": "one_time", "remains_after_visit": false, "state_after_visit": "cleared", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": false, "cooldown_days": 0, "refresh_rule": "none"},
+          "neutral_encounter": {"fixture_ref": "fixture_visible_stack"}
+        },
+        "scenario_placement": {
+          "placement_id": "fixture_visible_stack",
+          "object_id": "object_fixture_visible_stack",
+          "object_placement_id": "object_placement_fixture_visible_stack",
+          "primary_class": "neutral_encounter",
+          "x": 4,
+          "y": 6,
+          "encounter_ref": {"encounter_id": "fixture_road_pickets", "primary_encounter_id": "fixture_road_pickets", "encounter_ids": ["fixture_road_pickets"], "difficulty": "low", "difficulty_source": "scenario_placement", "combat_seed": 501, "combat_seed_source": "scenario_placement", "field_objectives_source": "none", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "fixture_visible_stack", "encounter_id": "fixture_road_pickets", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": "", "blocks_approach": true, "clear_required_for_target": false},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_fixture_bundle", "lifted_from_bundle_id": "neutral_encounter_representation_fixture_bundle"}
+        },
+        "lifted_scenario_metadata": {"fixture_ref": "fixture_visible_stack"}
+      },
+      {
+        "id": "object_backed_camp_anchor",
+        "object": {
+          "id": "object_fixture_camp_anchor",
+          "schema_version": 1,
+          "primary_class": "neutral_encounter",
+          "secondary_tags": ["camp_anchor", "fixed_encounter"],
+          "family": "neutral_encounter",
+          "subtype": "camp_anchor",
+          "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "small"},
+          "passable": false,
+          "visitable": true,
+          "passability_class": "blocking_visitable",
+          "interaction": {"cadence": "one_time", "remains_after_visit": true, "state_after_visit": "depleted", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": false, "cooldown_days": 0, "refresh_rule": "none"},
+          "neutral_encounter": {"fixture_ref": "fixture_camp_anchor"}
+        },
+        "scenario_placement": {
+          "placement_id": "fixture_camp_anchor",
+          "object_id": "object_fixture_camp_anchor",
+          "object_placement_id": "object_placement_fixture_camp_anchor",
+          "primary_class": "neutral_encounter",
+          "x": 8,
+          "y": 6,
+          "encounter_ref": {"encounter_id": "fixture_barrow_camp_guard", "primary_encounter_id": "fixture_barrow_camp_guard", "encounter_ids": ["fixture_barrow_camp_guard"], "difficulty": "medium", "difficulty_source": "scenario_placement", "combat_seed": 502, "combat_seed_source": "scenario_placement", "field_objectives_source": "none", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "fixture_camp_anchor", "encounter_id": "fixture_barrow_camp_guard", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": "", "blocks_approach": true, "clear_required_for_target": false},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_fixture_bundle", "lifted_from_bundle_id": "neutral_encounter_representation_fixture_bundle"}
+        },
+        "lifted_scenario_metadata": {"fixture_ref": "fixture_camp_anchor"}
+      },
+      {
+        "id": "object_backed_guard_linked_stack",
+        "object": {
+          "id": "object_fixture_guard_linked_stack",
+          "schema_version": 1,
+          "primary_class": "neutral_encounter",
+          "secondary_tags": ["visible_army", "guarded_reward"],
+          "family": "neutral_encounter",
+          "subtype": "guard_linked_stack",
+          "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"},
+          "passable": false,
+          "visitable": true,
+          "passability_class": "neutral_stack_blocking",
+          "interaction": {"cadence": "one_time", "remains_after_visit": false, "state_after_visit": "cleared", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": false, "cooldown_days": 0, "refresh_rule": "none"},
+          "neutral_encounter": {"fixture_ref": "fixture_guard_linked_stack"}
+        },
+        "scenario_placement": {
+          "placement_id": "fixture_guard_linked_stack",
+          "object_id": "object_fixture_guard_linked_stack",
+          "object_placement_id": "object_placement_fixture_guard_linked_stack",
+          "primary_class": "neutral_encounter",
+          "x": 12,
+          "y": 6,
+          "encounter_ref": {"encounter_id": "fixture_gatehouse_watch", "primary_encounter_id": "fixture_gatehouse_watch", "encounter_ids": ["fixture_gatehouse_watch"], "difficulty": "high", "difficulty_source": "scenario_placement", "combat_seed": 503, "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "fixture_guard_linked_stack", "encounter_id": "fixture_gatehouse_watch", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "fixture_basalt_gatehouse", "target_placement_id": "fixture_basalt_gatehouse_placement", "blocks_approach": true, "clear_required_for_target": true},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_fixture_bundle", "lifted_from_bundle_id": "neutral_encounter_representation_fixture_bundle"}
+        },
+        "lifted_scenario_metadata": {"fixture_ref": "fixture_guard_linked_stack"}
+      },
+      {
+        "id": "object_backed_guard_linked_camp",
+        "object": {
+          "id": "object_fixture_guard_linked_camp",
+          "schema_version": 1,
+          "primary_class": "neutral_encounter",
+          "secondary_tags": ["camp_anchor", "guarded_reward"],
+          "family": "neutral_encounter",
+          "subtype": "guard_linked_camp",
+          "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "small"},
+          "passable": false,
+          "visitable": true,
+          "passability_class": "blocking_visitable",
+          "interaction": {"cadence": "one_time", "remains_after_visit": true, "state_after_visit": "depleted", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": false, "cooldown_days": 0, "refresh_rule": "none"},
+          "neutral_encounter": {"fixture_ref": "fixture_guard_linked_camp"}
+        },
+        "scenario_placement": {
+          "placement_id": "fixture_guard_linked_camp",
+          "object_id": "object_fixture_guard_linked_camp",
+          "object_placement_id": "object_placement_fixture_guard_linked_camp",
+          "primary_class": "neutral_encounter",
+          "x": 16,
+          "y": 6,
+          "encounter_ref": {"encounter_id": "fixture_chain_camp", "primary_encounter_id": "fixture_chain_camp", "encounter_ids": ["fixture_chain_camp"], "difficulty": "high", "difficulty_source": "scenario_placement", "combat_seed": 504, "combat_seed_source": "scenario_placement", "field_objectives_source": "placement_override", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "fixture_guard_linked_camp", "encounter_id": "fixture_chain_camp", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "fixture_chain_release", "target_placement_id": "fixture_chain_gate", "blocks_approach": true, "clear_required_for_target": true},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_fixture_bundle", "lifted_from_bundle_id": "neutral_encounter_representation_fixture_bundle"}
+        },
+        "lifted_scenario_metadata": {"fixture_ref": "fixture_guard_linked_camp"}
       }
     ]
   },
@@ -543,6 +669,86 @@
         "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "enter"},
         "ai_hints": {"path_blocking": true},
         "editor_placement": {"placement_mode": "scenario_encounter_overlay"}
+      }
+    ],
+    "object_backed_neutral_encounters": [
+      {
+        "id": "bad_object_backed_missing_object_id",
+        "object": {"id": "object_bad_missing_object_id", "schema_version": 1, "primary_class": "neutral_encounter", "secondary_tags": ["visible_army"], "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"}, "passability_class": "neutral_stack_blocking", "interaction": {"cadence": "one_time"}, "neutral_encounter": {"fixture_ref": "fixture_visible_stack"}},
+        "scenario_placement": {
+          "placement_id": "bad_missing_object_id",
+          "object_placement_id": "object_placement_bad_missing_object_id",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "fixture_road_pickets", "primary_encounter_id": "fixture_road_pickets", "encounter_ids": ["fixture_road_pickets"], "field_objectives_source": "none"},
+          "legacy_scenario_encounter_ref": {"placement_id": "bad_missing_object_id", "encounter_id": "fixture_road_pickets", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": ""}
+        }
+      },
+      {
+        "id": "bad_object_backed_missing_legacy_placement_id_bridge",
+        "object": {"id": "object_bad_missing_legacy_bridge", "schema_version": 1, "primary_class": "neutral_encounter", "secondary_tags": ["visible_army"], "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"}, "passability_class": "neutral_stack_blocking", "interaction": {"cadence": "one_time"}, "neutral_encounter": {"fixture_ref": "fixture_visible_stack"}},
+        "scenario_placement": {
+          "placement_id": "bad_missing_legacy_bridge",
+          "object_id": "object_bad_missing_legacy_bridge",
+          "object_placement_id": "object_placement_bad_missing_legacy_bridge",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "fixture_road_pickets", "primary_encounter_id": "fixture_road_pickets", "encounter_ids": ["fixture_road_pickets"], "field_objectives_source": "none"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": ""}
+        }
+      },
+      {
+        "id": "bad_object_backed_missing_encounter_ref",
+        "object": {"id": "object_bad_missing_encounter_ref", "schema_version": 1, "primary_class": "neutral_encounter", "secondary_tags": ["visible_army"], "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"}, "passability_class": "neutral_stack_blocking", "interaction": {"cadence": "one_time"}, "neutral_encounter": {"fixture_ref": "fixture_visible_stack"}},
+        "scenario_placement": {
+          "placement_id": "bad_missing_encounter_ref",
+          "object_id": "object_bad_missing_encounter_ref",
+          "object_placement_id": "object_placement_bad_missing_encounter_ref",
+          "primary_class": "neutral_encounter",
+          "legacy_scenario_encounter_ref": {"placement_id": "bad_missing_encounter_ref", "encounter_id": "fixture_road_pickets", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": ""}
+        }
+      },
+      {
+        "id": "bad_object_backed_mismatched_field_objective_source",
+        "object": {"id": "object_bad_field_source", "schema_version": 1, "primary_class": "neutral_encounter", "secondary_tags": ["visible_army"], "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"}, "passability_class": "neutral_stack_blocking", "interaction": {"cadence": "one_time"}, "neutral_encounter": {"fixture_ref": "fixture_visible_stack"}},
+        "scenario_placement": {
+          "placement_id": "bad_field_source",
+          "object_id": "object_bad_field_source",
+          "object_placement_id": "object_placement_bad_field_source",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "fixture_road_pickets", "primary_encounter_id": "fixture_road_pickets", "encounter_ids": ["fixture_road_pickets"], "field_objectives_source": "placement_override"},
+          "legacy_scenario_encounter_ref": {"placement_id": "bad_field_source", "encounter_id": "fixture_road_pickets", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": ""}
+        }
+      },
+      {
+        "id": "bad_object_backed_mismatched_guard_target_ids",
+        "object": {"id": "object_bad_guard_target_ids", "schema_version": 1, "primary_class": "neutral_encounter", "secondary_tags": ["visible_army", "guarded_reward"], "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"}, "passability_class": "neutral_stack_blocking", "interaction": {"cadence": "one_time"}, "neutral_encounter": {"fixture_ref": "fixture_guard_linked_stack"}},
+        "scenario_placement": {
+          "placement_id": "bad_guard_target_ids",
+          "object_id": "object_bad_guard_target_ids",
+          "object_placement_id": "object_placement_bad_guard_target_ids",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "fixture_gatehouse_watch", "primary_encounter_id": "fixture_gatehouse_watch", "encounter_ids": ["fixture_gatehouse_watch"], "field_objectives_source": "encounter_definition"},
+          "legacy_scenario_encounter_ref": {"placement_id": "bad_guard_target_ids", "encounter_id": "fixture_gatehouse_watch", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "guards_resource_node", "target_kind": "resource_node", "target_id": "fixture_wrong_gatehouse", "target_placement_id": "fixture_basalt_gatehouse_placement", "blocks_approach": true, "clear_required_for_target": true}
+        },
+        "lifted_scenario_metadata": {"fixture_ref": "fixture_guard_linked_stack"}
+      },
+      {
+        "id": "bad_object_backed_duplicate_scenario_object_authority_disagreement",
+        "object": {"id": "object_bad_authority_disagreement", "schema_version": 1, "primary_class": "neutral_encounter", "secondary_tags": ["visible_army"], "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"}, "passability_class": "neutral_stack_blocking", "interaction": {"cadence": "one_time"}, "neutral_encounter": {"fixture_ref": "fixture_visible_stack"}},
+        "scenario_placement": {
+          "placement_id": "bad_authority_disagreement",
+          "object_id": "object_bad_authority_disagreement",
+          "object_placement_id": "object_placement_bad_authority_disagreement",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "fixture_road_pickets", "primary_encounter_id": "fixture_road_pickets", "encounter_ids": ["fixture_road_pickets"], "field_objectives_source": "none"},
+          "legacy_scenario_encounter_ref": {"placement_id": "bad_authority_disagreement", "encounter_id": "fixture_road_pickets", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "none", "target_kind": "none", "target_id": "", "target_placement_id": ""},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_fixture_bundle", "lifted_from_bundle_id": "neutral_encounter_representation_fixture_bundle"}
+        },
+        "lifted_scenario_metadata": {"fixture_ref": "fixture_camp_anchor"}
       }
     ]
   }
