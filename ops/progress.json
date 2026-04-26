@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T20:19:37Z",
+  "updatedAt": "2026-04-26T20:33:24Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "scenario-launch-handoff-clarity-10184",
-  "currentSliceTitle": "Surface compact scenario launch handoff clarity",
+  "currentSliceId": "resume-return-handoff-clarity-10184",
+  "currentSliceTitle": "Surface compact resume and return handoff clarity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible player-facing launch handoff polish slice on the existing MainMenu campaign and skirmish selection flow. CampaignRules and ScenarioSelectRules now expose compact Launch handoff lines for selected campaign chapters and skirmishes, summarizing Day 1 launch mode, objective, continuity, and save/progression impact from existing launch/action payloads. Main menu chapter/setup labels and launch tooltips surface the line, with focused menu/outcome smoke assertions covering visible text and no-score-leak guards. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow visible player-facing resume/return handoff polish slice using existing AppRouter, SaveService, MainMenu, and active shell save payloads. SaveService now exposes Resume handoff and Return handoff lines that explain the landing surface and preserved state without save schema changes. Main menu save pulse/footer/save details and active overworld, town, and battle save/menu controls surface the lines, with focused smoke assertions and no-score-leak guards. Town and battle shells now stamp their active game_state on direct scene entry so validation and active save surfaces match the visible shell. No mechanics, balance, save schema/version, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1670,6 +1670,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T20:14:07Z",
       "completedAt": "2026-04-26T20:19:37Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "resume-return-handoff-clarity-10184",
+      "title": "Surface compact resume and return handoff clarity",
+      "status": "completed",
+      "startedAt": "2026-04-26T20:23:28Z",
+      "completedAt": "2026-04-26T20:33:24Z",
       "difficulty": "medium"
     }
   ],

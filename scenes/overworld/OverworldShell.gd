@@ -573,10 +573,13 @@ func _refresh_save_slot_picker() -> void:
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var current_context := String(surface.get("current_context", ""))
 	var save_check := String(surface.get("save_check", ""))
+	var return_handoff := String(surface.get("return_handoff", ""))
 	var current_save_recap := String(surface.get("current_save_recap", ""))
 	var save_tooltip_lines := [latest_context]
 	if save_check != "":
 		save_tooltip_lines.append(save_check)
+	if return_handoff != "":
+		save_tooltip_lines.append(return_handoff)
 	if current_save_recap != "":
 		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
@@ -592,9 +595,12 @@ func _refresh_save_slot_picker() -> void:
 	]
 	if bool(_session.flags.get("editor_working_copy", false)):
 		_menu_button.text = "Editor"
-		_menu_button.tooltip_text = "Return to the map editor and restore the Play Copy launch snapshot."
+		_menu_button.tooltip_text = "%s\n%s" % [
+			"Return to the map editor and restore the Play Copy launch snapshot.",
+			return_handoff,
+		]
 	else:
-		_menu_button.text = "Menu"
+		_menu_button.text = String(surface.get("menu_button_label", "Menu: Field"))
 		_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func _refresh_commitment_panel() -> void:

@@ -80,6 +80,7 @@ func _ready() -> void:
 	if not TownRules.can_visit_active_town(_session):
 		AppRouter.go_to_overworld()
 		return
+	_session.game_state = "town"
 	_configure_save_slot_picker()
 	_refresh()
 
@@ -280,12 +281,15 @@ func _refresh_save_slot_picker() -> void:
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var save_check := String(surface.get("save_check", ""))
+	var return_handoff := String(surface.get("return_handoff", ""))
 	var current_save_recap := String(surface.get("current_save_recap", ""))
-	_save_status_label.text = latest_context
+	_save_status_label.text = latest_context if return_handoff == "" else "%s\n%s" % [latest_context, return_handoff]
 	var current_context := String(surface.get("current_context", ""))
 	var save_tooltip_lines := [latest_context]
 	if save_check != "":
 		save_tooltip_lines.append(save_check)
+	if return_handoff != "":
+		save_tooltip_lines.append(return_handoff)
 	if current_save_recap != "":
 		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":

@@ -170,11 +170,17 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"current_context": current_context,
 		"play_check": describe_session_play_check(session),
 		"save_check": describe_session_save_check(session),
+		"return_handoff": describe_session_return_handoff(session),
 		"current_save_recap": describe_session_save_recap(session),
 		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
 		"latest_resume_recap": describe_summary_resume_recap(latest_summary),
-		"menu_button_label": "Return to Menu",
-		"menu_button_tooltip": _return_to_menu_tooltip(current_target, latest_summary, current_context),
+		"menu_button_label": _return_to_menu_label(current_target, session),
+		"menu_button_tooltip": _return_to_menu_tooltip(
+			current_target,
+			latest_summary,
+			current_context,
+			describe_session_return_handoff(session)
+		),
 	}
 
 func resume_target_for_session(session: SessionStateStoreScript.SessionData) -> String:
@@ -214,8 +220,9 @@ func load_action_tooltip(summary: Dictionary) -> String:
 		return "No loadable saves are available."
 	if not can_load_summary(summary):
 		return String(summary.get("status_text", "This save cannot be resumed."))
-	return "%s\n%s\n%s" % [
+	return "%s\n%s\n%s\n%s" % [
 		describe_summary_next_play_action(summary),
+		describe_summary_resume_handoff(summary),
 		describe_resume_brief(summary),
 		describe_slot_details(summary),
 	]
@@ -314,6 +321,42 @@ func describe_session_play_check(session: SessionStateStoreScript.SessionData) -
 	summary["resume_target"] = _resume_target_for_session(session)
 	summary["status_text"] = _status_text_for_summary(summary)
 	return describe_summary_play_check(summary)
+
+func describe_summary_resume_handoff(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return "Resume handoff: select a loadable save to see its landing surface."
+	if not can_load_summary(summary):
+		return "Resume handoff: this save cannot be restored safely."
+	var target := _resume_context_label(summary)
+	var preserved := _resume_preserved_context(summary)
+	return "Resume handoff: %s opens %s with %s preserved." % [
+		load_action_label(summary),
+		target,
+		preserved,
+	]
+
+func describe_session_return_handoff(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.scenario_id == "":
+		return "Return handoff: no active expedition is available to preserve."
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(_selected_manual_slot), _slot_path(_selected_manual_slot))
+	summary = _populate_summary_from_payload(summary, session.to_dict())
+	summary["payload"] = session.to_dict()
+	summary["valid"] = true
+	summary["loadable"] = true
+	summary["resume_target"] = _resume_target_for_session(session)
+	summary["status_text"] = _status_text_for_summary(summary)
+	var target := _resume_context_label(summary)
+	var preserved := _resume_preserved_context(summary)
+	if bool(session.flags.get("editor_working_copy", false)):
+		return "Return handoff: Editor restores the Play Copy launch snapshot; %s keeps %s preserved while this copy is active." % [
+			target,
+			preserved,
+		]
+	return "Return handoff: Menu autosaves %s; Continue Latest returns to %s with %s preserved." % [
+		describe_resume_brief(summary),
+		target,
+		preserved,
+	]
 
 func describe_resume_brief(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1163,6 +1206,9 @@ func _session_save_resume_recap(session: SessionStateStoreScript.SessionData, su
 	var next_play_action := describe_summary_next_play_action(summary)
 	if next_play_action != "":
 		lines.append(next_play_action)
+	var resume_handoff := describe_summary_resume_handoff(summary)
+	if resume_handoff != "":
+		lines.append(resume_handoff)
 	var changed_line := _session_changed_recap_line(session, summary)
 	if changed_line != "":
 		lines.append("What changed: %s" % changed_line)
@@ -1378,6 +1424,19 @@ func _resume_target_noun(target: String) -> String:
 		_:
 			return "expedition"
 
+func _return_to_menu_label(current_target: String, session: SessionStateStoreScript.SessionData = null) -> String:
+	if session != null and bool(session.flags.get("editor_working_copy", false)):
+		return "Editor"
+	match current_target:
+		"battle":
+			return "Menu: Battle"
+		"town":
+			return "Menu: Town"
+		"outcome":
+			return "Menu: Outcome"
+		_:
+			return "Menu: Field"
+
 func _in_session_save_label(current_target: String, selected_slot: int) -> String:
 	match current_target:
 		"battle":
@@ -1412,16 +1471,36 @@ func _latest_context_line(latest_summary: Dictionary, current_target: String = "
 		format_modified_timestamp(_summary_sort_timestamp(latest_summary)),
 	]
 
-func _return_to_menu_tooltip(current_target: String, latest_summary: Dictionary, current_context: String = "") -> String:
+func _return_to_menu_tooltip(
+	current_target: String,
+	latest_summary: Dictionary,
+	current_context: String = "",
+	return_handoff: String = ""
+) -> String:
 	var lines := [
 		"Return to the main menu after refreshing autosave for %s." % (current_context if current_context != "" else "this %s state" % _resume_target_noun(current_target)),
 	]
+	if return_handoff != "":
+		lines.append(return_handoff)
 	if latest_summary.is_empty():
 		lines.append("A fresh autosave will become the latest continue target.")
 	else:
 		lines.append(_main_menu_continue_hint({"resume_target": current_target, "valid": true, "loadable": true, "payload": {"scenario_id": "active"}}))
 		lines.append("Latest before return: %s" % _slot_label(latest_summary))
 	return "\n".join(lines)
+
+func _resume_preserved_context(summary: Dictionary) -> String:
+	match String(summary.get("resume_target", "blocked")):
+		"battle":
+			return "round order, active stack, selected target, and tactical position"
+		"town":
+			return "build, recruit, spell, town defense, and logistics state"
+		"outcome":
+			return "scenario result, progress recap, and follow-up choices"
+		"overworld":
+			return "hero position, movement, map control, resources, and day state"
+		_:
+			return "available expedition state"
 
 func _resume_target_label(summary: Dictionary) -> String:
 	match String(summary.get("resume_target", "blocked")):

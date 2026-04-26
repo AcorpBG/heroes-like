@@ -120,13 +120,13 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu latest save pulse",
 		[String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", "")))],
-		["Continue Latest", "Skirmish", "River Pass", "Day", "Overworld", "Play check:"]
+		["Continue Latest", "Skirmish", "River Pass", "Day", "Overworld", "Play check:", "Resume handoff:"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu footer latest save target",
 		[String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", "")))],
-		["Latest save", "Skirmish", "River Pass", "Day", "Overworld", "Play check:"]
+		["Latest save", "Skirmish", "River Pass", "Day", "Overworld", "Play check:", "Resume handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -135,6 +135,7 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_snapshot.get("save_pulse_full", first_view_snapshot.get("save_pulse", ""))),
 			String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", ""))),
 			String(first_view_snapshot.get("latest_play_check", "")),
+			String(first_view_snapshot.get("latest_resume_handoff", "")),
 		]
 	):
 		return false
@@ -251,8 +252,9 @@ func _run_main_menu_smoke() -> bool:
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("load_selected_tooltip", "")),
 			String(save_snapshot.get("selected_save_play_check", "")),
+			String(save_snapshot.get("selected_save_resume_handoff", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Play check:", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Play check:", "Resume handoff:", "opens Overworld", "preserved", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Next play action:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -260,6 +262,7 @@ func _run_main_menu_smoke() -> bool:
 		[
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("selected_save_play_check", "")),
+			String(save_snapshot.get("selected_save_resume_handoff", "")),
 		]
 	):
 		return false
