@@ -156,7 +156,7 @@ func _run_main_menu_smoke() -> bool:
 			String(selected_chapter_action.get("summary", "")),
 			String(campaign_snapshot.get("campaign_commander_preview_full", campaign_snapshot.get("campaign_commander_preview", ""))),
 		],
-		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Field Route", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Campaign", "Captain", "Objective:", "Stakes:", "Action:", "Faction Identity", "Embercourt League", "Economy:", "Pressure:", "Spellbook", "Gear impact:", "Collection:", "Field Route", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 
@@ -186,7 +186,7 @@ func _run_main_menu_smoke() -> bool:
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
 		],
-		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Launch Preview", "Skirmish", "Warlord", "River Pass", "Objective:", "Stakes:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 

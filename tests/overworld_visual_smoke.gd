@@ -718,7 +718,7 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 			String(artifact_selection.get("selected_tile_rail_text", "")),
 			String(artifact_selection.get("primary_action", {}).get("summary", "")),
 		],
-		["Trailsinger Boots", "Slot Boots", "Footgear", "Exploration reward", "+2 move", "Will auto-equip"]
+		["Trailsinger Boots", "Slot Boots", "Footgear", "Exploration reward", "Standalone relic", "+2 move", "Impact Field Move +2", "Will auto-equip"]
 	):
 		return false
 
@@ -727,7 +727,7 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass artifact hover tooltip",
 		[String(artifact_hover.get("map_tooltip", ""))],
-		["Trailsinger Boots", "Exploration reward", "+2 move"]
+		["Trailsinger Boots", "Exploration reward", "+2 move", "Impact Field Move +2"]
 	):
 		return false
 
@@ -793,6 +793,8 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 			"Pack",
 			"Warcrest Pennon",
 			"Can equip to empty Banner",
+			"Gear impact",
+			"Collection",
 			"+1 attack",
 		]
 	):
@@ -806,7 +808,7 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"Overworld artifact equip action",
 		[String(equip_action.get("label", "")), String(equip_action.get("summary", ""))],
-		["Equip Warcrest Pennon", "Can equip to empty Banner", "Command reward", "+1 attack"]
+		["Equip Warcrest Pennon", "Can equip to empty Banner", "Command reward", "Impact Field no change", "Command Attack +1", "+1 attack"]
 	):
 		return false
 
@@ -821,7 +823,7 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 			String(equip_result.get("message", "")),
 			String(equip_result.get("artifact_tooltip_text", "")),
 		],
-		["Equipped Warcrest Pennon from pack into Banner", "Banner: Warcrest Pennon", "Equipped", "+1 attack"]
+		["Equipped Warcrest Pennon from pack into Banner", "Banner: Warcrest Pennon", "Equipped", "Gear impact", "Command Attack +1", "+1 attack"]
 	):
 		return false
 	if not _assert_action_feedback("artifact equip feedback cue", shell.call("validation_snapshot"), "artifact", ["Artifact:", "Warcrest Pennon"]):
@@ -835,7 +837,7 @@ func _assert_artifact_loadout_decision_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"Overworld artifact stow action",
 		[String(stow_action.get("label", "")), String(stow_action.get("summary", ""))],
-		["Stow Warcrest Pennon", "Move to pack", "+1 attack"]
+		["Stow Warcrest Pennon", "Move to pack", "Removes Impact", "Command Attack +1", "+1 attack"]
 	):
 		return false
 	var stow_result: Dictionary = shell.call("validation_perform_artifact_action", "unequip_artifact:banner")

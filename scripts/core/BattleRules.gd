@@ -1891,6 +1891,7 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 			battle_defense,
 			initiative_label,
 		],
+		"Gear impact: %s" % ArtifactRulesScript.describe_battle_impact_summary(commander_state),
 		"Mana %d/%d | Army %d stacks | %d units | %d HP" % [
 			int(commander_payload.get("mana_current", 0)),
 			int(commander_payload.get("mana_max", 0)),

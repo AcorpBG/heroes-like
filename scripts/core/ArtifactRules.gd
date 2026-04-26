@@ -315,7 +315,12 @@ static func describe_loadout(hero_state: Dictionary) -> String:
 
 	var inventory = hero_state.get("artifacts", {}).get("inventory", [])
 	var inventory_count: int = inventory.size() if inventory is Array else 0
-	return "Artifacts: %s | Pack %d" % [", ".join(parts), inventory_count]
+	return "Artifacts: %s | Pack %d\n%s\n%s" % [
+		", ".join(parts),
+		inventory_count,
+		describe_impact_summary(hero_state),
+		describe_collection_summary(hero_state),
+	]
 
 static func describe_management(hero_state: Dictionary) -> String:
 	hero_state = ensure_hero_artifacts(hero_state.duplicate(true))
@@ -330,10 +335,11 @@ static func describe_management(hero_state: Dictionary) -> String:
 			lines.append("- %s: empty | Ready for %s" % [slot.capitalize(), slot.capitalize()])
 			continue
 		lines.append(
-			"- %s: %s | Equipped | %s" % [
+			"- %s: %s | Equipped | %s | %s" % [
 				slot.capitalize(),
 				artifact_name(artifact_id),
 				artifact_effect_summary(artifact_id),
+				describe_single_artifact_impact(artifact_id),
 			]
 		)
 
@@ -344,17 +350,21 @@ static func describe_management(hero_state: Dictionary) -> String:
 			if artifact_id == "":
 				continue
 			lines.append(
-				"- %s | Pack | %s slot | %s | %s" % [
+				"- %s | Pack | %s slot | %s | %s | %s | %s" % [
 					artifact_name(artifact_id),
 					artifact_slot_label(artifact_id),
 					artifact_decision_summary(hero_state, artifact_id),
+					artifact_set_context(artifact_id),
 					artifact_effect_summary(artifact_id),
+					describe_single_artifact_impact(artifact_id),
 				]
 			)
 	else:
 		lines.append("- Empty")
 
 	lines.append(describe_bonus_summary(hero_state))
+	lines.append(describe_impact_summary(hero_state))
+	lines.append(describe_collection_summary(hero_state))
 	return "\n".join(lines)
 
 static func describe_bonus_summary(hero_state: Dictionary) -> String:
@@ -383,6 +393,34 @@ static func describe_bonus_summary(hero_state: Dictionary) -> String:
 
 	return "Bonuses: %s" % (", ".join(parts) if not parts.is_empty() else "none")
 
+static func describe_impact_summary(hero_state: Dictionary) -> String:
+	var sections := _bonus_impact_sections(aggregate_bonuses(hero_state), false)
+	var impact := "no equipped bonuses" if sections.is_empty() else " | ".join(sections)
+	return "Gear impact: %s" % impact
+
+static func describe_battle_impact_summary(hero_state: Dictionary) -> String:
+	var totals := aggregate_bonuses(hero_state)
+	var parts := []
+	if int(totals.get("battle_attack", 0)) > 0:
+		parts.append("Attack +%d" % int(totals.get("battle_attack", 0)))
+	if int(totals.get("battle_defense", 0)) > 0:
+		parts.append("Defense +%d" % int(totals.get("battle_defense", 0)))
+	if int(totals.get("battle_initiative", 0)) > 0:
+		parts.append("Initiative +%d" % int(totals.get("battle_initiative", 0)))
+	return "Command %s" % (", ".join(parts) if not parts.is_empty() else "no equipped battle bonuses")
+
+static func describe_collection_summary(hero_state: Dictionary) -> String:
+	var owned_count := owned_artifact_ids(hero_state).size()
+	var total_count := ContentService.get_content_ids(ContentService.ARTIFACTS_PATH).size()
+	if total_count <= 0:
+		return "Collection: %d owned" % owned_count
+	return "Collection: %d/%d known relics owned" % [owned_count, total_count]
+
+static func describe_single_artifact_impact(artifact_id: String) -> String:
+	var artifact := ContentService.get_artifact(artifact_id)
+	var sections := _bonus_impact_sections(_artifact_bonus_totals(artifact), true)
+	return "Impact %s" % ("no direct stat change" if sections.is_empty() else " | ".join(sections))
+
 static func get_management_actions(hero_state: Dictionary) -> Array:
 	hero_state = ensure_hero_artifacts(hero_state.duplicate(true))
 	var actions := []
@@ -401,16 +439,20 @@ static func get_management_actions(hero_state: Dictionary) -> Array:
 			var slot := artifact_slot(artifact_id)
 			var equipped_id := String(equipped.get(slot, ""))
 			var label_prefix := "Equip"
-			var summary := "%s | %s | %s" % [
+			var summary := "%s | %s | %s | %s | %s" % [
 				artifact_decision_summary(hero_state, artifact_id),
 				artifact_reward_role(artifact_id),
+				artifact_set_context(artifact_id),
+				describe_single_artifact_impact(artifact_id),
 				artifact_effect_summary(artifact_id),
 			]
 			if equipped_id != "":
 				label_prefix = "Swap In"
-				summary = "%s | %s | %s" % [
+				summary = "%s | %s | %s | %s | %s" % [
 					artifact_decision_summary(hero_state, artifact_id),
 					artifact_reward_role(artifact_id),
+					artifact_set_context(artifact_id),
+					describe_single_artifact_impact(artifact_id),
 					artifact_effect_summary(artifact_id),
 				]
 			actions.append(
@@ -431,8 +473,9 @@ static func get_management_actions(hero_state: Dictionary) -> Array:
 				{
 					"id": "unequip_artifact:%s" % slot,
 					"label": "Stow %s" % artifact_name(equipped_id),
-					"summary": "%s slot | Move to pack | %s" % [
+					"summary": "%s slot | Move to pack | Removes %s | %s" % [
 						artifact_slot_label(equipped_id),
+						describe_single_artifact_impact(equipped_id),
 						_artifact_effect_summary(equipped_artifact),
 					],
 				}
@@ -468,6 +511,15 @@ static func artifact_type_label(artifact_id: String) -> String:
 			return "Trinket"
 		_:
 			return "Carry item"
+
+static func artifact_set_context(artifact_id: String) -> String:
+	var artifact := ContentService.get_artifact(artifact_id)
+	if artifact.is_empty():
+		return "Set unknown"
+	var set_id := _artifact_set_id(artifact)
+	if set_id == "":
+		return "Standalone relic"
+	return "Set %s" % _title_label(set_id)
 
 static func artifact_effect_summary(artifact_id: String) -> String:
 	return _artifact_effect_summary(ContentService.get_artifact(artifact_id))
@@ -539,12 +591,14 @@ static func describe_artifact_inspection(
 	if artifact.is_empty():
 		return "Artifact cache\nUnknown relic record."
 	var state := artifact_collection_state(hero_state, artifact_id, collected, collected_by_faction_id)
-	return "%s\nSlot %s | %s | %s\nEffect: %s\nState: %s" % [
+	return "%s\nSlot %s | %s | %s | %s\nEffect: %s\n%s\nState: %s" % [
 		artifact_name(artifact_id),
 		artifact_slot_label(artifact_id),
 		artifact_type_label(artifact_id),
 		artifact_reward_role(artifact_id),
+		artifact_set_context(artifact_id),
 		artifact_effect_summary(artifact_id),
+		describe_single_artifact_impact(artifact_id),
 		state,
 	]
 
@@ -687,6 +741,88 @@ static func _artifact_effect_summary(artifact: Dictionary) -> String:
 		parts.append(", ".join(income_parts))
 
 	return ", ".join(parts) if not parts.is_empty() else "No bonuses"
+
+static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
+	var bonuses = artifact.get("bonuses", {}) if artifact is Dictionary else {}
+	var totals := {
+		"overworld_movement": 0,
+		"scouting_radius": 0,
+		"battle_attack": 0,
+		"battle_defense": 0,
+		"battle_initiative": 0,
+		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
+	}
+	if not (bonuses is Dictionary):
+		return totals
+	totals["overworld_movement"] = int(bonuses.get("overworld_movement", 0))
+	totals["scouting_radius"] = int(bonuses.get("scouting_radius", 0))
+	totals["battle_attack"] = int(bonuses.get("battle_attack", 0))
+	totals["battle_defense"] = int(bonuses.get("battle_defense", 0))
+	totals["battle_initiative"] = int(bonuses.get("battle_initiative", 0))
+	totals["daily_income"] = _merge_resources({}, bonuses.get("daily_income", {}))
+	return totals
+
+static func _bonus_impact_sections(totals: Dictionary, include_empty_sections: bool) -> Array:
+	var sections := []
+	var field_parts := []
+	if int(totals.get("overworld_movement", 0)) > 0:
+		field_parts.append("Move +%d" % int(totals.get("overworld_movement", 0)))
+	if int(totals.get("scouting_radius", 0)) > 0:
+		field_parts.append("Scout +%d" % int(totals.get("scouting_radius", 0)))
+	if not field_parts.is_empty():
+		sections.append("Field %s" % ", ".join(field_parts))
+	elif include_empty_sections:
+		sections.append("Field no change")
+
+	var command_parts := []
+	if int(totals.get("battle_attack", 0)) > 0:
+		command_parts.append("Attack +%d" % int(totals.get("battle_attack", 0)))
+	if int(totals.get("battle_defense", 0)) > 0:
+		command_parts.append("Defense +%d" % int(totals.get("battle_defense", 0)))
+	if int(totals.get("battle_initiative", 0)) > 0:
+		command_parts.append("Initiative +%d" % int(totals.get("battle_initiative", 0)))
+	if not command_parts.is_empty():
+		sections.append("Command %s" % ", ".join(command_parts))
+	elif include_empty_sections:
+		sections.append("Command no change")
+
+	var economy_parts := _resource_impact_parts(totals.get("daily_income", {}))
+	if not economy_parts.is_empty():
+		sections.append("Economy %s" % ", ".join(economy_parts))
+	elif include_empty_sections:
+		sections.append("Economy no income")
+	return sections
+
+static func _resource_impact_parts(value: Variant) -> Array:
+	var parts := []
+	if not (value is Dictionary):
+		return parts
+	for key in ["gold", "wood", "ore"]:
+		var amount := int(value.get(key, 0))
+		if amount > 0:
+			parts.append("%d %s/day" % [amount, key])
+	return parts
+
+static func _artifact_set_id(artifact: Dictionary) -> String:
+	for key in ["set_id", "artifact_set_id", "set"]:
+		var value = artifact.get(key, "")
+		if value is Dictionary:
+			var nested_id := String(value.get("id", "")).strip_edges()
+			if nested_id != "":
+				return nested_id
+		var label := String(value).strip_edges()
+		if label != "":
+			return label
+	return ""
+
+static func _title_label(value: String) -> String:
+	var words := []
+	for part in value.replace("-", "_").split("_"):
+		var word := String(part).strip_edges()
+		if word == "":
+			continue
+		words.append(word.capitalize())
+	return " ".join(words) if not words.is_empty() else value
 
 static func _merge_resources(base: Variant, delta: Variant) -> Dictionary:
 	var merged := {"gold": 0, "wood": 0, "ore": 0}

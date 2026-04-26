@@ -1465,10 +1465,11 @@ func _rail_tile_text() -> String:
 	var artifact_node := _artifact_node_at(_selected_tile.x, _selected_tile.y)
 	if not artifact_node.is_empty():
 		var artifact_id := String(artifact_node.get("artifact_id", ""))
-		return "Artifact: %s\n%s\n%s | %s%s" % [
+		return "Artifact: %s\n%s\n%s | %s | %s%s" % [
 			ArtifactRules.artifact_name(artifact_id),
 			route_line,
 			"%s | %s" % [ArtifactRules.artifact_slot_label(artifact_id), ArtifactRules.artifact_reward_role(artifact_id)],
+			ArtifactRules.artifact_set_context(artifact_id),
 			ArtifactRules.artifact_effect_summary(artifact_id),
 			"" if action_hint == "" else " | %s" % action_hint,
 		]
@@ -1780,13 +1781,14 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 	var artifact_node := _artifact_node_at(tile.x, tile.y)
 	if not artifact_node.is_empty():
 		var artifact_id := String(artifact_node.get("artifact_id", ""))
-		return "%s %d,%d | Artifact: %s | %s | %s | %s" % [
+		return "%s %d,%d | Artifact: %s | %s | %s | %s | %s" % [
 			prefix,
 			tile.x,
 			tile.y,
 			ArtifactRules.artifact_name(artifact_id),
 			ArtifactRules.artifact_reward_role(artifact_id),
 			ArtifactRules.artifact_effect_summary(artifact_id),
+			ArtifactRules.describe_single_artifact_impact(artifact_id),
 			terrain,
 		]
 	return "%s %d,%d | %s" % [prefix, tile.x, tile.y, terrain]
