@@ -1,6 +1,6 @@
 # AcOrP Attention
 
-Updated: 2026-04-25
+Updated: 2026-04-26
 
 ## Hard Blockers
 
@@ -46,8 +46,12 @@ Updated: 2026-04-25
 - Concept-art curation should confirm whether Mireclaw town/object direction is strong enough for compact overworld town and object-family brief drafting, while keeping unit-ladder approval deferred.
 - Concept-art curation should confirm whether Veilmourn harbor/town direction is accepted and whether the unit ladder needs a stricter tier-separation pass before combat briefs.
 - Concept-art curation should confirm whether Sunvault seven-tier direction is sufficient to close the anti-paladin recalibration loop, or whether another black-shape-only unit pass is needed.
-- Concept-art curation should confirm that the next art slice should broaden overworld object/town studies before implementation-brief prep, now that the main named second-pass faction/town/unit gaps are covered.
+- Concept-art curation should review the broader overworld object/town-adjacent outputs recorded in `docs/concept-art-batch-005-review.md`: route-law/transit objects, persistent resource fronts, neutral encounters, guarded rewards, pickups, and faction landmarks.
+- Concept-art curation should confirm whether the route-law/transit direction is acceptable for brief drafting, especially tollhouses, ferries, root gates, rail switches, prism markers, bell markers, and mirror/fog markers.
+- Concept-art curation should confirm whether persistent resource-front families are distinct enough for staged economy-site briefs, especially ore quarry, aetherglass orchard, peatwax cut, embergrain yard, verdant graft nursery, furnace/contract site, memory-salt/salvage field, and timber/rail yard.
+- Concept-art curation should decide whether neutral encounters should be represented as first-class visible overworld army objects separate from camps, dwellings, and guarded reward sites.
+- Concept-art curation should confirm which implementation briefs should be drafted first from the accepted/deferred art direction: Embercourt town/object, Mireclaw town/object, core object-class families, or a different slice.
 
 ## Current Follow-Up
 
-- Concept-art review notes are recorded in `docs/concept-art-batch-001-review.md`, `docs/concept-art-batch-002-review.md`, `docs/concept-art-batch-003-review.md`, and `docs/concept-art-batch-004-review.md`; all generated PNGs remain external only. Next production slice should broaden overworld object/town studies while collecting AcOrP curation calls; no hard blocker.
+- Concept-art review notes are recorded in `docs/concept-art-batch-001-review.md`, `docs/concept-art-batch-002-review.md`, `docs/concept-art-batch-003-review.md`, `docs/concept-art-batch-004-review.md`, and `docs/concept-art-batch-005-review.md`; all generated PNGs remain external only. Next production slice should prepare compact implementation briefs for selected directions while collecting AcOrP curation calls; no hard blocker.

@@ -47,11 +47,13 @@ Immediate execution order:
 10. First actual concept-art generation execution: completed as an external world mood plus six-faction identity batch, recorded in `docs/concept-art-batch-001-review.md`; generated PNGs remain outside the repo and are not runtime/source assets.
 11. First concept-art curation and second-pass prep: completed as a concise second-pass review for world route readability, no-text Veilmourn, and Sunvault anti-paladin silhouette direction, recorded in `docs/concept-art-batch-002-review.md`; generated PNGs remain outside the repo.
 12. Remaining second-pass concept-art expansion: completed for the main named faction/town/unit gaps across `docs/concept-art-batch-003-review.md` and `docs/concept-art-batch-004-review.md`, covering Thornwake, Brasshollow, Embercourt, Mireclaw, Veilmourn, and Sunvault second-pass needs. Generated PNGs remain external only.
-13. Broader overworld object/town studies: current next slice. Cover route-law objects, resource sites, faction landmarks, neutral encounter presentation, guarded reward sites, pickups, footprints, approach sides, and negative-space readability before implementation-brief prep.
-14. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+13. Broader overworld object/town studies: completed as external route-law/transit, persistent resource-front, neutral encounter, guarded reward, pickup, and faction-landmark evidence recorded in `docs/concept-art-batch-005-review.md`. Generated PNGs remain external only.
+14. Concept-art implementation-brief prep: current next slice. Convert selected accepted/deferred directions into compact briefs for object families and first town/object targets, with footprints, approach sides, state variants, guard expectations, reward/risk reads, animation hooks, ownership/capture handling, and rejection constraints.
+15. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Start broader overworld object/town concept studies from `docs/concept-art-pipeline.md`, `docs/overworld-object-taxonomy-density.md`, and the four concept-art batch reviews, focusing on route-law objects, resource sites, faction landmarks, neutral encounter presentation, guarded reward sites, pickups, footprints, approach sides, and negative-space readability.
+- Start concept-art implementation-brief prep from `docs/concept-art-pipeline.md`, `docs/overworld-object-taxonomy-density.md`, and the five concept-art batch reviews.
+- Prioritize brief candidates that now have enough evidence: Embercourt town/object, Mireclaw town/object, route-law/transit objects, persistent resource fronts, pickups, guarded reward sites, neutral encounter presentation, and faction landmarks.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise, and keep edits in docs/tracker/content-planning unless the slice explicitly moves into implementation later.
 
 Acceptance:
@@ -328,6 +330,27 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, imported generated images, or playability claims.
+
+## Completed Art-Direction Slice: Concept Art Batch 005 Broader Overworld Object/Town Studies
+Status: completed on 2026-04-26 for broader overworld object and town-adjacent study evidence.
+
+Purpose:
+- Record the broader overworld object/town-adjacent outputs for route-law/transit objects, persistent resource fronts/economy sites, and neutral encounter/reward/landmark object families.
+- Keep generated images outside the repo while preserving filenames, source briefs, prompt intent, preliminary curation, risks, deferred notes, and next art-direction steps.
+- Decide whether broader object/town study evidence is sufficient to move into implementation-brief prep.
+
+Delivered:
+- Added `docs/concept-art-batch-005-review.md` documenting the three external PNGs under `/root/.openclaw/media/tool-image-generation`.
+- Recorded preliminary curation notes for route-law/transit sites, persistent resource fronts, neutral encounters, guarded rewards, pickups, faction landmarks, footprint/approach implications, and state-variant risks.
+- Determined that broader object/town study evidence is sufficient for concept-art implementation-brief prep, while AcOrP approval and final asset implementation remain deferred.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, imported generated images, object sprites, map placements, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
