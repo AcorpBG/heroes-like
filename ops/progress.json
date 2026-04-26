@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:02:55Z",
+  "updatedAt": "2026-04-26T17:15:23Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "map-editor-post-placement-authoring-recap-10184",
-  "currentSliceTitle": "Surface practical map-editor post-placement authoring recap clarity",
+  "currentSliceId": "overworld-route-convoy-interception-clarity-10184",
+  "currentSliceTitle": "Surface practical route and convoy interception clarity in the live overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact real map-editor post-placement authoring recaps through existing object action status, placement preview, dependency validation, and property edit payloads. Placing, removing, moving, duplicating, retheming, and property edits now surface what changed, tile/object/dependency context, authoring/economy/route/objective impact, and the next practical editor check without schema/content migration, pathing/body-tile adoption, generated assets, or dashboard work.",
+  "currentSliceNotes": "Implemented compact real overworld route and convoy interception clarity through existing selected-route rail/footer/tooltips and field-feed watch payloads. Route decisions now surface active convoy blocks, threatened relief lanes, route-response readiness/coverage, and public raid pressure with affected lane/objective/control context plus the next practical field decision, without save/schema migration, durable logs, AI tuning, pathing/body-tile adoption, or dashboard work.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",

@@ -893,6 +893,12 @@ func _selected_route_decision_surface() -> Dictionary:
 	else:
 		status = "blocked"
 		blocked_reason = "No clear route from the active hero."
+	var interception_surface := OverworldRules.describe_route_interception_surface(
+		_session,
+		_selected_tile.x,
+		_selected_tile.y,
+		steps
+	)
 	var remote_owned_town := _is_selected_owned_town_visit_target()
 	if remote_owned_town:
 		action_kind = "town"
@@ -922,6 +928,10 @@ func _selected_route_decision_surface() -> Dictionary:
 		"visible": visible,
 		"explored": explored,
 		"terrain": _terrain_name_at(_selected_tile.x, _selected_tile.y),
+		"interception": interception_surface,
+		"interception_active": bool(interception_surface.get("active", false)),
+		"interception_cue": String(interception_surface.get("cue_text", "")),
+		"interception_tooltip": String(interception_surface.get("tooltip_text", "")),
 	}
 
 func _selected_route_action_kind(adjacent: bool) -> String:
@@ -967,6 +977,9 @@ func _route_decision_line(surface: Dictionary) -> String:
 	var reason := String(surface.get("blocked_reason", "")).strip_edges()
 	if reason != "":
 		line += " | %s" % reason
+	var interception := _route_decision_interception(surface)
+	if bool(interception.get("active", false)) and status != "current":
+		line += " | Watch: %s" % _short_action_label(String(interception.get("cue_text", "")), 34)
 	return line
 
 func _route_decision_cue(surface: Dictionary) -> String:
@@ -996,9 +1009,22 @@ func _route_decision_tooltip(surface: Dictionary) -> String:
 		return ""
 	var line := _route_decision_line(surface)
 	var reason := String(surface.get("blocked_reason", "")).strip_edges()
+	var interception := _route_decision_interception(surface)
+	var interception_tooltip := String(interception.get("tooltip_text", "")).strip_edges()
 	if reason != "":
+		if interception_tooltip != "":
+			return "%s. %s\n%s" % [line, reason, interception_tooltip]
 		return "%s. %s" % [line, reason]
-	return "%s. Commit %s." % [line, String(surface.get("action_label", "the selected order"))]
+	var commit_line := "%s. Commit %s." % [line, String(surface.get("action_label", "the selected order"))]
+	if interception_tooltip != "":
+		return "%s\n%s" % [commit_line, interception_tooltip]
+	return commit_line
+
+func _route_decision_interception(surface: Dictionary) -> Dictionary:
+	var value: Variant = surface.get("interception", {})
+	if value is Dictionary:
+		return value
+	return {}
 
 func _route_decision_status_label(surface: Dictionary) -> String:
 	match String(surface.get("status", "")):

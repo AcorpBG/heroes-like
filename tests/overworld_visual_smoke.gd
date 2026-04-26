@@ -614,6 +614,8 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 	var original_hero = session.overworld.get("hero", {}).duplicate(true)
 	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
 	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+	var original_resource_nodes = session.overworld.get("resource_nodes", []).duplicate(true)
+	var original_encounters = session.overworld.get("encounters", []).duplicate(true)
 
 	_set_active_hero_position(session, Vector2i(1, 2))
 	var movement: Dictionary = session.overworld.get("movement", {})
@@ -693,11 +695,108 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		):
 			return false
 
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		if not (nodes[index] is Dictionary):
+			continue
+		var node: Dictionary = nodes[index]
+		if String(node.get("placement_id", "")) != "river_free_company":
+			continue
+		node["collected"] = true
+		node["collected_by_faction_id"] = "player"
+		node["collected_day"] = session.day
+		node["response_origin"] = "field"
+		node["response_source_town_id"] = "riverwatch_hold"
+		node["response_last_day"] = session.day
+		node["response_until_day"] = session.day + 2
+		node["response_commander_id"] = String(session.overworld.get("hero", {}).get("id", ""))
+		node["response_security_rating"] = 2
+		node["delivery_controller_id"] = "player"
+		node["delivery_origin_town_id"] = "riverwatch_hold"
+		node["delivery_target_kind"] = "town"
+		node["delivery_target_id"] = "riverwatch_hold"
+		node["delivery_target_label"] = "Riverwatch Hold"
+		node["delivery_arrival_day"] = session.day
+		node["delivery_manifest"] = {"unit_river_guard": 2}
+		nodes[index] = node
+		break
+	session.overworld["resource_nodes"] = nodes
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append(
+		{
+			"placement_id": "smoke_mireclaw_convoy_interceptor",
+			"encounter_id": "encounter_mire_raid",
+			"x": 0,
+			"y": 3,
+			"difficulty": "scripted",
+			"spawned_by_faction_id": "faction_mireclaw",
+			"days_active": 2,
+			"arrived": true,
+			"target_kind": "resource",
+			"target_placement_id": "river_free_company",
+			"target_label": "Riverwatch Free Company Yard",
+			"goal_x": 0,
+			"goal_y": 4,
+			"goal_distance": 0,
+			"delivery_intercept_node_placement_id": "river_free_company",
+			"enemy_army": {"id": "smoke_mireclaw_convoy_interceptor", "name": "Smoke Interceptor", "stacks": []},
+		}
+	)
+	session.overworld["encounters"] = encounters
+	_set_active_hero_position(session, Vector2i(1, 2))
+	movement = session.overworld.get("movement", {})
+	movement["current"] = int(movement.get("max", movement.get("current", 0)))
+	session.overworld["movement"] = movement
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	var convoy_watch: Dictionary = shell.call("validation_select_tile", 0, 4)
+	var convoy_decision: Dictionary = convoy_watch.get("selected_route_decision", {})
+	var route_watch: Dictionary = convoy_decision.get("interception", {})
+	if not bool(route_watch.get("active", false)):
+		push_error("Overworld smoke: convoy route decision did not expose an active interception watch. snapshot=%s" % convoy_watch)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"convoy route interception clarity",
+		[
+			String(convoy_watch.get("selected_route_decision_text", "")),
+			String(convoy_watch.get("map_cue_tooltip_text", "")),
+			String(convoy_watch.get("selected_tile_rail_text", "")),
+			String(convoy_watch.get("primary_action", {}).get("summary", "")),
+			String(convoy_watch.get("event_tooltip_text", "")),
+			String(route_watch.get("tooltip_text", "")),
+		],
+		[
+			"Watch:",
+			"Convoy blocked",
+			"Riverwatch Free Company Yard",
+			"Riverwatch Hold",
+			"Interception Watch",
+			"Why it matters",
+			"Next:",
+			"Break",
+			"control",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak(
+		"convoy route interception clarity",
+		"\n".join([
+			String(convoy_watch.get("selected_route_decision_text", "")),
+			String(convoy_watch.get("map_cue_tooltip_text", "")),
+			String(convoy_watch.get("event_tooltip_text", "")),
+			String(route_watch.get("tooltip_text", "")),
+		])
+	):
+		return false
+
 	session.overworld["fog"] = original_fog
 	session.overworld["hero"] = original_hero
 	session.overworld["player_heroes"] = original_player_heroes
 	session.overworld["hero_position"] = original_hero_position
 	session.overworld["movement"] = original_movement
+	session.overworld["resource_nodes"] = original_resource_nodes
+	session.overworld["encounters"] = original_encounters
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	return true
@@ -1091,7 +1190,7 @@ func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 	return true
 
 func _assert_no_ai_score_leak(label: String, text: String) -> bool:
-	for token in ["base_value", "persistent_income_value", "final_priority", "assignment_penalty", "route_pressure_value", "denial_value", "debug_reason"]:
+	for token in ["base_value", "persistent_income_value", "final_priority", "assignment_penalty", "route_pressure_value", "denial_value", "debug_reason", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score"]:
 		if text.find(token) >= 0:
 			push_error("%s leaked AI score/debug token %s: %s" % [label, token, text])
 			get_tree().quit(1)

@@ -2145,6 +2145,12 @@ static func _enemy_activity_public_text(text: String) -> String:
 		"guard_cost",
 		"assignment_penalty",
 		"final_priority",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
 		"debug_reason",
 	]:
 		if output.find(token) >= 0:
@@ -2248,6 +2254,9 @@ static func _event_feed_next_step_line(session: SessionStateStoreScript.SessionD
 
 static func _event_feed_watch_line(session: SessionStateStoreScript.SessionData) -> String:
 	var parts := []
+	var route_pressure := describe_route_interception_surface(session)
+	if bool(route_pressure.get("active", false)):
+		parts.append(String(route_pressure.get("cue_text", "")))
 	var local_pressure := _local_visible_threat_summary(session, "")
 	if local_pressure != "":
 		parts.append(local_pressure)
@@ -2257,6 +2266,303 @@ static func _event_feed_watch_line(session: SessionStateStoreScript.SessionData)
 	if parts.is_empty():
 		return "No urgent raid, convoy, or town-management warning is visible."
 	return " | ".join(parts.slice(0, min(2, parts.size())))
+
+static func describe_route_interception_surface(
+	session: SessionStateStoreScript.SessionData,
+	destination_x: int = -1,
+	destination_y: int = -1,
+	route_steps: int = 0
+) -> Dictionary:
+	normalize_overworld_state(session)
+	if session == null:
+		return _route_interception_empty_surface()
+	if destination_x >= 0 and destination_y >= 0:
+		var selected := _selected_route_interception_surface(
+			session,
+			Vector2i(destination_x, destination_y),
+			route_steps
+		)
+		if bool(selected.get("active", false)):
+			return selected
+	var convoy := _best_convoy_interception_surface(session)
+	if bool(convoy.get("active", false)):
+		return convoy
+	var raid := _best_raid_interception_surface(session)
+	if bool(raid.get("active", false)):
+		return raid
+	return _route_interception_empty_surface()
+
+static func _route_interception_empty_surface() -> Dictionary:
+	return {
+		"active": false,
+		"kind": "",
+		"cue_text": "",
+		"visible_text": "",
+		"tooltip_text": "",
+		"affected": "",
+		"why_it_matters": "",
+		"next_step": "",
+		"importance": "normal",
+	}
+
+static func _route_interception_payload(
+	kind: String,
+	affected: String,
+	why_it_matters: String,
+	next_step: String,
+	cue_text: String,
+	importance: String = "normal"
+) -> Dictionary:
+	var cleaned_affected := _short_player_text(_enemy_activity_public_text(affected), 150)
+	var cleaned_why := _short_player_text(_enemy_activity_public_text(why_it_matters), 160)
+	var cleaned_next := _short_player_text(_enemy_activity_public_text(next_step), 140)
+	var cleaned_cue := _short_player_text(_enemy_activity_public_text(cue_text), 96)
+	if cleaned_affected == "" or cleaned_why == "" or cleaned_next == "" or cleaned_cue == "":
+		return _route_interception_empty_surface()
+	return {
+		"active": true,
+		"kind": kind,
+		"cue_text": cleaned_cue,
+		"visible_text": cleaned_cue,
+		"tooltip_text": "Interception Watch\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [
+			cleaned_affected,
+			cleaned_why,
+			cleaned_next,
+		],
+		"affected": cleaned_affected,
+		"why_it_matters": cleaned_why,
+		"next_step": cleaned_next,
+		"importance": importance,
+	}
+
+static func _selected_route_interception_surface(
+	session: SessionStateStoreScript.SessionData,
+	tile: Vector2i,
+	route_steps: int
+) -> Dictionary:
+	var encounter := _encounter_at_tile(session, tile.x, tile.y)
+	if not encounter.is_empty():
+		return _raid_interception_surface(session, encounter, route_steps, true)
+	var node := _resource_node_at_tile(session, tile.x, tile.y)
+	if node.is_empty():
+		return _route_interception_empty_surface()
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
+	if bool(delivery_state.get("active", false)):
+		return _convoy_interception_surface(session, node, site, true)
+	var response_state := _resource_site_response_state(session, node, site)
+	if bool(response_state.get("active", false)):
+		var impact := _resource_site_response_effect_summary(response_state)
+		return _route_interception_payload(
+			"route_response",
+			"%s response holds %s for %d day%s%s." % [
+				String(site.get("name", "Route site")),
+				String(response_state.get("action_label", "route security")).to_lower(),
+				int(response_state.get("remaining_days", 0)),
+				"" if int(response_state.get("remaining_days", 0)) == 1 else "s",
+				"" if impact == "" else " (%s)" % impact,
+			],
+			"Active response orders protect economy links, convoy movement, and nearby control pressure before raids resolve.",
+			"Use the protected lane to intercept a hostile host or keep moving toward the next objective.",
+			"%s response active" % String(site.get("name", "Route")),
+			"normal"
+		)
+	if String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
+		return _route_interception_payload(
+			"route_response_ready",
+			"%s can receive %s." % [
+				String(site.get("name", "Route site")),
+				String(response_state.get("action_label", "route security")).to_lower(),
+			],
+			"Response orders spend movement and stores to steady route pressure, protect convoys, and support linked towns.",
+			"Stand on the site or use the town response order if this lane matters more than the current march.",
+			"%s response ready" % String(site.get("name", "Route")),
+			"normal"
+		)
+	return _route_interception_empty_surface()
+
+static func _best_convoy_interception_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var best := _route_interception_empty_surface()
+	var best_score := -99999
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
+		if not bool(delivery_state.get("active", false)) or String(delivery_state.get("controller_id", "")) != "player":
+			continue
+		var interception: Dictionary = _resource_site_delivery_interception(session, node, site)
+		var score := int(delivery_state.get("manifest_value", 0))
+		score += 10000 if bool(interception.get("blocks_delivery", false)) else 0
+		score += 4000 if bool(interception.get("active", false)) else 0
+		score += max(0, 20 - int(delivery_state.get("days_remaining", 0))) * 10
+		if score <= best_score:
+			continue
+		best_score = score
+		best = _convoy_interception_surface(session, node, site, false)
+	return best
+
+static func _convoy_interception_surface(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary,
+	selected: bool
+) -> Dictionary:
+	var delivery_state: Dictionary = _resource_site_delivery_state(session, node, site)
+	if not bool(delivery_state.get("active", false)):
+		return _route_interception_empty_surface()
+	var interception: Dictionary = _resource_site_delivery_interception(session, node, site)
+	var site_name := String(site.get("name", "Frontier route"))
+	var target_label := String(delivery_state.get("target_label", "the front"))
+	var recruit_summary := String(delivery_state.get("recruit_summary", "the convoy"))
+	var route_label := "%s convoy to %s" % [site_name, target_label]
+	var affected := "%s carries %s; %s." % [
+		route_label,
+		recruit_summary,
+		_resource_site_delivery_line(session, node, site),
+	]
+	var why := _convoy_interception_why(String(delivery_state.get("target_kind", "")), target_label)
+	var next_step := "Keep the convoy route covered until arrival."
+	var cue := "Convoy: %s to %s" % [site_name, target_label]
+	var importance := "normal"
+	if bool(interception.get("blocks_delivery", false)):
+		var blocker := String(interception.get("encounter_name", "Raid host"))
+		next_step = "Break %s before ending the day or the convoy stays intercepted." % blocker
+		cue = "Convoy blocked: %s" % blocker
+		importance = "high"
+	elif bool(interception.get("active", false)):
+		var hunter := String(interception.get("encounter_name", "Raid host"))
+		next_step = "Intercept %s or reinforce %s before the convoy lane closes." % [
+			hunter,
+			target_label,
+		]
+		cue = "Convoy threatened: %s %d tile%s out" % [
+			hunter,
+			int(interception.get("goal_distance", 0)),
+			"" if int(interception.get("goal_distance", 0)) == 1 else "s",
+		]
+		importance = "high" if int(interception.get("goal_distance", 9999)) <= 1 else "normal"
+	elif selected:
+		next_step = "Hold this route response or move to intercept raids before they reach %s." % target_label
+		cue = "Convoy active: %s" % target_label
+	return _route_interception_payload("convoy", affected, why, next_step, cue, importance)
+
+static func _convoy_interception_why(target_kind: String, target_label: String) -> String:
+	match target_kind:
+		"town":
+			return "Those reserves change %s defense, recovery, recruitment tempo, and control stability." % target_label
+		"hero":
+			return "Those reserves change the field army's next battle odds and the route choices it can survive."
+		"raid":
+			return "Those reserves help answer the raid directly before it turns pressure into losses."
+		_:
+			return "Convoys turn controlled sites into practical economy, army, and objective tempo."
+
+static func _best_raid_interception_surface(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var best := _route_interception_empty_surface()
+	var best_score := -99999
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("spawned_by_faction_id", "")) == "" or is_encounter_resolved(session, encounter):
+			continue
+		if not _raid_is_public(session, encounter):
+			continue
+		var goal_distance := int(encounter.get("goal_distance", 9999))
+		var score := 2000 if bool(encounter.get("arrived", false)) or goal_distance <= 0 else 0
+		score += max(0, 20 - goal_distance) * 20
+		if _raid_target_is_objective_anchor(
+			session,
+			String(encounter.get("target_kind", "")),
+			String(encounter.get("target_placement_id", ""))
+		):
+			score += 1000
+		if score <= best_score:
+			continue
+		best_score = score
+		best = _raid_interception_surface(session, encounter, 0, false)
+	return best
+
+static func _raid_interception_surface(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	route_steps: int,
+	selected: bool
+) -> Dictionary:
+	if encounter.is_empty() or is_encounter_resolved(session, encounter):
+		return _route_interception_empty_surface()
+	var encounter_name := encounter_display_name(encounter)
+	var target_kind := String(encounter.get("target_kind", ""))
+	var target_label := String(encounter.get("target_label", "the frontier"))
+	var goal_distance := int(encounter.get("goal_distance", 9999))
+	var objective_anchor: bool = _raid_target_is_objective_anchor(
+		session,
+		target_kind,
+		String(encounter.get("target_placement_id", ""))
+	)
+	var affected := describe_encounter_pressure(session, encounter)
+	var why := _raid_interception_why(target_kind, target_label, objective_anchor)
+	var next_step := "Select the hostile contact or a route-response site before ending the day."
+	var cue := "Raid: %s toward %s" % [encounter_name, target_label]
+	var importance := "normal"
+	if selected:
+		next_step = "Enter battle now if this route pressure matters more than another site order."
+		if route_steps > 0:
+			next_step = "Advance %d step%s toward %s; enter battle when adjacent." % [
+				route_steps,
+				"" if route_steps == 1 else "s",
+				encounter_name,
+			]
+		cue = "Intercept: %s" % encounter_name
+	elif bool(encounter.get("arrived", false)) or goal_distance <= 0:
+		next_step = "Break %s now or it can turn pressure into control, convoy, or objective losses." % encounter_name
+		cue = "Raid arrived: %s" % encounter_name
+		importance = "high"
+	elif goal_distance <= 2:
+		next_step = "Move to intercept %s before it reaches %s." % [encounter_name, target_label]
+		cue = "Raid close: %s %d tile%s out" % [
+			encounter_name,
+			goal_distance,
+			"" if goal_distance == 1 else "s",
+		]
+		importance = "high"
+	return _route_interception_payload("raid", affected, why, next_step, cue, importance)
+
+static func _raid_interception_why(target_kind: String, target_label: String, objective_anchor: bool) -> String:
+	var objective_clause := " It is tied to objective pressure." if objective_anchor else ""
+	match target_kind:
+		"town":
+			return "Town raids threaten control, recruitment, income, and defense readiness at %s.%s" % [target_label, objective_clause]
+		"resource":
+			return "Site raids threaten linked economy, route response, convoy support, and town logistics at %s.%s" % [target_label, objective_clause]
+		"hero":
+			return "Hero hunts can force a field battle and pin the army away from route and objective work.%s" % objective_clause
+		"artifact":
+			return "Artifact raids can deny a field upgrade before the hero reaches it.%s" % objective_clause
+		"encounter":
+			return "Raid pressure on this guard can lock a route and delay objective progress.%s" % objective_clause
+		_:
+			return "Raid pressure can become economy, control, convoy, or objective loss if ignored.%s" % objective_clause
+
+static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if int(node.get("x", -1)) == x and int(node.get("y", -1)) == y:
+			return node
+	return {}
+
+static func _encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if int(encounter.get("x", -1)) == x and int(encounter.get("y", -1)) == y:
+			return encounter
+	return {}
 
 static func _event_feed_convoy_line(session: SessionStateStoreScript.SessionData) -> String:
 	for node_value in session.overworld.get("resource_nodes", []):
