@@ -158,6 +158,7 @@ SUPPORTED_MAP_OBJECT_FAMILIES = {
     "pickup",
     "mine",
     "neutral_dwelling",
+    "neutral_encounter",
     "shrine",
     "guarded_reward_site",
     "scouting_structure",
@@ -396,6 +397,7 @@ ECONOMY_SOURCE_BUCKETS = (
 OVERWORLD_OBJECT_REPORT_SCHEMA = "overworld_object_report_v1"
 NEUTRAL_ENCOUNTER_REPORT_SCHEMA = "neutral_encounter_report_v1"
 NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID = "neutral_encounter_representation_bundle_001"
+NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID = "neutral_encounter_first_class_object_bundle_001"
 NEUTRAL_ENCOUNTER_CANDIDATE_PLACEMENTS = {
     "river_pass_ghoul_grove": {
         "scenario_id": "river-pass",
@@ -419,6 +421,23 @@ NEUTRAL_ENCOUNTER_CANDIDATE_PLACEMENTS = {
         "target_id": "site_basalt_gatehouse",
         "target_placement_id": "dwelling_basalt_gatehouse",
         "expectation": "Candidate guard-link planning case for site_basalt_gatehouse.",
+    },
+}
+NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_001 = {
+    "river_pass_ghoul_grove": {
+        "scenario_id": "river-pass",
+        "object_id": "object_neutral_encounter_river_pass_ghoul_grove_stack",
+        "object_placement_id": "object_placement_river_pass_ghoul_grove",
+    },
+    "river_pass_hollow_mire": {
+        "scenario_id": "river-pass",
+        "object_id": "object_neutral_encounter_river_pass_hollow_mire_stack",
+        "object_placement_id": "object_placement_river_pass_hollow_mire",
+    },
+    "ninefold_basalt_gatehouse_watch": {
+        "scenario_id": "ninefold-confluence",
+        "object_id": "object_neutral_encounter_ninefold_basalt_gatehouse_watch_stack",
+        "object_placement_id": "object_placement_ninefold_basalt_gatehouse_watch",
     },
 }
 NEUTRAL_ENCOUNTER_BUNDLE_001_EXPECTED = {
@@ -712,6 +731,13 @@ OVERWORLD_OBJECT_SECONDARY_TAGS = {
     "small_reward",
     "route_pacing",
     "build_resource",
+    "visible_army",
+    "route_pressure",
+    "route_block",
+    "mire_pressure",
+    "neutral_dwelling_watch",
+    "scenario_objective_guard",
+    "neutral_encounter",
 }
 OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS = {
     "pickup": "pickup",
@@ -725,6 +751,7 @@ OVERWORLD_OBJECT_FAMILY_PRIMARY_CLASS = {
     "blocker": "decoration",
     "decoration": "decoration",
     "faction_landmark": "faction_landmark",
+    "neutral_encounter": "neutral_encounter",
 }
 OVERWORLD_OBJECT_FAMILY_TAGS = {
     "pickup": {"small_reward", "route_pacing"},
@@ -738,6 +765,7 @@ OVERWORLD_OBJECT_FAMILY_TAGS = {
     "blocker": {"blocked_route"},
     "decoration": {"world_lore"},
     "faction_landmark": {"faction_pressure", "world_lore"},
+    "neutral_encounter": {"neutral_encounter"},
 }
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
@@ -2251,6 +2279,122 @@ def validate_neutral_encounter_representation_bundle(errors: list[str], scenario
     ensure(not missing_authored, errors, f"neutral_encounter_representation_bundle_001 missing authored metadata for: {', '.join(sorted(missing_authored))}")
 
 
+def validate_neutral_encounter_first_class_object_bundle(errors: list[str], scenarios: dict[str, dict], map_objects: dict[str, dict]) -> None:
+    bundle_placements = set(NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_001.keys())
+    bundle_object_ids = {
+        str(entry.get("object_id", ""))
+        for entry in NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_001.values()
+    }
+    authored_object_backed_placements: set[str] = set()
+
+    for object_id, obj in map_objects.items():
+        if str(obj.get("primary_class", "")) == "neutral_encounter":
+            ensure(object_id in bundle_object_ids, errors, f"Only {NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID} map objects may declare primary_class neutral_encounter; found {object_id}")
+
+    object_backing_keys = {"object_id", "object_placement_id", "encounter_ref", "legacy_scenario_encounter_ref", "authored_metadata"}
+    for scenario_id, scenario in scenarios.items():
+        for placement in scenario.get("encounters", []):
+            if not isinstance(placement, dict):
+                continue
+            placement_id = str(placement.get("placement_id", ""))
+            has_object_backing = any(key in placement for key in object_backing_keys) or str(placement.get("primary_class", "")) == "neutral_encounter"
+            if not has_object_backing:
+                continue
+            authored_object_backed_placements.add(placement_id)
+            ensure(placement_id in bundle_placements, errors, f"Only {NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID} placements may declare object-backed neutral encounter metadata; found {scenario_id}:{placement_id}")
+
+    for placement_id, object_expected in NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_001.items():
+        scenario_id = str(object_expected["scenario_id"])
+        expected = NEUTRAL_ENCOUNTER_BUNDLE_001_EXPECTED[placement_id]
+        placement = find_scenario_encounter_placement(scenarios, scenario_id, placement_id)
+        ensure(isinstance(placement, dict), errors, f"{NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID} is missing scenario placement {scenario_id}:{placement_id}")
+        if not isinstance(placement, dict):
+            continue
+
+        for key, expected_value in expected["base"].items():
+            ensure(placement.get(key) == expected_value, errors, f"{scenario_id}:{placement_id} object-backed bundle must preserve {key}={expected_value!r}")
+        ensure(str(placement.get("object_id", "")) == object_expected["object_id"], errors, f"{scenario_id}:{placement_id} object_id must match {object_expected['object_id']}")
+        ensure(str(placement.get("object_placement_id", "")) == object_expected["object_placement_id"], errors, f"{scenario_id}:{placement_id} object_placement_id must match {object_expected['object_placement_id']}")
+        ensure(str(placement.get("primary_class", "")) == "neutral_encounter", errors, f"{scenario_id}:{placement_id} primary_class must be neutral_encounter")
+
+        metadata = placement.get("neutral_encounter", {})
+        ensure(isinstance(metadata, dict) and bool(metadata), errors, f"{scenario_id}:{placement_id} must keep source neutral_encounter metadata for lifted agreement")
+        if isinstance(metadata, dict) and metadata:
+            compare_expected_neutral_metadata(errors, f"{scenario_id}:{placement_id}.neutral_encounter", metadata, expected["metadata"])
+
+        encounter_metadata = expected["metadata"]["encounter"]
+        encounter_ref_expected = {
+            "encounter_id": expected["base"]["encounter_id"],
+            "primary_encounter_id": encounter_metadata["primary_encounter_id"],
+            "encounter_ids": encounter_metadata["encounter_ids"],
+            "difficulty": expected["base"]["difficulty"],
+            "difficulty_source": encounter_metadata["difficulty_source"],
+            "combat_seed": expected["base"]["combat_seed"],
+            "combat_seed_source": encounter_metadata["combat_seed_source"],
+            "field_objectives_source": encounter_metadata["field_objectives_source"],
+            "preserve_placement_field_objectives": encounter_metadata["preserve_placement_field_objectives"],
+        }
+        compare_expected_neutral_metadata(errors, f"{scenario_id}:{placement_id}.encounter_ref", placement.get("encounter_ref", {}), encounter_ref_expected)
+
+        legacy_ref_expected = {
+            "placement_id": placement_id,
+            "encounter_id": expected["base"]["encounter_id"],
+            "source_list": "scenarios.encounters",
+        }
+        compare_expected_neutral_metadata(errors, f"{scenario_id}:{placement_id}.legacy_scenario_encounter_ref", placement.get("legacy_scenario_encounter_ref", {}), legacy_ref_expected)
+        compare_expected_neutral_metadata(errors, f"{scenario_id}:{placement_id}.guard_link", placement.get("guard_link", {}), expected["metadata"]["guard_link"])
+        compare_expected_neutral_metadata(
+            errors,
+            f"{scenario_id}:{placement_id}.authored_metadata",
+            placement.get("authored_metadata", {}),
+            {
+                "bundle_id": NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID,
+                "lifted_from_bundle_id": NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID,
+            },
+        )
+
+        object_id = str(object_expected["object_id"])
+        object_record = map_objects.get(object_id, {})
+        ensure(isinstance(object_record, dict) and bool(object_record), errors, f"{NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID} is missing map object {object_id}")
+        if not isinstance(object_record, dict) or not object_record:
+            continue
+        missing_schema_fields = neutral_encounter_object_schema_missing_fields(object_record)
+        ensure(not missing_schema_fields, errors, f"Map object {object_id} is missing first-class neutral encounter schema fields: {', '.join(missing_schema_fields)}")
+        ensure(object_record.get("schema_version") == 1, errors, f"Map object {object_id} must declare schema_version 1")
+        ensure(str(object_record.get("primary_class", "")) == "neutral_encounter", errors, f"Map object {object_id} primary_class must be neutral_encounter")
+        ensure(str(object_record.get("family", "")) == "neutral_encounter", errors, f"Map object {object_id} family must be neutral_encounter")
+        ensure(str(object_record.get("subtype", "")) == expected["metadata"]["representation"]["mode"], errors, f"Map object {object_id} subtype must match lifted representation mode")
+        compare_expected_neutral_metadata(errors, f"{object_id}.secondary_tags", object_record.get("secondary_tags", []), expected["metadata"]["secondary_tags"])
+        compare_expected_neutral_metadata(errors, f"{object_id}.footprint", object_record.get("footprint", {}), {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"})
+        ensure(object_record.get("passable") is False, errors, f"Map object {object_id} passable must be false")
+        ensure(object_record.get("visitable") is True, errors, f"Map object {object_id} visitable must be true")
+        ensure(str(object_record.get("passability_class", "")) == expected["metadata"]["passability"]["passability_class"], errors, f"Map object {object_id} passability_class must match lifted passability")
+        compare_expected_neutral_metadata(
+            errors,
+            f"{object_id}.interaction",
+            object_record.get("interaction", {}),
+            {
+                "cadence": "one_time",
+                "remains_after_visit": False,
+                "state_after_visit": "cleared",
+                "requires_ownership": False,
+                "requires_guard_clear": False,
+                "supports_revisit": False,
+                "cooldown_days": 0,
+                "refresh_rule": "none",
+            },
+        )
+        compare_expected_neutral_metadata(errors, f"{object_id}.neutral_encounter", object_record.get("neutral_encounter", {}), expected["metadata"])
+
+        guard_link = placement.get("guard_link", {})
+        if isinstance(guard_link, dict):
+            guard_target_resolution = neutral_encounter_guard_target_resolution(scenarios.get(scenario_id, {}), guard_link, map_objects)
+            ensure(not guard_target_resolution["required"] or bool(guard_target_resolution["resolved"]), errors, f"{scenario_id}:{placement_id} guard target must resolve for {NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID}")
+
+    missing_object_backed = bundle_placements - authored_object_backed_placements
+    ensure(not missing_object_backed, errors, f"{NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID} missing object-backed placements for: {', '.join(sorted(missing_object_backed))}")
+
+
 def neutral_encounter_metadata_presence(metadata: dict) -> dict[str, bool]:
     representation = metadata.get("representation", {}) if isinstance(metadata, dict) else {}
     return {
@@ -2451,6 +2595,7 @@ def build_neutral_encounter_report() -> dict:
     }
     encounter_counts: dict[str, int] = {}
     candidate_lookup = NEUTRAL_ENCOUNTER_CANDIDATE_PLACEMENTS
+    object_bundle_lookup = NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_001
 
     for scenario_id, scenario in sorted(scenarios.items()):
         scenario_entry = {
@@ -2681,12 +2826,68 @@ def build_neutral_encounter_report() -> dict:
         ],
         "warnings": candidate_warnings,
     }
+    object_bundle_placements = []
+    object_bundle_warnings = []
+    for placement_id, object_expected in sorted(object_bundle_lookup.items()):
+        match = next((placement for placement in report["placements"] if placement.get("placement_id") == placement_id and placement.get("scenario_id") == object_expected.get("scenario_id")), None)
+        object_backing = match.get("object_backing", {}) if isinstance(match, dict) else {}
+        object_backed = match is not None and bool(object_backing.get("object_backed", False))
+        lifted = match is not None and str(match.get("placement_authority", "")) == "object_backed_lifted"
+        object_id_matches = bool(object_backing.get("object_id", "") == object_expected.get("object_id", ""))
+        object_placement_id_matches = bool(object_backing.get("object_placement_id", "") == object_expected.get("object_placement_id", ""))
+        schema_present = bool(object_backing.get("object_schema_fields_present", False))
+        object_bundle_placements.append({
+            **object_expected,
+            "placement_id": placement_id,
+            "placement_exists": match is not None,
+            "object_backed": object_backed,
+            "lifted_from_bundle_id": str(object_backing.get("lifted_from_bundle_id", "")) if isinstance(object_backing, dict) else "",
+            "lifted": lifted,
+            "object_id_matches": object_id_matches,
+            "object_placement_id_matches": object_placement_id_matches,
+            "object_schema_fields_present": schema_present,
+        })
+        if match is None:
+            object_bundle_warnings.append(f"object-backed bundle placement {placement_id} is not present in current scenario encounters")
+        elif not object_backed:
+            object_bundle_warnings.append(f"object-backed bundle placement {placement_id} has no object backing")
+        elif not lifted:
+            object_bundle_warnings.append(f"object-backed bundle placement {placement_id} is not marked lifted from {NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID}")
+        elif not object_id_matches:
+            object_bundle_warnings.append(f"object-backed bundle placement {placement_id} object_id does not match planned id")
+        elif not object_placement_id_matches:
+            object_bundle_warnings.append(f"object-backed bundle placement {placement_id} object_placement_id does not match planned id")
+        elif not schema_present:
+            object_bundle_warnings.append(f"object-backed bundle placement {placement_id} object schema fields are incomplete")
+    object_bundle_authored = all(
+        bool(placement.get("object_backed", False))
+        and bool(placement.get("lifted", False))
+        and bool(placement.get("object_id_matches", False))
+        and bool(placement.get("object_placement_id_matches", False))
+        and bool(placement.get("object_schema_fields_present", False))
+        for placement in object_bundle_placements
+    )
+    report["candidate_bundles"][NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID] = {
+        "bundle_id": NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID,
+        "status": "metadata_authored" if object_bundle_authored else "planning_only",
+        "production_json_migration": object_bundle_authored,
+        "production_json_migration_scope": "metadata_only_first_class_object_records" if object_bundle_authored else "none",
+        "placement_count": len(object_bundle_placements),
+        "placements": object_bundle_placements,
+        "runtime_adoption": "not_active",
+        "pathing_occupancy_adoption": False,
+        "renderer_adoption": False,
+        "ai_behavior_switch": False,
+        "editor_behavior_switch": False,
+        "save_migration": False,
+        "warnings": object_bundle_warnings,
+    }
     if first_class_count == 0:
         add_neutral_encounter_report_warning(report, "no first-class neutral_encounter map object records exist yet; direct scenario encounter placements remain compatibility source")
     if report["first_class_object_migration"]["object_backed_placement_count"] == 0:
         add_neutral_encounter_report_warning(report, "no object-backed neutral encounter placements exist yet; direct-only and scenario-metadata placements remain report authority")
     add_neutral_encounter_report_warning(report, "unmigrated production direct encounter placements remain legacy-compatible outside declared neutral encounter metadata bundles")
-    add_neutral_encounter_report_warning(report, "strict neutral encounter fixture checks remain isolated; migrated production bundle checks cover only neutral_encounter_representation_bundle_001")
+    add_neutral_encounter_report_warning(report, f"strict neutral encounter fixture checks remain isolated; migrated production bundle checks cover only {NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID} and {NEUTRAL_ENCOUNTER_FIRST_CLASS_OBJECT_BUNDLE_ID}")
     return report
 
 
@@ -2728,9 +2929,11 @@ def print_neutral_encounter_report(report: dict) -> None:
     for source, counts in report["guard_links"]["role_counts"].items():
         for role, count in counts.items():
             print(f"- {source}:{role}: {count}")
-    bundle = report["candidate_bundles"][NEUTRAL_ENCOUNTER_CANDIDATE_BUNDLE_ID]
-    print("Candidate bundle:")
-    print(f"- {bundle['bundle_id']}: {bundle['status']}; placements={bundle['placement_count']}; production_json_migration={bundle['production_json_migration']}")
+    print("Candidate bundles:")
+    for bundle in report["candidate_bundles"].values():
+        print(f"- {bundle['bundle_id']}: {bundle['status']}; placements={bundle['placement_count']}; production_json_migration={bundle['production_json_migration']}")
+        if bundle.get("runtime_adoption", ""):
+            print(f"- {bundle['bundle_id']} runtime adoption: {bundle['runtime_adoption']}; pathing occupancy adoption={bundle.get('pathing_occupancy_adoption', False)}")
     print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
@@ -3975,6 +4178,7 @@ def validate_content(errors: list[str]) -> None:
                             ensure(str(key) in ENEMY_STRATEGY_KEYS[section], errors, f"Scenario {scenario_id} enemy faction {faction_id} strategy_overrides {section} uses unsupported key {key}")
 
     validate_neutral_encounter_representation_bundle(errors, scenarios)
+    validate_neutral_encounter_first_class_object_bundle(errors, scenarios, map_objects)
     validate_campaigns(errors, campaigns, scenarios)
     ensure(RELEASE_FIELD_OBJECTIVE_SCENARIO_PLACEMENTS.issubset(objective_override_placements), errors, "Release battle-objective slice must keep authored scenario encounter overrides for the signature field-objective fronts")
     ensure(bool(skirmish_scenario_ids), errors, "At least one scenario must be marked skirmish-available")

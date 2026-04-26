@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T12:55:00Z",
+  "updatedAt": "2026-04-26T13:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "neutral-encounter-first-class-object-bundle-implementation-10184",
-  "currentSliceTitle": "Implement metadata-only first-class neutral encounter object bundle 001",
+  "currentSliceId": "neutral-encounter-first-class-object-bundle-report-review-10184",
+  "currentSliceTitle": "Review metadata-only first-class neutral encounter object bundle 001 report output",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Planning for neutral_encounter_first_class_object_bundle_001 is complete in docs/neutral-encounter-first-class-object-bundle-001-plan.md. The next supported slice is metadata-only production object-backed implementation for exactly river_pass_ghoul_grove, river_pass_hollow_mire, and ninefold_basalt_gatehouse_watch, or report/validator prep first if blockers appear. Runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, approach adoption, and broader production migration remain out of scope.",
+  "currentSliceNotes": "Metadata-only production object-backed implementation for neutral_encounter_first_class_object_bundle_001 is complete for exactly river_pass_ghoul_grove, river_pass_hollow_mire, and ninefold_basalt_gatehouse_watch. The next supported slice is report review/follow-up for the implemented object-backed output. Runtime encounter behavior, pathing, AI, editor behavior, renderer behavior, generated PNG import, save migration, route effects, body_tiles, approach adoption, and broader production migration remain out of scope.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -332,8 +332,16 @@
     {
       "id": "neutral-encounter-first-class-object-bundle-implementation-10184",
       "title": "Implement metadata-only first-class neutral encounter object bundle 001 for the three authored placements",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T13:00:00Z",
+      "completedAt": "2026-04-26T13:45:00Z",
       "difficulty": "high"
+    },
+    {
+      "id": "neutral-encounter-first-class-object-bundle-report-review-10184",
+      "title": "Review metadata-only first-class neutral encounter object bundle 001 report output",
+      "status": "pending",
+      "difficulty": "medium"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
@@ -801,8 +809,8 @@
     "Use docs/strategic-ai-foundation.md as the strategic AI source before AI profile/schema migration, planner/executor work, AI event surfacing, town governors, real AI heroes, object valuation, spell/artifact planning, difficulty tuning, or broad map reliance on AI.",
     "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, docs/concept-art-batch-003-review.md, docs/concept-art-batch-004-review.md, and docs/concept-art-batch-005-review.md to collect AcOrP accept/reject/defer calls on the external world/faction/object batch and second-pass follow-ups.",
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
-    "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, and docs/neutral-encounter-representation-bundle-001-report-review.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, first-class neutral encounter object migration, or runtime asset import.",
-    "Plan the first-class neutral encounter object migration boundary next; keep runtime encounters, pathing, AI, editor behavior, renderer behavior, save migration, generated PNG import, body_tiles, and approach adoption unchanged.",
+    "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
+    "Review the implemented neutral_encounter_first_class_object_bundle_001 report output next; keep runtime encounters, pathing, AI, editor behavior, renderer behavior, save migration, generated PNG import, body_tiles, and approach adoption unchanged.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
     "Avoid claiming six-faction, HoMM2-class, or HoMM3-class readiness until world, content, systems, AI, save/load, and manual-play evidence support it."
