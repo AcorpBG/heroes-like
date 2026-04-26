@@ -252,11 +252,11 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		String(snapshot.get("visible_consequence_text", "")),
 		String(snapshot.get("consequence_tooltip_text", "")),
 	])
-	for token in ["After order:", "Affected:", "Decision:", "Next:"]:
+	for token in ["After order:", "Affected:", "Why it matters:", "Next:"]:
 		if not recap_text.contains(token):
 			push_error("Battle smoke: post-action recap lost %s clarity: response=%s snapshot=%s text=%s." % [token, action_response, snapshot_recap, recap_text])
 			return false
-	for key in ["happened", "affected", "decision", "next_actor", "text"]:
+	for key in ["happened", "affected", "why_it_matters", "next_step", "decision", "next_actor", "text"]:
 		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
 			push_error("Battle smoke: post-action recap payload is missing %s: response=%s snapshot=%s." % [key, response_recap, snapshot_recap])
 			return false
@@ -269,7 +269,7 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 	if not action_tooltips.contains("Last order:") or not action_tooltips.contains("acts now"):
 		push_error("Battle smoke: action tooltips did not carry the post-action next-actor recap: %s." % action_tooltips)
 		return false
-	for leak_token in ["final_priority", "debug_reason", "ai_score", "weight"]:
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "ai_score", "weight"]:
 		if recap_text.contains(leak_token) or action_tooltips.contains(leak_token):
 			push_error("Battle smoke: post-action recap leaked internal token %s." % leak_token)
 			return false
@@ -564,14 +564,14 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		if not recap_text.contains(token):
 			push_error("Town smoke: post-action town recap lost %s clarity: response=%s snapshot=%s text=%s." % [token, response_recap, snapshot_recap, recap_text])
 			return false
-	for key in ["happened", "affected", "matters", "next", "text"]:
+	for key in ["happened", "affected", "why_it_matters", "next_step", "matters", "next", "text"]:
 		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
 			push_error("Town smoke: post-action town recap is missing structured %s: response=%s snapshot=%s." % [key, response_recap, snapshot_recap])
 			return false
 	var consequence_text := "\n".join([
 		String(response_recap.get("affected", "")),
-		String(response_recap.get("matters", "")),
-		String(response_recap.get("next", "")),
+		String(response_recap.get("why_it_matters", "")),
+		String(response_recap.get("next_step", "")),
 	])
 	var practical_tokens := ["Stores", "Reserve", "Field", "Building", "Income", "Weekly muster", "readiness", "frontier", "build", "recruit"]
 	var practical_token_found := false
@@ -582,7 +582,7 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 	if not practical_token_found:
 		push_error("Town smoke: post-action town recap did not explain a practical town/field consequence: %s." % response_recap)
 		return false
-	for leak_token in ["build_category_weights", "final_score", "debug_reason", "raid_target_weights"]:
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
 		if recap_text.contains(leak_token):
 			push_error("Town smoke: post-action town recap leaked internal strategy token %s: %s." % [leak_token, recap_text])
 			return false

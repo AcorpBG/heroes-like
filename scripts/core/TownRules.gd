@@ -495,6 +495,12 @@ static func build_town_action_recap(
 		matters,
 		next,
 	]
+	var tooltip := "Action Recap\n- Happened: %s\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [
+		happened,
+		affected,
+		matters,
+		next,
+	]
 	return {
 		"active": true,
 		"kind": lane,
@@ -502,9 +508,12 @@ static func build_town_action_recap(
 		"label": String(action.get("label", action_id)),
 		"happened": happened,
 		"affected": affected,
+		"why_it_matters": matters,
+		"next_step": next,
 		"matters": matters,
 		"next": next,
 		"text": text,
+		"tooltip_text": tooltip,
 		"message": message,
 	}
 

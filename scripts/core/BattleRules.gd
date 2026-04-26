@@ -2017,20 +2017,28 @@ static func post_action_recap_payload(
 	var next_actor := _post_action_next_actor_line(session)
 	var lines := [
 		"After order: %s" % happened,
-		"- Affected: %s" % affected,
-		"- Decision: %s" % decision,
-		"- Next: %s" % next_actor,
+		"Affected: %s" % affected,
+		"Why it matters: %s" % decision,
+		"Next: %s" % next_actor,
 	]
-	var tooltip := "%s | %s | %s" % [affected, decision, next_actor]
+	var tooltip := "Action Recap\n- Happened: %s\n- Affected: %s\n- Why it matters: %s\n- Next: %s" % [
+		happened,
+		affected,
+		decision,
+		next_actor,
+	]
 	return {
 		"action_id": normalized_action_id,
 		"state": String(result.get("state", "")),
 		"happened": happened,
 		"affected": affected,
+		"why_it_matters": decision,
+		"next_step": next_actor,
 		"decision": decision,
 		"next_actor": next_actor,
 		"text": "\n".join(lines),
 		"tooltip": tooltip,
+		"tooltip_text": tooltip,
 	}
 
 static func describe_post_action_recap(

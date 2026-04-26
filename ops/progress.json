@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:31:38Z",
+  "updatedAt": "2026-04-26T18:18:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-save-recap-polish-10184",
-  "currentSliceTitle": "Surface practical outcome and save resume recap polish in live UI",
+  "currentSliceId": "recap-contract-consistency-ui-10184",
+  "currentSliceTitle": "Align battle, town, and overworld post-action recap field contract in visible UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact outcome and save/load recap polish through existing outcome, save summary, scenario/campaign rule, post-action recap, and risk/watch helper payloads. Outcome save status and save/load details now answer saved state, what changed, resume state, watch context, and next decision while carrying only the latest compact action recap in existing session flags, with no save version bump, schema migration, durable event log, broad dashboard, or internal score leak.",
+  "currentSliceNotes": "Implemented compact visible recap consistency across battle and town payloads to match the existing overworld contract: happened, affected, why_it_matters, next_step, and matching visible labels/tooltips. Preserved existing battle decision/next_actor and town matters/next aliases, with no mechanics change, save version bump, schema migration, durable event log, or internal score leak.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1534,6 +1534,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T17:27:04Z",
       "completedAt": "2026-04-26T17:31:38Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "recap-contract-consistency-ui-10184",
+      "title": "Align battle, town, and overworld post-action recap field contract in visible UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T18:05:00Z",
+      "completedAt": "2026-04-26T18:18:00Z",
       "difficulty": "medium"
     }
   ],
