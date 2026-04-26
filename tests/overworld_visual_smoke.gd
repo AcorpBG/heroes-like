@@ -1393,6 +1393,7 @@ func _assert_overworld_action_context_strip_contract(snapshot: Dictionary) -> bo
 		String(action_context.get("tooltip_text", "")),
 		String(action_context.get("latest_action", "")),
 		String(action_context.get("next_practical_step", "")),
+		String(action_context.get("handoff_check", "")),
 	])
 	if not _assert_text_contains_all(
 		"overworld action context strip",
@@ -1403,6 +1404,7 @@ func _assert_overworld_action_context_strip_contract(snapshot: Dictionary) -> bo
 			"Current Turn Context",
 			"Latest action:",
 			"Next practical step:",
+			"Handoff check:",
 			"Moved from",
 			"Push toward",
 		]

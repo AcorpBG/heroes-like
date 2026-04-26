@@ -3928,11 +3928,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed the compact town latest-action and next-step context strip using existing town post-action recap, event/status label, town handoff/departure readiness, and save/status payloads.
+Current target: completed compact handoff-check consistency across the existing overworld, battle, and town Latest/Next context strips using current action recap, readiness, action-confirmation, departure, and save/status payloads.
 
 Done means:
-- The town event rail exposes a compact `Latest:` and `Next:` strip after a manual player town action.
-- The tooltip preserves the current town context with latest action, next practical step, town status, departure readiness, and save continuity details available.
-- Existing focused town/battle smoke coverage proves the surface is visible after an action without leaking internal score/debug fields.
+- The overworld, battle, and town context-strip tooltips all expose a compact public `Handoff check:` line after a manual player action.
+- The visible `Latest:` and `Next:` strips remain compact and use existing action-context surfaces instead of new dashboards.
+- Existing focused overworld and town/battle smoke coverage proves the surfaces remain visible after an action without leaking internal score/debug fields.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
