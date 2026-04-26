@@ -284,6 +284,24 @@ Validation:
 Limits:
 - This is UI/onboarding polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression, settings persistence semantics, or broad dashboard composition.
 
+## Completed Implementation Slice: Outcome Next-Step Action Cues
+Status: completed on 2026-04-26 as compact player-facing outcome UI polish.
+
+Purpose:
+- Help a manual player choose the next step from the scenario outcome screen without guessing whether retry, replay, next chapter, or menu return preserves the current result.
+- Reuse existing outcome, campaign/skirmish action, save/resume, and continuity payloads instead of adding mechanics, progression state, or save fields.
+
+Delivered:
+- Added dynamic `Action cue:` text to the existing outcome action hint in `scenes/results/ScenarioOutcomeShell.gd`.
+- Decorated existing outcome actions in `scripts/core/ScenarioRules.gd` with per-action cue text for retry, replay, next chapter, disabled informational actions, and menu return.
+- Added focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`, including visible cue text, per-action tooltip payloads, and no-score-leak assertions.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/menu_outcome_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression semantics, settings persistence, or broad dashboard composition.
+
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
 

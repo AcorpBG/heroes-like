@@ -271,6 +271,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 			"carryover_summary": "",
 			"aftermath_summary": "",
 			"journal_summary": "",
+			"action_cue_summary": "Action cue: return to the menu and choose a campaign, skirmish, save, or guide entry.",
 			"actions": [{"id": "return_to_menu", "label": "Return to Menu", "summary": "Return to the main menu.", "disabled": false}],
 		}
 
@@ -297,6 +298,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		"next_step_summary": "",
 		"next_play_action_summary": "",
 		"continuity_choice_summary": "",
+		"action_cue_summary": "",
 		"actions": [],
 	}
 	var progress_recap := describe_session_progress_recap(session, true)
@@ -336,6 +338,8 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		model["journal_summary"] = "Campaign chronicle updates are only recorded for launched campaign chapters."
 		model["continuity_choice_summary"] = _skirmish_outcome_continuity_choice_line(session)
 		model["actions"] = _build_skirmish_outcome_actions(session)
+	model["actions"] = _decorate_outcome_actions(session, scenario, model["actions"])
+	model["action_cue_summary"] = _outcome_action_cue_line(session, scenario, model["actions"])
 	return model
 
 static func perform_outcome_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
@@ -392,6 +396,63 @@ static func _build_skirmish_outcome_actions(session: SessionStateStoreScript.Ses
 			"disabled": false,
 		},
 	]
+
+static func _decorate_outcome_actions(session: SessionStateStoreScript.SessionData, scenario: Dictionary, actions: Array) -> Array:
+	var decorated := []
+	for action in actions:
+		if not (action is Dictionary):
+			continue
+		var action_copy: Dictionary = action.duplicate(true)
+		var cue := _outcome_action_cue_text(session, scenario, action_copy)
+		if cue != "":
+			action_copy["action_cue"] = cue
+			var summary := String(action_copy.get("summary", "")).strip_edges()
+			action_copy["summary"] = "%s\nAction cue: %s" % [summary, cue] if summary != "" else "Action cue: %s" % cue
+		decorated.append(action_copy)
+	return decorated
+
+static func _outcome_action_cue_text(session: SessionStateStoreScript.SessionData, scenario: Dictionary, action: Dictionary) -> String:
+	if bool(action.get("disabled", false)):
+		return "This is informational; choose another available outcome action or return to the menu."
+	var action_id := String(action.get("id", ""))
+	if action_id == "" or action_id == "return_to_menu":
+		return "Autosaves this outcome, then opens the menu so Continue Latest can return here."
+	if action_id.begins_with("skirmish_start:"):
+		return "Starts this skirmish fresh; save first if you want this outcome available later."
+	if action_id.begins_with("campaign_start:"):
+		var target_scenario_id := action_id.trim_prefix("campaign_start:")
+		if target_scenario_id == session.scenario_id:
+			if session.scenario_status == "victory":
+				return "Replays this chapter fresh; save first if you want this outcome available later."
+			return "Retries this chapter fresh; save first if you want this outcome available later."
+		var target_scenario := ContentService.get_scenario(target_scenario_id)
+		var target_name := String(target_scenario.get("name", target_scenario_id))
+		if target_name != "":
+			return "Starts %s at current difficulty; save this outcome first to keep the handoff." % target_name
+		return "Starts the next campaign chapter; save this outcome first to keep the handoff."
+	return ""
+
+static func _outcome_action_cue_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary, actions: Array) -> String:
+	var enabled_labels := []
+	for action in actions:
+		if not (action is Dictionary) or bool(action.get("disabled", false)):
+			continue
+		var label := String(action.get("label", "")).strip_edges()
+		if label != "":
+			enabled_labels.append(label)
+	if enabled_labels.is_empty():
+		return "Action cue: no follow-up action is available; use Return to Menu from the save panel."
+	var launch_mode := SessionStateStoreScript.normalize_launch_mode(session.launch_mode)
+	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
+		var next_chapter := _next_campaign_chapter_label(session, scenario)
+		if session.scenario_status == "victory" and next_chapter != "":
+			return "Action cue: save first; start %s to continue, replay this chapter to practice, or return to the campaign board." % next_chapter
+		if session.scenario_status == "victory":
+			return "Action cue: save first; replay this chapter if needed, or return to the campaign board for the next available choice."
+		return "Action cue: save first; retry this chapter fresh, or return to the campaign board and saves."
+	if session.scenario_status == "victory":
+		return "Action cue: save first; Return to Menu keeps this outcome resumable, while Retry Skirmish starts fresh."
+	return "Action cue: save first; Retry Skirmish starts fresh, while Return to Menu keeps this outcome resumable."
 
 static func _skirmish_outcome_continuity_choice_line(session: SessionStateStoreScript.SessionData) -> String:
 	if session.scenario_status == "victory":

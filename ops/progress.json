@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T21:42:40Z",
+  "updatedAt": "2026-04-26T21:52:11Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-contextual-field-manual-access-10184",
-  "currentSliceTitle": "Surface contextual field manual access from secondary menu boards",
+  "currentSliceId": "outcome-next-step-action-cue-10184",
+  "currentSliceTitle": "Surface compact outcome next-step action cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing onboarding slice: the existing Field Manual is now reachable from secondary main-menu boards through a contextual Guide/Back header control, opening to the matching campaign or save-flow topic without adding first-view commands or broad text panels. Focused main-menu smoke coverage checks contextual guide access, return flow, and no internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
+  "currentSliceNotes": "Implemented a compact player-facing outcome slice: the existing scenario outcome action rail now surfaces a dynamic Action cue hint and per-action tooltip cues for retry, replay, next chapter, and menu return choices using current outcome/campaign/skirmish/save payloads. Focused outcome smoke coverage checks visible cue text, per-action cue payloads, and no internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1742,6 +1742,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T21:34:46Z",
       "completedAt": "2026-04-26T21:37:44Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "outcome-next-step-action-cue-10184",
+      "title": "Surface compact outcome next-step action cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T21:49:10Z",
+      "completedAt": "2026-04-26T21:52:11Z",
       "difficulty": "medium"
     }
   ],

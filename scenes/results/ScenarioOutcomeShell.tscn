@@ -248,6 +248,7 @@ layout_mode = 2
 text = "Next Step"
 
 [node name="ActionsHint" type="Label" parent="ContentMargin/Content/MainRow/CommandColumn/ActionsPanel/ActionsPad/ActionsBox"]
+unique_name_in_owner = true
 layout_mode = 2
 autowrap_mode = 3
 text = "Advance the campaign, replay, or return to the frontier from one clear action rail."
