@@ -119,6 +119,62 @@ const COMMANDER_ROLE_TURN_NO_OP_REASONS := [
 	"no_existing_raid_to_move",
 	"report_fixture_not_configured_for_assignment",
 ]
+const AI_HERO_TASK_REPORT_ID := "AI_HERO_TASK_STATE_BOUNDARY_REPORT"
+const AI_HERO_TASK_STATE_POLICY := "report_only"
+const AI_HERO_TASK_SOURCE_KIND := "commander_role_adapter"
+const AI_HERO_TASK_CLASSES := [
+	"raid_town",
+	"retake_site",
+	"contest_site",
+	"stabilize_front",
+	"defend_front",
+	"recover_commander",
+	"rebuild_host",
+	"reserve",
+]
+const AI_HERO_TASK_EXCLUSIVE_CLASSES := ["retake_site", "contest_site", "defend_front", "raid_town"]
+const AI_HERO_TASK_PUBLIC_EVENT_KEYS := [
+	"event_id",
+	"day",
+	"sequence",
+	"event_type",
+	"faction_id",
+	"faction_label",
+	"actor_id",
+	"actor_label",
+	"task_class",
+	"target_kind",
+	"target_id",
+	"target_label",
+	"front_id",
+	"visibility",
+	"public_importance",
+	"summary",
+	"reason_codes",
+	"public_reason",
+	"state_policy",
+]
+const AI_HERO_TASK_BLOCKED_PUBLIC_TOKENS := [
+	"resource_score_breakdown",
+	"final_priority",
+	"debug_reason",
+	"target_debug_reason",
+	"fixture_",
+	"score",
+	"priority_table",
+	"breakdown",
+	"hero_task_state",
+	"commander_role_state",
+	"SAVE_VERSION",
+	"body_tiles",
+	"approach",
+	"task_id",
+	"source_id",
+	"assignment_id_hint",
+	"route_policy",
+	"reservation_key",
+	"invalidated_by_task_id",
+]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
@@ -3718,6 +3774,595 @@ static func commander_role_turn_transcript_report(
 
 static func commander_role_turn_transcript_public_leak_check(public_surfaces: Variant) -> Dictionary:
 	return commander_role_public_leak_check(public_surfaces)
+
+static func ai_hero_task_candidate_from_role(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	commander_entry: Dictionary,
+	role_record: Dictionary,
+	local_sequence: int,
+	options: Dictionary = {}
+) -> Dictionary:
+	var actor_id := String(role_record.get("roster_hero_id", commander_entry.get("roster_hero_id", "")))
+	var actor_label := String(role_record.get("commander_label", commander_display_name(commander_entry, false)))
+	if actor_label == "":
+		actor_label = actor_id
+	var source_role := String(role_record.get("role", COMMANDER_ROLE_RESERVE))
+	var role_status := String(role_record.get("role_status", ""))
+	var target_kind := String(role_record.get("target_kind", ""))
+	var target_id := String(role_record.get("target_id", ""))
+	var task_class := String(options.get("task_class", _ai_hero_task_class_for_role(source_role, target_kind, role_status)))
+	if task_class in ["recover_commander", "rebuild_host", "reserve"]:
+		target_kind = "commander"
+		target_id = actor_id
+	var assigned_day := int(options.get("assigned_day", int(session.day) if session != null else 0))
+	var task_id := ai_hero_task_candidate_id(
+		String(session.scenario_id) if session != null else "",
+		faction_id,
+		actor_id,
+		task_class,
+		target_kind,
+		target_id,
+		assigned_day,
+		local_sequence
+	)
+	var source_id := String(role_record.get("assignment_id_hint", ""))
+	if source_id == "":
+		source_id = _ai_hero_task_source_id(
+			String(session.scenario_id) if session != null else "",
+			faction_id,
+			actor_id,
+			source_role,
+			target_kind,
+			target_id,
+			assigned_day
+		)
+	var controller_before := String(role_record.get("target_controller_before", ""))
+	var target_label := String(role_record.get("target_label", target_id))
+	var target_x := int(role_record.get("target_x", 0))
+	var target_y := int(role_record.get("target_y", 0))
+	if target_kind == "resource":
+		var target_view := ai_hero_task_resource_target_snapshot(session, target_id)
+		if not target_view.is_empty():
+			if controller_before == "":
+				controller_before = String(target_view.get("controller_id", ""))
+			target_label = String(target_view.get("target_label", target_label))
+			target_x = int(target_view.get("x", target_x))
+			target_y = int(target_view.get("y", target_y))
+	var validation := "valid"
+	var task_status := String(options.get("task_status", "candidate"))
+	if task_class == "recover_commander":
+		task_status = "blocked"
+		validation = "invalid_actor_recovering"
+	elif task_class == "rebuild_host":
+		task_status = "blocked"
+		validation = "invalid_actor_rebuilding"
+	elif target_kind == "resource" and ai_hero_task_resource_target_snapshot(session, target_id).is_empty():
+		task_status = "invalid"
+		validation = "invalid_target_missing"
+	validation = String(options.get("last_validation", validation))
+	var reservation := _ai_hero_task_default_reservation(task_class, target_kind, target_id)
+	var active_link := commander_role_active_encounter_link(session, faction_id, actor_id)
+	return {
+		"task_id": task_id,
+		"task_status": task_status,
+		"owner_faction_id": faction_id,
+		"actor_kind": "commander_roster",
+		"actor_id": actor_id,
+		"actor_label": actor_label,
+		"actor_active_linked": bool(active_link.get("linked", false)),
+		"active_placement_id": String(active_link.get("placement_id", "")),
+		"source_kind": AI_HERO_TASK_SOURCE_KIND,
+		"source_id": source_id,
+		"source_role": source_role,
+		"source_timing": String(role_record.get("timing", options.get("source_timing", "before_turn"))),
+		"source_policy": String(role_record.get("state_policy", "report_only")),
+		"task_class": task_class,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label,
+		"target_x": target_x,
+		"target_y": target_y,
+		"target_controller_before": controller_before,
+		"target_controller_after": String(options.get("target_controller_after", controller_before)),
+		"target_owner_expected": String(options.get("target_owner_expected", _ai_hero_task_target_owner_expected(task_class, controller_before, faction_id))),
+		"front_id": String(role_record.get("front_id", commander_role_front_id(String(session.scenario_id) if session != null else "", target_kind, target_id))),
+		"origin_kind": "town",
+		"origin_id": String(options.get("origin_id", commander_role_origin_id(String(session.scenario_id) if session != null else "", faction_id))),
+		"priority_reason_codes": _normalize_string_array(role_record.get("priority_reason_codes", [])),
+		"assigned_day": assigned_day,
+		"expires_day": assigned_day + 3,
+		"continuity_policy": "persist_until_invalid",
+		"route_policy": "derive_route_on_turn",
+		"reservation": reservation,
+		"claim_status": String(options.get("claim_status", "")),
+		"last_validation": validation,
+		"state_policy": AI_HERO_TASK_STATE_POLICY,
+	}
+
+static func ai_hero_task_candidate_id(
+	scenario_id: String,
+	faction_id: String,
+	actor_id: String,
+	task_class: String,
+	target_kind: String,
+	target_id: String,
+	assigned_day: int,
+	local_sequence: int
+) -> String:
+	return "task:%s:%s:%s:%s:%s:%s:day_%d:seq_%d" % [
+		scenario_id,
+		faction_id,
+		actor_id,
+		task_class,
+		target_kind,
+		target_id,
+		assigned_day,
+		max(1, local_sequence),
+	]
+
+static func ai_hero_task_resource_target_snapshot(
+	session: SessionStateStoreScript.SessionData,
+	target_id: String
+) -> Dictionary:
+	if session == null or target_id == "":
+		return {}
+	var node_result := _find_resource_by_placement(session, target_id)
+	var node: Dictionary = node_result.get("node", {})
+	if int(node_result.get("index", -1)) < 0:
+		return {}
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	return {
+		"target_kind": "resource",
+		"target_id": target_id,
+		"target_label": String(site.get("name", target_id)),
+		"controller_id": String(node.get("collected_by_faction_id", "")),
+		"site_id": String(node.get("site_id", "")),
+		"x": int(node.get("x", 0)),
+		"y": int(node.get("y", 0)),
+		"state_policy": "derived",
+	}
+
+static func ai_hero_task_apply_reservations(tasks_value: Variant) -> Array:
+	var tasks: Array = tasks_value.duplicate(true) if tasks_value is Array else []
+	var exclusive_by_key := {}
+	for index in range(tasks.size()):
+		if not (tasks[index] is Dictionary):
+			continue
+		var task: Dictionary = tasks[index]
+		var reservation: Dictionary = task.get("reservation", {})
+		if String(reservation.get("reservation_scope", "")) != "exclusive_target":
+			continue
+		var key := String(reservation.get("reservation_key", ""))
+		if key == "":
+			continue
+		if not exclusive_by_key.has(key):
+			exclusive_by_key[key] = []
+		exclusive_by_key[key].append(index)
+	for key in exclusive_by_key.keys():
+		var indexes: Array = exclusive_by_key[key]
+		if indexes.size() <= 1:
+			continue
+		indexes.sort_custom(func(a: int, b: int) -> bool:
+			return _ai_hero_task_reservation_sort_key(tasks[a]) < _ai_hero_task_reservation_sort_key(tasks[b])
+		)
+		var primary_index := int(indexes[0])
+		var primary_task: Dictionary = tasks[primary_index]
+		var primary_reservation: Dictionary = primary_task.get("reservation", {})
+		primary_reservation["reservation_status"] = "primary"
+		primary_task["reservation"] = primary_reservation
+		if String(primary_task.get("last_validation", "")) == "invalid_target_reserved":
+			primary_task["last_validation"] = "valid"
+			primary_task["task_status"] = "candidate"
+		tasks[primary_index] = primary_task
+		for loser_position in range(1, indexes.size()):
+			var loser_index := int(indexes[loser_position])
+			var loser: Dictionary = tasks[loser_index]
+			var loser_reservation: Dictionary = loser.get("reservation", {})
+			loser_reservation["reservation_status"] = "rejected_duplicate"
+			loser_reservation["reservation_scope"] = "exclusive_target"
+			loser["reservation"] = loser_reservation
+			loser["task_status"] = "invalid"
+			loser["last_validation"] = "invalid_target_reserved"
+			loser["invalidated_by_task_id"] = String(primary_task.get("task_id", ""))
+			tasks[loser_index] = loser
+	return tasks
+
+static func ai_hero_task_transition_from_arrival(retake_task: Dictionary, arrival: Dictionary) -> Dictionary:
+	var task_target := "%s:%s" % [String(retake_task.get("target_kind", "")), String(retake_task.get("target_id", ""))]
+	var arrival_target := "%s:%s" % [String(arrival.get("target_kind", "")), String(arrival.get("target_id", ""))]
+	var owner_faction_id := String(retake_task.get("owner_faction_id", ""))
+	var controller_after := String(arrival.get("target_controller_after", ""))
+	var completed := (
+		String(retake_task.get("task_class", "")) == "retake_site"
+		and task_target == arrival_target
+		and owner_faction_id != ""
+		and controller_after == owner_faction_id
+	)
+	var reservation: Dictionary = retake_task.get("reservation", {})
+	return {
+		"task_id": String(retake_task.get("task_id", "")),
+		"target_kind": String(retake_task.get("target_kind", "")),
+		"target_id": String(retake_task.get("target_id", "")),
+		"arrival_placement_id": String(arrival.get("placement_id", "")),
+		"target_controller_before": String(arrival.get("target_controller_before", "")),
+		"target_controller_after": controller_after,
+		"transition_result": "completed_by_controller_flip" if completed else "no_completion",
+		"retake_open_after_arrival": not completed,
+		"released_reservation_key": String(reservation.get("reservation_key", "")) if completed else "",
+		"last_validation_after_arrival": "invalid_controller_changed" if completed else String(retake_task.get("last_validation", "")),
+		"state_policy": "derived",
+	}
+
+static func ai_hero_task_old_save_absence_check(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var saved_present := false
+	var saved_count := 0
+	if session != null:
+		for state_value in session.overworld.get("enemy_states", []):
+			if not (state_value is Dictionary):
+				continue
+			var state: Dictionary = state_value
+			if not state.has("hero_task_state"):
+				continue
+			saved_present = true
+			var task_state = state.get("hero_task_state", {})
+			if task_state is Dictionary:
+				var tasks = task_state.get("tasks", [])
+				if tasks is Array:
+					saved_count += tasks.size()
+	var save_version := int(SessionStateStoreScript.SAVE_VERSION)
+	return {
+		"ok": not saved_present and saved_count == 0,
+		"saved_task_board_present": saved_present,
+		"saved_task_count": saved_count,
+		"derived_candidate_tasks_allowed": true,
+		"save_version_before": save_version,
+		"save_version_after": save_version,
+		"normalization_policy": "missing_hero_task_state_means_no_saved_tasks",
+		"write_check": "no_hero_task_state_write",
+		"state_policy": "derived",
+	}
+
+static func ai_hero_task_public_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	candidate_task: Dictionary,
+	sequence: int,
+	event_type: String = "ai_hero_task_candidate"
+) -> Dictionary:
+	var reason_codes := _normalize_string_array(candidate_task.get("priority_reason_codes", []))
+	var public_reason := _public_reason_from_codes(reason_codes)
+	if public_reason == "" and String(candidate_task.get("task_class", "")) == "recover_commander":
+		public_reason = "commander recovering"
+	elif public_reason == "" and String(candidate_task.get("task_class", "")) == "rebuild_host":
+		public_reason = "commander rebuilding"
+	var actor_label := String(candidate_task.get("actor_label", candidate_task.get("actor_id", "")))
+	var target_label := String(candidate_task.get("target_label", candidate_task.get("target_id", "")))
+	var summary := "%s has %s intent for %s" % [
+		actor_label,
+		String(candidate_task.get("task_class", "front")),
+		target_label,
+	]
+	if public_reason != "":
+		summary += " (%s)" % public_reason
+	summary += "."
+	var day := int(candidate_task.get("assigned_day", int(session.day) if session != null else 0))
+	var faction_id := String(candidate_task.get("owner_faction_id", config.get("faction_id", "")))
+	var actor_id := String(candidate_task.get("actor_id", ""))
+	var target_id := String(candidate_task.get("target_id", ""))
+	return {
+		"event_id": "%d:%s:%s:%s:%s:%d" % [day, faction_id, event_type, actor_id, target_id, sequence],
+		"day": day,
+		"sequence": sequence,
+		"event_type": event_type,
+		"faction_id": faction_id,
+		"faction_label": String(config.get("label", faction_id)),
+		"actor_id": actor_id,
+		"actor_label": actor_label,
+		"task_class": String(candidate_task.get("task_class", "")),
+		"target_kind": String(candidate_task.get("target_kind", "")),
+		"target_id": target_id,
+		"target_label": target_label,
+		"front_id": String(candidate_task.get("front_id", "")),
+		"visibility": "hidden_debug",
+		"public_importance": _ai_hero_task_public_importance(candidate_task),
+		"summary": summary,
+		"reason_codes": reason_codes,
+		"public_reason": public_reason,
+		"state_policy": AI_HERO_TASK_STATE_POLICY,
+	}
+
+static func ai_hero_task_public_leak_check(public_surfaces: Variant) -> Dictionary:
+	var stack := [public_surfaces]
+	var checked_events := 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if not (value is Dictionary):
+			var value_text := String(value)
+			for token in AI_HERO_TASK_BLOCKED_PUBLIC_TOKENS:
+				if value_text.contains(String(token)):
+					return {"ok": false, "error": "public task surface leaked token %s" % String(token)}
+			continue
+		if String(value.get("event_type", "")) != "":
+			checked_events += 1
+			for key in value.keys():
+				if String(key) not in AI_HERO_TASK_PUBLIC_EVENT_KEYS:
+					return {"ok": false, "error": "%s leaked non-compact key %s" % [value.get("event_type", "event"), key]}
+		var text := JSON.stringify(value)
+		for token in AI_HERO_TASK_BLOCKED_PUBLIC_TOKENS:
+			if text.contains(String(token)):
+				return {"ok": false, "error": "%s leaked blocked token %s" % [value.get("event_type", "event"), token]}
+		for nested_key in value.keys():
+			var nested = value[nested_key]
+			if nested is Array or nested is Dictionary:
+				stack.append(nested)
+	return {
+		"ok": true,
+		"checked_events": checked_events,
+		"allowed_public_event_keys": AI_HERO_TASK_PUBLIC_EVENT_KEYS,
+		"blocked_public_tokens": AI_HERO_TASK_BLOCKED_PUBLIC_TOKENS,
+	}
+
+static func ai_hero_task_candidate_task_id_check(tasks: Array) -> Dictionary:
+	var ids := {}
+	var checked := 0
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			return {"ok": false, "error": "candidate task record is not a dictionary"}
+		var task: Dictionary = task_value
+		var task_id := String(task.get("task_id", ""))
+		var source_id := String(task.get("source_id", ""))
+		var parts := task_id.split(":")
+		if parts.size() != 9 or parts[0] != "task":
+			return {"ok": false, "error": "invalid candidate task id format %s" % task_id}
+		if not String(parts[7]).begins_with("day_") or not String(parts[8]).begins_with("seq_"):
+			return {"ok": false, "error": "candidate task id missing day/sequence %s" % task_id}
+		if task_id.contains(" ") or task_id.contains("/") or task_id.contains("\\"):
+			return {"ok": false, "error": "candidate task id contains display/path text %s" % task_id}
+		if ids.has(task_id):
+			return {"ok": false, "error": "duplicate candidate task id %s" % task_id}
+		if source_id == "" or source_id == task_id:
+			return {"ok": false, "error": "candidate task %s has invalid source id %s" % [task_id, source_id]}
+		ids[task_id] = true
+		checked += 1
+	return {"ok": true, "checked_tasks": checked, "task_ids": ids.keys()}
+
+static func ai_hero_task_actor_ownership_check(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	tasks: Array
+) -> Dictionary:
+	var roster := commander_roster_for_faction(session, faction_id)
+	var checked := 0
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("owner_faction_id", "")) != faction_id:
+			return {"ok": false, "error": "task owner mismatch for %s" % String(task.get("task_id", ""))}
+		if String(task.get("actor_kind", "")) != "commander_roster":
+			return {"ok": false, "error": "unsupported task actor kind %s" % String(task.get("actor_kind", ""))}
+		var actor_id := String(task.get("actor_id", ""))
+		if _commander_roster_entry(roster, actor_id).is_empty():
+			return {"ok": false, "error": "task actor %s missing from %s roster" % [actor_id, faction_id]}
+		checked += 1
+	return {"ok": true, "checked_tasks": checked, "actor_kind": "commander_roster"}
+
+static func ai_hero_task_target_ownership_check(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	tasks: Array
+) -> Dictionary:
+	var checked := 0
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		var target_kind := String(task.get("target_kind", ""))
+		var task_class := String(task.get("task_class", ""))
+		if target_kind == "resource":
+			var target_snapshot := ai_hero_task_resource_target_snapshot(session, String(task.get("target_id", "")))
+			if target_snapshot.is_empty():
+				return {"ok": false, "error": "task target missing %s" % String(task.get("target_id", ""))}
+			var before_controller := String(task.get("target_controller_before", ""))
+			if task_class == "retake_site" and before_controller == faction_id:
+				return {"ok": false, "error": "retake task target already controlled by owner %s" % String(task.get("target_id", ""))}
+			if task_class in ["defend_front", "stabilize_front"] and before_controller != faction_id:
+				return {"ok": false, "error": "%s target not owner-held %s" % [task_class, String(task.get("target_id", ""))]}
+		elif target_kind == "commander":
+			if String(task.get("target_id", "")) != String(task.get("actor_id", "")):
+				return {"ok": false, "error": "commander task target must be its actor"}
+		else:
+			return {"ok": false, "error": "unsupported task target kind %s" % target_kind}
+		checked += 1
+	return {"ok": true, "checked_tasks": checked}
+
+static func ai_hero_task_role_to_task_source_check(tasks: Array) -> Dictionary:
+	var checked := 0
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		if String(task.get("source_kind", "")) != AI_HERO_TASK_SOURCE_KIND:
+			return {"ok": false, "error": "task source kind is not commander role adapter"}
+		if String(task.get("state_policy", "")) != AI_HERO_TASK_STATE_POLICY:
+			return {"ok": false, "error": "task state policy is not report-only"}
+		if _ai_hero_task_class_for_role(String(task.get("source_role", "")), String(task.get("target_kind", "")), _ai_hero_task_role_status_from_task_class(String(task.get("task_class", "")))) != String(task.get("task_class", "")):
+			return {"ok": false, "error": "source role %s did not map to task class %s" % [task.get("source_role", ""), task.get("task_class", "")]}
+		if String(task.get("source_id", "")) == "" or String(task.get("source_id", "")) == String(task.get("task_id", "")):
+			return {"ok": false, "error": "task source id is missing or reused"}
+		checked += 1
+	return {"ok": true, "checked_tasks": checked, "source_kind": AI_HERO_TASK_SOURCE_KIND}
+
+static func ai_hero_task_target_reservation_check(tasks: Array) -> Dictionary:
+	var primary_by_key := {}
+	var checked := 0
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		var task_class := String(task.get("task_class", ""))
+		var reservation: Dictionary = task.get("reservation", {})
+		var scope := String(reservation.get("reservation_scope", ""))
+		var status := String(reservation.get("reservation_status", ""))
+		var key := String(reservation.get("reservation_key", ""))
+		if task_class in AI_HERO_TASK_EXCLUSIVE_CLASSES:
+			if String(task.get("task_status", "")) == "completed" and status == "released":
+				checked += 1
+				continue
+			if scope != "exclusive_target" or key == "":
+				return {"ok": false, "error": "%s task missing exclusive reservation" % task_class}
+			if status == "primary":
+				if primary_by_key.has(key):
+					return {"ok": false, "error": "duplicate primary reservation for %s" % key}
+				primary_by_key[key] = String(task.get("task_id", ""))
+		elif task_class == "stabilize_front":
+			if scope not in ["shared_front", "none"]:
+				return {"ok": false, "error": "stabilizer used invalid reservation scope %s" % scope}
+		elif task_class in ["recover_commander", "rebuild_host"]:
+			if scope != "none":
+				return {"ok": false, "error": "%s must not reserve map targets" % task_class}
+		checked += 1
+	return {
+		"ok": true,
+		"checked_tasks": checked,
+		"primary_reservation_count": primary_by_key.keys().size(),
+		"primary_reservations": primary_by_key,
+	}
+
+static func ai_hero_task_invalidation_check(tasks: Array, transitions: Array = []) -> Dictionary:
+	var checked := 0
+	var codes := {}
+	for task_value in tasks:
+		if not (task_value is Dictionary):
+			continue
+		var task: Dictionary = task_value
+		var validation := String(task.get("last_validation", ""))
+		if validation == "":
+			return {"ok": false, "error": "task missing validation %s" % String(task.get("task_id", ""))}
+		codes[validation] = int(codes.get(validation, 0)) + 1
+		if validation == "invalid_target_reserved" and String(task.get("invalidated_by_task_id", "")) == "":
+			return {"ok": false, "error": "duplicate-reserved task missing invalidating task id"}
+		if String(task.get("task_class", "")) in ["recover_commander", "rebuild_host"] and String(task.get("reservation", {}).get("reservation_scope", "")) != "none":
+			return {"ok": false, "error": "blocked commander task reserved a map target"}
+		checked += 1
+	for transition_value in transitions:
+		if not (transition_value is Dictionary):
+			continue
+		var transition: Dictionary = transition_value
+		if String(transition.get("transition_result", "")) == "completed_by_controller_flip":
+			if bool(transition.get("retake_open_after_arrival", true)):
+				return {"ok": false, "error": "completed controller flip still leaves retake open"}
+			if String(transition.get("last_validation_after_arrival", "")) != "invalid_controller_changed":
+				return {"ok": false, "error": "controller flip transition missing invalid_controller_changed"}
+			codes["invalid_controller_changed"] = int(codes.get("invalid_controller_changed", 0)) + 1
+	return {"ok": true, "checked_tasks": checked, "validation_codes": codes}
+
+static func _ai_hero_task_class_for_role(role: String, target_kind: String, role_status: String = "") -> String:
+	if role == COMMANDER_ROLE_RAIDER and target_kind == "town":
+		return "raid_town"
+	if role == COMMANDER_ROLE_RAIDER:
+		return "contest_site"
+	if role == COMMANDER_ROLE_RETAKER:
+		return "retake_site"
+	if role == COMMANDER_ROLE_DEFENDER:
+		return "defend_front"
+	if role == COMMANDER_ROLE_STABILIZER:
+		return "stabilize_front"
+	if role == COMMANDER_ROLE_RECOVERING and role_status == "cooldown":
+		return "recover_commander"
+	if role == COMMANDER_ROLE_RECOVERING and role_status == "rebuilding":
+		return "rebuild_host"
+	return "reserve"
+
+static func _ai_hero_task_role_status_from_task_class(task_class: String) -> String:
+	if task_class == "recover_commander":
+		return "cooldown"
+	if task_class == "rebuild_host":
+		return "rebuilding"
+	return "assigned"
+
+static func _ai_hero_task_source_id(
+	scenario_id: String,
+	faction_id: String,
+	actor_id: String,
+	role: String,
+	target_kind: String,
+	target_id: String,
+	assigned_day: int
+) -> String:
+	if scenario_id == "" or faction_id == "" or actor_id == "" or role == "" or target_kind == "" or target_id == "":
+		return ""
+	return "role:%s:%s:%s:%s:%s:%s:day_%d" % [
+		scenario_id,
+		faction_id,
+		actor_id,
+		role,
+		target_kind,
+		target_id,
+		assigned_day,
+	]
+
+static func _ai_hero_task_default_reservation(task_class: String, target_kind: String, target_id: String) -> Dictionary:
+	if task_class in AI_HERO_TASK_EXCLUSIVE_CLASSES:
+		return {
+			"reservation_status": "primary",
+			"reservation_scope": "exclusive_target",
+			"reservation_key": "%s:%s" % [target_kind, target_id],
+		}
+	if task_class == "stabilize_front":
+		return {
+			"reservation_status": "shared",
+			"reservation_scope": "shared_front",
+			"reservation_key": "",
+		}
+	return {
+		"reservation_status": "none",
+		"reservation_scope": "none",
+		"reservation_key": "",
+	}
+
+static func _ai_hero_task_target_owner_expected(task_class: String, controller_id: String, faction_id: String) -> String:
+	if task_class in ["retake_site", "contest_site"] and controller_id == "player":
+		return "player-held contested resource"
+	if task_class in ["defend_front", "stabilize_front"] and controller_id == faction_id:
+		return "owner-held front"
+	if task_class in ["recover_commander", "rebuild_host"]:
+		return "own commander"
+	return "contested target"
+
+static func _ai_hero_task_reservation_sort_key(task: Dictionary) -> String:
+	var active_rank := "0" if bool(task.get("actor_active_linked", false)) else "1"
+	var class_rank_map := {
+		"retake_site": 0,
+		"defend_front": 1,
+		"contest_site": 2,
+		"stabilize_front": 3,
+		"raid_town": 4,
+		"reserve": 5,
+		"recover_commander": 6,
+		"rebuild_host": 7,
+	}
+	var class_rank := int(class_rank_map.get(String(task.get("task_class", "")), 99))
+	return "%s:%02d:%s:%s" % [
+		active_rank,
+		class_rank,
+		String(task.get("actor_id", "")),
+		String(task.get("task_id", "")),
+	]
+
+static func _ai_hero_task_public_importance(task: Dictionary) -> String:
+	var task_class := String(task.get("task_class", ""))
+	if task_class in ["retake_site", "defend_front", "raid_town"]:
+		return "high"
+	if task_class in ["contest_site", "stabilize_front"]:
+		return "medium"
+	return "low"
 
 static func _turn_transcript_role_proposal(
 	session: SessionStateStoreScript.SessionData,
