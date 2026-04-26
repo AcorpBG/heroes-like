@@ -33,6 +33,8 @@ func _run() -> void:
 		return
 	if not _assert_object_economy_ui_contract(shell):
 		return
+	if not _assert_artifact_reward_visibility_contract(shell):
+		return
 	if not await _assert_enemy_activity_feed_contract(shell):
 		return
 	if not await _assert_diagonal_movement_contract(shell, map_node):
@@ -328,6 +330,71 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 		session,
 		Vector2i(int(original_hero_position.get("x", 0)), int(original_hero_position.get("y", 0)))
 	)
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	return true
+
+func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_select_tile") or not shell.has_method("validation_hover_tile") or not shell.has_method("validation_perform_primary_action"):
+		push_error("Overworld smoke: shell is missing artifact reward visibility validation hooks.")
+		get_tree().quit(1)
+		return false
+	var session = SessionState.ensure_active_session()
+	var original_fog = session.overworld.get("fog", {}).duplicate(true)
+	var original_hero = session.overworld.get("hero", {}).duplicate(true)
+	var original_player_heroes = session.overworld.get("player_heroes", []).duplicate(true)
+	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+	var original_artifact_nodes = session.overworld.get("artifact_nodes", []).duplicate(true)
+
+	_set_active_hero_position(session, Vector2i(1, 0))
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	var artifact_selection: Dictionary = shell.call("validation_select_tile", 2, 0)
+	if not _assert_text_contains_all(
+		"River Pass artifact inspection UI",
+		[
+			String(artifact_selection.get("context_summary", "")),
+			String(artifact_selection.get("selected_tile_rail_text", "")),
+			String(artifact_selection.get("primary_action", {}).get("summary", "")),
+		],
+		["Trailsinger Boots", "Slot Boots", "Footgear", "Exploration reward", "+2 move", "Will auto-equip"]
+	):
+		return false
+
+	shell.call("validation_select_tile", 1, 0)
+	var artifact_hover: Dictionary = shell.call("validation_hover_tile", 2, 0)
+	if not _assert_text_contains_all(
+		"River Pass artifact hover tooltip",
+		[String(artifact_hover.get("map_tooltip", ""))],
+		["Trailsinger Boots", "Exploration reward", "+2 move"]
+	):
+		return false
+
+	shell.call("validation_select_tile", 2, 0)
+	var collect_result: Dictionary = shell.call("validation_perform_primary_action")
+	if not bool(collect_result.get("ok", false)):
+		push_error("Overworld smoke: artifact primary order did not collect through live UI. result=%s" % collect_result)
+		get_tree().quit(1)
+		return false
+	if not _assert_text_contains_all(
+		"River Pass artifact collection message",
+		[String(collect_result.get("message", ""))],
+		["Trailsinger Boots", "Exploration reward", "+2 move", "Equipped in Boots slot"]
+	):
+		return false
+	var commander_state: Dictionary = shell.call("validation_snapshot").get("commander_state", {})
+	if "artifact_trailsinger_boots" not in commander_state.get("artifact_ids", []):
+		push_error("Overworld smoke: collected artifact was not visible in commander state. state=%s" % commander_state)
+		get_tree().quit(1)
+		return false
+
+	session.overworld["fog"] = original_fog
+	session.overworld["hero"] = original_hero
+	session.overworld["player_heroes"] = original_player_heroes
+	session.overworld["hero_position"] = original_hero_position
+	session.overworld["movement"] = original_movement
+	session.overworld["artifact_nodes"] = original_artifact_nodes
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	return true
