@@ -534,6 +534,65 @@ static func town_departure_confirmation(session: SessionStateStoreScript.Session
 		"ready_response_action_count": int(handoff.get("ready_response_action_count", 0)),
 	}
 
+static func town_order_target_handoff(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {
+			"active": false,
+			"visible_text": "Order target: no active town.",
+			"tooltip_text": "Town Order Target\n- No active town.",
+			"next_step": "Return to the overworld.",
+		}
+
+	var action := _town_order_target_action(session, town)
+	var departure := town_departure_confirmation(session)
+	if action.is_empty():
+		var fallback_next := _next_town_action_line(session, town)
+		var fallback_visible := "Order target: no open order | Next: %s" % _short_town_handoff_text(fallback_next, 64)
+		return {
+			"active": false,
+			"visible_text": fallback_visible,
+			"tooltip_text": "Town Order Target\n- Target: no open order\n- Next practical action: %s\n- Departure: %s" % [
+				fallback_next,
+				String(departure.get("visible_text", "")),
+			],
+			"next_step": fallback_next,
+		}
+
+	var lane := String(action.get("lane", "order"))
+	var label := _short_action_label(action, "Town order")
+	var where := _town_order_ui_surface_for_lane(lane)
+	var readiness := _town_order_readiness_line(action, lane)
+	var impact := _town_order_impact_line(action, lane)
+	var next_step := _town_order_next_step(action, lane, label, where, readiness)
+	var visible := "Order target: %s | %s | %s" % [
+		_short_town_handoff_text(label, 36),
+		_short_town_handoff_text(readiness, 34),
+		where,
+	]
+	var tooltip := "Town Order Target\n- Target: %s\n- Lane: %s\n- Where: %s\n- Readiness: %s\n- Why it matters: %s\n- Next practical action: %s\n- Departure: %s" % [
+		label,
+		_town_order_lane_label(lane),
+		where,
+		readiness,
+		impact,
+		next_step,
+		String(departure.get("visible_text", "")),
+	]
+	return {
+		"active": true,
+		"action_id": String(action.get("id", "")),
+		"lane": lane,
+		"target_label": label,
+		"ui_surface": where,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"disabled": bool(action.get("disabled", false)),
+	}
+
 static func town_action_consequence_signature(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():
@@ -1411,6 +1470,142 @@ static func _town_recommendation_action(session: SessionStateStoreScript.Session
 			best_score = score
 			best_action = action
 	return best_action
+
+static func _town_order_target_action(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	for action in get_response_actions(session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var response: Dictionary = action.duplicate(true)
+			response["lane"] = "response"
+			return response
+
+	var recommendation := _town_recommendation_action(session, town)
+	if not recommendation.is_empty():
+		var recommended := recommendation.duplicate(true)
+		var recommended_id := String(recommended.get("id", ""))
+		if recommended_id.begins_with("build:"):
+			recommended["lane"] = "build"
+		elif recommended_id.begins_with("recruit:"):
+			recommended["lane"] = "recruit"
+		else:
+			recommended["lane"] = "order"
+		return recommended
+
+	for action in get_spell_learning_actions(session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var study: Dictionary = action.duplicate(true)
+			study["lane"] = "study"
+			return study
+	for action in get_market_actions(session):
+		if action is Dictionary and not bool(action.get("disabled", false)):
+			var market: Dictionary = action.duplicate(true)
+			market["lane"] = "market"
+			return market
+	for action in get_build_actions(session):
+		if action is Dictionary:
+			var build: Dictionary = action.duplicate(true)
+			build["lane"] = "build"
+			return build
+	for action in get_recruit_actions(session):
+		if action is Dictionary:
+			var recruit: Dictionary = action.duplicate(true)
+			recruit["lane"] = "recruit"
+			return recruit
+	return {}
+
+static func _town_order_ui_surface_for_lane(lane: String) -> String:
+	match lane:
+		"build":
+			return "Build tab"
+		"recruit", "hero", "tavern", "transfer", "specialty":
+			return "Muster tab"
+		"study", "artifact":
+			return "Spells tab"
+		"market":
+			return "Trade tab"
+		"response":
+			return "Log tab"
+		_:
+			return "Town orders"
+
+static func _town_order_lane_label(lane: String) -> String:
+	match lane:
+		"build":
+			return "Construction"
+		"recruit":
+			return "Recruitment"
+		"response":
+			return "Strategic response"
+		"study":
+			return "Spell study"
+		"market":
+			return "Exchange"
+		"hero":
+			return "Commander"
+		"tavern":
+			return "Hero hire"
+		"transfer":
+			return "Transfer"
+		"artifact":
+			return "Artifact"
+		"specialty":
+			return "Specialty"
+		_:
+			return "Town order"
+
+static func _town_order_readiness_line(action: Dictionary, lane: String) -> String:
+	if lane == "build":
+		if bool(action.get("direct_affordable", false)):
+			return "Ready now"
+		if bool(action.get("market_coverable", false)):
+			var market_summary := String(action.get("market_summary", ""))
+			return "Needs exchange first%s" % (": %s" % market_summary if market_summary != "" else "")
+		return String(action.get("disabled_reason", "Blocked by current town state"))
+	if lane == "recruit":
+		var direct_count := int(action.get("direct_affordable_count", 0))
+		if direct_count > 0:
+			return "Ready x%d" % direct_count
+		var market_count := int(action.get("market_affordable_count", 0))
+		if market_count > 0:
+			var recruit_market_summary := String(action.get("market_summary", ""))
+			return "Needs exchange x%d%s" % [
+				market_count,
+				": %s" % recruit_market_summary if recruit_market_summary != "" else "",
+			]
+		return String(action.get("disabled_reason", "Blocked by current town state"))
+	if bool(action.get("disabled", false)):
+		return String(action.get("disabled_reason", "Blocked by current town state"))
+	var affordability := String(action.get("affordability_label", ""))
+	if affordability != "":
+		return affordability
+	return "Ready now"
+
+static func _town_order_impact_line(action: Dictionary, lane: String) -> String:
+	var impact := String(action.get("impact_line", "")).strip_edges()
+	if impact != "":
+		return impact.trim_suffix(".")
+	var recommendation := String(action.get("recommendation_line", "")).strip_edges()
+	if recommendation != "":
+		return recommendation.trim_suffix(".")
+	var delivery := String(action.get("delivery_summary", "")).strip_edges()
+	if delivery != "":
+		return delivery.trim_suffix(".")
+	var summary := String(action.get("summary", "")).strip_edges()
+	if summary != "":
+		var summary_lines := summary.split("\n", false)
+		for line_value in summary_lines:
+			var line := String(line_value).strip_edges()
+			if line != "":
+				return line.trim_suffix(".")
+	return "%s keeps the town plan moving" % _town_order_lane_label(lane).to_lower()
+
+static func _town_order_next_step(action: Dictionary, lane: String, label: String, where: String, readiness: String) -> String:
+	if bool(action.get("disabled", false)):
+		return "Resolve %s before pressing %s in %s." % [readiness.to_lower(), label, where]
+	if lane == "build" and bool(action.get("market_coverable", false)) and not bool(action.get("direct_affordable", false)):
+		return "Use the exchange path, then press %s in %s." % [label, where]
+	if lane == "recruit" and int(action.get("direct_affordable_count", 0)) <= 0 and int(action.get("market_affordable_count", 0)) > 0:
+		return "Use the exchange path, then press %s in %s." % [label, where]
+	return "Press %s in %s, or leave when town orders are set." % [label, where]
 
 static func _town_build_recommendation_score(town: Dictionary, action: Dictionary) -> int:
 	var building_id := String(action.get("id", "")).trim_prefix("build:")

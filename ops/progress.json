@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T22:05:57Z",
+  "updatedAt": "2026-04-26T22:15:54Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-target-handoff-cue-10184",
-  "currentSliceTitle": "Surface compact battle target handoff cues",
+  "currentSliceId": "town-order-target-handoff-cue-10184",
+  "currentSliceTitle": "Surface compact town order target handoff cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible battle UI polish: the battle footer now surfaces a Target handoff line using selected target, board-click intent, target cycling, movement intent, and action-readiness payloads, and the validation snapshot exposes the structured cue for focused smoke coverage. UI/readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
+  "currentSliceNotes": "Implemented compact visible town UI polish: the town dispatch rail now surfaces an Order target line using existing build, recruit, response, study, market, and departure payloads, with a structured validation snapshot and focused smoke coverage. UI/readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1766,6 +1766,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T22:03:13Z",
       "completedAt": "2026-04-26T22:05:57Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "town-order-target-handoff-cue-10184",
+      "title": "Surface compact town order target handoff cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T22:11:53Z",
+      "completedAt": "2026-04-26T22:15:54Z",
       "difficulty": "small"
     }
   ],

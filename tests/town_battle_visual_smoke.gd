@@ -64,6 +64,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_departure_confirmation_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_order_target_handoff_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_active_return_handoff_contract(shell, "Town", "Menu: Town"):
 		get_tree().quit(1)
 		return false
@@ -815,6 +818,48 @@ func _assert_town_departure_confirmation_contract(shell: Node) -> bool:
 			push_error("Town smoke: departure confirmation leaked internal strategy token %s: %s." % [leak_token, departure_text])
 			return false
 	return true
+
+func _assert_town_order_target_handoff_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell is missing town order target handoff validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var order_target: Dictionary = snapshot.get("town_order_target_handoff", {}) if snapshot.get("town_order_target_handoff", {}) is Dictionary else {}
+	var target_text := "\n".join([
+		String(snapshot.get("town_order_target_visible_text", "")),
+		String(snapshot.get("town_order_target_tooltip_text", "")),
+		String(snapshot.get("visible_consequence_text", "")),
+		String(snapshot.get("consequence_tooltip_text", "")),
+		String(order_target.get("target_label", "")),
+		String(order_target.get("ui_surface", "")),
+		String(order_target.get("readiness", "")),
+		String(order_target.get("why_it_matters", "")),
+		String(order_target.get("next_step", "")),
+	])
+	for token in ["Order target:", "Town Order Target", "Target:", "Lane:", "Where:", "Readiness:", "Why it matters:", "Next practical action:"]:
+		if not target_text.contains(token):
+			push_error("Town smoke: town order target handoff lost %s clarity: %s." % [token, target_text])
+			return false
+	if not String(snapshot.get("visible_consequence_text", "")).contains("Order target:"):
+		push_error("Town smoke: order target handoff is not visible in the town dispatch rail: %s." % snapshot)
+		return false
+	for key in ["action_id", "lane", "target_label", "ui_surface", "readiness", "why_it_matters", "next_step", "visible_text", "tooltip_text"]:
+		if String(order_target.get(key, "")) == "":
+			push_error("Town smoke: town order target handoff is missing structured %s: %s." % [key, order_target])
+			return false
+	var ui_surface := String(order_target.get("ui_surface", ""))
+	if not (ui_surface.contains("Build") or ui_surface.contains("Muster") or ui_surface.contains("Spells") or ui_surface.contains("Trade") or ui_surface.contains("Log") or ui_surface.contains("Town orders")):
+		push_error("Town smoke: town order target handoff did not name a usable town surface: %s." % order_target)
+		return false
+	for public_token in ["Ready", "Blocked", "exchange", "Press", "Use"]:
+		if target_text.contains(public_token):
+			for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+				if target_text.contains(leak_token):
+					push_error("Town smoke: town order target handoff leaked internal token %s: %s." % [leak_token, target_text])
+					return false
+			return true
+	push_error("Town smoke: town order target handoff did not expose a public readiness or action cue: %s." % target_text)
+	return false
 
 func _assert_town_production_overview(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):

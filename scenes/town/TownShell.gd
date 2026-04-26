@@ -246,12 +246,21 @@ func _refresh() -> void:
 	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
 	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 2)
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
+	var order_target := TownRules.town_order_target_handoff(_session)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
 	if town_context_surface.is_empty():
-		_set_compact_label(_event_label, dispatch_text, 2)
+		_set_compact_label(_event_label, "%s\n%s" % [String(order_target.get("visible_text", "")), dispatch_text], 2)
+		_event_label.tooltip_text = _join_tooltip_sections([
+			String(order_target.get("tooltip_text", "")),
+			dispatch_text,
+		])
 	else:
-		_set_compact_label(_event_label, "%s\n%s" % [String(town_context_surface.get("visible_text", "")), dispatch_text], 2)
-		_event_label.tooltip_text = String(town_context_surface.get("tooltip_text", _event_label.tooltip_text))
+		_set_compact_label(_event_label, "%s\n%s" % [String(town_context_surface.get("visible_text", "")), String(order_target.get("visible_text", ""))], 2)
+		_event_label.tooltip_text = _join_tooltip_sections([
+			String(town_context_surface.get("tooltip_text", "")),
+			String(order_target.get("tooltip_text", "")),
+			dispatch_text,
+		])
 	_town_stage_view.set_town_state(_session)
 	_refresh_save_slot_picker()
 	_rebuild_hero_actions()
@@ -320,6 +329,7 @@ func validation_snapshot() -> Dictionary:
 	var front := OverworldRules.town_front_state(_session, town)
 	var handoff := TownRules.town_handoff_recap(_session)
 	var departure := TownRules.town_departure_confirmation(_session)
+	var order_target := TownRules.town_order_target_handoff(_session)
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
 	return {
@@ -368,6 +378,9 @@ func validation_snapshot() -> Dictionary:
 		"town_handoff_tooltip_text": String(handoff.get("tooltip_text", "")),
 		"town_departure_confirmation": departure,
 		"town_departure_visible_text": String(departure.get("visible_text", "")),
+		"town_order_target_handoff": order_target,
+		"town_order_target_visible_text": String(order_target.get("visible_text", "")),
+		"town_order_target_tooltip_text": String(order_target.get("tooltip_text", "")),
 		"town_action_context": town_context_surface,
 		"town_action_context_text": String(town_context_surface.get("visible_text", "")),
 		"town_action_context_tooltip_text": String(town_context_surface.get("tooltip_text", "")),
