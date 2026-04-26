@@ -296,6 +296,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		"journal_summary": "",
 		"next_step_summary": "",
 		"next_play_action_summary": "",
+		"continuity_choice_summary": "",
 		"actions": [],
 	}
 	var progress_recap := describe_session_progress_recap(session, true)
@@ -305,6 +306,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 
 	if launch_mode == SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN:
 		var recap := CampaignProgression.outcome_recap(session)
+		model["continuity_choice_summary"] = CampaignProgression.outcome_continuity_choice(session)
 		var progression_lines := []
 		if progress_recap != "":
 			progression_lines.append(progress_recap)
@@ -332,6 +334,7 @@ static func build_outcome_model(session: SessionStateStoreScript.SessionData) ->
 		model["carryover_summary"] = "Skirmish runs do not import or export campaign carryover."
 		model["aftermath_summary"] = _build_skirmish_aftermath_summary(session, scenario)
 		model["journal_summary"] = "Campaign chronicle updates are only recorded for launched campaign chapters."
+		model["continuity_choice_summary"] = _skirmish_outcome_continuity_choice_line(session)
 		model["actions"] = _build_skirmish_outcome_actions(session)
 	return model
 
@@ -389,6 +392,11 @@ static func _build_skirmish_outcome_actions(session: SessionStateStoreScript.Ses
 			"disabled": false,
 		},
 	]
+
+static func _skirmish_outcome_continuity_choice_line(session: SessionStateStoreScript.SessionData) -> String:
+	if session.scenario_status == "victory":
+		return "Continuity choice: skirmish result stays self-contained; retry starts fresh, and return to menu can resume this outcome later."
+	return "Continuity choice: retry starts this skirmish fresh; no campaign carryover is banked, and return to menu can resume this outcome later."
 
 static func _build_skirmish_aftermath_summary(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
 	var lines := []

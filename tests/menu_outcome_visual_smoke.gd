@@ -358,6 +358,10 @@ func _assert_no_score_leak(label: String, texts: Array) -> bool:
 		"pressure_value",
 		"category_bonus",
 		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
 	]:
 		if joined.find(token) >= 0:
 			push_error("%s leaked internal score field '%s'. text=%s" % [label, token, joined])
@@ -404,14 +408,66 @@ func _run_outcome_smoke() -> bool:
 		[
 			String(snapshot.get("progression_summary", "")),
 			String(snapshot.get("next_step_summary", "")),
+			String(snapshot.get("continuity_choice_summary", "")),
 			String(snapshot.get("next_play_action_summary", "")),
 			String(snapshot.get("action_status", "")),
 			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Next play action:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Outcome skirmish continuity choice",
+		[
+			String(snapshot.get("continuity_choice_summary", "")),
+			String(snapshot.get("action_status", "")),
+		]
 	):
 		return false
 
 	shell.queue_free()
+	await get_tree().process_frame
+
+	var profile := CampaignRules.normalize_profile({})
+	var campaign_session = CampaignRules.build_session_bridge(
+		profile,
+		"river-pass",
+		"normal",
+		"campaign_reedfall"
+	)
+	campaign_session.scenario_status = "victory"
+	campaign_session.scenario_summary = "Smoke campaign victory outcome."
+	profile = CampaignRules.record_session_completion_bridge(profile, campaign_session)
+	CampaignProgression.profile = profile
+	SessionState.set_active_session(campaign_session)
+
+	var campaign_shell = load("res://scenes/results/ScenarioOutcomeShell.tscn").instantiate()
+	add_child(campaign_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var campaign_snapshot: Dictionary = campaign_shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"Outcome campaign continuity choice",
+		[
+			String(campaign_snapshot.get("progression_summary", "")),
+			String(campaign_snapshot.get("campaign_arc_summary", "")),
+			String(campaign_snapshot.get("carryover_summary", "")),
+			String(campaign_snapshot.get("continuity_choice_summary", "")),
+			String(campaign_snapshot.get("action_status", "")),
+		],
+		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu"]
+	):
+		return false
+	if not _assert_no_score_leak(
+		"Outcome campaign continuity choice",
+		[
+			String(campaign_snapshot.get("continuity_choice_summary", "")),
+			String(campaign_snapshot.get("action_status", "")),
+			String(campaign_snapshot.get("carryover_summary", "")),
+		]
+	):
+		return false
+
+	campaign_shell.queue_free()
 	await get_tree().process_frame
 	return true

@@ -77,6 +77,9 @@ func campaign_id_for_session(session: SessionStateStoreScript.SessionData) -> St
 func outcome_recap(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return CampaignRulesScript.build_outcome_recap_bridge(ensure_profile(), session)
 
+func outcome_continuity_choice(session: SessionStateStoreScript.SessionData) -> String:
+	return CampaignRulesScript.build_outcome_continuity_choice_bridge(ensure_profile(), session)
+
 func outcome_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	return CampaignRulesScript.build_outcome_actions_bridge(ensure_profile(), session)
 

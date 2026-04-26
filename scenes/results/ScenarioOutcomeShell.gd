@@ -63,9 +63,12 @@ func _refresh() -> void:
 	_refresh_save_surface()
 	var next_step_summary := String(_model.get("next_step_summary", ""))
 	var next_play_action_summary := String(_model.get("next_play_action_summary", ""))
+	var continuity_choice_summary := String(_model.get("continuity_choice_summary", ""))
 	var action_status_lines := []
 	if next_step_summary != "":
 		action_status_lines.append(next_step_summary)
+	if continuity_choice_summary != "":
+		action_status_lines.append(continuity_choice_summary)
 	if next_play_action_summary != "":
 		action_status_lines.append(next_play_action_summary)
 	var action_status_text := "\n".join(action_status_lines)
@@ -193,6 +196,7 @@ func validation_snapshot() -> Dictionary:
 		"aftermath_summary": String(_model.get("aftermath_summary", "")),
 		"journal_summary": String(_model.get("journal_summary", "")),
 		"next_step_summary": String(_model.get("next_step_summary", "")),
+		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
 		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
 		"action_status": _action_status_label.text,
 		"action_ids": action_ids,
