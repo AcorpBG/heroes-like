@@ -86,6 +86,13 @@ autowrap_mode = 3
 clip_text = true
 text = "Battle dispatch."
 
+[node name="BattleContext" type="Label" parent="ContentMargin/Content/Banner/BannerPad/BannerBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+clip_text = true
+text = "Battle context."
+
 [node name="MainRow" type="HBoxContainer" parent="ContentMargin/Content"]
 layout_mode = 2
 size_flags_horizontal = 3

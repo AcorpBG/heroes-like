@@ -72,6 +72,9 @@ func _run_battle_smoke() -> bool:
 		push_error("Battle smoke: battle board did not load.")
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_entry_context(shell):
+		get_tree().quit(1)
+		return false
 	if not board.has_method("validation_hex_layout_summary"):
 		push_error("Battle smoke: battle board does not expose hex layout validation.")
 		get_tree().quit(1)
@@ -200,6 +203,31 @@ func _run_battle_smoke() -> bool:
 
 	shell.queue_free()
 	await get_tree().process_frame
+	return true
+
+func _assert_battle_entry_context(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: battle shell does not expose validation snapshot.")
+		return false
+	var battle_context_label: Label = shell.get_node_or_null("%BattleContext")
+	if battle_context_label == null:
+		push_error("Battle smoke: battle entry context label did not load.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var entry_context := String(snapshot.get("entry_context", ""))
+	var visible_context := String(battle_context_label.text)
+	if not entry_context.contains("Matchup:") or not entry_context.contains("Forces:") or not entry_context.contains("Stakes:"):
+		push_error("Battle smoke: entry context did not expose matchup, force, and stakes lines: %s." % entry_context)
+		return false
+	if not entry_context.contains("Blackbranch Raiders") or not entry_context.contains("Difficulty Low"):
+		push_error("Battle smoke: entry context did not expose enemy force identity and encounter difficulty: %s." % entry_context)
+		return false
+	if not entry_context.contains("Friendly") or not entry_context.contains("Enemy") or not entry_context.contains("Reward"):
+		push_error("Battle smoke: entry context did not expose army framing and reward context: %s." % entry_context)
+		return false
+	if not visible_context.contains("Matchup:") or battle_context_label.tooltip_text != entry_context:
+		push_error("Battle smoke: live battle entry label is not carrying the validation entry context: visible=%s tooltip=%s snapshot=%s." % [visible_context, battle_context_label.tooltip_text, entry_context])
+		return false
 	return true
 
 func _first_player_town(session) -> Dictionary:
