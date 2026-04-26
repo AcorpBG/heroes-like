@@ -1980,6 +1980,18 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_timber_wagon | Site site_timber_wagon") < 0 or resource_text.find("Place: Resource reward pacing | Density 4-7 pickups/rewards per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
 		return false
+	if resource_text.find("Control: Uncollected; one visit can claim it.") < 0 or resource_text.find("Economy: one-time 150 gold, 2 wood") < 0:
+		_fail("Map editor smoke: tile text did not include practical resource-site control/reward inspection: %s." % resource_text)
+		return false
+	var guarded_resource_result: Dictionary = shell.call("validation_select_tile", 60, 36)
+	var guarded_resource_detail := _object_detail_for_family(guarded_resource_result.get("tile_inspection", {}), "resource")
+	var guarded_control := "%s\n%s" % [
+		String(guarded_resource_detail.get("control_summary", "")),
+		String(guarded_resource_detail.get("control_inspection", "")),
+	]
+	if guarded_control.find("Control held by Brasshollow Combine") < 0 or guarded_control.find("Guarded by Basalt Gatehouse Watch; clear guard to use site") < 0:
+		_fail("Map editor smoke: guarded resource-site inspection did not expose owner/control and guard link: detail=%s result=%s." % [guarded_resource_detail, guarded_resource_result])
+		return false
 
 	var town_result: Dictionary = shell.call("validation_select_tile", 23, 26)
 	var town_detail := _object_detail_for_family(town_result.get("tile_inspection", {}), "town")

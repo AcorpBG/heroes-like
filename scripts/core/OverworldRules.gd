@@ -3006,6 +3006,43 @@ static func describe_resource_site_surface(
 		parts.append("Support order ready")
 	return " | ".join(_non_empty_strings(parts))
 
+static func describe_resource_site_control_summary(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var parts := []
+	var control_line := _resource_site_control_brief(node, site)
+	if control_line != "":
+		parts.append(control_line)
+	var yield_line := _resource_site_yield_line(session, node, site)
+	if yield_line != "":
+		parts.append(yield_line)
+	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
+	if guard_line != "":
+		parts.append(guard_line)
+	return " | ".join(_non_empty_strings(parts))
+
+static func describe_resource_site_control_inspection(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var lines := []
+	var control_detail := _resource_site_control_detail(node, site)
+	if control_detail != "":
+		lines.append("Control: %s" % control_detail)
+	var yield_line := _resource_site_yield_line(session, node, site)
+	if yield_line != "":
+		lines.append("Economy: %s" % yield_line)
+	var route_line := _resource_site_route_line(session, node, site)
+	if route_line != "":
+		lines.append("Route: %s" % route_line)
+	var guard_line := _resource_site_guard_or_contest_line(session, node, site)
+	if guard_line != "":
+		lines.append("Guard: %s" % guard_line)
+	return "\n".join(lines)
+
 static func describe_resource_site_interaction_surface(node: Dictionary, site: Dictionary) -> String:
 	var map_object := ContentService.get_map_object_for_resource_site(String(node.get("site_id", "")))
 	var cadence := _resource_site_interaction_cadence(site, map_object)
@@ -3128,6 +3165,185 @@ static func _resource_site_control_label(node: Dictionary, site: Dictionary) -> 
 	if bool(node.get("collected", false)):
 		return "Collected"
 	return "Unclaimed"
+
+static func _resource_site_control_brief(node: Dictionary, site: Dictionary) -> String:
+	if _resource_site_is_persistent(site):
+		var controller := String(node.get("collected_by_faction_id", ""))
+		if controller == "":
+			return "Control unclaimed"
+		if controller == "player":
+			return "Control player held"
+		return "Control held by %s" % _controller_display_name(controller)
+	if bool(node.get("collected", false)):
+		var controller := String(node.get("collected_by_faction_id", ""))
+		if controller == "" or controller == "player":
+			return "State collected"
+		return "State collected by %s" % _controller_display_name(controller)
+	return "State uncollected"
+
+static func _resource_site_control_detail(node: Dictionary, site: Dictionary) -> String:
+	if _resource_site_is_persistent(site):
+		var controller := String(node.get("collected_by_faction_id", ""))
+		if controller == "":
+			return "Unclaimed; capture flips control."
+		if controller == "player":
+			return "Player held; income and support stay active while held."
+		return "%s held; reclaim to deny its income and support." % _controller_display_name(controller)
+	if bool(node.get("collected", false)):
+		var collected_day := int(node.get("collected_day", 0))
+		var day_clause := " on day %d" % collected_day if collected_day > 0 else ""
+		var controller := String(node.get("collected_by_faction_id", ""))
+		if controller == "" or controller == "player":
+			return "Collected%s." % day_clause
+		return "Collected by %s%s." % [_controller_display_name(controller), day_clause]
+	return "Uncollected; one visit can claim it."
+
+static func _resource_site_yield_line(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var parts := []
+	var claim_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+	var income_summary := _describe_resource_delta(site.get("control_income", {}))
+	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
+	var claim_recruits := _describe_recruit_delta(_resource_site_claim_recruits(site))
+	if _resource_site_is_persistent(site):
+		if claim_summary != "":
+			parts.append("claim %s" % claim_summary)
+		if income_summary != "":
+			parts.append("daily %s" % income_summary)
+		if weekly_summary != "":
+			parts.append("weekly %s" % weekly_summary)
+		if claim_recruits != "":
+			parts.append("capture recruits %s" % claim_recruits)
+	else:
+		var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+		if reward_summary != "":
+			parts.append("one-time %s" % reward_summary)
+	if _resource_site_is_repeatable(site):
+		var cost_summary := _describe_resource_delta(_resource_site_visit_cost(site))
+		if cost_summary != "":
+			parts.append("service cost %s" % cost_summary)
+		if _resource_site_repeat_ready(session, node, site):
+			parts.append("service ready")
+		elif bool(node.get("collected", false)):
+			parts.append("next service day %d" % _resource_site_next_visit_day(node, site))
+	var spell_id := String(site.get("learn_spell_id", ""))
+	if spell_id != "":
+		parts.append("teaches %s" % String(ContentService.get_spell(spell_id).get("name", spell_id)))
+	return ", ".join(_non_empty_strings(parts))
+
+static func _resource_site_route_line(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var parts := []
+	if session == null or node.is_empty():
+		return ""
+	var linked_town_result := _resource_node_linked_town(session, node, "player")
+	if int(linked_town_result.get("index", -1)) >= 0:
+		parts.append("Linked %s" % _town_name(linked_town_result.get("town", {})))
+	elif String(node.get("collected_by_faction_id", "")) == "player":
+		parts.append("No owned town support in range")
+	var response_state := _resource_site_response_state(session, node, site)
+	if bool(response_state.get("active", false)):
+		var response_line := "%s active %d day%s" % [
+			String(response_state.get("action_label", "Route security")),
+			int(response_state.get("remaining_days", 0)),
+			"" if int(response_state.get("remaining_days", 0)) == 1 else "s",
+		]
+		if String(response_state.get("commander_name", "")) != "":
+			response_line += "; %s detached" % String(response_state.get("commander_name", ""))
+		parts.append(response_line)
+	elif String(node.get("collected_by_faction_id", "")) == "player" and int(response_state.get("watch_days", 0)) > 0:
+		parts.append("%s available" % String(response_state.get("action_label", "Route security")))
+	var delivery_line := _resource_site_delivery_line(session, node, site)
+	if delivery_line != "":
+		parts.append(delivery_line)
+	return " | ".join(_non_empty_strings(parts))
+
+static func _resource_site_guard_or_contest_line(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> String:
+	var guard_encounter := _resource_site_guard_encounter(session, node, site)
+	if not guard_encounter.is_empty():
+		var guard := _resource_site_guard_link_for_encounter(guard_encounter)
+		var line := "Guarded by %s" % encounter_display_name(guard_encounter)
+		if bool(guard.get("clear_required_for_target", false)):
+			line += "; clear guard to use site"
+		elif bool(guard.get("blocks_approach", false)):
+			line += "; blocks approach"
+		return line
+	var controller := String(node.get("collected_by_faction_id", ""))
+	if controller == "":
+		return ""
+	var contest_encounter := _resource_site_contest_encounter(session, node, controller)
+	if not contest_encounter.is_empty():
+		return "%s is contesting this site" % encounter_display_name(contest_encounter)
+	if _resource_site_under_threat(session, node, controller):
+		return "Hostile pressure is contesting this site"
+	return ""
+
+static func _resource_site_guard_encounter(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	site: Dictionary
+) -> Dictionary:
+	if session == null:
+		return {}
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
+			continue
+		var guard := _resource_site_guard_link_for_encounter(encounter)
+		if guard.is_empty():
+			continue
+		if _resource_site_guard_targets_node(guard, node, site):
+			return encounter
+	return {}
+
+static func _resource_site_contest_encounter(
+	session: SessionStateStoreScript.SessionData,
+	node: Dictionary,
+	controller_id: String
+) -> Dictionary:
+	if session == null:
+		return {}
+	var best := {}
+	for encounter in session.overworld.get("encounters", []):
+		if not (encounter is Dictionary) or is_encounter_resolved(session, encounter):
+			continue
+		if String(encounter.get("spawned_by_faction_id", "")) in ["", controller_id]:
+			continue
+		if String(encounter.get("target_kind", "")) != "resource":
+			continue
+		if String(encounter.get("target_placement_id", "")) != String(node.get("placement_id", "")):
+			continue
+		if best.is_empty() or int(encounter.get("goal_distance", 9999)) < int(best.get("goal_distance", 9999)):
+			best = encounter
+	return best
+
+static func _resource_site_guard_link_for_encounter(encounter: Dictionary) -> Dictionary:
+	var guard = encounter.get("guard_link", {})
+	if guard is Dictionary and not guard.is_empty():
+		return guard
+	var metadata := _encounter_neutral_metadata(encounter)
+	guard = metadata.get("guard_link", {})
+	return guard if guard is Dictionary else {}
+
+static func _resource_site_guard_targets_node(guard: Dictionary, node: Dictionary, site: Dictionary) -> bool:
+	var node_placement_id := String(node.get("placement_id", ""))
+	var site_id := String(site.get("id", node.get("site_id", "")))
+	var target_placement_id := String(guard.get("target_placement_id", ""))
+	var target_id := String(guard.get("target_id", ""))
+	if target_placement_id != "" and target_placement_id == node_placement_id:
+		return true
+	if target_id != "" and target_id in [node_placement_id, site_id]:
+		return true
+	return false
 
 static func _resource_site_object_class_label(site: Dictionary, map_object: Dictionary) -> String:
 	var primary_class := String(map_object.get("primary_class", "")).strip_edges()
@@ -4269,6 +4485,9 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 	var interaction_surface := describe_resource_site_interaction_surface(node, site)
 	if interaction_surface != "":
 		parts.append(interaction_surface)
+	var control_inspection := describe_resource_site_control_inspection(session, node, site)
+	if control_inspection != "":
+		parts.append(control_inspection)
 	if _resource_site_is_persistent(site):
 		var controller := String(node.get("collected_by_faction_id", ""))
 		match controller:

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T14:17:30Z",
+  "updatedAt": "2026-04-26T14:28:43Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "faction-town-identity-inspection-clarity-10184",
-  "currentSliceTitle": "Surface practical faction and town identity inspection clarity in live UI",
+  "currentSliceId": "resource-site-control-inspection-clarity-10184",
+  "currentSliceTitle": "Surface practical resource-site and control inspection clarity in live UI/tooling",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live faction and town identity readability across town overview, overworld selected-town context, menu launch preview, and map editor town inspection. Existing faction names, town roles, economy identity, pressure flavor, magic library flavor, and strategic cues now surface without changing content, balance, schemas, saves, or AI.",
+  "currentSliceNotes": "Implemented compact resource-site control, income/reward, capture state, guard/contest, and route pressure readability across existing overworld selected-site context, map tooltip, validation payloads, and map-editor site inspection without changing schemas, saves, balance, AI, or content.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1384,6 +1384,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T14:08:09Z",
       "completedAt": "2026-04-26T14:17:30Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "resource-site-control-inspection-clarity-10184",
+      "title": "Surface practical resource-site and control inspection clarity in live UI/tooling",
+      "status": "completed",
+      "startedAt": "2026-04-26T14:20:31Z",
+      "completedAt": "2026-04-26T14:28:43Z",
       "difficulty": "medium"
     }
   ],
