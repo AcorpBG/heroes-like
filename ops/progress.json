@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T18:18:00Z",
+  "updatedAt": "2026-04-26T18:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "recap-contract-consistency-ui-10184",
-  "currentSliceTitle": "Align battle, town, and overworld post-action recap field contract in visible UI",
+  "currentSliceId": "overworld-field-readiness-recap-ui-10184",
+  "currentSliceTitle": "Surface compact overworld field readiness and next-action recap in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible recap consistency across battle and town payloads to match the existing overworld contract: happened, affected, why_it_matters, next_step, and matching visible labels/tooltips. Preserved existing battle decision/next_actor and town matters/next aliases, with no mechanics change, save version bump, schema migration, durable event log, or internal score leak.",
+  "currentSliceNotes": "Implemented a narrow player-facing overworld readiness recap that reuses existing objective, route, event-feed, movement, and end-turn forecast payloads to show one compact idle field-feed line and objective-tooltip detail. Added focused overworld smoke assertions and avoided mechanics changes, content migration, save schema changes, AI tuning, durable event logs, and internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1542,6 +1542,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T18:05:00Z",
       "completedAt": "2026-04-26T18:18:00Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "overworld-field-readiness-recap-ui-10184",
+      "title": "Surface compact overworld field readiness and next-action recap in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T18:20:00Z",
+      "completedAt": "2026-04-26T18:35:00Z",
       "difficulty": "medium"
     }
   ],

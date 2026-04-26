@@ -500,8 +500,12 @@ func _refresh() -> void:
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	var objective_brief := OverworldRules.describe_objective_brief(_session)
 	var objective_stakes := OverworldRules.describe_objective_stakes_board(_session)
+	var readiness_surface := _field_readiness_surface()
 	_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)
-	_objective_brief_label.tooltip_text = objective_stakes
+	_objective_brief_label.tooltip_text = _join_tooltip_sections([
+		objective_stakes,
+		String(readiness_surface.get("tooltip_text", "")),
+	])
 	var status_text := OverworldRules.describe_status(_session)
 	_status_label.tooltip_text = status_text
 	_status_label.text = _compact_text(status_text, 1, 64, false)
@@ -1466,8 +1470,86 @@ func _event_feed_surface() -> Dictionary:
 		_last_enemy_activity_events,
 		_last_action_recap
 	)
+	var readiness_surface := _field_readiness_surface(surface)
+	surface["field_readiness"] = readiness_surface
+	if _field_feed_is_idle():
+		var visible_text := String(readiness_surface.get("visible_text", "")).strip_edges()
+		if visible_text != "":
+			surface["visible_text"] = visible_text
+		surface["tooltip_text"] = _join_tooltip_sections([
+			String(surface.get("tooltip_text", "")),
+			String(readiness_surface.get("tooltip_text", "")),
+		])
 	surface["dispatch_text"] = OverworldRules.describe_dispatch(_session, _last_message)
 	return surface
+
+func _field_feed_is_idle() -> bool:
+	return (
+		_last_message.strip_edges() == ""
+		and _last_turn_resolution_text.strip_edges() == ""
+		and _last_enemy_activity_text.strip_edges() == ""
+		and _last_action_recap.is_empty()
+	)
+
+func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary:
+	var movement = _session.overworld.get("movement", {})
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+	]
+	var progress_recap := ScenarioRules.describe_session_progress_recap(_session, false)
+	var progress_line := _line_with_prefix(progress_recap, "Current progress:")
+	var next_step := String(base_event_surface.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
+	if next_step == "":
+		next_step = "Select the next destination or end the turn when field orders are spent."
+	var primary_action := _current_primary_action()
+	var primary_line := "Primary order: select a visible destination."
+	if not primary_action.is_empty():
+		primary_line = "Primary order: %s." % String(primary_action.get("label", "Commit order"))
+		var summary := String(primary_action.get("summary", "")).strip_edges()
+		if summary != "":
+			primary_line = "%s %s" % [primary_line, summary]
+	var route_line := _route_decision_line(_selected_route_decision_surface())
+	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
+	var visible_next := _short_text(next_step.trim_suffix("."), 44)
+	var visible := "Ready: %s | %s" % [visible_next, movement_line]
+	var tooltip_lines := [
+		"Field Readiness",
+		"- %s" % (progress_line if progress_line != "" else "Current progress: no authored objective progress is available."),
+		"- Next practical action: %s" % next_step,
+		"- %s" % primary_line,
+	]
+	if route_line != "":
+		tooltip_lines.append("- %s" % route_line)
+	if forecast != "":
+		tooltip_lines.append("- End turn forecast: %s" % forecast)
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"progress_line": progress_line,
+		"next_step": next_step,
+		"primary_order": primary_line,
+		"route_line": route_line,
+		"movement_line": movement_line,
+		"end_turn_forecast": forecast,
+	}
+
+func _line_with_prefix(text: String, prefix: String) -> String:
+	for raw_line in text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with(prefix):
+			return line
+	return ""
+
+func _join_tooltip_sections(sections: Array) -> String:
+	var lines := []
+	for section_value in sections:
+		var section := String(section_value).strip_edges()
+		if section != "" and section not in lines:
+			lines.append(section)
+	return "\n\n".join(lines)
 
 func _rail_order_text(commitment_text: String) -> String:
 	var primary_action := _current_primary_action()
@@ -2150,6 +2232,7 @@ func validation_snapshot() -> Dictionary:
 	var selected_town := _validation_selected_town_state()
 	var primary_action := _current_primary_action()
 	var route_decision := _selected_route_decision_surface()
+	var field_readiness := _field_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -2196,6 +2279,7 @@ func validation_snapshot() -> Dictionary:
 		"event_visible_text": _event_label.text,
 		"event_tooltip_text": _event_label.tooltip_text,
 		"event_feed": _event_feed_surface(),
+		"field_readiness": field_readiness,
 		"post_action_recap": _last_action_recap.duplicate(true),
 		"objective_brief_visible_text": _objective_brief_label.text,
 		"objective_brief_tooltip_text": _objective_brief_label.tooltip_text,
