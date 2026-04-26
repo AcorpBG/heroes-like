@@ -67,6 +67,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_order_target_handoff_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_command_tab_readiness_cues(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_active_return_handoff_contract(shell, "Town", "Menu: Town"):
 		get_tree().quit(1)
 		return false
@@ -274,6 +277,40 @@ func _assert_active_return_handoff_contract(shell: Node, expected_target: String
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if handoff_text.contains(leak_token):
 			push_error("%s smoke: active return handoff leaked internal token %s: %s." % [expected_target, leak_token, handoff_text])
+			return false
+	return true
+
+func _assert_town_command_tab_readiness_cues(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose command-tab readiness validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("town_tab_readiness", {}) if snapshot.get("town_tab_readiness", {}) is Dictionary else {}
+	var titles: Array = snapshot.get("town_tab_titles", []) if snapshot.get("town_tab_titles", []) is Array else []
+	var tabs: Array = readiness.get("tabs", []) if readiness.get("tabs", []) is Array else []
+	var cue_text := "\n".join([
+		" ".join(titles),
+		String(snapshot.get("town_tab_readiness_tooltip_text", "")),
+		JSON.stringify(readiness),
+	])
+	for token in ["Build", "Muster", "Spells", "Trade", "Log", "Town command tabs:", "Selected:"]:
+		if not cue_text.contains(token):
+			push_error("Town smoke: command-tab readiness cue lost %s clarity: %s." % [token, cue_text])
+			return false
+	if tabs.size() != 5:
+		push_error("Town smoke: command-tab readiness payload should cover five town tabs: %s." % readiness)
+		return false
+	var ready_title_found := false
+	for tab in tabs:
+		if tab is Dictionary and int(tab.get("ready_count", 0)) > 0 and String(tab.get("title", "")).contains(str(int(tab.get("ready_count", 0)))):
+			ready_title_found = true
+			break
+	if not ready_title_found:
+		push_error("Town smoke: no actionable tab exposed a visible ready count: titles=%s readiness=%s." % [titles, readiness])
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if cue_text.contains(leak_token):
+			push_error("Town smoke: command-tab readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
 			return false
 	return true
 

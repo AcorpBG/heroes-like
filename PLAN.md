@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact outcome Field Manual handoff cues using existing outcome, save, and guide payloads.
+Current target: completed compact town command-tab readiness cues using existing town action catalogs.
 
 Done means:
-- The outcome save rail exposes a compact `Guide` control without expanding the first-view outcome layout by default.
-- The guide opens a contextual Field Manual popout that explains resolved-outcome save, return, retry, continue, and resume handoff.
-- Focused menu/outcome smoke coverage proves collapsed/open/close guide state and no internal score/debug leaks.
+- The live town management tab labels expose compact ready-action counts for Build, Muster, Spells, Trade, and Log.
+- The town tab strip tooltip summarizes tab readiness and the selected tab's action focus.
+- Focused town/battle smoke coverage proves tab labels, tooltip context, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
