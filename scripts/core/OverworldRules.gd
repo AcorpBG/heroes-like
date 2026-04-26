@@ -1260,6 +1260,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 	var visible_contacts := 0
 	var local_contacts := 0
 	var nearest_contact_name := ""
+	var nearest_contact_reason := ""
 	var nearest_contact_distance := 99999
 	var visible_enemy_towns := 0
 	var visible_denied_sites := 0
@@ -1281,6 +1282,7 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 		if distance < nearest_contact_distance:
 			nearest_contact_distance = distance
 			nearest_contact_name = encounter_display_name(encounter)
+			nearest_contact_reason = String(encounter.get("target_public_reason", ""))
 		var commander_name := encounter_commander_threat_label(encounter)
 		if commander_name != "" and commander_name not in visible_commander_names:
 			visible_commander_names.append(commander_name)
@@ -1313,9 +1315,15 @@ static func _local_visible_threat_summary(session: SessionStateStoreScript.Sessi
 			visible_denied_sites += 1
 	var parts := []
 	if local_contacts > 0:
-		parts.append("%d hostile contact%s operating within 3 tiles" % [local_contacts, "" if local_contacts == 1 else "s"])
+		var local_clause := "%d hostile contact%s operating within 3 tiles" % [local_contacts, "" if local_contacts == 1 else "s"]
+		if nearest_contact_reason != "":
+			local_clause += " (%s)" % nearest_contact_reason
+		parts.append(local_clause)
 	elif nearest_contact_name != "":
-		parts.append("Nearest hostile contact %s at %d tiles" % [nearest_contact_name, nearest_contact_distance])
+		var nearest_clause := "Nearest hostile contact %s at %d tiles" % [nearest_contact_name, nearest_contact_distance]
+		if nearest_contact_reason != "":
+			nearest_clause += " (%s)" % nearest_contact_reason
+		parts.append(nearest_clause)
 	elif visible_contacts > 0:
 		parts.append("%d hostile contact%s visible on the frontier" % [visible_contacts, "" if visible_contacts == 1 else "s"])
 	if visible_enemy_towns > 0:

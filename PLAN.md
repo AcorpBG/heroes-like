@@ -78,12 +78,13 @@ Immediate execution order:
 41. Strategic AI economy pressure implementation is completed in `docs/strategic-ai-economy-pressure-implementation-report.md`. `EnemyAdventureRules` now has resource target score breakdown/report helpers, resource candidates carry compact debug reasons, and the focused Godot report proves `river_free_company` and `river_signal_post` outrank simple pickups when player-controlled while Riverwatch town pressure can still dominate the full target selector.
 42. Strategic AI economy pressure report gate review is completed in `docs/strategic-ai-economy-pressure-report-gate-review.md`. The gate passes: the focused report shows player-owned `river_signal_post` outranking simple pickups, player-owned `river_free_company` and `river_signal_post` ranking first and second when both are owned, explainable target reasons, no hidden difficulty bonus, no broad rewrite, and `riverwatch_hold` still able to dominate the full target selector. The next recommended slice is compact AI event/threat reason surfacing planning, not coefficient tuning.
 43. Strategic AI event/threat reason surfacing planning is completed in `docs/strategic-ai-event-surfacing-plan.md`. The plan defines a compact two-surface model: minimal public AI event/threat reasons for target assignment, site contest, site seizure, and pressure summaries, with detailed score breakdowns kept debug/report-only. It uses the River Pass signal-yard gate as the first example: `river_free_company`, `river_signal_post`, `riverwatch_hold`, site contest, and site seizure records.
-44. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+44. Strategic AI event/threat reason surfacing implementation is completed in `docs/strategic-ai-event-surfacing-implementation-report.md`. `EnemyAdventureRules` now builds reusable ephemeral/derived event records for target assignment, pressure summaries, site seizure, and site contest; resource and town candidates carry compact public reasons; visible threat and dispatch surfaces can show one short reason phrase; and the focused Godot report proves River Pass `river_free_company`, `river_signal_post`, `riverwatch_hold`, seizure, and objective-contest examples without leaking score tables to public surfaces.
+45. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Run `strategic-ai-event-surfacing-implementation-10184` as the next concrete slice.
-- Implement a compact reusable AI event/threat reason surface for target assignment, site contest, site seizure, and pressure summaries before broader strategic AI expansion.
-- Start report-first from the River Pass signal-yard examples: `river_free_company`, `river_signal_post`, `riverwatch_hold`, resource-site seizure messaging, and objective/site contest records.
+- Run `strategic-ai-event-surfacing-report-gate-10184` as the next concrete slice.
+- Rerun and review the focused AI event surfacing report, then decide whether a manual live-client gate around the River Pass signal-yard enemy turn is needed before broader strategic AI expansion.
+- Keep the review focused on the River Pass examples: `river_free_company`, `river_signal_post`, `riverwatch_hold`, resource-site seizure messaging, objective/site contest records, and compact threat/dispatch wording.
 - Keep detailed score breakdowns debug/report-oriented and avoid text-heavy in-game dashboards over the overworld.
 - Prefer ephemeral/derived event records and avoid save migration unless the implementation proves a bounded durable recent-event log is required.
 - Do not tune coefficients unless a later manual pass or report regression shows poor target ordering.
@@ -96,7 +97,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active choice is compact AI event/threat reason surfacing implementation, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
+- The next active choice is compact AI event/threat reason surfacing report/manual gate review, still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, editor behavior, renderer behavior, save format changes, generated PNG import, or asset import.
 
 ## Completed Prioritization Slice: Foundation Game Loop Prioritization
 Status: completed on 2026-04-26 as documentation-only prioritization after the neutral encounter metadata review.
@@ -263,6 +264,29 @@ Validation:
 
 Limits:
 - This is documentation/planning only. It does not edit gameplay code, production content JSON, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul markets, change runtime economy/pathing/editor/renderer/save behavior, import generated PNGs, add assets, migrate neutral encounters, implement full AI hero task state, broadly expand AI pressure, or rebalance River Pass.
+
+## Completed Implementation Slice: Strategic AI Event And Threat Reason Surfacing
+Status: completed on 2026-04-26 as the first narrow compact strategic AI event/reason implementation.
+
+Purpose:
+- Implement reusable compact AI event records and public reason phrases from existing strategic AI hooks.
+- Keep detailed score tables in debug/report surfaces and avoid adding a saved event log or large in-game dashboard.
+
+Delivered:
+- Added `docs/strategic-ai-event-surfacing-implementation-report.md`.
+- Added reusable event helpers in `EnemyAdventureRules` for `ai_target_assigned`, `ai_pressure_summary`, `ai_site_seized`, and `ai_site_contested`.
+- Added compact reason codes/public reasons/public importance to resource and town target candidates.
+- Extended `advance_raids(...)` to return ephemeral event records alongside existing compact event messages.
+- Added structured site seizure and objective-contest events from existing arrival handlers.
+- Added compact visible reason phrases to threat focus and local dispatch summaries.
+- Added focused Godot report coverage in `tests/ai_event_surfacing_report.gd` and `.tscn`.
+- Confirmed River Pass examples for `river_free_company`, `river_signal_post`, `riverwatch_hold`, resource-site seizure messaging, and objective-site contest records.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, `python3 tests/validate_repo.py`, `python3 tests/validate_repo.py --economy-resource-report`, `python3 tests/validate_repo.py --overworld-object-report`, `python3 tests/validate_repo.py --neutral-encounter-report`, and the focused Godot AI event surfacing report command.
+
+Limits:
+- This implementation does not add a durable AI event log, save migration, production JSON migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, full AI hero task state, broad strategic AI rewrite, or River Pass rebalance.
 
 ## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
 Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
