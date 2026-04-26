@@ -259,6 +259,9 @@ func _assert_battle_entry_context(shell: Node) -> bool:
 	if not player_commander.contains("Lyra Emberwell") or not player_commander.contains("Fast scouting caster") or not player_commander.contains("Lv1") or not player_commander.contains("XP 0/250") or not player_commander.contains("Wayfinder I"):
 		push_error("Battle smoke: player commander summary did not expose hero identity and progression context: %s." % player_commander)
 		return false
+	if not player_commander.contains("Gear impact:") or not player_commander.contains("Command no equipped battle bonuses"):
+		push_error("Battle smoke: player commander summary did not expose equipment impact context: %s." % player_commander)
+		return false
 	return true
 
 func _assert_town_hero_identity_progression_contract(shell: Node) -> bool:
@@ -271,6 +274,10 @@ func _assert_town_hero_identity_progression_contract(shell: Node) -> bool:
 		String(snapshot.get("hero_tooltip_text", "")),
 		String(snapshot.get("heroes_text", "")),
 	]
+	var town_artifact_text := "%s\n%s" % [
+		String(snapshot.get("artifact_text", "")),
+		String(snapshot.get("artifact_tooltip_text", "")),
+	]
 	if not town_hero_text.contains("Lyra Emberwell") or not town_hero_text.contains("Embercourt League") or not town_hero_text.contains("Fast scouting caster"):
 		push_error("Town smoke: hero panel did not expose hero identity/faction/role context: %s." % town_hero_text)
 		return false
@@ -279,6 +286,9 @@ func _assert_town_hero_identity_progression_contract(shell: Node) -> bool:
 		return false
 	if not town_hero_text.contains("Move") or not town_hero_text.contains("Scout") or not town_hero_text.contains("Army"):
 		push_error("Town smoke: hero panel did not expose readiness and army command context: %s." % town_hero_text)
+		return false
+	if not town_artifact_text.contains("Gear impact:") or not town_artifact_text.contains("Collection:"):
+		push_error("Town smoke: artifact panel did not expose equipment impact and collection context: %s." % town_artifact_text)
 		return false
 	return true
 

@@ -360,7 +360,10 @@ static func _hero_setup_summary(hero: Dictionary, scenario: Dictionary) -> Strin
 
 static func _artifact_preview(hero: Dictionary) -> String:
 	if ArtifactRulesScript.owned_artifact_ids(hero).is_empty():
-		return "Artifacts: no relics equipped or packed for this front."
+		return "Artifacts: no relics equipped or packed for this front.\n%s\n%s" % [
+			ArtifactRulesScript.describe_impact_summary(hero),
+			ArtifactRulesScript.describe_collection_summary(hero),
+		]
 	return ArtifactRulesScript.describe_loadout(hero)
 
 static func _army_preview(army: Dictionary) -> String:

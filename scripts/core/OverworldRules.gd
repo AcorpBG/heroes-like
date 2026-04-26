@@ -8227,7 +8227,7 @@ static func _context_action_summary(session: SessionStateStoreScript.SessionData
 		"collect_artifact":
 			var artifact_node = context.get("node", {})
 			var artifact_id := String(artifact_node.get("artifact_id", ""))
-			return "Recover %s for the active hero. %s" % [
+			return "Recover %s for the active hero. %s. %s." % [
 				ArtifactRulesScript.describe_artifact_short(artifact_id),
 				ArtifactRulesScript.artifact_collection_state(
 					session.overworld.get("hero", {}),
@@ -8235,6 +8235,7 @@ static func _context_action_summary(session: SessionStateStoreScript.SessionData
 					bool(artifact_node.get("collected", false)),
 					String(artifact_node.get("collected_by_faction_id", ""))
 				),
+				ArtifactRulesScript.describe_single_artifact_impact(artifact_id),
 			]
 		"enter_battle":
 			var encounter = context.get("encounter", {})
