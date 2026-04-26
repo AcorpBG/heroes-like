@@ -83,6 +83,7 @@ func _run() -> void:
 		return
 
 	_assert_remembered_owned_town_remote_entry(shell)
+	get_tree().quit(0)
 	return
 
 func _assert_hero_identity_progression_contract(shell: Node) -> bool:
@@ -672,7 +673,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		"reachable",
 		"move/collect",
 		2,
-		["Route:", "Timber Wagon", "Move/collect", "2 steps", "reachable today", "Move"]
+		["Route:", "Timber Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
 	):
 		return false
 	if not _assert_text_contains_all(
@@ -684,7 +685,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(reachable.get("map_tooltip", "")),
 			String(reachable.get("primary_action", {}).get("summary", "")),
 		],
-		["Timber Wagon", "Route:", "2 step", "Move", "reachable today"]
+		["Timber Wagon", "Route:", "2 step", "Move", "reachable today", "Decision Brief", "Next:"]
 	):
 		return false
 
@@ -884,8 +885,14 @@ func _assert_route_decision_fields(label: String, snapshot: Dictionary, expected
 		push_error("Overworld smoke: %s exposed wrong step count. expected=%d decision=%s" % [label, expected_steps, route_decision])
 		get_tree().quit(1)
 		return false
+	var decision_brief_value = route_decision.get("decision_brief", {})
+	var decision_brief: Dictionary = decision_brief_value if decision_brief_value is Dictionary else {}
 	var text := "\n".join([
 		String(snapshot.get("selected_route_decision_text", "")),
+		String(route_decision.get("decision_brief_text", "")),
+		String(decision_brief.get("affected", "")),
+		String(decision_brief.get("why_it_matters", "")),
+		String(decision_brief.get("next_step", "")),
 		String(snapshot.get("map_cue_text", "")),
 		String(snapshot.get("map_cue_tooltip_text", "")),
 		String(snapshot.get("context_visible_text", "")),
