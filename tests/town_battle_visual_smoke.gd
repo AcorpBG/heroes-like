@@ -627,11 +627,18 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var response_recap: Dictionary = action_response.get("town_action_recap", {}) if action_response.get("town_action_recap", {}) is Dictionary else {}
 	var snapshot_recap: Dictionary = snapshot.get("town_action_recap", {}) if snapshot.get("town_action_recap", {}) is Dictionary else {}
+	var context: Dictionary = snapshot.get("town_action_context", {}) if snapshot.get("town_action_context", {}) is Dictionary else {}
 	var recap_text := "\n".join([
 		String(action_response.get("town_action_recap_text", "")),
 		String(snapshot.get("town_action_recap_text", "")),
 		String(snapshot.get("visible_consequence_text", "")),
 		String(snapshot.get("consequence_tooltip_text", "")),
+	])
+	var context_text := "\n".join([
+		String(snapshot.get("town_action_context_text", "")),
+		String(snapshot.get("town_action_context_tooltip_text", "")),
+		String(context.get("latest_action", "")),
+		String(context.get("next_step", "")),
 	])
 	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
 	var save_text := "\n".join([
@@ -648,6 +655,16 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		if not save_text.contains(token):
 			push_error("Town smoke: save continuity check lost %s clarity after a town order: %s." % [token, save_text])
 			return false
+	for token in ["Latest:", "Next:", "Town Turn Context", "Latest action:", "Next practical step:", "Town status:", "Departure Check", "Save check:"]:
+		if not context_text.contains(token):
+			push_error("Town smoke: town action context strip lost %s clarity: %s." % [token, context_text])
+			return false
+	if String(context.get("source", "")) != "town_action_recap":
+		push_error("Town smoke: town action context strip did not use the town action recap source: %s." % context)
+		return false
+	if not String(snapshot.get("visible_consequence_text", "")).contains("Latest:"):
+		push_error("Town smoke: compact town Latest/Next strip is not visible in the event rail: %s." % snapshot)
+		return false
 	for key in ["happened", "affected", "why_it_matters", "next_step", "matters", "next", "text"]:
 		if String(response_recap.get(key, "")) == "" or String(snapshot_recap.get(key, "")) == "":
 			push_error("Town smoke: post-action town recap is missing structured %s: response=%s snapshot=%s." % [key, response_recap, snapshot_recap])
@@ -667,7 +684,7 @@ func _assert_town_post_action_consequence_contract(shell: Node, action_response:
 		push_error("Town smoke: post-action town recap did not explain a practical town/field consequence: %s." % response_recap)
 		return false
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights"]:
-		if recap_text.contains(leak_token) or save_text.contains(leak_token):
+		if recap_text.contains(leak_token) or save_text.contains(leak_token) or context_text.contains(leak_token):
 			push_error("Town smoke: post-action town recap leaked internal strategy token %s: %s." % [leak_token, recap_text])
 			return false
 	if String(snapshot.get("visible_consequence_text", "")) == "" or String(snapshot.get("consequence_tooltip_text", "")) == "":
