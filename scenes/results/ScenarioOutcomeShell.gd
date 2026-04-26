@@ -106,9 +106,19 @@ func _refresh_save_surface() -> void:
 	var summary: Dictionary = summary_value if summary_value is Dictionary else SaveService.inspect_manual_slot(selected_slot)
 	var latest_context := String(surface.get("latest_context", "Latest ready save: none."))
 	var current_save_recap := String(surface.get("current_save_recap", ""))
-	_set_compact_label(_save_status_label, current_save_recap if current_save_recap != "" else latest_context, 3)
 	var current_context := String(surface.get("current_context", ""))
+	var save_check := String(surface.get("save_check", "")).strip_edges()
+	var play_check := String(surface.get("play_check", "")).strip_edges()
+	var return_handoff := String(surface.get("return_handoff", "")).strip_edges()
+	var visible_save_text := save_check if save_check != "" else (current_save_recap if current_save_recap != "" else latest_context)
+	_set_compact_label(_save_status_label, visible_save_text, 3)
 	var save_tooltip_lines := [latest_context]
+	if save_check != "":
+		save_tooltip_lines.append(save_check)
+	if play_check != "":
+		save_tooltip_lines.append(play_check)
+	if return_handoff != "":
+		save_tooltip_lines.append(return_handoff)
 	if current_save_recap != "":
 		save_tooltip_lines.append("Saving now recap:\n%s" % current_save_recap)
 	if current_context != "":
@@ -120,7 +130,11 @@ func _refresh_save_surface() -> void:
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Outcome"))
-	_save_button.tooltip_text = String(surface.get("save_button_tooltip", "Save the current outcome safely."))
+	_save_button.tooltip_text = _join_tooltip_sections([
+		String(surface.get("save_button_tooltip", "Save the current outcome safely.")),
+		save_check,
+		return_handoff,
+	])
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
@@ -214,6 +228,13 @@ func validation_snapshot() -> Dictionary:
 		"actions": action_payloads,
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 		"save_surface": save_surface,
+		"save_status": _save_status_label.text,
+		"save_status_tooltip": _save_status_label.tooltip_text,
+		"save_button_tooltip": _save_button.tooltip_text,
+		"menu_button_tooltip": _menu_button.tooltip_text,
+		"save_check": String(save_surface.get("save_check", "")),
+		"play_check": String(save_surface.get("play_check", "")),
+		"return_handoff": String(save_surface.get("return_handoff", "")),
 		"current_save_recap": String(save_surface.get("current_save_recap", "")),
 		"slot_resume_recap": String(save_surface.get("slot_resume_recap", "")),
 	}
@@ -320,6 +341,14 @@ func _apply_result_palette(status: String) -> void:
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 96) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)
+
+func _join_tooltip_sections(sections: Array) -> String:
+	var lines := []
+	for section in sections:
+		var text := String(section).strip_edges()
+		if text != "":
+			lines.append(text)
+	return "\n".join(lines)
 
 func _apply_visual_theme() -> void:
 	var panel_tones := {

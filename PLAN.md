@@ -302,6 +302,24 @@ Validation:
 Limits:
 - This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression semantics, settings persistence, or broad dashboard composition.
 
+## Completed Implementation Slice: Outcome Save Readiness Check
+Status: completed on 2026-04-26 as compact player-facing outcome save UI polish.
+
+Purpose:
+- Help a manual player understand what saving on the outcome screen will preserve before returning to the menu, retrying, or starting the next chapter.
+- Reuse existing `SaveService` save-check, play-check, return-handoff, and save-recap payloads instead of adding mechanics, save fields, or progression semantics.
+
+Delivered:
+- The outcome save panel now leads with the compact `Save check:` line in `scenes/results/ScenarioOutcomeShell.gd`.
+- The outcome save status tooltip and save button tooltip now include `Save check:`, `Play check:`, and `Return handoff:` details from the existing save surface.
+- Added focused smoke coverage in `tests/menu_outcome_visual_smoke.gd`, including skirmish/campaign outcome assertions and no-score-leak coverage.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/menu_outcome_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression semantics, settings persistence, or broad dashboard composition.
+
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
 
@@ -3964,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact overworld route target handoff cues using existing selected-route decision, objective, movement, and readiness payloads.
+Current target: completed compact outcome save readiness cues using existing SaveService save-check, play-check, return-handoff, and save-recap payloads.
 
 Done means:
-- The overworld idle field rail and readiness tooltip expose a compact visible `Route target:` handoff so a player can see the selected destination, order, readiness, and movement implication.
-- The route target tooltip exposes target, order, readiness, impact, and next action using public-facing language from existing route/objective/readiness payloads.
-- Focused overworld smoke coverage proves the visible route target cue, structured validation payload, and no internal score/debug leaks.
+- The outcome save panel exposes a compact visible `Save check:` line so a player can see what saving will preserve before retrying, continuing, or returning to menu.
+- The outcome save status and save button tooltips include `Save check:`, `Play check:`, and `Return handoff:` details using public-facing language from existing save-surface payloads.
+- Focused menu/outcome smoke coverage proves the visible outcome save readiness cue, structured validation payload, skirmish/campaign outcome coverage, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, settings persistence semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
