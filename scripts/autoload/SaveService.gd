@@ -169,6 +169,7 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"latest_context": _latest_context_line(latest_summary, current_target),
 		"current_context": current_context,
 		"play_check": describe_session_play_check(session),
+		"save_check": describe_session_save_check(session),
 		"current_save_recap": describe_session_save_recap(session),
 		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
 		"latest_resume_recap": describe_summary_resume_recap(latest_summary),
@@ -230,6 +231,28 @@ func describe_session_save_recap(session: SessionStateStoreScript.SessionData) -
 	summary["resume_target"] = _resume_target_for_session(session)
 	summary["status_text"] = _status_text_for_summary(summary)
 	return _session_save_resume_recap(session, summary)
+
+func describe_session_save_check(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.scenario_id == "":
+		return "Save check: no active expedition."
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(_selected_manual_slot), _slot_path(_selected_manual_slot))
+	summary = _populate_summary_from_payload(summary, session.to_dict())
+	summary["payload"] = session.to_dict()
+	summary["valid"] = true
+	summary["loadable"] = true
+	summary["resume_target"] = _resume_target_for_session(session)
+	summary["status_text"] = _status_text_for_summary(summary)
+	var resume_context := _safe_player_text(_resume_context_label(summary), 44)
+	var changed := _safe_player_text(_session_changed_recap_line(session, summary), 74)
+	var next_decision := _safe_player_text(_session_next_decision_line(session, summary), 74)
+	var parts := []
+	if resume_context != "":
+		parts.append("Resume: %s" % resume_context)
+	if changed != "":
+		parts.append("What changed: %s" % changed)
+	if next_decision != "":
+		parts.append("Next: %s" % next_decision)
+	return "Save check: %s" % " | ".join(parts)
 
 func describe_summary_resume_recap(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1276,6 +1299,10 @@ func _contains_blocked_debug_token(text: String) -> bool:
 		"pressure_value",
 		"category_bonus",
 		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
 	]:
 		if normalized.find(token) >= 0:
 			return true
