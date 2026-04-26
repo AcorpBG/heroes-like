@@ -210,7 +210,7 @@ func _run_main_menu_smoke() -> bool:
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("load_selected_tooltip", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Saved state:", "What changed:", "Resume state:", "Next decision:", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
 	):
 		return false
 
@@ -368,8 +368,9 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("progression_summary", "")),
 			String(snapshot.get("next_step_summary", "")),
 			String(snapshot.get("action_status", "")),
+			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
 	):
 		return false
 

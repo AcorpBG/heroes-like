@@ -731,6 +731,8 @@ func _record_town_action_result(
 ) -> void:
 	_last_message = String(result.get("message", ""))
 	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before)
+	if bool(_last_action_recap.get("active", false)):
+		_session.flags["last_town_action_recap"] = _last_action_recap.duplicate(true)
 
 func _handle_session_resolution() -> bool:
 	if _session.scenario_status == "in_progress":

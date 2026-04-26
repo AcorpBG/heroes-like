@@ -168,6 +168,9 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"save_button_tooltip": _in_session_save_tooltip(current_target, slot_summary, current_context),
 		"latest_context": _latest_context_line(latest_summary, current_target),
 		"current_context": current_context,
+		"current_save_recap": describe_session_save_recap(session),
+		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
+		"latest_resume_recap": describe_summary_resume_recap(latest_summary),
 		"menu_button_label": "Return to Menu",
 		"menu_button_tooltip": _return_to_menu_tooltip(current_target, latest_summary, current_context),
 	}
@@ -213,6 +216,28 @@ func load_action_tooltip(summary: Dictionary) -> String:
 		describe_resume_brief(summary),
 		describe_slot_details(summary),
 	]
+
+func describe_session_save_recap(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null or session.scenario_id == "":
+		return "Saved state: No active expedition is available."
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(_selected_manual_slot), _slot_path(_selected_manual_slot))
+	summary = _populate_summary_from_payload(summary, session.to_dict())
+	summary["payload"] = session.to_dict()
+	summary["valid"] = true
+	summary["loadable"] = true
+	summary["resume_target"] = _resume_target_for_session(session)
+	summary["status_text"] = _status_text_for_summary(summary)
+	return _session_save_resume_recap(session, summary)
+
+func describe_summary_resume_recap(summary: Dictionary) -> String:
+	if summary.is_empty():
+		return ""
+	if not can_load_summary(summary):
+		return "Saved state: %s" % String(summary.get("status_text", "This save cannot be resumed."))
+	var session := _session_from_payload(_summary_payload(summary))
+	if session == null or session.scenario_id == "":
+		return "Saved state: This save cannot be inspected."
+	return _session_save_resume_recap(session, summary)
 
 func describe_resume_brief(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -335,6 +360,9 @@ func describe_slot_details(summary: Dictionary) -> String:
 		"Resume: %s"
 		% String(summary.get("status_text", "Unavailable"))
 	)
+	var resume_recap := describe_summary_resume_recap(summary)
+	if resume_recap != "":
+		lines.append(resume_recap)
 	var continuity_lines := _summary_continuity_lines(summary)
 	if not continuity_lines.is_empty():
 		lines.append_array(continuity_lines)
@@ -1024,6 +1052,150 @@ func _summary_watch_state_line(session: SessionStateStoreScript.SessionData, sum
 			if management_watch != "" and management_watch != "Town lines are stable.":
 				return "Risk watch: %s" % management_watch
 	return "Risk watch: No immediate stored warning; review the resumed scene before ending the turn."
+
+func _session_save_resume_recap(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
+	var lines := []
+	lines.append("Saved state: %s" % describe_resume_brief(summary))
+	var changed_line := _session_changed_recap_line(session, summary)
+	if changed_line != "":
+		lines.append("What changed: %s" % changed_line)
+	lines.append("Resume state: %s | %s" % [
+		_resume_context_label(summary),
+		_humanize_label(String(summary.get("game_state", "overworld"))),
+	])
+	var watch_line := _summary_watch_state_line(session, summary)
+	if watch_line != "":
+		lines.append("Watch: %s" % watch_line.trim_prefix("Risk watch:").strip_edges())
+	var next_line := _session_next_decision_line(session, summary)
+	if next_line != "":
+		lines.append("Next decision: %s" % next_line)
+	return "\n".join(lines)
+
+func _session_changed_recap_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
+	var recap := _preferred_recent_action_recap(session, String(summary.get("resume_target", "overworld")))
+	var recap_summary := _action_recap_change_summary(recap)
+	if recap_summary != "":
+		return recap_summary
+	var battle_summary := _battle_aftermath_summary(session)
+	if battle_summary != "":
+		return battle_summary
+	var progress_recent := _line_with_prefix(
+		load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false),
+		"Recently resolved:"
+	)
+	if progress_recent != "":
+		return _safe_player_text(progress_recent.trim_prefix("Recently resolved:").strip_edges(), 220)
+	var scenario_summary := String(summary.get("scenario_summary", "")).strip_edges()
+	if scenario_summary != "":
+		return _safe_player_text(scenario_summary, 220)
+	return "No recent action recap is stored; resume to make the next map, town, or battle order."
+
+func _session_next_decision_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
+	var recap := _preferred_recent_action_recap(session, String(summary.get("resume_target", "overworld")))
+	var recap_next := _action_recap_next_step(recap)
+	if recap_next != "":
+		return recap_next
+	var progress_next := _line_with_prefix(
+		load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false),
+		"Next step:"
+	)
+	if progress_next != "":
+		return _safe_player_text(progress_next.trim_prefix("Next step:").strip_edges(), 220)
+	var action_line := _summary_resume_action_line(summary)
+	if action_line != "":
+		return _safe_player_text(action_line.trim_prefix("Action:").strip_edges(), 220)
+	return "Load the save, inspect the resumed scene, then choose the next order."
+
+func _preferred_recent_action_recap(session: SessionStateStoreScript.SessionData, resume_target: String) -> Dictionary:
+	if session == null:
+		return {}
+	var ordered_keys := []
+	match resume_target:
+		"battle":
+			ordered_keys = ["last_battle_action_recap", "last_overworld_action_recap", "last_town_action_recap"]
+		"town":
+			ordered_keys = ["last_town_action_recap", "last_overworld_action_recap", "last_battle_action_recap"]
+		_:
+			ordered_keys = ["last_overworld_action_recap", "last_town_action_recap", "last_battle_action_recap"]
+	for key in ordered_keys:
+		var value = session.flags.get(key, {})
+		var recap := _normalize_saved_action_recap(value)
+		if not recap.is_empty():
+			return recap
+	return {}
+
+func _normalize_saved_action_recap(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {}
+	var source: Dictionary = value
+	var happened := _safe_player_text(String(source.get("happened", "")), 180)
+	var affected := _safe_player_text(String(source.get("affected", "")), 180)
+	var why := _safe_player_text(String(source.get("why_it_matters", source.get("matters", source.get("decision", "")))), 180)
+	var next_step := _safe_player_text(String(source.get("next_step", source.get("next", source.get("next_actor", "")))), 180)
+	if happened == "" and affected == "" and why == "" and next_step == "":
+		return {}
+	return {
+		"happened": happened,
+		"affected": affected,
+		"why": why,
+		"next_step": next_step,
+	}
+
+func _action_recap_change_summary(recap: Dictionary) -> String:
+	if recap.is_empty():
+		return ""
+	var parts := []
+	for key in ["happened", "affected", "why"]:
+		var text := String(recap.get(key, "")).strip_edges()
+		if text != "" and text not in parts:
+			parts.append(text)
+		if parts.size() >= 2:
+			break
+	return " | ".join(parts)
+
+func _action_recap_next_step(recap: Dictionary) -> String:
+	if recap.is_empty():
+		return ""
+	return String(recap.get("next_step", "")).strip_edges()
+
+func _battle_aftermath_summary(session: SessionStateStoreScript.SessionData) -> String:
+	if session == null:
+		return ""
+	var report = session.flags.get("last_battle_aftermath", {})
+	if not (report is Dictionary):
+		return ""
+	for key in ["return_summary", "result_summary", "reward_summary", "world_summary", "summary"]:
+		var line := _safe_player_text(String(report.get(key, "")), 220)
+		if line != "":
+			return line
+	return ""
+
+func _safe_player_text(value: String, max_chars: int = 220) -> String:
+	var text := value.strip_edges().replace("\n", " ")
+	while text.find("  ") >= 0:
+		text = text.replace("  ", " ")
+	if _contains_blocked_debug_token(text):
+		return ""
+	if text.length() <= max_chars:
+		return text
+	return "%s..." % text.left(max(1, max_chars - 3)).strip_edges()
+
+func _contains_blocked_debug_token(text: String) -> bool:
+	var normalized := text.to_lower()
+	for token in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+	]:
+		if normalized.find(token) >= 0:
+			return true
+	return false
 
 func _line_with_prefix(text: String, prefix: String) -> String:
 	for raw_line in text.split("\n", false):

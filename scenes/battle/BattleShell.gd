@@ -847,6 +847,8 @@ func _record_action_recap(action_id: String, result: Dictionary, context: Dictio
 		return
 	_last_action_recap_payload = BattleRules.post_action_recap_payload(_session, result, action_id, context)
 	_last_action_recap_text = String(_last_action_recap_payload.get("text", ""))
+	if not _last_action_recap_payload.is_empty():
+		_session.flags["last_battle_action_recap"] = _last_action_recap_payload.duplicate(true)
 
 func _battle_consequence_text() -> String:
 	if _last_action_recap_text.strip_edges() != "":
