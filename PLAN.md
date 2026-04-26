@@ -137,7 +137,7 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact battle action readiness confirmation UI, with focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact map-editor Play Copy handoff clarity, with focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
 
 ## Completed Implementation Slice: Overworld Field Readiness Recap
 Status: completed on 2026-04-26 as compact player-facing overworld UI polish.
@@ -247,6 +247,24 @@ Validation:
 
 Limits:
 - This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
+
+## Completed Implementation Slice: Map-Editor Play Copy Handoff Clarity
+Status: completed on 2026-04-26 as compact tooling-facing launch/readiness UI polish.
+
+Purpose:
+- Help an author understand exactly what the existing `Play Copy` command launches and what state returns to the editor afterward.
+- Reuse current `MapEditorShell`, `SessionState`, and `AppRouter` working-copy/session payloads instead of adding persistence, schemas, or gameplay rules.
+
+Delivered:
+- Added a compact `Play handoff:` surface in `scenes/editor/MapEditorShell.gd`.
+- The map-editor status area and `Play Copy` tooltip now clarify that play-testing uses the in-memory working copy, returns through the editor launch snapshot, and does not write authored content or campaign progression.
+- Added focused smoke coverage in `tests/map_editor_smoke.gd`, including authored-copy, edited-copy, launch payload, and no-score-leak assertions.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_smoke.tscn`.
+
+Limits:
+- This is UI/tooling readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression, authored file writes, or broad dashboard composition.
 
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.

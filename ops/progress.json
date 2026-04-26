@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T19:56:56Z",
+  "updatedAt": "2026-04-26T20:08:23Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-continuity-choice-cue-10184",
-  "currentSliceTitle": "Surface compact post-scenario continuity choice cues on the live outcome screen",
+  "currentSliceId": "editor-play-handoff-clarity-10184",
+  "currentSliceTitle": "Surface compact map-editor Play Copy handoff clarity",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible manual-play polish slice on the existing scenario outcome surface. ScenarioRules now adds a compact continuity choice line, CampaignRules describes campaign carry-forward/replay/menu outcomes from current campaign records and carryover bundles, and the outcome shell surfaces the line in the existing banner status. Focused menu/outcome smoke covers both skirmish and campaign outcome continuity without leaking internal score fields. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow visible tooling-facing polish slice on the existing MapEditorShell/AppRouter Play Copy flow. MapEditorShell now exposes a compact Play handoff line in the visible status area and Play Copy tooltip, clarifying that Play Copy launches the mutable in-memory working copy, snapshots the editor state for return, and does not write authored content or campaign progression. Focused map-editor smoke covers authored and edited working-copy handoff context, launch payload continuity, and no-score-leak assertions. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1654,6 +1654,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T19:54:02Z",
       "completedAt": "2026-04-26T19:56:56Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "editor-play-handoff-clarity-10184",
+      "title": "Surface compact map-editor Play Copy handoff clarity",
+      "status": "completed",
+      "startedAt": "2026-04-26T20:02:22Z",
+      "completedAt": "2026-04-26T20:08:23Z",
       "difficulty": "medium"
     }
   ],

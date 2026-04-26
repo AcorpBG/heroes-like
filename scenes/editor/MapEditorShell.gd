@@ -2408,8 +2408,17 @@ func _refresh_state() -> void:
 	_sync_tool_buttons()
 	_sync_property_controls()
 	_sync_object_taxonomy_summary()
+	_sync_play_handoff_surface()
 	_sync_preview()
 	_refresh_labels()
+
+func _sync_play_handoff_surface() -> void:
+	if _play_button == null:
+		return
+	var handoff := _editor_play_handoff_payload()
+	_play_button.disabled = _session == null
+	_play_button.text = String(handoff.get("button_label", "Play Copy"))
+	_play_button.tooltip_text = String(handoff.get("tooltip", "Load a scenario working copy before play-testing it."))
 
 func _sync_object_taxonomy_summary() -> void:
 	if _object_taxonomy_summary_label == null:
@@ -2488,6 +2497,9 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.y,
 		]
 	var status_lines := [state_line]
+	var play_handoff_text := String(_editor_play_handoff_payload().get("text", "")).strip_edges()
+	if play_handoff_text != "":
+		status_lines.append(play_handoff_text)
 	var cue_text := String(_editor_acceptance_cue_payload().get("text", "")).strip_edges()
 	if cue_text != "":
 		status_lines.append(cue_text)
@@ -4175,6 +4187,50 @@ func _on_play_working_copy_pressed() -> void:
 	SessionState.set_active_session(play_session)
 	AppRouter.go_to_overworld()
 
+func _editor_play_handoff_payload() -> Dictionary:
+	if _session == null:
+		return {
+			"button_label": "Play Copy",
+			"text": "",
+			"tooltip": "Load a scenario working copy before play-testing it.",
+			"state_context": "no_working_copy",
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var map_size := OverworldRules.derive_map_size(_session)
+	var hero_position := OverworldRules.hero_position(_session)
+	var state_context := "edited in-memory working copy" if _dirty else "authored working copy"
+	var return_context := "return restores the editor launch snapshot"
+	var write_context := "no authored file or campaign progress is written"
+	var text := "Play handoff: %s launches %s; %s; %s." % [
+		scenario_name,
+		state_context,
+		return_context,
+		write_context,
+	]
+	return {
+		"button_label": "Play Copy",
+		"text": text,
+		"tooltip": "%s\nMap %dx%d | Objects %d | Hero start %d,%d." % [
+			text,
+			map_size.x,
+			map_size.y,
+			_placement_count(),
+			hero_position.x,
+			hero_position.y,
+		],
+		"scenario_id": _session.scenario_id,
+		"scenario_name": scenario_name,
+		"state_context": state_context,
+		"return_context": return_context,
+		"write_context": write_context,
+		"return_model": "launch_snapshot",
+		"dirty": _dirty,
+		"map_size": {"x": map_size.x, "y": map_size.y},
+		"object_count": _placement_count(),
+		"hero_position": {"x": hero_position.x, "y": hero_position.y},
+	}
+
 func _prepare_working_copy_snapshot_for_return() -> void:
 	_session.flags["editor_working_copy"] = true
 	_session.flags["editor_source_scenario_id"] = _session.scenario_id
@@ -4787,6 +4843,11 @@ func validation_snapshot() -> Dictionary:
 		"dirty": _dirty,
 		"status_text": _last_message,
 		"visible_status_text": _status_label.text if _status_label != null else "",
+		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
+		"play_handoff": _editor_play_handoff_payload(),
+		"play_handoff_text": String(_editor_play_handoff_payload().get("text", "")),
+		"play_button_text": _play_button.text if _play_button != null else "",
+		"play_button_tooltip": _play_button.tooltip_text if _play_button != null else "",
 		"editor_acceptance_cue": _editor_acceptance_cue_payload(),
 		"last_object_authoring_recap": _last_object_authoring_recap,
 		"tool": _tool,
@@ -5480,6 +5541,7 @@ func validation_launch_working_copy() -> Dictionary:
 	if _session == null:
 		return {"ok": false, "message": "No editor working copy is loaded."}
 	var scenario_id := String(_session.scenario_id)
+	var launch_handoff := _editor_play_handoff_payload()
 	_on_play_working_copy_pressed()
 	return {
 		"ok": SessionState.ensure_active_session().scenario_id == scenario_id,
@@ -5488,6 +5550,7 @@ func validation_launch_working_copy() -> Dictionary:
 		"editor_working_copy": bool(SessionState.ensure_active_session().flags.get("editor_working_copy", false)),
 		"editor_snapshot_available": SessionState.has_editor_working_copy_session(),
 		"return_model": String(SessionState.ensure_active_session().flags.get("editor_return_model", "")),
+		"launch_handoff": launch_handoff,
 	}
 
 func _tile_inspection_payload(tile: Vector2i) -> Dictionary:
