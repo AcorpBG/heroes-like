@@ -60,11 +60,20 @@ Updated: 2026-04-26
 - Object schema migration should confirm whether route effects may be authored as metadata-only until pathing and strategic AI can safely evaluate linked endpoints, movement discounts/taxes, fog bypass, repair unlocks, and scenario gates.
 - Object schema migration should confirm whether animation cue ids can be referenced before a cue catalog exists, with warnings rather than hard validation.
 - Economy/resource schema migration should now resolve resource ids, `wood`/`timber` compatibility, output cadence, persistent-site capture values, market/exchange caps, faction preferences, AI valuation hooks, and save/schema compatibility before persistent resource-front content migration.
+- Economy/resource schema migration should review `docs/economy-resource-schema-migration-plan.md` before implementation and confirm that the first live slice should be additive schema fields plus validator warning/report planning, not production JSON migration.
+- Economy/resource schema migration should confirm whether `experience` stays a progression reward key outside the stockpile resource registry.
+- Economy/resource schema migration should confirm the initial resource registry fields: `id`, `display_name`, `category`, `market_tier`, `default_visible`, `legacy_aliases`, `faction_affinity`, `ui_sort`, `icon_hint_id`, and `material_cue`.
+- Economy/resource schema migration should confirm the output cadence vocabulary: `instant_claim`, `daily`, `weekly`, `limited_charges`, `route_linked`, `service_refresh`, `battle_cleanup`, and `scenario_scripted`.
+- Economy/resource schema migration should confirm persistent-site capture profile fields for counter-capture value, pillage policy, damaged-state policy, retake recovery days, defense investments, and route dependency tags.
+- Economy/resource schema migration should confirm that normal markets remain common-resource smoothing first, with no broad rare-resource buying until weekly caps, source discovery, UI display, AI use, and save state are implemented.
+- Economy/resource schema migration should confirm that faction resource preferences are advisory AI/content weights first, not hard locks or private currencies.
+- Economy/resource schema migration should confirm that resource-site behavior remains in `resource_sites.json` while map-object schema owns presentation, footprint, approach, passability, and visible state metadata.
 
 ## Current Follow-Up
 
 - Concept-art review notes are recorded in `docs/concept-art-batch-001-review.md`, `docs/concept-art-batch-002-review.md`, `docs/concept-art-batch-003-review.md`, `docs/concept-art-batch-004-review.md`, and `docs/concept-art-batch-005-review.md`; all generated PNGs remain external only.
 - The first implementation-brief prep pass is recorded in `docs/concept-art-implementation-briefs.md`. It is planning evidence, not final asset approval. AcOrP review remains open and is not a hard blocker to object schema migration planning.
 - The object schema migration planning contract is recorded in `docs/overworld-object-schema-migration-plan.md`. It is planning evidence only; no JSON content, runtime code, scenario placement, renderer sprite ingestion, runtime asset import, validator implementation, pathing change, or AI adoption has happened yet.
-- Economy/resource schema migration planning is the next current companion slice after object schema planning.
+- The economy/resource schema migration planning contract is recorded in `docs/economy-resource-schema-migration-plan.md`. It is planning evidence only; no JSON content, runtime code, validator implementation, market implementation, save migration, renderer sprite ingestion, or resource-site bundle migration has happened yet.
+- First additive resource schema and validator warning/report planning is the next current companion slice after economy/resource schema planning.
 - GitHub push/auth remains blocked by invalid credentials; keep work local and do not push until credentials are refreshed.

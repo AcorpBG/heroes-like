@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T01:35:00Z",
+  "updatedAt": "2026-04-26T02:05:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-resource-schema-migration-planning-10184",
-  "currentSliceTitle": "Plan economy/resource schema migration as the object-schema companion",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "docs/overworld-object-schema-migration-plan.md completes the planning-only object schema migration contract. It documents current map-object/resource-site reality and stages primary class, secondary tags, footprints/body tiles, approach offsets, passability classes, interaction cadence, guard/reward links, ownership/capture states, route effects, resource-site linkage, animation cue ids, AI valuation hooks, editor/tooling implications, validation levels, migration order, and rollback/compatibility concerns before any JSON migration. The next active companion slice should plan economy/resource schema migration for resource ids, wood/timber compatibility, resource categories, output cadence, persistent-site capture values, market/exchange caps, faction preferences, AI valuation, and save/schema compatibility before resource-site or economy content migration.",
+  "currentSliceId": "economy-resource-additive-schema-validator-planning-10184",
+  "currentSliceTitle": "Plan first additive resource schema fields and validator warning reports",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "docs/economy-resource-schema-migration-plan.md completes the planning-only economy/resource schema migration contract. It documents current gold/wood/ore reality, resource id policy, wood/timber compatibility, resource categories, output cadence, persistent-site capture values, pickup/income/service distinctions, market caps, faction preferences, cost compatibility, resource-site/object-schema linkage, AI hooks, UI/readability, save compatibility, validation levels, migration order, and rollback concerns before any JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, or save migration. The next slice should plan the first additive schema and validator warning/report implementation contract for optional resource registry fields, alias metadata, source/availability reports, cadence/capture warnings, market-cap report shape, and small strict fixtures.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -192,7 +192,13 @@
     {
       "id": "economy-resource-schema-migration-planning-10184",
       "title": "Plan economy/resource schema migration as the companion to object schema work",
-      "status": "in_progress",
+      "status": "completed",
+      "difficulty": "high"
+    },
+    {
+      "id": "economy-resource-additive-schema-validator-planning-10184",
+      "title": "Plan first additive resource schema fields and validator warning reports",
+      "status": "pending",
       "difficulty": "high"
     },
     {

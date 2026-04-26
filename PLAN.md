@@ -50,13 +50,14 @@ Immediate execution order:
 13. Broader overworld object/town studies: completed as external route-law/transit, persistent resource-front, neutral encounter, guarded reward, pickup, and faction-landmark evidence recorded in `docs/concept-art-batch-005-review.md`. Generated PNGs remain external only.
 14. Concept-art implementation-brief prep: completed in `docs/concept-art-implementation-briefs.md` for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes. Generated PNGs remain external concept evidence only, and AcOrP review remains open.
 15. Overworld object schema migration planning: completed in `docs/overworld-object-schema-migration-plan.md` as a planning-only migration contract for object primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard links, reward categories, ownership/capture states, route effects, resource-site linkage, animation cue ids, validation, editor/tooling, and rollback.
-16. Economy/resource schema migration planning is the next current slice and should run as the tightly coupled companion, because persistent resource fronts need resource ids, output cadence, capture values, `wood`/`timber` compatibility, market limits, AI valuation, and save compatibility decisions before JSON migration.
-17. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+16. Economy/resource schema migration planning: completed in `docs/economy-resource-schema-migration-plan.md` as the planning-only companion contract for resource ids, `wood`/`timber` compatibility, resource categories, output cadence, persistent-site capture values, pickup/income/service distinction, market caps, faction preferences, cost compatibility, object-schema linkage, AI hooks, UI/readability, save compatibility, validation levels, migration order, and rollback.
+17. First additive resource schema and validator warning/report planning is the next current slice. It should prepare a narrow implementation contract for optional resource registry fields, alias metadata, warning/report coverage, and sample fixtures before any production JSON migration or runtime behavior switch.
+18. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Start economy/resource schema migration planning from `docs/economy-overhaul-foundation.md`, `docs/overworld-object-schema-migration-plan.md`, current `content/resource_sites.json`, and current economy validators.
-- Prioritize resource ids, `wood`/`timber` compatibility, resource categories, output cadence, persistent-site capture values, market/exchange caps, faction preferences, town/recruitment cost compatibility, AI valuation hooks, save/schema migration, and staged validator warnings before any JSON migration.
-- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin economy JSON migration, resource-site bundle migration, renderer sprite ingestion, or runtime asset import until the economy/resource schema-planning slice selects a staged migration contract.
+- Plan the first additive resource schema and validator warning/report slice from `docs/economy-resource-schema-migration-plan.md`.
+- Prioritize a narrow contract for optional registry metadata, `wood`/`timber` alias reporting, resource-category warnings, source/availability reports, output-cadence report inference, persistent-site capture-value warnings, market-cap report shape, and tiny strict sample fixtures.
+- Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin economy JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, runtime asset import, or save cleanup until additive schema and validator/report work is explicitly approved.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
@@ -400,6 +401,28 @@ Validation:
 
 Limits:
 - This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, generated PNGs, object sprites, map placements, validator code, schema migration, pathing changes, AI changes, or playability claims.
+
+## Completed Planning Slice: Economy Resource Schema Migration Plan
+Status: completed on 2026-04-26 as a planning-only migration contract.
+
+Purpose:
+- Define the staged production data/schema contract for economy resource ids and persistent resource fronts before JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, or save migration.
+- Convert the economy foundation, object schema plan, object taxonomy, concept-art implementation briefs, and strategic-AI foundation into a concrete compatibility strategy.
+- Explicitly separate planning from implementation so current resource/site/town/unit/faction content and runtime behavior remain unchanged.
+
+Delivered:
+- Added `docs/economy-resource-schema-migration-plan.md`.
+- Documented current economy reality: `content/resource_sites.json` uses `gold`, `wood`, `ore`, and `experience`; units, buildings, towns, factions, markets, AI treasury, save state, and resource summaries remain built around the current `gold`/`wood`/`ore` baseline.
+- Defined target resource id policy, resource categories, `wood`/`timber` compatibility, output cadence, persistent-site capture values, pickup/income/service distinctions, market/exchange caps, faction preference fields, cost compatibility rules, resource-site/object-schema linkage, AI valuation hooks, UI/readability implications, save/schema compatibility, validation levels, staged migration order, and rollback concerns.
+- Staged the next slice as first additive resource schema and validator warning/report planning before any production JSON migration, runtime economy switch, market cap implementation, renderer sprite ingestion, or save cleanup.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`
+- Passed `git diff --check`
+- Passed `python3 tests/validate_repo.py`
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, content JSON, runtime assets, generated PNGs, object sprites, resource-site migrations, market implementation, validator code, schema migration, save migration, AI changes, or playability claims.
 
 ## Completed Implementation Slice: Overworld Renderer Cache Regression Repair
 Status: completed on 2026-04-23 as a narrow regression repair after `42cfdd6`.
@@ -2587,7 +2610,7 @@ No claim should move to "done" unless live-client usability and evidence are fil
 Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- The next slice starts with economy/resource schema migration planning rather than JSON migration, map placement, renderer asset ingestion, or screen polish.
+- The next slice starts with first additive resource schema and validator warning/report planning rather than JSON migration, map placement, renderer asset ingestion, market implementation, save cleanup, or screen polish.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.
