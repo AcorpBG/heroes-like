@@ -489,6 +489,51 @@ static func town_handoff_recap(session: SessionStateStoreScript.SessionData) -> 
 		"movement_max": int(movement.get("max", 0)),
 	}
 
+static func town_departure_confirmation(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var town := get_active_town(session)
+	if town.is_empty():
+		return {
+			"active": false,
+			"button_label": "Leave",
+			"visible_text": "Ready check: no active town.",
+			"tooltip_text": "Departure Check\n- No active town.",
+			"next_step": "Return to the overworld.",
+		}
+
+	var handoff := town_handoff_recap(session)
+	var movement := _active_hero_movement_state(session)
+	var move_current := int(movement.get("current", 0))
+	var move_max := int(movement.get("max", 0))
+	var recommendation := _town_recommendation_line(session, town)
+	var next_step := String(handoff.get("next_step", _next_town_action_line(session, town)))
+	var button_label := "Leave / End Turn" if move_current <= 0 else "Leave: %d/%d Move" % [move_current, move_max]
+	var visible_text := ""
+	if int(handoff.get("ready_response_action_count", 0)) > 0:
+		visible_text = "Ready check: response order is open before leaving."
+	elif move_current <= 0:
+		visible_text = "Ready check: finish town orders, then leave and end turn."
+	else:
+		visible_text = "Ready check: finish town orders, then leave with %d/%d move." % [move_current, move_max]
+	var tooltip := "Departure Check\n- Town readiness: %s\n- Affected: %s\n- Why it matters: %s\n- Next practical action: %s" % [
+		recommendation,
+		String(handoff.get("affected", "")),
+		String(handoff.get("why_it_matters", "")),
+		next_step,
+	]
+	return {
+		"active": true,
+		"button_label": button_label,
+		"visible_text": visible_text,
+		"tooltip_text": tooltip,
+		"town_readiness": recommendation,
+		"affected": String(handoff.get("affected", "")),
+		"why_it_matters": String(handoff.get("why_it_matters", "")),
+		"next_step": next_step,
+		"movement_current": move_current,
+		"movement_max": move_max,
+		"ready_response_action_count": int(handoff.get("ready_response_action_count", 0)),
+	}
+
 static func town_action_consequence_signature(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var town := get_active_town(session)
 	if town.is_empty():

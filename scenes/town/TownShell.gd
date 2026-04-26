@@ -288,7 +288,9 @@ func _refresh_save_slot_picker() -> void:
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Town"))
 	_save_button.tooltip_text = String(surface.get("save_button_tooltip", "Save the active town visit safely."))
-	_leave_button.tooltip_text = "Return to the overworld without leaving the current expedition."
+	var departure := TownRules.town_departure_confirmation(_session)
+	_leave_button.text = String(departure.get("button_label", "Leave"))
+	_leave_button.tooltip_text = String(departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
 	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
@@ -297,6 +299,7 @@ func validation_snapshot() -> Dictionary:
 	var occupation := OverworldRules.town_occupation_state(_session, town)
 	var front := OverworldRules.town_front_state(_session, town)
 	var handoff := TownRules.town_handoff_recap(_session)
+	var departure := TownRules.town_departure_confirmation(_session)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -341,6 +344,10 @@ func validation_snapshot() -> Dictionary:
 		"town_handoff": handoff,
 		"town_handoff_visible_text": String(handoff.get("visible_text", "")),
 		"town_handoff_tooltip_text": String(handoff.get("tooltip_text", "")),
+		"town_departure_confirmation": departure,
+		"town_departure_visible_text": String(departure.get("visible_text", "")),
+		"leave_button_text": _leave_button.text,
+		"leave_button_tooltip_text": _leave_button.tooltip_text,
 		"visible_consequence_text": _event_label.text,
 		"consequence_tooltip_text": _event_label.tooltip_text,
 		"front": front,
