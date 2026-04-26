@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T16:08:31Z",
+  "updatedAt": "2026-04-26T16:28:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "save-load-campaign-resume-risk-continuity-ui-10184",
-  "currentSliceTitle": "Surface practical save/load campaign resume risk and continuity clarity in live UI",
+  "currentSliceId": "campaign-chapter-selection-continuity-readiness-ui-10184",
+  "currentSliceTitle": "Surface practical campaign chapter selection continuity and readiness clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live save-slot resume clarity using existing SaveService summaries plus ScenarioRules progress recap, CampaignRules metadata, and current overworld/battle risk helpers. Save details and load tooltips now explain what choosing the slot will do, launch/campaign/chapter continuity, current objective progress, and stored risk/watch context without save migration, schema changes, reports, or dashboard panels.",
+  "currentSliceNotes": "Implemented compact live campaign/chapter selection clarity using existing CampaignRules, ScenarioRules, ScenarioSelectRules, and MainMenu surfaces. Chapter details and action tooltips now state chapter position, selected/current/next framing, continuity semantics, readiness/watch context, and what starting/retrying/replaying will do without docs, schema migration, save migration, content migration, or broad panels.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1472,6 +1472,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T16:01:00Z",
       "completedAt": "2026-04-26T16:08:31Z",
+      "difficulty": "medium"
+    },
+    {
+      "id": "campaign-chapter-selection-continuity-readiness-ui-10184",
+      "title": "Surface practical campaign chapter selection continuity and readiness clarity in live UI",
+      "status": "completed",
+      "startedAt": "2026-04-26T16:18:00Z",
+      "completedAt": "2026-04-26T16:28:00Z",
       "difficulty": "medium"
     }
   ],
