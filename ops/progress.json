@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:15:23Z",
+  "updatedAt": "2026-04-26T17:25:03Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-route-convoy-interception-clarity-10184",
-  "currentSliceTitle": "Surface practical route and convoy interception clarity in the live overworld UI",
+  "currentSliceId": "defense-readiness-warning-clarity-10184",
+  "currentSliceTitle": "Surface practical defense-readiness warning clarity in live town and overworld UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact real overworld route and convoy interception clarity through existing selected-route rail/footer/tooltips and field-feed watch payloads. Route decisions now surface active convoy blocks, threatened relief lanes, route-response readiness/coverage, and public raid pressure with affected lane/objective/control context plus the next practical field decision, without save/schema migration, durable logs, AI tuning, pathing/body-tile adoption, or dashboard work.",
+  "currentSliceNotes": "Implemented compact real town and overworld defense-readiness warning clarity through existing defense, frontier watch, dispatch, and field-feed surfaces. The live UI now names exposed or under-defended towns/fronts, summarizes the pressure/economy/objective context that makes the warning matter, and gives the next practical build, recruit, respond, intercept, or hold decision without save/schema migration, durable logs, AI tuning, pathing/body-tile adoption, dashboards, or internal score leaks.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
