@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T18:15:00Z",
+  "updatedAt": "2026-04-26T18:45:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-economy-pressure-report-gate-10184",
-  "currentSliceTitle": "Review the strategic AI economy pressure report and manual gate output",
+  "currentSliceId": "strategic-ai-event-surfacing-planning-10184",
+  "currentSliceTitle": "Plan compact strategic AI event and threat reason surfacing",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI economy pressure implementation is complete in docs/strategic-ai-economy-pressure-implementation-report.md. EnemyAdventureRules now exposes resource target score breakdown/report helpers and uses them for resource candidate priority; focused Godot report coverage proves player-controlled river_signal_post and river_free_company outrank simple pickups in River Pass resource target ordering while the full selector can still prefer riverwatch_hold when town pressure legitimately dominates. The next slice should review the report/manual gate output and decide pass/tune/event-stream follow-up. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
+  "currentSliceNotes": "Strategic AI economy pressure report gate is complete in docs/strategic-ai-economy-pressure-report-gate-review.md and passes. The focused Godot report shows player-owned river_signal_post outranking simple pickups in the reachable report, player-owned river_free_company and river_signal_post ranking first and second when both are owned, explainable target reasons, no hidden difficulty bonus, no broad rewrite, and riverwatch_hold still able to dominate the full target selector. The next slice should plan compact reusable AI event/threat reason surfacing for target assignment, site contest, site seizure, and pressure summaries before broader strategic AI expansion. Do not start production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, full AI hero/task implementation, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or broad River Pass rebalance. Neutral encounter metadata migration remains paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -396,6 +396,15 @@
     {
       "id": "strategic-ai-economy-pressure-report-gate-10184",
       "title": "Review the strategic AI economy pressure report and manual gate output",
+      "status": "completed",
+      "startedAt": "2026-04-26T18:20:00Z",
+      "completedAt": "2026-04-26T18:45:00Z",
+      "decision": "passed",
+      "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-event-surfacing-planning-10184",
+      "title": "Plan compact strategic AI event and threat reason surfacing",
       "status": "pending",
       "difficulty": "high"
     },
@@ -866,7 +875,7 @@
     "Use docs/concept-art-batch-001-review.md, docs/concept-art-batch-002-review.md, docs/concept-art-batch-003-review.md, docs/concept-art-batch-004-review.md, and docs/concept-art-batch-005-review.md to collect AcOrP accept/reject/defer calls on the external world/faction/object batch and second-pass follow-ups.",
     "Use docs/concept-art-implementation-briefs.md as the first implementation-brief source for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes while AcOrP curation remains open.",
     "Use docs/overworld-object-schema-migration-plan.md, docs/overworld-object-safe-additive-schema-plan.md, docs/neutral-encounter-representation-plan.md, docs/neutral-encounter-representation-bundle-001-plan.md, docs/neutral-encounter-representation-bundle-001-report-review.md, docs/neutral-encounter-first-class-object-migration-plan.md, and docs/neutral-encounter-first-class-object-bundle-001-plan.md as the planning contracts before broader object JSON migration, map placement, renderer sprite ingestion, true footprint/pathing adoption, or runtime asset import.",
-    "Use docs/strategic-ai-economy-pressure-slice-plan.md as the next implementation contract: make the existing Duskfen/Mireclaw pressure model explainably value player-controlled river_free_company and river_signal_post before broader AI work.",
+    "Use docs/strategic-ai-economy-pressure-report-gate-review.md as the current AI pressure gate result: the River Pass signal-yard pressure target passes, coefficient tuning is not needed from the focused report, and the next slice should plan compact AI event/threat reason surfacing before broader AI work.",
     "Keep neutral encounter metadata migration paused; the remaining 45 direct placements stay compatibility-warning-only until a later player-facing or tooling reason exists.",
     "Only after foundation depth and reviewed art-direction evidence start to exist, resume focus on implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall game loop.",
     "Keep River Pass as completed proof history and Ninefold Confluence as breadth/loading evidence, not as current production-depth proof.",
