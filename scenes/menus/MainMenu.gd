@@ -124,6 +124,7 @@ func _refresh_menu() -> void:
 	_refresh_summary()
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
+	_sync_first_view_command_tooltips()
 
 func _latest_continue_surface() -> Dictionary:
 	var latest_summary := SaveService.latest_loadable_summary()
@@ -781,6 +782,7 @@ func validation_snapshot() -> Dictionary:
 		"current_tab": _menu_tabs.current_tab,
 		"first_view_command_surface": "painted_backdrop_hotspots",
 		"first_view_commands": _first_view_command_labels(),
+		"first_view_command_tooltips": _first_view_command_tooltips(),
 		"stage_help_text": _stage_help_button.text,
 		"stage_help_tooltip": _stage_help_button.tooltip_text,
 		"stage_help_return_tab": _last_context_tab,
@@ -871,6 +873,16 @@ func _first_view_command_labels() -> Array:
 		if button is Button and button.visible:
 			labels.append(String(button.text))
 	return labels
+
+func _first_view_command_tooltips() -> Dictionary:
+	return {
+		"Campaign": _open_campaign_button.tooltip_text,
+		"Skirmish": _open_skirmish_button.tooltip_text,
+		"Load": _open_saves_button.tooltip_text,
+		"Settings": _open_settings_button.tooltip_text,
+		"Editor": _open_editor_button.tooltip_text,
+		"Quit": _quit_button.tooltip_text,
+	}
 
 func _save_browser_item_labels() -> Array:
 	var labels := []
@@ -1089,6 +1101,40 @@ func _sync_command_button_styles() -> void:
 func _sync_system_command_buttons() -> void:
 	_apply_backdrop_plaque_button(_open_editor_button, false, false)
 	_apply_backdrop_plaque_button(_quit_button, false, true)
+
+func _sync_first_view_command_tooltips() -> void:
+	_open_campaign_button.tooltip_text = (
+		"Command cue: Campaign opens the campaign board for arcs, carryover, and chapter launch handoffs. "
+		+ "It does not start a chapter until a campaign action is chosen."
+	)
+	_open_skirmish_button.tooltip_text = (
+		"Command cue: Skirmish opens the front charter for scenario, difficulty, and launch readiness. "
+		+ "Fresh skirmishes do not change campaign progression."
+	)
+	_open_saves_button.tooltip_text = _first_view_load_tooltip()
+	_open_settings_button.tooltip_text = (
+		"Command cue: Settings opens presentation, sound, and readability controls. "
+		+ "Changes apply to device config; expedition saves and campaign progress stay unchanged."
+	)
+	_open_editor_button.tooltip_text = (
+		"Command cue: Editor opens map-editing tooling and Play Copy checks. "
+		+ "Use it for scenario inspection or smoke-test handoff, not to resume a save."
+	)
+	_quit_button.tooltip_text = (
+		"Command cue: Quit closes the client. Save or return to menu first when you need an updated resume point."
+	)
+
+func _first_view_load_tooltip() -> String:
+	var latest_summary := SaveService.latest_loadable_summary()
+	var lines := [
+		"Command cue: Load opens the war ledger; loading only happens after Load Selected.",
+	]
+	if SaveService.can_load_summary(latest_summary):
+		lines.append(SaveService.describe_summary_play_check(latest_summary))
+		lines.append(SaveService.describe_summary_resume_handoff(latest_summary))
+	else:
+		lines.append("No loadable save is available; start Campaign or Skirmish to create a resume point.")
+	return "\n".join(lines)
 
 func _help_topic_for_tab(tab_index: int) -> String:
 	return String(TAB_HELP_TOPIC.get(tab_index, SettingsService.default_help_topic_id()))

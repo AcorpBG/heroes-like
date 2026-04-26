@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:29:26Z",
+  "updatedAt": "2026-04-26T23:34:28Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-field-manual-handoff-cue-10184",
-  "currentSliceTitle": "Surface compact outcome Field Manual handoff cues",
+  "currentSliceId": "main-menu-first-view-command-tooltips-10184",
+  "currentSliceTitle": "Surface compact main-menu first-view command tooltip cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact outcome-screen Field Manual handoff cues: the outcome save rail now has a collapsed Guide control that opens an informational Field Manual popout explaining resolved-outcome save, return, retry, continue, and resume handoff using existing outcome, save, and guide payloads. Added focused menu/outcome smoke assertions for collapsed/open/close guide state and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact contextual hover cues on the main menu's existing first-view painted plaque commands. Campaign, Skirmish, Load, Settings, Editor, and Quit now expose command-cue tooltips, with Load reusing existing save play-check and return-handoff helpers. Added focused menu/outcome smoke assertions for the first-view command tooltip payload and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1871,6 +1871,14 @@
       "status": "completed",
       "startedAt": "2026-04-26T23:26:43Z",
       "completedAt": "2026-04-26T23:29:26Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "main-menu-first-view-command-tooltips-10184",
+      "title": "Surface compact main-menu first-view command tooltip cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T23:32:27Z",
+      "completedAt": "2026-04-26T23:34:28Z",
       "difficulty": "small"
     }
   ],
