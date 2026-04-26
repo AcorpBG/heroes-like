@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T22:05:00Z",
+  "updatedAt": "2026-04-26T22:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-town-governor-pressure-report-gate-10184",
-  "currentSliceTitle": "Review report-only town governor pressure surfacing output",
+  "currentSliceId": "strategic-ai-faction-personality-pressure-planning-10184",
+  "currentSliceTitle": "Plan faction personality pressure evidence from existing strategic AI reports",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Strategic AI town governor pressure report implementation is complete in docs/strategic-ai-town-governor-pressure-implementation-report.md. EnemyTurnRules now exposes behavior-neutral town governor reports, build score breakdowns, recruitment destination breakdowns, and compact derived events for ai_town_built, ai_town_recruited, ai_garrison_reinforced, ai_raid_reinforced, and ai_commander_rebuilt. The focused Godot report prints AI_TOWN_GOVERNOR_PRESSURE_REPORT for River Pass Duskfen / Mireclaw, covering selected build reasoning, garrison reinforcement, active raid reinforcement, commander rebuild, and public-event leak checks. Next gate should review that output and decide whether the report-only boundary passes and whether any live-client enemy-turn gate is needed. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, or River Pass rebalance.",
+  "currentSliceNotes": "Strategic AI town governor pressure report gate review is complete in docs/strategic-ai-town-governor-pressure-report-gate-review.md. The gate passed: the focused Godot report showed Duskfen selecting Slingers Post, routing recruitment to garrison stabilization, active raid reinforcement, and commander rebuild in the expected cases, and emitting compact derived events without public score-table leakage. AI event surfacing and economy pressure reports were rerun and still pass. The live-client enemy-turn gate is deferred until a later AI slice changes visible turn pacing, arrival frequency, map pressure, or UI composition. Next slice should plan faction personality pressure evidence, likely Embercourt versus Mireclaw, using current resource target, compact event/threat, and town governor report surfaces before any tuning. Continue to avoid production JSON migration, content/resources.json, wood-to-timber migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, durable AI event log migration, full AI hero task state, broad strategic AI rewrite, behavior tuning, or River Pass rebalance.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -447,8 +447,17 @@
     {
       "id": "strategic-ai-town-governor-pressure-report-gate-10184",
       "title": "Review report-only town governor pressure surfacing output",
-      "status": "pending",
+      "status": "completed",
+      "startedAt": "2026-04-26T22:10:00Z",
+      "completedAt": "2026-04-26T22:35:00Z",
+      "decision": "passed",
       "difficulty": "high"
+    },
+    {
+      "id": "strategic-ai-faction-personality-pressure-planning-10184",
+      "title": "Plan faction personality pressure evidence from existing strategic AI reports",
+      "status": "pending",
+      "difficulty": "very_high"
     },
     {
       "id": "post-foundation-map-screen-polish-10184",
