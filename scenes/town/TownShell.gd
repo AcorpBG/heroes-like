@@ -518,7 +518,7 @@ func _rebuild_build_actions() -> void:
 		if not (action is Dictionary):
 			continue
 		var button := Button.new()
-		button.text = String(action.get("label", action.get("id", "Build")))
+		button.text = String(action.get("button_label", action.get("label", action.get("id", "Build"))))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
 		_style_action_button(button)
@@ -558,7 +558,7 @@ func _rebuild_recruit_actions() -> void:
 		if not (action is Dictionary):
 			continue
 		var button := Button.new()
-		button.text = String(action.get("label", action.get("id", "Recruit")))
+		button.text = String(action.get("button_label", action.get("label", action.get("id", "Recruit"))))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
 		_style_action_button(button)

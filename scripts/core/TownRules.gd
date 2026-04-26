@@ -240,6 +240,7 @@ static func describe_production_overview(session: SessionStateStoreScript.Sessio
 				recruit_actions.size(),
 				_next_town_action_line(session, town),
 			],
+			"- Practical priority: %s" % _town_recommendation_line(session, town),
 		]
 	)
 
@@ -657,12 +658,14 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 		var shortfall_summary := _cost_shortfall_line(readiness)
 		var affordability_line := _cost_readiness_line(resources, cost, readiness)
 		var after_spend_line := _stores_after_cost_line(resources, cost)
+		var impact_line := _build_choice_impact_line(session, town, building_id, building)
 		var summary_lines := [
 			"%s | Cost %s" % [
 				_building_line(building_id, "available", build_status),
 				_describe_resources(cost),
 			],
 			projection,
+			impact_line,
 			affordability_line,
 		]
 		if direct_affordable:
@@ -677,11 +680,24 @@ static func get_build_actions(session: SessionStateStoreScript.SessionData) -> A
 				"id": "build:%s" % building_id,
 				"label": "Build %s" % String(building.get("name", building_id)),
 				"summary": "\n".join(summary_lines),
+				"button_label": "Build %s | %s" % [
+					String(building.get("name", building_id)),
+					_build_action_badge(direct_affordable, market_coverable),
+				],
 				"ledger_line": "%s | Cost %s | %s" % [
 					_building_line(building_id, "available", build_status),
 					_describe_resources(cost),
 					String(affordability_line).trim_suffix("."),
 				],
+				"impact_line": impact_line,
+				"recommendation_line": _action_recommendation_line(
+					"Build",
+					String(building.get("name", building_id)),
+					direct_affordable,
+					market_coverable,
+					shortfall_summary,
+					impact_line
+				),
 				"cost": cost,
 				"affordability_label": String(affordability_line).trim_suffix("."),
 				"direct_affordable": direct_affordable,
@@ -714,6 +730,7 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
 		var market_affordable_count := _max_market_affordable_count(town, resources, unit_cost, available)
 		var direct_recruit_cost := _multiply_resource_cost(unit_cost, direct_affordable_count)
+		var recruit_impact_line := _recruit_choice_impact_line(unit_id, direct_affordable_count, available)
 		var market_summary := ""
 		if market_affordable_count > direct_affordable_count:
 			var market_readiness: Dictionary = OverworldRulesScript.town_cost_readiness(
@@ -734,6 +751,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 				_describe_resources(unit_cost),
 			]
 		]
+		if recruit_impact_line != "":
+			summary_lines.append(recruit_impact_line)
 		if direct_affordable_count > 0:
 			summary_lines.append("Ready: current stores can field %d now for %s." % [
 				direct_affordable_count,
@@ -753,7 +772,20 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 			{
 				"id": "recruit:%s" % unit_id,
 				"label": "Recruit %s" % String(unit.get("name", unit_id)),
+				"button_label": "Recruit %s | %s" % [
+					String(unit.get("name", unit_id)),
+					_recruit_action_badge(direct_affordable_count, market_affordable_count),
+				],
 				"summary": "\n".join(summary_lines),
+				"impact_line": recruit_impact_line,
+				"recommendation_line": _action_recommendation_line(
+					"Recruit",
+					String(unit.get("name", unit_id)),
+					direct_affordable_count > 0,
+					market_affordable_count > direct_affordable_count,
+					shortfall_summary,
+					recruit_impact_line
+				),
 				"unit_cost": unit_cost,
 				"available_count": available,
 				"weekly_growth": weekly_growth,
@@ -1159,6 +1191,175 @@ static func _coverage_order_ledger_line(session: SessionStateStoreScript.Session
 		int(movement_state.get("current", 0)),
 		int(movement_state.get("max", 0)),
 	]
+
+static func _town_recommendation_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	var recommendation := _town_recommendation_action(session, town)
+	if recommendation.is_empty():
+		return _next_town_action_line(session, town)
+	var label := _short_action_label(recommendation, "Town order")
+	var impact := String(recommendation.get("impact_line", "")).trim_suffix(".")
+	var readiness := String(recommendation.get("affordability_label", ""))
+	if readiness == "":
+		readiness = String(recommendation.get("disabled_reason", ""))
+	if impact != "" and readiness != "":
+		return "%s | %s | %s" % [label, readiness, impact]
+	if impact != "":
+		return "%s | %s" % [label, impact]
+	if readiness != "":
+		return "%s | %s" % [label, readiness]
+	return "%s is the clearest town order." % label
+
+static func _town_recommendation_action(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	var best_action := {}
+	var best_score := -999999
+	for action in get_build_actions(session):
+		if not (action is Dictionary):
+			continue
+		var score := _town_build_recommendation_score(town, action)
+		if score > best_score:
+			best_score = score
+			best_action = action
+	for action in get_recruit_actions(session):
+		if not (action is Dictionary):
+			continue
+		var score := _town_recruit_recommendation_score(action)
+		if score > best_score:
+			best_score = score
+			best_action = action
+	return best_action
+
+static func _town_build_recommendation_score(town: Dictionary, action: Dictionary) -> int:
+	var building_id := String(action.get("id", "")).trim_prefix("build:")
+	var building := ContentService.get_building(building_id)
+	var score := 0
+	if bool(action.get("direct_affordable", false)):
+		score += 120
+	elif bool(action.get("market_coverable", false)):
+		score += 70
+	else:
+		score += 20
+	match String(building.get("category", "")):
+		"dwelling":
+			score += 28
+		"support":
+			score += 24
+		"economy":
+			score += 18
+		"magic":
+			score += 12
+		"civic":
+			score += 10
+	if String(building.get("unlock_unit_id", "")) != "":
+		score += 18
+	var growth = building.get("growth_bonus", {})
+	if growth is Dictionary:
+		for unit_id in growth.keys():
+			score += max(0, int(growth.get(unit_id, 0))) * 3
+	score += max(0, int(building.get("readiness_bonus", 0))) * 2
+	score += max(0, int(building.get("pressure_bonus", 0))) * 8
+	var income = building.get("income", {})
+	if income is Dictionary:
+		score += min(18, int(floori(float(int(income.get("gold", 0))) / 50.0)))
+	if OverworldRulesScript.town_strategic_role(town) == "stronghold":
+		score += max(0, int(building.get("readiness_bonus", 0)))
+	return score
+
+static func _town_recruit_recommendation_score(action: Dictionary) -> int:
+	var ready_count := int(action.get("direct_affordable_count", 0))
+	var market_count := int(action.get("market_affordable_count", 0))
+	var unit_id := String(action.get("id", "")).trim_prefix("recruit:")
+	var score := 0
+	if ready_count > 0:
+		score += 105
+	elif market_count > 0:
+		score += 62
+	else:
+		score += 15
+	score += min(40, int(floori(float(OverworldRulesScript.unit_stack_strength_value(unit_id, max(ready_count, 1))) / 6.0)))
+	score += min(16, int(action.get("available_count", 0)) * 2)
+	score += min(12, int(action.get("weekly_growth", 0)) * 2)
+	return score
+
+static func _build_choice_impact_line(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	building_id: String,
+	building: Dictionary
+) -> String:
+	var projected_town := town.duplicate(true)
+	var built_buildings = projected_town.get("built_buildings", [])
+	if not (built_buildings is Array):
+		built_buildings = []
+	built_buildings = built_buildings.duplicate()
+	if building_id not in built_buildings:
+		built_buildings.append(building_id)
+	projected_town["built_buildings"] = built_buildings
+	var parts := []
+	var readiness_delta: int = OverworldRulesScript.town_battle_readiness(projected_town, session) - OverworldRulesScript.town_battle_readiness(town, session)
+	if readiness_delta != 0:
+		parts.append("readiness %s" % _signed_int(readiness_delta))
+	var quality_delta: int = OverworldRulesScript.town_reinforcement_quality(projected_town, session) - OverworldRulesScript.town_reinforcement_quality(town, session)
+	if quality_delta != 0:
+		parts.append("muster quality %s" % _signed_int(quality_delta))
+	var pressure_delta: int = OverworldRulesScript.town_pressure_output(projected_town, session) - OverworldRulesScript.town_pressure_output(town, session)
+	if pressure_delta != 0:
+		parts.append("%s %s" % [_town_pressure_label(town).to_lower(), _signed_int(pressure_delta)])
+	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
+	if unlock_unit_id != "":
+		var unit := ContentService.get_unit(unlock_unit_id)
+		parts.append("opens %s recruits" % String(unit.get("name", unlock_unit_id)))
+	if parts.is_empty():
+		match String(building.get("category", "")):
+			"economy":
+				parts.append("raises income for later build and recruit orders")
+			"magic":
+				parts.append("opens spell access without changing wall strength now")
+			_:
+				parts.append("steadies the town without an immediate readiness swing")
+	return "Defense/frontier: %s." % " | ".join(parts)
+
+static func _recruit_choice_impact_line(unit_id: String, ready_count: int, available_count: int) -> String:
+	var field_count: int = max(0, ready_count)
+	if field_count <= 0:
+		return "Defense/frontier: reserves are waiting, but stores do not field this stack yet."
+	var strength: int = OverworldRulesScript.unit_stack_strength_value(unit_id, field_count)
+	return "Defense/frontier: fields strength +%d to the marching army; %d remain in town reserve." % [
+		strength,
+		max(0, available_count - field_count),
+	]
+
+static func _action_recommendation_line(
+	lane: String,
+	label: String,
+	ready: bool,
+	market_coverable: bool,
+	shortfall_summary: String,
+	impact_line: String
+) -> String:
+	var status := "ready now" if ready else ("needs exchange first" if market_coverable else "blocked")
+	var parts := ["%s %s is %s" % [lane, label, status]]
+	if not ready and not market_coverable and shortfall_summary != "":
+		parts.append("Blocker: %s" % shortfall_summary)
+	if impact_line != "":
+		parts.append(impact_line)
+	return ". ".join(parts)
+
+static func _build_action_badge(ready: bool, market_coverable: bool) -> String:
+	if ready:
+		return "Ready"
+	if market_coverable:
+		return "Trade"
+	return "Blocked"
+
+static func _recruit_action_badge(ready_count: int, market_count: int) -> String:
+	if ready_count > 0:
+		return "Ready x%d" % ready_count
+	if market_count > 0:
+		return "Trade x%d" % market_count
+	return "Blocked"
+
+static func _signed_int(value: int) -> String:
+	return "%+d" % value
 
 static func _next_town_action_line(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var build_actions := get_build_actions(session)
