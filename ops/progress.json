@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T20:05:00Z",
+  "updatedAt": "2026-04-26T20:35:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-manual-play-action-cue-10184",
-  "currentSliceTitle": "Surface compact manual-play action cue in the live battle order rail",
+  "currentSliceId": "map-editor-manual-play-acceptance-cue-10184",
+  "currentSliceTitle": "Surface compact map-editor acceptance cue from existing authoring payloads",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a narrow visible battle UI polish: the existing battle order rail now includes one compact Try line derived from active action-surface, selected target board-click, and movement-click payloads only. Focused town/battle smoke asserts the cue is visible and does not leak internal score fields. No mechanics, balance, save schema, durable event logs, content migration, AI tuning, or internal score fields.",
+  "currentSliceNotes": "Implemented a narrow visible editor/tooling cue in MapEditorShell: the status strip and validation snapshot now expose one compact Cue line sourced only from existing action recap, placement preview, and scenario authoring validation payloads. Focused map editor smoke asserts preview/action cue visibility and no internal score-field leaks. No mechanics, balance, save schema, durable logs, AI tuning, pathing/body-tile adoption, renderer asset import, production JSON migration, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",

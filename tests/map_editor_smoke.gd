@@ -2177,6 +2177,8 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 		if palette_text.find(expected) < 0:
 			_fail("Map editor smoke: visible object palette text missed placement preview '%s': %s." % [expected, palette_text])
 			return false
+	if not _assert_editor_acceptance_cue(preview_result, "placement_preview", ["Cue:", "Click 5,4", "site_timber_wagon", "then"]):
+		return false
 
 	var encounter_preview_result: Dictionary = shell.call("validation_preview_object_placement", 7, 4, "encounter", "encounter_mire_raid")
 	var encounter_preview: Dictionary = encounter_preview_result.get("selected_object_placement_preview", {})
@@ -2199,6 +2201,8 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 		or int(blocked_preview_result.get("placement_count", 0)) != before_count
 	):
 		_fail("Map editor smoke: occupied-tile placement preview did not warn before placement: preview=%s result=%s." % [blocked_preview, blocked_preview_result])
+		return false
+	if not _assert_editor_acceptance_cue(blocked_preview_result, "placement_preview", ["Cue:", "Pick another tile", "Tile already has"]):
 		return false
 	return true
 
@@ -2224,6 +2228,43 @@ func _assert_authoring_recap(result: Dictionary, expected_action: String, expect
 	if String(recap.get("why", "")) == "" or String(recap.get("next_check", "")) == "":
 		_fail("Map editor smoke: authoring recap did not expose why/next-check fields: %s." % recap)
 		return false
+	if not _assert_editor_acceptance_cue(result, "action_recap", ["Cue:", String(recap.get("next_check", ""))]):
+		return false
+	return true
+
+func _assert_editor_acceptance_cue(result: Dictionary, expected_source: String, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("editor_acceptance_cue", {})
+	var text := String(cue.get("text", ""))
+	var visible_status := String(result.get("visible_status_text", ""))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: editor acceptance cue was not exposed: %s." % result)
+		return false
+	if String(cue.get("source", "")) != expected_source:
+		_fail("Map editor smoke: editor acceptance cue source mismatch, expected %s: %s." % [expected_source, cue])
+		return false
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and text.find(expected) < 0:
+			_fail("Map editor smoke: editor acceptance cue missed '%s': %s." % [expected, text])
+			return false
+		if expected != "" and visible_status.find(expected) < 0:
+			_fail("Map editor smoke: visible editor status missed acceptance cue '%s': %s." % [expected, visible_status])
+			return false
+	var leak_text := "%s\n%s" % [text, visible_status]
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+	]:
+		if leak_text.find(forbidden) >= 0:
+			_fail("Map editor smoke: editor acceptance cue leaked internal score field %s: %s." % [forbidden, leak_text])
+			return false
 	return true
 
 func _assert_object_property_edits(shell) -> bool:

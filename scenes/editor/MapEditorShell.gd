@@ -1006,6 +1006,69 @@ func _selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
 		"text": "\n".join(text_lines),
 	}
 
+func _editor_acceptance_cue_payload() -> Dictionary:
+	if _session == null:
+		return {}
+	var recap: Dictionary = _last_object_authoring_recap if _last_object_authoring_recap is Dictionary else {}
+	var recap_next_check := String(recap.get("next_check", "")).strip_edges()
+	if not recap.is_empty() and recap_next_check != "":
+		return {
+			"source": "action_recap",
+			"action": String(recap.get("action", "")),
+			"placement_id": String(recap.get("placement_id", "")),
+			"next_check": recap_next_check,
+			"text": "Cue: %s" % recap_next_check,
+		}
+	var preview := _selected_object_placement_preview_payload(_placement_preview_tile())
+	if _tool == TOOL_PLACE_OBJECT and not preview.is_empty():
+		var target_tile: Dictionary = preview.get("target_tile", {})
+		var target_label := "%d,%d" % [int(target_tile.get("x", _selected_tile.x)), int(target_tile.get("y", _selected_tile.y))]
+		var content_id := String(preview.get("content_id", _selected_object_content_id))
+		var blocked_reason := String(preview.get("blocked_reason", "")).strip_edges()
+		var dependency_warning := String(preview.get("dependency_warning", "")).strip_edges()
+		var consequence := String(preview.get("authoring_consequence", "")).strip_edges()
+		if not bool(preview.get("can_place", false)):
+			var blocked_next := blocked_reason if blocked_reason != "" else "choose an empty destination before placing."
+			return {
+				"source": "placement_preview",
+				"target_tile": target_tile,
+				"family": String(preview.get("family", _selected_object_family)),
+				"content_id": content_id,
+				"can_place": false,
+				"next_check": blocked_next,
+				"text": "Cue: Pick another tile or remove the blocker at %s; %s" % [target_label, blocked_next],
+			}
+		var preview_next := dependency_warning if dependency_warning != "" else consequence
+		if preview_next == "":
+			preview_next = "inspect density, dependency, and route context after placement."
+		return {
+			"source": "placement_preview",
+			"target_tile": target_tile,
+			"family": String(preview.get("family", _selected_object_family)),
+			"content_id": content_id,
+			"can_place": true,
+			"next_check": preview_next,
+			"text": "Cue: Click %s to place %s; then %s" % [target_label, content_id, preview_next],
+		}
+	var validation := _scenario_authoring_validation_payload()
+	var warnings: Array = validation.get("warnings", [])
+	if int(validation.get("warning_count", 0)) > 0 and not warnings.is_empty():
+		var warning := String(warnings[0]).strip_edges()
+		if warning != "":
+			return {
+				"source": "scenario_validation",
+				"next_check": warning,
+				"text": "Cue: Check authoring warning; %s" % warning,
+			}
+	var summary := String(validation.get("summary", "")).strip_edges()
+	if summary != "":
+		return {
+			"source": "scenario_validation",
+			"next_check": summary,
+			"text": "Cue: Select a tile or tool; %s before Play Copy." % summary,
+		}
+	return {}
+
 func _set_object_authoring_recap(
 	action: String,
 	changed: bool,
@@ -2424,7 +2487,13 @@ func _refresh_labels() -> void:
 			_pending_road_path_start.x,
 			_pending_road_path_start.y,
 		]
-	_set_compact_label(_status_label, "%s\n%s" % [state_line, _last_message], 3)
+	var status_lines := [state_line]
+	var cue_text := String(_editor_acceptance_cue_payload().get("text", "")).strip_edges()
+	if cue_text != "":
+		status_lines.append(cue_text)
+	if _last_message != "":
+		status_lines.append(_last_message)
+	_set_compact_label(_status_label, "\n".join(status_lines), 4)
 	_set_compact_label(_tile_info_label, _tile_inspection_text(_selected_tile), 12)
 
 func _tool_label(tool: String) -> String:
@@ -4717,6 +4786,8 @@ func validation_snapshot() -> Dictionary:
 		"return_model": String(_session.flags.get("editor_return_model", "")) if _session != null else "",
 		"dirty": _dirty,
 		"status_text": _last_message,
+		"visible_status_text": _status_label.text if _status_label != null else "",
+		"editor_acceptance_cue": _editor_acceptance_cue_payload(),
 		"last_object_authoring_recap": _last_object_authoring_recap,
 		"tool": _tool,
 		"selected_terrain_id": _selected_terrain_id,
@@ -5170,6 +5241,7 @@ func validation_preview_object_placement(x: int, y: int, family: String, content
 	_selected_tile = Vector2i(x, y)
 	_hovered_tile = _selected_tile
 	_tool = TOOL_PLACE_OBJECT
+	_last_object_authoring_recap = {}
 	_refresh_state()
 	var snapshot := validation_snapshot()
 	snapshot["ok"] = family_selected and content_selected and not snapshot.get("selected_object_placement_preview", {}).is_empty()
