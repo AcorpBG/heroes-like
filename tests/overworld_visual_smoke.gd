@@ -132,12 +132,20 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		return false
 	var move_result: Dictionary = shell.call("validation_perform_primary_action")
 	await get_tree().process_frame
-	var move_cache := _render_cache_metrics(shell.call("validation_snapshot"))
+	var move_snapshot: Dictionary = shell.call("validation_snapshot")
+	var move_cache := _render_cache_metrics(move_snapshot)
 	if not bool(move_result.get("ok", false)):
 		push_error("Overworld smoke: primary action did not move the hero during render-cache coverage. result=%s." % move_result)
 		get_tree().quit(1)
 		return false
-	if not _assert_action_feedback("movement feedback cue", shell.call("validation_snapshot"), "move", ["Moved:"]):
+	if not _assert_action_feedback("movement feedback cue", move_snapshot, "move", ["Moved:"]):
+		return false
+	if not _assert_post_action_recap(
+		"movement post-action recap",
+		move_snapshot,
+		"move",
+		["Moved from", "Affected:", "Why it matters:", "Next:", "scout net", "Push toward"]
+	):
 		return false
 	if (
 		int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))
@@ -430,6 +438,9 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	var session = SessionState.ensure_active_session()
 	var original_fog = session.overworld.get("fog", {}).duplicate(true)
 	var original_hero_position = session.overworld.get("hero_position", {}).duplicate(true)
+	var original_movement = session.overworld.get("movement", {}).duplicate(true)
+	var original_resources = session.overworld.get("resources", {}).duplicate(true)
+	var original_resource_nodes = session.overworld.get("resource_nodes", []).duplicate(true)
 	_set_active_hero_position(session, Vector2i(1, 2))
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
@@ -497,6 +508,30 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 		]
 	):
 		return false
+	_set_active_hero_position(session, Vector2i(2, 3))
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
+	var signal_result: Dictionary = shell.call("validation_perform_context_action", "collect_resource")
+	if not bool(signal_result.get("ok", false)):
+		push_error("Overworld smoke: signal post context order did not resolve through live UI. result=%s" % signal_result)
+		get_tree().quit(1)
+		return false
+	var signal_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_action_feedback("resource site feedback cue", signal_snapshot, "collect", ["Collected:", "Ember Signal Post"]):
+		return false
+	if not _assert_post_action_recap(
+		"resource site post-action recap",
+		signal_snapshot,
+		"resource_site",
+		["Ember Signal Post", "Affected:", "Why it matters:", "Next:", "daily", "route"]
+	):
+		return false
+	session.overworld["resources"] = original_resources
+	session.overworld["resource_nodes"] = original_resource_nodes
+	session.overworld["movement"] = original_movement
+	_set_active_hero_position(session, Vector2i(1, 2))
+	OverworldRules.refresh_fog_of_war(session)
+	shell.call("_refresh")
 
 	var free_company: Dictionary = shell.call("validation_select_tile", 0, 4)
 	if not _assert_text_contains_all(
@@ -557,6 +592,9 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 		return false
 
 	session.overworld["fog"] = original_fog
+	session.overworld["movement"] = original_movement
+	session.overworld["resources"] = original_resources
+	session.overworld["resource_nodes"] = original_resource_nodes
 	_set_active_hero_position(
 		session,
 		Vector2i(int(original_hero_position.get("x", 0)), int(original_hero_position.get("y", 0)))
@@ -765,6 +803,13 @@ func _assert_artifact_reward_visibility_contract(shell: Node) -> bool:
 	):
 		return false
 	if not _assert_action_feedback("artifact pickup feedback cue", shell.call("validation_snapshot"), "artifact", ["Artifact:", "Trailsinger Boots"]):
+		return false
+	if not _assert_post_action_recap(
+		"artifact post-action recap",
+		shell.call("validation_snapshot"),
+		"artifact",
+		["Recovered Trailsinger Boots", "Affected:", "Why it matters:", "Next:", "+2 move"]
+	):
 		return false
 	var commander_state: Dictionary = shell.call("validation_snapshot").get("commander_state", {})
 	if "artifact_trailsinger_boots" not in commander_state.get("artifact_ids", []):
@@ -1083,6 +1128,44 @@ func _assert_action_feedback(label: String, snapshot: Dictionary, expected_kind:
 			push_error("Overworld smoke: %s missing '%s'. feedback=%s" % [label, String(needle), feedback])
 			get_tree().quit(1)
 			return false
+	return true
+
+func _assert_post_action_recap(label: String, snapshot: Dictionary, expected_kind: String, needles: Array) -> bool:
+	var recap: Dictionary = snapshot.get("post_action_recap", {})
+	var feedback: Dictionary = snapshot.get("action_feedback", {})
+	var event_feed: Dictionary = snapshot.get("event_feed", {})
+	if recap.is_empty() and feedback.get("post_action_recap", {}) is Dictionary:
+		recap = feedback.get("post_action_recap", {})
+	if recap.is_empty():
+		push_error("Overworld smoke: %s did not expose a post-action recap. snapshot=%s" % [label, snapshot])
+		get_tree().quit(1)
+		return false
+	if expected_kind != "" and String(recap.get("kind", "")) != expected_kind:
+		push_error("Overworld smoke: %s exposed wrong recap kind. expected=%s recap=%s" % [label, expected_kind, recap])
+		get_tree().quit(1)
+		return false
+	var joined := "\n".join(
+		[
+			String(recap.get("happened", "")),
+			String(recap.get("affected", "")),
+			String(recap.get("why_it_matters", "")),
+			String(recap.get("next_step", "")),
+			String(recap.get("tooltip_text", "")),
+			String(feedback.get("full_text", "")),
+			String(event_feed.get("happened", "")),
+			String(event_feed.get("affected", "")),
+			String(event_feed.get("why_it_matters", "")),
+			String(event_feed.get("next_step", "")),
+			String(snapshot.get("event_tooltip_text", "")),
+		]
+	)
+	for needle in needles:
+		if joined.find(String(needle)) < 0:
+			push_error("Overworld smoke: %s missing '%s'. recap=%s feedback=%s event_feed=%s" % [label, String(needle), recap, feedback, event_feed])
+			get_tree().quit(1)
+			return false
+	if not _assert_no_ai_score_leak(label, joined):
+		return false
 	return true
 
 func _validation_action_by_id(actions: Variant, action_id: String) -> Dictionary:

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T17:45:00Z",
+  "updatedAt": "2026-04-26T16:37:36Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-post-action-consequence-recap-ui-10184",
-  "currentSliceTitle": "Surface practical town post-action consequence recap clarity in live UI",
+  "currentSliceId": "overworld-post-action-consequence-recap-ui-10184",
+  "currentSliceTitle": "Surface practical overworld post-action movement and site consequence recap clarity in live UI",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact live town post-action consequence recaps through TownRules before/after recap helpers and TownShell dispatch rail, tooltip, and validation payload surfaces. Resolved build, recruit, market, and town order actions now summarize what happened, affected building/resource/unit/queue state where available, why the change matters for production, defense, or frontier pressure, and the next practical town or field decision without schema, economy, save, AI, or content migration changes.",
+  "currentSliceNotes": "Implemented compact live overworld post-action recaps for movement, resource-site, artifact, route-response, battle-entry, and town-control outcomes through existing OverworldRules and OverworldShell feedback surfaces. The footer cue, Field Feed tooltip, action feedback validation payloads, and focused overworld visual smoke now show what happened, affected tile/site/resource/objective context, why it matters for route control/economy/scouting/objectives, and the next practical field decision without schema, save, AI, pathing, or content migration changes.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -796,6 +796,20 @@
             "completedAt": "2026-04-26T10:12:00Z",
             "validation": [
                 "git diff --check",
+                "python3 tests/validate_repo.py",
+                "godot4 --headless --path . tests/overworld_visual_smoke.tscn"
+            ],
+            "difficulty": "medium"
+        },
+        {
+            "id": "overworld-post-action-consequence-recap-ui-10184",
+            "title": "Surface practical overworld post-action movement and site consequence recap clarity in live UI",
+            "status": "completed",
+            "startedAt": "2026-04-26T16:33:36Z",
+            "completedAt": "2026-04-26T16:37:36Z",
+            "validation": [
+                "git diff --check",
+                "python3 -m json.tool ops/progress.json",
                 "python3 tests/validate_repo.py",
                 "godot4 --headless --path . tests/overworld_visual_smoke.tscn"
             ],
