@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T21:52:11Z",
+  "updatedAt": "2026-04-26T21:59:06Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "outcome-next-step-action-cue-10184",
-  "currentSliceTitle": "Surface compact outcome next-step action cues",
+  "currentSliceId": "save-browser-row-continuity-cue-10184",
+  "currentSliceTitle": "Surface compact save-browser row continuity cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing outcome slice: the existing scenario outcome action rail now surfaces a dynamic Action cue hint and per-action tooltip cues for retry, replay, next chapter, and menu return choices using current outcome/campaign/skirmish/save payloads. Focused outcome smoke coverage checks visible cue text, per-action cue payloads, and no internal score/debug leaks. No mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
+  "currentSliceNotes": "Implemented compact player-facing save browser polish: save list rows now use existing save summaries, resume target, and next-action payloads to show a public Cue line before detailed inspection, and the selected-save validation snapshot exposes the same cue for smoke coverage. UI/readability only; no mechanics, balance, save schema/version, durable logs, production JSON, pathing/body-tile adoption, renderer asset import, AI tuning, or internal score fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1751,6 +1751,14 @@
       "startedAt": "2026-04-26T21:49:10Z",
       "completedAt": "2026-04-26T21:52:11Z",
       "difficulty": "medium"
+    },
+    {
+      "id": "save-browser-row-continuity-cue-10184",
+      "title": "Surface compact save-browser row continuity cues",
+      "status": "completed",
+      "startedAt": "2026-04-26T21:55:14Z",
+      "completedAt": "2026-04-26T21:59:06Z",
+      "difficulty": "small"
     }
   ],
   "nextActions": [

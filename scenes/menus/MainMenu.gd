@@ -520,7 +520,7 @@ func _rebuild_save_browser() -> void:
 	var selected_index := -1
 	for index in range(_save_summaries.size()):
 		var summary: Dictionary = _save_summaries[index]
-		var label := SaveService.describe_slot(summary)
+		var label := SaveService.describe_slot_browser_row(summary)
 		if _summary_key(summary) == latest_key and SaveService.can_load_summary(summary):
 			label = "%s | Latest" % label
 		_save_list.add_item(label)
@@ -832,6 +832,7 @@ func validation_snapshot() -> Dictionary:
 		"selected_save_summary": selected_save_summary.duplicate(true),
 		"latest_play_check": SaveService.describe_summary_play_check(latest_summary),
 		"selected_save_play_check": SaveService.describe_summary_play_check(selected_save_summary),
+		"selected_save_browser_cue": SaveService.describe_slot_continuity_cue(selected_save_summary),
 		"latest_resume_handoff": SaveService.describe_summary_resume_handoff(latest_summary),
 		"selected_save_resume_handoff": SaveService.describe_summary_resume_handoff(selected_save_summary),
 		"save_browser_items": _save_browser_item_labels(),

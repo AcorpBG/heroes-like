@@ -3964,11 +3964,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed contextual Field Manual access from secondary main-menu boards using the existing help topic data and main-menu stage dock.
+Current target: completed compact save-browser row continuity cues using existing save summary, resume target, and next-action payloads.
 
 Done means:
-- Campaign and save secondary boards expose a compact contextual `Guide` control without adding first-view commands or large help panels over the scenic menu.
-- The contextual guide opens the existing Field Manual to the matching topic and the same header control returns to the previous secondary board.
-- Focused main-menu smoke coverage proves contextual guide access, return flow, and no internal score/debug leaks.
+- Save-browser list rows expose a compact public `Cue:` line so a player can see the resume surface and next practical action before reading the detail panel.
+- The selected-save validation snapshot exposes the same cue for focused smoke coverage.
+- Focused main-menu smoke coverage proves the visible row cue, selected-save cue, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, pathing/body-tile/footprint adoption, renderer/generated asset import, broad content migration, settings persistence semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
