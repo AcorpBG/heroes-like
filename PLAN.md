@@ -51,19 +51,37 @@ Immediate execution order:
 14. Concept-art implementation-brief prep: completed in `docs/concept-art-implementation-briefs.md` for Embercourt town/object direction, Mireclaw town/object direction, and core overworld object classes. Generated PNGs remain external concept evidence only, and AcOrP review remains open.
 15. Overworld object schema migration planning: completed in `docs/overworld-object-schema-migration-plan.md` as a planning-only migration contract for object primary class, secondary tags, footprints/body tiles, approach offsets, passability, interaction cadence, guard links, reward categories, ownership/capture states, route effects, resource-site linkage, animation cue ids, validation, editor/tooling, and rollback.
 16. Economy/resource schema migration planning: completed in `docs/economy-resource-schema-migration-plan.md` as the planning-only companion contract for resource ids, `wood`/`timber` compatibility, resource categories, output cadence, persistent-site capture values, pickup/income/service distinction, market caps, faction preferences, cost compatibility, object-schema linkage, AI hooks, UI/readability, save compatibility, validation levels, migration order, and rollback.
-17. First additive resource schema and validator warning/report planning is the next current slice. It should prepare a narrow implementation contract for optional resource registry fields, alias metadata, warning/report coverage, and sample fixtures before any production JSON migration or runtime behavior switch.
-18. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
+17. First additive resource schema and validator warning/report planning: completed in `docs/economy-resource-additive-schema-validator-plan.md` as a narrow implementation contract for optional resource registry fields, `wood`/`timber` alias reporting, resource/source/cadence/capture/market reports, strict fixture scope, warning levels, CLI expectations, compatibility adapters, acceptance tests, rollback, and hard non-change boundaries.
+18. First additive validator/report scaffolding implementation is the next current slice. It should implement report-only warnings and strict sample fixtures without production JSON migration, runtime economy behavior changes, market changes, save migration, rare-resource activation, or asset/sprite import.
+19. Only after these basics are deep enough and art-direction evidence starts to exist, return focus to implementation planning, campaign/skirmish maps, town-screen polish, battle-screen polish, battle AI systems, and the overall player loop: turn flow, economy, resource collection, mine capturing, battles, and town development.
 
 Recommended next slice:
-- Plan the first additive resource schema and validator warning/report slice from `docs/economy-resource-schema-migration-plan.md`.
-- Prioritize a narrow contract for optional registry metadata, `wood`/`timber` alias reporting, resource-category warnings, source/availability reports, output-cadence report inference, persistent-site capture-value warnings, market-cap report shape, and tiny strict sample fixtures.
+- Implement the first additive validator/report scaffolding from `docs/economy-resource-additive-schema-validator-plan.md`.
+- Prioritize opt-in report output, compatibility-mode warnings, `wood`/Timber alias reporting, source/availability matrices, output-cadence inference, persistent-site capture warnings, market-cap reports, and tiny strict fixtures.
 - Keep generated PNGs outside the repo unless a later explicit asset-ingestion slice says otherwise; do not begin economy JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, runtime asset import, or save cleanup until additive schema and validator/report work is explicitly approved.
 
 Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The next active implementation choice is tied to deepening world/content/systems foundations, not to fake HoMM2/HoMM3 parity, data volume, or visual surface polish alone.
+- The next active implementation choice is additive validator/report scaffolding, tied to deepening economy/resource foundations without switching production behavior.
+
+## Completed Planning Slice: Economy Resource Additive Schema And Validator Contract
+Status: completed on 2026-04-26 as a planning-only contract for the first additive economy/resource validator/report work.
+
+Purpose:
+- Prepare the first implementation slice after economy/resource schema migration planning without touching production JSON, runtime economy behavior, markets, saves, rare-resource costs, or assets.
+- Convert the broad economy migration direction into a narrow report-first validator contract.
+
+Delivered:
+- Added `docs/economy-resource-additive-schema-validator-plan.md` covering exact optional registry fields, inferred report fields, `wood`/`timber` alias reporting, registry/report shape, source and availability reports, output-cadence inference warnings, persistent-site capture warnings, market-cap report shape, strict fixture scope, warning-versus-error levels, CLI/report expectations, compatibility adapters, acceptance tests, rollback boundaries, and hard non-change rules.
+- Sequenced the next slice as additive validator/report scaffolding implementation, not production JSON migration or runtime economy adoption.
+
+Validation:
+- Planned validation for this slice remains `python3 -m json.tool ops/progress.json >/tmp/heroes-progress-jsoncheck.txt`, `git diff --check`, and `python3 tests/validate_repo.py`.
+
+Limits:
+- This is documentation and planning only. It does not add gameplay code, scenes, scripts, fixtures, assets, production content JSON, market behavior, save migration, rare resources, or playability claims.
 
 ## Completed Design Slice: Worldbuilding Foundation
 Status: completed on 2026-04-25 as the first deep production foundation design package.
@@ -2610,7 +2628,7 @@ No claim should move to "done" unless live-client usability and evidence are fil
 Current target: deep production foundation planning and design/art-direction gates.
 
 Done means:
-- The next slice starts with first additive resource schema and validator warning/report planning rather than JSON migration, map placement, renderer asset ingestion, market implementation, save cleanup, or screen polish.
+- The next slice starts with first additive resource validator/report scaffolding implementation rather than JSON migration, map placement, renderer asset ingestion, market implementation, save cleanup, rare-resource activation, or screen polish.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI are sequenced before campaign/skirmish maps and final polish.
 - The result is not dependent on pretending existing scaffolds, local-only reference assets, or content volume are production depth.
 - Remaining gaps are documented as foundation gaps, not hidden behind completed language.

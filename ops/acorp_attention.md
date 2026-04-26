@@ -68,6 +68,11 @@ Updated: 2026-04-26
 - Economy/resource schema migration should confirm that normal markets remain common-resource smoothing first, with no broad rare-resource buying until weekly caps, source discovery, UI display, AI use, and save state are implemented.
 - Economy/resource schema migration should confirm that faction resource preferences are advisory AI/content weights first, not hard locks or private currencies.
 - Economy/resource schema migration should confirm that resource-site behavior remains in `resource_sites.json` while map-object schema owns presentation, footprint, approach, passability, and visible state metadata.
+- Economy/resource additive validator planning should review `docs/economy-resource-additive-schema-validator-plan.md` before implementation and confirm that the first validator/report slice is opt-in, report-only for production content, and strict only for sample fixtures or declared migrated bundles.
+- Economy/resource additive validator planning should confirm whether the first resource registry lives only in tests/report fixtures before any later `content/resources.json` production content addition.
+- Economy/resource additive validator planning should confirm whether default `python3 tests/validate_repo.py` output may include compact economy warning counts or whether economy reports should remain behind explicit CLI flags.
+- Economy/resource additive validator planning should confirm that `wood` remains the live id and Timber display/alias reporting stays advisory until a save-aware canonical-id decision is made.
+- Economy/resource additive validator planning should confirm that missing output cadence, capture profile, and market caps are compatibility warnings only, not production-content errors, until a migrated bundle declares the strict schema.
 
 ## Current Follow-Up
 
@@ -75,5 +80,6 @@ Updated: 2026-04-26
 - The first implementation-brief prep pass is recorded in `docs/concept-art-implementation-briefs.md`. It is planning evidence, not final asset approval. AcOrP review remains open and is not a hard blocker to object schema migration planning.
 - The object schema migration planning contract is recorded in `docs/overworld-object-schema-migration-plan.md`. It is planning evidence only; no JSON content, runtime code, scenario placement, renderer sprite ingestion, runtime asset import, validator implementation, pathing change, or AI adoption has happened yet.
 - The economy/resource schema migration planning contract is recorded in `docs/economy-resource-schema-migration-plan.md`. It is planning evidence only; no JSON content, runtime code, validator implementation, market implementation, save migration, renderer sprite ingestion, or resource-site bundle migration has happened yet.
-- First additive resource schema and validator warning/report planning is the next current companion slice after economy/resource schema planning.
+- The first additive resource schema and validator warning/report planning contract is recorded in `docs/economy-resource-additive-schema-validator-plan.md`. It is planning evidence only; no production JSON content, runtime code, validator implementation, market behavior change, save migration, rare-resource activation, renderer sprite ingestion, runtime asset import, or generated concept-art import has happened yet.
+- First additive resource validator/report scaffolding implementation is the next current companion slice after the planning contract.
 - GitHub push/auth remains blocked by invalid credentials; keep work local and do not push until credentials are refreshed.
