@@ -2144,6 +2144,85 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 		])
 	return "\n".join(lines)
 
+static func target_handoff_cue_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {
+			"visible_text": "Target handoff: no battle is loaded.",
+			"tooltip_text": "Target Handoff\n- No battle is loaded.",
+			"focus": "",
+			"board_click": "",
+			"cycle": "",
+			"move": "",
+		}
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
+	var target_label := _stack_label(target) if not target.is_empty() else "no target"
+	var legal_target_ids := _legal_attack_target_ids_for_active_stack(battle)
+	var enemy_count := _alive_stacks_for_side(battle, "enemy").size()
+	var cycle_line := ""
+	if legal_target_ids.size() > 1:
+		cycle_line = "Prev/Next cycles %d legal targets." % legal_target_ids.size()
+	elif legal_target_ids.size() == 1:
+		cycle_line = "Only one legal target is ready."
+	elif enemy_count > 1:
+		cycle_line = "Prev/Next checks %d enemy stacks." % enemy_count
+	elif enemy_count == 1:
+		cycle_line = "Only one enemy stack remains."
+	else:
+		cycle_line = "No living enemy target remains."
+
+	var visible := ""
+	var board_line := ""
+	var move_line := ""
+	if active_stack.is_empty():
+		visible = "Target handoff: wait for the next stack."
+		board_line = "No stack is ready to act."
+	elif String(active_stack.get("side", "")) != "player":
+		visible = "Target handoff: enemy initiative; command returns after this action."
+		board_line = _player_input_locked_summary()
+	else:
+		var click_intent := selected_target_board_click_intent(battle)
+		var movement_intent := active_movement_board_click_intent(battle)
+		var continuity_context := selected_target_continuity_context(battle)
+		var closing_context := selected_target_closing_context(battle)
+		board_line = String(click_intent.get("message", ""))
+		if not continuity_context.is_empty():
+			board_line = String(continuity_context.get("message", board_line))
+		elif not closing_context.is_empty():
+			board_line = String(closing_context.get("message", board_line))
+		if board_line == "":
+			board_line = "Board click: highlighted enemy attacks now; green hex moves."
+		move_line = String(movement_intent.get("message", ""))
+		var click_action := String(click_intent.get("action", ""))
+		var click_label := String(click_intent.get("label", "")).strip_edges()
+		if click_action != "" and click_label != "" and not target.is_empty():
+			visible = "Target handoff: %s | Try: click target to %s." % [
+				target_label,
+				click_label.to_lower(),
+			]
+		elif String(movement_intent.get("action", "")) == "move":
+			visible = "Target handoff: %s | Try: click green hex to move." % target_label
+		else:
+			visible = "Target handoff: %s | Try: cycle or use a ready order." % target_label
+
+	var tooltip := "Target Handoff\n- Focus: %s\n- Board click: %s\n- Cycle: %s" % [
+		target_label,
+		board_line,
+		cycle_line,
+	]
+	if move_line != "":
+		tooltip += "\n- Move: %s" % move_line
+	tooltip += "\n- Ready check: %s" % describe_action_readiness_confirmation(session)
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"focus": target_label,
+		"board_click": board_line,
+		"cycle": cycle_line,
+		"move": move_line,
+	}
+
 static func action_readiness_confirmation_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {
