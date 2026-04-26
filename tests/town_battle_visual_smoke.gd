@@ -953,6 +953,26 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 	if not visible_action_guidance.contains("Try:"):
 		push_error("Battle smoke: manual-play action cue is not visible in the order rail: %s." % snapshot)
 		return false
+	var target_handoff: Dictionary = snapshot.get("target_handoff", {}) if snapshot.get("target_handoff", {}) is Dictionary else {}
+	var target_handoff_text := "\n".join([
+		String(snapshot.get("target_handoff_visible_text", "")),
+		String(snapshot.get("target_handoff_tooltip_text", "")),
+		String(target_handoff.get("focus", "")),
+		String(target_handoff.get("board_click", "")),
+		String(target_handoff.get("cycle", "")),
+		String(target_handoff.get("move", "")),
+		visible_action_guidance,
+	])
+	for token in ["Target handoff:", "Target Handoff", "Focus:", "Board click:", "Cycle:", "Try:"]:
+		if not target_handoff_text.contains(token):
+			push_error("Battle smoke: battle target handoff cue lost %s clarity: %s." % [token, target_handoff_text])
+			return false
+	if String(target_handoff.get("focus", "")) == "" or String(target_handoff.get("board_click", "")) == "" or String(target_handoff.get("cycle", "")) == "":
+		push_error("Battle smoke: target handoff payload is missing focus, board-click, or cycle context: %s." % target_handoff)
+		return false
+	if not visible_action_guidance.contains("Target handoff:"):
+		push_error("Battle smoke: target handoff cue is not visible in the footer action guide: %s." % snapshot)
+		return false
 	var confirmation: Dictionary = snapshot.get("action_confirmation", {}) if snapshot.get("action_confirmation", {}) is Dictionary else {}
 	var confirmation_text := "\n".join([
 		String(confirmation.get("visible_text", "")),
@@ -977,7 +997,7 @@ func _assert_battle_ability_status_action_consequence_contract(shell: Node) -> b
 		push_error("Battle smoke: active consequence payload is missing ability/status/range fields: %s." % [consequence_payload])
 		return false
 	for leak_token in ["final_priority", "debug_reason", "score", "ai_score", "weight"]:
-		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or manual_cue_text.contains(leak_token) or confirmation_text.contains(leak_token) or roster_text.contains(leak_token):
+		if active_text.contains(leak_token) or button_tooltips.contains(leak_token) or manual_cue_text.contains(leak_token) or target_handoff_text.contains(leak_token) or confirmation_text.contains(leak_token) or roster_text.contains(leak_token):
 			push_error("Battle smoke: battle consequence UI leaked internal token %s." % leak_token)
 			return false
 	return true

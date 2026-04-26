@@ -393,7 +393,10 @@ func _refresh() -> void:
 	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
-	_set_compact_label(_action_guide, BattleRules.describe_action_surface(_session), 5)
+	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
+	_action_guide.visible = true
+	_set_compact_label(_action_guide, String(target_handoff.get("visible_text", BattleRules.describe_action_surface(_session))), 1)
+	_action_guide.tooltip_text = String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session)))
 	var action_confirmation_tooltip := String(action_confirmation.get("tooltip_text", "")).strip_edges()
 	if action_confirmation_tooltip != "":
 		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
@@ -528,6 +531,7 @@ func validation_snapshot() -> Dictionary:
 	var action_surface := BattleRules.get_action_surface(_session)
 	var consequence_payload := BattleRules.active_consequence_payload(_session)
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
+	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
@@ -562,6 +566,9 @@ func validation_snapshot() -> Dictionary:
 		"active_movement_board_click_intent": movement_click_intent,
 		"active_movement_board_click_action": String(movement_click_intent.get("action", "")),
 		"active_movement_board_click_label": String(movement_click_intent.get("label", "")),
+		"target_handoff": target_handoff,
+		"target_handoff_visible_text": String(target_handoff.get("visible_text", "")),
+		"target_handoff_tooltip_text": String(target_handoff.get("tooltip_text", "")),
 		"action_surface": action_surface,
 		"action_confirmation": action_confirmation,
 		"action_confirmation_text": String(action_confirmation.get("visible_text", "")),
