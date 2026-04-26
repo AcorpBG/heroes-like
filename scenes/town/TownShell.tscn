@@ -322,6 +322,13 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Hero"
 
+[node name="ProductionOverview" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+clip_text = true
+text = "Production Overview"
+
 [node name="Heroes" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 visible = false
