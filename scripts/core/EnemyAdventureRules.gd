@@ -77,6 +77,7 @@ static func advance_raids(
 	var marching_counts = {}
 	var pressure_counts = {}
 	var event_messages = []
+	var event_records = []
 
 	for index in range(encounters.size()):
 		var encounter = encounters[index]
@@ -84,7 +85,11 @@ static func advance_raids(
 			continue
 
 		encounter = ensure_raid_army(encounter, session)
+		var previous_target := _current_target_snapshot(encounter)
 		encounter = assign_target(session, config, encounter)
+		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
+		if not assignment_event.is_empty():
+			event_records.append(assignment_event)
 		encounter["days_active"] = max(0, int(encounter.get("days_active", 0))) + 1
 
 		var current = Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
@@ -109,6 +114,9 @@ static func advance_raids(
 			var event_message = String(arrival_result.get("event_message", ""))
 			if event_message != "":
 				event_messages.append(event_message)
+			var arrival_event: Dictionary = arrival_result.get("ai_event", {})
+			if not arrival_event.is_empty():
+				event_records.append(arrival_event)
 		encounters[index] = encounter
 
 		var target_label = String(encounter.get("target_label", "the frontier"))
@@ -147,6 +155,7 @@ static func advance_raids(
 	return {
 		"message": " ".join(messages),
 		"state": state,
+		"events": event_records,
 	}
 
 static func normalize_raid_armies(session: SessionStateStoreScript.SessionData) -> void:
@@ -1898,7 +1907,7 @@ static func describe_focus(session: SessionStateStoreScript.SessionData, faction
 			continue
 		if public_only and not _raid_is_public(session, encounter):
 			continue
-		var target_label = String(encounter.get("target_label", "the frontier"))
+		var target_label = _raid_focus_label(encounter, public_only)
 		if bool(encounter.get("arrived", false)) or int(encounter.get("goal_distance", 9999)) == 0:
 			pressure_counts[target_label] = int(pressure_counts.get(target_label, 0)) + 1
 		else:
@@ -1912,6 +1921,15 @@ static func describe_focus(session: SessionStateStoreScript.SessionData, faction
 	if pressuring != "":
 		parts.append(pressuring)
 	return " | ".join(parts)
+
+static func _raid_focus_label(encounter: Dictionary, public_only: bool = false) -> String:
+	var label := String(encounter.get("target_label", "the frontier"))
+	var reason := String(encounter.get("target_public_reason", ""))
+	if reason == "":
+		return label
+	if public_only and String(encounter.get("target_public_importance", "low")) == "low":
+		return label
+	return "%s (%s)" % [label, reason]
 
 static func describe_contestation(session: SessionStateStoreScript.SessionData, faction_id: String, public_only: bool = false) -> String:
 	var secured_sites = 0
@@ -2120,6 +2138,9 @@ static func _append_town_candidate(
 		return
 	var objective_anchor = _town_is_objective_anchor(session, placement_id)
 	var strategic_bonus = _town_strategic_priority_bonus(session, town, faction_id, objective_anchor)
+	var reason_codes := ["town_siege"]
+	if objective_anchor:
+		reason_codes.append("objective_front")
 	candidates.append(
 		{
 			"target_kind": "town",
@@ -2142,6 +2163,10 @@ static func _append_town_candidate(
 					objective_anchor
 				) - _assignment_penalty(session, "town", placement_id)
 			),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": "town siege remains the main front" if placement_id == String(config.get("siege_target_placement_id", "")) else "town front pressure",
+			"target_debug_reason": "town siege and objective pressure" if objective_anchor else "town siege pressure",
+			"target_public_importance": "critical" if objective_anchor or placement_id == String(config.get("siege_target_placement_id", "")) else "high",
 		}
 	)
 
@@ -2168,6 +2193,7 @@ static func _append_resource_candidate(
 		return
 	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, faction_id)
 	var priority := int(breakdown.get("final_priority", 0))
+	var reason_codes: Array = breakdown.get("reason_codes", [])
 	candidates.append(
 		{
 			"target_kind": "resource",
@@ -2180,6 +2206,9 @@ static func _append_resource_candidate(
 			"goal_distance": goal_distance,
 			"priority": priority,
 			"target_debug_reason": String(breakdown.get("debug_reason", "")),
+			"target_reason_codes": reason_codes,
+			"target_public_reason": String(breakdown.get("public_reason", "")),
+			"target_public_importance": String(breakdown.get("public_importance", "low")),
 		}
 	)
 
@@ -2625,6 +2654,134 @@ static func resource_pressure_report(
 		"targets": targets,
 	}
 
+static func ai_target_assignment_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	actor: Dictionary,
+	previous_target: Dictionary = {}
+) -> Dictionary:
+	var target_kind := String(actor.get("target_kind", ""))
+	var target_id := String(actor.get("target_placement_id", ""))
+	if target_kind == "" or target_id == "":
+		return {}
+	if not previous_target.is_empty() and _target_signature(previous_target) == _target_signature(_current_target_snapshot(actor)):
+		return {}
+	var target := {
+		"target_kind": target_kind,
+		"target_placement_id": target_id,
+		"target_label": String(actor.get("target_label", target_id)),
+		"target_x": int(actor.get("target_x", actor.get("goal_x", 0))),
+		"target_y": int(actor.get("target_y", actor.get("goal_y", 0))),
+		"target_public_reason": String(actor.get("target_public_reason", "")),
+		"target_reason_codes": actor.get("target_reason_codes", []),
+		"target_public_importance": String(actor.get("target_public_importance", "")),
+		"target_debug_reason": String(actor.get("target_debug_reason", "")),
+	}
+	return build_ai_event_record(
+		session,
+		config,
+		"ai_target_assigned",
+		actor,
+		target,
+		{
+			"state_policy": "derived",
+			"summary_prefix": "targets",
+		}
+	)
+
+static func ai_pressure_summary_event(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	target: Dictionary,
+	state: Dictionary = {}
+) -> Dictionary:
+	if target.is_empty():
+		return {}
+	var summary_target := target.duplicate(true)
+	if String(summary_target.get("target_public_reason", "")) == "":
+		match String(summary_target.get("target_kind", "")):
+			"town":
+				summary_target["target_public_reason"] = "town siege remains the main front"
+				summary_target["target_reason_codes"] = ["town_siege", "objective_front"]
+				summary_target["target_public_importance"] = "critical"
+			"resource":
+				summary_target["target_public_reason"] = "site denial pressure"
+				summary_target["target_reason_codes"] = ["persistent_income_denial"]
+				summary_target["target_public_importance"] = "high"
+	var actor := {
+		"placement_id": String(config.get("faction_id", "")),
+		"name": String(config.get("label", config.get("faction_id", "Enemy"))),
+	}
+	return build_ai_event_record(
+		session,
+		config,
+		"ai_pressure_summary",
+		actor,
+		summary_target,
+		{
+			"public_importance": String(summary_target.get("target_public_importance", "medium")),
+			"state_policy": "derived",
+			"summary": "%s pressure centers on %s." % [
+				String(config.get("label", config.get("faction_id", "Enemy"))),
+				String(summary_target.get("target_label", summary_target.get("target_placement_id", "the frontier"))),
+			],
+			"debug_reason": String(summary_target.get("target_debug_reason", "")),
+		}
+	)
+
+static func build_ai_event_record(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	event_type: String,
+	actor: Dictionary,
+	target: Dictionary,
+	options: Dictionary = {}
+) -> Dictionary:
+	var faction_id := String(options.get("faction_id", config.get("faction_id", actor.get("spawned_by_faction_id", ""))))
+	var faction_label := String(options.get("faction_label", config.get("label", faction_id)))
+	var actor_id := String(options.get("actor_id", actor.get("placement_id", actor.get("id", ""))))
+	var actor_label := String(options.get("actor_label", _raid_name(actor) if actor.has("encounter_id") else actor.get("name", actor_id)))
+	var target_kind := String(options.get("target_kind", target.get("target_kind", "")))
+	var target_id := String(options.get("target_id", target.get("target_placement_id", target.get("placement_id", ""))))
+	var target_label := String(options.get("target_label", target.get("target_label", target.get("name", target_id))))
+	var target_x := int(options.get("target_x", target.get("target_x", target.get("x", 0))))
+	var target_y := int(options.get("target_y", target.get("target_y", target.get("y", 0))))
+	var reason_codes: Array = _normalize_string_array(options.get("reason_codes", target.get("target_reason_codes", [])))
+	if reason_codes.is_empty():
+		reason_codes = _default_reason_codes_for_target(target_kind, target_id, target)
+	var public_reason := String(options.get("public_reason", target.get("target_public_reason", _public_reason_from_codes(reason_codes))))
+	if public_reason == "":
+		public_reason = _public_reason_from_codes(reason_codes)
+	var debug_reason := String(options.get("debug_reason", target.get("target_debug_reason", public_reason)))
+	var importance := String(options.get("public_importance", target.get("target_public_importance", _default_public_importance(target_kind, reason_codes))))
+	var visibility := String(options.get("visibility", _event_visibility(session, target_x, target_y, importance)))
+	var summary := String(options.get("summary", ""))
+	if summary == "":
+		summary = _ai_event_summary(event_type, faction_label, actor_label, target_label, public_reason, String(options.get("summary_prefix", "")))
+	var event_id := "%d:%s:%s:%s:%s" % [int(session.day), faction_id, event_type, actor_id, target_id]
+	return {
+		"event_id": event_id,
+		"day": int(session.day),
+		"sequence": int(options.get("sequence", 0)),
+		"event_type": event_type,
+		"faction_id": faction_id,
+		"faction_label": faction_label,
+		"actor_id": actor_id,
+		"actor_label": actor_label,
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label,
+		"target_x": target_x,
+		"target_y": target_y,
+		"visibility": visibility,
+		"public_importance": importance,
+		"summary": summary,
+		"reason_codes": reason_codes,
+		"public_reason": public_reason,
+		"debug_reason": debug_reason,
+		"state_policy": String(options.get("state_policy", "ephemeral")),
+	}
+
 static func resource_target_score_breakdown(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -2706,6 +2863,9 @@ static func resource_target_score_breakdown(
 		debug_reason = _resource_target_debug_reason(site, player_controlled, persistent, claim_value, income_value, recruit_payload_value, route_pressure_value, town_enablement_value)
 	elif contestable:
 		debug_reason = "unreachable from current raid origin"
+	var reason_codes := _resource_target_reason_codes(site, player_controlled, persistent, income_value, recruit_payload_value, route_pressure_value, town_enablement_value)
+	var public_reason := _public_reason_from_codes(reason_codes)
+	var public_importance := _resource_target_public_importance(player_controlled, persistent, reason_codes, final_priority)
 
 	return {
 		"target_kind": "resource",
@@ -2728,6 +2888,9 @@ static func resource_target_score_breakdown(
 		"guard_cost": guard_cost,
 		"assignment_penalty": assignment_penalty,
 		"final_priority": final_priority,
+		"reason_codes": reason_codes,
+		"public_reason": public_reason,
+		"public_importance": public_importance,
 		"debug_reason": debug_reason,
 	}
 
@@ -2938,6 +3101,129 @@ static func _resource_target_debug_reason(
 	if parts.is_empty():
 		parts.append("frontier denial")
 	return ", ".join(parts)
+
+static func _resource_target_reason_codes(
+	site: Dictionary,
+	player_controlled: bool,
+	persistent: bool,
+	income_value: int,
+	recruit_payload_value: int,
+	route_pressure_value: int,
+	town_enablement_value: int
+) -> Array:
+	var codes := []
+	if player_controlled and persistent and income_value > 0:
+		codes.append("persistent_income_denial")
+	if recruit_payload_value > 0:
+		codes.append("recruit_denial")
+	if route_pressure_value > 0:
+		if max(0, int(site.get("vision_radius", 0))) > 0:
+			codes.append("route_vision")
+		else:
+			codes.append("route_pressure")
+	if town_enablement_value > 0:
+		codes.append("player_town_support")
+	if codes.is_empty():
+		codes.append("route_pressure")
+	return codes
+
+static func _resource_target_public_importance(player_controlled: bool, persistent: bool, reason_codes: Array, final_priority: int) -> String:
+	if player_controlled and persistent and ("persistent_income_denial" in reason_codes or "recruit_denial" in reason_codes):
+		return "high"
+	if final_priority >= 260:
+		return "medium"
+	return "low"
+
+static func _public_reason_from_codes(reason_codes: Array) -> String:
+	var codes := _normalize_string_array(reason_codes)
+	if "town_siege" in codes:
+		return "town siege remains the main front"
+	if "persistent_income_denial" in codes and "recruit_denial" in codes:
+		return "recruit and income denial"
+	if "persistent_income_denial" in codes and "route_vision" in codes:
+		return "income and route vision denial"
+	if "persistent_income_denial" in codes:
+		return "income denial"
+	if "recruit_denial" in codes:
+		return "recruit denial"
+	if "route_vision" in codes:
+		return "route vision denial"
+	if "route_pressure" in codes:
+		return "route pressure"
+	if "objective_front" in codes:
+		return "objective front"
+	if "site_seized" in codes:
+		return "site seized"
+	if "site_contested" in codes:
+		return "site contested"
+	if "commander_memory" in codes:
+		return "known commander focus"
+	return ""
+
+static func _default_reason_codes_for_target(target_kind: String, target_id: String, target: Dictionary = {}) -> Array:
+	match target_kind:
+		"town":
+			var codes := ["town_siege"]
+			if bool(target.get("objective_anchor", true)) or target_id == "riverwatch_hold":
+				codes.append("objective_front")
+			return codes
+		"resource":
+			return ["route_pressure"]
+		"encounter":
+			return ["site_contested", "objective_front"]
+		_:
+			return []
+
+static func _default_public_importance(target_kind: String, reason_codes: Array) -> String:
+	if target_kind == "town" or "town_siege" in reason_codes:
+		return "critical"
+	if "persistent_income_denial" in reason_codes or "recruit_denial" in reason_codes or "objective_front" in reason_codes:
+		return "high"
+	if "site_seized" in reason_codes or "site_contested" in reason_codes:
+		return "medium"
+	return "low"
+
+static func _event_visibility(session: SessionStateStoreScript.SessionData, x: int, y: int, public_importance: String) -> String:
+	if OverworldRulesScript.is_tile_visible(session, x, y):
+		return "visible"
+	if OverworldRulesScript.is_tile_explored(session, x, y):
+		return "scouted"
+	if public_importance in ["critical", "high"]:
+		return "rumored"
+	return "hidden_debug"
+
+static func _ai_event_summary(
+	event_type: String,
+	faction_label: String,
+	actor_label: String,
+	target_label: String,
+	public_reason: String,
+	summary_prefix: String = ""
+) -> String:
+	var actor_clause := actor_label if actor_label != "" else faction_label
+	var reason_suffix := " (%s)" % public_reason if public_reason != "" else ""
+	match event_type:
+		"ai_target_assigned":
+			var verb := summary_prefix if summary_prefix != "" else "targets"
+			return "%s %s %s%s." % [actor_clause, verb, target_label, reason_suffix]
+		"ai_site_seized":
+			return "%s seizes %s%s." % [actor_clause, target_label, reason_suffix]
+		"ai_site_contested":
+			return "%s contests %s%s." % [actor_clause, target_label, reason_suffix]
+		"ai_pressure_summary":
+			return "%s pressure centers on %s%s." % [faction_label, target_label, reason_suffix]
+		_:
+			return "%s marks %s%s." % [actor_clause, target_label, reason_suffix]
+
+static func _normalize_string_array(value: Variant) -> Array:
+	var output := []
+	if not (value is Array):
+		return output
+	for item in value:
+		var text := String(item)
+		if text != "" and text not in output:
+			output.append(text)
+	return output
 
 static func _resource_payload_summary(payload: Variant) -> String:
 	if not (payload is Dictionary):
@@ -3200,7 +3486,40 @@ static func _secure_resource_target(
 	)
 	if disruption_message != "":
 		message = "%s %s" % [message, disruption_message]
-	return {"encounter": raid, "state": state, "event_message": message}
+	var seized_codes := ["site_seized"]
+	seized_codes.append_array(
+		_resource_target_reason_codes(
+			site,
+			previous_controller == "player",
+			_resource_site_is_persistent(site),
+			_target_resource_value(site.get("control_income", {})),
+			_recruit_payload_value(site.get("claim_recruits", {})) + _recruit_payload_value(site.get("weekly_recruits", {})),
+			_resource_route_pressure_value(site),
+			_linked_player_town_bonus(session, previous_node)
+		)
+	)
+	var event := build_ai_event_record(
+		session,
+		{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+		"ai_site_seized",
+		raid,
+		{
+			"target_kind": "resource",
+			"target_placement_id": String(raid.get("target_placement_id", "")),
+			"target_label": String(site.get("name", "the site")),
+			"target_x": int(node.get("x", 0)),
+			"target_y": int(node.get("y", 0)),
+			"target_reason_codes": seized_codes,
+			"target_public_reason": _public_reason_from_codes(seized_codes),
+			"target_public_importance": "high" if previous_controller == "player" or _resource_site_is_persistent(site) else "medium",
+			"target_debug_reason": String(raid.get("target_debug_reason", "")),
+		},
+		{
+			"summary": message,
+			"state_policy": "durable_state_reference",
+		}
+	)
+	return {"encounter": raid, "state": state, "event_message": message, "ai_event": event}
 
 static func _secure_artifact_target(
 	session: SessionStateStoreScript.SessionData,
@@ -3258,13 +3577,36 @@ static func _contest_encounter_target(
 		session.overworld["encounters"] = encounters
 		if claimed_now:
 			state["pressure"] = max(0, int(state.get("pressure", 0))) + 1
+			var contest_message := "%s locks down %s and turns it into a live front." % [
+				_raid_name(raid),
+				String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
+			]
+			var contest_event := build_ai_event_record(
+				session,
+				{"faction_id": faction_id, "label": String(ContentService.get_faction(faction_id).get("name", faction_id))},
+				"ai_site_contested",
+				raid,
+				{
+					"target_kind": "encounter",
+					"target_placement_id": String(encounter_state.get("placement_id", "")),
+					"target_label": String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
+					"target_x": int(encounter_state.get("x", 0)),
+					"target_y": int(encounter_state.get("y", 0)),
+					"target_reason_codes": ["site_contested", "objective_front"],
+					"target_public_reason": "objective front",
+					"target_public_importance": "high",
+					"target_debug_reason": "objective encounter contested",
+				},
+				{
+					"summary": contest_message,
+					"state_policy": "durable_state_reference",
+				}
+			)
 			return {
 				"encounter": raid,
 				"state": state,
-				"event_message": "%s locks down %s and turns it into a live front." % [
-					_raid_name(raid),
-					String(ContentService.get_encounter(String(encounter_state.get("encounter_id", encounter_state.get("id", "")))).get("name", "the outpost")),
-				],
+				"event_message": contest_message,
+				"ai_event": contest_event,
 			}
 		return {"encounter": raid, "state": state, "event_message": ""}
 
