@@ -202,7 +202,7 @@ func _run_main_menu_smoke() -> bool:
 			String(save_snapshot.get("save_details_full", save_snapshot.get("save_details", ""))),
 			String(save_snapshot.get("load_selected_tooltip", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Progress Recap", "Current progress:", "Next step:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Action:", "Continuity:", "Current objective:", "Risk watch:", "Progress Recap", "Current progress:", "Next step:"]
 	):
 		return false
 
