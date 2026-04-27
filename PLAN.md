@@ -320,6 +320,24 @@ Validation:
 Limits:
 - This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression semantics, settings persistence, or broad dashboard composition.
 
+## Completed Implementation Slice: Map-Editor Export Intent Cue
+Status: completed on 2026-04-27 as compact tooling-facing map-editor UI polish.
+
+Purpose:
+- Help a map author understand whether the current editor working copy is clean or dirty and what should be smoke-tested before any future authored export.
+- Reuse existing scenario validation, working-copy dirty state, Play Copy handoff, hero start, and object-count payloads instead of adding an export pipeline or authored-file writes.
+
+Delivered:
+- Added a compact `Export intent:` payload in `scenes/editor/MapEditorShell.gd`.
+- The editor status and scenario picker tooltip now surface clean/dirty export intent, Play Copy next step, future authored-export context, and the no-authored-file/no-campaign-progress scope.
+- Added focused smoke coverage in `tests/map_editor_smoke.gd`, including clean and dirty working-copy assertions plus no-score-leak coverage.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/map_editor_smoke.tscn`.
+
+Limits:
+- This is UI/tooling clarity only. It does not add an export writer, change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, campaign progression semantics, settings persistence, or broad dashboard composition.
+
 ## Completed Planning Slice: Strategic AI Commander Role State Boundaries
 Status: completed on 2026-04-26 as documentation-only planning after the passed site-control and Glassroad defense proofs.
 
@@ -3982,11 +4000,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: compact overworld End Turn unused-movement cue using the existing end-turn readiness surface.
+Current target: compact map-editor export intent cue using the existing scenario validation, working-copy dirty state, and Play Copy handoff surfaces.
 
 Done means:
-- The overworld End Turn control makes unspent movement consequence visible before ending the day.
-- The End Turn tooltip explains whether movement remains, whether it carries over, and what the next-day movement refresh will do.
-- Focused overworld smoke coverage proves the visible cue, tooltip cue, and no internal score/debug leaks.
-- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
+- The map editor status makes clean/dirty export intent visible for the active working copy.
+- The scenario picker tooltip explains that Play Copy is the smoke-test handoff before any future authored export and that no authored file or campaign progress is written.
+- Focused map-editor smoke coverage proves the visible cue, tooltip cue, clean/dirty states, and no internal score/debug leaks.
+- No export writer, mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

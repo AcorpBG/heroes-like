@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T06:58:00Z",
+  "updatedAt": "2026-04-27T07:18:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-muster-cap-readiness-cue-10184",
-  "currentSliceTitle": "Surface compact town muster cap readiness cue",
+  "currentSliceId": "map-editor-export-intent-cue-10184",
+  "currentSliceTitle": "Surface compact map-editor export intent cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact player-facing town muster cue that distinguishes recruits waiting in reserve from the count that can actually be fielded or unlocked now. The cue is visible in the Muster panel line, tooltip, and validation snapshot, with focused town/battle smoke coverage. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact tooling-facing map-editor export intent cue that clarifies whether the current working copy is clean or dirty, what needs smoke testing before any future authored export, and that current editor actions still write no authored file or campaign progress. The cue is visible in the editor status, scenario picker tooltip, and validation snapshot with focused map-editor smoke coverage. UI clarity only; no mechanics, balance, save schema/version, durable logs, production JSON migration, AI tuning, renderer assets, pathing/body-tile adoption, campaign semantics, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2160,6 +2160,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T06:50:00Z",
       "completedAt": "2026-04-27T06:58:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "map-editor-export-intent-cue-10184",
+      "title": "Surface compact map-editor export intent cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T07:08:00Z",
+      "completedAt": "2026-04-27T07:18:00Z",
       "difficulty": "small"
     }
   ],
