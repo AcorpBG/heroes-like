@@ -58,15 +58,17 @@ Accepted means accepted as external concept evidence and implementation-brief di
 | Unit-ladder approval for Embercourt, Mireclaw, Thornwake, Brasshollow, and Veilmourn. | [Batch 003](concept-art-batch-003-review.md), [Batch 004](concept-art-batch-004-review.md) | Current sheets are stronger for town/object/support language than final combat tier progression. | Require silhouette-first seven-tier passes or explicit AcOrP acceptance before combat sprite, animation, or unit JSON visual migration work. |
 | Sunvault high-tier implementation form. | [Batch 004](concept-art-batch-004-review.md) | The direction is useful, but some rows imply crews or machinery rather than a single unit body. | Decide whether high tiers are multi-figure crews, construct wagons, or single large battlefield pieces before combat sprite and animation planning. |
 | Neutral army presentation model. | [Batch 005](concept-art-batch-005-review.md), [Implementation Briefs](concept-art-implementation-briefs.md) | Camps are useful but should not represent every neutral army. | Decide whether visible neutral armies are first-class overworld objects separate from camps, dwellings, guarded sites, and reward objects. |
-| Runtime asset ingestion and source-asset boundary. | [Pipeline](concept-art-pipeline.md), [Implementation Briefs](concept-art-implementation-briefs.md) | P2.2 first child is documentation/curation governance only. | Resolve `concept-art-asset-ingestion-boundary-10184` before any generated image, derivative study, processed art, or runtime asset import. |
-| First implementation brief track selection. | [Batch 005](concept-art-batch-005-review.md), [Implementation Briefs](concept-art-implementation-briefs.md) | Multiple directions are viable, but this child only records the decision register. | Resolve `concept-art-implementation-brief-selection-10184`; the highest-evidence candidates are Embercourt town/object, Mireclaw town/object, and core overworld object classes. |
+| Runtime asset ingestion and source-asset boundary. | [Pipeline](concept-art-pipeline.md), [Implementation Briefs](concept-art-implementation-briefs.md) | P2.2 curation governance does not approve generated-image import or final runtime art. | Resolve or keep explicitly paused `concept-art-asset-ingestion-boundary-10184` before any generated image, derivative study, processed art, or runtime asset import. |
+| Runtime/content implementation of selected Embercourt town/object track. | [Batch 001](concept-art-batch-001-review.md), [Batch 003](concept-art-batch-003-review.md), [Batch 005](concept-art-batch-005-review.md), [Implementation Briefs](concept-art-implementation-briefs.md) | The P2.2 second child selects the track for follow-up reference only. | Create a later explicit implementation slice before adding runtime art, content JSON, renderer hooks, object schema migration, or economy migration. |
 
-## Near-Term Recommendation
+## Selection Resolution
 
-The next P2.2 child should select one implementation brief track, not start asset ingestion or runtime work. The strongest documented candidates are:
+The P2.2 second child selects exactly one follow-up implementation brief track: **Embercourt Town And Object Direction**. This is a documentation/curation decision only. It does not import generated PNGs, approve final runtime art, or start renderer/content/schema work.
 
-- Embercourt town/object direction.
-- Mireclaw town/object direction.
-- Core overworld object classes.
+Source basis:
 
-If no single track is chosen by the next child, defer selection explicitly rather than treating all accepted evidence as implementation approval.
+- `docs/concept-art-decision-register.md` records Embercourt as the strongest town/object implementation direction.
+- `docs/concept-art-implementation-briefs.md` gives the selected track concrete footprint, approach, interaction class, state-variant, and animation-cue implications.
+- Batch 001, batch 003, and batch 005 provide the supporting concept evidence.
+
+Remaining P2.2 boundary: `concept-art-asset-ingestion-boundary-10184` stays paused unless a doc-only boundary decision explicitly resolves it. No generated image, derivative processed asset, or runtime/source art import should happen before that boundary is addressed.

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-implementation-brief-selection-10184",
-  "currentSliceTitle": "Concept-Art Implementation Brief Selection",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.2 second child in progress: select one implementation brief track or explicitly defer selection before any asset/runtime work.",
+  "currentSliceId": "concept-art-asset-ingestion-boundary-10184",
+  "currentSliceTitle": "Concept-Art Asset Ingestion Boundary",
+  "currentSliceStatus": "paused",
+  "currentSliceNotes": "Remaining P2.2 child is paused: no generated PNG, derivative processed asset, or runtime/source art import is authorized until a later explicit asset approval, provenance, import-location, and rollback boundary is resolved.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T13:16:26Z",
+  "updatedAt": "2026-04-27T13:18:49Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -168,8 +168,8 @@
       "implementationTargets": [
         "curation/status document or brief update only unless an explicit asset implementation slice follows"
       ],
-      "deferredReason": "Final asset approval and runtime ingestion remain deferred until the remaining P2.2 children resolve brief selection and asset boundary.",
-      "notes": "P2.2 selected after P2.1 completion; concept-art-decision-register-10184 completed as documentation/curation governance; process remaining P2.2 children before later Phase 2 parents.",
+      "deferredReason": "Final asset approval and runtime ingestion remain deferred until the remaining P2.2 asset-ingestion boundary is explicitly resolved.",
+      "notes": "P2.2 selected after P2.1 completion; concept-art-decision-register-10184 completed as documentation/curation governance; concept-art-implementation-brief-selection-10184 selected Embercourt Town And Object Direction as the single follow-up implementation brief track. The P2.2 parent remains in progress because the asset-ingestion boundary child is still paused.",
       "sliceType": "parent",
       "childSliceIds": [
         "concept-art-decision-register-10184",
@@ -181,10 +181,11 @@
         "concept-art-docs"
       ],
       "completedImplementationEvidenceIds": [
-        "concept-art-decision-register-10184"
+        "concept-art-decision-register-10184",
+        "concept-art-implementation-brief-selection-10184"
       ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-27T13:12:56Z",
+      "updatedAt": "2026-04-27T13:18:49Z",
       "startedAt": "2026-04-27T13:11:32Z"
     },
     {
@@ -664,7 +665,7 @@
       "id": "concept-art-implementation-brief-selection-10184",
       "title": "Concept-Art Implementation Brief Selection",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "concept-art-curation-gate-10184",
@@ -678,18 +679,25 @@
         "follow-up implementation slice reference"
       ],
       "baselineChecks": [
-        "python3 tests/validate_repo.py",
+        "markdown/link/path sanity for docs/concept-art-implementation-briefs.md and docs/concept-art-decision-register.md",
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py next /root/dev/heroes-like",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "docs/concept-art-implementation-briefs.md selects exactly one follow-up track: Embercourt Town And Object Direction.",
+        "docs/concept-art-decision-register.md records the selection resolution, source basis, implementation implications, and continued no-runtime-asset boundary."
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+        "One implementation brief track is selected or explicitly deferred with rationale.",
+        "Selection remains documentation/curation governance only and does not start asset ingestion, renderer work, content JSON migration, or final runtime art approval.",
+        "Progress tracker moves to the remaining P2.2 asset-ingestion boundary child without completing the P2.2 parent."
       ],
-      "updatedAt": "2026-04-27T13:16:26Z",
+      "updatedAt": "2026-04-27T13:18:49Z",
       "startedAt": "2026-04-27T13:16:26Z",
-      "notes": "worker started for P2.2 second child: select one implementation brief track or explicitly defer selection; no runtime asset ingestion or renderer/content code changes"
+      "notes": "Completed P2.2 second child: selected Embercourt Town And Object Direction as the single follow-up implementation brief track. Rationale: strongest town/object direction in the decision register, supported by batch 001, batch 003, batch 005, and concrete brief implications for footprint, approach sides, route objects, states, and animation cues. Non-goals remain no generated PNG import, no runtime/source asset approval, no renderer/content/schema migration, and no final art approval.",
+      "completedAt": "2026-04-27T13:18:49Z"
     },
     {
       "id": "concept-art-asset-ingestion-boundary-10184",
@@ -717,7 +725,9 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "deferredReason": "Runtime asset ingestion requires explicit approval after concept-art curation."
+      "updatedAt": "2026-04-27T13:18:49Z",
+      "deferredReason": "Runtime asset ingestion remains paused after brief-track selection. No generated PNG, derivative processed asset, source art import, runtime registration, renderer hookup, or final art approval is authorized until a later explicit boundary defines provenance requirements, approval authority, import location, rollback rules, and validation.",
+      "notes": "Remaining P2.2 child. Leave paused as a precise boundary after selecting Embercourt as the follow-up brief track; this paused state prevents asset ingestion while preserving the next governance item."
     },
     {
       "id": "economy-resource-registry-policy-10184",
@@ -2751,19 +2761,19 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "concept-art-implementation-brief-selection-10184",
-      "title": "Concept-Art Implementation Brief Selection",
-      "status": "in_progress",
+      "id": "concept-art-asset-ingestion-boundary-10184",
+      "title": "Concept-Art Asset Ingestion Boundary",
+      "status": "paused",
       "parentSliceId": "concept-art-curation-gate-10184",
       "sourceDocs": [
+        "docs/concept-art-pipeline.md",
         "docs/concept-art-implementation-briefs.md",
         "docs/concept-art-decision-register.md"
       ],
       "implementationTargets": [
-        "selected implementation brief update",
-        "follow-up implementation slice reference"
+        "asset ingestion plan or explicit deferral note"
       ],
-      "notes": "worker started for P2.2 second child: select one implementation brief track or explicitly defer selection; no runtime asset ingestion or renderer/content code changes",
+      "notes": "Remaining P2.2 child is paused as an explicit boundary: no generated PNG, derivative processed asset, source art import, runtime registration, renderer hookup, or final art approval is authorized until provenance, approval authority, import location, rollback rules, and validation are defined.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.2 Concept-Art Curation Gate"

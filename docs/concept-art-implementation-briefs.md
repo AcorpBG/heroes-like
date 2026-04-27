@@ -1,8 +1,8 @@
 # Concept Art Implementation Briefs
 
-Status: implementation-brief prep source, not final asset approval.
-Date: 2026-04-26.
-Slice: concept-art-implementation-brief-prep-10184.
+Status: implementation-brief prep and P2.2 selection reference, not final asset approval.
+Date: 2026-04-27.
+Slice: `concept-art-implementation-brief-selection-10184`.
 
 ## Scope
 
@@ -21,6 +21,31 @@ Primary source docs:
 - `docs/concept-art-batch-003-review.md`
 - `docs/concept-art-batch-004-review.md`
 - `docs/concept-art-batch-005-review.md`
+
+## Selected Follow-Up Track
+
+Selected track: **Embercourt Town And Object Direction**.
+
+Selection rationale:
+
+- `docs/concept-art-decision-register.md` names Embercourt as the strongest town/object implementation direction.
+- Source evidence spans batch 001 identity, batch 003 town/object study, and batch 005 shared route, resource, encounter, reward, and landmark object sheets.
+- The brief already defines concrete implementation implications: `3x2` overworld town footprint, road/river approach logic, lock gates, toll bridge courts, beacon courts, mills, granaries, state variants, route-object behavior, and lock/beacon/capture animation hooks.
+- The track strengthens existing Phase 2 foundations without requiring final art approval, generated PNG import, renderer changes, or production JSON migration in this governance slice.
+
+Future implementation reference:
+
+- Start from the Embercourt section below as the selected brief for a later explicit runtime/content slice.
+- Create original runtime art/content from the motifs and constraints, not from copied generated-image layouts, silhouettes, banners, symbols, labels, or palette chips.
+- Define object metadata before production migration: footprint/body tiles, visit anchor, approach sides, passability class, primary class, ownership/capture states, route effects, guard expectations, and animation cue ids.
+- Keep economy-resource work staged behind the `embergrain` and `timber`/`wood` compatibility decisions named in the prerequisites.
+
+Explicit non-goals for this selection:
+
+- No generated PNG import, crop, copy, trace, rename, manifest registration, scene hookup, renderer change, or runtime asset approval.
+- No final Embercourt town art approval.
+- No unit-ladder, combat sprite, economy migration, save migration, or broad object-schema migration.
+- Mireclaw and Core Overworld Object Classes remain accepted concept evidence, but they are not the selected follow-up track for this child.
 
 ## Shared Implementation Rules
 
