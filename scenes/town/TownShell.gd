@@ -389,6 +389,7 @@ func validation_snapshot() -> Dictionary:
 		"town_tab_readiness": tab_readiness,
 		"town_tab_titles": _management_tab_titles(),
 		"town_tab_readiness_tooltip_text": _management_tabs.tooltip_text,
+		"town_action_button_tooltips": _town_action_button_tooltip_snapshot(),
 		"town_active_tab": _management_tabs.current_tab,
 		"leave_button_text": _leave_button.text,
 		"leave_button_tooltip_text": _leave_button.tooltip_text,
@@ -595,7 +596,7 @@ func _rebuild_hero_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Command")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "hero")
 		_style_action_button(button)
 		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
 		_hero_actions.add_child(button)
@@ -615,7 +616,7 @@ func _rebuild_build_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("button_label", action.get("label", action.get("id", "Build"))))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "build")
 		_style_action_button(button)
 		button.pressed.connect(_on_build_action_pressed.bind(String(action.get("id", "")).trim_prefix("build:")))
 		_build_actions.add_child(button)
@@ -635,7 +636,7 @@ func _rebuild_market_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Trade")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "market")
 		_style_action_button(button)
 		button.pressed.connect(_on_market_action_pressed.bind(String(action.get("id", ""))))
 		_market_actions.add_child(button)
@@ -655,7 +656,7 @@ func _rebuild_recruit_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("button_label", action.get("label", action.get("id", "Recruit"))))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "recruit")
 		_style_action_button(button)
 		button.pressed.connect(_on_recruit_action_pressed.bind(String(action.get("id", "")).trim_prefix("recruit:")))
 		_recruit_actions.add_child(button)
@@ -675,7 +676,7 @@ func _rebuild_tavern_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Hire")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "tavern")
 		_style_action_button(button)
 		button.pressed.connect(_on_tavern_action_pressed.bind(String(action.get("id", ""))))
 		_tavern_actions.add_child(button)
@@ -695,7 +696,7 @@ func _rebuild_transfer_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Transfer")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "transfer")
 		_style_action_button(button)
 		button.pressed.connect(_on_transfer_action_pressed.bind(String(action.get("id", ""))))
 		_transfer_actions.add_child(button)
@@ -715,7 +716,7 @@ func _rebuild_response_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Respond")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "response")
 		_style_action_button(button)
 		button.pressed.connect(_on_response_action_pressed.bind(String(action.get("id", ""))))
 		_response_actions.add_child(button)
@@ -735,7 +736,7 @@ func _rebuild_study_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Learn")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "study")
 		_style_action_button(button)
 		button.pressed.connect(_on_study_action_pressed.bind(String(action.get("id", "")).trim_prefix("learn_spell:")))
 		_study_actions.add_child(button)
@@ -755,7 +756,7 @@ func _rebuild_artifact_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Artifact")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "artifact")
 		_style_action_button(button)
 		button.pressed.connect(_on_artifact_action_pressed.bind(String(action.get("id", ""))))
 		_artifact_actions.add_child(button)
@@ -775,10 +776,140 @@ func _rebuild_specialty_actions() -> void:
 		var button := Button.new()
 		button.text = String(action.get("label", action.get("id", "Choose Specialty")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		button.tooltip_text = _town_action_button_tooltip(action, "specialty")
 		_style_action_button(button)
 		button.pressed.connect(_on_specialty_action_pressed.bind(String(action.get("id", ""))))
 		_specialty_actions.add_child(button)
+
+func _town_action_button_tooltip(action: Dictionary, lane: String) -> String:
+	var summary := String(action.get("summary", "")).strip_edges()
+	return _join_tooltip_sections([
+		_town_action_button_cue_text(action, lane),
+		summary,
+	])
+
+func _town_action_button_cue_text(action: Dictionary, lane: String) -> String:
+	var label := String(action.get("button_label", action.get("label", action.get("id", "Order")))).strip_edges()
+	if label == "":
+		label = "Order"
+	var lane_label := _town_action_lane_label(lane)
+	var surface := _town_action_surface_label(lane)
+	var readiness := _town_action_button_readiness(action, lane)
+	var impact := _town_action_button_impact(action, lane)
+	var next_step := _town_action_button_next_step(action, lane, label, surface, readiness)
+	return "Command cue: %s | %s | %s | Next: %s" % [
+		lane_label,
+		_short_text(readiness, 46),
+		_short_text(impact, 54),
+		_short_text(next_step, 72),
+	]
+
+func _town_action_button_readiness(action: Dictionary, lane: String) -> String:
+	if bool(action.get("disabled", false)):
+		return String(action.get("disabled_reason", "Blocked by current town state")).strip_edges()
+	if lane == "build":
+		if bool(action.get("direct_affordable", false)):
+			return "Ready now"
+		if bool(action.get("market_coverable", false)):
+			var market_summary := String(action.get("market_summary", "")).strip_edges()
+			return "Needs exchange first%s" % (": %s" % market_summary if market_summary != "" else "")
+	if lane == "recruit":
+		var direct_count := int(action.get("direct_affordable_count", 0))
+		if direct_count > 0:
+			return "Ready x%d" % direct_count
+		var market_count := int(action.get("market_affordable_count", 0))
+		if market_count > 0:
+			var recruit_market := String(action.get("market_summary", "")).strip_edges()
+			return "Needs exchange x%d%s" % [market_count, ": %s" % recruit_market if recruit_market != "" else ""]
+	var affordability := String(action.get("affordability_label", "")).strip_edges()
+	if affordability != "":
+		return affordability
+	return "Ready now"
+
+func _town_action_button_impact(action: Dictionary, lane: String) -> String:
+	for key in ["impact_line", "recommendation_line", "delivery_summary"]:
+		var value := String(action.get(key, "")).strip_edges()
+		if value != "":
+			return value.trim_suffix(".")
+	var summary := String(action.get("summary", "")).strip_edges()
+	if summary != "":
+		for line_value in summary.split("\n", false):
+			var line := String(line_value).strip_edges()
+			if line != "":
+				return line.trim_suffix(".")
+	return "%s keeps the town plan moving" % _town_action_lane_label(lane).to_lower()
+
+func _town_action_button_next_step(action: Dictionary, lane: String, label: String, surface: String, readiness: String) -> String:
+	if bool(action.get("disabled", false)):
+		return "Resolve %s before pressing %s in %s." % [readiness.to_lower(), label, surface]
+	if lane in ["build", "recruit"] and readiness.begins_with("Needs exchange"):
+		return "Use Trade, then press %s in %s." % [label, surface]
+	return "Press %s in %s, or leave when town orders are set." % [label, surface]
+
+func _town_action_lane_label(lane: String) -> String:
+	match lane:
+		"build":
+			return "Construction"
+		"recruit":
+			return "Recruitment"
+		"market":
+			return "Exchange"
+		"study":
+			return "Spell study"
+		"hero":
+			return "Commander"
+		"tavern":
+			return "Hero hire"
+		"transfer":
+			return "Transfer"
+		"response":
+			return "Strategic response"
+		"artifact":
+			return "Artifact"
+		"specialty":
+			return "Specialty"
+		_:
+			return "Town order"
+
+func _town_action_surface_label(lane: String) -> String:
+	match lane:
+		"build":
+			return "Build tab"
+		"recruit", "hero", "tavern", "transfer", "specialty":
+			return "Muster tab"
+		"study", "artifact":
+			return "Spells tab"
+		"market":
+			return "Trade tab"
+		"response":
+			return "Log tab"
+		_:
+			return "Town orders"
+
+func _town_action_button_tooltip_snapshot() -> Dictionary:
+	return {
+		"build": _button_tooltips(_build_actions),
+		"recruit": _button_tooltips(_recruit_actions),
+		"study": _button_tooltips(_study_actions),
+		"market": _button_tooltips(_market_actions),
+		"hero": _button_tooltips(_hero_actions),
+		"tavern": _button_tooltips(_tavern_actions),
+		"transfer": _button_tooltips(_transfer_actions),
+		"response": _button_tooltips(_response_actions),
+		"artifact": _button_tooltips(_artifact_actions),
+		"specialty": _button_tooltips(_specialty_actions),
+	}
+
+func _button_tooltips(container: Container) -> Array:
+	var tooltips := []
+	for child in container.get_children():
+		if child is Button:
+			tooltips.append({
+				"text": child.text,
+				"tooltip": child.tooltip_text,
+				"disabled": child.disabled,
+			})
+	return tooltips
 
 func _record_town_action_result(
 	lane: String,

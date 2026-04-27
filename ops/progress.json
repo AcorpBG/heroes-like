@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-26T23:56:36Z",
+  "updatedAt": "2026-04-27T00:03:13Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-nonspell-order-cues-10184",
-  "currentSliceTitle": "Surface compact battle non-spell order cues",
+  "currentSliceId": "town-action-button-command-cues-10184",
+  "currentSliceTitle": "Surface compact town action button command cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible battle non-spell order cues on the live Advance, Strike, Shoot, and Defend controls using existing action-surface payloads only. Button text now exposes Ready/Blocked state, tooltips include a compact Order cue with target/range/why/next context, and focused town/battle smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible town action button command cues on existing live town order buttons using current action payloads only. Tooltips now include Command cue lines with readiness, surface, impact, and next-step guidance, and focused town/battle smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -877,6 +877,33 @@
                 "python3 -m json.tool ops/progress.json",
                 "python3 tests/validate_repo.py",
                 "godot4 --headless --path . tests/map_editor_smoke.tscn"
+            ],
+            "difficulty": "medium"
+        },
+        {
+            "id": "town-action-button-command-cues-10184",
+            "title": "Surface compact town action button command cues",
+            "status": "completed",
+            "startedAt": "2026-04-26T23:59:18Z",
+            "completedAt": "2026-04-27T00:03:13Z",
+            "decision": "completed-compact-visible-town-button-tooltip-cues",
+            "blockedOptions": [
+                "mechanics_changes",
+                "balance_changes",
+                "save_schema_version_bump",
+                "durable_event_logs",
+                "broad_dashboard_ui",
+                "campaign_progression_semantic_changes",
+                "internal_score_field_exposure",
+                "production_json_migration",
+                "pathing_body_tile_adoption",
+                "renderer_asset_import"
+            ],
+            "validation": [
+                "git diff --check",
+                "python3 -m json.tool ops/progress.json",
+                "python3 tests/validate_repo.py",
+                "godot4 --headless --path . tests/town_battle_visual_smoke.tscn"
             ],
             "difficulty": "medium"
         },
