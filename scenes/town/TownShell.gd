@@ -281,7 +281,16 @@ func _refresh() -> void:
 		TownRules.describe_spell_access(_session),
 	])
 	_set_compact_label(_spellbook_label, OverworldRules.describe_spellbook(_session), 2)
-	_set_compact_label(_artifact_label, TownRules.describe_artifacts(_session), 2)
+	var artifact_readiness := _artifact_readiness_surface()
+	var artifact_text := _join_tooltip_sections([
+		String(artifact_readiness.get("visible_text", "")),
+		TownRules.describe_artifacts(_session),
+	])
+	_set_compact_label(_artifact_label, artifact_text, 2)
+	_artifact_label.tooltip_text = _join_tooltip_sections([
+		String(artifact_readiness.get("tooltip_text", "")),
+		TownRules.describe_artifacts(_session),
+	])
 	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var order_target := TownRules.town_order_target_handoff(_session)
 	var town_context_surface := _town_action_context_surface(dispatch_text)
@@ -381,6 +390,7 @@ func validation_snapshot() -> Dictionary:
 	var market_readiness := _market_readiness_surface()
 	var muster_readiness := _muster_readiness_surface()
 	var study_readiness := _study_readiness_surface()
+	var artifact_readiness := _artifact_readiness_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -438,6 +448,9 @@ func validation_snapshot() -> Dictionary:
 		"artifact_text": TownRules.describe_artifacts(_session),
 		"artifact_visible_text": _artifact_label.text,
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
+		"artifact_readiness": artifact_readiness,
+		"artifact_readiness_visible_text": String(artifact_readiness.get("visible_text", "")),
+		"artifact_readiness_tooltip_text": String(artifact_readiness.get("tooltip_text", "")),
 		"artifact_actions": _duplicate_action_array(TownRules.get_artifact_actions(_session)),
 		"town_action_recap": _duplicate_dictionary(_last_action_recap),
 		"town_action_recap_text": String(_last_action_recap.get("text", "")),
@@ -1406,6 +1419,122 @@ func _muster_readiness_surface() -> Dictionary:
 		"best_order_direct_count": best_direct,
 		"best_order_market_count": best_market_count,
 		"cap_line": cap_line,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
+
+func _artifact_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_artifact_actions(_session)
+	var hero_value: Variant = _session.overworld.get("hero", {})
+	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+	var artifacts := ArtifactRules.normalize_hero_artifacts(hero.get("artifacts", {}))
+	var equipped: Dictionary = artifacts.get("equipped", {}) if artifacts.get("equipped", {}) is Dictionary else {}
+	var inventory: Array = artifacts.get("inventory", []) if artifacts.get("inventory", []) is Array else []
+	var equipped_count := 0
+	var empty_slot_count := 0
+	for slot in ArtifactRules.EQUIPMENT_SLOTS:
+		if String(equipped.get(slot, "")) != "":
+			equipped_count += 1
+		else:
+			empty_slot_count += 1
+
+	var ready_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if best_blocked.is_empty():
+				best_blocked = action
+			continue
+		ready_orders += 1
+		if best_ready.is_empty():
+			best_ready = action
+
+	var owned_count := ArtifactRules.owned_artifact_ids(hero).size()
+	var total_known := ContentService.get_content_ids(ContentService.ARTIFACTS_PATH).size()
+	var selected_action := best_ready
+	var state_line := "no relics owned yet"
+	var visible := "Gear check: no relics"
+	if ready_orders > 0:
+		state_line = "Ready now: %d gear order%s can adjust the loadout" % [
+			ready_orders,
+			"" if ready_orders == 1 else "s",
+		]
+		visible = "Gear check: Ready x%d | %d equipped" % [ready_orders, equipped_count]
+	elif blocked_orders > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d gear order%s waiting on current loadout state" % [
+			blocked_orders,
+			"" if blocked_orders == 1 else "s",
+		]
+		visible = "Gear check: Blocked x0/%d" % blocked_orders
+	elif owned_count > 0:
+		state_line = "Loadout set: %d equipped, %d in pack" % [equipped_count, inventory.size()]
+		visible = "Gear check: Loadout %d/%d | Pack %d" % [
+			equipped_count,
+			ArtifactRules.EQUIPMENT_SLOTS.size(),
+			inventory.size(),
+		]
+
+	var label := "No gear order"
+	var readiness := state_line
+	var impact := "Gear changes shape field movement, scouting, economy, and battle command before leaving town."
+	var next_step := "Recover relics in the field, or leave when the current loadout is settled."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Gear order"))).strip_edges()
+		readiness = _town_action_button_readiness(selected_action, "artifact")
+		impact = _town_action_button_impact(selected_action, "artifact")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"artifact",
+			label,
+			_town_action_surface_label("artifact"),
+			readiness
+		)
+	elif owned_count > 0:
+		next_step = "Review the loadout or leave when town orders are set."
+
+	var collection_line := "%d owned" % owned_count
+	if total_known > 0:
+		collection_line = "%d/%d owned" % [owned_count, total_known]
+	var tooltip_lines := [
+		"Gear Readiness",
+		"- Loadout: %d equipped, %d empty slot%s, %d in pack" % [
+			equipped_count,
+			empty_slot_count,
+			"" if empty_slot_count == 1 else "s",
+			inventory.size(),
+		],
+		"- Collection: %s" % collection_line,
+		"- Gear orders: %d ready, %d blocked, %d listed" % [
+			ready_orders,
+			blocked_orders,
+			actions.size(),
+		],
+		"- %s" % state_line,
+		"- Best order: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"equipped_count": equipped_count,
+		"empty_slot_count": empty_slot_count,
+		"pack_count": inventory.size(),
+		"owned_count": owned_count,
+		"known_count": total_known,
+		"ready_order_count": ready_orders,
+		"blocked_order_count": blocked_orders,
+		"listed_order_count": actions.size(),
+		"best_order_label": label,
 		"readiness": readiness,
 		"why_it_matters": impact,
 		"next_step": next_step,
