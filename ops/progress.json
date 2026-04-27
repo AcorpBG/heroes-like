@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-runtime-metadata-adoption-10184",
-  "currentSliceTitle": "Overworld Runtime Metadata Adoption",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.4 runtime metadata adoption in progress: inspect prior schema/content/runtime evidence first; bounded safe metadata only, no broad pathing/body-tile/renderer/save behavior.",
+  "currentSliceId": "overworld-object-editor-authoring-validation-10184",
+  "currentSliceTitle": "Overworld Editor Authoring Validation",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Next P2.4 child after bounded runtime metadata adoption. Keep this scoped to editor/tooling taxonomy validation; do not broaden into pathing/body_tiles/approach/renderer/save behavior without a selected slice.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T14:31:00Z",
+  "updatedAt": "2026-04-27T14:35:26Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -912,7 +912,7 @@
       "id": "overworld-object-runtime-metadata-adoption-10184",
       "title": "Overworld Runtime Metadata Adoption",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -936,9 +936,10 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T14:31:00Z",
+      "updatedAt": "2026-04-27T14:35:26Z",
       "startedAt": "2026-04-27T14:31:00Z",
-      "notes": "worker started for P2.4 runtime metadata adoption: inspect prior object schema docs/content/runtime first, then adopt only selected safe metadata without broad pathing/body-tile/renderer/save behavior"
+      "notes": "Completed bounded runtime metadata adoption: OverworldRules resource-site classification/reporting now reads safe primary_class, secondary_tags, and interaction.cadence; focused Godot report and overworld object validator report prove no pathing/body_tiles/approach/renderer/save/economy adoption.",
+      "completedAt": "2026-04-27T14:35:26Z"
     },
     {
       "id": "overworld-object-editor-authoring-validation-10184",
@@ -2806,20 +2807,19 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-runtime-metadata-adoption-10184",
-      "title": "Overworld Runtime Metadata Adoption",
-      "status": "in_progress",
+      "id": "overworld-object-editor-authoring-validation-10184",
+      "title": "Overworld Editor Authoring Validation",
+      "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/overworld-object-safe-additive-schema-plan.md",
-        "docs/overworld-object-schema-migration-plan.md"
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-object-report-review-001.md"
       ],
       "implementationTargets": [
-        "content/map_objects.json",
-        "runtime object rules/helpers",
-        "focused validation"
+        "map editor object tooling",
+        "validator/report fixtures"
       ],
-      "notes": "worker started for P2.4 runtime metadata adoption: inspect prior object schema docs/content/runtime first, then adopt only selected safe metadata without broad pathing/body-tile/renderer/save behavior",
+      "notes": "Next P2.4 child after bounded runtime metadata adoption: make object taxonomy useful in editor authoring and validation without broad runtime migration.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"

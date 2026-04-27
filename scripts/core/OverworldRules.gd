@@ -4361,6 +4361,12 @@ static func _interaction_cadence_label(cadence: String) -> String:
 			return "Cadence: one-time"
 		"repeatable":
 			return "Cadence: repeatable"
+		"repeatable_daily":
+			return "Cadence: repeatable daily"
+		"repeatable_weekly":
+			return "Cadence: repeatable weekly"
+		"cooldown_days":
+			return "Cadence: cooldown days"
 		"conditional":
 			return "Cadence: conditional"
 		"none":
@@ -4369,7 +4375,9 @@ static func _interaction_cadence_label(cadence: String) -> String:
 			return "Cadence: %s" % _humanize_id(cadence) if cadence != "" else ""
 
 static func _resource_site_role_tag_summary(site: Dictionary, map_object: Dictionary) -> String:
-	var roles: Array[String] = _string_array(map_object.get("map_roles", []))
+	var roles: Array[String] = _string_array(map_object.get("secondary_tags", []))
+	if roles.is_empty():
+		roles = _string_array(map_object.get("map_roles", []))
 	if roles.is_empty():
 		roles = _fallback_resource_site_roles(site)
 	var visible := []
