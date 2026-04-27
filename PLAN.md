@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: completed compact main-menu save command tooltip cues using existing save summaries.
+Current target: compact main-menu settings handoff cue using the existing settings persistence contract.
 
 Done means:
-- The main-menu war ledger save rows expose compact command tooltips that explain row selection, continuity, play check, resume handoff, and the selected load action.
-- The selected save load button tooltip explains that it acts on the selected save row and reuses existing save resume/play-check details.
-- Focused main-menu/outcome smoke coverage proves row and load tooltip context plus no internal score/debug leaks.
+- The Settings secondary board shows a compact visible handoff line explaining that settings apply immediately and Close returns to the scenic first view.
+- The Settings handoff label and Close tooltip explain that presentation, sound, and readability changes persist to device config while campaign progress and expedition saves stay unchanged.
+- Focused main-menu/outcome smoke coverage proves the visible cue, tooltip cue, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

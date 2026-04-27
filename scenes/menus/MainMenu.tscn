@@ -761,6 +761,13 @@ custom_minimum_size = Vector2(0, 66)
 autowrap_mode = 3
 text = "Settings summary"
 
+[node name="SettingsHandoff" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 38)
+autowrap_mode = 3
+text = "Settings handoff"
+
 [node name="PresentationRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsPanel/SettingsPad/SettingsBox"]
 layout_mode = 2
 theme_override_constants/separation = 8

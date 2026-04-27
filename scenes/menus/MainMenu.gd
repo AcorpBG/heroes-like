@@ -76,6 +76,7 @@ const TAB_HELP_TOPIC := {
 @onready var _help_list: ItemList = %HelpList
 @onready var _help_details_label: Label = %HelpDetails
 @onready var _settings_summary_label: Label = %SettingsSummary
+@onready var _settings_handoff_label: Label = %SettingsHandoff
 @onready var _presentation_mode_picker: OptionButton = %PresentationModePicker
 @onready var _resolution_picker: OptionButton = %ResolutionPicker
 @onready var _master_volume_slider: HSlider = %MasterVolumeSlider
@@ -527,6 +528,9 @@ func _select_help_topic(topic_id: String) -> void:
 func _refresh_settings_panel() -> void:
 	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)
 	var settings_check := SettingsService.describe_settings_persistence_check()
+	var settings_handoff := _settings_handoff_surface()
+	_set_compact_label(_settings_handoff_label, String(settings_handoff.get("visible_text", "")), 2, 96)
+	_settings_handoff_label.tooltip_text = String(settings_handoff.get("tooltip_text", ""))
 
 	_syncing_settings_ui = true
 	_presentation_mode_picker.clear()
@@ -865,7 +869,24 @@ func _refresh_stage_dock_header() -> void:
 		_stage_help_button.tooltip_text = "%s\nHelp handoff: opens reference only; Back returns to this secondary board." % [
 			"Open the Field Manual to the %s topic for this board. This does not start, load, save, or change settings." % topic_label
 		]
-	_close_stage_dock_button.tooltip_text = "Dismiss this secondary board and return to the clean scenic first view."
+	_close_stage_dock_button.tooltip_text = _close_stage_dock_tooltip()
+
+func _settings_handoff_surface() -> Dictionary:
+	var visible := "Settings handoff: changes apply now; close returns to the scenic menu."
+	var tooltip := "Settings Handoff\n- Applies: presentation, sound, and readability changes take effect immediately.\n- Saved to: device config.\n- Not changed: campaign progress and expedition saves.\n- Close: returns to the scenic first view with these settings still active."
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+	}
+
+func _close_stage_dock_tooltip() -> String:
+	if _menu_tabs.current_tab == TAB_SETTINGS:
+		return _join_nonempty_lines([
+			"Dismiss Settings and return to the clean scenic first view.",
+			String(_settings_handoff_surface().get("tooltip_text", "")),
+			SettingsService.describe_settings_persistence_check(),
+		])
+	return "Dismiss this secondary board and return to the clean scenic first view."
 
 func validation_snapshot() -> Dictionary:
 	var primary_campaign_action := CampaignProgression.primary_campaign_action(_selected_campaign_id)
@@ -883,6 +904,7 @@ func validation_snapshot() -> Dictionary:
 		"first_view_command_tooltips": _first_view_command_tooltips(),
 		"stage_help_text": _stage_help_button.text,
 		"stage_help_tooltip": _stage_help_button.tooltip_text,
+		"close_stage_dock_tooltip": _close_stage_dock_button.tooltip_text,
 		"stage_help_return_tab": _last_context_tab,
 		"has_generated_command_spine": get_node_or_null("CommandSpinePanel") != null,
 		"has_first_view_status_box": get_node_or_null("SpineStatusPanel") != null,
@@ -955,6 +977,8 @@ func validation_snapshot() -> Dictionary:
 		"settings_summary": _settings_summary_label.text,
 		"settings_summary_full": _settings_summary_label.tooltip_text,
 		"settings_persistence_check": SettingsService.describe_settings_persistence_check(),
+		"settings_handoff_text": _settings_handoff_label.text,
+		"settings_handoff_tooltip": _settings_handoff_label.tooltip_text,
 		"presentation_mode": SettingsService.presentation_mode_id(),
 		"presentation_mode_tooltip": _presentation_mode_picker.tooltip_text,
 		"presentation_resolution": SettingsService.presentation_resolution_id(),
