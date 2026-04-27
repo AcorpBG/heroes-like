@@ -374,6 +374,7 @@ sourceDocs:
 - `docs/economy-capture-resource-loop-proof-plan.md`
 - `docs/economy-capture-resource-loop-live-proof-report.md`
 - `docs/economy-capture-resource-loop-manual-gate-review.md`
+- `docs/economy-capture-income-loop-expansion-report.md`
 
 implementationTargets:
 - Economy rule helpers.
@@ -856,6 +857,7 @@ sourceDocs:
 - `docs/economy-capture-resource-loop-proof-plan.md`
 - `docs/economy-capture-resource-loop-live-proof-report.md`
 - `docs/economy-capture-resource-loop-manual-gate-review.md`
+- `docs/economy-capture-income-loop-expansion-report.md`
 
 implementationTargets:
 - economy rule helpers
