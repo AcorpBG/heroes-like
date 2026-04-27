@@ -1318,10 +1318,111 @@ func _editor_terrain_paint_check_payload(tool: String = "") -> Dictionary:
 		"scope": "working_copy_only",
 	}
 
+func _editor_road_check_payload(tool: String = "") -> Dictionary:
+	var tool_id := _tool if tool == "" else tool
+	if not (tool_id in [TOOL_ROAD, TOOL_ROAD_PATH]):
+		return {}
+	if _session == null:
+		var empty_text := "Road check: load a scenario working copy before editing roads."
+		return {
+			"text": empty_text,
+			"tooltip": empty_text,
+			"state": "empty",
+			"scope": "working_copy_only",
+		}
+	var target_tile := _road_check_preview_tile()
+	var target_label := "%d,%d" % [target_tile.x, target_tile.y]
+	var current_has_road := _has_road_at(target_tile) if _tile_in_bounds(target_tile) else false
+	var road_layers := _road_layer_ids_at(target_tile) if current_has_road else []
+	var scope := ""
+	var readiness := ""
+	var next_step := ""
+	var resolved_action := "toggle"
+	var affected_count := 1
+	var changed_count := 1
+	var existing_count := 1 if current_has_road else 0
+	match tool_id:
+		TOOL_ROAD:
+			resolved_action = "remove" if current_has_road else "add"
+			scope = "single tile %s" % target_label
+			readiness = "%s ready" % resolved_action
+			next_step = "click %s to %s road" % [target_label, resolved_action]
+		TOOL_ROAD_PATH:
+			if _has_pending_road_path_start():
+				var path_tiles := _road_path_tiles(_pending_road_path_start, target_tile)
+				affected_count = path_tiles.size()
+				existing_count = _road_check_existing_count(path_tiles)
+				resolved_action = "remove" if affected_count > 0 and existing_count == affected_count else "add"
+				changed_count = existing_count if resolved_action == "remove" else affected_count - existing_count
+				scope = "path %d,%d to %s (%d tile%s)" % [
+					_pending_road_path_start.x,
+					_pending_road_path_start.y,
+					target_label,
+					affected_count,
+					"" if affected_count == 1 else "s",
+				]
+				readiness = "%s ready x%d/%d" % [resolved_action, changed_count, affected_count] if changed_count > 0 else "no road change"
+				next_step = "click %s to %s the road path" % [target_label, resolved_action] if changed_count > 0 else "choose another endpoint before applying the path"
+			else:
+				affected_count = 0
+				changed_count = 0
+				existing_count = 0
+				scope = "path start at %s" % target_label
+				readiness = "pick path start"
+				next_step = "click the first road path tile"
+	var layer_text := ", ".join(road_layers) if not road_layers.is_empty() else "none"
+	var text := "Road check: %s | %s; next: %s." % [
+		readiness.capitalize(),
+		scope,
+		next_step,
+	]
+	var tooltip := "Road Check\n- Target: %s.\n- Current road layers: %s.\n- Path rule: %s.\n- Readiness: %s.\n- Action: %s.\n- Changes: %d/%d tile%s.\n- Next: %s.\n- Scope: in-memory working copy only; no authored file or campaign progress is written." % [
+		scope,
+		layer_text,
+		ROAD_PATH_RULE_LABEL if tool_id == TOOL_ROAD_PATH else "single tile toggle",
+		readiness,
+		resolved_action,
+		changed_count,
+		affected_count,
+		"" if affected_count == 1 else "s",
+		next_step,
+	]
+	return {
+		"text": text,
+		"tooltip": tooltip,
+		"tool": tool_id,
+		"target_tile": {"x": target_tile.x, "y": target_tile.y},
+		"has_road": current_has_road,
+		"road_layers": road_layers,
+		"scope_text": scope,
+		"readiness": readiness,
+		"action": resolved_action,
+		"next_step": next_step,
+		"affected_count": affected_count,
+		"changed_count": changed_count,
+		"existing_count": existing_count,
+		"path_rule": ROAD_PATH_RULE_ID if tool_id == TOOL_ROAD_PATH else "single_tile_toggle",
+		"path_rule_label": ROAD_PATH_RULE_LABEL if tool_id == TOOL_ROAD_PATH else "Single tile road toggle",
+		"scope": "working_copy_only",
+	}
+
 func _terrain_paint_preview_tile(tool: String) -> Vector2i:
 	if _tile_in_bounds(_hovered_tile):
 		return _hovered_tile
 	return _selected_tile
+
+func _road_check_preview_tile() -> Vector2i:
+	if _tile_in_bounds(_hovered_tile):
+		return _hovered_tile
+	return _selected_tile
+
+func _road_check_existing_count(path_tiles: Array) -> int:
+	var existing_count := 0
+	for tile_value in path_tiles:
+		var tile: Vector2i = tile_value
+		if _tile_in_bounds(tile) and _has_road_at(tile):
+			existing_count += 1
+	return existing_count
 
 func _terrain_changed_tile_count(tiles: Array, terrain_id: String) -> int:
 	var changed_count := 0
@@ -2762,6 +2863,10 @@ func _sync_preview() -> void:
 		var terrain_paint_tooltip := String(_editor_terrain_paint_check_payload().get("tooltip", "")).strip_edges()
 		if terrain_paint_tooltip != "":
 			tooltip_sections.append(terrain_paint_tooltip)
+	if _tool in [TOOL_ROAD, TOOL_ROAD_PATH]:
+		var road_check_tooltip := String(_editor_road_check_payload().get("tooltip", "")).strip_edges()
+		if road_check_tooltip != "":
+			tooltip_sections.append(road_check_tooltip)
 	if _tool == TOOL_PLACE_OBJECT:
 		var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
 		if placement_action != "":
@@ -2846,6 +2951,10 @@ func _refresh_labels() -> void:
 		var terrain_paint_text := String(_editor_terrain_paint_check_payload().get("text", "")).strip_edges()
 		if terrain_paint_text != "":
 			status_lines.append(terrain_paint_text)
+	if _tool in [TOOL_ROAD, TOOL_ROAD_PATH]:
+		var road_check_text := String(_editor_road_check_payload().get("text", "")).strip_edges()
+		if road_check_text != "":
+			status_lines.append(road_check_text)
 	var restore_tile_text := String(_editor_restore_tile_cue_payload().get("text", "")).strip_edges()
 	if restore_tile_text != "":
 		status_lines.append(restore_tile_text)
@@ -2954,6 +3063,10 @@ func _sync_tool_buttons() -> void:
 			var terrain_check := String(_editor_terrain_paint_check_payload(String(tool_id)).get("tooltip", "")).strip_edges()
 			if terrain_check != "":
 				tooltip = "%s\n%s" % [tooltip, terrain_check]
+		if tool_id in [TOOL_ROAD, TOOL_ROAD_PATH]:
+			var road_check := String(_editor_road_check_payload(String(tool_id)).get("tooltip", "")).strip_edges()
+			if road_check != "":
+				tooltip = "%s\n%s" % [tooltip, road_check]
 		if tool_id == TOOL_PLACE_OBJECT:
 			var placement_action := String(_editor_placement_action_cue_payload().get("tooltip_text", "")).strip_edges()
 			if placement_action != "":
@@ -5901,6 +6014,9 @@ func validation_snapshot() -> Dictionary:
 		"terrain_paint_check_text": String(_editor_terrain_paint_check_payload().get("text", "")),
 		"terrain_paint_check_tooltip": String(_editor_terrain_paint_check_payload().get("tooltip", "")),
 		"terrain_picker_tooltip": _terrain_picker.tooltip_text if _terrain_picker != null else "",
+		"road_check": _editor_road_check_payload(),
+		"road_check_text": String(_editor_road_check_payload().get("text", "")),
+		"road_check_tooltip": String(_editor_road_check_payload().get("tooltip", "")),
 		"active_tool_cue": _editor_active_tool_cue_payload(),
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),

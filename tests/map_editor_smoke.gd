@@ -134,6 +134,8 @@ func _run() -> void:
 		return
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
+	if not _assert_editor_road_check(add_road_result, ["Road check:", "Road Check", "single tile 2,2", "Current road layers:", "Action: remove", "Changes: 1/1 tile", "Scope: in-memory working copy only", "no authored file or campaign progress is written"]):
+		return
 	var add_road_inspection: Dictionary = add_road_result.get("tile_inspection", {})
 	var road_layers: Array = add_road_inspection.get("road_layers", [])
 	if not bool(add_road_result.get("ok", false)) or not bool(add_road_inspection.get("road", false)) or "editor_working_road" not in road_layers:
@@ -1709,6 +1711,8 @@ func _assert_road_path_tool(shell) -> bool:
 	):
 		_fail("Map editor smoke: road path start did not expose the pending Manhattan L rule state: %s." % start_result)
 		return false
+	if not _assert_editor_road_check(start_result, ["Road check:", "Road Check", "path 8,8 to 8,8", "Path rule: Manhattan L path, horizontal first, then vertical", "Action: add", "Changes: 1/1 tile", "Scope: in-memory working copy only"]):
+		return false
 
 	var add_result: Dictionary = shell.call("validation_apply_road_path", 11, 10)
 	if (
@@ -1722,6 +1726,8 @@ func _assert_road_path_tool(shell) -> bool:
 		or not _path_payload_matches(add_result.get("path_tiles", []), expected_tiles)
 	):
 		_fail("Map editor smoke: road path add did not report the expected horizontal-first Manhattan L path: %s." % add_result)
+		return false
+	if not _assert_editor_road_check(add_result, ["Road check:", "Road Check", "path start at 11,10", "click the first road path tile", "Scope: in-memory working copy only"]):
 		return false
 	for tile in expected_tiles:
 		var inspection_result: Dictionary = shell.call("validation_select_tile", tile.x, tile.y)
@@ -2779,6 +2785,54 @@ func _assert_editor_terrain_paint_check(result: Dictionary, fragments: Array) ->
 	]:
 		if combined.find(forbidden) >= 0:
 			_fail("Map editor smoke: terrain paint check leaked internal score field %s: %s." % [forbidden, combined])
+			return false
+	return true
+
+func _assert_editor_road_check(result: Dictionary, fragments: Array) -> bool:
+	var cue: Dictionary = result.get("road_check", {})
+	var text := String(cue.get("text", ""))
+	var tooltip := String(cue.get("tooltip", ""))
+	var visible_status := String(result.get("visible_status_full", result.get("visible_status_text", "")))
+	var map_tooltip := String(result.get("map_tooltip", ""))
+	if cue.is_empty() or text == "":
+		_fail("Map editor smoke: road check cue was not exposed: %s." % result)
+		return false
+	if String(cue.get("scope", "")) != "working_copy_only":
+		_fail("Map editor smoke: road check cue did not declare working-copy scope: %s." % cue)
+		return false
+	for key in ["text", "tooltip", "scope_text", "readiness", "action", "next_step", "scope"]:
+		if String(cue.get(key, "")) == "":
+			_fail("Map editor smoke: road check cue missed structured key %s: %s." % [key, cue])
+			return false
+	var combined := "%s\n%s\n%s\n%s" % [text, tooltip, visible_status, map_tooltip]
+	for fragment in fragments:
+		var expected := String(fragment)
+		if expected != "" and combined.find(expected) < 0:
+			_fail("Map editor smoke: road check cue missed '%s': %s." % [expected, combined])
+			return false
+	if visible_status.find("Road check:") < 0:
+		_fail("Map editor smoke: visible editor status did not carry road check cue: %s." % visible_status)
+		return false
+	if map_tooltip.find("Road Check") < 0:
+		_fail("Map editor smoke: map tooltip did not carry road check: %s." % map_tooltip)
+		return false
+	for forbidden in [
+		"final_priority",
+		"base_value",
+		"assignment_penalty",
+		"final_score",
+		"income_value",
+		"growth_value",
+		"pressure_value",
+		"category_bonus",
+		"raid_score",
+		"debug_reason",
+		"raid_target_weights",
+		"ai_score",
+		"weight",
+	]:
+		if combined.find(forbidden) >= 0:
+			_fail("Map editor smoke: road check leaked internal score field %s: %s." % [forbidden, combined])
 			return false
 	return true
 
