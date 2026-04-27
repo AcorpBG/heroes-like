@@ -897,6 +897,7 @@ OVERWORLD_OBJECT_FAMILY_TAGS = {
 OVERWORLD_OBJECT_CONTENT_BATCH_001_ID = "overworld-object-content-batch-001-core-density-pickups-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001B_ID = "overworld-object-content-batch-001b-biome-scenic-decoration-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_001C_ID = "overworld-object-content-batch-001c-biome-blockers-edge-10184"
+OVERWORLD_OBJECT_CONTENT_BATCH_001D_ID = "overworld-object-content-batch-001d-large-footprint-coverage-10184"
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
     "passable_scenic",
@@ -3221,6 +3222,166 @@ def build_overworld_object_content_batch_001c_section(map_objects: dict[str, dic
     return section
 
 
+def build_overworld_object_content_batch_001d_section(map_objects: dict[str, dict], biomes: dict[str, dict]) -> dict:
+    batch_objects = {
+        object_id: obj
+        for object_id, obj in map_objects.items()
+        if str(obj.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_001D_ID
+    }
+    decoration_or_blocker_count = sum(
+        1
+        for obj in map_objects.values()
+        if str(obj.get("primary_class", infer_overworld_object_primary_class(obj, None))) == "decoration"
+        and str(obj.get("passability_class", infer_overworld_object_passability_class(obj)))
+        in {"passable_scenic", "blocking_non_visitable", "edge_blocker"}
+    )
+    section = {
+        "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_001D_ID,
+        "object_count": len(batch_objects),
+        "decoration_or_blocker_total_count": decoration_or_blocker_count,
+        "passable_scenic_count": 0,
+        "blocking_non_visitable_count": 0,
+        "edge_blocker_count": 0,
+        "partial_body_mask_count": 0,
+        "large_footprint_count": 0,
+        "footprints": {},
+        "biome_counts": {},
+        "edge_intents": [],
+        "content_token_coverage": {},
+        "errors": [],
+        "warnings": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in section["errors"]:
+            section["errors"].append(message)
+
+    required_content_tokens = {
+        "cliff_band": ("cliff",),
+        "elder_root": ("elder root", "root"),
+        "wreck_field": ("wreck", "quay"),
+        "cavern_wall": ("cavern", "underway"),
+        "icefall": ("icefall",),
+        "slag_wall": ("slag", "clinker"),
+        "shoreline_shelf": ("shore", "reef", "coast"),
+        "transition": ("transition", "grass-ridge", "forest-highland", "mire-coast", "ash-badland"),
+    }
+    token_hits = {key: False for key in required_content_tokens.keys()}
+
+    for object_id, obj in sorted(batch_objects.items()):
+        primary_class = str(obj.get("primary_class", infer_overworld_object_primary_class(obj, None)))
+        passability_class = str(obj.get("passability_class", infer_overworld_object_passability_class(obj)))
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        width = int(footprint.get("width", 0))
+        height = int(footprint.get("height", 0))
+        footprint_key = f"{width}x{height}"
+        increment_count(section["footprints"], footprint_key)
+        if width >= 5 or height >= 5:
+            section["large_footprint_count"] += 1
+        for biome_id in obj.get("biome_ids", []) if isinstance(obj.get("biome_ids", []), list) else []:
+            increment_count(section["biome_counts"], str(biome_id))
+        forbidden_wood_alias = "tim" + "ber"
+        text_key = f"{object_id} {obj.get('name', '')}".lower()
+        if forbidden_wood_alias in text_key:
+            add_error(f"{object_id}: Batch 001d must keep wood canonical and avoid non-canonical wood aliases")
+        for token_key, token_options in required_content_tokens.items():
+            if any(token in text_key for token in token_options):
+                token_hits[token_key] = True
+        if primary_class != "decoration":
+            add_error(f"{object_id}: Batch 001d objects must be decorations")
+        if bool(obj.get("visitable", False)):
+            add_error(f"{object_id}: Batch 001d objects must set visitable=false")
+        if passability_class == "passable_scenic":
+            section["passable_scenic_count"] += 1
+            if bool(obj.get("passable", False)) is not True:
+                add_error(f"{object_id}: Batch 001d passable scenic objects must set passable=true")
+            body_tiles = obj.get("body_tiles", [])
+            if body_tiles not in ([], None):
+                add_error(f"{object_id}: Batch 001d passable scenic objects must keep empty body_tiles")
+        elif passability_class in {"blocking_non_visitable", "edge_blocker"}:
+            if passability_class == "blocking_non_visitable":
+                section["blocking_non_visitable_count"] += 1
+            else:
+                section["edge_blocker_count"] += 1
+            if bool(obj.get("passable", True)):
+                add_error(f"{object_id}: Batch 001d blocking and edge-blocker objects must set passable=false")
+            body_tiles = obj.get("body_tiles", [])
+            if not isinstance(body_tiles, list) or not body_tiles:
+                add_error(f"{object_id}: Batch 001d blocking and edge-blocker objects must author non-empty body_tiles")
+            else:
+                seen_body_tiles: set[str] = set()
+                for tile in body_tiles:
+                    if not isinstance(tile, dict):
+                        add_error(f"{object_id}: body_tiles entries must be dictionaries")
+                        continue
+                    x = int(tile.get("x", -999))
+                    y = int(tile.get("y", -999))
+                    if x < 0 or y < 0 or x >= width or y >= height:
+                        add_error(f"{object_id}: body tile {x},{y} is outside footprint")
+                    tile_key = f"{x},{y}"
+                    if tile_key in seen_body_tiles:
+                        add_error(f"{object_id}: body tile {tile_key} is duplicated")
+                    seen_body_tiles.add(tile_key)
+                if width > 0 and height > 0 and len(seen_body_tiles) < width * height:
+                    section["partial_body_mask_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 001d objects must use passable_scenic, blocking_non_visitable, or edge_blocker")
+        if passability_class == "edge_blocker":
+            edge = obj.get("edge_blocker", {})
+            if not isinstance(edge, dict) or not edge:
+                add_error(f"{object_id}: edge_blocker objects must define edge_blocker metadata")
+            else:
+                edge_intent = str(edge.get("edge_intent", ""))
+                if not edge_intent:
+                    add_error(f"{object_id}: edge_blocker metadata must define edge_intent")
+                else:
+                    append_unique(section["edge_intents"], edge_intent)
+                protected_sides = edge.get("protected_sides", [])
+                if not isinstance(protected_sides, list) or not protected_sides:
+                    add_error(f"{object_id}: edge_blocker metadata must define protected_sides")
+        if str(obj.get("resource_site_id", "")):
+            add_error(f"{object_id}: Batch 001d objects must not link resource_site_id")
+        if isinstance(obj.get("staged_resource_pickup", {}), dict) and obj.get("staged_resource_pickup", {}):
+            add_error(f"{object_id}: Batch 001d objects must not author staged_resource_pickup")
+        if isinstance(obj.get("rewards", {}), dict) and obj.get("rewards", {}):
+            add_error(f"{object_id}: Batch 001d objects must not author rewards")
+
+    section["footprints"] = sorted_counts(section["footprints"])
+    section["biome_counts"] = dict(sorted(section["biome_counts"].items()))
+    section["edge_intents"] = sorted(section["edge_intents"])
+    section["content_token_coverage"] = dict(sorted(token_hits.items()))
+    if batch_objects:
+        if not (46 <= len(batch_objects) <= 50):
+            add_error("Batch 001d must author about 48 object definitions")
+        if section["passable_scenic_count"] + section["blocking_non_visitable_count"] + section["edge_blocker_count"] != len(batch_objects):
+            add_error("Batch 001d must be non-interactable decoration/blocker-only")
+        if section["decoration_or_blocker_total_count"] < 199:
+            add_error("Batch 001d must bring decoration/blocker coverage near the 200-object foundation target")
+        if section["large_footprint_count"] != len(batch_objects):
+            add_error("Batch 001d objects must all use large-footprint silhouettes")
+        if section["partial_body_mask_count"] < 32:
+            add_error("Batch 001d must include broad partial/non-rectangular body-mask coverage")
+        required_footprints = {"5x2", "5x3", "6x3", "6x4", "6x6"}
+        for footprint_key in sorted(required_footprints):
+            if footprint_key not in section["footprints"]:
+                add_error(f"Batch 001d must cover footprint {footprint_key}")
+        for biome_id in sorted(biomes.keys()):
+            if int(section["biome_counts"].get(biome_id, 0)) < 5:
+                add_error(f"Batch 001d must include at least 5 large-footprint definitions for {biome_id}")
+        if section["passable_scenic_count"] < 6:
+            add_error("Batch 001d must include large passable scenic overhang/shadow variants")
+        if section["blocking_non_visitable_count"] < 12:
+            add_error("Batch 001d must include substantial large blocking_non_visitable coverage")
+        if section["edge_blocker_count"] < 18:
+            add_error("Batch 001d must include substantial large edge_blocker coverage")
+        if len(section["edge_intents"]) < 12:
+            add_error("Batch 001d must include varied large edge-blocker intents")
+        for token_key, covered in section["content_token_coverage"].items():
+            if not covered:
+                add_error(f"Batch 001d must include large-footprint vocabulary for {token_key}")
+    return section
+
+
 def build_overworld_object_report() -> dict:
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions", "biomes")}
     map_objects = items_index(payloads["map_objects"])
@@ -3317,6 +3478,7 @@ def build_overworld_object_report() -> dict:
     report["content_batches"]["batch_001_core_density_pickups"] = build_overworld_object_content_batch_001_section(map_objects, resource_sites)
     report["content_batches"]["batch_001b_biome_scenic_decoration"] = build_overworld_object_content_batch_001b_section(map_objects, biomes)
     report["content_batches"]["batch_001c_biome_blockers_edge"] = build_overworld_object_content_batch_001c_section(map_objects, biomes)
+    report["content_batches"]["batch_001d_large_footprint_coverage"] = build_overworld_object_content_batch_001d_section(map_objects, biomes)
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -3518,6 +3680,9 @@ def build_overworld_object_report() -> dict:
     for batch_error in report.get("content_batches", {}).get("batch_001c_biome_blockers_edge", {}).get("errors", []):
         if batch_error not in report["errors"]:
             report["errors"].append(batch_error)
+    for batch_error in report.get("content_batches", {}).get("batch_001d_large_footprint_coverage", {}).get("errors", []):
+        if batch_error not in report["errors"]:
+            report["errors"].append(batch_error)
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
@@ -3582,6 +3747,12 @@ def print_overworld_object_report(report: dict) -> None:
         print(f"- objects: {batch_001c.get('object_count', 0)}; blocking={batch_001c.get('blocking_non_visitable_count', 0)}; edge={batch_001c.get('edge_blocker_count', 0)}; partial_masks={batch_001c.get('partial_body_mask_count', 0)}")
         print(f"- biomes covered={len(batch_001c.get('biome_counts', {}))}; footprints={','.join(batch_001c.get('footprints', {}).keys())}")
         print(f"- edge intents={len(batch_001c.get('edge_intents', []))}; errors={len(batch_001c.get('errors', []))}; warnings={len(batch_001c.get('warnings', []))}")
+    batch_001d = report.get("content_batches", {}).get("batch_001d_large_footprint_coverage", {})
+    if batch_001d:
+        print("Content Batch 001d:")
+        print(f"- objects: {batch_001d.get('object_count', 0)}; scenic={batch_001d.get('passable_scenic_count', 0)}; blocking={batch_001d.get('blocking_non_visitable_count', 0)}; edge={batch_001d.get('edge_blocker_count', 0)}; partial_masks={batch_001d.get('partial_body_mask_count', 0)}")
+        print(f"- decoration/blocker total={batch_001d.get('decoration_or_blocker_total_count', 0)}; biomes covered={len(batch_001d.get('biome_counts', {}))}; footprints={','.join(batch_001d.get('footprints', {}).keys())}")
+        print(f"- edge intents={len(batch_001d.get('edge_intents', []))}; errors={len(batch_001d.get('errors', []))}; warnings={len(batch_001d.get('warnings', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
@@ -8998,6 +9169,23 @@ def validate_overworld_object_content_batch_001(errors: list[str]) -> None:
                 "`wood` remains canonical",
             ):
                 ensure(required_text in doc_text, errors, f"Overworld object Batch 001c report doc is missing required boundary text: {required_text}")
+    batch_001d = report.get("content_batches", {}).get("batch_001d_large_footprint_coverage", {})
+    if batch_001d and int(batch_001d.get("object_count", 0)) > 0:
+        for batch_error in batch_001d.get("errors", []):
+            fail(errors, f"Overworld object Batch 001d: {batch_error}")
+        docs_path = ROOT / "docs" / "overworld-object-content-batch-001d-large-footprint-coverage-report.md"
+        ensure(docs_path.exists(), errors, "Missing overworld object Batch 001d implementation report doc")
+        if docs_path.exists():
+            doc_text = docs_path.read_text(encoding="utf-8")
+            for required_text in (
+                "Status: implementation evidence.",
+                "No interactable objects.",
+                "No rewards, resource grants",
+                "No route-effect runtime adoption",
+                "No pathing runtime adoption",
+                "`wood` remains canonical",
+            ):
+                ensure(required_text in doc_text, errors, f"Overworld object Batch 001d report doc is missing required boundary text: {required_text}")
 
 
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:

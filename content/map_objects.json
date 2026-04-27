@@ -8161,6 +8161,3930 @@
         ],
         "avoid_route_center_closure": true
       }
+    },
+    {
+      "id": "object_grass_ridge_scree_apron",
+      "name": "Grass-Ridge Scree Apron",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "grass_ridge_transition",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_grass_lockwall_flood_shelf",
+      "name": "Lockwall Flood Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "levee_wall_edge",
+        "protected_sides": [
+          "north",
+          "west"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_grass_old_weir_shadow",
+      "name": "Old Weir Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_grass_millstone_breach_field",
+      "name": "Millstone Breach Field",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_grass_tollroad_embankment",
+      "name": "Tollroad Embankment",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_grasslands"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "route_shoulder_embankment",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_forest_highland_root_shelf",
+      "name": "Forest-Highland Root Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "forest_highland_transition",
+        "protected_sides": [
+          "south",
+          "east"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_forest_elder_root_overhang",
+      "name": "Elder Root Overhang",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 3,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "forest_boundary_root_shelf",
+        "protected_sides": [
+          "south",
+          "east"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_forest_canopy_shadow_fall",
+      "name": "Canopy Shadow Fall",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_forest_pilgrim_moss_stone_line",
+      "name": "Pilgrim Moss Stone Line",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_forest_great_bough_deadfall",
+      "name": "Great Bough Deadfall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_deep_forest"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_mire_coast_reed_bed_shelf",
+      "name": "Mire-Coast Reed Bed Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "marsh_coast_reed_transition",
+        "protected_sides": [
+          "north",
+          "west"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_mire_drowned_cypress_knee_wall",
+      "name": "Drowned Cypress Knee Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_mire_blackwater_fen_shelf",
+      "name": "Blackwater Fen Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "blackwater_edge",
+        "protected_sides": [
+          "west",
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_mire_rotted_causeway_shadow",
+      "name": "Rotted Causeway Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_mire_drum_island_reed_wall",
+      "name": "Drum-Island Reed Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "ambush_lane",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_highland_cliff_band_weathercut",
+      "name": "Weathercut Cliff Band",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "cliff_band_edge",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_highland_scree_bowl",
+      "name": "Highland Scree Bowl",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_highland_switchback_slate_overhang",
+      "name": "Switchback Slate Overhang",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 5,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "switchback_cliff_lip",
+        "protected_sides": [
+          "east",
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_highland_storm_cairn_shadow",
+      "name": "Storm Cairn Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_highland_ridge_teeth_line",
+      "name": "Ridge Teeth Line",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_coast_black_sail_wreck_field",
+      "name": "Black-Sail Wreck Field",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_coast_mirror_salt_shore_shelf",
+      "name": "Mirror-Salt Shore Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "shoreline_shelf",
+        "protected_sides": [
+          "north"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_coast_reef_ledge_overhang",
+      "name": "Reef Ledge Overhang",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "reef_shelf_edge",
+        "protected_sides": [
+          "north",
+          "east"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_coast_tidepool_glass_shadow",
+      "name": "Tidepool Glass Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_coast_drowned_quay_blockline",
+      "name": "Drowned Quay Blockline",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_badland_redstone_escarpment",
+      "name": "Redstone Escarpment",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "badland_escarpment_edge",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_badland_dry_gully_fan",
+      "name": "Dry Gully Fan",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "gully_edge",
+        "protected_sides": [
+          "west",
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_badland_shardfall_rubble_wall",
+      "name": "Shardfall Rubble Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_badland_survey_stake_shadow",
+      "name": "Survey Stake Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_badland_razorfin_wall",
+      "name": "Razorfin Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_ash_lava_slag_wall",
+      "name": "Lava-Slag Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_ash_badland_clinker_transition",
+      "name": "Ash-Badland Clinker Transition",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "ash_badland_clinker_transition",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_ash_furnace_scree_shelf",
+      "name": "Furnace Scree Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "furnace_scree_shelf",
+        "protected_sides": [
+          "north"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_ash_heatglass_haze_sheet",
+      "name": "Heatglass Haze Sheet",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_ash_obsidian_cooling_wall",
+      "name": "Obsidian Cooling Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 6,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "obsidian_cooling_wall",
+        "protected_sides": [
+          "south",
+          "east"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_underway_brasspipe_cavern_wall",
+      "name": "Brasspipe Cavern Wall",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 5,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_underway_quarry_spoil_curtain",
+      "name": "Quarry Spoil Curtain",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_underway_pressure_rail_embankment",
+      "name": "Pressure-Rail Embankment",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "rail_embankment_edge",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_underway_glowfungus_ceiling_shadow",
+      "name": "Glowfungus Ceiling Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_underway_ash_slag_pipe_choke",
+      "name": "Underway-Ash Slag Pipe Choke",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_subterranean_underways",
+        "biome_ash_lava_wastes"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 4,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 3,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "body"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "body"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_frost_icefall_anchor",
+      "name": "Frost March Icefall Anchor",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 6,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 5,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 4,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 3,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 3,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "icefall_wall_edge",
+        "protected_sides": [
+          "south",
+          "west",
+          "east"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_frost_whitewood_trunk_shelf",
+      "name": "Whitewood Trunk Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "world_lore"
+      ],
+      "passability_class": "blocking_non_visitable",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "blocking_non_visitable"
+      }
+    },
+    {
+      "id": "object_frost_frozen_pool_lip",
+      "name": "Frozen Pool Lip",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "frozen_pool_edge",
+        "protected_sides": [
+          "north"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_frost_snowblind_drift_shadow",
+      "name": "Snowblind Drift Shadow",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
+    },
+    {
+      "id": "object_frost_highland_rime_cliff_band",
+      "name": "Frost-Highland Rime Cliff Band",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_snow_frost_marches",
+        "biome_highland_ridge"
+      ],
+      "footprint": {
+        "width": 6,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 5,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "rime_cliff_transition",
+        "protected_sides": [
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_grass_mire_cutwater_reed_shelf",
+      "name": "Grass-Mire Cutwater Reed Shelf",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 1,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "road_control",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "standard_adventure",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "grass_mire_reed_transition",
+        "protected_sides": [
+          "north",
+          "west"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_coast_underway_sinkhole_quay",
+      "name": "Coast-Underway Sinkhole Quay",
+      "family": "blocker",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_coast_archipelago",
+        "biome_subterranean_underways"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 3,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [
+        {
+          "x": 4,
+          "y": 0,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "role": "edge"
+        },
+        {
+          "x": 4,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 3,
+          "y": 2,
+          "role": "edge"
+        },
+        {
+          "x": 2,
+          "y": 2,
+          "role": "edge"
+        }
+      ],
+      "passable": false,
+      "visitable": false,
+      "map_roles": [
+        "blocked_route",
+        "route_pressure",
+        "world_lore"
+      ],
+      "passability_class": "edge_blocker",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "ruin_reward_pocket",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "edge_blocker"
+      },
+      "edge_blocker": {
+        "edge_intent": "sinkhole_quay_transition",
+        "protected_sides": [
+          "east",
+          "south"
+        ],
+        "avoid_route_center_closure": true
+      }
+    },
+    {
+      "id": "object_forest_mire_root_reed_mat",
+      "name": "Forest-Mire Root Reed Mat",
+      "family": "decoration",
+      "schema_version": 1,
+      "primary_class": "decoration",
+      "secondary_tags": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "content_batch_id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+      "biome_ids": [
+        "biome_deep_forest",
+        "biome_mire_fen"
+      ],
+      "footprint": {
+        "width": 5,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "region_feature"
+      },
+      "body_tiles": [],
+      "passable": true,
+      "visitable": false,
+      "map_roles": [
+        "world_lore",
+        "route_pacing"
+      ],
+      "passability_class": "passable_scenic",
+      "interaction": {
+        "cadence": "none",
+        "remains_after_visit": true,
+        "state_after_visit": "unchanged",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": false,
+        "cooldown_days": 0,
+        "refresh_rule": "none"
+      },
+      "editor_placement": {
+        "placement_mode": "palette_object",
+        "density_band": "sparse_wild",
+        "minimum_lane_clearance": 0,
+        "allows_adjacent_visitable": true
+      },
+      "ai_hints": {
+        "strategic_value": 0,
+        "risk_tier": "unguarded",
+        "placement_role": "passable_scenic"
+      }
     }
   ]
 }

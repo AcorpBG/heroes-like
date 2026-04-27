@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-001c-biome-blockers-edge-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 001c Biome Blockers And Edge Blockers",
+  "currentSliceId": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 001d Large Footprint Coverage",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Batch 001c completed with validated blocker/edge-blocker content; next corrective P2.4 slice is Batch 001d large-footprint coverage. P2.5 remains paused.",
+  "currentSliceNotes": "Completed Batch 001d: 48 large-footprint non-interactable decoration/blocker objects, validator/report coverage, and implementation report.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T18:40:47Z",
+  "updatedAt": "2026-04-27T18:49:55Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1282,7 +1282,7 @@
       "id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
       "title": "Overworld Object Content Batch 001d Large Footprint Coverage",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1307,7 +1307,50 @@
         "The decoration/blocker category is near the 200-object target with all 9 biomes represented.",
         "Large silhouettes use partial masks where appropriate and remain non-interactable."
       ],
-      "notes": "Pending follow-up decoration batch. Do not mark complete until object JSON and validation evidence exist."
+      "notes": "Completed Batch 001d: 48 large-footprint non-interactable decoration/blocker objects, validator/report coverage, and implementation report.",
+      "updatedAt": "2026-04-27T18:49:55Z",
+      "startedAt": "2026-04-27T18:43:42Z",
+      "completedAt": "2026-04-27T18:49:55Z"
+    },
+    {
+      "id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "title": "Overworld Object Content Batch 002 Mines And Resource Fronts",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Continue corrective P2.4 object content with mines, rare-resource fronts, support producers, and explicit resource-front authoring contracts after decoration/blocker coverage.",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/economy-resource-schema-migration-plan.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "object and economy validator/report fixtures as needed"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --economy-resource-report",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "About 28 new or normalized mine/resource-front/support-producer definitions cover common mines, staged rare-resource fronts, support producers, and selected existing mine normalization."
+      ],
+      "completionCriteria": [
+        "Mines and resource-front objects define explicit footprint, body, approach, ownership/control, staged-output, guard expectation, and biome metadata as appropriate.",
+        "Rare-resource fronts remain staged/report-safe without activating live rare-resource costs, markets, save payloads, or production grants."
+      ],
+      "nonGoals": [
+        "No save migration or SAVE_VERSION bump.",
+        "No market changes.",
+        "No rare-resource costs, stockpile grants, UI inventory activation, or broad economy rebalance."
+      ],
+      "updatedAt": "2026-04-27T18:51:01Z",
+      "notes": "Next corrective P2.4 category after completed decoration/blocker Batch 001d; P2.5 remains paused."
     },
     {
       "id": "magic-spell-school-category-schema-10184",
@@ -3068,22 +3111,24 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-001d-large-footprint-coverage-10184",
-      "title": "Overworld Object Content Batch 001d Large Footprint Coverage",
+      "id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "title": "Overworld Object Content Batch 002 Mines And Resource Fronts",
       "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
         "docs/phase2-4-object-implementation-backlog.md",
-        "docs/overworld-object-taxonomy-density.md"
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/economy-resource-schema-migration-plan.md"
       ],
       "implementationTargets": [
         "content/map_objects.json",
-        "object validator/report fixtures as needed"
+        "content/resource_sites.json",
+        "object and economy validator/report fixtures as needed"
       ],
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation",
-      "notes": "next corrective P2.4 large-footprint decoration/blocker coverage after completed Batch 001c; P2.5 remains paused"
+      "notes": "next corrective P2.4 mines/resource fronts Batch 002 after completed decoration/blocker coverage; P2.5 remains paused"
     }
   ],
   "stoppedOrPausedTasks": [
