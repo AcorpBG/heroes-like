@@ -2,6 +2,41 @@ class_name ArtifactRules
 extends RefCounted
 
 const EQUIPMENT_SLOTS := ["boots", "banner", "armor", "trinket"]
+const ARTIFACT_SCHEMA_ID := "artifact_taxonomy_v1"
+const ARTIFACT_CLASSES := ["common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"]
+const ARTIFACT_RARITIES := ["common", "uncommon", "rare", "epic", "legendary", "scenario"]
+const ARTIFACT_ROLES := [
+	"economy",
+	"movement",
+	"scouting",
+	"combat",
+	"defense",
+	"morale",
+	"magic",
+	"resistance",
+	"recruitment",
+	"town_support",
+	"route",
+	"reward_modifier",
+	"progression",
+	"objective",
+]
+const ARTIFACT_ACCORD_AFFINITIES := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure", "neutral", "none"]
+const ARTIFACT_SOURCE_TAGS := [
+	"pickup",
+	"guarded_site",
+	"shrine",
+	"dwelling",
+	"artifact_cache",
+	"town",
+	"battle_salvage",
+	"campaign",
+	"set_chain",
+	"market",
+	"objective",
+]
+const ARTIFACT_BONUS_TYPES := ["stat", "resource_income", "spell_modifier", "site_modifier", "town_modifier", "unit_tag_modifier", "adventure_effect", "tradeoff"]
+const SLOT_LIMITS := {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
 
 static func ensure_hero_artifacts(hero_state: Dictionary) -> Dictionary:
 	var artifacts = normalize_hero_artifacts(hero_state.get("artifacts", {}))
@@ -133,6 +168,120 @@ static func spell_effect_amount_delta(hero_state: Dictionary, spell: Dictionary)
 	for modifier in spell_affinity_records(hero_state, spell):
 		delta += int(modifier.get("effect_amount_delta", 0))
 	return delta
+
+static func artifact_taxonomy(artifact_id: String) -> Dictionary:
+	var artifact := ContentService.get_artifact(artifact_id)
+	if artifact.is_empty():
+		return {}
+	return _artifact_taxonomy_payload(artifact)
+
+static func artifact_taxonomy_summary(artifact_id: String) -> String:
+	var taxonomy := artifact_taxonomy(artifact_id)
+	if taxonomy.is_empty():
+		return "Taxonomy unknown"
+	var rarity := _title_label(String(taxonomy.get("rarity", "")))
+	var family := _title_label(String(taxonomy.get("family", "")))
+	var roles = taxonomy.get("roles", [])
+	var role_labels := []
+	if roles is Array:
+		for role_value in roles:
+			var role := String(role_value).strip_edges()
+			if role == "":
+				continue
+			role_labels.append(_title_label(role))
+	return "%s %s | %s" % [
+		rarity,
+		family,
+		", ".join(role_labels) if not role_labels.is_empty() else "Role pending",
+	]
+
+static func artifact_schema_report(artifact_records: Array = []) -> Dictionary:
+	var records := artifact_records
+	if records.is_empty():
+		var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+		var raw_items = raw.get("items", [])
+		if raw_items is Array:
+			records = raw_items
+
+	var report := {
+		"ok": true,
+		"schema_status": "artifact_taxonomy_schema_loaded",
+		"schema_id": ARTIFACT_SCHEMA_ID,
+		"artifact_count": 0,
+		"complete_taxonomy_count": 0,
+		"equip_constraint_count": 0,
+		"bonus_metadata_count": 0,
+		"risk_metadata_count": 0,
+		"ui_summary_count": 0,
+		"ai_hint_count": 0,
+		"slot_counts": {},
+		"rarity_counts": {},
+		"class_counts": {},
+		"family_counts": {},
+		"role_counts": {},
+		"source_tag_counts": {},
+		"curse_tradeoff_counts": {"cursed": 0, "tradeoff": 0},
+		"unsupported_records": [],
+		"content_scope": "existing_artifact_records_only",
+		"runtime_policy": {
+			"save_version_bump": false,
+			"equipment_runtime_migration": false,
+			"source_reward_tables_active": false,
+			"rare_resource_activation": false,
+		},
+	}
+	var slot_counts: Dictionary = report["slot_counts"]
+	var rarity_counts: Dictionary = report["rarity_counts"]
+	var class_counts: Dictionary = report["class_counts"]
+	var family_counts: Dictionary = report["family_counts"]
+	var role_counts: Dictionary = report["role_counts"]
+	var source_tag_counts: Dictionary = report["source_tag_counts"]
+	var curse_tradeoff_counts: Dictionary = report["curse_tradeoff_counts"]
+	var unsupported_records: Array = report["unsupported_records"]
+
+	for artifact_value in records:
+		if not (artifact_value is Dictionary):
+			continue
+		var artifact: Dictionary = artifact_value
+		var artifact_id := String(artifact.get("id", "")).strip_edges()
+		if artifact_id == "":
+			continue
+		report["artifact_count"] = int(report.get("artifact_count", 0)) + 1
+		_increment_count(slot_counts, String(artifact.get("slot", "")))
+		_increment_count(rarity_counts, String(artifact.get("rarity", "")))
+		_increment_count(class_counts, String(artifact.get("artifact_class", "")))
+		_increment_count(family_counts, String(artifact.get("family", "")))
+		for role in _string_array(artifact.get("roles", [])):
+			_increment_count(role_counts, role)
+		for source_tag in _string_array(artifact.get("source_tags", [])):
+			_increment_count(source_tag_counts, source_tag)
+
+		var errors := _artifact_taxonomy_validation_errors(artifact)
+		if errors.is_empty():
+			report["complete_taxonomy_count"] = int(report.get("complete_taxonomy_count", 0)) + 1
+		else:
+			unsupported_records.append({"artifact_id": artifact_id, "issues": errors})
+
+		if _equip_constraints_complete(artifact):
+			report["equip_constraint_count"] = int(report.get("equip_constraint_count", 0)) + 1
+		if _bonus_metadata_complete(artifact):
+			report["bonus_metadata_count"] = int(report.get("bonus_metadata_count", 0)) + 1
+		if _risk_metadata_complete(artifact):
+			report["risk_metadata_count"] = int(report.get("risk_metadata_count", 0)) + 1
+		if _artifact_ui_summary(artifact) != "":
+			report["ui_summary_count"] = int(report.get("ui_summary_count", 0)) + 1
+		if _ai_hints_complete(artifact):
+			report["ai_hint_count"] = int(report.get("ai_hint_count", 0)) + 1
+
+		var risk = artifact.get("risk", {})
+		if risk is Dictionary:
+			if bool(risk.get("cursed", false)):
+				curse_tradeoff_counts["cursed"] = int(curse_tradeoff_counts.get("cursed", 0)) + 1
+			if bool(risk.get("tradeoff", false)):
+				curse_tradeoff_counts["tradeoff"] = int(curse_tradeoff_counts.get("tradeoff", 0)) + 1
+
+	report["ok"] = int(report.get("artifact_count", 0)) > 0 and int(report.get("complete_taxonomy_count", 0)) == int(report.get("artifact_count", 0))
+	return report
 
 static func claim_artifact(
 	hero_state: Dictionary,
@@ -363,9 +512,10 @@ static func describe_management(hero_state: Dictionary) -> String:
 			lines.append("- %s: empty | Ready for %s" % [slot.capitalize(), slot.capitalize()])
 			continue
 		lines.append(
-			"- %s: %s | Equipped | %s | %s" % [
+			"- %s: %s | Equipped | %s | %s | %s" % [
 				slot.capitalize(),
 				artifact_name(artifact_id),
+				artifact_taxonomy_summary(artifact_id),
 				artifact_effect_summary(artifact_id),
 				describe_single_artifact_impact(artifact_id),
 			]
@@ -378,9 +528,10 @@ static func describe_management(hero_state: Dictionary) -> String:
 			if artifact_id == "":
 				continue
 			lines.append(
-				"- %s | Pack | %s slot | %s | %s | %s | %s" % [
+				"- %s | Pack | %s slot | %s | %s | %s | %s | %s" % [
 					artifact_name(artifact_id),
 					artifact_slot_label(artifact_id),
+					artifact_taxonomy_summary(artifact_id),
 					artifact_decision_summary(hero_state, artifact_id),
 					artifact_set_context(artifact_id),
 					artifact_effect_summary(artifact_id),
@@ -602,9 +753,10 @@ static func artifact_decision_summary(hero_state: Dictionary, artifact_id: Strin
 static func describe_artifact_short(artifact_id: String) -> String:
 	if ContentService.get_artifact(artifact_id).is_empty():
 		return "Artifact cache"
-	return "%s | %s | %s | %s" % [
+	return "%s | %s | %s | %s | %s" % [
 		artifact_name(artifact_id),
 		artifact_slot_label(artifact_id),
+		artifact_taxonomy_summary(artifact_id),
 		artifact_reward_role(artifact_id),
 		artifact_effect_summary(artifact_id),
 	]
@@ -619,12 +771,13 @@ static func describe_artifact_inspection(
 	if artifact.is_empty():
 		return "Artifact cache\nUnknown relic record."
 	var state := artifact_collection_state(hero_state, artifact_id, collected, collected_by_faction_id)
-	return "%s\nSlot %s | %s | %s | %s\nEffect: %s\n%s\nState: %s" % [
+	return "%s\nSlot %s | %s | %s | %s\nTaxonomy: %s\nEffect: %s\n%s\nState: %s" % [
 		artifact_name(artifact_id),
 		artifact_slot_label(artifact_id),
 		artifact_type_label(artifact_id),
 		artifact_reward_role(artifact_id),
 		artifact_set_context(artifact_id),
+		artifact_taxonomy_summary(artifact_id),
 		artifact_effect_summary(artifact_id),
 		describe_single_artifact_impact(artifact_id),
 		state,
@@ -659,8 +812,9 @@ static func describe_artifact(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	if artifact.is_empty():
 		return "Artifact cache"
-	return "%s | %s | %s" % [
+	return "%s | %s | %s | %s" % [
 		artifact_name(artifact_id),
+		artifact_taxonomy_summary(artifact_id),
 		String(artifact.get("description", "Recovered equipment")),
 		_artifact_effect_summary(artifact),
 	]
@@ -925,6 +1079,160 @@ static func _artifact_spell_modifier_parts(value: Variant) -> Array:
 			continue
 		parts.append("%s %s %s" % [school, context, ", ".join(modifier_parts)])
 	return parts
+
+static func _artifact_taxonomy_payload(artifact: Dictionary) -> Dictionary:
+	return {
+		"artifact_id": String(artifact.get("id", "")),
+		"artifact_class": String(artifact.get("artifact_class", "")),
+		"rarity": String(artifact.get("rarity", "")),
+		"slot": String(artifact.get("slot", "")),
+		"family": String(artifact.get("family", "")),
+		"roles": _string_array(artifact.get("roles", [])),
+		"accord_affinity": String(artifact.get("accord_affinity", "")),
+		"faction_affinity": _string_array(artifact.get("faction_affinity", [])),
+		"source_tags": _string_array(artifact.get("source_tags", [])),
+		"set_id": _artifact_set_id(artifact),
+		"cursed": bool((artifact.get("risk", {}) if artifact.get("risk", {}) is Dictionary else {}).get("cursed", false)),
+		"tradeoff": bool((artifact.get("risk", {}) if artifact.get("risk", {}) is Dictionary else {}).get("tradeoff", false)),
+		"ui_summary": _artifact_ui_summary(artifact),
+	}
+
+static func _artifact_taxonomy_validation_errors(artifact: Dictionary) -> Array:
+	var errors := []
+	var artifact_id := String(artifact.get("id", "")).strip_edges()
+	if artifact_id == "":
+		errors.append("missing_id")
+	var slot := String(artifact.get("slot", "")).strip_edges()
+	if slot not in EQUIPMENT_SLOTS:
+		errors.append("unsupported_slot")
+	var artifact_class := String(artifact.get("artifact_class", "")).strip_edges()
+	if artifact_class not in ARTIFACT_CLASSES:
+		errors.append("unsupported_artifact_class")
+	var rarity := String(artifact.get("rarity", "")).strip_edges()
+	if rarity not in ARTIFACT_RARITIES:
+		errors.append("unsupported_rarity")
+	var family := String(artifact.get("family", "")).strip_edges()
+	if family == "":
+		errors.append("missing_family")
+	var roles := _string_array(artifact.get("roles", []))
+	if roles.is_empty():
+		errors.append("missing_roles")
+	for role in roles:
+		if role not in ARTIFACT_ROLES:
+			errors.append("unsupported_role:%s" % role)
+	var accord_affinity := String(artifact.get("accord_affinity", "")).strip_edges()
+	if accord_affinity not in ARTIFACT_ACCORD_AFFINITIES:
+		errors.append("unsupported_accord_affinity")
+	var source_tags := _string_array(artifact.get("source_tags", []))
+	if source_tags.is_empty():
+		errors.append("missing_source_tags")
+	for source_tag in source_tags:
+		if source_tag not in ARTIFACT_SOURCE_TAGS:
+			errors.append("unsupported_source_tag:%s" % source_tag)
+	if not _equip_constraints_complete(artifact):
+		errors.append("incomplete_equip_constraints")
+	if not _bonus_metadata_complete(artifact):
+		errors.append("incomplete_bonus_metadata")
+	if not _risk_metadata_complete(artifact):
+		errors.append("incomplete_risk_metadata")
+	if _artifact_ui_summary(artifact) == "":
+		errors.append("missing_ui_summary")
+	if not _ai_hints_complete(artifact):
+		errors.append("incomplete_ai_hints")
+	var validation_tags = artifact.get("validation_tags", {})
+	if not (validation_tags is Dictionary):
+		errors.append("missing_validation_tags")
+	else:
+		var schema := String(validation_tags.get("schema", "")).strip_edges()
+		if schema != ARTIFACT_SCHEMA_ID:
+			errors.append("unsupported_schema")
+		if String(validation_tags.get("save_behavior", "")).strip_edges() == "":
+			errors.append("missing_save_behavior")
+	return errors
+
+static func _equip_constraints_complete(artifact: Dictionary) -> bool:
+	var constraints = artifact.get("equip_constraints", {})
+	if not (constraints is Dictionary):
+		return false
+	var slot := String(artifact.get("slot", "")).strip_edges()
+	if slot == "" or slot not in EQUIPMENT_SLOTS:
+		return false
+	var expected_limit := int(SLOT_LIMITS.get(slot, 1))
+	if int(constraints.get("slot_limit", 0)) != expected_limit:
+		return false
+	if not constraints.has("unique_per_hero"):
+		return false
+	if not (constraints.get("allowed_faction_ids", []) is Array):
+		return false
+	if not (constraints.get("required_tags", []) is Array):
+		return false
+	return true
+
+static func _bonus_metadata_complete(artifact: Dictionary) -> bool:
+	var metadata = artifact.get("bonus_metadata", [])
+	if not (metadata is Array) or metadata.is_empty():
+		return false
+	for entry_value in metadata:
+		if not (entry_value is Dictionary):
+			return false
+		var entry: Dictionary = entry_value
+		var bonus_type := String(entry.get("bonus_type", "")).strip_edges()
+		if bonus_type not in ARTIFACT_BONUS_TYPES:
+			return false
+		if String(entry.get("scope", "")).strip_edges() == "":
+			return false
+		if String(entry.get("public_summary", "")).strip_edges() == "":
+			return false
+	return true
+
+static func _risk_metadata_complete(artifact: Dictionary) -> bool:
+	var risk = artifact.get("risk", {})
+	if not (risk is Dictionary):
+		return false
+	if not risk.has("cursed") or not risk.has("tradeoff"):
+		return false
+	if not (risk.get("warning_tags", []) is Array):
+		return false
+	return true
+
+static func _ai_hints_complete(artifact: Dictionary) -> bool:
+	var hints = artifact.get("ai_hints", {})
+	if not (hints is Dictionary):
+		return false
+	if _string_array(hints.get("value_drivers", [])).is_empty():
+		return false
+	if _string_array(hints.get("preferred_hero_roles", [])).is_empty():
+		return false
+	if not (hints.get("preferred_faction_ids", []) is Array):
+		return false
+	if not (hints.get("combo_tags", []) is Array):
+		return false
+	return true
+
+static func _artifact_ui_summary(artifact: Dictionary) -> String:
+	var ui = artifact.get("ui", {})
+	if ui is Dictionary:
+		return String(ui.get("summary", "")).strip_edges()
+	return ""
+
+static func _string_array(value: Variant) -> Array:
+	var result := []
+	if value is Array:
+		for item in value:
+			var text := String(item).strip_edges()
+			if text != "" and text not in result:
+				result.append(text)
+	elif value is String:
+		var text := String(value).strip_edges()
+		if text != "":
+			result.append(text)
+	return result
+
+static func _increment_count(counts: Dictionary, key_value: String) -> void:
+	var key := key_value.strip_edges()
+	if key == "":
+		key = "none"
+	counts[key] = int(counts.get(key, 0)) + 1
 
 static func _signed_amount_label(amount: int) -> String:
 	if amount > 0:

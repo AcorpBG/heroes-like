@@ -4,6 +4,90 @@
       "id": "artifact_trailsinger_boots",
       "name": "Trailsinger Boots",
       "slot": "boots",
+      "artifact_class": "common",
+      "rarity": "common",
+      "family": "roadfinder_gear",
+      "roles": [
+        "movement",
+        "scouting",
+        "magic"
+      ],
+      "accord_affinity": "beacon",
+      "faction_affinity": [],
+      "source_tags": [
+        "pickup",
+        "guarded_site",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "overworld_movement",
+          "public_summary": "Improves field movement."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "scouting_radius",
+          "public_summary": "Extends scouting range."
+        },
+        {
+          "bonus_type": "spell_modifier",
+          "scope": "equipped",
+          "school_id": "beacon",
+          "context": "overworld",
+          "public_summary": "Improves Beacon route spells."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Common roadfinder boots for movement, scouting, and Beacon route tempo.",
+        "icon_id": "artifact_boots_placeholder",
+        "effect_tags": [
+          "movement",
+          "scouting",
+          "beacon"
+        ],
+        "comparison_priority": [
+          "overworld_movement",
+          "scouting_radius",
+          "spell_modifiers"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "route_tempo",
+          "scouting_reach",
+          "beacon_spell_support"
+        ],
+        "preferred_hero_roles": [
+          "scout",
+          "magic"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "road",
+          "beacon"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
       "description": "Soft-soled boots traced with old road songs. They stretch a march and sharpen a scout's read of the road ahead.",
       "bonuses": {
         "overworld_movement": 2,
@@ -24,6 +108,77 @@
       "id": "artifact_quarry_tally_rod",
       "name": "Quarry Tally Rod",
       "slot": "trinket",
+      "artifact_class": "crafted",
+      "rarity": "common",
+      "family": "surveyor_instruments",
+      "roles": [
+        "economy",
+        "town_support"
+      ],
+      "accord_affinity": "neutral",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "artifact_cache",
+        "town"
+      ],
+      "equip_constraints": {
+        "slot_limit": 2,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "resource_income",
+          "scope": "equipped",
+          "resource_ids": [
+            "gold",
+            "ore"
+          ],
+          "cadence": "daily",
+          "public_summary": "Adds daily common-resource income."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Common surveyor trinket for gold and ore income.",
+        "icon_id": "artifact_tally_rod_placeholder",
+        "effect_tags": [
+          "economy",
+          "ore"
+        ],
+        "comparison_priority": [
+          "daily_income"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "common_resource_income",
+          "ore_shortage",
+          "town_build_support"
+        ],
+        "preferred_hero_roles": [
+          "governor",
+          "carrier"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "mine",
+          "survey"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
       "description": "A brass counting rod used by frontier surveyors to squeeze one more cart from every shift.",
       "bonuses": {
         "daily_income": {
@@ -36,6 +191,79 @@
       "id": "artifact_warcrest_pennon",
       "name": "Warcrest Pennon",
       "slot": "banner",
+      "artifact_class": "crafted",
+      "rarity": "uncommon",
+      "family": "battle_command_pieces",
+      "roles": [
+        "combat",
+        "morale"
+      ],
+      "accord_affinity": "neutral",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "battle_salvage",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_attack",
+          "public_summary": "Improves attack command."
+        },
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_initiative",
+          "public_summary": "Improves initiative command."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Uncommon command banner for attack and initiative.",
+        "icon_id": "artifact_pennon_placeholder",
+        "effect_tags": [
+          "combat",
+          "initiative"
+        ],
+        "comparison_priority": [
+          "battle_attack",
+          "battle_initiative"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_attack",
+          "initiative_tempo"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "raider"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "command",
+          "charge"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
       "description": "A compact command pennon whose bright crest sharpens charges and keeps the line moving.",
       "bonuses": {
         "battle_attack": 1,
@@ -46,6 +274,72 @@
       "id": "artifact_bastion_gorget",
       "name": "Bastion Gorget",
       "slot": "armor",
+      "artifact_class": "crafted",
+      "rarity": "uncommon",
+      "family": "battle_command_pieces",
+      "roles": [
+        "defense",
+        "combat"
+      ],
+      "accord_affinity": "neutral",
+      "faction_affinity": [],
+      "source_tags": [
+        "guarded_site",
+        "town",
+        "artifact_cache"
+      ],
+      "equip_constraints": {
+        "slot_limit": 1,
+        "unique_per_hero": true,
+        "allowed_faction_ids": [],
+        "required_tags": []
+      },
+      "bonus_metadata": [
+        {
+          "bonus_type": "stat",
+          "scope": "equipped",
+          "stat": "battle_defense",
+          "public_summary": "Improves defensive command."
+        }
+      ],
+      "risk": {
+        "cursed": false,
+        "tradeoff": false,
+        "warning_tags": []
+      },
+      "ui": {
+        "summary": "Uncommon armor for defensive command.",
+        "icon_id": "artifact_gorget_placeholder",
+        "effect_tags": [
+          "defense",
+          "armor"
+        ],
+        "comparison_priority": [
+          "battle_defense"
+        ]
+      },
+      "ai_hints": {
+        "value_drivers": [
+          "frontline_survival",
+          "town_defense"
+        ],
+        "preferred_hero_roles": [
+          "might",
+          "defender"
+        ],
+        "preferred_faction_ids": [],
+        "combo_tags": [
+          "armor",
+          "redoubt"
+        ]
+      },
+      "validation_tags": {
+        "schema": "artifact_taxonomy_v1",
+        "save_behavior": "content_reference_only",
+        "set_id": "",
+        "mutual_exclusions": [],
+        "stack_rule": "unique_per_hero"
+      },
       "description": "Layered bronze plate forged for siege marshals. It steadies the front under punishing blows.",
       "bonuses": {
         "battle_defense": 2
