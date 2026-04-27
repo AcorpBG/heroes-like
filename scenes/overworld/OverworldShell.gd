@@ -529,7 +529,13 @@ func _refresh() -> void:
 	var army_text := OverworldRules.describe_army(_session)
 	_set_rail_text(_army_label, army_text, _rail_prefixed_summary("Army", army_text), 1)
 	var heroes_text := OverworldRules.describe_heroes(_session)
-	_set_rail_text(_heroes_label, heroes_text, _rail_prefixed_summary("Heroes", heroes_text), 1)
+	var command_check := _command_check_surface()
+	_set_rail_text(
+		_heroes_label,
+		_join_tooltip_sections([heroes_text, String(command_check.get("tooltip_text", ""))]),
+		String(command_check.get("visible_text", _rail_prefixed_summary("Heroes", heroes_text))),
+		1
+	)
 	var specialty_text := OverworldRules.describe_specialties(_session)
 	_set_rail_text(_specialty_label, specialty_text, _rail_prefixed_summary("Spec", specialty_text), 1)
 	var spell_text := OverworldRules.describe_spellbook(_session, SpellRules.CONTEXT_OVERWORLD)
@@ -648,7 +654,9 @@ func _rebuild_hero_actions() -> void:
 
 	var actions = _cached_hero_actions()
 	if actions.size() <= 1:
-		_hero_actions.add_child(_make_placeholder_label("No reserve switch"))
+		var placeholder := _make_placeholder_label("Command check: solo")
+		placeholder.tooltip_text = String(_command_check_surface().get("tooltip_text", "No reserve switch."))
+		_hero_actions.add_child(placeholder)
 		return
 
 	for action in actions:
@@ -657,7 +665,11 @@ func _rebuild_hero_actions() -> void:
 		var button = Button.new()
 		button.text = String(action.get("label", action.get("id", "Command")))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = String(action.get("summary", ""))
+		var switch_check := _hero_switch_check_surface(action)
+		button.tooltip_text = _join_tooltip_sections([
+			String(action.get("summary", "")),
+			String(switch_check.get("tooltip_text", "")),
+		])
 		_style_rail_action_button(button)
 		button.pressed.connect(_on_hero_action_pressed.bind(String(action.get("id", ""))))
 		_hero_actions.add_child(button)
@@ -804,6 +816,100 @@ func _cached_hero_actions() -> Array:
 	if not _refresh_cache.has("hero_actions"):
 		_refresh_cache["hero_actions"] = OverworldRules.get_hero_actions(_session)
 	return _refresh_cache["hero_actions"]
+
+func _command_check_surface() -> Dictionary:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var active_name := String(hero.get("name", "Commander")).strip_edges()
+	if active_name == "":
+		active_name = "Commander"
+	var movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var actions: Array = _cached_hero_actions()
+	var roster_count: int = actions.size()
+	var reserve_count: int = maxi(0, roster_count - 1)
+	var switchable_count := 0
+	var first_switch_label := ""
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			continue
+		switchable_count += 1
+		if first_switch_label == "":
+			first_switch_label = String(action.get("label", "reserve commander")).trim_prefix("Command ").strip_edges()
+	var readiness := "Solo command"
+	var switch_line := "No reserve switch is available."
+	var next_step := "Keep %s active and select a visible destination." % active_name
+	if switchable_count > 0:
+		readiness = "%d reserve%s ready" % [switchable_count, "" if switchable_count == 1 else "s"]
+		switch_line = "Switch ready: %s." % first_switch_label
+		next_step = "Open Command and choose %s if that commander should take the next field order." % first_switch_label
+	else:
+		var primary_action := _current_primary_action()
+		if not primary_action.is_empty() and not bool(primary_action.get("disabled", false)):
+			next_step = "Keep %s active and commit %s when ready." % [
+				active_name,
+				String(primary_action.get("label", "the primary order")),
+			]
+	var roster_line := "%d commander%s, %d reserve%s" % [
+		roster_count,
+		"" if roster_count == 1 else "s",
+		reserve_count,
+		"" if reserve_count == 1 else "s",
+	]
+	var visible := "Command check: %s | %s | %s" % [
+		_short_action_label(active_name, 18),
+		readiness,
+		movement_line,
+	]
+	var tooltip := "Command Check\n- Active: %s\n- Roster: %s\n- Readiness: %s | %s\n- Switch: %s\n- Next practical action: %s\n- State change: choosing a reserve makes that commander active; inspection alone does not spend movement or end the day." % [
+		active_name,
+		roster_line,
+		readiness,
+		movement_line,
+		switch_line,
+		next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active_name": active_name,
+		"roster_count": roster_count,
+		"reserve_count": reserve_count,
+		"switchable_count": switchable_count,
+		"readiness": readiness,
+		"movement_line": movement_line,
+		"switch_line": switch_line,
+		"next_step": next_step,
+	}
+
+func _hero_switch_check_surface(action: Dictionary) -> Dictionary:
+	if action.is_empty():
+		return {}
+	var label := String(action.get("label", "Command")).trim_prefix("Command ").strip_edges()
+	if label == "":
+		label = String(action.get("label", "Commander")).strip_edges()
+	var summary := String(action.get("summary", "")).strip_edges()
+	var disabled := bool(action.get("disabled", false))
+	var readiness := "active now" if disabled else "switch ready"
+	var next_step := "Already active; keep planning from this commander's current field position." if disabled else "Select this command to make %s the active field commander." % label
+	var tooltip := "Command Switch Check\n- Target: %s\n- Readiness: %s\n- Summary: %s\n- Next practical action: %s\n- State change: switching changes the active commander; it does not end the day by itself." % [
+		label,
+		readiness,
+		summary if summary != "" else "No roster summary available.",
+		next_step,
+	]
+	return {
+		"tooltip_text": tooltip,
+		"target_label": label,
+		"readiness": readiness,
+		"summary": summary,
+		"next_step": next_step,
+	}
 
 func _cached_spell_actions() -> Array:
 	if not _refresh_cache.has("spell_actions"):
@@ -3141,6 +3247,7 @@ func validation_snapshot() -> Dictionary:
 	var action_context := _action_context_surface(event_feed, field_readiness)
 	var drawer_handoff := _drawer_handoff_surfaces(field_readiness)
 	var status_forecast := _status_forecast_surface()
+	var command_check := _command_check_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -3180,6 +3287,10 @@ func validation_snapshot() -> Dictionary:
 		"heroes_text": OverworldRules.describe_heroes(_session),
 		"heroes_visible_text": _heroes_label.text,
 		"heroes_tooltip_text": _heroes_label.tooltip_text,
+		"command_check": command_check,
+		"command_check_visible_text": String(command_check.get("visible_text", "")),
+		"command_check_tooltip_text": String(command_check.get("tooltip_text", "")),
+		"hero_action_surfaces": _validation_control_surfaces(_hero_actions),
 		"army_text": OverworldRules.describe_army(_session),
 		"army_visible_text": _army_label.text,
 		"army_tooltip_text": _army_label.tooltip_text,
@@ -3317,6 +3428,33 @@ func _validation_action_feedback() -> Dictionary:
 		"cue_chip_text": _map_cue_label.text if _map_cue_label != null else "",
 		"reduced_motion": SettingsService.reduced_motion_enabled(),
 	}
+
+func _validation_control_surfaces(container: Node) -> Array:
+	var surfaces := []
+	if container == null:
+		return surfaces
+	for child in container.get_children():
+		if child.is_queued_for_deletion():
+			continue
+		var surface := {
+			"text": "",
+			"tooltip": "",
+			"disabled": false,
+		}
+		if child is Button:
+			var button := child as Button
+			surface["text"] = button.text
+			surface["tooltip"] = button.tooltip_text
+			surface["disabled"] = button.disabled
+		elif child is Label:
+			var label := child as Label
+			surface["text"] = label.text
+			surface["tooltip"] = label.tooltip_text
+		elif child is Control:
+			var control := child as Control
+			surface["tooltip"] = control.tooltip_text
+		surfaces.append(surface)
+	return surfaces
 
 func validation_open_command_drawer() -> Dictionary:
 	_active_drawer = "command"
