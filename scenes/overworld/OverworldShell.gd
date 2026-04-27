@@ -1010,6 +1010,25 @@ func _selected_route_decision_surface() -> Dictionary:
 	if not selected_is_hero and explored and not blocked:
 		route = _selected_route()
 	var steps: int = max(0, route.size() - 1)
+	var next_step := Vector2i(-1, -1)
+	var next_step_label := ""
+	var next_step_terrain := ""
+	var next_step_line := ""
+	var steps_after_next := 0
+	if route.size() > 1 and route[1] is Vector2i:
+		next_step = route[1]
+		next_step_label = "%d,%d" % [next_step.x, next_step.y]
+		next_step_terrain = _terrain_name_at(next_step.x, next_step.y)
+		steps_after_next = max(0, steps - 1)
+		var remaining_text := "arrives at target" if steps_after_next <= 0 else "%d step%s remains" % [
+			steps_after_next,
+			"" if steps_after_next == 1 else "s",
+		]
+		next_step_line = "Next step: %s via %s (%s)" % [
+			next_step_label,
+			next_step_terrain,
+			remaining_text,
+		]
 	var adjacent: bool = _is_adjacent_move_target(hero_pos, _selected_tile)
 	var action_kind := _selected_route_action_kind(adjacent)
 	var action_label := _selected_tile_order_label(adjacent) if not selected_is_hero else "Hold"
@@ -1072,6 +1091,17 @@ func _selected_route_decision_surface() -> Dictionary:
 		"movement_max": movement_max,
 		"movement_cost": movement_cost,
 		"movement_after_order": max(0, movement_current - movement_cost),
+		"next_step": {
+			"x": next_step.x,
+			"y": next_step.y,
+			"label": next_step_label,
+			"terrain": next_step_terrain,
+			"remaining_steps_after": steps_after_next,
+		},
+		"next_step_label": next_step_label,
+		"next_step_terrain": next_step_terrain,
+		"next_step_line": next_step_line,
+		"remaining_steps_after_next": steps_after_next,
 		"visible": visible,
 		"explored": explored,
 		"terrain": _terrain_name_at(_selected_tile.x, _selected_tile.y),
@@ -1125,6 +1155,9 @@ func _route_decision_line(surface: Dictionary) -> String:
 		status_text,
 		movement_text,
 	]
+	var next_step_line := String(surface.get("next_step_line", "")).strip_edges()
+	if next_step_line != "" and status != "current":
+		line += " | %s" % next_step_line
 	var reason := String(surface.get("blocked_reason", "")).strip_edges()
 	if reason != "":
 		line += " | %s" % reason
@@ -1147,12 +1180,17 @@ func _route_decision_cue(surface: Dictionary) -> String:
 		movement_text = "%d->%d" % [movement_current, movement_after]
 	if status in ["blocked", "no_movement"]:
 		return "Route: %s | %s | Move %s" % [destination, _route_decision_status_label(surface), movement_text]
-	return "%s: %s | %d step%s | Move %s" % [
+	var next_step_label := String(surface.get("next_step_label", "")).strip_edges()
+	var next_step_text := ""
+	if next_step_label != "":
+		next_step_text = " | Next %s" % next_step_label
+	return "%s: %s | %d step%s | Move %s%s" % [
 		String(surface.get("action_kind", "move")).capitalize(),
 		destination,
 		int(surface.get("steps", 0)),
 		"" if int(surface.get("steps", 0)) == 1 else "s",
 		movement_text,
+		next_step_text,
 	]
 
 func _route_decision_tooltip(surface: Dictionary) -> String:
@@ -1212,6 +1250,9 @@ func _route_target_handoff_surface(surface: Dictionary = {}) -> Dictionary:
 	if next_step == "":
 		next_step = _route_decision_next_practical_action(route_surface)
 	var readiness := "%s, %s, %s" % [step_text, status_label, movement_text]
+	var next_step_line := String(route_surface.get("next_step_line", "")).strip_edges()
+	if next_step_line != "":
+		readiness = "%s, %s" % [readiness, next_step_line]
 	var visible := "Route target: %s | %s | %s" % [
 		_short_action_label(destination, 22),
 		_short_action_label(action_label, 18),
@@ -1226,6 +1267,8 @@ func _route_target_handoff_surface(surface: Dictionary = {}) -> Dictionary:
 		why,
 		next_step,
 	]
+	if next_step_line != "":
+		tooltip += "\n- Route step: %s" % next_step_line
 	var blocked_reason := String(route_surface.get("blocked_reason", "")).strip_edges()
 	if blocked_reason != "":
 		tooltip += "\n- Blocked: %s" % blocked_reason
