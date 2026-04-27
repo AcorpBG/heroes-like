@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-ai-valuation-route-effects-10184",
-  "currentSliceTitle": "Overworld Object AI Valuation And Route Effects",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.4 AI valuation/route effects in progress: inspect prior object/AI evidence first; connect selected object metadata to AI valuation or route-effect reporting without public score leaks or broad renderer/save/resource migration.",
+  "currentSliceId": "overworld-object-route-effect-authoring-validation-10184",
+  "currentSliceTitle": "Overworld Object Route Effect Authoring Validation",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Next P2.4 child selected after AI valuation completion: validate selected route/transit object authoring expectations without broad pathing, renderer, save, or AI rewrites.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T15:53:55Z",
+  "updatedAt": "2026-04-27T16:24:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -269,7 +269,8 @@
         "overworld-object-editor-authoring-validation-10184",
         "overworld-object-pathing-occupancy-adoption-10184",
         "neutral-encounter-object-migration-expansion-10184",
-        "overworld-object-ai-valuation-route-effects-10184"
+        "overworld-object-ai-valuation-route-effects-10184",
+        "overworld-object-route-effect-authoring-validation-10184"
       ],
       "aggregateStatusNote": "Parent status summarizes the broad track; child slices carry executable implementation state.",
       "docsReadyEvidenceIds": [
@@ -1057,7 +1058,7 @@
       "id": "overworld-object-ai-valuation-route-effects-10184",
       "title": "Overworld Object AI Valuation And Route Effects",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1081,9 +1082,48 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T15:53:55Z",
+      "completionEvidence": [
+        "EnemyAdventureRules.neutral_encounter_object_valuation_breakdown reads selected object-backed neutral encounter secondary_tags, passability_class, guard_link, ai_hints, and shape-mask metadata for bounded AI valuation.",
+        "EnemyAdventureRules.neutral_encounter_object_route_pressure_report exposes report/tooling-only internal route pressure and priority deltas for object-backed encounter placements.",
+        "Encounter target candidates now receive a bounded metadata value from object-backed neutral encounters while public events keep compact reason text and omit internal score fields.",
+        "tests/ai_overworld_object_valuation_route_effects_report.gd proves river_pass_reed_totemists and river_pass_hollow_mire produce object-backed objective/route pressure and pass public leak checks.",
+        "docs/overworld-object-ai-valuation-route-effects-report.md records the implementation boundary and deferred renderer/save/pathing/resource work."
+      ],
+      "updatedAt": "2026-04-27T16:24:00Z",
       "startedAt": "2026-04-27T15:53:55Z",
-      "notes": "worker started for P2.4 AI valuation/route effects: inspect prior object/AI evidence first, then connect selected object metadata to AI valuation or route-effect reporting without public score leaks or broad renderer/save/resource migration"
+      "notes": "Completed bounded object-backed neutral encounter AI valuation/report adoption: selected ai_hints, secondary_tags, passability_class, guard_link, body_tiles, and approach metadata now affect report/tooling valuation and encounter target priority without public score leaks, renderer import, save migration, broad pathing adoption, broad AI rewrite, rare-resource activation, or wood id changes.",
+      "completedAt": "2026-04-27T16:24:00Z"
+    },
+    {
+      "id": "overworld-object-route-effect-authoring-validation-10184",
+      "title": "Overworld Object Route Effect Authoring Validation",
+      "phase": "phase-2-deep-production-foundation",
+      "status": "pending",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "purpose": "Validate selected route/transit object authoring expectations after object-backed AI valuation without adopting broad pathing or renderer behavior.",
+      "sourceDocs": [
+        "docs/overworld-object-taxonomy-density.md",
+        "docs/overworld-object-ai-valuation-route-effects-report.md"
+      ],
+      "implementationTargets": [
+        "route-effect report helpers",
+        "selected transit/route object fixtures",
+        "public leak checks if any public route output is touched"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+      ],
+      "completionCriteria": [
+        "Selected route/transit object authoring expectations are validated or explicitly deferred according to the P2.4 parent boundaries."
+      ],
+      "updatedAt": "2026-04-27T16:24:00Z",
+      "notes": "Next bounded P2.4 child after object-backed AI valuation: validate route-effect authoring/report expectations without broad runtime pathing, renderer, save, resource, or AI migration."
     },
     {
       "id": "magic-spell-school-category-schema-10184",
@@ -2836,20 +2876,20 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-ai-valuation-route-effects-10184",
-      "title": "Overworld Object AI Valuation And Route Effects",
-      "status": "in_progress",
+      "id": "overworld-object-route-effect-authoring-validation-10184",
+      "title": "Overworld Object Route Effect Authoring Validation",
+      "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
         "docs/overworld-object-taxonomy-density.md",
-        "docs/strategic-ai-foundation.md"
+        "docs/overworld-object-ai-valuation-route-effects-report.md"
       ],
       "implementationTargets": [
-        "AI valuation/report helpers",
-        "route-effect helpers when selected",
-        "public leak checks"
+        "route-effect report helpers",
+        "selected transit/route object fixtures",
+        "public leak checks if any public route output is touched"
       ],
-      "notes": "worker started for P2.4 AI valuation/route effects: inspect prior object/AI evidence first, then connect selected object metadata to AI valuation or route-effect reporting without public score leaks or broad renderer/save/resource migration",
+      "notes": "Next bounded P2.4 child after object-backed AI valuation: validate route-effect authoring/report expectations without broad runtime pathing, renderer, save, resource, or AI migration.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"

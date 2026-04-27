@@ -944,6 +944,26 @@ implementationTargets:
 - route-effect helpers when selected
 - public leak checks
 
+implementationEvidence:
+- `docs/overworld-object-ai-valuation-route-effects-report.md`
+- `tests/ai_overworld_object_valuation_route_effects_report.gd`
+
+### P2 Child: Overworld Object Route Effect Authoring Validation
+
+id: `overworld-object-route-effect-authoring-validation-10184`
+parentSliceId: `overworld-object-encounter-foundation-implementation-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Validate selected route/transit object authoring expectations after object-backed AI valuation without adopting broad pathing or renderer behavior.
+
+sourceDocs:
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/overworld-object-ai-valuation-route-effects-report.md`
+
+implementationTargets:
+- route-effect report helpers
+- selected transit/route object fixtures
+- public leak checks if any public route output is touched
+
 ### P2 Child: Magic Spell School And Category Schema
 
 id: `magic-spell-school-category-schema-10184`
