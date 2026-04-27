@@ -29,6 +29,8 @@ func _run() -> void:
 		return
 	if not _assert_end_turn_readiness_confirmation_contract(shell):
 		return
+	if not _assert_drawer_handoff_cue_contract(shell):
+		return
 	if not _assert_small_map_fit(shell):
 		return
 	if not await _assert_render_cache_split(shell):
@@ -325,6 +327,74 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 		return false
 	if not _assert_no_ai_score_leak("overworld end-turn readiness confirmation", joined):
 		return false
+	return true
+
+func _assert_drawer_handoff_cue_contract(shell: Node) -> bool:
+	if (
+		not shell.has_method("validation_snapshot")
+		or not shell.has_method("validation_open_command_drawer")
+		or not shell.has_method("validation_open_frontier_drawer")
+	):
+		push_error("Overworld smoke: shell is missing drawer handoff validation hooks.")
+		get_tree().quit(1)
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var drawer_handoff: Dictionary = snapshot.get("drawer_handoff", {}) if snapshot.get("drawer_handoff", {}) is Dictionary else {}
+	var command: Dictionary = drawer_handoff.get("command", {}) if drawer_handoff.get("command", {}) is Dictionary else {}
+	var frontier: Dictionary = drawer_handoff.get("frontier", {}) if drawer_handoff.get("frontier", {}) is Dictionary else {}
+	var joined := "\n".join([
+		String(snapshot.get("command_drawer_button_text", "")),
+		String(snapshot.get("command_drawer_tooltip_text", "")),
+		String(command.get("button_text", "")),
+		String(command.get("tooltip_text", "")),
+		String(snapshot.get("frontier_drawer_button_text", "")),
+		String(snapshot.get("frontier_drawer_tooltip_text", "")),
+		String(frontier.get("button_text", "")),
+		String(frontier.get("tooltip_text", "")),
+		String(snapshot.get("close_command_tooltip_text", "")),
+		String(snapshot.get("close_frontier_tooltip_text", "")),
+	])
+	if not _assert_text_contains_all(
+		"overworld drawer handoff cues",
+		[joined],
+		[
+			"Command",
+			"Command Drawer Handoff",
+			"hero, army, spell, artifact, and selected-order panels",
+			"Current order:",
+			"Readiness:",
+			"State change: inspection only",
+			"Frontier",
+			"Frontier Drawer Handoff",
+			"objectives, scout net, threat watch, and end-turn forecast",
+			"End Turn remains the commit",
+			"Close Command drawer",
+			"Close Frontier drawer",
+		]
+	):
+		return false
+	if not _assert_no_ai_score_leak("overworld drawer handoff cues", joined):
+		return false
+
+	shell.call("validation_open_command_drawer")
+	var command_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"overworld command drawer open cue",
+		[String(command_snapshot.get("command_drawer_button_text", "")), String(command_snapshot.get("command_drawer_tooltip_text", ""))],
+		["Command Open", "Command Drawer Handoff"]
+	):
+		return false
+	shell.call("_on_close_drawers_pressed")
+
+	shell.call("validation_open_frontier_drawer")
+	var frontier_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not _assert_text_contains_all(
+		"overworld frontier drawer open cue",
+		[String(frontier_snapshot.get("frontier_drawer_button_text", "")), String(frontier_snapshot.get("frontier_drawer_tooltip_text", ""))],
+		["Frontier Open", "Frontier Drawer Handoff"]
+	):
+		return false
+	shell.call("_on_close_drawers_pressed")
 	return true
 
 func _assert_diagonal_movement_contract(shell: Node, map_node: Node) -> bool:

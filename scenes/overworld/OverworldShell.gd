@@ -1968,6 +1968,71 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		"end_turn_forecast": forecast,
 	}
 
+func _refresh_drawer_handoff_cues(field_readiness: Dictionary = {}) -> void:
+	var surfaces := _drawer_handoff_surfaces(field_readiness)
+	var command_surface: Dictionary = surfaces.get("command", {}) if surfaces.get("command", {}) is Dictionary else {}
+	var frontier_surface: Dictionary = surfaces.get("frontier", {}) if surfaces.get("frontier", {}) is Dictionary else {}
+	_open_command_button.text = String(command_surface.get("button_text", "Command"))
+	_open_command_button.tooltip_text = String(command_surface.get("tooltip_text", "Open command panels."))
+	_open_frontier_button.text = String(frontier_surface.get("button_text", "Frontier"))
+	_open_frontier_button.tooltip_text = String(frontier_surface.get("tooltip_text", "Open frontier panels."))
+	_close_command_button.tooltip_text = "Close Command drawer and return to the selected tile context."
+	_close_frontier_button.tooltip_text = "Close Frontier drawer and return to the selected tile context."
+
+func _drawer_handoff_surfaces(field_readiness: Dictionary = {}) -> Dictionary:
+	var readiness := field_readiness
+	if readiness.is_empty():
+		readiness = _field_readiness_surface()
+	var primary_action := _current_primary_action()
+	var primary_label := String(primary_action.get("label", "")).strip_edges()
+	if primary_label == "":
+		primary_label = "select a destination"
+	var next_step := String(readiness.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = "Select the next destination or end the turn when field orders are spent."
+	var movement_line := String(readiness.get("movement_line", "")).strip_edges()
+	if movement_line == "":
+		var movement = _session.overworld.get("movement", {})
+		movement_line = "Move %d/%d" % [int(movement.get("current", 0)), int(movement.get("max", 0))]
+	var command_state := "Open" if _active_drawer == "command" else ("Ready" if not primary_action.is_empty() else "Select")
+	var frontier_state := "Open" if _active_drawer == "frontier" else "Next"
+	var command_tooltip := "Command Drawer Handoff\n- Opens: hero, army, spell, artifact, and selected-order panels.\n- Current order: %s.\n- Readiness: %s | %s.\n- Next: %s\n- State change: inspection only until an order button or Enter is committed." % [
+		primary_label,
+		String(readiness.get("visible_text", "Ready: field orders")).strip_edges(),
+		movement_line,
+		next_step,
+	]
+	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
+	var objective_line := _line_with_prefix(_cached_objective_text(), "Next step:")
+	if objective_line == "":
+		objective_line = String(readiness.get("progress_line", "")).strip_edges()
+	var threat_line := _compact_rail_text(_cached_frontier_threats(), 1, 38, true)
+	if threat_line == "":
+		threat_line = "No immediate frontier warning."
+	var frontier_tooltip := "Frontier Drawer Handoff\n- Opens: objectives, scout net, threat watch, and end-turn forecast.\n- Objective: %s\n- Watch: %s\n- Forecast: %s\n- State change: inspection only; End Turn remains the commit." % [
+		objective_line if objective_line != "" else "review current objectives.",
+		threat_line,
+		forecast if forecast != "" else "next day forecast unavailable.",
+	]
+	return {
+		"command": {
+			"button_text": "Command %s" % command_state,
+			"tooltip_text": command_tooltip,
+			"state": command_state.to_lower(),
+			"current_order": primary_label,
+			"next_step": next_step,
+			"movement_line": movement_line,
+		},
+		"frontier": {
+			"button_text": "Frontier %s" % frontier_state,
+			"tooltip_text": frontier_tooltip,
+			"state": frontier_state.to_lower(),
+			"objective_line": objective_line,
+			"watch_line": threat_line,
+			"forecast": forecast,
+		},
+	}
+
 func _line_with_prefix(text: String, prefix: String) -> String:
 	for raw_line in text.split("\n", false):
 		var line := String(raw_line).strip_edges()
@@ -2197,6 +2262,7 @@ func _sync_context_drawers() -> void:
 	_command_spine.visible = show_command or show_frontier or show_tile
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
+	_refresh_drawer_handoff_cues()
 
 func _should_show_tile_context() -> bool:
 	if not _tile_in_bounds(_selected_tile):
@@ -2705,6 +2771,7 @@ func validation_snapshot() -> Dictionary:
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
 	var event_feed := _event_feed_surface()
 	var action_context := _action_context_surface(event_feed, field_readiness)
+	var drawer_handoff := _drawer_handoff_surfaces(field_readiness)
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -2763,6 +2830,13 @@ func validation_snapshot() -> Dictionary:
 		"end_turn_button_text": _end_turn_button.text,
 		"end_turn_tooltip_text": _end_turn_button.tooltip_text,
 		"end_turn_confirmation": end_turn_check,
+		"drawer_handoff": drawer_handoff,
+		"command_drawer_button_text": _open_command_button.text,
+		"command_drawer_tooltip_text": _open_command_button.tooltip_text,
+		"frontier_drawer_button_text": _open_frontier_button.text,
+		"frontier_drawer_tooltip_text": _open_frontier_button.tooltip_text,
+		"close_command_tooltip_text": _close_command_button.tooltip_text,
+		"close_frontier_tooltip_text": _close_frontier_button.tooltip_text,
 		"action_feedback": _validation_action_feedback(),
 		"action_feedback_text": _action_feedback_text(),
 		"map_cue_text": _map_cue_label.text,
@@ -2832,6 +2906,10 @@ func _validation_chrome_state() -> Dictionary:
 		"map_cue_text": _map_cue_label.text,
 		"action_feedback": _validation_action_feedback(),
 		"frontier_indicator": _frontier_indicator_label.text,
+		"command_drawer_button_text": _open_command_button.text,
+		"command_drawer_tooltip_text": _open_command_button.tooltip_text,
+		"frontier_drawer_button_text": _open_frontier_button.text,
+		"frontier_drawer_tooltip_text": _open_frontier_button.tooltip_text,
 	}
 
 func _validation_action_feedback() -> Dictionary:

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T00:08:10Z",
+  "updatedAt": "2026-04-27T00:18:39Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-save-command-tooltips-10184",
-  "currentSliceTitle": "Surface compact main-menu save command tooltip cues",
+  "currentSliceId": "overworld-drawer-handoff-cues-10184",
+  "currentSliceTitle": "Surface compact overworld command/frontier drawer handoff cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible save-browser command tooltip cues on the existing main-menu war ledger using current save summaries only. Save rows now explain selection-only behavior, continuity, play check, resume handoff, and selected-load result; the selected load button now states that it acts on the selected row. Focused main-menu/outcome smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented compact visible overworld Command and Frontier drawer handoff cues using current hero/action/objective/threat/readiness surfaces only. The drawer buttons now show closed/open handoff states, tooltips clarify inspection-only behavior and commit boundaries, close controls explain the return to selected-tile context, and focused overworld smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1938,6 +1938,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T00:06:02Z",
       "completedAt": "2026-04-27T00:08:10Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "overworld-drawer-handoff-cues-10184",
+      "title": "Surface compact overworld command/frontier drawer handoff cues",
+      "status": "completed",
+      "startedAt": "2026-04-27T00:11:04Z",
+      "completedAt": "2026-04-27T00:18:39Z",
       "difficulty": "small"
     }
   ],
