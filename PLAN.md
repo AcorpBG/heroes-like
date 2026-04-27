@@ -137,7 +137,25 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact overworld Specialty check clarity, with focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact battle Objective check clarity, with focused smoke assertions but still without production JSON migration, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+
+## Completed Implementation Slice: Battle Objective Check Cue
+Status: completed on 2026-04-27 as compact player-facing battle UI polish.
+
+Purpose:
+- Help a manual player connect the selected battle objective pressure to the next practical order from the existing battle footer.
+- Reuse current field objective state, target handoff, action surface, and action confirmation payloads instead of changing battle mechanics.
+
+Delivered:
+- Added a compact `Objective check:` payload in `scripts/core/BattleRules.gd`.
+- The live battle footer now pairs target handoff with objective pressure, readiness, and next-practical-action clarity.
+- Added focused smoke coverage in `tests/town_battle_visual_smoke.gd`, including visible-cue and no-score-leak assertions.
+
+Validation:
+- Planned validation for this slice is `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
 ## Completed Implementation Slice: Overworld Specialty Check Cue
 Status: completed on 2026-04-27 as compact player-facing overworld UI polish.

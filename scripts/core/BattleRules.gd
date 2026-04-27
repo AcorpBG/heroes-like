@@ -2223,6 +2223,70 @@ static func target_handoff_cue_payload(session: SessionStateStoreScript.SessionD
 		"move": move_line,
 	}
 
+static func objective_check_cue_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {
+			"visible_text": "Objective check: no battle is loaded.",
+			"tooltip_text": "Objective Check\n- No battle is loaded.",
+			"field": "",
+			"pressure": "",
+			"next_step": "",
+			"readiness": "unavailable",
+		}
+	var battle = session.battle
+	var active_stack = get_active_stack(battle)
+	var target = get_selected_target(battle)
+	var surface := get_action_surface(session)
+	var field_line := _field_objective_status_brief(battle)
+	var pressure_line := _field_objective_pressure_summary(battle)
+	var next_step := _objective_pull_line(session, battle, surface, active_stack, target)
+	var readiness := "Ready"
+	var order_line := ""
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		next_step = "Wait for the next stack or battle resolution."
+	elif String(active_stack.get("side", "")) != "player":
+		readiness = "Locked"
+		next_step = "Enemy initiative is active; wait for command to return."
+	else:
+		var action_id := _preferred_player_action_id(surface, active_stack)
+		if action_id != "":
+			var action: Dictionary = surface.get(action_id, {}) if surface.get(action_id, {}) is Dictionary else {}
+			var action_label := String(action.get("label", action_id.capitalize())).strip_edges()
+			var action_readiness := String(action.get("readiness", "")).strip_edges()
+			order_line = "%s%s" % [
+				action_label,
+				" (%s)" % action_readiness if action_readiness != "" else "",
+			]
+		else:
+			readiness = "Check"
+	if field_line == "":
+		field_line = "no active field objective"
+	if pressure_line == "":
+		pressure_line = "line break is the main battle pressure"
+	if next_step.strip_edges() == "":
+		next_step = "Choose the next legal order."
+	var visible := "Objective check: %s; %s." % [field_line, next_step]
+	var tooltip_lines := [
+		"Objective Check",
+		"- Field: %s" % field_line,
+		"- Pressure: %s" % pressure_line,
+		"- Readiness: %s" % readiness,
+		"- Next practical action: %s" % next_step,
+		"- Inspection: checking this cue does not spend an action or advance initiative.",
+	]
+	if order_line != "":
+		tooltip_lines.insert(4, "- Current order lever: %s" % order_line)
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"field": field_line,
+		"pressure": pressure_line,
+		"next_step": next_step,
+		"readiness": readiness,
+		"order": order_line,
+	}
+
 static func action_readiness_confirmation_payload(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {
