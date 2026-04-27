@@ -838,10 +838,11 @@ sourceDocs:
 - `docs/economy-overhaul-foundation.md`
 - `docs/factions-content-bible.md`
 - `docs/economy-rare-resource-activation-report.md`
+- `docs/economy-market-faction-costs-report.md`
 
 implementationTargets:
 - town economy rules
-- market/cost content
+- market/cost validation
 - focused reports or smoke coverage
 
 ### P2 Child: Economy Capture Income Loop Expansion
