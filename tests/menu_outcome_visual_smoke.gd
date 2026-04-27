@@ -278,10 +278,18 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	var skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
 	var selected_skirmish_setup: Dictionary = skirmish_snapshot.get("selected_skirmish_setup", {}) if skirmish_snapshot.get("selected_skirmish_setup", {}) is Dictionary else {}
+	var skirmish_front_check: Dictionary = skirmish_snapshot.get("skirmish_front_check", {}) if skirmish_snapshot.get("skirmish_front_check", {}) is Dictionary else {}
+	var skirmish_browser_tooltips := []
+	for item_tooltip in (skirmish_snapshot.get("skirmish_browser_item_tooltips", []) if skirmish_snapshot.get("skirmish_browser_item_tooltips", []) is Array else []):
+		skirmish_browser_tooltips.append(String(item_tooltip))
 	if not _assert_text_contains_all(
 		"Main menu skirmish launch preview",
 		[
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
+			String(skirmish_front_check.get("visible_text", "")),
+			String(skirmish_front_check.get("tooltip_text", "")),
+			String(skirmish_snapshot.get("skirmish_front_check_text", "")),
+			String(skirmish_snapshot.get("skirmish_front_check_tooltip", "")),
 			String(skirmish_snapshot.get("difficulty_summary_full", skirmish_snapshot.get("difficulty_summary", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
 			String(skirmish_snapshot.get("skirmish_commander_preview_full", skirmish_snapshot.get("skirmish_commander_preview", ""))),
@@ -292,24 +300,28 @@ func _run_main_menu_smoke() -> bool:
 			String(selected_skirmish_setup.get("difficulty_check", "")),
 			String(selected_skirmish_setup.get("difficulty_consequence", "")),
 			String(selected_skirmish_setup.get("action_consequence", "")),
+			"\n".join(skirmish_browser_tooltips),
 		],
-		["Launch Preview", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
+		["Skirmish front check:", "Skirmish Front Check", "Launch Skirmish target", "selection changes preview only", "Selected front:", "changing front rows updates", "campaign progress", "latest save", "manual save slots", "Front cue:", "Launch Preview", "Launch handoff:", "fresh Skirmish expedition on Day 1", "Skirmish", "Warlord", "River Pass", "Front context:", "Objective stakes:", "Readiness watch:", "Difficulty check:", "Warlord differs from recommended Captain", "Difficulty consequence:", "Action consequence:", "fresh Skirmish expedition", "does not change campaign progression", "Objective:", "Stakes:", "Current progress:", "Next step:", "Action:", "Faction Identity", "Embercourt League", "Stable civic investment", "Spellbook", "Gear impact:", "Collection:", "Waystride", "Field Route", "Cinder Burst", "Battle Strike", "Cost", "Use:"]
 	):
 		return false
 	if not _assert_text_contains_all(
 		"Main menu visible skirmish launch handoff",
 		[String(skirmish_snapshot.get("skirmish_setup", ""))],
-		["Launch handoff:", "fresh Skirmish expedition on Day 1"]
+		["Skirmish front check:", "Launch Skirmish target", "Launch handoff:", "fresh Skirmish expedition on Day 1"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Main menu skirmish launch handoff",
 		[
+			String(skirmish_front_check.get("visible_text", "")),
+			String(skirmish_front_check.get("tooltip_text", "")),
 			String(selected_skirmish_setup.get("launch_handoff", "")),
 			String(selected_skirmish_setup.get("difficulty_check", "")),
 			String(skirmish_snapshot.get("difficulty_summary_full", skirmish_snapshot.get("difficulty_summary", ""))),
 			String(skirmish_snapshot.get("skirmish_setup_full", skirmish_snapshot.get("skirmish_setup", ""))),
 			String(skirmish_snapshot.get("start_skirmish_tooltip", "")),
+			"\n".join(skirmish_browser_tooltips),
 		]
 	):
 		return false
