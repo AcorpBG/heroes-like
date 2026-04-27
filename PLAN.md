@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: compact main-menu settings handoff cue using the existing settings persistence contract.
+Current target: compact outcome resolution handoff cue using the existing outcome model, action row, and save surface.
 
 Done means:
-- The Settings secondary board shows a compact visible handoff line explaining that settings apply immediately and Close returns to the scenic first view.
-- The Settings handoff label and Close tooltip explain that presentation, sound, and readability changes persist to device config while campaign progress and expedition saves stay unchanged.
+- The outcome action area shows a compact visible handoff line explaining that the result is recorded, which follow-up action is primary, and how Return to Menu preserves outcome review.
+- Outcome action tooltips and the outcome Field Manual include the same handoff without changing routing, campaign progression, or save semantics.
 - Focused main-menu/outcome smoke coverage proves the visible cue, tooltip cue, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

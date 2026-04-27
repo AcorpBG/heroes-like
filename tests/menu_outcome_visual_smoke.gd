@@ -616,16 +616,20 @@ func _run_outcome_smoke() -> bool:
 	if not _assert_outcome_field_manual_contract(shell, "Outcome skirmish Field Manual"):
 		return false
 	var action_payload_text := _joined_action_payload_text(snapshot)
+	var action_tooltip_text := _joined_action_tooltip_text(snapshot)
 	if not _assert_text_contains_all(
 		"Outcome progress and next-step recap",
 		[
 			String(snapshot.get("progression_summary", "")),
 			String(snapshot.get("next_step_summary", "")),
+			String(snapshot.get("outcome_resolution_handoff", "")),
 			String(snapshot.get("continuity_choice_summary", "")),
 			String(snapshot.get("next_play_action_summary", "")),
 			String(snapshot.get("action_cue_summary", "")),
 			String(snapshot.get("actions_hint", "")),
+			String(snapshot.get("actions_hint_tooltip", "")),
 			action_payload_text,
+			action_tooltip_text,
 			String(snapshot.get("action_status", "")),
 			String(snapshot.get("save_status", "")),
 			String(snapshot.get("save_status_tooltip", "")),
@@ -637,16 +641,19 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("return_handoff", "")),
 			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Outcome skirmish continuity choice",
 		[
+			String(snapshot.get("outcome_resolution_handoff", "")),
 			String(snapshot.get("continuity_choice_summary", "")),
 			String(snapshot.get("action_cue_summary", "")),
 			String(snapshot.get("actions_hint", "")),
+			String(snapshot.get("actions_hint_tooltip", "")),
 			action_payload_text,
+			action_tooltip_text,
 			String(snapshot.get("action_status", "")),
 			String(snapshot.get("save_status", "")),
 			String(snapshot.get("save_status_tooltip", "")),
@@ -681,16 +688,20 @@ func _run_outcome_smoke() -> bool:
 	if not _assert_outcome_field_manual_contract(campaign_shell, "Outcome campaign Field Manual"):
 		return false
 	var campaign_action_payload_text := _joined_action_payload_text(campaign_snapshot)
+	var campaign_action_tooltip_text := _joined_action_tooltip_text(campaign_snapshot)
 	if not _assert_text_contains_all(
 		"Outcome campaign continuity choice",
 		[
 			String(campaign_snapshot.get("progression_summary", "")),
 			String(campaign_snapshot.get("campaign_arc_summary", "")),
 			String(campaign_snapshot.get("carryover_summary", "")),
+			String(campaign_snapshot.get("outcome_resolution_handoff", "")),
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
 			String(campaign_snapshot.get("action_cue_summary", "")),
 			String(campaign_snapshot.get("actions_hint", "")),
+			String(campaign_snapshot.get("actions_hint_tooltip", "")),
 			campaign_action_payload_text,
+			campaign_action_tooltip_text,
 			String(campaign_snapshot.get("action_status", "")),
 			String(campaign_snapshot.get("save_status", "")),
 			String(campaign_snapshot.get("save_status_tooltip", "")),
@@ -701,16 +712,19 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("play_check", "")),
 			String(campaign_snapshot.get("return_handoff", "")),
 		],
-		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
+		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Outcome handoff:", "Victory recorded", "primary follow-up", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Outcome campaign continuity choice",
 		[
+			String(campaign_snapshot.get("outcome_resolution_handoff", "")),
 			String(campaign_snapshot.get("continuity_choice_summary", "")),
 			String(campaign_snapshot.get("action_cue_summary", "")),
 			String(campaign_snapshot.get("actions_hint", "")),
+			String(campaign_snapshot.get("actions_hint_tooltip", "")),
 			campaign_action_payload_text,
+			campaign_action_tooltip_text,
 			String(campaign_snapshot.get("action_status", "")),
 			String(campaign_snapshot.get("carryover_summary", "")),
 			String(campaign_snapshot.get("save_status", "")),
@@ -786,4 +800,14 @@ func _joined_action_payload_text(snapshot: Dictionary) -> String:
 				lines.append(String(action.get("label", "")))
 				lines.append(String(action.get("summary", "")))
 				lines.append(String(action.get("action_cue", "")))
+	return "\n".join(lines)
+
+func _joined_action_tooltip_text(snapshot: Dictionary) -> String:
+	var lines := []
+	var tooltips = snapshot.get("action_tooltips", [])
+	if tooltips is Array:
+		for tooltip in tooltips:
+			if tooltip is Dictionary:
+				lines.append(String(tooltip.get("label", "")))
+				lines.append(String(tooltip.get("tooltip", "")))
 	return "\n".join(lines)
