@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
-  "currentSliceTitle": "Hero Task-State Save-Normalizer Preservation Report",
+  "currentSliceId": "world-faction-mechanics-identity-hooks-10184",
+  "currentSliceTitle": "Faction Mechanics Identity Hooks",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Selected next pending child implementation candidate after progress architecture reconciliation. Scope remains report-only AI normalizer preservation; no live task producer, save migration, SAVE_VERSION bump, production JSON edit, pathing, renderer/editor, or UI work.",
-  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task.",
-  "updatedAt": "2026-04-27T12:25:00Z",
+  "currentSliceNotes": "Selected next after correction: begin Phase 2 implementation from P2.1 faction identity hooks; docs-ready does not mean previous P2 tracks completed.",
+  "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
+  "updatedAt": "2026-04-27T12:27:26Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -411,7 +411,7 @@
       "title": "Hero Task-State Save-Normalizer Preservation Report",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
-      "classification": "selected_next_report_only_implementation_child",
+      "classification": "phase2_child_implementation_slice",
       "sourceDocs": [
         "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
         "docs/strategic-ai-hero-task-state-report-gate-review.md",
@@ -428,7 +428,7 @@
         "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_normalizer_preservation_report.tscn",
         "git diff --check"
       ],
-      "notes": "Not complete in current code: no normalizer preservation report scene exists, and EnemyTurnRules.normalize_enemy_states currently rebuilds known fields without hero_task_state preservation.",
+      "notes": "Still valid pending strategic AI child slice, but no longer selected next after correcting Phase 2 ordering semantics.",
       "sliceType": "child",
       "parentSliceId": "strategic-ai-foundation-continuation-10184"
     },
@@ -530,7 +530,9 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T12:27:26Z",
+      "notes": "Corrected selected next slice after document reset: Phase 2 tracks are not sequentially completed; start with P2.1 child faction mechanics identity hooks instead of inherited P2.8a AI normalizer momentum."
     },
     {
       "id": "faction-town-unit-asymmetry-content-10184",
@@ -2636,28 +2638,24 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
-      "title": "Hero Task-State Save-Normalizer Preservation Report",
+      "id": "world-faction-mechanics-identity-hooks-10184",
+      "title": "Faction Mechanics Identity Hooks",
       "status": "pending",
-      "parentSliceId": "strategic-ai-foundation-continuation-10184",
-      "source": "PLAN.md P2.8a",
-      "docs": [
-        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
-        "docs/strategic-ai-hero-task-state-report-gate-review.md",
-        "docs/strategic-ai-hero-task-state-boundary-plan.md"
+      "parentSliceId": "world-faction-identity-implementation-bridge-10184",
+      "sourceDocs": [
+        "docs/worldbuilding-foundation.md",
+        "docs/factions-content-bible.md"
       ],
       "implementationTargets": [
-        "scripts/core/EnemyTurnRules.gd",
-        "tests/ai_hero_task_state_normalizer_preservation_report.gd",
-        "tests/ai_hero_task_state_normalizer_preservation_report.tscn",
-        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
+        "content/factions.json",
+        "content/heroes.json",
+        "content/units.json",
+        "faction-specific rule hooks selected by the worker"
       ],
-      "validation": [
-        "python3 tests/validate_repo.py",
-        "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_normalizer_preservation_report.tscn",
-        "git diff --check"
-      ],
-      "notes": "Selected next real worker task. Keep it report-only and preserve old-save absence semantics."
+      "notes": "Selected next after correction: begin Phase 2 implementation from P2.1 faction identity hooks; docs-ready does not mean previous P2 tracks completed.",
+      "phase": "phase-2-deep-production-foundation",
+      "classification": "phase2_child_implementation_slice",
+      "source": "PLAN.md Phase 2 Operational Child Slices / P2.1"
     }
   ],
   "stoppedOrPausedTasks": [
