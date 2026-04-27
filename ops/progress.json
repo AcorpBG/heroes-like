@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "animation-event-cue-catalog-contract-10184",
-  "currentSliceTitle": "Animation Event Cue Catalog Contract",
+  "currentSliceId": "animation-reduced-motion-fast-mode-policy-10184",
+  "currentSliceTitle": "Animation Reduced-Motion And Fast-Mode Policy",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next Phase 2 category after P2.6 artifact foundation closeout. Keep scope bounded to event/cue contract implementation; no final VFX/audio, final sprite/art production, renderer asset import, or ad hoc screen polish.",
+  "currentSliceNotes": "Next P2.7 child after the event/cue catalog contract. Keep scope to applying reduced-motion and fast-mode behavior/policy to selected troop/object/event playback; no final assets, renderer pipeline, save migration, or broad UI polish.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:06:40Z",
+  "updatedAt": "2026-04-27T22:17:14Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1708,7 +1708,7 @@
       "id": "animation-event-cue-catalog-contract-10184",
       "title": "Animation Event Cue Catalog Contract",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
@@ -1727,11 +1727,18 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "Implemented content/animation_event_cues.json with 32 resolved gameplay event cue contracts across battle, overworld, town, spell, artifact, and UI surfaces.",
+        "Implemented scripts/core/AnimationCueCatalog.gd report and cue lookup helpers for required fields, state families, playback policy, VFX/audio placeholders, reduced-motion fallback tags, and fast-mode fallback tags.",
+        "Added focused validation in tests/animation_event_cue_catalog_report.gd/.tscn and tests/validate_repo.py --animation-cue-catalog-report.",
+        "Recorded implementation evidence in docs/animation-event-cue-catalog-contract-report.md."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T22:17:14Z",
+      "startedAt": "2026-04-27T22:17:14Z",
+      "completedAt": "2026-04-27T22:17:14Z",
+      "notes": "Completed bounded event/cue catalog contract. Evidence covers battle troop sprite animation events, overworld map object states, town build/recruit events, spell cast/effect events, artifact acquire/equip events, and UI/system cues. Boundaries preserved: no save migration, no final sprite/VFX/audio import, no renderer asset pipeline work, no final playback runtime, no broad UI polish, no terrain/editor work, no rare-resource activation, and wood remains canonical."
     },
     {
       "id": "animation-reduced-motion-fast-mode-policy-10184",
@@ -3418,22 +3425,21 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "animation-event-cue-catalog-contract-10184",
-      "title": "Animation Event Cue Catalog Contract",
+      "id": "animation-reduced-motion-fast-mode-policy-10184",
+      "title": "Animation Reduced-Motion And Fast-Mode Policy",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "animation-event-cue-foundation-implementation-10184",
       "source": "PLAN.md P2.7 Animation And Event Cue Foundation",
       "sourceDocs": [
-        "docs/animation-systems-foundation.md",
-        "docs/screen-wireframes.md"
+        "docs/animation-systems-foundation.md"
       ],
       "implementationTargets": [
-        "event/cue catalog for resolved battle, overworld, town, spell, artifact, and UI events",
-        "mappings from event ids to animation states, playback policy, VFX/audio ids, reduced-motion/fast-mode fallbacks, and validation tags",
-        "validation/report hooks"
+        "animation settings/policy helpers",
+        "troop/object animation fallback policy",
+        "smoke coverage for selected surfaces"
       ],
-      "notes": "Next Phase 2 category after P2.6 artifact foundation closeout. Keep scope bounded to event/cue contract implementation; no final VFX/audio, final sprite/art production, renderer asset import, or ad hoc screen polish."
+      "notes": "Next P2.7 child after the event/cue catalog contract. Keep scope to applying reduced-motion and fast-mode behavior/policy to selected troop/object/event playback; no final assets, renderer pipeline, save migration, or broad UI polish."
     }
   ],
   "stoppedOrPausedTasks": [

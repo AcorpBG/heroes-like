@@ -36,6 +36,7 @@ TOWN_RULES_PATH = ROOT / "scripts" / "core" / "TownRules.gd"
 CAMPAIGN_RULES_PATH = ROOT / "scripts" / "core" / "CampaignRules.gd"
 ARTIFACT_RULES_PATH = ROOT / "scripts" / "core" / "ArtifactRules.gd"
 SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
+ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
@@ -66,6 +67,10 @@ OVERWORLD_OBJECT_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "overworld_object_s
 OVERWORLD_OBJECT_STRICT_CASES_PATH = OVERWORLD_OBJECT_FIXTURE_DIR / "strict_cases.json"
 NEUTRAL_ENCOUNTER_FIXTURE_DIR = ROOT / "tests" / "fixtures" / "neutral_encounter_schema"
 NEUTRAL_ENCOUNTER_STRICT_CASES_PATH = NEUTRAL_ENCOUNTER_FIXTURE_DIR / "strict_cases.json"
+ANIMATION_EVENT_CUES_PATH = CONTENT_DIR / "animation_event_cues.json"
+ANIMATION_EVENT_CUE_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_event_cue_catalog_report.gd"
+ANIMATION_EVENT_CUE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_event_cue_catalog_report.tscn"
+ANIMATION_EVENT_CUE_REPORT_DOC_PATH = ROOT / "docs" / "animation-event-cue-catalog-contract-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -122,6 +127,46 @@ SUPPORTED_SPELL_PRIMARY_ROLES = {
 }
 ARTIFACT_SCHEMA_ID = "artifact_taxonomy_v1"
 ARTIFACT_SOURCE_REWARD_SCHEMA_ID = "artifact_source_reward_v1"
+ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
+ANIMATION_EVENT_CUE_REQUIRED_SURFACES = {"battle", "overworld", "town", "spell", "artifact", "ui"}
+ANIMATION_EVENT_CUE_REQUIRED_FIELDS = {
+    "event_id",
+    "cue_id",
+    "surface",
+    "subject_kind",
+    "animation_state_family",
+    "animation_state",
+    "playback_policy",
+    "blocking_policy",
+    "vfx_cue_ids",
+    "audio_cue_ids",
+    "fallbacks",
+    "validation_tags",
+    "producer_refs",
+}
+ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS = {
+    "battle_unit_move",
+    "battle_unit_melee_attack",
+    "battle_unit_hit",
+    "battle_unit_death",
+    "battle_unit_cast",
+    "battle_status_applied",
+    "battle_unit_defend",
+    "overworld_object_visited",
+    "overworld_object_captured",
+    "overworld_object_depleted",
+    "overworld_route_blocked",
+    "overworld_route_open",
+    "overworld_route_closed",
+    "overworld_object_ambient",
+    "town_building_built",
+    "town_units_recruited",
+    "spell_cast_battle",
+    "spell_effect_damage",
+    "artifact_acquired",
+    "artifact_equipped",
+    "ui_invalid_action",
+}
 SUPPORTED_ARTIFACT_SLOTS = {"boots", "banner", "armor", "trinket"}
 ARTIFACT_SLOT_LIMITS = {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
 SUPPORTED_ARTIFACT_CLASSES = {"common", "crafted", "faction", "accord", "relic", "cursed", "set_piece", "old_measure", "scenario"}
@@ -7718,6 +7763,195 @@ def print_artifact_source_reward_report(report: dict) -> None:
         print(f"- table validation issues: {report['table_validation_issues']}")
 
 
+def build_animation_event_cue_catalog_report() -> dict:
+    raw = load_json(ANIMATION_EVENT_CUES_PATH)
+    entries = raw.get("entries", [])
+    if not isinstance(entries, list):
+        entries = []
+    errors: list[str] = []
+    warnings: list[str] = []
+    event_ids: set[str] = set()
+    cue_ids: set[str] = set()
+    surface_counts: dict[str, int] = {}
+    state_family_counts: dict[str, int] = {}
+    playback_policy_counts: dict[str, int] = {}
+    blocking_policy_counts: dict[str, int] = {}
+    validation_tag_counts: dict[str, int] = {}
+    fallback_counts = {"reduced_motion": 0, "fast_mode": 0}
+    placeholder_counts = {"vfx": 0, "audio": 0}
+    producer_ref_count = 0
+
+    if str(raw.get("schema_id", "")) != ANIMATION_EVENT_CUE_SCHEMA_ID:
+        errors.append(f"schema_id must be {ANIMATION_EVENT_CUE_SCHEMA_ID}")
+    runtime_policy = raw.get("runtime_policy", {})
+    if not isinstance(runtime_policy, dict):
+        runtime_policy = {}
+        errors.append("runtime_policy must be a dictionary")
+    for blocked_flag in (
+        "save_version_bump",
+        "final_sprite_import",
+        "final_vfx_import",
+        "final_audio_import",
+        "renderer_asset_pipeline",
+        "playback_runtime",
+        "broad_ui_polish",
+    ):
+        if bool(runtime_policy.get(blocked_flag, True)):
+            errors.append(f"runtime policy must keep {blocked_flag} disabled")
+
+    for entry in entries:
+        if not isinstance(entry, dict):
+            errors.append("catalog entry must be a dictionary")
+            continue
+        event_id = str(entry.get("event_id", "")).strip()
+        cue_id = str(entry.get("cue_id", "")).strip()
+        surface = str(entry.get("surface", "")).strip()
+        state_family = str(entry.get("animation_state_family", "")).strip()
+        playback_policy = str(entry.get("playback_policy", "")).strip()
+        blocking_policy = str(entry.get("blocking_policy", "")).strip()
+
+        missing_fields = sorted(field for field in ANIMATION_EVENT_CUE_REQUIRED_FIELDS if field not in entry)
+        if missing_fields:
+            errors.append(f"{event_id or '<entry>'} missing fields: {', '.join(missing_fields)}")
+        if not event_id:
+            errors.append("catalog entry has empty event_id")
+        elif event_id in event_ids:
+            errors.append(f"duplicate event_id {event_id}")
+        else:
+            event_ids.add(event_id)
+        if not cue_id:
+            errors.append(f"{event_id} has empty cue_id")
+        elif cue_id in cue_ids:
+            errors.append(f"duplicate cue_id {cue_id}")
+        else:
+            cue_ids.add(cue_id)
+        if surface not in ANIMATION_EVENT_CUE_REQUIRED_SURFACES:
+            errors.append(f"{event_id} uses unsupported surface {surface}")
+        increment_count(surface_counts, surface or "<empty>")
+        increment_count(state_family_counts, state_family or "<empty>")
+        increment_count(playback_policy_counts, playback_policy or "<empty>")
+        increment_count(blocking_policy_counts, blocking_policy or "<empty>")
+
+        fallbacks = entry.get("fallbacks", {})
+        if not isinstance(fallbacks, dict):
+            errors.append(f"{event_id} fallbacks must be a dictionary")
+            fallbacks = {}
+        reduced_motion = str(fallbacks.get("reduced_motion_tag", "")).strip()
+        fast_mode = str(fallbacks.get("fast_mode_tag", "")).strip()
+        if not reduced_motion:
+            errors.append(f"{event_id} missing reduced_motion_tag")
+        else:
+            fallback_counts["reduced_motion"] += 1
+        if not fast_mode:
+            errors.append(f"{event_id} missing fast_mode_tag")
+        else:
+            fallback_counts["fast_mode"] += 1
+
+        vfx_ids = string_list(entry.get("vfx_cue_ids", []))
+        audio_ids = string_list(entry.get("audio_cue_ids", []))
+        if not vfx_ids:
+            errors.append(f"{event_id} must define VFX ids or placeholders")
+        if not audio_ids:
+            errors.append(f"{event_id} must define audio ids or placeholders")
+        placeholder_counts["vfx"] += len([cue_id for cue_id in vfx_ids if cue_id.startswith("vfx_placeholder_")])
+        placeholder_counts["audio"] += len([cue_id for cue_id in audio_ids if cue_id.startswith("audio_placeholder_")])
+
+        tags = string_list(entry.get("validation_tags", []))
+        if not tags:
+            errors.append(f"{event_id} missing validation_tags")
+        for tag in tags:
+            increment_count(validation_tag_counts, tag)
+        producer_refs = string_list(entry.get("producer_refs", []))
+        if not producer_refs:
+            errors.append(f"{event_id} missing producer_refs")
+        producer_ref_count += len(producer_refs)
+        if not bool(entry.get("skippable", False)):
+            warnings.append(f"{event_id} is not skippable")
+
+    for surface in sorted(ANIMATION_EVENT_CUE_REQUIRED_SURFACES):
+        if int(surface_counts.get(surface, 0)) <= 0:
+            errors.append(f"missing required surface {surface}")
+    missing_representatives = sorted(ANIMATION_EVENT_CUE_REPRESENTATIVE_EVENTS - event_ids)
+    if missing_representatives:
+        errors.append(f"missing representative events: {', '.join(missing_representatives)}")
+    for tag in ("battle", "overworld", "town", "spell", "artifact", "ui", "resolved_event"):
+        if int(validation_tag_counts.get(tag, 0)) <= 0:
+            errors.append(f"missing validation tag {tag}")
+    if int(fallback_counts["reduced_motion"]) != len(entries) or int(fallback_counts["fast_mode"]) != len(entries):
+        errors.append("every cue entry must include reduced-motion and fast-mode fallbacks")
+    if int(state_family_counts.get("move", 0)) <= 0 or int(state_family_counts.get("captured", 0)) <= 0:
+        errors.append("catalog must include battle move and overworld capture state families")
+
+    return {
+        "ok": not errors,
+        "schema": ANIMATION_EVENT_CUE_SCHEMA_ID,
+        "mode": "resolved_gameplay_event_to_animation_playback_contract",
+        "entry_count": len(entries),
+        "surface_counts": surface_counts,
+        "state_family_counts": state_family_counts,
+        "playback_policy_counts": playback_policy_counts,
+        "blocking_policy_counts": blocking_policy_counts,
+        "validation_tag_counts": validation_tag_counts,
+        "fallback_counts": fallback_counts,
+        "placeholder_counts": placeholder_counts,
+        "producer_ref_count": producer_ref_count,
+        "runtime_policy": runtime_policy,
+        "warnings": warnings,
+        "errors": errors,
+    }
+
+
+def print_animation_event_cue_catalog_report(report: dict) -> None:
+    print("ANIMATION EVENT CUE CATALOG REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- entries: {report['entry_count']}")
+    print(f"- surfaces: {report['surface_counts']}")
+    print(f"- state families: {report['state_family_counts']}")
+    print(f"- fallbacks: {report['fallback_counts']}")
+    print(f"- placeholder cues: {report['placeholder_counts']}")
+    policy = report.get("runtime_policy", {})
+    print(f"- runtime policy: save_version_bump={policy.get('save_version_bump', True)}, final_sprite_import={policy.get('final_sprite_import', True)}, final_vfx_import={policy.get('final_vfx_import', True)}, final_audio_import={policy.get('final_audio_import', True)}, playback_runtime={policy.get('playback_runtime', True)}")
+    if report.get("warnings"):
+        print(f"- warnings: {report['warnings']}")
+    if report.get("errors"):
+        print(f"- errors: {report['errors']}")
+
+
+def validate_animation_event_cue_catalog(errors: list[str]) -> None:
+    for path in (
+        ANIMATION_EVENT_CUES_PATH,
+        ANIMATION_CUE_CATALOG_RULES_PATH,
+        ANIMATION_EVENT_CUE_REPORT_SCRIPT_PATH,
+        ANIMATION_EVENT_CUE_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUE_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing animation cue catalog slice file: {path.relative_to(ROOT)}")
+    if not ANIMATION_EVENT_CUES_PATH.exists():
+        return
+    report = build_animation_event_cue_catalog_report()
+    for error in report.get("errors", []):
+        fail(errors, f"Animation cue catalog: {error}")
+    ensure(int(report.get("entry_count", 0)) >= 30, errors, "Animation cue catalog must contain at least 30 representative entries")
+    ensure(int(report.get("fallback_counts", {}).get("reduced_motion", 0)) == int(report.get("entry_count", 0)), errors, "Animation cue catalog reduced-motion fallback coverage is incomplete")
+    ensure(int(report.get("fallback_counts", {}).get("fast_mode", 0)) == int(report.get("entry_count", 0)), errors, "Animation cue catalog fast-mode fallback coverage is incomplete")
+    if ANIMATION_EVENT_CUE_REPORT_DOC_PATH.exists():
+        doc_text = ANIMATION_EVENT_CUE_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "animation_event_cue_catalog_v1",
+            "battle troop sprite animation",
+            "overworld map object animation",
+            "reduced-motion",
+            "fast-mode",
+            "No save migration",
+            "No final sprite, VFX, or audio import",
+            "No renderer asset pipeline work",
+            "`wood` remains canonical",
+        ):
+            ensure(required_text in doc_text, errors, f"Animation cue catalog report doc is missing required boundary text: {required_text}")
+
+
 def validate_content(errors: list[str]) -> None:
     required = discover_content_files(errors)
     expected_domains = {
@@ -13649,6 +13883,8 @@ def main() -> int:
     parser.add_argument("--artifact-set-faction-report-json", type=str, default="", help="Write the opt-in artifact set/faction metadata report as JSON.")
     parser.add_argument("--artifact-source-reward-report", action="store_true", help="Print the opt-in artifact source/reward metadata report.")
     parser.add_argument("--artifact-source-reward-report-json", type=str, default="", help="Write the opt-in artifact source/reward metadata report as JSON.")
+    parser.add_argument("--animation-cue-catalog-report", action="store_true", help="Print the opt-in animation event/cue catalog contract report.")
+    parser.add_argument("--animation-cue-catalog-report-json", type=str, default="", help="Write the opt-in animation event/cue catalog contract report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -13703,6 +13939,7 @@ def main() -> int:
     validate_economy_rare_resource_activation_policy(errors)
     validate_market_faction_cost_policy(errors)
     validate_economy_capture_income_loop_expansion(errors)
+    validate_animation_event_cue_catalog(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
         strict_fixture_errors, strict_fixture_warnings = validate_strict_economy_resource_fixtures()
@@ -13779,6 +14016,7 @@ def main() -> int:
     print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")
     print("- Glassroad capture/income expansion has focused live-rule report coverage for relay control, lens-house income/recruits, market build, recruitment, and save/resume")
     print("- artifact content now includes bounded set metadata, faction affinities, and source/reward metadata without live drop execution, set bonuses, save migration, or AI valuation behavior")
+    print("- animation event/cue catalog now maps resolved gameplay events to placeholder animation, VFX, audio, reduced-motion, and fast-mode contract fields")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -13841,6 +14079,14 @@ def main() -> int:
             print(f"- artifact source/reward report JSON written to {report_path}")
         if args.artifact_source_reward_report:
             print_artifact_source_reward_report(report)
+    if args.animation_cue_catalog_report or args.animation_cue_catalog_report_json:
+        report = build_animation_event_cue_catalog_report()
+        if args.animation_cue_catalog_report_json:
+            report_path = Path(args.animation_cue_catalog_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- animation cue catalog report JSON written to {report_path}")
+        if args.animation_cue_catalog_report:
+            print_animation_event_cue_catalog_report(report)
     return 0
 
 

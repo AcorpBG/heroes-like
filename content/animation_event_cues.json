@@ -1,0 +1,646 @@
+{
+  "schema_id": "animation_event_cue_catalog_v1",
+  "schema_status": "event_cue_catalog_contract_loaded",
+  "runtime_policy": {
+    "save_version_bump": false,
+    "final_sprite_import": false,
+    "final_vfx_import": false,
+    "final_audio_import": false,
+    "renderer_asset_pipeline": false,
+    "playback_runtime": false,
+    "broad_ui_polish": false
+  },
+  "required_surfaces": [
+    "battle",
+    "overworld",
+    "town",
+    "spell",
+    "artifact",
+    "ui"
+  ],
+  "required_fields": [
+    "event_id",
+    "cue_id",
+    "surface",
+    "subject_kind",
+    "animation_state_family",
+    "animation_state",
+    "playback_policy",
+    "blocking_policy",
+    "vfx_cue_ids",
+    "audio_cue_ids",
+    "fallbacks",
+    "validation_tags",
+    "producer_refs"
+  ],
+  "entries": [
+    {
+      "event_id": "battle_stack_ready",
+      "cue_id": "cue_battle_stack_ready",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "ready",
+      "animation_state": "ready_active",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_active_ring"],
+      "audio_cue_ids": ["audio_placeholder_turn_ready"],
+      "fallbacks": {
+        "reduced_motion_tag": "static_active_outline",
+        "fast_mode_tag": "instant_active_flash"
+      },
+      "validation_tags": ["battle", "troop_state", "initiative", "resolved_event"],
+      "producer_refs": ["BattleRules._prepare_round", "BattleRules.advance_turn"]
+    },
+    {
+      "event_id": "battle_unit_move",
+      "cue_id": "cue_battle_unit_move",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "move",
+      "animation_state": "move_path_step",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_battle_path_ghost"],
+      "audio_cue_ids": ["audio_placeholder_unit_step"],
+      "fallbacks": {
+        "reduced_motion_tag": "path_marker_snap",
+        "fast_mode_tag": "snap_to_destination"
+      },
+      "validation_tags": ["battle", "troop_state", "movement", "resolved_event"],
+      "producer_refs": ["BattleRules.action_id:move", "BattleRules.movement_intent_for_destination"]
+    },
+    {
+      "event_id": "battle_unit_melee_attack",
+      "cue_id": "cue_battle_unit_melee_attack",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "attack",
+      "animation_state": "melee_windup_release",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_melee_arc"],
+      "audio_cue_ids": ["audio_placeholder_melee_release"],
+      "fallbacks": {
+        "reduced_motion_tag": "directional_attack_icon",
+        "fast_mode_tag": "single_release_frame"
+      },
+      "validation_tags": ["battle", "troop_state", "attack", "resolved_event"],
+      "producer_refs": ["BattleRules.action_id:strike", "BattleRules._resolve_attack"]
+    },
+    {
+      "event_id": "battle_unit_ranged_attack",
+      "cue_id": "cue_battle_unit_ranged_attack",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "attack",
+      "animation_state": "ranged_aim_release",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_projectile_path"],
+      "audio_cue_ids": ["audio_placeholder_ranged_release"],
+      "fallbacks": {
+        "reduced_motion_tag": "source_target_line",
+        "fast_mode_tag": "projectile_snap"
+      },
+      "validation_tags": ["battle", "troop_state", "attack", "ranged", "resolved_event"],
+      "producer_refs": ["BattleRules.action_id:shoot", "BattleRules._resolve_attack"]
+    },
+    {
+      "event_id": "battle_unit_hit",
+      "cue_id": "cue_battle_unit_hit",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "hit",
+      "animation_state": "hit_stagger",
+      "playback_policy": "queue_after_source",
+      "blocking_policy": "inherits_source",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_damage_tick"],
+      "audio_cue_ids": ["audio_placeholder_hit"],
+      "fallbacks": {
+        "reduced_motion_tag": "damage_badge_pulse",
+        "fast_mode_tag": "damage_badge_instant"
+      },
+      "validation_tags": ["battle", "troop_state", "damage", "resolved_event"],
+      "producer_refs": ["BattleRules._apply_damage_to_stack", "SpellRules.resolve_battle_spell"]
+    },
+    {
+      "event_id": "battle_unit_death",
+      "cue_id": "cue_battle_unit_death",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "death",
+      "animation_state": "death_rout_remove",
+      "playback_policy": "queue_after_hit",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_stack_fade"],
+      "audio_cue_ids": ["audio_placeholder_unit_rout"],
+      "fallbacks": {
+        "reduced_motion_tag": "empty_hex_marker",
+        "fast_mode_tag": "remove_after_damage_badge"
+      },
+      "validation_tags": ["battle", "troop_state", "death", "resolved_event"],
+      "producer_refs": ["BattleRules._evaluate_outcome", "BattleRules._alive_stacks_for_side"]
+    },
+    {
+      "event_id": "battle_unit_cast",
+      "cue_id": "cue_battle_unit_cast",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "cast",
+      "animation_state": "cast_support_anchor",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_cast_anchor"],
+      "audio_cue_ids": ["audio_placeholder_cast"],
+      "fallbacks": {
+        "reduced_motion_tag": "cast_icon_anchor",
+        "fast_mode_tag": "cast_anchor_flash"
+      },
+      "validation_tags": ["battle", "troop_state", "spell", "resolved_event"],
+      "producer_refs": ["SpellRules.resolve_battle_spell", "BattleRules.get_spell_actions"]
+    },
+    {
+      "event_id": "battle_status_applied",
+      "cue_id": "cue_battle_status_applied",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "status",
+      "animation_state": "status_applied",
+      "playback_policy": "queue_after_effect",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_status_residue"],
+      "audio_cue_ids": ["audio_placeholder_status_apply"],
+      "fallbacks": {
+        "reduced_motion_tag": "status_icon_add",
+        "fast_mode_tag": "status_icon_snap"
+      },
+      "validation_tags": ["battle", "troop_state", "status", "resolved_event"],
+      "producer_refs": ["BattleRules.STATUS_HARRIED", "BattleRules.STATUS_STAGGERED", "SpellRules._status_effect_from_spell_effect"]
+    },
+    {
+      "event_id": "battle_status_expired",
+      "cue_id": "cue_battle_status_expired",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "status",
+      "animation_state": "status_expired",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_status_clear"],
+      "audio_cue_ids": ["audio_placeholder_status_clear"],
+      "fallbacks": {
+        "reduced_motion_tag": "status_icon_remove",
+        "fast_mode_tag": "status_icon_clear"
+      },
+      "validation_tags": ["battle", "troop_state", "status", "resolved_event"],
+      "producer_refs": ["SpellRules.purge_expired_stack_effects", "BattleRules._prepare_round"]
+    },
+    {
+      "event_id": "battle_unit_defend",
+      "cue_id": "cue_battle_unit_defend",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "defend",
+      "animation_state": "defend_brace",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_brace_outline"],
+      "audio_cue_ids": ["audio_placeholder_defend"],
+      "fallbacks": {
+        "reduced_motion_tag": "brace_icon_static",
+        "fast_mode_tag": "brace_icon_flash"
+      },
+      "validation_tags": ["battle", "troop_state", "defend", "resolved_event"],
+      "producer_refs": ["BattleRules.action_id:defend", "BattleRules.get_action_surface"]
+    },
+    {
+      "event_id": "battle_retaliation",
+      "cue_id": "cue_battle_retaliation",
+      "surface": "battle",
+      "subject_kind": "troop_stack",
+      "animation_state_family": "attack",
+      "animation_state": "retaliation_release",
+      "playback_policy": "queue_after_source",
+      "blocking_policy": "inherits_source",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_retaliation_arc"],
+      "audio_cue_ids": ["audio_placeholder_retaliation"],
+      "fallbacks": {
+        "reduced_motion_tag": "retaliation_icon",
+        "fast_mode_tag": "retaliation_flash"
+      },
+      "validation_tags": ["battle", "troop_state", "retaliation", "resolved_event"],
+      "producer_refs": ["BattleRules._can_make_retaliation", "BattleRules._resolve_attack"]
+    },
+    {
+      "event_id": "overworld_hero_move",
+      "cue_id": "cue_overworld_hero_move",
+      "surface": "overworld",
+      "subject_kind": "hero",
+      "animation_state_family": "locomotion",
+      "animation_state": "map_step",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_route_step"],
+      "audio_cue_ids": ["audio_placeholder_map_step"],
+      "fallbacks": {
+        "reduced_motion_tag": "route_endpoint_snap",
+        "fast_mode_tag": "summarized_route_snap"
+      },
+      "validation_tags": ["overworld", "hero", "movement", "resolved_event"],
+      "producer_refs": ["OverworldRules.try_move", "HeroCommandRules.spend_active_hero_movement"]
+    },
+    {
+      "event_id": "overworld_route_blocked",
+      "cue_id": "cue_overworld_route_blocked",
+      "surface": "overworld",
+      "subject_kind": "route",
+      "animation_state_family": "blocked",
+      "animation_state": "route_blocked",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_blocked_route_marker"],
+      "audio_cue_ids": ["audio_placeholder_invalid_route"],
+      "fallbacks": {
+        "reduced_motion_tag": "blocked_route_icon",
+        "fast_mode_tag": "blocked_route_flash"
+      },
+      "validation_tags": ["overworld", "route", "blocked", "resolved_event"],
+      "producer_refs": ["OverworldRules.tile_is_blocked", "OverworldRules.perform_context_action"]
+    },
+    {
+      "event_id": "overworld_object_visited",
+      "cue_id": "cue_overworld_object_visited",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "visited",
+      "animation_state": "visit_resolved",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_object_visit"],
+      "audio_cue_ids": ["audio_placeholder_object_visit"],
+      "fallbacks": {
+        "reduced_motion_tag": "visited_check_icon",
+        "fast_mode_tag": "visited_check_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "visited", "resolved_event"],
+      "producer_refs": ["OverworldRules.collect_active_resource", "OverworldRules.perform_context_action"]
+    },
+    {
+      "event_id": "overworld_object_captured",
+      "cue_id": "cue_overworld_object_captured",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "captured",
+      "animation_state": "ownership_capture",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_capture_flag"],
+      "audio_cue_ids": ["audio_placeholder_capture"],
+      "fallbacks": {
+        "reduced_motion_tag": "ownership_badge_swap",
+        "fast_mode_tag": "capture_badge_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "captured", "resolved_event"],
+      "producer_refs": ["OverworldRules.collect_active_resource", "OverworldRules.apply_resource_site_disruption"]
+    },
+    {
+      "event_id": "overworld_object_depleted",
+      "cue_id": "cue_overworld_object_depleted",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "depleted",
+      "animation_state": "depleted_remove_or_dim",
+      "playback_policy": "queue_after_visit",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_depleted_dim"],
+      "audio_cue_ids": ["audio_placeholder_collect"],
+      "fallbacks": {
+        "reduced_motion_tag": "depleted_static_dim",
+        "fast_mode_tag": "depleted_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "depleted", "resolved_event"],
+      "producer_refs": ["OverworldRules.collect_active_resource", "OverworldRules.collect_active_artifact"]
+    },
+    {
+      "event_id": "overworld_route_open",
+      "cue_id": "cue_overworld_route_open",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "route",
+      "animation_state": "route_open",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_route_open"],
+      "audio_cue_ids": ["audio_placeholder_route_open"],
+      "fallbacks": {
+        "reduced_motion_tag": "route_open_icon",
+        "fast_mode_tag": "route_open_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "route_open", "resolved_event"],
+      "producer_refs": ["OverworldRules.apply_resource_site_disruption", "OverworldRules.perform_town_response_action"]
+    },
+    {
+      "event_id": "overworld_route_closed",
+      "cue_id": "cue_overworld_route_closed",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "route",
+      "animation_state": "route_closed",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_route_closed"],
+      "audio_cue_ids": ["audio_placeholder_route_closed"],
+      "fallbacks": {
+        "reduced_motion_tag": "route_closed_icon",
+        "fast_mode_tag": "route_closed_snap"
+      },
+      "validation_tags": ["overworld", "object_state", "route_closed", "resolved_event"],
+      "producer_refs": ["EnemyTurnRules.resolve_enemy_turn", "OverworldRules.describe_route_interception_surface"]
+    },
+    {
+      "event_id": "overworld_object_ambient",
+      "cue_id": "cue_overworld_object_ambient",
+      "surface": "overworld",
+      "subject_kind": "map_object",
+      "animation_state_family": "ambient",
+      "animation_state": "low_cost_idle_loop",
+      "playback_policy": "ambient_loop_visible_only",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_object_idle"],
+      "audio_cue_ids": ["audio_placeholder_object_ambient_soft"],
+      "fallbacks": {
+        "reduced_motion_tag": "static_object_pose",
+        "fast_mode_tag": "static_object_pose"
+      },
+      "validation_tags": ["overworld", "object_state", "ambient", "reduced_motion_loop"],
+      "producer_refs": ["OverworldMapView.object_fallback_draw", "content/map_objects.json"]
+    },
+    {
+      "event_id": "town_building_built",
+      "cue_id": "cue_town_building_built",
+      "surface": "town",
+      "subject_kind": "building",
+      "animation_state_family": "construction",
+      "animation_state": "build_complete",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_build_complete"],
+      "audio_cue_ids": ["audio_placeholder_town_build"],
+      "fallbacks": {
+        "reduced_motion_tag": "building_badge_added",
+        "fast_mode_tag": "build_badge_snap"
+      },
+      "validation_tags": ["town", "building", "resolved_event"],
+      "producer_refs": ["OverworldRules.build_in_active_town", "EnemyTurnRules.ai_town_build_event"]
+    },
+    {
+      "event_id": "town_units_recruited",
+      "cue_id": "cue_town_units_recruited",
+      "surface": "town",
+      "subject_kind": "unit_roster",
+      "animation_state_family": "recruit",
+      "animation_state": "recruit_confirmed",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_recruit_muster"],
+      "audio_cue_ids": ["audio_placeholder_recruit"],
+      "fallbacks": {
+        "reduced_motion_tag": "recruit_count_badge",
+        "fast_mode_tag": "recruit_badge_snap"
+      },
+      "validation_tags": ["town", "recruit", "resolved_event"],
+      "producer_refs": ["OverworldRules.recruit_in_active_town", "EnemyTurnRules.ai_town_recruit_event"]
+    },
+    {
+      "event_id": "spell_cast_battle",
+      "cue_id": "cue_spell_cast_battle",
+      "surface": "spell",
+      "subject_kind": "spell",
+      "animation_state_family": "spell_cast",
+      "animation_state": "battle_cast_anchor",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_spell_anchor"],
+      "audio_cue_ids": ["audio_placeholder_spell_school"],
+      "fallbacks": {
+        "reduced_motion_tag": "spell_school_icon_anchor",
+        "fast_mode_tag": "spell_school_flash"
+      },
+      "validation_tags": ["spell", "battle", "cast", "resolved_event"],
+      "producer_refs": ["SpellRules.resolve_battle_spell", "BattleRules.get_spell_actions"]
+    },
+    {
+      "event_id": "spell_effect_damage",
+      "cue_id": "cue_spell_effect_damage",
+      "surface": "spell",
+      "subject_kind": "spell_effect",
+      "animation_state_family": "spell_effect",
+      "animation_state": "impact_damage",
+      "playback_policy": "queue_after_cast",
+      "blocking_policy": "inherits_source",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_spell_impact"],
+      "audio_cue_ids": ["audio_placeholder_spell_impact"],
+      "fallbacks": {
+        "reduced_motion_tag": "impact_icon_damage",
+        "fast_mode_tag": "impact_damage_snap"
+      },
+      "validation_tags": ["spell", "effect", "damage", "resolved_event"],
+      "producer_refs": ["SpellRules.resolve_battle_spell:damage"]
+    },
+    {
+      "event_id": "spell_cast_overworld",
+      "cue_id": "cue_spell_cast_overworld",
+      "surface": "spell",
+      "subject_kind": "spell",
+      "animation_state_family": "spell_cast",
+      "animation_state": "adventure_cast_anchor",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_adventure_spell"],
+      "audio_cue_ids": ["audio_placeholder_spell_school_soft"],
+      "fallbacks": {
+        "reduced_motion_tag": "adventure_spell_icon",
+        "fast_mode_tag": "adventure_spell_snap"
+      },
+      "validation_tags": ["spell", "overworld", "cast", "resolved_event"],
+      "producer_refs": ["SpellRules.cast_overworld_spell"]
+    },
+    {
+      "event_id": "artifact_acquired",
+      "cue_id": "cue_artifact_acquired",
+      "surface": "artifact",
+      "subject_kind": "artifact",
+      "animation_state_family": "pickup",
+      "animation_state": "artifact_claim",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "input_blocking_timeout",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_artifact_claim"],
+      "audio_cue_ids": ["audio_placeholder_artifact_claim"],
+      "fallbacks": {
+        "reduced_motion_tag": "artifact_badge_added",
+        "fast_mode_tag": "artifact_badge_snap"
+      },
+      "validation_tags": ["artifact", "overworld", "pickup", "resolved_event"],
+      "producer_refs": ["OverworldRules.collect_active_artifact", "OverworldRules.award_hero_artifact"]
+    },
+    {
+      "event_id": "artifact_equipped",
+      "cue_id": "cue_artifact_equipped",
+      "surface": "artifact",
+      "subject_kind": "artifact_slot",
+      "animation_state_family": "equip",
+      "animation_state": "slot_equip_pulse",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_slot_equip"],
+      "audio_cue_ids": ["audio_placeholder_artifact_equip"],
+      "fallbacks": {
+        "reduced_motion_tag": "slot_badge_added",
+        "fast_mode_tag": "slot_badge_snap"
+      },
+      "validation_tags": ["artifact", "equip", "resolved_event"],
+      "producer_refs": ["OverworldRules.equip_artifact", "ArtifactRules.perform_management_action"]
+    },
+    {
+      "event_id": "artifact_unequipped",
+      "cue_id": "cue_artifact_unequipped",
+      "surface": "artifact",
+      "subject_kind": "artifact_slot",
+      "animation_state_family": "equip",
+      "animation_state": "slot_unequip_pulse",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_slot_unequip"],
+      "audio_cue_ids": ["audio_placeholder_artifact_stow"],
+      "fallbacks": {
+        "reduced_motion_tag": "slot_badge_removed",
+        "fast_mode_tag": "slot_badge_clear"
+      },
+      "validation_tags": ["artifact", "equip", "resolved_event"],
+      "producer_refs": ["OverworldRules.unequip_artifact", "ArtifactRules.perform_management_action"]
+    },
+    {
+      "event_id": "ui_command_confirmed",
+      "cue_id": "cue_ui_command_confirmed",
+      "surface": "ui",
+      "subject_kind": "command",
+      "animation_state_family": "microinteraction",
+      "animation_state": "press_confirm",
+      "playback_policy": "instant",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
+      "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+      "fallbacks": {
+        "reduced_motion_tag": "button_state_static",
+        "fast_mode_tag": "button_state_instant"
+      },
+      "validation_tags": ["ui", "command", "resolved_event"],
+      "producer_refs": ["BattleRules.action_readiness_confirmation_payload", "OverworldRules.perform_context_action", "TownRules.perform_market_action"]
+    },
+    {
+      "event_id": "ui_invalid_action",
+      "cue_id": "cue_ui_invalid_action",
+      "surface": "ui",
+      "subject_kind": "command",
+      "animation_state_family": "microinteraction",
+      "animation_state": "invalid_action",
+      "playback_policy": "instant",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_invalid_command"],
+      "audio_cue_ids": ["audio_placeholder_ui_invalid"],
+      "fallbacks": {
+        "reduced_motion_tag": "invalid_icon_static",
+        "fast_mode_tag": "invalid_icon_instant"
+      },
+      "validation_tags": ["ui", "invalid", "fallback_required"],
+      "producer_refs": ["OverworldRules.tile_is_blocked", "SpellRules.validate_battle_spell", "TownRules.get_build_actions"]
+    },
+    {
+      "event_id": "ui_resource_delta",
+      "cue_id": "cue_ui_resource_delta",
+      "surface": "ui",
+      "subject_kind": "resource_delta",
+      "animation_state_family": "microinteraction",
+      "animation_state": "resource_delta_tick",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_resource_delta"],
+      "audio_cue_ids": ["audio_placeholder_resource_tick"],
+      "fallbacks": {
+        "reduced_motion_tag": "resource_delta_static",
+        "fast_mode_tag": "resource_delta_instant"
+      },
+      "validation_tags": ["ui", "resource", "resolved_event"],
+      "producer_refs": ["OverworldRules.collect_active_resource", "OverworldRules.resolve_end_turn"]
+    },
+    {
+      "event_id": "system_save_written",
+      "cue_id": "cue_system_save_written",
+      "surface": "ui",
+      "subject_kind": "system",
+      "animation_state_family": "microinteraction",
+      "animation_state": "save_confirm",
+      "playback_policy": "instant",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_save_confirm"],
+      "audio_cue_ids": ["audio_placeholder_save_confirm"],
+      "fallbacks": {
+        "reduced_motion_tag": "save_icon_static",
+        "fast_mode_tag": "save_icon_instant"
+      },
+      "validation_tags": ["ui", "system", "save", "resolved_event"],
+      "producer_refs": ["SaveService.save_game"]
+    },
+    {
+      "event_id": "system_load_resumed",
+      "cue_id": "cue_system_load_resumed",
+      "surface": "ui",
+      "subject_kind": "system",
+      "animation_state_family": "microinteraction",
+      "animation_state": "load_resume",
+      "playback_policy": "instant",
+      "blocking_policy": "never_blocks_input",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_load_resume"],
+      "audio_cue_ids": ["audio_placeholder_load_resume"],
+      "fallbacks": {
+        "reduced_motion_tag": "load_icon_static",
+        "fast_mode_tag": "load_icon_instant"
+      },
+      "validation_tags": ["ui", "system", "load", "resolved_event"],
+      "producer_refs": ["SaveService.load_game", "SaveService.describe_slot_continuity_cue"]
+    }
+  ]
+}
