@@ -70,6 +70,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_command_tab_readiness_cues(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_action_button_command_cues(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_active_return_handoff_contract(shell, "Town", "Menu: Town"):
 		get_tree().quit(1)
 		return false
@@ -311,6 +314,44 @@ func _assert_town_command_tab_readiness_cues(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if cue_text.contains(leak_token):
 			push_error("Town smoke: command-tab readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
+			return false
+	return true
+
+func _assert_town_action_button_command_cues(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose action-button command cue validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var tooltip_payload: Dictionary = snapshot.get("town_action_button_tooltips", {}) if snapshot.get("town_action_button_tooltips", {}) is Dictionary else {}
+	var all_text_lines := []
+	var lanes_with_cues := []
+	for lane in tooltip_payload.keys():
+		var entries: Array = tooltip_payload.get(lane, []) if tooltip_payload.get(lane, []) is Array else []
+		for entry in entries:
+			if not (entry is Dictionary):
+				continue
+			var tooltip := String(entry.get("tooltip", ""))
+			all_text_lines.append("%s %s %s" % [
+				String(lane),
+				String(entry.get("text", "")),
+				tooltip,
+			])
+			if tooltip.contains("Command cue:") and tooltip.contains("Next:"):
+				lanes_with_cues.append(String(lane))
+	var all_text := "\n".join(all_text_lines)
+	for token in ["Command cue:", "Next:", "Build tab", "Muster tab"]:
+		if not all_text.contains(token):
+			push_error("Town smoke: action-button command cues lost %s clarity: %s." % [token, all_text])
+			return false
+	if not lanes_with_cues.has("build") or not lanes_with_cues.has("recruit"):
+		push_error("Town smoke: build and recruit buttons should expose command cues: lanes=%s payload=%s." % [lanes_with_cues, tooltip_payload])
+		return false
+	if all_text.find("Ready") < 0 and all_text.find("Blocked") < 0 and all_text.find("Needs exchange") < 0:
+		push_error("Town smoke: action-button command cues do not expose readiness state: %s." % all_text)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if all_text.contains(leak_token):
+			push_error("Town smoke: action-button command cue leaked internal token %s: %s." % [leak_token, all_text])
 			return false
 	return true
 
