@@ -924,6 +924,7 @@ OVERWORLD_OBJECT_CONTENT_BATCH_001D_ID = "overworld-object-content-batch-001d-la
 OVERWORLD_OBJECT_CONTENT_BATCH_002_ID = "overworld-object-content-batch-002-mines-resource-fronts-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_003_ID = "overworld-object-content-batch-003-services-shrines-signs-events-10184"
 OVERWORLD_OBJECT_CONTENT_BATCH_004_ID = "overworld-object-content-batch-004-transit-coast-route-control-10184"
+OVERWORLD_OBJECT_CONTENT_BATCH_005_ID = "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184"
 OVERWORLD_OBJECT_PASSABILITY_CLASSES = {
     "passable_visit_on_enter",
     "passable_scenic",
@@ -4177,8 +4178,325 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
     return section
 
 
+def build_overworld_object_content_batch_005_section(
+    map_objects: dict[str, dict],
+    resource_sites: dict[str, dict],
+    biomes: dict[str, dict],
+    neutral_dwellings: dict[str, dict],
+    army_groups: dict[str, dict],
+    encounters: dict[str, dict],
+) -> dict:
+    batch_objects = {
+        object_id: obj
+        for object_id, obj in map_objects.items()
+        if str(obj.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_005_ID
+        or str(obj.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_005_ID
+    }
+    batch_sites = {
+        site_id: site
+        for site_id, site in resource_sites.items()
+        if str(site.get("content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_005_ID
+        or str(site.get("normalized_content_batch_id", "")) == OVERWORLD_OBJECT_CONTENT_BATCH_005_ID
+    }
+    expected_role_counts = {
+        "existing_dwelling_normalization": 25,
+        "new_basic_dwelling": 4,
+        "guarded_high_value_dwelling": 4,
+    }
+    section = {
+        "batch_id": OVERWORLD_OBJECT_CONTENT_BATCH_005_ID,
+        "object_count": len(batch_objects),
+        "site_count": len(batch_sites),
+        "role_counts": {},
+        "footprints": {},
+        "biome_counts": {},
+        "shape_contract_ready_count": 0,
+        "linked_resource_site_count": 0,
+        "linked_site_contract_count": 0,
+        "roster_contract_ready_count": 0,
+        "guard_contract_ready_count": 0,
+        "guarded_variant_count": 0,
+        "metadata_only_boundary_count": 0,
+        "no_rare_resource_activation_count": 0,
+        "normalized_existing_count": 0,
+        "new_basic_count": 0,
+        "errors": [],
+        "warnings": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in section["errors"]:
+            section["errors"].append(message)
+
+    def live_resource_ids(site: dict, obj: dict) -> set[str]:
+        ids: set[str] = set()
+        for payload in (site, obj):
+            for field in ("rewards", "claim_rewards", "control_income", "service_cost"):
+                values = payload.get(field, {})
+                if isinstance(values, dict):
+                    ids.update(str(resource_id) for resource_id in values.keys())
+            response_cost = payload.get("response_profile", {}).get("resource_cost", {}) if isinstance(payload.get("response_profile", {}), dict) else {}
+            if isinstance(response_cost, dict):
+                ids.update(str(resource_id) for resource_id in response_cost.keys())
+        return ids
+
+    def metadata_boundary_is_safe(payload: dict, guarded: bool) -> bool:
+        boundary = payload.get("runtime_boundary", {}) if isinstance(payload.get("runtime_boundary", {}), dict) else {}
+        safe = (
+            str(boundary.get("status", "")) == "metadata_only"
+            and bool(boundary.get("neutral_dwelling_site_runtime_supported", False))
+            and not bool(boundary.get("guarded_variant_runtime_migration", True))
+            and not bool(boundary.get("recruitment_ui_overhaul", True))
+            and not bool(boundary.get("save_payload_required", True))
+            and not bool(boundary.get("renderer_sprite_required", True))
+            and not bool(boundary.get("pathing_runtime_adopted", True))
+            and not bool(boundary.get("rare_resource_activation", True))
+            and not bool(boundary.get("scenario_placement_migration", True))
+        )
+        if guarded:
+            safe = safe and not bool(boundary.get("guard_resolution_runtime_adopted", True))
+        return safe
+
+    def check_public_text(object_id: str, obj: dict, site: dict) -> None:
+        public_text_values = [
+            str(obj.get("name", "")),
+            str(site.get("name", "")),
+            str(site.get("response_profile", {}).get("summary", "")) if isinstance(site.get("response_profile", {}), dict) else "",
+            str(obj.get("guard_expectation", {}).get("visible_cue", "")) if isinstance(obj.get("guard_expectation", {}), dict) else "",
+        ]
+        for text in public_text_values:
+            lowered = text.lower()
+            for token in ("debug", "internal", "score", "fixture"):
+                if token in lowered:
+                    add_error(f"{object_id}: Batch 005 public text must not leak internal/debug/score fields")
+
+    def check_body_and_approach(object_id: str, obj: dict, width: int, height: int) -> bool:
+        body_tiles = obj.get("body_tiles", [])
+        approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
+        visit_offsets = approach.get("visit_offsets", []) if isinstance(approach.get("visit_offsets", []), list) else []
+        ready = True
+        if not isinstance(body_tiles, list) or not body_tiles:
+            add_error(f"{object_id}: Batch 005 dwellings must author non-empty body_tiles")
+            ready = False
+        if not isinstance(obj.get("approach", {}), dict) or not visit_offsets:
+            add_error(f"{object_id}: Batch 005 dwellings must author approach.visit_offsets")
+            ready = False
+        seen_body_tiles: set[str] = set()
+        for tile in body_tiles if isinstance(body_tiles, list) else []:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: body_tiles entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            if x < 0 or y < 0 or x >= width or y >= height:
+                add_error(f"{object_id}: body tile {x},{y} is outside footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_body_tiles:
+                add_error(f"{object_id}: body tile {tile_key} is duplicated")
+                ready = False
+            seen_body_tiles.add(tile_key)
+        seen_visit_offsets: set[str] = set()
+        for tile in visit_offsets:
+            if not isinstance(tile, dict):
+                add_error(f"{object_id}: approach.visit_offsets entries must be dictionaries")
+                ready = False
+                continue
+            x = int(tile.get("x", -999))
+            y = int(tile.get("y", -999))
+            adjacent = (x == -1 and 0 <= y < height) or (x == width and 0 <= y < height) or (y == -1 and 0 <= x < width) or (y == height and 0 <= x < width)
+            if not adjacent:
+                add_error(f"{object_id}: approach tile {x},{y} must be adjacent to footprint")
+                ready = False
+            tile_key = f"{x},{y}"
+            if tile_key in seen_visit_offsets:
+                add_error(f"{object_id}: approach tile {tile_key} is duplicated")
+                ready = False
+            seen_visit_offsets.add(tile_key)
+        if seen_body_tiles.intersection(seen_visit_offsets):
+            add_error(f"{object_id}: body_tiles must not overlap approach.visit_offsets")
+            ready = False
+        if str(approach.get("mode", "")) != "adjacent":
+            add_error(f"{object_id}: Batch 005 approach.mode must be adjacent")
+            ready = False
+        return ready
+
+    def recruit_units(site: dict) -> set[str]:
+        ids: set[str] = set()
+        for key in ("claim_recruits", "weekly_recruits"):
+            recruits = site.get(key, {})
+            if isinstance(recruits, dict):
+                ids.update(str(unit_id) for unit_id in recruits.keys())
+        roster = site.get("neutral_roster", {}) if isinstance(site.get("neutral_roster", {}), dict) else {}
+        for key in ("claim_recruits", "weekly_recruits"):
+            recruits = roster.get(key, {})
+            if isinstance(recruits, dict):
+                ids.update(str(unit_id) for unit_id in recruits.keys())
+        return ids
+
+    def roster_contract_ready(object_id: str, site: dict, contract: dict) -> bool:
+        dwelling_id = str(contract.get("neutral_dwelling_family_id", ""))
+        if dwelling_id not in neutral_dwellings:
+            add_error(f"{object_id}: Batch 005 dwelling_contract references missing neutral dwelling family {dwelling_id}")
+            return False
+        dwelling_units = {str(unit_id) for unit_id in neutral_dwellings[dwelling_id].get("unit_ids", [])}
+        site_units = recruit_units(site)
+        contract_units = {str(unit_id) for unit_id in contract.get("roster_unit_ids", [])}
+        ready = True
+        if not site_units:
+            add_error(f"{object_id}: Batch 005 linked site must define recruit payloads")
+            ready = False
+        if not contract_units:
+            add_error(f"{object_id}: Batch 005 dwelling_contract must list roster_unit_ids")
+            ready = False
+        if not site_units.issubset(dwelling_units):
+            add_error(f"{object_id}: Batch 005 site recruits must belong to linked neutral dwelling family")
+            ready = False
+        if not contract_units.issubset(dwelling_units):
+            add_error(f"{object_id}: Batch 005 contract roster_unit_ids must belong to linked neutral dwelling family")
+            ready = False
+        if str(contract.get("recruit_policy", "")) != "weekly_muster" or not bool(contract.get("recurring_recruit_access", False)):
+            add_error(f"{object_id}: Batch 005 dwelling_contract must define recurring weekly muster access")
+            ready = False
+        return ready
+
+    def guard_contract_ready(object_id: str, site: dict, guard: dict, guarded: bool) -> bool:
+        ready = True
+        guard_group_id = str(guard.get("guard_army_group_id", ""))
+        guard_encounter_id = str(guard.get("guard_encounter_id", ""))
+        if guard_group_id not in army_groups:
+            add_error(f"{object_id}: Batch 005 guard army group {guard_group_id} is missing")
+            ready = False
+        if guard_encounter_id not in encounters:
+            add_error(f"{object_id}: Batch 005 guard encounter {guard_encounter_id} is missing")
+            ready = False
+        if guard_encounter_id in encounters and str(encounters[guard_encounter_id].get("affiliation", "")) != "neutral":
+            add_error(f"{object_id}: Batch 005 guard encounter must remain neutral")
+            ready = False
+        roster = site.get("neutral_roster", {}) if isinstance(site.get("neutral_roster", {}), dict) else {}
+        if guard_group_id and str(roster.get("guard_army_group_id", "")) != guard_group_id:
+            add_error(f"{object_id}: Batch 005 site neutral_roster guard army must match object guard expectation")
+            ready = False
+        if guard_encounter_id and str(roster.get("guard_encounter_id", "")) != guard_encounter_id:
+            add_error(f"{object_id}: Batch 005 site neutral_roster guard encounter must match object guard expectation")
+            ready = False
+        if guarded:
+            guard_profile = site.get("guard_profile", {}) if isinstance(site.get("guard_profile", {}), dict) else {}
+            if not bool(site.get("guarded", False)) or not guard_profile:
+                add_error(f"{object_id}: guarded Batch 005 dwellings must set guarded=true and author guard_profile")
+                ready = False
+            if not bool(guard.get("clear_required_for_recruitment", False)) or not bool(guard.get("blocks_approach", False)):
+                add_error(f"{object_id}: guarded Batch 005 dwellings must require guard clearance and block approach in metadata")
+                ready = False
+            if guard_profile and (not bool(guard_profile.get("metadata_only", False)) or bool(guard_profile.get("runtime_guard_resolution_adopted", True))):
+                add_error(f"{object_id}: guarded Batch 005 guard_profile must remain metadata-only")
+                ready = False
+        return ready
+
+    for object_id, obj in sorted(batch_objects.items()):
+        role = str(obj.get("batch005_role", ""))
+        site_id = str(obj.get("resource_site_id", ""))
+        site = resource_sites.get(site_id, {}) if site_id else {}
+        footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+        width = int(footprint.get("width", 0))
+        height = int(footprint.get("height", 0))
+        footprint_key = f"{width}x{height}"
+        guarded = role == "guarded_high_value_dwelling"
+        increment_count(section["role_counts"], role)
+        increment_count(section["footprints"], footprint_key)
+        for biome_id in obj.get("biome_ids", []) if isinstance(obj.get("biome_ids", []), list) else []:
+            increment_count(section["biome_counts"], str(biome_id))
+        if role == "existing_dwelling_normalization":
+            section["normalized_existing_count"] += 1
+        if role == "new_basic_dwelling":
+            section["new_basic_count"] += 1
+        if guarded:
+            section["guarded_variant_count"] += 1
+
+        forbidden_wood_alias = "tim" + "ber"
+        text_key = json.dumps({"object": obj, "site": site}, sort_keys=True).lower()
+        if forbidden_wood_alias in text_key:
+            add_error(f"{object_id}: Batch 005 must keep wood canonical and avoid non-canonical wood aliases")
+        if role not in expected_role_counts:
+            add_error(f"{object_id}: Batch 005 object must author a supported batch005_role")
+        if str(obj.get("family", "")) != "neutral_dwelling" or str(obj.get("primary_class", "")) != "neutral_dwelling":
+            add_error(f"{object_id}: Batch 005 objects must remain neutral_dwelling map objects")
+        if not site_id or site_id not in resource_sites:
+            add_error(f"{object_id}: Batch 005 object must link an existing resource_site_id")
+        else:
+            section["linked_resource_site_count"] += 1
+            if str(site.get("family", "")) != "neutral_dwelling":
+                add_error(f"{object_id}: linked site {site_id} must use neutral_dwelling family")
+            if str(site.get("content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_005_ID and str(site.get("normalized_content_batch_id", "")) != OVERWORLD_OBJECT_CONTENT_BATCH_005_ID:
+                add_error(f"{object_id}: linked site {site_id} must carry Batch 005 content metadata")
+        if width <= 0 or height <= 0:
+            add_error(f"{object_id}: Batch 005 footprint dimensions must be positive")
+        if str(footprint.get("anchor", "")) not in OVERWORLD_OBJECT_FOOTPRINT_ANCHORS:
+            add_error(f"{object_id}: Batch 005 footprint.anchor is missing or unsupported")
+        if str(footprint.get("tier", "")) not in OVERWORLD_OBJECT_FOOTPRINT_TIERS:
+            add_error(f"{object_id}: Batch 005 footprint.tier is missing or unsupported")
+        if str(obj.get("passability_class", "")) != "blocking_visitable":
+            add_error(f"{object_id}: Batch 005 dwelling objects must use blocking_visitable")
+        interaction = obj.get("interaction", {}) if isinstance(obj.get("interaction", {}), dict) else {}
+        if str(interaction.get("cadence", "")) != "persistent_control" or str(interaction.get("refresh_rule", "")) != "weekly_muster":
+            add_error(f"{object_id}: Batch 005 dwelling interaction must remain persistent weekly muster")
+        if guarded and not bool(interaction.get("requires_guard_clear", False)):
+            add_error(f"{object_id}: guarded Batch 005 dwellings must require guard clear in interaction metadata")
+        if check_body_and_approach(object_id, obj, width, height):
+            section["shape_contract_ready_count"] += 1
+        contract = obj.get("dwelling_contract", {}) if isinstance(obj.get("dwelling_contract", {}), dict) else {}
+        site_contract = site.get("dwelling_contract", {}) if isinstance(site.get("dwelling_contract", {}), dict) else {}
+        if contract and site_contract and str(contract.get("resource_site_id", "")) == site_id and str(site_contract.get("resource_site_id", "")) == site_id:
+            section["linked_site_contract_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 005 object and site must author matching dwelling_contract metadata")
+        if site and roster_contract_ready(object_id, site, contract):
+            section["roster_contract_ready_count"] += 1
+        guard = obj.get("guard_expectation", {}) if isinstance(obj.get("guard_expectation", {}), dict) else {}
+        if site and guard and guard_contract_ready(object_id, site, guard, guarded):
+            section["guard_contract_ready_count"] += 1
+        if not isinstance(obj.get("ai_hints", {}), dict) or not obj.get("ai_hints", {}):
+            add_error(f"{object_id}: Batch 005 objects must author ai_hints")
+        if not isinstance(obj.get("editor_placement", {}), dict) or not obj.get("editor_placement", {}):
+            add_error(f"{object_id}: Batch 005 objects must author editor_placement")
+        if metadata_boundary_is_safe(obj, guarded) and metadata_boundary_is_safe(site, guarded):
+            section["metadata_only_boundary_count"] += 1
+        else:
+            add_error(f"{object_id}: Batch 005 object and site must keep explicit metadata-only runtime boundaries")
+        if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
+            add_error(f"{object_id}: Batch 005 must not activate rare resources in live site fields")
+        else:
+            section["no_rare_resource_activation_count"] += 1
+        check_public_text(object_id, obj, site)
+
+    section["role_counts"] = sorted_counts(section["role_counts"])
+    section["footprints"] = sorted_counts(section["footprints"])
+    section["biome_counts"] = dict(sorted(section["biome_counts"].items()))
+    if batch_objects:
+        if len(batch_objects) != 33:
+            add_error("Batch 005 must contain exactly 33 dwelling object definitions: 25 current normalizations plus 8 new variants")
+        if len(batch_sites) != 33:
+            add_error("Batch 005 must carry matching metadata on exactly 33 linked dwelling resource-site records")
+        for role, expected_count in expected_role_counts.items():
+            if int(section["role_counts"].get(role, 0)) != expected_count:
+                add_error(f"Batch 005 must include {expected_count} {role} objects")
+        for counter_key in ("linked_resource_site_count", "shape_contract_ready_count", "linked_site_contract_count", "roster_contract_ready_count", "guard_contract_ready_count", "metadata_only_boundary_count", "no_rare_resource_activation_count"):
+            if int(section[counter_key]) != len(batch_objects):
+                add_error(f"Batch 005 {counter_key} must match object count")
+        if section["guarded_variant_count"] != 4:
+            add_error("Batch 005 must include exactly 4 guarded high-value dwelling variants")
+        for biome_id in sorted(biomes.keys()):
+            if int(section["biome_counts"].get(biome_id, 0)) < 2:
+                add_error(f"Batch 005 must include at least 2 dwelling definitions for {biome_id}")
+        for footprint_key in ("2x1", "2x2", "3x2", "3x3"):
+            if footprint_key not in section["footprints"]:
+                add_error(f"Batch 005 must cover footprint {footprint_key}")
+    return section
+
+
 def build_overworld_object_report() -> dict:
-    payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions", "biomes")}
+    payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("map_objects", "resource_sites", "scenarios", "encounters", "army_groups", "factions", "biomes", "neutral_dwellings")}
     map_objects = items_index(payloads["map_objects"])
     resource_sites = items_index(payloads["resource_sites"])
     scenarios = items_index(payloads["scenarios"])
@@ -4186,6 +4504,7 @@ def build_overworld_object_report() -> dict:
     army_groups = items_index(payloads["army_groups"])
     factions = items_index(payloads["factions"])
     biomes = items_index(payloads["biomes"])
+    neutral_dwellings = items_index(payloads["neutral_dwellings"])
     site_placements = collect_overworld_object_scenario_site_placements(scenarios)
     encounter_placements = collect_overworld_object_scenario_encounter_placements(scenarios)
     object_ids_by_site_id = {str(obj.get("resource_site_id", "")): object_id for object_id, obj in map_objects.items() if str(obj.get("resource_site_id", ""))}
@@ -4277,6 +4596,7 @@ def build_overworld_object_report() -> dict:
     report["content_batches"]["batch_002_mines_resource_fronts"] = build_overworld_object_content_batch_002_section(map_objects, resource_sites, biomes)
     report["content_batches"]["batch_003_services_shrines_signs_events"] = build_overworld_object_content_batch_003_section(map_objects, resource_sites, biomes)
     report["content_batches"]["batch_004_transit_coast_route_control"] = build_overworld_object_content_batch_004_section(map_objects, resource_sites, biomes)
+    report["content_batches"]["batch_005_dwellings_guarded_dwellings"] = build_overworld_object_content_batch_005_section(map_objects, resource_sites, biomes, neutral_dwellings, army_groups, encounters)
     report["ai_editor_implications"]["visible_neutral_encounter_records_present"] = any(
         infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "neutral_encounter"
         for obj in map_objects.values()
@@ -4490,6 +4810,9 @@ def build_overworld_object_report() -> dict:
     for batch_error in report.get("content_batches", {}).get("batch_004_transit_coast_route_control", {}).get("errors", []):
         if batch_error not in report["errors"]:
             report["errors"].append(batch_error)
+    for batch_error in report.get("content_batches", {}).get("batch_005_dwellings_guarded_dwellings", {}).get("errors", []):
+        if batch_error not in report["errors"]:
+            report["errors"].append(batch_error)
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
     add_overworld_object_report_warning(report, "body_tiles and approach metadata remain warnings for unmigrated objects; pathing adoption is bounded to authored representative masks")
     return report
@@ -4583,6 +4906,14 @@ def print_overworld_object_report(report: dict) -> None:
         print(f"- shape contracts={batch_004.get('shape_contract_ready_count', 0)}; linked endpoints={batch_004.get('linked_endpoint_contract_count', 0)}; route effects={batch_004.get('route_effect_metadata_count', 0)}; coast applicability={batch_004.get('coast_applicability_count', 0)}")
         print(f"- directionality={','.join(batch_004.get('directionality_counts', {}).keys())}; biomes covered={len(batch_004.get('biome_counts', {}))}; footprints={','.join(batch_004.get('footprints', {}).keys())}; normalized={batch_004.get('normalized_existing_count', 0)}")
         print(f"- metadata-only boundaries={batch_004.get('metadata_only_boundary_count', 0)}; no live ship system={batch_004.get('no_live_ship_system_count', 0)}; errors={len(batch_004.get('errors', []))}; warnings={len(batch_004.get('warnings', []))}")
+    batch_005 = report.get("content_batches", {}).get("batch_005_dwellings_guarded_dwellings", {})
+    if batch_005:
+        print("Content Batch 005:")
+        role_counts = batch_005.get("role_counts", {})
+        print(f"- objects: {batch_005.get('object_count', 0)}; sites={batch_005.get('site_count', 0)}; normalized={role_counts.get('existing_dwelling_normalization', 0)}; new_basic={role_counts.get('new_basic_dwelling', 0)}; guarded_high_value={role_counts.get('guarded_high_value_dwelling', 0)}")
+        print(f"- shape contracts={batch_005.get('shape_contract_ready_count', 0)}; linked site contracts={batch_005.get('linked_site_contract_count', 0)}; roster contracts={batch_005.get('roster_contract_ready_count', 0)}; guard contracts={batch_005.get('guard_contract_ready_count', 0)}")
+        print(f"- biomes covered={len(batch_005.get('biome_counts', {}))}; footprints={','.join(batch_005.get('footprints', {}).keys())}; guarded variants={batch_005.get('guarded_variant_count', 0)}")
+        print(f"- metadata-only boundaries={batch_005.get('metadata_only_boundary_count', 0)}; no rare-resource activation={batch_005.get('no_rare_resource_activation_count', 0)}; errors={len(batch_005.get('errors', []))}; warnings={len(batch_005.get('warnings', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
@@ -10057,6 +10388,29 @@ def validate_overworld_object_content_batch_001(errors: list[str]) -> None:
                 "`wood` remains canonical",
             ):
                 ensure(required_text in doc_text, errors, f"Overworld object Batch 004 report doc is missing required boundary text: {required_text}")
+    batch_005 = report.get("content_batches", {}).get("batch_005_dwellings_guarded_dwellings", {})
+    if batch_005 and int(batch_005.get("object_count", 0)) > 0:
+        for batch_error in batch_005.get("errors", []):
+            fail(errors, f"Overworld object Batch 005: {batch_error}")
+        docs_path = ROOT / "docs" / "overworld-object-content-batch-005-dwellings-guarded-dwellings-report.md"
+        ensure(docs_path.exists(), errors, "Missing overworld object Batch 005 implementation report doc")
+        if docs_path.exists():
+            doc_text = docs_path.read_text(encoding="utf-8")
+            for required_text in (
+                "Status: implementation evidence.",
+                "33 Batch 005 map objects",
+                "339 map objects",
+                "135 resource sites",
+                "metadata-only",
+                "4 guarded high-value dwelling variants",
+                "No broad dwelling runtime migration",
+                "No recruitment UI overhaul",
+                "No renderer sprite import",
+                "No save migration",
+                "No rare-resource activation",
+                "`wood` remains canonical",
+            ):
+                ensure(required_text in doc_text, errors, f"Overworld object Batch 005 report doc is missing required boundary text: {required_text}")
 
 
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:

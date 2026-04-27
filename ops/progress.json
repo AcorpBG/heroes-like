@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-004-transit-coast-route-control-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 004 Transit Coast And Route Control",
+  "currentSliceId": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
+  "currentSliceTitle": "Overworld Object Content Batch 005 Dwellings And Guarded Dwellings",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Batch 004 transit/coast/route-control content and validation; next corrective P2.4 category is Batch 005 dwellings/guarded dwellings; P2.5 remains paused.",
+  "currentSliceNotes": "Completed Batch 005 dwelling normalization and guarded-dwelling content with validator/report coverage; next corrective P2.4 category is Batch 006 guarded rewards and elite sites; P2.5 remains paused.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T19:29:21Z",
+  "updatedAt": "2026-04-27T19:40:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -2399,7 +2399,7 @@
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
-      "status": "pending",
+      "status": "completed",
       "purpose": "Continue corrective P2.4 object content by normalizing existing neutral dwellings and adding guarded high-value dwelling variants after Batch 004 transit/coast/route-control work.",
       "sourceDocs": [
         "docs/phase2-4-object-implementation-backlog.md",
@@ -2416,7 +2416,8 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Dwellings and guarded dwellings author explicit footprint, body, approach, recruit/guard expectations, biome applicability, and metadata boundaries."
+        "33 Batch 005 map objects and 33 linked resource-site contracts cover 25 existing dwelling normalizations, 4 new basic dwellings, and 4 guarded high-value dwelling variants.",
+        "Dwellings and guarded dwellings author explicit footprint, body, approach, recruit/guard expectations, biome applicability, editor/AI metadata, and metadata-only runtime boundaries."
       ],
       "completionCriteria": [
         "Existing and new dwelling objects define clear shape, approach, interaction cadence, linked site, guard, roster, editor, and AI metadata as appropriate.",
@@ -2426,8 +2427,47 @@
         "No broad dwelling runtime migration, recruitment UI overhaul, scenario placement migration, save migration, renderer sprite import, or economy rebalance.",
         "No P2.5 magic implementation."
       ],
-      "notes": "Next corrective P2.4 category after completed Batch 004; P2.5 remains paused.",
-      "updatedAt": "2026-04-27T19:29:21Z"
+      "notes": "Completed Batch 005: 25 current neutral dwelling map objects normalized, 4 new basic dwellings and 4 guarded high-value dwelling variants added with linked site contracts, validator/report coverage, implementation report, and clean validation. P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:40:45Z",
+      "completedAt": "2026-04-27T19:40:45Z",
+      "startedAt": "2026-04-27T19:40:45Z"
+    },
+    {
+      "id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184",
+      "title": "Overworld Object Content Batch 006 Guarded Rewards And Elite Sites",
+      "phase": "phase-2-deep-production-foundation",
+      "sliceType": "child",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "status": "pending",
+      "purpose": "Continue corrective P2.4 object content with guarded reward sites, hostile reward pockets, and elite site contracts after Batch 005 dwellings.",
+      "sourceDocs": [
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-taxonomy-density.md"
+      ],
+      "implementationTargets": [
+        "content/map_objects.json",
+        "content/resource_sites.json",
+        "object validator/report coverage as needed"
+      ],
+      "baselineChecks": [
+        "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --overworld-object-report",
+        "git diff --check"
+      ],
+      "sliceEvidence": [
+        "Guarded reward and elite site objects author explicit footprint, body, approach, visible guard, reward category, linked site, biome applicability, editor, AI, and metadata boundary contracts."
+      ],
+      "completionCriteria": [
+        "Minor guarded rewards, major guarded rewards, and guarded route/reward hybrids define clear risk/reward and guard-link expectations without obscuring the guarded object class.",
+        "Guarded reward variants remain content/metadata implementation unless current runtime already supports their linked site family."
+      ],
+      "nonGoals": [
+        "No neutral encounter migration, broad reward runtime migration, scenario placement migration, save migration, renderer sprite import, rare-resource activation, market changes, or economy rebalance.",
+        "No P2.5 magic implementation."
+      ],
+      "notes": "Next corrective P2.4 category after completed Batch 005; P2.5 remains paused.",
+      "updatedAt": "2026-04-27T19:40:45Z"
     }
   ],
   "completedImplementationEvidence": [
@@ -3230,8 +3270,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-005-dwellings-guarded-dwellings-10184",
-      "title": "Overworld Object Content Batch 005 Dwellings And Guarded Dwellings",
+      "id": "overworld-object-content-batch-006-guarded-rewards-elite-sites-10184",
+      "title": "Overworld Object Content Batch 006 Guarded Rewards And Elite Sites",
       "phase": "phase-2-deep-production-foundation",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
@@ -3246,7 +3286,7 @@
         "content/resource_sites.json",
         "object validator/report coverage as needed"
       ],
-      "notes": "Next corrective P2.4 dwellings/guarded-dwellings Batch 005 after completed Batch 004; P2.5 remains paused."
+      "notes": "Next corrective P2.4 guarded rewards and elite sites Batch 006 after completed Batch 005; P2.5 remains paused."
     }
   ],
   "stoppedOrPausedTasks": [
