@@ -820,11 +820,12 @@ purpose: Stage rare-resource activation behind explicit rules, UI, content, and 
 sourceDocs:
 - `docs/economy-overhaul-foundation.md`
 - `docs/economy-resource-schema-migration-plan.md`
+- `docs/economy-rare-resource-activation-report.md`
 
 implementationTargets:
-- economy rules
-- resource-site content
-- UI/report validation for selected resources
+- report-only resource registry gates
+- strict economy/resource fixtures
+- UI/report validation for selected staged rare resources
 
 ### P2 Child: Economy Market And Faction Costs
 
@@ -836,6 +837,7 @@ purpose: Implement bounded market caps or faction-biased cost hooks only after r
 sourceDocs:
 - `docs/economy-overhaul-foundation.md`
 - `docs/factions-content-bible.md`
+- `docs/economy-rare-resource-activation-report.md`
 
 implementationTargets:
 - town economy rules

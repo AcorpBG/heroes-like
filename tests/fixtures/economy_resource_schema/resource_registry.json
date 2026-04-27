@@ -51,6 +51,138 @@
       "report_only": true
     },
     {
+      "id": "aetherglass",
+      "display_name": "Aetherglass",
+      "category": "arcane_material",
+      "market_tier": "restricted_rare",
+      "default_visible": false,
+      "legacy_aliases": [],
+      "canonical_status": "staged_limited",
+      "activation_status": "staged_report_only",
+      "source_readiness": "planned_source_family",
+      "source_site_family": "aetherglass_orchard",
+      "intended_source_paths": ["aetherglass orchard", "lens gallery", "relay salvage"],
+      "source_evidence_docs": ["docs/economy-overhaul-foundation.md", "docs/concept-art-implementation-briefs.md", "docs/concept-art-batch-005-review.md"],
+      "faction_affinity": {
+        "faction_sunvault": "primary"
+      },
+      "ui_sort": 100,
+      "icon_hint_id": "resource_aetherglass_placeholder",
+      "material_cue": "mirror shards, lens fruit, prism relays, and cold glass glints",
+      "stockpile": true,
+      "report_only": true
+    },
+    {
+      "id": "embergrain",
+      "display_name": "Embergrain",
+      "category": "supply",
+      "market_tier": "restricted_rare",
+      "default_visible": false,
+      "legacy_aliases": [],
+      "canonical_status": "staged_limited",
+      "activation_status": "staged_report_only",
+      "source_readiness": "planned_source_family",
+      "source_site_family": "embergrain_yard",
+      "intended_source_paths": ["embergrain yard", "granary barge", "ration depot"],
+      "source_evidence_docs": ["docs/economy-overhaul-foundation.md", "docs/concept-art-implementation-briefs.md", "docs/concept-art-batch-005-review.md"],
+      "faction_affinity": {
+        "faction_embercourt": "primary"
+      },
+      "ui_sort": 110,
+      "icon_hint_id": "resource_embergrain_placeholder",
+      "material_cue": "sealed grain, ration sacks, warm lamp seed, and civic granary marks",
+      "stockpile": true,
+      "report_only": true
+    },
+    {
+      "id": "peatwax",
+      "display_name": "Peatwax",
+      "category": "local_fuel_rite",
+      "market_tier": "restricted_rare",
+      "default_visible": false,
+      "legacy_aliases": [],
+      "canonical_status": "staged_limited",
+      "activation_status": "staged_report_only",
+      "source_readiness": "planned_source_family",
+      "source_site_family": "peatwax_cut",
+      "intended_source_paths": ["peatwax cut", "mudglass deposit", "ferry rite cache"],
+      "source_evidence_docs": ["docs/economy-overhaul-foundation.md", "docs/concept-art-implementation-briefs.md", "docs/concept-art-batch-005-review.md"],
+      "faction_affinity": {
+        "faction_mireclaw": "primary"
+      },
+      "ui_sort": 120,
+      "icon_hint_id": "resource_peatwax_placeholder",
+      "material_cue": "dark fuel bricks, wax seals, marsh smoke, and ferry votives",
+      "stockpile": true,
+      "report_only": true
+    },
+    {
+      "id": "verdant_grafts",
+      "display_name": "Verdant grafts",
+      "category": "living_material",
+      "market_tier": "restricted_rare",
+      "default_visible": false,
+      "legacy_aliases": [],
+      "canonical_status": "staged_limited",
+      "activation_status": "staged_report_only",
+      "source_readiness": "planned_source_family",
+      "source_site_family": "graft_nursery",
+      "intended_source_paths": ["graft nursery", "rooted orchard", "renewal grove"],
+      "source_evidence_docs": ["docs/economy-overhaul-foundation.md", "docs/concept-art-implementation-briefs.md", "docs/concept-art-batch-005-review.md"],
+      "faction_affinity": {
+        "faction_thornwake": "primary"
+      },
+      "ui_sort": 130,
+      "icon_hint_id": "resource_verdant_grafts_placeholder",
+      "material_cue": "living cuttings, bound roots, nursery bundles, and renewal knots",
+      "stockpile": true,
+      "report_only": true
+    },
+    {
+      "id": "brass_scrip",
+      "display_name": "Brass scrip",
+      "category": "contract_credit",
+      "market_tier": "restricted_rare",
+      "default_visible": false,
+      "legacy_aliases": [],
+      "canonical_status": "staged_limited",
+      "activation_status": "staged_report_only",
+      "source_readiness": "planned_source_family",
+      "source_site_family": "contract_foundry",
+      "intended_source_paths": ["contract foundry", "scrip office", "pressure rail depot"],
+      "source_evidence_docs": ["docs/economy-overhaul-foundation.md", "docs/concept-art-implementation-briefs.md", "docs/concept-art-batch-005-review.md"],
+      "faction_affinity": {
+        "faction_brasshollow": "primary"
+      },
+      "ui_sort": 140,
+      "icon_hint_id": "resource_brass_scrip_placeholder",
+      "material_cue": "stamped contract plates, debt tags, furnace seals, and rail tallies",
+      "stockpile": true,
+      "report_only": true
+    },
+    {
+      "id": "memory_salt",
+      "display_name": "Memory salt",
+      "category": "salvage_memory",
+      "market_tier": "restricted_rare",
+      "default_visible": false,
+      "legacy_aliases": [],
+      "canonical_status": "staged_limited",
+      "activation_status": "staged_report_only",
+      "source_readiness": "planned_source_family",
+      "source_site_family": "memory_salt_salvage",
+      "intended_source_paths": ["wreck field", "obituary vault", "fog salvage camp"],
+      "source_evidence_docs": ["docs/economy-overhaul-foundation.md", "docs/concept-art-implementation-briefs.md", "docs/concept-art-batch-005-review.md"],
+      "faction_affinity": {
+        "faction_veilmourn": "primary"
+      },
+      "ui_sort": 150,
+      "icon_hint_id": "resource_memory_salt_placeholder",
+      "material_cue": "pale salvage salt, fog charts, bell ledgers, and wreck claims",
+      "stockpile": true,
+      "report_only": true
+    },
+    {
       "id": "experience",
       "display_name": "Experience",
       "category": "progression_reward",
