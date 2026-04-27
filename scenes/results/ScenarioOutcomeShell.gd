@@ -1,6 +1,7 @@
 extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 
 @onready var _backdrop: ColorRect = %Backdrop
 @onready var _header_label: Label = %Header
@@ -62,7 +63,19 @@ func _refresh() -> void:
 	_set_compact_label(_resource_label, String(_model.get("resource_summary", "Resource data unavailable.")), 5)
 	_set_compact_label(_progression_label, String(_model.get("progression_summary", "")), 4)
 	_set_compact_label(_campaign_arc_label, String(_model.get("campaign_arc_summary", "")), 4)
-	_set_compact_label(_carryover_label, String(_model.get("carryover_summary", "")), 4)
+	var carryover_check := _outcome_carryover_check(AppRouter.active_save_surface())
+	_set_compact_label(
+		_carryover_label,
+		_join_tooltip_sections([
+			String(carryover_check.get("visible_text", "")),
+			String(_model.get("carryover_summary", "")),
+		]),
+		4
+	)
+	_carryover_label.tooltip_text = _join_tooltip_sections([
+		String(carryover_check.get("tooltip_text", "")),
+		String(_model.get("carryover_summary", "")),
+	])
 	_set_compact_label(_aftermath_label, String(_model.get("aftermath_summary", "")), 4)
 	_set_compact_label(_journal_label, String(_model.get("journal_summary", "")), 4)
 	_refresh_save_surface()
@@ -258,6 +271,8 @@ func validation_snapshot() -> Dictionary:
 		"progression_summary": String(_model.get("progression_summary", "")),
 		"campaign_arc_summary": String(_model.get("campaign_arc_summary", "")),
 		"carryover_summary": String(_model.get("carryover_summary", "")),
+		"carryover_label": _carryover_label.text,
+		"carryover_tooltip": _carryover_label.tooltip_text,
 		"aftermath_summary": String(_model.get("aftermath_summary", "")),
 		"journal_summary": String(_model.get("journal_summary", "")),
 		"next_step_summary": String(_model.get("next_step_summary", "")),
@@ -265,6 +280,9 @@ func validation_snapshot() -> Dictionary:
 		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
 		"post_result_handoff_summary": String(_model.get("post_result_handoff_summary", "")),
 		"outcome_follow_up_check": _outcome_follow_up_check(save_surface),
+		"outcome_carryover_check": _outcome_carryover_check(save_surface),
+		"outcome_carryover_check_text": String(_outcome_carryover_check(save_surface).get("visible_text", "")),
+		"outcome_carryover_check_tooltip": String(_outcome_carryover_check(save_surface).get("tooltip_text", "")),
 		"next_play_action_summary": String(_model.get("next_play_action_summary", "")),
 		"action_cue_summary": String(_model.get("action_cue_summary", "")),
 		"actions_hint": _actions_hint_label.text,
@@ -529,6 +547,54 @@ func _outcome_slot_check(surface: Dictionary = {}, summary_override: Dictionary 
 		"save_effect": overwrite_line,
 	}
 
+func _outcome_carryover_check(surface: Dictionary = {}) -> Dictionary:
+	var launch_mode := SessionStateStore.normalize_launch_mode(_session.launch_mode)
+	var status_text := String(_session.scenario_status).replace("_", " ").strip_edges()
+	if status_text == "":
+		status_text = "outcome"
+	var status_label := status_text.capitalize()
+	var carryover_summary := String(_model.get("carryover_summary", "")).strip_edges()
+	if carryover_summary == "":
+		carryover_summary = "No carryover summary is available for this result."
+	var primary_label := _primary_outcome_action_label()
+	var primary_action_id := _primary_outcome_action_id()
+	if primary_label == "":
+		primary_label = "Return to Menu"
+	var save_label := String(surface.get("save_button_label", "Save Outcome")).strip_edges()
+	if save_label == "":
+		save_label = "Save Outcome"
+	var selected_slot := int(surface.get("selected_slot", SaveService.get_selected_manual_slot()))
+	var mode_label := ScenarioSelectRulesScript.launch_mode_label(launch_mode)
+	var visible := "Carryover check: %s | no campaign export" % mode_label
+	var replay_line := "Fresh skirmish starts do not import or export campaign carryover."
+	var next_line := _outcome_primary_follow_up_effect(primary_action_id, primary_label, launch_mode)
+	if launch_mode == SessionStateStore.LAUNCH_MODE_CAMPAIGN:
+		visible = "Carryover check: Campaign export | %s" % (
+			"next chapter ready" if primary_action_id.begins_with("campaign_start:") else "review saved"
+		)
+		replay_line = "Replay or next-chapter choices start fresh play from recorded campaign progress; this review stays available until another autosave replaces it."
+	elif primary_action_id.begins_with("skirmish_start:"):
+		visible = "Carryover check: Skirmish result | retry starts fresh"
+	var tooltip := "Outcome Carryover Check\n- Result: %s recorded in %s mode.\n- Carryover: %s\n- Next follow-up: %s\n- Replay/new run: %s\n- Manual save: %s can preserve this result review in Manual %d before leaving.\n- Scope: reading this check does not save, route, or change campaign progression." % [
+		status_label,
+		mode_label,
+		carryover_summary,
+		next_line,
+		replay_line,
+		save_label,
+		selected_slot,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"mode": launch_mode,
+		"primary_action_id": primary_action_id,
+		"primary_label": primary_label,
+		"carryover_summary": carryover_summary,
+		"next_follow_up": next_line,
+		"replay_line": replay_line,
+	}
+
 func _primary_outcome_action_label() -> String:
 	var actions = _model.get("actions", [])
 	if not (actions is Array):
@@ -654,6 +720,7 @@ func _build_outcome_guide_text() -> String:
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var save_surface := AppRouter.active_save_surface()
 	var follow_up_check := _outcome_follow_up_check(save_surface)
+	var carryover_check := _outcome_carryover_check(save_surface)
 	var slot_check := _outcome_slot_check(save_surface)
 	var save_check := String(save_surface.get("save_check", "")).strip_edges()
 	var play_check := String(save_surface.get("play_check", "")).strip_edges()
@@ -664,6 +731,8 @@ func _build_outcome_guide_text() -> String:
 		lines.append(next_play_action)
 	if String(follow_up_check.get("tooltip_text", "")).strip_edges() != "":
 		lines.append(String(follow_up_check.get("tooltip_text", "")).strip_edges())
+	if String(carryover_check.get("tooltip_text", "")).strip_edges() != "":
+		lines.append(String(carryover_check.get("tooltip_text", "")).strip_edges())
 	if String(slot_check.get("tooltip_text", "")).strip_edges() != "":
 		lines.append(String(slot_check.get("tooltip_text", "")).strip_edges())
 	if resolution_handoff != "":
