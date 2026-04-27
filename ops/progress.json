@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-route-effect-authoring-validation-10184",
-  "currentSliceTitle": "Overworld Object Route Effect Authoring Validation",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.4 route-effect authoring validation in progress: inspect prior object AI/route evidence first; validate selected route/transit authoring expectations without broad pathing, renderer, save, resource, or AI migration.",
+  "currentSliceId": "magic-spell-school-category-schema-10184",
+  "currentSliceTitle": "Magic Spell School And Category Schema",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "P2.4 completed. Next actionable P2.5 child is the selected magic spell school/category schema slice.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T16:05:27Z",
+  "updatedAt": "2026-04-27T16:25:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -239,8 +239,8 @@
       "id": "overworld-object-encounter-foundation-implementation-10184",
       "title": "Overworld Object And Neutral Encounter Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
-      "classification": "parent_foundation_docs_ready_partial_metadata_children_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/overworld-content-bible.md",
         "docs/overworld-object-taxonomy-density.md",
@@ -261,8 +261,8 @@
         "map editor object tooling",
         "validator/report fixtures"
       ],
-      "evidence": "Safe metadata, bounded pathing/occupancy adoption for Brightwood Sawmill, and six neutral encounter object-backed placements exist with validator/report support. Broad renderer/editor/save adoption is intentionally deferred.",
-      "notes": "No broad warning cleanup, renderer sprite ingestion, neutral encounter runtime pathing adoption, or save adoption without explicit sub-slices.",
+      "evidence": "Safe metadata, editor authoring validation, bounded pathing/occupancy adoption for Brightwood Sawmill, six neutral encounter object-backed placements, object-backed AI valuation, and selected transit route-effect authoring validation exist with validator/report support. Broad renderer/save/runtime route-effect adoption is intentionally deferred.",
+      "notes": "Completed P2.4 child sequence through route-effect authoring validation. No broad warning cleanup, renderer sprite ingestion, save adoption, rare-resource activation, or broad runtime route-effect migration was performed.",
       "sliceType": "parent",
       "childSliceIds": [
         "overworld-object-runtime-metadata-adoption-10184",
@@ -282,7 +282,9 @@
       ],
       "reportOnlyEvidenceIds": [
         "overworld-neutral-reports"
-      ]
+      ],
+      "updatedAt": "2026-04-27T16:25:00Z",
+      "completedAt": "2026-04-27T16:25:00Z"
     },
     {
       "id": "magic-system-foundation-implementation-10184",
@@ -1105,7 +1107,8 @@
       "purpose": "Validate selected route/transit object authoring expectations after object-backed AI valuation without adopting broad pathing or renderer behavior.",
       "sourceDocs": [
         "docs/overworld-object-taxonomy-density.md",
-        "docs/overworld-object-ai-valuation-route-effects-report.md"
+        "docs/overworld-object-ai-valuation-route-effects-report.md",
+        "docs/overworld-object-route-effect-authoring-validation-report.md"
       ],
       "implementationTargets": [
         "route-effect report helpers",
@@ -1117,14 +1120,17 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "content/map_objects.json authors selected route_effect metadata, body_tiles, linked endpoint approach offsets, conditional passability, editor placement, and AI hints for object_repaired_ferry_stage and object_rope_lift.",
+        "tests/validate_repo.py validates selected transit route-effect authoring fields, linked endpoint/body/approach consistency, toll resource policy, and public text leak boundaries.",
+        "The overworld object report exposes route_effect_authoring with runtime_behavior_adopted=false and zero selected transit authoring errors."
       ],
       "completionCriteria": [
         "Selected route/transit object authoring expectations are validated or explicitly deferred according to the P2.4 parent boundaries."
       ],
-      "updatedAt": "2026-04-27T16:05:27Z",
-      "notes": "worker started for P2.4 route-effect authoring validation: inspect prior object AI/route evidence first, validate selected route/transit authoring expectations without broad pathing, renderer, save, resource, or AI migration",
-      "startedAt": "2026-04-27T16:05:27Z"
+      "updatedAt": "2026-04-27T16:25:00Z",
+      "notes": "Completed selected route/transit authoring validation: ferry stage and rope lift now carry metadata-only route_effect contracts with separate body_tiles and linked approach endpoints; validator/report coverage enforces route tags, conditional passability/cadence, endpoint consistency, common-resource toll policy, and no public score/debug token leaks. No broad pathing, renderer, save, resource, or AI migration.",
+      "startedAt": "2026-04-27T16:05:27Z",
+      "completedAt": "2026-04-27T16:25:00Z"
     },
     {
       "id": "magic-spell-school-category-schema-10184",
@@ -2877,23 +2883,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-route-effect-authoring-validation-10184",
-      "title": "Overworld Object Route Effect Authoring Validation",
-      "status": "in_progress",
-      "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
+      "id": "magic-spell-school-category-schema-10184",
+      "title": "Magic Spell School And Category Schema",
+      "status": "pending",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/overworld-object-taxonomy-density.md",
-        "docs/overworld-object-ai-valuation-route-effects-report.md"
+        "docs/magic-system-expansion-foundation.md"
       ],
       "implementationTargets": [
-        "route-effect report helpers",
-        "selected transit/route object fixtures",
-        "public leak checks if any public route output is touched"
+        "content/spells.json",
+        "scripts/core/SpellRules.gd",
+        "validation fixtures/reports"
       ],
-      "notes": "worker started for P2.4 route-effect authoring validation: inspect prior object AI/route evidence first, validate selected route/transit authoring expectations without broad pathing, renderer, save, resource, or AI migration",
+      "notes": "P2.5 next actionable child after P2.4 completion: implement selected spell school/category/tier metadata and validation without treating UI cues as magic-system implementation.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
-      "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
+      "source": "PLAN.md P2.5 Magic System Foundation Implementation"
     }
   ],
   "stoppedOrPausedTasks": [
