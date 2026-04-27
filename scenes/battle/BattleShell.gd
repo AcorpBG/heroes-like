@@ -416,7 +416,20 @@ func _refresh() -> void:
 			String(active_stack_check.get("tooltip_text", "")),
 			active_context,
 		])
-	_set_compact_label(_target_label, BattleRules.describe_target_context(_session), 3)
+	var target_context := BattleRules.describe_target_context(_session)
+	var engagement_check := _battle_engagement_check_cue_surface()
+	if engagement_check.is_empty():
+		_set_compact_label(_target_label, target_context, 3)
+	else:
+		_set_compact_label(
+			_target_label,
+			"%s\n%s" % [String(engagement_check.get("visible_text", "")), target_context],
+			3
+		)
+		_target_label.tooltip_text = _join_tooltip_sections([
+			String(engagement_check.get("tooltip_text", "")),
+			target_context,
+		])
 	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
@@ -848,6 +861,97 @@ func _battle_position_stack_label(stack: Dictionary) -> String:
 		label = String(stack.get("battle_id", "stack")).strip_edges()
 	return label
 
+func _battle_engagement_check_cue_surface() -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {
+			"visible_text": "Engagement check: no battle is loaded.",
+			"tooltip_text": "Battle Engagement Check\n- No battle is loaded.",
+			"readiness": "unavailable",
+		}
+	var battle := _session.battle
+	var active_stack := BattleRules.get_active_stack(battle)
+	var selected_target := BattleRules.get_selected_target(battle)
+	var consequence := BattleRules.active_consequence_payload(_session)
+	var action_surface := BattleRules.get_action_surface(_session)
+	var active_label := _battle_position_stack_label(active_stack)
+	var target_label := _battle_position_stack_label(selected_target)
+	var target_range := String(consequence.get("target_range", "Target/range: no target selected.")).strip_edges()
+	var preferred_action_id := String(consequence.get("preferred_action_id", "")).strip_edges()
+	if preferred_action_id == "":
+		preferred_action_id = _battle_first_ready_order_id(action_surface)
+	var preferred_action: Dictionary = action_surface.get(preferred_action_id, {}) if action_surface.get(preferred_action_id, {}) is Dictionary else {}
+	var order_label := String(preferred_action.get("label", preferred_action_id.capitalize())).strip_edges()
+	if order_label == "":
+		order_label = "no ready order"
+	var order_readiness := _battle_order_readiness_label(preferred_action) if not preferred_action.is_empty() else "Waiting"
+	var consequence_preview := _battle_engagement_consequence_preview(preferred_action_id, preferred_action, consequence)
+	var next_step := ""
+	var readiness := order_readiness
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		order_readiness = "Waiting"
+		next_step = "Wait for battle resolution."
+	elif String(active_stack.get("side", "")) != "player":
+		readiness = "Locked"
+		order_readiness = "Locked"
+		next_step = "Wait for command to return."
+	elif selected_target.is_empty():
+		readiness = "Select"
+		order_readiness = "Select target"
+		next_step = "Cycle or click an enemy stack before confirming an order."
+	elif preferred_action.is_empty() or bool(preferred_action.get("disabled", false)):
+		readiness = "Blocked"
+		next_step = "Move, cycle target focus, or use Defend if no attack opens."
+	else:
+		next_step = String(preferred_action.get("confirmation", preferred_action.get("consequence", ""))).strip_edges()
+		if next_step == "":
+			next_step = "Confirming this order spends the active stack's action."
+	if consequence_preview == "":
+		consequence_preview = "No immediate consequence preview."
+	var visible := "Engagement check: %s; %s via %s." % [
+		_short_text(target_label, 28),
+		readiness,
+		_short_text(order_label, 24),
+	]
+	var tooltip := "Battle Engagement Check\n- Active stack: %s\n- Selected target: %s\n- Order readiness: %s via %s\n- %s\n- Consequence preview: %s\n- Next practical action: %s\n- Inspection: checking this cue does not attack, move, cast, or advance initiative." % [
+		active_label,
+		target_label,
+		order_readiness,
+		order_label,
+		target_range,
+		consequence_preview,
+		next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active": active_label,
+		"target": target_label,
+		"order": order_label,
+		"readiness": readiness,
+		"order_readiness": order_readiness,
+		"target_range": target_range,
+		"consequence_preview": consequence_preview,
+		"next_step": next_step,
+	}
+
+func _battle_engagement_consequence_preview(
+	action_id: String,
+	action: Dictionary,
+	consequence: Dictionary
+) -> String:
+	var preview := String(action.get("consequence", "")).strip_edges()
+	if preview != "":
+		return preview
+	var previews: Array = consequence.get("action_previews", []) if consequence.get("action_previews", []) is Array else []
+	for preview_value in previews:
+		if not (preview_value is Dictionary):
+			continue
+		var preview_dict: Dictionary = preview_value
+		if String(preview_dict.get("id", "")) == action_id:
+			return String(preview_dict.get("consequence", "")).strip_edges()
+	return ""
+
 func _battle_first_ready_order_id(action_surface: Dictionary) -> String:
 	for action_id in ["shoot", "strike", "advance", "defend"]:
 		var action: Dictionary = action_surface.get(action_id, {}) if action_surface.get(action_id, {}) is Dictionary else {}
@@ -1030,6 +1134,7 @@ func validation_snapshot() -> Dictionary:
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
+	var engagement_check := _battle_engagement_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var stack_check := _battle_stack_check_cue_surface()
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
@@ -1093,6 +1198,11 @@ func validation_snapshot() -> Dictionary:
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),
+		"engagement_check": engagement_check,
+		"engagement_check_visible_text": String(engagement_check.get("visible_text", "")),
+		"engagement_check_tooltip_text": String(engagement_check.get("tooltip_text", "")),
+		"target_visible_text": _target_label.text,
+		"target_tooltip_text": _target_label.tooltip_text,
 		"stack_check": stack_check,
 		"stack_check_visible_text": String(stack_check.get("visible_text", "")),
 		"stack_check_tooltip_text": String(stack_check.get("tooltip_text", "")),
