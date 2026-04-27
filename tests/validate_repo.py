@@ -83,6 +83,9 @@ ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH = ROOT / "docs" / "animation-overworl
 ANIMATION_VALIDATION_SMOKE_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_validation_smoke_harness_report.gd"
 ANIMATION_VALIDATION_SMOKE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_validation_smoke_harness_report.tscn"
 ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validation-smoke-harness-report.md"
+AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.gd"
+AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH = ROOT / "tests" / "ai_hero_task_state_normalizer_preservation_report.tscn"
+AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH = ROOT / "docs" / "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -12857,6 +12860,60 @@ def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> N
         ensure(required_text in doc_text, errors, f"Overworld object AI valuation report doc is missing required boundary text: {required_text}")
 
 
+def validate_ai_hero_task_state_normalizer_preservation(errors: list[str]) -> None:
+    for path in (
+        AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH,
+        AI_HERO_TASK_NORMALIZER_REPORT_SCENE_PATH,
+        AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing AI hero task-state normalizer preservation file: {path.relative_to(ROOT)}")
+    enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8") if ENEMY_TURN_RULES_PATH.exists() else ""
+    for required_token in (
+        "func normalize_optional_hero_task_state",
+        "func _normalize_hero_task_record",
+        'existing_state.has("hero_task_state")',
+        '"schema_version"',
+        '"planner_epoch"',
+        '"tasks"',
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing hero task-state normalizer token: {required_token}")
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8") if SAVE_SERVICE_PATH.exists() else ""
+    for forbidden_token in ("hero_task_state", "ai_hero_task", "task_class"):
+        ensure(forbidden_token not in save_text, errors, f"SaveService.gd must not own hero task-state semantics token: {forbidden_token}")
+    if AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH.exists():
+        report_text = AI_HERO_TASK_NORMALIZER_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT",
+            "old_save_absence_no_task_board",
+            "future_optional_field_preservation_valid_board",
+            "future_optional_empty_board_preservation",
+            "malformed_non_dictionary_task_state",
+            "malformed_task_record_tolerance",
+            "unknown_task_fields_sanitized",
+            "unknown_enemy_state_field_isolation",
+            "save_service_payload_boundary",
+            "commander_roster_continuity_with_malformed_task_state",
+            "no_hero_task_state_producer_no_disk_write",
+            "payload_boundary_only_no_ai_task_semantics",
+            "debug_score",
+            "route_tiles",
+            "public_reason",
+        ):
+            ensure(required_token in report_text, errors, f"AI hero task-state normalizer report is missing token: {required_token}")
+    if AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH.exists():
+        doc_text = AI_HERO_TASK_NORMALIZER_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT",
+            "No save migration",
+            "SAVE_VERSION",
+            "SaveService",
+            "`wood` remains canonical",
+            "Still deferred: schema adoption",
+        ):
+            ensure(required_text in doc_text, errors, f"AI hero task-state normalizer report doc is missing required boundary text: {required_text}")
+
+
 def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
     docs_path = ROOT / "docs" / "overworld-object-route-effect-authoring-validation-report.md"
     ensure(docs_path.exists(), errors, "Missing overworld object route-effect authoring validation report doc")
@@ -14865,6 +14922,7 @@ def main() -> int:
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
     validate_overworld_object_ai_valuation_route_effects(errors)
+    validate_ai_hero_task_state_normalizer_preservation(errors)
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
@@ -14947,6 +15005,7 @@ def main() -> int:
     print("- enemy towns now build, recruit, reinforce raid armies, and surface public threat posture without a save-version bump")
     print("- enemy raids now contest sites, relics, neutral fronts, retake priorities, and objective anchors through save-backed core rules")
     print("- neutral dwellings, faction outposts, and frontier shrines now drive recurring logistics, scouting, spell access, and raid-value contestation across authored scenarios")
+    print("- strategic AI hero task-state normalizer preservation now proves optional future task boards survive only explicit normalization while old-save absence, malformed input, SaveService boundaries, and save version 9 remain intact")
     print("- overworld biomes and map-object families now have authored content domains, validation, and runtime family hooks")
     print("- overworld terrain now uses authored autotile-ready grammar, structural road layers, renderer hooks, selected object assets, and procedural object fallbacks")
     print("- Ninefold Confluence keeps a 64x64 six-faction, nine-biome, all-neutral-dwelling breadth scenario under validation")

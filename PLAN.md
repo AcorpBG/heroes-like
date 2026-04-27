@@ -24,7 +24,7 @@ Current phase: **Phase 2 - Deep Production Foundation**.
 
 Current tactical objective: continue Phase 2 in category order after P2.7 animation/event cue foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, and P2.7 animation/event cue children are implemented.
 
-Selected next implementation candidate: `strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184`.
+Selected next implementation candidate: `strategic-ai-public-event-log-boundary-10184`.
 
 ## Slice Status Model
 
@@ -156,7 +156,7 @@ Docs-ready/report-only:
 - Commander-role and hero-task-state docs define boundaries and report contracts, not live AI task behavior.
 
 Pending:
-- `strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184` is the next selected report-only implementation candidate.
+- `strategic-ai-public-event-log-boundary-10184` is the next selected P2.8 boundary candidate.
 
 Deferred:
 - Live commander-role behavior, live AI hero task-state adoption, schema writes, save migration, durable event logs, defense-specific durable state, broad AI rewrite, and coefficient tuning.

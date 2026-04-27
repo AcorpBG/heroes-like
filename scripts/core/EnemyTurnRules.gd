@@ -52,27 +52,80 @@ static func normalize_enemy_states(session: SessionStateStoreScript.SessionData)
 				continue
 			var faction_id = String(config.get("faction_id", ""))
 			var existing_state = _find_state(existing_states, faction_id)
-			normalized_states.append(
-				{
-					"faction_id": faction_id,
-					"pressure": max(0, int(existing_state.get("pressure", 0))),
-					"raid_counter": max(0, int(existing_state.get("raid_counter", 0))),
-					"commander_counter": max(0, int(existing_state.get("commander_counter", 0))),
-					"siege_progress": max(0, int(existing_state.get("siege_progress", 0))),
-					"treasury": _normalize_resource_pool(existing_state.get("treasury", {})),
-					"posture": _normalize_posture(existing_state.get("posture", "probing")),
-					"captured_artifact_ids": _normalize_string_array(existing_state.get("captured_artifact_ids", [])),
-					"commander_roster": EnemyAdventureRulesScript.normalize_commander_roster(
-						session,
-						faction_id,
-						existing_state.get("commander_roster", [])
-					),
-				}
-			)
+			var normalized_state := {
+				"faction_id": faction_id,
+				"pressure": max(0, int(existing_state.get("pressure", 0))),
+				"raid_counter": max(0, int(existing_state.get("raid_counter", 0))),
+				"commander_counter": max(0, int(existing_state.get("commander_counter", 0))),
+				"siege_progress": max(0, int(existing_state.get("siege_progress", 0))),
+				"treasury": _normalize_resource_pool(existing_state.get("treasury", {})),
+				"posture": _normalize_posture(existing_state.get("posture", "probing")),
+				"captured_artifact_ids": _normalize_string_array(existing_state.get("captured_artifact_ids", [])),
+				"commander_roster": EnemyAdventureRulesScript.normalize_commander_roster(
+					session,
+					faction_id,
+					existing_state.get("commander_roster", [])
+				),
+			}
+			if existing_state.has("hero_task_state"):
+				var task_state_report := normalize_optional_hero_task_state(existing_state.get("hero_task_state", {}))
+				if bool(task_state_report.get("ok", false)) and bool(task_state_report.get("normalized_present", false)):
+					normalized_state["hero_task_state"] = task_state_report.get("task_state", {})
+			normalized_states.append(normalized_state)
 
 	session.overworld["enemy_states"] = normalized_states
 	EnemyAdventureRulesScript.normalize_raid_armies(session)
 	EnemyAdventureRulesScript.normalize_all_commander_rosters(session)
+
+static func normalize_optional_hero_task_state(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {
+			"ok": false,
+			"normalized_present": false,
+			"invalid_reason": "hero_task_state_not_dictionary",
+			"input_task_count": 0,
+			"normalized_task_count": 0,
+			"dropped_task_count": 0,
+			"sanitized_field_count": 0,
+			"observed_policy": "dropped_invalid_board",
+		}
+	var source: Dictionary = value
+	var tasks_value = source.get("tasks", [])
+	if not (tasks_value is Array):
+		return {
+			"ok": false,
+			"normalized_present": false,
+			"invalid_reason": "hero_task_state_tasks_not_array",
+			"input_task_count": 0,
+			"normalized_task_count": 0,
+			"dropped_task_count": 0,
+			"sanitized_field_count": max(0, source.keys().size()),
+			"observed_policy": "dropped_invalid_board",
+		}
+	var normalized_tasks := []
+	var dropped_count := 0
+	var sanitized_count := _hero_task_state_board_sanitized_field_count(source)
+	for task_value in tasks_value:
+		var task_report := _normalize_hero_task_record(task_value)
+		sanitized_count += int(task_report.get("sanitized_field_count", 0))
+		if bool(task_report.get("ok", false)):
+			normalized_tasks.append(task_report.get("task", {}))
+		else:
+			dropped_count += 1
+	return {
+		"ok": true,
+		"normalized_present": true,
+		"task_state": {
+			"schema_version": clamp(max(1, int(source.get("schema_version", 1))), 1, 1),
+			"planner_epoch": max(0, int(source.get("planner_epoch", 0))),
+			"tasks": normalized_tasks,
+		},
+		"input_task_count": tasks_value.size(),
+		"normalized_task_count": normalized_tasks.size(),
+		"dropped_task_count": dropped_count,
+		"sanitized_field_count": sanitized_count,
+		"observed_policy": "preserved_and_normalized",
+	}
 
 static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	DifficultyRulesScript.normalize_session(session)
@@ -2467,6 +2520,181 @@ static func _normalize_posture(value: Variant) -> String:
 	if posture in ["probing", "massing", "raiding", "fortifying", "reorganizing", "collapsed"]:
 		return posture
 	return "probing"
+
+static func _normalize_hero_task_record(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {"ok": false, "invalid_reason": "task_not_dictionary", "sanitized_field_count": 0}
+	var task: Dictionary = value
+	var required_strings := [
+		"task_id",
+		"owner_faction_id",
+		"actor_id",
+		"task_class",
+		"target_id",
+	]
+	for required_key in required_strings:
+		if String(task.get(String(required_key), "")) == "":
+			return {
+				"ok": false,
+				"invalid_reason": "missing_%s" % String(required_key),
+				"sanitized_field_count": _hero_task_record_sanitized_field_count(task),
+			}
+	var task_class := _normalize_hero_task_class(task.get("task_class", ""))
+	var task_status := _normalize_hero_task_status(task.get("task_status", "planned"))
+	var target_kind := _normalize_hero_task_target_kind(task.get("target_kind", ""))
+	var validation := _normalize_hero_task_validation_code(task.get("last_validation", "valid"))
+	if task_class == "" or task_status == "" or target_kind == "" or validation == "":
+		return {
+			"ok": false,
+			"invalid_reason": "unsupported_task_enum",
+			"sanitized_field_count": _hero_task_record_sanitized_field_count(task),
+		}
+	var normalized := {
+		"task_id": String(task.get("task_id", "")),
+		"owner_faction_id": String(task.get("owner_faction_id", "")),
+		"actor_kind": _normalize_hero_task_actor_kind(task.get("actor_kind", "commander_roster")),
+		"actor_id": String(task.get("actor_id", "")),
+		"source_kind": _normalize_hero_task_source_kind(task.get("source_kind", "commander_role_adapter")),
+		"source_id": String(task.get("source_id", "")),
+		"task_class": task_class,
+		"task_status": task_status,
+		"target_kind": target_kind,
+		"target_id": String(task.get("target_id", "")),
+		"front_id": String(task.get("front_id", "")),
+		"origin_kind": _normalize_hero_task_origin_kind(task.get("origin_kind", "town")),
+		"origin_id": String(task.get("origin_id", "")),
+		"priority_reason_codes": _normalize_string_array(task.get("priority_reason_codes", [])),
+		"assigned_day": max(0, int(task.get("assigned_day", 0))),
+		"expires_day": max(0, int(task.get("expires_day", 0))),
+		"continuity_policy": _normalize_hero_task_continuity_policy(task.get("continuity_policy", "persist_until_invalid")),
+		"route_policy": _normalize_hero_task_route_policy(task.get("route_policy", "derive_route_on_turn")),
+		"last_validation": validation,
+	}
+	if task.has("invalidated_by_task_id"):
+		normalized["invalidated_by_task_id"] = String(task.get("invalidated_by_task_id", ""))
+	if task.get("reservation", {}) is Dictionary:
+		normalized["reservation"] = _normalize_hero_task_reservation(task.get("reservation", {}))
+	return {
+		"ok": true,
+		"task": normalized,
+		"sanitized_field_count": _hero_task_record_sanitized_field_count(task),
+	}
+
+static func _hero_task_state_board_sanitized_field_count(board: Dictionary) -> int:
+	var allowed := {"schema_version": true, "planner_epoch": true, "tasks": true}
+	var sanitized := 0
+	for key in board.keys():
+		if not allowed.has(String(key)):
+			sanitized += 1
+	return sanitized
+
+static func _hero_task_record_sanitized_field_count(task: Dictionary) -> int:
+	var allowed := {
+		"task_id": true,
+		"owner_faction_id": true,
+		"actor_kind": true,
+		"actor_id": true,
+		"source_kind": true,
+		"source_id": true,
+		"task_class": true,
+		"task_status": true,
+		"target_kind": true,
+		"target_id": true,
+		"front_id": true,
+		"origin_kind": true,
+		"origin_id": true,
+		"priority_reason_codes": true,
+		"assigned_day": true,
+		"expires_day": true,
+		"continuity_policy": true,
+		"route_policy": true,
+		"last_validation": true,
+		"reservation": true,
+		"invalidated_by_task_id": true,
+	}
+	var sanitized := 0
+	for key in task.keys():
+		if not allowed.has(String(key)):
+			sanitized += 1
+	return sanitized
+
+static func _normalize_hero_task_class(value: Variant) -> String:
+	var task_class := String(value)
+	if task_class in ["raid_town", "retake_site", "contest_site", "stabilize_front", "defend_front", "recover_commander", "rebuild_host", "reserve"]:
+		return task_class
+	return ""
+
+static func _normalize_hero_task_status(value: Variant) -> String:
+	var task_status := String(value)
+	if task_status in ["candidate", "planned", "reserved", "active", "suspended", "blocked", "completed", "failed", "cancelled", "invalid"]:
+		return task_status
+	return ""
+
+static func _normalize_hero_task_target_kind(value: Variant) -> String:
+	var target_kind := String(value)
+	if target_kind in ["resource", "town", "commander", "front"]:
+		return target_kind
+	return ""
+
+static func _normalize_hero_task_actor_kind(value: Variant) -> String:
+	var actor_kind := String(value)
+	return actor_kind if actor_kind in ["commander_roster", "active_encounter", "ai_hero"] else "commander_roster"
+
+static func _normalize_hero_task_source_kind(value: Variant) -> String:
+	var source_kind := String(value)
+	return source_kind if source_kind in ["commander_role_adapter", "saved_task_state"] else "commander_role_adapter"
+
+static func _normalize_hero_task_origin_kind(value: Variant) -> String:
+	var origin_kind := String(value)
+	return origin_kind if origin_kind in ["town", "front", "encounter"] else "town"
+
+static func _normalize_hero_task_continuity_policy(value: Variant) -> String:
+	var policy := String(value)
+	return policy if policy in ["persist_until_invalid", "expire_on_day", "derive_each_turn"] else "persist_until_invalid"
+
+static func _normalize_hero_task_route_policy(value: Variant) -> String:
+	var policy := String(value)
+	return policy if policy in ["derive_route_on_turn", "hold_position", "route_deferred"] else "derive_route_on_turn"
+
+static func _normalize_hero_task_validation_code(value: Variant) -> String:
+	var code := String(value)
+	if code in [
+		"valid",
+		"invalid_target_missing",
+		"invalid_target_resolved",
+		"invalid_controller_changed",
+		"invalid_target_reserved",
+		"invalid_front_quiet",
+		"invalid_actor_missing",
+		"invalid_actor_recovering",
+		"invalid_actor_rebuilding",
+		"invalid_actor_active_elsewhere",
+		"invalid_actor_defeated",
+		"invalid_origin_missing",
+		"invalid_origin_controller_changed",
+		"invalid_route_unreachable",
+		"invalid_approach_unavailable",
+		"invalid_script_lock",
+		"invalid_scenario_complete",
+	]:
+		return code
+	return ""
+
+static func _normalize_hero_task_reservation(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {"reservation_status": "none", "reservation_scope": "none", "reservation_key": ""}
+	var reservation: Dictionary = value
+	var status := String(reservation.get("reservation_status", "none"))
+	if status not in ["none", "primary", "shared", "released", "rejected_duplicate"]:
+		status = "none"
+	var scope := String(reservation.get("reservation_scope", "none"))
+	if scope not in ["none", "exclusive_target", "shared_front"]:
+		scope = "none"
+	return {
+		"reservation_status": status,
+		"reservation_scope": scope,
+		"reservation_key": String(reservation.get("reservation_key", "")),
+	}
 
 static func _normalize_string_array(value: Variant) -> Array:
 	var normalized = []
