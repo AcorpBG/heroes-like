@@ -87,12 +87,17 @@ func _refresh() -> void:
 	var follow_up_check := _outcome_follow_up_check(AppRouter.active_save_surface())
 	var follow_up_visible := String(follow_up_check.get("visible_text", ""))
 	var follow_up_tooltip := String(follow_up_check.get("tooltip_text", ""))
+	var retry_check := _outcome_retry_check(AppRouter.active_save_surface())
+	var retry_visible := String(retry_check.get("visible_text", ""))
+	var retry_tooltip := String(retry_check.get("tooltip_text", ""))
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var action_status_lines := []
 	if next_step_summary != "":
 		action_status_lines.append(next_step_summary)
 	if follow_up_visible != "":
 		action_status_lines.append(follow_up_visible)
+	if retry_visible != "":
+		action_status_lines.append(retry_visible)
 	if resolution_handoff != "":
 		action_status_lines.append(resolution_handoff)
 	if post_result_handoff != "":
@@ -102,10 +107,14 @@ func _refresh() -> void:
 	if next_play_action_summary != "":
 		action_status_lines.append(next_play_action_summary)
 	var visible_action_hint := action_cue_summary
+	if retry_visible != "":
+		visible_action_hint = "%s\n%s" % [retry_visible, visible_action_hint] if visible_action_hint != "" else retry_visible
 	if follow_up_visible != "":
 		visible_action_hint = "%s\n%s" % [follow_up_visible, visible_action_hint] if visible_action_hint != "" else follow_up_visible
 	if post_result_handoff != "":
 		visible_action_hint = "%s\n%s" % [post_result_handoff, action_cue_summary] if action_cue_summary != "" else post_result_handoff
+		if retry_visible != "":
+			visible_action_hint = "%s\n%s" % [retry_visible, visible_action_hint]
 		if follow_up_visible != "":
 			visible_action_hint = "%s\n%s" % [follow_up_visible, visible_action_hint]
 	var action_status_text := "\n".join(action_status_lines)
@@ -119,7 +128,7 @@ func _refresh() -> void:
 		visible_action_hint if visible_action_hint != "" else "Action cue: choose the follow-up action that matches the saved outcome you want to keep.",
 		3
 	)
-	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, action_cue_summary]).strip_edges()
+	_actions_hint_label.tooltip_text = "\n".join(action_status_lines + [follow_up_tooltip, retry_tooltip, action_cue_summary]).strip_edges()
 	_refresh_guide_surface()
 	_rebuild_actions()
 
@@ -286,6 +295,9 @@ func validation_snapshot() -> Dictionary:
 		"continuity_choice_summary": String(_model.get("continuity_choice_summary", "")),
 		"post_result_handoff_summary": String(_model.get("post_result_handoff_summary", "")),
 		"outcome_follow_up_check": _outcome_follow_up_check(save_surface),
+		"outcome_retry_check": _outcome_retry_check(save_surface),
+		"outcome_retry_check_text": String(_outcome_retry_check(save_surface).get("visible_text", "")),
+		"outcome_retry_check_tooltip": String(_outcome_retry_check(save_surface).get("tooltip_text", "")),
 		"outcome_carryover_check": _outcome_carryover_check(save_surface),
 		"outcome_carryover_check_text": String(_outcome_carryover_check(save_surface).get("visible_text", "")),
 		"outcome_carryover_check_tooltip": String(_outcome_carryover_check(save_surface).get("tooltip_text", "")),
@@ -652,6 +664,46 @@ func _outcome_carryover_check(surface: Dictionary = {}) -> Dictionary:
 		"replay_line": replay_line,
 	}
 
+func _outcome_retry_check(surface: Dictionary = {}) -> Dictionary:
+	var retry_action := _retry_or_replay_outcome_action()
+	if retry_action.is_empty():
+		return {
+			"visible_text": "Retry check: no fresh retry or replay action is available.",
+			"tooltip_text": "Outcome Retry Check\n- Action: unavailable for this result.\n- Save first: Save Outcome can still preserve this review in the selected manual slot.\n- Scope: reading this check does not save, route, restart play, or change campaign progression.",
+		}
+	var action_id := String(retry_action.get("id", ""))
+	var label := String(retry_action.get("label", "Retry")).strip_edges()
+	if label == "":
+		label = "Retry"
+	var launch_mode := SessionStateStore.normalize_launch_mode(_session.launch_mode)
+	var mode_label := ScenarioSelectRulesScript.launch_mode_label(launch_mode)
+	var selected_slot := int(surface.get("selected_slot", SaveService.get_selected_manual_slot()))
+	var save_label := String(surface.get("save_button_label", "Save Outcome")).strip_edges()
+	if save_label == "":
+		save_label = "Save Outcome"
+	var fresh_start := _retry_action_start_line(action_id, label, launch_mode)
+	var preservation := "current campaign record stays as recorded" if launch_mode == SessionStateStore.LAUNCH_MODE_CAMPAIGN else "campaign progression stays unchanged"
+	var visible := "Retry check: %s starts fresh | save keeps review" % label
+	var tooltip := "Outcome Retry Check\n- Action: %s.\n- Fresh start: %s\n- Preservation: %s; the resolved outcome review stays resumable only if autosave or a manual slot keeps it.\n- Save first: %s can preserve this review in Manual %d before pressing %s.\n- State change: pressing %s starts a fresh %s run; reading this check does not save, route, restart play, or change campaign progression." % [
+		label,
+		fresh_start,
+		preservation,
+		save_label,
+		selected_slot,
+		label,
+		label,
+		mode_label,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"action_id": action_id,
+		"action_label": label,
+		"fresh_start": fresh_start,
+		"preservation": preservation,
+		"selected_slot": selected_slot,
+	}
+
 func _primary_outcome_action_label() -> String:
 	var actions = _model.get("actions", [])
 	if not (actions is Array):
@@ -667,6 +719,26 @@ func _primary_outcome_action_label() -> String:
 			if label != "":
 				return label
 	return ""
+
+func _retry_or_replay_outcome_action() -> Dictionary:
+	var actions = _model.get("actions", [])
+	if not (actions is Array):
+		return {}
+	var same_scenario_action := {}
+	var first_fresh_action := {}
+	for action in actions:
+		if not (action is Dictionary) or bool(action.get("disabled", false)):
+			continue
+		var action_id := String(action.get("id", ""))
+		if not (action_id.begins_with("campaign_start:") or action_id.begins_with("skirmish_start:")):
+			continue
+		if first_fresh_action.is_empty():
+			first_fresh_action = action
+		var target_scenario_id := action_id.trim_prefix("campaign_start:").trim_prefix("skirmish_start:")
+		if target_scenario_id == _session.scenario_id:
+			same_scenario_action = action
+			break
+	return same_scenario_action if not same_scenario_action.is_empty() else first_fresh_action
 
 func _primary_outcome_action_id() -> String:
 	var actions = _model.get("actions", [])
@@ -693,11 +765,27 @@ func _outcome_primary_follow_up_effect(action_id: String, label: String, launch_
 		return "%s opens the menu and keeps the outcome review resumable" % label
 	return "%s follows the resolved outcome action" % label
 
+func _retry_action_start_line(action_id: String, label: String, launch_mode: String) -> String:
+	if action_id.begins_with("campaign_start:"):
+		var target_scenario_id := action_id.trim_prefix("campaign_start:")
+		if target_scenario_id == _session.scenario_id:
+			if _session.scenario_status == "victory":
+				return "%s replays this chapter from its authored opening state at current difficulty." % label
+			return "%s retries this chapter from its authored opening state at current difficulty." % label
+		if launch_mode == SessionStateStore.LAUNCH_MODE_CAMPAIGN:
+			return "%s starts the next campaign chapter from recorded campaign progress at current difficulty." % label
+		return "%s starts a fresh campaign expedition at current difficulty." % label
+	if action_id.begins_with("skirmish_start:"):
+		return "%s starts this skirmish from Day 1 at current difficulty." % label
+	return "%s starts fresh play from this outcome action." % label
+
 func _outcome_action_tooltip(action: Dictionary) -> String:
 	var follow_up_check := _outcome_follow_up_check(AppRouter.active_save_surface())
+	var retry_check := _outcome_retry_check(AppRouter.active_save_surface())
 	return _join_tooltip_sections([
 		String(action.get("summary", "")),
 		String(follow_up_check.get("tooltip_text", "")),
+		String(retry_check.get("tooltip_text", "")),
 		_outcome_resolution_handoff_text(),
 		String(_model.get("post_result_handoff_summary", "")),
 	])
@@ -777,6 +865,7 @@ func _build_outcome_guide_text() -> String:
 	var resolution_handoff := _outcome_resolution_handoff_text()
 	var save_surface := AppRouter.active_save_surface()
 	var follow_up_check := _outcome_follow_up_check(save_surface)
+	var retry_check := _outcome_retry_check(save_surface)
 	var carryover_check := _outcome_carryover_check(save_surface)
 	var slot_check := _outcome_slot_check(save_surface)
 	var outcome_save_check := _outcome_save_check(save_surface)
@@ -789,6 +878,8 @@ func _build_outcome_guide_text() -> String:
 		lines.append(next_play_action)
 	if String(follow_up_check.get("tooltip_text", "")).strip_edges() != "":
 		lines.append(String(follow_up_check.get("tooltip_text", "")).strip_edges())
+	if String(retry_check.get("tooltip_text", "")).strip_edges() != "":
+		lines.append(String(retry_check.get("tooltip_text", "")).strip_edges())
 	if String(carryover_check.get("tooltip_text", "")).strip_edges() != "":
 		lines.append(String(carryover_check.get("tooltip_text", "")).strip_edges())
 	if String(slot_check.get("tooltip_text", "")).strip_edges() != "":
