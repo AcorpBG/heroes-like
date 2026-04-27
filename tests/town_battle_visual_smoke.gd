@@ -95,6 +95,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_transfer_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_response_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_action_button_command_cues(shell):
 		get_tree().quit(1)
 		return false
@@ -633,6 +636,49 @@ func _assert_town_transfer_readiness_cue(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if cue_text.contains(leak_token):
 			push_error("Town smoke: transfer readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
+			return false
+	return true
+
+func _assert_town_response_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose response-readiness validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("response_readiness", {}) if snapshot.get("response_readiness", {}) is Dictionary else {}
+	var response_actions: Array = snapshot.get("response_actions", []) if snapshot.get("response_actions", []) is Array else []
+	var text := "\n".join([
+		String(snapshot.get("response_readiness_visible_text", "")),
+		String(snapshot.get("response_readiness_tooltip_text", "")),
+		String(snapshot.get("response_visible_text", "")),
+		String(snapshot.get("response_tooltip_text", "")),
+		String(snapshot.get("response_text", "")),
+		String(readiness.get("best_order_label", "")),
+		String(readiness.get("readiness", "")),
+		String(readiness.get("why_it_matters", "")),
+		String(readiness.get("next_step", "")),
+		JSON.stringify(response_actions),
+	])
+	for token in ["Response check:", "Response Readiness", "Strategic Response", "Orders:", "Movement:", "Readiness:", "Why it matters:", "Next practical action:"]:
+		if not text.contains(token):
+			push_error("Town smoke: response readiness cue lost %s clarity: %s." % [token, text])
+			return false
+	if String(readiness.get("visible_text", "")) == "" or String(readiness.get("tooltip_text", "")) == "":
+		push_error("Town smoke: response readiness payload is missing visible or tooltip text: %s." % readiness)
+		return false
+	if int(readiness.get("listed_order_count", -1)) != response_actions.size():
+		push_error("Town smoke: response readiness listed count does not match response action catalog: readiness=%s actions=%s." % [readiness, response_actions])
+		return false
+	if not (
+		text.contains("route")
+		or text.contains("Recovery")
+		or text.contains("response order")
+		or text.contains("Move")
+	):
+		push_error("Town smoke: response readiness did not explain route, recovery, order, or movement context: %s." % text)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if text.contains(leak_token):
+			push_error("Town smoke: response readiness cue leaked internal token %s: %s." % [leak_token, text])
 			return false
 	return true
 

@@ -137,7 +137,25 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact main-menu Campaign chapter check clarity, with focused smoke assertions but still without production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact town Strategic Response readiness check clarity, with focused smoke assertions but still without production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+
+## Completed Implementation Slice: Town Response Readiness Check Cue
+Status: completed on 2026-04-27 as compact player-facing town UI polish.
+
+Purpose:
+- Help a manual player tell whether Strategic Response has a ready route/recovery order, a movement/store blocker, an active route order, or no immediate order before leaving town.
+- Reuse current response actions, town logistics, recovery, movement, and Strategic Response panel data instead of changing response mechanics.
+
+Delivered:
+- Added a compact `Response check:` payload in `scenes/town/TownShell.gd`.
+- The Strategic Response panel now pairs the existing response summary with readiness, movement, best-order, why-it-matters, and next-practical-action tooltip detail.
+- Added focused smoke coverage in `tests/town_battle_visual_smoke.gd`, including visible-cue, action-catalog count, and no-score-leak assertions.
+
+Validation:
+- Passed `python3 -m json.tool ops/progress.json`, `git diff --check`, `python3 tests/validate_repo.py`, and `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, response-order semantics, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
 ## Completed Implementation Slice: Main-Menu Campaign Chapter Check Cue
 Status: completed on 2026-04-27 as compact player-facing main-menu UI polish.
@@ -4054,11 +4072,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: compact map-editor Object preview check cue using the existing object palette, selected/hovered tile, placement preview, occupancy, density, dependency, and Play Copy handoff surfaces.
+Current target: compact town Strategic Response readiness check cue using existing response actions, town logistics, recovery, movement, and Strategic Response panel surfaces.
 
 Done means:
-- The map editor status makes the selected object preview outcome visible before placement.
-- The object palette and map tooltip explain target tile, readiness, blocker or dependency watch, consequence, and working-copy scope.
-- Focused map-editor smoke coverage proves ready and blocked preview cue text plus no internal score/debug leaks.
-- No export writer, mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
+- The town Strategic Response panel makes the response readiness outcome visible before leaving town.
+- The response tooltip explains ready or blocked order state, movement, best order, why it matters, and the next practical action without opening a broad dashboard.
+- Focused town/battle smoke coverage proves visible response cue text, response action-catalog count alignment, and no internal score/debug leaks.
+- No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.
