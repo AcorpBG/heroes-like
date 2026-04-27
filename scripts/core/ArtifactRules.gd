@@ -88,6 +88,7 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		"battle_defense": 0,
 		"battle_initiative": 0,
 		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
+		"spell_modifiers": [],
 	}
 
 	var equipped = hero_state.get("artifacts", {}).get("equipped", {})
@@ -103,8 +104,35 @@ static func aggregate_bonuses(hero_state: Dictionary) -> Dictionary:
 		totals["battle_defense"] = int(totals.get("battle_defense", 0)) + int(bonuses.get("battle_defense", 0))
 		totals["battle_initiative"] = int(totals.get("battle_initiative", 0)) + int(bonuses.get("battle_initiative", 0))
 		totals["daily_income"] = _merge_resources(totals.get("daily_income", {}), bonuses.get("daily_income", {}))
+		totals["spell_modifiers"].append_array(_artifact_spell_modifier_records(artifact, artifact_id))
 
 	return totals
+
+static func spell_affinity_records(hero_state: Dictionary, spell: Dictionary = {}) -> Array:
+	var records := []
+	var modifiers = aggregate_bonuses(hero_state).get("spell_modifiers", [])
+	if not (modifiers is Array):
+		return records
+	for modifier_value in modifiers:
+		if not (modifier_value is Dictionary):
+			continue
+		var modifier: Dictionary = modifier_value
+		if not spell.is_empty() and not _spell_modifier_matches(modifier, spell):
+			continue
+		records.append(modifier.duplicate(true))
+	return records
+
+static func spell_mana_cost_delta(hero_state: Dictionary, spell: Dictionary) -> int:
+	var delta := 0
+	for modifier in spell_affinity_records(hero_state, spell):
+		delta += int(modifier.get("mana_cost_delta", 0))
+	return delta
+
+static func spell_effect_amount_delta(hero_state: Dictionary, spell: Dictionary) -> int:
+	var delta := 0
+	for modifier in spell_affinity_records(hero_state, spell):
+		delta += int(modifier.get("effect_amount_delta", 0))
+	return delta
 
 static func claim_artifact(
 	hero_state: Dictionary,
@@ -739,6 +767,9 @@ static func _artifact_effect_summary(artifact: Dictionary) -> String:
 				income_parts.append("+%d %s/day" % [amount, key])
 	if not income_parts.is_empty():
 		parts.append(", ".join(income_parts))
+	var spell_parts := _artifact_spell_modifier_parts(_artifact_spell_modifier_records(artifact, String(artifact.get("id", ""))))
+	if not spell_parts.is_empty():
+		parts.append(", ".join(spell_parts))
 
 	return ", ".join(parts) if not parts.is_empty() else "No bonuses"
 
@@ -751,6 +782,7 @@ static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
 		"battle_defense": 0,
 		"battle_initiative": 0,
 		"daily_income": {"gold": 0, "wood": 0, "ore": 0},
+		"spell_modifiers": [],
 	}
 	if not (bonuses is Dictionary):
 		return totals
@@ -760,6 +792,7 @@ static func _artifact_bonus_totals(artifact: Dictionary) -> Dictionary:
 	totals["battle_defense"] = int(bonuses.get("battle_defense", 0))
 	totals["battle_initiative"] = int(bonuses.get("battle_initiative", 0))
 	totals["daily_income"] = _merge_resources({}, bonuses.get("daily_income", {}))
+	totals["spell_modifiers"] = _artifact_spell_modifier_records(artifact, String(artifact.get("id", "")))
 	return totals
 
 static func _bonus_impact_sections(totals: Dictionary, include_empty_sections: bool) -> Array:
@@ -791,6 +824,12 @@ static func _bonus_impact_sections(totals: Dictionary, include_empty_sections: b
 		sections.append("Economy %s" % ", ".join(economy_parts))
 	elif include_empty_sections:
 		sections.append("Economy no income")
+
+	var spell_parts := _artifact_spell_modifier_parts(totals.get("spell_modifiers", []))
+	if not spell_parts.is_empty():
+		sections.append("Magic %s" % ", ".join(spell_parts))
+	elif include_empty_sections:
+		sections.append("Magic no spell hook")
 	return sections
 
 static func _resource_impact_parts(value: Variant) -> Array:
@@ -814,6 +853,83 @@ static func _artifact_set_id(artifact: Dictionary) -> String:
 		if label != "":
 			return label
 	return ""
+
+static func _artifact_spell_modifier_records(artifact: Dictionary, artifact_id: String) -> Array:
+	var records := []
+	if artifact.is_empty():
+		return records
+	var bonuses = artifact.get("bonuses", {})
+	if not (bonuses is Dictionary):
+		return records
+	var modifiers = bonuses.get("spell_modifiers", [])
+	if not (modifiers is Array):
+		return records
+	for modifier_value in modifiers:
+		if not (modifier_value is Dictionary):
+			continue
+		var modifier: Dictionary = modifier_value
+		var record := {
+			"artifact_id": artifact_id,
+			"artifact_name": String(artifact.get("name", artifact_id)),
+			"school_id": String(modifier.get("school_id", "")),
+			"context": String(modifier.get("context", "")),
+			"effect_type": String(modifier.get("effect_type", "")),
+			"mana_cost_delta": int(modifier.get("mana_cost_delta", 0)),
+			"effect_amount_delta": int(modifier.get("effect_amount_delta", 0)),
+			"public_summary": String(modifier.get("public_summary", "")),
+		}
+		records.append(record)
+	return records
+
+static func _spell_modifier_matches(modifier: Dictionary, spell: Dictionary) -> bool:
+	if spell.is_empty():
+		return true
+	var effect = spell.get("effect", {})
+	var effect_type := String(effect.get("type", "")) if effect is Dictionary else ""
+	for key in ["school_id", "context", "effect_type", "primary_role"]:
+		var required := String(modifier.get(key, "")).strip_edges()
+		if required == "":
+			continue
+		var actual := ""
+		match key:
+			"school_id":
+				actual = String(spell.get("school_id", ""))
+			"context":
+				actual = String(spell.get("context", ""))
+			"effect_type":
+				actual = effect_type
+			"primary_role":
+				actual = String(spell.get("primary_role", ""))
+		if actual != required:
+			return false
+	return true
+
+static func _artifact_spell_modifier_parts(value: Variant) -> Array:
+	var parts := []
+	if not (value is Array):
+		return parts
+	for modifier_value in value:
+		if not (modifier_value is Dictionary):
+			continue
+		var modifier: Dictionary = modifier_value
+		var school := _title_label(String(modifier.get("school_id", "spell")))
+		var context := String(modifier.get("context", "spell")).replace("_", " ")
+		var modifier_parts := []
+		var mana_delta := int(modifier.get("mana_cost_delta", 0))
+		var effect_delta := int(modifier.get("effect_amount_delta", 0))
+		if mana_delta != 0:
+			modifier_parts.append("%s mana" % _signed_amount_label(mana_delta))
+		if effect_delta != 0:
+			modifier_parts.append("%s effect" % _signed_amount_label(effect_delta))
+		if modifier_parts.is_empty():
+			continue
+		parts.append("%s %s %s" % [school, context, ", ".join(modifier_parts)])
+	return parts
+
+static func _signed_amount_label(amount: int) -> String:
+	if amount > 0:
+		return "+%d" % amount
+	return "%d" % amount
 
 static func _title_label(value: String) -> String:
 	var words := []

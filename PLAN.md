@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: resume Phase 2 in category order after corrective P2.4 object-content closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic now resumes as implementation work, not docs-only completion.
+Current tactical objective: continue Phase 2 in category order after P2.5 magic implementation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children are now implemented, with remaining artifact foundation work moving to P2.6.
 
-Selected next implementation candidate after the bounded magic adventure-map spell hook slice: `magic-ai-valuation-casting-hooks-10184`.
+Selected next implementation candidate after the bounded magic/artifact/economy integration slice: `artifact-taxonomy-schema-implementation-10184`.
 
 ## Slice Status Model
 

@@ -7,7 +7,17 @@
       "description": "Soft-soled boots traced with old road songs. They stretch a march and sharpen a scout's read of the road ahead.",
       "bonuses": {
         "overworld_movement": 2,
-        "scouting_radius": 1
+        "scouting_radius": 1,
+        "spell_modifiers": [
+          {
+            "school_id": "beacon",
+            "context": "overworld",
+            "effect_type": "restore_movement",
+            "mana_cost_delta": -1,
+            "effect_amount_delta": 1,
+            "public_summary": "Beacon field route spells cost 1 less mana and restore 1 more movement."
+          }
+        ]
       }
     },
     {

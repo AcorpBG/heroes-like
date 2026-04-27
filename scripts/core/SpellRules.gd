@@ -2,9 +2,12 @@ class_name SpellRules
 extends RefCounted
 
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
+const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
+const COMMON_RESOURCE_IDS := ["gold", "wood", "ore"]
+const RARE_RESOURCE_IDS := ["aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"]
 const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
 const SPELL_ROLE_CATEGORIES := ["damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"]
 const SPELL_PRIMARY_ROLES := [
@@ -77,6 +80,16 @@ static func mana_state(hero_state: Dictionary) -> Dictionary:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	return hero.get("spellbook", {}).get("mana", {})
 
+static func adjusted_spell_mana_cost(hero_state: Dictionary, spell: Variant) -> int:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var spell_dict: Dictionary = spell if spell is Dictionary else ContentService.get_spell(String(spell))
+	if spell_dict.is_empty():
+		return 0
+	var base_cost := int(spell_dict.get("mana_cost", 0))
+	var progression_cost := HeroProgressionRulesScript.adjusted_mana_cost(hero, base_cost)
+	var artifact_delta := ArtifactRulesScript.spell_mana_cost_delta(hero, spell_dict)
+	return max(0, progression_cost + artifact_delta)
+
 static func knows_spell(hero_state: Dictionary, spell_id: String) -> bool:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	return _knows_spell(hero, spell_id)
@@ -134,7 +147,7 @@ static func describe_spellbook(hero_state: Dictionary, context_filter: String = 
 	]
 	var spell_lines := []
 	for spell in known_spells(hero, context_filter):
-		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+		var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 		spell_lines.append(
 			"- %s | %s | Cost %d | %s | %s | Use: %s" % [
 				String(spell.get("name", spell.get("id", "Spell"))),
@@ -402,7 +415,7 @@ static func adventure_spell_target_contract(hero_state: Dictionary, movement_sta
 			"blocked_reason": "That spell is not known.",
 			"public_text": "That spell is not known.",
 		}
-	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))
+	var mana_cost: int = adjusted_spell_mana_cost(hero, spell_dict)
 	var validation := validate_overworld_spell(hero, movement_state, spell_dict)
 	var target_requirement := _overworld_target_requirement(spell_dict)
 	var public_text := "%s targets the active hero; %s." % [
@@ -434,10 +447,10 @@ static func adventure_spell_consequence_preview(hero_state: Dictionary, movement
 			"spell_name": "Unknown spell",
 			"public_text": "That spell has no supported adventure consequence.",
 		}
-	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))
+	var mana_cost: int = adjusted_spell_mana_cost(hero, spell_dict)
 	var effect = spell_dict.get("effect", {})
 	var effect_type := String(effect.get("type", "")) if effect is Dictionary else ""
-	var preview := _movement_restore_preview(movement_state, spell_dict)
+	var preview := _movement_restore_preview(movement_state, spell_dict, hero)
 	var supported := String(spell_dict.get("context", "")) == CONTEXT_OVERWORLD and effect_type == "restore_movement"
 	var public_text := ""
 	if supported:
@@ -513,9 +526,88 @@ static func adventure_spell_behavior_report(spells: Array) -> Dictionary:
 		"records": records,
 	}
 
+static func magic_artifact_economy_integration_report(
+	hero_state: Dictionary,
+	movement_state: Dictionary,
+	spells: Array
+) -> Dictionary:
+	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
+	var errors := []
+	var records := []
+	var artifact_income = ArtifactRulesScript.aggregate_bonuses(hero).get("daily_income", {})
+	var common_income := _common_resource_delta(artifact_income)
+	var rare_income := _rare_resource_delta(artifact_income)
+	var active_resource_costs := []
+	var matching_artifact_records := []
+	for spell_value in spells:
+		if not (spell_value is Dictionary):
+			continue
+		var spell: Dictionary = spell_value
+		var spell_id := String(spell.get("id", ""))
+		if spell_id == "":
+			continue
+		var base_mana_cost := int(spell.get("mana_cost", 0))
+		var final_mana_cost := adjusted_spell_mana_cost(hero, spell)
+		var preview := adventure_spell_consequence_preview(hero, movement_state, spell)
+		var affinity_records := ArtifactRulesScript.spell_affinity_records(hero, spell)
+		if not affinity_records.is_empty():
+			matching_artifact_records.append_array(affinity_records)
+		var resource_cost = spell.get("resource_cost", spell.get("resource_costs", {}))
+		var public_resource_cost := _common_resource_delta(resource_cost)
+		if not _rare_resource_delta(resource_cost).is_empty():
+			errors.append("Spell %s activated rare-resource costs." % spell_id)
+		if not public_resource_cost.is_empty():
+			active_resource_costs.append(
+				{
+					"spell_id": spell_id,
+					"resources": public_resource_cost,
+				}
+			)
+		records.append(
+			{
+				"spell_id": spell_id,
+				"spell_name": String(spell.get("name", spell_id)),
+				"school_id": spell_school_id(spell),
+				"context": String(spell.get("context", "")),
+				"effect_type": String(spell.get("effect", {}).get("type", "")) if spell.get("effect", {}) is Dictionary else "",
+				"base_mana_cost": base_mana_cost,
+				"final_mana_cost": final_mana_cost,
+				"artifact_mana_delta": final_mana_cost - HeroProgressionRulesScript.adjusted_mana_cost(hero, base_mana_cost),
+				"movement_after": int(preview.get("movement_after", int(movement_state.get("current", 0)))),
+				"movement_restored": int(preview.get("movement_restored", 0)),
+				"artifact_spell_hooks": affinity_records,
+				"resource_costs": public_resource_cost,
+			}
+		)
+	if matching_artifact_records.is_empty():
+		errors.append("No equipped artifact spell-affinity metadata matched the spell fixture.")
+	if not rare_income.is_empty():
+		errors.append("Artifact income activated rare resources in this bounded integration report.")
+	for record in records:
+		var encoded := JSON.stringify(record).to_lower()
+		for leak_token in ["debug", "score", "internal"]:
+			if encoded.contains(leak_token):
+				errors.append("Magic artifact economy record for %s leaks %s." % [String(record.get("spell_id", "")), leak_token])
+	return {
+		"ok": errors.is_empty(),
+		"schema_status": "magic_artifact_economy_bridge_loaded",
+		"record_count": records.size(),
+		"artifact_spell_hook_count": matching_artifact_records.size(),
+		"common_artifact_income": common_income,
+		"rare_artifact_income": rare_income,
+		"active_spell_resource_costs": active_resource_costs,
+		"resource_policy": {
+			"live_cost_mode": "mana_only",
+			"common_resources_reported": ["gold", "wood", "ore"],
+			"rare_resource_costs_active": false,
+		},
+		"errors": errors,
+		"records": records,
+	}
+
 static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
-	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+	var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 	var readiness := _mana_readiness_label(hero, mana_cost)
 	var context := String(spell.get("context", ""))
 	if context == CONTEXT_OVERWORLD:
@@ -528,7 +620,7 @@ static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictio
 			spell_category_label(spell),
 			mana_cost,
 			readiness,
-			_overworld_spell_effect_summary(spell, movement),
+			_overworld_spell_effect_summary(spell, movement, hero),
 			_best_use_line(spell, movement),
 		]
 	if context == CONTEXT_BATTLE:
@@ -595,7 +687,7 @@ static func describe_overworld_spellbook(hero_state: Dictionary, movement_state:
 	var spell_lines := []
 	for spell in known_spells(hero, CONTEXT_OVERWORLD):
 		var validation := validate_overworld_spell(hero, movement_state, spell)
-		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+		var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 		spell_lines.append("- %s" % _overworld_spell_readability_line(hero, movement_state, spell, validation, mana_cost))
 	if spell_lines.is_empty():
 		lines.append("- No field spells known")
@@ -770,10 +862,10 @@ static func get_overworld_actions(hero_state: Dictionary, movement_state: Dictio
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
 	for spell in known_spells(hero, CONTEXT_OVERWORLD):
 		var validation := validate_overworld_spell(hero, movement_state, spell)
-		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
-		var summary := _overworld_spell_action_summary(movement_state, spell, validation, mana_cost)
+		var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
+		var summary := _overworld_spell_action_summary(hero, movement_state, spell, validation, mana_cost)
 		var category := spell_category_label(spell)
-		var effect_summary := _overworld_spell_effect_summary(spell, movement_state)
+		var effect_summary := _overworld_spell_effect_summary(spell, movement_state, hero)
 		var target_contract := adventure_spell_target_contract(hero, movement_state, spell)
 		var consequence_preview := adventure_spell_consequence_preview(hero, movement_state, spell)
 		var readiness := "Ready" if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
@@ -819,7 +911,7 @@ static func cast_overworld_spell(hero_state: Dictionary, movement_state: Diction
 	var spell := ContentService.get_spell(spell_id)
 	if spell.is_empty():
 		return {"ok": false, "hero": hero, "movement": movement, "message": "That spell is not known."}
-	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+	var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 
 	var validation := validate_overworld_spell(hero, movement, spell)
 	if not bool(validation.get("ok", false)):
@@ -857,7 +949,7 @@ static func get_battle_actions(hero_state: Dictionary, battle: Dictionary, activ
 	var actions := []
 	for spell in known_spells(hero_state, CONTEXT_BATTLE):
 		var validation := validate_battle_spell(hero_state, battle, active_stack, target_stack, spell)
-		var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero_state, int(spell.get("mana_cost", 0)))
+		var mana_cost: int = adjusted_spell_mana_cost(hero_state, spell)
 		var summary := _battle_spell_action_summary(hero_state, battle, active_stack, target_stack, spell)
 		var validation_message := String(validation.get("message", ""))
 		if validation_message != "":
@@ -899,7 +991,7 @@ static func resolve_battle_spell(
 	var spell := ContentService.get_spell(spell_id)
 	if spell.is_empty():
 		return {"ok": false, "hero": hero, "message": "That spell is not known."}
-	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell.get("mana_cost", 0)))
+	var mana_cost: int = adjusted_spell_mana_cost(hero, spell)
 
 	var validation := validate_battle_spell(hero, battle, active_stack, target_stack, spell, acting_side)
 	if not bool(validation.get("ok", false)):
@@ -983,7 +1075,7 @@ static func validate_overworld_spell(hero_state: Dictionary, movement_state: Dic
 		return {"ok": false, "message": "That spell is not known."}
 	if String(spell_dict.get("context", "")) != CONTEXT_OVERWORLD:
 		return {"ok": false, "message": "That spell cannot be used on the overworld."}
-	var mana_cost: int = HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))
+	var mana_cost: int = adjusted_spell_mana_cost(hero, spell_dict)
 	if not _has_mana(hero, mana_cost):
 		var current_mana := int(hero.get("spellbook", {}).get("mana", {}).get("current", 0))
 		return {"ok": false, "message": "Need %d mana; only %d available." % [mana_cost, current_mana]}
@@ -1015,7 +1107,7 @@ static func validate_battle_spell(
 		return {"ok": false, "message": "That spell cannot be used in battle."}
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != acting_side:
 		return {"ok": false, "message": "It is not this side's turn."}
-	if not _has_mana(hero, HeroProgressionRulesScript.adjusted_mana_cost(hero, int(spell_dict.get("mana_cost", 0)))):
+	if not _has_mana(hero, adjusted_spell_mana_cost(hero, spell_dict)):
 		return {"ok": false, "message": "Insufficient mana."}
 
 	var effect = spell_dict.get("effect", {})
@@ -1301,6 +1393,7 @@ static func battle_spell_timing_summary(
 			return ""
 
 static func _overworld_spell_action_summary(
+	hero_state: Dictionary,
 	movement_state: Dictionary,
 	spell: Dictionary,
 	validation: Dictionary,
@@ -1309,7 +1402,7 @@ static func _overworld_spell_action_summary(
 	var target_label := _target_mode_label(String(spell.get("target_mode", "self")))
 	var availability := "Ready now." if bool(validation.get("ok", false)) else "Blocked: %s" % String(validation.get("message", "cannot cast now"))
 	var description := String(spell.get("description", "")).strip_edges()
-	var consequence := _overworld_spell_effect_summary(spell, movement_state)
+	var consequence := _overworld_spell_effect_summary(spell, movement_state, hero_state)
 	var why_cast := _best_use_line(spell, movement_state)
 	var pieces := [
 		"%s | Consequence: %s." % [String(spell_category_label(spell)), consequence],
@@ -1339,11 +1432,11 @@ static func _overworld_spell_readability_line(
 		int(mana.get("max", 0)),
 		mana_cost,
 		_overworld_target_requirement(spell),
-		_overworld_spell_effect_summary(spell, movement_state),
+		_overworld_spell_effect_summary(spell, movement_state, hero),
 		_best_use_line(spell, movement_state),
 	]
 
-static func _movement_restore_preview(movement_state: Dictionary, spell: Dictionary) -> Dictionary:
+static func _movement_restore_preview(movement_state: Dictionary, spell: Dictionary, hero_state: Dictionary = {}) -> Dictionary:
 	var effect = spell.get("effect", {})
 	if not (effect is Dictionary) or String(effect.get("type", "")) != "restore_movement":
 		return {
@@ -1352,7 +1445,7 @@ static func _movement_restore_preview(movement_state: Dictionary, spell: Diction
 			"movement_max": int(movement_state.get("max", 0)),
 			"restored": 0,
 		}
-	var amount: int = max(1, int(effect.get("amount", 0)))
+	var amount: int = max(1, int(effect.get("amount", 0)) + ArtifactRulesScript.spell_effect_amount_delta(hero_state, spell))
 	var current := int(movement_state.get("current", 0))
 	var max_movement := int(movement_state.get("max", 0))
 	var restored: int = min(amount, max(0, max_movement - current))
@@ -1363,12 +1456,12 @@ static func _movement_restore_preview(movement_state: Dictionary, spell: Diction
 		"restored": restored,
 	}
 
-static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary) -> String:
+static func _overworld_spell_effect_summary(spell: Dictionary, movement_state: Dictionary, hero_state: Dictionary = {}) -> String:
 	var effect = spell.get("effect", {})
 	match String(effect.get("type", "")):
 		"restore_movement":
-			var preview := _movement_restore_preview(movement_state, spell)
-			var amount: int = max(1, int(effect.get("amount", 0)))
+			var preview := _movement_restore_preview(movement_state, spell, hero_state)
+			var amount: int = max(1, int(effect.get("amount", 0)) + ArtifactRulesScript.spell_effect_amount_delta(hero_state, spell))
 			if int(preview.get("restored", 0)) > 0:
 				return "Restores up to %d movement; %d can fit now" % [amount, int(preview.get("restored", 0))]
 			return "Restores up to %d movement" % amount
@@ -1480,6 +1573,24 @@ static func _normalize_string_array(value: Variant) -> Array:
 			if normalized != "" and normalized not in results:
 				results.append(normalized)
 	return results
+
+static func _common_resource_delta(value: Variant) -> Dictionary:
+	return _filtered_resource_delta(value, COMMON_RESOURCE_IDS)
+
+static func _rare_resource_delta(value: Variant) -> Dictionary:
+	return _filtered_resource_delta(value, RARE_RESOURCE_IDS)
+
+static func _filtered_resource_delta(value: Variant, allowed_ids: Array) -> Dictionary:
+	var result := {}
+	if not (value is Dictionary):
+		return result
+	for key in value.keys():
+		var resource_id := String(key)
+		var amount := int(value[key])
+		if amount <= 0 or resource_id not in allowed_ids:
+			continue
+		result[resource_id] = amount
+	return result
 
 static func _normalize_spell_ids(value: Variant) -> Array:
 	var ids := []
