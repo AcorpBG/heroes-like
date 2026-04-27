@@ -206,6 +206,7 @@ func _on_save_slot_selected(index: int) -> void:
 	_refresh_save_slot_picker()
 
 func _on_leave_pressed() -> void:
+	_prepare_town_return_handoff()
 	AppRouter.go_to_overworld()
 
 func _on_menu_pressed() -> void:
@@ -604,6 +605,9 @@ func validation_leave_town() -> Dictionary:
 		"town_placement_id": String(town.get("placement_id", "")),
 		"message": "Town route closed.",
 	}
+
+func validation_prepare_town_return_handoff() -> Dictionary:
+	return _prepare_town_return_handoff()
 
 func _rebuild_hero_actions() -> void:
 	for child in _hero_actions.get_children():
@@ -1206,6 +1210,57 @@ func _town_action_context_surface(dispatch_text: String = "") -> Dictionary:
 		"handoff_check": handoff_check,
 		"source": "town_action_recap",
 	}
+
+func _prepare_town_return_handoff() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	if town.is_empty():
+		return {}
+	var town_name := _town_display_name(town)
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	var move_current := int(movement.get("current", 0))
+	var move_max := int(movement.get("max", move_current))
+	var movement_line := "Move %d/%d" % [move_current, move_max]
+	var field_position := "%d,%d" % [hero_pos.x, hero_pos.y]
+	var departure := TownRules.town_departure_confirmation(_session)
+	var next_step := String(departure.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = "Select the next destination or end the turn when field orders are spent."
+	var visible := "Town return: %s | %s" % [_short_text(town_name, 24), movement_line]
+	var tooltip := "Town Return Handoff\n- Returned: Leave closed %s and reopened the overworld.\n- Field position: active hero remains at %s.\n- Movement: %s remains for field orders.\n- Day: Day %d did not advance.\n- Next practical action: %s" % [
+		town_name,
+		field_position,
+		movement_line,
+		_session.day,
+		next_step,
+	]
+	var recap := {
+		"happened": "Left %s for the field." % town_name,
+		"affected": "%s at %s | %s" % [town_name, field_position, movement_line],
+		"why_it_matters": "Leaving town returns to overworld control without advancing the day or spending field movement.",
+		"next_step": next_step,
+		"cue_text": visible,
+		"tooltip_text": tooltip,
+		"text": "After town: %s Next: %s" % [visible, next_step],
+	}
+	var handoff := {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"town_name": town_name,
+		"town_placement_id": String(town.get("placement_id", "")),
+		"field_position": field_position,
+		"movement_line": movement_line,
+		"day": _session.day,
+		"next_step": next_step,
+		"post_action_recap": recap,
+	}
+	_session.flags["town_return_handoff"] = handoff.duplicate(true)
+	_session.flags["last_action"] = "left_town"
+	return handoff
+
+func _town_display_name(town: Dictionary) -> String:
+	var template := ContentService.get_town(String(town.get("town_id", "")))
+	return String(template.get("name", town.get("placement_id", "Town")))
 
 func _town_action_handoff_check(next_step: String, departure: Dictionary = {}) -> String:
 	var cleaned_next := _strip_sentence(next_step).trim_suffix(".")
