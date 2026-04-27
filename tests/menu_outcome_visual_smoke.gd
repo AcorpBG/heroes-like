@@ -128,7 +128,22 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_tooltips.get("Editor", "")),
 			String(first_view_tooltips.get("Quit", "")),
 		],
-		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "Load Selected", "Play check:", "Resume handoff:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes"]
+		["Command cue:", "Campaign opens", "Skirmish opens", "Load opens", "Load Selected", "Play check:", "Resume handoff:", "Settings opens", "device config", "Editor opens", "Play Copy", "Quit closes", "Quit Check", "Resume point:"]
+	):
+		return false
+	var quit_check: Dictionary = first_view_snapshot.get("quit_check", {}) if first_view_snapshot.get("quit_check", {}) is Dictionary else {}
+	if not _assert_text_contains_all(
+		"Main menu Quit check cue",
+		[
+			String(first_view_snapshot.get("quit_check_text", "")),
+			String(first_view_snapshot.get("quit_check_tooltip", "")),
+			String(quit_check.get("visible_text", "")),
+			String(quit_check.get("tooltip_text", "")),
+			String((quit_button as Button).tooltip_text),
+			String(first_view_snapshot.get("active_expedition", "")),
+			String(first_view_snapshot.get("active_expedition_full", "")),
+		],
+		["Quit check:", "closes client", "save first", "Quit Check", "Resume point:", "Not changed:", "campaign progress", "expedition saves", "device settings"]
 	):
 		return false
 	if not _assert_text_contains_all(
@@ -150,6 +165,8 @@ func _run_main_menu_smoke() -> bool:
 			String(first_view_snapshot.get("active_expedition_full", first_view_snapshot.get("active_expedition", ""))),
 			String(first_view_snapshot.get("latest_play_check", "")),
 			String(first_view_snapshot.get("latest_resume_handoff", "")),
+			String(first_view_snapshot.get("quit_check_text", "")),
+			String(first_view_snapshot.get("quit_check_tooltip", "")),
 			"\n".join(first_view_tooltips.values()),
 		]
 	):

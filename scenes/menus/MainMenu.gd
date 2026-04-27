@@ -142,7 +142,7 @@ func _refresh_summary() -> void:
 	_set_compact_label(
 		_active_expedition_label,
 		_build_footer_expedition_summary(),
-		4,
+		5,
 		84
 	)
 
@@ -933,6 +933,7 @@ func _build_save_pulse() -> String:
 
 func _build_footer_expedition_summary() -> String:
 	var lines := [ScenarioSelectRulesScript.build_current_session_summary(SessionState.ensure_active_session())]
+	lines.append(String(_quit_check_surface().get("visible_text", "")))
 	var latest_summary := SaveService.latest_loadable_summary()
 	if SaveService.can_load_summary(latest_summary):
 		lines.append("Latest save: %s" % SaveService.describe_resume_brief(latest_summary))
@@ -989,6 +990,18 @@ func _refresh_stage_dock_header() -> void:
 		]
 	_close_stage_dock_button.tooltip_text = _close_stage_dock_tooltip()
 
+func _quit_check_surface() -> Dictionary:
+	var latest_summary := SaveService.latest_loadable_summary()
+	var resume_line := "No current resume point will be created by Quit."
+	if SaveService.can_load_summary(latest_summary):
+		resume_line = "Latest resume stays %s." % SaveService.describe_resume_brief(latest_summary)
+	var visible := "Quit check: closes client; save first for an updated resume."
+	var tooltip := "Quit Check\n- Action: closes the client from the scenic menu.\n- Resume point: %s\n- Save first: use an in-run save or outcome save before quitting when the latest play state must be preserved.\n- Not changed: campaign progress, expedition saves, and device settings are not written by reading this cue." % resume_line
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+	}
+
 func _settings_handoff_surface() -> Dictionary:
 	var visible := "Settings handoff: changes apply now; close returns to the scenic menu."
 	var tooltip := "Settings Handoff\n- Applies: presentation, sound, and readability changes take effect immediately.\n- Saved to: device config.\n- Not changed: campaign progress and expedition saves.\n- Close: returns to the scenic first view with these settings still active."
@@ -1015,6 +1028,7 @@ func validation_snapshot() -> Dictionary:
 	var selected_save_summary := _selected_summary()
 	var latest_continue := _latest_continue_surface()
 	var latest_summary := SaveService.latest_loadable_summary()
+	var quit_check := _quit_check_surface()
 	return {
 		"scene_path": scene_file_path,
 		"stage_dock_visible": _stage_dock_panel.visible,
@@ -1106,6 +1120,9 @@ func validation_snapshot() -> Dictionary:
 		"settings_persistence_check": SettingsService.describe_settings_persistence_check(),
 		"settings_handoff_text": _settings_handoff_label.text,
 		"settings_handoff_tooltip": _settings_handoff_label.tooltip_text,
+		"quit_check": quit_check.duplicate(true),
+		"quit_check_text": String(quit_check.get("visible_text", "")),
+		"quit_check_tooltip": String(quit_check.get("tooltip_text", "")),
 		"presentation_mode": SettingsService.presentation_mode_id(),
 		"presentation_mode_tooltip": _presentation_mode_picker.tooltip_text,
 		"presentation_resolution": SettingsService.presentation_resolution_id(),
@@ -1394,7 +1411,7 @@ func _sync_first_view_command_tooltips() -> void:
 		+ "Use it for scenario inspection or smoke-test handoff, not to resume a save."
 	)
 	_quit_button.tooltip_text = (
-		"Command cue: Quit closes the client. Save or return to menu first when you need an updated resume point."
+		"Command cue: Quit closes the client.\n%s" % String(_quit_check_surface().get("tooltip_text", ""))
 	)
 
 func _first_view_load_tooltip() -> String:
