@@ -549,11 +549,24 @@
       "secondary_tags": ["resource_front", "counter_capture_target", "town_support"],
       "resource_site_id": "site_brightwood_sawmill",
       "biome_ids": ["biome_grasslands", "biome_deep_forest"],
-      "footprint": {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"},
+      "footprint": {"width": 5, "height": 3, "anchor": "bottom_center", "tier": "region_feature"},
+      "body_tiles": [
+        {"x": 1, "y": 0, "role": "body"},
+        {"x": 2, "y": 0, "role": "body"},
+        {"x": 3, "y": 0, "role": "body"},
+        {"x": 0, "y": 1, "role": "body"},
+        {"x": 1, "y": 1, "role": "body"},
+        {"x": 2, "y": 1, "role": "body"},
+        {"x": 3, "y": 1, "role": "body"},
+        {"x": 4, "y": 1, "role": "body"},
+        {"x": 0, "y": 2, "role": "body"},
+        {"x": 1, "y": 2, "role": "body"}
+      ],
       "passable": false,
       "visitable": true,
       "map_roles": ["durable_economy", "wood_control", "lane_anchor"],
       "passability_class": "blocking_visitable",
+      "approach": {"mode": "enter", "primary_sides": ["south"], "visit_offsets": [{"x": 2, "y": 2}], "stop_before_interaction": false, "requires_clear_tile": true, "linked_exit_offsets": []},
       "interaction": {"cadence": "persistent_control", "remains_after_visit": true, "state_after_visit": "claimed", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": true, "cooldown_days": 0, "refresh_rule": "daily_income"}
     },
     {
