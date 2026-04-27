@@ -170,6 +170,8 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"current_context": current_context,
 		"play_check": describe_session_play_check(session),
 		"save_check": describe_session_save_check(session),
+		"save_handoff": describe_session_save_handoff(session, selected_slot),
+		"save_handoff_brief": describe_session_save_handoff_brief(session, selected_slot),
 		"return_handoff": describe_session_return_handoff(session),
 		"current_save_recap": describe_session_save_recap(session),
 		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
@@ -260,6 +262,36 @@ func describe_session_save_check(session: SessionStateStoreScript.SessionData) -
 	if next_decision != "":
 		parts.append("Next: %s" % next_decision)
 	return "Save check: %s" % " | ".join(parts)
+
+func describe_session_save_handoff(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int = -1
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Save handoff: no active expedition is available to write."
+	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
+	var summary := _manual_summary_for_session(session, selected_slot)
+	if summary.is_empty():
+		return "Save handoff: no active expedition is available to write."
+	return "Save handoff: %s writes %s as %s; Load Selected reopens %s with %s preserved." % [
+		_in_session_save_label(String(summary.get("resume_target", "blocked")), selected_slot),
+		_slot_label(summary),
+		_resume_target_label(summary),
+		_resume_context_label(summary),
+		_resume_preserved_context(summary),
+	]
+
+func describe_session_save_handoff_brief(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int = -1
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Save handoff: no active expedition."
+	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
+	var summary := _manual_summary_for_session(session, selected_slot)
+	if summary.is_empty():
+		return "Save handoff: no active expedition."
+	return "Save handoff: %s -> %s." % [_slot_label(summary), _resume_target_label(summary)]
 
 func describe_summary_resume_recap(summary: Dictionary) -> String:
 	if summary.is_empty():
@@ -1095,6 +1127,23 @@ func _runtime_session_resume_brief(session: SessionStateStoreScript.SessionData)
 	summary["resume_target"] = _resume_target_for_session(session)
 	summary["status_text"] = _status_text_for_summary(summary)
 	return describe_resume_brief(summary)
+
+func _manual_summary_for_session(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int = -1
+) -> Dictionary:
+	if session == null or session.scenario_id == "":
+		return {}
+	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(selected_slot), _slot_path(selected_slot))
+	summary = _populate_summary_from_payload(summary, session.to_dict())
+	summary["payload"] = session.to_dict()
+	summary["valid"] = true
+	summary["validity"] = "ok"
+	summary["loadable"] = true
+	summary["resume_target"] = _resume_target_for_session(session)
+	summary["status_text"] = _status_text_for_summary(summary)
+	return summary
 
 func _session_from_payload(payload: Dictionary) -> SessionStateStoreScript.SessionData:
 	if payload.is_empty():

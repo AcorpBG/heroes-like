@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T01:18:11Z",
+  "updatedAt": "2026-04-27T02:18:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-status-forecast-cue-10184",
-  "currentSliceTitle": "Surface compact overworld status forecast cues",
+  "currentSliceId": "town-save-handoff-cue-10184",
+  "currentSliceTitle": "Surface compact town save handoff cues",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible overworld footer status forecast cue using existing status and end-turn forecast payloads only. The status chip now shows current week/day, movement, and next day; its tooltip carries the detailed current status plus next-day forecast. Focused overworld smoke asserts the visible cue, detailed tooltip, and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible town footer save-handoff cue using existing save-summary and town-state data only. The town footer now shows the selected manual slot's resume target, and the save button/status tooltip explains that Save Town writes the slot, Load Selected reopens the town, and the current build/recruit/logistics state is preserved. Focused town/battle smoke asserts visible cue, detailed tooltip, and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",

@@ -64,6 +64,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_departure_confirmation_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_save_handoff_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_order_target_handoff_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -286,6 +289,33 @@ func _assert_active_return_handoff_contract(shell: Node, expected_target: String
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if handoff_text.contains(leak_token):
 			push_error("%s smoke: active return handoff leaked internal token %s: %s." % [expected_target, leak_token, handoff_text])
+			return false
+	return true
+
+func _assert_town_save_handoff_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose save-handoff validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
+	var handoff_text := "\n".join([
+		String(save_surface.get("save_handoff", "")),
+		String(save_surface.get("save_handoff_brief", "")),
+		String(snapshot.get("save_handoff_visible_text", "")),
+		String(snapshot.get("save_button_text", "")),
+		String(snapshot.get("save_button_tooltip_text", "")),
+		String(snapshot.get("save_status_tooltip_text", "")),
+	])
+	for token in ["Save handoff:", "Manual", "Town Resume", "Load Selected", "reopens", "preserved", "Save Town"]:
+		if not handoff_text.contains(token):
+			push_error("Town smoke: save handoff cue lost %s clarity: %s." % [token, handoff_text])
+			return false
+	if not bool(snapshot.get("save_handoff_visible", false)):
+		push_error("Town smoke: save handoff cue is not visible in the town footer: %s." % handoff_text)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if handoff_text.contains(leak_token):
+			push_error("Town smoke: save handoff cue leaked internal token %s: %s." % [leak_token, handoff_text])
 			return false
 	return true
 
