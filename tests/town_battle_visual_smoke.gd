@@ -98,6 +98,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_transfer_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_specialty_readiness_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_response_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
@@ -654,6 +657,52 @@ func _assert_town_transfer_readiness_cue(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if cue_text.contains(leak_token):
 			push_error("Town smoke: transfer readiness cue leaked internal token %s: %s." % [leak_token, cue_text])
+			return false
+	return true
+
+func _assert_town_specialty_readiness_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell does not expose specialty-readiness validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("specialty_readiness", {}) if snapshot.get("specialty_readiness", {}) is Dictionary else {}
+	var specialty_actions: Array = snapshot.get("specialty_actions", []) if snapshot.get("specialty_actions", []) is Array else []
+	var text := "\n".join([
+		String(snapshot.get("specialty_readiness_visible_text", "")),
+		String(snapshot.get("specialty_readiness_tooltip_text", "")),
+		String(snapshot.get("specialty_visible_text", "")),
+		String(snapshot.get("specialty_tooltip_text", "")),
+		String(snapshot.get("specialty_text", "")),
+		String(readiness.get("best_order_label", "")),
+		String(readiness.get("readiness", "")),
+		String(readiness.get("why_it_matters", "")),
+		String(readiness.get("next_step", "")),
+		JSON.stringify(specialty_actions),
+	])
+	for token in ["Specialty check:", "Specialty Readiness", "Choices:", "Chosen ranks:", "Best choice:", "Readiness:", "Why it matters:", "Next practical action:", "Specialties"]:
+		if not text.contains(token):
+			push_error("Town smoke: specialty readiness cue lost %s clarity: %s." % [token, text])
+			return false
+	if not String(snapshot.get("specialty_visible_text", "")).contains("Specialty check:"):
+		push_error("Town smoke: specialty readiness cue is not visible in the specialty label: %s." % snapshot)
+		return false
+	if int(readiness.get("listed_order_count", -1)) != specialty_actions.size():
+		push_error("Town smoke: specialty readiness listed count does not match specialty actions: readiness=%s actions=%s." % [readiness, specialty_actions])
+		return false
+	if int(readiness.get("ready_order_count", -1)) < 0 or int(readiness.get("pending_choice_count", -1)) < 0 or int(readiness.get("chosen_rank_count", -1)) < 0:
+		push_error("Town smoke: specialty readiness counts are not stable visible counts: %s." % readiness)
+		return false
+	if not (
+		text.contains("Ready")
+		or text.contains("Blocked")
+		or text.contains("no choice")
+		or text.contains("pending choice")
+	):
+		push_error("Town smoke: specialty readiness cue does not explain ready, blocked, pending, or empty state: %s." % text)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if text.contains(leak_token):
+			push_error("Town smoke: specialty readiness cue leaked internal token %s: %s." % [leak_token, text])
 			return false
 	return true
 

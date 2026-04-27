@@ -242,7 +242,16 @@ func _refresh() -> void:
 		production_overview,
 	])
 	_set_compact_label(_heroes_label, TownRules.describe_heroes(_session), 2)
-	_set_compact_label(_specialty_label, TownRules.describe_specialties(_session), 2)
+	var specialty_readiness := _specialty_readiness_surface()
+	var specialty_text := _join_tooltip_sections([
+		String(specialty_readiness.get("visible_text", "")),
+		TownRules.describe_specialties(_session),
+	])
+	_set_compact_label(_specialty_label, specialty_text, 2)
+	_specialty_label.tooltip_text = _join_tooltip_sections([
+		String(specialty_readiness.get("tooltip_text", "")),
+		TownRules.describe_specialties(_session),
+	])
 	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2)
 	_set_compact_label(_town_label, TownRules.describe_summary(_session), 5)
 	_set_compact_label(_defense_label, TownRules.describe_defense(_session), 4)
@@ -430,6 +439,7 @@ func validation_snapshot() -> Dictionary:
 	var study_readiness := _study_readiness_surface()
 	var hire_readiness := _hire_readiness_surface()
 	var artifact_readiness := _artifact_readiness_surface()
+	var specialty_readiness := _specialty_readiness_surface()
 	var response_readiness := _response_readiness_surface()
 	var defense_check := _defense_check_surface()
 	return {
@@ -452,6 +462,13 @@ func validation_snapshot() -> Dictionary:
 		"heroes_text": TownRules.describe_heroes(_session),
 		"heroes_visible_text": _heroes_label.text,
 		"heroes_tooltip_text": _heroes_label.tooltip_text,
+		"specialty_text": TownRules.describe_specialties(_session),
+		"specialty_visible_text": _specialty_label.text,
+		"specialty_tooltip_text": _specialty_label.tooltip_text,
+		"specialty_readiness": specialty_readiness,
+		"specialty_readiness_visible_text": String(specialty_readiness.get("visible_text", "")),
+		"specialty_readiness_tooltip_text": String(specialty_readiness.get("tooltip_text", "")),
+		"specialty_actions": _duplicate_action_array(TownRules.get_specialty_actions(_session)),
 		"summary": TownRules.describe_summary(_session),
 		"production_overview": TownRules.describe_production_overview(_session),
 		"visible_production_overview": _production_overview_label.text,
@@ -1063,6 +1080,103 @@ func _button_tooltips(container: Container) -> Array:
 				"disabled": child.disabled,
 			})
 	return tooltips
+
+func _specialty_readiness_surface() -> Dictionary:
+	var actions := TownRules.get_specialty_actions(_session)
+	var hero_value: Variant = _session.overworld.get("hero", {})
+	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+	var pending_choices: Array = hero.get("pending_specialty_choices", []) if hero.get("pending_specialty_choices", []) is Array else []
+	var chosen_specialties: Array = hero.get("specialties", []) if hero.get("specialties", []) is Array else []
+	var hero_name := String(hero.get("name", "Active hero")).strip_edges()
+	if hero_name == "":
+		hero_name = "Active hero"
+
+	var ready_orders := 0
+	var blocked_orders := 0
+	var best_ready := {}
+	var best_blocked := {}
+	for action_value in actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		if bool(action.get("disabled", false)):
+			blocked_orders += 1
+			if best_blocked.is_empty():
+				best_blocked = action
+			continue
+		ready_orders += 1
+		if best_ready.is_empty():
+			best_ready = action
+
+	var selected_action := best_ready
+	var state_line := "no specialty choice is waiting"
+	var visible := "Specialty check: no choice | %d chosen" % chosen_specialties.size()
+	if ready_orders > 0:
+		state_line = "Ready now: %d specialty choice%s can be selected" % [
+			ready_orders,
+			"" if ready_orders == 1 else "s",
+		]
+		visible = "Specialty check: Ready x%d | %d chosen" % [ready_orders, chosen_specialties.size()]
+	elif blocked_orders > 0:
+		selected_action = best_blocked
+		state_line = "Blocked: %d specialty choice%s waiting on hero state" % [
+			blocked_orders,
+			"" if blocked_orders == 1 else "s",
+		]
+		visible = "Specialty check: Blocked x0/%d" % blocked_orders
+	elif pending_choices.size() > 0:
+		state_line = "pending specialty choices need valid options"
+		visible = "Specialty check: pending choice needs options"
+
+	var label := "No specialty choice"
+	var readiness := state_line
+	var impact := "Specialties shape the hero's field, economy, and battle role before leaving town."
+	var next_step := "Keep building experience, review current specialties, or leave when town orders are set."
+	if not selected_action.is_empty():
+		label = String(selected_action.get("button_label", selected_action.get("label", "Specialty choice"))).strip_edges()
+		if label == "":
+			label = "Specialty choice"
+		readiness = _town_action_button_readiness(selected_action, "specialty")
+		impact = _town_action_button_impact(selected_action, "specialty")
+		next_step = _town_action_button_next_step(
+			selected_action,
+			"specialty",
+			label,
+			_town_action_surface_label("specialty"),
+			readiness
+		)
+	elif pending_choices.size() > 0:
+		next_step = "Resolve the pending hero progression choice after valid options are available."
+
+	var tooltip_lines := [
+		"Specialty Readiness",
+		"- Hero: %s" % hero_name,
+		"- Choices: %d ready, %d blocked, %d pending queue" % [
+			ready_orders,
+			blocked_orders,
+			pending_choices.size(),
+		],
+		"- Chosen ranks: %d" % chosen_specialties.size(),
+		"- %s" % state_line,
+		"- Best choice: %s" % label,
+		"- Readiness: %s" % readiness,
+		"- Why it matters: %s" % impact,
+		"- Next practical action: %s" % next_step,
+		"- Scope: this check only reads hero progression choices; pressing a specialty button is the action that changes the hero.",
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"ready_order_count": ready_orders,
+		"blocked_order_count": blocked_orders,
+		"listed_order_count": actions.size(),
+		"pending_choice_count": pending_choices.size(),
+		"chosen_rank_count": chosen_specialties.size(),
+		"best_order_label": label,
+		"readiness": readiness,
+		"why_it_matters": impact,
+		"next_step": next_step,
+	}
 
 func _defense_check_surface() -> Dictionary:
 	var town := TownRules.get_active_town(_session)
