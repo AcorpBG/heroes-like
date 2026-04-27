@@ -601,6 +601,49 @@ const AI_HERO_TASK_BLOCKED_PUBLIC_TOKENS := [
 	"reservation_key",
 	"invalidated_by_task_id",
 ]
+const AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT_ID := "AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT"
+const AI_HERO_TASK_LIVE_ADOPTION_GATE_EVENT_KEYS := [
+	"event_id",
+	"day",
+	"sequence",
+	"event_type",
+	"faction_id",
+	"faction_label",
+	"actor_id",
+	"actor_label",
+	"target_kind",
+	"target_id",
+	"target_label",
+	"visibility",
+	"public_importance",
+	"summary",
+	"reason_codes",
+	"public_reason",
+	"state_policy",
+]
+const AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS := [
+	"resource_score_breakdown",
+	"final_score",
+	"debug_reason",
+	"target_debug_reason",
+	"fixture_",
+	"score",
+	"priority_table",
+	"breakdown",
+	"hero_task_state",
+	"commander_role_state",
+	"SAVE_VERSION",
+	"schema_version",
+	"planner_epoch",
+	"body_tiles",
+	"approach",
+	"route_policy",
+	"reservation_key",
+	"task_id",
+	"source_id",
+	"assignment_id_hint",
+	"invalidated_by_task_id",
+]
 
 static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
@@ -5513,6 +5556,436 @@ static func ai_hero_task_invalidation_check(tasks: Array, transitions: Array = [
 				return {"ok": false, "error": "controller flip transition missing invalid_controller_changed"}
 			codes["invalid_controller_changed"] = int(codes.get("invalid_controller_changed", 0)) + 1
 	return {"ok": true, "checked_tasks": checked, "validation_codes": codes}
+
+static func ai_hero_task_live_adoption_gate_report(
+	task_boundary_report: Dictionary,
+	normalizer_report: Dictionary,
+	commander_boundary_report: Dictionary = {},
+	options: Dictionary = {}
+) -> Dictionary:
+	var day: int = max(0, int(options.get("day", task_boundary_report.get("day", 0))))
+	var faction_id: String = String(options.get("faction_id", task_boundary_report.get("faction_id", "")))
+	var faction_label: String = String(options.get("faction_label", faction_id))
+	var task_signal := _ai_hero_task_boundary_signal(task_boundary_report)
+	var normalizer_signal := _ai_hero_task_normalizer_signal(normalizer_report)
+	var commander_signal := _ai_hero_task_commander_adoption_signal(commander_boundary_report)
+	var records := _ai_hero_task_live_adoption_gate_records(task_signal, normalizer_signal, commander_signal)
+	var public_events: Array = []
+	for index in range(records.size()):
+		public_events.append(_ai_hero_task_live_adoption_gate_event(records[index], day, faction_id, faction_label, index))
+	var leak_check := ai_hero_task_live_adoption_gate_public_leak_check(public_events)
+	var report_ready_surfaces: Array = []
+	var deferred_surfaces: Array = []
+	var blocked_surfaces: Array = []
+	var live_selected := false
+	var save_write_selected := false
+	var migration_selected := false
+	for record_value in records:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		match String(record.get("gate_status", "")):
+			"ready_report_only":
+				report_ready_surfaces.append(String(record.get("surface_id", "")))
+			"defer":
+				deferred_surfaces.append(String(record.get("surface_id", "")))
+			_:
+				blocked_surfaces.append(String(record.get("surface_id", "")))
+		live_selected = live_selected or bool(record.get("live_behavior_selected", false))
+		save_write_selected = save_write_selected or bool(record.get("save_write_selected", false))
+		migration_selected = migration_selected or bool(record.get("requires_save_migration", false))
+	var ok := (
+		bool(task_signal.get("ok", false))
+		and bool(normalizer_signal.get("ok", false))
+		and bool(commander_signal.get("ok", false))
+		and bool(leak_check.get("ok", false))
+		and blocked_surfaces.is_empty()
+		and not deferred_surfaces.is_empty()
+		and not live_selected
+		and not save_write_selected
+		and not migration_selected
+	)
+	return {
+		"ok": ok,
+		"report_id": AI_HERO_TASK_LIVE_ADOPTION_GATE_REPORT_ID,
+		"gate_id": "strategic-ai-live-hero-task-adoption-10184",
+		"schema_status": "live_hero_task_adoption_gate_report_only",
+		"behavior_policy": "no_live_hero_task_behavior_adoption",
+		"save_policy": "no_hero_task_state_write_no_save_migration",
+		"event_log_policy": "no_durable_event_log",
+		"source_reports": [task_signal, normalizer_signal, commander_signal],
+		"gate_records": records,
+		"report_only_ready_surfaces": report_ready_surfaces,
+		"deferred_surfaces": deferred_surfaces,
+		"public_gate_events": public_events,
+		"public_leak_check": leak_check,
+		"save_version_before": int(SessionStateStoreScript.SAVE_VERSION),
+		"save_version_after": int(SessionStateStoreScript.SAVE_VERSION),
+		"live_behavior_selected": live_selected,
+		"schema_write_selected": save_write_selected,
+		"requires_save_migration": migration_selected,
+		"completion_policy": "explicit_live_adoption_gate_from_passed_report_boundaries_no_runtime_adoption",
+	}
+
+static func ai_hero_task_live_adoption_gate_public_leak_check(public_surfaces: Variant) -> Dictionary:
+	var stack: Array = [public_surfaces]
+	var checked_events := 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if not (value is Dictionary):
+			var value_text := String(value)
+			for token in AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS:
+				if value_text.contains(String(token)):
+					return {"ok": false, "error": "public live adoption gate surface leaked token %s" % String(token)}
+			continue
+		if String(value.get("event_type", "")) != "":
+			checked_events += 1
+			for key in value.keys():
+				if String(key) not in AI_HERO_TASK_LIVE_ADOPTION_GATE_EVENT_KEYS:
+					return {"ok": false, "error": "%s leaked non-compact key %s" % [value.get("event_type", "event"), key]}
+		var text := JSON.stringify(value)
+		for token in AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS:
+			if text.contains(String(token)):
+				return {"ok": false, "error": "%s leaked blocked token %s" % [value.get("event_type", "event"), token]}
+		for nested_key in value.keys():
+			var nested = value[nested_key]
+			if nested is Array or nested is Dictionary:
+				stack.append(nested)
+	return {
+		"ok": true,
+		"checked_events": checked_events,
+		"allowed_public_event_keys": AI_HERO_TASK_LIVE_ADOPTION_GATE_EVENT_KEYS,
+		"blocked_public_tokens": AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS,
+	}
+
+static func _ai_hero_task_boundary_signal(report: Dictionary) -> Dictionary:
+	var leak_check: Dictionary = report.get("public_leak_check", {}) if report.get("public_leak_check", {}) is Dictionary else {}
+	var cases: Array = report.get("cases", []) if report.get("cases", []) is Array else []
+	var id_check: Dictionary = report.get("candidate_task_id_check", {}) if report.get("candidate_task_id_check", {}) is Dictionary else {}
+	var old_save_check: Dictionary = report.get("old_save_absence_check", {}) if report.get("old_save_absence_check", {}) is Dictionary else {}
+	var ready := (
+		bool(report.get("ok", false))
+		and String(report.get("schema_status", "")) == "task_state_boundary_report_only"
+		and String(report.get("behavior_policy", "")) == "derive_candidate_tasks_only"
+		and String(report.get("save_policy", "")) == "no_hero_task_state_write"
+		and cases.size() > 0
+		and int(id_check.get("checked_tasks", 0)) > 0
+		and bool(old_save_check.get("ok", false))
+		and bool(leak_check.get("ok", false))
+	)
+	return {
+		"report_id": String(report.get("report_id", AI_HERO_TASK_REPORT_ID)),
+		"ok": ready,
+		"schema_status": String(report.get("schema_status", "")),
+		"behavior_policy": String(report.get("behavior_policy", "")),
+		"save_policy": String(report.get("save_policy", "")),
+		"case_count": cases.size(),
+		"checked_candidate_tasks": int(id_check.get("checked_tasks", 0)),
+		"old_save_absence_ok": bool(old_save_check.get("ok", false)),
+		"public_leak_ok": bool(leak_check.get("ok", false)),
+		"signal_policy": "candidate_tasks_report_only",
+	}
+
+static func _ai_hero_task_normalizer_signal(report: Dictionary) -> Dictionary:
+	var save_version := int(SessionStateStoreScript.SAVE_VERSION)
+	var ready := (
+		bool(report.get("ok", false))
+		and String(report.get("schema_status", "")) == "hero_task_state_normalizer_preservation_report_only"
+		and String(report.get("behavior_policy", "")) == "observe_normalization_only"
+		and String(report.get("save_policy", "")) == "no_hero_task_state_producer_no_disk_write"
+		and String(report.get("save_service_policy", "")) == "payload_boundary_only_no_ai_task_semantics"
+		and int(report.get("cases_reviewed", 0)) >= 9
+		and int(report.get("save_version_before", save_version)) == save_version
+		and int(report.get("save_version_after", save_version)) == save_version
+	)
+	return {
+		"report_id": String(report.get("report_id", "AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT")),
+		"ok": ready,
+		"schema_status": String(report.get("schema_status", "")),
+		"behavior_policy": String(report.get("behavior_policy", "")),
+		"save_policy": String(report.get("save_policy", "")),
+		"save_service_policy": String(report.get("save_service_policy", "")),
+		"cases_reviewed": int(report.get("cases_reviewed", 0)),
+		"save_version_unchanged": int(report.get("save_version_before", save_version)) == save_version and int(report.get("save_version_after", save_version)) == save_version,
+		"signal_policy": "optional_state_preservation_report_only",
+	}
+
+static func _ai_hero_task_commander_adoption_signal(report: Dictionary) -> Dictionary:
+	var leak_check: Dictionary = report.get("public_leak_check", {}) if report.get("public_leak_check", {}) is Dictionary else {}
+	var ready := (
+		bool(report.get("ok", false))
+		and String(report.get("schema_status", "")) == "commander_role_adoption_boundary_report_only"
+		and String(report.get("behavior_policy", "")) == "no_live_commander_role_behavior_adoption"
+		and String(report.get("save_policy", "")) == "no_commander_role_state_write"
+		and not bool(report.get("live_behavior_selected", true))
+		and not bool(report.get("save_write_selected", true))
+		and not bool(report.get("requires_save_migration", true))
+		and bool(leak_check.get("ok", false))
+	)
+	return {
+		"report_id": String(report.get("report_id", "AI_COMMANDER_ROLE_ADOPTION_BOUNDARY_REPORT")),
+		"ok": ready,
+		"schema_status": String(report.get("schema_status", "")),
+		"behavior_policy": String(report.get("behavior_policy", "")),
+		"save_policy": String(report.get("save_policy", "")),
+		"public_leak_ok": bool(leak_check.get("ok", false)),
+		"signal_policy": "commander_role_boundary_report_only",
+	}
+
+static func _ai_hero_task_live_adoption_gate_records(task_signal: Dictionary, normalizer_signal: Dictionary, commander_signal: Dictionary) -> Array:
+	var report_ready := bool(task_signal.get("ok", false))
+	var normalizer_ready := bool(normalizer_signal.get("ok", false))
+	var commander_ready := bool(commander_signal.get("ok", false))
+	return [
+		_ai_hero_task_live_adoption_gate_record(
+			"candidate_task_reports",
+			"Candidate task reports",
+			"ready_report_only" if report_ready else "blocked",
+			"Derived candidate tasks remain diagnostic and do not drive target selection.",
+			"report evidence only",
+			["AI_HERO_TASK_STATE_BOUNDARY_REPORT"],
+			"candidate_report_passed" if report_ready else "candidate_report_not_ready"
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"optional_task_normalizer",
+			"Optional task normalizer",
+			"ready_report_only" if normalizer_ready else "blocked",
+			"Explicit optional task boards can be sanitized when present, but no producer is approved.",
+			"report evidence only",
+			["AI_HERO_TASK_STATE_NORMALIZER_PRESERVATION_REPORT"],
+			"normalizer_report_passed" if normalizer_ready else "normalizer_report_not_ready"
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"commander_role_boundary",
+			"Commander role boundary",
+			"ready_report_only" if commander_ready else "blocked",
+			"Commander role signals are ready as report evidence without live role adoption.",
+			"report evidence only",
+			["AI_COMMANDER_ROLE_ADOPTION_BOUNDARY_REPORT"],
+			"commander_boundary_passed" if commander_ready else "commander_boundary_not_ready"
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"task_schema_writer",
+			"Task schema writer",
+			"defer",
+			"No minimal schema planning or writer gate has approved durable task records.",
+			"needs later schema gate",
+			["strategic-ai-hero-task-state-boundary-plan"],
+			"schema_writer_not_selected",
+			false,
+			true,
+			true
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"save_migration",
+			"Save migration",
+			"defer",
+			"Save migration and version changes require a separate approved migration slice.",
+			"needs later compatibility gate",
+			["strategic-ai-hero-task-state-adoption-sequencing-plan"],
+			"save_migration_not_selected",
+			false,
+			true,
+			true
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"live_target_selection",
+			"Live target selection",
+			"defer",
+			"Candidate tasks have not been approved as target-selection inputs.",
+			"needs later behavior gate",
+			["AI_HERO_TASK_STATE_BOUNDARY_REPORT"],
+			"target_selection_not_selected",
+			true,
+			false,
+			false
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"route_actor_execution",
+			"Route and actor execution",
+			"defer",
+			"Route ownership, actor ownership, and invalidation are not approved for live execution.",
+			"needs later route gate",
+			["strategic-ai-hero-task-state-boundary-plan"],
+			"route_actor_execution_not_ready",
+			true,
+			false,
+			false
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"save_resume_live_tasks",
+			"Save and resume live tasks",
+			"defer",
+			"No old-save fixture or resume proof exists for executable task state.",
+			"needs later resume gate",
+			["strategic-ai-hero-task-state-adoption-sequencing-plan"],
+			"save_resume_not_proven",
+			true,
+			true,
+			true
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"manual_pacing_review",
+			"Manual pacing review",
+			"defer",
+			"Live-client pacing and readability review is required before behavior adoption.",
+			"needs later live-client gate",
+			["strategic-ai-hero-task-state-adoption-sequencing-plan"],
+			"manual_review_not_run",
+			true,
+			false,
+			false
+		),
+		_ai_hero_task_live_adoption_gate_record(
+			"durable_event_log",
+			"Persistent event history",
+			"defer",
+			"Current public/report events are derived and do not require persistent history.",
+			"needs later history gate",
+			["strategic-ai-public-event-log-boundary-10184"],
+			"durable_event_log_not_selected",
+			false,
+			false,
+			false,
+			true
+		),
+	]
+
+static func _ai_hero_task_live_adoption_gate_record(
+	surface_id: String,
+	surface_label: String,
+	gate_status: String,
+	internal_reason: String,
+	public_reason: String,
+	source_report_ids: Array,
+	reason_code: String,
+	live_behavior_risk: bool = false,
+	save_write_risk: bool = false,
+	schema_risk: bool = false,
+	durable_log_risk: bool = false
+) -> Dictionary:
+	return {
+		"surface_id": surface_id,
+		"surface_label": surface_label,
+		"gate_status": gate_status,
+		"adoption_scope": "report_helper_only" if gate_status == "ready_report_only" else "deferred",
+		"reason_code": reason_code,
+		"reason": internal_reason,
+		"public_reason": public_reason,
+		"source_report_ids": source_report_ids,
+		"live_behavior_selected": false,
+		"save_write_selected": false,
+		"requires_save_migration": false,
+		"risk_flags": {
+			"live_behavior_risk": live_behavior_risk,
+			"save_write_risk": save_write_risk,
+			"schema_risk": schema_risk,
+			"durable_log_risk": durable_log_risk,
+		},
+		"state_policy": AI_HERO_TASK_STATE_POLICY,
+	}
+
+static func _ai_hero_task_live_adoption_gate_event(
+	record: Dictionary,
+	day: int,
+	faction_id: String,
+	faction_label: String,
+	sequence: int
+) -> Dictionary:
+	var surface_id := String(record.get("surface_id", ""))
+	var target_id := _ai_hero_task_live_adoption_gate_public_target_id(surface_id)
+	var label := _ai_hero_task_live_adoption_gate_public_label(surface_id, String(record.get("surface_label", surface_id)))
+	var status := String(record.get("gate_status", "defer")).replace("_", " ")
+	var public_reason := String(record.get("public_reason", "needs later gate"))
+	return {
+		"event_id": "%d:%s:ai_hero_task_live_gate:%s:%d" % [day, faction_id, target_id, sequence],
+		"day": day,
+		"sequence": sequence,
+		"event_type": "ai_hero_task_live_gate",
+		"faction_id": faction_id,
+		"faction_label": faction_label,
+		"actor_id": "strategic_ai",
+		"actor_label": "Strategic AI",
+		"target_kind": "gate",
+		"target_id": target_id,
+		"target_label": label,
+		"visibility": "hidden_report",
+		"public_importance": "low",
+		"summary": "%s is %s (%s)." % [label, status, public_reason],
+		"reason_codes": [_ai_hero_task_live_adoption_gate_public_reason_code(String(record.get("reason_code", "")))],
+		"public_reason": public_reason,
+		"state_policy": AI_HERO_TASK_STATE_POLICY,
+	}
+
+static func _ai_hero_task_live_adoption_gate_public_target_id(surface_id: String) -> String:
+	match surface_id:
+		"candidate_task_reports":
+			return "candidate_reports"
+		"optional_task_normalizer":
+			return "optional_normalizer"
+		"commander_role_boundary":
+			return "commander_boundary"
+		"task_schema_writer":
+			return "task_schema_writer"
+		"save_migration":
+			return "compatibility_path"
+		"live_target_selection":
+			return "target_selection"
+		"route_actor_execution":
+			return "route_actor_execution"
+		"save_resume_live_tasks":
+			return "save_resume_live_tasks"
+		"manual_pacing_review":
+			return "manual_review"
+		"durable_event_log":
+			return "event_history"
+	return surface_id
+
+static func _ai_hero_task_live_adoption_gate_public_label(surface_id: String, fallback: String) -> String:
+	match surface_id:
+		"candidate_task_reports":
+			return "Candidate reports"
+		"optional_task_normalizer":
+			return "Optional normalizer"
+		"commander_role_boundary":
+			return "Commander boundary"
+		"task_schema_writer":
+			return "Task schema writer"
+		"save_migration":
+			return "Compatibility path"
+		"live_target_selection":
+			return "Target selection"
+		"route_actor_execution":
+			return "Route and actor execution"
+		"save_resume_live_tasks":
+			return "Save and resume"
+		"manual_pacing_review":
+			return "Manual pacing review"
+		"durable_event_log":
+			return "Event history"
+	return fallback
+
+static func _ai_hero_task_live_adoption_gate_public_reason_code(reason_code: String) -> String:
+	match reason_code:
+		"schema_writer_not_selected":
+			return "later_schema_gate"
+		"save_migration_not_selected":
+			return "later_compatibility_gate"
+		"target_selection_not_selected":
+			return "later_behavior_gate"
+		"route_actor_execution_not_ready":
+			return "later_route_gate"
+		"save_resume_not_proven":
+			return "later_resume_gate"
+		"manual_review_not_run":
+			return "later_live_client_gate"
+		"durable_event_log_not_selected":
+			return "later_history_gate"
+	return reason_code
 
 static func _ai_hero_task_class_for_role(role: String, target_kind: String, role_status: String = "") -> String:
 	if role == COMMANDER_ROLE_RAIDER and target_kind == "town":

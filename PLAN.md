@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: continue Phase 2 in category order after P2.7 animation/event cue foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, and P2.7 animation/event cue children are implemented.
+Current tactical objective: continue Phase 2 in category order after P2.8 strategic AI foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, P2.7 animation/event cue, and P2.8 strategic AI children are implemented.
 
-Selected next implementation candidate: `strategic-ai-live-hero-task-adoption-10184` only as the remaining P2.8 tracker child; it still requires its own explicit gate before live behavior or save/schema adoption.
+Selected next implementation candidate: `terrain-editor-terrain-placement-contract-10184` under P2.9 terrain/editor tooling. Do not start P2.9 from P2.8 closeout work.
 
 ## Slice Status Model
 
@@ -159,9 +159,7 @@ Implemented/report-boundary:
 - `strategic-ai-public-event-log-boundary-10184` implemented the derived/ephemeral public event log boundary without durable log adoption.
 - `strategic-ai-economy-pressure-followup-10184` implemented bounded resource pressure follow-up evidence without scoring or live behavior changes.
 - `strategic-ai-commander-role-adoption-boundary-10184` implemented explicit report-only adoption/deferral boundary evidence without live behavior or save/schema adoption.
-
-Pending:
-- `strategic-ai-live-hero-task-adoption-10184` remains pending and still needs a separate explicit gate before any live AI hero task behavior or save/schema adoption.
+- `strategic-ai-live-hero-task-adoption-10184` implemented the explicit live-adoption gate as report-only deferral evidence. It did not adopt live behavior, save/schema writes, or durable event history.
 
 Deferred:
 - Live commander-role behavior, live AI hero task-state adoption, schema writes, save migration, durable event logs, defense-specific durable state, broad AI rewrite, and coefficient tuning.
@@ -1655,6 +1653,12 @@ implementationTargets:
 - `scripts/core/EnemyAdventureRules.gd`
 - `scripts/core/EnemyTurnRules.gd`
 - focused AI report/smoke coverage
+
+implementationEvidence:
+- `EnemyAdventureRules.ai_hero_task_live_adoption_gate_report(...)`
+- `tests/ai_hero_task_live_adoption_gate_report.gd`
+- `tests/ai_hero_task_live_adoption_gate_report.tscn`
+- `docs/strategic-ai-live-hero-task-adoption-gate-report.md`
 
 ### P2 Child: Strategic AI Public Event Log Boundary
 
