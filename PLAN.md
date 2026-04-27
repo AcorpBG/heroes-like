@@ -921,6 +921,7 @@ purpose: Extend first-class neutral encounter object migration beyond the first 
 sourceDocs:
 - `docs/neutral-encounter-first-class-object-migration-plan.md`
 - `docs/neutral-encounter-first-class-object-bundle-001-report-review.md`
+- `docs/neutral-encounter-first-class-object-bundle-002-expansion-report.md`
 
 implementationTargets:
 - `content/map_objects.json`

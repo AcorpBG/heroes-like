@@ -430,7 +430,36 @@
             }
           }
         },
-        {"placement_id": "river_pass_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 4, "y": 0, "difficulty": "medium", "combat_seed": 1203}
+        {
+          "placement_id": "river_pass_reed_totemists",
+          "encounter_id": "encounter_reed_totemists",
+          "x": 4,
+          "y": 0,
+          "difficulty": "medium",
+          "combat_seed": 1203,
+          "object_id": "object_neutral_encounter_river_pass_reed_totemists_stack",
+          "object_placement_id": "object_placement_river_pass_reed_totemists",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "encounter_reed_totemists", "primary_encounter_id": "encounter_reed_totemists", "encounter_ids": ["encounter_reed_totemists"], "difficulty": "medium", "difficulty_source": "scenario_placement", "combat_seed": 1203, "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "river_pass_reed_totemists", "encounter_id": "encounter_reed_totemists", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "break_reed_totemists", "target_placement_id": "river_pass_reed_totemists", "blocks_approach": true, "clear_required_for_target": true},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_bundle_002"},
+          "neutral_encounter": {
+            "schema_version": 1,
+            "bundle_id": "neutral_encounter_first_class_object_bundle_002",
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "mire_pressure", "scenario_objective_guard"],
+            "encounter": {"primary_encounter_id": "encounter_reed_totemists", "encounter_ids": ["encounter_reed_totemists"], "difficulty_source": "scenario_placement", "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+            "representation": {"mode": "guard_linked_stack", "footprint_tier": "micro", "readability_family": "reed_totemist_ring", "danger_cue_id": "neutral_warning_standard", "visible_before_interaction": true, "uncertainty_policy": "exact_encounter_known"},
+            "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "break_reed_totemists", "target_placement_id": "river_pass_reed_totemists", "blocks_approach": true, "clear_required_for_target": true},
+            "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "state_after_defeat": "active", "remove_on_clear": true, "remember_after_clear": true},
+            "placement_ownership": {"ownership_model": "neutral_ecology", "allowed_owner_kinds": ["neutral"], "spawner_kind": "scenario", "placement_authority": "scenario"},
+            "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["gold", "small_resource", "resource", "experience", "scenario_progress"], "resource_reward_ids": ["gold", "wood"], "guards_reward_tier": "objective"},
+            "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "adjacent", "blocks_route_until_cleared": true},
+            "ai_hints": {"path_blocking": true, "avoid_until_strength": "standard_guard", "neutral_clearance_value": 4, "guard_target_value_hint": 3},
+            "editor_placement": {"placement_mode": "scenario_encounter_overlay", "requires_clear_adjacent_target": true, "warn_if_hiding_target": true, "density_bucket": "guard_or_encounter"}
+          }
+        }
       ]
     },
     {
@@ -648,7 +677,36 @@
       "encounters": [
         {"placement_id": "causeway_reed_camp", "encounter_id": "encounter_reedward_camp", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 2201},
         {"placement_id": "causeway_gate_marshals", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 2202},
-        {"placement_id": "causeway_levee_cutters", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 2203}
+        {
+          "placement_id": "causeway_levee_cutters",
+          "encounter_id": "encounter_reed_totemists",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 2203,
+          "object_id": "object_neutral_encounter_causeway_levee_cutters_stack",
+          "object_placement_id": "object_placement_causeway_levee_cutters",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "encounter_reed_totemists", "primary_encounter_id": "encounter_reed_totemists", "encounter_ids": ["encounter_reed_totemists"], "difficulty": "medium", "difficulty_source": "scenario_placement", "combat_seed": 2203, "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "causeway_levee_cutters", "encounter_id": "encounter_reed_totemists", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "clear_levee_cutters", "target_placement_id": "causeway_levee_cutters", "blocks_approach": true, "clear_required_for_target": true},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_bundle_002"},
+          "neutral_encounter": {
+            "schema_version": 1,
+            "bundle_id": "neutral_encounter_first_class_object_bundle_002",
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "mire_pressure", "scenario_objective_guard"],
+            "encounter": {"primary_encounter_id": "encounter_reed_totemists", "encounter_ids": ["encounter_reed_totemists"], "difficulty_source": "scenario_placement", "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+            "representation": {"mode": "guard_linked_stack", "footprint_tier": "micro", "readability_family": "reed_totemist_ring", "danger_cue_id": "neutral_warning_standard", "visible_before_interaction": true, "uncertainty_policy": "exact_encounter_known"},
+            "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "clear_levee_cutters", "target_placement_id": "causeway_levee_cutters", "blocks_approach": true, "clear_required_for_target": true},
+            "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "state_after_defeat": "active", "remove_on_clear": true, "remember_after_clear": true},
+            "placement_ownership": {"ownership_model": "neutral_ecology", "allowed_owner_kinds": ["neutral"], "spawner_kind": "scenario", "placement_authority": "scenario"},
+            "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["gold", "small_resource", "resource", "experience", "scenario_progress"], "resource_reward_ids": ["gold", "wood"], "guards_reward_tier": "objective"},
+            "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "adjacent", "blocks_route_until_cleared": true},
+            "ai_hints": {"path_blocking": true, "avoid_until_strength": "standard_guard", "neutral_clearance_value": 4, "guard_target_value_hint": 3},
+            "editor_placement": {"placement_mode": "scenario_encounter_overlay", "requires_clear_adjacent_target": true, "warn_if_hiding_target": true, "density_bucket": "guard_or_encounter"}
+          }
+        }
       ]
     },
     {
@@ -1039,7 +1097,36 @@
       "encounters": [
         {"placement_id": "sluice_band", "encounter_id": "encounter_sluice_raiders", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 4201},
         {"placement_id": "willow_mill", "encounter_id": "encounter_willow_mill_pack", "x": 7, "y": 2, "difficulty": "medium", "combat_seed": 4202},
-        {"placement_id": "stonewake_reed_totemists", "encounter_id": "encounter_reed_totemists", "x": 6, "y": 5, "difficulty": "medium", "combat_seed": 4203}
+        {
+          "placement_id": "stonewake_reed_totemists",
+          "encounter_id": "encounter_reed_totemists",
+          "x": 6,
+          "y": 5,
+          "difficulty": "medium",
+          "combat_seed": 4203,
+          "object_id": "object_neutral_encounter_stonewake_reed_totemists_stack",
+          "object_placement_id": "object_placement_stonewake_reed_totemists",
+          "primary_class": "neutral_encounter",
+          "encounter_ref": {"encounter_id": "encounter_reed_totemists", "primary_encounter_id": "encounter_reed_totemists", "encounter_ids": ["encounter_reed_totemists"], "difficulty": "medium", "difficulty_source": "scenario_placement", "combat_seed": 4203, "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+          "legacy_scenario_encounter_ref": {"placement_id": "stonewake_reed_totemists", "encounter_id": "encounter_reed_totemists", "source_list": "scenarios.encounters"},
+          "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "clear_reed_totemists", "target_placement_id": "stonewake_reed_totemists", "blocks_approach": true, "clear_required_for_target": true},
+          "authored_metadata": {"bundle_id": "neutral_encounter_first_class_object_bundle_002"},
+          "neutral_encounter": {
+            "schema_version": 1,
+            "bundle_id": "neutral_encounter_first_class_object_bundle_002",
+            "primary_class": "neutral_encounter",
+            "secondary_tags": ["visible_army", "mire_pressure", "scenario_objective_guard"],
+            "encounter": {"primary_encounter_id": "encounter_reed_totemists", "encounter_ids": ["encounter_reed_totemists"], "difficulty_source": "scenario_placement", "combat_seed_source": "scenario_placement", "field_objectives_source": "encounter_definition", "preserve_placement_field_objectives": true},
+            "representation": {"mode": "guard_linked_stack", "footprint_tier": "micro", "readability_family": "reed_totemist_ring", "danger_cue_id": "neutral_warning_standard", "visible_before_interaction": true, "uncertainty_policy": "exact_encounter_known"},
+            "guard_link": {"guard_role": "guards_scenario_objective", "target_kind": "scenario_objective", "target_id": "clear_reed_totemists", "target_placement_id": "stonewake_reed_totemists", "blocks_approach": true, "clear_required_for_target": true},
+            "state_model": {"initial_state": "idle", "state_after_victory": "cleared", "state_after_defeat": "active", "remove_on_clear": true, "remember_after_clear": true},
+            "placement_ownership": {"ownership_model": "neutral_ecology", "allowed_owner_kinds": ["neutral"], "spawner_kind": "scenario", "placement_authority": "scenario"},
+            "reward_guard_summary": {"risk_tier": "standard", "reward_categories": ["gold", "small_resource", "resource", "experience", "scenario_progress"], "resource_reward_ids": ["gold", "wood"], "guards_reward_tier": "objective"},
+            "passability": {"passability_class": "neutral_stack_blocking", "interaction_mode": "adjacent", "blocks_route_until_cleared": true},
+            "ai_hints": {"path_blocking": true, "avoid_until_strength": "standard_guard", "neutral_clearance_value": 4, "guard_target_value_hint": 3},
+            "editor_placement": {"placement_mode": "scenario_encounter_overlay", "requires_clear_adjacent_target": true, "warn_if_hiding_target": true, "density_bucket": "guard_or_encounter"}
+          }
+        }
       ]
     },
     {
