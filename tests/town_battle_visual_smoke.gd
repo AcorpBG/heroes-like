@@ -164,6 +164,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_risk_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_timing_check_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not board.has_method("validation_hex_layout_summary"):
 		push_error("Battle smoke: battle board does not expose hex layout validation.")
 		get_tree().quit(1)
@@ -1089,6 +1092,57 @@ func _assert_battle_risk_check_cue_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if risk_text.contains(leak_token):
 			push_error("Battle smoke: risk-check cue leaked internal token %s: %s." % [leak_token, risk_text])
+			return false
+	return true
+
+func _assert_battle_timing_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing timing-check cue validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var timing_check: Dictionary = snapshot.get("timing_check", {}) if snapshot.get("timing_check", {}) is Dictionary else {}
+	var timing_text := "\n".join([
+		String(snapshot.get("spell_timing_visible_text", "")),
+		String(snapshot.get("spell_timing_tooltip_text", "")),
+		String(snapshot.get("spell_timing_text", "")),
+		String(snapshot.get("timing_check_visible_text", "")),
+		String(snapshot.get("timing_check_tooltip_text", "")),
+		String(timing_check.get("active", "")),
+		String(timing_check.get("target", "")),
+		String(timing_check.get("spell_window", "")),
+		String(timing_check.get("support_payoff", "")),
+		String(timing_check.get("protection_need", "")),
+		String(timing_check.get("burst_risk", "")),
+		String(timing_check.get("readiness", "")),
+		String(timing_check.get("next_step", "")),
+	])
+	for token in ["Timing check:", "Battle Timing Check", "Active stack:", "Selected target:", "Spell window:", "Burst risk:", "Readiness:", "Next practical action:", "Inspection:", "does not spend an action"]:
+		if not timing_text.contains(token):
+			push_error("Battle smoke: timing-check cue lost %s clarity: %s." % [token, timing_text])
+			return false
+	if not String(snapshot.get("spell_timing_visible_text", "")).contains("Timing check:"):
+		push_error("Battle smoke: timing-check cue is not visible in the timing rail: %s." % snapshot)
+		return false
+	for key in ["active", "target", "spell_window", "burst_risk", "readiness", "next_step"]:
+		if String(timing_check.get(key, "")) == "":
+			push_error("Battle smoke: timing-check payload is missing %s: %s." % [key, timing_check])
+			return false
+	if not ["Cast", "Order", "Hold", "Review", "Locked", "Waiting", "unavailable"].has(String(timing_check.get("readiness", ""))):
+		push_error("Battle smoke: timing-check cue exposed an unexpected readiness: %s." % timing_check)
+		return false
+	if not (
+		timing_text.contains("Spell and Ability Timing")
+		and (
+			timing_text.contains("Support payoff:")
+			or timing_text.contains("Enemy spell pressure:")
+			or timing_text.contains("No support payoff line")
+		)
+	):
+		push_error("Battle smoke: timing-check cue is not anchored to the existing timing board: %s." % timing_text)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if timing_text.contains(leak_token):
+			push_error("Battle smoke: timing-check cue leaked internal token %s: %s." % [leak_token, timing_text])
 			return false
 	return true
 
