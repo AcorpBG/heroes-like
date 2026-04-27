@@ -764,6 +764,37 @@ nonGoals:
 - No neutral encounter migration, broad reward runtime migration, scenario placement migration, save migration, renderer sprite import, rare-resource activation, market changes, or economy rebalance.
 - No P2.5 magic implementation.
 
+#### P2.4k Corrective Landmarks Objectives And State Variants Batch 007
+
+id: `overworld-object-content-batch-007-landmarks-objectives-state-variants-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue corrective P2.4 object content with faction landmarks, scenario objective object families, and damaged/captured state variant metadata after Batch 006 guarded rewards.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json`
+- Object validator/report coverage as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- Faction landmark, scenario objective, and state-variant objects author explicit role, footprint/body/approach contracts where visitable, biome/faction applicability, editor placement, AI hints, and metadata-only runtime boundaries.
+
+completionCriteria:
+- Batch 007 covers the backlog landmark/objective/state-variant category without using map text panels as the main implementation.
+- Runtime behavior remains metadata/content implementation unless current systems already support the linked object/site family.
+
+nonGoals:
+- No broad objective runtime migration, scenario placement migration, save migration, renderer sprite import, rare-resource activation, market changes, UI inventory, or economy rebalance.
+- No P2.5 magic implementation.
+
 ### P2.5 Magic System Foundation Implementation
 
 id: `magic-system-foundation-implementation-10184`
