@@ -388,7 +388,20 @@ func _refresh() -> void:
 	_set_compact_label(_consequence_label, _battle_consequence_text(), 4)
 	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 1)
 	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 1)
-	_set_compact_label(_initiative_label, BattleRules.describe_initiative_track(_session), 5)
+	var initiative_track := BattleRules.describe_initiative_track(_session)
+	var initiative_handoff := _battle_initiative_handoff_surface()
+	if initiative_handoff.is_empty():
+		_set_compact_label(_initiative_label, initiative_track, 5)
+	else:
+		_set_compact_label(
+			_initiative_label,
+			"%s\n%s" % [String(initiative_handoff.get("visible_text", "")), initiative_track],
+			5
+		)
+		_initiative_label.tooltip_text = _join_tooltip_sections([
+			String(initiative_handoff.get("tooltip_text", "")),
+			initiative_track,
+		])
 	_set_compact_label(_active_label, BattleRules.describe_active_context(_session), 3)
 	_set_compact_label(_target_label, BattleRules.describe_target_context(_session), 3)
 	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
@@ -624,6 +637,82 @@ func _battle_target_cycle_focus_label(target_stack: Dictionary) -> String:
 		name = String(target_stack.get("battle_id", "target")).strip_edges()
 	return _short_text(name, 28)
 
+func _battle_initiative_handoff_surface() -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {}
+	var battle := _session.battle
+	var active_stack := BattleRules.get_active_stack(battle)
+	var turn_order: Variant = battle.get("turn_order", [])
+	if active_stack.is_empty() or not (turn_order is Array) or turn_order.is_empty():
+		return {}
+	var current_label := _battle_initiative_stack_label(active_stack)
+	var current_side := _battle_initiative_side_label(String(active_stack.get("side", "")))
+	var turn_index := clampi(int(battle.get("turn_index", 0)), 0, max(0, (turn_order as Array).size() - 1))
+	var next_stack := _battle_next_living_stack(turn_order as Array, turn_index + 1)
+	var next_round := false
+	if next_stack.is_empty():
+		next_stack = _battle_next_living_stack(turn_order as Array, 0)
+		next_round = not next_stack.is_empty()
+	var next_label := _battle_initiative_stack_label(next_stack) if not next_stack.is_empty() else "no queued stack"
+	var next_side := _battle_initiative_side_label(String(next_stack.get("side", ""))) if not next_stack.is_empty() else "None"
+	var round: int = max(1, int(battle.get("round", 1)))
+	var next_round_label: int = round + 1 if next_round else round
+	var current_window := "player command window" if String(active_stack.get("side", "")) == "player" else "enemy pressure window"
+	var next_window := "next round opens" if next_round else "same round continues"
+	var visible := "Initiative cue: Now: %s; Next: %s." % [
+		_short_text(current_label, 30),
+		_short_text(next_label, 30),
+	]
+	var tooltip := "Initiative Handoff\n- Round: %d\n- Current: %s [%s]\n- Next: %s [%s], round %d\n- Handoff: %s; %s.\n- Player input: %s." % [
+		round,
+		current_label,
+		current_side,
+		next_label,
+		next_side,
+		next_round_label,
+		current_window,
+		next_window,
+		"orders are open now" if String(active_stack.get("side", "")) == "player" else "wait for command to return",
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"current_stack": current_label,
+		"current_side": current_side,
+		"next_stack": next_label,
+		"next_side": next_side,
+		"round": round,
+		"next_round": next_round_label,
+		"handoff": "%s; %s" % [current_window, next_window],
+	}
+
+func _battle_next_living_stack(turn_order: Array, start_index: int) -> Dictionary:
+	for index in range(max(0, start_index), turn_order.size()):
+		var stack := _stack_by_battle_id(String(turn_order[index]))
+		if not stack.is_empty() and int(stack.get("count", 0)) > 0 and int(stack.get("total_health", 0)) > 0:
+			return stack
+	return {}
+
+func _battle_initiative_stack_label(stack: Dictionary) -> String:
+	if stack.is_empty():
+		return "no stack"
+	var name := String(stack.get("name", "")).strip_edges()
+	if name == "":
+		name = String(stack.get("battle_id", "stack")).strip_edges()
+	var count := int(stack.get("count", 0))
+	var hp := int(stack.get("total_health", 0))
+	if count > 0 and hp > 0:
+		return "%s x%d, %d HP" % [name, count, hp]
+	return name
+
+func _battle_initiative_side_label(side: String) -> String:
+	match side:
+		"player":
+			return "Player"
+		"enemy":
+			return "Enemy"
+	return "Neutral"
+
 func _living_enemy_target_ids() -> Array:
 	var ids := []
 	if _session == null or _session.battle.is_empty():
@@ -777,6 +866,10 @@ func validation_snapshot() -> Dictionary:
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),
+		"initiative_handoff": _battle_initiative_handoff_surface(),
+		"initiative_handoff_visible_text": String(_battle_initiative_handoff_surface().get("visible_text", "")),
+		"initiative_handoff_tooltip_text": _initiative_label.tooltip_text,
+		"initiative_visible_text": _initiative_label.text,
 		"active_consequence_payload": consequence_payload,
 		"battle_action_context": action_context_surface,
 		"battle_action_context_text": String(action_context_surface.get("visible_text", "")),
