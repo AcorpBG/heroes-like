@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: reconcile planning around implementation obligations, then resume bounded foundation work. The archived plan/progress show many completed docs, reports, scaffolds, and cue slices, but completion claims must now be mapped to implementation reality.
+Current tactical objective: resume Phase 2 in category order after corrective P2.4 object-content closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic now resumes as implementation work, not docs-only completion.
 
-Selected next implementation candidate after PLAN review: `strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184`.
+Selected next implementation candidate after P2.4 closeout: `magic-battle-spell-behavior-expansion-10184`.
 
 ## Slice Status Model
 

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "overworld-object-content-batch-007-landmarks-objectives-state-variants-10184",
-  "currentSliceTitle": "Overworld Object Content Batch 007 Landmarks Objectives And State Variants",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed Batch 007 landmark/objective/state-variant metadata with 20 object/site contracts, validator/report coverage, and P2.5 still paused. No further corrective P2.4 content category is currently queued.",
+  "currentSliceId": "magic-battle-spell-behavior-expansion-10184",
+  "currentSliceTitle": "Magic Battle Spell Behavior Expansion",
+  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "Selected next P2.5 magic child after P2.4 corrective object-content Batches 001 through 007 closed the P2.4 parent. Queue correction only; no P2.5 implementation started in this closeout worker.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T20:10:59Z",
+  "updatedAt": "2026-04-27T20:22:24Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -239,8 +239,8 @@
       "id": "overworld-object-encounter-foundation-implementation-10184",
       "title": "Overworld Object And Neutral Encounter Foundation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
-      "classification": "parent_track_in_progress_selected_child_pending",
+      "status": "completed",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/overworld-content-bible.md",
         "docs/overworld-object-taxonomy-density.md",
@@ -263,7 +263,7 @@
         "validator/report fixtures"
       ],
       "evidence": "Safe metadata, editor authoring validation, bounded pathing/occupancy adoption for Brightwood Sawmill, six neutral encounter object-backed placements, object-backed AI valuation, and selected transit route-effect authoring validation exist with validator/report support. Owner correction on 2026-04-27 found this insufficient for P2.4 because broad object families/types were not implemented.",
-      "notes": "P2.4 corrective object-content batches through Batch 007 are complete; P2.5 remains paused until explicitly selected.",
+      "notes": "P2.4 parent closed after corrective object-content Batches 001 through 007 completed through Batch 007 landmark/objective/state-variant metadata. Remaining object/neutral follow-ups stay as later explicit slices, not blockers for P2.5 resumption.",
       "sliceType": "parent",
       "childSliceIds": [
         "overworld-object-runtime-metadata-adoption-10184",
@@ -295,14 +295,15 @@
       "reportOnlyEvidenceIds": [
         "overworld-neutral-reports"
       ],
-      "updatedAt": "2026-04-27T20:10:59Z"
+      "updatedAt": "2026-04-27T20:22:24Z",
+      "completedAt": "2026-04-27T20:22:24Z"
     },
     {
       "id": "magic-system-foundation-implementation-10184",
       "title": "Magic System Foundation Implementation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
-      "classification": "parent_foundation_docs_ready_children_pending",
+      "status": "in_progress",
+      "classification": "parent_track_in_progress_selected_child_pending",
       "sourceDocs": [
         "docs/magic-system-expansion-foundation.md"
       ],
@@ -314,7 +315,7 @@
         "validation fixtures/reports"
       ],
       "evidence": "Current spells and SpellRules exist, but expanded schools/categories/tiers, adventure-map magic, AI casting heuristics, and validation fixtures remain unimplemented.",
-      "notes": "UI-only cues are not magic-system implementation.",
+      "notes": "P2.5 resumed after P2.4 parent closeout. Active child is magic-battle-spell-behavior-expansion-10184; remaining magic work is implementation work, not docs-only completion.",
       "sliceType": "parent",
       "childSliceIds": [
         "magic-spell-school-category-schema-10184",
@@ -328,7 +329,9 @@
         "magic-artifact-animation-docs"
       ],
       "completedImplementationEvidenceIds": [],
-      "reportOnlyEvidenceIds": []
+      "reportOnlyEvidenceIds": [],
+      "updatedAt": "2026-04-27T20:22:24Z",
+      "startedAt": "2026-04-27T20:22:24Z"
     },
     {
       "id": "artifact-system-foundation-implementation-10184",
@@ -1396,7 +1399,7 @@
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "paused",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1418,10 +1421,9 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T16:57:45Z",
+      "updatedAt": "2026-04-27T20:22:24Z",
       "startedAt": "2026-04-27T16:23:53Z",
-      "deferredReason": "Paused by owner correction until corrective P2.4 object implementation backlog/content work is addressed.",
-      "notes": "Do not start this P2.5 slice until the corrective P2.4 object-content batch is implemented or the owner explicitly resumes P2.5."
+      "notes": "Selected as the next P2.5 implementation child after corrective P2.4 object-content Batches 001 through 007 closed the P2.4 parent. This closeout worker did not start or complete implementation."
     },
     {
       "id": "magic-adventure-map-spell-hooks-10184",
@@ -3313,16 +3315,25 @@
       ]
     }
   ],
-  "actionableNextTasks": [],
-  "stoppedOrPausedTasks": [
+  "actionableNextTasks": [
     {
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
-      "status": "paused",
-      "classification": "paused_by_owner_correction",
+      "status": "in_progress",
+      "classification": "phase2_child_implementation_slice",
+      "parentSliceId": "magic-system-foundation-implementation-10184",
       "source": "PLAN.md P2.5 Magic System Foundation Implementation",
-      "notes": "Paused until corrective P2.4 object-content work from docs/phase2-4-object-implementation-backlog.md is addressed or the owner explicitly resumes P2.5."
-    },
+      "sourceDocs": [
+        "docs/magic-system-expansion-foundation.md"
+      ],
+      "implementationTargets": [
+        "battle spell hooks",
+        "battle smoke/report fixtures"
+      ],
+      "notes": "Selected next P2.5 child after corrective P2.4 object-content closeout. Implementation remains to be done by the next worker."
+    }
+  ],
+  "stoppedOrPausedTasks": [
     {
       "id": "overworld-artifact-check-cue-10184",
       "title": "Overworld Artifact Check Cue",
