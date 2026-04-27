@@ -428,6 +428,53 @@ static func choose_enemy_action(battle: Dictionary, active_stack: Dictionary, en
 			return best_attack
 	return best
 
+static func battle_spell_choice_report(battle: Dictionary, active_stack: Dictionary, enemy_hero: Dictionary) -> Dictionary:
+	var errors := []
+	if active_stack.is_empty() or String(active_stack.get("side", "")) != "enemy":
+		errors.append("No active enemy stack is available for spell valuation.")
+	var targets := _alive_stacks_for_side(battle, "player")
+	if targets.is_empty():
+		errors.append("No valid player targets are available for spell valuation.")
+
+	var candidates := []
+	var selected := {}
+	var family_counts := {}
+	var hook_counts := {}
+	if errors.is_empty():
+		for candidate in _battle_spell_candidates(battle, active_stack, enemy_hero, targets):
+			if not (candidate is Dictionary):
+				continue
+			var spell := ContentService.get_spell(String(candidate.get("spell_id", "")))
+			var behavior := SpellRulesScript.battle_spell_behavior(spell)
+			var public_candidate := _public_spell_candidate(candidate, spell, behavior)
+			candidates.append(public_candidate)
+			_increment_count(family_counts, String(public_candidate.get("effect_type", "")))
+			for hook in public_candidate.get("runtime_hooks", []):
+				_increment_count(hook_counts, String(hook))
+			if selected.is_empty() or _candidate_beats(candidate, selected):
+				selected = candidate
+
+	var public_selected := {}
+	if not selected.is_empty():
+		var selected_spell := ContentService.get_spell(String(selected.get("spell_id", "")))
+		public_selected = _public_spell_candidate(
+			selected,
+			selected_spell,
+			SpellRulesScript.battle_spell_behavior(selected_spell)
+		)
+
+	return {
+		"ok": errors.is_empty(),
+		"report_status": "battle_ai_spell_behavior_metadata_valued",
+		"actor_battle_id": String(active_stack.get("battle_id", "")),
+		"candidate_count": candidates.size(),
+		"selected": public_selected,
+		"effect_type_counts": family_counts,
+		"runtime_hook_counts": hook_counts,
+		"candidates": candidates,
+		"errors": errors,
+	}
+
 static func _best_spell_action(
 	battle: Dictionary,
 	active_stack: Dictionary,
@@ -437,11 +484,25 @@ static func _best_spell_action(
 	if _commander_spell_cast_this_round(battle, String(active_stack.get("side", ""))):
 		return {}
 	var best := {}
+	for candidate in _battle_spell_candidates(battle, active_stack, enemy_hero, targets):
+		if candidate is Dictionary and _candidate_beats(candidate, best):
+			best = candidate
+	return best
+
+static func _battle_spell_candidates(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	enemy_hero: Dictionary,
+	targets: Array
+) -> Array:
+	var candidates := []
 	for spell in SpellRulesScript.known_spells(enemy_hero, SpellRulesScript.CONTEXT_BATTLE):
 		if not (spell is Dictionary):
 			continue
-		var effect = spell.get("effect", {})
-		match String(effect.get("type", "")):
+		var behavior := SpellRulesScript.battle_spell_behavior(spell)
+		if behavior.is_empty() or String(behavior.get("resolution_type", "")) == "unsupported":
+			continue
+		match String(behavior.get("effect_type", "")):
 			"damage_enemy", "control_enemy":
 				for target in targets:
 					if not (target is Dictionary):
@@ -456,15 +517,13 @@ static func _best_spell_action(
 					)
 					if not bool(validation.get("ok", false)):
 						continue
-					var score := _damage_spell_score(enemy_hero, battle, active_stack, target, spell)
 					var candidate := {
 						"action": "cast_spell",
 						"spell_id": String(spell.get("id", "")),
 						"target_battle_id": String(target.get("battle_id", "")),
-						"score": score,
+						"score": _spell_candidate_score(enemy_hero, battle, active_stack, target, spell, behavior),
 					}
-					if _candidate_beats(candidate, best):
-						best = candidate
+					candidates.append(candidate)
 			"defense_buff", "recover_ally", "cleanse_ally":
 				if _spell_buff_already_active(active_stack, battle, spell):
 					continue
@@ -482,10 +541,9 @@ static func _best_spell_action(
 					"action": "cast_spell",
 					"spell_id": String(spell.get("id", "")),
 					"target_battle_id": String(active_stack.get("battle_id", "")),
-					"score": _buff_spell_score(battle, active_stack, targets, spell),
+					"score": _spell_candidate_score(enemy_hero, battle, active_stack, active_stack, spell, behavior),
 				}
-				if _candidate_beats(defense_candidate, best):
-					best = defense_candidate
+				candidates.append(defense_candidate)
 			"initiative_buff", "attack_buff":
 				if _spell_buff_already_active(active_stack, battle, spell):
 					continue
@@ -503,11 +561,10 @@ static func _best_spell_action(
 					"action": "cast_spell",
 					"spell_id": String(spell.get("id", "")),
 					"target_battle_id": String(active_stack.get("battle_id", "")),
-					"score": _buff_spell_score(battle, active_stack, targets, spell),
+					"score": _spell_candidate_score(enemy_hero, battle, active_stack, active_stack, spell, behavior),
 				}
-				if _candidate_beats(initiative_candidate, best):
-					best = initiative_candidate
-	return best
+				candidates.append(initiative_candidate)
+	return candidates
 
 static func _best_attack_action(battle: Dictionary, active_stack: Dictionary, targets: Array) -> Dictionary:
 	var best := {}
@@ -672,6 +729,147 @@ static func _damage_spell_score(
 	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target)
 	score -= float(int(spell.get("mana_cost", 0))) * 0.25
 	return score
+
+static func _spell_candidate_score(
+	enemy_hero: Dictionary,
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target: Dictionary,
+	spell: Dictionary,
+	behavior: Dictionary
+) -> float:
+	var effect_type := String(behavior.get("effect_type", ""))
+	var score := 0.0
+	match effect_type:
+		"damage_enemy":
+			score = _damage_spell_score(enemy_hero, battle, active_stack, target, spell)
+		"control_enemy":
+			score = _control_spell_score(battle, active_stack, target, spell)
+		"recover_ally":
+			score = _recovery_spell_score(enemy_hero, battle, active_stack, spell)
+		"cleanse_ally":
+			score = _cleanse_spell_score(battle, active_stack, spell)
+		"defense_buff", "initiative_buff", "attack_buff":
+			score = _buff_spell_score(battle, active_stack, _alive_stacks_for_side(battle, _opposing_side(String(active_stack.get("side", "")))), spell)
+		_:
+			score = -9999.0
+	return score + _spell_metadata_value_modifier(battle, active_stack, target, spell, behavior)
+
+static func _control_spell_score(battle: Dictionary, active_stack: Dictionary, target: Dictionary, spell: Dictionary) -> float:
+	var status_effect := _status_effect_from_spell(spell)
+	var status_id := String(status_effect.get("effect_id", ""))
+	var score := 3.0 + (_attack_score(active_stack, target, battle, true) * 0.35)
+	if status_id != "" and not SpellRulesScript.has_effect_id(target, battle, status_id):
+		score += 3.0
+		score += _allied_status_synergy_score(battle, String(active_stack.get("side", "")), status_id)
+	if _health_ratio(target) > 0.5:
+		score += 1.25
+	if bool(target.get("ranged", false)) and int(target.get("shots_remaining", 0)) > 0:
+		score += 1.0
+	if _stack_cohesion_total(target, battle) <= 4:
+		score += 1.0
+	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, target)
+	score -= float(int(spell.get("mana_cost", 0))) * 0.2
+	return score
+
+static func _recovery_spell_score(enemy_hero: Dictionary, battle: Dictionary, active_stack: Dictionary, spell: Dictionary) -> float:
+	var missing_health := _stack_missing_health(active_stack)
+	var unit_hp: int = max(1, int(active_stack.get("unit_hp", 1)))
+	var restore_amount := _battle_recovery_amount(enemy_hero, spell)
+	var useful_restore: int = min(missing_health, restore_amount)
+	var score := 1.5 + (float(useful_restore) / float(unit_hp)) * 1.15
+	score += (1.0 - _health_ratio(active_stack)) * 5.0
+	if int(battle.get("distance", 1)) <= 0:
+		score += 1.0
+	if _stack_is_anchor_side(active_stack, battle) or _stack_is_assault_side(active_stack, battle):
+		score += 0.75
+	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, active_stack)
+	score -= float(int(spell.get("mana_cost", 0))) * 0.2
+	return score
+
+static func _cleanse_spell_score(battle: Dictionary, active_stack: Dictionary, spell: Dictionary) -> float:
+	var effect = spell.get("effect", {})
+	var cleanse_effect_ids := _normalize_string_array(effect.get("cleanse_effect_ids", []))
+	var matching_effects := 0
+	for effect_id in cleanse_effect_ids:
+		if SpellRulesScript.has_effect_id(active_stack, battle, String(effect_id)):
+			matching_effects += 1
+	var score := 1.25 + float(matching_effects) * 4.0
+	if SpellRulesScript.has_any_effect_ids(active_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+		score += 1.5
+	score += (1.0 - (float(_stack_cohesion_total(active_stack, battle)) / float(COHESION_MAX))) * 2.0
+	score += _objective_action_score(battle, String(active_stack.get("side", "")), "cast_spell", active_stack, active_stack)
+	score -= float(int(spell.get("mana_cost", 0))) * 0.2
+	return score
+
+static func _spell_metadata_value_modifier(
+	battle: Dictionary,
+	active_stack: Dictionary,
+	target: Dictionary,
+	spell: Dictionary,
+	behavior: Dictionary
+) -> float:
+	var modifier := 0.0
+	var role_categories: Array = behavior.get("role_categories", [])
+	var primary_role := String(behavior.get("primary_role", ""))
+	if role_categories.has("damage") and _health_ratio(target) <= 0.5:
+		modifier += 0.8
+	if role_categories.has("control") and not target.is_empty() and _health_ratio(target) > 0.5:
+		modifier += 0.7
+	if role_categories.has("recovery") and _health_ratio(active_stack) <= 0.65:
+		modifier += 0.7
+	if role_categories.has("countermagic") and SpellRulesScript.has_any_effect_ids(active_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+		modifier += 0.9
+	if primary_role == "priority_damage" and _health_ratio(target) <= 0.5:
+		modifier += 0.7
+	elif primary_role == "control_enemy" and not target.is_empty() and _stack_cohesion_total(target, battle) >= 5:
+		modifier += 0.6
+	elif primary_role == "ally_recovery" and _stack_missing_health(active_stack) > 0:
+		modifier += 0.6
+	elif primary_role == "countermagic_ward" and SpellRulesScript.has_any_effect_ids(active_stack, battle, [STATUS_HARRIED, STATUS_STAGGERED]):
+		modifier += 0.6
+	return modifier
+
+static func _public_spell_candidate(candidate: Dictionary, spell: Dictionary, behavior: Dictionary) -> Dictionary:
+	var value := float(candidate.get("score", 0.0))
+	return {
+		"action": "cast_spell",
+		"spell_id": String(spell.get("id", candidate.get("spell_id", ""))),
+		"spell_name": String(spell.get("name", candidate.get("spell_id", ""))),
+		"target_battle_id": String(candidate.get("target_battle_id", "")),
+		"school_id": String(behavior.get("school_id", "")),
+		"tier": int(behavior.get("tier", 0)),
+		"primary_role": String(behavior.get("primary_role", "")),
+		"role_categories": behavior.get("role_categories", []),
+		"effect_type": String(behavior.get("effect_type", "")),
+		"runtime_hooks": behavior.get("runtime_hooks", []),
+		"value_band": _spell_value_band(value),
+		"reason": _spell_candidate_reason(spell, behavior),
+	}
+
+static func _spell_value_band(value: float) -> String:
+	if value >= 14.0:
+		return "decisive"
+	if value >= 9.0:
+		return "strong"
+	if value >= 5.0:
+		return "useful"
+	return "low"
+
+static func _spell_candidate_reason(spell: Dictionary, behavior: Dictionary) -> String:
+	match String(behavior.get("effect_type", "")):
+		"damage_enemy":
+			return "pressure or finish a selected enemy stack using authored damage metadata"
+		"control_enemy":
+			return "deny a selected enemy stack using authored control metadata"
+		"recover_ally":
+			return "stabilize the active stack using authored recovery metadata"
+		"cleanse_ally":
+			return "clear dangerous pressure from the active stack using authored countermagic metadata"
+		"defense_buff", "initiative_buff", "attack_buff":
+			return "improve the active stack using authored buff metadata"
+		_:
+			return String(spell.get("description", "Use when the board state supports it."))
 
 static func _buff_spell_score(
 	battle: Dictionary,
@@ -1085,6 +1283,15 @@ static func _side_positive_effect_count(battle: Dictionary, side: String) -> int
 static func _alive_count(stack: Dictionary) -> int:
 	var unit_hp: int = max(1, int(stack.get("unit_hp", 1)))
 	return int(ceil(float(max(0, int(stack.get("total_health", 0)))) / float(unit_hp)))
+
+static func _stack_missing_health(stack: Dictionary) -> int:
+	var max_health: int = max(1, int(stack.get("base_count", stack.get("count", 0))) * max(1, int(stack.get("unit_hp", 1))))
+	return max(0, max_health - max(0, int(stack.get("total_health", 0))))
+
+static func _battle_recovery_amount(hero_state: Dictionary, spell: Dictionary) -> int:
+	var effect = spell.get("effect", {})
+	var power := int(hero_state.get("command", {}).get("power", 0))
+	return max(1, int(effect.get("base_restore", effect.get("amount", 0))) + (max(0, power) * int(effect.get("power_scale", 0))))
 
 static func _health_ratio(stack: Dictionary) -> float:
 	var max_health: int = max(1, int(stack.get("base_count", 0)) * max(1, int(stack.get("unit_hp", 1))))
@@ -1573,6 +1780,20 @@ static func _side_faction_id(battle: Dictionary, side: String) -> String:
 		if faction_id != "":
 			return faction_id
 	return ""
+
+static func _increment_count(counts: Dictionary, key: String) -> void:
+	if key == "":
+		key = "unspecified"
+	counts[key] = int(counts.get(key, 0)) + 1
+
+static func _normalize_string_array(value: Variant) -> Array:
+	var results := []
+	if value is Array:
+		for item in value:
+			var text := String(item)
+			if text != "":
+				results.append(text)
+	return results
 
 static func _candidate_beats(candidate: Dictionary, current_best: Dictionary) -> bool:
 	if current_best.is_empty():

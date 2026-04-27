@@ -126,6 +126,53 @@ const COMMANDER_ROLE_TURN_NO_OP_REASONS := [
 	"no_existing_raid_to_move",
 	"report_fixture_not_configured_for_assignment",
 ]
+
+static func adventure_spell_valuation_report(
+	hero_state: Dictionary,
+	movement_state: Dictionary,
+	strategic_context: Dictionary = {}
+) -> Dictionary:
+	var hero := SpellRulesScript.ensure_hero_spellbook(hero_state.duplicate(true))
+	var movement := movement_state.duplicate(true)
+	var candidates := []
+	var effect_type_counts := {}
+	var hook_counts := {}
+	for spell in SpellRulesScript.known_spells(hero, SpellRulesScript.CONTEXT_OVERWORLD):
+		if not (spell is Dictionary):
+			continue
+		var behavior := SpellRulesScript.adventure_spell_behavior(spell)
+		if behavior.is_empty() or String(behavior.get("resolution_type", "")) == "unsupported":
+			continue
+		var validation := SpellRulesScript.validate_overworld_spell(hero, movement, spell)
+		var consequence := SpellRulesScript.adventure_spell_consequence_preview(hero, movement, spell)
+		var value := _adventure_spell_value(hero, movement, strategic_context, spell, behavior, validation, consequence)
+		var public_candidate := _public_adventure_spell_candidate(spell, behavior, validation, consequence, strategic_context, value)
+		candidates.append(public_candidate)
+		_increment_count(effect_type_counts, String(public_candidate.get("effect_type", "")))
+		for hook in public_candidate.get("runtime_hooks", []):
+			_increment_count(hook_counts, String(hook))
+
+	var selected := {}
+	for candidate in candidates:
+		if not (candidate is Dictionary):
+			continue
+		if String(candidate.get("recommendation", "")) != "cast":
+			continue
+		if selected.is_empty() or _adventure_band_rank(String(candidate.get("value_band", ""))) > _adventure_band_rank(String(selected.get("value_band", ""))):
+			selected = candidate
+
+	return {
+		"ok": true,
+		"report_status": "enemy_adventure_spell_behavior_metadata_valued",
+		"actor_id": String(hero.get("id", hero.get("hero_id", ""))),
+		"candidate_count": candidates.size(),
+		"selected": selected,
+		"effect_type_counts": effect_type_counts,
+		"runtime_hook_counts": hook_counts,
+		"candidates": candidates,
+		"runtime_policy": "valuation_only_no_enemy_adventure_cast_executor",
+	}
+
 const AI_HERO_TASK_REPORT_ID := "AI_HERO_TASK_STATE_BOUNDARY_REPORT"
 const AI_HERO_TASK_STATE_POLICY := "report_only"
 const AI_HERO_TASK_SOURCE_KIND := "commander_role_adapter"
@@ -5465,6 +5512,112 @@ static func _normalize_string_array(value: Variant) -> Array:
 		if text != "" and text not in output:
 			output.append(text)
 	return output
+
+static func _increment_count(counts: Dictionary, key: String) -> void:
+	if key == "":
+		key = "unspecified"
+	counts[key] = int(counts.get(key, 0)) + 1
+
+static func _adventure_spell_value(
+	hero_state: Dictionary,
+	movement_state: Dictionary,
+	strategic_context: Dictionary,
+	spell: Dictionary,
+	behavior: Dictionary,
+	validation: Dictionary,
+	consequence: Dictionary
+) -> float:
+	if not bool(validation.get("ok", false)):
+		return 0.0
+	var restored := int(consequence.get("movement_restored", 0))
+	var movement_max: int = max(1, int(movement_state.get("max", 1)))
+	var value := 1.0 + (float(restored) / float(movement_max)) * 6.0
+	var objective_steps := int(strategic_context.get("objective_steps_remaining", 0))
+	var movement_current := int(movement_state.get("current", 0))
+	var movement_after := int(consequence.get("movement_after", movement_current))
+	if objective_steps > movement_current and objective_steps <= movement_after:
+		value += 5.0
+	if String(strategic_context.get("target_kind", "")) in ["town", "resource_site", "objective", "threat"]:
+		value += 1.5
+	if bool(strategic_context.get("route_pressure", false)):
+		value += 1.0
+	if bool(strategic_context.get("threat_nearby", false)):
+		value += 1.0
+	if String(behavior.get("target_policy", "")) == "self_hero_movement_gap":
+		value += 0.75
+	value -= float(int(spell.get("mana_cost", 0))) * 0.2
+	return value
+
+static func _public_adventure_spell_candidate(
+	spell: Dictionary,
+	behavior: Dictionary,
+	validation: Dictionary,
+	consequence: Dictionary,
+	strategic_context: Dictionary,
+	value: float
+) -> Dictionary:
+	var recommendation := "hold"
+	if bool(validation.get("ok", false)) and value >= 5.0:
+		recommendation = "cast"
+	return {
+		"spell_id": String(spell.get("id", "")),
+		"spell_name": String(spell.get("name", "")),
+		"school_id": String(behavior.get("school_id", "")),
+		"tier": int(behavior.get("tier", 0)),
+		"primary_role": String(behavior.get("primary_role", "")),
+		"role_categories": behavior.get("role_categories", []),
+		"effect_type": String(behavior.get("effect_type", "")),
+		"target_policy": String(behavior.get("target_policy", "")),
+		"runtime_hooks": behavior.get("runtime_hooks", []),
+		"map_mutation": String(behavior.get("map_mutation", "")),
+		"availability": "ready" if bool(validation.get("ok", false)) else "blocked",
+		"blocked_reason": String(validation.get("message", "")) if not bool(validation.get("ok", false)) else "",
+		"movement_before": int(consequence.get("movement_before", 0)),
+		"movement_after": int(consequence.get("movement_after", int(consequence.get("movement_before", 0)))),
+		"movement_restored": int(consequence.get("movement_restored", 0)),
+		"value_band": _adventure_spell_value_band(value),
+		"recommendation": recommendation,
+		"reason": _adventure_spell_reason(strategic_context, behavior, validation, consequence),
+	}
+
+static func _adventure_spell_value_band(value: float) -> String:
+	if value >= 10.0:
+		return "decisive"
+	if value >= 7.0:
+		return "strong"
+	if value >= 5.0:
+		return "useful"
+	return "low"
+
+static func _adventure_band_rank(value_band: String) -> int:
+	match value_band:
+		"decisive":
+			return 4
+		"strong":
+			return 3
+		"useful":
+			return 2
+		_:
+			return 1
+
+static func _adventure_spell_reason(
+	strategic_context: Dictionary,
+	behavior: Dictionary,
+	validation: Dictionary,
+	consequence: Dictionary
+) -> String:
+	if not bool(validation.get("ok", false)):
+		return "hold because the spell is not currently castable"
+	var objective_steps := int(strategic_context.get("objective_steps_remaining", 0))
+	var movement_before := int(consequence.get("movement_before", 0))
+	var movement_after := int(consequence.get("movement_after", movement_before))
+	if objective_steps > movement_before and objective_steps <= movement_after:
+		return "cast because restored movement reaches the current %s" % String(strategic_context.get("target_kind", "target"))
+	if int(consequence.get("movement_restored", 0)) > 0 and bool(strategic_context.get("route_pressure", false)):
+		return "cast to preserve route pressure with the authored movement spell hook"
+	if String(behavior.get("target_policy", "")) == "self_hero_movement_gap":
+		return "hold until restored movement changes a route, site, town, or threat decision"
+	return "hold until the map objective justifies the spell"
 
 static func _resource_payload_summary(payload: Variant) -> String:
 	if not (payload is Dictionary):
