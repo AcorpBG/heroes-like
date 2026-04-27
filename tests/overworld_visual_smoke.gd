@@ -1647,6 +1647,15 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		["Waystride", "Field Magic", "Field Route", "Cost 3", "target active hero", "No map target", "affects active hero", "Movement is already full", "Mana", "need 3", "Restores up to 4 movement", "save until movement has room"]
 	):
 		return false
+	var full_spell_surface_text := _spell_surface_text(full_snapshot, full_spell_action)
+	if not _assert_text_contains_all(
+		"Overworld field spell blocked check cue",
+		[full_spell_surface_text],
+		["Spell check:", "Spell Check", "Blocked x0/1", "Waystride", "Mana", "Movement", "Best spell:", "Next practical action:", "Spell Cast Check", "State change: casting spends mana"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("Overworld field spell blocked check cue", full_spell_surface_text):
+		return false
 
 	var start := OverworldRules.hero_position(session)
 	var safe_step: Vector2i = shell.call("_first_validation_safe_step", start)
@@ -1685,6 +1694,15 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 		["Cast Waystride (3 mana)", "Field Magic", "Field Route", "Restores up to 4 movement", "Cost 3", "target active hero", "No map target", "affects active hero", "Mana", "need 3", "Ready", "recover route tempo"]
 	):
 		return false
+	var ready_spell_surface_text := _spell_surface_text(ready_snapshot, ready_spell_action)
+	if not _assert_text_contains_all(
+		"Overworld field spell ready check cue",
+		[ready_spell_surface_text],
+		["Spell check:", "Spell Check", "Ready x1/1", "Waystride", "Mana", "Movement", "Best spell:", "Next practical action:", "Spell Cast Check", "Cast now", "State change: casting spends mana"]
+	):
+		return false
+	if not _assert_no_ai_score_leak("Overworld field spell ready check cue", ready_spell_surface_text):
+		return false
 
 	var cast_result: Dictionary = shell.call("validation_cast_overworld_spell", "spell_waystride")
 	if not bool(cast_result.get("ok", false)):
@@ -1713,6 +1731,18 @@ func _assert_overworld_magic_affordance_contract(shell: Node) -> bool:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	return true
+
+func _spell_surface_text(snapshot: Dictionary, spell_action: Dictionary) -> String:
+	var action_surfaces := []
+	for surface in (snapshot.get("spell_action_surfaces", []) if snapshot.get("spell_action_surfaces", []) is Array else []):
+		if surface is Dictionary:
+			action_surfaces.append("%s\n%s" % [String(surface.get("text", "")), String(surface.get("tooltip", ""))])
+	return "\n".join([
+		String(snapshot.get("spell_check_visible_text", "")),
+		String(snapshot.get("spell_check_tooltip_text", "")),
+		String(spell_action.get("spell_check_tooltip_text", "")),
+		"\n".join(action_surfaces),
+	])
 
 func _assert_enemy_activity_feed_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_end_turn") or not shell.has_method("validation_snapshot"):
