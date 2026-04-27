@@ -47,6 +47,9 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_build_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_town_defense_check_cue(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_town_trade_readiness_cue(shell):
 		get_tree().quit(1)
 		return false
@@ -1286,6 +1289,42 @@ func _assert_town_build_readiness_cue(shell: Node) -> bool:
 	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if text.contains(leak_token):
 			push_error("Town smoke: build readiness cue leaked internal token %s: %s." % [leak_token, text])
+			return false
+	return true
+
+func _assert_town_defense_check_cue(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Town smoke: shell is missing defense-check validation hooks.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var defense_check: Dictionary = snapshot.get("defense_check", {}) if snapshot.get("defense_check", {}) is Dictionary else {}
+	var text := "\n".join([
+		String(snapshot.get("defense_check_visible_text", "")),
+		String(snapshot.get("defense_check_tooltip_text", "")),
+		String(snapshot.get("visible_production_overview", "")),
+		String(snapshot.get("production_overview_tooltip_text", "")),
+		String(defense_check.get("frontier_state", "")),
+		String(defense_check.get("warning", "")),
+		String(defense_check.get("garrison_line", "")),
+		String(defense_check.get("threat_line", "")),
+		String(defense_check.get("next_step", "")),
+	])
+	for token in ["Defense check:", "Defense Check", "Readiness:", "Frontier state:", "Warning:", "Garrison:", "Threat watch:", "Next practical action:"]:
+		if not text.contains(token):
+			push_error("Town smoke: defense check cue lost %s clarity: %s." % [token, text])
+			return false
+	if not String(snapshot.get("visible_production_overview", "")).contains("Defense check:"):
+		push_error("Town smoke: defense check cue is not visible in the command overview: %s." % snapshot)
+		return false
+	if int(defense_check.get("readiness", -1)) <= 0 or int(defense_check.get("base_readiness", -1)) <= 0:
+		push_error("Town smoke: defense check cue did not expose stable readiness counts: %s." % defense_check)
+		return false
+	if String(defense_check.get("state", "")) not in ["steady", "front", "occupied", "reduced", "none"]:
+		push_error("Town smoke: defense check cue exposed an unexpected state: %s." % defense_check)
+		return false
+	for leak_token in ["build_category_weights", "final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if text.contains(leak_token):
+			push_error("Town smoke: defense check cue leaked internal token %s: %s." % [leak_token, text])
 			return false
 	return true
 
