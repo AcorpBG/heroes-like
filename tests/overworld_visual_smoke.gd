@@ -853,7 +853,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		"reachable",
 		"move/collect",
 		2,
-		["Route:", "Timber Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
+		["Route:", "Timber Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Next step:", "1,1", "1 step remains", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
 	):
 		return false
 	if not _assert_text_contains_all(
@@ -865,7 +865,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(reachable.get("map_tooltip", "")),
 			String(reachable.get("primary_action", {}).get("summary", "")),
 		],
-		["Timber Wagon", "Route:", "2 step", "Move", "reachable today", "Decision Brief", "Next:"]
+		["Timber Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "1,1", "Decision Brief", "Next:"]
 	):
 		return false
 
@@ -1070,6 +1070,7 @@ func _assert_route_decision_fields(label: String, snapshot: Dictionary, expected
 	var text := "\n".join([
 		String(snapshot.get("selected_route_decision_text", "")),
 		String(route_decision.get("decision_brief_text", "")),
+		String(route_decision.get("next_step_line", "")),
 		String(decision_brief.get("affected", "")),
 		String(decision_brief.get("why_it_matters", "")),
 		String(decision_brief.get("next_step", "")),
@@ -1138,6 +1139,9 @@ func _assert_route_target_handoff_contract(shell: Node) -> bool:
 			"Advance to Site",
 			"Readiness:",
 			"reachable today",
+			"Route step:",
+			"Next step:",
+			"1,1",
 			"Why it matters:",
 			"Next:",
 			"Move",
@@ -1207,6 +1211,8 @@ func _assert_primary_order_commit_check_contract(shell: Node) -> bool:
 			"Timber Wagon",
 			"Readiness:",
 			"reachable today",
+			"Next step:",
+			"1,1",
 			"Affected:",
 			"Why it matters:",
 			"Next:",
