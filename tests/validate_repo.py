@@ -367,6 +367,7 @@ ENEMY_STRATEGY_KEYS = {
     "raid": {"threshold_scale", "max_active_bonus", "pressure_commitment_scale", "objective_weight", "town_siege_weight", "site_denial_weight", "hero_hunt_weight"},
 }
 ECONOMY_REPORT_SCHEMA = "economy_resource_report_v1"
+ECONOMY_RESOURCE_REGISTRY_POLICY_ID = "live_id_compatibility_v1"
 ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", "timber", "experience")
 ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore"}
 ECONOMY_NON_STOCKPILE_REWARD_IDS = {"experience"}
@@ -1310,6 +1311,19 @@ def build_economy_resource_report() -> dict:
         "cadence": {},
         "capture": {},
         "market_caps": {},
+        "registry_policy": {
+            "policy_id": ECONOMY_RESOURCE_REGISTRY_POLICY_ID,
+            "mode": "report_only_compatibility",
+            "live_stockpile_resource_ids": ["gold", "wood", "ore"],
+            "target_only_resource_ids": ["timber"],
+            "non_stockpile_reward_ids": ["experience"],
+            "wood_timber_policy": "wood remains the live authored/save id; timber is target-only planning metadata until a save-aware adapter is selected",
+            "production_content_migration": False,
+            "runtime_adoption": "not_active",
+            "save_rewrite": False,
+            "save_version_bump": False,
+            "rare_resource_activation": False,
+        },
         "compatibility_adapters": {"runtime_adoption": "not_active", "report_normalization": "display_only", "wood_live_id": "wood", "timber_target_id": "timber", "save_rewrite": False},
         "warnings": [],
         "errors": [],
@@ -1395,6 +1409,11 @@ def print_economy_resource_report(report: dict) -> None:
     print(f"- non-stockpile rewards: {', '.join(report['registry']['non_stockpile_reward_ids'])}")
     for alias in report["registry"].get("alias_pairs", []):
         print(f"- alias: {alias['legacy_id']} is live id, {alias['target_id']} is target; display={alias['display_name']}; occurrences={alias.get('production_occurrences', 0)}")
+    policy = report.get("registry_policy", {})
+    print("Registry policy:")
+    print(f"- policy: {policy.get('policy_id', '')}; mode={policy.get('mode', '')}")
+    print(f"- live ids: {', '.join(policy.get('live_stockpile_resource_ids', []))}; target-only ids: {', '.join(policy.get('target_only_resource_ids', []))}")
+    print(f"- migration={policy.get('production_content_migration', False)}; save_version_bump={policy.get('save_version_bump', False)}; rare_activation={policy.get('rare_resource_activation', False)}")
     print("Resource usage:")
     for resource_id in sorted(report["usage"].keys()):
         entry = report["usage"][resource_id]
