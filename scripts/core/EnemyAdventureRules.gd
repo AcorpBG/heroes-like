@@ -126,6 +126,25 @@ const COMMANDER_ROLE_TURN_NO_OP_REASONS := [
 	"no_existing_raid_to_move",
 	"report_fixture_not_configured_for_assignment",
 ]
+const ARTIFACT_AI_VALUATION_SCHEMA := "artifact_ai_valuation_v1"
+const ARTIFACT_AI_BLOCKED_PUBLIC_TOKENS := [
+	"base_value",
+	"taxonomy_value",
+	"runtime_value",
+	"source_value",
+	"affinity_value",
+	"set_context_value",
+	"objective_value",
+	"faction_bias",
+	"travel_cost",
+	"assignment_penalty",
+	"final_priority",
+	"priority",
+	"debug",
+	"internal",
+	"score",
+	"breakdown",
+]
 
 static func adventure_spell_valuation_report(
 	hero_state: Dictionary,
@@ -171,6 +190,229 @@ static func adventure_spell_valuation_report(
 		"runtime_hook_counts": hook_counts,
 		"candidates": candidates,
 		"runtime_policy": "valuation_only_no_enemy_adventure_cast_executor",
+	}
+
+static func artifact_reward_valuation_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin: Dictionary,
+	faction_id: String = "",
+	limit: int = 0
+) -> Dictionary:
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+	var targets := []
+	var role_bucket_counts := {}
+	var runtime_surface_counts := {}
+	var source_context_counts := {}
+	var strategic_band_counts := {}
+	var faction_fit_count := 0
+	var set_piece_count := 0
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var breakdown := artifact_target_valuation_breakdown(
+			session,
+			config,
+			node_value,
+			origin_pos,
+			resolved_faction_id
+		)
+		if breakdown.is_empty() or int(breakdown.get("final_priority", 0)) <= 0:
+			continue
+		targets.append(breakdown)
+		for role_bucket in _normalize_string_array(breakdown.get("role_buckets", [])):
+			_increment_count(role_bucket_counts, role_bucket)
+		for surface in _normalize_string_array(breakdown.get("runtime_surfaces", [])):
+			_increment_count(runtime_surface_counts, surface)
+		for source_context in _normalize_string_array(breakdown.get("source_context_tags", [])):
+			_increment_count(source_context_counts, source_context)
+		_increment_count(strategic_band_counts, String(breakdown.get("strategic_band", "")))
+		if bool(breakdown.get("faction_affinity_match", false)):
+			faction_fit_count += 1
+		if String(breakdown.get("set_id", "")) != "":
+			set_piece_count += 1
+	targets.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("final_priority", 0)) == int(b.get("final_priority", 0)):
+			if int(a.get("travel_cost", 0)) == int(b.get("travel_cost", 0)):
+				return String(a.get("placement_id", "")) < String(b.get("placement_id", ""))
+			return int(a.get("travel_cost", 0)) < int(b.get("travel_cost", 0))
+		return int(a.get("final_priority", 0)) > int(b.get("final_priority", 0))
+	)
+	if limit > 0 and targets.size() > limit:
+		targets = targets.slice(0, limit)
+	var public_targets := []
+	for target in targets:
+		public_targets.append(_public_artifact_target_payload(target))
+	return {
+		"ok": true,
+		"schema": ARTIFACT_AI_VALUATION_SCHEMA,
+		"report_status": "artifact_reward_metadata_valued",
+		"scenario_id": String(session.scenario_id),
+		"faction_id": resolved_faction_id,
+		"origin": {"x": origin_pos.x, "y": origin_pos.y},
+		"target_count": public_targets.size(),
+		"public_targets": public_targets,
+		"role_bucket_counts": role_bucket_counts,
+		"runtime_surface_counts": runtime_surface_counts,
+		"source_context_counts": source_context_counts,
+		"strategic_band_counts": strategic_band_counts,
+		"faction_fit_count": faction_fit_count,
+		"set_piece_count": set_piece_count,
+		"selection_policy": "report_only_metadata_bands_with_existing_artifact_targeting",
+		"runtime_policy": {
+			"live_drop_execution": false,
+			"save_version_bump": false,
+			"set_bonuses_active": false,
+			"rare_resource_activation": false,
+			"broad_ai_rewrite": false,
+		},
+	}
+
+static func artifact_target_valuation_breakdown(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	node: Variant,
+	origin_pos: Vector2i,
+	faction_id: String = ""
+) -> Dictionary:
+	if not (node is Dictionary) or bool(node.get("collected", false)):
+		return {}
+	var placement_id := String(node.get("placement_id", ""))
+	var artifact_id := String(node.get("artifact_id", ""))
+	if placement_id == "" or artifact_id == "":
+		return {}
+	var artifact := ContentService.get_artifact(artifact_id)
+	if artifact.is_empty():
+		return {}
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var goal_distance := _path_distance(session, origin_pos, [target_tile], "")
+	if goal_distance >= 9999:
+		return {}
+	var roles := _normalize_string_array(artifact.get("roles", []))
+	var role_buckets := _artifact_role_buckets(artifact)
+	var runtime_surfaces := _artifact_runtime_surfaces(artifact)
+	var source_contexts := _artifact_source_contexts(artifact_id)
+	var source_context_tags := []
+	for context_value in source_contexts:
+		if not (context_value is Dictionary):
+			continue
+		var source_tag := String(context_value.get("source_tag", ""))
+		if source_tag != "" and source_tag not in source_context_tags:
+			source_context_tags.append(source_tag)
+	for source_tag in _normalize_string_array(artifact.get("source_tags", [])):
+		if source_tag not in source_context_tags:
+			source_context_tags.append(source_tag)
+	var faction_affinity := _normalize_string_array(artifact.get("faction_affinity", []))
+	var ai_hints: Dictionary = artifact.get("ai_hints", {}) if artifact.get("ai_hints", {}) is Dictionary else {}
+	var preferred_factions := _normalize_string_array(ai_hints.get("preferred_faction_ids", []))
+	var faction_match := (
+		resolved_faction_id != ""
+		and (resolved_faction_id in faction_affinity or resolved_faction_id in preferred_factions)
+	)
+	var set_id := _artifact_set_id_from_record(artifact)
+	var base_value := _artifact_target_priority(session, node)
+	var taxonomy_value := _artifact_taxonomy_signal_value(artifact, role_buckets)
+	var runtime_value := _artifact_runtime_signal_value(artifact, runtime_surfaces)
+	var source_value: int = min(45, source_contexts.size() * 10 + source_context_tags.size() * 4)
+	var affinity_value: int = 32 if faction_match else 0
+	var set_context_value: int = 18 if set_id != "" else 0
+	var objective_value: int = _objective_proximity_bonus(session, target_tile.x, target_tile.y)
+	var faction_bias: int = priority_target_bonus(config, placement_id)
+	var travel_cost: int = max(0, goal_distance - 1) * 3
+	var assignment_penalty: int = _assignment_penalty(session, "artifact", placement_id)
+	var final_priority: int = max(
+		0,
+		_weighted_priority(
+			config,
+			resolved_faction_id,
+			"artifact",
+			placement_id,
+			base_value,
+			"",
+			false
+		) - assignment_penalty
+	)
+	var reason_codes := _artifact_reason_codes(
+		artifact,
+		role_buckets,
+		runtime_surfaces,
+		source_context_tags,
+		faction_match,
+		set_id
+	)
+	return {
+		"target_kind": "artifact",
+		"placement_id": placement_id,
+		"artifact_id": artifact_id,
+		"artifact_label": String(artifact.get("name", artifact_id)),
+		"target_label": ArtifactRulesScript.describe_artifact(artifact_id),
+		"target_x": target_tile.x,
+		"target_y": target_tile.y,
+		"artifact_class": String(artifact.get("artifact_class", "")),
+		"rarity": String(artifact.get("rarity", "")),
+		"family": String(artifact.get("family", "")),
+		"roles": roles,
+		"role_buckets": role_buckets,
+		"accord_affinity": String(artifact.get("accord_affinity", "")),
+		"faction_affinity": faction_affinity,
+		"faction_affinity_match": faction_match,
+		"set_id": set_id,
+		"source_tags": _normalize_string_array(artifact.get("source_tags", [])),
+		"source_contexts": source_contexts,
+		"source_context_tags": source_context_tags,
+		"runtime_surfaces": runtime_surfaces,
+		"strategic_band": _artifact_strategic_band(taxonomy_value + runtime_value + source_value + affinity_value + set_context_value),
+		"base_value": base_value,
+		"taxonomy_value": taxonomy_value,
+		"runtime_value": runtime_value,
+		"source_value": source_value,
+		"affinity_value": affinity_value,
+		"set_context_value": set_context_value,
+		"objective_value": objective_value,
+		"faction_bias": faction_bias,
+		"travel_cost": travel_cost,
+		"assignment_penalty": assignment_penalty,
+		"final_priority": final_priority,
+		"reason_codes": reason_codes,
+		"public_reason": _artifact_public_reason(reason_codes),
+		"public_importance": _artifact_public_importance(reason_codes, final_priority),
+		"report_reason": "metadata valuation from taxonomy, runtime surfaces, source contexts, faction fit, and set context",
+	}
+
+static func artifact_ai_public_leak_check(public_surfaces: Variant) -> Dictionary:
+	var stack := [public_surfaces]
+	var checked_records := 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if value is Dictionary:
+			checked_records += 1
+			var text := JSON.stringify(value)
+			for token in ARTIFACT_AI_BLOCKED_PUBLIC_TOKENS:
+				if text.contains(String(token)):
+					return {"ok": false, "error": "public artifact valuation surface leaked token %s" % String(token)}
+			for nested_key in value.keys():
+				var nested = value[nested_key]
+				if nested is Array or nested is Dictionary:
+					stack.append(nested)
+			continue
+		var value_text := String(value)
+		for token in ARTIFACT_AI_BLOCKED_PUBLIC_TOKENS:
+			if value_text.contains(String(token)):
+				return {"ok": false, "error": "public artifact valuation text leaked token %s" % String(token)}
+	return {
+		"ok": true,
+		"checked_records": checked_records,
+		"blocked_public_tokens": ARTIFACT_AI_BLOCKED_PUBLIC_TOKENS,
 	}
 
 const AI_HERO_TASK_REPORT_ID := "AI_HERO_TASK_STATE_BOUNDARY_REPORT"
@@ -2434,6 +2676,7 @@ static func _append_artifact_candidate(
 	var goal_distance = _path_distance(session, origin_pos, [goal_tile], "")
 	if goal_distance >= 9999:
 		return
+	var breakdown := artifact_target_valuation_breakdown(session, config, node, origin_pos, faction_id)
 	candidates.append(
 		{
 			"target_kind": "artifact",
@@ -2456,6 +2699,9 @@ static func _append_artifact_candidate(
 					false
 				) - _assignment_penalty(session, "artifact", placement_id)
 			),
+			"target_reason_codes": breakdown.get("reason_codes", []),
+			"target_public_reason": String(breakdown.get("public_reason", "")),
+			"target_public_importance": String(breakdown.get("public_importance", "medium")),
 		}
 	)
 
@@ -5675,6 +5921,213 @@ static func _artifact_target_priority(session: SessionStateStoreScript.SessionDa
 	priority += int(min(50, _target_resource_value(bonuses.get("daily_income", {})) / 80))
 	priority += _objective_proximity_bonus(session, int(node.get("x", 0)), int(node.get("y", 0)))
 	return priority
+
+static func _public_artifact_target_payload(target: Dictionary) -> Dictionary:
+	return {
+		"target_kind": "artifact",
+		"placement_id": String(target.get("placement_id", "")),
+		"artifact_id": String(target.get("artifact_id", "")),
+		"artifact_label": String(target.get("artifact_label", "")),
+		"artifact_class": String(target.get("artifact_class", "")),
+		"rarity": String(target.get("rarity", "")),
+		"family": String(target.get("family", "")),
+		"role_buckets": _normalize_string_array(target.get("role_buckets", [])),
+		"accord_affinity": String(target.get("accord_affinity", "")),
+		"faction_affinity_match": bool(target.get("faction_affinity_match", false)),
+		"set_context": "set_piece" if String(target.get("set_id", "")) != "" else "standalone",
+		"source_contexts": _normalize_string_array(target.get("source_context_tags", [])),
+		"runtime_surfaces": _normalize_string_array(target.get("runtime_surfaces", [])),
+		"strategic_band": String(target.get("strategic_band", "")),
+		"reason_codes": _normalize_string_array(target.get("reason_codes", [])),
+		"public_reason": String(target.get("public_reason", "")),
+		"public_importance": String(target.get("public_importance", "medium")),
+	}
+
+static func _artifact_role_buckets(artifact: Dictionary) -> Array:
+	var roles := _normalize_string_array(artifact.get("roles", []))
+	var ai_hints: Dictionary = artifact.get("ai_hints", {}) if artifact.get("ai_hints", {}) is Dictionary else {}
+	var drivers := _normalize_string_array(ai_hints.get("value_drivers", []))
+	var buckets := []
+	if "movement" in roles or "route" in roles or "route_tempo" in drivers or "root_route_tempo" in drivers or "fog_route_scouting" in drivers:
+		buckets.append("route")
+	if "scouting" in roles or "reward_modifier" in roles or "scouting_reach" in drivers or "hidden_site_reveal" in drivers:
+		buckets.append("scouting")
+	if "economy" in roles or "town_support" in roles or "common_resource_income" in drivers or "town_build_support" in drivers:
+		buckets.append("economy")
+	if "combat" in roles or "morale" in roles or "frontline_attack" in drivers or "initiative_tempo" in drivers:
+		buckets.append("command")
+	if "defense" in roles or "resistance" in roles or "frontline_survival" in drivers or "town_defense" in drivers:
+		buckets.append("defense")
+	if "magic" in roles or String(artifact.get("accord_affinity", "")) not in ["", "neutral", "none"]:
+		buckets.append("magic")
+	if "recruitment" in roles:
+		buckets.append("recruitment")
+	if "progression" in roles or _artifact_set_id_from_record(artifact) != "":
+		buckets.append("progression")
+	return buckets
+
+static func _artifact_runtime_surfaces(artifact: Dictionary) -> Array:
+	var bonuses = artifact.get("bonuses", {})
+	if not (bonuses is Dictionary):
+		return []
+	var surfaces := []
+	if int(bonuses.get("overworld_movement", 0)) != 0:
+		surfaces.append("adventure_movement")
+	if int(bonuses.get("scouting_radius", 0)) != 0:
+		surfaces.append("adventure_scouting")
+	if (
+		int(bonuses.get("battle_attack", 0)) != 0
+		or int(bonuses.get("battle_defense", 0)) != 0
+		or int(bonuses.get("battle_initiative", 0)) != 0
+	):
+		surfaces.append("battle_command")
+	var income = bonuses.get("daily_income", {})
+	if income is Dictionary and not _reward_resources_for_empire(income).is_empty():
+		surfaces.append("daily_common_income")
+	var spell_modifiers = bonuses.get("spell_modifiers", [])
+	if spell_modifiers is Array and not spell_modifiers.is_empty():
+		surfaces.append("spell_modifier")
+	return surfaces
+
+static func _artifact_source_contexts(artifact_id: String) -> Array:
+	var raw := ContentService.load_json(ContentService.ARTIFACTS_PATH)
+	var tables = raw.get("source_reward_tables", [])
+	var contexts := []
+	if not (tables is Array):
+		return contexts
+	for table_value in tables:
+		if not (table_value is Dictionary):
+			continue
+		var table: Dictionary = table_value
+		if artifact_id not in _normalize_string_array(table.get("artifact_ids", [])):
+			continue
+		contexts.append(
+			{
+				"source_tag": String(table.get("source_tag", "")),
+				"reward_context": String(table.get("reward_context", "")),
+				"guard_tiers": _normalize_string_array(table.get("guard_tiers", [])),
+				"rarity_bands": _normalize_string_array(table.get("rarity_bands", [])),
+			}
+		)
+	return contexts
+
+static func _artifact_set_id_from_record(artifact: Dictionary) -> String:
+	for key in ["set_id", "artifact_set_id", "set"]:
+		var value = artifact.get(key, "")
+		if value is Dictionary:
+			var nested_id := String(value.get("id", "")).strip_edges()
+			if nested_id != "":
+				return nested_id
+		var label := String(value).strip_edges()
+		if label != "":
+			return label
+	var validation_tags = artifact.get("validation_tags", {})
+	if validation_tags is Dictionary:
+		return String(validation_tags.get("set_id", "")).strip_edges()
+	return ""
+
+static func _artifact_taxonomy_signal_value(artifact: Dictionary, role_buckets: Array) -> int:
+	var value := role_buckets.size() * 8
+	match String(artifact.get("rarity", "")):
+		"uncommon":
+			value += 8
+		"rare":
+			value += 18
+		"epic":
+			value += 32
+		"legendary":
+			value += 48
+		"scenario":
+			value += 20
+	match String(artifact.get("artifact_class", "")):
+		"faction", "accord", "set_piece":
+			value += 10
+		"relic", "old_measure":
+			value += 24
+	return value
+
+static func _artifact_runtime_signal_value(artifact: Dictionary, runtime_surfaces: Array) -> int:
+	var bonuses = artifact.get("bonuses", {})
+	if not (bonuses is Dictionary):
+		return 0
+	var value := runtime_surfaces.size() * 7
+	value += max(0, int(bonuses.get("overworld_movement", 0))) * 10
+	value += max(0, int(bonuses.get("scouting_radius", 0))) * 8
+	value += max(0, int(bonuses.get("battle_attack", 0))) * 8
+	value += max(0, int(bonuses.get("battle_defense", 0))) * 8
+	value += max(0, int(bonuses.get("battle_initiative", 0))) * 9
+	value += int(min(28, _target_resource_value(bonuses.get("daily_income", {})) / 120))
+	return value
+
+static func _artifact_strategic_band(signal_value: int) -> String:
+	if signal_value >= 110:
+		return "decisive"
+	if signal_value >= 75:
+		return "high"
+	if signal_value >= 45:
+		return "medium"
+	return "low"
+
+static func _artifact_reason_codes(
+	artifact: Dictionary,
+	role_buckets: Array,
+	runtime_surfaces: Array,
+	source_context_tags: Array,
+	faction_match: bool,
+	set_id: String
+) -> Array:
+	var codes := []
+	if "route" in role_buckets:
+		codes.append("route_tempo")
+	if "scouting" in role_buckets:
+		codes.append("scouting_reach")
+	if "economy" in role_buckets:
+		codes.append("economy_support")
+	if "command" in role_buckets:
+		codes.append("command_pressure")
+	if "defense" in role_buckets:
+		codes.append("defense_posture")
+	if "magic" in role_buckets:
+		codes.append("magic_support")
+	if "daily_common_income" in runtime_surfaces and "economy_support" not in codes:
+		codes.append("economy_support")
+	if "battle_command" in runtime_surfaces and "command_pressure" not in codes:
+		codes.append("command_pressure")
+	if not source_context_tags.is_empty():
+		codes.append("source_eligible")
+	if faction_match:
+		codes.append("faction_fit")
+	if set_id != "":
+		codes.append("set_progress")
+	return codes
+
+static func _artifact_public_reason(reason_codes: Array) -> String:
+	if "faction_fit" in reason_codes:
+		return "faction-fit relic"
+	if "economy_support" in reason_codes:
+		return "economy support relic"
+	if "route_tempo" in reason_codes and "scouting_reach" in reason_codes:
+		return "route scouting relic"
+	if "route_tempo" in reason_codes:
+		return "route tempo relic"
+	if "scouting_reach" in reason_codes:
+		return "scouting relic"
+	if "defense_posture" in reason_codes:
+		return "defensive relic"
+	if "command_pressure" in reason_codes:
+		return "command relic"
+	if "magic_support" in reason_codes:
+		return "magic relic"
+	if "set_progress" in reason_codes:
+		return "set progress relic"
+	return "artifact reward"
+
+static func _artifact_public_importance(reason_codes: Array, final_priority: int) -> String:
+	if "faction_fit" in reason_codes or final_priority >= 190:
+		return "high"
+	if "economy_support" in reason_codes or "set_progress" in reason_codes or final_priority >= 145:
+		return "medium"
+	return "low"
 
 static func _encounter_target_priority(session: SessionStateStoreScript.SessionData, encounter: Variant) -> int:
 	if not (encounter is Dictionary):

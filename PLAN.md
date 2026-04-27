@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: continue Phase 2 in category order after P2.5 magic implementation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children are now implemented, with remaining artifact foundation work moving to P2.6.
+Current tactical objective: continue Phase 2 in category order after P2.6 artifact foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children and P2.6 artifact children are now implemented, with animation/event cue foundation work moving to P2.7.
 
-Selected next implementation candidate after bounded artifact source/reward metadata: `artifact-equip-runtime-effects-10184`.
+Selected next implementation candidate after bounded artifact AI valuation: `animation-event-cue-catalog-contract-10184`.
 
 ## Slice Status Model
 
@@ -1495,6 +1495,11 @@ implementationTargets:
 - AI valuation/report helpers
 - strategic AI report fixtures
 - public-output leak checks
+
+implementationEvidence:
+- `docs/artifact-ai-valuation-report.md`
+- `tests/artifact_ai_valuation_report.gd`
+- `EnemyAdventureRules.artifact_reward_valuation_report(...)`
 
 ### P2 Child: Animation Event Cue Catalog Contract
 

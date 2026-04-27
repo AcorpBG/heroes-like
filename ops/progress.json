@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "artifact-equip-runtime-effects-10184",
-  "currentSliceTitle": "Artifact Equip Surface And Runtime Effects",
-  "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded artifact equip/runtime effect proof. Evidence: ArtifactRules.artifact_equip_runtime_report, tests/artifact_equip_runtime_effects_report.gd, docs/artifact-equip-runtime-effects-report.md, and PLAN evidence entry. Equipped artifacts now have public-safe report coverage proving current equipment management plus movement/scouting, battle command, daily common-resource income, and supported spell modifier runtime hooks. Boundaries preserved: no save migration, source/drop execution changes, set bonus activation, AI valuation behavior, rare-resource activation, or broad UI overhaul.",
+  "currentSliceId": "animation-event-cue-catalog-contract-10184",
+  "currentSliceTitle": "Animation Event Cue Catalog Contract",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "Next Phase 2 category after P2.6 artifact foundation closeout. Keep scope bounded to event/cue contract implementation; no final VFX/audio, final sprite/art production, renderer asset import, or ad hoc screen polish.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T23:25:00Z",
+  "updatedAt": "2026-04-27T22:06:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -340,7 +340,7 @@
       "id": "artifact-system-foundation-implementation-10184",
       "title": "Artifact System Foundation Implementation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "docs_ready",
+      "status": "completed",
       "classification": "parent_foundation_docs_ready_children_pending",
       "sourceDocs": [
         "docs/artifact-system-expansion-foundation.md"
@@ -354,8 +354,8 @@
         "spell/economy/battle/adventure hooks",
         "validation fixtures/reports"
       ],
-      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system—multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation—requires child implementation slices.",
-      "notes": "Do not reduce artifact work to an overworld cue. Cue polish is not artifact-system implementation.",
+      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system\u2014multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation\u2014requires child implementation slices.",
+      "notes": "Completed P2.6 Artifact System Foundation child set through artifact taxonomy/schema, set/faction content, source/reward metadata, equip/runtime effects, and bounded artifact AI valuation. Remaining artifact work beyond these bounded slices stays future-scoped; next category in phase order is P2.7 animation/event cue foundation.",
       "childSliceIds": [
         "artifact-taxonomy-schema-implementation-10184",
         "artifact-sets-faction-specific-content-10184",
@@ -369,7 +369,9 @@
         "magic-artifact-animation-docs"
       ],
       "completedImplementationEvidenceIds": [],
-      "reportOnlyEvidenceIds": []
+      "reportOnlyEvidenceIds": [],
+      "updatedAt": "2026-04-27T22:06:07Z",
+      "completedAt": "2026-04-27T22:06:07Z"
     },
     {
       "id": "animation-event-cue-foundation-implementation-10184",
@@ -1672,7 +1674,7 @@
       "id": "artifact-ai-valuation-10184",
       "title": "Artifact AI Valuation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "artifact-system-foundation-implementation-10184",
@@ -1696,7 +1698,11 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T22:06:03Z",
+      "startedAt": "2026-04-27T21:58:09Z",
+      "notes": "Completed bounded artifact AI valuation implementation. Evidence: EnemyAdventureRules.artifact_target_valuation_breakdown and artifact_reward_valuation_report, artifact_ai_public_leak_check, tests/artifact_ai_valuation_report.gd/.tscn, docs/artifact-ai-valuation-report.md, and PLAN evidence entry. The report consumes artifact taxonomy roles/AI hints, source reward tables and source tags, set context, faction affinity, and current runtime bonus surfaces, while public payloads omit raw priority/debug/internal fields. Boundaries preserved: no save migration, source/drop execution changes, set bonus activation, rare-resource activation, broad AI rewrite, market/economy rebalance, or broad UI overhaul.",
+      "completedAt": "2026-04-27T22:06:03Z"
     },
     {
       "id": "animation-event-cue-catalog-contract-10184",
@@ -3412,23 +3418,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "artifact-ai-valuation-10184",
-      "title": "Artifact AI Valuation",
+      "id": "animation-event-cue-catalog-contract-10184",
+      "title": "Animation Event Cue Catalog Contract",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
-      "parentSliceId": "artifact-system-foundation-implementation-10184",
-      "source": "PLAN.md P2.6 Artifact System Foundation Implementation",
+      "parentSliceId": "animation-event-cue-foundation-implementation-10184",
+      "source": "PLAN.md P2.7 Animation And Event Cue Foundation",
       "sourceDocs": [
-        "docs/artifact-system-expansion-foundation.md",
-        "docs/strategic-ai-foundation.md",
-        "docs/strategic-ai-pressure-expansion-plan.md"
+        "docs/animation-systems-foundation.md",
+        "docs/screen-wireframes.md"
       ],
       "implementationTargets": [
-        "AI valuation/report helpers",
-        "strategic AI report fixtures",
-        "public-output leak checks"
+        "event/cue catalog for resolved battle, overworld, town, spell, artifact, and UI events",
+        "mappings from event ids to animation states, playback policy, VFX/audio ids, reduced-motion/fast-mode fallbacks, and validation tags",
+        "validation/report hooks"
       ],
-      "notes": "Next P2.6 child after bounded artifact equip/runtime proof. Keep scope bounded; add report/helper valuation evidence without introducing hidden player-facing score fields, broad AI behavior changes, save migration, rare-resource activation, source/drop execution changes, or set bonus activation."
+      "notes": "Next Phase 2 category after P2.6 artifact foundation closeout. Keep scope bounded to event/cue contract implementation; no final VFX/audio, final sprite/art production, renderer asset import, or ad hoc screen polish."
     }
   ],
   "stoppedOrPausedTasks": [
