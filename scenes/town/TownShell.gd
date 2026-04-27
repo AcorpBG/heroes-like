@@ -230,7 +230,17 @@ func _refresh() -> void:
 	_set_compact_label(_outlook_label, TownRules.describe_outlook_board(_session), 4)
 	_set_compact_label(_command_ledger_label, TownRules.describe_command_ledger(_session), 4)
 	_set_compact_label(_hero_label, OverworldRules.describe_hero(_session), 2)
-	_set_compact_label(_production_overview_label, TownRules.describe_production_overview(_session), 4)
+	var defense_check := _defense_check_surface()
+	var production_overview := TownRules.describe_production_overview(_session)
+	var production_text := _production_overview_with_defense_check(
+		production_overview,
+		String(defense_check.get("visible_text", "")),
+	)
+	_set_compact_label(_production_overview_label, production_text, 4)
+	_production_overview_label.tooltip_text = _join_tooltip_sections([
+		String(defense_check.get("tooltip_text", "")),
+		production_overview,
+	])
 	_set_compact_label(_heroes_label, TownRules.describe_heroes(_session), 2)
 	_set_compact_label(_specialty_label, TownRules.describe_specialties(_session), 2)
 	_set_compact_label(_army_label, OverworldRules.describe_army(_session), 2)
@@ -421,6 +431,7 @@ func validation_snapshot() -> Dictionary:
 	var hire_readiness := _hire_readiness_surface()
 	var artifact_readiness := _artifact_readiness_surface()
 	var response_readiness := _response_readiness_surface()
+	var defense_check := _defense_check_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -444,6 +455,10 @@ func validation_snapshot() -> Dictionary:
 		"summary": TownRules.describe_summary(_session),
 		"production_overview": TownRules.describe_production_overview(_session),
 		"visible_production_overview": _production_overview_label.text,
+		"production_overview_tooltip_text": _production_overview_label.tooltip_text,
+		"defense_check": defense_check,
+		"defense_check_visible_text": String(defense_check.get("visible_text", "")),
+		"defense_check_tooltip_text": String(defense_check.get("tooltip_text", "")),
 		"army_text": OverworldRules.describe_army(_session),
 		"army_visible_text": _army_label.text,
 		"defense_text": TownRules.describe_defense(_session),
@@ -1048,6 +1063,84 @@ func _button_tooltips(container: Container) -> Array:
 				"disabled": child.disabled,
 			})
 	return tooltips
+
+func _defense_check_surface() -> Dictionary:
+	var town := TownRules.get_active_town(_session)
+	if town.is_empty():
+		return {
+			"visible_text": "Defense check: no active town",
+			"tooltip_text": "Defense Check\n- Town: none.\n- Readiness: unavailable.\n- Next practical action: return to the overworld and select a visitable town.",
+			"readiness": 0,
+			"base_readiness": 0,
+			"state": "none",
+			"frontier_state": "No active town.",
+			"warning": "No town front is selected.",
+			"next_step": "Return to the overworld and select a visitable town.",
+		}
+
+	var readiness := OverworldRules.town_battle_readiness(town, _session)
+	var base_readiness := OverworldRules.town_battle_readiness(town)
+	var occupation := OverworldRules.town_occupation_state(_session, town)
+	var front := OverworldRules.town_front_state(_session, town)
+	var warning := OverworldRules.describe_town_defense_readiness_warning(_session, town)
+	var frontier_state := "steady watch"
+	var state := "steady"
+	if bool(occupation.get("active", false)):
+		state = "occupied"
+		frontier_state = String(occupation.get("summary", "occupation pressure is active")).strip_edges()
+	elif bool(front.get("active", false)):
+		state = "front"
+		frontier_state = String(front.get("summary", "front pressure is active")).strip_edges()
+	elif readiness < base_readiness:
+		state = "reduced"
+		frontier_state = "defense readiness is below the town's base posture"
+	var visible := "Defense check: Steady | Readiness %d" % readiness
+	match state:
+		"occupied":
+			visible = "Defense check: Occupied | Readiness %d" % readiness
+		"front":
+			visible = "Defense check: Front active | Readiness %d" % readiness
+		"reduced":
+			visible = "Defense check: Reduced %d/%d" % [readiness, base_readiness]
+
+	var garrison_line := _first_matching_line(TownRules.describe_defense(_session), ["companies", "Garrison"])
+	if garrison_line == "":
+		garrison_line = "Garrison state is listed in Defense Posture."
+	var threat_line := _first_matching_line(TownRules.describe_threats(_session), ["raid", "Front watch", "Occupation watch", "No hostile"])
+	if threat_line == "":
+		threat_line = frontier_state.capitalize()
+	var next_step := "Leave when town orders are set; keep the frontier watch current."
+	if state == "occupied":
+		next_step = "Stabilize occupation or reinforce before relying on this town."
+	elif state == "front":
+		next_step = "Review Strategic Response or leave town to break the hostile lane."
+	elif state == "reduced":
+		next_step = "Muster or recover defenders before drawing a siege."
+	elif readiness < 30:
+		next_step = "Muster available troops before leaving town."
+
+	var tooltip_lines := [
+		"Defense Check",
+		"- Town: %s" % _town_display_name(town),
+		"- Readiness: %d current, %d base" % [readiness, base_readiness],
+		"- Frontier state: %s" % frontier_state,
+		"- Warning: %s" % warning,
+		"- Garrison: %s" % garrison_line.trim_prefix("- ").strip_edges(),
+		"- Threat watch: %s" % threat_line.trim_prefix("- ").strip_edges(),
+		"- Next practical action: %s" % next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"readiness": readiness,
+		"base_readiness": base_readiness,
+		"state": state,
+		"frontier_state": frontier_state,
+		"warning": warning,
+		"garrison_line": garrison_line,
+		"threat_line": threat_line,
+		"next_step": next_step,
+	}
 
 func _build_readiness_surface() -> Dictionary:
 	var actions := TownRules.get_build_actions(_session)
@@ -2108,6 +2201,27 @@ func _short_text(text: String, max_chars: int) -> String:
 	if max_chars <= 0 or cleaned.length() <= max_chars:
 		return cleaned
 	return "%s..." % cleaned.left(max(0, max_chars - 3)).strip_edges()
+
+func _first_matching_line(text: String, tokens: Array) -> String:
+	for line_value in text.split("\n", false):
+		var line := String(line_value).strip_edges()
+		if line == "":
+			continue
+		for token_value in tokens:
+			if line.find(String(token_value)) >= 0:
+				return line
+	return ""
+
+func _production_overview_with_defense_check(overview: String, defense_visible: String) -> String:
+	if defense_visible.strip_edges() == "":
+		return overview
+	var lines := overview.split("\n", false)
+	for index in range(lines.size()):
+		var line := String(lines[index])
+		if line.strip_edges().begins_with("- Owner "):
+			lines[index] = "- %s | %s" % [defense_visible.strip_edges(), line.strip_edges().trim_prefix("- ")]
+			return "\n".join(lines)
+	return _join_tooltip_sections([defense_visible, overview])
 
 func _join_tooltip_sections(sections: Array) -> String:
 	var lines := []
