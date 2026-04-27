@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "magic-spell-school-category-schema-10184",
-  "currentSliceTitle": "Magic Spell School And Category Schema",
+  "currentSliceId": "magic-battle-spell-behavior-expansion-10184",
+  "currentSliceTitle": "Magic Battle Spell Behavior Expansion",
   "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.5 magic spell school/category schema in progress: inspect prior magic docs/content/runtime first; implement selected spell school/category/tier metadata and validation without treating UI cues as implementation.",
+  "currentSliceNotes": "Selected next P2.5 child after completing magic-spell-school-category-schema-10184. Next work should expand selected tactical spell behavior with focused battle validation, without broad rebalance, save migration, AI rewrite, or UI-only implementation claims.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T16:16:23Z",
+  "updatedAt": "2026-04-27T16:23:53Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1136,7 +1136,7 @@
       "id": "magic-spell-school-category-schema-10184",
       "title": "Magic Spell School And Category Schema",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1159,15 +1159,16 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T16:16:23Z",
+      "updatedAt": "2026-04-27T16:23:31Z",
       "startedAt": "2026-04-27T16:16:23Z",
-      "notes": "worker started for P2.5 magic spell school/category schema: inspect prior magic docs/content/runtime first, then implement selected spell school/category/tier metadata and validation without treating UI cues as implementation"
+      "notes": "Completed spell school/category/tier schema implementation: content/spells.json now carries school_id, tier, accord_family, primary_role, and role_categories for all 20 spells; SpellRules exposes metadata helpers and schema report; ContentService, validate_repo, focused MAGIC_SPELL_SCHEMA_REPORT, and docs evidence validate loaded metadata without balance, save, AI, adventure-targeting, renderer, or resource migration.",
+      "completedAt": "2026-04-27T16:23:31Z"
     },
     {
       "id": "magic-battle-spell-behavior-expansion-10184",
       "title": "Magic Battle Spell Behavior Expansion",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "in_progress",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1188,7 +1189,10 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T16:23:53Z",
+      "startedAt": "2026-04-27T16:23:53Z",
+      "notes": "Selected next P2.5 child after completing magic-spell-school-category-schema-10184. Next work should expand selected tactical spell behavior with focused battle validation, without broad rebalance, save migration, AI rewrite, or UI-only implementation claims."
     },
     {
       "id": "magic-adventure-map-spell-hooks-10184",
@@ -2886,19 +2890,18 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "magic-spell-school-category-schema-10184",
-      "title": "Magic Spell School And Category Schema",
+      "id": "magic-battle-spell-behavior-expansion-10184",
+      "title": "Magic Battle Spell Behavior Expansion",
       "status": "in_progress",
       "parentSliceId": "magic-system-foundation-implementation-10184",
       "sourceDocs": [
         "docs/magic-system-expansion-foundation.md"
       ],
       "implementationTargets": [
-        "content/spells.json",
-        "scripts/core/SpellRules.gd",
-        "validation fixtures/reports"
+        "battle spell hooks",
+        "battle smoke/report fixtures"
       ],
-      "notes": "worker started for P2.5 magic spell school/category schema: inspect prior magic docs/content/runtime first, then implement selected spell school/category/tier metadata and validation without treating UI cues as implementation",
+      "notes": "Selected next P2.5 child after completing magic-spell-school-category-schema-10184. Next work should expand selected tactical spell behavior with focused battle validation, without broad rebalance, save migration, AI rewrite, or UI-only implementation claims.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.5 Magic System Foundation Implementation"

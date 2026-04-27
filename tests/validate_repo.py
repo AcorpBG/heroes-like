@@ -104,6 +104,19 @@ SUPPORTED_FIELD_OBJECTIVE_PRESSURE_TAGS = {
     "urgency",
 }
 SUPPORTED_BUILDING_CATEGORIES = {"civic", "dwelling", "economy", "support", "magic"}
+SUPPORTED_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"}
+REQUIRED_MAJOR_SPELL_SCHOOLS = {"beacon", "mire", "lens", "root", "furnace", "veil"}
+SUPPORTED_SPELL_ROLE_CATEGORIES = {"damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"}
+SUPPORTED_SPELL_PRIMARY_ROLES = {
+    "movement_support",
+    "priority_damage",
+    "harry_damage",
+    "control_damage",
+    "isolation_damage",
+    "ally_defense",
+    "tempo_buff",
+    "assault_buff",
+}
 VALID_SPECIALTY_IDS = {"wayfinder", "ledgerkeeper", "spellwright", "drillmaster", "armsmaster", "mustercaptain", "borderwarden"}
 RELEASE_PLAYER_FACTIONS = {"faction_embercourt", "faction_mireclaw", "faction_sunvault"}
 SIX_FACTION_BIBLE_IDS = {
@@ -5057,9 +5070,16 @@ def validate_content(errors: list[str]) -> None:
             ensure(isinstance(entry, dict), errors, f"Town {town_id} contains a non-dict spell library entry")
             if not isinstance(entry, dict):
                 continue
-            ensure(int(entry.get("tier", 0)) > 0, errors, f"Town {town_id} spell library entries must define tier > 0")
+            library_tier = int(entry.get("tier", 0))
+            ensure(library_tier > 0, errors, f"Town {town_id} spell library entries must define tier > 0")
             for spell_id in entry.get("spell_ids", []):
                 ensure(str(spell_id) in spells, errors, f"Town {town_id} references missing spell library spell {spell_id}")
+                if str(spell_id) in spells:
+                    ensure(
+                        int(spells[str(spell_id)].get("tier", 0)) <= library_tier,
+                        errors,
+                        f"Town {town_id} tier {library_tier} spell library cannot offer higher-tier spell {spell_id}",
+                    )
         advanced_embercourt_ids = [building_id for building_id in town.get("buildable_building_ids", []) if str(building_id) in ADVANCED_EMBERCOURT_BUILDING_IDS]
         advanced_mireclaw_ids = [building_id for building_id in town.get("buildable_building_ids", []) if str(building_id) in ADVANCED_MIRECLAW_BUILDING_IDS]
         advanced_sunvault_ids = [building_id for building_id in town.get("buildable_building_ids", []) if str(building_id) in ADVANCED_SUNVAULT_BUILDING_IDS]
@@ -5095,9 +5115,28 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(factions.get("faction_sunvault", {}).get("economy", {}).get("per_category_income", {}).get("magic", {}).get("gold", 0)) >= 30, errors, "Sunvault must keep a strong faction-wide magic income identity")
     ensure(int(factions.get("faction_sunvault", {}).get("economy", {}).get("per_category_income", {}).get("support", {}).get("gold", 0)) >= 30, errors, "Sunvault must keep a strong faction-wide support income identity")
 
+    spell_school_counts: dict[str, int] = {}
+    spell_context_counts: dict[str, int] = {}
+    spell_role_category_counts: dict[str, int] = {}
     for spell_id, spell in spells.items():
+        school_id = str(spell.get("school_id", ""))
+        ensure(school_id in SUPPORTED_SPELL_SCHOOLS, errors, f"Spell {spell_id} uses unsupported school_id {school_id}")
+        spell_school_counts[school_id] = spell_school_counts.get(school_id, 0) + 1
+        tier = int(spell.get("tier", 0))
+        ensure(1 <= tier <= 5, errors, f"Spell {spell_id} tier must be between 1 and 5")
+        ensure(bool(str(spell.get("accord_family", ""))), errors, f"Spell {spell_id} must define accord_family")
+        primary_role = str(spell.get("primary_role", ""))
+        ensure(primary_role in SUPPORTED_SPELL_PRIMARY_ROLES, errors, f"Spell {spell_id} uses unsupported primary_role {primary_role}")
+        role_categories = spell.get("role_categories", [])
+        ensure(isinstance(role_categories, list) and bool(role_categories), errors, f"Spell {spell_id} must define role_categories")
+        normalized_role_categories = [str(category) for category in role_categories] if isinstance(role_categories, list) else []
+        ensure(len(normalized_role_categories) == len(set(normalized_role_categories)), errors, f"Spell {spell_id} role_categories must not contain duplicates")
+        for category in normalized_role_categories:
+            ensure(category in SUPPORTED_SPELL_ROLE_CATEGORIES, errors, f"Spell {spell_id} uses unsupported role category {category}")
+            spell_role_category_counts[category] = spell_role_category_counts.get(category, 0) + 1
         context = str(spell.get("context", ""))
         ensure(context in {"overworld", "battle"}, errors, f"Spell {spell_id} uses unsupported context {context}")
+        spell_context_counts[context] = spell_context_counts.get(context, 0) + 1
         ensure(int(spell.get("mana_cost", 0)) > 0, errors, f"Spell {spell_id} must define mana_cost > 0")
         effect = spell.get("effect", {})
         ensure(isinstance(effect, dict), errors, f"Spell {spell_id} must define an effect payload")
@@ -5105,8 +5144,13 @@ def validate_content(errors: list[str]) -> None:
             continue
         effect_type = str(effect.get("type", ""))
         if effect_type == "restore_movement":
+            ensure(context == "overworld", errors, f"Spell {spell_id} restore_movement effect must use overworld context")
+            ensure(primary_role == "movement_support", errors, f"Spell {spell_id} restore_movement effect must use movement_support primary_role")
+            ensure("economy_map_utility" in normalized_role_categories, errors, f"Spell {spell_id} restore_movement effect must include economy_map_utility role category")
             ensure(int(effect.get("amount", 0)) > 0, errors, f"Spell {spell_id} must define restore movement amount > 0")
         elif effect_type == "damage_enemy":
+            ensure(context == "battle", errors, f"Spell {spell_id} damage_enemy effect must use battle context")
+            ensure("damage" in normalized_role_categories, errors, f"Spell {spell_id} damage_enemy effect must include damage role category")
             ensure(int(effect.get("base_damage", 0)) > 0, errors, f"Spell {spell_id} must define base_damage > 0")
             ensure(int(effect.get("power_scale", -1)) >= 0, errors, f"Spell {spell_id} must define power_scale >= 0")
             status_effect = effect.get("status_effect", {})
@@ -5118,6 +5162,8 @@ def validate_content(errors: list[str]) -> None:
                 modifiers = status_effect.get("modifiers", {})
                 ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} status_effect must define modifiers")
         elif effect_type in {"defense_buff", "initiative_buff", "attack_buff"}:
+            ensure(context == "battle", errors, f"Spell {spell_id} buff effect must use battle context")
+            ensure("buff" in normalized_role_categories or "recovery" in normalized_role_categories, errors, f"Spell {spell_id} buff effect must include buff or recovery role category")
             ensure(int(effect.get("amount", 0)) > 0, errors, f"Spell {spell_id} must define buff amount > 0")
             ensure(int(effect.get("duration_rounds", 0)) > 0, errors, f"Spell {spell_id} must define duration_rounds > 0")
             modifiers = effect.get("modifiers", {})
@@ -5125,6 +5171,11 @@ def validate_content(errors: list[str]) -> None:
                 ensure(isinstance(modifiers, dict) and bool(modifiers), errors, f"Spell {spell_id} modifiers must be a non-empty dictionary when present")
         else:
             fail(errors, f"Spell {spell_id} uses unsupported effect type {effect_type}")
+
+    ensure(REQUIRED_MAJOR_SPELL_SCHOOLS.issubset(set(spell_school_counts.keys())), errors, "Spell catalog must classify at least one spell in each major accord school")
+    ensure(int(spell_context_counts.get("overworld", 0)) > 0, errors, "Spell catalog must keep at least one overworld spell for adventure-map magic")
+    ensure(int(spell_context_counts.get("battle", 0)) > 0, errors, "Spell catalog must keep at least one battle spell")
+    ensure("damage" in spell_role_category_counts and "buff" in spell_role_category_counts and "economy_map_utility" in spell_role_category_counts, errors, "Spell catalog must keep damage, buff, and economy/map role category coverage")
 
     cinder_burst = spells.get("spell_cinder_burst", {}).get("effect", {})
     ensure(str(cinder_burst.get("status_effect", {}).get("effect_id", "")) == "status_staggered", errors, "Cinder Burst must keep its staggered spell payoff authored")

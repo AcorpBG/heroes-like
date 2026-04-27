@@ -952,7 +952,24 @@ func _validate_artifact(artifact: Dictionary) -> void:
 
 func _validate_spell(spell: Dictionary) -> void:
 	var spell_id := String(spell.get("id", ""))
+	var school_id := String(spell.get("school_id", ""))
+	var tier := int(spell.get("tier", 0))
+	var accord_family := String(spell.get("accord_family", ""))
+	var primary_role := String(spell.get("primary_role", ""))
+	var role_categories = spell.get("role_categories", [])
 	var context := String(spell.get("context", ""))
+	if school_id not in ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]:
+		push_warning("Spell %s uses unsupported school_id %s." % [spell_id, school_id])
+	if tier < 1 or tier > 5:
+		push_warning("Spell %s tier must be between 1 and 5." % spell_id)
+	if accord_family == "":
+		push_warning("Spell %s must define accord_family." % spell_id)
+	if primary_role == "":
+		push_warning("Spell %s must define primary_role." % spell_id)
+	if not (role_categories is Array) or role_categories.is_empty():
+		push_warning("Spell %s must define role_categories." % spell_id)
+	elif "economy_map_utility" in role_categories and context != "overworld":
+		push_warning("Spell %s economy_map_utility role must use overworld context." % spell_id)
 	if context not in ["overworld", "battle"]:
 		push_warning("Spell %s uses unsupported context %s." % [spell_id, context])
 	if int(spell.get("mana_cost", 0)) <= 0:

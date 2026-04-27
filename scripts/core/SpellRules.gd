@@ -5,6 +5,18 @@ const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRu
 
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
+const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]
+const SPELL_ROLE_CATEGORIES := ["damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"]
+const SPELL_PRIMARY_ROLES := [
+	"movement_support",
+	"priority_damage",
+	"harry_damage",
+	"control_damage",
+	"isolation_damage",
+	"ally_defense",
+	"tempo_buff",
+	"assault_buff",
+]
 
 static func build_spellbook(hero_template: Dictionary) -> Dictionary:
 	var mana_max := mana_max_from_command(hero_template.get("command", {}))
@@ -159,6 +171,80 @@ static func spell_category_label(spell: Dictionary) -> String:
 			_:
 				return "Battle Utility"
 	return "Unsorted Magic"
+
+static func spell_school_id(spell: Dictionary) -> String:
+	return String(spell.get("school_id", ""))
+
+static func spell_tier(spell: Dictionary) -> int:
+	return int(spell.get("tier", 0))
+
+static func spell_primary_role(spell: Dictionary) -> String:
+	return String(spell.get("primary_role", ""))
+
+static func spell_role_categories(spell: Dictionary) -> Array:
+	return _normalize_string_array(spell.get("role_categories", []))
+
+static func spell_metadata_summary(spell: Dictionary) -> String:
+	var school := spell_school_id(spell)
+	var tier := spell_tier(spell)
+	var primary_role := spell_primary_role(spell)
+	var role_categories := spell_role_categories(spell)
+	return "%s T%d | %s | %s" % [
+		_school_label(school),
+		tier,
+		primary_role.replace("_", " ") if primary_role != "" else "unassigned role",
+		", ".join(role_categories) if not role_categories.is_empty() else "no categories",
+	]
+
+static func spell_schema_report(spells: Array) -> Dictionary:
+	var errors := []
+	var school_counts := {}
+	var tier_counts := {}
+	var context_counts := {}
+	var role_category_counts := {}
+	var records := []
+	for spell_value in spells:
+		if not (spell_value is Dictionary):
+			errors.append("Spell catalog contains a non-dictionary entry.")
+			continue
+		var spell: Dictionary = spell_value
+		var spell_id := String(spell.get("id", ""))
+		var school := spell_school_id(spell)
+		var tier := spell_tier(spell)
+		var primary_role := spell_primary_role(spell)
+		var role_categories := spell_role_categories(spell)
+		var context := String(spell.get("context", ""))
+		var effect = spell.get("effect", {})
+		var effect_type := String(effect.get("type", "")) if effect is Dictionary else ""
+		_increment_count(school_counts, school)
+		_increment_count(tier_counts, str(tier))
+		_increment_count(context_counts, context)
+		for role_category in role_categories:
+			_increment_count(role_category_counts, String(role_category))
+		_validate_spell_schema_record(errors, spell_id, school, tier, primary_role, role_categories, context, effect_type)
+		records.append(
+			{
+				"id": spell_id,
+				"school_id": school,
+				"tier": tier,
+				"context": context,
+				"accord_family": String(spell.get("accord_family", "")),
+				"primary_role": primary_role,
+				"role_categories": role_categories,
+				"metadata_summary": spell_metadata_summary(spell),
+			}
+		)
+	return {
+		"ok": errors.is_empty(),
+		"schema_status": "loaded_spell_school_category_tier_metadata",
+		"spell_count": records.size(),
+		"school_counts": school_counts,
+		"tier_counts": tier_counts,
+		"context_counts": context_counts,
+		"role_category_counts": role_category_counts,
+		"errors": errors,
+		"records": records,
+	}
 
 static func describe_spell_inspection_line(hero_state: Dictionary, spell: Dictionary, context_state: Dictionary = {}) -> String:
 	var hero := ensure_hero_spellbook(hero_state.duplicate(true))
@@ -877,6 +963,79 @@ static func _target_mode_label(target_mode: String) -> String:
 			return "selected enemy"
 		_:
 			return target_mode.replace("_", " ")
+
+static func _school_label(school_id: String) -> String:
+	match school_id:
+		"beacon":
+			return "Beacon"
+		"mire":
+			return "Mire"
+		"lens":
+			return "Lens"
+		"root":
+			return "Root"
+		"furnace":
+			return "Furnace"
+		"veil":
+			return "Veil"
+		"old_measure":
+			return "Old Measure"
+		_:
+			return "Unassigned"
+
+static func _validate_spell_schema_record(
+	errors: Array,
+	spell_id: String,
+	school: String,
+	tier: int,
+	primary_role: String,
+	role_categories: Array,
+	context: String,
+	effect_type: String
+) -> void:
+	if spell_id == "":
+		errors.append("Spell record must define id.")
+	if school not in SPELL_SCHOOL_IDS:
+		errors.append("Spell %s uses unsupported school_id %s." % [spell_id, school])
+	if tier < 1 or tier > 5:
+		errors.append("Spell %s tier must be between 1 and 5." % spell_id)
+	if primary_role not in SPELL_PRIMARY_ROLES:
+		errors.append("Spell %s uses unsupported primary_role %s." % [spell_id, primary_role])
+	if role_categories.is_empty():
+		errors.append("Spell %s must define at least one role category." % spell_id)
+	for role_category in role_categories:
+		if String(role_category) not in SPELL_ROLE_CATEGORIES:
+			errors.append("Spell %s uses unsupported role category %s." % [spell_id, role_category])
+	if String(effect_type) == "restore_movement":
+		if context != CONTEXT_OVERWORLD:
+			errors.append("Spell %s restore_movement metadata must use overworld context." % spell_id)
+		if primary_role != "movement_support":
+			errors.append("Spell %s restore_movement metadata must use movement_support primary_role." % spell_id)
+		if "economy_map_utility" not in role_categories:
+			errors.append("Spell %s restore_movement metadata must include economy_map_utility." % spell_id)
+	elif String(effect_type) == "damage_enemy":
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s damage metadata must use battle context." % spell_id)
+		if "damage" not in role_categories:
+			errors.append("Spell %s damage metadata must include damage role category." % spell_id)
+	elif String(effect_type) in ["defense_buff", "initiative_buff", "attack_buff"]:
+		if context != CONTEXT_BATTLE:
+			errors.append("Spell %s buff metadata must use battle context." % spell_id)
+		if "buff" not in role_categories and "recovery" not in role_categories:
+			errors.append("Spell %s buff metadata must include buff or recovery role category." % spell_id)
+
+static func _increment_count(counts: Dictionary, key: String) -> void:
+	var normalized_key := key if key != "" else "missing"
+	counts[normalized_key] = int(counts.get(normalized_key, 0)) + 1
+
+static func _normalize_string_array(value: Variant) -> Array:
+	var results := []
+	if value is Array:
+		for entry in value:
+			var normalized := String(entry).strip_edges()
+			if normalized != "" and normalized not in results:
+				results.append(normalized)
+	return results
 
 static func _normalize_spell_ids(value: Variant) -> Array:
 	var ids := []
