@@ -27,6 +27,11 @@ func _run() -> void:
 		return
 	cases.append(both_case)
 
+	var ore_case := _run_southern_ore_gate_case()
+	if ore_case.is_empty():
+		return
+	cases.append(ore_case)
+
 	var payload := {
 		"ok": true,
 		"scenario_id": SCENARIO_ID,
@@ -83,6 +88,62 @@ func _run_case(case_id: String, player_owned_placements: Array, required_order_p
 		"chosen_target_reason": String(chosen.get("target_debug_reason", "")),
 	}
 
+func _run_southern_ore_gate_case() -> Dictionary:
+	var session = ScenarioFactory.create_session(
+		SCENARIO_ID,
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	OverworldRules.normalize_overworld_state(session)
+	_set_resource_controller(session, "river_signal_post", "player")
+	_set_resource_controller(session, "river_free_company", "player")
+
+	var config := _enemy_config()
+	var origin := {"x": 7, "y": 1}
+	var blocked := EnemyAdventureRules.resource_pressure_target_report(session, config, origin, "southern_ore", FACTION_ID)
+	if not bool(blocked.get("target_found", false)):
+		_fail("southern_ore target report did not find the resource node")
+		return {}
+	if bool(blocked.get("included_in_ranked_report", false)) or bool(blocked.get("reachable", false)):
+		_fail("southern_ore should be gated before Hollow Mire is resolved: %s" % blocked)
+		return {}
+	var route_gate: Dictionary = blocked.get("route_gate", {})
+	if String(route_gate.get("kind", "")) != "unresolved_encounter" or String(route_gate.get("placement_id", "")) != "river_pass_hollow_mire":
+		_fail("southern_ore expected Hollow Mire route gate, got %s" % route_gate)
+		return {}
+
+	_resolve_encounter(session, "river_pass_hollow_mire")
+	var opened := EnemyAdventureRules.resource_pressure_target_report(session, config, origin, "southern_ore", FACTION_ID)
+	if not bool(opened.get("included_in_ranked_report", false)) or not bool(opened.get("reachable", false)):
+		_fail("southern_ore should enter the ranked report after Hollow Mire is resolved: %s" % opened)
+		return {}
+	var opened_breakdown: Dictionary = opened.get("score_breakdown", {})
+	if int(opened_breakdown.get("final_priority", 0)) <= 0 or int(opened_breakdown.get("scarcity_value", 0)) <= 0:
+		_fail("southern_ore should expose positive ore-branch scarcity evidence after opening: %s" % opened_breakdown)
+		return {}
+
+	var opened_report := EnemyAdventureRules.resource_pressure_report(session, config, origin, FACTION_ID, 0)
+	var target_ids := []
+	for target in opened_report.get("targets", []):
+		if target is Dictionary:
+			target_ids.append(String(target.get("placement_id", "")))
+	var ore_rank := target_ids.find("southern_ore")
+	if ore_rank < 0:
+		_fail("southern_ore missing from opened resource report: %s" % target_ids)
+		return {}
+	for signal_id in ["river_free_company", "river_signal_post"]:
+		var signal_rank := target_ids.find(signal_id)
+		if signal_rank < 0 or signal_rank > ore_rank:
+			_fail("owned persistent site %s should still outrank opened southern_ore branch: %s" % [signal_id, target_ids])
+			return {}
+
+	return {
+		"case_id": "southern_ore_hollow_mire_gate",
+		"blocked_target": blocked,
+		"opened_target": opened,
+		"opened_resource_order": target_ids,
+	}
+
 func _set_resource_controller(session, placement_id: String, faction_id: String) -> void:
 	var nodes: Array = session.overworld.get("resource_nodes", [])
 	for index in range(nodes.size()):
@@ -98,6 +159,12 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		session.overworld["resource_nodes"] = nodes
 		return
 	_fail("Could not find resource placement %s" % placement_id)
+
+func _resolve_encounter(session, placement_id: String) -> void:
+	var resolved: Array = session.overworld.get("resolved_encounters", [])
+	if placement_id not in resolved:
+		resolved.append(placement_id)
+	session.overworld["resolved_encounters"] = resolved
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(SCENARIO_ID)

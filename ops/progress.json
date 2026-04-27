@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-public-event-log-boundary-10184",
-  "currentSliceTitle": "Strategic AI Public Event Log Boundary",
+  "currentSliceId": "strategic-ai-economy-pressure-followup-10184",
+  "currentSliceTitle": "Strategic AI Economy Pressure Follow-Up",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented derived bounded public AI event log helpers and focused report evidence. No durable event log, save migration, SAVE_VERSION bump, live hero task adoption, coefficient tuning, UI dashboard, terrain/editor, economy rebalance, or resource activation.",
+  "currentSliceNotes": "Completed bounded report/helper evidence for the economy pressure gate caveat: southern_ore is explicitly reported as Hollow Mire-gated until the encounter resolves, then enters the ranked resource report behind the player-owned signal-yard sites. No scoring, live AI behavior, save, resource, economy, or public UI output changes.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T23:13:58Z",
+  "updatedAt": "2026-04-27T23:26:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1906,7 +1906,7 @@
       "id": "strategic-ai-economy-pressure-followup-10184",
       "title": "Strategic AI Economy Pressure Follow-Up",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
@@ -1924,11 +1924,23 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "EnemyAdventureRules.resource_pressure_target_report(...) exposes named resource-target evidence without changing scoring or live behavior.",
+        "tests/ai_economy_pressure_report.gd now proves southern_ore is gated by unresolved river_pass_hollow_mire, enters the ranked report after that encounter is resolved, and remains below player-owned river_free_company and river_signal_post.",
+        "docs/strategic-ai-economy-pressure-followup-report.md records the finding and validation."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T23:26:00Z",
+      "startedAt": "2026-04-27T23:18:00Z",
+      "completedAt": "2026-04-27T23:26:00Z",
+      "implementationEvidence": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_economy_pressure_report.gd",
+        "tests/ai_economy_pressure_report.tscn",
+        "docs/strategic-ai-economy-pressure-followup-report.md"
+      ],
+      "notes": "Completed bounded follow-up to address the economy pressure gate caveat: southern_ore was named as a comparator but absent from the focused reachable report because Hollow Mire blocks the shared tile until resolved. Added report-only named target evidence and focused fixture coverage; no scoring, save, resource, economy, public UI, durable event log, or live AI behavior changes."
     },
     {
       "id": "strategic-ai-commander-role-adoption-boundary-10184",
@@ -3507,22 +3519,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "strategic-ai-economy-pressure-followup-10184",
-      "title": "Strategic AI Economy Pressure Follow-Up",
+      "id": "strategic-ai-commander-role-adoption-boundary-10184",
+      "title": "Strategic AI Commander Role Adoption Boundary",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
       "source": "PLAN.md P2.8 Strategic AI Foundation Continuation",
       "sourceDocs": [
-        "docs/strategic-ai-economy-pressure-slice-plan.md",
-        "docs/strategic-ai-economy-pressure-report-gate-review.md"
+        "docs/strategic-ai-commander-role-adoption-sequencing-plan.md",
+        "docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md"
       ],
       "implementationTargets": [
-        "scripts/core/EnemyAdventureRules.gd",
-        "focused AI report fixtures"
+        "AI report helpers",
+        "adoption plan or explicit deferral evidence"
       ],
-      "notes": "Next P2.8 child after the public event log boundary. Continue economy/site pressure only when a report or manual gate identifies a concrete defect; keep broad AI rewrites, save migration, durable logs, and resource/economy migrations deferred unless explicitly selected.",
-      "updatedAt": "2026-04-27T23:14:23Z"
+      "notes": "Next P2.8 child after the bounded economy pressure follow-up. Convert commander-role report findings into adoption boundaries without live behavior or save schema changes unless explicitly selected.",
+      "updatedAt": "2026-04-27T23:26:00Z"
     }
   ],
   "stoppedOrPausedTasks": [
