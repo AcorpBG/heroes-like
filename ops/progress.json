@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "magic-artifact-economy-integration-10184",
-  "currentSliceTitle": "Magic Artifact And Economy Integration",
+  "currentSliceId": "artifact-taxonomy-schema-implementation-10184",
+  "currentSliceTitle": "Artifact Taxonomy And Schema",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.5 child selected after completing magic-ai-valuation-casting-hooks-10184. Do not start rare-resource activation, artifact integration, or economy hooks without the bounded slice scope.",
+  "currentSliceNotes": "P2.5 magic implementation children are complete. Next Phase 2 category-order candidate is the first P2.6 artifact foundation child.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T20:58:05Z",
+  "updatedAt": "2026-04-27T21:08:40Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -154,7 +154,7 @@
       "title": "Concept-Art Curation Gate",
       "phase": "phase-2-deep-production-foundation",
       "status": "in_progress",
-      "classification": "parent_track_in_progress_selected_child_pending",
+      "classification": "parent_foundation_completed_children_completed",
       "sourceDocs": [
         "docs/concept-art-pipeline.md",
         "docs/concept-art-batch-001-review.md",
@@ -302,7 +302,7 @@
       "id": "magic-system-foundation-implementation-10184",
       "title": "Magic System Foundation Implementation",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "parent_track_in_progress_selected_child_pending",
       "sourceDocs": [
         "docs/magic-system-expansion-foundation.md"
@@ -314,8 +314,8 @@
         "adventure spell hooks",
         "validation fixtures/reports"
       ],
-      "evidence": "Current spells and SpellRules exist, but expanded schools/categories/tiers, adventure-map magic, AI casting heuristics, and validation fixtures remain unimplemented.",
-      "notes": "P2.5 resumed after P2.4 parent closeout. Active child is magic-battle-spell-behavior-expansion-10184; remaining magic work is implementation work, not docs-only completion.",
+      "evidence": "P2.5 children implemented spell school/category/tier metadata, battle spell behavior hooks, adventure-map spell hooks, AI valuation/casting hooks, and bounded magic/artifact/economy integration evidence.",
+      "notes": "P2.5 parent closed after all planned children completed through Magic Artifact And Economy Integration. Remaining artifact-system work continues under P2.6 explicit child slices.",
       "sliceType": "parent",
       "childSliceIds": [
         "magic-spell-school-category-schema-10184",
@@ -328,10 +328,13 @@
       "docsReadyEvidenceIds": [
         "magic-artifact-animation-docs"
       ],
-      "completedImplementationEvidenceIds": [],
+      "completedImplementationEvidenceIds": [
+        "magic-system-foundation-children"
+      ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-27T20:22:24Z",
-      "startedAt": "2026-04-27T20:22:24Z"
+      "updatedAt": "2026-04-27T21:08:40Z",
+      "startedAt": "2026-04-27T20:22:24Z",
+      "completedAt": "2026-04-27T21:07:56Z"
     },
     {
       "id": "artifact-system-foundation-implementation-10184",
@@ -351,7 +354,7 @@
         "spell/economy/battle/adventure hooks",
         "validation fixtures/reports"
       ],
-      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system\u2014multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation\u2014requires child implementation slices.",
+      "evidence": "ArtifactRules and current artifact records exist, but AcOrP's requested full artifact system—multiple artifacts, sets/families, faction-specific artifacts, source/reward rules, equip surfaces, runtime effects, and AI valuation—requires child implementation slices.",
       "notes": "Do not reduce artifact work to an overworld cue. Cue polish is not artifact-system implementation.",
       "childSliceIds": [
         "artifact-taxonomy-schema-implementation-10184",
@@ -1500,7 +1503,7 @@
       "id": "magic-artifact-economy-integration-10184",
       "title": "Magic Artifact And Economy Integration",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1523,7 +1526,12 @@
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T21:07:56Z",
+      "startedAt": "2026-04-27T21:02:03Z",
+      "completedAt": "2026-04-27T21:07:56Z",
+      "notes": "Completed bounded magic/artifact/economy bridge: Trailsinger Boots expose equipped spell-affinity metadata for Beacon overworld movement spells; SpellRules applies artifact-adjusted mana cost and movement preview/cast effects; report coverage proves common-resource artifact income and keeps rare-resource costs inactive.",
+      "evidence": "Implemented safe integration hooks in content/artifacts.json, ArtifactRules.gd, and SpellRules.gd. Added docs/magic-artifact-economy-integration-report.md plus MAGIC_ARTIFACT_ECONOMY_INTEGRATION_REPORT fixture. Validation passed: wood alias scan returned no matches; python3 tests/validate_repo.py; godot --headless --path /root/dev/heroes-like tests/magic_artifact_economy_integration_report.tscn; godot --headless --path /root/dev/heroes-like tests/magic_adventure_spell_hooks_report.tscn; godot --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn; godot --headless --path /root/dev/heroes-like tests/magic_ai_valuation_casting_hooks_report.tscn; godot --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn."
     },
     {
       "id": "artifact-taxonomy-schema-implementation-10184",
@@ -3387,22 +3395,21 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "magic-artifact-economy-integration-10184",
-      "title": "Magic Artifact And Economy Integration",
+      "id": "artifact-taxonomy-schema-implementation-10184",
+      "title": "Artifact Taxonomy And Schema",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
-      "parentSliceId": "magic-system-foundation-implementation-10184",
-      "source": "PLAN.md P2.5 Magic System Foundation Implementation",
+      "parentSliceId": "artifact-system-foundation-implementation-10184",
+      "source": "PLAN.md P2.6 Artifact System Foundation Implementation",
       "sourceDocs": [
-        "docs/magic-system-expansion-foundation.md",
-        "docs/artifact-system-expansion-foundation.md",
-        "docs/economy-overhaul-foundation.md"
+        "docs/artifact-system-expansion-foundation.md"
       ],
       "implementationTargets": [
-        "spell/artifact/economy hooks",
-        "focused reports/smoke coverage"
+        "content/artifacts.json",
+        "scripts/core/ArtifactRules.gd",
+        "artifact validation/report fixtures"
       ],
-      "notes": "Selected next P2.5 child after completing magic-ai-valuation-casting-hooks-10184. Keep scope bounded; no rare-resource activation or broad economy migration unless explicitly selected."
+      "notes": "Selected next Phase 2 category-order child after P2.5 magic foundation closeout. Keep taxonomy/schema bounded; broad artifact overhaul remains split across later P2.6 children."
     }
   ],
   "stoppedOrPausedTasks": [
