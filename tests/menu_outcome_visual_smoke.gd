@@ -209,27 +209,38 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu campaign contextual guide control",
 		[String(campaign_snapshot.get("stage_help_tooltip", ""))],
-		["Open the Field Manual", "Campaign", "does not start, load, save, or change settings"]
+		["Open the Field Manual", "Campaign", "does not start, load, save, or change settings", "Help handoff:", "reference only"]
 	):
 		return false
 	shell.call("validation_open_contextual_guide_stage")
 	var campaign_guide_snapshot: Dictionary = shell.call("validation_snapshot")
+	var campaign_help_item_tooltips := []
+	for item_tooltip in (campaign_guide_snapshot.get("help_item_tooltips", []) if campaign_guide_snapshot.get("help_item_tooltips", []) is Array else []):
+		campaign_help_item_tooltips.append(String(item_tooltip))
 	if not _assert_text_contains_all(
 		"Main menu campaign contextual Field Manual",
 		[
 			String(campaign_guide_snapshot.get("stage_help_text", "")),
 			String(campaign_guide_snapshot.get("stage_help_tooltip", "")),
 			String(campaign_guide_snapshot.get("help_topic_id", "")),
+			String(campaign_guide_snapshot.get("help_handoff_text", "")),
+			String(campaign_guide_snapshot.get("help_handoff_tooltip", "")),
+			String(campaign_guide_snapshot.get("help_intro_full", campaign_guide_snapshot.get("help_intro", ""))),
 			String(campaign_guide_snapshot.get("help_details_full", campaign_guide_snapshot.get("help_details", ""))),
+			"\n".join(campaign_help_item_tooltips),
 		],
-		["Back", "Return to campaign board", "campaign", "Campaigns are the authored progression path", "carryover"]
+		["Back", "Return to campaign board", "campaign", "Campaigns are the authored progression path", "carryover", "Help handoff:", "reference only", "Topic cue:", "Selection:", "no campaign progress", "expedition save", "device setting"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Main menu campaign contextual Field Manual",
 		[
 			String(campaign_guide_snapshot.get("stage_help_tooltip", "")),
+			String(campaign_guide_snapshot.get("help_handoff_text", "")),
+			String(campaign_guide_snapshot.get("help_handoff_tooltip", "")),
+			String(campaign_guide_snapshot.get("help_intro_full", campaign_guide_snapshot.get("help_intro", ""))),
 			String(campaign_guide_snapshot.get("help_details_full", campaign_guide_snapshot.get("help_details", ""))),
+			"\n".join(campaign_help_item_tooltips),
 		]
 	):
 		return false
@@ -346,27 +357,38 @@ func _run_main_menu_smoke() -> bool:
 	if not _assert_text_contains_all(
 		"Main menu save contextual guide control",
 		[String(save_snapshot.get("stage_help_tooltip", ""))],
-		["Open the Field Manual", "Save Flow", "does not start, load, save, or change settings"]
+		["Open the Field Manual", "Save Flow", "does not start, load, save, or change settings", "Help handoff:", "reference only"]
 	):
 		return false
 	shell.call("validation_open_contextual_guide_stage")
 	var save_guide_snapshot: Dictionary = shell.call("validation_snapshot")
+	var save_help_item_tooltips := []
+	for item_tooltip in (save_guide_snapshot.get("help_item_tooltips", []) if save_guide_snapshot.get("help_item_tooltips", []) is Array else []):
+		save_help_item_tooltips.append(String(item_tooltip))
 	if not _assert_text_contains_all(
 		"Main menu save contextual Field Manual",
 		[
 			String(save_guide_snapshot.get("stage_help_text", "")),
 			String(save_guide_snapshot.get("stage_help_tooltip", "")),
 			String(save_guide_snapshot.get("help_topic_id", "")),
+			String(save_guide_snapshot.get("help_handoff_text", "")),
+			String(save_guide_snapshot.get("help_handoff_tooltip", "")),
+			String(save_guide_snapshot.get("help_intro_full", save_guide_snapshot.get("help_intro", ""))),
 			String(save_guide_snapshot.get("help_details_full", save_guide_snapshot.get("help_details", ""))),
+			"\n".join(save_help_item_tooltips),
 		],
-		["Back", "Return to war ledger", "saves", "Campaign unlocks and carryover live in progression data", "manual slots plus autosave"]
+		["Back", "Return to war ledger", "saves", "Campaign unlocks and carryover live in progression data", "manual slots plus autosave", "Help handoff:", "reference only", "Topic cue:", "Selection:", "no campaign progress", "expedition save", "device setting"]
 	):
 		return false
 	if not _assert_no_score_leak(
 		"Main menu save contextual Field Manual",
 		[
 			String(save_guide_snapshot.get("stage_help_tooltip", "")),
+			String(save_guide_snapshot.get("help_handoff_text", "")),
+			String(save_guide_snapshot.get("help_handoff_tooltip", "")),
+			String(save_guide_snapshot.get("help_intro_full", save_guide_snapshot.get("help_intro", ""))),
 			String(save_guide_snapshot.get("help_details_full", save_guide_snapshot.get("help_details", ""))),
+			"\n".join(save_help_item_tooltips),
 		]
 	):
 		return false

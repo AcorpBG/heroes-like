@@ -420,7 +420,6 @@ func _refresh_campaign_browser() -> void:
 	_start_chapter_button.tooltip_text = String(chapter_action.get("summary", ""))
 
 func _rebuild_help_browser() -> void:
-	_set_compact_label(_help_intro_label, SettingsService.help_browser_summary(), 3, 84)
 	_help_entries = SettingsService.build_help_topics()
 	_help_list.clear()
 
@@ -432,6 +431,7 @@ func _rebuild_help_browser() -> void:
 	for index in range(_help_entries.size()):
 		var entry = _help_entries[index]
 		_help_list.add_item(String(entry.get("label", entry.get("id", "Topic"))))
+		_help_list.set_item_tooltip(index, _help_topic_row_tooltip(entry))
 		if String(entry.get("id", "")) == preferred_help_topic_id:
 			selected_index = index
 
@@ -444,6 +444,7 @@ func _rebuild_help_browser() -> void:
 	else:
 		_selected_help_topic_id = ""
 
+	_refresh_help_intro()
 	_refresh_help_browser()
 
 func _refresh_help_browser() -> void:
@@ -455,7 +456,61 @@ func _refresh_help_browser() -> void:
 		_selected_help_topic_id = String(_help_entries[0].get("id", ""))
 		_help_list.select(0)
 
-	_set_compact_label(_help_details_label, SettingsService.describe_help_topic(_selected_help_topic_id), 7, 88)
+	var handoff := _help_handoff_surface()
+	_set_compact_label(
+		_help_details_label,
+		"%s\n%s" % [String(handoff.get("text", "")), SettingsService.describe_help_topic(_selected_help_topic_id)],
+		7,
+		88
+	)
+	_help_details_label.tooltip_text = "%s\n%s" % [
+		String(handoff.get("tooltip_text", "")),
+		SettingsService.describe_help_topic(_selected_help_topic_id),
+	]
+
+func _refresh_help_intro() -> void:
+	_refresh_help_topic_tooltips()
+	var handoff := _help_handoff_surface()
+	_set_compact_label(
+		_help_intro_label,
+		"%s\n%s" % [SettingsService.help_browser_summary(), String(handoff.get("text", ""))],
+		3,
+		84
+	)
+	_help_intro_label.tooltip_text = "%s\n%s" % [
+		SettingsService.help_browser_summary(),
+		String(handoff.get("tooltip_text", "")),
+	]
+
+func _help_handoff_surface(topic_id_override: String = "") -> Dictionary:
+	var topic_id := topic_id_override
+	if topic_id == "":
+		topic_id = _selected_help_topic_id
+	if topic_id == "":
+		topic_id = SettingsService.default_help_topic_id()
+	var topic_label := SettingsService.help_topic_label(topic_id)
+	var return_copy: Dictionary = TAB_STAGE_COPY.get(_last_context_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
+	var return_label := String(return_copy.get("title", "the previous board")).to_lower()
+	return {
+		"text": "Help handoff: %s is reference only; Back returns to %s; Close returns to scenic first view." % [topic_label, return_label],
+		"tooltip_text": "Help Handoff\n- Topic: %s.\n- Selection: changes the visible Field Manual page only.\n- Back: returns to %s without launching, loading, saving, or changing settings.\n- Close: dismisses the secondary board and returns to the scenic first view.\n- State change: no campaign progress, expedition save, or device setting changes." % [topic_label, return_label],
+		"topic_id": topic_id,
+		"topic_label": topic_label,
+		"return_board": return_label,
+	}
+
+func _help_topic_row_tooltip(entry: Dictionary) -> String:
+	var topic_id := String(entry.get("id", ""))
+	var topic_label := String(entry.get("label", entry.get("id", "Topic")))
+	return "Topic cue: selecting %s changes the visible Field Manual reference only.\n%s" % [
+		topic_label,
+		String(_help_handoff_surface(topic_id).get("tooltip_text", "")),
+	]
+
+func _refresh_help_topic_tooltips() -> void:
+	for index in range(mini(_help_list.get_item_count(), _help_entries.size())):
+		var entry: Dictionary = _help_entries[index]
+		_help_list.set_item_tooltip(index, _help_topic_row_tooltip(entry))
 
 func _select_help_topic(topic_id: String) -> void:
 	if topic_id == "":
@@ -466,6 +521,7 @@ func _select_help_topic(topic_id: String) -> void:
 			continue
 		_help_list.select(index)
 		break
+	_refresh_help_intro()
 	_refresh_help_browser()
 
 func _refresh_settings_panel() -> void:
@@ -799,11 +855,16 @@ func _refresh_stage_dock_header() -> void:
 	if _menu_tabs.current_tab == TAB_GUIDE:
 		var return_copy: Dictionary = TAB_STAGE_COPY.get(_last_context_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
 		_stage_help_button.text = "Back"
-		_stage_help_button.tooltip_text = "Return to %s without closing the secondary board." % String(return_copy.get("title", "the previous board")).to_lower()
+		_stage_help_button.tooltip_text = "%s\n%s" % [
+			"Return to %s without closing the secondary board." % String(return_copy.get("title", "the previous board")).to_lower(),
+			String(_help_handoff_surface().get("tooltip_text", "")),
+		]
 	else:
 		var topic_label := SettingsService.help_topic_label(_help_topic_for_tab(_menu_tabs.current_tab))
 		_stage_help_button.text = "Guide"
-		_stage_help_button.tooltip_text = "Open the Field Manual to the %s topic for this board. This does not start, load, save, or change settings." % topic_label
+		_stage_help_button.tooltip_text = "%s\nHelp handoff: opens reference only; Back returns to this secondary board." % [
+			"Open the Field Manual to the %s topic for this board. This does not start, load, save, or change settings." % topic_label
+		]
 	_close_stage_dock_button.tooltip_text = "Dismiss this secondary board and return to the clean scenic first view."
 
 func validation_snapshot() -> Dictionary:
@@ -847,6 +908,10 @@ func validation_snapshot() -> Dictionary:
 		"save_count": _save_summaries.size(),
 		"help_topic_id": _selected_help_topic_id,
 		"help_items": _help_browser_item_labels(),
+		"help_item_tooltips": _help_browser_item_tooltips(),
+		"help_handoff": _help_handoff_surface(),
+		"help_handoff_text": String(_help_handoff_surface().get("text", "")),
+		"help_handoff_tooltip": String(_help_handoff_surface().get("tooltip_text", "")),
 		"help_intro": _help_intro_label.text,
 		"help_intro_full": _help_intro_label.tooltip_text,
 		"help_details": _help_details_label.text,
@@ -940,6 +1005,12 @@ func _help_browser_item_labels() -> Array:
 	for index in range(_help_list.get_item_count()):
 		labels.append(_help_list.get_item_text(index))
 	return labels
+
+func _help_browser_item_tooltips() -> Array:
+	var tooltips := []
+	for index in range(_help_list.get_item_count()):
+		tooltips.append(_help_list.get_item_tooltip(index))
+	return tooltips
 
 func _picker_item_labels(picker: OptionButton) -> Array:
 	var labels := []
