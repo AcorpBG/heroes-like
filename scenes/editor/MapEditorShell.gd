@@ -2599,6 +2599,9 @@ func _sync_scenario_validation_surface() -> void:
 	var focus_tooltip := String(_editor_selected_validation_focus_payload().get("tooltip", "")).strip_edges()
 	if focus_tooltip != "":
 		tooltip_lines.append(focus_tooltip)
+	var export_tooltip := String(_editor_export_intent_payload().get("tooltip", "")).strip_edges()
+	if export_tooltip != "":
+		tooltip_lines.append(export_tooltip)
 	_scenario_picker.tooltip_text = "\n".join(tooltip_lines)
 
 func _sync_menu_return_surface() -> void:
@@ -2706,6 +2709,9 @@ func _refresh_labels() -> void:
 	var scenario_check_text := String(_editor_scenario_validation_check_payload().get("text", "")).strip_edges()
 	if scenario_check_text != "":
 		status_lines.append(scenario_check_text)
+	var export_intent_text := String(_editor_export_intent_payload().get("text", "")).strip_edges()
+	if export_intent_text != "":
+		status_lines.append(export_intent_text)
 	var selected_validation_focus_text := String(_editor_selected_validation_focus_payload().get("text", "")).strip_edges()
 	if selected_validation_focus_text != "":
 		status_lines.append(selected_validation_focus_text)
@@ -4532,6 +4538,64 @@ func _editor_scenario_validation_check_payload() -> Dictionary:
 		"scope": "editor_working_copy_only",
 	}
 
+func _editor_export_intent_payload() -> Dictionary:
+	if _session == null:
+		return {
+			"text": "",
+			"tooltip": "Load a scenario working copy before reviewing export intent.",
+			"state": "no_working_copy",
+			"dirty": false,
+			"ready": false,
+		}
+	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario_name := String(scenario.get("name", _session.scenario_id))
+	var validation := _scenario_authoring_validation_payload()
+	var warning_count := int(validation.get("warning_count", 0))
+	var missing_count := int(validation.get("missing_objective_anchor_count", 0))
+	var covered_count := int(validation.get("covered_objective_anchor_count", 0))
+	var objective_count := int(validation.get("objective_anchors", []).size())
+	var hero_position := OverworldRules.hero_position(_session)
+	var ready := warning_count == 0 and missing_count == 0
+	var state := "dirty" if _dirty else "clean"
+	var next_step := "Play Copy can smoke-test this working copy" if ready else "review warnings before Play Copy"
+	var write_context := "no authored file or campaign progress is written"
+	var text := "Export intent: %s | %s working copy; %s before future authored export; %s." % [
+		scenario_name,
+		state,
+		next_step,
+		write_context,
+	]
+	var tooltip := "Editor Export Intent\n- Scenario: %s.\n- State: %s working copy.\n- Current check: Objectives %d/%d covered; warnings %d.\n- Hero start: %d,%d.\n- Objects: %d.\n- Next: %s before future authored export.\n- Scope: editor working copy only; %s." % [
+		scenario_name,
+		state,
+		covered_count,
+		objective_count,
+		warning_count,
+		hero_position.x,
+		hero_position.y,
+		_placement_count(),
+		next_step,
+		write_context,
+	]
+	return {
+		"text": text,
+		"tooltip": tooltip,
+		"state": state,
+		"dirty": _dirty,
+		"ready": ready,
+		"scenario_id": _session.scenario_id,
+		"scenario_name": scenario_name,
+		"next_step": next_step,
+		"write_context": write_context,
+		"covered_objective_anchor_count": covered_count,
+		"objective_anchor_count": objective_count,
+		"missing_objective_anchor_count": missing_count,
+		"warning_count": warning_count,
+		"hero_position": {"x": hero_position.x, "y": hero_position.y},
+		"object_count": _placement_count(),
+		"scope": "editor_working_copy_export_intent",
+	}
+
 func _editor_scenario_switch_handoff_payload() -> Dictionary:
 	if _session == null:
 		return {
@@ -5668,6 +5732,9 @@ func validation_snapshot() -> Dictionary:
 		"visible_status_full": _status_label.tooltip_text if _status_label != null else "",
 		"scenario_validation_check": _editor_scenario_validation_check_payload(),
 		"scenario_validation_check_text": String(_editor_scenario_validation_check_payload().get("text", "")),
+		"export_intent": _editor_export_intent_payload(),
+		"export_intent_text": String(_editor_export_intent_payload().get("text", "")),
+		"export_intent_tooltip": String(_editor_export_intent_payload().get("tooltip", "")),
 		"scenario_switch_handoff": _editor_scenario_switch_handoff_payload(),
 		"scenario_switch_handoff_text": String(_editor_scenario_switch_handoff_payload().get("text", "")),
 		"scenario_switch_handoff_tooltip": String(_editor_scenario_switch_handoff_payload().get("tooltip", "")),
