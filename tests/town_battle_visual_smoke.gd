@@ -155,6 +155,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_magic_inspection_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_status_check_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not board.has_method("validation_hex_layout_summary"):
 		push_error("Battle smoke: battle board does not expose hex layout validation.")
 		get_tree().quit(1)
@@ -963,6 +966,38 @@ func _assert_battle_stack_inspection_contract(shell: Node) -> bool:
 	for token in ["Strength", "HP", "T", "Ready", "Atk", "Coh"]:
 		if not roster_text.contains(token):
 			push_error("Battle smoke: stack rosters lost compact inspection token %s: %s." % [token, roster_text])
+			return false
+	return true
+
+func _assert_battle_status_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing status-check cue validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var status_check: Dictionary = snapshot.get("status_check", {}) if snapshot.get("status_check", {}) is Dictionary else {}
+	var status_text := "\n".join([
+		String(snapshot.get("effect_visible_text", "")),
+		String(snapshot.get("effect_tooltip_text", "")),
+		String(snapshot.get("status_check_visible_text", "")),
+		String(snapshot.get("status_check_tooltip_text", "")),
+		JSON.stringify(status_check),
+	])
+	for token in ["Status check:", "Battle Status Check", "Active stack:", "Selected target:", "Status pressure:", "Selected pressure:", "Effect board:", "Readiness:", "Next practical action:", "Inspection:", "does not spend an action"]:
+		if not status_text.contains(token):
+			push_error("Battle smoke: status-check cue lost %s clarity: %s." % [token, status_text])
+			return false
+	if not String(snapshot.get("effect_visible_text", "")).contains("Status check:"):
+		push_error("Battle smoke: status-check cue is not visible in the effects rail: %s." % snapshot)
+		return false
+	if int(status_check.get("effect_stack_count", -1)) < 0 or int(status_check.get("active_effect_count", -1)) < 0 or int(status_check.get("target_effect_count", -1)) < 0:
+		push_error("Battle smoke: status-check cue did not expose stable effect counts: %s." % status_check)
+		return false
+	if not ["Clear", "Watch", "Review", "Locked", "Waiting", "unavailable"].has(String(status_check.get("readiness", ""))):
+		push_error("Battle smoke: status-check cue exposed an unexpected readiness: %s." % status_check)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if status_text.contains(leak_token):
+			push_error("Battle smoke: status-check cue leaked internal token %s: %s." % [leak_token, status_text])
 			return false
 	return true
 

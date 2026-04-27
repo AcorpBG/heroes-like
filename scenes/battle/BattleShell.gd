@@ -431,7 +431,20 @@ func _refresh() -> void:
 			target_context,
 		])
 	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
-	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
+	var effect_board := BattleRules.describe_effect_board(_session)
+	var status_check := _battle_status_check_cue_surface()
+	if status_check.is_empty():
+		_set_compact_label(_effect_label, effect_board, 3)
+	else:
+		_set_compact_label(
+			_effect_label,
+			"%s\n%s" % [String(status_check.get("visible_text", "")), effect_board],
+			3
+		)
+		_effect_label.tooltip_text = _join_tooltip_sections([
+			String(status_check.get("tooltip_text", "")),
+			effect_board,
+		])
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
@@ -952,6 +965,103 @@ func _battle_engagement_consequence_preview(
 			return String(preview_dict.get("consequence", "")).strip_edges()
 	return ""
 
+func _battle_status_check_cue_surface() -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {
+			"visible_text": "Status check: no battle is loaded.",
+			"tooltip_text": "Battle Status Check\n- No battle is loaded.",
+			"readiness": "unavailable",
+		}
+	var battle := _session.battle
+	var active_stack := BattleRules.get_active_stack(battle)
+	var selected_target := BattleRules.get_selected_target(battle)
+	var consequence := BattleRules.active_consequence_payload(_session)
+	var effect_board := BattleRules.describe_effect_board(_session)
+	var active_label := _battle_position_stack_label(active_stack)
+	var target_label := _battle_position_stack_label(selected_target)
+	var active_pressure := String(consequence.get("status_pressure", "Status pressure: no stack selected.")).strip_edges()
+	var target_pressure := _battle_stack_pressure_for_status_check(selected_target, battle, "Selected pressure")
+	var active_effect_count := _battle_stack_active_effect_count(active_stack, battle)
+	var target_effect_count := _battle_stack_active_effect_count(selected_target, battle)
+	var total_effect_stacks := _battle_effect_stack_count(battle)
+	var readiness := "Clear"
+	var next_step := "Use orders normally; inspect this rail again after spells or status abilities land."
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		next_step = "Wait for battle resolution."
+	elif String(active_stack.get("side", "")) != "player":
+		readiness = "Locked"
+		next_step = "Wait for command to return, then recheck status pressure before acting."
+	elif active_effect_count > 0 or target_effect_count > 0:
+		readiness = "Watch"
+		next_step = "Spend ready orders before short effects expire or status pressure shifts."
+	elif total_effect_stacks > 0:
+		readiness = "Review"
+		next_step = "Inspect affected stacks before committing the next order."
+	var visible := "Status check: %s; %s" % [
+		readiness,
+		_short_text(_strip_sentence(next_step).trim_suffix("."), 58),
+	]
+	var tooltip := "Battle Status Check\n- Active stack: %s\n- Selected target: %s\n- %s\n- %s\n- Effect board: %d stack%s with active spell/status effects\n- Readiness: %s\n- Next practical action: %s\n- Inspection: checking this cue does not spend an action, cast, move, or advance initiative." % [
+		active_label,
+		target_label,
+		active_pressure,
+		target_pressure,
+		total_effect_stacks,
+		"" if total_effect_stacks == 1 else "s",
+		readiness,
+		next_step,
+	]
+	if effect_board.strip_edges() != "":
+		tooltip = "%s\n- Current board: %s" % [tooltip, _strip_sentence(effect_board)]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active": active_label,
+		"target": target_label,
+		"active_pressure": active_pressure,
+		"target_pressure": target_pressure,
+		"active_effect_count": active_effect_count,
+		"target_effect_count": target_effect_count,
+		"effect_stack_count": total_effect_stacks,
+		"readiness": readiness,
+		"next_step": next_step,
+	}
+
+func _battle_stack_pressure_for_status_check(stack: Dictionary, battle: Dictionary, prefix: String) -> String:
+	if stack.is_empty():
+		return "%s: no selected target." % prefix
+	var pressure := String(BattleRules._stack_status_pressure_line(stack, battle)).strip_edges()
+	if pressure.begins_with("Status pressure:"):
+		pressure = pressure.trim_prefix("Status pressure:").strip_edges()
+	return "%s: %s" % [prefix, pressure]
+
+func _battle_effect_stack_count(battle: Dictionary) -> int:
+	var count := 0
+	for stack_value in battle.get("stacks", []):
+		if not (stack_value is Dictionary):
+			continue
+		var stack: Dictionary = stack_value
+		if _battle_stack_active_effect_count(stack, battle) > 0:
+			count += 1
+	return count
+
+func _battle_stack_active_effect_count(stack: Dictionary, battle: Dictionary) -> int:
+	if stack.is_empty():
+		return 0
+	var effects: Variant = stack.get("effects", [])
+	if not (effects is Array):
+		return 0
+	var current_round := int(battle.get("round", 1))
+	var count := 0
+	for effect_value in effects:
+		if not (effect_value is Dictionary):
+			continue
+		var effect: Dictionary = effect_value
+		if int(effect.get("expires_after_round", current_round)) >= current_round:
+			count += 1
+	return count
+
 func _battle_first_ready_order_id(action_surface: Dictionary) -> String:
 	for action_id in ["shoot", "strike", "advance", "defend"]:
 		var action: Dictionary = action_surface.get(action_id, {}) if action_surface.get(action_id, {}) is Dictionary else {}
@@ -1135,6 +1245,7 @@ func validation_snapshot() -> Dictionary:
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
 	var engagement_check := _battle_engagement_check_cue_surface()
+	var status_check := _battle_status_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var stack_check := _battle_stack_check_cue_surface()
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
@@ -1203,6 +1314,11 @@ func validation_snapshot() -> Dictionary:
 		"engagement_check_tooltip_text": String(engagement_check.get("tooltip_text", "")),
 		"target_visible_text": _target_label.text,
 		"target_tooltip_text": _target_label.tooltip_text,
+		"status_check": status_check,
+		"status_check_visible_text": String(status_check.get("visible_text", "")),
+		"status_check_tooltip_text": String(status_check.get("tooltip_text", "")),
+		"effect_visible_text": _effect_label.text,
+		"effect_tooltip_text": _effect_label.tooltip_text,
 		"stack_check": stack_check,
 		"stack_check_visible_text": String(stack_check.get("visible_text", "")),
 		"stack_check_tooltip_text": String(stack_check.get("tooltip_text", "")),
