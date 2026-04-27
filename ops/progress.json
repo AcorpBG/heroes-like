@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "strategic-ai-economy-pressure-followup-10184",
-  "currentSliceTitle": "Strategic AI Economy Pressure Follow-Up",
+  "currentSliceId": "strategic-ai-commander-role-adoption-boundary-10184",
+  "currentSliceTitle": "Strategic AI Commander Role Adoption Boundary",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Completed bounded report/helper evidence for the economy pressure gate caveat: southern_ore is explicitly reported as Hollow Mire-gated until the encounter resolves, then enters the ranked resource report behind the player-owned signal-yard sites. No scoring, live AI behavior, save, resource, economy, or public UI output changes.",
+  "currentSliceNotes": "Completed report/helper adoption boundary evidence for commander-role signals. Report-only surfaces are ready; live commander-role behavior, role continuity writes, save migration, durable event history, and full AI hero task execution remain deferred.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T23:26:00Z",
+  "updatedAt": "2026-04-27T23:50:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1946,7 +1946,7 @@
       "id": "strategic-ai-commander-role-adoption-boundary-10184",
       "title": "Strategic AI Commander Role Adoption Boundary",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
@@ -1964,11 +1964,23 @@
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "EnemyAdventureRules.commander_role_adoption_boundary_report(...) maps passed commander-role state and turn transcript report signals into explicit report-only adoption and deferral records.",
+        "tests/ai_commander_role_adoption_boundary_report.gd prints AI_COMMANDER_ROLE_ADOPTION_BOUNDARY_REPORT with ok true and asserts no live behavior, save writes, or save migration are selected.",
+        "docs/strategic-ai-commander-role-adoption-boundary-report.md records the implementation boundary and deferred surfaces."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
-      ]
+      ],
+      "updatedAt": "2026-04-27T23:50:00Z",
+      "startedAt": "2026-04-27T23:35:00Z",
+      "completedAt": "2026-04-27T23:50:00Z",
+      "implementationEvidence": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_commander_role_adoption_boundary_report.gd",
+        "tests/ai_commander_role_adoption_boundary_report.tscn",
+        "docs/strategic-ai-commander-role-adoption-boundary-report.md"
+      ],
+      "notes": "Completed bounded commander-role adoption boundary evidence. Derived role proposals, turn transcript evidence, compact report events, and town-governor refs are explicitly report-only ready; role continuity writes, save migration, live commander-role behavior, durable event history, and full AI hero task execution remain deferred. No live behavior, save/schema, resource/economy, public UI, terrain/editor, or production JSON change was made."
     },
     {
       "id": "strategic-ai-live-hero-task-adoption-10184",
@@ -3519,22 +3531,23 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "strategic-ai-commander-role-adoption-boundary-10184",
-      "title": "Strategic AI Commander Role Adoption Boundary",
+      "id": "strategic-ai-live-hero-task-adoption-10184",
+      "title": "Strategic AI Live Hero Task Adoption",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
       "source": "PLAN.md P2.8 Strategic AI Foundation Continuation",
       "sourceDocs": [
-        "docs/strategic-ai-commander-role-adoption-sequencing-plan.md",
-        "docs/strategic-ai-commander-role-live-turn-transcript-report-gate-review.md"
+        "docs/strategic-ai-hero-task-state-adoption-sequencing-plan.md",
+        "docs/strategic-ai-hero-task-state-boundary-plan.md"
       ],
       "implementationTargets": [
-        "AI report helpers",
-        "adoption plan or explicit deferral evidence"
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/core/EnemyTurnRules.gd",
+        "focused AI report/smoke coverage"
       ],
-      "notes": "Next P2.8 child after the bounded economy pressure follow-up. Convert commander-role report findings into adoption boundaries without live behavior or save schema changes unless explicitly selected.",
-      "updatedAt": "2026-04-27T23:26:00Z"
+      "notes": "Next remaining P2.8 child after commander-role boundary completion. This remains pending and requires its own explicit implementation gate before any live AI hero task behavior, save/schema writes, durable logs, or broad AI rewrite.",
+      "updatedAt": "2026-04-27T23:50:00Z"
     }
   ],
   "stoppedOrPausedTasks": [

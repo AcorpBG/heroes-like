@@ -211,6 +211,48 @@ const COMMANDER_ROLE_TURN_NO_OP_REASONS := [
 	"no_existing_raid_to_move",
 	"report_fixture_not_configured_for_assignment",
 ]
+const COMMANDER_ROLE_ADOPTION_PUBLIC_EVENT_KEYS := [
+	"event_id",
+	"day",
+	"sequence",
+	"event_type",
+	"faction_id",
+	"faction_label",
+	"actor_id",
+	"actor_label",
+	"target_kind",
+	"target_id",
+	"target_label",
+	"visibility",
+	"public_importance",
+	"summary",
+	"reason_codes",
+	"public_reason",
+	"state_policy",
+]
+const COMMANDER_ROLE_ADOPTION_BLOCKED_PUBLIC_TOKENS := [
+	"commander_role_state",
+	"hero_task_state",
+	"SAVE_VERSION",
+	"schema",
+	"migration",
+	"durable",
+	"saved",
+	"save",
+	"live_behavior",
+	"score",
+	"breakdown",
+	"debug",
+	"fixture_",
+	"target_memory",
+	"focus_pressure_count",
+	"rivalry_count",
+	"task_id",
+	"source_id",
+	"route_policy",
+	"body_tiles",
+	"approach",
+]
 const ARTIFACT_AI_VALUATION_SCHEMA := "artifact_ai_valuation_v1"
 const ARTIFACT_AI_BLOCKED_PUBLIC_TOKENS := [
 	"base_value",
@@ -4612,6 +4654,377 @@ static func commander_role_turn_transcript_report(
 
 static func commander_role_turn_transcript_public_leak_check(public_surfaces: Variant) -> Dictionary:
 	return commander_role_public_leak_check(public_surfaces)
+
+static func commander_role_adoption_boundary_report(
+	state_report: Dictionary,
+	turn_report: Dictionary,
+	options: Dictionary = {}
+) -> Dictionary:
+	var day: int = max(0, int(options.get("day", turn_report.get("day_after", state_report.get("day", 0)))))
+	var faction_id: String = String(options.get("faction_id", turn_report.get("faction_id", state_report.get("faction_id", ""))))
+	var faction_label: String = String(options.get("faction_label", faction_id))
+	var state_signal: Dictionary = _commander_role_state_report_signal(state_report)
+	var turn_signal: Dictionary = _commander_role_turn_report_signal(turn_report)
+	var records: Array = _commander_role_adoption_boundary_records(state_signal, turn_signal)
+	var public_events: Array = []
+	for index in range(records.size()):
+		public_events.append(_commander_role_adoption_public_event(records[index], day, faction_id, faction_label, index))
+	var leak_check: Dictionary = commander_role_adoption_boundary_public_leak_check(public_events)
+	var report_only_ready: Array = []
+	var deferred: Array = []
+	var blocked: Array = []
+	var live_selected: bool = false
+	var save_write_selected: bool = false
+	var migration_selected: bool = false
+	for record in records:
+		if not (record is Dictionary):
+			continue
+		match String(record.get("boundary_status", "")):
+			"adopt_report_only":
+				report_only_ready.append(String(record.get("surface_id", "")))
+			"defer":
+				deferred.append(String(record.get("surface_id", "")))
+			_:
+				blocked.append(String(record.get("surface_id", "")))
+		live_selected = live_selected or bool(record.get("live_behavior_selected", false))
+		save_write_selected = save_write_selected or bool(record.get("save_write_selected", false))
+		migration_selected = migration_selected or bool(record.get("requires_save_migration", false))
+	var ok: bool = (
+		bool(state_signal.get("ok", false))
+		and bool(turn_signal.get("ok", false))
+		and bool(leak_check.get("ok", false))
+		and blocked.is_empty()
+		and not live_selected
+		and not save_write_selected
+		and not migration_selected
+	)
+	return {
+		"ok": ok,
+		"boundary_id": "strategic-ai-commander-role-adoption-boundary-10184",
+		"schema_status": "commander_role_adoption_boundary_report_only",
+		"behavior_policy": "no_live_commander_role_behavior_adoption",
+		"save_policy": "no_commander_role_state_write",
+		"event_log_policy": "no_durable_event_log",
+		"source_reports": [state_signal, turn_signal],
+		"boundary_records": records,
+		"report_only_ready_surfaces": report_only_ready,
+		"deferred_surfaces": deferred,
+		"public_boundary_events": public_events,
+		"public_leak_check": leak_check,
+		"save_version_before": int(SessionStateStoreScript.SAVE_VERSION),
+		"save_version_after": int(SessionStateStoreScript.SAVE_VERSION),
+		"live_behavior_selected": live_selected,
+		"save_write_selected": save_write_selected,
+		"requires_save_migration": migration_selected,
+		"completion_policy": "explicit_boundary_from_passed_reports_no_runtime_adoption",
+	}
+
+static func commander_role_adoption_boundary_public_leak_check(public_surfaces: Variant) -> Dictionary:
+	var stack: Array = [public_surfaces]
+	var checked_events: int = 0
+	while not stack.is_empty():
+		var value = stack.pop_back()
+		if value is Array:
+			for item in value:
+				stack.append(item)
+			continue
+		if not (value is Dictionary):
+			var value_text: String = String(value)
+			for token in COMMANDER_ROLE_ADOPTION_BLOCKED_PUBLIC_TOKENS:
+				if value_text.contains(String(token)):
+					return {"ok": false, "error": "public adoption boundary surface leaked token %s" % String(token)}
+			continue
+		if String(value.get("event_type", "")) != "":
+			checked_events += 1
+			for key in value.keys():
+				if String(key) not in COMMANDER_ROLE_ADOPTION_PUBLIC_EVENT_KEYS:
+					return {"ok": false, "error": "%s leaked non-compact key %s" % [value.get("event_type", "event"), key]}
+		var text: String = JSON.stringify(value)
+		for token in COMMANDER_ROLE_ADOPTION_BLOCKED_PUBLIC_TOKENS:
+			if text.contains(String(token)):
+				return {"ok": false, "error": "%s leaked blocked token %s" % [value.get("event_type", "event"), token]}
+		for nested_key in value.keys():
+			var nested = value[nested_key]
+			if nested is Array or nested is Dictionary:
+				stack.append(nested)
+	return {
+		"ok": true,
+		"checked_events": checked_events,
+		"allowed_public_event_keys": COMMANDER_ROLE_ADOPTION_PUBLIC_EVENT_KEYS,
+		"blocked_public_tokens": COMMANDER_ROLE_ADOPTION_BLOCKED_PUBLIC_TOKENS,
+	}
+
+static func _commander_role_state_report_signal(report: Dictionary) -> Dictionary:
+	var leak_check: Dictionary = report.get("public_leak_check", {}) if report.get("public_leak_check", {}) is Dictionary else {}
+	var cases: Array = report.get("cases", []) if report.get("cases", []) is Array else []
+	return {
+		"report_id": String(report.get("report_id", "AI_COMMANDER_ROLE_STATE_REPORT")),
+		"ok": bool(report.get("ok", false)),
+		"schema_status": String(report.get("schema_status", "")),
+		"case_count": cases.size(),
+		"public_leak_ok": bool(leak_check.get("ok", false)),
+		"checked_public_events": int(leak_check.get("checked_events", 0)),
+		"signal_policy": "report_fixture_only",
+	}
+
+static func _commander_role_turn_report_signal(report: Dictionary) -> Dictionary:
+	var leak_check: Dictionary = report.get("public_leak_check", {}) if report.get("public_leak_check", {}) is Dictionary else {}
+	var cases: Array = report.get("cases", []) if report.get("cases", []) is Array else []
+	var phase_count: int = 0
+	var arrival_count: int = 0
+	var no_op_count: int = 0
+	var town_ref_count: int = 0
+	for case_value in cases:
+		if not (case_value is Dictionary):
+			continue
+		var case_report: Dictionary = case_value
+		phase_count += case_report.get("phase_records", []).size() if case_report.get("phase_records", []) is Array else 0
+		arrival_count += case_report.get("raid_arrival_summary", []).size() if case_report.get("raid_arrival_summary", []) is Array else 0
+		no_op_count += case_report.get("target_no_op_records", []).size() if case_report.get("target_no_op_records", []) is Array else 0
+		town_ref_count += case_report.get("town_governor_supporting_event_refs", []).size() if case_report.get("town_governor_supporting_event_refs", []) is Array else 0
+	return {
+		"report_id": String(report.get("report_id", "AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT")),
+		"ok": bool(report.get("ok", false)),
+		"schema_status": String(report.get("schema_status", "")),
+		"behavior_policy": String(report.get("behavior_policy", "")),
+		"save_policy": String(report.get("save_policy", "")),
+		"case_count": cases.size(),
+		"phase_record_count": phase_count,
+		"arrival_record_count": arrival_count,
+		"no_op_record_count": no_op_count,
+		"town_governor_ref_count": town_ref_count,
+		"public_leak_ok": bool(leak_check.get("ok", false)),
+		"checked_public_events": int(leak_check.get("checked_events", 0)),
+		"signal_policy": "derived_turn_transcript_report_only",
+	}
+
+static func _commander_role_adoption_boundary_records(state_signal: Dictionary, turn_signal: Dictionary) -> Array:
+	var state_ready: bool = (
+		bool(state_signal.get("ok", false))
+		and String(state_signal.get("schema_status", "")) == "report_fixture_only"
+		and int(state_signal.get("case_count", 0)) > 0
+		and bool(state_signal.get("public_leak_ok", false))
+	)
+	var turn_ready: bool = (
+		bool(turn_signal.get("ok", false))
+		and String(turn_signal.get("schema_status", "")) == "derived_turn_transcript_report_only"
+		and String(turn_signal.get("behavior_policy", "")) == "observe_existing_enemy_turn_only"
+		and String(turn_signal.get("save_policy", "")) == "no_commander_role_state_write"
+		and int(turn_signal.get("case_count", 0)) > 0
+		and int(turn_signal.get("phase_record_count", 0)) > 0
+		and bool(turn_signal.get("public_leak_ok", false))
+	)
+	var records: Array = [
+		_commander_role_adoption_record(
+			"derived_role_proposals",
+			"Derived role proposals",
+			"adopt_report_only" if state_ready else "blocked",
+			"Role labels, assignment hints, and public reasons can remain report evidence.",
+			"report evidence only",
+			["AI_COMMANDER_ROLE_STATE_REPORT"],
+			"state_report_passed" if state_ready else "state_report_not_ready"
+		),
+		_commander_role_adoption_record(
+			"turn_transcript",
+			"Turn transcript",
+			"adopt_report_only" if turn_ready else "blocked",
+			"Before and after turn snapshots can remain behavior-neutral report evidence.",
+			"report evidence only",
+			["AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT"],
+			"transcript_gate_passed" if turn_ready else "transcript_not_ready"
+		),
+		_commander_role_adoption_record(
+			"compact_public_events",
+			"Compact public events",
+			"adopt_report_only" if state_ready and turn_ready else "blocked",
+			"Compact events are safe for report fixtures after recursive leak checks.",
+			"report evidence only",
+			["AI_COMMANDER_ROLE_STATE_REPORT", "AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT"],
+			"public_leak_checks_passed" if state_ready and turn_ready else "public_leak_checks_not_ready"
+		),
+		_commander_role_adoption_record(
+			"town_governor_refs",
+			"Town governor references",
+			"adopt_report_only" if turn_ready and int(turn_signal.get("town_governor_ref_count", 0)) > 0 else "blocked",
+			"Town governor refs can support reports without becoming event authority.",
+			"supporting report evidence",
+			["AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT"],
+			"support_refs_present" if int(turn_signal.get("town_governor_ref_count", 0)) > 0 else "support_refs_missing"
+		),
+		_commander_role_adoption_record(
+			"commander_role_state_write",
+			"Role continuity field",
+			"defer",
+			"Passed reports explain current outcomes from existing roster and encounter state.",
+			"needs later gate",
+			["strategic-ai-commander-role-live-turn-transcript-report-gate-review"],
+			"no_continuity_need_proven",
+			false,
+			false,
+			true
+		),
+		_commander_role_adoption_record(
+			"save_migration",
+			"Compatibility migration",
+			"defer",
+			"Current evidence keeps compatibility unchanged and does not require migration.",
+			"needs later gate",
+			["strategic-ai-commander-role-live-turn-transcript-report-gate-review"],
+			"no_migration_selected",
+			false,
+			false,
+			true
+		),
+		_commander_role_adoption_record(
+			"live_commander_role_behavior",
+			"Live commander behavior",
+			"defer",
+			"The transcript observes existing enemy turns without selecting new behavior.",
+			"needs later gate",
+			["strategic-ai-commander-role-adoption-sequencing-plan"],
+			"live_behavior_not_selected",
+			true,
+			false,
+			false
+		),
+		_commander_role_adoption_record(
+			"durable_event_log",
+			"Persistent event history",
+			"defer",
+			"Compact report events are derived and do not need persistent history.",
+			"needs later gate",
+			["strategic-ai-commander-role-live-turn-transcript-report-gate-review"],
+			"persistent_log_not_selected",
+			false,
+			false,
+			false,
+			true
+		),
+		_commander_role_adoption_record(
+			"full_ai_hero_task_state",
+			"Full AI hero tasks",
+			"defer",
+			"Task execution still needs its own route, invalidation, and ownership gates.",
+			"needs later gate",
+			["strategic-ai-hero-task-state-boundary-plan"],
+			"task_execution_out_of_scope",
+			true,
+			false,
+			false
+		),
+	]
+	return records
+
+static func _commander_role_adoption_record(
+	surface_id: String,
+	surface_label: String,
+	boundary_status: String,
+	internal_reason: String,
+	public_reason: String,
+	source_report_ids: Array,
+	reason_code: String,
+	live_behavior_risk: bool = false,
+	save_write_risk: bool = false,
+	schema_risk: bool = false,
+	durable_log_risk: bool = false
+) -> Dictionary:
+	return {
+		"surface_id": surface_id,
+		"surface_label": surface_label,
+		"boundary_status": boundary_status,
+		"public_status": "ready_report_only" if boundary_status == "adopt_report_only" else boundary_status,
+		"adoption_scope": "report_helper_only" if boundary_status == "adopt_report_only" else "deferred",
+		"reason_code": reason_code,
+		"reason": internal_reason,
+		"public_reason": public_reason,
+		"source_report_ids": source_report_ids,
+		"live_behavior_selected": false,
+		"save_write_selected": false,
+		"requires_save_migration": false,
+		"risk_flags": {
+			"live_behavior_risk": live_behavior_risk,
+			"save_write_risk": save_write_risk,
+			"schema_risk": schema_risk,
+			"durable_log_risk": durable_log_risk,
+		},
+		"state_policy": "report_only",
+	}
+
+static func _commander_role_adoption_public_event(
+	record: Dictionary,
+	day: int,
+	faction_id: String,
+	faction_label: String,
+	sequence: int
+) -> Dictionary:
+	var status := String(record.get("public_status", "deferred"))
+	var public_reason := String(record.get("public_reason", "needs later gate"))
+	var surface_id := String(record.get("surface_id", ""))
+	var target_id := _commander_role_adoption_public_target_id(surface_id)
+	var surface_label := _commander_role_adoption_public_target_label(surface_id, String(record.get("surface_label", surface_id)))
+	var public_reason_code := _commander_role_adoption_public_reason_code(String(record.get("reason_code", "")))
+	var summary := "%s is %s (%s)." % [surface_label, status.replace("_", " "), public_reason]
+	return {
+		"event_id": "%d:%s:ai_commander_role_boundary:%s:%d" % [day, faction_id, target_id, sequence],
+		"day": day,
+		"sequence": sequence,
+		"event_type": "ai_commander_role_boundary",
+		"faction_id": faction_id,
+		"faction_label": faction_label,
+		"actor_id": "strategic_ai",
+		"actor_label": "Strategic AI",
+		"target_kind": "boundary",
+		"target_id": target_id,
+		"target_label": surface_label,
+		"visibility": "hidden_report",
+		"public_importance": "low",
+		"summary": summary,
+		"reason_codes": [public_reason_code],
+		"public_reason": public_reason,
+		"state_policy": "report_only",
+	}
+
+static func _commander_role_adoption_public_target_id(surface_id: String) -> String:
+	match surface_id:
+		"commander_role_state_write":
+			return "continuity_field"
+		"save_migration":
+			return "compatibility_path"
+		"live_commander_role_behavior":
+			return "turn_behavior"
+		"durable_event_log":
+			return "event_history"
+		"full_ai_hero_task_state":
+			return "hero_tasks"
+	return surface_id
+
+static func _commander_role_adoption_public_target_label(surface_id: String, fallback: String) -> String:
+	match surface_id:
+		"commander_role_state_write":
+			return "Continuity field"
+		"save_migration":
+			return "Compatibility path"
+		"live_commander_role_behavior":
+			return "Turn behavior"
+		"durable_event_log":
+			return "Event history"
+		"full_ai_hero_task_state":
+			return "Hero tasks"
+	return fallback
+
+static func _commander_role_adoption_public_reason_code(reason_code: String) -> String:
+	match reason_code:
+		"no_continuity_need_proven":
+			return "later_continuity_gate"
+		"no_migration_selected":
+			return "later_compatibility_gate"
+		"live_behavior_not_selected":
+			return "later_behavior_gate"
+		"persistent_log_not_selected":
+			return "later_history_gate"
+		"task_execution_out_of_scope":
+			return "later_task_gate"
+	return reason_code
 
 static func ai_hero_task_candidate_from_role(
 	session: SessionStateStoreScript.SessionData,
