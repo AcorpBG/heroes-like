@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T06:13:48Z",
+  "updatedAt": "2026-04-27T06:21:11Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "town-response-readiness-check-cue-10184",
-  "currentSliceTitle": "Surface compact town response readiness check cue",
+  "currentSliceId": "battle-stack-check-cue-10184",
+  "currentSliceTitle": "Surface compact battle active stack check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible town Strategic Response check using existing response actions, town logistics, recovery, movement, and town response panel payloads only. The Response panel now shows a `Response check:` line, detailed readiness tooltip, validation snapshot payload, and focused smoke coverage for visible text, action-catalog count alignment, and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer asset import, pathing/body-tile adoption, broad dashboards, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible battle active-stack check using existing active consequence, status pressure, target range, and action surface payloads only. The active-stack rail now shows a `Stack check:` line, detailed role/status/range/order/next-action tooltip, validation snapshot payload, and focused smoke coverage for visible text and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, production JSON, durable logs, AI behavior, renderer asset import, pathing/body-tile adoption, broad dashboards, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2307,6 +2307,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T12:05:00Z",
       "completedAt": "2026-04-27T12:18:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-stack-check-cue-10184",
+      "title": "Surface compact battle active stack check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T06:18:11Z",
+      "completedAt": "2026-04-27T06:21:11Z",
       "difficulty": "small"
     }
   ],
