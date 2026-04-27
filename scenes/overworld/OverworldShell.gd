@@ -866,8 +866,10 @@ func _refresh_primary_action_button(action: Dictionary) -> void:
 	if summary == "":
 		summary = "Commit %s." % String(action.get("label", "the primary order")).to_lower()
 	var commit_check := _primary_order_commit_check_surface(action)
+	var active_site_order := _active_site_order_surface(action)
 	_primary_action_button.tooltip_text = _join_tooltip_sections([
 		summary,
+		String(active_site_order.get("tooltip_text", "")),
 		String(_town_entry_handoff_surface().get("tooltip_text", "")),
 		String(commit_check.get("tooltip_text", "")),
 		"Press Enter or Space to commit this order.",
@@ -959,6 +961,97 @@ func _primary_order_commit_check_surface(action: Dictionary = {}) -> Dictionary:
 		"next_step": next_step,
 		"confirmation": confirmation,
 	}
+
+func _active_site_order_surface(action: Dictionary = {}) -> Dictionary:
+	if _selected_tile != OverworldRules.hero_position(_session):
+		return {}
+	var primary_action := action
+	if primary_action.is_empty():
+		primary_action = _current_primary_action()
+	if primary_action.is_empty():
+		return {}
+	var action_id := String(primary_action.get("id", "")).strip_edges()
+	if action_id not in ["collect_resource", "collect_artifact", "enter_battle", "capture_town", "site_response"]:
+		return {}
+	var active_context := _cached_active_context()
+	var context_type := String(active_context.get("type", "")).strip_edges()
+	if context_type == "" or context_type == "empty":
+		return {}
+	var label := String(primary_action.get("label", "Resolve Site")).strip_edges()
+	if label == "":
+		label = "Resolve Site"
+	var target := _active_site_order_target_label(active_context)
+	if target == "":
+		target = "current tile"
+	var movement = _session.overworld.get("movement", {})
+	var movement_line := "Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", movement.get("current", 0))),
+	]
+	var readiness := "Ready"
+	if bool(primary_action.get("disabled", false)):
+		readiness = "Blocked"
+	var affected := String(primary_action.get("summary", "")).strip_edges()
+	if affected == "":
+		affected = "This current-tile order changes the field state."
+	var next_step := _active_site_order_next_step(action_id, label)
+	var tooltip := "Active Site Handoff\n- Current tile: %s\n- Order: %s\n- Readiness: %s | %s\n- Affected: %s\n- Next: %s\n- State change: Enter/Space commits this current-tile order; inspection alone does not spend movement." % [
+		target,
+		label,
+		readiness,
+		movement_line,
+		affected,
+		next_step,
+	]
+	return {
+		"visible_text": "Site handoff: %s | %s | %s" % [
+			_short_action_label(target, 22),
+			_short_action_label(label, 18),
+			readiness,
+		],
+		"tooltip_text": tooltip,
+		"context_type": context_type,
+		"action_id": action_id,
+		"target_label": target,
+		"order_label": label,
+		"readiness": readiness,
+		"movement_line": movement_line,
+		"affected": affected,
+		"next_step": next_step,
+	}
+
+func _active_site_order_target_label(active_context: Dictionary) -> String:
+	match String(active_context.get("type", "")):
+		"resource":
+			var node: Dictionary = active_context.get("node", {}) if active_context.get("node", {}) is Dictionary else {}
+			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+			return String(site.get("name", node.get("placement_id", "Resource site")))
+		"artifact":
+			var artifact_node: Dictionary = active_context.get("node", {}) if active_context.get("node", {}) is Dictionary else {}
+			return ArtifactRules.artifact_name(String(artifact_node.get("artifact_id", "")))
+		"encounter":
+			var encounter: Dictionary = active_context.get("encounter", {}) if active_context.get("encounter", {}) is Dictionary else {}
+			return OverworldRules.encounter_display_name(encounter)
+		"town":
+			var town: Dictionary = active_context.get("town", {}) if active_context.get("town", {}) is Dictionary else {}
+			return String(town.get("name", town.get("placement_id", "Town")))
+		_:
+			return ""
+
+func _active_site_order_next_step(action_id: String, label: String) -> String:
+	match action_id:
+		"collect_resource":
+			return "Resolve %s, then review the claim recap before ending the day." % label
+		"collect_artifact":
+			return "Recover the artifact, then check the commander gear rail."
+		"enter_battle":
+			return "Open the battle handoff and resolve the hostile contact."
+		"capture_town":
+			return "Commit the town assault or claim order before planning the next field move."
+		"site_response":
+			return "Dispatch the response order, then watch the route and end-turn forecast."
+		_:
+			return "Commit the current-tile order before ending the day."
 
 func _selected_tile_movement_action() -> Dictionary:
 	if not _tile_in_bounds(_selected_tile):
@@ -2078,9 +2171,16 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 	var route_line := _route_decision_line(route_decision)
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
 	var town_entry_handoff := _town_entry_handoff_surface()
+	var active_site_order := _active_site_order_surface(primary_action)
 	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
 	var visible_next := _short_text(next_step.trim_suffix("."), 44)
 	var visible := "Ready: %s | %s" % [visible_next, movement_line]
+	var active_site_visible := String(active_site_order.get("visible_text", "")).strip_edges()
+	if active_site_visible != "":
+		visible = "Ready: %s | %s" % [
+			visible_next,
+			_short_text(active_site_visible.trim_prefix("Site handoff: "), 36),
+		]
 	var route_target_visible := String(route_target_handoff.get("visible_text", "")).strip_edges()
 	if route_target_visible != "":
 		visible = "Ready: %s | %s" % [
@@ -2099,6 +2199,9 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"- Next practical action: %s" % next_step,
 		"- %s" % primary_line,
 	]
+	var active_site_tooltip := String(active_site_order.get("tooltip_text", "")).strip_edges()
+	if active_site_tooltip != "":
+		tooltip_lines.append(active_site_tooltip)
 	var route_target_tooltip := String(route_target_handoff.get("tooltip_text", "")).strip_edges()
 	if route_target_tooltip != "":
 		tooltip_lines.append(route_target_tooltip)
@@ -2115,6 +2218,7 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"progress_line": progress_line,
 		"next_step": next_step,
 		"primary_order": primary_line,
+		"active_site_order": active_site_order,
 		"route_line": route_line,
 		"route_target_handoff": route_target_handoff,
 		"town_entry_handoff": town_entry_handoff,
@@ -3030,6 +3134,7 @@ func validation_snapshot() -> Dictionary:
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
 	var town_entry_handoff := _town_entry_handoff_surface()
 	var primary_order_commit_check := _primary_order_commit_check_surface(primary_action)
+	var active_site_order := _active_site_order_surface(primary_action)
 	var field_readiness := _field_readiness_surface()
 	var end_turn_check := _end_turn_confirmation_surface(field_readiness)
 	var event_feed := _event_feed_surface()
@@ -3120,6 +3225,9 @@ func validation_snapshot() -> Dictionary:
 		"town_entry_handoff": town_entry_handoff,
 		"town_entry_handoff_visible_text": String(town_entry_handoff.get("visible_text", "")),
 		"town_entry_handoff_tooltip_text": String(town_entry_handoff.get("tooltip_text", "")),
+		"active_site_order": active_site_order,
+		"active_site_order_visible_text": String(active_site_order.get("visible_text", "")),
+		"active_site_order_tooltip_text": String(active_site_order.get("tooltip_text", "")),
 		"selected_tile_rail_text": _rail_tile_text(),
 		"map_tooltip": _map_tooltip_text(),
 		"active_context_type": String(active_context.get("type", "")),
