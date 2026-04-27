@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "concept-art-decision-register-10184",
-  "currentSliceTitle": "Concept-Art Decision Register",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.2 selected intentionally; remove stale P2.8a next-reference and complete P2.2 children in order.",
+  "currentSliceId": "concept-art-implementation-brief-selection-10184",
+  "currentSliceTitle": "Concept-Art Implementation Brief Selection",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "P2.2 decision register completed; next child should select or explicitly defer one implementation brief track before any runtime or asset work.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T13:11:32Z",
+  "updatedAt": "2026-04-27T13:12:56Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -154,7 +154,7 @@
       "title": "Concept-Art Curation Gate",
       "phase": "phase-2-deep-production-foundation",
       "status": "in_progress",
-      "classification": "parent_gate_paused_children_pending",
+      "classification": "parent_track_in_progress_selected_child_pending",
       "sourceDocs": [
         "docs/concept-art-pipeline.md",
         "docs/concept-art-batch-001-review.md",
@@ -162,13 +162,14 @@
         "docs/concept-art-batch-003-review.md",
         "docs/concept-art-batch-004-review.md",
         "docs/concept-art-batch-005-review.md",
-        "docs/concept-art-implementation-briefs.md"
+        "docs/concept-art-implementation-briefs.md",
+        "docs/concept-art-decision-register.md"
       ],
       "implementationTargets": [
         "curation/status document or brief update only unless an explicit asset implementation slice follows"
       ],
-      "deferredReason": "Batch review docs and implementation briefs exist, but accepted/rejected/deferred study decisions are not selected as the current worker task.",
-      "notes": "P2.2 selected after P2.1 completion; process child slices in P2.2 order before later Phase 2 parents",
+      "deferredReason": "Final asset approval and runtime ingestion remain deferred until the remaining P2.2 children resolve brief selection and asset boundary.",
+      "notes": "P2.2 selected after P2.1 completion; concept-art-decision-register-10184 completed as documentation/curation governance; process remaining P2.2 children before later Phase 2 parents.",
       "sliceType": "parent",
       "childSliceIds": [
         "concept-art-decision-register-10184",
@@ -179,9 +180,11 @@
       "docsReadyEvidenceIds": [
         "concept-art-docs"
       ],
-      "completedImplementationEvidenceIds": [],
+      "completedImplementationEvidenceIds": [
+        "concept-art-decision-register-10184"
+      ],
       "reportOnlyEvidenceIds": [],
-      "updatedAt": "2026-04-27T13:11:32Z",
+      "updatedAt": "2026-04-27T13:12:56Z",
       "startedAt": "2026-04-27T13:11:32Z"
     },
     {
@@ -620,7 +623,7 @@
       "id": "concept-art-decision-register-10184",
       "title": "Concept-Art Decision Register",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "concept-art-curation-gate-10184",
@@ -631,24 +634,31 @@
         "docs/concept-art-batch-002-review.md",
         "docs/concept-art-batch-003-review.md",
         "docs/concept-art-batch-004-review.md",
-        "docs/concept-art-batch-005-review.md"
+        "docs/concept-art-batch-005-review.md",
+        "docs/concept-art-implementation-briefs.md"
       ],
       "implementationTargets": [
         "curation/status doc or brief update only"
       ],
       "baselineChecks": [
-        "python3 tests/validate_repo.py",
+        "markdown/link/path sanity for docs/concept-art-decision-register.md",
+        "python3 -m json.tool ops/progress.json >/tmp/heroes-progress-json.txt",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py status /root/dev/heroes-like",
+        "python3 /root/.openclaw/workspace/skills/heroes-progress/scripts/progress.py next /root/dev/heroes-like",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "docs/concept-art-decision-register.md records accepted, rejected, and deferred concept directions from batches 001-005 and docs/concept-art-implementation-briefs.md, with implementation implications and explicit no-runtime-asset boundary."
       ],
       "completionCriteria": [
-        "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
+        "Accepted, rejected, and deferred studies are clearly listed for future visual/content workers.",
+        "Generated PNGs remain external and no runtime asset/code changes are made.",
+        "Progress tracker moves to the next P2.2 child without completing the P2.2 parent."
       ],
-      "updatedAt": "2026-04-27T13:11:32Z",
+      "updatedAt": "2026-04-27T13:12:56Z",
       "startedAt": "2026-04-27T13:11:32Z",
-      "notes": "worker started for P2.2 first child: build/update accepted/rejected/deferred concept-art decision register from review docs"
+      "notes": "Completed P2.2 first child: created docs/concept-art-decision-register.md as a curation governance register. It accepts directions only as external concept evidence/brief inputs, rejects PNG ingestion and direct copying, defers AcOrP final approval, prompt provenance, unit-ladder approvals, neutral army presentation, asset ingestion, and first brief-track selection.",
+      "completedAt": "2026-04-27T13:12:56Z"
     },
     {
       "id": "concept-art-implementation-brief-selection-10184",
@@ -660,7 +670,8 @@
       "parentSliceId": "concept-art-curation-gate-10184",
       "purpose": "Select one concept-art implementation brief track for later runtime/content work.",
       "sourceDocs": [
-        "docs/concept-art-implementation-briefs.md"
+        "docs/concept-art-implementation-briefs.md",
+        "docs/concept-art-decision-register.md"
       ],
       "implementationTargets": [
         "selected implementation brief update",
@@ -2737,22 +2748,19 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "concept-art-decision-register-10184",
-      "title": "Concept-Art Decision Register",
-      "status": "in_progress",
+      "id": "concept-art-implementation-brief-selection-10184",
+      "title": "Concept-Art Implementation Brief Selection",
+      "status": "pending",
       "parentSliceId": "concept-art-curation-gate-10184",
       "sourceDocs": [
-        "docs/concept-art-pipeline.md",
-        "docs/concept-art-batch-001-review.md",
-        "docs/concept-art-batch-002-review.md",
-        "docs/concept-art-batch-003-review.md",
-        "docs/concept-art-batch-004-review.md",
-        "docs/concept-art-batch-005-review.md"
+        "docs/concept-art-implementation-briefs.md",
+        "docs/concept-art-decision-register.md"
       ],
       "implementationTargets": [
-        "curation/status doc or brief update only"
+        "selected implementation brief update",
+        "follow-up implementation slice reference"
       ],
-      "notes": "worker started for P2.2 first child: build/update accepted/rejected/deferred concept-art decision register from review docs",
+      "notes": "next P2.2 child: select one concept-art implementation brief track or explicitly defer selection; do not start runtime asset ingestion or renderer/content code changes",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.2 Concept-Art Curation Gate"
