@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
   "currentSliceTitle": "Hero Task-State Save-Normalizer Preservation Report",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next selected Phase 2 category after P2.7 closeout. Inspect prior strategic AI reports and docs before implementation; do not start P2.9 terrain/editor here, and keep save migration/live task adoption/broad AI rewrite out of scope unless explicitly selected.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Implemented report-only hero task-state normalizer preservation proof. EnemyTurnRules now preserves sanitized optional hero_task_state only when explicitly present; focused Godot report covers old-save absence, valid/empty boards, malformed records, unknown field isolation, SaveService boundary, commander roster continuity, and SAVE_VERSION 9.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T22:54:40Z",
+  "updatedAt": "2026-04-27T23:05:29Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -461,7 +461,7 @@
       "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
       "title": "Hero Task-State Save-Normalizer Preservation Report",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "classification": "phase2_child_implementation_slice",
       "sourceDocs": [
         "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
@@ -479,10 +479,11 @@
         "godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_hero_task_state_normalizer_preservation_report.tscn",
         "git diff --check"
       ],
-      "notes": "Next selected Phase 2 category after P2.7 closeout. Inspect prior strategic AI reports and docs before implementation; do not start P2.9 terrain/editor here, and keep save migration/live task adoption/broad AI rewrite out of scope unless explicitly selected.",
+      "notes": "Implemented report-only hero task-state normalizer preservation proof. EnemyTurnRules now preserves sanitized optional hero_task_state only when explicitly present; focused Godot report covers old-save absence, valid/empty boards, malformed records, unknown field isolation, SaveService boundary, commander roster continuity, and SAVE_VERSION 9.",
       "sliceType": "child",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
-      "updatedAt": "2026-04-27T22:54:40Z"
+      "updatedAt": "2026-04-27T23:05:29Z",
+      "completedAt": "2026-04-27T23:05:29Z"
     },
     {
       "id": "terrain-editor-tooling-foundation-implementation-10184",
@@ -3494,24 +3495,22 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184",
-      "title": "Hero Task-State Save-Normalizer Preservation Report",
+      "id": "strategic-ai-public-event-log-boundary-10184",
+      "title": "Strategic AI Public Event Log Boundary",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "strategic-ai-foundation-continuation-10184",
       "source": "PLAN.md P2.8 Strategic AI Foundation Continuation",
       "sourceDocs": [
-        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-plan.md",
-        "docs/strategic-ai-hero-task-state-report-gate-review.md",
-        "docs/strategic-ai-hero-task-state-boundary-plan.md"
+        "docs/strategic-ai-event-surfacing-plan.md",
+        "docs/strategic-ai-event-surfacing-report-gate-review.md"
       ],
       "implementationTargets": [
-        "scripts/core/EnemyTurnRules.gd",
-        "tests/ai_hero_task_state_normalizer_preservation_report.gd",
-        "tests/ai_hero_task_state_normalizer_preservation_report.tscn",
-        "docs/strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-report.md"
+        "derived event/report helpers",
+        "save boundary docs/tests if durability is selected"
       ],
-      "notes": "Next selected Phase 2 category after P2.7 closeout. Inspect prior strategic AI reports and docs before implementation; do not start P2.9 terrain/editor here, and keep save migration/live task adoption/broad AI rewrite out of scope unless explicitly selected."
+      "notes": "Next P2.8 child after the hero task-state normalizer preservation report. Keep live AI task adoption, save migration, durable event logs, and broad AI rewrites deferred unless this boundary explicitly selects them.",
+      "updatedAt": "2026-04-27T23:05:29Z"
     }
   ],
   "stoppedOrPausedTasks": [
