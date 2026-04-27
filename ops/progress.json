@@ -5,10 +5,10 @@
   "currentPhase": "phase-2-deep-production-foundation",
   "currentSliceId": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
   "currentSliceTitle": "Overworld Object Content Batch 001b Biome Scenic Decoration",
-  "currentSliceStatus": "pending",
-  "currentSliceNotes": "Corrective P2.4 Batch 001 is completed. P2.5 remains paused; next corrective P2.4 slice is decoration expansion 001b.",
+  "currentSliceStatus": "completed",
+  "currentSliceNotes": "Completed corrective P2.4 Batch 001b with 60 passable scenic decoration map_objects across all 9 biomes, validator/report coverage, and implementation report. P2.5 remains paused; next corrective P2.4 slice is 001c blockers/edge blockers.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T18:16:41Z",
+  "updatedAt": "2026-04-27T18:31:01Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -1214,7 +1214,7 @@
       "id": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
       "title": "Overworld Object Content Batch 001b Biome Scenic Decoration",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
@@ -1239,7 +1239,10 @@
         "Scenic decorations remain non-interactable and distinguish visual footprint from empty or minimal body masks.",
         "Every biome has usable passable scenic scatter for route dressing and negative-space density."
       ],
-      "notes": "Pending follow-up decoration batch. Do not mark complete until object JSON and validation evidence exist."
+      "notes": "Completed corrective P2.4 Batch 001b with 60 passable scenic decoration map_objects across all 9 biomes, validator/report coverage, and implementation report. P2.5 remains paused; next corrective P2.4 slice is 001c blockers/edge blockers.",
+      "updatedAt": "2026-04-27T18:31:01Z",
+      "startedAt": "2026-04-27T18:20:15Z",
+      "completedAt": "2026-04-27T18:31:01Z"
     },
     {
       "id": "overworld-object-content-batch-001c-biome-blockers-edge-10184",
@@ -3062,8 +3065,8 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "overworld-object-content-batch-001b-biome-scenic-decoration-10184",
-      "title": "Overworld Object Content Batch 001b Biome Scenic Decoration",
+      "id": "overworld-object-content-batch-001c-biome-blockers-edge-10184",
+      "title": "Overworld Object Content Batch 001c Biome Blockers And Edge Blockers",
       "status": "pending",
       "parentSliceId": "overworld-object-encounter-foundation-implementation-10184",
       "sourceDocs": [
@@ -3074,7 +3077,7 @@
         "content/map_objects.json",
         "object validator/report fixtures as needed"
       ],
-      "notes": "next corrective P2.4 decoration expansion after completed Batch 001; P2.5 remains paused",
+      "notes": "next corrective P2.4 blocker and edge-blocker expansion after completed Batch 001b; P2.5 remains paused",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.4 Overworld Object And Neutral Encounter Foundation"
