@@ -506,9 +506,9 @@ func _refresh() -> void:
 		objective_stakes,
 		String(readiness_surface.get("tooltip_text", "")),
 	])
-	var status_text := OverworldRules.describe_status(_session)
-	_status_label.tooltip_text = status_text
-	_status_label.text = _compact_text(status_text, 1, 64, false)
+	var status_forecast := _status_forecast_surface()
+	_status_label.tooltip_text = String(status_forecast.get("tooltip_text", ""))
+	_status_label.text = _compact_text(String(status_forecast.get("visible_text", "")), 1, 64, false)
 	var resource_text := OverworldRules.describe_resources(_session)
 	_resource_label.tooltip_text = resource_text
 	_resource_label.text = resource_text
@@ -1989,6 +1989,37 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"end_turn_forecast": forecast,
 	}
 
+func _status_forecast_surface() -> Dictionary:
+	var status_text := OverworldRules.describe_status(_session)
+	var movement = _session.overworld.get("movement", {})
+	var next_day := _session.day + 1
+	var week: int = int(floori(float(max(_session.day, 1) - 1) / 7.0)) + 1
+	var weekday: int = ((max(_session.day, 1) - 1) % 7) + 1
+	var visible_text := "Week %d Day %d | Move %d/%d | Next: Day %d" % [
+		week,
+		weekday,
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+		next_day,
+	]
+	var forecast_text := OverworldRules.describe_end_turn_forecast(_session)
+	var forecast_compact := OverworldRules.describe_end_turn_forecast_compact(_session)
+	var tooltip_lines := [
+		"Status Forecast",
+		"- Current: %s" % status_text,
+		"- Next day: %s" % (forecast_compact if forecast_compact != "" else "forecast unavailable"),
+	]
+	if forecast_text != "":
+		tooltip_lines.append(forecast_text)
+	return {
+		"visible_text": visible_text,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"current_status": status_text,
+		"next_day": next_day,
+		"forecast": forecast_text,
+		"forecast_compact": forecast_compact,
+	}
+
 func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Dictionary:
 	var readiness := field_readiness
 	if readiness.is_empty():
@@ -2855,6 +2886,7 @@ func validation_snapshot() -> Dictionary:
 	var event_feed := _event_feed_surface()
 	var action_context := _action_context_surface(event_feed, field_readiness)
 	var drawer_handoff := _drawer_handoff_surfaces(field_readiness)
+	var status_forecast := _status_forecast_surface()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id,
@@ -2875,6 +2907,9 @@ func validation_snapshot() -> Dictionary:
 		},
 		"movement_current": int(movement.get("current", 0)),
 		"movement_max": int(movement.get("max", 0)),
+		"status_visible_text": _status_label.text,
+		"status_tooltip_text": _status_label.tooltip_text,
+		"status_forecast": status_forecast,
 		"map_size": {
 			"x": _map_size.x,
 			"y": _map_size.y,
