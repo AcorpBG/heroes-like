@@ -603,6 +603,40 @@ nonGoals:
 - No pathing, renderer, save, economy, or scenario migration beyond metadata validation.
 - No HoMM-scale 500+ decoration breadth in P2.4.
 
+#### P2.4f Corrective Mines And Resource Fronts Batch 002
+
+id: `overworld-object-content-batch-002-mines-resource-fronts-10184`
+phase: `phase-2-deep-production-foundation`
+purpose: Continue corrective P2.4 object content with mines, rare-resource fronts, support producers, and explicit resource-front authoring contracts after decoration/blocker coverage.
+
+sourceDocs:
+- `docs/phase2-4-object-implementation-backlog.md`
+- `docs/overworld-object-taxonomy-density.md`
+- `docs/economy-resource-schema-migration-plan.md`
+
+implementationTargets:
+- `content/map_objects.json`
+- `content/resource_sites.json`
+- Object and economy validator/report fixtures as needed.
+
+baselineChecks:
+- `python3 tests/validate_repo.py`
+- `python3 tests/validate_repo.py --economy-resource-report`
+- `python3 tests/validate_repo.py --overworld-object-report`
+- `git diff --check`
+
+sliceEvidence:
+- About 28 new or normalized mine/resource-front/support-producer definitions cover common mines, staged rare-resource fronts, support producers, and selected existing mine normalization.
+
+completionCriteria:
+- Mines and resource-front objects define explicit footprint, body, approach, ownership/control, staged-output, guard expectation, and biome metadata as appropriate.
+- Rare-resource fronts remain staged/report-safe without activating live rare-resource costs, markets, save payloads, or production grants.
+
+nonGoals:
+- No save migration or `SAVE_VERSION` bump.
+- No market changes.
+- No rare-resource costs, stockpile grants, UI inventory activation, or broad economy rebalance.
+
 ### P2.5 Magic System Foundation Implementation
 
 id: `magic-system-foundation-implementation-10184`
