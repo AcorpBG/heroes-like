@@ -8,7 +8,7 @@ Slice: `strategic-ai-commander-role-report-fixture-planning-10184`.
 
 Plan exact deterministic fixture cases and report payloads for a future `AI_COMMANDER_ROLE_STATE_REPORT` before adopting commander-role schema, save migration, report helpers, tests, live behavior, or full AI hero task state.
 
-This slice is planning only. It does not implement report helpers/tests, add schema, change AI behavior, tune coefficients, edit production JSON, add durable event logs, migrate saves, add defense-specific durable state, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
+This slice is planning only. It does not implement report helpers/tests, add schema, change AI behavior, tune coefficients, edit production JSON, add durable event logs, migrate saves, add defense-specific durable state, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, or rebalance River Pass.
 
 ## Evidence Baseline
 

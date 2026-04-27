@@ -10,7 +10,7 @@ Choose the smallest useful broader strategic AI pressure expansion after the Riv
 
 This plan uses `docs/strategic-ai-event-surfacing-report-gate-review.md` as a contract: public output stays compact, score tables stay in debug/report output, and a live-client gate is required only when a later slice changes visible turn pacing, enemy arrival frequency, map pressure, or UI composition.
 
-This slice is documentation/planning only. It does not approve gameplay/code changes, production JSON migration, durable AI event log migration, save migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
+This slice is documentation/planning only. It does not approve gameplay/code changes, production JSON migration, durable AI event log migration, save migration, `content/resources.json`, wood id change, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
 
 ## Current Reality
 

@@ -8,7 +8,7 @@ Slice: `strategic-ai-hero-task-state-report-implementation-10184`.
 
 Implement the planned `AI_HERO_TASK_STATE_BOUNDARY_REPORT` as a report-only boundary over existing commander-role snapshots and enemy-turn evidence.
 
-This slice does not write `hero_task_state`, migrate saves, bump `SAVE_VERSION`, add durable event logs, add defense-specific durable state, tune coefficients, edit production JSON, implement full AI hero task state, adopt live commander-role behavior, change target selection, change raid movement or arrival, change town-governor choices, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, rebalance River Pass, push, or open a PR.
+This slice does not write `hero_task_state`, migrate saves, bump `SAVE_VERSION`, add durable event logs, add defense-specific durable state, tune coefficients, edit production JSON, implement full AI hero task state, adopt live commander-role behavior, change target selection, change raid movement or arrival, change town-governor choices, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, rebalance River Pass, push, or open a PR.
 
 ## Delivered
 

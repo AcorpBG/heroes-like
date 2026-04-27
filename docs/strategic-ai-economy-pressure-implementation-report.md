@@ -8,7 +8,7 @@ Slice: `strategic-ai-economy-pressure-implementation-10184`.
 
 This slice implements the first narrow strategic AI economy pressure target for existing `river-pass` / Mireclaw pressure behavior.
 
-The implementation stays on the current `EnemyAdventureRules` target-selection path. It does not add full AI heroes, AI task state, production JSON migration, new resources, `timber` migration, rare-resource activation, market-cap changes, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated assets, neutral encounter migration, or broad River Pass rebalance.
+The implementation stays on the current `EnemyAdventureRules` target-selection path. It does not add full AI heroes, AI task state, production JSON migration, new resources, wood id change, rare-resource activation, market-cap changes, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated assets, neutral encounter migration, or broad River Pass rebalance.
 
 ## Delivered
 
@@ -45,7 +45,7 @@ godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/ai_ec
 
 The report passed these deterministic River Pass cases:
 
-- `signal_post_owned`: player-controlled `river_signal_post` outranks the simple pickups present in the focused reachable report, including `north_timber` and `eastern_cache`.
+- `signal_post_owned`: player-controlled `river_signal_post` outranks the simple pickups present in the focused reachable report, including `north_wood` and `eastern_cache`.
 - `signal_post_and_free_company_owned`: player-controlled `river_free_company` ranks first among resource targets and `river_signal_post` ranks second.
 - Simple pickups do not outrank owned persistent signal-yard sites in the resource report. `southern_ore` is part of the planning comparator set, but it is not present in the focused reachable report ordering from the tested raid origin.
 - The full target selector still chooses `riverwatch_hold` as the top target in the tested opening siege context, so town pressure can still dominate when the strategic front says it should.

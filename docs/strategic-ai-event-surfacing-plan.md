@@ -10,7 +10,7 @@ Plan the smallest reusable surface for strategic AI events and threat reasons af
 
 The goal is not to build a broad AI dashboard, a full AI hero task system, or a new save schema. The goal is to define a compact public/debug contract that can explain target assignment, site contest, site seizure, pressure summaries, and deterministic reports without covering the overworld with text panels.
 
-This document is planning only. It does not approve gameplay code changes, production content JSON changes, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, full AI hero task state, broad strategic AI rewrite, or River Pass rebalance.
+This document is planning only. It does not approve gameplay code changes, production content JSON changes, `content/resources.json`, wood id change, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, full AI hero task state, broad strategic AI rewrite, or River Pass rebalance.
 
 ## Current Reality
 
@@ -292,7 +292,7 @@ This plan does not approve:
 - Gameplay implementation in this planning slice.
 - Production content JSON edits.
 - `content/resources.json`.
-- `wood` to `timber` migration.
+- wood id change.
 - Rare-resource activation.
 - Market-cap overhaul.
 - Runtime economy rule migration.

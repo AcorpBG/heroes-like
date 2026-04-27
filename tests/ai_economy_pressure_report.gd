@@ -2,7 +2,7 @@ extends Node
 
 const SCENARIO_ID := "river-pass"
 const FACTION_ID := "faction_mireclaw"
-const SIMPLE_PICKUPS := ["north_timber", "southern_ore", "eastern_cache"]
+const SIMPLE_PICKUPS := ["north_wood", "southern_ore", "eastern_cache"]
 
 func _ready() -> void:
 	call_deferred("_run")

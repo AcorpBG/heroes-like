@@ -10,7 +10,7 @@ Plan explicit commander-role state boundaries after the passed Mireclaw site-con
 
 The core decision is that the next strategic AI gap is commander-role continuity for non-staged behavior. Current assignment, seizure, controller-flip, town-governor, and compact public event surfaces are enough for the proved staged site-control and defense cases. The next work should not tune coefficients or add defense-specific durable state just because future commander behavior needs a clearer owner.
 
-This slice is documentation/planning only. It does not change AI behavior, production JSON, coefficients, scenario balance, durable event logs, save migration, full AI hero task state, defense-specific durable state, pathing/body-tile/approach behavior, renderer/editor behavior, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market caps, or River Pass balance.
+This slice is documentation/planning only. It does not change AI behavior, production JSON, coefficients, scenario balance, durable event logs, save migration, full AI hero task state, defense-specific durable state, pathing/body-tile/approach behavior, renderer/editor behavior, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare-resource activation, market caps, or River Pass balance.
 
 ## Evidence Baseline
 

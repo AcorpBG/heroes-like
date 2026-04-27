@@ -88,7 +88,7 @@ Required cases:
    - Stage `glassroad_watch_relay` and `glassroad_starlens` as player-controlled persistent sites.
    - Run `EnemyAdventureRules.resource_pressure_report(...)` from `{x: 9, y: 1}` for `faction_embercourt`.
    - Expected ordering: `glassroad_watch_relay` first, `glassroad_starlens` second.
-   - Expected simple-site sanity: both controlled persistent sites should outrank simple pickups such as `glassroad_timber`, `glassroad_ore`, and `market_cache`.
+   - Expected simple-site sanity: both controlled persistent sites should outrank simple pickups such as `glassroad_wood`, `glassroad_ore`, and `market_cache`.
    - Expected relay reason: public reason `income and route vision denial`, with `persistent_income_denial`, `route_vision`, and `player_town_support`.
    - Expected Starlens reason: public reason `route pressure`, with `route_pressure`; record that the reason is generic because current metadata is coarse.
 
@@ -274,7 +274,7 @@ If triggered, the manual gate should use `glassroad-sundering` only:
 - Generated PNG import or runtime asset import.
 - Neutral encounter migration.
 - `content/resources.json`.
-- `wood` to `timber` migration.
+- wood id change.
 - Rare-resource activation.
 - Market-cap overhaul.
 - River Pass rebalance.

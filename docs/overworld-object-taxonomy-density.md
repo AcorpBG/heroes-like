@@ -250,7 +250,7 @@ This is the target breadth for production planning. It is not an instruction to 
 | --- | --- | --- | --- |
 | Writ Bundle | Embercourt, roads | Pickup | Gold, road clue, minor morale/readiness. |
 | Granary Sack Cache | Emberflow Basin | Pickup | Embergrain and recovery pacing. |
-| Timber Cart | Emberflow, Walking Green | Pickup | Timber/wood compatibility until resource migration. |
+| Wood Cart | Emberflow, Walking Green | Pickup | Wood canonical policy until resource migration. |
 | Peatwax Votive | Drowned Marches | Pickup | Peatwax, shrine clue, low-risk mire reward. |
 | Reed-Marked Cache | Drowned Marches | Pickup | Resource plus nearby-route reveal. |
 | Crystal Lot | Glass Uplands | Pickup | Aetherglass shard, minor guarded variants. |
@@ -269,7 +269,7 @@ This is the target breadth for production planning. It is not an instruction to 
 | Family | Regions/factions | Primary class | Notes |
 | --- | --- | --- | --- |
 | Tollhouse Mill | Emberflow, Embercourt | Persistent economy | Gold/embergrain, road-linked income, capture target. |
-| Timber Yard | Emberflow, Walking Green | Persistent economy | Timber output, vulnerable to raids. |
+| Wood Yard | Emberflow, Walking Green | Persistent economy | Wood output, vulnerable to raids. |
 | Embergrain Yard | Emberflow | Persistent economy | Supply/recovery pressure, town support. |
 | Ore Quarry | Brass Deeps, highlands | Persistent economy | Ore, standard guard, high AI priority. |
 | Aetherglass Seam | Glass Uplands, Confluence | Persistent economy | Rare arcane output, heavy guard. |
@@ -410,7 +410,7 @@ Every major object family should support region variants where it appears often.
 
 Variant dimensions:
 
-- Material: pale stone, wet timber, mudglass, blue-violet crystal, pale bark, brass, black lacquer, salt stone.
+- Material: pale stone, wet wood, mudglass, blue-violet crystal, pale bark, brass, black lacquer, salt stone.
 - Grounding: dry road dust, marsh waterline, ridge shadow, root intrusion, slag bed, fog wash, shard rubble.
 - Approach side: front gate, dock side, bridge end, tunnel mouth, root arch, rail switch, stair terrace.
 - State: neutral, owned, captured, damaged, depleted, guarded, active, exhausted.
@@ -427,7 +427,7 @@ Examples:
 - A generic bridge becomes an Embercourt Toll Bridge Court after ownership: red signal ceramic, public writs, visible patrol.
 - A ferry crossing under Mireclaw influence gains chainboom posts, drum markers, and ambush warning cues.
 - A scouting tower under Sunvault influence becomes a lens relay with crystal alignment props.
-- A timber site under Thornwake influence becomes a graft-managed renewal grove rather than a logging camp.
+- A wood site under Thornwake influence becomes a graft-managed renewal grove rather than a logging camp.
 - An ore quarry under Brasshollow influence gains rail hooks, gauges, and contract banners.
 - A coastal dock under Veilmourn influence becomes a fog slip with bells, obituary marks, and salvage lights.
 

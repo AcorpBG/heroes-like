@@ -49,7 +49,7 @@ Target full resource set from `docs/economy-overhaul-foundation.md`:
 | Canonical id | Display name | Category | Migration stance |
 | --- | --- | --- | --- |
 | `gold` | Gold | liquidity | Existing canonical id. |
-| `timber` | Timber | construction_staple | Target canonical name, but blocked by current `wood` compatibility. |
+| `wood` | Wood | construction_staple | Existing canonical id. |
 | `ore` | Ore | construction_staple | Existing canonical id. |
 | `aetherglass` | Aetherglass | arcane_material | New staged resource. |
 | `embergrain` | Embergrain | supply | New staged resource. |
@@ -62,45 +62,40 @@ Recommended registry fields:
 
 ```json
 {
-  "id": "timber",
-  "display_name": "Timber",
+  "id": "wood",
+  "display_name": "Wood",
   "category": "construction_staple",
   "market_tier": "common",
   "default_visible": true,
-  "legacy_aliases": ["wood"],
+  "legacy_aliases": [],
   "faction_affinity": {
     "faction_embercourt": "primary",
     "faction_thornwake": "primary"
   },
   "ui_sort": 20,
-  "icon_hint_id": "resource_timber_placeholder",
-  "material_cue": "cut beams, road planks, rails, and timber yards"
+  "icon_hint_id": "resource_wood_placeholder",
+  "material_cue": "cut beams, road planks, rails, and wood yards"
 }
 ```
 
 Rules:
 
 - Authored content should eventually reference canonical ids only.
-- Runtime may accept aliases only through a resource compatibility adapter.
+- Runtime should continue to reject unknown resource ids until an explicit future migration adds a narrowly scoped adapter.
 - Validators must distinguish stockpile resources from non-stockpile reward keys such as `experience`.
 - Costs, rewards, site outputs, markets, scenario scripts, campaign carryover caps, AI treasury state, and save payloads must all validate against the same registry or adapter.
 - Resource ids must not encode faction names unless the resource is truly faction-specific across the whole game; `brass_scrip` and `memory_salt` are world resources with faction affinity, not private currencies.
 
-## Wood And Timber Compatibility
+## Wood Canonical Policy
 
-Current content and runtime use `wood`. The economy foundation wants Timber as the world/display concept.
+Current content and runtime use `wood`, and Wood is the world/display concept.
 
-Recommended compatibility decision:
+Canonical decision:
 
-- Keep `wood` as the live storage and authored-content id during the first additive schema and validator-warning stages.
-- Add resource registry metadata that displays `wood` as Timber or maps `wood` as a legacy alias for target `timber`.
-- Do not migrate authored JSON from `wood` to `timber` until save migration, market code, AI treasury normalization, validators, content reports, UI labels, and tests support the alias path.
-- When migration happens, use one deterministic adapter:
-  - Load old saves with `wood`, normalize to `timber`, and optionally preserve a `legacy_resource_aliases_applied` warning.
-  - Reject saves or content that contain both `wood` and `timber` with positive amounts unless the adapter has an explicit merge rule.
-  - Keep exported/new saves canonical after the migration boundary.
-
-Open AcOrP decision: whether `wood` remains the permanent internal id with Timber as display text, or whether `timber` becomes canonical through a save-aware migration. The safer production contract is to plan for `timber` canonical but implement `wood` compatibility first.
+- Keep `wood` as the live storage, authored-content, runtime, and save id.
+- Add resource registry metadata that displays `wood` as Wood.
+- Do not add an alternate target id or alias path for wood.
+- Old saves with `wood` continue to load without resource-id migration.
 
 ## Resource Categories
 
@@ -109,7 +104,7 @@ The registry should categorize resources so markets, UI, AI, and validation do n
 Target category ids:
 
 - `liquidity`: flexible common spending, currently only `gold`.
-- `construction_staple`: common structural resources, `timber`/`wood` and `ore`.
+- `construction_staple`: common structural resources, `wood` and `ore`.
 - `arcane_material`: scarce magic/infrastructure material, `aetherglass`.
 - `supply`: readiness, recovery, and long-route pressure, `embergrain`.
 - `local_fuel_rite`: regional rite/fuel resource, `peatwax`.
@@ -287,12 +282,12 @@ Initial target preferences:
 
 | Faction | Primary | Secondary | Awkward |
 | --- | --- | --- | --- |
-| Embercourt | `gold`, `timber`/`wood`, `embergrain` | `ore` | `aetherglass`, `memory_salt` |
-| Mireclaw | `peatwax`, `gold`, raid spoils | `timber`/`wood`, den/recovery resources | `ore`, `aetherglass`, `brass_scrip` |
-| Sunvault | `ore`, `aetherglass`, relay value | `gold` | `timber`/`wood`, `embergrain` |
-| Thornwake | `timber`/`wood`, `verdant_grafts` | `gold`, recovery resources | `ore`, `brass_scrip`, `aetherglass` |
-| Brasshollow | `ore`, `brass_scrip`, furnace throughput | `gold` | `timber`/`wood`, `embergrain`, `memory_salt` |
-| Veilmourn | `memory_salt`, salvage, scouting rewards | `gold`, `timber`/`wood` | steady `ore`, `brass_scrip` |
+| Embercourt | `gold`, canonical `wood`, `embergrain` | `ore` | `aetherglass`, `memory_salt` |
+| Mireclaw | `peatwax`, `gold`, raid spoils | canonical `wood`, den/recovery resources | `ore`, `aetherglass`, `brass_scrip` |
+| Sunvault | `ore`, `aetherglass`, relay value | `gold` | canonical `wood`, `embergrain` |
+| Thornwake | canonical `wood`, `verdant_grafts` | `gold`, recovery resources | `ore`, `brass_scrip`, `aetherglass` |
+| Brasshollow | `ore`, `brass_scrip`, furnace throughput | `gold` | canonical `wood`, `embergrain`, `memory_salt` |
+| Veilmourn | `memory_salt`, salvage, scouting rewards | `gold`, canonical `wood` | steady `ore`, `brass_scrip` |
 
 Compatibility:
 
@@ -336,7 +331,7 @@ Link rules:
 - `persistent_economy_site` objects should normally link to resource sites that have persistent output/capture metadata.
 - A resource-site output must reference a registered resource id or accepted legacy alias.
 - Object `reward_summary.resource_output_ids` should be a summary of site behavior, not a second source of truth.
-- Persistent resource-front bundle migration must wait until `wood`/`timber`, output cadence, capture profile, market caps, and validation reports are settled.
+- Persistent resource-front bundle migration must wait until canonical `wood`, output cadence, capture profile, market caps, and validation reports are settled.
 
 ## AI Valuation Hooks
 
@@ -387,7 +382,7 @@ Rules:
 - The UI must show missing resources at the build/recruit/service decision point.
 - Resource-site hover/selection should show owner, output cadence, capture state, guard risk, and route effect in compact language.
 - Market UI must show exchange rates and caps before the player commits.
-- `wood` displayed as Timber must be consistent across costs, rewards, market lines, and site summaries during compatibility stages.
+- `wood` displayed as Wood must be consistent across costs, rewards, market lines, and site summaries during compatibility stages.
 - Resource icons and material cues need concept-art review before final UI polish, but placeholder ids can exist earlier.
 
 Validation snapshots should eventually prove that the resource strip, town build views, recruit views, site context, and market views expose the right information without covering the scenic/play surface.
@@ -408,8 +403,8 @@ Required save considerations:
 Migration risks:
 
 - Saves with `wood` only.
-- Future saves with `timber` only.
-- Broken or test saves with both `wood` and `timber`.
+- Future saves with `wood` only.
+- Broken or test saves with both `wood` and `wood`.
 - Existing market helper state that assumes only wood/ore exchange.
 - Enemy treasury normalization that drops unknown resource ids.
 - UI/resource summaries that hide resources outside `gold`, `wood`, and `ore`.
@@ -418,25 +413,23 @@ Recommended save migration policy:
 
 1. Add adapter/report support while saves remain unchanged.
 2. Add `resource_schema_version` to new saves only after runtime can read absent versions.
-3. Migrate `wood` to `timber` only after AcOrP confirms canonical id direction.
-4. Keep a one-release or multi-slice compatibility window where old saves load with warnings.
-5. Only remove legacy alias writes after manual save/load testing across economy sites, markets, towns, AI turns, and campaign carryover.
+3. Keep old saves that contain `wood` valid without rewriting resource ids.
+4. Only add future resource-id adapters when a concrete, non-wood id change requires them.
 
 ## Validation Levels
 
 Validation should move through levels so current content stays valid until a bundle declares migration.
 
-Level 0, current compatibility:
+Level 0, current behavior:
 
 - Existing validation continues to pass.
 - Existing `gold`, `wood`, `ore`, and `experience` payloads remain valid.
 - Existing content, saves, market UI, and AI helpers keep using current behavior.
 
-Level 1, registry and alias warnings:
+Level 1, registry warnings:
 
 - Warn when a resource key is not in the registry or allowed non-stockpile reward keys.
-- Warn when `wood` appears and registry policy says Timber is target display/canonical.
-- Warn when a resource registry entry lacks category, display name, market tier, UI sort, or alias metadata.
+- Warn when a resource registry entry lacks category, display name, market tier, or UI sort metadata.
 - Warn when current runtime hardcoded resource lists differ from the registry.
 
 Level 2, availability and cadence reports:
@@ -450,7 +443,7 @@ Level 3, strict sample fixtures:
 
 - Require full registry fields for a tiny fixture set.
 - Require one sample pickup, one persistent economy site, one repeatable service, one market profile, one faction preference profile, and one save-migration fixture.
-- Require strict alias behavior for `wood`/`timber`.
+- Require `wood` to remain the canonical stockpile id.
 - Validate daily, weekly, limited, and service cadence examples without switching production content.
 
 Level 4, migrated bundle errors:
@@ -473,20 +466,20 @@ Level 5, runtime adoption errors:
 2. Additive schema fields.
    - Add optional resource registry/schema fields after review.
    - Keep current authored resource ids and current behavior.
-   - Treat `wood` compatibility as explicit metadata.
+   - Treat `wood` as explicit canonical metadata.
 
 3. Validator warnings and report.
-   - Add warning/report mode for resource ids, aliases, categories, source availability, output cadence, market caps, persistent-site capture values, faction preferences, and AI valuation hints.
+   - Add warning/report mode for resource ids, categories, source availability, output cadence, market caps, persistent-site capture values, faction preferences, and AI valuation hints.
    - Do not fail existing content yet.
 
 4. Sample fixtures.
-   - Add small non-production fixtures for registry, alias behavior, pickup reward, persistent site output, repeatable service, market cap, faction preference, and save compatibility.
+   - Add small non-production fixtures for registry behavior, pickup reward, persistent site output, repeatable service, market cap, faction preference, and save compatibility.
    - Validate fixtures strictly.
 
-5. Resource id compatibility adapters.
-   - Add shared resource normalization, display, merge, spend, describe, market, save, and AI treasury helpers.
+5. Resource registry helpers.
+   - Add shared resource display, validation, spend, describe, market, save, and AI treasury helpers when runtime adoption is selected.
    - Preserve old content and saves.
-   - Decide and implement `wood` permanent-display alias or `timber` canonical migration path.
+   - Keep `wood` canonical.
 
 6. Content bundle migration.
    - Migrate in small bundles:
@@ -508,7 +501,7 @@ Level 5, runtime adoption errors:
    - Keep debug explanations available.
 
 9. Save cleanup.
-   - Add resource schema version and migration once old/new resource ids are stable.
+   - Add resource schema version and migration only when a future resource migration needs it.
    - Clean up legacy writes only after old saves load, new saves resume, markets persist caps, AI treasury survives, and persistent sites serialize state.
 
 ## Rollback And Compatibility Concerns
@@ -518,7 +511,7 @@ Level 5, runtime adoption errors:
 - Existing `gold`, `wood`, and `ore` content remains valid until a declared bundle migrates.
 - Do not introduce rare resources into production costs before sources, markets, UI, AI, and save compatibility exist.
 - If a rare-resource cost blocks a current scenario opening, roll back that bundle rather than adding hidden grants.
-- If `timber` migration creates duplicate `wood`/`timber` stockpiles, stop at adapter/report level and resolve before content migration.
+- If any future resource migration creates duplicate stockpiles, stop at adapter/report level and resolve before content migration.
 - If market caps are not serialized safely, keep markets on current behavior.
 - If AI drops unknown resources from treasury, do not enable AI use of the broader resource set.
 - Renderer sprite ingestion for resource-front art must wait for the object/resource schema bundle, not lead it.
@@ -526,10 +519,10 @@ Level 5, runtime adoption errors:
 
 ## Decisions For AcOrP Review
 
-- Confirm whether `wood` remains the permanent internal id with Timber display text, or whether `timber` becomes canonical through save-aware migration.
+- Confirm that `wood` remains the permanent internal id and display concept.
 - Confirm the nine-resource target set before broad JSON migration, especially `embergrain`, `peatwax`, `verdant_grafts`, `brass_scrip`, and `memory_salt`.
 - Confirm whether the first implementation should be additive schema plus validator warning/report only, before any production content migration.
-- Confirm market stance: common wood/ore/timber exchanges first, no broad rare-resource buying until caps, source discovery, UI, AI, and saves support it.
+- Confirm market stance: common wood/ore exchanges first, no broad rare-resource buying until caps, source discovery, UI, AI, and saves support it.
 - Confirm that `experience` remains a progression reward key outside the normal stockpile resource registry.
 - Confirm capture profile expectations for persistent resource fronts, including counter-capture values, damaged states, and retake recovery.
 - Confirm that faction preferences are advisory weights first, not hard locks or private faction currencies.
@@ -538,6 +531,6 @@ Level 5, runtime adoption errors:
 ## Done Criteria For This Planning Slice
 
 - Current resource/economy reality is documented.
-- Target resource id policy, `wood`/`timber` compatibility, resource categories, output cadence, persistent-site capture values, pickup/income/service distinction, market caps, faction preferences, town/recruitment/building cost compatibility, resource-site/object linkage, AI hooks, UI implications, save compatibility, validation levels, migration order, and rollback concerns are covered.
+- Target resource id policy, canonical `wood`, resource categories, output cadence, persistent-site capture values, pickup/income/service distinction, market caps, faction preferences, town/recruitment/building cost compatibility, resource-site/object linkage, AI hooks, UI implications, save compatibility, validation levels, migration order, and rollback concerns are covered.
 - Planning is explicitly separated from implementation.
 - The next slice is staged as additive schema and validator warning/report planning or implementation, not JSON migration, resource-site bundle migration, market implementation, renderer sprite ingestion, or save cleanup.

@@ -294,7 +294,7 @@ func _run_resource_auto_collect_regression() -> bool:
 	_set_active_hero_position(session, Vector2i(0, 0))
 	var resource_before: int = int(session.overworld.get("resources", {}).get("wood", 0))
 	var result := OverworldRules.try_move(session, 1, 0)
-	var resource_node := _resource_node_by_placement(session, "north_timber")
+	var resource_node := _resource_node_by_placement(session, "north_wood")
 	if not bool(result.get("ok", false)):
 		push_error("Core systems smoke: stepping onto a resource site failed instead of auto-resolving.")
 		get_tree().quit(1)
@@ -442,9 +442,9 @@ func _run_overworld_primary_action_regression() -> bool:
 		DIFFICULTY_ID,
 		SessionState.LAUNCH_MODE_SKIRMISH
 	)
-	var resource_node := _resource_node_by_placement(resource_session, "north_timber")
+	var resource_node := _resource_node_by_placement(resource_session, "north_wood")
 	if resource_node.is_empty():
-		push_error("Core systems smoke: sample scenario is missing north_timber for primary action coverage.")
+		push_error("Core systems smoke: sample scenario is missing north_wood for primary action coverage.")
 		get_tree().quit(1)
 		return false
 	_set_active_hero_position(resource_session, Vector2i(int(resource_node.get("x", 0)), int(resource_node.get("y", 0))))
@@ -461,7 +461,7 @@ func _run_overworld_primary_action_regression() -> bool:
 		return false
 	var primary_result: Dictionary = resource_shell.call("validation_perform_primary_action")
 	await get_tree().process_frame
-	var resource_after := _resource_node_by_placement(resource_session, "north_timber")
+	var resource_after := _resource_node_by_placement(resource_session, "north_wood")
 	if not bool(primary_result.get("ok", false)) or String(resource_after.get("collected_by_faction_id", "")) != "player":
 		push_error("Core systems smoke: overworld primary action did not collect the active resource site. %s" % JSON.stringify({
 			"primary_result": primary_result,

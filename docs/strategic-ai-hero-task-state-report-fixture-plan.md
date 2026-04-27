@@ -8,7 +8,7 @@ Slice: `strategic-ai-hero-task-state-report-fixture-planning-10184`.
 
 Define the exact future `AI_HERO_TASK_STATE_BOUNDARY_REPORT` payload and deterministic fixture cases after the completed task-state boundary plan.
 
-This slice is planning only. It does not implement report helpers, tests, schema writes, save migration, durable event logs, full AI hero task state, defense-specific durable state, live commander-role behavior, production JSON edits, coefficient tuning, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market-cap overhaul, or River Pass rebalance.
+This slice is planning only. It does not implement report helpers, tests, schema writes, save migration, durable event logs, full AI hero task state, defense-specific durable state, live commander-role behavior, production JSON edits, coefficient tuning, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market-cap overhaul, or River Pass rebalance.
 
 ## Evidence Baseline
 

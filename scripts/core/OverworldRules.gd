@@ -7928,7 +7928,7 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 	var state := _town_market_state(town)
 	var lines := ["Exchange Hall"]
 	if not bool(state.get("active", false)):
-		lines.append("- No market square stands here. Build a market to liquidate spare stock or buy scarce timber and ore.")
+		lines.append("- No market square stands here. Build a market to liquidate spare stock or buy scarce wood and ore.")
 		return lines
 	var buy_rates: Dictionary = state.get("buy_rates", {})
 	var sell_rates: Dictionary = state.get("sell_rates", {})
@@ -8127,7 +8127,7 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 	var specialty_summary := "Standard brokers can move one crate at a time between raw stock and hard coin."
 	if profile_id == "river":
 		bulk_resource = "wood"
-		specialty_summary = "River barges tighten timber rates and open double-wood convoy trades for construction or levy recovery."
+		specialty_summary = "River barges tighten wood rates and open double-wood convoy trades for construction or levy recovery."
 	elif profile_id == "resonant":
 		bulk_resource = "ore"
 		specialty_summary = "Resonant relay brokers tighten ore rates and open double-ore lots for crystal feed and battery upkeep."

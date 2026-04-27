@@ -12,7 +12,7 @@ Primary site: `river_free_company`.
 
 Companion site: `river_signal_post`.
 
-This slice added focused Godot report scaffolding only. It did not tune coefficients, change AI behavior, edit production JSON, add durable event logs, migrate saves, implement full AI hero task state, change pathing/body tiles/approach behavior, alter renderer/editor behavior, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, rebalance River Pass, import generated PNGs, push, or open a PR.
+This slice added focused Godot report scaffolding only. It did not tune coefficients, change AI behavior, edit production JSON, add durable event logs, migrate saves, implement full AI hero task state, change pathing/body tiles/approach behavior, alter renderer/editor behavior, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, rebalance River Pass, import generated PNGs, push, or open a PR.
 
 ## Focused Report
 
@@ -31,7 +31,7 @@ With `river_free_company` and `river_signal_post` staged as player-controlled pe
 1. `river_free_company`
 2. `river_signal_post`
 3. `river_sanctum`
-4. `north_timber`
+4. `north_wood`
 5. `midway_shrine`
 6. `eastern_cache`
 

@@ -8,7 +8,7 @@ Slice: `strategic-ai-event-surfacing-report-gate-10184`.
 
 This gate reviews compact strategic AI event and threat reason surfacing after the River Pass signal-yard pressure implementation.
 
-This review does not approve gameplay/code/content changes, production JSON migration, a durable AI event log, save migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
+This review does not approve gameplay/code/content changes, production JSON migration, a durable AI event log, save migration, `content/resources.json`, wood id change, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
 
 ## Focused Report Results
 
@@ -40,8 +40,8 @@ Result: passed. The command printed `AI_ECONOMY_PRESSURE_REPORT` with `"ok": tru
 
 Meaningful output:
 
-- In `signal_post_owned`, resource order is `river_free_company`, `river_signal_post`, `river_sanctum`, `north_timber`, `midway_shrine`, `eastern_cache`; the full selector still chooses `riverwatch_hold`.
-- In `signal_post_and_free_company_owned`, resource order remains `river_free_company`, `river_signal_post`, `river_sanctum`, `north_timber`, `midway_shrine`, `eastern_cache`; the full selector still chooses `riverwatch_hold`.
+- In `signal_post_owned`, resource order is `river_free_company`, `river_signal_post`, `river_sanctum`, `north_wood`, `midway_shrine`, `eastern_cache`; the full selector still chooses `riverwatch_hold`.
+- In `signal_post_and_free_company_owned`, resource order remains `river_free_company`, `river_signal_post`, `river_sanctum`, `north_wood`, `midway_shrine`, `eastern_cache`; the full selector still chooses `riverwatch_hold`.
 - Owned signal-yard sites keep their priority over reachable simple pickups, and town pressure still legitimately dominates the full target selector.
 
 ## Public Surface Review

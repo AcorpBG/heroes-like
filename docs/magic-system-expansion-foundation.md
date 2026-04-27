@@ -186,12 +186,12 @@ School catalyst affinities:
 
 | School | Resource hooks |
 | --- | --- |
-| Beacon | gold, timber, embergrain, small aetherglass for advanced route marks |
+| Beacon | gold, wood, embergrain, small aetherglass for advanced route marks |
 | Mire | peatwax, embergrain theft, occasional memory salt for fear/memory rites |
 | Lens | aetherglass, ore, gold, relay ownership |
-| Root | verdant grafts, timber, embergrain, rooted site control |
+| Root | verdant grafts, wood, embergrain, rooted site control |
 | Furnace | ore, brass scrip, embergrain for worker readiness |
-| Veil | memory salt, timber for ships/docks, aetherglass for mirror charts |
+| Veil | memory salt, wood for ships/docks, aetherglass for mirror charts |
 | Old Measure | aetherglass, memory salt, scenario fragments, rare site ownership |
 
 Economy rule: resource catalysts should support strategic choices, not spam prevention alone. If a spell consumes a rare resource, the UI must show why it is worth that cost and how to obtain more.

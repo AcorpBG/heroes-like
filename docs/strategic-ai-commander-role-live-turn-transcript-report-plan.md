@@ -10,7 +10,7 @@ Plan a future behavior-neutral `AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT` over e
 
 The later report should connect the already-passed commander-role report evidence to the real enemy-turn path without changing target selection, raid movement, raid arrival, town-governor choices, save data, production JSON, coefficients, or public UI composition.
 
-This slice is planning only. It does not implement reports, tests, report helpers, schema writes, save migration, durable event logs, defense-specific durable state, full AI hero tasks, live commander-role behavior, production JSON edits, coefficient tuning, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market-cap changes, or River Pass rebalance.
+This slice is planning only. It does not implement reports, tests, report helpers, schema writes, save migration, durable event logs, defense-specific durable state, full AI hero tasks, live commander-role behavior, production JSON edits, coefficient tuning, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market-cap changes, or River Pass rebalance.
 
 ## Evidence Baseline
 
@@ -442,6 +442,6 @@ Recommended future implementation sequence:
 
 Recommended next slice: `strategic-ai-commander-role-live-turn-transcript-report-implementation-10184`.
 
-That slice should implement the report-only transcript exactly within this plan. It should still avoid schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, production JSON edits, full AI hero tasks, live commander-role behavior, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market-cap changes, and River Pass rebalance.
+That slice should implement the report-only transcript exactly within this plan. It should still avoid schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, production JSON edits, full AI hero tasks, live commander-role behavior, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market-cap changes, and River Pass rebalance.
 
 If the implementation discovers that a useful transcript cannot be derived from before/after snapshots and existing event/report helpers, the correct fallback is a gate review or full AI hero task-state planning slice, not schema adoption or coefficient tuning.

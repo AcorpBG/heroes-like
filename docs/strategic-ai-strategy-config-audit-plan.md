@@ -189,7 +189,7 @@ The evidence report is strong enough to plan the audit, but not enough to tune. 
 
 - Coefficient tuning and behavior tuning.
 - Production JSON migration or scenario rebalance.
-- `content/resources.json`, `wood` to `timber` migration, rare-resource activation, and market-cap overhaul.
+- `content/resources.json`, wood id change, rare-resource activation, and market-cap overhaul.
 - Pathing, body-tile, approach, renderer, editor, save, and generated PNG import work.
 - Neutral encounter migration.
 - Durable AI event logs.

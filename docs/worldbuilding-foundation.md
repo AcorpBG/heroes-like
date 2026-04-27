@@ -56,7 +56,7 @@ Strategic implications:
 
 ### 2. The Drowned Marches
 
-Fen, reed seas, drowned roads, peat cuts, blackwater ferries, drum islands, and shrine posts made from old bridge timbers. Mireclaw does not simply live here; it controls the rules of movement here.
+Fen, reed seas, drowned roads, peat cuts, blackwater ferries, drum islands, and shrine posts made from old bridge woods. Mireclaw does not simply live here; it controls the rules of movement here.
 
 Strategic implications:
 
@@ -183,7 +183,7 @@ Design uses:
 3. **Extraction versus renewal**
    - Brasshollow needs deep ore and furnace throughput.
    - Thornwake treats extraction as a debt owed to soil and future growth.
-   - Sunvault needs crystals, Embercourt needs timber and grain, Mireclaw needs peat and bodies, Veilmourn needs salvage.
+   - Sunvault needs crystals, Embercourt needs wood and grain, Mireclaw needs peat and bodies, Veilmourn needs salvage.
 
 4. **Memory as property**
    - Veilmourn trades in charts, last words, salvage claims, and remembered routes.
@@ -227,7 +227,7 @@ The world supports a richer economy than gold, ore, and wood. Future economy des
 Baseline resources:
 
 - **Gold**: civic liquidity, wages, contracts, bribes, market smoothing.
-- **Timber**: roads, town growth, siege frames, boats, root rites.
+- **Wood**: roads, town growth, siege frames, boats, root rites.
 - **Ore**: armor, machines, fortifications, lens mounts, heavy dwellings.
 
 Foundation resources to evaluate in the economy overhaul:
@@ -241,10 +241,10 @@ Foundation resources to evaluate in the economy overhaul:
 
 Economy implications by faction:
 
-- Embercourt should prefer gold, timber, embergrain, and road-linked income.
+- Embercourt should prefer gold, wood, embergrain, and road-linked income.
 - Mireclaw should prefer peatwax, growth sites, raid spoils, and cheap replacement loops.
 - Sunvault should prefer ore, aetherglass, relay-linked spell infrastructure, and quality upgrades.
-- Thornwake should prefer timber, verdant grafts, renewal sites, and long-term compounding growth.
+- Thornwake should prefer wood, verdant grafts, renewal sites, and long-term compounding growth.
 - Brasshollow should prefer ore, brass scrip, furnace throughput, and expensive capital projects.
 - Veilmourn should prefer memory salt, salvage, scouting rewards, and uneven income spikes.
 
@@ -331,7 +331,7 @@ Conflict pressure:
 - Stabilizes trade and protects settlements, but turns every route into a tollable jurisdiction.
 
 Economy hooks:
-- Gold, timber, embergrain, road support, fortified crossings, readiness discounts.
+- Gold, wood, embergrain, road support, fortified crossings, readiness discounts.
 
 Magic hooks:
 - Beacon Accord, ash writs, public records, revealed routes, oath retaliation, civic morale.
@@ -382,7 +382,7 @@ Conflict pressure:
 - Restores damaged places and punishes reckless extraction, but can choke roads, towns, and farms under root veto.
 
 Economy hooks:
-- Timber, verdant grafts, renewal sites, long campaigns, recovery, compounding growth.
+- Wood, verdant grafts, renewal sites, long campaigns, recovery, compounding growth.
 
 Magic hooks:
 - Root Accord, regeneration, bind, road taxation, site renewal, terrain denial.

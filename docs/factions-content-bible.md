@@ -27,17 +27,17 @@ Faction identity must stay tied to:
 - **Geography**: rivers, marshes, uplands, walking forests, furnace valleys, and fog coasts create political behavior.
 - **Infrastructure**: locks, ferries, lenses, root gates, pressure rails, and bell harbors are strategic tools, not background flavor.
 - **Accordance magic**: each faction makes reality obey through a distinct anchor language.
-- **Economy pressure**: resources are political. Gold, timber, ore, aetherglass, embergrain, peatwax, verdant grafts, brass scrip, and memory salt should matter differently by faction.
+- **Economy pressure**: resources are political. Gold, wood, ore, aetherglass, embergrain, peatwax, verdant grafts, brass scrip, and memory salt should matter differently by faction.
 - **Readable asymmetry**: no faction should be a swapped template with cheap melee, archer, cavalry, caster, flyer, and ultimate.
 
 ## Cross-Faction Contrast Matrix
 
 | Faction | World role | Political motive | Moral tension | Accord identity | Economy pressure | Map pressure | Battle fingerprint |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Embercourt League | Civic river-law power of the Emberflow Basin | Restore enforceable roads, tolls, records, and granaries | Public order can become coercive occupation | Beacon Accord through writs, signal fires, court bells | Gold, timber, embergrain, road-linked income | Hold crossings, retake roads, punish overextension | Braced lines, counterfire, reserves, retaliation value |
+| Embercourt League | Civic river-law power of the Emberflow Basin | Restore enforceable roads, tolls, records, and granaries | Public order can become coercive occupation | Beacon Accord through writs, signal fires, court bells | Gold, wood, embergrain, road-linked income | Hold crossings, retake roads, punish overextension | Braced lines, counterfire, reserves, retaliation value |
 | Mireclaw Covenant | Marsh sovereignty and predatory ferry clans of the Drowned Marches | Keep lowlands outside courthouse maps and mine contracts | Freedom from empire can shelter raids, extortion, and blood debts | Mire Accord through drums, reeds, peat, rot rites | Peatwax, raid spoils, den growth, replacement loops | Multi-lane raids, site denial, wounded-prey pressure | Harry, blind, drag, isolate, finish wounded targets |
 | Sunvault Compact | Solar calibrators of the Glass Uplands | Rebuild mirror order under disciplined relay control | Truth and restoration can become technocratic rule | Lens Accord through crystals, choirs, prisms, relays | Ore, aetherglass, costly quality upgrades | Extend relay nodes, sightlines, and prepared fronts | Ranged lanes, shields, resonance timing, focused marks |
-| Thornwake Concord | Living orchard law and migratory root infrastructure | Give land itself veto power over settlement and extraction | Renewal can become strangling exclusion and forced obedience | Root Accord through grafts, knots, orchards, root gates | Timber, verdant grafts, rooted sites, recovery loops | Root roads, tax movement, turn lanes into hostile ground | Binds, regeneration, brambles, attrition zones |
+| Thornwake Concord | Living orchard law and migratory root infrastructure | Give land itself veto power over settlement and extraction | Renewal can become strangling exclusion and forced obedience | Root Accord through grafts, knots, orchards, root gates | Wood, verdant grafts, rooted sites, recovery loops | Root roads, tax movement, turn lanes into hostile ground | Binds, regeneration, brambles, attrition zones |
 | Brasshollow Combine | Industrial contract power of the Brass Deeps | Make extraction, debt, and furnace capacity predictable | Fair contract can become debt rule and strip-mined necessity | Furnace Accord through clauses, gauges, heat seals | Ore, brass scrip, capital projects, repair windows | Mine camps, railheads, siege staging | Armor, heat bursts, artillery, repair, cooldown risk |
 | Veilmourn Armada | Fog maritime network and memory salvage houses | Preserve mobility, salvage rights, and uncharted routes | Autonomy and grief trade can become theft of memory and certainty | Veil Accord through bells, charts, fog, obituary ink | Memory salt, salvage spikes, scouting rewards | Fog lanes, bypasses, backline threats | Displacement, blinds, morale drain, isolation spikes |
 
@@ -85,7 +85,7 @@ Town feel: horizontal river fortresses with stone weirs, water wheels, lock gate
 ### Visual Language
 
 - Shapes: rectangles, lock steps, bridge spans, low walls, square towers, court bells.
-- Materials: pale stone, river timber, iron chains, red ceramic signal braziers, ash-stamped parchment.
+- Materials: pale stone, river wood, iron chains, red ceramic signal braziers, ash-stamped parchment.
 - Palette: warm fire red, river blue-green, cream masonry, dark wet wood, granary gold.
 - Unit silhouettes: disciplined crews, hook tools, barge frames, signal lanterns, court-bell machinery.
 
@@ -118,7 +118,7 @@ Embercourt should not become a generic human castle. Its ladder is a prepared ci
 
 ### Economy Preferences And Resources
 
-Embercourt prefers gold, timber, embergrain, and road-linked income. Its town development should reward civic chains: granaries, tollhouses, beacon courts, and support buildings that lower recruitment friction, improve recovery, and protect holdings. It should have reliable income, average raw growth, strong affordability after investment, and high value from crossroads, bridges, mills, and granary sites.
+Embercourt prefers gold, wood, embergrain, and road-linked income. Its town development should reward civic chains: granaries, tollhouses, beacon courts, and support buildings that lower recruitment friction, improve recovery, and protect holdings. It should have reliable income, average raw growth, strong affordability after investment, and high value from crossroads, bridges, mills, and granary sites.
 
 ### Magic And Accord Identity
 
@@ -187,7 +187,7 @@ Town feel: low, wet, mobile, and threatening. Drowned pilings, chain ferries, re
 ### Visual Language
 
 - Shapes: low profiles, chain curves, reed clusters, hanging hides, broken causeways.
-- Materials: wet timber, peat, bone tokens, green-black water, mudglass, rope, rusted ferry chain.
+- Materials: wet wood, peat, bone tokens, green-black water, mudglass, rope, rusted ferry chain.
 - Palette: green-black, yellow reed, cold mud, muted bone, toxic glints.
 - Unit silhouettes: crouched packs, hooks, lashes, shell or bogplate armor, drum carriers, antlered apex forms.
 
@@ -420,7 +420,7 @@ Thornwake is not elves, druids, or tree people. Its ladder is living infrastruct
 
 ### Economy Preferences And Resources
 
-Thornwake prefers timber, verdant grafts, rooted neutral sites, nursery control, and long-term recovery. It should have slower direct gold but compounding value from site links and growth buildings. Some town upgrades should only reach full value while linked sites remain controlled.
+Thornwake prefers wood, verdant grafts, rooted neutral sites, nursery control, and long-term recovery. It should have slower direct gold but compounding value from site links and growth buildings. Some town upgrades should only reach full value while linked sites remain controlled.
 
 ### Magic And Accord Identity
 
@@ -676,7 +676,7 @@ Veilmourn is information, bypass, and selective violence. It wants to scout more
 | Resource pressure | Embercourt | Mireclaw | Sunvault | Thornwake | Brasshollow | Veilmourn |
 | --- | --- | --- | --- | --- | --- | --- |
 | Gold | steady civic base | lower safe income | moderate | weaker direct | contract-heavy | spike-based |
-| Timber | roads, barges | ferries, dens | supports | core growth | secondary supports | docks |
+| Wood | roads, barges | ferries, dens | supports | core growth | secondary supports | docks |
 | Ore | defenses, heavy engines | bogplate only | core quality | limited | core requirement | harpoons |
 | Aetherglass | beacon/lens hybrids | low priority | core magic | rare graft focus | gauge safety | mirror charts |
 | Embergrain | readiness and recovery | raid target | supplies relays | growth support | worker rations | trade cargo |

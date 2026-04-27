@@ -8,7 +8,7 @@ Slice: `strategic-ai-event-surfacing-implementation-10184`.
 
 This slice implements compact strategic AI event and threat reason surfacing from existing `EnemyAdventureRules` / `EnemyTurnRules` paths.
 
-It does not add a saved AI event log, save migration, production JSON migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, full AI hero task state, broad strategic AI rewrite, or River Pass rebalance.
+It does not add a saved AI event log, save migration, production JSON migration, `content/resources.json`, wood id change, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, renderer/editor behavior changes, generated PNG import, neutral encounter migration, full AI hero task state, broad strategic AI rewrite, or River Pass rebalance.
 
 ## Delivered
 

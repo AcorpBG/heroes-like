@@ -36,10 +36,10 @@ func _run() -> void:
 		String(snapshot.get("primary_action", {}).get("summary", "")),
 	])
 	if String(route_decision.get("status", "")) != "reachable":
-		_fail("Route tooltip smoke: Timber Wagon route should be reachable.", snapshot)
+		_fail("Route tooltip smoke: Wood Wagon route should be reachable.", snapshot)
 		return
 	if String(route_decision.get("action_kind", "")) != "move/collect":
-		_fail("Route tooltip smoke: Timber Wagon route should expose move/collect.", snapshot)
+		_fail("Route tooltip smoke: Wood Wagon route should expose move/collect.", snapshot)
 		return
 	if not _assert_text_contains_all(
 		"Route tooltip smoke",
@@ -47,7 +47,7 @@ func _run() -> void:
 		[
 			"Decision Brief",
 			"Affected:",
-			"Timber Wagon route",
+			"Wood Wagon route",
 			"Objective:",
 			"Claim Duskfen Bastion",
 			"Why it matters:",

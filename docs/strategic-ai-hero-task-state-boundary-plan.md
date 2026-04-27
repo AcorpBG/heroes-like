@@ -8,7 +8,7 @@ Slice: `strategic-ai-hero-task-state-boundary-planning-10184`.
 
 Define the future real strategic AI hero task-state boundary after the passed commander-role live-turn transcript/report gate.
 
-This slice is planning only. It does not implement task state, reports, tests, schema writes, save migration, durable event logs, defense-specific durable state, live commander-role behavior, production JSON edits, coefficient tuning, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market-cap overhaul, or River Pass rebalance.
+This slice is planning only. It does not implement task state, reports, tests, schema writes, save migration, durable event logs, defense-specific durable state, live commander-role behavior, production JSON edits, coefficient tuning, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market-cap overhaul, or River Pass rebalance.
 
 ## Evidence Baseline
 

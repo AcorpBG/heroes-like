@@ -507,7 +507,7 @@ func _assert_active_site_order_handoff_contract(shell: Node) -> bool:
 			"Site handoff:",
 			"Active Site Handoff",
 			"Current tile:",
-			"Timber Wagon",
+			"Wood Wagon",
 			"Order:",
 			"Readiness:",
 			"Ready",
@@ -909,10 +909,10 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 
-	var timber: Dictionary = shell.call("validation_select_tile", 1, 0)
+	var wood: Dictionary = shell.call("validation_select_tile", 1, 0)
 	if not _assert_text_contains_all(
-		"River Pass timber pickup/cache UI",
-		[String(timber.get("context_summary", "")), String(timber.get("selected_tile_rail_text", ""))],
+		"River Pass wood pickup/cache UI",
+		[String(wood.get("context_summary", "")), String(wood.get("selected_tile_rail_text", ""))],
 		["Pickup/cache", "Class: Pickup", "Cadence: one-time", "Reward"]
 	):
 		return false
@@ -945,11 +945,11 @@ func _assert_object_economy_ui_contract(shell: Node) -> bool:
 		return false
 	if not _assert_no_ai_score_leak("selected town faction identity UI", String(town_context.get("context_summary", ""))):
 		return false
-	var timber_hover: Dictionary = shell.call("validation_hover_tile", 1, 0)
+	var wood_hover: Dictionary = shell.call("validation_hover_tile", 1, 0)
 	if not _assert_text_contains_all(
-		"River Pass timber hover tooltip",
-		[String(timber_hover.get("map_tooltip", ""))],
-		["Timber Wagon", "Pickup/cache", "Cadence: one-time"]
+		"River Pass wood hover tooltip",
+		[String(wood_hover.get("map_tooltip", ""))],
+		["Wood Wagon", "Pickup/cache", "Cadence: one-time"]
 	):
 		return false
 	var signal_state: Dictionary = shell.call("validation_resource_site_state", "river_signal_post")
@@ -1095,7 +1095,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		"reachable",
 		"move/collect",
 		2,
-		["Route:", "Timber Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Next step:", "1,1", "1 step remains", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
+		["Route:", "Wood Wagon", "Move/collect", "2 steps", "reachable today", "Move", "Next step:", "1,1", "1 step remains", "Decision Brief", "Affected:", "Objective:", "Why it matters:", "Next:"]
 	):
 		return false
 	if not _assert_text_contains_all(
@@ -1107,7 +1107,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			String(reachable.get("map_tooltip", "")),
 			String(reachable.get("primary_action", {}).get("summary", "")),
 		],
-		["Timber Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "1,1", "Decision Brief", "Next:"]
+		["Wood Wagon", "Route:", "2 step", "Move", "reachable today", "Next step:", "1,1", "Decision Brief", "Next:"]
 	):
 		return false
 
@@ -1376,7 +1376,7 @@ func _assert_route_target_handoff_contract(shell: Node) -> bool:
 			"Route target:",
 			"Route Target Handoff",
 			"Target:",
-			"Timber Wagon",
+			"Wood Wagon",
 			"Order:",
 			"Advance to Site",
 			"Readiness:",
@@ -1450,7 +1450,7 @@ func _assert_primary_order_commit_check_contract(shell: Node) -> bool:
 			"Commit:",
 			"Advance to Site",
 			"Target:",
-			"Timber Wagon",
+			"Wood Wagon",
 			"Readiness:",
 			"reachable today",
 			"Next step:",
@@ -1506,7 +1506,7 @@ func _assert_hover_order_cue_contract(shell: Node) -> bool:
 		[
 			"Hover order:",
 			"select route, then commit if ready",
-			"Timber Wagon",
+			"Wood Wagon",
 			"select Secure Site, then commit if ready",
 			"Ember Signal Post",
 			"Move",
@@ -2080,9 +2080,9 @@ func _assert_remembered_owned_town_remote_entry(shell: Node) -> bool:
 		return false
 	if not _assert_marker_style(presentation, "town", true):
 		return false
-	var remembered_timber_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
-	if bool(remembered_timber_presentation.get("visible", true)) or not _assert_art_sprite(remembered_timber_presentation, "lumber_wagon", true):
-		push_error("Overworld smoke: remembered mapped pickup did not keep a ghosted sprite treatment. presentation=%s" % remembered_timber_presentation)
+	var remembered_wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
+	if bool(remembered_wood_presentation.get("visible", true)) or not _assert_art_sprite(remembered_wood_presentation, "lumber_wagon", true):
+		push_error("Overworld smoke: remembered mapped pickup did not keep a ghosted sprite treatment. presentation=%s" % remembered_wood_presentation)
 		get_tree().quit(1)
 		return false
 	var visit_result: Dictionary = shell.call("validation_perform_primary_action")
@@ -2571,8 +2571,8 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	var encounter_presentation: Dictionary = shell.call("validation_tile_presentation", encounter_tile.x, encounter_tile.y)
 	if not _assert_art_sprite(encounter_presentation, "hostile_camp", false):
 		return false
-	var timber_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
-	if not _assert_art_sprite(timber_presentation, "lumber_wagon", false):
+	var wood_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 0)
+	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
 		return false
 	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 0)
 	if not _assert_art_sprite(artifact_presentation, "adventurers_bundle", false):

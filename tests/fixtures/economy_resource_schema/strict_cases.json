@@ -11,7 +11,7 @@
     ],
     "sites": [
       {
-        "id": "fixture_timber_cache",
+        "id": "fixture_wood_cache",
         "family": "one_shot_pickup",
         "rewards": {"gold": 120, "wood": 1}
       },
@@ -96,13 +96,13 @@
     ],
     "resource_dicts": [
       {
-        "id": "bad_alias_collision",
-        "resources": {"wood": 1, "timber": 1},
+        "id": "bad_unknown_resource",
+        "resources": {"unknown_relic_credit": 1},
         "stockpile": true
       },
       {
-        "id": "bad_unknown_resource",
-        "resources": {"unknown_relic_credit": 1},
+        "id": "bad_negative_wood_amount",
+        "resources": {"wood": -1},
         "stockpile": true
       },
       {

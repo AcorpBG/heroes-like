@@ -8,7 +8,7 @@ Slice: `strategic-ai-commander-role-adoption-sequencing-planning-10184`.
 
 Compare the next narrow strategic AI step for commander-role adoption before any schema write, save migration, live commander-role behavior switch, durable event log, defense-specific durable state, coefficient tuning, or full AI hero task implementation.
 
-This slice is planning only. It does not change AI behavior, production JSON, reports/tests, schema, save format, coefficients, pathing/body-tile/approach behavior, renderer/editor behavior, generated PNG imports, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market caps, or River Pass balance.
+This slice is planning only. It does not change AI behavior, production JSON, reports/tests, schema, save format, coefficients, pathing/body-tile/approach behavior, renderer/editor behavior, generated PNG imports, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market caps, or River Pass balance.
 
 ## Evidence Baseline
 
@@ -152,7 +152,7 @@ Do not include any of the following in the next slice:
 - full AI hero task state, route plans, path arrays, movement budgets, or fog/scouting memory;
 - durable event logs or defense-specific durable state;
 - coefficient tuning, strategy weight changes, market-cap changes, or River Pass rebalance;
-- production JSON edits, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, generated PNG import, renderer/editor work, pathing/body-tile/approach adoption, or asset import.
+- production JSON edits, neutral encounter migration, `content/resources.json`, wood id change, rare resources, generated PNG import, renderer/editor work, pathing/body-tile/approach adoption, or asset import.
 
 ## Validation Commands
 

@@ -1549,7 +1549,7 @@ func _drive_causeway_chapter_to_victory_outcome(overworld, step_prefix: String) 
 func _drive_fen_crown_chapter_to_victory_outcome(overworld, step_prefix: String) -> Dictionary:
 	var current_overworld = overworld
 	for support_target in [
-		{"kind": "resource", "placement_id": "crown_timber", "step": "pre_outcome_support_site_claimed_crown_timber"},
+		{"kind": "resource", "placement_id": "crown_wood", "step": "pre_outcome_support_site_claimed_crown_wood"},
 		{"kind": "resource", "placement_id": "reedward_ford_cache", "step": "pre_outcome_support_site_claimed_reedward_ford_cache"},
 	]:
 		var support_claim := await _claim_overworld_validation_target(

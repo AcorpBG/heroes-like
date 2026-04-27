@@ -6,8 +6,8 @@
       "rewards": {"gold": 400}
     },
     {
-      "id": "site_timber_wagon",
-      "name": "Timber Wagon",
+      "id": "site_wood_wagon",
+      "name": "Wood Wagon",
       "rewards": {"wood": 2, "gold": 150}
     },
     {
@@ -1349,7 +1349,7 @@
       "control_income": {"wood": 1},
       "town_support": {"growth_bonus_percent": 4},
       "response_profile": {
-        "action_label": "Secure Timber Road",
+        "action_label": "Secure Wood Road",
         "summary": "Foresters and escorts keep the mill road open for reserve wagons.",
         "movement_cost": 3,
         "resource_cost": {"gold": 90},

@@ -17,13 +17,13 @@
       "interaction": {"cadence": "one_time", "remains_after_visit": false, "state_after_visit": "collected", "requires_ownership": false, "requires_guard_clear": false, "supports_revisit": false, "cooldown_days": 0, "refresh_rule": "none"}
     },
     {
-      "id": "object_timber_wagon",
-      "name": "Timber Wagon",
+      "id": "object_wood_wagon",
+      "name": "Wood Wagon",
       "family": "pickup",
       "schema_version": 1,
       "primary_class": "pickup",
       "secondary_tags": ["build_resource", "small_reward", "route_pacing"],
-      "resource_site_id": "site_timber_wagon",
+      "resource_site_id": "site_wood_wagon",
       "biome_ids": ["biome_grasslands", "biome_deep_forest", "biome_snow_frost_marches"],
       "footprint": {"width": 1, "height": 1, "anchor": "bottom_center", "tier": "micro"},
       "passable": true,

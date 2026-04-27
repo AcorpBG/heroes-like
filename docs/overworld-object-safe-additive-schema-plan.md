@@ -310,7 +310,7 @@ Candidate `safe_metadata_bundle_001`:
 | Object id | Family | Why it is low risk |
 | --- | --- | --- |
 | `object_waystone_cache` | `pickup` | Existing linked one-time pickup, 1x1, passable and visitable. |
-| `object_timber_wagon` | `pickup` | Existing linked one-time pickup, 1x1, passable and visitable. |
+| `object_wood_wagon` | `pickup` | Existing linked one-time pickup, 1x1, passable and visitable. |
 | `object_watchtower_beacon` | `scouting_structure` | Existing linked scouting site, small footprint, persistent/capturable inference already reportable. |
 | `object_wayfarer_infirmary` | `repeatable_service` | Existing linked repeatable support service, no new route or combat behavior required. |
 | `object_market_caravanserai` | `repeatable_service` | Existing linked service/market-style object, metadata can remain descriptive. |

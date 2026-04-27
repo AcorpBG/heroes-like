@@ -16,7 +16,7 @@ Town-front sanity target: `halo_spire_bridgehead`.
 
 Town governor defense signal: `riverwatch_market`.
 
-This slice added focused Godot report scaffolding only. It did not tune coefficients, change AI behavior, edit production JSON, add durable event logs, migrate saves, implement full AI hero task state, add defense-specific durable state, change pathing/body tiles/approach behavior, alter renderer/editor behavior, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, rebalance River Pass, import generated PNGs, push, or open a PR.
+This slice added focused Godot report scaffolding only. It did not tune coefficients, change AI behavior, edit production JSON, add durable event logs, migrate saves, implement full AI hero task state, add defense-specific durable state, change pathing/body tiles/approach behavior, alter renderer/editor behavior, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, rebalance River Pass, import generated PNGs, push, or open a PR.
 
 ## Focused Report
 
@@ -45,7 +45,7 @@ With `glassroad_watch_relay` and `glassroad_starlens` staged as player-controlle
 1. `glassroad_watch_relay`
 2. `glassroad_starlens`
 3. `glassroad_lens_house`
-4. `glassroad_timber`
+4. `glassroad_wood`
 5. `glassroad_ore`
 6. `market_cache`
 7. `glassroad_shrine`

@@ -38,7 +38,7 @@ Future implementation reference:
 - Start from the Embercourt section below as the selected brief for a later explicit runtime/content slice.
 - Create original runtime art/content from the motifs and constraints, not from copied generated-image layouts, silhouettes, banners, symbols, labels, or palette chips.
 - Define object metadata before production migration: footprint/body tiles, visit anchor, approach sides, passability class, primary class, ownership/capture states, route effects, guard expectations, and animation cue ids.
-- Keep economy-resource work staged behind the `embergrain` and `timber`/`wood` compatibility decisions named in the prerequisites.
+- Keep economy-resource work staged behind the `embergrain` and canonical `wood` policy decisions named in the prerequisites.
 
 Explicit non-goals for this selection:
 
@@ -77,7 +77,7 @@ Design intent:
 
 Original motifs to translate:
 
-- Stone weirs, lock gates, bridge spans, barge cranes, mill islands, granary barges, beacon towers, court bells, ash-writ posts, red signal ceramics, pale masonry, wet timber, iron chains.
+- Stone weirs, lock gates, bridge spans, barge cranes, mill islands, granary barges, beacon towers, court bells, ash-writ posts, red signal ceramics, pale masonry, wet wood, iron chains.
 - Translate as simplified original silhouettes and material rules. Do not copy the generated town layout, roofs, tower profiles, banners, or exact bridge/crane arrangements.
 
 Footprint and approach guidance:
@@ -87,15 +87,15 @@ Footprint and approach guidance:
 - Toll bridge court: small/medium `2x1` or `2x2`, road-aligned, primary approach from road/front side; may have two linked approach sides when it controls a crossing.
 - Lock gate: small/medium linear object, path-adjacent or path-spanning, approach from road/riverbank side; pass-through state can open/close a route.
 - Beacon court/shrine: small `1x2` or `2x1`, adjacent visit from front/lower side.
-- Tollhouse mill, timber yard, embergrain yard: medium `2x2`, entrance on work-yard/front side with road adjacency preferred.
+- Tollhouse mill, wood yard, embergrain yard: medium `2x2`, entrance on work-yard/front side with road adjacency preferred.
 
 Passability and interaction class:
 
 - Town: blocking visitable town, separate from normal site interaction.
 - Toll bridge court and lock gate: transit / route object; may also be persistent economy if owned.
-- Tollhouse mill, timber yard, embergrain yard: persistent economy site.
+- Tollhouse mill, wood yard, embergrain yard: persistent economy site.
 - Beacon court shrine and public ration depot: interactable service/support site.
-- Writ bundle, granary sack cache, timber cart: pickup, usually enter-to-collect.
+- Writ bundle, granary sack cache, wood cart: pickup, usually enter-to-collect.
 - Lockwall remnants, levee cuts, beacon ash poles: decoration, edge blocker, or non-interactable route texture.
 
 State variants:
@@ -128,7 +128,7 @@ Rejection constraints:
 Implementation prerequisites:
 
 - Object/town schema plan for `footprint`, `approach_sides`, `passability_class`, `primary_class`, `state_variants`, `route_effect`, and `ownership_state`.
-- Resource schema migration plan for `embergrain` and `timber`/`wood` compatibility before Embercourt economy sites become production content.
+- Resource schema migration plan for `embergrain` and canonical `wood` policy before Embercourt economy sites become production content.
 - Renderer/editor plan for true blocking body tiles versus visit/approach tiles.
 - Animation cue catalog entries for lock, beacon, capture, damaged, repaired, and output-ready states.
 
@@ -271,7 +271,7 @@ Prerequisites:
 
 Motifs to translate:
 
-- Ore quarry ramps, aetherglass/crystal orchards, peat cuts, embergrain yards, graft nurseries, debt/furnace sites, memory-salt wreck fields, timber/rail yards.
+- Ore quarry ramps, aetherglass/crystal orchards, peat cuts, embergrain yards, graft nurseries, debt/furnace sites, memory-salt wreck fields, wood/rail yards.
 
 Footprint and approach:
 
@@ -290,7 +290,7 @@ State variants:
 
 Animation hooks:
 
-- Quarry dust, crystal glint, peat smoke, grain/lamp flicker, graft growth, furnace pulse, salvage lantern, timber crane.
+- Quarry dust, crystal glint, peat smoke, grain/lamp flicker, graft growth, furnace pulse, salvage lantern, wood crane.
 - Output-ready cue should be subtle and physical, not a reward sparkle copied from pickups.
 
 Readability constraints:
@@ -349,7 +349,7 @@ Prerequisites:
 
 Motifs to translate:
 
-- Writ bundles, granary sacks, timber carts, peatwax votives, reed caches, crystal lots, sextant cases, seed packets, gauge cases, ore sleds, salvage crates, obituary ink flasks, mirror cairns, ration cairns.
+- Writ bundles, granary sacks, wood carts, peatwax votives, reed caches, crystal lots, sextant cases, seed packets, gauge cases, ore sleds, salvage crates, obituary ink flasks, mirror cairns, ration cairns.
 
 Footprint and approach:
 

@@ -394,7 +394,7 @@ The migration should preserve a clean split:
 
 - `map_objects.json` owns world-object identity, footprint, approach, passability class, visible state vocabulary, animation cue ids, editor placement rules, and high-level AI valuation hints.
 - `resource_sites.json` owns rewards, income, service costs, persistent control behavior, repeatability, recruitment payloads, transit profiles, guard profiles, and current site behavior until economy/schema migration says otherwise.
-- Future economy/resource schema migration should decide the resource ids, outputs, cadence, market compatibility, and `wood`/`timber` policy before persistent resource-front content expands.
+- Future economy/resource schema migration should decide the resource ids, outputs, cadence, market compatibility, and canonical `wood` policy before persistent resource-front content expands.
 
 Link rules:
 
@@ -578,7 +578,7 @@ Level 4, runtime adoption errors:
 - Legacy booleans and family fields remain the fallback source until each consuming system has an adapter.
 - Save files should store content ids and placement state, not copied object schema blobs.
 - If target passability produces blocked routes in existing scenarios, pathing adoption must be rolled back independently from metadata.
-- Resource output fields should not be migrated before the economy/resource schema plan resolves `wood` versus `timber`, the nine-resource target, and market/cadence compatibility.
+- Resource output fields should not be migrated before the economy/resource schema plan resolves `wood` versus `wood`, the nine-resource target, and market/cadence compatibility.
 - Renderer sprite ingestion should not depend on generated-image filenames or imported concept PNGs.
 - The neutral encounter split is a product/schema decision and should not be forced by a renderer shortcut.
 

@@ -2455,7 +2455,7 @@ static func _market_building_summary(building: Dictionary) -> String:
 		"building_market_square":
 			return "Exchange wood or ore against gold"
 		"building_river_granary_exchange":
-			return "Bulk wood lots and stronger river timber rates"
+			return "Bulk wood lots and stronger river wood rates"
 		"building_resonant_exchange":
 			return "Bulk ore lots and stronger relay crystal rates"
 		_:

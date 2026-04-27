@@ -17,21 +17,19 @@
     },
     {
       "id": "wood",
-      "display_name": "Timber",
+      "display_name": "Wood",
       "category": "construction_staple",
       "market_tier": "common",
       "default_visible": true,
       "legacy_aliases": [],
-      "target_aliases": ["timber"],
-      "canonical_target_id": "timber",
-      "canonical_status": "legacy_live_id",
+      "canonical_status": "canonical_live_id",
       "faction_affinity": {
         "faction_embercourt": "primary",
         "faction_thornwake": "primary"
       },
       "ui_sort": 20,
-      "icon_hint_id": "resource_timber_placeholder",
-      "material_cue": "cut beams, road planks, rails, and timber yards",
+      "icon_hint_id": "resource_wood_placeholder",
+      "material_cue": "cut beams, road planks, rails, and wood yards",
       "stockpile": true,
       "report_only": true
     },
@@ -49,24 +47,6 @@
       "ui_sort": 30,
       "icon_hint_id": "resource_ore_placeholder",
       "material_cue": "quarry blocks, metal seams, and tool stock",
-      "stockpile": true,
-      "report_only": true
-    },
-    {
-      "id": "timber",
-      "display_name": "Timber",
-      "category": "construction_staple",
-      "market_tier": "common",
-      "default_visible": false,
-      "legacy_aliases": ["wood"],
-      "canonical_status": "alias_only",
-      "faction_affinity": {
-        "faction_embercourt": "primary",
-        "faction_thornwake": "primary"
-      },
-      "ui_sort": 21,
-      "icon_hint_id": "resource_timber_placeholder",
-      "material_cue": "target canonical id for future save-aware migration",
       "stockpile": true,
       "report_only": true
     },

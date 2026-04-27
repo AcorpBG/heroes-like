@@ -189,5 +189,5 @@ Deferred:
 - Coefficient tuning and behavior tuning.
 - Commander-role state planning.
 - Production JSON migration.
-- `content/resources.json`, `wood` to `timber`, rare resources, and market-cap overhaul.
+- `content/resources.json`, wood id change, rare resources, and market-cap overhaul.
 - Pathing/body-tile/approach adoption, renderer/editor/save changes, generated PNG import, neutral encounter migration, durable AI event logs, full AI hero task state, broad AI rewrite, and River Pass rebalance.
