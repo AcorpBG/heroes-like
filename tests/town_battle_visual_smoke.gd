@@ -158,6 +158,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_status_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_risk_check_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not board.has_method("validation_hex_layout_summary"):
 		push_error("Battle smoke: battle board does not expose hex layout validation.")
 		get_tree().quit(1)
@@ -998,6 +1001,45 @@ func _assert_battle_status_check_cue_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if status_text.contains(leak_token):
 			push_error("Battle smoke: status-check cue leaked internal token %s: %s." % [leak_token, status_text])
+			return false
+	return true
+
+func _assert_battle_risk_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing risk-check cue validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var risk_check: Dictionary = snapshot.get("risk_check", {}) if snapshot.get("risk_check", {}) is Dictionary else {}
+	var risk_text := "\n".join([
+		String(snapshot.get("risk_visible_text", "")),
+		String(snapshot.get("risk_tooltip_text", "")),
+		String(snapshot.get("risk_board", "")),
+		String(snapshot.get("risk_check_visible_text", "")),
+		String(snapshot.get("risk_check_tooltip_text", "")),
+		String(risk_check.get("active", "")),
+		String(risk_check.get("outlook", "")),
+		String(risk_check.get("initiative", "")),
+		String(risk_check.get("integrity", "")),
+		String(risk_check.get("objective", "")),
+		String(risk_check.get("readiness", "")),
+		String(risk_check.get("next_step", "")),
+	])
+	for token in ["Risk check:", "Battle Risk Check", "Active stack:", "Outlook:", "Initiative swing:", "Line integrity:", "Objective urgency:", "Readiness:", "Next practical action:", "Inspection:", "does not spend an action"]:
+		if not risk_text.contains(token):
+			push_error("Battle smoke: risk-check cue lost %s clarity: %s." % [token, risk_text])
+			return false
+	if String(risk_check.get("active", "")) == "" or String(risk_check.get("outlook", "")) == "" or String(risk_check.get("next_step", "")) == "":
+		push_error("Battle smoke: risk-check payload is missing active, outlook, or next-step context: %s." % risk_check)
+		return false
+	if not ["Brace", "Press", "Review", "Steady", "Trade", "Locked", "Waiting", "unavailable"].has(String(risk_check.get("readiness", ""))):
+		push_error("Battle smoke: risk-check cue exposed an unexpected readiness: %s." % risk_check)
+		return false
+	if not String(snapshot.get("risk_visible_text", "")).contains("Risk check:"):
+		push_error("Battle smoke: risk-check cue is not visible in the risk rail: %s." % snapshot)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if risk_text.contains(leak_token):
+			push_error("Battle smoke: risk-check cue leaked internal token %s: %s." % [leak_token, risk_text])
 			return false
 	return true
 

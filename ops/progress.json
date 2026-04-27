@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T14:24:00Z",
+  "updatedAt": "2026-04-27T14:44:00Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "battle-status-check-cue-10184",
-  "currentSliceTitle": "Surface compact battle status check cue",
+  "currentSliceId": "battle-risk-check-cue-10184",
+  "currentSliceTitle": "Surface compact battle risk check cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented a compact visible battle Status check cue using existing active stack, selected target, status pressure, and effect board summaries only. The cue summarizes current status readiness, effect-stack count, active and selected pressure, and next practical action in the Effects rail, with focused smoke coverage for visible text, tooltip payload, stable counts, and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, durable logs, AI behavior, renderer import, pathing/body-tile adoption, or internal score/debug field exposure.",
+  "currentSliceNotes": "Implemented a compact visible battle Risk check cue using the existing tactical risk board, active stack, and action-readiness context only. The cue summarizes risk readiness, outlook, initiative swing, line integrity, objective urgency, and next practical action in the Risk rail, with focused smoke coverage for visible text, tooltip payload, readiness states, and no-score-leak behavior. UI clarity only; no mechanics, balance, save schema/version, durable logs, AI behavior, renderer import, pathing/body-tile adoption, or internal score/debug field exposure.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -2371,6 +2371,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T14:10:00Z",
       "completedAt": "2026-04-27T14:24:00Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "battle-risk-check-cue-10184",
+      "title": "Surface compact battle risk check cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T14:30:00Z",
+      "completedAt": "2026-04-27T14:44:00Z",
       "difficulty": "small"
     }
   ],
