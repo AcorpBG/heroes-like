@@ -3,10 +3,10 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "magic-adventure-map-spell-hooks-10184",
-  "currentSliceTitle": "Magic Adventure Map Spell Hooks",
+  "currentSliceId": "magic-ai-valuation-casting-hooks-10184",
+  "currentSliceTitle": "Magic AI Valuation And Casting Hooks",
   "currentSliceStatus": "pending",
-  "currentSliceNotes": "Next P2.5 child selected after completing magic-battle-spell-behavior-expansion-10184. No adventure-map spell implementation has started.",
+  "currentSliceNotes": "Next P2.5 child selected after completing magic-adventure-map-spell-hooks-10184. No AI valuation/casting hook implementation has started.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
   "updatedAt": "2026-04-27T20:35:03Z",
   "statusTaxonomy": {
@@ -1433,7 +1433,7 @@
       "id": "magic-adventure-map-spell-hooks-10184",
       "title": "Magic Adventure Map Spell Hooks",
       "phase": "phase-2-deep-production-foundation",
-      "status": "pending",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
@@ -1457,8 +1457,11 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T20:35:03Z",
-      "notes": "Selected next P2.5 child after battle spell behavior expansion; implementation not started."
+      "updatedAt": "2026-04-27T21:10:00Z",
+      "startedAt": "2026-04-27T20:44:00Z",
+      "notes": "Completed bounded adventure-map spell hooks for the currently authored overworld movement spells. Scope is self-hero targeting, movement consequence previews, live overworld cast recap, and focused report coverage only.",
+      "completedAt": "2026-04-27T21:10:00Z",
+      "evidence": "Implemented bounded adventure-map spell hook expansion: SpellRules adventure behavior metadata/report, safe self-hero target contracts, movement consequence previews with clamp/mana spend evidence, OverworldRules spell post-action recap, focused MAGIC_ADVENTURE_SPELL_HOOKS_REPORT, and docs evidence. Validation passed: wood alias scan no matches; python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like tests/magic_adventure_spell_hooks_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn."
     },
     {
       "id": "magic-ai-valuation-casting-hooks-10184",
@@ -2922,6 +2925,31 @@
           "evidence": "Implemented bounded battle spell behavior expansion: SpellRules battle behavior helpers/report, Cinder Burst wounded priority bonus, Briar Bind control status, Graft Mend recovery+ward, Prism Bastion cleanse+ward, BattleRules recovery/cleanse hooks, BattleAiRules recognition, focused MAGIC_BATTLE_SPELL_BEHAVIOR_REPORT, docs evidence, and validator coverage. Validation passed: wood alias scan no matches; python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn."
         }
       ]
+    },
+    {
+      "id": "magic-adventure-map-spell-hooks-10184",
+      "system": "magic adventure-map spell hooks",
+      "phase": "phase-2-deep-production-foundation",
+      "mappedPlannedSliceIds": [
+        "magic-adventure-map-spell-hooks-10184"
+      ],
+      "sourceRefs": [
+        "docs/magic-system-expansion-foundation.md",
+        "docs/overworld-content-bible.md",
+        "docs/magic-adventure-map-spell-hooks-report.md",
+        "content/spells.json",
+        "scripts/core/SpellRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/magic_adventure_spell_hooks_report.gd"
+      ],
+      "entries": [
+        {
+          "id": "magic-adventure-map-spell-runtime-hooks-10184",
+          "title": "Implement bounded adventure-map spell targeting and consequence hooks",
+          "status": "completed",
+          "evidence": "Implemented bounded adventure-map spell hook expansion: SpellRules adventure behavior metadata/report, safe self-hero target contracts, movement consequence previews with clamp/mana spend evidence, OverworldRules spell post-action recap, focused MAGIC_ADVENTURE_SPELL_HOOKS_REPORT, docs evidence, and validator coverage. Validation passed: wood alias scan no matches; python3 tests/validate_repo.py; godot4 --headless --path /root/dev/heroes-like tests/magic_adventure_spell_hooks_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_spell_schema_report.tscn; godot4 --headless --path /root/dev/heroes-like tests/magic_battle_spell_behavior_report.tscn."
+        }
+      ]
     }
   ],
   "docsReadyEvidence": [
@@ -3354,22 +3382,21 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "magic-adventure-map-spell-hooks-10184",
-      "title": "Magic Adventure Map Spell Hooks",
+      "id": "magic-ai-valuation-casting-hooks-10184",
+      "title": "Magic AI Valuation And Casting Hooks",
       "status": "pending",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "magic-system-foundation-implementation-10184",
       "source": "PLAN.md P2.5 Magic System Foundation Implementation",
       "sourceDocs": [
         "docs/magic-system-expansion-foundation.md",
-        "docs/overworld-content-bible.md"
+        "docs/strategic-ai-foundation.md"
       ],
       "implementationTargets": [
-        "overworld spell hooks",
-        "target/consequence reports",
-        "UI surface only when selected"
+        "AI valuation/report helpers",
+        "spell casting decision fixtures"
       ],
-      "notes": "Selected next P2.5 child after battle spell behavior expansion; implementation not started."
+      "notes": "Selected next P2.5 child after adventure-map spell hooks; implementation not started."
     }
   ],
   "stoppedOrPausedTasks": [
