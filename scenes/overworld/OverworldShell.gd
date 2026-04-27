@@ -2047,8 +2047,14 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		button_text = "End? Action"
 		confirmation = "%s is available before ending the day." % action_label
 	else:
-		button_text = "End? %d Move" % move_current
+		button_text = "End? %d Left" % move_current
 		confirmation = "Movement remains before ending the day."
+	var spend_check := "No movement remains; next day refreshes to %d move." % move_max
+	if move_current > 0:
+		spend_check = "%d unspent move will not carry over; next day refreshes to %d move." % [
+			move_current,
+			move_max,
+		]
 	var next_step := String(readiness.get("next_step", "")).strip_edges()
 	if next_step == "":
 		next_step = confirmation
@@ -2065,6 +2071,7 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		"- Next practical action: %s" % next_step,
 		"- %s" % primary_line,
 		"- Confirmation: %s" % confirmation,
+		"- Spend check: %s" % spend_check,
 	]
 	if route_line != "":
 		tooltip_lines.append("- %s" % route_line)
@@ -2078,6 +2085,7 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		"primary_order": primary_line,
 		"route_line": route_line,
 		"movement_line": "Move %d/%d" % [move_current, move_max],
+		"spend_check": spend_check,
 		"end_turn_forecast": forecast,
 	}
 

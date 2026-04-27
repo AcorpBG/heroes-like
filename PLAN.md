@@ -3982,11 +3982,11 @@ Use this structure for each target system or content claim:
 No claim should move to "done" unless live-client usability and evidence are filled in.
 
 ## Current Acceptance Target
-Current target: compact map-editor scenario validation check using the existing editor authoring validation payload.
+Current target: compact overworld End Turn unused-movement cue using the existing end-turn readiness surface.
 
 Done means:
-- The map editor shows a compact scenario check cue for objective-anchor coverage, warning count, hero start, object count, and Play Copy readiness.
-- The scenario picker tooltip carries the same validation check without changing authored files, campaign progress, save schema, or editor mechanics.
-- Focused map-editor smoke coverage proves the visible cue, tooltip cue, and no internal score/debug leaks.
+- The overworld End Turn control makes unspent movement consequence visible before ending the day.
+- The End Turn tooltip explains whether movement remains, whether it carries over, and what the next-day movement refresh will do.
+- Focused overworld smoke coverage proves the visible cue, tooltip cue, and no internal score/debug leaks.
 - No mechanics, balance, save schema/version bump, durable event logs, production JSON migration, AI tuning/rewrite, renderer/generated asset import, campaign progression semantic changes, or internal/debug score fields are introduced.
 - Faction identity, concept-art pipeline, economy, overworld objects, magic, artifacts, animation, and strategic AI remain sequenced before campaign/skirmish maps and final polish.

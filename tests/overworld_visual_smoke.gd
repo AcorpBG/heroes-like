@@ -310,6 +310,7 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 		String(confirmation.get("primary_order", "")),
 		String(confirmation.get("route_line", "")),
 		String(confirmation.get("movement_line", "")),
+		String(confirmation.get("spend_check", "")),
 		String(confirmation.get("end_turn_forecast", "")),
 	])
 	if not _assert_text_contains_all(
@@ -324,6 +325,8 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 			"Primary order:",
 			"Confirmation:",
 			"Movement remains before ending the day.",
+			"Spend check:",
+			"unspent move will not carry over",
 			"End turn forecast:",
 			"Move",
 		]
