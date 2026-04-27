@@ -408,9 +408,20 @@ func _refresh() -> void:
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
+	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	_action_guide.visible = true
-	_set_compact_label(_action_guide, String(target_handoff.get("visible_text", BattleRules.describe_action_surface(_session))), 1)
-	_action_guide.tooltip_text = String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session)))
+	_set_compact_label(
+		_action_guide,
+		"%s\n%s" % [
+			String(target_handoff.get("visible_text", BattleRules.describe_action_surface(_session))),
+			String(objective_check.get("visible_text", "")),
+		],
+		2
+	)
+	_action_guide.tooltip_text = _join_tooltip_sections([
+		String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session))),
+		String(objective_check.get("tooltip_text", "")),
+	])
 	var action_confirmation_tooltip := String(action_confirmation.get("tooltip_text", "")).strip_edges()
 	if action_confirmation_tooltip != "":
 		_action_guide.tooltip_text = "%s\n\n%s" % [_action_guide.tooltip_text, action_confirmation_tooltip]
@@ -811,6 +822,7 @@ func validation_snapshot() -> Dictionary:
 	var consequence_payload := BattleRules.active_consequence_payload(_session)
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
+	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
 		dispatch_text = _tactical_briefing_text
@@ -848,6 +860,9 @@ func validation_snapshot() -> Dictionary:
 		"target_handoff": target_handoff,
 		"target_handoff_visible_text": String(target_handoff.get("visible_text", "")),
 		"target_handoff_tooltip_text": String(target_handoff.get("tooltip_text", "")),
+		"objective_check": objective_check,
+		"objective_check_visible_text": String(objective_check.get("visible_text", "")),
+		"objective_check_tooltip_text": String(objective_check.get("tooltip_text", "")),
 		"target_cycle_cue": _battle_target_cycle_cue_surface(
 			String(active_stack.get("side", "")) == "player",
 			active_stack,
