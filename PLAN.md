@@ -137,7 +137,26 @@ Acceptance:
 - `project.md`, this plan, and `ops/progress.json` agree that the active milestone is deep production foundation, not River Pass recovery or post-River-Pass screen/content polish.
 - Completed renderer, map-editor, terrain, content-scaffold, and River Pass proof slices remain preserved as history, not labeled as the current implementation slice.
 - Maps, final town-screen polish, final battle-screen polish, and broad game-loop polish are explicitly sequenced after the foundation tracks above.
-- The completed active slice is compact outcome manual slot check clarity, with focused smoke assertions but still without production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+- The completed active slice is compact battle position check clarity, with focused smoke assertions but still without mechanics changes, production JSON migration, campaign progression semantic changes, new resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, pathing/body-tile/approach adoption, full AI hero/task implementation, broad AI rewrite, behavior tuning, renderer behavior, save format changes, generated PNG import, asset import, live commander-role behavior adoption, schema writes, save migration, durable event logs, or new defense-specific durable state.
+
+## Completed Implementation Slice: Battle Position Check Cue
+Status: completed on 2026-04-27 as compact player-facing battle UI polish.
+
+Purpose:
+- Help a manual player tell whether the active stack can attack from its current hex, needs green-hex movement, should retarget, should hold, or is locked during enemy initiative.
+- Reuse the current selected-target, legal-action, and movement-intent payloads instead of changing battle mechanics.
+
+Delivered:
+- Added a compact `Position check:` surface in `scenes/battle/BattleShell.gd`.
+- The battle footer action guide now pairs the existing target handoff and objective check with current-position readiness, movement, target, and next-practical-action tooltip detail.
+- Added focused smoke coverage in `tests/town_battle_visual_smoke.gd`, including visible-cue, payload-count, and no-score-leak assertions.
+
+Validation:
+- Passed focused smoke `godot4 --headless --path /root/dev/heroes-like /root/dev/heroes-like/tests/town_battle_visual_smoke.tscn`.
+- Full required validation is run with this slice before commit.
+
+Limits:
+- This is UI/readability polish only. It does not change mechanics, balance, battle action semantics, save schema/version, durable event logs, production JSON, strategic AI behavior, coefficients, pathing, body tiles, renderer assets, generated asset import, or broad dashboard composition.
 
 ## Completed Implementation Slice: Outcome Manual Slot Check Cue
 Status: completed on 2026-04-27 as compact player-facing outcome UI polish.

@@ -421,18 +421,21 @@ func _refresh() -> void:
 	_set_compact_label(_effect_label, BattleRules.describe_effect_board(_session), 3)
 	_set_compact_label(_timing_label, BattleRules.describe_spell_timing_board(_session), 3)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
+	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	_action_guide.visible = true
 	_set_compact_label(
 		_action_guide,
-		"%s\n%s" % [
+		"%s\n%s\n%s" % [
 			String(target_handoff.get("visible_text", BattleRules.describe_action_surface(_session))),
+			String(position_check.get("visible_text", "")),
 			String(objective_check.get("visible_text", "")),
 		],
-		2
+		3
 	)
 	_action_guide.tooltip_text = _join_tooltip_sections([
 		String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session))),
+		String(position_check.get("tooltip_text", "")),
 		String(objective_check.get("tooltip_text", "")),
 	])
 	var action_confirmation_tooltip := String(action_confirmation.get("tooltip_text", "")).strip_edges()
@@ -731,6 +734,120 @@ func _battle_stack_check_cue_surface() -> Dictionary:
 		"next_step": next_step,
 	}
 
+func _battle_position_check_cue_surface() -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {
+			"visible_text": "Position check: no battle is loaded.",
+			"tooltip_text": "Battle Position Check\n- No battle is loaded.",
+			"readiness": "unavailable",
+		}
+	var battle := _session.battle
+	var active_stack := BattleRules.get_active_stack(battle)
+	var selected_target := BattleRules.get_selected_target(battle)
+	var click_intent := BattleRules.selected_target_board_click_intent(battle)
+	var movement_intent := BattleRules.active_movement_board_click_intent(battle)
+	var movement_options := BattleRules.legal_movement_intents_for_active_stack(battle)
+	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(battle)
+	var active_label := _battle_position_stack_label(active_stack)
+	var target_label := _battle_position_stack_label(selected_target)
+	var readiness := "Ready"
+	var reach_line := ""
+	var movement_line := String(movement_intent.get("message", "")).strip_edges()
+	var next_step := ""
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		reach_line = "no stack is queued"
+		next_step = "Wait for battle resolution."
+	elif String(active_stack.get("side", "")) != "player":
+		readiness = "Locked"
+		reach_line = "enemy initiative is active"
+		next_step = "Wait for command to return."
+	else:
+		var click_label := String(click_intent.get("label", "")).strip_edges()
+		if bool(click_intent.get("attackable", false)) and click_label != "":
+			reach_line = "%s is reachable from here" % target_label
+			next_step = "Click the highlighted target or use %s." % click_label
+		elif bool(click_intent.get("blocked", false)) and int(movement_intent.get("destination_count", 0)) > 0:
+			readiness = "Move"
+			reach_line = "%s needs a green hex move" % target_label
+			next_step = _battle_position_move_next_step(movement_options, target_label)
+		elif legal_target_ids.size() > 0:
+			readiness = "Retarget"
+			reach_line = "selected target is blocked; another highlighted enemy can be attacked"
+			next_step = "Cycle target focus or click a highlighted enemy."
+		elif int(movement_intent.get("destination_count", 0)) > 0:
+			readiness = "Move"
+			reach_line = "%d green hex move%s open" % [
+				int(movement_intent.get("destination_count", 0)),
+				"" if int(movement_intent.get("destination_count", 0)) == 1 else "s",
+			]
+			next_step = _battle_position_move_next_step(movement_options, target_label)
+		else:
+			readiness = "Hold"
+			reach_line = "no attack or green hex move is open"
+			next_step = "Use Defend, retarget, or wait for the next initiative handoff."
+	if movement_line == "":
+		movement_line = "Green hex movement is not currently available."
+	var visible := "Position check: %s; %s" % [
+		_short_text(reach_line, 54),
+		_short_text(_strip_sentence(next_step).trim_suffix("."), 46),
+	]
+	var tooltip := "Battle Position Check\n- Active stack: %s\n- Selected target: %s\n- Reach from current hex: %s\n- Movement: %s\n- Readiness: %s\n- Next practical action: %s\n- Inspection: checking this cue does not move, attack, cast, or advance initiative." % [
+		active_label,
+		target_label,
+		reach_line,
+		movement_line,
+		readiness,
+		next_step,
+	]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active": active_label,
+		"target": target_label,
+		"reach": reach_line,
+		"movement": movement_line,
+		"movement_option_count": int(movement_intent.get("destination_count", movement_options.size())),
+		"legal_target_count": legal_target_ids.size(),
+		"readiness": readiness,
+		"next_step": next_step,
+	}
+
+func _battle_position_move_next_step(movement_options: Array, target_label: String) -> String:
+	for option in movement_options:
+		if not (option is Dictionary):
+			continue
+		var option_dict: Dictionary = option
+		if bool(option_dict.get("sets_up_selected_target_attack", false)):
+			var setup_label := String(option_dict.get("selected_target_setup_label", "attack")).strip_edges()
+			var destination := String(option_dict.get("destination_detail", option_dict.get("destination_label", "a green hex"))).strip_edges()
+			return "Click %s to set up %s on %s." % [
+				destination if destination != "" else "a green hex",
+				setup_label.to_lower(),
+				target_label,
+			]
+	for option in movement_options:
+		if not (option is Dictionary):
+			continue
+		var option_dict: Dictionary = option
+		if bool(option_dict.get("closes_on_selected_target", false)):
+			var destination := String(option_dict.get("destination_detail", option_dict.get("destination_label", "a green hex"))).strip_edges()
+			return "Click %s to close on %s." % [
+				destination if destination != "" else "a green hex",
+				target_label,
+			]
+	if not movement_options.is_empty():
+		return "Click a green hex to reposition before choosing the next order."
+	return "Use Defend, retarget, or wait for the next initiative handoff."
+
+func _battle_position_stack_label(stack: Dictionary) -> String:
+	if stack.is_empty():
+		return "no stack"
+	var label := String(stack.get("name", "")).strip_edges()
+	if label == "":
+		label = String(stack.get("battle_id", "stack")).strip_edges()
+	return label
+
 func _battle_first_ready_order_id(action_surface: Dictionary) -> String:
 	for action_id in ["shoot", "strike", "advance", "defend"]:
 		var action: Dictionary = action_surface.get(action_id, {}) if action_surface.get(action_id, {}) is Dictionary else {}
@@ -912,6 +1029,7 @@ func validation_snapshot() -> Dictionary:
 	var consequence_payload := BattleRules.active_consequence_payload(_session)
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
+	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var stack_check := _battle_stack_check_cue_surface()
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
@@ -951,6 +1069,9 @@ func validation_snapshot() -> Dictionary:
 		"target_handoff": target_handoff,
 		"target_handoff_visible_text": String(target_handoff.get("visible_text", "")),
 		"target_handoff_tooltip_text": String(target_handoff.get("tooltip_text", "")),
+		"position_check": position_check,
+		"position_check_visible_text": String(position_check.get("visible_text", "")),
+		"position_check_tooltip_text": String(position_check.get("tooltip_text", "")),
 		"objective_check": objective_check,
 		"objective_check_visible_text": String(objective_check.get("visible_text", "")),
 		"objective_check_tooltip_text": String(objective_check.get("tooltip_text", "")),

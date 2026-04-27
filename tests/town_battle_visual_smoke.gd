@@ -268,6 +268,9 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_stack_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
+	if not _assert_battle_position_check_cue_contract(shell):
+		get_tree().quit(1)
+		return false
 	if not _assert_battle_objective_check_cue_contract(shell):
 		get_tree().quit(1)
 		return false
@@ -1785,6 +1788,44 @@ func _assert_battle_stack_check_cue_contract(shell: Node) -> bool:
 	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
 		if stack_text.contains(leak_token):
 			push_error("Battle smoke: stack-check cue leaked internal token %s: %s." % [leak_token, stack_text])
+			return false
+	return true
+
+func _assert_battle_position_check_cue_contract(shell: Node) -> bool:
+	if not shell.has_method("validation_snapshot"):
+		push_error("Battle smoke: shell is missing position-check validation snapshot.")
+		return false
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var position_check: Dictionary = snapshot.get("position_check", {}) if snapshot.get("position_check", {}) is Dictionary else {}
+	var position_text := "\n".join([
+		String(position_check.get("visible_text", "")),
+		String(position_check.get("tooltip_text", "")),
+		String(position_check.get("active", "")),
+		String(position_check.get("target", "")),
+		String(position_check.get("reach", "")),
+		String(position_check.get("movement", "")),
+		String(position_check.get("readiness", "")),
+		String(position_check.get("next_step", "")),
+		String(snapshot.get("position_check_visible_text", "")),
+		String(snapshot.get("position_check_tooltip_text", "")),
+		String(snapshot.get("visible_action_guidance", "")),
+	])
+	for token in ["Position check:", "Battle Position Check", "Active stack:", "Selected target:", "Reach from current hex:", "Movement:", "Readiness:", "Next practical action:", "Inspection:", "does not move"]:
+		if not position_text.contains(token):
+			push_error("Battle smoke: position-check cue lost %s clarity: %s." % [token, position_text])
+			return false
+	if String(position_check.get("active", "")) == "" or String(position_check.get("target", "")) == "" or String(position_check.get("next_step", "")) == "":
+		push_error("Battle smoke: position-check payload is missing active, target, or next-step context: %s." % position_check)
+		return false
+	if int(position_check.get("movement_option_count", -1)) < 0 or int(position_check.get("legal_target_count", -1)) < 0:
+		push_error("Battle smoke: position-check payload is missing non-negative movement/target counts: %s." % position_check)
+		return false
+	if not String(snapshot.get("visible_action_guidance", "")).contains("Position check:"):
+		push_error("Battle smoke: position-check cue is not visible in the footer action guide: %s." % snapshot)
+		return false
+	for leak_token in ["final_priority", "base_value", "assignment_penalty", "final_score", "income_value", "growth_value", "pressure_value", "category_bonus", "raid_score", "debug_reason", "raid_target_weights", "ai_score", "weight"]:
+		if position_text.contains(leak_token):
+			push_error("Battle smoke: position-check cue leaked internal token %s: %s." % [leak_token, position_text])
 			return false
 	return true
 
