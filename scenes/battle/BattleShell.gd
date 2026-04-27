@@ -384,7 +384,20 @@ func _refresh() -> void:
 	_set_compact_label(_battle_context_label, BattleRules.describe_entry_context(_session), 3)
 	_set_compact_label(_briefing_label, _tactical_briefing_text, 4)
 	_briefing_panel.visible = false
-	_set_compact_label(_risk_label, BattleRules.describe_risk_readiness_board(_session), 4)
+	var risk_board := BattleRules.describe_risk_readiness_board(_session)
+	var risk_check := _battle_risk_check_cue_surface(risk_board, action_confirmation)
+	if risk_check.is_empty():
+		_set_compact_label(_risk_label, risk_board, 4)
+	else:
+		_set_compact_label(
+			_risk_label,
+			"%s\n%s" % [String(risk_check.get("visible_text", "")), risk_board],
+			4
+		)
+		_risk_label.tooltip_text = _join_tooltip_sections([
+			String(risk_check.get("tooltip_text", "")),
+			risk_board,
+		])
 	_set_compact_label(_consequence_label, _battle_consequence_text(), 4)
 	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 1)
 	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 1)
@@ -760,6 +773,73 @@ func _battle_stack_check_cue_surface() -> Dictionary:
 		"next_step": next_step,
 	}
 
+func _battle_risk_check_cue_surface(risk_board: String = "", action_confirmation: Dictionary = {}) -> Dictionary:
+	if _session == null or _session.battle.is_empty():
+		return {
+			"visible_text": "Risk check: no battle is loaded.",
+			"tooltip_text": "Battle Risk Check\n- No battle is loaded.",
+			"readiness": "unavailable",
+		}
+	var battle := _session.battle
+	var active_stack := BattleRules.get_active_stack(battle)
+	var active_label := _battle_position_stack_label(active_stack)
+	var board_text := risk_board.strip_edges()
+	if board_text == "":
+		board_text = BattleRules.describe_risk_readiness_board(_session)
+	var outlook := _battle_board_line_with_prefix(board_text, "Outlook:")
+	var initiative := _battle_board_line_with_prefix(board_text, "Initiative swing:")
+	var integrity := _battle_board_line_with_prefix(board_text, "Line integrity:")
+	var objective := _battle_board_line_with_prefix(board_text, "Objective urgency:")
+	var readiness := "Review"
+	var next_step := "Read the risk rail before committing the next order."
+	var outlook_lower := outlook.to_lower()
+	if active_stack.is_empty():
+		readiness = "Waiting"
+		next_step = "Wait for battle resolution."
+	elif String(active_stack.get("side", "")) != "player":
+		readiness = "Locked"
+		next_step = "Wait for command to return, then recheck the risk rail."
+	elif outlook_lower.contains("collapse") or outlook_lower.contains("fragile"):
+		readiness = "Brace"
+		next_step = "Preserve stacks, use Defend or reposition before trading into the next swing."
+	elif outlook_lower.contains("strong") or outlook_lower.contains("ready"):
+		readiness = "Press"
+		next_step = "Spend the current edge with a ready order before initiative shifts."
+	elif outlook_lower.contains("contested"):
+		readiness = "Trade"
+		next_step = "Confirm the safest ready order or reposition before the exchange worsens."
+	else:
+		readiness = "Steady"
+		next_step = "Use the current order normally, then recheck after the next activation."
+	var action_text := String(action_confirmation.get("visible_text", "")).strip_edges()
+	var visible := "Risk check: %s; %s" % [
+		readiness,
+		_short_text(_strip_sentence(next_step).trim_suffix("."), 58),
+	]
+	var tooltip := "Battle Risk Check\n- Active stack: %s\n- %s\n- %s\n- %s\n- %s\n- Readiness: %s\n- Next practical action: %s\n- Inspection: checking this cue does not spend an action, move, attack, cast, or advance initiative." % [
+		active_label,
+		outlook,
+		initiative,
+		integrity,
+		objective,
+		readiness,
+		next_step,
+	]
+	if action_text != "":
+		tooltip = "%s\n- Current order check: %s" % [tooltip, _strip_sentence(action_text)]
+	return {
+		"visible_text": visible,
+		"tooltip_text": tooltip,
+		"active": active_label,
+		"outlook": outlook,
+		"initiative": initiative,
+		"integrity": integrity,
+		"objective": objective,
+		"readiness": readiness,
+		"next_step": next_step,
+		"action_check": action_text,
+	}
+
 func _battle_position_check_cue_surface() -> Dictionary:
 	if _session == null or _session.battle.is_empty():
 		return {
@@ -1069,6 +1149,13 @@ func _battle_first_ready_order_id(action_surface: Dictionary) -> String:
 			return action_id
 	return ""
 
+func _battle_board_line_with_prefix(board_text: String, prefix: String) -> String:
+	for raw_line in board_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with(prefix):
+			return line
+	return "%s unavailable." % prefix.trim_suffix(":")
+
 func _battle_initiative_handoff_surface() -> Dictionary:
 	if _session == null or _session.battle.is_empty():
 		return {}
@@ -1242,6 +1329,8 @@ func validation_snapshot() -> Dictionary:
 	var action_surface := BattleRules.get_action_surface(_session)
 	var consequence_payload := BattleRules.active_consequence_payload(_session)
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
+	var risk_board := BattleRules.describe_risk_readiness_board(_session)
+	var risk_check := _battle_risk_check_cue_surface(risk_board, action_confirmation)
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
 	var engagement_check := _battle_engagement_check_cue_surface()
@@ -1306,6 +1395,12 @@ func validation_snapshot() -> Dictionary:
 		"action_confirmation": action_confirmation,
 		"action_confirmation_text": String(action_confirmation.get("visible_text", "")),
 		"action_confirmation_tooltip_text": String(action_confirmation.get("tooltip_text", "")),
+		"risk_board": risk_board,
+		"risk_check": risk_check,
+		"risk_check_visible_text": String(risk_check.get("visible_text", "")),
+		"risk_check_tooltip_text": String(risk_check.get("tooltip_text", "")),
+		"risk_visible_text": _risk_label.text,
+		"risk_tooltip_text": _risk_label.tooltip_text,
 		"action_guidance": BattleRules.describe_action_surface(_session),
 		"visible_action_guidance": _action_guide.text,
 		"target_context": BattleRules.describe_target_context(_session),
