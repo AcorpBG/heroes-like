@@ -427,6 +427,12 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Latest ready save: none."
 
+[node name="ReturnCue" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+text = "Return cue: Menu refreshes autosave before opening the main menu."
+
 [node name="SaveBar" type="HFlowContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/SavePanel/SavePad/SaveBox"]
 layout_mode = 2
 theme_override_constants/h_separation = 6
