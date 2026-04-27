@@ -3,12 +3,12 @@
   "valid": {
     "objects": [
       {
-        "id": "fixture_timber_cache_object",
-        "name": "Fixture Timber Cache",
+        "id": "fixture_wood_cache_object",
+        "name": "Fixture Wood Cache",
         "family": "pickup",
         "primary_class": "pickup",
         "secondary_tags": ["small_reward", "route_pacing", "build_resource"],
-        "resource_site_id": "fixture_timber_cache",
+        "resource_site_id": "fixture_wood_cache",
         "footprint": {
           "width": 1,
           "height": 1,

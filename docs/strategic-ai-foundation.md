@@ -222,7 +222,7 @@ Faction examples:
 - Embercourt values stable income, embergrain recovery, roads, bridges, and defensive support sites.
 - Mireclaw tolerates weaker safe income if raids, peatwax, dens, and counter-capture stay active.
 - Sunvault hoards ore and aetherglass for quality units, relays, and magic buildings.
-- Thornwake protects timber and verdant grafts, links rooted sites, and avoids overextension before networks mature.
+- Thornwake protects wood and verdant grafts, links rooted sites, and avoids overextension before networks mature.
 - Brasshollow saves ore and brass scrip for capital projects, mine defense, and repair-heavy armies.
 - Veilmourn accepts uneven income, scouts aggressively, values memory salt, salvage spikes, fog routes, and hidden reward knowledge.
 
@@ -624,7 +624,7 @@ Migration principles:
 
 - Existing `enemy_states` should be normalized forward rather than discarded.
 - Existing raid encounters should migrate into active AI hero/task records when that model lands.
-- Existing `wood` should remain compatible until economy migration resolves `timber`.
+- Existing `wood` should remain valid while the economy registry matures.
 - Old saves should load with fallback AI profiles and rebuild missing governor/hero memory.
 - Any scenario relying on old pressure raids must continue to work until it is explicitly migrated.
 

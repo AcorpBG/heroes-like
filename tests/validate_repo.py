@@ -238,7 +238,7 @@ OVERWORLD_ART_REQUIRED_ASSET_IDS = {
     "stone_quarry",
 }
 OVERWORLD_ART_REQUIRED_SITE_MAPPINGS = {
-    "site_timber_wagon": "lumber_wagon",
+    "site_wood_wagon": "lumber_wagon",
     "site_ore_crates": "ore_crates",
     "site_waystone_cache": "ruined_obelisk",
     "site_fenhound_kennels": "kennel",
@@ -367,9 +367,11 @@ ENEMY_STRATEGY_KEYS = {
     "raid": {"threshold_scale", "max_active_bonus", "pressure_commitment_scale", "objective_weight", "town_siege_weight", "site_denial_weight", "hero_hunt_weight"},
 }
 ECONOMY_REPORT_SCHEMA = "economy_resource_report_v1"
-ECONOMY_RESOURCE_REGISTRY_POLICY_ID = "live_id_compatibility_v1"
-ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", "timber", "experience")
+ECONOMY_RESOURCE_REGISTRY_POLICY_ID = "wood_canonical_v1"
+ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", "experience")
 ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore"}
+ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS = ("gold", "wood", "ore")
+ECONOMY_TARGET_ONLY_RESOURCE_IDS: set[str] = set()
 ECONOMY_NON_STOCKPILE_REWARD_IDS = {"experience"}
 ECONOMY_RARE_RESOURCE_IDS = {"aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt"}
 ECONOMY_USAGE_BUCKETS = (
@@ -795,7 +797,7 @@ OVERWORLD_OBJECT_INTERACTION_CADENCES = {
 }
 OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001 = {
     "object_waystone_cache",
-    "object_timber_wagon",
+    "object_wood_wagon",
     "object_watchtower_beacon",
     "object_wayfarer_infirmary",
     "object_market_caravanserai",
@@ -874,8 +876,7 @@ def resource_display_name(resource_id: str, registry_items: dict[str, dict] | No
         return str(registry_items[resource_id].get("display_name", resource_id))
     fallback = {
         "gold": "Gold",
-        "wood": "Timber",
-        "timber": "Timber",
+        "wood": "Wood",
         "ore": "Ore",
         "experience": "Experience",
     }
@@ -904,12 +905,7 @@ def positive_resource_amount(resources: dict, resource_id: str) -> bool:
 
 
 def detect_alias_collisions(resources: object) -> list[str]:
-    if not isinstance(resources, dict):
-        return []
-    collisions: list[str] = []
-    if positive_resource_amount(resources, "wood") and positive_resource_amount(resources, "timber"):
-        collisions.append("wood/timber")
-    return collisions
+    return []
 
 
 def scene_has_node(scene_text: str, node_name: str, node_type: str) -> bool:
@@ -1141,9 +1137,8 @@ def load_economy_resource_registry() -> dict:
         "schema": "economy_resource_registry_fixture_v1",
         "items": [
             {"id": "gold", "display_name": "Gold", "category": "liquidity", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "ui_sort": 10, "stockpile": True},
-            {"id": "wood", "display_name": "Timber", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "target_aliases": ["timber"], "canonical_target_id": "timber", "canonical_status": "legacy_live_id", "ui_sort": 20, "stockpile": True, "report_only": True},
+            {"id": "wood", "display_name": "Wood", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "canonical_status": "canonical_live_id", "ui_sort": 20, "stockpile": True, "report_only": True},
             {"id": "ore", "display_name": "Ore", "category": "construction_staple", "market_tier": "common", "default_visible": True, "legacy_aliases": [], "ui_sort": 30, "stockpile": True},
-            {"id": "timber", "display_name": "Timber", "category": "construction_staple", "market_tier": "common", "default_visible": False, "legacy_aliases": ["wood"], "canonical_status": "alias_only", "ui_sort": 21, "stockpile": True, "report_only": True},
             {"id": "experience", "display_name": "Experience", "category": "progression_reward", "market_tier": "none", "default_visible": False, "legacy_aliases": [], "canonical_status": "non_stockpile_reward", "ui_sort": 900, "stockpile": False},
         ],
     }
@@ -1174,8 +1169,6 @@ def add_economy_report_warning(report: dict, warning: str) -> None:
 def record_economy_resource_dict(report: dict, registry_items: dict[str, dict], resources: object, domain: str, owner_id: str, field: str, usage_bucket: str, source_bucket: str = "") -> None:
     if not isinstance(resources, dict) or not resources:
         return
-    for collision in detect_alias_collisions(resources):
-        add_economy_report_warning(report, f"{domain} {owner_id} {field} contains positive {collision} amounts without a merge rule")
     for raw_resource_id, raw_amount in resources.items():
         resource_id = str(raw_resource_id)
         try:
@@ -1190,10 +1183,6 @@ def record_economy_resource_dict(report: dict, registry_items: dict[str, dict], 
         append_unique_dict(entry["occurrences"], {"domain": domain, "id": owner_id, "field": field, "amount": amount})
         if source_bucket and source_bucket in entry["source_paths"]:
             append_unique(entry["source_paths"][source_bucket], f"{domain}:{owner_id}:{field}")
-        if resource_id == "timber" and amount > 0:
-            warning = f"{domain} {owner_id} uses target resource id timber before adapter/save migration"
-            append_unique(entry["warnings"], warning)
-            add_economy_report_warning(report, warning)
         if resource_id not in registry_items and resource_id not in ECONOMY_STOCKPILE_RESOURCE_IDS and resource_id not in ECONOMY_NON_STOCKPILE_REWARD_IDS:
             warning = f"{domain} {owner_id} references unregistered resource id {resource_id}"
             append_unique(entry["warnings"], warning)
@@ -1292,13 +1281,48 @@ def finalize_economy_resource_availability(report: dict, registry_items: dict[st
             entry["availability"] = "registry_only"
 
 
+def economy_old_save_compatibility_summary(registry_items: dict[str, dict]) -> dict:
+    summary = {
+        "resource_schema_version_required": False,
+        "save_version_bump_required": False,
+        "live_resource_id": "wood",
+        "target_only_resource_ids": [],
+        "accepted_without_resource_schema_version": False,
+        "wood_preserved_in_old_save_fixture": False,
+        "fixture_ids": [],
+        "warnings": [],
+    }
+    fixture_path = ECONOMY_RESOURCE_STRICT_CASES_PATH
+    if not fixture_path.exists():
+        summary["warnings"].append(f"missing strict economy save fixture file: {fixture_path.relative_to(ROOT)}")
+        return summary
+    cases = load_json(fixture_path)
+    for payload in cases.get("valid", {}).get("save_payloads", []):
+        if not isinstance(payload, dict):
+            continue
+        payload_id = str(payload.get("id", "valid_save_payload"))
+        resources = payload.get("resources", {})
+        summary["fixture_ids"].append(payload_id)
+        if "resource_schema_version" not in payload:
+            summary["accepted_without_resource_schema_version"] = True
+        if isinstance(resources, dict):
+            if "wood" in resources and str("wood") in registry_items:
+                summary["wood_preserved_in_old_save_fixture"] = True
+    if not summary["accepted_without_resource_schema_version"]:
+        summary["warnings"].append("no valid old-save fixture omits resource_schema_version")
+    if not summary["wood_preserved_in_old_save_fixture"]:
+        summary["warnings"].append("no valid old-save fixture preserves wood")
+    return summary
+
+
 def build_economy_resource_report() -> dict:
     registry = load_economy_resource_registry()
     registry_items = economy_registry_items(registry)
+    old_save_compatibility = economy_old_save_compatibility_summary(registry_items)
     report = {
         "schema": ECONOMY_REPORT_SCHEMA,
         "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
-        "mode": "compatibility_report",
+        "mode": "registry_policy_report",
         "registry": {
             "resource_count": len(registry_items),
             "stockpile_resource_ids": sorted([resource_id for resource_id, item in registry_items.items() if bool(item.get("stockpile", False)) and str(item.get("canonical_status", "canonical")) != "alias_only"]),
@@ -1313,25 +1337,25 @@ def build_economy_resource_report() -> dict:
         "market_caps": {},
         "registry_policy": {
             "policy_id": ECONOMY_RESOURCE_REGISTRY_POLICY_ID,
-            "mode": "report_only_compatibility",
-            "live_stockpile_resource_ids": ["gold", "wood", "ore"],
-            "target_only_resource_ids": ["timber"],
+            "mode": "report_only_registry_policy",
+            "decision": "keep_wood_as_live_authored_and_save_id",
+            "live_stockpile_resource_ids": list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS),
+            "target_only_resource_ids": [],
             "non_stockpile_reward_ids": ["experience"],
-            "wood_timber_policy": "wood remains the live authored/save id; timber is target-only planning metadata until a save-aware adapter is selected",
+            "wood_policy": "wood is the canonical live authored/save id with no alternate target id or alias path",
             "production_content_migration": False,
             "runtime_adoption": "not_active",
             "save_rewrite": False,
             "save_version_bump": False,
             "rare_resource_activation": False,
         },
-        "compatibility_adapters": {"runtime_adoption": "not_active", "report_normalization": "display_only", "wood_live_id": "wood", "timber_target_id": "timber", "save_rewrite": False},
+        "compatibility_adapters": {"runtime_adoption": "not_needed", "report_normalization": "none", "wood_live_id": "wood", "target_resource_ids": [], "save_rewrite": False},
+        "old_save_compatibility": old_save_compatibility,
         "warnings": [],
         "errors": [],
     }
     for resource_id in ECONOMY_REPORT_RESOURCE_IDS:
         report["usage"][resource_id] = economy_report_resource_entry(resource_id, registry_items)
-    report["registry"]["alias_pairs"].append({"resource_id": "wood", "display_name": "Timber", "legacy_id": "wood", "target_id": "timber", "canonical_target_id": "timber", "status": "legacy_live_id", "warning": "wood remains the live id; timber is target display/canonical planning only", "decision_needed": "AcOrP must decide permanent wood display alias vs save-aware timber migration"})
-    add_economy_report_warning(report, "wood remains the live resource id and is reported as Timber pending AcOrP canonical-id decision")
 
     payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("factions", "heroes", "units", "towns", "buildings", "resource_sites", "scenarios", "campaigns")}
     factions = items_index(payloads["factions"])
@@ -1390,15 +1414,41 @@ def build_economy_resource_report() -> dict:
     report["market_caps"]["legacy_common_exchange"] = {"market_profile_id": "legacy_common_exchange", "source": "inferred_from_current_town_market_code", "buy_resources": ["wood", "ore"], "sell_resources": ["wood", "ore"], "buy_caps_present": False, "sell_caps_present": False, "refresh_cadence_present": False, "rare_resource_buying_enabled": False, "warnings": ["legacy market has no serialized weekly caps", "legacy market is common-resource only", "legacy market code is hardcoded to wood/ore"]}
     for warning in report["market_caps"]["legacy_common_exchange"]["warnings"]:
         add_economy_report_warning(report, warning)
-    report["registry"]["alias_pairs"][0]["production_occurrences"] = len(report["usage"].get("wood", {}).get("occurrences", []))
-    report["registry"]["alias_pairs"][0]["target_occurrences"] = len(report["usage"].get("timber", {}).get("occurrences", []))
-    if report["usage"]["timber"]["occurrences"]:
-        add_economy_report_warning(report, "production content uses timber before migration support is implemented")
     if report["usage"]["experience"]["occurrences"]:
         append_unique(report["usage"]["experience"]["warnings"], "experience is a non-stockpile progression reward and must stay outside normal markets")
     finalize_economy_resource_availability(report, registry_items)
     report["sources"] = {resource_id: {"resource_id": resource_id, "display_name": entry["display_name"], "stockpile": entry["stockpile"], "used_by": entry["used_by"], "source_paths": entry["source_paths"], "availability": entry["availability"], "warnings": entry["warnings"]} for resource_id, entry in sorted(report["usage"].items())}
     return report
+
+
+def validate_economy_wood_canonical_policy(errors: list[str]) -> None:
+    report = build_economy_resource_report()
+    policy = report.get("registry_policy", {})
+    adapters = report.get("compatibility_adapters", {})
+    old_save = report.get("old_save_compatibility", {})
+    alias_pairs = report.get("registry", {}).get("alias_pairs", [])
+    session_store_text = (ROOT / "scripts/core/SessionStateStore.gd").read_text(encoding="utf-8")
+    autoload_session_text = (ROOT / "scripts/autoload/SessionState.gd").read_text(encoding="utf-8")
+
+    ensure(str(policy.get("decision", "")) == "keep_wood_as_live_authored_and_save_id", errors, "Economy resource policy must keep wood as the live authored/save id")
+    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Economy resource policy must keep live stockpile ids as gold, wood, and ore")
+    ensure(policy.get("target_only_resource_ids", []) == [], errors, "Economy resource policy must not define target-only resource ids")
+    ensure(bool(policy.get("production_content_migration", True)) is False, errors, "Economy resource policy must not enable production content migration")
+    ensure(bool(policy.get("save_rewrite", True)) is False, errors, "Economy resource policy must not rewrite saves")
+    ensure(bool(policy.get("save_version_bump", True)) is False, errors, "Economy resource policy must not require a save-version bump")
+    ensure(bool(policy.get("rare_resource_activation", True)) is False, errors, "Economy resource policy must not activate rare resources")
+    ensure(str(adapters.get("runtime_adoption", "")) == "not_needed", errors, "Economy resource policy must not require a compatibility adapter")
+    ensure(adapters.get("target_resource_ids", []) == [], errors, "Economy resource policy must not expose target resource ids")
+    ensure(bool(adapters.get("save_rewrite", True)) is False, errors, "Economy compatibility adapter must not rewrite saves")
+    ensure(alias_pairs == [], errors, "Economy resource policy must not report resource alias pairs")
+    ensure(report.get("usage", {}).get("wood", {}).get("availability", "") == "available", errors, "Economy resource report must keep wood available")
+    ensure(report.get("usage", {}).get("experience", {}).get("availability", "") == "non_stockpile_reward", errors, "Economy compatibility report must keep experience outside stockpiles")
+    ensure(bool(old_save.get("resource_schema_version_required", True)) is False, errors, "Old-save resource compatibility must not require resource_schema_version")
+    ensure(bool(old_save.get("accepted_without_resource_schema_version", False)), errors, "Old-save resource fixture must prove saves without resource_schema_version are accepted")
+    ensure(bool(old_save.get("wood_preserved_in_old_save_fixture", False)), errors, "Old-save resource fixture must preserve wood")
+    ensure(old_save.get("target_only_resource_ids", []) == [], errors, "Old-save resource fixture must not report target-only resource ids")
+    ensure("const SAVE_VERSION := 9" in session_store_text, errors, "Wood canonical cleanup must preserve SessionStateStore SAVE_VERSION 9")
+    ensure("const SAVE_VERSION := 9" in autoload_session_text, errors, "Wood canonical cleanup must preserve autoload SessionState SAVE_VERSION 9")
 
 
 def print_economy_resource_report(report: dict) -> None:
@@ -1407,13 +1457,15 @@ def print_economy_resource_report(report: dict) -> None:
     print(f"- mode: {report['mode']}")
     print(f"- stockpile resources: {', '.join(report['registry']['stockpile_resource_ids'])}")
     print(f"- non-stockpile rewards: {', '.join(report['registry']['non_stockpile_reward_ids'])}")
-    for alias in report["registry"].get("alias_pairs", []):
-        print(f"- alias: {alias['legacy_id']} is live id, {alias['target_id']} is target; display={alias['display_name']}; occurrences={alias.get('production_occurrences', 0)}")
     policy = report.get("registry_policy", {})
     print("Registry policy:")
     print(f"- policy: {policy.get('policy_id', '')}; mode={policy.get('mode', '')}")
+    print(f"- decision: {policy.get('decision', '')}")
     print(f"- live ids: {', '.join(policy.get('live_stockpile_resource_ids', []))}; target-only ids: {', '.join(policy.get('target_only_resource_ids', []))}")
     print(f"- migration={policy.get('production_content_migration', False)}; save_version_bump={policy.get('save_version_bump', False)}; rare_activation={policy.get('rare_resource_activation', False)}")
+    old_save = report.get("old_save_compatibility", {})
+    print("Old-save compatibility:")
+    print(f"- resource_schema_version_required={old_save.get('resource_schema_version_required', True)}; accepted_without_schema={old_save.get('accepted_without_resource_schema_version', False)}; wood_preserved={old_save.get('wood_preserved_in_old_save_fixture', False)}")
     print("Resource usage:")
     for resource_id in sorted(report["usage"].keys()):
         entry = report["usage"][resource_id]
@@ -1458,23 +1510,28 @@ def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
         if resource_id == "experience" and bool(item.get("stockpile", True)):
             fail(errors, "Strict registry must keep experience as a non-stockpile reward")
         if resource_id == "wood":
-            ensure(str(item.get("canonical_status", "")) == "legacy_live_id", errors, "Strict registry must mark wood as the legacy_live_id")
-            ensure(str(item.get("canonical_target_id", "")) == "timber", errors, "Strict registry must report timber as wood's target id")
+            ensure(str(item.get("canonical_status", "")) == "canonical_live_id", errors, "Strict registry must mark wood as the canonical live id")
+            ensure("canonical_target_id" not in item, errors, "Strict registry must not define a target id for wood")
+            ensure("target_aliases" not in item or item.get("target_aliases", []) == [], errors, "Strict registry must not define target aliases for wood")
 
     def strict_resource_dict_errors(label: str, resources: object, stockpile_payload: bool = True) -> list[str]:
         local_errors: list[str] = []
         if not isinstance(resources, dict) or not resources:
             local_errors.append(f"{label} must define a non-empty resource dictionary")
             return local_errors
-        if detect_alias_collisions(resources):
-            local_errors.append(f"{label} contains positive wood and timber without a merge policy")
         for resource_id, amount in resources.items():
             rid = str(resource_id)
+            try:
+                parsed_amount = int(amount)
+            except (TypeError, ValueError):
+                parsed_amount = 0
             if rid not in registry_items:
                 local_errors.append(f"{label} uses unknown resource id {rid}")
-            if stockpile_payload and rid == "experience" and int(amount) > 0:
+            if stockpile_payload and rid == "experience" and parsed_amount > 0:
                 local_errors.append(f"{label} treats experience as a stockpile resource")
-            if int(amount) < 0:
+            if stockpile_payload and rid in ECONOMY_TARGET_ONLY_RESOURCE_IDS and parsed_amount > 0:
+                local_errors.append(f"{label} uses target-only resource id {rid} before a save-aware migration")
+            if parsed_amount < 0:
                 local_errors.append(f"{label} has negative amount for {rid}")
         return local_errors
 
@@ -8933,6 +8990,7 @@ def main() -> int:
     validate_live_client_harness(errors)
     validate_in_session_save_controls(errors)
     validate_six_faction_content_scaffold(errors)
+    validate_economy_wood_canonical_policy(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
         strict_fixture_errors, strict_fixture_warnings = validate_strict_economy_resource_fixtures()
@@ -9004,6 +9062,7 @@ def main() -> int:
     print("- the live routed-client harness now drives the real menu into overworld, owned-town orders, required encounter objectives, hostile-town assault, resolved outcome routing, outcome save/load review semantics, and post-outcome menu return artifacts")
     print("- active-play shells now use router-driven save controls, latest-save context, and safe return-or-resume flow without a save-version bump")
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
+    print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:

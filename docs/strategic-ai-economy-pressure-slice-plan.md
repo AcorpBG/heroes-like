@@ -28,7 +28,7 @@ Riverwatch proof facts to preserve as implementation targets:
 | --- | --- | --- |
 | `river_signal_post` | Persistent player-controlled site, `50 gold` claim reward, `20 gold` daily control income, vision/pressure support. | First AI should value it as an economy-denial and route-watch target, not as a generic pickup. |
 | `river_free_company` | Persistent player-controlled site, `80 gold`, `40 gold` daily income, immediate `River Guard` and `Ember Archer` joins, weekly recruit potential. | First AI should treat it as the highest-value Riverwatch economy/recruit denial target. |
-| `north_timber` | Common pickup changes `wood` from 4 to 6 and helps the Bowyer Lodge path. | AI scoring should know common pickups can solve build/recruit blockers, but the first implementation should not rewrite pickup behavior. |
+| `north_wood` | Common pickup changes `wood` from 4 to 6 and helps the Bowyer Lodge path. | AI scoring should know common pickups can solve build/recruit blockers, but the first implementation should not rewrite pickup behavior. |
 | `southern_ore` | Fight-gated ore branch adds `ore +2`, and Hollow Mire itself adds ore before the pickup. | AI should read ore branches as route-pressure evidence and future blocker-solving value. |
 | Ghoul Grove and Hollow Mire | Fights gate route, resource, and objective progress. | AI should not ignore route blockers when evaluating pressure; first slice can score adjacent/route-gated targets without neutral encounter migration. |
 | Riverwatch spend/recruit | Captures convert into `building_bowyer_lodge` and `unit_ember_archer` recruitment. | AI pressure should target sites that enable visible town power, not only direct town attacks. |
@@ -72,7 +72,7 @@ Priority target order for this slice:
 1. `river_free_company`: highest value because it combines daily gold, recruit denial, immediate recruit proof, and Riverwatch support.
 2. `river_signal_post`: second-highest because it combines daily gold, vision/route control, pressure support, and route-watch flavor.
 3. `southern_ore`: valuable only after route/fight context makes it relevant, and not above persistent player-controlled sites.
-4. `north_timber` and `eastern_cache`: opportunistic only; they should not distract from persistent captured sites once claimed by the player.
+4. `north_wood` and `eastern_cache`: opportunistic only; they should not distract from persistent captured sites once claimed by the player.
 5. `duskfen_bastion` / Riverwatch siege logic: remains the strategic front. The slice should not make AI economy denial so strong that the town objective disappears from pressure summaries.
 
 ## Proposed Scoring Fields
@@ -169,7 +169,7 @@ Recommended implementation-specific validation:
 - Confirm `river_free_company` outranks simple pickups once player-controlled.
 - Confirm `river_signal_post` outranks simple pickups once player-controlled.
 - Confirm `riverwatch_hold` siege pressure can still outrank economy denial when the scenario pressure state says town attack is the main threat.
-- Confirm no target score uses rare resources, `timber`, market caps, generated object metadata, or hidden omniscient state.
+- Confirm no target score uses rare resources, `wood`, market caps, generated object metadata, or hidden omniscient state.
 
 Manual gate checklist:
 
@@ -177,7 +177,7 @@ Manual gate checklist:
 - Let the enemy turn run after `river_signal_post` is player-controlled.
 - Record whether the Mireclaw summary or debug report names signal-yard pressure.
 - Let the enemy turn run after `river_free_company` is player-controlled.
-- Record whether a raid prefers the Free Company / Signal Post lane over `north_timber`, `eastern_cache`, or unrelated artifacts when no town/hero target should dominate.
+- Record whether a raid prefers the Free Company / Signal Post lane over `north_wood`, `eastern_cache`, or unrelated artifacts when no town/hero target should dominate.
 - Advance until a contesting raid arrives, or record that travel time prevents arrival within the short gate while target choice still passes.
 - Save/resume after target assignment and verify raid target, site control, enemy pressure, and summary remain coherent.
 
@@ -194,7 +194,7 @@ Failure criteria:
 
 - The AI still chases simple pickups or unrelated targets while ignoring player-owned signal-yard income without a town/hero reason.
 - The score cannot be explained from current state and content.
-- The implementation requires rare-resource activation, `timber` migration, market overhaul, pathing/body-tile adoption, renderer/editor/save migration, or broad scenario rebalance.
+- The implementation requires rare-resource activation, wood id change, market overhaul, pathing/body-tile adoption, renderer/editor/save migration, or broad scenario rebalance.
 - The player-facing surface becomes a text-heavy dashboard over the map.
 
 ## Non-Change Boundaries
@@ -203,7 +203,7 @@ The implementation slice following this plan must not include:
 
 - No production resource schema migration.
 - No `content/resources.json`.
-- No `wood` to `timber` canonical migration.
+- No wood id change.
 - No rare-resource activation.
 - No market-cap or exchange overhaul.
 - No runtime economy rule migration.

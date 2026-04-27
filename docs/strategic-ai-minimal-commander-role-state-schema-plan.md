@@ -8,7 +8,7 @@ Slice: `strategic-ai-minimal-commander-role-state-schema-planning-10184`.
 
 Decide the exact minimal commander-role state schema boundary before implementing `AI_COMMANDER_ROLE_STATE_REPORT`, fixture-only normalization, live commander-role behavior, save migration, or full AI hero task state.
 
-This slice is planning only. It does not implement schema, reports, tests, live behavior, production JSON edits, coefficient tuning, durable event logs, save migration, full AI hero task state, defense-specific durable state, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market-cap overhaul, or River Pass rebalance.
+This slice is planning only. It does not implement schema, reports, tests, live behavior, production JSON edits, coefficient tuning, durable event logs, save migration, full AI hero task state, defense-specific durable state, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market-cap overhaul, or River Pass rebalance.
 
 ## Inputs
 

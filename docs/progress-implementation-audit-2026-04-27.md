@@ -83,7 +83,7 @@ Implemented:
 - Current live stockpile economy is `gold`, `wood`, and `ore`.
 - River Pass economy proof passed for Riverwatch signal-yard flow.
 - Validator supports opt-in economy/resource report and strict fixtures.
-- Economy report currently shows stockpile resources `gold`, `ore`, `wood`; `timber` is registry-only alias target; 163 warnings and 0 errors.
+- Economy report currently shows stockpile resources `gold`, `ore`, `wood`; `wood` is registry-only alias target; 163 warnings and 0 errors.
 
 Partial:
 - Persistent site capture and market-cap concepts are report/compatibility warnings, not migrated systems.
@@ -91,7 +91,7 @@ Partial:
 
 Only planned/report-only:
 - `content/resources.json` or equivalent production registry.
-- `wood` to `timber` migration.
+- wood id change.
 - Rare-resource activation.
 - Market cap overhaul.
 - Multi-resource town/recruitment/building costs.
@@ -280,7 +280,7 @@ Pending/non-completed steps:
 
 6. Economy resource registry decision/report gate.
    Source: economy resource schema plans and economy report.
-   Targets: reconcile `wood`/`timber`, decide whether `content/resources.json` is the next additive production registry, and define one strict bundle. No rare-resource activation or market overhaul yet.
+   Targets: reconcile canonical `wood`, decide whether `content/resources.json` is the next additive production registry, and define one strict bundle. No rare-resource activation or market overhaul yet.
 
 7. Artifact schema planning before more artifact UI cues.
    Source: `docs/artifact-system-expansion-foundation.md`.

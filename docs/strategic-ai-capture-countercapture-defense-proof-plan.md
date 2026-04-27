@@ -68,7 +68,7 @@ Required cases:
    - Normalize overworld state and fog as existing focused reports do.
    - Stage `river_free_company` and `river_signal_post` as player-controlled persistent sites.
    - Run `EnemyAdventureRules.resource_pressure_report(...)` from `{x: 7, y: 1}` for `faction_mireclaw`.
-   - Expected ordering: `river_free_company` before `river_signal_post`; both before reachable simple pickups such as `north_timber` and `eastern_cache`.
+   - Expected ordering: `river_free_company` before `river_signal_post`; both before reachable simple pickups such as `north_wood` and `eastern_cache`.
    - Also run `EnemyAdventureRules.choose_target(...)` as a sanity check. It may still choose `riverwatch_hold`; that remains acceptable and should be recorded, not treated as failure.
 
 2. `mireclaw_free_company_assignment`
@@ -215,7 +215,7 @@ If triggered, the manual gate should use `river-pass` only:
 - Generated PNG import or runtime asset import.
 - Neutral encounter migration.
 - `content/resources.json`.
-- `wood` to `timber` migration.
+- wood id change.
 - Rare-resource activation.
 - Market-cap overhaul.
 - River Pass rebalance.

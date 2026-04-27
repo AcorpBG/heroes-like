@@ -8,7 +8,7 @@ Slice: `strategic-ai-commander-role-report-gate-review-10184`.
 
 This gate reviews the report-only `AI_COMMANDER_ROLE_STATE_REPORT` output before any commander-role schema writes, save migration, durable event logs, defense-specific durable state, coefficient tuning, full AI hero task state, or live commander-role behavior adoption.
 
-This review does not approve production JSON edits, behavior tuning, durable events, save migration, `commander_role_state` writes, live commander-role selection, full AI hero movement/task implementation, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, `wood` to `timber` migration, rare resources, market-cap overhaul, or River Pass rebalance.
+This review does not approve production JSON edits, behavior tuning, durable events, save migration, `commander_role_state` writes, live commander-role selection, full AI hero movement/task implementation, pathing/body-tile/approach adoption, renderer/editor changes, generated PNG import, neutral encounter migration, `content/resources.json`, wood id change, rare resources, market-cap overhaul, or River Pass rebalance.
 
 ## Focused Report Results
 

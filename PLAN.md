@@ -103,7 +103,7 @@ Docs-ready/report-only:
 
 Pending:
 - Decide and implement resource registry policy.
-- Resolve `wood`/`timber` compatibility.
+- Keep `wood` canonical with no alternate target id or alias path.
 - Stage rare-resource activation, market caps, and faction-biased costs only through explicit migration slices.
 
 Deferred:
@@ -392,7 +392,7 @@ sliceEvidence:
 
 completionCriteria:
 - Economy changes are implemented in live rules or tooling, not only described.
-- `wood`/`timber`, rare resources, market caps, and save compatibility have explicit decisions before production migration.
+- Canonical `wood`, rare resources, market caps, and save compatibility have explicit decisions before production migration.
 
 nonGoals:
 - No full multi-resource migration in a generic foundation slice.
@@ -794,20 +794,21 @@ implementationTargets:
 - resource registry helpers or explicit policy doc
 - validator/report fixtures
 
-### P2 Child: Economy Wood/Timber Compatibility Decision
+### P2 Child: Economy Wood Canonical Cleanup
 
-id: `economy-wood-timber-compatibility-decision-10184`
+id: `economy-wood-canonical-cleanup-10184`
 parentSliceId: `economy-resource-foundation-implementation-10184`
 phase: `phase-2-deep-production-foundation`
-purpose: Resolve the `wood`/`timber` compatibility path before broader resource migration.
+purpose: Correct the resource registry policy so `wood` is the only canonical wood resource id, with no alternate target id or alias path.
 
 sourceDocs:
 - `docs/economy-resource-schema-migration-plan.md`
 - `docs/economy-resource-additive-schema-validator-plan.md`
 
 implementationTargets:
-- compatibility adapter/report
-- docs or tests proving old ids remain safe
+- economy report policy
+- validator and strict fixtures proving wood remains canonical
+- docs/progress cleanup for resource-id terminology
 
 ### P2 Child: Economy Rare Resource Activation
 

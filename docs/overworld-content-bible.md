@@ -220,7 +220,7 @@ Purpose:
 
 Examples:
 - coin cache
-- timber wagon
+- wood wagon
 - ore crates
 - ration cart
 - salvage drift

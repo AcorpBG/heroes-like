@@ -8,7 +8,7 @@ Slice: `strategic-ai-commander-role-report-implementation-planning-10184`.
 
 Plan the implementation boundaries for a future `AI_COMMANDER_ROLE_STATE_REPORT` before adding report helpers, Godot report coverage, fixture-only state views, live commander-role behavior, save migration, or full AI hero task state.
 
-This slice is planning only. It does not implement report helpers/tests, change AI behavior, tune coefficients, edit production JSON, add durable event logs, migrate saves, add defense-specific durable state, add live commander-role behavior, write schema, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
+This slice is planning only. It does not implement report helpers/tests, change AI behavior, tune coefficients, edit production JSON, add durable event logs, migrate saves, add defense-specific durable state, add live commander-role behavior, write schema, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, or rebalance River Pass.
 
 ## Inputs
 

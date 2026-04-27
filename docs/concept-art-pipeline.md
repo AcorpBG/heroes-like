@@ -144,8 +144,8 @@ Faction brief inputs:
 
 | Faction | World role | Shapes and materials | Anti-generic note |
 | --- | --- | --- | --- |
-| Embercourt League | Civic river-law power of locks, roads, tolls, beacons, granaries, and oath courts | Rectangles, lock steps, bridge spans, pale stone, river timber, iron chains, red signal ceramics | Not a human kingdom, knightly castle, or holy order |
-| Mireclaw Covenant | Marsh sovereignty network of ferries, reed routes, shrine drums, wetland clans, and wounded-prey law | Low profiles, chain curves, reed clusters, wet timber, peat, bone, mudglass | Not orcs, goblins, swamp monsters, or tribal cliche |
+| Embercourt League | Civic river-law power of locks, roads, tolls, beacons, granaries, and oath courts | Rectangles, lock steps, bridge spans, pale stone, river wood, iron chains, red signal ceramics | Not a human kingdom, knightly castle, or holy order |
+| Mireclaw Covenant | Marsh sovereignty network of ferries, reed routes, shrine drums, wetland clans, and wounded-prey law | Low profiles, chain curves, reed clusters, wet wood, peat, bone, mudglass | Not orcs, goblins, swamp monsters, or tribal cliche |
 | Sunvault Compact | Solar calibration society rebuilding mirror order through relays, lenses, choirs, and crystal engineering | Facets, thin towers, terraces, pale stone, blue-violet crystal, mirror, gold inlay | Not angels, clerics, high elves, or generic holy light |
 | Thornwake Concord | Living orchard law and migratory root infrastructure that gives land political force | Branching silhouettes, root arches, graft bands, pale bark, dark leaves, amber fruit glass | Not elves, druids, forest guardians, or treants |
 | Brasshollow Combine | Furnace-contract industrial power of ore, debt, rails, repair, and machines | Plates, braces, rails, pipes, gantries, brass, iron, hot ceramic, slag glass | Not dwarves, generic constructs, or decorative steampunk |

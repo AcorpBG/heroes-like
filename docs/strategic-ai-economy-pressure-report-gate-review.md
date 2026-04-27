@@ -8,7 +8,7 @@ Slice: `strategic-ai-economy-pressure-report-gate-10184`.
 
 This gate reviews the first narrow River Pass strategic AI economy pressure implementation and its focused Godot report output.
 
-This review does not approve production JSON migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
+This review does not approve production JSON migration, `content/resources.json`, wood id change, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
 
 ## Validation Command
 
@@ -27,18 +27,18 @@ Case `signal_post_owned`, with `river_signal_post` set to player control:
 1. `river_free_company` - final priority `390`; reason `recruit denial, player-town support`.
 2. `river_signal_post` - final priority `363`; reason `denies 20 gold daily, route vision, player-town support`.
 3. `river_sanctum` - final priority `168`; reason `claims 100 experience`.
-4. `north_timber` - final priority `157`; reason `player-town support`.
+4. `north_wood` - final priority `157`; reason `player-town support`.
 5. `midway_shrine` - final priority `145`; reason `player-town support`.
 6. `eastern_cache`.
 
-Finding: the player-owned signal post outranks the simple pickup set present in the reachable report (`north_timber`, `eastern_cache`) and remains above other lower-value opportunity targets. `river_free_company` ranking above it is acceptable because it is the same signal-yard economy front and carries recruit denial plus player-town support value, not a simple pickup distraction.
+Finding: the player-owned signal post outranks the simple pickup set present in the reachable report (`north_wood`, `eastern_cache`) and remains above other lower-value opportunity targets. `river_free_company` ranking above it is acceptable because it is the same signal-yard economy front and carries recruit denial plus player-town support value, not a simple pickup distraction.
 
 Case `signal_post_and_free_company_owned`, with both signal-yard sites set to player control:
 
 1. `river_free_company` - final priority `466`; reason `denies 40 gold daily, recruit denial, player-town support`.
 2. `river_signal_post` - final priority `363`; reason `denies 20 gold daily, route vision, player-town support`.
 3. `river_sanctum` - final priority `168`; reason `claims 100 experience`.
-4. `north_timber` - final priority `157`; reason `player-town support`.
+4. `north_wood` - final priority `157`; reason `player-town support`.
 5. `midway_shrine` - final priority `145`; reason `player-town support`.
 6. `eastern_cache`.
 

@@ -40,21 +40,19 @@ Recommended registry item fields:
 ```json
 {
   "id": "wood",
-  "display_name": "Timber",
+  "display_name": "Wood",
   "category": "construction_staple",
   "market_tier": "common",
   "default_visible": true,
   "legacy_aliases": [],
-  "target_aliases": ["timber"],
-  "canonical_target_id": "timber",
-  "canonical_status": "legacy_live_id",
+  "canonical_status": "canonical_live_id",
   "faction_affinity": {
     "faction_embercourt": "primary",
     "faction_thornwake": "primary"
   },
   "ui_sort": 20,
-  "icon_hint_id": "resource_timber_placeholder",
-  "material_cue": "cut beams, road planks, rails, and timber yards",
+  "icon_hint_id": "resource_wood_placeholder",
+  "material_cue": "cut beams, road planks, rails, and wood yards",
   "stockpile": true,
   "report_only": true
 }
@@ -73,9 +71,7 @@ Minimum fields for strict fixtures:
 
 Optional first-pass fields:
 
-- `canonical_target_id`
 - `canonical_status`
-- `target_aliases`
 - `faction_affinity`
 - `icon_hint_id`
 - `material_cue`
@@ -85,8 +81,7 @@ Optional first-pass fields:
 Allowed `canonical_status` values:
 
 - `canonical`
-- `legacy_live_id`
-- `alias_only`
+- `canonical_live_id`
 - `non_stockpile_reward`
 
 The production registry can start as a test fixture or report fixture. Adding `content/resources.json` to production content should wait for explicit approval because this task forbids production JSON content changes.
@@ -101,19 +96,12 @@ Suggested JSON shape:
 {
   "schema": "economy_resource_report_v1",
   "generated_at": "iso8601",
-  "mode": "compatibility_report",
+  "mode": "registry_policy_report",
   "registry": {
     "resource_count": 4,
     "stockpile_resource_ids": ["gold", "wood", "ore"],
     "non_stockpile_reward_ids": ["experience"],
-    "alias_pairs": [
-      {
-        "legacy_id": "wood",
-        "target_id": "timber",
-        "status": "legacy_live_id",
-        "warning": "wood remains the live id; timber is target display/canonical planning only"
-      }
-    ],
+    "alias_pairs": [],
     "missing_metadata": []
   },
   "usage": {},
@@ -128,39 +116,35 @@ Suggested JSON shape:
 
 The text report should group findings in this order:
 
-1. Registry and alias summary.
+1. Registry summary.
 2. Resource usage by content domain.
 3. Source and availability matrix.
 4. Output cadence inference.
 5. Persistent-site capture warnings.
 6. Market cap and rare-resource access stance.
-7. Compatibility adapter notes.
+7. Resource policy notes.
 8. Strict fixture results.
 
-## Wood And Timber Alias Reporting
+## Wood Canonical Reporting
 
-The first implementation must report `wood`/`timber` explicitly, but must not rename production data.
+The first implementation must report `wood` explicitly and must not rename production data.
 
 Required behavior:
 
 - Treat `wood` as the live authored and save id.
-- Display/report `wood` as Timber where display names are available.
-- Treat `timber` as the target canonical id only in planning/fixture metadata until AcOrP chooses the final policy.
-- Warn if production content starts using `timber` before the adapter and save migration are implemented.
-- Warn, and in strict fixtures error, if both `wood` and `timber` appear in the same resource dictionary with positive amounts without an explicit merge rule.
+- Display/report `wood` as Wood where display names are available.
+- Treat `wood` as the canonical resource id with no target id or alias path.
 - Keep `experience` outside the stockpile registry and report it under non-stockpile reward usage.
 
-Suggested alias report item:
+Suggested policy report item:
 
 ```json
 {
   "resource_id": "wood",
-  "display_name": "Timber",
-  "canonical_target_id": "timber",
-  "live_status": "legacy_live_id",
+  "display_name": "Wood",
+  "canonical_status": "canonical_live_id",
   "production_occurrences": 0,
-  "target_occurrences": 0,
-  "decision_needed": "AcOrP must decide permanent wood display alias vs save-aware timber migration"
+  "target_resource_ids": []
 }
 ```
 
@@ -305,9 +289,7 @@ Strict fixtures should be tiny, non-production, and isolated under a test fixtur
 
 Fixture scope:
 
-- One registry fixture containing `gold`, `wood`, `ore`, `timber`, and `experience`.
-- One alias fixture with `wood` live id and `timber` target/canonical planning id.
-- One invalid alias fixture with both `wood` and `timber` positive in the same payload.
+- One registry fixture containing `gold`, `wood`, `ore`, and `experience`.
 - One pickup fixture with `instant_claim` reward.
 - One persistent economy site fixture with daily output and capture profile.
 - One persistent economy site fixture missing capture profile to prove warning behavior.
@@ -326,14 +308,13 @@ Compatibility mode:
 - Errors remain the existing validator errors: malformed JSON, broken references, negative resource amounts, unsupported legacy families, missing required legacy fields.
 - New economy findings are warnings or report notes.
 - Unknown resource ids should warn unless they appear in a strict fixture or declared migrated bundle.
-- `wood` usage should warn as an alias/canonical-decision note, not as a production error.
+- `wood` usage is valid production content.
 
 Strict fixture mode:
 
 - Missing required registry fields are errors.
 - Unknown stockpile resource ids are errors.
 - `experience` as a stockpile resource is an error.
-- Both `wood` and `timber` positive in the same dictionary is an error without an explicit merge policy.
 - Persistent fixture sites without cadence/capture metadata are errors unless the fixture is intentionally testing warnings.
 - Rare-resource buying through a normal market profile is an error.
 
@@ -355,23 +336,20 @@ Suggested CLI additions:
 
 Default validator output should either stay unchanged or print a compact warning count with a path to the report. Report generation must not rewrite content files.
 
-## Compatibility Adapters
+## Resource Registry Helpers
 
-The first implementation may add adapter scaffolding only if it is unused by runtime behavior or used only by reports/tests.
+The first implementation may add helper scaffolding only if it is unused by runtime behavior or used only by reports/tests.
 
 Required adapter functions, names to be chosen in code style:
 
-- Normalize a resource id for reports without mutating production payloads.
-- Get display name for a resource id, including `wood` as Timber.
+- Get display name for a resource id, including `wood` as Wood.
 - Identify stockpile resources versus non-stockpile rewards.
-- Detect alias collisions in one dictionary.
-- Merge resource dictionaries in report-only mode.
-- List canonical/live ids for warnings.
+- List canonical live ids for warnings.
 
 Boundaries:
 
-- Do not route live spend/add/market/save code through the adapter in this planning slice.
-- Runtime adoption of adapters is a later implementation slice after report scaffolding passes.
+- Do not route live spend/add/market/save code through new helpers in this planning slice.
+- Runtime adoption of helpers is a later implementation slice after report scaffolding passes.
 - No save payload should be rewritten by report adapters.
 
 ## Acceptance Tests
@@ -381,14 +359,14 @@ The first implementation slice should be accepted by tests that prove:
 - Existing `python3 tests/validate_repo.py` still passes on production content.
 - The economy resource report can be generated without changing files.
 - The report lists `gold`, `wood`, `ore`, and `experience` from current production content.
-- The report calls out `wood`/Timber alias status.
+- The report calls out canonical `wood` status.
 - The report classifies `experience` as non-stockpile.
 - The source matrix distinguishes costs, rewards, persistent site income, scenario starts, and script grants.
 - Persistent site cadence is inferred from `control_income` without requiring production metadata.
 - Repeatable service cadence is inferred from `repeatable` plus `visit_cooldown_days`.
 - Missing capture profiles are warnings in compatibility mode.
 - Missing market caps are warnings in compatibility mode.
-- Strict fixtures fail for unknown resources, bad alias collisions, missing required registry metadata, and rare-resource normal-market buying.
+- Strict fixtures fail for unknown resources, negative amounts, missing required registry metadata, and rare-resource normal-market buying.
 - Strict fixtures pass for a valid pickup, persistent site, repeatable service, capped market profile, faction preference profile, and old-save resource payload.
 
 ## Rollback Boundaries
@@ -409,7 +387,7 @@ If warnings are too noisy, lower report verbosity or scope before promoting any 
 This contract explicitly forbids:
 
 - Production JSON migration in `content/`.
-- Resource id migration from `wood` to `timber`.
+- Resource id migration for `wood`.
 - Market/runtime behavior changes.
 - Save schema migration or save rewrite.
 - Rare-resource economy activation in production costs, rewards, markets, AI, or starts.
@@ -424,7 +402,7 @@ This contract explicitly forbids:
 
 AcOrP should review before implementation:
 
-- Whether `wood` remains permanent internal id with Timber display text or migrates later to canonical `timber`.
+- Confirm that `wood` remains the permanent internal id and display concept.
 - Whether the first registry is test/report-only or should later become `content/resources.json`.
 - Whether default validator output may print warning counts or report mode should be opt-in only.
 - Whether `experience` remains outside stockpile registry as planned.
@@ -435,5 +413,5 @@ AcOrP should review before implementation:
 
 - The first implementation contract is narrow, additive, and report-first.
 - Exact optional resource registry fields and warning/report shapes are defined.
-- `wood`/`timber`, source availability, cadence inference, capture warnings, market caps, fixture scope, validation levels, CLI expectations, compatibility adapters, acceptance tests, rollback, and hard non-changes are covered.
+- Canonical `wood`, source availability, cadence inference, capture warnings, market caps, fixture scope, validation levels, CLI expectations, resource registry helpers, acceptance tests, rollback, and hard non-changes are covered.
 - The next slice can implement validator/report scaffolding without touching production content JSON or runtime economy behavior.

@@ -199,7 +199,7 @@ func _run() -> void:
 		return
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
-	if not _exercise_object_placement(shell, "resource", "site_timber_wagon", Vector2i(5, 4), "has_resource"):
+	if not _exercise_object_placement(shell, "resource", "site_wood_wagon", Vector2i(5, 4), "has_resource"):
 		return
 	var artifact_move_seed: Dictionary = shell.call("validation_remove_object", 23, 5, "artifact")
 	if not bool(artifact_move_seed.get("ok", false)):
@@ -1866,7 +1866,7 @@ func _assert_selected_tile_restore(shell) -> bool:
 	if not bool(resource_move.get("ok", false)):
 		_fail("Map editor smoke: could not move authored resource before restore: %s." % resource_move)
 		return false
-	var source_blocker: Dictionary = shell.call("validation_place_object", 23, 8, "resource", "site_timber_wagon")
+	var source_blocker: Dictionary = shell.call("validation_place_object", 23, 8, "resource", "site_wood_wagon")
 	if not bool(source_blocker.get("ok", false)):
 		_fail("Map editor smoke: could not place a source-tile blocker before restore: %s." % source_blocker)
 		return false
@@ -1991,7 +1991,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 	if not bool(palette_family.get("ok", false)):
 		_fail("Map editor smoke: could not select resource object family before taxonomy check: %s." % palette_family)
 		return false
-	var palette_result: Dictionary = shell.call("validation_select_object_content", "site_timber_wagon")
+	var palette_result: Dictionary = shell.call("validation_select_object_content", "site_wood_wagon")
 	var palette_taxonomy: Dictionary = palette_result.get("selected_object_taxonomy", {})
 	var palette_guidance: Dictionary = palette_result.get("selected_object_guidance", {})
 	if (
@@ -1999,7 +1999,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		or String(palette_taxonomy.get("primary_class", "")) != "pickup"
 		or String(palette_taxonomy.get("cadence", "")) != "one_time"
 		or String(palette_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
-		or String(palette_taxonomy.get("resource_site_id", "")) != "site_timber_wagon"
+		or String(palette_taxonomy.get("resource_site_id", "")) != "site_wood_wagon"
 		or "build_resource" not in palette_taxonomy.get("secondary_tags", [])
 	):
 		_fail("Map editor smoke: object palette did not expose resource-site taxonomy metadata: %s." % palette_result)
@@ -2010,7 +2010,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		or String(palette_guidance.get("density_target", "")) != "4-7 pickups/rewards per 16x16"
 		or not bool(palette_guidance.get("role_flags", {}).get("economy", false))
 		or not bool(palette_guidance.get("role_flags", {}).get("reward", false))
-		or String(palette_guidance.get("content_link", "")).find("site_timber_wagon") < 0
+		or String(palette_guidance.get("content_link", "")).find("site_wood_wagon") < 0
 	):
 		_fail("Map editor smoke: object palette did not expose practical placement/density guidance for resource rewards: %s." % palette_result)
 		return false
@@ -2023,7 +2023,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		String(resource_taxonomy.get("primary_class", "")) != "pickup"
 		or String(resource_taxonomy.get("cadence", "")) != "one_time"
 		or String(resource_taxonomy.get("passability_class", "")) != "passable_visit_on_enter"
-		or String(resource_taxonomy.get("map_object_id", "")) != "object_timber_wagon"
+		or String(resource_taxonomy.get("map_object_id", "")) != "object_wood_wagon"
 		or String(resource_detail.get("taxonomy_summary", "")).find("class Pickup") < 0
 	):
 		_fail("Map editor smoke: resource selection did not expose linked object taxonomy detail: detail=%s result=%s." % [resource_detail, resource_result])
@@ -2036,7 +2036,7 @@ func _assert_object_taxonomy_surfaces(shell) -> bool:
 		_fail("Map editor smoke: resource selection did not expose local placement-density guidance: detail=%s result=%s." % [resource_detail, resource_result])
 		return false
 	var resource_text := String(resource_result.get("tile_inspection", {}).get("text", ""))
-	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_timber_wagon | Site site_timber_wagon") < 0 or resource_text.find("Place: Resource reward pacing | Density 4-7 pickups/rewards per 16x16") < 0:
+	if resource_text.find("Taxonomy: class Pickup") < 0 or resource_text.find("Link: Object object_wood_wagon | Site site_wood_wagon") < 0 or resource_text.find("Place: Resource reward pacing | Density 4-7 pickups/rewards per 16x16") < 0:
 		_fail("Map editor smoke: tile text did not include compact resource taxonomy/link lines: %s." % resource_text)
 		return false
 	if resource_text.find("Control: Uncollected; one visit can claim it.") < 0 or resource_text.find("Economy: one-time 150 gold, 2 wood") < 0:
@@ -2200,7 +2200,7 @@ func _assert_object_authoring_dependency_surfaces(shell) -> bool:
 func _assert_object_placement_preview_surfaces(shell) -> bool:
 	var before_snapshot: Dictionary = shell.call("validation_snapshot")
 	var before_count := int(before_snapshot.get("placement_count", 0))
-	var preview_result: Dictionary = shell.call("validation_preview_object_placement", 5, 4, "resource", "site_timber_wagon")
+	var preview_result: Dictionary = shell.call("validation_preview_object_placement", 5, 4, "resource", "site_wood_wagon")
 	var preview: Dictionary = preview_result.get("selected_object_placement_preview", {})
 	var preview_text := String(preview.get("text", ""))
 	var palette_text := String(preview_result.get("selected_object_palette_text", ""))
@@ -2228,11 +2228,11 @@ func _assert_object_placement_preview_surfaces(shell) -> bool:
 		if palette_text.find(expected) < 0:
 			_fail("Map editor smoke: visible object palette text missed placement preview '%s': %s." % [expected, palette_text])
 			return false
-	if not _assert_editor_acceptance_cue(preview_result, "placement_preview", ["Cue:", "Click 5,4", "site_timber_wagon", "then"]):
+	if not _assert_editor_acceptance_cue(preview_result, "placement_preview", ["Cue:", "Click 5,4", "site_wood_wagon", "then"]):
 		return false
-	if not _assert_editor_object_preview_check(preview_result, true, ["Object preview check:", "Resource", "Timber Wagon", "5,4", "ready", "empty target", "Play Copy", "working copy"]):
+	if not _assert_editor_object_preview_check(preview_result, true, ["Object preview check:", "Resource", "Wood Wagon", "5,4", "ready", "empty target", "Play Copy", "working copy"]):
 		return false
-	if not _assert_editor_placement_action_cue(preview_result, true, ["Placement action:", "Resource", "Timber Wagon", "5,4", "ready", "Play Copy", "working copy"]):
+	if not _assert_editor_placement_action_cue(preview_result, true, ["Placement action:", "Resource", "Wood Wagon", "5,4", "ready", "Play Copy", "working copy"]):
 		return false
 
 	var encounter_preview_result: Dictionary = shell.call("validation_preview_object_placement", 7, 4, "encounter", "encounter_mire_raid")
@@ -3195,7 +3195,7 @@ func _assert_object_move_edits(shell) -> bool:
 		"resource",
 		Vector2i(2, 6),
 		Vector2i(3, 6),
-		"north_snow_timber",
+		"north_snow_wood",
 		"collected",
 		true
 	):
@@ -3238,7 +3238,7 @@ func _assert_object_duplicate_edits(shell) -> bool:
 		"resource",
 		Vector2i(3, 6),
 		Vector2i(4, 6),
-		"north_snow_timber",
+		"north_snow_wood",
 		"collected",
 		true
 	):
@@ -3280,7 +3280,7 @@ func _assert_object_retheme_edits(shell) -> bool:
 		shell,
 		"resource",
 		Vector2i(3, 6),
-		"north_snow_timber",
+		"north_snow_wood",
 		"site_free_company_yard",
 		"collected",
 		true
@@ -3638,19 +3638,19 @@ func _assert_active_session_property_edits(session) -> bool:
 	if _placement_position(session, "towns", "editor_duplicate_town_ninefold_embercourt_survey_camp_25_26") != Vector2i(25, 26):
 		_fail("Map editor smoke: Play Copy did not use the duplicated town position.")
 		return false
-	if not _resource_collected(session, "north_snow_timber"):
+	if not _resource_collected(session, "north_snow_wood"):
 		_fail("Map editor smoke: Play Copy did not use the edited resource collected state.")
 		return false
-	if _placement_content_id(session, "resource_nodes", "north_snow_timber", "site_id") != "site_free_company_yard":
+	if _placement_content_id(session, "resource_nodes", "north_snow_wood", "site_id") != "site_free_company_yard":
 		_fail("Map editor smoke: Play Copy did not use the rethemed resource content id.")
 		return false
-	if _placement_position(session, "resource_nodes", "north_snow_timber") != Vector2i(3, 6):
+	if _placement_position(session, "resource_nodes", "north_snow_wood") != Vector2i(3, 6):
 		_fail("Map editor smoke: Play Copy did not use the moved resource position.")
 		return false
-	if not _resource_collected(session, "editor_duplicate_resource_north_snow_timber_4_6"):
+	if not _resource_collected(session, "editor_duplicate_resource_north_snow_wood_4_6"):
 		_fail("Map editor smoke: Play Copy did not preserve the duplicated resource collected state.")
 		return false
-	if _placement_position(session, "resource_nodes", "editor_duplicate_resource_north_snow_timber_4_6") != Vector2i(4, 6):
+	if _placement_position(session, "resource_nodes", "editor_duplicate_resource_north_snow_wood_4_6") != Vector2i(4, 6):
 		_fail("Map editor smoke: Play Copy did not use the duplicated resource position.")
 		return false
 	if not _artifact_collected(session, "confluence_quarry_tally_rod"):
@@ -3706,7 +3706,7 @@ func _assert_returned_editor_property_edits(returned_editor) -> bool:
 		return false
 	var duplicate_resource_result: Dictionary = returned_editor.call("validation_select_tile", 4, 6)
 	var duplicate_resource_detail := _object_detail_for_family(duplicate_resource_result.get("tile_inspection", {}), "resource")
-	if String(duplicate_resource_detail.get("placement_id", "")) != "editor_duplicate_resource_north_snow_timber_4_6" or not bool(duplicate_resource_detail.get("collected", false)):
+	if String(duplicate_resource_detail.get("placement_id", "")) != "editor_duplicate_resource_north_snow_wood_4_6" or not bool(duplicate_resource_detail.get("collected", false)):
 		_fail("Map editor smoke: returned editor lost the duplicated resource state: %s." % duplicate_resource_result)
 		return false
 	var artifact_result: Dictionary = returned_editor.call("validation_select_tile", 10, 45)

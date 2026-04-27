@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-wood-timber-compatibility-decision-10184",
-  "currentSliceTitle": "Economy Wood/Timber Compatibility Decision",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.3 second child in progress: inspect prior evidence first, resolve wood/timber compatibility, preserve old ids and save safety unless explicitly proven safe.",
+  "currentSliceId": "economy-rare-resource-activation-10184",
+  "currentSliceTitle": "Economy Rare Resource Activation",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "P2.3 rare-resource activation is next after completing the wood canonical cleanup. Do not activate rare resources without explicit rules, UI, content, and save compatibility gates.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T13:26:32Z",
+  "updatedAt": "2026-04-27T13:31:45Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -208,12 +208,12 @@
         "optional resource registry only by sub-slice",
         "town cost/recruitment/market behavior only by explicit migration sub-slice"
       ],
-      "evidence": "Current live economy uses gold, wood, and ore, and a narrow River Pass signal-yard proof exists. Full resource registry, wood/timber decision, rare-resource activation, market caps, and faction-biased costs remain pending.",
-      "notes": "P2.3 selected after P2.2 curation reached paused asset-ingestion boundary; process P2.3 children in order before later Phase 2 parents",
+      "evidence": "Current live economy uses gold, wood, and ore, and a narrow River Pass signal-yard proof exists. The first registry policy and wood canonical cleanup are implemented as report/validator proof. Rare-resource activation, market caps, faction-biased costs, and capture-income expansion remain pending.",
+      "notes": "P2.3 selected after P2.2 curation reached paused asset-ingestion boundary; process remaining P2.3 children in order before later Phase 2 parents",
       "sliceType": "parent",
       "childSliceIds": [
         "economy-resource-registry-policy-10184",
-        "economy-wood-timber-compatibility-decision-10184",
+        "economy-wood-canonical-cleanup-10184",
         "economy-rare-resource-activation-10184",
         "economy-market-faction-costs-10184",
         "economy-capture-income-loop-expansion-10184"
@@ -223,12 +223,14 @@
         "economy-docs"
       ],
       "completedImplementationEvidenceIds": [
-        "economy-resource-implementation-history"
+        "economy-resource-implementation-history",
+        "economy-resource-registry-policy-10184",
+        "economy-wood-canonical-cleanup-10184"
       ],
       "reportOnlyEvidenceIds": [
         "economy-resource-reports"
       ],
-      "updatedAt": "2026-04-27T13:21:32Z",
+      "updatedAt": "2026-04-27T13:31:45Z",
       "startedAt": "2026-04-27T13:21:32Z"
     },
     {
@@ -761,25 +763,27 @@
       ],
       "updatedAt": "2026-04-27T13:23:40Z",
       "startedAt": "2026-04-27T13:21:32Z",
-      "notes": "Completed P2.3 first child: executable economy/resource report now exposes live_id_compatibility_v1 registry policy; strict fixtures validate wood live id, timber target-only alias, experience non-stockpile handling, cadence/capture/market warnings, and old-save wood preservation. No production content migration, runtime adoption, SAVE_VERSION bump, rare-resource activation, or market overhaul.",
+      "notes": "Completed P2.3 first child: executable economy/resource report now exposes wood_canonical_v1 registry policy; strict fixtures validate gold, wood, ore, experience non-stockpile handling, cadence/capture/market warnings, and old-save wood preservation. No production content migration, runtime adoption, SAVE_VERSION bump, rare-resource activation, or market overhaul.",
       "completedAt": "2026-04-27T13:23:40Z"
     },
     {
-      "id": "economy-wood-timber-compatibility-decision-10184",
-      "title": "Economy Wood/Timber Compatibility Decision",
+      "id": "economy-wood-canonical-cleanup-10184",
+      "title": "Economy Wood Canonical Cleanup",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
-      "purpose": "Resolve the `wood`/`timber` compatibility path before broader resource migration.",
+      "purpose": "Correct the resource registry policy so `wood` is the only canonical wood resource id, with no alternate target id or alias path.",
       "sourceDocs": [
         "docs/economy-resource-schema-migration-plan.md",
-        "docs/economy-resource-additive-schema-validator-plan.md"
+        "docs/economy-resource-additive-schema-validator-plan.md",
+        "docs/economy-wood-canonical-cleanup-report.md"
       ],
       "implementationTargets": [
-        "compatibility adapter/report",
-        "docs or tests proving old ids remain safe"
+        "economy report policy",
+        "validator and strict fixtures proving wood remains canonical",
+        "docs/progress cleanup for resource-id terminology"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
@@ -791,9 +795,10 @@
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T13:26:32Z",
+      "updatedAt": "2026-04-27T13:31:45Z",
       "startedAt": "2026-04-27T13:26:32Z",
-      "notes": "worker started for P2.3 second child: inspect prior economy/resource evidence first, then resolve wood/timber compatibility with executable proof and no unsafe migration"
+      "notes": "Completed P2.3 second child: wood remains the live authored/runtime/save id and the canonical display concept. Default validation now asserts no target-only resource ids or alias pairs, positive wood occurrences, no production migration, no compatibility adapter adoption, no save rewrite, no SAVE_VERSION bump, and no rare-resource activation. The economy report exposes old-save compatibility proof, and strict fixtures keep wood as a valid stockpile id while rejecting unknown resources, negative amounts, stockpiled experience, missing registry metadata, and normal-market rare-resource buying. No production JSON migration, market overhaul, faction-cost rebalance, or save migration.",
+      "completedAt": "2026-04-27T13:31:45Z"
     },
     {
       "id": "economy-rare-resource-activation-10184",
@@ -2770,19 +2775,20 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "economy-wood-timber-compatibility-decision-10184",
-      "title": "Economy Wood/Timber Compatibility Decision",
-      "status": "in_progress",
+      "id": "economy-rare-resource-activation-10184",
+      "title": "Economy Rare Resource Activation",
+      "status": "pending",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/economy-resource-schema-migration-plan.md",
-        "docs/economy-resource-additive-schema-validator-plan.md"
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-resource-schema-migration-plan.md"
       ],
       "implementationTargets": [
-        "compatibility adapter/report",
-        "docs or tests proving old ids remain safe"
+        "economy rules",
+        "resource-site content",
+        "UI/report validation for selected resources"
       ],
-      "notes": "worker started for P2.3 second child: inspect prior economy/resource evidence first, then resolve wood/timber compatibility with executable proof and no unsafe migration",
+      "notes": "Next P2.3 child after wood canonical cleanup. Do not activate rare resources without explicit rules, UI, content, and save compatibility gates; no broad market/cost migration.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.3 Economy Resource Foundation Implementation"

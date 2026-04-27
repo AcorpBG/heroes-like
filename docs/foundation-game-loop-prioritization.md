@@ -73,7 +73,7 @@ Scope:
 Non-change boundaries:
 
 - No production JSON migration.
-- No new resource registry or `wood` to `timber` canonical migration.
+- No new resource registry or wood id change.
 - No rare-resource activation.
 - No runtime economy, market, AI, pathing, renderer, editor, save, or asset changes.
 - No validator/test implementation.

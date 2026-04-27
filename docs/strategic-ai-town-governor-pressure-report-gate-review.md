@@ -8,7 +8,7 @@ Slice: `strategic-ai-town-governor-pressure-report-gate-10184`.
 
 This gate reviews the report-only town governor pressure surfacing implementation for existing enemy town build, recruit, garrison, raid reinforcement, and commander rebuild choices.
 
-This review does not approve gameplay/code/content changes, production JSON migration, a durable AI event log, save migration, `content/resources.json`, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, behavior tuning, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
+This review does not approve gameplay/code/content changes, production JSON migration, a durable AI event log, save migration, `content/resources.json`, wood id change, rare-resource activation, market-cap overhaul, full AI hero task state, broad strategic AI rewrite, behavior tuning, pathing/body-tile/approach adoption, renderer/editor/save behavior changes, generated PNG import, neutral encounter migration, or River Pass rebalance.
 
 ## Focused Report Results
 

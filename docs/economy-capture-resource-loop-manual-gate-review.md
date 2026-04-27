@@ -19,7 +19,7 @@ Primary report: `docs/economy-capture-resource-loop-live-proof-report.md`.
 The report records these pass points:
 
 - Starting `river-pass` economy uses current stockpile ids: `1500 gold`, `4 wood`, `3 ore`.
-- `north_timber` changes resources to `1650 gold`, `6 wood`, `3 ore`, confirming the current live `wood` id remains active while player-facing text can still say Timber.
+- `north_wood` changes resources to `1650 gold`, `6 wood`, `3 ore`, confirming the current live `wood` id remains active while player-facing text can still say Wood.
 - `river_signal_post` grants `50 gold`, becomes collected by `player`, and contributes persistent income. The next day includes `Field sites yield 20 gold`.
 - `river_free_company` grants `80 gold`, joins `+3 Ember Archer` and `+5 River Guard`, becomes collected by `player`, and combines with the signal post for `Field sites yield 60 gold` on the following day.
 - `river_pass_ghoul_grove` and `river_pass_hollow_mire` resolve route and objective state, add resources, and affect scenario progress. The battle outcomes were forced for proof inspection, so this is economy-state evidence, not a tactical balance claim.
@@ -38,7 +38,7 @@ Known caveats accepted for this gate:
 - The proof does not claim a fresh tactical difficulty pass.
 - The proof does not finish the whole scenario; it records that the route remains plausibly completable.
 - Weekly recruit behavior was not required because daily capture income, immediate recruit joins, town build, recruitment, and save/resume already prove the selected loop.
-- Current `wood` remains the live resource id; `timber` canonical migration remains deferred.
+- Current `wood` remains the live resource id; `wood` canonical migration remains deferred.
 - Persistent income is currently gold-only for this path; broader multi-resource economy work remains future staged migration.
 
 ## Follow-Up Decision
@@ -50,7 +50,7 @@ Reason: economy proof data now exists for the same map-control surfaces the futu
 Keep these boundaries in place for the next slice:
 
 - No production JSON migration.
-- No new resource registry or `wood` to `timber` migration.
+- No new resource registry or wood id change.
 - No rare-resource activation.
 - No market overhaul.
 - No runtime economy/pathing/editor/renderer/save behavior changes.

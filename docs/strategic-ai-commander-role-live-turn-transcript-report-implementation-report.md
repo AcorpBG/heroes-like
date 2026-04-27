@@ -8,7 +8,7 @@ Slice: `strategic-ai-commander-role-live-turn-transcript-report-implementation-1
 
 Implement the planned `AI_COMMANDER_ROLE_TURN_TRANSCRIPT_REPORT` as a behavior-neutral transcript over existing enemy-turn execution.
 
-This slice does not adopt live commander-role behavior, write `commander_role_state`, migrate saves, add durable event logs, tune coefficients, edit production JSON, add defense-specific durable state, implement full AI hero tasks, change pathing/body-tile/approach behavior, change UI/renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, or rebalance River Pass.
+This slice does not adopt live commander-role behavior, write `commander_role_state`, migrate saves, add durable event logs, tune coefficients, edit production JSON, add defense-specific durable state, implement full AI hero tasks, change pathing/body-tile/approach behavior, change UI/renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, or rebalance River Pass.
 
 ## Delivered
 

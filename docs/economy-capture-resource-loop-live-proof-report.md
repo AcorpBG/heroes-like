@@ -8,7 +8,7 @@ Slice: `economy-capture-resource-loop-live-slice-10184`.
 
 This report covers only the selected Riverwatch signal-yard proof path in `river-pass`:
 
-- `north_timber`
+- `north_wood`
 - `river_signal_post`
 - `river_free_company`
 - `river_pass_ghoul_grove`
@@ -18,13 +18,13 @@ This report covers only the selected Riverwatch signal-yard proof path in `river
 - Riverwatch spend/recruit choice
 - save/resume preservation
 
-No production content JSON, runtime code, schema, validator, save migration, pathing, renderer, editor, AI, resource registry, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, generated asset, or broad balance change was needed.
+No production content JSON, runtime code, schema, validator, save migration, pathing, renderer, editor, AI, resource registry, wood id change, rare-resource activation, market-cap overhaul, generated asset, or broad balance change was needed.
 
 ## Proof Method
 
 The proof used current authored data and current Godot core systems. A temporary local Godot scene/script under `.artifacts/` exercised the exact path headlessly, then was removed before final changes. The generated observation JSON was written to `/tmp/heroes-economy-capture-proof.json` and checked with `python3 -m json.tool`.
 
-The existing routed live validation harness was not used for this exact path because no existing flow deliberately visits `north_timber`, `river_signal_post`, `river_pass_hollow_mire`, `southern_ore`, optional `eastern_cache`, then makes the post-capture Riverwatch spend/recruit choice. The closest existing routed flows cover broader River Pass routing, town save/resume, `river_free_company`, encounters, and outcome paths, but not this selected economy proof sequence. Adding a new harness flow would be test/harness implementation and was outside the strict first-preference scope because the current rules/data already prove the loop.
+The existing routed live validation harness was not used for this exact path because no existing flow deliberately visits `north_wood`, `river_signal_post`, `river_pass_hollow_mire`, `southern_ore`, optional `eastern_cache`, then makes the post-capture Riverwatch spend/recruit choice. The closest existing routed flows cover broader River Pass routing, town save/resume, `river_free_company`, encounters, and outcome paths, but not this selected economy proof sequence. Adding a new harness flow would be test/harness implementation and was outside the strict first-preference scope because the current rules/data already prove the loop.
 
 Battle observations below force victory through current battle resolution rules to inspect economy state after the selected clears. This proves the economy path after the fights are cleared; it does not make a fresh tactical balance claim.
 
@@ -63,13 +63,13 @@ Starting Riverwatch orders:
 
 ## Path Observations
 
-`north_timber` / `site_timber_wagon`:
+`north_wood` / `site_wood_wagon`:
 
 - Result: passed.
-- Message: `Claimed Timber Wagon. Stores 150 gold, 2 wood.`
+- Message: `Claimed Wood Wagon. Stores 150 gold, 2 wood.`
 - Resources changed from `1500 gold, 4 wood, 3 ore` to `1650 gold, 6 wood, 3 ore`.
 - Site state became `collected: true`, `collected_by_faction_id: player`, `collected_day: 1`.
-- Observation: current live resource id is still `wood`, while player-facing text names Timber. No `timber` migration is needed for this proof.
+- Observation: current live resource id is still `wood`, while player-facing text names Wood. No wood id change is needed for this proof.
 
 `river_signal_post` / `site_ember_signal_post`:
 
@@ -130,7 +130,7 @@ Optional `eastern_cache` / `site_waystone_cache`:
 
 ## Town Spend And Recruit Choice
 
-Before spending, Riverwatch had `4500 gold`, `7 wood`, and `8 ore` after the optional cache path. The selected spend was `building_bowyer_lodge` because it demonstrates that the `north_timber` wood pickup and captured income can convert into a military unlock without new schema work.
+Before spending, Riverwatch had `4500 gold`, `7 wood`, and `8 ore` after the optional cache path. The selected spend was `building_bowyer_lodge` because it demonstrates that the `north_wood` wood pickup and captured income can convert into a military unlock without new schema work.
 
 Build result:
 
@@ -171,7 +171,7 @@ Resume result:
 - Restored resources: `2820 gold`, `5 wood`, `8 ore`.
 - Restored Riverwatch state preserved `building_bowyer_lodge`, available recruits, and owner.
 - Restored army preserved `14 Ember Archer` and `15 River Guard`.
-- Restored site states preserved `north_timber`, `river_signal_post`, `river_free_company`, `southern_ore`, and `eastern_cache` as collected by player.
+- Restored site states preserved `north_wood`, `river_signal_post`, `river_free_company`, `southern_ore`, and `eastern_cache` as collected by player.
 - Restored resolved encounters preserved `river_pass_ghoul_grove` and `river_pass_hollow_mire`.
 
 Observation: current save/resume preserves the selected economy path state.
@@ -196,7 +196,7 @@ Viability finding: the economy path leaves the scenario plausibly completable an
 The proof passes for the selected minimal economy capture/resource loop:
 
 - Player starts with readable `gold`/`wood`/`ore` resources.
-- `north_timber` affects the current wood/Timber stockpile.
+- `north_wood` affects the current wood stockpile.
 - `river_signal_post` and `river_free_company` are persistent captures with observable day-advance income.
 - `river_free_company` adds immediate field recruits.
 - Ghoul Grove and Hollow Mire choices affect route state, flags, resources, and scenario progress.

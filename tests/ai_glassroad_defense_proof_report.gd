@@ -8,7 +8,7 @@ const PRIMARY_SITE := "glassroad_watch_relay"
 const COMPANION_SITE := "glassroad_starlens"
 const COMPANION_ENCOUNTER := "glassroad_beacon_wardens"
 const ORIGIN := {"x": 9, "y": 1}
-const SIMPLE_PICKUPS := ["glassroad_timber", "glassroad_ore", "market_cache"]
+const SIMPLE_PICKUPS := ["glassroad_wood", "glassroad_ore", "market_cache"]
 const TREASURY := {"gold": 7200, "wood": 12, "ore": 12}
 const SCORE_KEYS := [
 	"base_value",

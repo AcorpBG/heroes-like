@@ -8,7 +8,7 @@ Slice: `strategic-ai-hero-task-state-adoption-sequencing-planning-10184`.
 
 Decide the next strategic AI hero task-state adoption sequence after the passed `AI_HERO_TASK_STATE_BOUNDARY_REPORT` gate.
 
-This slice is planning only. It does not implement reports/tests, write `hero_task_state`, bump `SAVE_VERSION`, migrate saves, add durable event logs, add defense-specific durable state, tune coefficients, edit production JSON, implement full AI hero task state, adopt live commander-role behavior, adopt live AI hero behavior, change target selection, change raid movement or arrival, change town-governor choices, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, migrate `wood` to `timber`, activate rare resources, overhaul market caps, rebalance River Pass, push, or open a PR.
+This slice is planning only. It does not implement reports/tests, write `hero_task_state`, bump `SAVE_VERSION`, migrate saves, add durable event logs, add defense-specific durable state, tune coefficients, edit production JSON, implement full AI hero task state, adopt live commander-role behavior, adopt live AI hero behavior, change target selection, change raid movement or arrival, change town-governor choices, change pathing/body-tile/approach behavior, change renderer/editor behavior, import generated PNGs, migrate neutral encounters, add `content/resources.json`, change wood resource ids, activate rare resources, overhaul market caps, rebalance River Pass, push, or open a PR.
 
 ## Evidence Boundary
 

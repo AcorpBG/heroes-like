@@ -36,7 +36,7 @@ The target economy uses nine resources at full foundation depth. Migration shoul
 | Resource | Target id | Category | World meaning | Strategic use |
 | --- | --- | --- | --- | --- |
 | Gold | `gold` | Liquidity | Wages, contracts, tolls, bribes, market smoothing | Universal spending, hero hire, services, low-tier recruitment |
-| Timber | `timber` | Construction | Roads, boats, halls, siege frames, root rites | Buildings, road/ferry repair, wooden units, Thornwake/Embercourt pressure |
+| Wood | `wood` | Construction | Roads, boats, halls, siege frames, root rites | Buildings, road/ferry repair, wooden units, Thornwake/Embercourt pressure |
 | Ore | `ore` | Construction | Armor, tools, fortifications, machines, lens mounts | Defenses, heavy units, Sunvault/Brasshollow pressure |
 | Aetherglass | `aetherglass` | Arcane material | Mirror and lens fragments | Magic buildings, relays, artifacts, high-tier Sunvault costs |
 | Embergrain | `embergrain` | Supply | Preserved food and lamp fuel | Readiness, recovery, town growth, long-route operations |
@@ -45,14 +45,14 @@ The target economy uses nine resources at full foundation depth. Migration shoul
 | Brass scrip | `brass_scrip` | Industrial credit | Furnace contracts and machine debt | Brasshollow capital projects, repair windows, acceleration |
 | Memory salt | `memory_salt` | Salvage/memory medium | Fog charts, obituary ledgers, salvage claims | Veilmourn routes, morale magic, artifacts, hidden-object rewards |
 
-Compatibility note: existing JSON uses `wood`. A future migration should either alias `wood` to display as Timber or migrate authored ids to `timber` through a save-aware compatibility layer. Do not casually rename the resource id until content validation, save migration, UI, and tests are ready.
+Compatibility note: existing JSON uses `wood`; keep `wood` as the canonical id and display it as Wood. Do not casually rename the resource id unless a future non-wood resource migration has content validation, save migration, UI, and tests ready.
 
 ## Resource Categories
 
 Resources should behave differently by category instead of sharing one generic stockpile feel.
 
 - Liquidity: Gold is frequent, flexible, and smooths mistakes. It should rarely be the only blocker for high-tier power.
-- Construction staples: Timber and ore are stable map-control resources. They should come from mines/fronts and drive town shape.
+- Construction staples: Wood and ore are stable map-control resources. They should come from mines/fronts and drive town shape.
 - Arcane material: Aetherglass is scarce, guarded, and often tied to spell infrastructure, artifacts, relays, and high-quality upgrades.
 - Supply resources: Embergrain supports readiness, recovery, growth, and expedition tempo. It should be consumed by long campaigns and recovery loops.
 - Local fuel/rite resources: Peatwax and verdant grafts should matter most where their faction, region, or site network makes them productive.
@@ -62,11 +62,11 @@ Resources should behave differently by category instead of sharing one generic s
 
 ### Embercourt League
 
-Embercourt should feel reliable and civic. It prefers gold, timber, embergrain, and road-linked income.
+Embercourt should feel reliable and civic. It prefers gold, wood, embergrain, and road-linked income.
 
 - Strengths: steady town income, efficient low/mid recruitment near controlled roads, strong recovery when granary and beacon chains are held.
 - Shortages: aetherglass and memory salt should remain awkward without trade or conquest; ore should be adequate but not effortless.
-- Sites it values: tollhouses, timber yards, embergrain granaries, bridge bastions, beacon courts, mills, river locks.
+- Sites it values: tollhouses, wood yards, embergrain granaries, bridge bastions, beacon courts, mills, river locks.
 - Cost profile: broad but fair costs, with support buildings reducing gold friction and embergrain supporting readiness/recovery.
 - Strategic behavior: holds crossings, retakes road economy quickly, benefits from contiguous public infrastructure more than scattered mines.
 
@@ -85,19 +85,19 @@ Mireclaw should feel unsafe to ignore and difficult to starve in the marsh. It p
 Sunvault should feel precise, costly, and quality-driven. It prefers ore, aetherglass, relay-linked spell infrastructure, and prepared fronts.
 
 - Strengths: efficient use of aetherglass, strong magic building value, high-quality units when relay sites and ore lines are secure.
-- Shortages: timber and embergrain should constrain expansion tempo; peatwax and memory salt are peripheral.
+- Shortages: wood and embergrain should constrain expansion tempo; peatwax and memory salt are peripheral.
 - Sites it values: crystal orchards, lens galleries, prism roads, relay crowns, observatories, aetherglass quarries.
 - Cost profile: fewer cheap shortcuts; buildings and high-tier units need ore/aetherglass and should reward planning.
 - Strategic behavior: secures sightlines and relay nodes before committing to expensive upgrades.
 
 ### Thornwake Concord
 
-Thornwake should feel slow-starting and compounding. It prefers timber, verdant grafts, renewal sites, nurseries, and long-term recovery.
+Thornwake should feel slow-starting and compounding. It prefers wood, verdant grafts, renewal sites, nurseries, and long-term recovery.
 
 - Strengths: site-link bonuses, regrowth, recovery, and route taxation once root networks mature.
 - Shortages: direct gold should be weaker; ore, brass scrip, and aetherglass are specialized rather than core.
 - Sites it values: graft nurseries, rooted groves, living orchards, root gates, pilgrim clearings, renewal shrines.
-- Cost profile: buildings use timber and verdant grafts; some upgrades reach full value only while linked sites remain controlled.
+- Cost profile: buildings use wood and verdant grafts; some upgrades reach full value only while linked sites remain controlled.
 - Strategic behavior: seeds territory, defends networks, counter-captures to restore links, and wins by making routes costly.
 
 ### Brasshollow Combine
@@ -105,7 +105,7 @@ Thornwake should feel slow-starting and compounding. It prefers timber, verdant 
 Brasshollow should feel capital-intensive and hard to uproot. It prefers ore, brass scrip, furnace throughput, mine control, railheads, and repair windows.
 
 - Strengths: durable infrastructure, strong late projects, repair economies, excellent use of ore and scrip.
-- Shortages: timber and embergrain should constrain early expansion; memory salt and verdant grafts are awkward.
+- Shortages: wood and embergrain should constrain early expansion; memory salt and verdant grafts are awkward.
 - Sites it values: ore quarries, pressure rails, debt foundries, pump houses, furnace chapels, slag roads, machine yards.
 - Cost profile: expensive buildings and units, lower growth, heavy ore/scrip needs, high penalty for losing production chains.
 - Strategic behavior: protects mines, builds rail-linked staging, commits to objectives after capital setup.
@@ -115,7 +115,7 @@ Brasshollow should feel capital-intensive and hard to uproot. It prefers ore, br
 Veilmourn should feel opportunistic and information-led. It prefers memory salt, salvage, scouting rewards, fog routes, and uneven income spikes.
 
 - Strengths: burst income from wrecks and hidden sites, good rewards from scouting and battle cleanup, flexible route bypass.
-- Shortages: steady gold, ore, and timber should be less reliable; brass scrip is mostly ransom/exchange value.
+- Shortages: steady gold, ore, and wood should be less reliable; brass scrip is mostly ransom/exchange value.
 - Sites it values: memory-salt wreck fields, bell docks, fog slips, mirror shoals, obituary vaults, salvage camps, lighthouses.
 - Cost profile: mid/high units and magic need memory salt; some recruitment discounts come from recent salvage or scouted route marks.
 - Strategic behavior: scouts aggressively, avoids honest static races, raids weak backline resources, cashes out spikes before being pinned.
@@ -126,7 +126,7 @@ The word mine should become a gameplay family, not one visual. Every persistent 
 
 Core classes:
 
-- Civic production: mills, tollhouses, granaries, timber yards. Mostly gold/timber/embergrain and road-linked bonuses.
+- Civic production: mills, tollhouses, granaries, wood yards. Mostly gold/wood/embergrain and road-linked bonuses.
 - Extraction fronts: ore quarries, aetherglass seams, peat cuts, crystal orchards, slag pits. Guarded or exposed based on value.
 - Living production: graft nurseries, rooted orchards, renewal groves. Often linked and vulnerable to counter-capture.
 - Industrial finance: debt foundries, scrip offices, pressure rail depots. Produce brass scrip or acceleration value.
@@ -173,7 +173,7 @@ Daily income:
 
 - Town base income, faction modifiers, and controlled site income tick at day advance.
 - Gold should be the most common daily resource.
-- Timber, ore, peatwax, and embergrain can be daily when tied to stable production.
+- Wood, ore, peatwax, and embergrain can be daily when tied to stable production.
 - Aetherglass, verdant grafts, brass scrip, and memory salt should usually be slower, conditional, guarded, or burst-based.
 - Route-linked bonuses can add small daily income only when paths remain controlled.
 
@@ -196,18 +196,18 @@ Cost rules:
 - Low-tier recruitment buildings use gold plus one faction-appropriate staple.
 - Economy buildings use the resource they improve, plus gold, to create early tradeoffs.
 - Magic buildings require the faction accord resource or aetherglass.
-- Defensive upgrades use ore/timber/gold with faction bias.
+- Defensive upgrades use ore/wood/gold with faction bias.
 - High-tier dwellings require two or three resources and should create map-control pressure.
 - Capstone buildings require a rare faction resource and should not be reachable through market exchange alone.
 
 Examples:
 
-- Embercourt beacon and granary buildings: gold, timber, embergrain, small aetherglass for advanced beacon logic.
-- Mireclaw dens and shrine drums: gold, peatwax, timber, occasional ore for bogplate infrastructure.
+- Embercourt beacon and granary buildings: gold, wood, embergrain, small aetherglass for advanced beacon logic.
+- Mireclaw dens and shrine drums: gold, peatwax, wood, occasional ore for bogplate infrastructure.
 - Sunvault relays and batteries: gold, ore, aetherglass, small embergrain for supply.
-- Thornwake nurseries and root gates: timber, verdant grafts, gold, rare aetherglass for Old Measure graft studies.
+- Thornwake nurseries and root gates: wood, verdant grafts, gold, rare aetherglass for Old Measure graft studies.
 - Brasshollow furnaces and rail terminals: gold, ore, brass scrip, small embergrain for worker rations.
-- Veilmourn harbors and obituary vaults: gold, timber, memory salt, occasional aetherglass for mirror charts.
+- Veilmourn harbors and obituary vaults: gold, wood, memory salt, occasional aetherglass for mirror charts.
 
 ## Recruitment Costs
 
@@ -238,8 +238,8 @@ Rules:
 
 Suggested exchange stance:
 
-- Gold can buy limited timber/ore at poor rates.
-- Timber and ore can trade into each other at worse rates through market sites.
+- Gold can buy limited wood/ore at poor rates.
+- Wood and ore can trade into each other at worse rates through market sites.
 - Aetherglass, verdant grafts, brass scrip, and memory salt require special markets or site control.
 - Faction resources should have sell value but limited buy availability.
 
@@ -344,7 +344,7 @@ Required save considerations:
 
 - Resource stockpile must accept new resource ids while preserving old saves.
 - Save version should record resource schema version.
-- Legacy `wood` must either persist as an alias or migrate to `timber` deterministically.
+- Legacy `wood` must either persist as an alias or migrate to `wood` deterministically.
 - Site ownership state must store capture owner, damaged/raided state, cooldowns, weekly-yield timers, route-link state, and optional garrison/patrol state.
 - Market state must store weekly caps, discovered exchanges, and scenario restrictions.
 - AI economy state may need cached plans, but caches must be rebuildable from authoritative save data.
@@ -379,14 +379,14 @@ This economy plan depends on `docs/concept-art-pipeline.md`.
 
 Before broad resource-site JSON migration or final object art:
 
-- Generate and review overworld object-family sheets for resource fronts: ore quarry, crystal orchard, peat cut, graft nursery, salvage foundry, embergrain yard, memory-salt wreck field, scrip office, and timber yard.
+- Generate and review overworld object-family sheets for resource fronts: ore quarry, crystal orchard, peat cut, graft nursery, salvage foundry, embergrain yard, memory-salt wreck field, scrip office, and wood yard.
 - Generate route-law and transit sheets for tollhouse, ferry chain, root gate, rail switch, fog slip, bridge bastion, and prism road marker.
 - Generate pickup sheets for caches, cairns, carts, writ bundles, salvage crates, seed packets, gauge cases, peatwax votives, and crystal lots.
 - Require object classification notes: decoration, pickup, persistent economy site, transit economy, support site, guarded reward site, or faction landmark.
 - Require approach side, footprint, visit/capture read, material palette, damaged/captured state, and animation hooks.
 - Keep generated studies in `art/concept/`; do not place generated output directly into runtime art folders.
 
-Economy visuals must make resource type legible at map scale without text labels: quarry does not equal crystal orchard, peat cut does not equal timber yard, salvage wreck field does not equal memory vault.
+Economy visuals must make resource type legible at map scale without text labels: quarry does not equal crystal orchard, peat cut does not equal wood yard, salvage wreck field does not equal memory vault.
 
 ## Validation And Testing Gates
 
@@ -414,8 +414,8 @@ Manual play gates:
 ## Migration Sequence
 
 1. Freeze this document as the economy design target.
-2. Add an explicit resource registry design and decide whether `wood` remains the internal id or migrates to `timber`.
-3. Extend validators to understand resource metadata, aliases, and availability graphs.
+2. Add an explicit resource registry design and confirm that `wood` remains the internal id.
+3. Extend validators to understand resource metadata and availability graphs.
 4. Add schema support for new resources without changing gameplay balance yet.
 5. Add UI icon placeholders and compact resource display rules behind validation snapshots.
 6. Migrate site schemas first: outputs, categories, capture profiles, route affinity, and faction weights.

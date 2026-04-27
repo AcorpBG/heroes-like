@@ -8,7 +8,7 @@ Slice: economy-capture-resource-loop-proof-planning-10184.
 
 Plan one narrow live-client proof that the current economy can support a real player loop: scout, fight, capture or claim useful sites, receive resource value over turns, spend in town, recruit, save, resume, and continue toward River Pass objectives.
 
-This plan does not approve production JSON migration, validator/test implementation, runtime economy/pathing/AI/editor/renderer/save behavior changes, new resource registry work, `wood` to `timber` migration, rare-resource activation, market-cap overhaul, generated PNG import, asset import, or broad balance work.
+This plan does not approve production JSON migration, validator/test implementation, runtime economy/pathing/AI/editor/renderer/save behavior changes, new resource registry work, wood id change, rare-resource activation, market-cap overhaul, generated PNG import, asset import, or broad balance work.
 
 ## Selected Target
 
@@ -20,7 +20,7 @@ Reason: River Pass is the manually proven scenario, small enough for one session
 - Enemy town: `duskfen_bastion` using `town_duskfen`.
 - Starting resources: `{"gold": 1500, "wood": 4, "ore": 3}`.
 - Persistent daily gold sites: `river_signal_post` and `river_free_company`.
-- Current common-resource pickups: `north_timber`, `southern_ore`, `eastern_cache`.
+- Current common-resource pickups: `north_wood`, `southern_ore`, `eastern_cache`.
 - Existing low/medium fights that gate or pressure route choices: `river_pass_ghoul_grove`, `river_pass_hollow_mire`, and `river_pass_reed_totemists`.
 - Current script pressure on day 2 and day 3, which creates timing pressure without needing new AI.
 
@@ -34,7 +34,7 @@ Scenario path:
 | --- | --- | --- |
 | Start | `river-pass` | Begin with Lyra near Riverwatch and resources `1500 gold`, `4 wood`, `3 ore`. |
 | Town baseline | `riverwatch_hold` / `town_riverwatch` | Inspect current build and recruit choices before collecting anything. |
-| First pickup | `north_timber` / `site_timber_wagon` at `1,0` | Claim `wood +2`, `gold +150`; confirms current `wood` live id remains active. |
+| First pickup | `north_wood` / `site_wood_wagon` at `1,0` | Claim `wood +2`, `gold +150`; confirms current `wood` live id remains active. |
 | First capture | `river_signal_post` / `site_ember_signal_post` at `2,3` | Claim `gold +50`, capture persistent control, observe `control_income {"gold": 20}` after day advance. |
 | First route fight | `river_pass_ghoul_grove` / `encounter_ghoul_grove` at `3,1` | Clear low fight as scouting/risk confirmation before deeper route commitment. |
 | Main capture | `river_free_company` / `site_riverwatch_free_company_yard` at `0,4` | Claim `gold +80`, capture persistent control, receive `control_income {"gold": 40}`, `claim_recruits {"unit_river_guard": 5, "unit_ember_archer": 3}`, and later `weekly_recruits {"unit_river_guard": 1}` if the week boundary is reached. |
@@ -50,7 +50,7 @@ The proof should not require every optional branch. It should prove that at leas
 Use only current resources:
 
 - `gold`: starting stock, town income, pickup rewards, site claim rewards, persistent control income, unit costs, and building costs.
-- `wood`: current live id for Timber, used by existing town buildings and pickup rewards. Do not introduce `timber`.
+- `wood`: current live id for Wood, used by existing town buildings and pickup rewards. Do not introduce `wood`.
 - `ore`: current construction resource, used by existing town buildings and pickup rewards.
 - `experience`: may appear as non-stockpile reward from `midway_shrine` or scripts, but it is not part of this proof's stockpile loop.
 
@@ -69,7 +69,7 @@ Riverwatch choices to inspect and record:
 | Choice | Current cost | Proof question |
 | --- | ---: | --- |
 | `building_market_square` | `gold 1000` | Is a pure-gold economy build available immediately, and does choosing it delay army growth? |
-| `building_bowyer_lodge` | `gold 1200`, `wood 2` | Does `north_timber` make a wood-gated military build feel reachable? |
+| `building_bowyer_lodge` | `gold 1200`, `wood 2` | Does `north_wood` make a wood-gated military build feel reachable? |
 | `building_watch_barracks` | `gold 1400`, `ore 2` | Does preserving or claiming ore change the defensive/military choice? |
 | `building_stone_store` | `gold 900`, `ore 2` | Does an ore-consuming income/support choice compete with later military spending? |
 | `building_lantern_archive` | `gold 1100`, `wood 1` | Does a cheaper wood spend compete with direct army growth? |
@@ -100,7 +100,7 @@ If the live client cannot expose any of those facts without developer interpreta
 - Launch the live client from `project.godot` or use the existing routed harness only as supporting evidence.
 - Select `river-pass` at normal difficulty.
 - Record starting resources and Riverwatch available orders.
-- Claim `north_timber`.
+- Claim `north_wood`.
 - Capture `river_signal_post`; advance one day and record whether gold income changes.
 - Capture `river_free_company`; record claim recruits and daily gold income.
 - Clear `river_pass_ghoul_grove` or record why it was skipped.
@@ -127,7 +127,7 @@ The implementation slice must not change:
 
 - No production JSON migration or new schema.
 - No `content/resources.json`.
-- No `wood` to `timber` canonical migration.
+- No wood id change.
 - No rare-resource activation.
 - No market-cap overhaul or rare-resource market buying.
 - No resource registry adoption by runtime.
@@ -162,7 +162,7 @@ godot4 --path .
 Current compatibility report expectations for this planning baseline:
 
 - Default validator passes.
-- Economy report remains compatibility mode with stockpile resources `gold`, `ore`, and `wood`; `experience` remains non-stockpile; `wood` remains the live id and Timber target/canonical decision remains advisory; rare-resource buying remains false; errors remain `0`.
+- Economy report remains compatibility mode with stockpile resources `gold`, `ore`, and `wood`; `experience` remains non-stockpile; `wood` remains the live id and Wood target/canonical decision remains advisory; rare-resource buying remains false; errors remain `0`.
 - Economy report warning count is currently `163`; do not reduce it by migrating production JSON during this proof planning.
 - Overworld object report remains compatibility mode; current output shows `46` map objects, `48` resource sites, `127` scenario site placements, `48` encounter placements, `177` warnings, and `0` errors.
 - Neutral encounter report remains compatibility mode; current output shows `48` direct placements, `3` lifted object-backed records, `542` warnings, and `0` errors.
@@ -182,7 +182,7 @@ Live proof success for the next slice:
 
 - A player can understand why `river_signal_post` and `river_free_company` matter.
 - Captured persistent sites produce observable value after day advance.
-- `north_timber` and/or `southern_ore` affect a Riverwatch build or recruit decision.
+- `north_wood` and/or `southern_ore` affect a Riverwatch build or recruit decision.
 - At least one fight/capture decision changes the route or timing.
 - Save/resume preserves resources, controlled sites, resolved fights, town spend, and objective progress.
 - The scenario remains plausibly completable after the economy choices.
