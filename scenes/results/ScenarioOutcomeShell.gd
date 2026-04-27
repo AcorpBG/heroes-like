@@ -21,6 +21,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 @onready var _journal_label: Label = %Journal
 @onready var _actions_hint_label: Label = %ActionsHint
 @onready var _save_status_label: Label = %SaveStatus
+@onready var _return_cue_label: Label = %ReturnCue
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _menu_button: Button = %Menu
@@ -116,6 +117,8 @@ func _refresh_save_surface() -> void:
 	var return_handoff := String(surface.get("return_handoff", "")).strip_edges()
 	var visible_save_text := save_check if save_check != "" else (current_save_recap if current_save_recap != "" else latest_context)
 	_set_compact_label(_save_status_label, visible_save_text, 3)
+	var return_cue := _outcome_return_cue_text(surface)
+	_set_compact_label(_return_cue_label, return_cue, 2, 108)
 	var save_tooltip_lines := [latest_context]
 	if save_check != "":
 		save_tooltip_lines.append(save_check)
@@ -132,6 +135,11 @@ func _refresh_save_surface() -> void:
 		save_tooltip_lines.append("Selected slot recap:\n%s" % slot_resume_recap)
 	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
+	_return_cue_label.tooltip_text = _join_tooltip_sections([
+		return_cue,
+		return_handoff,
+		String(surface.get("menu_button_tooltip", "")),
+	])
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = String(surface.get("save_button_label", "Save Outcome"))
 	_save_button.tooltip_text = _join_tooltip_sections([
@@ -241,6 +249,8 @@ func validation_snapshot() -> Dictionary:
 		"save_status_tooltip": _save_status_label.tooltip_text,
 		"save_button_tooltip": _save_button.tooltip_text,
 		"menu_button_tooltip": _menu_button.tooltip_text,
+		"return_cue": _return_cue_label.text,
+		"return_cue_tooltip": _return_cue_label.tooltip_text,
 		"outcome_guide_visible": _guide_panel.visible,
 		"outcome_guide_button": _guide_button.text,
 		"outcome_guide_tooltip": _guide_button.tooltip_text,
@@ -372,6 +382,16 @@ func _join_tooltip_sections(sections: Array) -> String:
 			lines.append(text)
 	return "\n".join(lines)
 
+func _outcome_return_cue_text(surface: Dictionary) -> String:
+	var return_handoff := String(surface.get("return_handoff", "")).strip_edges()
+	if return_handoff.find("Editor restores") >= 0:
+		return "Return cue: Editor restores the Play Copy launch snapshot."
+	if SaveService.resume_target_for_session(_session) == "outcome":
+		return "Return cue: Menu autosaves this outcome; Continue Latest reviews it later."
+	if return_handoff != "":
+		return return_handoff.replace("Return handoff:", "Return cue:")
+	return "Return cue: Menu refreshes autosave before opening the main menu."
+
 func _apply_visual_theme() -> void:
 	var panel_tones := {
 		"Banner": "banner",
@@ -414,6 +434,7 @@ func _apply_visual_theme() -> void:
 				FrontierVisualKit.apply_label(title_label, "title", 14)
 	FrontierVisualKit.apply_label(_header_label, "title", 24)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
+	FrontierVisualKit.apply_label(_return_cue_label, "muted", 12)
 
 func _refresh_guide_surface() -> void:
 	if _guide_button == null or _guide_label == null or _guide_panel == null:

@@ -1,13 +1,13 @@
 {
   "taskId": 10184,
   "project": "heroes-like",
-  "updatedAt": "2026-04-27T00:30:40Z",
+  "updatedAt": "2026-04-27T00:36:58Z",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "main-menu-help-handoff-cues-10184",
-  "currentSliceTitle": "Surface compact main-menu Field Manual handoff cues",
+  "currentSliceId": "outcome-menu-return-cue-10184",
+  "currentSliceTitle": "Surface compact outcome menu return cue",
   "currentSliceStatus": "completed",
-  "currentSliceNotes": "Implemented compact visible main-menu Field Manual/help handoff cues using existing SettingsService help topics and MainMenu secondary-board flow only. The help intro/details now expose a Help handoff line, topic rows clarify inspection-only selection, contextual Guide/Back tooltips explain return and non-mutating behavior, and focused menu/outcome smoke asserts the rendered cues plus no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
+  "currentSliceNotes": "Implemented a compact visible outcome save-panel return cue using existing AppRouter/SaveService save surface data so the player can see that Menu autosaves the outcome and Continue Latest can review it later without opening a guide or relying on hover-only text. Focused menu/outcome smoke asserts the cue and no internal score/debug leaks. UI readability only; no mechanics, balance, save schema/version, durable logs, production JSON, AI tuning, renderer assets, campaign semantics, or internal score/debug fields.",
   "realityAssessment": {
     "classification": "prototype_pre_alpha",
     "manualPlayAudit": "river-pass-manual-gate-passed-foundation-depth-still-missing",
@@ -1954,6 +1954,14 @@
       "status": "completed",
       "startedAt": "2026-04-27T00:27:16Z",
       "completedAt": "2026-04-27T00:30:40Z",
+      "difficulty": "small"
+    },
+    {
+      "id": "outcome-menu-return-cue-10184",
+      "title": "Surface compact outcome menu return cue",
+      "status": "completed",
+      "startedAt": "2026-04-27T00:33:06Z",
+      "completedAt": "2026-04-27T00:36:58Z",
       "difficulty": "small"
     }
   ],

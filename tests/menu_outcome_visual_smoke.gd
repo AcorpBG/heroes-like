@@ -614,12 +614,14 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("save_status", "")),
 			String(snapshot.get("save_status_tooltip", "")),
 			String(snapshot.get("save_button_tooltip", "")),
+			String(snapshot.get("return_cue", "")),
+			String(snapshot.get("return_cue_tooltip", "")),
 			String(snapshot.get("save_check", "")),
 			String(snapshot.get("play_check", "")),
 			String(snapshot.get("return_handoff", "")),
 			String(snapshot.get("current_save_recap", "")),
 		],
-		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
+		["Progress Recap", "Current progress:", "Recently resolved:", "Next step:", "Continuity choice:", "self-contained", "retry starts fresh", "Next play action:", "Action cue:", "save first", "Return to Menu", "Retry Skirmish", "starts fresh", "resumable", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:", "Saved state:", "What changed:", "Resume state:", "Watch:", "Next decision:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -633,6 +635,8 @@ func _run_outcome_smoke() -> bool:
 			String(snapshot.get("save_status", "")),
 			String(snapshot.get("save_status_tooltip", "")),
 			String(snapshot.get("save_button_tooltip", "")),
+			String(snapshot.get("return_cue", "")),
+			String(snapshot.get("return_cue_tooltip", "")),
 		]
 	):
 		return false
@@ -675,11 +679,13 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("save_status", "")),
 			String(campaign_snapshot.get("save_status_tooltip", "")),
 			String(campaign_snapshot.get("save_button_tooltip", "")),
+			String(campaign_snapshot.get("return_cue", "")),
+			String(campaign_snapshot.get("return_cue_tooltip", "")),
 			String(campaign_snapshot.get("save_check", "")),
 			String(campaign_snapshot.get("play_check", "")),
 			String(campaign_snapshot.get("return_handoff", "")),
 		],
-		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Save check:", "Play check:", "Return handoff:"]
+		["Campaign progress", "Next chapter unlocked:", "This victory exports:", "Continuity choice:", "carry forward", "Chapter 2", "replay keeps", "return to menu", "Action cue:", "save first", "continue", "campaign board", "Replays this chapter fresh", "Return cue:", "Menu autosaves this outcome", "Continue Latest reviews it later", "Save check:", "Play check:", "Return handoff:"]
 	):
 		return false
 	if not _assert_no_score_leak(
@@ -694,6 +700,8 @@ func _run_outcome_smoke() -> bool:
 			String(campaign_snapshot.get("save_status", "")),
 			String(campaign_snapshot.get("save_status_tooltip", "")),
 			String(campaign_snapshot.get("save_button_tooltip", "")),
+			String(campaign_snapshot.get("return_cue", "")),
+			String(campaign_snapshot.get("return_cue_tooltip", "")),
 		]
 	):
 		return false
