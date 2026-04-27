@@ -22,9 +22,9 @@ Rules:
 
 Current phase: **Phase 2 - Deep Production Foundation**.
 
-Current tactical objective: continue Phase 2 in category order after P2.6 artifact foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic children and P2.6 artifact children are implemented, with P2.7 animation/event cue foundation work now active.
+Current tactical objective: continue Phase 2 in category order after P2.7 animation/event cue foundation closeout. P2.4 Batches 001 through 007 closed the P2.4 parent boundary; P2.5 magic, P2.6 artifact, and P2.7 animation/event cue children are implemented.
 
-Selected next implementation candidate after the overworld object state contract slice: `animation-validation-smoke-harness-10184`.
+Selected next implementation candidate: `strategic-ai-hero-task-state-save-normalizer-preservation-report-implementation-10184`.
 
 ## Slice Status Model
 
@@ -1594,6 +1594,11 @@ implementationTargets:
 - event id to animation state mapping checks
 - reduced-motion and fast-mode fallback checks
 - report fixtures
+
+implementationEvidence:
+- `docs/animation-validation-smoke-harness-report.md`
+- `tests/animation_validation_smoke_harness_report.gd`
+- `AnimationCueCatalog.animation_validation_smoke_harness_report(...)`
 
 ### P2 Child: Strategic AI Economy Pressure Follow-Up
 

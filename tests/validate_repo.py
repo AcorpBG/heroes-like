@@ -80,6 +80,9 @@ ANIMATION_BATTLE_TROOP_REPORT_DOC_PATH = ROOT / "docs" / "animation-battle-troop
 ANIMATION_OVERWORLD_OBJECT_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_overworld_object_state_contract_report.gd"
 ANIMATION_OVERWORLD_OBJECT_REPORT_SCENE_PATH = ROOT / "tests" / "animation_overworld_object_state_contract_report.tscn"
 ANIMATION_OVERWORLD_OBJECT_REPORT_DOC_PATH = ROOT / "docs" / "animation-overworld-object-state-contract-report.md"
+ANIMATION_VALIDATION_SMOKE_REPORT_SCRIPT_PATH = ROOT / "tests" / "animation_validation_smoke_harness_report.gd"
+ANIMATION_VALIDATION_SMOKE_REPORT_SCENE_PATH = ROOT / "tests" / "animation_validation_smoke_harness_report.tscn"
+ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validation-smoke-harness-report.md"
 
 VALID_DIFFICULTIES = {"story", "normal", "hard"}
 WAYFARERS_HALL_BUILDING_ID = "building_wayfarers_hall"
@@ -140,6 +143,7 @@ ANIMATION_EVENT_CUE_SCHEMA_ID = "animation_event_cue_catalog_v1"
 ANIMATION_PREFERENCE_POLICY_SCHEMA_ID = "animation_playback_preference_policy_v1"
 ANIMATION_BATTLE_TROOP_STATE_CONTRACT_SCHEMA_ID = "battle_troop_sprite_state_contract_v1"
 ANIMATION_OVERWORLD_OBJECT_STATE_CONTRACT_SCHEMA_ID = "overworld_object_state_contract_v1"
+ANIMATION_VALIDATION_SMOKE_HARNESS_SCHEMA_ID = "animation_validation_smoke_harness_v1"
 ANIMATION_EVENT_CUE_REQUIRED_SURFACES = {"battle", "overworld", "town", "spell", "artifact", "ui"}
 ANIMATION_EVENT_CUE_REQUIRED_FIELDS = {
     "event_id",
@@ -247,6 +251,30 @@ ANIMATION_POLICY_REPRESENTATIVE_EVENTS = {
     "spell_cast_battle",
     "artifact_equipped",
     "ui_invalid_action",
+}
+ANIMATION_VALIDATION_SMOKE_REPRESENTATIVE_EVENTS = {
+    "battle": {"battle_unit_move", "battle_unit_melee_attack", "battle_unit_death"},
+    "overworld": {"overworld_object_captured", "overworld_object_guarded", "overworld_route_open"},
+    "town": {"town_captured", "town_building_built"},
+    "spell": {"spell_cast_battle", "spell_effect_damage"},
+    "artifact": {"artifact_acquired", "artifact_equipped"},
+    "ui": {"ui_invalid_action", "ui_resource_delta"},
+}
+ANIMATION_VALIDATION_SMOKE_EXPECTED_STATE_FAMILIES = {
+    "battle_unit_move": "move",
+    "battle_unit_melee_attack": "attack",
+    "battle_unit_death": "death",
+    "overworld_object_captured": "captured",
+    "overworld_object_guarded": "guarded",
+    "overworld_route_open": "route-open",
+    "town_captured": "captured",
+    "town_building_built": "construction",
+    "spell_cast_battle": "spell_cast",
+    "spell_effect_damage": "spell_effect",
+    "artifact_acquired": "pickup",
+    "artifact_equipped": "equip",
+    "ui_invalid_action": "microinteraction",
+    "ui_resource_delta": "microinteraction",
 }
 SUPPORTED_ARTIFACT_SLOTS = {"boots", "banner", "armor", "trinket"}
 ARTIFACT_SLOT_LIMITS = {"boots": 1, "banner": 1, "armor": 1, "trinket": 2}
@@ -8486,6 +8514,162 @@ def print_animation_overworld_object_state_contract_report(report: dict) -> None
         print(f"- errors: {report['errors']}")
 
 
+def animation_public_payload_has_leak(payload: object) -> bool:
+    surface_text = json.dumps(payload, sort_keys=True).lower()
+    return any(token in surface_text for token in ("debug", "score", "internal"))
+
+
+def animation_public_report_status(report: dict) -> dict:
+    return {
+        "ok": bool(report.get("ok", False)),
+        "schema": str(report.get("schema", report.get("schema_id", ""))),
+        "mode": str(report.get("mode", report.get("schema_status", ""))),
+        "error_count": len(report.get("errors", [])) if isinstance(report.get("errors", []), list) else 0,
+    }
+
+
+def build_animation_validation_smoke_harness_report() -> dict:
+    raw = load_json(ANIMATION_EVENT_CUES_PATH)
+    entries = raw.get("entries", [])
+    if not isinstance(entries, list):
+        entries = []
+    by_event = {str(entry.get("event_id", "")): entry for entry in entries if isinstance(entry, dict)}
+    catalog_report = build_animation_event_cue_catalog_report()
+    policy_report = build_animation_preference_policy_report()
+    battle_report = build_animation_battle_troop_state_contract_report()
+    overworld_report = build_animation_overworld_object_state_contract_report()
+    reports = {
+        "catalog": catalog_report,
+        "policy": policy_report,
+        "battle_troop": battle_report,
+        "overworld_object": overworld_report,
+    }
+    errors: list[str] = []
+    individual_reports = {name: animation_public_report_status(report) for name, report in reports.items()}
+    for name, status in individual_reports.items():
+        if not status.get("ok", False):
+            errors.append(f"dependency report failed: {name}")
+
+    runtime_policy = raw.get("runtime_policy", {})
+    if not isinstance(runtime_policy, dict):
+        runtime_policy = {}
+        errors.append("runtime_policy must be a dictionary")
+    for blocked_flag in (
+        "save_version_bump",
+        "final_sprite_import",
+        "final_vfx_import",
+        "final_audio_import",
+        "renderer_asset_pipeline",
+        "playback_runtime",
+        "broad_ui_polish",
+    ):
+        if bool(runtime_policy.get(blocked_flag, True)):
+            errors.append(f"runtime policy must keep {blocked_flag} disabled")
+
+    surface_counts: dict[str, int] = {}
+    mode_counts = {"normal": 0, "reduced_motion": 0, "fast": 0, "reduced_motion_fast": 0}
+    event_policy_matrix: dict[str, dict] = {}
+    representative_event_count = 0
+    preference_cases = {
+        "normal": {},
+        "reduced_motion": {"reduced_motion": True},
+        "fast": {"fast_mode": True},
+        "reduced_motion_fast": {"reduced_motion": True, "fast_mode": True},
+    }
+
+    for surface, event_ids in ANIMATION_VALIDATION_SMOKE_REPRESENTATIVE_EVENTS.items():
+        surface_events: dict[str, dict] = {}
+        for event_id in sorted(event_ids):
+            entry = by_event.get(event_id)
+            if not isinstance(entry, dict):
+                errors.append(f"missing smoke representative event {event_id}")
+                continue
+            representative_event_count += 1
+            actual_surface = str(entry.get("surface", "")).strip()
+            increment_count(surface_counts, actual_surface or "<empty>")
+            if actual_surface != surface:
+                errors.append(f"{event_id} must use smoke surface {surface}")
+            expected_family = ANIMATION_VALIDATION_SMOKE_EXPECTED_STATE_FAMILIES.get(event_id, "")
+            if expected_family and str(entry.get("animation_state_family", "")) != expected_family:
+                errors.append(f"{event_id} must map to state family {expected_family}")
+            fallbacks = entry.get("fallbacks", {})
+            if not isinstance(fallbacks, dict):
+                fallbacks = {}
+            cases: dict[str, dict] = {}
+            for mode, preferences in preference_cases.items():
+                selected = select_animation_policy_case(entry, preferences)
+                cases[mode] = selected
+                mode_counts[mode] += 1
+                if not str(selected.get("selected_animation_state", "")).strip():
+                    errors.append(f"{event_id} produced empty selected animation state in {mode} mode")
+            if cases["normal"]["selected_animation_state"] != str(entry.get("animation_state", "")):
+                errors.append(f"{event_id} normal mode must keep authored animation state")
+            if cases["reduced_motion"]["selected_fallback_tag"] != str(fallbacks.get("reduced_motion_tag", "")).strip():
+                errors.append(f"{event_id} reduced-motion mode must select reduced fallback")
+            if cases["fast"]["selected_fallback_tag"] != str(fallbacks.get("fast_mode_tag", "")).strip() or cases["fast"]["selected_playback_policy"] != "fast_resolve":
+                errors.append(f"{event_id} fast mode must select fast fallback and fast_resolve playback")
+            if cases["reduced_motion_fast"]["selected_fallback_tag"] != str(fallbacks.get("reduced_motion_tag", "")).strip() or cases["reduced_motion_fast"]["timing_preference"] != "fast":
+                errors.append(f"{event_id} combined mode must use reduced visuals with fast timing")
+            surface_events[event_id] = {
+                "surface": actual_surface,
+                "subject_kind": str(entry.get("subject_kind", "")),
+                "state_family": str(entry.get("animation_state_family", "")),
+                "animation_state": str(entry.get("animation_state", "")),
+                "policy_cases": cases,
+            }
+        event_policy_matrix[surface] = surface_events
+
+    for surface in sorted(ANIMATION_EVENT_CUE_REQUIRED_SURFACES):
+        if int(surface_counts.get(surface, 0)) <= 0:
+            errors.append(f"smoke harness missing surface coverage for {surface}")
+    for mode, count in mode_counts.items():
+        if count != representative_event_count:
+            errors.append(f"smoke harness did not resolve every representative event in {mode} mode")
+
+    public_payload = {
+        "schema": ANIMATION_VALIDATION_SMOKE_HARNESS_SCHEMA_ID,
+        "mode": "animation_contract_cross_report_smoke",
+        "individual_reports": individual_reports,
+        "representative_event_count": representative_event_count,
+        "surface_counts": surface_counts,
+        "mode_counts": mode_counts,
+        "event_policy_matrix": event_policy_matrix,
+        "runtime_policy": runtime_policy,
+        "errors": errors,
+    }
+    if animation_public_payload_has_leak(public_payload):
+        errors.append("animation smoke public payload leaked debug/score/internal token")
+        public_payload["errors"] = errors
+
+    return {
+        "ok": not errors,
+        "schema": ANIMATION_VALIDATION_SMOKE_HARNESS_SCHEMA_ID,
+        "mode": "animation_contract_cross_report_smoke",
+        "individual_reports": individual_reports,
+        "representative_event_count": representative_event_count,
+        "surface_counts": surface_counts,
+        "mode_counts": mode_counts,
+        "event_policy_matrix": event_policy_matrix,
+        "runtime_policy": runtime_policy,
+        "public_payload": public_payload,
+        "errors": errors,
+    }
+
+
+def print_animation_validation_smoke_harness_report(report: dict) -> None:
+    print("ANIMATION VALIDATION SMOKE HARNESS REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    print(f"- dependency reports: {report['individual_reports']}")
+    print(f"- representative events: {report['representative_event_count']}")
+    print(f"- surfaces: {report['surface_counts']}")
+    print(f"- mode counts: {report['mode_counts']}")
+    policy = report.get("runtime_policy", {})
+    print(f"- runtime policy: save_version_bump={policy.get('save_version_bump', True)}, final_sprite_import={policy.get('final_sprite_import', True)}, final_vfx_import={policy.get('final_vfx_import', True)}, final_audio_import={policy.get('final_audio_import', True)}, playback_runtime={policy.get('playback_runtime', True)}")
+    if report.get("errors"):
+        print(f"- errors: {report['errors']}")
+
+
 def validate_animation_event_cue_catalog(errors: list[str]) -> None:
     for path in (
         ANIMATION_EVENT_CUES_PATH,
@@ -8522,6 +8706,7 @@ def validate_animation_event_cue_catalog(errors: list[str]) -> None:
     validate_animation_reduced_motion_fast_mode_policy(errors)
     validate_animation_battle_troop_state_contract(errors)
     validate_animation_overworld_object_state_contract(errors)
+    validate_animation_validation_smoke_harness(errors)
 
 
 def validate_animation_reduced_motion_fast_mode_policy(errors: list[str]) -> None:
@@ -8655,6 +8840,54 @@ def validate_animation_overworld_object_state_contract(errors: list[str]) -> Non
             "`wood` remains canonical",
         ):
             ensure(required_text in doc_text, errors, f"Animation overworld object state contract report doc is missing required text: {required_text}")
+
+
+def validate_animation_validation_smoke_harness(errors: list[str]) -> None:
+    for path in (
+        ANIMATION_VALIDATION_SMOKE_REPORT_SCRIPT_PATH,
+        ANIMATION_VALIDATION_SMOKE_REPORT_SCENE_PATH,
+        ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing animation validation smoke harness slice file: {path.relative_to(ROOT)}")
+    rules_text = ANIMATION_CUE_CATALOG_RULES_PATH.read_text(encoding="utf-8") if ANIMATION_CUE_CATALOG_RULES_PATH.exists() else ""
+    for required_token in (
+        "VALIDATION_SMOKE_HARNESS_SCHEMA_ID",
+        "VALIDATION_SMOKE_REPRESENTATIVE_EVENTS",
+        "func animation_validation_smoke_harness_report",
+        "event_cue_catalog_report",
+        "animation_preference_policy_report",
+        "battle_troop_sprite_state_contract_report",
+        "overworld_object_state_contract_report",
+    ):
+        ensure(required_token in rules_text, errors, f"AnimationCueCatalog.gd is missing validation smoke harness token: {required_token}")
+    report = build_animation_validation_smoke_harness_report()
+    for error in report.get("errors", []):
+        fail(errors, f"Animation validation smoke harness: {error}")
+    ensure(int(report.get("representative_event_count", 0)) >= 14, errors, "Animation validation smoke harness must cover representative battle/overworld/town/spell/artifact/UI events")
+    for mode in ("normal", "reduced_motion", "fast", "reduced_motion_fast"):
+        ensure(int(report.get("mode_counts", {}).get(mode, 0)) == int(report.get("representative_event_count", 0)), errors, f"Animation validation smoke harness must resolve every representative event in {mode} mode")
+    for surface in sorted(ANIMATION_EVENT_CUE_REQUIRED_SURFACES):
+        ensure(int(report.get("surface_counts", {}).get(surface, 0)) > 0, errors, f"Animation validation smoke harness must cover surface {surface}")
+    if ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH.exists():
+        doc_text = ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "animation_validation_smoke_harness_v1",
+            "event/cue catalog",
+            "reduced-motion",
+            "fast-mode",
+            "battle troop",
+            "overworld object",
+            "town",
+            "spell",
+            "artifact",
+            "UI",
+            "No save migration",
+            "No final sprite, VFX, or audio import",
+            "No renderer asset pipeline work",
+            "`wood` remains canonical",
+        ):
+            ensure(required_text in doc_text, errors, f"Animation validation smoke harness report doc is missing required text: {required_text}")
 
 
 def validate_content(errors: list[str]) -> None:
@@ -14596,6 +14829,8 @@ def main() -> int:
     parser.add_argument("--animation-battle-troop-contract-report-json", type=str, default="", help="Write the opt-in battle troop sprite state contract report as JSON.")
     parser.add_argument("--animation-overworld-object-contract-report", action="store_true", help="Print the opt-in overworld object state contract report.")
     parser.add_argument("--animation-overworld-object-contract-report-json", type=str, default="", help="Write the opt-in overworld object state contract report as JSON.")
+    parser.add_argument("--animation-validation-smoke-report", action="store_true", help="Print the opt-in consolidated animation validation smoke harness report.")
+    parser.add_argument("--animation-validation-smoke-report-json", type=str, default="", help="Write the opt-in consolidated animation validation smoke harness report as JSON.")
     args = parser.parse_args()
 
     errors: list[str] = []
@@ -14731,6 +14966,7 @@ def main() -> int:
     print("- animation reduced-motion and fast-mode policy helpers now select bounded troop/object/event fallbacks without playback runtime or asset import")
     print("- animation battle troop sprite state contracts now cover idle, ready, move, attack, hit, death, cast, status, defend, and retreat-style cue families")
     print("- animation overworld object state contracts now cover idle, active, visited, depleted, captured, blocked, guarded, route-open, route-closed, and ambient-loop cue families")
+    print("- animation validation smoke harness now proves catalog, policy, battle troop, and overworld object reports agree across representative battle/overworld/town/spell/artifact/UI events")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -14825,6 +15061,14 @@ def main() -> int:
             print(f"- animation overworld object contract report JSON written to {report_path}")
         if args.animation_overworld_object_contract_report:
             print_animation_overworld_object_state_contract_report(report)
+    if args.animation_validation_smoke_report or args.animation_validation_smoke_report_json:
+        report = build_animation_validation_smoke_harness_report()
+        if args.animation_validation_smoke_report_json:
+            report_path = Path(args.animation_validation_smoke_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- animation validation smoke harness report JSON written to {report_path}")
+        if args.animation_validation_smoke_report:
+            print_animation_validation_smoke_harness_report(report)
     return 0
 
 
