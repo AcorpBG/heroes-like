@@ -99,6 +99,8 @@ var _last_object_authoring_recap := {}
 var _restored_from_play_copy := false
 var _terrain_paint_order := 0
 var _last_terrain_placement_result := {}
+var _authored_baseline_cache = null
+var _authored_baseline_cache_id := ""
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -2445,6 +2447,8 @@ func _load_scenario_working_copy(scenario_id: String) -> bool:
 		_refresh_state()
 		return false
 	_session = session
+	_authored_baseline_cache = null
+	_authored_baseline_cache_id = ""
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
 	_selected_scenario_id = scenario_id
@@ -2466,6 +2470,8 @@ func _resume_working_copy_from_memory(session) -> bool:
 	if session == null or session.scenario_id == "":
 		return false
 	_session = session
+	_authored_baseline_cache = null
+	_authored_baseline_cache_id = ""
 	OverworldRules.normalize_overworld_state(_session)
 	_make_all_tiles_visible(_session)
 	_selected_scenario_id = _session.scenario_id
@@ -2557,6 +2563,7 @@ func _refresh_state() -> void:
 	_sync_object_taxonomy_summary()
 	_sync_play_handoff_surface()
 	_sync_menu_return_surface()
+	_sync_restore_tile_surface()
 	_sync_preview()
 	_refresh_labels()
 
@@ -2587,6 +2594,14 @@ func _sync_menu_return_surface() -> void:
 	_menu_button.disabled = false
 	_menu_button.text = String(menu_return.get("button_label", "Menu"))
 	_menu_button.tooltip_text = String(menu_return.get("tooltip", "Return to the main menu."))
+
+func _sync_restore_tile_surface() -> void:
+	if _restore_tile_button == null:
+		return
+	var cue := _editor_restore_tile_cue_payload()
+	_restore_tile_button.disabled = _session == null
+	_restore_tile_button.text = String(cue.get("button_label", "Restore Tile"))
+	_restore_tile_button.tooltip_text = String(cue.get("tooltip", "Restore the selected tile from the authored baseline."))
 
 func _sync_object_taxonomy_summary() -> void:
 	if _object_taxonomy_summary_label == null:
@@ -2674,6 +2689,9 @@ func _refresh_labels() -> void:
 	var active_tool_text := String(_editor_active_tool_cue_payload().get("text", "")).strip_edges()
 	if active_tool_text != "":
 		status_lines.append(active_tool_text)
+	var restore_tile_text := String(_editor_restore_tile_cue_payload().get("text", "")).strip_edges()
+	if restore_tile_text != "":
+		status_lines.append(restore_tile_text)
 	if _tool == TOOL_PLACE_OBJECT:
 		var placement_action_text := String(_editor_placement_action_cue_payload().get("text", "")).strip_edges()
 		if placement_action_text != "":
@@ -4121,6 +4139,8 @@ func _restore_selected_tile_from_authored() -> Dictionary:
 func _authored_baseline_session():
 	if _session == null or _session.scenario_id == "":
 		return null
+	if _authored_baseline_cache != null and _authored_baseline_cache_id == _session.scenario_id:
+		return _authored_baseline_cache
 	var baseline = ScenarioFactoryScript.create_session(
 		_session.scenario_id,
 		"normal",
@@ -4129,6 +4149,8 @@ func _authored_baseline_session():
 	if baseline == null or baseline.scenario_id == "":
 		return null
 	OverworldRules.normalize_overworld_state(baseline)
+	_authored_baseline_cache = baseline
+	_authored_baseline_cache_id = _session.scenario_id
 	return baseline
 
 func _restore_tile_terrain_from_baseline(tile: Vector2i, baseline) -> Dictionary:
@@ -4510,6 +4532,133 @@ func _editor_play_return_context_payload() -> Dictionary:
 		"object_count": _placement_count(),
 		"dirty": _dirty,
 	}
+
+func _editor_restore_tile_cue_payload() -> Dictionary:
+	if _session == null:
+		return {
+			"button_label": "Restore Tile",
+			"text": "",
+			"tooltip": "Load a scenario working copy before restoring a selected tile.",
+			"state": "no_working_copy",
+			"changed": false,
+		}
+	var tile := _selected_tile
+	if not _tile_in_bounds(tile):
+		var outside_text := "Tile reset: selected tile is outside the current map."
+		return {
+			"button_label": "Restore Tile",
+			"text": outside_text,
+			"tooltip": outside_text,
+			"state": "blocked",
+			"changed": false,
+			"scope": "selected_tile_working_copy_only",
+		}
+	var baseline = _authored_baseline_session()
+	if baseline == null or baseline.scenario_id == "":
+		var missing_text := "Tile reset: authored baseline is unavailable for %s." % _session.scenario_id
+		return {
+			"button_label": "Restore Tile",
+			"text": missing_text,
+			"tooltip": missing_text,
+			"state": "blocked",
+			"changed": false,
+			"scope": "selected_tile_working_copy_only",
+		}
+	var current_signature := _tile_authoring_signature_for_session(_session, tile)
+	var authored_signature := _tile_authoring_signature_for_session(baseline, tile)
+	var delta_labels := _tile_authoring_delta_labels(current_signature, authored_signature)
+	var changed := not delta_labels.is_empty()
+	var tile_label := "%d,%d" % [tile.x, tile.y]
+	var text := ""
+	var button_label := "Restore Clean"
+	var next_step := "select another tile or keep editing"
+	if changed:
+		button_label = "Restore Changed"
+		next_step = "press Restore Tile to reset this tile, then use Play Copy to smoke-test"
+		text = "Tile reset: %s differs in %s; Restore Tile returns this tile to authored baseline." % [
+			tile_label,
+			", ".join(delta_labels),
+		]
+	else:
+		text = "Tile reset: %s already matches authored baseline; Restore Tile is a no-op check." % tile_label
+	var tooltip := "Restore Tile\n- Selected: %s\n- Current: %s\n- Authored: %s\n- Next: %s\n- Scope: selected tile only; in-memory working copy only; no authored file or campaign progress is written." % [
+		tile_label,
+		_tile_authoring_signature_summary(current_signature),
+		_tile_authoring_signature_summary(authored_signature),
+		next_step,
+	]
+	return {
+		"button_label": button_label,
+		"text": text,
+		"tooltip": tooltip,
+		"state": "changed" if changed else "clean",
+		"changed": changed,
+		"delta_labels": delta_labels,
+		"next_step": next_step,
+		"scope": "selected_tile_working_copy_only",
+		"tile": {"x": tile.x, "y": tile.y},
+		"current": current_signature,
+		"authored": authored_signature,
+	}
+
+func _tile_authoring_signature_for_session(session, tile: Vector2i) -> Dictionary:
+	if session == null:
+		return {}
+	var road_layer_ids := []
+	for road in _road_layers_at_in_overworld(session.overworld, tile):
+		if road is Dictionary:
+			road_layer_ids.append(String(road.get("id", EDITOR_ROAD_LAYER_ID)))
+	road_layer_ids.sort()
+	var object_signatures := []
+	for family in [OBJECT_FAMILY_TOWN, OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT, OBJECT_FAMILY_ENCOUNTER]:
+		var content_key := _placement_content_key(family)
+		for placement in _placements_for_family_at_in_session(session, family, tile):
+			if not (placement is Dictionary):
+				continue
+			var parts := [
+				family,
+				String(placement.get("placement_id", "")),
+				String(placement.get(content_key, "")),
+			]
+			match family:
+				OBJECT_FAMILY_TOWN:
+					parts.append(String(placement.get("owner", "neutral")))
+				OBJECT_FAMILY_RESOURCE, OBJECT_FAMILY_ARTIFACT:
+					parts.append("collected:%s" % ("yes" if bool(placement.get("collected", false)) else "no"))
+				OBJECT_FAMILY_ENCOUNTER:
+					parts.append(String(placement.get("difficulty", "medium")))
+			object_signatures.append(":".join(parts))
+	object_signatures.sort()
+	return {
+		"terrain_id": _terrain_at_in_overworld(session.overworld, tile),
+		"road_layer_ids": road_layer_ids,
+		"road_count": road_layer_ids.size(),
+		"hero_start": OverworldRules.hero_position(session) == tile,
+		"object_signatures": object_signatures,
+		"object_count": object_signatures.size(),
+	}
+
+func _tile_authoring_delta_labels(current_signature: Dictionary, authored_signature: Dictionary) -> Array:
+	var labels := []
+	if String(current_signature.get("terrain_id", "")) != String(authored_signature.get("terrain_id", "")):
+		labels.append("terrain")
+	if current_signature.get("road_layer_ids", []) != authored_signature.get("road_layer_ids", []):
+		labels.append("roads")
+	if bool(current_signature.get("hero_start", false)) != bool(authored_signature.get("hero_start", false)):
+		labels.append("hero start")
+	if current_signature.get("object_signatures", []) != authored_signature.get("object_signatures", []):
+		labels.append("objects")
+	return labels
+
+func _tile_authoring_signature_summary(signature: Dictionary) -> String:
+	if signature.is_empty():
+		return "unavailable"
+	return "terrain %s | roads %d | hero %s | objects %d" % [
+		_terrain_label_for_id(String(signature.get("terrain_id", ""))),
+		int(signature.get("road_count", 0)),
+		"yes" if bool(signature.get("hero_start", false)) else "no",
+		int(signature.get("object_count", 0)),
+	]
 
 func _editor_menu_return_payload() -> Dictionary:
 	if _session == null:
@@ -5277,6 +5426,10 @@ func validation_snapshot() -> Dictionary:
 		"menu_return_text": String(_editor_menu_return_payload().get("text", "")),
 		"menu_button_text": _menu_button.text if _menu_button != null else "",
 		"menu_button_tooltip": _menu_button.tooltip_text if _menu_button != null else "",
+		"restore_tile_cue": _editor_restore_tile_cue_payload(),
+		"restore_tile_cue_text": String(_editor_restore_tile_cue_payload().get("text", "")),
+		"restore_tile_button_text": _restore_tile_button.text if _restore_tile_button != null else "",
+		"restore_tile_button_tooltip": _restore_tile_button.tooltip_text if _restore_tile_button != null else "",
 		"active_tool_cue": _editor_active_tool_cue_payload(),
 		"active_tool_cue_text": String(_editor_active_tool_cue_payload().get("text", "")),
 		"active_tool_cue_tooltip": String(_editor_active_tool_cue_payload().get("tooltip", "")),
