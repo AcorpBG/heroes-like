@@ -3200,6 +3200,54 @@ static func resource_pressure_report(
 		"targets": targets,
 	}
 
+static func resource_pressure_target_report(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin: Dictionary,
+	target_placement_id: String,
+	faction_id: String = ""
+) -> Dictionary:
+	var resolved_faction_id := faction_id
+	if resolved_faction_id == "":
+		resolved_faction_id = String(config.get("faction_id", ""))
+	var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
+	var node: Dictionary = {}
+	for node_value in session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == target_placement_id:
+			node = node_value
+			break
+	if node.is_empty():
+		return {
+			"scenario_id": String(session.scenario_id),
+			"faction_id": resolved_faction_id,
+			"origin": {"x": origin_pos.x, "y": origin_pos.y},
+			"placement_id": target_placement_id,
+			"target_found": false,
+			"included_in_ranked_report": false,
+			"reachable": false,
+			"resource_rank": 0,
+			"route_gate": {},
+			"score_breakdown": {},
+		}
+	var breakdown := resource_target_score_breakdown(session, config, node, origin_pos, resolved_faction_id)
+	var ranked_ids := []
+	for target_value in resource_pressure_report(session, config, origin, resolved_faction_id, 0).get("targets", []):
+		if target_value is Dictionary:
+			ranked_ids.append(String(target_value.get("placement_id", "")))
+	var ranked_index := ranked_ids.find(target_placement_id)
+	return {
+		"scenario_id": String(session.scenario_id),
+		"faction_id": resolved_faction_id,
+		"origin": {"x": origin_pos.x, "y": origin_pos.y},
+		"placement_id": target_placement_id,
+		"target_found": true,
+		"included_in_ranked_report": ranked_index >= 0,
+		"reachable": int(breakdown.get("final_priority", 0)) > 0,
+		"resource_rank": ranked_index + 1 if ranked_index >= 0 else 0,
+		"route_gate": _resource_target_route_gate(session, node),
+		"score_breakdown": breakdown,
+	}
+
 static func neutral_encounter_object_route_pressure_report(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -4299,6 +4347,26 @@ static func _resource_guard_cost(site: Dictionary) -> int:
 	if String(neutral_roster.get("guard_encounter_id", "")) == "" and String(neutral_roster.get("guard_army_group_id", "")) == "":
 		return 0
 	return 12
+
+static func _resource_target_route_gate(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
+	var target_tile := Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))
+	var resolved = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))) != target_tile:
+			continue
+		var placement_id := String(encounter.get("placement_id", ""))
+		if resolved is Array and placement_id in resolved:
+			continue
+		return {
+			"kind": "unresolved_encounter",
+			"placement_id": placement_id,
+			"encounter_id": String(encounter.get("encounter_id", "")),
+			"target_placement_id": String(node.get("placement_id", "")),
+		}
+	return {}
 
 static func _resource_target_debug_reason(
 	site: Dictionary,

@@ -1616,6 +1616,11 @@ implementationTargets:
 - `scripts/core/EnemyAdventureRules.gd`
 - focused AI report fixtures
 
+implementationEvidence:
+- `docs/strategic-ai-economy-pressure-followup-report.md`
+- `EnemyAdventureRules.resource_pressure_target_report(...)`
+- `tests/ai_economy_pressure_report.gd`
+
 ### P2 Child: Strategic AI Commander Role Adoption Boundary
 
 id: `strategic-ai-commander-role-adoption-boundary-10184`
