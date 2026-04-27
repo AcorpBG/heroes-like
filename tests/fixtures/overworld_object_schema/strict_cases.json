@@ -85,10 +85,14 @@
           "refresh_rule": "route_state"
         },
         "route_effect": {
+          "effect_id": "fixture_bridge_link",
           "effect_type": "linked_endpoint",
-          "endpoint_group_id": "fixture_bridge_pair",
-          "requires_repair": false,
-          "movement_delta": -1
+          "requires_visit": true,
+          "requires_owner": false,
+          "movement_cost_delta": -1,
+          "toll_resources": {},
+          "blocked_state_ids": ["damaged", "closed"],
+          "linked_endpoint_group_id": "fixture_bridge_pair"
         },
         "animation_cues": ["object_chain_gate_open_placeholder", "object_route_active_placeholder"],
         "editor_placement": {
@@ -297,6 +301,55 @@
         "passability_class": "conditional_pass",
         "interaction": {"cadence": "conditional"},
         "approach": {"mode": "linked_endpoint", "primary_sides": ["west", "east"], "visit_offsets": [{"x": -1, "y": 0}]},
+        "animation_cues": ["object_route_active_placeholder"],
+        "editor_placement": {"density_band": "contested_economy"},
+        "ai_hints": {"strategic_value": 5}
+      },
+      {
+        "id": "bad_transit_body_approach_overlap",
+        "family": "transit_object",
+        "primary_class": "transit_route_object",
+        "secondary_tags": ["road_control", "conditional_route"],
+        "footprint": {"width": 2, "height": 1, "anchor": "bottom_center", "tier": "small"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}],
+        "passability_class": "conditional_pass",
+        "interaction": {"cadence": "conditional"},
+        "approach": {"mode": "linked_endpoint", "primary_sides": ["west", "east"], "visit_offsets": [{"x": 0, "y": 0}, {"x": 2, "y": 0}], "linked_exit_offsets": [{"x": 0, "y": 0}, {"x": 2, "y": 0}]},
+        "route_effect": {
+          "effect_id": "bad_overlap_link",
+          "effect_type": "linked_endpoint",
+          "requires_visit": true,
+          "requires_owner": false,
+          "movement_cost_delta": -1,
+          "toll_resources": {},
+          "blocked_state_ids": ["closed"],
+          "linked_endpoint_group_id": "bad_overlap_group"
+        },
+        "animation_cues": ["object_route_active_placeholder"],
+        "editor_placement": {"density_band": "contested_economy"},
+        "ai_hints": {"strategic_value": 5}
+      },
+      {
+        "id": "bad_transit_public_score_leak",
+        "family": "transit_object",
+        "primary_class": "transit_route_object",
+        "secondary_tags": ["road_control", "conditional_route"],
+        "footprint": {"width": 2, "height": 1, "anchor": "bottom_center", "tier": "small"},
+        "body_tiles": [{"x": 0, "y": 0, "role": "body"}, {"x": 1, "y": 0, "role": "body"}],
+        "passability_class": "conditional_pass",
+        "interaction": {"cadence": "conditional"},
+        "approach": {"mode": "linked_endpoint", "primary_sides": ["west", "east"], "visit_offsets": [{"x": -1, "y": 0}, {"x": 2, "y": 0}], "linked_exit_offsets": [{"x": -1, "y": 0}, {"x": 2, "y": 0}]},
+        "route_effect": {
+          "effect_id": "bad_score_link",
+          "effect_type": "linked_endpoint",
+          "requires_visit": true,
+          "requires_owner": false,
+          "movement_cost_delta": -1,
+          "toll_resources": {},
+          "blocked_state_ids": ["closed"],
+          "linked_endpoint_group_id": "bad_score_group",
+          "public_reason": "priority_with_object_metadata"
+        },
         "animation_cues": ["object_route_active_placeholder"],
         "editor_placement": {"density_band": "contested_economy"},
         "ai_hints": {"strategic_value": 5}

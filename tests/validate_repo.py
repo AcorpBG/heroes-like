@@ -928,6 +928,42 @@ OVERWORLD_OBJECT_INTERACTION_CADENCES = {
     "conditional",
     "scenario_scripted",
 }
+OVERWORLD_OBJECT_ROUTE_EFFECT_TYPES = {
+    "open_route",
+    "close_route",
+    "linked_endpoint",
+    "movement_discount",
+    "movement_tax",
+    "toll",
+    "conditional_pass",
+    "scouting_sightline",
+    "fog_bypass",
+    "repair_unlock",
+    "faction_favored_pass",
+    "scenario_gate",
+}
+OVERWORLD_OBJECT_ROUTE_EFFECT_REQUIRED_KEYS = {
+    "effect_id",
+    "effect_type",
+    "requires_visit",
+    "requires_owner",
+    "movement_cost_delta",
+    "toll_resources",
+    "blocked_state_ids",
+}
+OVERWORLD_OBJECT_PUBLIC_ROUTE_LEAK_TOKENS = {
+    "base_value",
+    "route_pressure_value",
+    "object_metadata_value",
+    "object_route_pressure_value",
+    "priority_without_object_metadata",
+    "priority_with_object_metadata",
+    "final_priority",
+    "final_score",
+    "debug_reason",
+    "ai_score",
+    "weight",
+}
 OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001 = {
     "object_waystone_cache",
     "object_wood_wagon",
@@ -2327,6 +2363,124 @@ def infer_overworld_object_interaction_cadence(obj: dict, site: dict | None = No
     return "one_time"
 
 
+def overworld_object_tile_key(tile: object) -> str:
+    if not isinstance(tile, dict):
+        return ""
+    return f"{int(tile.get('x', -999))},{int(tile.get('y', -999))}"
+
+
+def validate_overworld_object_route_effect_authoring_entry(object_id: str, obj: dict, site: dict | None) -> dict:
+    footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
+    body_tiles = obj.get("body_tiles", []) if isinstance(obj.get("body_tiles", []), list) else []
+    approach = obj.get("approach", {}) if isinstance(obj.get("approach", {}), dict) else {}
+    visit_offsets = approach.get("visit_offsets", []) if isinstance(approach.get("visit_offsets", []), list) else []
+    linked_exit_offsets = approach.get("linked_exit_offsets", []) if isinstance(approach.get("linked_exit_offsets", []), list) else []
+    route_effect = obj.get("route_effect", {}) if isinstance(obj.get("route_effect", {}), dict) else {}
+    secondary_tags = [str(tag) for tag in obj.get("secondary_tags", [])] if isinstance(obj.get("secondary_tags", []), list) else []
+    map_roles = [str(role) for role in obj.get("map_roles", [])] if isinstance(obj.get("map_roles", []), list) else []
+    transit_profile = site.get("transit_profile", {}) if isinstance(site, dict) and isinstance(site.get("transit_profile", {}), dict) else {}
+    entry = {
+        "object_id": object_id,
+        "resource_site_id": str(obj.get("resource_site_id", "")),
+        "site_has_transit_profile": bool(transit_profile),
+        "route_effect_present": bool(route_effect),
+        "effect_id": str(route_effect.get("effect_id", "")) if route_effect else "",
+        "effect_type": str(route_effect.get("effect_type", "")) if route_effect else "",
+        "route_tags_present": "conditional_route" in secondary_tags and "road_control" in secondary_tags,
+        "route_map_roles": [role for role in map_roles if "route" in role or "transit" in role or "shortcut" in role],
+        "shape_mask_contract": {
+            "visual_footprint": {
+                "width": int(footprint.get("width", 0)),
+                "height": int(footprint.get("height", 0)),
+                "anchor": str(footprint.get("anchor", "")),
+            },
+            "body_tile_count": len(body_tiles),
+            "approach_visit_offset_count": len(visit_offsets),
+            "linked_exit_offset_count": len(linked_exit_offsets),
+            "body_tiles_separate_from_approach": bool(body_tiles) and bool(visit_offsets) and not set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)),
+        },
+        "runtime_adoption": "metadata_only_reported_not_pathing_or_save_state",
+        "warnings": [],
+        "errors": [],
+    }
+
+    def add_error(message: str) -> None:
+        if message not in entry["errors"]:
+            entry["errors"].append(message)
+
+    def add_warning(message: str) -> None:
+        if message not in entry["warnings"]:
+            entry["warnings"].append(message)
+
+    if str(obj.get("primary_class", infer_overworld_object_primary_class(obj, site))) != "transit_route_object" and str(obj.get("family", "")) != "transit_object":
+        add_warning("route-effect validation was invoked for a non-transit object")
+    if not transit_profile:
+        add_error("transit object must link to a resource site with transit_profile")
+    if not entry["route_tags_present"]:
+        add_error("transit object must author road_control and conditional_route secondary tags")
+    if not entry["route_map_roles"]:
+        add_error("transit object must keep a route/transit/shortcut map role")
+    if str(obj.get("passability_class", "")) != "conditional_pass":
+        add_error("transit object must author passability_class conditional_pass for route-effect validation")
+    interaction = obj.get("interaction", {}) if isinstance(obj.get("interaction", {}), dict) else {}
+    if str(interaction.get("cadence", "")) != "conditional":
+        add_error("transit object interaction.cadence must be conditional")
+    if str(approach.get("mode", "")) != "linked_endpoint":
+        add_error("transit object approach.mode must be linked_endpoint")
+    if not body_tiles:
+        add_error("transit object must author body_tiles separately from approach tiles")
+    if len(visit_offsets) < 2:
+        add_error("transit object must author at least two approach.visit_offsets")
+    if len(linked_exit_offsets) != len(visit_offsets):
+        add_error("transit object linked_exit_offsets must match approach.visit_offsets count")
+    if set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)):
+        add_error("transit object body_tiles must not overlap approach.visit_offsets")
+    if not route_effect:
+        add_error("transit object must define route_effect metadata")
+    else:
+        missing_keys = sorted(OVERWORLD_OBJECT_ROUTE_EFFECT_REQUIRED_KEYS.difference(route_effect.keys()))
+        if missing_keys:
+            add_error(f"route_effect is missing required keys: {', '.join(missing_keys)}")
+        effect_type = str(route_effect.get("effect_type", ""))
+        if effect_type not in OVERWORLD_OBJECT_ROUTE_EFFECT_TYPES:
+            add_error(f"route_effect effect_type is unsupported: {effect_type}")
+        if not str(route_effect.get("effect_id", "")):
+            add_error("route_effect.effect_id must be non-empty")
+        for bool_key in ("requires_visit", "requires_owner"):
+            if bool_key in route_effect and type(route_effect.get(bool_key)) is not bool:
+                add_error(f"route_effect.{bool_key} must be boolean")
+        if "movement_cost_delta" in route_effect and type(route_effect.get("movement_cost_delta")) is not int:
+            add_error("route_effect.movement_cost_delta must be an integer")
+        toll_resources = route_effect.get("toll_resources", {})
+        if not isinstance(toll_resources, dict):
+            add_error("route_effect.toll_resources must be a dictionary")
+        else:
+            for resource_id, amount in toll_resources.items():
+                rid = str(resource_id)
+                if rid not in ECONOMY_STOCKPILE_RESOURCE_IDS:
+                    add_error(f"route_effect.toll_resources uses unsupported live resource id {rid}")
+                if rid in ECONOMY_RARE_RESOURCE_IDS:
+                    add_error(f"route_effect.toll_resources must not activate staged rare resource {rid}")
+                if type(amount) is not int or int(amount) < 0:
+                    add_error(f"route_effect.toll_resources.{rid} must be a non-negative integer")
+        blocked_state_ids = route_effect.get("blocked_state_ids", [])
+        if not isinstance(blocked_state_ids, list):
+            add_error("route_effect.blocked_state_ids must be a list")
+        elif any(not str(state_id) for state_id in blocked_state_ids):
+            add_error("route_effect.blocked_state_ids must contain non-empty state ids")
+        if effect_type == "linked_endpoint" and not str(route_effect.get("linked_endpoint_group_id", "")):
+            add_error("linked_endpoint route_effect must define linked_endpoint_group_id")
+        for public_key in ("public_reason", "public_summary", "display_name"):
+            if public_key in route_effect:
+                public_text = str(route_effect.get(public_key, ""))
+                for token in OVERWORLD_OBJECT_PUBLIC_ROUTE_LEAK_TOKENS:
+                    if token in public_text:
+                        add_error(f"route_effect.{public_key} leaks internal token {token}")
+    if not entry["errors"] and int(route_effect.get("movement_cost_delta", 0)) == 0 and not route_effect.get("toll_resources", {}):
+        add_warning("route_effect has no movement delta or toll payload; confirm the selected effect is intentionally state-only")
+    return entry
+
+
 def validate_overworld_object_safe_metadata_bundle(errors: list[str], map_objects: dict[str, dict], resource_sites: dict[str, dict]) -> None:
     for object_id in sorted(OVERWORLD_OBJECT_SAFE_METADATA_BUNDLE_001):
         ensure(object_id in map_objects, errors, f"Safe metadata bundle safe_metadata_bundle_001 is missing map object {object_id}")
@@ -2752,9 +2906,10 @@ def build_overworld_object_report() -> dict:
         "compatibility_adapters": {
             "runtime_adoption": "classification_reporting_safe_metadata_and_bounded_shape_masks",
             "runtime_adopted_safe_fields": ["primary_class", "secondary_tags", "interaction.cadence", "body_tiles", "approach.visit_offsets", "passability_class"],
-            "runtime_deferred_fields": ["route_effect", "renderer_hint_id", "ai_hints", "save_state"],
+            "runtime_deferred_fields": ["route_effect_runtime_behavior", "renderer_hint_id", "ai_hints", "save_state"],
             "production_json_migration": "safe_metadata_bundle_001_plus_one_representative_shape_mask",
             "pathing_occupancy_adoption": "bounded_resource_object_body_and_interaction_masks",
+            "route_effect_authoring": "selected_transit_metadata_validated_report_only",
             "renderer_sprite_ingestion": False,
             "ai_behavior_switch": False,
             "report_normalization": "authored_safe_fields_when_present_else_inferred",
@@ -2794,6 +2949,16 @@ def build_overworld_object_report() -> dict:
             "placed_guard_encounters": [],
         },
         "route_transit": {},
+        "route_effect_authoring": {
+            "mode": "metadata_validation_only",
+            "runtime_behavior_adopted": False,
+            "public_boundary": "route-effect authoring values are tooling-only unless a later UI/runtime slice explicitly adopts compact public text",
+            "selected_transit_object_ids": [],
+            "validated_count": 0,
+            "warning_count": 0,
+            "error_count": 0,
+            "entries": {},
+        },
         "guard_reward": {},
         "ownership_capture": {},
         "ai_editor_implications": {
@@ -2893,16 +3058,31 @@ def build_overworld_object_report() -> dict:
         if site is None and site_id:
             object_warnings.append(f"linked resource_site_id {site_id} is missing")
         if primary_class == "transit_route_object":
+            route_authoring_entry = validate_overworld_object_route_effect_authoring_entry(object_id, obj, site)
+            report["route_effect_authoring"]["entries"][object_id] = route_authoring_entry
+            append_unique(report["route_effect_authoring"]["selected_transit_object_ids"], object_id)
+            report["route_effect_authoring"]["validated_count"] += 1
+            report["route_effect_authoring"]["warning_count"] += len(route_authoring_entry.get("warnings", []))
+            report["route_effect_authoring"]["error_count"] += len(route_authoring_entry.get("errors", []))
+            for route_error in route_authoring_entry.get("errors", []):
+                if route_error not in report["errors"]:
+                    report["errors"].append(f"{object_id}: {route_error}")
             route_entry = {
                 "object_id": object_id,
                 "resource_site_id": site_id,
                 "site_has_transit_profile": isinstance(site.get("transit_profile", {}) if site else {}, dict) and bool(site.get("transit_profile", {}) if site else {}),
                 "future_route_effect_present": "route_effect" in obj or "route_effect_id" in obj,
+                "route_effect_authoring_status": "valid" if not route_authoring_entry.get("errors", []) else "invalid",
+                "route_effect_id": str(route_authoring_entry.get("effect_id", "")),
+                "route_effect_type": str(route_authoring_entry.get("effect_type", "")),
+                "shape_mask_contract": route_authoring_entry.get("shape_mask_contract", {}),
                 "warnings": [],
             }
             if not route_entry["future_route_effect_present"]:
                 route_entry["warnings"].append("future route_effect metadata is missing; report keeps transit runtime behavior unchanged")
                 object_warnings.append("future schema warning: transit object lacks route_effect metadata")
+            for route_warning in route_authoring_entry.get("warnings", []):
+                route_entry["warnings"].append(route_warning)
             report["route_transit"][object_id] = route_entry
         if site and (bool(site.get("guarded", False)) or isinstance(site.get("guard_profile", {}), dict) and bool(site.get("guard_profile", {})) or isinstance(site.get("neutral_roster", {}), dict) and bool(site.get("neutral_roster", {}))):
             neutral_roster = site.get("neutral_roster", {}) if isinstance(site.get("neutral_roster", {}), dict) else {}
@@ -2988,6 +3168,7 @@ def build_overworld_object_report() -> dict:
     report["resource_site_links"]["linked_resource_site_ids"] = sorted(report["resource_site_links"]["linked_resource_site_ids"])
     report["scenario_reality"]["placed_site_ids_without_map_object"] = sorted(report["scenario_reality"]["placed_site_ids_without_map_object"])
     report["scenario_reality"]["placed_guard_encounters"] = sorted(report["scenario_reality"]["placed_guard_encounters"])
+    report["route_effect_authoring"]["selected_transit_object_ids"] = sorted(report["route_effect_authoring"]["selected_transit_object_ids"])
     if not report["ai_editor_implications"]["visible_neutral_encounter_records_present"]:
         add_overworld_object_report_warning(report, "no first-class neutral_encounter map object records exist yet; visible encounter placement remains scenario encounter data")
     add_overworld_object_report_warning(report, "unmigrated production map_objects.json records remain legacy-compatible; inferred primary_class and tags are report-only outside declared migrated bundles")
@@ -3030,6 +3211,10 @@ def print_overworld_object_report(report: dict) -> None:
     print(f"- top-level editor placement: {readiness.get('top_level_editor_placement_count', 0)}; nested neutral editor placement: {readiness.get('nested_neutral_editor_placement_count', 0)}")
     print(f"- role mismatches: {len(readiness.get('role_mismatches', []))}; unsupported map-role tags: {len(readiness.get('unsupported_map_role_tags', []))}")
     print(f"- density regions requiring review: {len(density.get('regions_requiring_review', []))}; unlinked placed resource sites: {len(density.get('unlinked_placed_resource_sites', []))}")
+    route_effect_authoring = report.get("route_effect_authoring", {})
+    print("Route effect authoring:")
+    print(f"- selected transit objects: {route_effect_authoring.get('validated_count', 0)}; errors: {route_effect_authoring.get('error_count', 0)}; warnings: {route_effect_authoring.get('warning_count', 0)}")
+    print(f"- runtime behavior adopted: {route_effect_authoring.get('runtime_behavior_adopted', False)}")
     print(f"- runtime adoption: {report['compatibility_adapters']['runtime_adoption']}; pathing occupancy adoption={report['compatibility_adapters']['pathing_occupancy_adoption']}")
     print(f"- runtime adopted safe fields: {', '.join(report['compatibility_adapters'].get('runtime_adopted_safe_fields', []))}")
     print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
@@ -3094,6 +3279,7 @@ def validate_strict_overworld_object_fixtures() -> tuple[list[str], list[str]]:
         if cadence not in OVERWORLD_OBJECT_INTERACTION_CADENCES:
             local_errors.append(f"{object_id} interaction cadence is missing or unsupported")
         approach = obj.get("approach", {})
+        visit_offsets = []
         if primary_class != "decoration" and cadence != "none":
             if not isinstance(approach, dict) or not approach:
                 local_errors.append(f"{object_id} visitable/interactable object must define approach")
@@ -3115,8 +3301,35 @@ def validate_strict_overworld_object_fixtures() -> tuple[list[str], list[str]]:
             route_effect = obj.get("route_effect", {})
             if not isinstance(route_effect, dict) or not route_effect:
                 local_errors.append(f"{object_id} transit object must define route_effect in strict fixtures")
-            elif str(route_effect.get("effect_type", "")) not in {"open_route", "movement_discount", "toll", "linked_endpoint", "conditional_pass"}:
-                local_errors.append(f"{object_id} route_effect effect_type is unsupported")
+            else:
+                missing_keys = sorted(OVERWORLD_OBJECT_ROUTE_EFFECT_REQUIRED_KEYS.difference(route_effect.keys()))
+                if missing_keys:
+                    local_errors.append(f"{object_id} route_effect is missing keys: {', '.join(missing_keys)}")
+                if str(route_effect.get("effect_type", "")) not in OVERWORLD_OBJECT_ROUTE_EFFECT_TYPES:
+                    local_errors.append(f"{object_id} route_effect effect_type is unsupported")
+                if str(route_effect.get("effect_type", "")) == "linked_endpoint" and not str(route_effect.get("linked_endpoint_group_id", "")):
+                    local_errors.append(f"{object_id} linked_endpoint route_effect must define linked_endpoint_group_id")
+                if "movement_cost_delta" in route_effect and type(route_effect.get("movement_cost_delta")) is not int:
+                    local_errors.append(f"{object_id} route_effect.movement_cost_delta must be an integer")
+                toll_resources = route_effect.get("toll_resources", {})
+                if not isinstance(toll_resources, dict):
+                    local_errors.append(f"{object_id} route_effect.toll_resources must be a dictionary")
+                else:
+                    for resource_id, amount in toll_resources.items():
+                        if str(resource_id) not in ECONOMY_STOCKPILE_RESOURCE_IDS:
+                            local_errors.append(f"{object_id} route_effect toll resource {resource_id} is unsupported")
+                        if type(amount) is not int or int(amount) < 0:
+                            local_errors.append(f"{object_id} route_effect toll resource {resource_id} must be a non-negative integer")
+                if set(overworld_object_tile_key(tile) for tile in body_tiles).intersection(set(overworld_object_tile_key(tile) for tile in visit_offsets)):
+                    local_errors.append(f"{object_id} route-effect approach tiles must remain separate from body_tiles")
+                if str(approach.get("mode", "")) == "linked_endpoint" and len(linked_exit_offsets := approach.get("linked_exit_offsets", []) if isinstance(approach.get("linked_exit_offsets", []), list) else []) != len(visit_offsets):
+                    local_errors.append(f"{object_id} linked_endpoint linked_exit_offsets must match visit_offsets")
+                for public_key in ("public_reason", "public_summary", "display_name"):
+                    if public_key in route_effect:
+                        public_text = str(route_effect.get(public_key, ""))
+                        for token in OVERWORLD_OBJECT_PUBLIC_ROUTE_LEAK_TOKENS:
+                            if token in public_text:
+                                local_errors.append(f"{object_id} route_effect.{public_key} leaks internal token {token}")
         if primary_class == "guarded_reward_site":
             guard = obj.get("guard", {})
             reward_summary = obj.get("reward_summary", {})
@@ -8313,6 +8526,35 @@ def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> N
         ensure(required_text in doc_text, errors, f"Overworld object AI valuation report doc is missing required boundary text: {required_text}")
 
 
+def validate_overworld_object_route_effect_authoring(errors: list[str]) -> None:
+    docs_path = ROOT / "docs" / "overworld-object-route-effect-authoring-validation-report.md"
+    ensure(docs_path.exists(), errors, "Missing overworld object route-effect authoring validation report doc")
+    map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    transit_object_ids = sorted(
+        object_id
+        for object_id, obj in map_objects.items()
+        if infer_overworld_object_primary_class(obj, resource_sites.get(str(obj.get("resource_site_id", "")))) == "transit_route_object"
+    )
+    ensure(bool(transit_object_ids), errors, "Route-effect authoring validation must have selected transit object metadata")
+    for object_id in transit_object_ids:
+        obj = map_objects[object_id]
+        site_id = str(obj.get("resource_site_id", ""))
+        entry = validate_overworld_object_route_effect_authoring_entry(object_id, obj, resource_sites.get(site_id) if site_id else None)
+        for route_error in entry.get("errors", []):
+            fail(errors, f"{object_id}: {route_error}")
+    if docs_path.exists():
+        doc_text = docs_path.read_text(encoding="utf-8")
+        for required_text in (
+            "Status: implementation evidence.",
+            "metadata-only",
+            "No route-effect runtime adoption",
+            "`wood` remains canonical",
+            "No public/internal score leaks",
+        ):
+            ensure(required_text in doc_text, errors, f"Route-effect authoring report doc is missing required boundary text: {required_text}")
+
+
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
@@ -10104,6 +10346,7 @@ def main() -> int:
     validate_overworld_route_security_escort(errors)
     validate_overworld_content_foundation(errors)
     validate_overworld_object_ai_valuation_route_effects(errors)
+    validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_art_asset_slice(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_six_faction_biome_scenario_breadth(errors)
