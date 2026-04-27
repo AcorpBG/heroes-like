@@ -367,11 +367,13 @@ ENEMY_STRATEGY_KEYS = {
     "raid": {"threshold_scale", "max_active_bonus", "pressure_commitment_scale", "objective_weight", "town_siege_weight", "site_denial_weight", "hero_hunt_weight"},
 }
 ECONOMY_REPORT_SCHEMA = "economy_resource_report_v1"
+MARKET_FACTION_COST_REPORT_SCHEMA = "market_faction_cost_report_v1"
 ECONOMY_RESOURCE_REGISTRY_POLICY_ID = "wood_canonical_v1"
 ECONOMY_STAGED_RARE_RESOURCE_IDS = ("aetherglass", "embergrain", "peatwax", "verdant_grafts", "brass_scrip", "memory_salt")
 ECONOMY_REPORT_RESOURCE_IDS = ("gold", "wood", "ore", *ECONOMY_STAGED_RARE_RESOURCE_IDS, "experience")
 ECONOMY_STOCKPILE_RESOURCE_IDS = {"gold", "wood", "ore"}
 ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS = ("gold", "wood", "ore")
+ECONOMY_NORMAL_MARKET_RESOURCE_IDS = ("wood", "ore")
 ECONOMY_TARGET_ONLY_RESOURCE_IDS: set[str] = set()
 ECONOMY_NON_STOCKPILE_REWARD_IDS = {"experience"}
 ECONOMY_RARE_RESOURCE_IDS = set(ECONOMY_STAGED_RARE_RESOURCE_IDS)
@@ -1737,6 +1739,303 @@ def validate_strict_economy_resource_fixtures() -> tuple[list[str], list[str]]:
         if not (bool(profile.get("normal_market", False)) and rare_buying):
             fail(errors, f"Strict invalid market fixture {profile_id} unexpectedly passed")
     return errors, warnings
+
+
+def market_faction_cost_apply_discount(cost: object, discount_percent: int) -> dict[str, int]:
+    discounted: dict[str, int] = {}
+    if not isinstance(cost, dict):
+        return discounted
+    clamped_discount = max(0, min(75, int(discount_percent)))
+    for resource_id, amount in cost.items():
+        base_amount = max(0, int(amount))
+        discounted[str(resource_id)] = ((base_amount * (100 - clamped_discount)) + 99) // 100
+    return discounted
+
+
+def market_faction_cost_discount_from_profile(profile: object, unit_id: str) -> int:
+    if not isinstance(profile, dict):
+        return 0
+    discounts = profile.get("cost_discount_percent", {})
+    if not isinstance(discounts, dict):
+        return 0
+    return max(0, int(discounts.get(unit_id, 0)))
+
+
+def market_faction_cost_case(
+    case_id: str,
+    source: str,
+    town_id: str,
+    town: dict,
+    faction_id: str,
+    faction: dict,
+    unit_id: str,
+    unit: dict,
+    building: dict | None = None,
+) -> dict:
+    town_discount = market_faction_cost_discount_from_profile(town.get("recruitment", {}), unit_id)
+    faction_discount = market_faction_cost_discount_from_profile(faction.get("recruitment", {}), unit_id)
+    building_discount = 0
+    building_id = ""
+    if isinstance(building, dict):
+        building_id = str(building.get("id", ""))
+        building_discount = market_faction_cost_discount_from_profile({"cost_discount_percent": building.get("recruitment_discount_percent", {})}, unit_id)
+    total_discount = town_discount + faction_discount + building_discount
+    base_cost = {str(key): max(0, int(value)) for key, value in unit.get("cost", {}).items()} if isinstance(unit.get("cost", {}), dict) else {}
+    adjusted_cost = market_faction_cost_apply_discount(base_cost, total_discount)
+    return {
+        "case_id": case_id,
+        "source": source,
+        "town_id": town_id,
+        "faction_id": faction_id,
+        "unit_id": unit_id,
+        "building_id": building_id,
+        "discount_components": {
+            "town": town_discount,
+            "faction": faction_discount,
+            "building": building_discount,
+        },
+        "total_discount_percent": total_discount,
+        "base_cost": base_cost,
+        "adjusted_cost": adjusted_cost,
+        "resource_ids_preserved": sorted(base_cost.keys()) == sorted(adjusted_cost.keys()),
+        "live_resource_ids_only": set(base_cost.keys()).issubset(ECONOMY_STOCKPILE_RESOURCE_IDS) and set(adjusted_cost.keys()).issubset(ECONOMY_STOCKPILE_RESOURCE_IDS),
+        "rare_resource_ids_used": sorted((set(base_cost.keys()) | set(adjusted_cost.keys())).intersection(ECONOMY_RARE_RESOURCE_IDS)),
+        "cost_reduced": sum(adjusted_cost.values()) < sum(base_cost.values()),
+    }
+
+
+def market_resource_abundance_score(faction_economy: object, town_economy: object, resource_id: str) -> int:
+    score = 0
+    faction_base = faction_economy.get("base_income", {}) if isinstance(faction_economy, dict) else {}
+    town_base = town_economy.get("base_income", {}) if isinstance(town_economy, dict) else {}
+    faction_categories = faction_economy.get("per_category_income", {}) if isinstance(faction_economy, dict) else {}
+    town_categories = town_economy.get("per_category_income", {}) if isinstance(town_economy, dict) else {}
+    faction_economy_bucket = faction_categories.get("economy", {}) if isinstance(faction_categories, dict) else {}
+    town_economy_bucket = town_categories.get("economy", {}) if isinstance(town_categories, dict) else {}
+    score += 1 if isinstance(faction_base, dict) and int(faction_base.get(resource_id, 0)) > 0 else 0
+    score += 1 if isinstance(town_base, dict) and int(town_base.get(resource_id, 0)) > 0 else 0
+    score += 1 if isinstance(faction_economy_bucket, dict) and int(faction_economy_bucket.get(resource_id, 0)) > 0 else 0
+    score += 1 if isinstance(town_economy_bucket, dict) and int(town_economy_bucket.get(resource_id, 0)) > 0 else 0
+    return score
+
+
+def market_profile_for_building(building_id: str) -> tuple[str, int, str]:
+    if building_id == "building_resonant_exchange":
+        return "resonant", 2, "ore"
+    if building_id == "building_river_granary_exchange":
+        return "river", 2, "wood"
+    if building_id == "building_market_square":
+        return "square", 1, ""
+    return "none", 0, ""
+
+
+def market_faction_cost_market_case(town_id: str, town: dict, faction: dict, building_id: str) -> dict:
+    profile_id, tier, bulk_resource = market_profile_for_building(building_id)
+    buy_rates: dict[str, int] = {}
+    sell_rates: dict[str, int] = {}
+    for resource_id in ECONOMY_NORMAL_MARKET_RESOURCE_IDS:
+        abundance = market_resource_abundance_score(faction.get("economy", {}), town.get("economy", {}), resource_id)
+        buy_rate = 740 - (abundance * 35)
+        sell_rate = 280 + (abundance * 30)
+        if profile_id == "river":
+            if resource_id == "wood":
+                buy_rate -= 80
+                sell_rate += 90
+            else:
+                buy_rate -= 25
+                sell_rate += 25
+        elif profile_id == "resonant":
+            if resource_id == "ore":
+                buy_rate -= 80
+                sell_rate += 90
+            else:
+                buy_rate -= 25
+                sell_rate += 25
+        else:
+            buy_rate -= 20
+            sell_rate += 10
+        buy_rate = max(500, min(760, buy_rate))
+        sell_rate = max(260, min(max(260, buy_rate - 120), sell_rate))
+        buy_rates[resource_id] = buy_rate
+        sell_rates[resource_id] = sell_rate
+    exchange_resources = sorted(set(buy_rates.keys()) | set(sell_rates.keys()))
+    return {
+        "town_id": town_id,
+        "faction_id": str(town.get("faction_id", "")),
+        "market_building_id": building_id,
+        "profile": profile_id,
+        "tier": tier,
+        "buy_rates": buy_rates,
+        "sell_rates": sell_rates,
+        "bulk_resource": bulk_resource,
+        "exchange_resources": exchange_resources,
+        "rare_resource_buying_enabled": bool(set(buy_rates.keys()).intersection(ECONOMY_RARE_RESOURCE_IDS)),
+        "normal_market_resource_ids_only": set(exchange_resources) == set(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
+    }
+
+
+def build_market_faction_cost_report() -> dict:
+    payloads = {key: load_json(CONTENT_DIR / f"{key}.json") for key in ("factions", "towns", "buildings", "units")}
+    factions = items_index(payloads["factions"])
+    towns = items_index(payloads["towns"])
+    buildings = items_index(payloads["buildings"])
+    units = items_index(payloads["units"])
+    strict_cases = load_json(ECONOMY_RESOURCE_STRICT_CASES_PATH) if ECONOMY_RESOURCE_STRICT_CASES_PATH.exists() else {}
+    report = {
+        "schema": MARKET_FACTION_COST_REPORT_SCHEMA,
+        "generated_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "mode": "bounded_live_hook_report",
+        "policy": {
+            "live_stockpile_resource_ids": list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS),
+            "normal_market_resource_ids": list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS),
+            "rare_resource_activation": "staged_report_only",
+            "normal_market_rare_buying_enabled": False,
+            "runtime_market_cap_adoption": False,
+            "market_cap_support": "strict_fixture_and_report_only_until weekly state, UI, AI, and save semantics are selected",
+            "faction_cost_hook": "live recruitment discounts from faction, town, and building profiles",
+            "save_version_bump": False,
+            "broad_rebalance": False,
+        },
+        "market_cases": [],
+        "market_cap_fixtures": [],
+        "faction_cost_cases": [],
+        "warnings": [],
+        "errors": [],
+    }
+    seen_market_profiles: set[str] = set()
+    for town_id, town in towns.items():
+        faction_id = str(town.get("faction_id", ""))
+        faction = factions.get(faction_id, {})
+        buildable_ids = [str(value) for value in town.get("buildable_building_ids", []) if str(value) in buildings]
+        for building_id in ("building_market_square", "building_river_granary_exchange", "building_resonant_exchange"):
+            if building_id not in buildable_ids or building_id in seen_market_profiles:
+                continue
+            profile_id, _, _ = market_profile_for_building(building_id)
+            if profile_id == "none":
+                continue
+            report["market_cases"].append(market_faction_cost_market_case(town_id, town, faction, building_id))
+            seen_market_profiles.add(building_id)
+    valid_cases = strict_cases.get("valid", {}) if isinstance(strict_cases, dict) else {}
+    for profile in valid_cases.get("market_profiles", []) if isinstance(valid_cases.get("market_profiles", []), list) else []:
+        if not isinstance(profile, dict):
+            continue
+        buy_caps = profile.get("buy_caps", {}) if isinstance(profile.get("buy_caps", {}), dict) else {}
+        sell_caps = profile.get("sell_caps", {}) if isinstance(profile.get("sell_caps", {}), dict) else {}
+        restricted = [str(value) for value in profile.get("restricted_buy_resource_ids", [])] if isinstance(profile.get("restricted_buy_resource_ids", []), list) else []
+        report["market_cap_fixtures"].append(
+            {
+                "profile_id": str(profile.get("id", "")),
+                "normal_market": bool(profile.get("normal_market", True)),
+                "refresh_cadence": str(profile.get("refresh_cadence", "")),
+                "buy_caps": {str(key): int(value) for key, value in buy_caps.items()},
+                "sell_caps": {str(key): int(value) for key, value in sell_caps.items()},
+                "restricted_buy_resource_ids": restricted,
+                "rare_resource_buying_enabled": bool(set(buy_caps.keys()).intersection(ECONOMY_RARE_RESOURCE_IDS)),
+            }
+        )
+    for town_id, town in towns.items():
+        faction_id = str(town.get("faction_id", ""))
+        faction = factions.get(faction_id, {})
+        faction_discounts = faction.get("recruitment", {}).get("cost_discount_percent", {}) if isinstance(faction.get("recruitment", {}), dict) else {}
+        town_discounts = town.get("recruitment", {}).get("cost_discount_percent", {}) if isinstance(town.get("recruitment", {}), dict) else {}
+        for unit_id in sorted(faction_discounts.keys()):
+            unit = units.get(str(unit_id), {})
+            if unit:
+                report["faction_cost_cases"].append(market_faction_cost_case(f"{town_id}_{unit_id}_faction", "faction_profile", town_id, town, faction_id, faction, str(unit_id), unit))
+                break
+        for unit_id in sorted(town_discounts.keys()):
+            unit = units.get(str(unit_id), {})
+            if unit:
+                report["faction_cost_cases"].append(market_faction_cost_case(f"{town_id}_{unit_id}_town", "town_profile", town_id, town, faction_id, faction, str(unit_id), unit))
+                break
+        for building_id in town.get("buildable_building_ids", []):
+            building = buildings.get(str(building_id), {})
+            discounts = building.get("recruitment_discount_percent", {}) if isinstance(building, dict) else {}
+            if not isinstance(discounts, dict) or not discounts:
+                continue
+            unit_id = sorted(discounts.keys())[0]
+            unit = units.get(str(unit_id), {})
+            if unit:
+                report["faction_cost_cases"].append(market_faction_cost_case(f"{town_id}_{building_id}_{unit_id}_building", "building_profile", town_id, town, faction_id, faction, str(unit_id), unit, building))
+                break
+    return report
+
+
+def validate_market_faction_cost_policy(errors: list[str]) -> None:
+    report = build_market_faction_cost_report()
+    policy = report.get("policy", {})
+    session_store_text = SESSION_STATE_STORE_PATH.read_text(encoding="utf-8")
+    autoload_session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+
+    ensure(report.get("schema", "") == MARKET_FACTION_COST_REPORT_SCHEMA, errors, "Market/faction-cost report must use the selected schema")
+    ensure(policy.get("live_stockpile_resource_ids", []) == list(ECONOMY_LIVE_STOCKPILE_RESOURCE_IDS), errors, "Market/faction-cost policy must keep live stockpile ids as gold, wood, and ore")
+    ensure(policy.get("normal_market_resource_ids", []) == list(ECONOMY_NORMAL_MARKET_RESOURCE_IDS), errors, "Normal market must remain bounded to wood and ore")
+    ensure(bool(policy.get("normal_market_rare_buying_enabled", True)) is False, errors, "Normal market must not buy staged rare resources")
+    ensure(str(policy.get("rare_resource_activation", "")) == "staged_report_only", errors, "Market/faction-cost slice must keep rare resources report-only")
+    ensure(bool(policy.get("save_version_bump", True)) is False, errors, "Market/faction-cost slice must not require a save-version bump")
+    ensure(bool(policy.get("broad_rebalance", True)) is False, errors, "Market/faction-cost slice must not perform a broad rebalance")
+    ensure("const SAVE_VERSION := 9" in session_store_text, errors, "Market/faction-cost slice must preserve SessionStateStore SAVE_VERSION 9")
+    ensure("const SAVE_VERSION := 9" in autoload_session_text, errors, "Market/faction-cost slice must preserve autoload SessionState SAVE_VERSION 9")
+    ensure('for resource_key in ["wood", "ore"]' in overworld_rules_text, errors, "Town market rules must stay visibly bounded to wood and ore")
+    ensure("static func town_recruit_cost" in overworld_rules_text and "_recruitment_discount_percent" in overworld_rules_text, errors, "Town recruit costs must still apply faction/town/building discount hooks")
+
+    market_cases = report.get("market_cases", [])
+    ensure(bool(market_cases), errors, "Market/faction-cost report must include at least one live market case")
+    for case in market_cases:
+        case_id = f"{case.get('town_id', '')}:{case.get('market_building_id', '')}"
+        ensure(case.get("normal_market_resource_ids_only", False) is True, errors, f"{case_id} market case must exchange only wood and ore")
+        ensure(case.get("rare_resource_buying_enabled", True) is False, errors, f"{case_id} market case must not buy rare resources")
+    cap_fixtures = report.get("market_cap_fixtures", [])
+    ensure(bool(cap_fixtures), errors, "Market/faction-cost report must include a bounded common-market cap fixture")
+    for fixture in cap_fixtures:
+        fixture_id = str(fixture.get("profile_id", "market_cap_fixture"))
+        ensure(str(fixture.get("refresh_cadence", "")) == "weekly", errors, f"{fixture_id} must keep weekly market cap cadence")
+        ensure(set(fixture.get("buy_caps", {}).keys()).issubset(set(ECONOMY_NORMAL_MARKET_RESOURCE_IDS)), errors, f"{fixture_id} buy caps must stay common-only")
+        ensure(set(fixture.get("sell_caps", {}).keys()).issubset(set(ECONOMY_NORMAL_MARKET_RESOURCE_IDS)), errors, f"{fixture_id} sell caps must stay common-only")
+        ensure(fixture.get("rare_resource_buying_enabled", True) is False, errors, f"{fixture_id} must not enable rare-resource buying")
+        ensure(ECONOMY_RARE_RESOURCE_IDS.issubset(set(fixture.get("restricted_buy_resource_ids", []))), errors, f"{fixture_id} must explicitly restrict all staged rare-resource buys")
+
+    cost_cases = report.get("faction_cost_cases", [])
+    ensure(len(cost_cases) >= 2, errors, "Market/faction-cost report must include multiple faction-biased cost cases")
+    ensure(any(str(case.get("source", "")) == "faction_profile" and int(case.get("discount_components", {}).get("faction", 0)) > 0 for case in cost_cases), errors, "Faction cost report must prove an authored faction discount affects a live cost")
+    ensure(any(str(case.get("source", "")) == "town_profile" and int(case.get("discount_components", {}).get("town", 0)) > 0 for case in cost_cases), errors, "Faction cost report must prove an authored town discount affects a live cost")
+    ensure(any(str(case.get("source", "")) == "building_profile" and int(case.get("discount_components", {}).get("building", 0)) > 0 for case in cost_cases), errors, "Faction cost report must prove an authored building discount affects a live cost")
+    for case in cost_cases:
+        case_id = str(case.get("case_id", "cost_case"))
+        ensure(case.get("cost_reduced", False) is True, errors, f"{case_id} must reduce the base cost")
+        ensure(case.get("resource_ids_preserved", False) is True, errors, f"{case_id} must preserve resource ids rather than creating hidden grants")
+        ensure(case.get("live_resource_ids_only", False) is True, errors, f"{case_id} must use only live stockpile resources")
+        ensure(case.get("rare_resource_ids_used", []) == [], errors, f"{case_id} must not use staged rare resources")
+
+
+def print_market_faction_cost_report(report: dict) -> None:
+    print("MARKET FACTION COST REPORT")
+    print(f"- schema: {report['schema']}")
+    print(f"- mode: {report['mode']}")
+    policy = report.get("policy", {})
+    print("Policy:")
+    print(f"- live ids: {', '.join(policy.get('live_stockpile_resource_ids', []))}; normal market: {', '.join(policy.get('normal_market_resource_ids', []))}")
+    print(f"- rare_activation={policy.get('rare_resource_activation', '')}; rare_market_buying={policy.get('normal_market_rare_buying_enabled', True)}; save_version_bump={policy.get('save_version_bump', True)}")
+    print("Market cases:")
+    for case in report.get("market_cases", []):
+        print(
+            f"- {case.get('town_id', '')}:{case.get('profile', '')} "
+            f"buy={case.get('buy_rates', {})} sell={case.get('sell_rates', {})} "
+            f"rare_buying={case.get('rare_resource_buying_enabled', True)}"
+        )
+    print("Market cap fixtures:")
+    for fixture in report.get("market_cap_fixtures", []):
+        print(f"- {fixture.get('profile_id', '')}: cadence={fixture.get('refresh_cadence', '')}; buy_caps={fixture.get('buy_caps', {})}; rare_buying={fixture.get('rare_resource_buying_enabled', True)}")
+    print("Faction cost cases:")
+    for case in report.get("faction_cost_cases", [])[:12]:
+        print(
+            f"- {case.get('case_id', '')}: source={case.get('source', '')}; "
+            f"discount={case.get('total_discount_percent', 0)}%; "
+            f"base={case.get('base_cost', {})}; adjusted={case.get('adjusted_cost', {})}; "
+            f"rare={case.get('rare_resource_ids_used', [])}"
+        )
+    print(f"Warnings: {len(report['warnings'])}; Errors: {len(report['errors'])}")
 
 
 def add_overworld_object_report_warning(report: dict, warning: str) -> None:
@@ -9084,6 +9383,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
     parser.add_argument("--economy-resource-report-json", type=str, default="", help="Write the opt-in economy/resource compatibility report as JSON.")
+    parser.add_argument("--market-faction-cost-report", action="store_true", help="Print the opt-in bounded market/faction-cost hook report.")
+    parser.add_argument("--market-faction-cost-report-json", type=str, default="", help="Write the opt-in bounded market/faction-cost hook report as JSON.")
     parser.add_argument("--strict-economy-resource-fixtures", action="store_true", help="Validate isolated strict economy/resource schema fixtures.")
     parser.add_argument("--overworld-object-report", action="store_true", help="Print the opt-in overworld object compatibility report.")
     parser.add_argument("--overworld-object-report-json", type=str, default="", help="Write the opt-in overworld object compatibility report as JSON.")
@@ -9140,6 +9441,7 @@ def main() -> int:
     validate_six_faction_content_scaffold(errors)
     validate_economy_wood_canonical_policy(errors)
     validate_economy_rare_resource_activation_policy(errors)
+    validate_market_faction_cost_policy(errors)
     strict_fixture_warnings: list[str] = []
     if args.strict_economy_resource_fixtures:
         strict_fixture_errors, strict_fixture_warnings = validate_strict_economy_resource_fixtures()
@@ -9213,6 +9515,7 @@ def main() -> int:
     print("- six-faction bible content now has real scaffold records, seed towns for new factions, and tavern gating for non-integrated heroes")
     print("- economy/resource policy keeps wood as the canonical live save id, rejects target aliases, and preserves old-save wood payloads without a save-version bump")
     print("- staged rare-resource registry/report gates expose original rare resources without live costs, market buying, save migration, or production grants")
+    print("- market/faction-cost gates keep normal exchanges common-only and prove live faction, town, and building recruitment cost hooks without rare-resource activation")
     if args.strict_economy_resource_fixtures:
         print(f"- strict economy/resource fixtures passed with {len(strict_fixture_warnings)} intentional warning case(s)")
     if args.strict_overworld_object_fixtures:
@@ -9227,6 +9530,14 @@ def main() -> int:
             print(f"- economy/resource report JSON written to {report_path}")
         if args.economy_resource_report:
             print_economy_resource_report(report)
+    if args.market_faction_cost_report or args.market_faction_cost_report_json:
+        report = build_market_faction_cost_report()
+        if args.market_faction_cost_report_json:
+            report_path = Path(args.market_faction_cost_report_json)
+            report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            print(f"- market/faction-cost report JSON written to {report_path}")
+        if args.market_faction_cost_report:
+            print_market_faction_cost_report(report)
     if args.overworld_object_report or args.overworld_object_report_json:
         report = build_overworld_object_report()
         if args.overworld_object_report_json:

@@ -3,12 +3,12 @@
   "taskId": "10184",
   "status": "in_progress",
   "currentPhase": "phase-2-deep-production-foundation",
-  "currentSliceId": "economy-market-faction-costs-10184",
-  "currentSliceTitle": "Economy Market And Faction Costs",
-  "currentSliceStatus": "in_progress",
-  "currentSliceNotes": "P2.3 market/faction costs in progress: inspect prior evidence first; implement bounded market caps or faction-biased cost hooks only where resource/source/UI/save/AI gates are supported.",
+  "currentSliceId": "economy-capture-income-loop-expansion-10184",
+  "currentSliceTitle": "Economy Capture Income Loop Expansion",
+  "currentSliceStatus": "pending",
+  "currentSliceNotes": "P2.3 market/faction costs completed with bounded report/validation evidence; next selected child should expand a live capture/income loop without activating staged rare resources.",
   "nextActionGuardrailNote": "Use PLAN.md active ids as the queue. Docs/reports are evidence, not implementation completion unless the slice is explicitly documentation/report-only. Worker-stopped state does not cancel the underlying product task. Phase 2 numbering is category order, not proof that earlier tracks are complete.",
-  "updatedAt": "2026-04-27T14:09:27Z",
+  "updatedAt": "2026-04-27T14:30:00Z",
   "statusTaxonomy": {
     "validStatuses": [
       "pending",
@@ -838,7 +838,7 @@
       "id": "economy-market-faction-costs-10184",
       "title": "Economy Market And Faction Costs",
       "phase": "phase-2-deep-production-foundation",
-      "status": "in_progress",
+      "status": "completed",
       "sliceType": "child",
       "classification": "phase2_child_implementation_slice",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
@@ -846,26 +846,29 @@
       "sourceDocs": [
         "docs/economy-overhaul-foundation.md",
         "docs/factions-content-bible.md",
-        "docs/economy-rare-resource-activation-report.md"
+        "docs/economy-rare-resource-activation-report.md",
+        "docs/economy-market-faction-costs-report.md"
       ],
       "implementationTargets": [
         "town economy rules",
-        "market/cost content",
+        "market/cost validation",
         "focused reports or smoke coverage"
       ],
       "baselineChecks": [
         "python3 tests/validate_repo.py",
+        "python3 tests/validate_repo.py --market-faction-cost-report --market-faction-cost-report-json /tmp/heroes-market-faction-cost-report.json",
         "git diff --check"
       ],
       "sliceEvidence": [
-        "Focused report, smoke test, validation output, or live proof demonstrates the selected child requirement."
+        "market_faction_cost_report_v1 proves normal town markets remain bounded to wood/ore, staged rare resources remain excluded from normal market buying, strict weekly cap fixtures are common-only, and live faction/town/building recruitment discount hooks reduce costs without changing resource ids."
       ],
       "completionCriteria": [
         "The selected requirement is implemented or explicitly resolved according to its parent PLAN slice, with validation evidence recorded."
       ],
-      "updatedAt": "2026-04-27T14:09:27Z",
+      "updatedAt": "2026-04-27T14:30:00Z",
       "startedAt": "2026-04-27T14:09:27Z",
-      "notes": "worker started for P2.3 market/faction costs: inspect prior economy/town/faction work first, then implement bounded market caps or faction-biased cost hooks only where gates are supported"
+      "notes": "Completed bounded P2.3 market/faction-cost slice through executable report/validator evidence. The live normal market remains common wood/ore only; rare resources stay staged/report-only; strict fixture caps document weekly common-market boundaries without claiming runtime cap state; faction, town, and building recruitment discount hooks are validated against live content without hidden grants or broad rebalance.",
+      "completedAt": "2026-04-27T14:30:00Z"
     },
     {
       "id": "economy-capture-income-loop-expansion-10184",
@@ -2049,11 +2052,13 @@
       "phase": "phase-2-deep-production-foundation",
       "mappedPlannedSliceIds": [
         "economy-resource-foundation-implementation-10184",
+        "economy-market-faction-costs-10184",
         "economy-capture-income-loop-expansion-10184"
       ],
       "sourceRefs": [
         "archive/document-reset-2026-04-27/progress.json",
-        "docs/economy-capture-resource-loop-live-proof-report.md"
+        "docs/economy-capture-resource-loop-live-proof-report.md",
+        "docs/economy-market-faction-costs-report.md"
       ],
       "entries": [
         {
@@ -2073,6 +2078,12 @@
           "title": "Manual verify economy capture/resource loop proof",
           "status": "completed",
           "evidence": "Manual gate review recorded current-system proof and limits."
+        },
+        {
+          "id": "economy-market-faction-costs-10184",
+          "title": "Implement bounded market and faction-cost validation hooks",
+          "status": "completed",
+          "evidence": "market_faction_cost_report_v1 validates common-only normal markets, strict weekly common-market cap fixtures, staged rare-resource exclusion, and live faction/town/building recruitment discount hooks without save migration or broad rebalance."
         }
       ]
     },
@@ -2784,21 +2795,21 @@
   ],
   "actionableNextTasks": [
     {
-      "id": "economy-market-faction-costs-10184",
-      "title": "Economy Market And Faction Costs",
-      "status": "in_progress",
+      "id": "economy-capture-income-loop-expansion-10184",
+      "title": "Economy Capture Income Loop Expansion",
+      "status": "pending",
       "parentSliceId": "economy-resource-foundation-implementation-10184",
       "sourceDocs": [
-        "docs/economy-overhaul-foundation.md",
-        "docs/factions-content-bible.md",
-        "docs/economy-rare-resource-activation-report.md"
+        "docs/economy-capture-resource-loop-proof-plan.md",
+        "docs/economy-capture-resource-loop-live-proof-report.md",
+        "docs/economy-capture-resource-loop-manual-gate-review.md"
       ],
       "implementationTargets": [
-        "town economy rules",
-        "market/cost content",
-        "focused reports or smoke coverage"
+        "economy rule helpers",
+        "resource-site capture/production report",
+        "live proof or manual gate evidence"
       ],
-      "notes": "worker started for P2.3 market/faction costs: inspect prior economy/town/faction work first, then implement bounded market caps or faction-biased cost hooks only where gates are supported",
+      "notes": "Next P2.3 child after bounded market/faction-cost validation. Expand a selected live capture/income loop using current gold/wood/ore gates; do not activate staged rare resources without the full source/UI/save/AI/market boundary.",
       "phase": "phase-2-deep-production-foundation",
       "classification": "phase2_child_implementation_slice",
       "source": "PLAN.md P2.3 Economy Resource Foundation Implementation"
